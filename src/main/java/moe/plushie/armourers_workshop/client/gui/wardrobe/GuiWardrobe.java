@@ -14,16 +14,14 @@ import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTab;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabbed;
-import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeColourSettings;
-import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeDisplaySettings;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeSkins;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
+import moe.plushie.armourers_workshop.common.capability.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.skin.EquipmentWardrobeData;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -44,10 +42,10 @@ public class GuiWardrobe extends GuiTabbed {
     private static final ResourceLocation TEXTURE_TAB = new ResourceLocation(LibGuiResources.WARDROBE_TABS);
     
     private final GuiTabWardrobeSkins tabSkins;
-    private final GuiTabWardrobeDisplaySettings tabDisplaySettings;
-    private final GuiTabWardrobeColourSettings tabColourSettings;
+    //private final GuiTabWardrobeDisplaySettings tabDisplaySettings;
+    //private final GuiTabWardrobeColourSettings tabColourSettings;
 
-    ExPropsPlayerSkinData customEquipmentData;
+    EntitySkinCapability skinCapability;
     EquipmentWardrobeData equipmentWardrobeData;
     EntityPlayer player;
     
@@ -59,15 +57,15 @@ public class GuiWardrobe extends GuiTabbed {
     
     String guiName = "equipmentWardrobe";
     
-    public GuiWardrobe(InventoryPlayer inventory, ExPropsPlayerSkinData customEquipmentData) {
-        super(new ContainerSkinWardrobe(inventory, customEquipmentData), false, TEXTURE_TAB);
+    public GuiWardrobe(InventoryPlayer inventory, EntitySkinCapability skinCapability) {
+        super(new ContainerSkinWardrobe(inventory, skinCapability), false, TEXTURE_TAB);
         
         // Tab size 21
         this.xSize = 236;
         this.ySize = 240;
         
         this.player = inventory.player;
-        this.customEquipmentData = customEquipmentData;
+        this.skinCapability = skinCapability;
         PlayerPointer playerPointer = new PlayerPointer(player);
         equipmentWardrobeData = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         
@@ -77,16 +75,17 @@ public class GuiWardrobe extends GuiTabbed {
         }
         
         tabSkins = new GuiTabWardrobeSkins(0, this);
-        tabDisplaySettings = new GuiTabWardrobeDisplaySettings(1, this, player, customEquipmentData, equipmentWardrobeData);
-        tabColourSettings = new GuiTabWardrobeColourSettings(2, this, player, customEquipmentData, equipmentWardrobeData);
+        
+        //tabDisplaySettings = new GuiTabWardrobeDisplaySettings(1, this, player, skinCapability, equipmentWardrobeData);
+        //tabColourSettings = new GuiTabWardrobeColourSettings(2, this, player, skinCapability, equipmentWardrobeData);
         
         tabList.add(tabSkins);
-        tabList.add(tabDisplaySettings);
-        tabList.add(tabColourSettings);
+        //tabList.add(tabDisplaySettings);
+        //tabList.add(tabColourSettings);
         
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.skins")).setIconLocation(52, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.displaySettings")).setIconLocation(52 + 16, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.colourSettings")).setIconLocation(52 + 32, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
+        //tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.displaySettings")).setIconLocation(52 + 16, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
+        //tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.colourSettings")).setIconLocation(52 + 32, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
         
         tabController.setActiveTabIndex(activeTab);
         

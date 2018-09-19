@@ -26,6 +26,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
@@ -70,7 +71,6 @@ public class ModelRendererAttachment extends ModelRenderer {
             mc.mcProfiler.endSection();
             return;
         }*/
-        
         double distance = Minecraft.getMinecraft().player.getDistance(
                 player.posX,
                 player.posY,
@@ -103,6 +103,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                 SkinPart partData = data.getParts().get(i);
                 if (partData.getPartType() == skinPart) {
                     GL11.glPushMatrix();
+                    
                     if (skinType == SkinTypeRegistry.skinLegs && skinPart.getRegistryName().equals("armourers:legs.skirt")) {
                         GL11.glTranslatef(0, 12 * scale, 0);
                         if (player.isSneaking()) {
@@ -114,6 +115,8 @@ public class ModelRendererAttachment extends ModelRenderer {
                             GL11.glRotated(-70, 1F, 0F, 0F);
                         }
                     }
+                    
+                    
                     if (skinType == SkinTypeRegistry.skinWings) {
                         GL11.glTranslated(0, 0, scale * 2);
                         double angle = SkinUtils.getFlapAngleForWings(player, data);
@@ -155,12 +158,18 @@ public class ModelRendererAttachment extends ModelRenderer {
                         GL11.glTranslated(scale * -point.getX(), scale * -point.getY(), scale * -point.getZ());
                         GL11.glTranslated(scale * -0.5F, scale * -0.5F, scale * -0.5F);
                     }
+                    
+                    
+                    
                     GL11.glEnable(GL11.GL_CULL_FACE);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     GL11.glEnable(GL11.GL_BLEND);
                     SkinPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours, distance, true);
+                    GlStateManager.resetColor();
+                    GlStateManager.color(1, 1, 1, 1);
                     GL11.glDisable(GL11.GL_CULL_FACE);
                     GL11.glPopMatrix();
+                    
                     break;
                 }
             }

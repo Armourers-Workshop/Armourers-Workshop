@@ -7,16 +7,18 @@ import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.entity.SkinnableEntityChickenRenderer;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SkinnableEntityChicken implements ISkinnableEntity {
 
     @Override
-    public Class<? extends EntityLivingBase> getEntityClass() {
-        return EntityChicken.class;
+    public ArrayList<Class<? extends EntityLivingBase>> getEntityClass() {
+        ArrayList<Class<? extends EntityLivingBase>> classes = new ArrayList<Class<? extends EntityLivingBase>>();
+        classes.add(EntityChicken.class);
+        return classes;
     }
     
     @SideOnly(Side.CLIENT)

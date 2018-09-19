@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.common.tileentities;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.common.blocks.BlockSkinLibrary;
+import moe.plushie.armourers_workshop.common.blocks.BlockSkinLibrary.EnumLibraryType;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
 import moe.plushie.armourers_workshop.common.items.ItemSkinTemplate;
@@ -13,11 +15,12 @@ import moe.plushie.armourers_workshop.common.network.messages.server.MessageServ
 import moe.plushie.armourers_workshop.common.skin.ISkinHolder;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -37,11 +40,8 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
     }
     
     public boolean isCreativeLibrary() {
-        int meta = getBlockMetadata();
-        if (meta == 1) {
-            return true;
-        }
-        return false;
+        IBlockState blockState = getWorld().getBlockState(getPos());
+        return blockState.getValue(BlockSkinLibrary.STATE_TYPE) == EnumLibraryType.CREATIVE;
     }
     
     public void sendArmourToClient(String filename, String filePath, EntityPlayerMP player) {
@@ -164,15 +164,15 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         ItemStack stackOutput = getStackInSlot(1);
         
         if (!isCreativeLibrary()) {
-            if (stackInput == null) {
+            if (stackInput == ItemStack.EMPTY) {
                 return;
             }
         }
-        
-        if (stackOutput != null) {
+        ModLogger.log("loading");
+        if (stackOutput != ItemStack.EMPTY) {
             return;
         }
-        
+        ModLogger.log("loading");
         if (!isCreativeLibrary()) {
             if (!(stackInput.getItem() instanceof ISkinHolder)) {
                 return;

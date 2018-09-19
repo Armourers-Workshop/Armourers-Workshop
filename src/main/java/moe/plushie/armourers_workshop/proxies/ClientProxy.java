@@ -22,6 +22,7 @@ import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
 import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandler;
+import moe.plushie.armourers_workshop.client.render.item.RenderItemEquipmentSkin;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockArmourer;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockColourable;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockGlobalSkinLibrary;
@@ -108,6 +109,7 @@ public class ClientProxy extends CommonProxy {
                 ((ICustomModel)item).registerModels();
             }
         }
+        ModItems.equipmentSkin.setTileEntityItemStackRenderer(new RenderItemEquipmentSkin());
     }
     
     @Override

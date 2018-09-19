@@ -14,8 +14,8 @@ import moe.plushie.armourers_workshop.common.library.ILibraryManager;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.library.LibraryFileList;
 import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
-import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import moe.plushie.armourers_workshop.utils.UtilItems;
@@ -53,6 +53,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         registerEntity(new SkinnableEntityChicken());
         registerEntity(new SkinnableEntityCreeper());
         registerEntity(new SkinnableEntityGhast());
+        registerEntity(new SkinnableEntityPlayer());
         registerEntity(new SkinnableEntitySkeleton());
         registerEntity(new SkinnableEntitySlime());
         registerEntity(new SkinnableEntityZombie());
@@ -67,7 +68,10 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
             return;
         }
         ModLogger.log(String.format("Registering %s as a skinnable entity.", skinnableEntity.getEntityClass()));
-        entityMap.put(skinnableEntity.getEntityClass(), skinnableEntity);
+        ArrayList<Class<? extends EntityLivingBase>> classes = skinnableEntity.getEntityClass();
+        for (int i = 0; i < classes.size(); i++) {
+            entityMap.put(classes.get(i), skinnableEntity);
+        }
     }
     
     @SubscribeEvent
@@ -91,6 +95,13 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
             }
         }
         return false;
+    }
+    
+    public ISkinnableEntity geSkinnableEntity(Entity entity) {
+        if (entity instanceof EntityLivingBase) {
+            return entityMap.get(entity.getClass());
+        }
+        return null;
     }
     
     public boolean canUseWandOfStyleOnEntity(Entity entity) {

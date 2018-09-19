@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.client.gui.miniarmourer.GuiMiniArmourer;
 import moe.plushie.armourers_workshop.client.gui.miniarmourer.GuiMiniArmourerBuilding;
 import moe.plushie.armourers_workshop.client.gui.skinlibrary.GuiSkinLibrary;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
+import moe.plushie.armourers_workshop.common.capability.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourLibrary;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
@@ -36,9 +37,7 @@ import moe.plushie.armourers_workshop.common.inventory.ContainerSkinningTable;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.entity.ExPropsEntityEquipmentData;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityDyeTable;
@@ -91,8 +90,13 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
-                ExPropsPlayerSkinData customEquipmentData = ExPropsPlayerSkinData.get(player);
-                return new ContainerSkinWardrobe(player.inventory, customEquipmentData);
+                EntitySkinCapability skinCapabilityPlayer = (EntitySkinCapability) player.getCapability(EntitySkinCapability.SKIN_CAP, null);
+                if (skinCapabilityPlayer != null) {
+                    return new ContainerSkinWardrobe(player.inventory, skinCapabilityPlayer);
+                } else {
+                    ModLogger.log(Level.WARN, "Error entity not found");
+                }
+                break;
             case LibGuiIds.MANNEQUIN:
                 if (te instanceof TileEntityMannequin) {
                     return new ContainerMannequin(player.inventory, (TileEntityMannequin)te);
@@ -110,11 +114,11 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.ENTITY_SKIN_INVENTORY:
                 Entity entity = player.getEntityWorld().getEntityByID(x);
                 if (entity != null) {
-                    ExPropsEntityEquipmentData entityProps = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
-                    if (entityProps == null) {
+                    EntitySkinCapability skinCapability = (EntitySkinCapability) entity.getCapability(EntitySkinCapability.SKIN_CAP, null);
+                    if (skinCapability == null) {
                         break;
                     }
-                    return new ContainerEntityEquipment(player.inventory, entityProps.getSkinInventory());
+                    return new ContainerEntityEquipment(player.inventory, skinCapability);
                 } else {
                     ModLogger.log(Level.WARN, "Error entity not found");
                 }
@@ -183,8 +187,13 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
-                ExPropsPlayerSkinData customEquipmentData = ExPropsPlayerSkinData.get(player);
-                return new GuiWardrobe(player.inventory, customEquipmentData);
+                EntitySkinCapability skinCapabilityPlayer = (EntitySkinCapability) player.getCapability(EntitySkinCapability.SKIN_CAP, null);
+                if (skinCapabilityPlayer != null) {
+                    return new GuiWardrobe(player.inventory, skinCapabilityPlayer);
+                } else {
+                    ModLogger.log(Level.WARN, "Error entity not found");
+                }
+                break;
             case LibGuiIds.TOOL_OPTIONS:
                 if (player.getHeldItemMainhand().getItem() instanceof IConfigurableTool) {
                     return new GuiToolOptions(player.getHeldItemMainhand());
@@ -207,11 +216,11 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.ENTITY_SKIN_INVENTORY:
                 Entity entity = player.getEntityWorld().getEntityByID(x);
                 if (entity != null) {
-                    ExPropsEntityEquipmentData entityProps = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
-                    if (entityProps == null) {
+                    EntitySkinCapability skinCapability = (EntitySkinCapability) entity.getCapability(EntitySkinCapability.SKIN_CAP, null);
+                    if (skinCapability == null) {
                         break;
                     }
-                    return new GuiEntityEquipment(player.inventory, entityProps.getSkinInventory());
+                    return new GuiEntityEquipment(player.inventory, skinCapability);
                 } else {
                     ModLogger.log(Level.WARN, "Error entity not found");
                 }

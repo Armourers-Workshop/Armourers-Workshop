@@ -21,6 +21,9 @@ public class WardrobeInventory implements IInventory {
     public WardrobeInventory(IInventorySlotUpdate callback, ISkinType skinType) {
         this.callback = callback;
         this.skinType = skinType;
+        for (int i = 0; i < wardrobeItemStacks.length; i++) {
+            wardrobeItemStacks[i] = ItemStack.EMPTY;
+        }
     }
     
     public ISkinType getSkinType() {
@@ -51,14 +54,14 @@ public class WardrobeInventory implements IInventory {
         }
         return itemstack;
     }
-/*
+    
     @Override
-    public ItemStack getStackInSlotOnClosing(int slot) {
-        ItemStack item = getStackInSlot(slot);
-        setInventorySlotContents(slot, null);
+    public ItemStack removeStackFromSlot(int index) {
+        ItemStack item = getStackInSlot(index);
+        setInventorySlotContents(index, null);
         return item;
     }
-*/
+    
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
         wardrobeItemStacks[slot] = stack;
@@ -68,6 +71,7 @@ public class WardrobeInventory implements IInventory {
         callback.setInventorySlotContents(this, slot, stack);
         markDirty();
     }
+    
     @Override
     public int getInventoryStackLimit() {
         return 64;
@@ -112,32 +116,22 @@ public class WardrobeInventory implements IInventory {
 
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
         return "pasta";
     }
 
     @Override
     public boolean hasCustomName() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public ITextComponent getDisplayName() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public boolean isEmpty() {
-        // TODO Auto-generated method stub
         return false;
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int index) {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override
@@ -155,25 +149,22 @@ public class WardrobeInventory implements IInventory {
 
     @Override
     public int getField(int id) {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public void setField(int id, int value) {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override
     public int getFieldCount() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
-        
+        for (int i = 0; i < wardrobeItemStacks.length; i++) {
+            setInventorySlotContents(i, ItemStack.EMPTY);
+        }
     }
 }

@@ -1,12 +1,10 @@
 package moe.plushie.armourers_workshop.client.gui;
 
-import java.util.ArrayList;
-
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.common.capability.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.inventory.ContainerEntityEquipment;
-import moe.plushie.armourers_workshop.common.inventory.InventoryEntitySkin;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
@@ -17,11 +15,11 @@ public class GuiEntityEquipment extends GuiContainer {
 
     private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/entitySkinInventory.png");
     
-    private final InventoryEntitySkin skinInventory;
+    private final EntitySkinCapability entitySkinCapability;
     
-    public GuiEntityEquipment(InventoryPlayer playerInventory, InventoryEntitySkin skinInventory) {
-        super(new ContainerEntityEquipment(playerInventory, skinInventory));
-        this.skinInventory = skinInventory;
+    public GuiEntityEquipment(InventoryPlayer playerInventory, EntitySkinCapability entitySkinCapability) {
+        super(new ContainerEntityEquipment(playerInventory, entitySkinCapability));
+        this.entitySkinCapability = entitySkinCapability;
     }
     
     @Override
@@ -43,8 +41,8 @@ public class GuiEntityEquipment extends GuiContainer {
         this.mc.getTextureManager().bindTexture(texture);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         
-        ArrayList<ISkinType> skinTypes = skinInventory.getSkinTypes();
-        for (int i = 0; i < skinTypes.size(); i++) {
+        ISkinType[] skinTypes = entitySkinCapability.getValidSkinTypes();
+        for (int i = 0; i < skinTypes.length; i++) {
             drawTexturedModalRect(this.guiLeft + 7 + i * 18, this.guiTop + 20, 0, 148, 18, 18);
         }
     }

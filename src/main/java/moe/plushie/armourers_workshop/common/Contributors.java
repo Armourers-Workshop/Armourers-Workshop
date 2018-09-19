@@ -55,7 +55,7 @@ public class Contributors {
         
         public final UUID uuid;
         public final String username;
-        EnumSet<ContributionFlags> contributions;
+        public final EnumSet<ContributionFlags> contributions;
         public final byte r;
         public final byte g;
         public final byte b;

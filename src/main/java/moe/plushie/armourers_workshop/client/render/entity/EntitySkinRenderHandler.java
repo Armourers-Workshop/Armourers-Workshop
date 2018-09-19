@@ -34,20 +34,23 @@ public final class EntitySkinRenderHandler {
     }
     
     public void initRenderer() {
-        loadNpcRenderers();
+        loadEntityRenderers();
     }
     
-    private void loadNpcRenderers() {        
+    private void loadEntityRenderers() {        
         ArrayList<ISkinnableEntity> skinnableEntities = EntitySkinHandler.INSTANCE.getRegisteredEntities();
         for (int i = 0; i < skinnableEntities.size(); i++) {
             ISkinnableEntity skinnableEntity = skinnableEntities.get(i);
             if (skinnableEntity.getRendererClass() != null) {
-                registerRendererForNpc(skinnableEntity.getEntityClass(), skinnableEntity.getRendererClass());
+                ArrayList<Class<? extends EntityLivingBase>> classes = skinnableEntity.getEntityClass();
+                for (int j = 0; j < classes.size(); j++) {
+                    registerRendererForEntity(classes.get(j), skinnableEntity.getRendererClass());
+                }
             }
         }
     }
     
-    private void registerRendererForNpc(Class<? extends EntityLivingBase> entity, Class<? extends ISkinnableEntityRenderer> renderClass) {
+    private void registerRendererForEntity(Class<? extends EntityLivingBase> entity, Class<? extends ISkinnableEntityRenderer> renderClass) {
         try {
             entityRenderer.put(entity, renderClass.newInstance());
         } catch (InstantiationException e) {

@@ -42,8 +42,8 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiLoadSaveArmour.LibraryPacketType;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinLibrary;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -249,7 +249,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     private boolean isLoading() {
         Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
         ItemStack stack = slot.getStack();
-        if (stack != null && !(stack.getItem() instanceof ItemSkinTemplate)) {
+        if ((stack.getItem() instanceof ItemSkinTemplate)) {
             return false;
         }
         return true;
@@ -588,6 +588,8 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         ArrayList<LibraryFile> files = libraryManager.getServerPublicFileList().getFileList();
         
         loadSaveButton.enabled = true;
+        
+        //ModLogger.log(isLoading());
         
         if (isLoading()) {
             loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "load");

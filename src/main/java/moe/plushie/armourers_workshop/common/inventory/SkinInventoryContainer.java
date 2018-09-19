@@ -4,20 +4,16 @@ import java.util.HashMap;
 import java.util.Set;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import moe.plushie.armourers_workshop.utils.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class WardrobeInventoryContainer {
+public class SkinInventoryContainer {
     
     private static final String TAG_WARDROBE_CONTAINER = "wardrobeContainer";
-    private static final String TAG_LEGACY_ITEMS = "items";
     
     private final HashMap<ISkinType, WardrobeInventory> skinInventorys;
     
-    public WardrobeInventoryContainer(IInventorySlotUpdate callback, ISkinType[] validSkins) {
+    public SkinInventoryContainer(IInventorySlotUpdate callback, ISkinType[] validSkins) {
         skinInventorys = new HashMap<ISkinType, WardrobeInventory>();
         for (int i = 0; i < validSkins.length; i++) {
             skinInventorys.put(validSkins[i], new WardrobeInventory(callback, validSkins[i]));
@@ -45,18 +41,6 @@ public class WardrobeInventoryContainer {
             for (int i = 0; i < skinInventorys.size(); i++) {
                 ISkinType skinType = (ISkinType) skinInventorys.keySet().toArray()[i];
                 skinInventorys.get(skinType).readItemsFromNBT(containerCompound);
-            }
-        } else {
-            if (compound.hasKey(TAG_LEGACY_ITEMS)) {
-                ItemStack[] legacyItems = new ItemStack[7];
-                NBTHelper.readStackArrayFromNBT(compound, TAG_LEGACY_ITEMS, legacyItems);
-                getInventoryForSkinType(SkinTypeRegistry.skinHead).setInventorySlotContents(0, legacyItems[0]);
-                getInventoryForSkinType(SkinTypeRegistry.skinChest).setInventorySlotContents(0, legacyItems[1]);
-                getInventoryForSkinType(SkinTypeRegistry.skinLegs).setInventorySlotContents(0, legacyItems[2]);
-                getInventoryForSkinType(SkinTypeRegistry.skinFeet).setInventorySlotContents(0, legacyItems[3]);
-                getInventoryForSkinType(SkinTypeRegistry.skinSword).setInventorySlotContents(0, legacyItems[4]);
-                getInventoryForSkinType(SkinTypeRegistry.skinBow).setInventorySlotContents(0, legacyItems[5]);
-                getInventoryForSkinType(SkinTypeRegistry.skinArrow).setInventorySlotContents(0, legacyItems[6]);
             }
         }
     }

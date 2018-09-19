@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.common.inventory;
 
-import java.util.ArrayList;
-
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.common.capability.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
@@ -16,10 +15,11 @@ public class ContainerEntityEquipment extends Container {
 
     private int skinSlots = 0;
     
-    public ContainerEntityEquipment(InventoryPlayer invPlayer, InventoryEntitySkin skinInventory) {
-        ArrayList<ISkinType> skinTypes = skinInventory.getSkinTypes();
-        for (int i = 0; i < skinTypes.size(); i++) {
-            addSlotToContainer(new SlotSkin(skinTypes.get(i), skinInventory, i, 8 + i * 18, 21));
+    public ContainerEntityEquipment(InventoryPlayer invPlayer, EntitySkinCapability skinCapability) {
+        ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
+        
+        for (int i = 0; i < skinTypes.length; i++) {
+            addSlotToContainer(new SlotSkin(skinTypes[i], skinCapability.getSkinInventoryContainer().getInventoryForSkinType(skinTypes[i]), i, 8 + i * 18, 21));
             skinSlots++;
         }
         

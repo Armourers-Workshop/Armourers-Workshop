@@ -10,9 +10,14 @@ import org.apache.logging.log4j.Level;
 import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
-import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable.Seat;
+import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.capability.EntitySkinFactory;
+import moe.plushie.armourers_workshop.common.capability.EntitySkinProvider;
+import moe.plushie.armourers_workshop.common.capability.EntitySkinStorage;
+import moe.plushie.armourers_workshop.common.capability.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerOverrides;
@@ -44,14 +49,20 @@ import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.update.UpdateCheck;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
+@Mod.EventBusSubscriber(modid = LibModInfo.ID)
 public class CommonProxy implements ILibraryCallback {
     
     private static ModItems modItems;
@@ -82,6 +93,20 @@ public class CommonProxy implements ILibraryCallback {
         
         modItems = new ModItems();
         modBlocks = new ModBlocks();
+        
+        EntitySkinHandler.init();
+        
+        CapabilityManager.INSTANCE.register(IEntitySkinCapability.class, new EntitySkinStorage(), new EntitySkinFactory());
+    }
+    
+    @SubscribeEvent
+    public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+        ModLogger.log("attach try on " + event.getObject().getClass());
+        ISkinnableEntity skinnableEntity = EntitySkinHandler.INSTANCE.geSkinnableEntity(event.getObject());
+        if (skinnableEntity != null) {
+            ModLogger.log("Adding EntitySkinProvider to entity: " + event.getObject().getClass());
+            event.addCapability(new ResourceLocation(LibModInfo.ID, "entity-skin-storage"), new EntitySkinProvider(event.getObject(), skinnableEntity));
+        }
     }
     
     public void initLibraryManager() {
@@ -98,7 +123,7 @@ public class CommonProxy implements ILibraryCallback {
         
         PacketHandler.init();
         EntityEquipmentDataManager.init();
-        EntitySkinHandler.init();
+        
         permissionSystem = new PermissionSystem();
         ModAddonManager.init();
     }

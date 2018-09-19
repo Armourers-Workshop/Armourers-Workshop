@@ -9,8 +9,8 @@ import java.util.WeakHashMap;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.model.ModelRendererAttachment;
 import moe.plushie.armourers_workshop.client.model.skin.AbstractModelSkin;
@@ -24,6 +24,8 @@ import moe.plushie.armourers_workshop.client.model.skin.ModelSkinSkirt;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinSword;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinWings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.common.capability.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
@@ -102,6 +104,16 @@ public final class SkinModelRenderer {
                 return getCustomArmourItemData(sp);
             }*/
         }
+        
+        IEntitySkinCapability skinCapability = entity.getCapability(EntitySkinCapability.SKIN_CAP, null);
+        if (skinCapability != null) {
+            ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, slotIndex);
+            if (skinDescriptor != null) {
+                return getCustomArmourItemData(skinDescriptor);
+            }
+            
+        }
+        
         
         //No skinned armour found checking the equipment wardrobe.
         if (equipmentData == null) {

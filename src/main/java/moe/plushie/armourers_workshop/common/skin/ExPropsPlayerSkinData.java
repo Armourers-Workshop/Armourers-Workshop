@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.inventory.IInventorySlotUpdate;
 import moe.plushie.armourers_workshop.common.inventory.WardrobeInventory;
-import moe.plushie.armourers_workshop.common.inventory.WardrobeInventoryContainer;
+import moe.plushie.armourers_workshop.common.inventory.SkinInventoryContainer;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinInfoUpdate;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
@@ -37,7 +37,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
             SkinTypeRegistry.skinWings
             };
     
-    private final WardrobeInventoryContainer wardrobeInventoryContainer;
+    private final SkinInventoryContainer wardrobeInventoryContainer;
     private final EntityEquipmentData equipmentData;
     private final EntityPlayer player;
     /** Stores all other wardrobe settings. */
@@ -50,11 +50,11 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
         this.player = player;
         //An array of all the skins that can be placed in the players wardrobe.
 
-        wardrobeInventoryContainer = new WardrobeInventoryContainer(this, validSkins);
+        wardrobeInventoryContainer = new SkinInventoryContainer(this, validSkins);
         equipmentData = new EntityEquipmentData();
     }
     
-    public WardrobeInventoryContainer getWardrobeInventoryContainer() {
+    public SkinInventoryContainer getWardrobeInventoryContainer() {
         return wardrobeInventoryContainer;
     }
     

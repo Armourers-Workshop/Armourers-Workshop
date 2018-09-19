@@ -146,10 +146,10 @@ public class SkinNBTHelper {
         return stack;
     }
     
-    public static ItemStack makeEquipmentSkinStack(SkinDescriptor skinPointer) {
+    public static ItemStack makeEquipmentSkinStack(SkinDescriptor skinDescriptor) {
         ItemStack stack = new ItemStack(ModItems.equipmentSkin, 1);
         stack.setTagCompound(new NBTTagCompound());
-        addSkinDataToStack(stack, skinPointer.getIdentifier(), false, new SkinDye(skinPointer.getSkinDye()));
+        addSkinDataToStack(stack, skinDescriptor.getIdentifier(), false, new SkinDye(skinDescriptor.getSkinDye()));
         return stack;
     }
     
