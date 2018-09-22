@@ -10,13 +10,13 @@ public class EntitySkinStorage implements IStorage<IEntitySkinCapability> {
 
     @Override
     public NBTBase writeNBT(Capability<IEntitySkinCapability> capability, IEntitySkinCapability instance, EnumFacing side) {
-        // TODO Auto-generated method stub
-        return new NBTTagCompound();
+        NBTTagCompound compound = new NBTTagCompound();
+        instance.getSkinInventoryContainer().writeToNBT(compound);
+        return compound;
     }
 
     @Override
     public void readNBT(Capability<IEntitySkinCapability> capability, IEntitySkinCapability instance, EnumFacing side, NBTBase nbt) {
-        // TODO Auto-generated method stub
-        
+        instance.getSkinInventoryContainer().readFromNBT((NBTTagCompound) nbt);
     }
 }

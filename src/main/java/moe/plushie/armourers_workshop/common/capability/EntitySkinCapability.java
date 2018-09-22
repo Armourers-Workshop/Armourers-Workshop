@@ -42,6 +42,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
         return entity;
     }
     
+    @Override
     public SkinInventoryContainer getSkinInventoryContainer() {
         return skinInventoryContainer;
     }

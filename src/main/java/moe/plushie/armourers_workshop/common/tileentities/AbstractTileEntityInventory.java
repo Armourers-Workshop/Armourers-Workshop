@@ -5,28 +5,26 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 
 public abstract class AbstractTileEntityInventory extends ModTileEntity implements IInventory {
 
     private static final String TAG_ITEMS = "items";
-    protected final ItemStack[] items;
+    protected final NonNullList<ItemStack> items;
     
     public AbstractTileEntityInventory(int inventorySize) {
-        this.items = new ItemStack[inventorySize];
-        for (int i = 0; i < items.length; i++) {
-            items[i] = ItemStack.EMPTY;
-        }
+        this.items = NonNullList.<ItemStack>withSize(inventorySize, ItemStack.EMPTY);
     }
     
     @Override
     public int getSizeInventory() {
-        return items.length;
+        return items.size();
     }
 
     @Override
     public ItemStack getStackInSlot(int i) {
-        return items[i];
+        return items.get(i);
     }
     
     @Override
@@ -52,7 +50,7 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
 
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
-        items[i] = itemstack;
+        items.set(i, itemstack);
         if (itemstack != ItemStack.EMPTY && itemstack.getCount() > getInventoryStackLimit()) {
             itemstack.setCount(getInventoryStackLimit());
         }

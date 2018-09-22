@@ -14,7 +14,7 @@ public class ModInventory implements IInventory {
     private static final String TAG_ITEMS = "items";
     
     private final String name;
-    private final ItemStack[] slots;
+    private final NonNullList<ItemStack> slots;
     private final IInventorySlotUpdate callback;
     private final TileEntity parent;
     
@@ -32,19 +32,19 @@ public class ModInventory implements IInventory {
     
     public ModInventory(String name, int slotCount, TileEntity parent, IInventorySlotUpdate callback) {
         this.name = name;
-        this.slots = NonNullList.<ItemStack>withSize(slotCount, ItemStack.EMPTY).toArray(new ItemStack[0]);
+        this.slots = NonNullList.<ItemStack>withSize(slotCount, ItemStack.EMPTY);
         this.parent = parent;
         this.callback = callback;
     }
     
     @Override
     public int getSizeInventory() {
-        return this.slots.length;
+        return this.slots.size();
     }
 
     @Override
     public ItemStack getStackInSlot(int slotId) {
-        return this.slots[slotId];
+        return this.slots.get(slotId);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ModInventory implements IInventory {
 
     @Override
     public void setInventorySlotContents(int slotId, ItemStack stack) {
-        this.slots[slotId] = stack;
+        this.slots.set(slotId, stack);
         if (stack != null && stack.getCount() > getInventoryStackLimit()) {
             stack.setCount(getInventoryStackLimit());
         }

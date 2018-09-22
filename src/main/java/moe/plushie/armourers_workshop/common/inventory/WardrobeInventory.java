@@ -8,12 +8,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 public class WardrobeInventory implements IInventory {
     
-    private ItemStack[] wardrobeItemStacks = new ItemStack[ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE];
+    private NonNullList<ItemStack> wardrobeItemStacks;
     private boolean inventoryChanged;
     private final IInventorySlotUpdate callback;
     private final ISkinType skinType;
@@ -21,9 +22,7 @@ public class WardrobeInventory implements IInventory {
     public WardrobeInventory(IInventorySlotUpdate callback, ISkinType skinType) {
         this.callback = callback;
         this.skinType = skinType;
-        for (int i = 0; i < wardrobeItemStacks.length; i++) {
-            wardrobeItemStacks[i] = ItemStack.EMPTY;
-        }
+        wardrobeItemStacks = NonNullList.<ItemStack>withSize(ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE, ItemStack.EMPTY);
     }
     
     public ISkinType getSkinType() {
@@ -32,12 +31,12 @@ public class WardrobeInventory implements IInventory {
     
     @Override
     public int getSizeInventory() {
-        return wardrobeItemStacks.length;
+        return wardrobeItemStacks.size();
     }
 
     @Override
     public ItemStack getStackInSlot(int slot) {
-        return wardrobeItemStacks[slot];
+        return wardrobeItemStacks.get(slot);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class WardrobeInventory implements IInventory {
         
         if (itemstack != null) {
             if (itemstack.getCount() <= count){
-                setInventorySlotContents(slot, null);
+                setInventorySlotContents(slot, ItemStack.EMPTY);
             }else{
                 itemstack = itemstack.splitStack(count);
                 markDirty();
@@ -58,13 +57,13 @@ public class WardrobeInventory implements IInventory {
     @Override
     public ItemStack removeStackFromSlot(int index) {
         ItemStack item = getStackInSlot(index);
-        setInventorySlotContents(index, null);
+        setInventorySlotContents(index, ItemStack.EMPTY);
         return item;
     }
     
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
-        wardrobeItemStacks[slot] = stack;
+        wardrobeItemStacks.set(slot, stack);
         if (stack != null && stack.getCount() > getInventoryStackLimit()) {
             stack.setCount(getInventoryStackLimit());
         }
@@ -163,7 +162,7 @@ public class WardrobeInventory implements IInventory {
 
     @Override
     public void clear() {
-        for (int i = 0; i < wardrobeItemStacks.length; i++) {
+        for (int i = 0; i < wardrobeItemStacks.size(); i++) {
             setInventorySlotContents(i, ItemStack.EMPTY);
         }
     }

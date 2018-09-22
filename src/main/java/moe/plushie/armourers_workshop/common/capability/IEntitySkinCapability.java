@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.capability;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.common.inventory.SkinInventoryContainer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
@@ -50,4 +51,6 @@ public interface IEntitySkinCapability {
     public ItemStack getSkinStack(ISkinType skinType, int slotIndex);
     
     public ItemStack setSkinStack(ISkinType skinType, int slotIndex, ItemStack skinStack);
+    
+    public SkinInventoryContainer getSkinInventoryContainer();
 }

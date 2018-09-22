@@ -1,8 +1,9 @@
 package moe.plushie.armourers_workshop.utils;
 
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants.NBT;
 
@@ -38,29 +39,15 @@ public final class NBTHelper {
         return false;
     }
     
-    public static void writeStackArrayToNBT(NBTTagCompound compound, String key, ItemStack[] itemStacks) {
-        NBTTagList items = new NBTTagList();
-        for (int i = 0; i < itemStacks.length; i++) {
-            ItemStack stack = itemStacks[i];
-            if (stack != null) {
-                NBTTagCompound item = new NBTTagCompound();
-                item.setByte(TAG_SLOT, (byte)i);
-                stack.writeToNBT(item);
-                items.appendTag(item);
-            }
-        }
+    public static void writeStackArrayToNBT(NBTTagCompound compound, String key,  NonNullList<ItemStack> itemStacks) {
+        NBTTagCompound items = new NBTTagCompound();
+        ItemStackHelper.saveAllItems(items, itemStacks);
         compound.setTag(key, items);
     }
     
-    public static void readStackArrayFromNBT(NBTTagCompound compound, String key, ItemStack[] itemStacks) {
-        NBTTagList items = compound.getTagList(key, NBT.TAG_COMPOUND);
-        for (int i = 0; i < items.tagCount(); i++) {
-            NBTTagCompound item = (NBTTagCompound)items.getCompoundTagAt(i);
-            int slot = item.getByte(TAG_SLOT);
-            if (slot >= 0 && slot < itemStacks.length) {
-                //itemStacks[slot] = ItemStack.loadItemStackFromNBT(item);
-            }
-        }
+    public static void readStackArrayFromNBT(NBTTagCompound compound, String key,  NonNullList<ItemStack> itemStacks) {
+        NBTTagCompound items = compound.getCompoundTag(key);
+        ItemStackHelper.loadAllItems(items, itemStacks);
     }
     
     public static void writeBlockPosToNBT(NBTTagCompound compound, String key, BlockPos pos) {
