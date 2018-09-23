@@ -42,4 +42,8 @@ public class SkinnableEntityCreeper implements ISkinnableEntity {
         skinTypes.add(SkinTypeRegistry.skinHead);
     }
 
+    @Override
+    public int getSlotsForSkinType(ISkinType skinType) {
+        return 1;
+    }
 }

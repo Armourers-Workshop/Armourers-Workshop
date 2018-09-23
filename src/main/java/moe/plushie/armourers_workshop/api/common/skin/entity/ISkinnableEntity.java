@@ -25,4 +25,6 @@ public interface ISkinnableEntity {
     
     /** Return a list of skins that are valid for this entity. */
     public void getValidSkinTypes(ArrayList<ISkinType> skinTypes);
+    
+    public int getSlotsForSkinType(ISkinType skinType);
 }

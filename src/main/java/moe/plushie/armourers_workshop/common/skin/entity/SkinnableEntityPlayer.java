@@ -48,4 +48,15 @@ public class SkinnableEntityPlayer implements ISkinnableEntity {
         skinTypes.add(SkinTypeRegistry.skinBow);
         skinTypes.add(SkinTypeRegistry.skinWings);
     }
+    
+    @Override
+    public int getSlotsForSkinType(ISkinType skinType) {
+        if (skinType.getVanillaArmourSlotId() != -1) {
+            return 8;
+        }
+        if (skinType == SkinTypeRegistry.skinWings) {
+            return 8;
+        }
+        return 1;
+    }
 }

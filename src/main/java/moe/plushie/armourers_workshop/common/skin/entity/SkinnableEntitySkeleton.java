@@ -45,4 +45,9 @@ public class SkinnableEntitySkeleton implements ISkinnableEntity {
         skinTypes.add(SkinTypeRegistry.skinFeet);
         skinTypes.add(SkinTypeRegistry.skinWings);
     }
+    
+    @Override
+    public int getSlotsForSkinType(ISkinType skinType) {
+        return 1;
+    }
 }

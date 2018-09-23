@@ -41,4 +41,9 @@ public class SkinnableEntityChicken implements ISkinnableEntity {
     public void getValidSkinTypes(ArrayList<ISkinType> skinTypes) {
         skinTypes.add(SkinTypeRegistry.skinHead);
     }
+    
+    @Override
+    public int getSlotsForSkinType(ISkinType skinType) {
+        return 1;
+    }
 }

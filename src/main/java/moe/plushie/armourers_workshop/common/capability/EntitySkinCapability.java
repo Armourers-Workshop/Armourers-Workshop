@@ -88,7 +88,11 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
 
     @Override
     public int getSlotCountForSkinType(ISkinType skinType) {
-        return 1;
+        if (canHoldSkinType(skinType)) {
+            return skinnableEntity.getSlotsForSkinType(skinType);
+        } else {
+            return 0;
+        }
     }
 
     @Override
