@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.common.network;
 
+import java.util.ArrayList;
+
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiAdminPanel;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiArmourerBlockUtil;
@@ -31,19 +33,27 @@ import moe.plushie.armourers_workshop.common.network.messages.server.MessageServ
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerMiniArmourerSkinData;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerPlayerLeftTrackingRange;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSendSkinData;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinInfoUpdate;
+import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinCapabilitySync;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncConfig;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class PacketHandler {
+@Mod.EventBusSubscriber(modid = LibModInfo.ID)
+public final class PacketHandler {
 
     public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(LibModInfo.CHANNEL);
     private static int packetId = 0;
+    
+    private static ArrayList<DelayedPacket> delayedPackets = new ArrayList<DelayedPacket>();
     
     public static void init() {
         // Client messages.
@@ -72,7 +82,7 @@ public class PacketHandler {
         registerMessage(MessageClientGuiHologramProjector.class, MessageClientGuiHologramProjector.class, Side.SERVER);
         
         //Server messages.
-        registerMessage(MessageServerSkinInfoUpdate.class, MessageServerSkinInfoUpdate.class, Side.CLIENT);
+        registerMessage(MessageServerSkinCapabilitySync.class, MessageServerSkinCapabilitySync.class, Side.CLIENT);
         registerMessage(MessageServerPlayerLeftTrackingRange.class, MessageServerPlayerLeftTrackingRange.class, Side.CLIENT);
         registerMessage(MessageServerLibraryFileList.class, MessageServerLibraryFileList.class, Side.CLIENT);
         registerMessage(MessageServerSkinWardrobeUpdate.class, MessageServerSkinWardrobeUpdate.class, Side.CLIENT);
@@ -89,5 +99,43 @@ public class PacketHandler {
     private static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side) {
         networkWrapper.registerMessage(messageHandler, requestMessageType, packetId, side);
         packetId++;
+    }
+    
+    public static void sendToDelayed(IMessage message, EntityPlayerMP player, int delay) {
+        if (delay == 0) {
+            networkWrapper.sendTo(message, player);
+        } else {
+            synchronized (delayedPackets) {
+                delayedPackets.add(new DelayedPacket(message, player, delay));
+            }
+        }
+    }
+    
+    @SubscribeEvent
+    public static void onClientTick(ClientTickEvent event) {
+        if (event.phase == Phase.END) {
+            synchronized (delayedPackets) {
+                for (int i = 0; i < delayedPackets.size(); i++) {
+                    DelayedPacket delayedPacket = delayedPackets.get(i);
+                    delayedPacket.delay--;
+                    if (delayedPacket.delay < 1) {
+                        networkWrapper.sendTo(delayedPacket.message, delayedPacket.player);
+                        delayedPackets.remove(i);
+                    }
+                }
+            }
+        }
+    }
+    
+    private static class DelayedPacket {
+        IMessage message;
+        EntityPlayerMP player;
+        int delay;
+        
+        public DelayedPacket(IMessage message, EntityPlayerMP player, int delay) {
+            this.message = message;
+            this.player = player;
+            this.delay = delay;
+        }
     }
 }

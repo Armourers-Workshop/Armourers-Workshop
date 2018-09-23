@@ -6,10 +6,9 @@ import java.util.BitSet;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.inventory.IInventorySlotUpdate;
-import moe.plushie.armourers_workshop.common.inventory.WardrobeInventory;
 import moe.plushie.armourers_workshop.common.inventory.SkinInventoryContainer;
+import moe.plushie.armourers_workshop.common.inventory.WardrobeInventory;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinInfoUpdate;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -150,7 +149,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
         }
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PlayerPointer playerPointer = new PlayerPointer(player);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerSkinInfoUpdate(playerPointer, equipmentData), p);
+        //PacketHandler.networkWrapper.sendToAllAround(new MessageServerSkinInfoUpdate(playerPointer, equipmentData), p);
     }
     
     public EntityEquipmentData getEquipmentData() {
@@ -202,12 +201,12 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
     
     private void checkAndSendCustomArmourDataTo(EntityPlayerMP targetPlayer) {
         PlayerPointer playerPointer = new PlayerPointer(player);
-        PacketHandler.networkWrapper.sendTo(new MessageServerSkinInfoUpdate(playerPointer, equipmentData), targetPlayer);
+        //PacketHandler.networkWrapper.sendTo(new MessageServerSkinInfoUpdate(playerPointer, equipmentData), targetPlayer);
     }
     
     private void sendNakedData(EntityPlayerMP targetPlayer) {
         PlayerPointer playerPointer = new PlayerPointer(player);
-        PacketHandler.networkWrapper.sendTo(new MessageServerSkinWardrobeUpdate(playerPointer, this.equipmentWardrobeData), targetPlayer);
+        //PacketHandler.networkWrapper.sendTo(new MessageServerSkinWardrobeUpdate(playerPointer, this.equipmentWardrobeData), targetPlayer);
     }
     
     private void sendSkinData() {

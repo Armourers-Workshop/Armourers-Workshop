@@ -12,6 +12,8 @@ public interface IEntitySkinCapability {
     
     public void enableAutoSync(boolean sync);
     
+    public void syncToPlayerDelayed(EntityPlayerMP entityPlayer, int delay);
+    
     public void syncToPlayer(EntityPlayerMP entityPlayer);
     
     public void syncToAllAround();

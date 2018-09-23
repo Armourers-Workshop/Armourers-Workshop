@@ -1,25 +1,16 @@
 package moe.plushie.armourers_workshop.common.skin;
 
-import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.addons.ModAddon.ItemOverrideType;
-import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.GameRules;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -114,82 +105,4 @@ public final class EntityEquipmentDataManager {
         }
     }
     
-    @SubscribeEvent
-    public void onStartTracking(PlayerEvent.StartTracking event) {
-        if (event.getTarget() instanceof EntityPlayerMP) {
-            //EntityPlayerMP targetPlayer = (EntityPlayerMP) event.getTarget();
-            //ExPropsPlayerSkinData.get((EntityPlayer) event.getEntity()).sendCustomArmourDataToPlayer(targetPlayer);
-        }
-    }
-    
-    @SubscribeEvent
-    public void onStopTracking(PlayerEvent.StopTracking event) {
-        if (event.getTarget() instanceof EntityPlayerMP) {
-            EntityPlayerMP target = (EntityPlayerMP) event.getTarget();
-            //MessageServerPlayerLeftTrackingRange message = new MessageServerPlayerLeftTrackingRange(new PlayerPointer(target));
-            //PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) event.getEntityPlayer());
-        }
-    }
-    
-    @SubscribeEvent
-    public void onEntityConstructing(EntityConstructing event) {
-        if (event.getEntity() instanceof EntityPlayer && ExPropsPlayerSkinData.get((EntityPlayer) event.getEntity()) == null) {
-            //ExPropsPlayerSkinData.register((EntityPlayer) event.getEntity());
-        }
-    }
-    
-    @SubscribeEvent
-    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof EntityPlayerMP) {
-            //ExPropsPlayerSkinData playerData = ExPropsPlayerSkinData.get((EntityPlayer) event.getEntity());
-            //playerData.sendCustomArmourDataToPlayer((EntityPlayerMP) event.getEntity());
-            //HolidayHelper.giftPlayer((EntityPlayerMP) event.getEntity());
-        }
-    }
-    
-    //@SubscribeEvent
-    public void onLivingDeathEvent (LivingDeathEvent  event) {
-        if (!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof EntityPlayerMP) {
-            boolean dropSkins = true;
-            MinecraftServer server = event.getEntity().getEntityWorld().getMinecraftServer();
-            GameRules gr = getGameRules(server);
-            boolean keepInventory = false;
-            if (gr.hasRule("keepInventory")) {
-                keepInventory = gr.getBoolean("keepInventory");
-            }
-            
-            switch (ConfigHandler.dropSkinsOnDeath) {
-            case 0:
-                dropSkins = !keepInventory;
-                break;
-            case 1:
-                dropSkins = false;
-                break;
-            case 2:
-                dropSkins = true;
-                break;
-            default:
-                dropSkins = !keepInventory;
-                break;
-            }
-
-            ExPropsPlayerSkinData playerData = ExPropsPlayerSkinData.get((EntityPlayer) event.getEntity());
-            if (dropSkins) {
-                playerData.getWardrobeInventoryContainer().dropItems((EntityPlayer) event.getEntity());
-            }
-        }
-    }
-    
-    private GameRules getGameRules(MinecraftServer server) {
-        return server.getWorld(0).getGameRules();
-    }
-    
-    //@SubscribeEvent
-    public void onLivingDeathEvent (PlayerEvent.Clone  event) {
-        NBTTagCompound compound = new NBTTagCompound();
-        ExPropsPlayerSkinData oldProps = ExPropsPlayerSkinData.get(event.getOriginal());
-        ExPropsPlayerSkinData newProps = ExPropsPlayerSkinData.get(event.getEntityPlayer());
-        oldProps.saveNBTData(compound);
-        newProps.loadNBTData(compound);
-    }
 }
