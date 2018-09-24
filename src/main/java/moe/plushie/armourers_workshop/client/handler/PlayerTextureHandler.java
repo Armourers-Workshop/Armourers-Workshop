@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.render.EntityTextureInfo;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
-import moe.plushie.armourers_workshop.common.skin.WardrobeData;
+import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -58,7 +58,7 @@ public class PlayerTextureHandler {
             return;
         }
         PlayerPointer playerPointer = new PlayerPointer(player);
-        WardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
+        PlayerWardrobe ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         if (ewd == null) {
             return;
         }
@@ -111,7 +111,7 @@ public class PlayerTextureHandler {
             return;
         }
         PlayerPointer playerPointer = new PlayerPointer(player);
-        WardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
+        PlayerWardrobe ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         if (ewd == null) {
             return;
         }

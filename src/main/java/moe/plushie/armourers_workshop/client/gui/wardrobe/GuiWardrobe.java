@@ -17,11 +17,11 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiTabbed;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeSkins;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
-import moe.plushie.armourers_workshop.common.capability.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
-import moe.plushie.armourers_workshop.common.skin.WardrobeData;
+import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -46,7 +46,7 @@ public class GuiWardrobe extends GuiTabbed {
     //private final GuiTabWardrobeColourSettings tabColourSettings;
 
     EntitySkinCapability skinCapability;
-    WardrobeData equipmentWardrobeData;
+    PlayerWardrobe equipmentWardrobeData;
     EntityPlayer player;
     
     private boolean rotatingPlayer = false;
@@ -70,7 +70,7 @@ public class GuiWardrobe extends GuiTabbed {
         equipmentWardrobeData = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         
         if (equipmentWardrobeData == null) {
-            equipmentWardrobeData = new WardrobeData();
+            equipmentWardrobeData = new PlayerWardrobe();
             ModLogger.log(Level.ERROR,"Unable to get skin info for player: " + this.player.getDisplayName());
         }
         

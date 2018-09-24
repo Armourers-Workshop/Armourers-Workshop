@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.capability;
+package moe.plushie.armourers_workshop.common.capability.entityskin;
 
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import net.minecraft.entity.Entity;
@@ -17,24 +17,24 @@ public class EntitySkinProvider implements ICapabilitySerializable<NBTTagCompoun
     
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        return capability != null && capability == EntitySkinCapability.SKIN_CAP;
+        return capability != null && capability == EntitySkinCapability.ENTITY_SKIN_CAP;
     }
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (hasCapability(capability, facing)) {
-            return EntitySkinCapability.SKIN_CAP.cast(entitySkinCapability);
+            return EntitySkinCapability.ENTITY_SKIN_CAP.cast(entitySkinCapability);
         }
         return null;
     }
 
     @Override
     public NBTTagCompound serializeNBT() {
-        return (NBTTagCompound) EntitySkinCapability.SKIN_CAP.getStorage().writeNBT(EntitySkinCapability.SKIN_CAP, entitySkinCapability, null);
+        return (NBTTagCompound) EntitySkinCapability.ENTITY_SKIN_CAP.getStorage().writeNBT(EntitySkinCapability.ENTITY_SKIN_CAP, entitySkinCapability, null);
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
-        EntitySkinCapability.SKIN_CAP.getStorage().readNBT(EntitySkinCapability.SKIN_CAP, entitySkinCapability, null, nbt);
+        EntitySkinCapability.ENTITY_SKIN_CAP.getStorage().readNBT(EntitySkinCapability.ENTITY_SKIN_CAP, entitySkinCapability, null, nbt);
     }
 }

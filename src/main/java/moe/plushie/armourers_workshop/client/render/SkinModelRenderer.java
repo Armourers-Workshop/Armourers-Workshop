@@ -24,12 +24,12 @@ import moe.plushie.armourers_workshop.client.model.skin.ModelSkinSkirt;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinSword;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinWings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
-import moe.plushie.armourers_workshop.common.capability.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
-import moe.plushie.armourers_workshop.common.skin.WardrobeData;
+import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
@@ -105,7 +105,7 @@ public final class SkinModelRenderer {
             }*/
         }
         
-        IEntitySkinCapability skinCapability = entity.getCapability(EntitySkinCapability.SKIN_CAP, null);
+        IEntitySkinCapability skinCapability = entity.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
         if (skinCapability != null) {
             ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, slotIndex);
             if (skinDescriptor != null) {
@@ -261,7 +261,7 @@ public final class SkinModelRenderer {
         //Limit the players limbs if they have a skirt equipped.
         //A proper lady should not swing her legs around!
         if (isPlayerWearingSkirt(playerPointer)) {
-            WardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
+            PlayerWardrobe ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
             if (ewd != null && ewd.limitLimbs) {
                 if (player.limbSwingAmount > 0.25F) {
                     player.limbSwingAmount = 0.25F;
@@ -320,7 +320,7 @@ public final class SkinModelRenderer {
             return;
         }
         
-        WardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(new PlayerPointer(player));
+        PlayerWardrobe ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(new PlayerPointer(player));
         byte[] extraColours = null;
         if (ewd != null) {
             Color skinColour = new Color(ewd.skinColour);

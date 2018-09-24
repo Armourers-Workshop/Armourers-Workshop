@@ -6,10 +6,10 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
-import moe.plushie.armourers_workshop.common.capability.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
-import moe.plushie.armourers_workshop.common.skin.WardrobeData;
+import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -32,18 +32,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public final class EquipmentWardrobeHandler {
     
     /** Map holding the equipment wardrobe data for all players in tracking range. */
-    private final HashMap<PlayerPointer, WardrobeData> equipmentWardrobeMap;
+    private final HashMap<PlayerPointer, PlayerWardrobe> equipmentWardrobeMap;
     
     /** Lock object use to keep threads in sync. */
     private final Object threadLock;
     
     public EquipmentWardrobeHandler() {
         MinecraftForge.EVENT_BUS.register(this);
-        this.equipmentWardrobeMap = new HashMap<PlayerPointer, WardrobeData>();
+        this.equipmentWardrobeMap = new HashMap<PlayerPointer, PlayerWardrobe>();
         this.threadLock = new Object();
     }
     
-    public void setEquipmentWardrobeData(PlayerPointer playerPointer, WardrobeData ewd) {
+    public void setEquipmentWardrobeData(PlayerPointer playerPointer, PlayerWardrobe ewd) {
         synchronized (threadLock) {
             if (equipmentWardrobeMap.containsKey(playerPointer)) {
                 equipmentWardrobeMap.remove(playerPointer);
@@ -58,8 +58,8 @@ public final class EquipmentWardrobeHandler {
         }
     }
     
-    public WardrobeData getEquipmentWardrobeData(PlayerPointer playerPointer) {
-        WardrobeData ewd = null;
+    public PlayerWardrobe getEquipmentWardrobeData(PlayerPointer playerPointer) {
+        PlayerWardrobe ewd = null;
         synchronized (threadLock) {
             ewd = equipmentWardrobeMap.get(playerPointer);
         }
@@ -95,7 +95,7 @@ public final class EquipmentWardrobeHandler {
         PlayerPointer playerPointer = new PlayerPointer(player);
         RenderPlayer renderer = event.getRenderer();
         if (equipmentWardrobeMap.containsKey(playerPointer)) {
-            WardrobeData ewd = equipmentWardrobeMap.get(playerPointer);
+            PlayerWardrobe ewd = equipmentWardrobeMap.get(playerPointer);
             renderer.getMainModel().bipedHeadwear.isHidden = ewd.headOverlay;
             if (!ewd.headOverlay) {
                 if (SkinModelRenderer.INSTANCE.playerHasCustomHead(player)) {

@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.client.gui;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.common.capability.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.inventory.ContainerEntityEquipment;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraft.client.gui.inventory.GuiContainer;

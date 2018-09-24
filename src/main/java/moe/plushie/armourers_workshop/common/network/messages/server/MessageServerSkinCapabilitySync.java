@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.common.network.messages.server;
 import org.apache.logging.log4j.Level;
 
 import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.common.capability.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -52,7 +52,7 @@ public class MessageServerSkinCapabilitySync implements IMessage, IMessageHandle
             if (entity != null) {
                 IEntitySkinCapability skinCapability = EntitySkinCapability.get((EntityLivingBase) entity);
                 if (skinCapability != null) {
-                    EntitySkinCapability.SKIN_CAP.getStorage().readNBT(EntitySkinCapability.SKIN_CAP, skinCapability, null, message.compound);
+                    EntitySkinCapability.ENTITY_SKIN_CAP.getStorage().readNBT(EntitySkinCapability.ENTITY_SKIN_CAP, skinCapability, null, message.compound);
                 }
             } else {
                 ModLogger.log(Level.WARN, "Failed to get entity with id " + message.entityId);

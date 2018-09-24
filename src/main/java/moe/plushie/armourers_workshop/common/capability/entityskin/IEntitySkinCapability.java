@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.capability;
+package moe.plushie.armourers_workshop.common.capability.entityskin;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
@@ -8,20 +8,35 @@ import net.minecraft.item.ItemStack;
 
 public interface IEntitySkinCapability {
     
-    public void disableAutoSync();
-    
-    public void enableAutoSync(boolean sync);
-    
+    /**
+     * Syncs capability data to a player with a delay.
+     * 
+     * @param entityPlayer Player to sync to.
+     * @param delay Delay time in ticks.
+     */
     public void syncToPlayerDelayed(EntityPlayerMP entityPlayer, int delay);
     
+    /**
+     * Syncs capability data to a player.
+     * 
+     * @param entityPlayer Player to sync to.
+     */
     public void syncToPlayer(EntityPlayerMP entityPlayer);
     
+    /**
+     * Syncs capability data to all players tracking the entity.
+     */
     public void syncToAllAround();
     
+    /**
+     * 
+     * @return
+     */
     public ISkinType[] getValidSkinTypes();
 
     /**
      * Checks if the entity can hold this skin type.
+     * 
      * @param skinType
      * @return
      */
@@ -29,12 +44,14 @@ public interface IEntitySkinCapability {
     
     /**
      * Gets the number of this skin that the entity can hold.
+     * 
      * @return
      */
     public int getSlotCountForSkinType(ISkinType skinType);
     
     /**
      * Get the skin descriptor for the ISkinType and slot index.
+     * 
      * @param skinType
      * @param slotIndex
      * @return
@@ -50,9 +67,23 @@ public interface IEntitySkinCapability {
      */
     public ISkinDescriptor setSkinDescriptor(ISkinType skinType, int slotIndex, ISkinDescriptor skinDescriptor);
     
+    /**
+     * 
+     * @param skinType
+     * @param slotIndex
+     * @return
+     */
     public ItemStack getSkinStack(ISkinType skinType, int slotIndex);
     
+    /**
+     * 
+     * @param skinType
+     * @param slotIndex
+     * @param skinStack
+     * @return
+     */
     public ItemStack setSkinStack(ISkinType skinType, int slotIndex, ItemStack skinStack);
     
+    //TODO Change this to use CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
     public SkinInventoryContainer getSkinInventoryContainer();
 }

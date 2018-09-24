@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.util.BitSet;
 import java.util.HashMap;
 
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.SkinHelper;
@@ -15,8 +14,9 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-public class WardrobeData {
+public class PlayerWardrobe {
     
     private static final String TAG_SKIN_COLOUR = "skinColour";
     private static final String TAG_HAIR_COLOUR = "hairColour";
@@ -43,7 +43,7 @@ public class WardrobeData {
     /** Number of slots the player has unlocked in the wardrobe */
     public HashMap<String, Integer> slotsUnlocked;
     
-    public WardrobeData() {
+    public PlayerWardrobe() {
         skinColour = COLOUR_SKIN_DEFAULT.getRGB();
         hairColour = COLOUR_HAIR_DEFAULT.getRGB();
         armourOverride = new BitSet(4);
@@ -75,7 +75,7 @@ public class WardrobeData {
         slotsUnlocked.put(skinType.getRegistryName(), value);
     }
     
-    public WardrobeData(WardrobeData ewd) {
+    public PlayerWardrobe(PlayerWardrobe ewd) {
         skinColour = ewd.skinColour;
         hairColour = ewd.hairColour;
         armourOverride = (BitSet) ewd.armourOverride.clone();

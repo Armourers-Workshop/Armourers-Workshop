@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
-import moe.plushie.armourers_workshop.common.skin.WardrobeData;
+import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -27,7 +27,7 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
     
     EntityPlayer entityPlayer;
     ExPropsPlayerSkinData propsPlayerSkinData;
-    WardrobeData equipmentWardrobeData;
+    PlayerWardrobe equipmentWardrobeData;
     
     BitSet armourOverride;
     boolean headOverlay;
@@ -39,7 +39,7 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
     
     String guiName = "equipmentWardrobe";
     
-    public GuiTabWardrobeDisplaySettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, ExPropsPlayerSkinData propsPlayerSkinData, WardrobeData equipmentWardrobeData) {
+    public GuiTabWardrobeDisplaySettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, ExPropsPlayerSkinData propsPlayerSkinData, PlayerWardrobe equipmentWardrobeData) {
         super(tabId, parent, false);
         this.entityPlayer = entityPlayer;
         this.propsPlayerSkinData = propsPlayerSkinData;

@@ -20,7 +20,7 @@ import moe.plushie.armourers_workshop.client.gui.miniarmourer.GuiMiniArmourer;
 import moe.plushie.armourers_workshop.client.gui.miniarmourer.GuiMiniArmourerBuilding;
 import moe.plushie.armourers_workshop.client.gui.skinlibrary.GuiSkinLibrary;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
-import moe.plushie.armourers_workshop.common.capability.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourLibrary;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
@@ -90,7 +90,7 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
-                EntitySkinCapability skinCapabilityPlayer = (EntitySkinCapability) player.getCapability(EntitySkinCapability.SKIN_CAP, null);
+                EntitySkinCapability skinCapabilityPlayer = (EntitySkinCapability) player.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
                 if (skinCapabilityPlayer != null) {
                     return new ContainerSkinWardrobe(player.inventory, skinCapabilityPlayer);
                 } else {
@@ -114,7 +114,7 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.ENTITY_SKIN_INVENTORY:
                 Entity entity = player.getEntityWorld().getEntityByID(x);
                 if (entity != null) {
-                    EntitySkinCapability skinCapability = (EntitySkinCapability) entity.getCapability(EntitySkinCapability.SKIN_CAP, null);
+                    EntitySkinCapability skinCapability = (EntitySkinCapability) entity.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
                     if (skinCapability == null) {
                         break;
                     }
@@ -187,7 +187,7 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
-                EntitySkinCapability skinCapabilityPlayer = (EntitySkinCapability) player.getCapability(EntitySkinCapability.SKIN_CAP, null);
+                EntitySkinCapability skinCapabilityPlayer = (EntitySkinCapability) player.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
                 if (skinCapabilityPlayer != null) {
                     return new GuiWardrobe(player.inventory, skinCapabilityPlayer);
                 } else {
@@ -216,7 +216,7 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.ENTITY_SKIN_INVENTORY:
                 Entity entity = player.getEntityWorld().getEntityByID(x);
                 if (entity != null) {
-                    EntitySkinCapability skinCapability = (EntitySkinCapability) entity.getCapability(EntitySkinCapability.SKIN_CAP, null);
+                    EntitySkinCapability skinCapability = (EntitySkinCapability) entity.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
                     if (skinCapability == null) {
                         break;
                     }

@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.capability;
+package moe.plushie.armourers_workshop.common.capability.entityskin;
 
 import java.util.ArrayList;
 
@@ -25,13 +25,12 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 public class EntitySkinCapability implements IEntitySkinCapability, IInventorySlotUpdate {
     
     @CapabilityInject(IEntitySkinCapability.class)
-    public static final Capability<IEntitySkinCapability> SKIN_CAP = null;
+    public static final Capability<IEntitySkinCapability> ENTITY_SKIN_CAP = null;
     
     private final Entity entity;
     private ISkinnableEntity skinnableEntity;
     private final ISkinType[] validSkinTypes;
     private final SkinInventoryContainer skinInventoryContainer;
-    private boolean autoSync;
     
     public EntitySkinCapability(Entity entity, ISkinnableEntity skinnableEntity) {
         this.entity = entity;
@@ -40,7 +39,6 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
         skinnableEntity.getValidSkinTypes(skinTypes);
         validSkinTypes = skinTypes.toArray(new ISkinType[skinTypes.size()]);
         skinInventoryContainer = new SkinInventoryContainer(this, validSkinTypes);
-        autoSync = true;
     }
     
     public Entity getEntity() {
@@ -53,23 +51,9 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
     }
 
     @Override
-    public void disableAutoSync() {
-        autoSync = false;
-        
-    }
-
-    @Override
-    public void enableAutoSync(boolean sync) {
-        autoSync = true;
-        if (sync) {
-            syncToAllAround();
-        }
-    }
-
-    @Override
     public void syncToPlayerDelayed(EntityPlayerMP entityPlayer, int delay) {
-        IStorage<IEntitySkinCapability> storage = SKIN_CAP.getStorage();
-        NBTTagCompound compound = (NBTTagCompound) storage.writeNBT(SKIN_CAP, this, null);
+        IStorage<IEntitySkinCapability> storage = ENTITY_SKIN_CAP.getStorage();
+        NBTTagCompound compound = (NBTTagCompound) storage.writeNBT(ENTITY_SKIN_CAP, this, null);
         MessageServerSkinCapabilitySync message = new MessageServerSkinCapabilitySync(entity.getEntityId(), compound);
         PacketHandler.sendToDelayed(message, entityPlayer, delay);
     }
@@ -81,7 +65,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
 
     @Override
     public void syncToAllAround() {
-        NBTTagCompound compound = (NBTTagCompound)SKIN_CAP.getStorage().writeNBT(SKIN_CAP, this, null);
+        NBTTagCompound compound = (NBTTagCompound)ENTITY_SKIN_CAP.getStorage().writeNBT(ENTITY_SKIN_CAP, this, null);
         MessageServerSkinCapabilitySync message = new MessageServerSkinCapabilitySync(entity.getEntityId(), compound);
         PacketHandler.networkWrapper.sendToAllTracking(message, entity);
     }
@@ -158,6 +142,6 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
     }
     
     public static IEntitySkinCapability get(EntityLivingBase entity) {
-        return entity.getCapability(SKIN_CAP, null);
+        return entity.getCapability(ENTITY_SKIN_CAP, null);
     }
 }

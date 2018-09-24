@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.capability;
+package moe.plushie.armourers_workshop.common.capability.entityskin;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;

@@ -1,7 +1,7 @@
 
 package moe.plushie.armourers_workshop.common.inventory;
 
-import moe.plushie.armourers_workshop.common.capability.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;

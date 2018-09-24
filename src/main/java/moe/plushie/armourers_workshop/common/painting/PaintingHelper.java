@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.common.painting;
 import java.awt.Color;
 
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
-import moe.plushie.armourers_workshop.common.skin.WardrobeData;
+import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -137,7 +137,7 @@ public final class PaintingHelper {
     @SideOnly(Side.CLIENT)
     public static int getLocalPlayersSkinColour() {
         PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().player);
-        WardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
+        PlayerWardrobe ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         if (ewd != null) {
             return ewd.skinColour;
         }
@@ -147,7 +147,7 @@ public final class PaintingHelper {
     @SideOnly(Side.CLIENT)
     public static int getLocalPlayersHairColour() {
         PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().player);
-        WardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
+        PlayerWardrobe ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         if (ewd != null) {
             return ewd.hairColour;
         }
