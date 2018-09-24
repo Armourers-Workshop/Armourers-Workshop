@@ -46,9 +46,14 @@ public class TileEntityColourable extends ModTileEntity implements IPantable {
     
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(getPos(), 5, getUpdateTag());
+    }
+    
+    @Override
+    public NBTTagCompound getUpdateTag() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
-        return new SPacketUpdateTileEntity(getPos(), 5, compound);
+        return compound;
     }
 
     @Override
@@ -85,7 +90,7 @@ public class TileEntityColourable extends ModTileEntity implements IPantable {
 
     @Override
     public int getColour(int side) {
-        Color saveColour = new Color(colour.getRed(side) & 0xFF, colour.getGreen(side) & 0xFF, colour.getBlue(side) & 0xFF);
+        Color saveColour = new Color(colour.getRed(side) & 0xFF, colour.getGreen(side) & 0xFF, colour.getBlue(side) & 0xFF, 255);
         return saveColour.getRGB();
     }
     

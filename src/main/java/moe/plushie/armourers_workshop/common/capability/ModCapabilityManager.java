@@ -46,10 +46,9 @@ public final class ModCapabilityManager {
         ISkinnableEntity skinnableEntity = EntitySkinHandler.INSTANCE.geSkinnableEntity(event.getObject());
         if (skinnableEntity != null) {
             event.addCapability(new ResourceLocation(LibModInfo.ID, "entity-skin-provider"), new EntitySkinProvider(event.getObject(), skinnableEntity));
-        }
-        
-        if (event.getObject() instanceof EntityPlayer) {
-            event.addCapability(new ResourceLocation(LibModInfo.ID, "wardrobe-provider"), new WardrobeProvider((EntityPlayer) event.getObject()));
+            if (event.getObject() instanceof EntityPlayer) {
+                event.addCapability(new ResourceLocation(LibModInfo.ID, "wardrobe-provider"), new WardrobeProvider((EntityPlayer) event.getObject(), skinnableEntity));
+            }
         }
     }
 }

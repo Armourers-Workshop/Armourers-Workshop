@@ -21,17 +21,17 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * @author RiskyKen
  *
  */
-public class MessageServerSkinCapabilitySync implements IMessage, IMessageHandler<MessageServerSkinCapabilitySync, IMessage> {
+public class MessageServerSyncSkinCap implements IMessage, IMessageHandler<MessageServerSyncSkinCap, IMessage> {
 
     private int entityId;
     private NBTTagCompound compound;
     
-    public MessageServerSkinCapabilitySync(int entityId, NBTTagCompound compound) {
+    public MessageServerSyncSkinCap(int entityId, NBTTagCompound compound) {
         this.entityId = entityId;
         this.compound = compound;
     }
     
-    public MessageServerSkinCapabilitySync() {}
+    public MessageServerSyncSkinCap() {}
     
     @Override
     public void toBytes(ByteBuf buf) {
@@ -46,7 +46,7 @@ public class MessageServerSkinCapabilitySync implements IMessage, IMessageHandle
     }
     
     @Override
-    public IMessage onMessage(MessageServerSkinCapabilitySync message, MessageContext ctx) {
+    public IMessage onMessage(MessageServerSyncSkinCap message, MessageContext ctx) {
         if (Minecraft.getMinecraft().world != null) {
             Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.entityId);
             if (entity != null) {
@@ -55,7 +55,7 @@ public class MessageServerSkinCapabilitySync implements IMessage, IMessageHandle
                     EntitySkinCapability.ENTITY_SKIN_CAP.getStorage().readNBT(EntitySkinCapability.ENTITY_SKIN_CAP, skinCapability, null, message.compound);
                 }
             } else {
-                ModLogger.log(Level.WARN, "Failed to get entity with id " + message.entityId);
+                ModLogger.log(Level.WARN, String.format("Failed to get entity with %d when updating IEntitySkinCapability.", message.entityId));
             }
 
         }

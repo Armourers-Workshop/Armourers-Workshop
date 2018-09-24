@@ -198,10 +198,10 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         ItemStack stackInput = this.getStackInSlot(0);
         ItemStack stackOuput = this.getStackInSlot(1);
         
-        if (stackInput == null) {
+        if (stackInput == ItemStack.EMPTY) {
             return;
         }
-        if (stackOuput != null) {
+        if (stackOuput != ItemStack.EMPTY) {
             return;
         }
         if (!(stackInput.getItem() instanceof ItemSkin)) {
@@ -235,7 +235,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         }
         dirtySync();
         
-        this.setInventorySlotContents(0, null);
+        this.setInventorySlotContents(0, ItemStack.EMPTY);
         this.setInventorySlotContents(1, stackInput);
     }
     

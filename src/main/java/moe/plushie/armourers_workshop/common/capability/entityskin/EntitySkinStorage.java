@@ -17,6 +17,7 @@ public class EntitySkinStorage implements IStorage<IEntitySkinCapability> {
 
     @Override
     public void readNBT(Capability<IEntitySkinCapability> capability, IEntitySkinCapability instance, EnumFacing side, NBTBase nbt) {
-        instance.getSkinInventoryContainer().readFromNBT((NBTTagCompound) nbt);
+        NBTTagCompound compound = (NBTTagCompound) nbt;
+        instance.getSkinInventoryContainer().readFromNBT(compound);
     }
 }

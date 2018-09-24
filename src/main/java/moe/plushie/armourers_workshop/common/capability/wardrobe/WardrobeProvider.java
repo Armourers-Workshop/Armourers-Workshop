@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.common.capability.wardrobe;
 
+import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -10,8 +11,8 @@ public class WardrobeProvider implements ICapabilitySerializable<NBTTagCompound>
 
     private final WardrobeCapability wardrobeCapability;
     
-    public WardrobeProvider(EntityPlayer entityPlayer) {
-        this.wardrobeCapability = new WardrobeCapability(entityPlayer);
+    public WardrobeProvider(EntityPlayer entityPlayer, ISkinnableEntity skinnableEntity) {
+        this.wardrobeCapability = new WardrobeCapability(entityPlayer, skinnableEntity);
     }
     
     @Override

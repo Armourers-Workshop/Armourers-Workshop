@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Level;
 import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.handler.BlockHighlightRenderHandler;
 import moe.plushie.armourers_workshop.client.handler.DebugTextHandler;
@@ -59,13 +60,18 @@ import moe.plushie.armourers_workshop.utils.HolidayHelper;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -163,6 +169,11 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
         RenderingRegistry.registerBlockHandler(new RenderBlockGlowing());
         */
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourable);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourableGlass);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourableGlowing);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourableGlassGlowing);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourMixer);
     }
     
     @Override
@@ -394,5 +405,18 @@ public class ClientProxy extends CommonProxy {
         RENDER_EVENT,
         MODEL_ATTACHMENT,
         RENDER_LAYER
+    }
+    
+    private static class BlockColour implements IBlockColor {
+
+        @Override
+        public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
+            TileEntity tileEntity = worldIn.getTileEntity(pos);
+            if (tileEntity != null && tileEntity instanceof IPantable) {
+                //ModLogger.log("got te " + ((IPantable)tileEntity).getColour(tintIndex));
+                return ((IPantable)tileEntity).getColour(tintIndex);
+            }
+            return 0xFFFFFFFF;
+        }
     }
 }

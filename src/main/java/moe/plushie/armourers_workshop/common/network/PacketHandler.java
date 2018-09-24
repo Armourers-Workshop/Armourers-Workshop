@@ -33,8 +33,8 @@ import moe.plushie.armourers_workshop.common.network.messages.server.MessageServ
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerMiniArmourerSkinData;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerPlayerLeftTrackingRange;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSendSkinData;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinCapabilitySync;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
+import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncSkinCap;
+import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.Mod;
@@ -82,10 +82,10 @@ public final class PacketHandler {
         registerMessage(MessageClientGuiHologramProjector.class, MessageClientGuiHologramProjector.class, Side.SERVER);
         
         //Server messages.
-        registerMessage(MessageServerSkinCapabilitySync.class, MessageServerSkinCapabilitySync.class, Side.CLIENT);
+        registerMessage(MessageServerSyncSkinCap.class, MessageServerSyncSkinCap.class, Side.CLIENT);
         registerMessage(MessageServerPlayerLeftTrackingRange.class, MessageServerPlayerLeftTrackingRange.class, Side.CLIENT);
         registerMessage(MessageServerLibraryFileList.class, MessageServerLibraryFileList.class, Side.CLIENT);
-        registerMessage(MessageServerSkinWardrobeUpdate.class, MessageServerSkinWardrobeUpdate.class, Side.CLIENT);
+        registerMessage(MessageServerSyncWardrobeCap.class, MessageServerSyncWardrobeCap.class, Side.CLIENT);
         registerMessage(MessageServerSendSkinData.class, MessageServerSendSkinData.class, Side.CLIENT);
         registerMessage(MessageServerClientCommand.class, MessageServerClientCommand.class, Side.CLIENT);
         registerMessage(MessageServerEntitySkinData.class, MessageServerEntitySkinData.class, Side.CLIENT);

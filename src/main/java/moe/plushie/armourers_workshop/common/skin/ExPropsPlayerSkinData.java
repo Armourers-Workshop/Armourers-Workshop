@@ -8,8 +8,6 @@ import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.inventory.IInventorySlotUpdate;
 import moe.plushie.armourers_workshop.common.inventory.SkinInventoryContainer;
 import moe.plushie.armourers_workshop.common.inventory.WardrobeInventory;
-import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
@@ -212,7 +210,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
     private void sendSkinData() {
         TargetPoint p = new TargetPoint(player.dimension, player.posX, player.posY, player.posZ, 512);
         PlayerPointer playerPointer = new PlayerPointer(player);
-        PacketHandler.networkWrapper.sendToAllAround(new MessageServerSkinWardrobeUpdate(playerPointer, this.equipmentWardrobeData), p);
+        //PacketHandler.networkWrapper.sendToAllAround(new MessageServerSyncWardrobeCap(playerPointer, this.equipmentWardrobeData), p);
     }
     
     public PlayerWardrobe getEquipmentWardrobeData() {

@@ -2,8 +2,11 @@ package moe.plushie.armourers_workshop.common.handler;
 
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -11,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 @Mod.EventBusSubscriber(modid = LibModInfo.ID)
-public final class EntityCapabilitySyncHandler {
+public final class CapabilitySyncHandler {
     
     @SubscribeEvent
     public static void onStartTracking(PlayerEvent.StartTracking event) {
@@ -21,6 +24,12 @@ public final class EntityCapabilitySyncHandler {
                 skinCapability.syncToPlayerDelayed((EntityPlayerMP) event.getEntityPlayer(), 2);
             }
         }
+        if (event.getTarget() instanceof EntityPlayer) {
+            IWardrobeCapability wardrobeCapability = WardrobeCapability.get((EntityPlayer) event.getTarget());
+            if (wardrobeCapability != null) {
+                wardrobeCapability.syncToPlayerDelayed((EntityPlayerMP) event.getEntityPlayer(), 2);
+            }
+        }
     }
     
     @SubscribeEvent
@@ -28,6 +37,11 @@ public final class EntityCapabilitySyncHandler {
         IEntitySkinCapability skinCapability = EntitySkinCapability.get((EntityLivingBase) event.player);
         if (skinCapability != null) {
             skinCapability.syncToPlayer((EntityPlayerMP) event.player);
+        }
+        
+        IWardrobeCapability wardrobeCapability = WardrobeCapability.get(event.player);
+        if (wardrobeCapability != null) {
+            wardrobeCapability.syncToPlayer((EntityPlayerMP) event.player);
         }
     }
     

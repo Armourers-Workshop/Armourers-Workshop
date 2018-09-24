@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.common.inventory.IInventorySlotUpdate;
 import moe.plushie.armourers_workshop.common.inventory.SkinInventoryContainer;
 import moe.plushie.armourers_workshop.common.inventory.WardrobeInventory;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSkinCapabilitySync;
+import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncSkinCap;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.Entity;
@@ -54,7 +54,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
     public void syncToPlayerDelayed(EntityPlayerMP entityPlayer, int delay) {
         IStorage<IEntitySkinCapability> storage = ENTITY_SKIN_CAP.getStorage();
         NBTTagCompound compound = (NBTTagCompound) storage.writeNBT(ENTITY_SKIN_CAP, this, null);
-        MessageServerSkinCapabilitySync message = new MessageServerSkinCapabilitySync(entity.getEntityId(), compound);
+        MessageServerSyncSkinCap message = new MessageServerSyncSkinCap(entity.getEntityId(), compound);
         PacketHandler.sendToDelayed(message, entityPlayer, delay);
     }
     
@@ -66,7 +66,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
     @Override
     public void syncToAllAround() {
         NBTTagCompound compound = (NBTTagCompound)ENTITY_SKIN_CAP.getStorage().writeNBT(ENTITY_SKIN_CAP, this, null);
-        MessageServerSkinCapabilitySync message = new MessageServerSkinCapabilitySync(entity.getEntityId(), compound);
+        MessageServerSyncSkinCap message = new MessageServerSyncSkinCap(entity.getEntityId(), compound);
         PacketHandler.networkWrapper.sendToAllTracking(message, entity);
     }
     
