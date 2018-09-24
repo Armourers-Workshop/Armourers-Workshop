@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.common.skin.EquipmentWardrobeData;
+import moe.plushie.armourers_workshop.common.skin.WardrobeData;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -15,13 +15,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class MessageClientSkinWardrobeUpdate implements IMessage, IMessageHandler<MessageClientSkinWardrobeUpdate, IMessage> {
 
-    EquipmentWardrobeData equipmentWardrobeData;
+    WardrobeData equipmentWardrobeData;
     
     public MessageClientSkinWardrobeUpdate() {
-        equipmentWardrobeData = new EquipmentWardrobeData();
+        equipmentWardrobeData = new WardrobeData();
     }
 
-    public MessageClientSkinWardrobeUpdate(EquipmentWardrobeData equipmentWardrobeData) {
+    public MessageClientSkinWardrobeUpdate(WardrobeData equipmentWardrobeData) {
         this.equipmentWardrobeData = equipmentWardrobeData;
     }
 

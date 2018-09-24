@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
-import moe.plushie.armourers_workshop.common.skin.EquipmentWardrobeData;
+import moe.plushie.armourers_workshop.common.skin.WardrobeData;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 
 /**
@@ -17,13 +17,13 @@ import moe.plushie.armourers_workshop.proxies.ClientProxy;
 public class MessageServerSkinWardrobeUpdate implements IMessage, IMessageHandler<MessageServerSkinWardrobeUpdate, IMessage> {
 
     PlayerPointer playerPointer;
-    EquipmentWardrobeData equipmentWardrobeData;
+    WardrobeData equipmentWardrobeData;
     
     public MessageServerSkinWardrobeUpdate() {
-        equipmentWardrobeData = new EquipmentWardrobeData();
+        equipmentWardrobeData = new WardrobeData();
     }
 
-    public MessageServerSkinWardrobeUpdate(PlayerPointer playerPointer, EquipmentWardrobeData equipmentWardrobeData) {
+    public MessageServerSkinWardrobeUpdate(PlayerPointer playerPointer, WardrobeData equipmentWardrobeData) {
         this.playerPointer = playerPointer;
         this.equipmentWardrobeData = equipmentWardrobeData;
     }
@@ -46,7 +46,7 @@ public class MessageServerSkinWardrobeUpdate implements IMessage, IMessageHandle
         return null;
     }
     
-    private void setEquipmentWardrobeData(PlayerPointer playerPointer, EquipmentWardrobeData ewd) {
+    private void setEquipmentWardrobeData(PlayerPointer playerPointer, WardrobeData ewd) {
         ClientProxy.equipmentWardrobeHandler.setEquipmentWardrobeData(playerPointer, ewd);
     }
 }

@@ -92,7 +92,7 @@ public class ContainerSkinWardrobe extends Container {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
         Slot slot = getSlot(slotId);
-        if (slot != null && slot.getHasStack()) {
+        if (slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
 
@@ -117,15 +117,15 @@ public class ContainerSkinWardrobe extends Container {
                         }
                     }
                     if (!slotted) {
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 } else {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }
 
             if (stack.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
@@ -134,7 +134,7 @@ public class ContainerSkinWardrobe extends Container {
 
             return result;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
 }

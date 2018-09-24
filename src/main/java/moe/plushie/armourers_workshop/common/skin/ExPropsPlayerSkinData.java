@@ -40,7 +40,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
     private final EntityEquipmentData equipmentData;
     private final EntityPlayer player;
     /** Stores all other wardrobe settings. */
-    private EquipmentWardrobeData equipmentWardrobeData = new EquipmentWardrobeData(); 
+    private WardrobeData equipmentWardrobeData = new WardrobeData(); 
     public int lastXmasYear;
     private boolean allowNetworkUpdates;
     
@@ -192,7 +192,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
         sendNakedData(targetPlayer);
     }
     
-    public void setSkinInfo(EquipmentWardrobeData equipmentWardrobeData, boolean sendUpdate) {
+    public void setSkinInfo(WardrobeData equipmentWardrobeData, boolean sendUpdate) {
         this.equipmentWardrobeData = equipmentWardrobeData;
         if (sendUpdate) {
             sendSkinData();
@@ -215,7 +215,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
         PacketHandler.networkWrapper.sendToAllAround(new MessageServerSkinWardrobeUpdate(playerPointer, this.equipmentWardrobeData), p);
     }
     
-    public EquipmentWardrobeData getEquipmentWardrobeData() {
+    public WardrobeData getEquipmentWardrobeData() {
         return equipmentWardrobeData;
     }
     

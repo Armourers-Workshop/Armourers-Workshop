@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
-import moe.plushie.armourers_workshop.common.skin.EquipmentWardrobeData;
+import moe.plushie.armourers_workshop.common.skin.WardrobeData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
@@ -179,7 +179,7 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
             return false;
         }
         EquipmentWardrobeHandler ewh = ClientProxy.equipmentWardrobeHandler;
-        EquipmentWardrobeData ewd = ewh.getEquipmentWardrobeData(new PlayerPointer(player));
+        WardrobeData ewd = ewh.getEquipmentWardrobeData(new PlayerPointer(player));
         if (ewd != null) {
             return ewd.armourOverride.get(slotId);
         }

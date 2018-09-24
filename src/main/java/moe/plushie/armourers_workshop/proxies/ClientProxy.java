@@ -238,6 +238,7 @@ public class ClientProxy extends CommonProxy {
         case 3: //Force render layer
             return SkinRenderType.RENDER_LAYER;
         default: //Auto
+            /*
             if (ModAddonManager.addonMorePlayerModels.isModLoaded()) {
                 return SkinRenderType.RENDER_EVENT;
             }
@@ -250,7 +251,8 @@ public class ClientProxy extends CommonProxy {
             if (ModAddonManager.addonJBRAClient.isModLoaded()) {
                 return SkinRenderType.RENDER_EVENT;
             }
-            return SkinRenderType.MODEL_ATTACHMENT;
+            */
+            return SkinRenderType.RENDER_LAYER;
         }
     }
     

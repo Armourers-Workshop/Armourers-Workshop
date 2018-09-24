@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.common.command;
 
 import java.util.List;
 
-import moe.plushie.armourers_workshop.common.skin.EquipmentWardrobeData;
+import moe.plushie.armourers_workshop.common.skin.WardrobeData;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -59,7 +59,7 @@ public class CommandSetWardrobeOption extends ModCommand {
         
         ExPropsPlayerSkinData playerEquipmentData = ExPropsPlayerSkinData.get(player);
         if (playerEquipmentData != null) {
-            EquipmentWardrobeData ewd = playerEquipmentData.getEquipmentWardrobeData();
+            WardrobeData ewd = playerEquipmentData.getEquipmentWardrobeData();
             if (subOptionIndex < 4) {
                 ewd.armourOverride.set(subOptionIndex, !value);
             }

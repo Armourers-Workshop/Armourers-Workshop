@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiEntityEquipment extends GuiContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/entitySkinInventory.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibModInfo.ID, "textures/gui/entity-skin-inventory.png");
     
     private final EntitySkinCapability entitySkinCapability;
     
@@ -38,7 +38,7 @@ public class GuiEntityEquipment extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int mouseX, int mouseY) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(texture);
+        this.mc.getTextureManager().bindTexture(TEXTURE);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         
         ISkinType[] skinTypes = entitySkinCapability.getValidSkinTypes();

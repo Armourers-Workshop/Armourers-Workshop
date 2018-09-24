@@ -38,7 +38,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
         this.skinnableEntity = skinnableEntity;
         ArrayList<ISkinType> skinTypes = new ArrayList<ISkinType>();
         skinnableEntity.getValidSkinTypes(skinTypes);
-        validSkinTypes = skinTypes.toArray(new ISkinType[0]);
+        validSkinTypes = skinTypes.toArray(new ISkinType[skinTypes.size()]);
         skinInventoryContainer = new SkinInventoryContainer(this, validSkinTypes);
         autoSync = true;
     }

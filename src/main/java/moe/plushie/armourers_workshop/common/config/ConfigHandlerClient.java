@@ -129,13 +129,14 @@ public class ConfigHandlerClient {
     
     private static void loadCategoryDebug() {
         skinRenderType = config
-                .getInt("skinRenderType", CATEGORY_DEBUG, 0, 0, 2,
+                .getInt("skinRenderType", CATEGORY_DEBUG, 0, 0, 3,
                 "Only change this if you are having rendering issues with skins on players." +
                 "(normally fixes skins not rotating on players)\n" +
                 "\n" +
                 "0 = auto\n" +
                 "1 = render event\n" +
-                "2 = model attachment\n");
+                "2 = model attachment\n" +
+                "3 = render layer");
         
         skinTextureRenderOverride = config
                 .get(CATEGORY_DEBUG, "skinTextureRenderOverride", false,

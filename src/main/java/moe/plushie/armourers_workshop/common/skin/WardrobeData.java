@@ -16,7 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
 
-public class EquipmentWardrobeData {
+public class WardrobeData {
     
     private static final String TAG_SKIN_COLOUR = "skinColour";
     private static final String TAG_HAIR_COLOUR = "hairColour";
@@ -43,7 +43,7 @@ public class EquipmentWardrobeData {
     /** Number of slots the player has unlocked in the wardrobe */
     public HashMap<String, Integer> slotsUnlocked;
     
-    public EquipmentWardrobeData() {
+    public WardrobeData() {
         skinColour = COLOUR_SKIN_DEFAULT.getRGB();
         hairColour = COLOUR_HAIR_DEFAULT.getRGB();
         armourOverride = new BitSet(4);
@@ -75,7 +75,7 @@ public class EquipmentWardrobeData {
         slotsUnlocked.put(skinType.getRegistryName(), value);
     }
     
-    public EquipmentWardrobeData(EquipmentWardrobeData ewd) {
+    public WardrobeData(WardrobeData ewd) {
         skinColour = ewd.skinColour;
         hairColour = ewd.hairColour;
         armourOverride = (BitSet) ewd.armourOverride.clone();

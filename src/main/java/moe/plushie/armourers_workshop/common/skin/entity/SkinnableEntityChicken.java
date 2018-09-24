@@ -2,17 +2,14 @@ package moe.plushie.armourers_workshop.common.skin.entity;
 
 import java.util.ArrayList;
 
-import moe.plushie.armourers_workshop.api.client.render.entity.ISkinnableEntityRenderer;
-import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.client.render.entity.SkinnableEntityChickenRenderer;
+import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererChicken;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SkinnableEntityChicken implements ISkinnableEntity {
+public class SkinnableEntityChicken extends SkinnableEntity {
 
     @Override
     public ArrayList<Class<? extends EntityLivingBase>> getEntityClass() {
@@ -21,20 +18,9 @@ public class SkinnableEntityChicken implements ISkinnableEntity {
         return classes;
     }
     
-    @SideOnly(Side.CLIENT)
     @Override
-    public Class<? extends ISkinnableEntityRenderer> getRendererClass() {
-        return SkinnableEntityChickenRenderer.class;
-    }
-
-    @Override
-    public boolean canUseWandOfStyle() {
-        return true;
-    }
-
-    @Override
-    public boolean canUseSkinsOnEntity() {
-        return false;
+    public LayerRenderer<? extends EntityLivingBase> getLayerRenderer(Class<? extends EntityLivingBase> entityClass) {
+        return new SkinLayerRendererChicken();
     }
 
     @Override

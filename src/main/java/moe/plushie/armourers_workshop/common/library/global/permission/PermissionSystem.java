@@ -79,6 +79,7 @@ public final class PermissionSystem {
         }
         
         public boolean havePermission(Action action) {
+            //PermissionAPI.hasPermission(profile, node, context)
             return actions.contains(action);
         }
     }

@@ -7,30 +7,28 @@ import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.handler.ModClientFMLEventHandler;
-import moe.plushie.armourers_workshop.client.model.skin.AbstractModelSkin;
-import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import net.minecraft.client.model.ModelZombieVillager;
 import net.minecraft.client.renderer.entity.RenderBiped;
-import net.minecraft.client.renderer.entity.RenderZombie;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer<EntityZombie> {
-    
+public class SkinLayerRendererSlime implements ISkinnableEntityRenderer<EntitySlime> {
+
     //@Override
-    public void render(EntityZombie entity, RenderBiped renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
+    public void render(EntitySlime entity, RenderBiped renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
         GL11.glPushMatrix();
         float scale = 0.0625F;
         
         GL11.glTranslated(x, y, z);
         GL11.glScalef(1, -1, -1);
+        
         
         double rot = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset) * ModClientFMLEventHandler.renderTickTime;
         GL11.glRotated(rot, 0, 1, 0);
@@ -44,49 +42,32 @@ public class SkinnableEntityZombieRenderer implements ISkinnableEntityRenderer<E
             GL11.glRotatef(angle * 90F, 0.0F, 0.0F, 1.0F);
         }
         
-        GL11.glTranslated(0, -entity.height + 4.67F * scale, 0);
+        float f1 = (float)entity.getSlimeSize();
+        float f2 = (entity.prevSquishFactor + (entity.squishFactor - entity.prevSquishFactor) * ModClientFMLEventHandler.renderTickTime) / (f1 * 0.5F + 1.0F);
+        float f3 = 1.0F / (f2 + 1.0F);
+        GL11.glScalef(f3 * f1, 1.0F / f3 * f1, f3 * f1);
         
-        float headScale = 1.002F;
+        GL11.glTranslated(0, -0.12F * scale, 0);
+        
+        float headScale = 1.001F;
         GL11.glScalef(headScale, headScale, headScale);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
-        renderEquipmentType(entity, renderer, SkinTypeRegistry.skinChest, entityEquipment);
-        renderEquipmentType(entity, renderer, SkinTypeRegistry.skinLegs, entityEquipment);
-        renderEquipmentType(entity, renderer, SkinTypeRegistry.skinSkirt, entityEquipment);
-        renderEquipmentType(entity, renderer, SkinTypeRegistry.skinFeet, entityEquipment);
-        renderEquipmentType(entity, renderer, SkinTypeRegistry.skinWings, entityEquipment);
-        
         GL11.glPopMatrix();
     }
     
     private void renderEquipmentType(EntityLivingBase entity, RenderBiped renderer, ISkinType skinType, IEntityEquipment equipmentData) {
-        float scale = 0.0625F;
-        if (renderer instanceof RenderZombie) {
-            RenderZombie rz = (RenderZombie) renderer;
-            boolean isZombieVillager = false;
-            isZombieVillager = rz.getMainModel() instanceof ModelZombieVillager;
-            if (!equipmentData.haveEquipment(skinType, 0)) {
-                return;
-            }
+        if (equipmentData.haveEquipment(skinType, 0)) {
             ISkinDescriptor skinPointer = equipmentData.getSkinPointer(skinType, 0);
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             if (skin == null) {
                 return;
             }
-            
-            AbstractModelSkin model = SkinModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
-            
-            GL11.glPushMatrix();
-            if (isZombieVillager & skinType == SkinTypeRegistry.skinHead) {
-                GL11.glTranslated(0, -2.0F * scale, 0);
+            GL11.glEnable(GL11.GL_NORMALIZE);
+            float scale = 1F / 16F;
+            for (int i = 0; i < skin.getParts().size(); i++) {
+                SkinPartRenderer.INSTANCE.renderPart(skin.getParts().get(i), scale, skinPointer.getSkinDye(), null, false);
             }
-            if (skinType == SkinTypeRegistry.skinLegs | skinType == SkinTypeRegistry.skinFeet) {
-                GL11.glTranslated(0, 0, 0.1F * scale);
-            }
-            //GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
-            //GL11.glPolygonOffset(-1F, -1F);
-            //model.render(entity, rz.getMainModel(), skin, false, skinPointer.getSkinDye(), null, false, 0, false);
-            //GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
-            GL11.glPopMatrix();
+            GL11.glDisable(GL11.GL_NORMALIZE);
         }
     }
 }

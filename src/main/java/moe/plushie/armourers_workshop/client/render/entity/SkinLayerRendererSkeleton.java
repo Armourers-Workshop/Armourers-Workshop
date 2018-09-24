@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class SkinnableEntitySkeletonRenderer implements ISkinnableEntityRenderer<EntitySkeleton> {
+public class SkinLayerRendererSkeleton implements ISkinnableEntityRenderer<EntitySkeleton> {
     
     //@Override
     public void render(EntitySkeleton entity, RenderBiped renderer, double x, double y, double z, IEntityEquipment entityEquipment) {

@@ -6,16 +6,16 @@ import moe.plushie.armourers_workshop.api.client.render.entity.ISkinnableEntityR
 import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
 import moe.plushie.armourers_workshop.client.handler.ModClientFMLEventHandler;
 import net.minecraft.client.renderer.entity.RenderEntity;
-import net.minecraft.entity.monster.EntityGhast;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class SkinnableEntityGhastRenderer implements ISkinnableEntityRenderer<EntityGhast> {
+public class SkinLayerRendererCreeper implements ISkinnableEntityRenderer<EntityCreeper> {
 
     //@Override
-    public void render(EntityGhast entity, RenderEntity renderer,
+    public void render(EntityCreeper entity, RenderEntity renderer,
             double x, double y, double z, IEntityEquipment entityEquipment) {
         GL11.glPushMatrix();
         float scale = 0.0625F;
@@ -35,12 +35,14 @@ public class SkinnableEntityGhastRenderer implements ISkinnableEntityRenderer<En
             GL11.glRotatef(angle * 90F, 0.0F, 0.0F, 1.0F);
         }
         
-        GL11.glTranslated(0, 6.65F * scale, 0);
+        GL11.glTranslated(0, -20.2F * scale, 0);
+        //GL11.glTranslated(0, 0, -4.0F * scale);
         
         double headRot = entity.prevRotationYawHead + (entity.rotationYawHead - entity.prevRotationYawHead) * ModClientFMLEventHandler.renderTickTime;
+        GL11.glRotated(headRot - rot, 0, 1, 0);
         GL11.glRotatef(entity.rotationPitch, 1, 0, 0);
         
-        float headScale = 9.01F;
+        float headScale = 1.001F;
         GL11.glScalef(headScale, headScale, headScale);
         //renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
         GL11.glPopMatrix();
@@ -54,7 +56,7 @@ public class SkinnableEntityGhastRenderer implements ISkinnableEntityRenderer<En
                 return;
             }
             GL11.glEnable(GL11.GL_NORMALIZE);
-            float scale = 1F / 16F;
+            float scale = 0.0625F;
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPartRenderer.INSTANCE.renderPart(skin.getParts().get(i), scale, skinPointer.getSkinDye(), null, false);
             }

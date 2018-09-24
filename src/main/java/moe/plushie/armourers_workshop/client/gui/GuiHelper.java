@@ -37,9 +37,9 @@ public final class GuiHelper {
         int sourceSize = 8;
         
         // Face
-        Gui.drawScaledCustomSizeModalRect(x + 1, y + 1, 8, 8, sourceSize, sourceSize, size, size, 64, 32);
+        Gui.drawScaledCustomSizeModalRect(x + 1, y + 1, 8, 8, sourceSize, sourceSize, size, size, 64, 64);
         // Overlay
-        Gui.drawScaledCustomSizeModalRect(x, y, 40, 8, sourceSize, sourceSize, size + 2, size + 2, 64, 32);
+        Gui.drawScaledCustomSizeModalRect(x, y, 40, 8, sourceSize, sourceSize, size + 2, size + 2, 64, 64);
     }
     
     private static PlayerTexture getPlayerTexture(String textureString, TextureType textureType) {

@@ -1,39 +1,57 @@
 package moe.plushie.armourers_workshop.client.handler;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
+import moe.plushie.armourers_workshop.client.render.DisplayList;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
+import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
+import moe.plushie.armourers_workshop.proxies.ClientProxy;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class DebugTextHandler {
-    /*
+    
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onDebugText(RenderGameOverlayEvent.Text event) {
         if (!ConfigHandlerClient.showF3DebugInfo) {
             return;
         }
-        if (event.left != null && event.left.size() > 0) {
-            EntityClientPlayerMP localPlayer = Minecraft.getMinecraft().thePlayer;
-            List playerList = localPlayer.sendQueue.playerInfoList;
-            event.left.add("");
-            event.left.add(EnumChatFormatting.GOLD + "[" + LibModInfo.NAME + "]");
-            event.left.add("Skins Rendered: " + ModClientFMLEventHandler.skinRenderLastTick);
-            event.left.add("Model Count: " + ClientSkinCache.INSTANCE.getModelCount());
+        if (event.getLeft() != null && event.getLeft().size() > 0) {
+            EntityPlayerSP localPlayer = Minecraft.getMinecraft().player;
+            
+            event.getLeft().add("");
+            event.getLeft().add(TextFormatting.GOLD + "[" + LibModInfo.NAME + "]");
+            event.getLeft().add("Skins Rendered: " + ModClientFMLEventHandler.skinRenderLastTick);
+            event.getLeft().add("Model Count: " + ClientSkinCache.INSTANCE.getModelCount());
             if (GuiScreen.isCtrlKeyDown() != LibModInfo.DEVELOPMENT_VERSION) {
-                event.left.add("Client Skin Count: " + ArmourersWorkshop.proxy.getPlayerModelCacheSize());
+                event.getLeft().add("Client Skin Count: " + ArmourersWorkshop.proxy.getPlayerModelCacheSize());
                 if (Minecraft.getMinecraft().isIntegratedServerRunning()) {
-                    event.left.add("Common Skin Cache: S[" + CommonSkinCache.INSTANCE.size() + "] F[" + CommonSkinCache.INSTANCE.fileLinkSize() + "] G[" + CommonSkinCache.INSTANCE.globalLinkSize() + "]");
+                    event.getLeft().add("Common Skin Cache: S[" + CommonSkinCache.INSTANCE.size() + "] F[" + CommonSkinCache.INSTANCE.fileLinkSize() + "] G[" + CommonSkinCache.INSTANCE.globalLinkSize() + "]");
                 }
-                event.left.add("Part Count: " + ClientSkinCache.INSTANCE.getPartCount());
-                event.left.add("Player Data: " + SkinModelRenderer.INSTANCE.getSkinDataMapSize());
+                event.getLeft().add("Part Count: " + ClientSkinCache.INSTANCE.getPartCount());
+                event.getLeft().add("Player Data: " + SkinModelRenderer.INSTANCE.getSkinDataMapSize());
                 int bakeQueue = ModelBakery.INSTANCE.getBakingQueueSize();
-                event.left.add("Baking Queue: " + bakeQueue);
-                event.left.add("Request Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue));
-                event.left.add("Texture Count: " + ClientSkinPaintCache.INSTANCE.size());
-                event.left.add("Skin Render Type: " + ClientProxy.getSkinRenderType().toString().toLowerCase());
-                event.left.add("Texture Render: " + ClientProxy.useSafeTextureRender());
-                event.left.add("Display Lists: " + DisplayList.getListCount());
-                event.left.add("Average Bake Time: " + ModelBakery.INSTANCE.getAverageBakeTime() + "ms");
+                event.getLeft().add("Baking Queue: " + bakeQueue);
+                event.getLeft().add("Request Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue));
+                event.getLeft().add("Texture Count: " + ClientSkinPaintCache.INSTANCE.size());
+                event.getLeft().add("Skin Render Type: " + ClientProxy.getSkinRenderType().toString().toLowerCase());
+                event.getLeft().add("Texture Render: " + ClientProxy.useSafeTextureRender());
+                event.getLeft().add("Display Lists: " + DisplayList.getListCount());
+                event.getLeft().add("Average Bake Time: " + ModelBakery.INSTANCE.getAverageBakeTime() + "ms");
+                /*
+                List playerList = localPlayer.sendQueue.playerInfoList;
                 if (!Minecraft.getMinecraft().isIntegratedServerRunning()) {
                     for (int i = 0; i < playerList.size(); i++) {
                         GuiPlayerInfo player = (GuiPlayerInfo) playerList.get(i);
@@ -43,10 +61,11 @@ public class DebugTextHandler {
                         }
                     } 
                 }
+                */
             } else {
-                event.left.add("Hold " + EnumChatFormatting.GREEN + "Ctrl" + EnumChatFormatting.WHITE + " for more.");  
+                event.getLeft().add("Hold " + TextFormatting.GREEN + "Ctrl" + TextFormatting.WHITE + " for more.");  
             }
         }
     }
-    */
+    
 }

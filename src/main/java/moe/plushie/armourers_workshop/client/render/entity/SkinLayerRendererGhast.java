@@ -6,16 +6,16 @@ import moe.plushie.armourers_workshop.api.client.render.entity.ISkinnableEntityR
 import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
 import moe.plushie.armourers_workshop.client.handler.ModClientFMLEventHandler;
 import net.minecraft.client.renderer.entity.RenderEntity;
-import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer<EntityChicken> {
+public class SkinLayerRendererGhast implements ISkinnableEntityRenderer<EntityGhast> {
 
     //@Override
-    public void render(EntityChicken entity, RenderEntity renderer,
+    public void render(EntityGhast entity, RenderEntity renderer,
             double x, double y, double z, IEntityEquipment entityEquipment) {
         GL11.glPushMatrix();
         float scale = 0.0625F;
@@ -35,19 +35,13 @@ public class SkinnableEntityChickenRenderer implements ISkinnableEntityRenderer<
             GL11.glRotatef(angle * 90F, 0.0F, 0.0F, 1.0F);
         }
         
-        if (entity.isChild()) {
-            GL11.glTranslated(0, scale * 5, scale * 1.5F);
-        }
-        
-        GL11.glTranslated(0, -9F * scale, 0);
-        GL11.glTranslated(0, 0, -4.0F * scale);
+        GL11.glTranslated(0, 6.65F * scale, 0);
         
         double headRot = entity.prevRotationYawHead + (entity.rotationYawHead - entity.prevRotationYawHead) * ModClientFMLEventHandler.renderTickTime;
-        GL11.glRotated(headRot - rot, 0, 1, 0);
         GL11.glRotatef(entity.rotationPitch, 1, 0, 0);
-
-        float headScale = 0.5F;
-        GL11.glScalef(headScale, headScale * 1.5F, headScale);
+        
+        float headScale = 9.01F;
+        GL11.glScalef(headScale, headScale, headScale);
         //renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
         GL11.glPopMatrix();
     }

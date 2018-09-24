@@ -29,7 +29,7 @@ import moe.plushie.armourers_workshop.common.capability.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
-import moe.plushie.armourers_workshop.common.skin.EquipmentWardrobeData;
+import moe.plushie.armourers_workshop.common.skin.WardrobeData;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
@@ -261,7 +261,7 @@ public final class SkinModelRenderer {
         //Limit the players limbs if they have a skirt equipped.
         //A proper lady should not swing her legs around!
         if (isPlayerWearingSkirt(playerPointer)) {
-            EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
+            WardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
             if (ewd != null && ewd.limitLimbs) {
                 if (player.limbSwingAmount > 0.25F) {
                     player.limbSwingAmount = 0.25F;
@@ -320,7 +320,7 @@ public final class SkinModelRenderer {
             return;
         }
         
-        EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(new PlayerPointer(player));
+        WardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(new PlayerPointer(player));
         byte[] extraColours = null;
         if (ewd != null) {
             Color skinColour = new Color(ewd.skinColour);

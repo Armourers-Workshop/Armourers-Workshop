@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
-import moe.plushie.armourers_workshop.common.skin.EquipmentWardrobeData;
+import moe.plushie.armourers_workshop.common.skin.WardrobeData;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -42,11 +42,11 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     
     EntityPlayer entityPlayer;
     ExPropsPlayerSkinData propsPlayerSkinData;
-    EquipmentWardrobeData equipmentWardrobeData;
+    WardrobeData equipmentWardrobeData;
     
     String guiName = "equipmentWardrobe";
     
-    public GuiTabWardrobeColourSettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, ExPropsPlayerSkinData propsPlayerSkinData, EquipmentWardrobeData equipmentWardrobeData) {
+    public GuiTabWardrobeColourSettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, ExPropsPlayerSkinData propsPlayerSkinData, WardrobeData equipmentWardrobeData) {
         super(tabId, parent, false);
         this.skinColour = new Color(equipmentWardrobeData.skinColour);
         this.hairColour = new Color(equipmentWardrobeData.hairColour);
@@ -72,13 +72,13 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     @Override
     public void mouseClicked(int mouseX, int mouseY, int button) {
         if (button == 0 & selectingSkinColour) {
-            EquipmentWardrobeData ewd = new EquipmentWardrobeData(this.equipmentWardrobeData);
+            WardrobeData ewd = new WardrobeData(this.equipmentWardrobeData);
             ewd.skinColour = skinColour.getRGB();
             PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(ewd));
             selectingSkinColour = false;
         }
         if (button == 0 & selectingHairColour) {
-            EquipmentWardrobeData ewd = new EquipmentWardrobeData(this.equipmentWardrobeData);
+            WardrobeData ewd = new WardrobeData(this.equipmentWardrobeData);
             ewd.hairColour = hairColour.getRGB();
             PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(ewd));
             selectingHairColour = false;
@@ -98,14 +98,14 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         }
         if (button == autoSkinButton) {
             int newSkinColour = equipmentWardrobeData.autoColourSkin((AbstractClientPlayer) this.entityPlayer);
-            EquipmentWardrobeData ewd = new EquipmentWardrobeData(this.equipmentWardrobeData);
+            WardrobeData ewd = new WardrobeData(this.equipmentWardrobeData);
             ewd.skinColour = newSkinColour;
             PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(ewd));
         }
         
         if (button == autoHairButton) {
             int newHairColour = equipmentWardrobeData.autoColourHair((AbstractClientPlayer) this.entityPlayer);
-            EquipmentWardrobeData ewd = new EquipmentWardrobeData(this.equipmentWardrobeData);
+            WardrobeData ewd = new WardrobeData(this.equipmentWardrobeData);
             ewd.hairColour = newHairColour;
             PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(ewd));
         }
@@ -122,7 +122,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
         
         PlayerPointer playerPointer = new PlayerPointer(entityPlayer);
-        EquipmentWardrobeData newEwd = equipmentWardrobeData = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
+        WardrobeData newEwd = equipmentWardrobeData = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         if (newEwd != null) {
             equipmentWardrobeData = newEwd;
         }

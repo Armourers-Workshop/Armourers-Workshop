@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.client.render.tileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.client.render.ItemStackRenderHelper;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
+import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -183,7 +183,7 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         ModRenderHelper.enableAlphaBlend();
         
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-        ItemStackRenderHelper.renderSkinWithHelper(skin, skinPointer, true, false);
+        SkinItemRenderHelper.renderSkinWithHelper(skin, skinPointer, true, false);
         
         GL11.glPopMatrix();
         if (tileEntity.isShowRotationPoint()) {
