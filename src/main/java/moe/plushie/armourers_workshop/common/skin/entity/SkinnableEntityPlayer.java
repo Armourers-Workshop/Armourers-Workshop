@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.common.skin.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.entity.ModelResetLayer;
 import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererPlayer;
@@ -25,9 +26,16 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
     @Override
     public ArrayList<Class<? extends EntityLivingBase>> getEntityClass() {
         ArrayList<Class<? extends EntityLivingBase>> classes = new ArrayList<Class<? extends EntityLivingBase>>();
-        classes.add(EntityPlayerSP.class);
+        if (!ArmourersWorkshop.isDedicated()) {
+            addClientClass(classes);
+        }
         classes.add(EntityPlayerMP.class);
         return classes;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    private void addClientClass(ArrayList<Class<? extends EntityLivingBase>> classes) {
+        classes.add(EntityPlayerSP.class);
     }
     
     @SideOnly(Side.CLIENT)
