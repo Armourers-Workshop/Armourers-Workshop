@@ -4,8 +4,19 @@ import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.items.ModItems;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.registries.IForgeRegistry;
 
+@Mod.EventBusSubscriber(modid = LibModInfo.ID)
 public final class CraftingManager {
 
     
@@ -31,13 +42,20 @@ public final class CraftingManager {
             new DollCraftingHandler();
         }*/
     }
-
-    public static void addShapelessRecipe(ItemStack result, Object[] recipe) {
-        //GameRegistry.addRecipe(new ShapelessOreRecipe(result, recipe));
+    
+    @SubscribeEvent
+    public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
+        ModLogger.log("------------registerRecipes------------");
+        ModBlockRecipes.init(event.getRegistry());
+        ModItemRecipes.init(event.getRegistry()); 
     }
 
-    public static void addShapedRecipe(ItemStack result, Object[] recipe) {
-        //GameRegistry.addRecipe(new ShapedOreRecipe(result, recipe));
+    public static void addShapelessRecipe(IForgeRegistry<IRecipe> iForgeRegistry, ItemStack result, Object[] recipe) {
+        iForgeRegistry.register(new ShapelessOreRecipe(null, result, recipe).setRegistryName(new ResourceLocation(LibModInfo.ID, result.getUnlocalizedName())));
+    }
+
+    public static void addShapedRecipe(IForgeRegistry<IRecipe> iForgeRegistry, ItemStack result, Object[] recipe) {
+        iForgeRegistry.register(new ShapedOreRecipe(null, result, recipe).setRegistryName(new ResourceLocation(LibModInfo.ID, result.getUnlocalizedName())));
     }
     
     public static void hideItemsInNEI() {
