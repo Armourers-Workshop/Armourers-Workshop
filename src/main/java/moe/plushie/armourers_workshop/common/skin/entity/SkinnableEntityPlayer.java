@@ -10,12 +10,14 @@ import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererPlay
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,12 +32,14 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
             addClientClass(classes);
         }
         classes.add(EntityPlayerMP.class);
+        classes.add(EntityPlayer.class);
         return classes;
     }
     
     @SideOnly(Side.CLIENT)
     private void addClientClass(ArrayList<Class<? extends EntityLivingBase>> classes) {
         classes.add(EntityPlayerSP.class);
+        classes.add(AbstractClientPlayer.class);
     }
     
     @SideOnly(Side.CLIENT)
