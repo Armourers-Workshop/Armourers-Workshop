@@ -34,12 +34,17 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
     @Override
     public void addRenderLayer(RenderManager renderManager) {
         for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
-            Object object = ReflectionHelper.getPrivateValue(RenderLivingBase.class, playerRender, "field_177097_h", "layerRenderers");
-            if (object != null) {
-                List<LayerRenderer<?>> layerRenderers = (List<LayerRenderer<?>>) object;
-                layerRenderers.add(0, new ModelResetLayer(playerRender));
-                ModLogger.log("adding reset layer");
+            try {
+                Object object = ReflectionHelper.getPrivateValue(RenderLivingBase.class, playerRender, "field_177097_h", "layerRenderers");
+                if (object != null) {
+                    List<LayerRenderer<?>> layerRenderers = (List<LayerRenderer<?>>) object;
+                    layerRenderers.add(0, new ModelResetLayer(playerRender));
+                    ModLogger.log("adding reset layer");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
             playerRender.addLayer(new SkinLayerRendererPlayer(playerRender));
         }
     }
