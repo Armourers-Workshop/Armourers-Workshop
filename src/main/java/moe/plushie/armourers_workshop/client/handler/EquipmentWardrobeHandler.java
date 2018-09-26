@@ -9,21 +9,21 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
-import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
+import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -74,6 +74,55 @@ public final class EquipmentWardrobeHandler {
         }
     }
     
+    ItemStack[] armour = new ItemStack[4];
+    
+    @SubscribeEvent
+    public void onRender(RenderLivingEvent.Pre<EntityLivingBase> event) {
+        if (event.getEntity() instanceof EntityPlayer) {
+            
+            ModelPlayer modelPlayer = (ModelPlayer) event.getRenderer().getMainModel();
+            IEntitySkinCapability skinCapability = EntitySkinCapability.get(event.getEntity());
+            ISkinType[] skinTypes = new ISkinType[] {SkinTypeRegistry.skinHead, SkinTypeRegistry.skinChest, SkinTypeRegistry.skinLegs, SkinTypeRegistry.skinFeet};
+            
+            if (skinCapability != null) {
+                for (int i = 0; i < skinTypes.length; i++) {
+                    ISkinType skinType = skinTypes[i];
+                    
+                    ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, 0);
+                    if (skinDescriptor == null) {
+                        continue;
+                    }
+                    Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
+                    if (skin == null) {
+                        continue;
+                    }
+                    if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
+                        if (i == 0) {
+                            modelPlayer.bipedHead.isHidden = true;
+                        } else if(i == 1) {
+                            modelPlayer.bipedBody.isHidden = true;
+                            modelPlayer.bipedLeftArm.isHidden = true;
+                            modelPlayer.bipedRightArm.isHidden = true;
+                        } else if(i == 2) {
+                            modelPlayer.bipedLeftLeg.isHidden = true;
+                            modelPlayer.bipedRightLeg.isHidden = true;
+                        } else if(i == 3) {
+                            modelPlayer.bipedLeftLeg.isHidden = true;
+                            modelPlayer.bipedRightLeg.isHidden = true;
+                        }
+                    }
+                    
+                    
+                }
+            }
+        }
+    }
+    
+    @SubscribeEvent
+    public void onRender(RenderLivingEvent.Post<EntityLivingBase> event) {
+        
+    }
+    
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.getEntityPlayer();
@@ -89,9 +138,13 @@ public final class EquipmentWardrobeHandler {
             return;
         }
         
+        for (int i = 0; i < armour.length; i++) {
+            armour[i] = player.inventory.armorInventory.get(i);
+            player.inventory.armorInventory.set(i, ItemStack.EMPTY);
+        }
         
         
-        //Hide the head overlay if the player has turned it off.
+        // Hide the head overlay if the player has turned it off.
         PlayerPointer playerPointer = new PlayerPointer(player);
         RenderPlayer renderer = event.getRenderer();
         if (equipmentWardrobeMap.containsKey(playerPointer)) {
@@ -109,7 +162,6 @@ public final class EquipmentWardrobeHandler {
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
         ISkinType[] skinTypes = new ISkinType[] {SkinTypeRegistry.skinHead, SkinTypeRegistry.skinChest, SkinTypeRegistry.skinLegs, SkinTypeRegistry.skinFeet};
         
-        
         if (skinCapability != null) {
             for (int i = 0; i < skinTypes.length; i++) {
                 ISkinType skinType = skinTypes[i];
@@ -126,9 +178,9 @@ public final class EquipmentWardrobeHandler {
                     if (i == 0) {
                         modelPlayer.bipedHead.isHidden = true;
                     } else if(i == 1) {
-                        modelPlayer.bipedBody.isHidden = true;
-                        modelPlayer.bipedLeftArm.isHidden = true;
-                        modelPlayer.bipedRightArm.isHidden = true;
+                        //modelPlayer.bipedBody.isHidden = true;
+                        //modelPlayer.bipedLeftArm.isHidden = true;
+                        //modelPlayer.bipedRightArm.isHidden = true;
                     } else if(i == 2) {
                         modelPlayer.bipedLeftLeg.isHidden = true;
                         modelPlayer.bipedRightLeg.isHidden = true;
@@ -157,6 +209,10 @@ public final class EquipmentWardrobeHandler {
             return;
         }
         
+        for (int i = 0; i < armour.length; i++) {
+            player.inventory.armorInventory.set(i, armour[i]);
+        }
+        
         //Restore the head overlay.
         PlayerPointer playerPointer = new PlayerPointer(player);
         RenderPlayer renderer = event.getRenderer();
@@ -171,41 +227,5 @@ public final class EquipmentWardrobeHandler {
         modelPlayer.bipedRightArm.isHidden = false;
         modelPlayer.bipedLeftLeg.isHidden = false;
         modelPlayer.bipedRightLeg.isHidden = false;
-    }
-    
-    @SubscribeEvent(priority=EventPriority.HIGH)
-    public void onRender(RenderPlayerEvent.SetArmorModel event) {
-        int slot = -event.getSlot() + 3;
-        if (slot > 3) {
-            return;
-        }
-        EntityPlayer player = event.getEntityPlayer();
-        /*if (player instanceof MannequinFakePlayer) {
-            return;
-        }*/
-        if (player.getGameProfile() == null) {
-            return;
-        }
-        if (player instanceof FakePlayer) {
-            return;
-        }
-        
-        int result = -1;
-        //Hide the armour if it had been skinned.
-        
-        ItemStack stack = player.inventory.armorInventory.get(event.getSlot());
-        if (SkinNBTHelper.stackHasSkinData(stack)) {
-            result = -2;
-        }
-        /*
-        //Hide the armour if the player has turned it off.
-        PlayerPointer playerPointer = new PlayerPointer(player);
-        if (equipmentWardrobeMap.containsKey(playerPointer)) {
-            EquipmentWardrobeData ewd = equipmentWardrobeMap.get(playerPointer);
-            if (ewd.armourOverride.get(slot)) {
-                result = -2;
-            }
-        }*/
-        event.setResult(result);
     }
 }

@@ -29,6 +29,8 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         if (ClientProxy.getSkinRenderType() != SkinRenderType.RENDER_LAYER) {
             return;
         }
+        renderPlayer.getMainModel().bipedLeftArm.isHidden = false;
+        renderPlayer.getMainModel().bipedRightArm.isHidden = false;
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(entitylivingbaseIn);
         if (skinCapability == null) {
             return;

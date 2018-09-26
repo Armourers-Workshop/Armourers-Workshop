@@ -1,16 +1,24 @@
 package moe.plushie.armourers_workshop.common.skin.entity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.client.render.entity.ModelResetLayer;
 import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererPlayer;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SkinnableEntityPlayer extends SkinnableEntity {
 
@@ -22,9 +30,16 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
         return classes;
     }
     
+    @SideOnly(Side.CLIENT)
     @Override
     public void addRenderLayer(RenderManager renderManager) {
         for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
+            Object object = ReflectionHelper.getPrivateValue(RenderLivingBase.class, playerRender, "layerRenderers");
+            if (object != null) {
+                List<LayerRenderer<?>> layerRenderers = (List<LayerRenderer<?>>) object;
+                layerRenderers.add(0, new ModelResetLayer(playerRender));
+                ModLogger.log("adding reset layer");
+            }
             playerRender.addLayer(new SkinLayerRendererPlayer(playerRender));
         }
     }
