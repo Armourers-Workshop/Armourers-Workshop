@@ -14,15 +14,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class SkinnableEntityChicken extends SkinnableEntity {
 
     @Override
-    public ArrayList<Class<? extends EntityLivingBase>> getEntityClass() {
+    public Class<? extends EntityLivingBase> getEntityClass() {
         ArrayList<Class<? extends EntityLivingBase>> classes = new ArrayList<Class<? extends EntityLivingBase>>();
         classes.add(EntityChicken.class);
-        return classes;
+        return EntityChicken.class;
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public LayerRenderer<? extends EntityLivingBase> getLayerRenderer(Class<? extends EntityLivingBase> entityClass) {
+    public LayerRenderer<? extends EntityLivingBase> getLayerRenderer() {
         return new SkinLayerRendererChicken();
     }
 

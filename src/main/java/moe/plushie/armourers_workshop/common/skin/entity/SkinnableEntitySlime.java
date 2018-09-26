@@ -10,10 +10,8 @@ import net.minecraft.entity.monster.EntitySlime;
 public class SkinnableEntitySlime extends SkinnableEntity {
 
     @Override
-    public ArrayList<Class<? extends EntityLivingBase>> getEntityClass() {
-        ArrayList<Class<? extends EntityLivingBase>> classes = new ArrayList<Class<? extends EntityLivingBase>>();
-        classes.add(EntitySlime.class);
-        return classes;
+    public Class<? extends EntityLivingBase> getEntityClass() {
+        return EntitySlime.class;
     }
 
     @Override

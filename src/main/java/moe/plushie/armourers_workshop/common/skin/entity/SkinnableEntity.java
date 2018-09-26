@@ -15,20 +15,17 @@ public abstract class SkinnableEntity implements ISkinnableEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public void addRenderLayer(RenderManager renderManager) {
-        for (int i = 0; i < getEntityClass().size(); i++) {
-            Class<? extends EntityLivingBase> entityClass = getEntityClass().get(i);
-            Render<Entity> renderer = renderManager.getEntityClassRenderObject(entityClass);
-            if (renderer != null && renderer instanceof RenderLivingBase) {
-                LayerRenderer<? extends EntityLivingBase> layerRenderer = getLayerRenderer(entityClass);
-                if (layerRenderer != null) {
-                    ((RenderLivingBase<?>) renderer).addLayer(layerRenderer);
-                }
+        Render<Entity> renderer = renderManager.getEntityClassRenderObject(getEntityClass());
+        if (renderer != null && renderer instanceof RenderLivingBase) {
+            LayerRenderer<? extends EntityLivingBase> layerRenderer = getLayerRenderer();
+            if (layerRenderer != null) {
+                ((RenderLivingBase<?>) renderer).addLayer(layerRenderer);
             }
         }
     }
     
     @SideOnly(Side.CLIENT)
-    public LayerRenderer<? extends EntityLivingBase> getLayerRenderer(Class<? extends EntityLivingBase> entityClass) {
+    public LayerRenderer<? extends EntityLivingBase> getLayerRenderer() {
         return null;
     }
     

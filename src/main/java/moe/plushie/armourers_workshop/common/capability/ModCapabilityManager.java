@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeStorage
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -43,12 +44,14 @@ public final class ModCapabilityManager {
     
     @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        ISkinnableEntity skinnableEntity = EntitySkinHandler.INSTANCE.geSkinnableEntity(event.getObject());
-        if (skinnableEntity != null) {
-            event.addCapability(new ResourceLocation(LibModInfo.ID, "entity-skin-provider"), new EntitySkinProvider(event.getObject(), skinnableEntity));
-            if (event.getObject() instanceof EntityPlayer) {
-                event.addCapability(new ResourceLocation(LibModInfo.ID, "wardrobe-provider"), new WardrobeProvider((EntityPlayer) event.getObject(), skinnableEntity));
+        if (event.getObject() instanceof EntityLivingBase) {
+            ISkinnableEntity skinnableEntity = EntitySkinHandler.INSTANCE.getSkinnableEntity((EntityLivingBase) event.getObject());
+            if (skinnableEntity != null) {
+                event.addCapability(new ResourceLocation(LibModInfo.ID, "entity-skin-provider"), new EntitySkinProvider(event.getObject(), skinnableEntity));
+                if (event.getObject() instanceof EntityPlayer) {
+                    event.addCapability(new ResourceLocation(LibModInfo.ID, "wardrobe-provider"), new WardrobeProvider((EntityPlayer) event.getObject(), skinnableEntity));
+                }
             }
-        }
+        }  
     }
 }

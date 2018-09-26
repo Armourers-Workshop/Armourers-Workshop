@@ -22,15 +22,14 @@ public class ItemWandOfStyle extends AbstractModItem {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
         ModLogger.log(entity.getClass());
-        if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(entity)) {
-            if (entity.getEntityWorld().isRemote) {
-                return true;
+        if (entity instanceof EntityLivingBase) {
+            if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity((EntityLivingBase) entity)) {
+                if (entity.getEntityWorld().isRemote) {
+                    return true;
+                }
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.ENTITY_SKIN_INVENTORY, entity.getEntityWorld(), entity.getEntityId(), 0, 0);
             }
-            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance,
-                    LibGuiIds.ENTITY_SKIN_INVENTORY, entity.getEntityWorld(),
-                    entity.getEntityId(), 0, 0);
         }
-        
         return true;
     }
     

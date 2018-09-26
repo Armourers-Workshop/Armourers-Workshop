@@ -22,14 +22,9 @@ import moe.plushie.armourers_workshop.utils.UtilItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -68,27 +63,26 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
             return;
         }
         ModLogger.log(String.format("Registering %s as a skinnable entity.", skinnableEntity.getEntityClass()));
-        ArrayList<Class<? extends EntityLivingBase>> classes = skinnableEntity.getEntityClass();
-        for (int i = 0; i < classes.size(); i++) {
-            entityMap.put(classes.get(i), skinnableEntity);
-        }
+        entityMap.put(skinnableEntity.getEntityClass(), skinnableEntity);
     }
     
-    @SubscribeEvent
-    public void onStartTracking(PlayerEvent.StartTracking event) {
-        if (event.getEntity().getEntityWorld().isRemote) {
-            return;
+    public ISkinnableEntity getSkinnableEntity(EntityLivingBase entity) {
+        if (entityMap.containsKey(entity.getClass())) {
+            return entityMap.get(entity.getClass());
         }
         
-        Entity entity = event.getTarget();
-        ExPropsEntityEquipmentData props = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
-        if (props != null) {
-            props.sendEquipmentDataToPlayer((EntityPlayerMP) event.getEntityPlayer());
+        for (int i = 0; i < entityMap.size(); i++) {
+            Class <? extends EntityLivingBase> entityClass;
+            entityClass = (Class <? extends EntityLivingBase>)entityMap.keySet().toArray()[i];
+            if (entityClass.isAssignableFrom(entity.getClass())) {
+                return entityMap.get(entityClass);
+            }
         }
+        return null;
     }
     
     @Override
-    public boolean isValidEntity(Entity entity) {
+    public boolean isValidEntity(EntityLivingBase entity) {
         if (entity instanceof EntityLivingBase) {
             if (entityMap.containsKey(entity.getClass())) {
                 return true;
@@ -97,38 +91,12 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         return false;
     }
     
-    public ISkinnableEntity geSkinnableEntity(Entity entity) {
-        if (entity instanceof EntityLivingBase) {
-            return entityMap.get(entity.getClass());
-        }
-        return null;
-    }
-    
-    public boolean canUseWandOfStyleOnEntity(Entity entity) {
-        if (isValidEntity(entity)) {
-            ISkinnableEntity skinnableEntity = entityMap.get(entity.getClass());
+    public boolean canUseWandOfStyleOnEntity(EntityLivingBase entity) {
+        ISkinnableEntity skinnableEntity = getSkinnableEntity(entity);
+        if (skinnableEntity != null) {
             return skinnableEntity.canUseWandOfStyle();
         }
         return false;
-    }
-    
-    @SubscribeEvent
-    public void onEntityConstructing(EntityConstructing event) {
-        Entity entity = event.getEntity();
-        if (isValidEntity(entity)) {
-            ISkinnableEntity skinnableEntity = entityMap.get(entity.getClass());
-            ExPropsEntityEquipmentData.register(entity, skinnableEntity);
-        }
-    }
-    
-    @SubscribeEvent
-    public void onLivingDeathEvent(LivingDeathEvent event) {
-        Entity entity = event.getEntity();
-        if (isValidEntity(entity)) {
-            if (entity.getEntityWorld() != null && !entity.getEntityWorld().isRemote) {
-                dropEntitySkins(entity); 
-            }
-        }
     }
     
     private void dropEntitySkins(Entity entity) {

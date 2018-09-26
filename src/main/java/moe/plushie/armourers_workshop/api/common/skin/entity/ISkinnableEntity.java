@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface ISkinnableEntity {
     
     /** Return the class of the entity to be skinned. */
-    public ArrayList<Class<? extends EntityLivingBase>> getEntityClass();
+    public Class<? extends EntityLivingBase> getEntityClass();
     
     /** Return the render class for the entity. */
     @SideOnly(Side.CLIENT)

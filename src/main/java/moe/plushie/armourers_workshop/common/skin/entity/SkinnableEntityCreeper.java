@@ -10,10 +10,8 @@ import net.minecraft.entity.monster.EntityCreeper;
 public class SkinnableEntityCreeper extends SkinnableEntity {
 
     @Override
-    public ArrayList<Class<? extends EntityLivingBase>> getEntityClass() {
-        ArrayList<Class<? extends EntityLivingBase>> classes = new ArrayList<Class<? extends EntityLivingBase>>();
-        classes.add(EntityCreeper.class);
-        return classes;
+    public Class<? extends EntityLivingBase> getEntityClass() {
+        return EntityCreeper.class;
     }
 
     @Override
