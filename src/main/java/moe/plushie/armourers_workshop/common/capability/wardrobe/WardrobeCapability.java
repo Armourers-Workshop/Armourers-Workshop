@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdateWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -23,9 +24,9 @@ public class WardrobeCapability implements IWardrobeCapability {
     @CapabilityInject(IWardrobeCapability.class)
     public static final Capability<IWardrobeCapability> WARDROBE_CAP = null;
 
-    private static final Color COLOUR_SKIN_DEFAULT = Color.decode("#F9DFD2");
+    public static final Color COLOUR_SKIN_DEFAULT = Color.decode("#F9DFD2");
 
-    private static final Color COLOUR_HAIR_DEFAULT = Color.decode("#804020");
+    public static final Color COLOUR_HAIR_DEFAULT = Color.decode("#804020");
 
     private final EntityPlayer entityPlayer;
 
@@ -56,21 +57,35 @@ public class WardrobeCapability implements IWardrobeCapability {
             slotsUnlocked.put(skinType.getRegistryName(), getUnlockedSlotsForSkinType(skinType));
         }
     }
-
+    
+    @Override
     public int getSkinColour() {
         return skinColour;
     }
-
+    
+    @Override
     public void setSkinColour(int skinColour) {
         this.skinColour = skinColour;
     }
-
+    
+    @Override
     public int getHairColour() {
         return hairColour;
     }
-
+    
+    @Override
     public void setHairColour(int hairColour) {
         this.hairColour = hairColour;
+    }
+    
+    @Override
+    public BitSet getArmourOverride() {
+        return armourOverride;
+    }
+    
+    @Override
+    public void setArmourOverride(BitSet armourOverride) {
+        this.armourOverride = armourOverride;
     }
 
     public int getUnlockedSlotsForSkinType(ISkinType skinType) {
@@ -109,6 +124,13 @@ public class WardrobeCapability implements IWardrobeCapability {
         NBTTagCompound compound = (NBTTagCompound) WARDROBE_CAP.getStorage().writeNBT(WARDROBE_CAP, this, null);
         MessageServerSyncWardrobeCap message = new MessageServerSyncWardrobeCap(entityPlayer.getEntityId(), compound);
         PacketHandler.networkWrapper.sendToAllTracking(message, entityPlayer);
+    }
+    
+    @Override
+    public void sendUpdateToServer() {
+        NBTTagCompound compound = (NBTTagCompound) WARDROBE_CAP.getStorage().writeNBT(WARDROBE_CAP, this, null);
+        MessageClientUpdateWardrobeCap message = new MessageClientUpdateWardrobeCap(compound);
+        PacketHandler.networkWrapper.sendToServer(message);
     }
 
     public static IWardrobeCapability get(EntityPlayer entity) {

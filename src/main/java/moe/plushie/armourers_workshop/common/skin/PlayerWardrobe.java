@@ -1,16 +1,13 @@
 package moe.plushie.armourers_workshop.common.skin;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.util.BitSet;
 import java.util.HashMap;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -166,51 +163,5 @@ public class PlayerWardrobe {
             ByteBufUtils.writeUTF8String(buf, skinType.getRegistryName());
             buf.writeInt(getUnlockedSlotsForSkinType(skinType));
         }
-    }
-    
-    public int autoColourHair(AbstractClientPlayer player) {
-        BufferedImage playerTexture = SkinHelper.getBufferedImageSkin(player);
-        if (playerTexture == null) {
-            return COLOUR_HAIR_DEFAULT.getRGB();
-        }
-        
-        int r = 0, g = 0, b = 0;
-        
-        for (int ix = 0; ix < 2; ix++) {
-            for (int iy = 0; iy < 1; iy++) {
-                Color c = new Color(playerTexture.getRGB(ix + 11, iy + 3));
-                r += c.getRed();
-                g += c.getGreen();
-                b += c.getBlue();
-            }
-        }
-        r = r / 2;
-        g = g / 2;
-        b = b / 2;
-        
-        return new Color(r, g, b).getRGB();
-    }
-    
-    public int autoColourSkin(AbstractClientPlayer player) {
-        BufferedImage playerTexture = SkinHelper.getBufferedImageSkin(player);
-        if (playerTexture == null) {
-            return COLOUR_SKIN_DEFAULT.getRGB();
-        }
-        
-        int r = 0, g = 0, b = 0;
-        
-        for (int ix = 0; ix < 2; ix++) {
-            for (int iy = 0; iy < 1; iy++) {
-                Color c = new Color(playerTexture.getRGB(ix + 11, iy + 13));
-                r += c.getRed();
-                g += c.getGreen();
-                b += c.getBlue();
-            }
-        }
-        r = r / 2;
-        g = g / 2;
-        b = b / 2;
-        
-        return new Color(r, g, b).getRGB();
     }
 }

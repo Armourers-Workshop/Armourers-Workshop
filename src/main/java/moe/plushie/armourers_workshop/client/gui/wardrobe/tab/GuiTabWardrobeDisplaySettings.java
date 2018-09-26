@@ -9,10 +9,8 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
-import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
-import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
+import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,29 +23,22 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE);
     
-    EntityPlayer entityPlayer;
-    ExPropsPlayerSkinData propsPlayerSkinData;
-    PlayerWardrobe equipmentWardrobeData;
+    private EntityPlayer entityPlayer;
+    private IEntitySkinCapability skinCapability;
+    private IWardrobeCapability wardrobeCapability;
     
-    BitSet armourOverride;
-    boolean headOverlay;
-    boolean limitLimbs;
+    private BitSet armourOverride;
     
     private GuiCheckBox[] armourOverrideCheck;
-    private GuiCheckBox[] overlayOverrideCheck;
-    private GuiCheckBox limitLimbsCheck;
     
     String guiName = "equipmentWardrobe";
     
-    public GuiTabWardrobeDisplaySettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, ExPropsPlayerSkinData propsPlayerSkinData, PlayerWardrobe equipmentWardrobeData) {
+    public GuiTabWardrobeDisplaySettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IWardrobeCapability wardrobeCapability) {
         super(tabId, parent, false);
         this.entityPlayer = entityPlayer;
-        this.propsPlayerSkinData = propsPlayerSkinData;
-        this.equipmentWardrobeData = equipmentWardrobeData;
-        
-        this.armourOverride = equipmentWardrobeData.armourOverride;
-        this.headOverlay = equipmentWardrobeData.headOverlay;
-        this.limitLimbs = equipmentWardrobeData.limitLimbs;
+        this.skinCapability = skinCapability;
+        this.wardrobeCapability = wardrobeCapability;
+        this.armourOverride = wardrobeCapability.getArmourOverride();
     }
     
     @Override
@@ -59,33 +50,23 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
         armourOverrideCheck[2] = new GuiCheckBox(4, 68, 75, GuiHelper.getLocalizedControlName(guiName, "renderLegArmour"), !armourOverride.get(2));
         armourOverrideCheck[3] = new GuiCheckBox(5, 68, 94, GuiHelper.getLocalizedControlName(guiName, "renderFootArmour"), !armourOverride.get(3));
         
-        overlayOverrideCheck = new GuiCheckBox[1];
-        overlayOverrideCheck[0] = new GuiCheckBox(6, 68, 26, GuiHelper.getLocalizedControlName(guiName, "renderHeadOverlay"), !headOverlay);
-        
-        limitLimbsCheck = new GuiCheckBox(7, 68, 56, GuiHelper.getLocalizedControlName(guiName, "limitLimbMovement"), limitLimbs);
-        
-        buttonList.add(overlayOverrideCheck[0]);
         buttonList.add(armourOverrideCheck[0]);
         buttonList.add(armourOverrideCheck[1]);
         buttonList.add(armourOverrideCheck[2]);
         buttonList.add(armourOverrideCheck[3]);
-        buttonList.add(limitLimbsCheck);
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button instanceof GuiCheckBox) {
-            headOverlay = !overlayOverrideCheck[0].isChecked();
             for (int i = 0; i < 4; i++) {
                 armourOverride.set(i, !armourOverrideCheck[i].isChecked());
             }
         }
         
         if (button.id >= 1) {
-            equipmentWardrobeData.headOverlay = headOverlay;
-            equipmentWardrobeData.armourOverride = armourOverride;
-            equipmentWardrobeData.limitLimbs = limitLimbsCheck.isChecked();
-            PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(equipmentWardrobeData));
+            wardrobeCapability.setArmourOverride(armourOverride);
+            wardrobeCapability.sendUpdateToServer();
         }
     }
 

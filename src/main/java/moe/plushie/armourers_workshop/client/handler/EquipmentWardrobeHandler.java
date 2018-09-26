@@ -8,6 +8,8 @@ import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
@@ -78,44 +80,6 @@ public final class EquipmentWardrobeHandler {
     
     @SubscribeEvent
     public void onRender(RenderLivingEvent.Pre<EntityLivingBase> event) {
-        if (event.getEntity() instanceof EntityPlayer) {
-            
-            ModelPlayer modelPlayer = (ModelPlayer) event.getRenderer().getMainModel();
-            IEntitySkinCapability skinCapability = EntitySkinCapability.get(event.getEntity());
-            ISkinType[] skinTypes = new ISkinType[] {SkinTypeRegistry.skinHead, SkinTypeRegistry.skinChest, SkinTypeRegistry.skinLegs, SkinTypeRegistry.skinFeet};
-            
-            if (skinCapability != null) {
-                for (int i = 0; i < skinTypes.length; i++) {
-                    ISkinType skinType = skinTypes[i];
-                    
-                    ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, 0);
-                    if (skinDescriptor == null) {
-                        continue;
-                    }
-                    Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
-                    if (skin == null) {
-                        continue;
-                    }
-                    if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
-                        if (i == 0) {
-                            modelPlayer.bipedHead.isHidden = true;
-                        } else if(i == 1) {
-                            modelPlayer.bipedBody.isHidden = true;
-                            modelPlayer.bipedLeftArm.isHidden = true;
-                            modelPlayer.bipedRightArm.isHidden = true;
-                        } else if(i == 2) {
-                            modelPlayer.bipedLeftLeg.isHidden = true;
-                            modelPlayer.bipedRightLeg.isHidden = true;
-                        } else if(i == 3) {
-                            modelPlayer.bipedLeftLeg.isHidden = true;
-                            modelPlayer.bipedRightLeg.isHidden = true;
-                        }
-                    }
-                    
-                    
-                }
-            }
-        }
     }
     
     @SubscribeEvent
@@ -138,11 +102,15 @@ public final class EquipmentWardrobeHandler {
             return;
         }
         
-        for (int i = 0; i < armour.length; i++) {
-            armour[i] = player.inventory.armorInventory.get(i);
-            player.inventory.armorInventory.set(i, ItemStack.EMPTY);
+        IWardrobeCapability wardrobeCapability = WardrobeCapability.get(player);
+        if (wardrobeCapability != null) {
+            for (int i = 0; i < armour.length; i++) {
+                armour[i] = player.inventory.armorInventory.get(i);
+                if (wardrobeCapability.getArmourOverride().get(-i + 3)) {
+                    player.inventory.armorInventory.set(i, ItemStack.EMPTY);
+                }
+            }
         }
-        
         
         // Hide the head overlay if the player has turned it off.
         PlayerPointer playerPointer = new PlayerPointer(player);
@@ -178,9 +146,9 @@ public final class EquipmentWardrobeHandler {
                     if (i == 0) {
                         modelPlayer.bipedHead.isHidden = true;
                     } else if(i == 1) {
-                        //modelPlayer.bipedBody.isHidden = true;
-                        //modelPlayer.bipedLeftArm.isHidden = true;
-                        //modelPlayer.bipedRightArm.isHidden = true;
+                        modelPlayer.bipedBody.isHidden = true;
+                        modelPlayer.bipedLeftArm.isHidden = true;
+                        modelPlayer.bipedRightArm.isHidden = true;
                     } else if(i == 2) {
                         modelPlayer.bipedLeftLeg.isHidden = true;
                         modelPlayer.bipedRightLeg.isHidden = true;

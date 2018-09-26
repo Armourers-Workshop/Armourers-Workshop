@@ -14,15 +14,17 @@ import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTab;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabbed;
+import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeColourSettings;
+import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeDisplaySettings;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeSkins;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.data.PlayerPointer;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
-import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -42,8 +44,8 @@ public class GuiWardrobe extends GuiTabbed {
     private static final ResourceLocation TEXTURE_TAB = new ResourceLocation(LibGuiResources.WARDROBE_TABS);
     
     private final GuiTabWardrobeSkins tabSkins;
-    //private final GuiTabWardrobeDisplaySettings tabDisplaySettings;
-    //private final GuiTabWardrobeColourSettings tabColourSettings;
+    private final GuiTabWardrobeDisplaySettings tabDisplaySettings;
+    private final GuiTabWardrobeColourSettings tabColourSettings;
 
     EntitySkinCapability skinCapability;
     PlayerWardrobe equipmentWardrobeData;
@@ -66,26 +68,22 @@ public class GuiWardrobe extends GuiTabbed {
         
         this.player = inventory.player;
         this.skinCapability = skinCapability;
-        PlayerPointer playerPointer = new PlayerPointer(player);
-        equipmentWardrobeData = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
-        
-        if (equipmentWardrobeData == null) {
-            equipmentWardrobeData = new PlayerWardrobe();
-            ModLogger.log(Level.ERROR,"Unable to get skin info for player: " + this.player.getDisplayName());
+        IWardrobeCapability wardrobeCapability = WardrobeCapability.get(player);
+        if (wardrobeCapability == null) {
+            ModLogger.log(Level.ERROR, "Unable to get wardrobe info for player: " + this.player.getDisplayName());
         }
         
         tabSkins = new GuiTabWardrobeSkins(0, this);
-        
-        //tabDisplaySettings = new GuiTabWardrobeDisplaySettings(1, this, player, skinCapability, equipmentWardrobeData);
-        //tabColourSettings = new GuiTabWardrobeColourSettings(2, this, player, skinCapability, equipmentWardrobeData);
+        tabDisplaySettings = new GuiTabWardrobeDisplaySettings(1, this, player, skinCapability, wardrobeCapability);
+        tabColourSettings = new GuiTabWardrobeColourSettings(2, this, player, skinCapability, wardrobeCapability);
         
         tabList.add(tabSkins);
-        //tabList.add(tabDisplaySettings);
-        //tabList.add(tabColourSettings);
+        tabList.add(tabDisplaySettings);
+        tabList.add(tabColourSettings);
         
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.skins")).setIconLocation(52, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
-        //tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.displaySettings")).setIconLocation(52 + 16, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
-        //tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.colourSettings")).setIconLocation(52 + 32, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.displaySettings")).setIconLocation(52 + 16, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.colourSettings")).setIconLocation(52 + 32, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
         
         tabController.setActiveTabIndex(activeTab);
         

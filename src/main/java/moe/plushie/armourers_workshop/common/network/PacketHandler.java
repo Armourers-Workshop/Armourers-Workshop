@@ -22,7 +22,7 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientRequestGameProfile;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientRequestSkinData;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientSkinPart;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdateWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientToolPaintBlock;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerClientCommand;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerEntitySkinData;
@@ -59,7 +59,7 @@ public final class PacketHandler {
         // Client messages.
         registerMessage(MessageClientLoadArmour.class, MessageClientLoadArmour.class, Side.SERVER);
         registerMessage(MessageClientKeyPress.class, MessageClientKeyPress.class, Side.SERVER);
-        registerMessage(MessageClientSkinWardrobeUpdate.class, MessageClientSkinWardrobeUpdate.class, Side.SERVER);
+        registerMessage(MessageClientUpdateWardrobeCap.class, MessageClientUpdateWardrobeCap.class, Side.SERVER);
         registerMessage(MessageClientRequestSkinData.class, MessageClientRequestSkinData.class, Side.SERVER);
         registerMessage(MessageClientSkinPart.class, MessageClientSkinPart.class, Side.SERVER);
         registerMessage(MessageClientToolPaintBlock.class, MessageClientToolPaintBlock.class, Side.SERVER);

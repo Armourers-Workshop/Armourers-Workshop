@@ -44,7 +44,6 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             playerRender.addLayer(new SkinLayerRendererPlayer(playerRender));
         }
     }

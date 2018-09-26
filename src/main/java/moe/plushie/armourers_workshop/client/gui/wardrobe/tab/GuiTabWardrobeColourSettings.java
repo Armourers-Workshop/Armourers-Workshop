@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.client.gui.wardrobe.tab;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 import org.lwjgl.opengl.GL11;
 
@@ -9,12 +10,10 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
-import moe.plushie.armourers_workshop.common.data.PlayerPointer;
-import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
-import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
-import moe.plushie.armourers_workshop.proxies.ClientProxy;
+import moe.plushie.armourers_workshop.common.SkinHelper;
+import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -29,6 +28,10 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE);
     
+    private EntityPlayer entityPlayer;
+    private IEntitySkinCapability skinCapability;
+    private IWardrobeCapability wardrobeCapability;
+    
     private boolean selectingSkinColour = false;
     private boolean selectingHairColour = false;
     
@@ -40,19 +43,15 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     private GuiButtonExt selectHairButton;
     private GuiButtonExt autoHairButton;
     
-    EntityPlayer entityPlayer;
-    ExPropsPlayerSkinData propsPlayerSkinData;
-    PlayerWardrobe equipmentWardrobeData;
-    
     String guiName = "equipmentWardrobe";
     
-    public GuiTabWardrobeColourSettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, ExPropsPlayerSkinData propsPlayerSkinData, PlayerWardrobe equipmentWardrobeData) {
+    public GuiTabWardrobeColourSettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IWardrobeCapability wardrobeCapability) {
         super(tabId, parent, false);
-        this.skinColour = new Color(equipmentWardrobeData.skinColour);
-        this.hairColour = new Color(equipmentWardrobeData.hairColour);
         this.entityPlayer = entityPlayer;
-        this.propsPlayerSkinData = propsPlayerSkinData;
-        this.equipmentWardrobeData = equipmentWardrobeData;
+        this.skinCapability = skinCapability;
+        this.wardrobeCapability = wardrobeCapability;
+        this.skinColour = new Color(wardrobeCapability.getSkinColour());
+        this.hairColour = new Color(wardrobeCapability.getHairColour());
     }
     
     @Override
@@ -72,15 +71,13 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     @Override
     public void mouseClicked(int mouseX, int mouseY, int button) {
         if (button == 0 & selectingSkinColour) {
-            PlayerWardrobe ewd = new PlayerWardrobe(this.equipmentWardrobeData);
-            ewd.skinColour = skinColour.getRGB();
-            PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(ewd));
+            wardrobeCapability.setSkinColour(skinColour.getRGB());
+            wardrobeCapability.sendUpdateToServer();
             selectingSkinColour = false;
         }
         if (button == 0 & selectingHairColour) {
-            PlayerWardrobe ewd = new PlayerWardrobe(this.equipmentWardrobeData);
-            ewd.hairColour = hairColour.getRGB();
-            PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(ewd));
+            wardrobeCapability.setHairColour(hairColour.getRGB());
+            wardrobeCapability.sendUpdateToServer();
             selectingHairColour = false;
         }
         super.mouseClicked(mouseX, mouseY, button);
@@ -97,17 +94,15 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
             selectingHairColour = true;
         }
         if (button == autoSkinButton) {
-            int newSkinColour = equipmentWardrobeData.autoColourSkin((AbstractClientPlayer) this.entityPlayer);
-            PlayerWardrobe ewd = new PlayerWardrobe(this.equipmentWardrobeData);
-            ewd.skinColour = newSkinColour;
-            PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(ewd));
+            int newSkinColour = autoColourSkin((AbstractClientPlayer) this.entityPlayer);
+            wardrobeCapability.setSkinColour(newSkinColour);
+            wardrobeCapability.sendUpdateToServer();
         }
         
         if (button == autoHairButton) {
-            int newHairColour = equipmentWardrobeData.autoColourHair((AbstractClientPlayer) this.entityPlayer);
-            PlayerWardrobe ewd = new PlayerWardrobe(this.equipmentWardrobeData);
-            ewd.hairColour = newHairColour;
-            PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(ewd));
+            int newHairColour = autoColourHair((AbstractClientPlayer) this.entityPlayer);
+            wardrobeCapability.setHairColour(newHairColour);
+            wardrobeCapability.sendUpdateToServer();
         }
     }
     
@@ -120,12 +115,6 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         
         //Bottom half of GUI. (player inventory)
         this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
-        
-        PlayerPointer playerPointer = new PlayerPointer(entityPlayer);
-        PlayerWardrobe newEwd = equipmentWardrobeData = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
-        if (newEwd != null) {
-            equipmentWardrobeData = newEwd;
-        }
         
         float skinR = (float) skinColour.getRed() / 255;
         float skinG = (float) skinColour.getGreen() / 255;
@@ -161,8 +150,8 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         String labelHairColour = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.hairColour");
         fontRenderer.drawString(labelHairColour + ":", 70, 70, 4210752); 
         
-        this.skinColour = new Color(equipmentWardrobeData.skinColour);
-        this.hairColour = new Color(equipmentWardrobeData.hairColour);
+        this.skinColour = new Color(wardrobeCapability.getSkinColour());
+        this.hairColour = new Color(wardrobeCapability.getHairColour());
         
         GL11.glPushMatrix();
         GL11.glTranslated(-x, -y, 0);
@@ -179,5 +168,51 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
             ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY, false);
         }
         GL11.glPopMatrix();
+    }
+    
+    public int autoColourHair(AbstractClientPlayer player) {
+        BufferedImage playerTexture = SkinHelper.getBufferedImageSkin(player);
+        if (playerTexture == null) {
+            return WardrobeCapability.COLOUR_HAIR_DEFAULT.getRGB();
+        }
+        
+        int r = 0, g = 0, b = 0;
+        
+        for (int ix = 0; ix < 2; ix++) {
+            for (int iy = 0; iy < 1; iy++) {
+                Color c = new Color(playerTexture.getRGB(ix + 11, iy + 3));
+                r += c.getRed();
+                g += c.getGreen();
+                b += c.getBlue();
+            }
+        }
+        r = r / 2;
+        g = g / 2;
+        b = b / 2;
+        
+        return new Color(r, g, b).getRGB();
+    }
+    
+    public int autoColourSkin(AbstractClientPlayer player) {
+        BufferedImage playerTexture = SkinHelper.getBufferedImageSkin(player);
+        if (playerTexture == null) {
+            return WardrobeCapability.COLOUR_SKIN_DEFAULT.getRGB();
+        }
+        
+        int r = 0, g = 0, b = 0;
+        
+        for (int ix = 0; ix < 2; ix++) {
+            for (int iy = 0; iy < 1; iy++) {
+                Color c = new Color(playerTexture.getRGB(ix + 11, iy + 13));
+                r += c.getRed();
+                g += c.getGreen();
+                b += c.getBlue();
+            }
+        }
+        r = r / 2;
+        g = g / 2;
+        b = b / 2;
+        
+        return new Color(r, g, b).getRGB();
     }
 }
