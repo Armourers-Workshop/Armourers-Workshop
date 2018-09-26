@@ -19,10 +19,8 @@ import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
@@ -76,16 +74,7 @@ public final class EquipmentWardrobeHandler {
         }
     }
     
-    ItemStack[] armour = new ItemStack[4];
-    
-    @SubscribeEvent
-    public void onRender(RenderLivingEvent.Pre<EntityLivingBase> event) {
-    }
-    
-    @SubscribeEvent
-    public void onRender(RenderLivingEvent.Post<EntityLivingBase> event) {
-        
-    }
+    private ItemStack[] armour = new ItemStack[4];
     
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
@@ -102,10 +91,14 @@ public final class EquipmentWardrobeHandler {
             return;
         }
         
+        for (int i = 0; i < armour.length; i++) {
+            armour[i] = ItemStack.EMPTY;
+        }
+        
         IWardrobeCapability wardrobeCapability = WardrobeCapability.get(player);
-        if (wardrobeCapability != null) {
-            for (int i = 0; i < armour.length; i++) {
-                armour[i] = player.inventory.armorInventory.get(i);
+        for (int i = 0; i < armour.length; i++) {
+            armour[i] = player.inventory.armorInventory.get(i);
+            if (wardrobeCapability != null) {
                 if (wardrobeCapability.getArmourOverride().get(-i + 3)) {
                     player.inventory.armorInventory.set(i, ItemStack.EMPTY);
                 }
