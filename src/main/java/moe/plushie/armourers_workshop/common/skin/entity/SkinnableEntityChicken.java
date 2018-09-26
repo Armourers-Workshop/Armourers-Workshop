@@ -8,6 +8,8 @@ import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SkinnableEntityChicken extends SkinnableEntity {
 
@@ -18,6 +20,7 @@ public class SkinnableEntityChicken extends SkinnableEntity {
         return classes;
     }
     
+    @SideOnly(Side.CLIENT)
     @Override
     public LayerRenderer<? extends EntityLivingBase> getLayerRenderer(Class<? extends EntityLivingBase> entityClass) {
         return new SkinLayerRendererChicken();
