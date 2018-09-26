@@ -94,7 +94,7 @@ public class GuiHandler implements IGuiHandler {
                 if (skinCapabilityPlayer != null) {
                     return new ContainerSkinWardrobe(player.inventory, skinCapabilityPlayer);
                 } else {
-                    ModLogger.log(Level.WARN, "Error entity not found");
+                    ModLogger.log(Level.WARN, "Error entity not found " + player.getClass());
                 }
                 break;
             case LibGuiIds.MANNEQUIN:
@@ -191,7 +191,7 @@ public class GuiHandler implements IGuiHandler {
                 if (skinCapabilityPlayer != null) {
                     return new GuiWardrobe(player.inventory, skinCapabilityPlayer);
                 } else {
-                    ModLogger.log(Level.WARN, "Error entity not found");
+                    ModLogger.log(Level.WARN, "Error entity not found " + player.getClass());
                 }
                 break;
             case LibGuiIds.TOOL_OPTIONS:
