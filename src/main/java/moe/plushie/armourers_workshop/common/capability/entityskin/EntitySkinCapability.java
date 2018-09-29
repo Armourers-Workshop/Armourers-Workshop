@@ -138,7 +138,9 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
 
     @Override
     public void setInventorySlotContents(IInventory inventory, int slotId, ItemStack stack) {
-        // TODO Auto-generated method stub
+        if (!entity.getEntityWorld().isRemote) {
+            syncToAllAround();
+        }
     }
     
     public static IEntitySkinCapability get(EntityLivingBase entity) {
