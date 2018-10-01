@@ -60,9 +60,9 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
-        if (stackInput != null && stackInput.getItem() instanceof IPaintingTool) {
-            if (stackOutput != null) { return; }
-            setInventorySlotContents(0, null);
+        if (stackInput.getItem() instanceof IPaintingTool) {
+            if (stackOutput != ItemStack.EMPTY) { return; }
+            setInventorySlotContents(0, ItemStack.EMPTY);
             setInventorySlotContents(1, stackInput);
             
             if (stackInput.getItem() instanceof IPaintingTool && stackInput.getItem() != ModItems.colourPicker) {
@@ -97,7 +97,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         setPaintType(paintType, 0);
     }
     
-    public void setColour(int colour, boolean item){
+    public void setColour(int colour, boolean item) {
         if (getWorld().isRemote) {
             return;
         }
@@ -130,14 +130,19 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     }
     
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
+    public NBTTagCompound getUpdateTag() {
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
         compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
         compound.setInteger(TAG_PAINT_TYPE, paintType.getKey());
         compound.setBoolean(TAG_ITEM_UPDATE, itemUpdate);
+        return compound;
+    }
+    
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
         if (itemUpdate) { itemUpdate = false; }
-        return new SPacketUpdateTileEntity(getPos(), 3, compound);
+        return new SPacketUpdateTileEntity(getPos(), 3, getUpdateTag());
     }
 
     @Override

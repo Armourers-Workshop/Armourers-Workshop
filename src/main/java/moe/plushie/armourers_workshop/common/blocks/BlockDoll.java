@@ -34,6 +34,7 @@ public class BlockDoll extends AbstractModBlockContainer {
         isValentins = HolidayHelper.valentins.isHolidayActive();
         setSortPriority(198);
     }
+    
     /*
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int metadata) {

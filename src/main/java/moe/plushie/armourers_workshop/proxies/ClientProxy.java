@@ -45,6 +45,7 @@ import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.library.LibraryFileType;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
+import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -65,8 +66,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
@@ -169,6 +172,14 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
         RenderingRegistry.registerBlockHandler(new RenderBlockGlowing());
         */
+        
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.paintbrush);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.paintRoller);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.colourPicker);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.dyeBottle);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.hueTool);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.soap);
+        
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourable);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourableGlass);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourableGlowing);
@@ -413,8 +424,18 @@ public class ClientProxy extends CommonProxy {
         public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
             TileEntity tileEntity = worldIn.getTileEntity(pos);
             if (tileEntity != null && tileEntity instanceof IPantable) {
-                //ModLogger.log("got te " + ((IPantable)tileEntity).getColour(tintIndex));
                 return ((IPantable)tileEntity).getColour(tintIndex);
+            }
+            return 0xFFFFFFFF;
+        }
+    }
+    
+    private static class ItemColour implements IItemColor {
+
+        @Override
+        public int colorMultiplier(ItemStack stack, int tintIndex) {
+            if (tintIndex == 1) {
+                return PaintingHelper.getToolPaintColourRGB(stack);
             }
             return 0xFFFFFFFF;
         }

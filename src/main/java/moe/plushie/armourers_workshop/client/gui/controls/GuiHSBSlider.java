@@ -141,7 +141,8 @@ public class GuiHSBSlider extends GuiSlider {
     }
     
     public void drawTexturedModalRectScaled (int x, int y, int u, int v, int srcWidth, int srcHeight, int tarWidth, int tarHeight) {
-        Gui.drawModalRectWithCustomSizedTexture(x, y, u, v, srcWidth, srcHeight, tarWidth, tarHeight);
+        //Gui.drawModalRectWithCustomSizedTexture(x, y, u, v, tarWidth, tarHeight, srcWidth, srcHeight);
+        Gui.drawScaledCustomSizeModalRect(x, y, u, v, srcWidth, srcHeight, tarWidth, tarHeight, 256, 256);
     }
     
     public enum HSBSliderType {

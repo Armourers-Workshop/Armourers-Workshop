@@ -15,6 +15,8 @@ public abstract class ModTileEntity extends TileEntity {
     public void syncWithClients() {
         if (!getWorld().isRemote) {
             syncWithNearbyPlayers(this);
+        } else {
+            getWorld().markBlockRangeForRenderUpdate(getPos(), getPos());
         }
         
         //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
