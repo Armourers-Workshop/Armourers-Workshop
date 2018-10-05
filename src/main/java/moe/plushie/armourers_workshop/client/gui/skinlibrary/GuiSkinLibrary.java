@@ -249,10 +249,23 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     private boolean isLoading() {
         Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
         ItemStack stack = slot.getStack();
-        if (!(stack.getItem() instanceof ItemSkinTemplate)) {
+        if (armourLibrary.isCreativeLibrary()) {
+            if (stack == ItemStack.EMPTY) {
+                return true;
+            }
+            if (stack == null) {
+                return true;
+            }
+            if (stack.getItem() instanceof ItemSkinTemplate) {
+                return true;
+            }
+            return false;
+        } else {
+            if (stack.getItem() instanceof ItemSkinTemplate) {
+                return true;
+            }
             return false;
         }
-        return true;
     }
     
     private void setFileSwitchType(LibraryFileType type) {
