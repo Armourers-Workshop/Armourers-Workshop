@@ -74,13 +74,13 @@ public abstract class ToolOption<T> {
             optionsCompund.setString(key, (String) value);
         }
         if (value instanceof Integer) {
-            optionsCompund.setInteger(key, (int) value);
+            optionsCompund.setInteger(key, (Integer) value);
         }
         if (value instanceof Double) {
-            optionsCompund.setDouble(key, (double) value);
+            optionsCompund.setDouble(key, (Double) value);
         }
         if (value instanceof Boolean) {
-            optionsCompund.setBoolean(key, (boolean) value);
+            optionsCompund.setBoolean(key, (Boolean) value);
         }
     }
     
