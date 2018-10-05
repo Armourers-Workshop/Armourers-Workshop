@@ -49,7 +49,7 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
         Slot slot = getSlot(slotID);
-        if (slot != null && slot.getHasStack()) {
+        if (slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
             if (slotID < 36) {
@@ -57,21 +57,21 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
                         stack.getItem() instanceof ItemSkinTemplate & stack.getItemDamage() == 0) |
                         stack.getItem() instanceof ItemSkin) {
                     if (!this.mergeItemStack(stack, 36, 37, false)) {
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 } else {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             } else {
                 if (!this.mergeItemStack(stack, 9, 36, false)) {
                     if (!this.mergeItemStack(stack, 0, 9, false)) {
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
             }
 
             if (stack.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
@@ -81,7 +81,7 @@ public class ContainerArmourLibrary extends Container implements ISlotChanged {
             return result;
         }
 
-        return null;
+        return ItemStack.EMPTY;
     }
     
     @Override
