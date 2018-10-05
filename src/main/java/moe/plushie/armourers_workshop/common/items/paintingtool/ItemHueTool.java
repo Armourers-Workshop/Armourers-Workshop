@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
-import moe.plushie.armourers_workshop.common.blocks.BlockLocation;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientToolPaintBlock;
@@ -16,6 +15,8 @@ import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTool {
@@ -78,7 +79,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
     
     @SuppressWarnings("deprecation")
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
         boolean changeHue = (boolean) ToolOptions.CHANGE_HUE.readFromNBTBool(stack.getTagCompound());
         boolean changeSaturation = (boolean) ToolOptions.CHANGE_SATURATION.readFromNBTBool(stack.getTagCompound());
         boolean changeBrightness = (boolean) ToolOptions.CHANGE_BRIGHTNESS.readFromNBTBool(stack.getTagCompound());
@@ -91,9 +92,9 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         IPantableBlock worldColourable = (IPantableBlock) block;
         
         
-        if (worldColourable.isRemoteOnly(world, bl.x, bl.y, bl.z, side) & world.isRemote) {
-            int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
-            byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
+        if (worldColourable.isRemoteOnly(world, pos, facing) & world.isRemote) {
+            int oldColour = worldColourable.getColour(world, pos, facing);
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getKey();
             float[] blockhsb;
             Color blockColour = new Color(oldColour);
             blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);
@@ -119,11 +120,11 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
             if (changePaintType) {
                 rgbt[3] = (byte)paintType.getKey();
             }
-            MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(bl.x, bl.y, bl.z, (byte)side, rgbt);
+            MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(pos, facing, rgbt);
             PacketHandler.networkWrapper.sendToServer(message);
-        } else if(!worldColourable.isRemoteOnly(world, bl.x, bl.y, bl.z, side) & !world.isRemote) {
-            int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
-            byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
+        } else if(!worldColourable.isRemoteOnly(world, pos, facing) & !world.isRemote) {
+            int oldColour = worldColourable.getColour(world, pos, facing);
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getKey();
             float[] blockhsb;
             Color blockColour = new Color(oldColour);
             blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);
@@ -141,11 +142,11 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
             
             int newColour = Color.HSBtoRGB(recolour[0], recolour[1], recolour[2]);
             
-            UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
+            UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, facing);
             
-            ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
+            ((IPantableBlock)block).setColour(world, pos, newColour, facing);
             if (changePaintType) {
-                ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, side);
+                ((IPantableBlock)block).setPaintType(world, pos, paintType, facing);
             }
         }
     }

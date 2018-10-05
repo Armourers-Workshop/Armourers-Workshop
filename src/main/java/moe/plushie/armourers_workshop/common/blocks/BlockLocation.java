@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 public class BlockLocation {
@@ -43,6 +44,10 @@ public class BlockLocation {
     @Override
     public int hashCode() {
         return x ^ y * 137 ^ z * 11317;
+    }
+    
+    public BlockPos getPos() {
+        return new BlockPos(x, y, z);
     }
     
     @Override

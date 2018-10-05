@@ -5,7 +5,6 @@ import java.util.List;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
-import moe.plushie.armourers_workshop.common.blocks.BlockLocation;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.items.AbstractModItem;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
@@ -124,7 +123,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
         if (state.getBlock() instanceof IPantableBlock) {
             if (!worldIn.isRemote) {
                 UndoManager.begin(player);
-                usedOnBlockSide(stack, player, worldIn, new BlockLocation(pos.getX(), pos.getY(), pos.getZ()), state.getBlock(), facing.getIndex());
+                usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), facing);
                 UndoManager.end(player);
                 //worldIn.playSound(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, LibSounds.BURN, 1.0F, 1.0F);
             }
@@ -243,10 +242,9 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
         toolOptionList.add(ToolOptions.RADIUS_SAMPLE);
         toolOptionList.add(ToolOptions.RADIUS_EFFECT);
     }
+    
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block,
-            int side) {
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
         // TODO Auto-generated method stub
-        
     }
 }

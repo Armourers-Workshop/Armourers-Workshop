@@ -1,11 +1,14 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -44,29 +47,27 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
     
     @SuppressWarnings("deprecation")
     @Override
-    public boolean setColour(IBlockAccess world, int x, int y, int z, int colour, int side) {
-        /*
-        TileEntity te = world.getTileEntity(x, y, z);
+    public boolean setColour(IBlockAccess world, BlockPos pos, int colour, EnumFacing facing) {
+        TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof IPantable) {
-            ((IPantable)te).setColour(colour, side);
+            ((IPantable)te).setColour(colour, facing.ordinal());
             return true;
-        }*/
+        }
         return false;
     }
     
     @Override
-    public boolean setColour(IBlockAccess world, int x, int y, int z, byte[] rgb, int side) {
-        /*
-        TileEntity te = world.getTileEntity(x, y, z);
+    public boolean setColour(IBlockAccess world, BlockPos pos, byte[] rgb, EnumFacing facing) {
+        TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof IPantable) {
-            ((IPantable)te).setColour(rgb, side);
+            ((IPantable)te).setColour(rgb, facing.ordinal());
             return true;
-        }*/
+        }
         return false;
     }
 
     @Override
-    public int getColour(IBlockAccess world, int x, int y, int z, int side) {
+    public int getColour(IBlockAccess world, BlockPos pos, EnumFacing facing) {
         /*TileEntity te = world.getTileEntity(x, y, z);
         if (te != null & te instanceof IPantable) {
             return ((IPantable)te).getColour(side);
@@ -75,7 +76,7 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
     }
     
     @Override
-    public ICubeColour getColour(IBlockAccess world, int x, int y, int z) {
+    public ICubeColour getColour(IBlockAccess world, BlockPos pos) {
         /*TileEntity te = world.getTileEntity(x, y, z);
         if (te != null & te instanceof IPantable) {
             return ((IPantable)te).getColour();
@@ -84,7 +85,7 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
     }
     
     @Override
-    public void setPaintType(IBlockAccess world, int x, int y, int z, PaintType paintType, int side) {
+    public void setPaintType(IBlockAccess world, BlockPos pos, PaintType paintType, EnumFacing facing) {
         /*TileEntity te = world.getTileEntity(x, y, z);
         if (te != null & te instanceof IPantable) {
             ((IPantable)te).setPaintType(paintType, side);
@@ -92,7 +93,7 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
     }
     
     @Override
-    public PaintType getPaintType(IBlockAccess world, int x, int y, int z, int side) {
+    public PaintType getPaintType(IBlockAccess world, BlockPos pos, EnumFacing facing) {
         /*TileEntity te = world.getTileEntity(x, y, z);
         if (te != null & te instanceof IPantable) {
             return ((IPantable)te).getPaintType(side);
@@ -101,7 +102,7 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
     }
     
     @Override
-    public boolean isRemoteOnly(IBlockAccess world, int x, int y, int z, int side) {
+    public boolean isRemoteOnly(IBlockAccess world, BlockPos pos, EnumFacing facing) {
         return false;
     }
 }

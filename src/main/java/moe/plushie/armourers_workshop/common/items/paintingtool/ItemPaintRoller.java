@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.common.items.paintingtool;
 import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
-import moe.plushie.armourers_workshop.common.blocks.BlockLocation;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.tool.AbstractToolOption;
@@ -13,6 +12,8 @@ import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurableTool {
@@ -105,7 +106,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     
     @SuppressWarnings("deprecation")
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
         if (block instanceof IPantableBlock) {
             int newColour = getToolColour(stack);
             PaintType paintType = getToolPaintType(stack);
@@ -113,21 +114,22 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
                 IPantableBlock worldColourable = (IPantableBlock) block;
                 if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
                     for (int i = 0; i < 6; i++) {
-                        int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, i);
-                        byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, i).getKey();
-                        UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, i);
-                        ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, i);
-                        ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, i);
+                        EnumFacing face = EnumFacing.VALUES[i];
+                        int oldColour = worldColourable.getColour(world, pos, face);
+                        byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, face).getKey();
+                        UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, face);
+                        ((IPantableBlock)block).setColour(world, pos, newColour, face);
+                        ((IPantableBlock)block).setPaintType(world, pos, paintType, face);
                     }
                 } else {
-                    int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
-                    byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
-                    UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
-                    ((IPantableBlock)block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
-                    ((IPantableBlock)block).setPaintType(world, bl.x, bl.y, bl.z, paintType, side);
+                    int oldColour = worldColourable.getColour(world, pos, facing);
+                    byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getKey();
+                    UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, facing);
+                    ((IPantableBlock)block).setColour(world, pos, newColour, facing);
+                    ((IPantableBlock)block).setPaintType(world, pos, paintType, facing);
                 }
             } else {
-                spawnPaintParticles(world, bl.x, bl.y, bl.z, side, newColour);
+                spawnPaintParticles(world, pos, facing, newColour);
             }
         }
     }

@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.common.undo;
 
+import net.minecraft.util.EnumFacing;
+
 public class UndoData {
 
     public final int blockX;
@@ -8,15 +10,15 @@ public class UndoData {
     public final int dimensionId;
     public final byte[] rgb;
     public final byte paintType;
-    public final int side;
+    public final EnumFacing facing;
 
-    public UndoData(int blockX, int blockY, int blockZ, int dimensionId, byte[] rgb, byte paintType, int side) {
+    public UndoData(int blockX, int blockY, int blockZ, int dimensionId, byte[] rgb, byte paintType, EnumFacing facing) {
         this.blockX = blockX;
         this.blockY = blockY;
         this.blockZ = blockZ;
         this.dimensionId = dimensionId;
         this.rgb = rgb;
         this.paintType = paintType;
-        this.side = side;
+        this.facing = facing;
     }
 }

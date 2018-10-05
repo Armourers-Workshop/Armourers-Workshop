@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
-import moe.plushie.armourers_workshop.common.lib.LibCommonTags;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,11 +29,7 @@ public class TileEntityColourable extends ModTileEntity implements IPantable {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        if (compound.hasKey(LibCommonTags.TAG_COLOUR)) {
-            colour.setColour(compound.getInteger(LibCommonTags.TAG_COLOUR));
-        } else {
-            colour.readFromNBT(compound);
-        }
+        colour.readFromNBT(compound);
     }
 
     @Override

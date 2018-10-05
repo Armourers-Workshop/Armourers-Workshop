@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -17,17 +18,17 @@ public class MessageClientToolPaintBlock implements IMessage, IMessageHandler<Me
     private int x;
     private int y;
     private int z;
-    private byte side;
+    private EnumFacing facing;
     private byte[] rgbt = new byte[4];
     
     public MessageClientToolPaintBlock() {
     }
     
-    public MessageClientToolPaintBlock(int x, int y, int z, byte side, byte[] rgbt) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.side = side;
+    public MessageClientToolPaintBlock(BlockPos pos, EnumFacing facing, byte[] rgbt) {
+        this.x = pos.getX();
+        this.y = pos.getY();
+        this.z = pos.getZ();
+        this.facing = facing;
         this.rgbt = rgbt;
     }
 
@@ -36,7 +37,7 @@ public class MessageClientToolPaintBlock implements IMessage, IMessageHandler<Me
         buf.writeInt(x);
         buf.writeInt(y);
         buf.writeInt(z);
-        buf.writeByte(side);
+        buf.writeByte((byte)facing.ordinal());
         buf.writeBytes(rgbt);
     }
     
@@ -45,7 +46,7 @@ public class MessageClientToolPaintBlock implements IMessage, IMessageHandler<Me
         x = buf.readInt();
         y = buf.readInt();
         z = buf.readInt();
-        side = buf.readByte();
+        facing = EnumFacing.VALUES[buf.readByte()];
         buf.readBytes(rgbt);
     }
     
@@ -60,11 +61,11 @@ public class MessageClientToolPaintBlock implements IMessage, IMessageHandler<Me
             if (block instanceof IPantableBlock) {
                 UndoManager.begin(player);
                 IPantableBlock paintable = (IPantableBlock) block;
-                int oldColour = paintable.getColour(world, message.x, message.y, message.z, message.side);
-                PaintType oldPaintType = paintable.getPaintType(world, message.x, message.y, message.z, message.side);
-                UndoManager.blockPainted(player, world, message.x, message.y, message.z, oldColour, (byte)oldPaintType.getKey(), message.side);
-                paintable.setColour(world, message.x, message.y, message.z, message.rgbt, message.side);
-                paintable.setPaintType(world, message.x, message.y, message.z, PaintType.getPaintTypeFormSKey(message.rgbt[3]), message.side);
+                int oldColour = paintable.getColour(world, pos, message.facing);
+                PaintType oldPaintType = paintable.getPaintType(world, pos, message.facing);
+                UndoManager.blockPainted(player, world, pos, oldColour, (byte)oldPaintType.getKey(), message.facing);
+                paintable.setColour(world, pos, message.rgbt, message.facing);
+                paintable.setPaintType(world, pos, PaintType.getPaintTypeFormSKey(message.rgbt[3]), message.facing);
                 UndoManager.end(player);
             }
         }

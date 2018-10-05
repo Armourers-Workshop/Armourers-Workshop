@@ -266,7 +266,8 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
                 
                 if (block instanceof IPantableBlock) {
                     for (int side = 0; side < 6; side++) {
-                        tool.usedOnBlockSide(stack, player, world, bl, block, side);
+                        EnumFacing face = EnumFacing.VALUES[i];
+                        tool.usedOnBlockSide(stack, player, world, bl.getPos(), block, face);
                     }
                 }
             }

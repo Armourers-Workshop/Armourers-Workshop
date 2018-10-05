@@ -2,23 +2,25 @@ package moe.plushie.armourers_workshop.api.common.painting;
 
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 public interface IPantableBlock {
     
     /** @deprecated Replaced by {@link #setColour(IBlockAccess world, int x, int y, int z, byte[] rgb, int side)} */
     @Deprecated
-    public boolean setColour(IBlockAccess world, int x, int y, int z, int colour, int side);
+    public boolean setColour(IBlockAccess world, BlockPos pos, int colour, EnumFacing facing);
     
-    public boolean setColour(IBlockAccess world, int x, int y, int z, byte[] rgb, int side);
+    public boolean setColour(IBlockAccess world, BlockPos pos, byte[] rgb, EnumFacing facing);
     
-    public int getColour(IBlockAccess world, int x, int y, int z, int side);
+    public int getColour(IBlockAccess world, BlockPos pos, EnumFacing facing);
     
-    public void setPaintType(IBlockAccess world, int x, int y, int z, PaintType paintType, int side);
+    public void setPaintType(IBlockAccess world, BlockPos pos, PaintType paintType, EnumFacing facing);
     
-    public PaintType getPaintType(IBlockAccess world, int x, int y, int z, int side);
+    public PaintType getPaintType(IBlockAccess world, BlockPos pos, EnumFacing facing);
     
-    public ICubeColour getColour(IBlockAccess world, int x, int y, int z);
+    public ICubeColour getColour(IBlockAccess world, BlockPos pos);
     
-    public boolean isRemoteOnly(IBlockAccess world, int x, int y, int z, int side);
+    public boolean isRemoteOnly(IBlockAccess world, BlockPos pos, EnumFacing facing);
 }

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
-import moe.plushie.armourers_workshop.common.blocks.BlockLocation;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.items.AbstractModItem;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
@@ -21,6 +20,8 @@ import moe.plushie.armourers_workshop.utils.UtilItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemColourNoiseTool extends AbstractModItem implements IConfigurableTool, IBlockPainter {
@@ -69,13 +70,13 @@ public class ItemColourNoiseTool extends AbstractModItem implements IConfigurabl
     
     @SuppressWarnings("deprecation")
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockLocation bl, Block block, int side) {
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
         int intensity = UtilItems.getIntensityFromStack(stack, 16);
         IPantableBlock worldColourable = (IPantableBlock) block;
-        if (worldColourable.isRemoteOnly(world, bl.x, bl.y, bl.z, side) & world.isRemote) {
+        if (worldColourable.isRemoteOnly(world, pos, facing) & world.isRemote) {
             byte[] rgbt = new byte[4];
-            int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
-            PaintType oldPaintType = worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side);
+            int oldColour = worldColourable.getColour(world, pos, facing);
+            PaintType oldPaintType = worldColourable.getPaintType(world, pos, facing);
             Color c = UtilColour.addColourNoise(new Color(oldColour), intensity);
             rgbt[0] = (byte)c.getRed();
             rgbt[1] = (byte)c.getGreen();
@@ -84,14 +85,14 @@ public class ItemColourNoiseTool extends AbstractModItem implements IConfigurabl
             if (block == ModBlocks.boundingBox && oldPaintType == PaintType.NONE) {
                 rgbt[3] = (byte)PaintType.NORMAL.getKey();
             }
-            MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(bl.x, bl.y, bl.z, (byte)side, rgbt);
+            MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(pos, facing, rgbt);
             PacketHandler.networkWrapper.sendToServer(message);
-        } else if(!worldColourable.isRemoteOnly(world, bl.x, bl.y, bl.z, side) & !world.isRemote) {
-            int oldColour = worldColourable.getColour(world, bl.x, bl.y, bl.z, side);
-            byte oldPaintType = (byte) worldColourable.getPaintType(world, bl.x, bl.y, bl.z, side).getKey();
+        } else if(!worldColourable.isRemoteOnly(world, pos, facing) & !world.isRemote) {
+            int oldColour = worldColourable.getColour(world, pos, facing);
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getKey();
             int newColour = UtilColour.addColourNoise(new Color(oldColour), intensity).getRGB();
-            UndoManager.blockPainted(player, world, bl.x, bl.y, bl.z, oldColour, oldPaintType, side);
-            ((IPantableBlock) block).setColour(world, bl.x, bl.y, bl.z, newColour, side);
+            UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, facing);
+            ((IPantableBlock) block).setColour(world, pos, newColour, facing);
         }
     }
     /*

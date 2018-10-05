@@ -63,7 +63,12 @@ public abstract class AbstractModItem extends Item implements ISortOrder, ICusto
         }
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
-
+    
+    @Override
+    public String getUnlocalizedName(ItemStack stack) {
+        return getModdedUnlocalizedName(super.getUnlocalizedName(stack), stack);
+    }
+    
     protected String getModdedUnlocalizedName(String unlocalizedName) {
         String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
         if (hasSubtypes) {

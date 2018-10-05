@@ -127,8 +127,8 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public boolean setColour(IBlockAccess world, int x, int y, int z, int colour, int side) {
-        EnumFacing sideBlock = EnumFacing.getFront(side);
+    public boolean setColour(IBlockAccess world, BlockPos pos, int colour, EnumFacing facing) {
+        //EnumFacing sideBlock = EnumFacing.getFront(side);
         /*
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return false;
@@ -161,14 +161,14 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     public void registerModels() {}
     
     @Override
-    public boolean setColour(IBlockAccess world, int x, int y, int z, byte[] rgb, int side) {
+    public boolean setColour(IBlockAccess world, BlockPos pos, byte[] rgb, EnumFacing facing) {
         int colour = new Color(rgb[0] & 0xFF, rgb[1] & 0xFF, rgb[2] & 0xFF).getRGB();
-        return setColour(world, x, y, z, colour, side);
+        return setColour(world, pos, colour, facing);
     }
 
     @Override
-    public int getColour(IBlockAccess world, int x, int y, int z, int side) {
-        EnumFacing sideBlock = EnumFacing.getFront(side);
+    public int getColour(IBlockAccess world, BlockPos pos, EnumFacing facing) {
+        //EnumFacing sideBlock = EnumFacing.getFront(facing);
         /*
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return 0x00FFFFFF;
@@ -202,8 +202,8 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public boolean isRemoteOnly(IBlockAccess world, int x, int y, int z, int side) {
-        EnumFacing sideBlock = EnumFacing.getFront(side);
+    public boolean isRemoteOnly(IBlockAccess world, BlockPos pos, EnumFacing facing) {
+        //EnumFacing sideBlock = EnumFacing.getFront(side);
         /*
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return false;
@@ -226,8 +226,8 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public void setPaintType(IBlockAccess world, int x, int y, int z, PaintType paintType, int side) {
-        EnumFacing sideBlock = EnumFacing.getFront(side);
+    public void setPaintType(IBlockAccess world, BlockPos pos, PaintType paintType, EnumFacing facing) {
+        //EnumFacing sideBlock = EnumFacing.getFront(side);
         /*
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return;
@@ -252,8 +252,8 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public PaintType getPaintType(IBlockAccess world, int x, int y, int z, int side) {
-        EnumFacing sideBlock = EnumFacing.getFront(side);
+    public PaintType getPaintType(IBlockAccess world, BlockPos pos, EnumFacing facing) {
+        //EnumFacing sideBlock = EnumFacing.getFront(side);
         /*
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return PaintType.NORMAL;
@@ -275,7 +275,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
 
     @Override
-    public ICubeColour getColour(IBlockAccess world, int x, int y, int z) {
+    public ICubeColour getColour(IBlockAccess world, BlockPos pos) {
         return null;
     }
 }

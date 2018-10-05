@@ -6,6 +6,8 @@ import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,7 +29,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     }
     
     @SideOnly(Side.CLIENT)
-    protected void spawnPaintParticles (World world, int x, int y, int z, int side, int colour) {
+    protected void spawnPaintParticles (World world, BlockPos pos, EnumFacing side, int colour) {
         /*
         for (int i = 0; i < 3; i++) {
             EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,

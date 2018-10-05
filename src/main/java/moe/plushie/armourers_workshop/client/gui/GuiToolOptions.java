@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiToolOptions extends GuiScreen {
     
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/toolOptions.png");
+    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/tool-options.png");
     private static final int MARGIN_TOP = 22;
     private static final int MARGIN_LEFT = 6;
     private static final int CONTROL_PADDING = 6;
@@ -80,6 +80,13 @@ public class GuiToolOptions extends GuiScreen {
         GuiUtils.drawContinuousTexturedBox(guiLeft, guiTop, 0, 0, guiWidth, guiHeight, textureWidth, textureHeight, borderSize, zLevel);
         super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
         renderGuiTitle(fontRenderer, guiName);
+    }
+    
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        NBTTagCompound compound = new NBTTagCompound();
+        writeToCompound(compound);
+        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate(compound));
     }
     
     @Override

@@ -99,8 +99,9 @@ public class PlayerUndoData {
             int rgb = c.getRGB();
             
             IPantableBlock worldColourable = (IPantableBlock) block;
-            worldColourable.setColour(world, undoData.blockX, undoData.blockY, undoData.blockZ, rgb, undoData.side);
-            worldColourable.setPaintType(world, undoData.blockX, undoData.blockY, undoData.blockZ, PaintType.getPaintTypeFormSKey(undoData.paintType), undoData.side);
+            BlockPos pos = new BlockPos(undoData.blockX, undoData.blockY, undoData.blockZ);
+            worldColourable.setColour(world, pos, rgb, undoData.facing);
+            worldColourable.setPaintType(world, pos, PaintType.getPaintTypeFormSKey(undoData.paintType), undoData.facing);
         }
         undos.remove(undos.size() - 1);
     }
