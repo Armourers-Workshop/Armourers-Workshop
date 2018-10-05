@@ -7,8 +7,8 @@ import moe.plushie.armourers_workshop.common.items.AbstractModItem;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
-import moe.plushie.armourers_workshop.common.painting.tool.AbstractToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
+import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
 import net.minecraft.item.ItemStack;
 
@@ -133,7 +133,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     }*/
     
     @Override
-    public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
+    public void getToolOptions(ArrayList<ToolOption<?>> toolOptionList) {
         toolOptionList.add(ToolOptions.CHANGE_PAINT_TYPE);
     }
     

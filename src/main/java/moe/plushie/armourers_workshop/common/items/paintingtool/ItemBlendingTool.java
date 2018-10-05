@@ -10,8 +10,8 @@ import moe.plushie.armourers_workshop.common.items.AbstractModItem;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
-import moe.plushie.armourers_workshop.common.painting.tool.AbstractToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
+import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
@@ -219,8 +219,8 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         int intensity = UtilItems.getIntensityFromStack(stack, 16);
-        int radiusSample = (Integer) ToolOptions.RADIUS_SAMPLE.readFromNBT(stack.getTagCompound(), 2);
-        int radiusEffect = (Integer) ToolOptions.RADIUS_EFFECT.readFromNBT(stack.getTagCompound(), 1);
+        int radiusSample = ToolOptions.RADIUS_SAMPLE.getValue(stack);
+        int radiusEffect = ToolOptions.RADIUS_EFFECT.getValue(stack);
         
         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.intensity", intensity));
         tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.radius", radiusSample, radiusSample, 1));
@@ -237,7 +237,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
     }
     
     @Override
-    public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
+    public void getToolOptions(ArrayList<ToolOption<?>> toolOptionList) {
         toolOptionList.add(ToolOptions.INTENSITY);
         toolOptionList.add(ToolOptions.RADIUS_SAMPLE);
         toolOptionList.add(ToolOptions.RADIUS_EFFECT);

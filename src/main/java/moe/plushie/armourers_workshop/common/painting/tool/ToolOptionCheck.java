@@ -1,24 +1,17 @@
 package moe.plushie.armourers_workshop.common.painting.tool;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ToolOptionCheck extends AbstractToolOption {
+public class ToolOptionCheck extends ToolOption<Boolean> {
+    
+    public ToolOptionCheck(String key, Boolean defaultValue) {
+        super(key, defaultValue);
+    }
 
-    private final boolean defaultCheck;
-    
-    public ToolOptionCheck(String optionName) {
-        this(optionName, true);
-    }
-    
-    public ToolOptionCheck(String optionName, boolean defaultCheck) {
-        super(optionName);
-        this.defaultCheck = defaultCheck;
-    }
-    
     @SideOnly(Side.CLIENT)
     @Override
     public int getDisplayWidth() {
@@ -34,39 +27,12 @@ public class ToolOptionCheck extends AbstractToolOption {
     @SideOnly(Side.CLIENT)
     @Override
     public GuiButton getGuiControl(int id, int x, int y, NBTTagCompound compound) {
-        return new GuiCheckBox(id, x, y, getLocalisedLabel(), (Boolean) readFromNBT(compound));
+        return new GuiCheckBox(id, x, y, getLocalisedLabel(), (boolean) readFromNBT(compound, defaultValue));
     }
     
-    public boolean readFromNBTBool(NBTTagCompound compound) {
-        boolean checked = defaultCheck;
-        if (compound != null && compound.hasKey(optionName)) {
-            checked = compound.getBoolean(optionName);
-        }
-        return checked;
-    }
-    
+    @SideOnly(Side.CLIENT)
     @Override
-    public Object readFromNBT(NBTTagCompound compound) {
-        return readFromNBT(compound, defaultCheck);
-    }
-    
-    @Override
-    public Object readFromNBT(NBTTagCompound compound, Object value) {
-        boolean checked = (Boolean) value;
-        if (compound != null && compound.hasKey(optionName)) {
-            checked = compound.getBoolean(optionName);
-        }
-        return checked;
-    }
-    
-    @Override
-    public void writeToNBT(NBTTagCompound compound, GuiButton control) {
-        GuiCheckBox checkControl = (GuiCheckBox) control;
-        writeToNBT(compound, checkControl.isChecked());
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound compound, Object value) {
-        compound.setBoolean(optionName, (Boolean) value);
+    public void writeGuiControlToNBT(GuiButton button, NBTTagCompound compound) {
+        writeToNBT(compound, ((GuiCheckBox)button).isChecked());
     }
 }

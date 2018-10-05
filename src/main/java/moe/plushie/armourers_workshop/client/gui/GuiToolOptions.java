@@ -8,8 +8,8 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
-import moe.plushie.armourers_workshop.common.painting.tool.AbstractToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
+import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -35,11 +35,11 @@ public class GuiToolOptions extends GuiScreen {
     protected int guiTop;
     protected ItemStack stack;
     private String guiName;
-    private final ArrayList<AbstractToolOption> toolOptionsList;
+    private final ArrayList<ToolOption<?>> toolOptionsList;
     
     public GuiToolOptions(ItemStack stack) {
         this.stack = stack;
-        toolOptionsList = new ArrayList<AbstractToolOption>();
+        toolOptionsList = new ArrayList<ToolOption<?>>();
         ((IConfigurableTool)stack.getItem()).getToolOptions(toolOptionsList);
         guiWidth = 175;
         guiHeight = 61;
@@ -116,7 +116,7 @@ public class GuiToolOptions extends GuiScreen {
     
     public void writeToCompound(NBTTagCompound compound) {
         for (int i = 0; i < toolOptionsList.size(); i++) {
-            toolOptionsList.get(i).writeToNBT(compound, (GuiButton) buttonList.get(i));
+            toolOptionsList.get(i).writeGuiControlToNBT((GuiButton) buttonList.get(i), compound);
         }
     }
 }

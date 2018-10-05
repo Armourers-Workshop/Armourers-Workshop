@@ -1,15 +1,15 @@
 package moe.plushie.armourers_workshop.common.painting.tool;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.nbt.NBTTagCompound;
 
-public class ToolOptionRadius extends AbstractToolOption {
+public class ToolOptionRadius extends ToolOption<Integer> {
     
-    public ToolOptionRadius(String optionName) {
-        super(optionName);
+    public ToolOptionRadius(String key, Integer defaultValue) {
+        super(key, defaultValue);
     }
 
     @SideOnly(Side.CLIENT)
@@ -27,33 +27,14 @@ public class ToolOptionRadius extends AbstractToolOption {
     @SideOnly(Side.CLIENT)
     @Override
     public GuiButton getGuiControl(int id, int x, int y, NBTTagCompound compound) {
-        GuiSlider sliderControl = new GuiSlider(id, x, y, getLocalisedLabel() + " ", 1, 6, (Integer) readFromNBT(compound), null);
+        GuiSlider sliderControl = new GuiSlider(id, x, y, getLocalisedLabel() + " ", 1, 6, (Integer) readFromNBT(compound, defaultValue), null);
         sliderControl.showDecimal = false;
         return sliderControl;
     }
-
-    @Override
-    public Object readFromNBT(NBTTagCompound compound) {
-        return readFromNBT(compound, 2);
-    }
     
+    @SideOnly(Side.CLIENT)
     @Override
-    public Object readFromNBT(NBTTagCompound compound, Object value) {
-        int intensityValue = (Integer) value;
-        if (compound != null && compound.hasKey(optionName)) {
-            intensityValue = compound.getInteger(optionName);
-        }
-        return intensityValue;
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound compound, GuiButton control) {
-        GuiSlider sliderControl = (GuiSlider) control;
-        writeToNBT(compound, sliderControl.getValueInt());
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound compound, Object value) {
-        compound.setInteger(optionName, (Integer) value);
+    public void writeGuiControlToNBT(GuiButton button, NBTTagCompound compound) {
+        writeToNBT(compound, ((GuiSlider)button).getValueInt());
     }
 }

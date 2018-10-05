@@ -13,8 +13,8 @@ import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.lib.LibSounds;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
-import moe.plushie.armourers_workshop.common.painting.tool.AbstractToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
+import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
@@ -71,7 +71,7 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
             int newColour = getToolColour(stack);
             if (!worldIn.isRemote) {
                 UndoManager.begin(player);
-                if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+                if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
                     for (int i = 0; i < 6; i++) {
                         usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), EnumFacing.VALUES[i]);
                     }
@@ -79,7 +79,7 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
                     usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), facing);
                 }
                 UndoManager.end(player);
-                if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+                if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
                     worldIn.playSound(null, pos, new SoundEvent(new ResourceLocation(LibSounds.PAINT)), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
                 } else {
                     worldIn.playSound(null, pos, new SoundEvent(new ResourceLocation(LibSounds.PAINT)), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 1.5F);
@@ -144,7 +144,7 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
     }
     
     @Override
-    public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
+    public void getToolOptions(ArrayList<ToolOption<?>> toolOptionList) {
         toolOptionList.add(ToolOptions.FULL_BLOCK_MODE);
     }
     
@@ -154,7 +154,7 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
         ModelLoader.setCustomMeshDefinition(this, new ItemMeshDefinition() {
             @Override
             public ModelResourceLocation getModelLocation(ItemStack stack) {
-                if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+                if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
                     return new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory");
                 } else {
                     return new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName() + "-small"), "inventory");

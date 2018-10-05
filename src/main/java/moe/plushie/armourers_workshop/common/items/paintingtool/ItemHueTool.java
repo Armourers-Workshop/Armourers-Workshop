@@ -8,8 +8,8 @@ import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientToolPaintBlock;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
-import moe.plushie.armourers_workshop.common.painting.tool.AbstractToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
+import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import net.minecraft.block.Block;
@@ -80,10 +80,10 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
     @SuppressWarnings("deprecation")
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
-        boolean changeHue = (boolean) ToolOptions.CHANGE_HUE.readFromNBTBool(stack.getTagCompound());
-        boolean changeSaturation = (boolean) ToolOptions.CHANGE_SATURATION.readFromNBTBool(stack.getTagCompound());
-        boolean changeBrightness = (boolean) ToolOptions.CHANGE_BRIGHTNESS.readFromNBTBool(stack.getTagCompound());
-        boolean changePaintType = (boolean) ToolOptions.CHANGE_PAINT_TYPE.readFromNBTBool(stack.getTagCompound());
+        boolean changeHue = ToolOptions.CHANGE_HUE.getValue(stack);
+        boolean changeSaturation = ToolOptions.CHANGE_SATURATION.getValue(stack);
+        boolean changeBrightness = ToolOptions.CHANGE_BRIGHTNESS.getValue(stack);
+        boolean changePaintType = ToolOptions.CHANGE_PAINT_TYPE.getValue(stack);
         
         Color toolColour = new Color(getToolColour(stack));
         PaintType paintType = getToolPaintType(stack);
@@ -176,7 +176,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
     }*/
 
     @Override
-    public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
+    public void getToolOptions(ArrayList<ToolOption<?>> toolOptionList) {
         toolOptionList.add(ToolOptions.CHANGE_HUE);
         toolOptionList.add(ToolOptions.CHANGE_SATURATION);
         toolOptionList.add(ToolOptions.CHANGE_BRIGHTNESS);

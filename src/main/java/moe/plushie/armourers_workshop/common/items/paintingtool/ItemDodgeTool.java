@@ -11,8 +11,8 @@ import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientToolPaintBlock;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
-import moe.plushie.armourers_workshop.common.painting.tool.AbstractToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
+import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import moe.plushie.armourers_workshop.utils.UtilColour;
@@ -71,7 +71,7 @@ public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool,
     @SuppressWarnings("deprecation")
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
-        int intensity = (Integer) ToolOptions.INTENSITY.readFromNBT(stack.getTagCompound());
+        int intensity = ToolOptions.INTENSITY.getValue(stack);
         IPantableBlock worldColourable = (IPantableBlock) block;
         if (worldColourable.isRemoteOnly(world, pos, facing) & world.isRemote) {
             byte[] rgbt = new byte[4];
@@ -115,7 +115,7 @@ public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool,
     }
 */
     @Override
-    public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
+    public void getToolOptions(ArrayList<ToolOption<?>> toolOptionList) {
         toolOptionList.add(ToolOptions.FULL_BLOCK_MODE);
         toolOptionList.add(ToolOptions.INTENSITY);
     }

@@ -4,5 +4,5 @@ import java.util.ArrayList;
 
 public interface IConfigurableTool {
 
-    public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList);
+    public void getToolOptions(ArrayList<ToolOption<?>> toolOptionList);
 }

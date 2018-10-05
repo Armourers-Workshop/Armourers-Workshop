@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
-import moe.plushie.armourers_workshop.common.painting.tool.AbstractToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
+import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import net.minecraft.block.Block;
@@ -112,7 +112,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
             PaintType paintType = getToolPaintType(stack);
             if (!world.isRemote) {
                 IPantableBlock worldColourable = (IPantableBlock) block;
-                if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+                if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
                     for (int i = 0; i < 6; i++) {
                         EnumFacing face = EnumFacing.VALUES[i];
                         int oldColour = worldColourable.getColour(world, pos, face);
@@ -163,7 +163,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     }
     */
     @Override
-    public void getToolOptions(ArrayList<AbstractToolOption> toolOptionList) {
+    public void getToolOptions(ArrayList<ToolOption<?>> toolOptionList) {
         toolOptionList.add(ToolOptions.FULL_BLOCK_MODE);
         toolOptionList.add(ToolOptions.RADIUS);
     }
