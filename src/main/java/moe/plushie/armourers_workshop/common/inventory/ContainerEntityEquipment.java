@@ -43,7 +43,7 @@ public class ContainerEntityEquipment extends Container {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotId) {
         Slot slot = getSlot(slotId);
-        if (slot != null && slot.getHasStack()) {
+        if (slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
 
@@ -52,7 +52,7 @@ public class ContainerEntityEquipment extends Container {
                 if (!this.mergeItemStack(stack, skinSlots + 9, skinSlots + 36, false)) {
                     //Moving item to hotbar
                     if (!this.mergeItemStack(stack, skinSlots, skinSlots + 9, false)) {
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
             } else {
@@ -68,15 +68,15 @@ public class ContainerEntityEquipment extends Container {
                         }
                     }
                     if (!slotted) {
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 } else {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }
 
             if (stack.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
@@ -85,6 +85,6 @@ public class ContainerEntityEquipment extends Container {
 
             return result;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 }
