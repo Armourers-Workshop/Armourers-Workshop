@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.common.lib;
 
 public class LibItemNames {
+    
     public static final String EQUIPMENT_SKIN_TEMPLATE = "equipment-skin-template";
     public static final String EQUIPMENT_SKIN = "equipment-skin";
+    
     public static final String PAINTBRUSH = "paintbrush";
     public static final String PAINT_ROLLER = "paint-roller";
     public static final String COLOUR_PICKER = "colour-picker";
@@ -11,6 +13,8 @@ public class LibItemNames {
     public static final String COLOUR_NOISE_TOOL = "colour-noise-tool";
     public static final String SHADE_NOISE_TOOL = "shade-noise-tool";
     public static final String PAINTBALL_GUN = "paintball-gun";
+    public static final String PALETTE = "palette";
+    
     public static final String GUIDE_BOOK = "guide-book";
     public static final String MANNEQUIN_TOOL = "mannequin-tool";
     public static final String ARMOUR_CONTAINER = "armour-container";
@@ -28,4 +32,5 @@ public class LibItemNames {
     public static final String DEBUG_TOOL = "debug-tool";
     public static final String SKIN_UNLOCK = "skin-unlock";
     public static final String LINKING_TOOL = "linking-tool";
+    
 }

@@ -43,7 +43,7 @@ public final class ModCapabilityManager {
     }
     
     @SubscribeEvent
-    public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof EntityLivingBase) {
             ISkinnableEntity skinnableEntity = EntitySkinHandler.INSTANCE.getSkinnableEntity((EntityLivingBase) event.getObject());
             if (skinnableEntity != null) {

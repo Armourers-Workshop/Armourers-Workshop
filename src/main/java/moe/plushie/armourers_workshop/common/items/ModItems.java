@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.common.items.paintingtool.ItemDodgeTool;
 import moe.plushie.armourers_workshop.common.items.paintingtool.ItemHueTool;
 import moe.plushie.armourers_workshop.common.items.paintingtool.ItemPaintRoller;
 import moe.plushie.armourers_workshop.common.items.paintingtool.ItemPaintbrush;
+import moe.plushie.armourers_workshop.common.items.paintingtool.ItemPalette;
 import moe.plushie.armourers_workshop.common.items.paintingtool.ItemShadeNoiseTool;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -41,6 +42,7 @@ public class ModItems {
     public static Item blendingTool;
     public static Item blockMarker;
     //public static Item paintballGun;
+    public static Item palette;
     
     public static Item mannequinTool;
     public static Item wandOfStyle;
@@ -73,6 +75,7 @@ public class ModItems {
         blockMarker = new ItemBlockMarker();
         blendingTool = new ItemBlendingTool();
         //paintballGun = new ItemPaintballGun();
+        palette = new ItemPalette();
         
         mannequinTool = new ItemMannequinTool();
         wandOfStyle = new ItemWandOfStyle();
