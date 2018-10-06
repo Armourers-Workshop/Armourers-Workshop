@@ -250,10 +250,10 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
         ItemStack stack = slot.getStack();
         if (armourLibrary.isCreativeLibrary()) {
-            if (stack == ItemStack.EMPTY) {
+            if (stack == null) {
                 return true;
             }
-            if (stack == null) {
+            if (stack.isEmpty()) {
                 return true;
             }
             if (stack.getItem() instanceof ItemSkinTemplate) {

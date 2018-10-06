@@ -39,9 +39,9 @@ public class ContainerSkinningTable extends Container {
     }
     
     @Override
-    public void onCraftMatrixChanged(IInventory p_75130_1_) {
+    public void onCraftMatrixChanged(IInventory inv) {
         ItemSkinningRecipes.onCraft(craftingInventory);
-        super.onCraftMatrixChanged(p_75130_1_);
+        super.onCraftMatrixChanged(inv);
     }
     
     @Override
@@ -52,14 +52,14 @@ public class ContainerSkinningTable extends Container {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
         Slot slot = getSlot(slotId);
-        if (slot != null && slot.getHasStack()) {
+        if (slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
 
             if (slotId > 35) {
                 if (!this.mergeItemStack(stack, 9, 36, false)) {
                     if (!this.mergeItemStack(stack, 0, 9, false)) {
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
             } else {
@@ -72,12 +72,12 @@ public class ContainerSkinningTable extends Container {
                     }
                 }
                 if (!slotted) {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }
 
             if (stack.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
@@ -86,6 +86,6 @@ public class ContainerSkinningTable extends Container {
 
             return result;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 }

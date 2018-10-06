@@ -31,9 +31,11 @@ public final class CraftingManager {
         RecipeSorter.INSTANCE.register("armourersworkshop:shapeless", RecipeClearDye.class, Category.SHAPELESS, "after:minecraft:shapeless");
         
         hideItemsInNEI();
+        */
         if (!ConfigHandler.disableSkinningRecipes) {
             ItemSkinningRecipes.init();
         }
+        /*
         if (!ConfigHandler.disableRecipes) {
             ModBlockRecipes.init();
             ModItemRecipes.init();

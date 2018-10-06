@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiSkinningTable extends GuiContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/skinningTable.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibModInfo.ID, "textures/gui/skinning-table.png");
     
     private final TileEntitySkinningTable tileEntity;
     
@@ -40,7 +40,7 @@ public class GuiSkinningTable extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int mouseX, int mouseY) {
         GL11.glColor4f(1, 1, 1, 1);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
     }
 }

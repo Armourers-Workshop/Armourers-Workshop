@@ -50,9 +50,9 @@ public class ModInventory implements IInventory {
     @Override
     public ItemStack decrStackSize(int slotId, int count) {
         ItemStack itemstack = getStackInSlot(slotId);
-        if (itemstack != null) {
+        if (itemstack != ItemStack.EMPTY) {
             if (itemstack.getCount() <= count){
-                setInventorySlotContents(slotId, null);
+                setInventorySlotContents(slotId, ItemStack.EMPTY);
             }else{
                 itemstack = itemstack.splitStack(count);
                 setInventorySlotContents(slotId, getStackInSlot(slotId));
@@ -70,7 +70,7 @@ public class ModInventory implements IInventory {
     @Override
     public void setInventorySlotContents(int slotId, ItemStack stack) {
         this.slots.set(slotId, stack);
-        if (stack != null && stack.getCount() > getInventoryStackLimit()) {
+        if (stack.getCount() > getInventoryStackLimit()) {
             stack.setCount(getInventoryStackLimit());
         }
         markDirty();

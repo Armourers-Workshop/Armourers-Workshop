@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.client.handler.EquipmentWardrobeHandler;
 import moe.plushie.armourers_workshop.client.model.ModelRendererAttachment;
 import moe.plushie.armourers_workshop.client.model.skin.AbstractModelSkin;
 import moe.plushie.armourers_workshop.client.model.skin.IEquipmentModel;
@@ -29,8 +30,8 @@ import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCa
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
-import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
+import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -93,39 +94,27 @@ public final class SkinModelRenderer {
         if (!(entity instanceof AbstractClientPlayer)) { return null; }
         AbstractClientPlayer player = (AbstractClientPlayer) entity;
         
-        EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
-        
-        //Look for skinned armourer.
+        // Look for skinned armourer.
         if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
+            
             int slot = 3 - skinType.getVanillaArmourSlotId();
-            /*ItemStack armourStack = player.getCurrentArmor(slot);
+            ItemStack armourStack = EquipmentWardrobeHandler.getArmourInSlot(slot);
             if (SkinNBTHelper.stackHasSkinData(armourStack)) {
-                SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(armourStack);
-                return getCustomArmourItemData(sp);
-            }*/
+                SkinDescriptor sd = SkinNBTHelper.getSkinDescriptorFromStack(armourStack);
+                return getCustomArmourItemData(sd);
+            }
         }
         
+        // No skinned armour found checking the wardrobe.
         IEntitySkinCapability skinCapability = entity.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
         if (skinCapability != null) {
             ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, slotIndex);
             if (skinDescriptor != null) {
                 return getCustomArmourItemData(skinDescriptor);
             }
-            
         }
         
-        
-        //No skinned armour found checking the equipment wardrobe.
-        if (equipmentData == null) {
-            return null;
-        }
-        
-        if (!equipmentData.haveEquipment(skinType, slotIndex)) {
-            return null;
-        }
-        
-        ISkinDescriptor skinPointer = equipmentData.getSkinPointer(skinType, slotIndex);
-        return getCustomArmourItemData(skinPointer);
+        return null;
     }
     
     public ISkinDye getPlayerDyeData(Entity entity, ISkinType skinType, int slotIndex) {

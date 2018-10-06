@@ -1,6 +1,15 @@
 package moe.plushie.armourers_workshop.common.crafting.recipe;
 
-public class RecipeSkinArmourContainer/*extends RecipeItemSkinning*/ {/*
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.common.items.ModItems;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+
+public class RecipeSkinArmourContainer extends RecipeItemSkinning {
 
     public RecipeSkinArmourContainer(ISkinType skinType) {
         super(skinType);
@@ -8,50 +17,50 @@ public class RecipeSkinArmourContainer/*extends RecipeItemSkinning*/ {/*
     
     @Override
     public boolean matches(IInventory inventory) {
-        return getCraftingResult(inventory) != null;
+        return getCraftingResult(inventory) != ItemStack.EMPTY;
     }
     
     @Override
     public ItemStack getCraftingResult(IInventory inventory) {
-        ItemStack skinStack = null;
-        ItemStack armourStack = null;
+        ItemStack skinStack = ItemStack.EMPTY;
+        ItemStack armourStack = ItemStack.EMPTY;
         
         for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
             ItemStack stack = inventory.getStackInSlot(slotId);
-            if (stack != null) {
+            if (stack != ItemStack.EMPTY) {
                 Item item = stack.getItem();
                 
                 if (isValidSkinForType(stack)) {
-                    if (skinStack != null) {
-                        return null;
+                    if (skinStack != ItemStack.EMPTY) {
+                        return ItemStack.EMPTY;
                     }
                     skinStack = stack;
                 } else if (stack.getItem() == ModItems.armourContainerItem) {
-                    if (armourStack != null) {
-                        return null;
+                    if (armourStack != ItemStack.EMPTY) {
+                        return ItemStack.EMPTY;
                     }
                     armourStack = stack;
                 } else {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
                 
             }
         }
         
-        if (skinStack != null && armourStack != null) {
-            SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(skinStack);
-            ItemStack returnStack = SkinNBTHelper.makeArmouerContainerStack(skinPointer);
+        if (skinStack != ItemStack.EMPTY && armourStack != ItemStack.EMPTY) {
+            SkinDescriptor sd = SkinNBTHelper.getSkinDescriptorFromStack(skinStack);
+            ItemStack returnStack = SkinNBTHelper.makeArmouerContainerStack(sd);
             return returnStack;
         } else {
-            return null;
+            return ItemStack.EMPTY;
         }
     }
     
     private boolean isValidArmourForSkin(ItemStack armourStack, ItemStack skinStack) {
-        SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(skinStack);
-        ISkinType skinType = sp.getIdentifier().getSkinType();
+        SkinDescriptor sd = SkinNBTHelper.getSkinDescriptorFromStack(skinStack);
+        ISkinType skinType = sd.getIdentifier().getSkinType();
         Item armourItem = armourStack.getItem();
-        if (armourItem.isValidArmor(armourStack, skinType.getVanillaArmourSlotId(), null)) {
+        if (armourItem.isValidArmor(armourStack, EntityEquipmentSlot.values()[skinType.getVanillaArmourSlotId()], null)) {
             return true;
         }
         return false;
@@ -62,5 +71,5 @@ public class RecipeSkinArmourContainer/*extends RecipeItemSkinning*/ {/*
         for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
             inventory.decrStackSize(slotId, 1);
         }
-    }*/
+    }
 }

@@ -21,6 +21,7 @@ public class SlotInput extends Slot {
     public void onSlotChanged() {
         super.onSlotChanged();
         if (callback != null) {
+            //callback.onCraftMatrixChanged(inventory);
             callback.detectAndSendChanges();
         }
     }

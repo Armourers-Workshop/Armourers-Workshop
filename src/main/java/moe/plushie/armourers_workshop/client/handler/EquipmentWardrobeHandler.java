@@ -16,6 +16,7 @@ import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -74,7 +75,11 @@ public final class EquipmentWardrobeHandler {
         }
     }
     
-    private ItemStack[] armour = new ItemStack[4];
+    private static ItemStack[] armour = new ItemStack[4];
+    
+    public static ItemStack getArmourInSlot(int slotId) {
+        return armour[slotId];
+    }
     
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
@@ -127,10 +132,16 @@ public final class EquipmentWardrobeHandler {
             for (int i = 0; i < skinTypes.length; i++) {
                 ISkinType skinType = skinTypes[i];
                 
-                ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, 0);
+                ISkinDescriptor skinDescriptor = SkinNBTHelper.getSkinDescriptorFromStack(armour[3 - i]);
+                
+                if (skinDescriptor == null) {
+                    skinDescriptor = skinCapability.getSkinDescriptor(skinType, 0);
+                }
+                
                 if (skinDescriptor == null) {
                     continue;
                 }
+                
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
                 if (skin == null) {
                     continue;

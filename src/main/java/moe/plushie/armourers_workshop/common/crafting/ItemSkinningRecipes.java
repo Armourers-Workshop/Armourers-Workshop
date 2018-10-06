@@ -3,6 +3,9 @@ package moe.plushie.armourers_workshop.common.crafting;
 import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.common.crafting.recipe.RecipeItemSkinning;
+import moe.plushie.armourers_workshop.common.crafting.recipe.RecipeSkinArmour;
+import moe.plushie.armourers_workshop.common.crafting.recipe.RecipeSkinArmourContainer;
+import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,6 +23,7 @@ public class ItemSkinningRecipes {
         recipes.add(new RecipeSkinCopy());
         recipes.add(new RecipeSkinClear());
         recipes.add(new RecipeSkinRecover());
+        */
         recipes.add(new RecipeSkinArmour(SkinTypeRegistry.skinHead));
         recipes.add(new RecipeSkinArmour(SkinTypeRegistry.skinChest));
         recipes.add(new RecipeSkinArmour(SkinTypeRegistry.skinLegs));
@@ -28,7 +32,6 @@ public class ItemSkinningRecipes {
         recipes.add(new RecipeSkinArmourContainer(SkinTypeRegistry.skinChest));
         recipes.add(new RecipeSkinArmourContainer(SkinTypeRegistry.skinLegs));
         recipes.add(new RecipeSkinArmourContainer(SkinTypeRegistry.skinFeet));
-        */
     }
     
     public static void addSkinnableItem(Item item) {
@@ -50,7 +53,7 @@ public class ItemSkinningRecipes {
                 return recipes.get(i).getCraftingResult(inventory);
             }
         }
-        return null;
+        return ItemStack.EMPTY;
     }
     
     public static void onCraft(IInventory inventory) {

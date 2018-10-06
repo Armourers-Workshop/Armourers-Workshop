@@ -27,7 +27,6 @@ import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
 
 public class ItemSkin extends AbstractModItem {
 
@@ -51,10 +50,7 @@ public class ItemSkin extends AbstractModItem {
         return super.getItemStackDisplayName(stack);
     }
     
-    @Override
-    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        // TODO Auto-generated method stub
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public static void addTooltipToSkinItem(ItemStack stack, EntityPlayer player, List tooltip, ITooltipFlag flagIn) {
         String cRed = TextFormatting.RED.toString();
         
         boolean isEquipmentSkin = stack.getItem() == ModItems.equipmentSkin;
@@ -138,12 +134,12 @@ public class ItemSkin extends AbstractModItem {
                 tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinOpenWardrobe", keyName));
             }
         } else {
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinInvalidItem"));
+            
+            if (isEquipmentSkin) {
+                tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinInvalidItem"));
+            }
+            
         }
-    }
-    
-    public static void addTooltipToSkinItem(ItemStack stack, EntityPlayer player, List tooltip, boolean showAdvancedItemTooltips) {
-
     }
     /*
     @Override
