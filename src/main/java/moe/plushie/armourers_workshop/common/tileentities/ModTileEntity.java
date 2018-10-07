@@ -18,8 +18,6 @@ public abstract class ModTileEntity extends TileEntity {
         } else {
             getWorld().markBlockRangeForRenderUpdate(getPos(), getPos());
         }
-        
-        //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
     /**

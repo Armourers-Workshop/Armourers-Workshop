@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.common.inventory;
 
+import javax.annotation.Nonnull;
+
 import moe.plushie.armourers_workshop.utils.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -50,7 +52,7 @@ public class ModInventory implements IInventory {
     @Override
     public ItemStack decrStackSize(int slotId, int count) {
         ItemStack itemstack = getStackInSlot(slotId);
-        if (itemstack != ItemStack.EMPTY) {
+        if (!itemstack.isEmpty()) {
             if (itemstack.getCount() <= count){
                 setInventorySlotContents(slotId, ItemStack.EMPTY);
             }else{
@@ -68,7 +70,7 @@ public class ModInventory implements IInventory {
     }
 
     @Override
-    public void setInventorySlotContents(int slotId, ItemStack stack) {
+    public void setInventorySlotContents(int slotId, @Nonnull ItemStack stack) {
         this.slots.set(slotId, stack);
         if (stack.getCount() > getInventoryStackLimit()) {
             stack.setCount(getInventoryStackLimit());
@@ -144,17 +146,15 @@ public class ModInventory implements IInventory {
 
     @Override
     public void setField(int id, int value) {
-        // TODO Auto-generated method stub
     }
 
     @Override
     public int getFieldCount() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
+        slots.clear();
     }
 }

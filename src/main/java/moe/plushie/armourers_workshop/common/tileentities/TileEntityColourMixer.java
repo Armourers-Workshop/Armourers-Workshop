@@ -61,7 +61,9 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         ItemStack stackOutput = getStackInSlot(1);
         
         if (stackInput.getItem() instanceof IPaintingTool) {
-            if (stackOutput != ItemStack.EMPTY) { return; }
+            if (!stackOutput.isEmpty()) {
+                return;
+            }
             setInventorySlotContents(0, ItemStack.EMPTY);
             setInventorySlotContents(1, stackInput);
             

@@ -198,10 +198,10 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         ItemStack stackInput = this.getStackInSlot(0);
         ItemStack stackOuput = this.getStackInSlot(1);
         
-        if (stackInput == ItemStack.EMPTY) {
+        if (stackInput.isEmpty()) {
             return;
         }
-        if (stackOuput != ItemStack.EMPTY) {
+        if (!stackOuput.isEmpty()) {
             return;
         }
         if (!(stackInput.getItem() instanceof ItemSkin)) {

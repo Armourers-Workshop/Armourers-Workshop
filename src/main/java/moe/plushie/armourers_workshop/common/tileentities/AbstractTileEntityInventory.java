@@ -30,7 +30,7 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     @Override
     public ItemStack decrStackSize(int i, int count) {
         ItemStack itemstack = getStackInSlot(i);
-        if (itemstack != ItemStack.EMPTY) {
+        if (!itemstack.isEmpty()) {
             if (itemstack.getCount() <= count){
                 setInventorySlotContents(i, ItemStack.EMPTY);
             }else{
@@ -51,7 +51,7 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         items.set(i, itemstack);
-        if (itemstack != ItemStack.EMPTY && itemstack.getCount() > getInventoryStackLimit()) {
+        if (!itemstack.isEmpty() && itemstack.getCount() > getInventoryStackLimit()) {
             itemstack.setCount(getInventoryStackLimit());
         }
         markDirty();
@@ -104,14 +104,12 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     
     @Override
     public int getField(int id) {
-        // TODO Auto-generated method stub
         return 0;
     }
     
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
-        
+        items.clear();
     }
     
     @Override
@@ -124,7 +122,6 @@ public abstract class AbstractTileEntityInventory extends ModTileEntity implemen
     
     @Override
     public void setField(int id, int value) {
-        // TODO Auto-generated method stub
     }
     
     @Override
