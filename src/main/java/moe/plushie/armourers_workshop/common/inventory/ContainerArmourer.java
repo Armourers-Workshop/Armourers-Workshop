@@ -38,14 +38,14 @@ public class ContainerArmourer extends Container {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
         Slot slot = getSlot(slotID);
-        if (slot != null && slot.getHasStack()) {
+        if (slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
 
             if (slotID < 2) {
                 if (!this.mergeItemStack(stack, 11, 38, false)) {
                     if (!this.mergeItemStack(stack, 2, 11, false)) {
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
             } else {
@@ -54,15 +54,15 @@ public class ContainerArmourer extends Container {
                         stack.getItem() instanceof ItemSkin |
                         stack.getItem() instanceof ItemArmourContainerItem) {
                     if (!this.mergeItemStack(stack, 0, 1, false)) {
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 } else {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }
 
             if (stack.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
@@ -72,7 +72,7 @@ public class ContainerArmourer extends Container {
             return result;
         }
 
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
