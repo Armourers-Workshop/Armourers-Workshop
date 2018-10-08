@@ -43,7 +43,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     private GuiButtonExt selectHairButton;
     private GuiButtonExt autoHairButton;
     
-    String guiName = "equipmentWardrobe";
+    String guiName = "equipment-wardrobe";
     
     public GuiTabWardrobeColourSettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IWardrobeCapability wardrobeCapability) {
         super(tabId, parent, false);
@@ -141,13 +141,13 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     @Override
     public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
         super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
-        String labelSkinColour = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.skinColour");
+        String labelSkinColour = GuiHelper.getLocalizedControlName(guiName, "label.skinColour");
         fontRenderer.drawString(labelSkinColour + ":", 70, 18, 4210752); 
         
         //String labelSkinOverride = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.skinOverride");
         //this.fontRendererObj.drawString(labelSkinOverride + ":", 165, 18, 4210752); 
         
-        String labelHairColour = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.hairColour");
+        String labelHairColour = GuiHelper.getLocalizedControlName(guiName, "label.hairColour");
         fontRenderer.drawString(labelHairColour + ":", 70, 70, 4210752); 
         
         this.skinColour = new Color(wardrobeCapability.getSkinColour());

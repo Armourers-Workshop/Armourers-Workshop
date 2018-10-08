@@ -27,6 +27,7 @@ import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
@@ -57,7 +58,7 @@ public class GuiWardrobe extends GuiTabbed {
     private int lastMouseX;
     private int lastMouseY;
     
-    String guiName = "equipmentWardrobe";
+    String guiName = "equipment-wardrobe";
     
     public GuiWardrobe(InventoryPlayer inventory, EntitySkinCapability skinCapability) {
         super(new ContainerSkinWardrobe(inventory, skinCapability), false, TEXTURE_TAB);
@@ -107,8 +108,9 @@ public class GuiWardrobe extends GuiTabbed {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         // Title label.
-        GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, "equipmentWardrobe");
+        GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, "equipment-wardrobe");
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {
@@ -193,8 +195,13 @@ public class GuiWardrobe extends GuiTabbed {
             ModRenderHelper.enableScissorScaled(x + 8, y + 18, 57, 92);
         }
         
-        GL11.glPushMatrix();
-        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+        
+        RenderHelper.enableStandardItemLighting();
+        
+        
+        GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
+        
         GL11.glTranslatef(boxX, boxY, 50);
         GL11.glRotatef(-20, 1, 0, 0);
         GL11.glRotatef(playerRotation, 0, 1, 0);
@@ -204,13 +211,16 @@ public class GuiWardrobe extends GuiTabbed {
             colour = getColourAtPos(Mouse.getX(), Mouse.getY());
         }
         GuiInventory.drawEntityOnScreen(0, 0, 35, 0, 0, this.mc.player);
-        GL11.glPopAttrib();
-        GL11.glPopMatrix();
         
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
+        
+        
+        GlStateManager.enableBlend();
+
         if (!overPlayerBox) {
             ModRenderHelper.disableScissor();
         }
-        
         
         return colour;
     }
