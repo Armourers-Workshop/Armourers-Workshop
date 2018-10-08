@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.common.blocks;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
+import moe.plushie.armourers_workshop.common.items.block.ModItemBlock;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -12,7 +13,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -97,7 +97,7 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
     
     @Override
     public void registerItemBlock(IForgeRegistry<Item> registry) {
-        registry.register(new ItemBlock(this).setRegistryName(getRegistryName()));
+        registry.register(new ModItemBlock(this).setRegistryName(getRegistryName()));
     }
     
     @SideOnly(Side.CLIENT)

@@ -9,6 +9,7 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.common.Contributors;
 import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.items.ItemDebugTool.IDebug;
+import moe.plushie.armourers_workshop.common.items.block.ItemBlockMannequin;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
@@ -23,19 +24,24 @@ import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class BlockMannequin extends AbstractModBlockContainer implements IDebug {
 
@@ -88,6 +94,11 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
             }
         }
         //world.setBlock(x, y + 1, z, this, 1, 2);
+    }
+    
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return new AxisAlignedBB(0.1F, 0, 0.1F, 0.9F, 1.96F, 0.9F);
     }
     
     @SideOnly(Side.CLIENT)
@@ -271,6 +282,10 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
         return true;
     }
+    
+    
+    
+    
     /*
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
@@ -364,5 +379,15 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         } else {
             textLines.add("profile=null");
         }
+    }
+    
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+    }
+    
+    @Override
+    public void registerItemBlock(IForgeRegistry<Item> registry) {
+        registry.register(new ItemBlockMannequin(this).setRegistryName(getRegistryName()));
     }
 }

@@ -454,10 +454,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        AxisAlignedBB bb = INFINITE_EXTENT_AABB;
-        bb = new AxisAlignedBB(-1, 0, -1, 2, 3, 2);
-        bb.offset(getPos());
-        return bb;
+        AxisAlignedBB bb = new AxisAlignedBB(-1, 0, -1, 2, 3, 2);
+        return bb.offset(getPos());
     }
 
     @Override

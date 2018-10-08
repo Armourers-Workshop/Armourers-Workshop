@@ -19,11 +19,13 @@ import moe.plushie.armourers_workshop.client.handler.RehostedJarHandler;
 import moe.plushie.armourers_workshop.client.handler.SkinPreviewHandler;
 import moe.plushie.armourers_workshop.client.library.ClientLibraryManager;
 import moe.plushie.armourers_workshop.client.model.ICustomModel;
+import moe.plushie.armourers_workshop.client.model.ModelMannequin;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
 import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandler;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemEquipmentSkin;
+import moe.plushie.armourers_workshop.client.render.item.RenderItemMannequin;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockArmourer;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockColourable;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockGlobalSkinLibrary;
@@ -119,6 +121,11 @@ public class ClientProxy extends CommonProxy {
             }
         }
         ModItems.equipmentSkin.setTileEntityItemStackRenderer(new RenderItemEquipmentSkin());
+        ModelMannequin modelSteve = new ModelMannequin(false);
+        ModelMannequin modelAlex = new ModelMannequin(true);
+        RenderItemMannequin renderItemMannequin = new RenderItemMannequin(modelSteve, modelAlex);
+        Item.getItemFromBlock(ModBlocks.mannequin).setTileEntityItemStackRenderer(renderItemMannequin);
+        Item.getItemFromBlock(ModBlocks.doll).setTileEntityItemStackRenderer(renderItemMannequin);
     }
     
     @Override

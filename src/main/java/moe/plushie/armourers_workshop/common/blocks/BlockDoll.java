@@ -16,8 +16,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,6 +28,7 @@ public class BlockDoll extends AbstractModBlockContainer {
 
     private static final String TAG_OWNER = "owner";
     private final boolean isValentins;
+    private static final AxisAlignedBB AABB = new AxisAlignedBB(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
     
     public BlockDoll() {
         super(LibBlockNames.DOLL, Material.ROCK, SoundType.METAL, !ConfigHandler.hideDollFromCreativeTabs);
@@ -33,6 +36,12 @@ public class BlockDoll extends AbstractModBlockContainer {
         //setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
         isValentins = HolidayHelper.valentins.isHolidayActive();
         setSortPriority(198);
+    }
+    
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        // TODO Auto-generated method stub
+        return AABB;
     }
     
     /*

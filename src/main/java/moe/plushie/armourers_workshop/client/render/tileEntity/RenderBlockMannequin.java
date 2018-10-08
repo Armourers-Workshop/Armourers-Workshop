@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.client.render.MannequinFakePlayer;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.data.BipedRotations;
 import moe.plushie.armourers_workshop.common.inventory.MannequinSlotType;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
@@ -25,8 +26,10 @@ import moe.plushie.armourers_workshop.utils.HolidayHelper;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -65,9 +68,34 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         isHalloween = HolidayHelper.halloween.isHolidayActive();
         //MannequinFakePlayer fakePlayer = te.getFakePlayer();
         
-        /*
         mc.mcProfiler.endStartSection("move");
         
+        
+        GlStateManager.pushMatrix();
+        
+        
+        
+        GlStateManager.translate(x, y, z);
+        GlStateManager.scale(-1, -1, 1);
+        GlStateManager.translate(-8 * SCALE, -24F * SCALE, 8 * SCALE);
+        GlStateManager.enableRescaleNormal();
+        
+        
+        
+        GlStateManager.pushAttrib();
+        if (te.getBlockType() == ModBlocks.doll) {
+            float dollScale = 0.5F;
+            GL11.glScalef(dollScale, dollScale, dollScale);
+            GL11.glTranslatef(0, SCALE * 24, 0);
+        }
+        
+        bindTexture(DefaultPlayerSkin.getDefaultSkinLegacy());
+        renderModel(te, modelSteve);
+        
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
+        
+        /*
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
@@ -315,8 +343,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         GL11.glPopAttrib();
         GL11.glPopAttrib();
         GL11.glPopMatrix();
+        */
         mc.mcProfiler.endSection();
-        mc.mcProfiler.endSection();*/
+        mc.mcProfiler.endSection();
     }
     
     private void renderMagicCircle(byte r, byte g, byte b, float partialTickTime, int offset, boolean isChild) {
@@ -356,7 +385,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         GL11.glPopMatrix();
     }
     
-    private void renderModel(TileEntityMannequin te, ModelBiped targetBiped, MannequinFakePlayer fakePlayer) {
+    private void renderModel(TileEntityMannequin te, ModelBiped targetBiped) {
         if (!hasCustomHead(te)) {
             if (te.getBipedRotations().isChild) {
                 ModelHelper.enableChildModelScale(true, SCALE);

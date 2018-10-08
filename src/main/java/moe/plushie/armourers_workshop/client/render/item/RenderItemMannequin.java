@@ -1,7 +1,14 @@
 package moe.plushie.armourers_workshop.client.render.item;
 
-public class RenderItemMannequin /*implements IItemRenderer*/ {
-    /*
+import moe.plushie.armourers_workshop.client.model.ModelMannequin;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.item.ItemStack;
+
+public class RenderItemMannequin extends TileEntityItemStackRenderer {
+    
     private final ModelMannequin modelSteve;
     private final ModelMannequin modelAlex;
     
@@ -10,6 +17,24 @@ public class RenderItemMannequin /*implements IItemRenderer*/ {
         this.modelAlex = modelAlex;
     }
     
+    @Override
+    public void renderByItem(ItemStack itemStackIn) {
+        Minecraft.getMinecraft().renderEngine.bindTexture(DefaultPlayerSkin.getDefaultSkinLegacy());
+        float scale = 0.0625F;
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(-1, -1, 1);
+        /*
+        float angle = (((Minecraft.getMinecraft().world.getTotalWorldTime() * 8) % 360) + 0);
+        GlStateManager.rotate(angle, 0, 1, 0);
+        
+        //GlStateManager.translate(0, 0, -7F * scale);
+        
+        GlStateManager.translate(0F * scale, 0, 0);
+        */
+        modelSteve.render(null, 0, 0, 0, 0, 0, 0.0625F, true);
+        GlStateManager.popMatrix();
+    }
+    /*
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type) {
         return true;
