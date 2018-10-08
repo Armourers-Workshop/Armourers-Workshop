@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import moe.plushie.armourers_workshop.common.skin.entity.ExPropsEntityEquipmentData;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,10 +38,12 @@ public final class EntitySkinRenderHandler {
         loadEntityRenderers();
     }
     
-    private void loadEntityRenderers() {        
+    private void loadEntityRenderers() {
+        ModLogger.log("Adding layer renderers to entities");
         ArrayList<ISkinnableEntity> skinnableEntities = EntitySkinHandler.INSTANCE.getRegisteredEntities();
         for (int i = 0; i < skinnableEntities.size(); i++) {
             ISkinnableEntity skinnableEntity = skinnableEntities.get(i);
+            ModLogger.log("Adding layer renderer to entity " + skinnableEntity.getEntityClass());
             skinnableEntity.addRenderLayer(Minecraft.getMinecraft().getRenderManager());
         }
     }
