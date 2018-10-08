@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -53,11 +52,11 @@ public final class CraftingManager {
     }
 
     public static void addShapelessRecipe(IForgeRegistry<IRecipe> iForgeRegistry, ItemStack result, Object[] recipe) {
-        iForgeRegistry.register(new ShapelessOreRecipe(null, result, recipe).setRegistryName(new ResourceLocation(LibModInfo.ID, result.getUnlocalizedName())));
+        iForgeRegistry.register(new ShapelessOreRecipe(null, result, recipe).setRegistryName(result.getItem().getRegistryName()));
     }
 
     public static void addShapedRecipe(IForgeRegistry<IRecipe> iForgeRegistry, ItemStack result, Object[] recipe) {
-        iForgeRegistry.register(new ShapedOreRecipe(null, result, recipe).setRegistryName(new ResourceLocation(LibModInfo.ID, result.getUnlocalizedName())));
+        iForgeRegistry.register(new ShapedOreRecipe(null, result, recipe).setRegistryName(result.getItem().getRegistryName()));
     }
     
     public static void hideItemsInNEI() {
