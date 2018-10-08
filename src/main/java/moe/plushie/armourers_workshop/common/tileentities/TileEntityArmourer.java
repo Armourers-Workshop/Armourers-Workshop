@@ -2,8 +2,6 @@ package moe.plushie.armourers_workshop.common.tileentities;
 
 import java.util.ArrayList;
 
-import com.mojang.authlib.GameProfile;
-
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
@@ -26,7 +24,6 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinProperty;
 import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -34,7 +31,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -56,9 +52,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     private static final String TAG_SHOW_HELPER = "showHelper";
     private static final String TAG_PAINT_DATA = "paintData";
     private static final String TAG_TEXTURE = "texture";
-    
-    private static final String TAG_TYPE_OLD = "type";
-    private static final String TAG_OWNER_OLD = "owner";
     
     private static final int HEIGHT_OFFSET = 1;
     private static final int INVENTORY_SIZE = 2;
@@ -486,14 +479,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         super.readCommonFromNBT(compound);
         direction = EnumFacing.getFront(compound.getByte(TAG_DIRECTION));
         skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(compound.getString(TAG_TYPE));
-        //Update code for old saves
-        if (skinType == null && compound.hasKey(TAG_TYPE_OLD)) {
-            skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(compound.getInteger(TAG_TYPE_OLD) - 1);
-        }
-        if (compound.hasKey(TAG_OWNER_OLD, NBT.TAG_COMPOUND)) {
-            GameProfile gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER_OLD));
-            texture = new PlayerTexture(gameProfile.getName(), TextureType.USER);
-        }
         
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
         showOverlay = compound.getBoolean(TAG_SHOW_OVERLAY);
@@ -517,7 +502,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         if (skinType != null) {
             compound.setString(TAG_TYPE, skinType.getRegistryName());
         }
-        ModLogger.log("send " + skinType);
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
         compound.setBoolean(TAG_SHOW_OVERLAY, showOverlay);
         compound.setBoolean(TAG_SHOW_HELPER, showHelper);
@@ -527,6 +511,4 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         compound.setTag(TAG_TEXTURE, textureCompound);
         compound.setIntArray(TAG_PAINT_DATA, this.paintData);
     }
-    
-    
 }
