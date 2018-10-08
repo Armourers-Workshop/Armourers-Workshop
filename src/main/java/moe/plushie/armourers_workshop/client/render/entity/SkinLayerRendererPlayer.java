@@ -40,15 +40,18 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         byte[] extraColours = null;
         for (int i = 0; i < skinTypes.length; i++) {
             ISkinType skinType = skinTypes[i];
-            for (int skinIndex = 0; skinIndex < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
-                Skin skin = modelRenderer.getPlayerCustomArmour(entitylivingbaseIn, skinType, skinIndex);
-                if (skin == null) {
-                    continue;
+            if (skinType.getVanillaArmourSlotId() != -1) {
+                for (int skinIndex = 0; skinIndex < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
+                    Skin skin = modelRenderer.getPlayerCustomArmour(entitylivingbaseIn, skinType, skinIndex);
+                    if (skin == null) {
+                        continue;
+                    }
+                    ISkinDye skinDye = modelRenderer.getPlayerDyeData(entitylivingbaseIn, skinType, skinIndex);
+                    
+                    modelRenderer.renderEquipmentPart(entitylivingbaseIn, renderPlayer.getMainModel(), skin, skinDye, extraColours, 0, true);
                 }
-                ISkinDye skinDye = modelRenderer.getPlayerDyeData(entitylivingbaseIn, skinType, skinIndex);
-                
-                modelRenderer.renderEquipmentPart(entitylivingbaseIn, renderPlayer.getMainModel(), skin, skinDye, extraColours, 0, true);
             }
+
         }
     }
 

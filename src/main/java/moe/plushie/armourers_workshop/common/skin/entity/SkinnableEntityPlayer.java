@@ -5,6 +5,7 @@ import java.util.List;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.entity.ModelResetLayer;
+import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererHeldItem;
 import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererPlayer;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -35,7 +36,17 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
                 if (object != null) {
                     List<LayerRenderer<?>> layerRenderers = (List<LayerRenderer<?>>) object;
                     layerRenderers.add(0, new ModelResetLayer(playerRender));
-                    ModLogger.log("adding reset layer");
+                    ModLogger.log("Adding reset layer");
+                    for (int i = 0; i < layerRenderers.size(); i++) {
+                        LayerRenderer<?> layerRenderer = layerRenderers.get(i);
+                        if (layerRenderer.getClass().getName().contains("LayerHeldItem")) {
+                            ModLogger.log("Removing held item layer");
+                            layerRenderers.remove(i);
+                            ModLogger.log("Adding skinned held item layer");
+                            layerRenderers.add(new SkinLayerRendererHeldItem(playerRender, layerRenderer));
+                            break;
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

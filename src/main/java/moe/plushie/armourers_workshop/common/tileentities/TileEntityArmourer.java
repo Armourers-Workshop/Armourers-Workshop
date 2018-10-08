@@ -24,6 +24,7 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinProperty;
 import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -105,16 +106,17 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         if (getWorld().isRemote) {
             return;
         }
+
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
         if (!player.capabilities.isCreativeMode) {
-            if (stackInput == null) {
+            if (stackInput.isEmpty()) {
                 return;
             }
         }
         
-        if (stackOutput != null) {
+        if (!stackOutput.isEmpty()) {
             return;
         }
         
@@ -163,7 +165,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
                 break;
             }
         }
-        
+        ModLogger.log("save");
         if (armourItemData == null) {
             return;
         }
@@ -171,7 +173,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(armourItemData, (LibraryFile)null);
         
         stackOutput = inputItem.makeStackForEquipment(armourItemData);
-        if (stackOutput == null) {
+        if (stackOutput.isEmpty()) {
             return;
         }
         if (!player.capabilities.isCreativeMode) {
