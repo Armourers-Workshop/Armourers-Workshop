@@ -67,36 +67,41 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         skinHead = new SkinHead();
         skinChest = new SkinChest();
         skinLegs = new SkinLegs();
-        oldSkinSkirt = new SkinSkirt();
         skinFeet = new SkinFeet();
+        skinWings = new SkinWings();
+        
         skinSword = new SkinItem("Sword");
         skinShield = new SkinItem("Shield");
+        skinBow = new SkinBow();
+        
         skinPickaxe = new SkinItem("Pickaxe");
         skinAxe = new SkinItem("Axe");
         skinShovel = new SkinItem("Shovel");
         skinHoe = new SkinItem("Hoe");
         skinItem = new SkinItem("Item");
-        skinBow = new SkinBow();
-        oldSkinArrow = new SkinArrow();
+        
         skinBlock = new SkinBlock();
-        skinWings = new SkinWings();
+        
+        oldSkinSkirt = new SkinSkirt();
+        oldSkinArrow = new SkinArrow();
         
         registerSkin(skinHead);
         registerSkin(skinChest);
         registerSkin(skinLegs);
-        //registerSkin(skinSkirt);
         registerSkin(skinFeet);
+        registerSkin(skinWings);
+        
         registerSkin(skinSword);
+        registerSkin(skinShield);
+        registerSkin(skinBow);
+        
         registerSkin(skinPickaxe);
         registerSkin(skinAxe);
         registerSkin(skinShovel);
         registerSkin(skinHoe);
         registerSkin(skinItem);
         
-        registerSkin(skinBow);
-        //registerSkin(skinArrow);
         registerSkin(skinBlock);
-        registerSkin(skinWings);
     }
     
     @Override

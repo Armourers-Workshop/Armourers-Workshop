@@ -63,25 +63,16 @@ public class GuiDropDownList extends GuiButtonExt {
                     DropDownListItem listItem = listItems.get(i);
                     int textX = this.x + 4;
                     int textY = this.y + this.height + 4 + (i * 10);
-                    int textWidth = this.width - 8;
-                    int textHeight = 8;
-                    int textColour = 16777215;
-                    if (!listItem.enabled) {
-                        textColour = 0xFFCC0000;
-                    } else {
-                        if (mouseX >= textX && mouseY >= textY && mouseX < textX + textWidth && mouseY < textY + textHeight) {
-                            if (listItem.enabled) {
-                                textColour = 16777120;
-                                this.hoverIndex = i;
-                                drawRect(textX, textY, textX + textWidth, textY + textHeight, 0x44CCCCCC);
-                            }
-                        }
+                    if (listItem.isMouseOver(this, textX, textY, mouseX, mouseY) & listItem.enabled) {
+                        hoverIndex = i;
                     }
-                    mc.fontRenderer.drawString(listItem.displayText, textX, textY, textColour);
+                    listItem.drawItem(mc, this, textX, textY, mouseX, mouseY, partial, false);
                 } 
             }
-            
-            mc.fontRenderer.drawString(this.displayString, this.x + 3, this.y + 3, 16777215);
+            if (getListSelectedItem() != null) {
+                getListSelectedItem().drawItem(mc, this, this.x + 3, this.y + 3, mouseX, mouseY, partial, true);
+            }
+            //mc.fontRenderer.drawString(this.displayString, this.x + 3, this.y + 3, 16777215);
         }
     }
     
@@ -202,7 +193,7 @@ public class GuiDropDownList extends GuiButtonExt {
         public void onDropDownListChanged(GuiDropDownList dropDownList);
     }
     
-    public class DropDownListItem {
+    public static class DropDownListItem {
         public String displayText;
         public String tag;
         public boolean enabled;
@@ -211,6 +202,32 @@ public class GuiDropDownList extends GuiButtonExt {
             this.displayText = displayText;
             this.tag = tag;
             this.enabled = enabled;
+        }
+        
+        public boolean isMouseOver(GuiDropDownList parent, int x, int y, int mouseX, int mouseY) {
+            int textWidth = parent.width - 8;
+            int textHeight = 8;
+            if (mouseX >= x && mouseY >= y && mouseX < x + textWidth && mouseY < y + textHeight) {
+                return true;
+            }
+            return false;
+        }
+
+        public void drawItem(Minecraft mc, GuiDropDownList parent, int x, int y, int mouseX, int mouseY, float partial, boolean topItem) {
+            int textWidth = parent.width - 8;
+            int textHeight = 8;
+            int textColour = 16777215;
+            if (!enabled) {
+                textColour = 0xFFCC0000;
+            } else {
+                if (isMouseOver(parent, x, y, mouseX, mouseY) & !topItem) {
+                    if (enabled) {
+                        textColour = 16777120;
+                        drawRect(x, y, x + textWidth, y + textHeight, 0x44CCCCCC);
+                    }
+                }
+            }
+            mc.fontRenderer.drawString(displayText, x, y, textColour);
         }
     }
 }

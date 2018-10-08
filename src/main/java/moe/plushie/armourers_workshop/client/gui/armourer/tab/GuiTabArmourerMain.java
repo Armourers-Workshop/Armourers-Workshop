@@ -8,9 +8,9 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.armourer.GuiArmourer;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.DropDownListItem;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
@@ -23,9 +23,11 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -63,7 +65,8 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
             if (!skinType.isHidden()) {
                 String skinLocalizedName = str.getLocalizedSkinTypeName(skinType);
                 String skinRegistryName = skinType.getRegistryName();
-                dropDownList.addListItem(skinLocalizedName, skinRegistryName, skinType.enabled());
+                DropDownItemSkin item = new DropDownItemSkin(skinLocalizedName, skinRegistryName, skinType.enabled(), skinType);
+                dropDownList.addListItem(item);
                 if (skinType == tileEntity.getSkinType()) {
                     dropDownList.setListSelectedIndex(skinCount);
                 }
@@ -78,6 +81,43 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         textItemName = new GuiTextField(-1, fontRenderer, x + 64, y + 58, 103, 16);
         textItemName.setMaxStringLength(40);
         textItemName.setText(tileEntity.getSkinProps().getPropertyString(Skin.KEY_CUSTOM_NAME, ""));
+    }
+    
+    public static class DropDownItemSkin extends DropDownListItem {
+
+        private final ISkinType skinType;
+        
+        public DropDownItemSkin(String displayText, String tag, boolean enabled, ISkinType skinType) {
+            super(displayText, tag, enabled);
+            this.skinType = skinType;
+        }
+        
+        @Override
+        public void drawItem(Minecraft mc, GuiDropDownList parent, int x, int y, int mouseX, int mouseY, float partial, boolean topItem) {
+            int textWidth = parent.width - 8;
+            int textHeight = 8;
+            int textColour = 16777215;
+            if (topItem) {
+                mc.fontRenderer.drawString(displayText, x, y, textColour);
+            } else {
+                
+                //textWidth -= 7;
+                if (!enabled) {
+                    textColour = 0xFFCC0000;
+                } else {
+                    if (isMouseOver(parent, x, y, mouseX, mouseY) & !topItem) {
+                        if (enabled) {
+                            textColour = 16777120;
+                            drawRect(x, y, x + textWidth, y + textHeight, 0x44CCCCCC);
+                        }
+                    }
+                }
+                mc.renderEngine.bindTexture(skinType.getIcon());
+                GlStateManager.color(1, 1, 1);
+                Gui.drawScaledCustomSizeModalRect(x - 2, y, 0, 0, 16, 16, 8, 8, 16, 16);
+                mc.fontRenderer.drawString(displayText, x + 7, y, textColour);
+            }
+        }
     }
     
     @Override
@@ -143,6 +183,8 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         drawTexturedModalRect(this.x + 63, this.y + 20, 238, 0, 18, 18);
         // output slot
         drawTexturedModalRect(this.x + 142, this.y + 16, 230, 18, 26, 26);
+        
+        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), this.x + 8, this.y + this.height - 96 + 2, 4210752);
         textItemName.drawTextBox();
     }
     
@@ -160,7 +202,6 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     @Override
     public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
         super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
-        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.height - 96 + 2, 4210752);
     
         String itemNameLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.itemName");
         

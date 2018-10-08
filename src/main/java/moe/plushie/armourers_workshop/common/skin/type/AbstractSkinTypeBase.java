@@ -14,7 +14,7 @@ public abstract class AbstractSkinTypeBase implements ISkinType {
     @SideOnly(Side.CLIENT)
     @Override
     public ResourceLocation getIcon() {
-        return new ResourceLocation(LibModInfo.ID, "textures/items/skin/template-" + getName().toLowerCase());
+        return new ResourceLocation(LibModInfo.ID, "textures/items/skin/template-" + getName().toLowerCase() + ".png");
     }
     
     @SideOnly(Side.CLIENT)
