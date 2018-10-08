@@ -50,7 +50,6 @@ public class SkinLayerRendererSkeleton implements ISkinnableEntityRenderer<Entit
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinChest, entityEquipment);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinLegs, entityEquipment);
-        renderEquipmentType(entity, renderer, SkinTypeRegistry.skinSkirt, entityEquipment);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinFeet, entityEquipment);
         renderEquipmentType(entity, renderer, SkinTypeRegistry.skinWings, entityEquipment);
         

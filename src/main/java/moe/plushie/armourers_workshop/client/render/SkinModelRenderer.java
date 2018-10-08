@@ -21,7 +21,6 @@ import moe.plushie.armourers_workshop.client.model.skin.ModelSkinChest;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinFeet;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinHead;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinLegs;
-import moe.plushie.armourers_workshop.client.model.skin.ModelSkinSkirt;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinSword;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinWings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
@@ -76,7 +75,6 @@ public final class SkinModelRenderer {
     public final ModelSkinChest customChest = new ModelSkinChest();
     public final ModelSkinHead customHead = new ModelSkinHead();
     public final ModelSkinLegs customLegs = new ModelSkinLegs();
-    public final ModelSkinSkirt customSkirt = new ModelSkinSkirt();
     public final ModelSkinFeet customFeet = new ModelSkinFeet();
     public final ModelSkinSword customSword = new ModelSkinSword();
     public final ModelSkinBow customBow = new ModelSkinBow();
@@ -346,13 +344,6 @@ public final class SkinModelRenderer {
                         customLegs.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
                     }
                 }
-                if (slot == SkinTypeRegistry.skinSkirt.getVanillaArmourSlotId()) {
-                    Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinSkirt, skinIndex);
-                    ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinSkirt, skinIndex);
-                    if (data != null) {
-                        customSkirt.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
-                    }
-                }
                 if (slot == SkinTypeRegistry.skinFeet.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
@@ -381,8 +372,6 @@ public final class SkinModelRenderer {
             return customChest;
         } else if (skinType == SkinTypeRegistry.skinLegs) {
             return customLegs;
-        } else if (skinType == SkinTypeRegistry.skinSkirt) {
-            return customSkirt;
         } else if (skinType == SkinTypeRegistry.skinFeet) {
             return customFeet;
         } else if (skinType == SkinTypeRegistry.skinSword) {

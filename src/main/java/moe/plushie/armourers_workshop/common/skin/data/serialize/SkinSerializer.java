@@ -144,7 +144,7 @@ public final class SkinSerializer {
         } else {
             if (loadedProps) {
                 String regName = stream.readUTF();
-                if (regName.equals(SkinTypeRegistry.skinSkirt.getRegistryName())) {
+                if (regName.equals(SkinTypeRegistry.oldSkinSkirt.getRegistryName())) {
                     regName = SkinTypeRegistry.skinLegs.getRegistryName();
                 }
                 equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
@@ -298,7 +298,7 @@ public final class SkinSerializer {
         } else {
             if (loadedProps) {
                 String regName = stream.readUTF();
-                if (regName.equals(SkinTypeRegistry.skinSkirt.getRegistryName())) {
+                if (regName.equals(SkinTypeRegistry.oldSkinSkirt.getRegistryName())) {
                     regName = SkinTypeRegistry.skinLegs.getRegistryName();
                 }
                 equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);

@@ -203,12 +203,14 @@ skinType.armourers:chest.name=Chest
 skinType.armourers:legs.name=Legs
 skinType.armourers:skirt.name=Skirt
 skinType.armourers:feet.name=Feet
+skinType.armourers:wings.name=Wings
 skinType.armourers:sword.name=Sword
+skinType.armourers:shield.name=Shield
 skinType.armourers:bow.name=Bow
-skinType.armourers:arrow.name=Arrow
+skinType.armourers:pickaxe.name=Pickaxe
 skinType.armourers:block.name=Block
 skinType.armourers:multiblock.name=Multiblock
-skinType.armourers:wings.name=Wings
+
 
 # Skin Part Types
 skinPartType.armourers:head.base.name=Base

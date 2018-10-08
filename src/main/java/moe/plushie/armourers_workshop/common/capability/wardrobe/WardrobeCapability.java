@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.common.capability.wardrobe;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
 
@@ -10,7 +11,6 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdateWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncWardrobeCap;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -51,9 +51,10 @@ public class WardrobeCapability implements IWardrobeCapability {
         hairColour = COLOUR_HAIR_DEFAULT.getRGB();
         armourOverride = new BitSet(4);
         slotsUnlocked = new HashMap<String, Integer>();
-        ISkinType[] validSkins = ExPropsPlayerSkinData.validSkins;
-        for (int i = 0; i < validSkins.length; i++) {
-            ISkinType skinType = validSkins[i];
+        ArrayList<ISkinType> validSkinTypes = new ArrayList<ISkinType>();
+        skinnableEntity.getValidSkinTypes(validSkinTypes);
+        for (int i = 0; i < validSkinTypes.size(); i++) {
+            ISkinType skinType = validSkinTypes.get(i);
             slotsUnlocked.put(skinType.getRegistryName(), getUnlockedSlotsForSkinType(skinType));
         }
     }

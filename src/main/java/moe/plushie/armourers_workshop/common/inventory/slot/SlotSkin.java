@@ -35,7 +35,6 @@ public class SlotSkin extends SlotHidable {
     @SideOnly(Side.CLIENT)
     @Override
     public TextureAtlasSprite getBackgroundSprite() {
-        // TODO Auto-generated method stub
         return new DummySprite("");
     }
     
@@ -66,25 +65,4 @@ public class SlotSkin extends SlotHidable {
             return 0;
         }
     }
-    
-    /*
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getBackgroundIconIndex() {
-        if (skinType == SkinTypeRegistry.skinSword & getSlotIndex() > 0) {
-            if (getSlotIndex() == 1) {
-                return ClientProxy.iconSkinPickaxe;
-            } else if (getSlotIndex() == 2) {
-                return ClientProxy.iconSkinAxe;
-            } else if (getSlotIndex() == 3) {
-                return ClientProxy.iconSkinShovel;
-            } else if (getSlotIndex() == 4) {
-                return ClientProxy.iconSkinHoe;
-            }
-        }
-        if (this.skinType != null) {
-            return this.skinType.getEmptySlotIcon();
-        }
-        return super.getBackgroundIconIndex();
-    }*/
 }

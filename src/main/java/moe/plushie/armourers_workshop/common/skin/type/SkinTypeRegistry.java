@@ -31,19 +31,24 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     public static ISkinType skinHead;
     public static ISkinType skinChest;
     public static ISkinType skinLegs;
-    public static ISkinType skinSkirt;
     public static ISkinType skinFeet;
+    public static ISkinType skinWings;
+    
     public static ISkinType skinSword;
     public static ISkinType skinShield;
+    public static ISkinType skinBow;
+    
     public static ISkinType skinPickaxe;
     public static ISkinType skinAxe;
     public static ISkinType skinShovel;
     public static ISkinType skinHoe;
     public static ISkinType skinItem;
-    public static ISkinType skinBow;
-    public static ISkinType skinArrow;
+    
     public static ISkinType skinBlock;
-    public static ISkinType skinWings;
+    
+    public static ISkinType oldSkinSkirt;
+    public static ISkinType oldSkinArrow;
+    
     
     private LinkedHashMap<String, ISkinType> skinTypeMap;
     private HashMap<String, ISkinPartType> skinPartMap;
@@ -62,7 +67,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         skinHead = new SkinHead();
         skinChest = new SkinChest();
         skinLegs = new SkinLegs();
-        skinSkirt = new SkinSkirt();
+        oldSkinSkirt = new SkinSkirt();
         skinFeet = new SkinFeet();
         skinSword = new SkinItem("Sword");
         skinShield = new SkinItem("Shield");
@@ -72,7 +77,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         skinHoe = new SkinItem("Hoe");
         skinItem = new SkinItem("Item");
         skinBow = new SkinBow();
-        skinArrow = new SkinArrow();
+        oldSkinArrow = new SkinArrow();
         skinBlock = new SkinBlock();
         skinWings = new SkinWings();
         
@@ -128,10 +133,10 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         if (registryName == null | registryName.trim().isEmpty()) {
             return null;
         }
-        if(registryName.equals(skinSkirt.getRegistryName())) {
+        if(registryName.equals(oldSkinSkirt.getRegistryName())) {
             return skinLegs;
         }
-        if(registryName.equals(skinArrow.getRegistryName())) {
+        if(registryName.equals(oldSkinArrow.getRegistryName())) {
             return skinBow;
         }
         ISkinType skinType = skinTypeMap.get(registryName);
@@ -228,19 +233,4 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         String localizedName = "skinPartType." + skinPartType.getRegistryName() + ".name";
         return I18n.format(localizedName);
     }
-    /*
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-        if (event.map.getTextureType() == 1) {
-            for (int i = 0; i < skinTypeMap.size(); i++) {
-                String registryName = (String) skinTypeMap.keySet().toArray()[i];
-                ISkinType skinType = getSkinTypeFromRegistryName(registryName);
-                if (skinType != null) {
-                    skinType.registerIcon(event.map);
-                }
-            }
-        }
-    }
-     */
 }

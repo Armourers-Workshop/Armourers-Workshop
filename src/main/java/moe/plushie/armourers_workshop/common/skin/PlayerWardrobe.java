@@ -4,14 +4,9 @@ import java.awt.Color;
 import java.util.BitSet;
 import java.util.HashMap;
 
-import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class PlayerWardrobe {
     
@@ -47,11 +42,13 @@ public class PlayerWardrobe {
         headOverlay = false;
         limitLimbs = true;
         slotsUnlocked = new HashMap<String, Integer>();
+        /*
         ISkinType[] validSkins = ExPropsPlayerSkinData.validSkins;
         for (int i = 0; i < validSkins.length; i++) {
             ISkinType skinType = validSkins[i];
             slotsUnlocked.put(skinType.getRegistryName(), getUnlockedSlotsForSkinType(skinType));
         }
+        */
     }
     
     public int getUnlockedSlotsForSkinType(ISkinType skinType) {
@@ -79,89 +76,5 @@ public class PlayerWardrobe {
         headOverlay = ewd.headOverlay;
         limitLimbs = ewd.limitLimbs;
         slotsUnlocked = ewd.slotsUnlocked;
-    }
-    
-    public void saveNBTData(NBTTagCompound compound) {
-        compound.setInteger(TAG_SKIN_COLOUR, this.skinColour);
-        compound.setInteger(TAG_HAIR_COLOUR, this.hairColour);
-        for (int i = 0; i < 4; i++) {
-            compound.setBoolean(TAG_ARMOUR_OVERRIDE + i, this.armourOverride.get(i));
-        }
-        compound.setBoolean(TAG_HEAD_OVERLAY, this.headOverlay);
-        compound.setBoolean(TAG_LIMIT_LIMBS, this.limitLimbs);
-        
-        NBTTagList slotsList = new NBTTagList();
-        ISkinType[] validSkins = ExPropsPlayerSkinData.validSkins;
-        for (int i = 0; i < validSkins.length; i++) {
-            ISkinType skinType = validSkins[i];
-            NBTTagCompound slotCount = new NBTTagCompound();
-            slotCount.setString(TAG_SLOT_KEY, skinType.getRegistryName());
-            slotCount.setInteger(TAG_SLOT_VALUE, getUnlockedSlotsForSkinType(skinType));
-            slotsList.appendTag(slotCount);
-        }
-        compound.setTag(TAG_SLOTS_UNLOCKED, slotsList);
-    }
-    
-    public void loadNBTData(NBTTagCompound compound) {
-        if (compound.hasKey(TAG_SKIN_COLOUR)) {
-            this.skinColour = compound.getInteger(TAG_SKIN_COLOUR);
-        }
-        if (compound.hasKey(TAG_HAIR_COLOUR)) {
-            this.hairColour = compound.getInteger(TAG_HAIR_COLOUR);
-        }
-        for (int i = 0; i < 4; i++) {
-            this.armourOverride.set(i, compound.getBoolean(TAG_ARMOUR_OVERRIDE + i));
-        }
-        if (compound.hasKey(TAG_HEAD_OVERLAY)) {
-            this.headOverlay = compound.getBoolean(TAG_HEAD_OVERLAY);
-        }
-        if (compound.hasKey(TAG_LIMIT_LIMBS)) {
-            this.limitLimbs = compound.getBoolean(TAG_LIMIT_LIMBS);
-        }
-        if (compound.hasKey(TAG_SLOTS_UNLOCKED, NBT.TAG_LIST)) {
-            NBTTagList slotsList = compound.getTagList(TAG_SLOTS_UNLOCKED, NBT.TAG_COMPOUND);
-            this.slotsUnlocked.clear();
-            for (int i = 0; i < slotsList.tagCount(); i++) {
-                NBTTagCompound slotCount = slotsList.getCompoundTagAt(i);
-                if (slotCount.hasKey(TAG_SLOT_KEY, NBT.TAG_STRING) & slotCount.hasKey(TAG_SLOT_VALUE, NBT.TAG_INT)) {
-                    String key = slotCount.getString(TAG_SLOT_KEY);
-                    int value = slotCount.getInteger(TAG_SLOT_VALUE);
-                    slotsUnlocked.put(key, value);
-                }
-            }
-        }
-    }
-    
-    public void fromBytes(ByteBuf buf) {
-        this.skinColour = buf.readInt();
-        this.hairColour = buf.readInt();
-        this.armourOverride = new BitSet(4);
-        for (int i = 0; i < 4; i++) {
-            this.armourOverride.set(i, buf.readBoolean());
-        }
-        this.headOverlay = buf.readBoolean();
-        this.limitLimbs = buf.readBoolean();
-        for (int i = 0; i < ExPropsPlayerSkinData.validSkins.length; i++) {
-            String key = ByteBufUtils.readUTF8String(buf);
-            int value = buf.readInt();
-            slotsUnlocked.put(key, value);
-        }
-    }
-
-    public void toBytes(ByteBuf buf) {
-        buf.writeInt(this.skinColour);
-        buf.writeInt(this.hairColour);
-        for (int i = 0; i < 4; i++) {
-            buf.writeBoolean(this.armourOverride.get(i));
-        }
-        buf.writeBoolean(this.headOverlay);
-        buf.writeBoolean(this.limitLimbs);
-        
-        ISkinType[] validSkins = ExPropsPlayerSkinData.validSkins;
-        for (int i = 0; i < validSkins.length; i++) {
-            ISkinType skinType = validSkins[i];
-            ByteBufUtils.writeUTF8String(buf, skinType.getRegistryName());
-            buf.writeInt(getUnlockedSlotsForSkinType(skinType));
-        }
     }
 }

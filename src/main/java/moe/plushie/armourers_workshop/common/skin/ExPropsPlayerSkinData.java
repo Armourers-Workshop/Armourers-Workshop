@@ -15,7 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IInventorySlotUpdate {
@@ -23,14 +22,13 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
     public static final int MAX_SLOTS_PER_SKIN_TYPE = 8;
     public static final String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
     private static final String TAG_LAST_XMAS_YEAR = "lastXmasYear";
-    public static final ISkinType[] validSkins = {
+    private static final ISkinType[] validSkins = {
             SkinTypeRegistry.skinHead,
             SkinTypeRegistry.skinChest,
             SkinTypeRegistry.skinLegs,
             SkinTypeRegistry.skinFeet,
             SkinTypeRegistry.skinSword,
             SkinTypeRegistry.skinBow,
-            SkinTypeRegistry.skinArrow,
             SkinTypeRegistry.skinWings
             };
     
@@ -220,7 +218,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
     public BitSet getArmourOverride() {
         return equipmentWardrobeData.armourOverride;
     }
-    
+    /*
     //@Override
     public void saveNBTData(NBTTagCompound compound) {
         wardrobeInventoryContainer.writeToNBT(compound);
@@ -248,7 +246,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
             this.lastXmasYear = 0;
         }
     }
-    
+    */
     private void loadFromItemStack(ItemStack stack, byte slotId) {
         SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         addCustomEquipment(skinPointer.getIdentifier().getSkinType(), slotId, skinPointer);
