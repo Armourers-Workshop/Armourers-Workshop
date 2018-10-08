@@ -115,11 +115,41 @@ public class AddonCustomNPCS extends ModAddon {
         return null;
     }
     
-    private static Object getiEntity(Entity entity) {
+    public static Object getiEntity(Entity entity) {
         if (npcAPI != null) {
             try {
                 Method m = ReflectionHelper.findMethod(npcAPI.getClass(), "getIEntity", null, new Class[] {Entity.class});
                 return m.invoke(npcAPI, entity);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+    
+    public static Object getDisplay(Object iEntity) {
+        if (npcAPI != null) {
+            try {
+                Method m = ReflectionHelper.findMethod(iEntity.getClass(), "getDisplay", null, new Class[] {});
+                return m.invoke(iEntity, new Object[] {});
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * 
+     * @param iDisplay
+     * @param part 0:Head, 1:Body, 2:ArmLeft, 3:ArmRight, 4:LegLeft, 5:LegRight
+     * @return
+     */
+    public static float[] getModelScale(Object iDisplay, int part) {
+        if (npcAPI != null) {
+            try {
+                Method m = ReflectionHelper.findMethod(iDisplay.getClass(), "getModelScale", null, new Class[] {int.class});
+                return (float[]) m.invoke(iDisplay, new Object[] {part});
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -143,8 +173,9 @@ public class AddonCustomNPCS extends ModAddon {
                 return;
             }
             
-            //Object iEntity = getiEntity(entitylivingbaseIn);
-            //ModLogger.log(iEntity);
+            //Object iEntity = AddonCustomNPCS.getiEntity(entitylivingbaseIn);
+            //Object display = AddonCustomNPCS.getDisplay(entitylivingbaseIn);
+            //ModLogger.log(display);
             
             ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
             SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
@@ -169,63 +200,4 @@ public class AddonCustomNPCS extends ModAddon {
             return false;
         }
     }
-    
-    /*
-    @SideOnly(Side.CLIENT)
-    public static class SkinnableEntityCustomNPCRenderer implements ISkinnableEntityRenderer {
-
-        @Override
-        public void render(EntityLivingBase entity, RendererLivingEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
-            float scale = 0.0625F;
-            
-            GL11.glPushMatrix();
-            
-            GL11.glTranslated(x, y, z);
-            GL11.glScalef(1, -1, -1);
-            GL11.glScalef(0.94F, 0.94F, 0.94F);
-            
-            GL11.glTranslated(0, -24 * scale, 0);
-            entity.getEyeHeight();
-            //renderTarget.prevPosX + (renderTarget.posX - renderTarget.prevPosX) * partialRenderTick;
-            
-            double rot = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset) * ModClientFMLEventHandler.renderTickTime;
-            
-            GL11.glRotated(rot, 0, 1, 0);
-            
-            
-            renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
-            renderEquipmentType(entity, renderer, SkinTypeRegistry.skinChest, entityEquipment);
-            renderEquipmentType(entity, renderer, SkinTypeRegistry.skinLegs, entityEquipment);
-            renderEquipmentType(entity, renderer, SkinTypeRegistry.skinFeet, entityEquipment);
-            renderEquipmentType(entity, renderer, SkinTypeRegistry.skinWings, entityEquipment);
-
-            GL11.glPopMatrix();
-        }
-        
-        private void renderEquipmentType(EntityLivingBase entity, RendererLivingEntity renderer, ISkinType skinType, IEntityEquipment equipmentData) {
-            
-            if (!equipmentData.haveEquipment(skinType, 0)) {
-                return;
-            }
-            ISkinPointer skinPointer = equipmentData.getSkinPointer(skinType, 0);
-            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-            if (skin == null) {
-                return;
-            }
-            
-            Object object = null;
-            try {
-                object = ReflectionHelper.getPrivateValue(RendererLivingEntity.class, renderer, "field_77045_g", "mainModel");
-            } catch (UnableToAccessFieldException e) {
-                e.printStackTrace();
-            }
-
-            AbstractModelSkin model = SkinModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
-            if (object != null && object instanceof ModelBiped) {
-                model.render(entity, (ModelBiped) object, skin, false, skinPointer.getSkinDye(), null, false, 0, false);
-            } else {
-                model.render(entity, null, skin, false, skinPointer.getSkinDye(), null, false, 0, false);
-            }
-        }
-    }*/
 }
