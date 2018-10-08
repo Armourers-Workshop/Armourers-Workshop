@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.common.addons;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
@@ -22,6 +23,9 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -47,61 +51,6 @@ public class AddonCustomNPCS extends ModAddon {
     @Override
     public void postInit() {
         npcAPI = getApi();
-    }
-    
-    public static class SkinnableEntityCustomNPC extends SkinnableEntity {
-
-        @Override
-        public void addRenderLayer(RenderManager renderManager) {
-            Render<Entity> renderer = renderManager.getEntityClassRenderObject(getEntityClass());
-            if (renderer != null && renderer instanceof RenderLivingBase) {
-                LayerRenderer<? extends EntityLivingBase> layerRenderer = new SkinLayerRendererCustomNPC((RenderLivingBase) renderer);
-                if (layerRenderer != null) {
-                    ((RenderLivingBase<?>) renderer).addLayer(layerRenderer);
-                }
-            }
-            ModLogger.log(renderer);
-        }
-        
-        @Override
-        public Class<? extends EntityLivingBase> getEntityClass() {
-            try {
-                return (Class<? extends EntityLivingBase>) Class.forName(CLASS_NAME_ENTITY_CNPC);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        public void getValidSkinTypes(ArrayList<ISkinType> skinTypes) {
-            
-            skinTypes.add(SkinTypeRegistry.skinHead);
-            skinTypes.add(SkinTypeRegistry.skinChest);
-            skinTypes.add(SkinTypeRegistry.skinLegs);
-            skinTypes.add(SkinTypeRegistry.skinFeet);
-            skinTypes.add(SkinTypeRegistry.skinSword);
-            skinTypes.add(SkinTypeRegistry.skinBow);
-            skinTypes.add(SkinTypeRegistry.skinWings);
-        }
-
-        @Override
-        public int getSlotsForSkinType(ISkinType skinType) {
-            return 1;
-        }
-        
-        private boolean addedRender = false;
-        
-        @Override
-        public boolean canUseWandOfStyle() {
-            if (!addedRender) {
-                ModLogger.log("--------DEBUG--------");
-                ModLogger.log("Adding render layer");
-                addRenderLayer(Minecraft.getMinecraft().getRenderManager());
-                addedRender = true;
-            }
-            return super.canUseWandOfStyle();
-        }
     }
     
     private static Object getApi() {
@@ -156,6 +105,76 @@ public class AddonCustomNPCS extends ModAddon {
         }
         return null;
     }
+    
+    public static class SkinnableEntityCustomNPC extends SkinnableEntity {
+        
+        private boolean addedRender = false;
+        
+        public SkinnableEntityCustomNPC() {
+            if (!ArmourersWorkshop.isDedicated()) {
+                MinecraftForge.EVENT_BUS.register(this);
+            }
+        }
+        
+        @SideOnly(Side.CLIENT)
+        @SubscribeEvent
+        public void onRenderLiving(RenderLivingEvent.Pre event) {
+            if (!addedRender) {
+                if (event.getEntity().getClass().isAssignableFrom(getEntityClass())) {
+                    addRenderLayer(Minecraft.getMinecraft().getRenderManager());
+                    addedRender = true;
+                }
+
+            }
+        }
+        
+        @SideOnly(Side.CLIENT)
+        @Override
+        public void addRenderLayer(RenderManager renderManager) {
+            Render<Entity> renderer = renderManager.getEntityClassRenderObject(getEntityClass());
+            if (renderer != null && renderer instanceof RenderLivingBase) {
+                LayerRenderer<? extends EntityLivingBase> layerRenderer = new SkinLayerRendererCustomNPC((RenderLivingBase) renderer);
+                if (layerRenderer != null) {
+                    ((RenderLivingBase<?>) renderer).addLayer(layerRenderer);
+                }
+            }
+            ModLogger.log(renderer);
+        }
+        
+        @Override
+        public Class<? extends EntityLivingBase> getEntityClass() {
+            try {
+                return (Class<? extends EntityLivingBase>) Class.forName(CLASS_NAME_ENTITY_CNPC);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        public void getValidSkinTypes(ArrayList<ISkinType> skinTypes) {
+            
+            skinTypes.add(SkinTypeRegistry.skinHead);
+            skinTypes.add(SkinTypeRegistry.skinChest);
+            skinTypes.add(SkinTypeRegistry.skinLegs);
+            skinTypes.add(SkinTypeRegistry.skinFeet);
+            skinTypes.add(SkinTypeRegistry.skinSword);
+            skinTypes.add(SkinTypeRegistry.skinBow);
+            skinTypes.add(SkinTypeRegistry.skinWings);
+        }
+
+        @Override
+        public int getSlotsForSkinType(ISkinType skinType) {
+            return 1;
+        }
+        
+        @Override
+        public boolean canUseWandOfStyle() {
+
+            return super.canUseWandOfStyle();
+        }
+    }
+    
     
     @SideOnly(Side.CLIENT)
     public static class SkinLayerRendererCustomNPC implements LayerRenderer {

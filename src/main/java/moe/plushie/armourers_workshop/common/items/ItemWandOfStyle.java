@@ -21,13 +21,18 @@ public class ItemWandOfStyle extends AbstractModItem {
     
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
-        ModLogger.log(entity.getClass());
         if (entity instanceof EntityLivingBase) {
             if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity((EntityLivingBase) entity)) {
                 if (entity.getEntityWorld().isRemote) {
                     return true;
                 }
                 FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.ENTITY_SKIN_INVENTORY, entity.getEntityWorld(), entity.getEntityId(), 0, 0);
+                return true;
+            } else {
+                if (entity.getEntityWorld().isRemote) {
+                    ModLogger.log(String.format("Entity \"%s\" is not supported with the wand of style.", entity.getClass().getName()));
+                    ModLogger.log("Please ask the mod author if you would like support added for this entity.");
+                }
             }
         }
         return true;
@@ -35,14 +40,17 @@ public class ItemWandOfStyle extends AbstractModItem {
     
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
-        ModLogger.log(target.getClass());
         if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(target)) {
             if (target.getEntityWorld().isRemote) {
                 return true;
             }
-            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance,
-                    LibGuiIds.ENTITY_SKIN_INVENTORY, target.getEntityWorld(),
-                    target.getEntityId(), 0, 0);
+            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.ENTITY_SKIN_INVENTORY, target.getEntityWorld(), target.getEntityId(), 0, 0);
+            return true;
+        } else {
+            if (target.getEntityWorld().isRemote) {
+                ModLogger.log(String.format("Entity \"%s\" is not supported with the wand of style.", target.getClass().getName()));
+                ModLogger.log("Please ask the mod author if you would like support added for this entity.");
+            }
         }
         return false;
     }
