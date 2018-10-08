@@ -22,15 +22,4 @@ public interface ISkinTypeRegistry {
     public ISkinPartType getSkinPartFromRegistryName(String registryName);
     
     public ArrayList<ISkinType> getRegisteredSkinTypes();
-    
-    public ISkinType getSkinTypeHead();
-    
-    public ISkinType getSkinTypeChest();
-    
-    public ISkinType getSkinTypeLegs();
-    
-    @Deprecated
-    public ISkinType getSkinTypeSkirt();
-    
-    public ISkinType getSkinTypeFeet();
 }

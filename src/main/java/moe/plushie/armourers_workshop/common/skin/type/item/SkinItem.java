@@ -7,11 +7,13 @@ import moe.plushie.armourers_workshop.common.skin.type.AbstractSkinTypeBase;
 
 public class SkinItem extends AbstractSkinTypeBase {
 
+    private final String name;
     private ArrayList<ISkinPartType> skinParts;
     
-    public SkinItem() {
+    public SkinItem(String name) {
         this.skinParts = new ArrayList<ISkinPartType>();
         skinParts.add(new SkinItemPartBase(this));
+        this.name = name;
     }
     
     @Override
@@ -21,11 +23,11 @@ public class SkinItem extends AbstractSkinTypeBase {
     
     @Override
     public String getRegistryName() {
-        return "armourers:sword";
+        return "armourers:" + name.toLowerCase();
     }
     
     @Override
     public String getName() {
-        return "Sword";
+        return name;
     }
 }

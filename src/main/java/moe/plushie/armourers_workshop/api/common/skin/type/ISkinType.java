@@ -3,6 +3,9 @@ package moe.plushie.armourers_workshop.api.common.skin.type;
 import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperty;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * 
@@ -29,16 +32,12 @@ public interface ISkinType {
      */
     public String getName();
     
-    /*
     @SideOnly(Side.CLIENT)
-    public void registerIcon(IIconRegister register);
+    public ResourceLocation getIcon();
     
     @SideOnly(Side.CLIENT)
-    public IIcon getIcon();
+    public ResourceLocation getSlotIcon();
     
-    @SideOnly(Side.CLIENT)
-    public IIcon getEmptySlotIcon();
-    */
     /**
      * Should the show skin overlay check box be shown in the armourer and mini armourer.
      * @return

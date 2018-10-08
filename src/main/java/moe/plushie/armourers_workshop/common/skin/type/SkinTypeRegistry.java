@@ -34,6 +34,12 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     public static ISkinType skinSkirt;
     public static ISkinType skinFeet;
     public static ISkinType skinSword;
+    public static ISkinType skinShield;
+    public static ISkinType skinPickaxe;
+    public static ISkinType skinAxe;
+    public static ISkinType skinShovel;
+    public static ISkinType skinHoe;
+    public static ISkinType skinItem;
     public static ISkinType skinBow;
     public static ISkinType skinArrow;
     public static ISkinType skinBlock;
@@ -58,7 +64,13 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         skinLegs = new SkinLegs();
         skinSkirt = new SkinSkirt();
         skinFeet = new SkinFeet();
-        skinSword = new SkinItem();
+        skinSword = new SkinItem("Sword");
+        skinShield = new SkinItem("Shield");
+        skinPickaxe = new SkinItem("Pickaxe");
+        skinAxe = new SkinItem("Axe");
+        skinShovel = new SkinItem("Shovel");
+        skinHoe = new SkinItem("Hoe");
+        skinItem = new SkinItem("Item");
         skinBow = new SkinBow();
         skinArrow = new SkinArrow();
         skinBlock = new SkinBlock();
@@ -70,6 +82,12 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         //registerSkin(skinSkirt);
         registerSkin(skinFeet);
         registerSkin(skinSword);
+        registerSkin(skinPickaxe);
+        registerSkin(skinAxe);
+        registerSkin(skinShovel);
+        registerSkin(skinHoe);
+        registerSkin(skinItem);
+        
         registerSkin(skinBow);
         //registerSkin(skinArrow);
         registerSkin(skinBlock);
@@ -224,29 +242,5 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             }
         }
     }
-*/
-    @Override
-    public ISkinType getSkinTypeHead() {
-        return skinHead;
-    }
-
-    @Override
-    public ISkinType getSkinTypeChest() {
-        return skinChest;
-    }
-
-    @Override
-    public ISkinType getSkinTypeLegs() {
-        return skinLegs;
-    }
-
-    @Override
-    public ISkinType getSkinTypeSkirt() {
-        return skinSkirt;
-    }
-
-    @Override
-    public ISkinType getSkinTypeFeet() {
-        return skinFeet;
-    }
+     */
 }

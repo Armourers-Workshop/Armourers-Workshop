@@ -4,8 +4,11 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SlotSkin extends SlotHidable {
     
@@ -14,6 +17,7 @@ public class SlotSkin extends SlotHidable {
     public SlotSkin(ISkinType skinType, IInventory inventory, int slotIndex, int xDisplayPosition, int yDisplayPosition) {
         super(inventory, slotIndex, xDisplayPosition, yDisplayPosition);
         this.skinType = skinType;
+        setBackgroundLocation(skinType.getSlotIcon());
     }
     @Override
     public boolean isItemValid(ItemStack stack) {
@@ -27,6 +31,42 @@ public class SlotSkin extends SlotHidable {
         }
         return false;
     }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public TextureAtlasSprite getBackgroundSprite() {
+        // TODO Auto-generated method stub
+        return new DummySprite("");
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public static class DummySprite extends TextureAtlasSprite {
+
+        protected DummySprite(String spriteName) {
+            super(spriteName);
+        }
+        
+        @Override
+        public float getMaxU() {
+            return 1;
+        }
+        
+        @Override
+        public float getMaxV() {
+            return 1;
+        }
+        
+        @Override
+        public float getMinU() {
+            return 0;
+        }
+        
+        @Override
+        public float getMinV() {
+            return 0;
+        }
+    }
+    
     /*
     @SideOnly(Side.CLIENT)
     @Override
