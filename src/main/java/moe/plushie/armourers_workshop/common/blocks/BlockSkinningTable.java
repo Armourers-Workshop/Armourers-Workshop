@@ -21,7 +21,7 @@ public class BlockSkinningTable extends AbstractModBlockContainer {
     }
     
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.SOLID;
     }
     

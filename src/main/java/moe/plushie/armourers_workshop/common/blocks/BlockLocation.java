@@ -17,7 +17,7 @@ public class BlockLocation {
     }
     
     public BlockLocation offset(EnumFacing direction) {
-        return new BlockLocation(x + direction.getFrontOffsetX(), y + direction.getFrontOffsetY(), z + direction.getFrontOffsetZ()); 
+        return new BlockLocation(x + direction.getXOffset(), y + direction.getYOffset(), z + direction.getZOffset());
     }
     
     @Override

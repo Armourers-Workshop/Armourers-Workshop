@@ -27,7 +27,7 @@ public abstract class AbstractModBlock extends Block implements ISortOrder, ICus
         setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         setHardness(3.0F);
         setSoundType(SoundType.METAL);
-        setUnlocalizedName(name);
+        setTranslationKey(name);
         ModBlocks.BLOCK_LIST.add(this);
     }
 
@@ -38,12 +38,12 @@ public abstract class AbstractModBlock extends Block implements ISortOrder, ICus
         }
         setHardness(3.0F);
         setSoundType(soundType);
-        setUnlocalizedName(name);
+        setTranslationKey(name);
         ModBlocks.BLOCK_LIST.add(this);
     }
 
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
@@ -74,9 +74,9 @@ public abstract class AbstractModBlock extends Block implements ISortOrder, ICus
     }
 
     @Override
-    public Block setUnlocalizedName(String name) {
-        super.setUnlocalizedName(name);
-        setRegistryName(new ResourceLocation(LibModInfo.ID, "tile." + name));
+    public Block setTranslationKey(String key) {
+        super.setTranslationKey(key);
+        setRegistryName(new ResourceLocation(LibModInfo.ID, "tile." + key));
         return this;
     }
 
@@ -98,6 +98,6 @@ public abstract class AbstractModBlock extends Block implements ISortOrder, ICus
     @SideOnly(Side.CLIENT)
     @Override
     public void registerModels() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "inventory"));
     }
 }

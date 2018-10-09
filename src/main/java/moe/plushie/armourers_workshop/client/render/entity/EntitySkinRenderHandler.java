@@ -70,11 +70,11 @@ public final class EntitySkinRenderHandler {
             if (props == null) {
                 return;
             }
-            Minecraft.getMinecraft().mcProfiler.startSection("wandOfStyleRender");
+            Minecraft.getMinecraft().profiler.startSection("wandOfStyleRender");
             ModRenderHelper.enableAlphaBlend();
             //renderer.render(entity, event.getRenderer(), event.getX(), event.getY(), event.getZ(), props.getEquipmentData());
             ModRenderHelper.disableAlphaBlend();
-            Minecraft.getMinecraft().mcProfiler.endSection();
+            Minecraft.getMinecraft().profiler.endSection();
         }
     }
 }

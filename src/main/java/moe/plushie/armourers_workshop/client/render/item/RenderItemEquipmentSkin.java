@@ -43,14 +43,14 @@ public class RenderItemEquipmentSkin extends TileEntityItemStackRenderer {
                 break;
             }
             */
-            mc.mcProfiler.startSection("armourersItemSkin");
+            mc.profiler.startSection("armourersItemSkin");
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             ModRenderHelper.enableAlphaBlend();
             GL11.glEnable(GL11.GL_CULL_FACE);
             SkinItemRenderHelper.renderSkinAsItem(itemStackIn, true, 16, 16);
             //ItemStackRenderHelper.renderItemAsArmourModel(stack, true);
             GL11.glPopAttrib();
-            mc.mcProfiler.endSection();
+            mc.profiler.endSection();
             GL11.glPopMatrix();
         } else {
             //renderNomalIcon(stack);

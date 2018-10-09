@@ -44,7 +44,7 @@ public class SkinPartRenderer extends ModelBase {
     }
     
     private void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, int lod, boolean doLodLoading) {
-        //mc.mcProfiler.startSection(skinPart.getPartType().getPartName());
+        //mc.profiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
         //GL11.glColor3f(1F, 1F, 1F);
         
@@ -133,7 +133,7 @@ public class SkinPartRenderer extends ModelBase {
             GlStateManager.enableTexture2D();
         }
         GlStateManager.resetColor();
-        //mc.mcProfiler.endSection();
+        //mc.profiler.endSection();
     }
     
     private void renderVertexList(ArrayList<ColouredFace> vertexList, float scale, ISkinDye skinDye, byte[] extraColour, ClientSkinPartData cspd) {

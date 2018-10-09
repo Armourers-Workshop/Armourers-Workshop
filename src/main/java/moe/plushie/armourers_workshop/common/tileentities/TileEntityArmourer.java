@@ -479,7 +479,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     @Override
     public void readCommonFromNBT(NBTTagCompound compound) {
         super.readCommonFromNBT(compound);
-        direction = EnumFacing.getFront(compound.getByte(TAG_DIRECTION));
+        direction = EnumFacing.byIndex(compound.getByte(TAG_DIRECTION));
         skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(compound.getString(TAG_TYPE));
         
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);

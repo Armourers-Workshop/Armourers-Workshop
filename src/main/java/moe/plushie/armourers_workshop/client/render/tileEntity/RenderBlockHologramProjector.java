@@ -104,7 +104,7 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
             angleZ = angleZ / speedZ * 360F;
         }
         if (!tileEntity.isGlowing()) {
-            EnumFacing dir = EnumFacing.getFront(tileEntity.getBlockMetadata());
+            EnumFacing dir = EnumFacing.byIndex(tileEntity.getBlockMetadata());
             float xLight = tileEntity.getPos().getX();
             float yLight = tileEntity.getPos().getY();
             float zLight = tileEntity.getPos().getZ();

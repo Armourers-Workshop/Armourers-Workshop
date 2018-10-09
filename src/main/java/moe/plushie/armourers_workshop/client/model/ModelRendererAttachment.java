@@ -60,15 +60,15 @@ public class ModelRendererAttachment extends ModelRenderer {
         if (ClientProxy.getSkinRenderType() != SkinRenderType.MODEL_ATTACHMENT) {
             return;
         }
-        mc.mcProfiler.startSection("armourers player render");
+        mc.profiler.startSection("armourers player render");
         SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
         EntityPlayer player = modelRenderer.targetPlayer;
         if (player == null) {
-            mc.mcProfiler.endSection();
+            mc.profiler.endSection();
             return;
         }
         /*if (player instanceof MannequinFakePlayer) {
-            mc.mcProfiler.endSection();
+            mc.profiler.endSection();
             return;
         }*/
         double distance = Minecraft.getMinecraft().player.getDistance(
@@ -181,6 +181,6 @@ public class ModelRendererAttachment extends ModelRenderer {
                 Minecraft.getMinecraft().renderEngine.bindTexture(clientPlayer.getLocationSkin());
             }
         }
-        mc.mcProfiler.endSection();
+        mc.profiler.endSection();
     }
 }

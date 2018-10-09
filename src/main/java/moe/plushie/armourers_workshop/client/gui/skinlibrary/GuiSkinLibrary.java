@@ -850,7 +850,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     @Override
     protected void keyTyped(char key, int keyCode) throws IOException {
         if (keyCode == mc.gameSettings.keyBindScreenshot.getKeyCode()) {
-            mc.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(mc.mcDataDir, mc.displayWidth, mc.displayHeight, mc.getFramebuffer()));
+            mc.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(mc.gameDir, mc.displayWidth, mc.displayHeight, mc.getFramebuffer()));
         }
         if (!isDialogOpen()) {
             if (!(searchTextbox.textboxKeyTyped(key, keyCode) | filenameTextbox.textboxKeyTyped(key, keyCode))) {

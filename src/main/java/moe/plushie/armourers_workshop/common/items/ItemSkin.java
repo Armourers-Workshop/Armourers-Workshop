@@ -149,7 +149,7 @@ public class ItemSkin extends AbstractModItem {
         if (skinPointer != null && skinPointer.getIdentifier().getSkinType() == SkinTypeRegistry.skinBlock) {
             Skin skin = SkinUtils.getSkinDetectSide(skinPointer, false, true);
             if (skin != null) {
-                EnumFacing dir = EnumFacing.getFront(side);
+                EnumFacing dir = EnumFacing.byIndex(side);
                 Block replaceBlock = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
                 if (replaceBlock.isReplaceable(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ)) {
                     placeSkinAtLocation(world, player, side, stack, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, skinPointer);
@@ -318,9 +318,9 @@ public class ItemSkin extends AbstractModItem {
             /*
             IBlockState state = blockSource.getBlockState();
             EnumFacing enumfacing = BlockDispenser.func_149937_b(blockSource.getBlockState());
-            double x = blockSource.getX() + enumfacing.getFrontOffsetX();
-            double y = blockSource.getY() + enumfacing.getFrontOffsetY();
-            double z = blockSource.getZ() + enumfacing.getFrontOffsetZ();
+            double x = blockSource.getX() + enumfacing.getXOffset();
+            double y = blockSource.getY() + enumfacing.getYOffset();
+            double z = blockSource.getZ() + enumfacing.getZOffset();
             AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox((double)x, (double)y, (double)z, (double)(x + 1), (double)(y + 1), (double)(z + 1));
             List list = blockSource.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
             

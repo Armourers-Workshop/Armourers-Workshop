@@ -107,8 +107,8 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public String getUnlocalizedName() {
-        return getModdedUnlocalizedName(super.getUnlocalizedName());
+    public String getTranslationKey() {
+        return getModdedUnlocalizedName(super.getTranslationKey());
     }
 
     protected String getModdedUnlocalizedName(String unlocalizedName) {
@@ -128,7 +128,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     
     @Override
     public boolean setColour(IBlockAccess world, BlockPos pos, int colour, EnumFacing facing) {
-        //EnumFacing sideBlock = EnumFacing.getFront(side);
+        //EnumFacing sideBlock = EnumFacing.byIndex(side);
         /*
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return false;
@@ -168,7 +168,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
 
     @Override
     public int getColour(IBlockAccess world, BlockPos pos, EnumFacing facing) {
-        //EnumFacing sideBlock = EnumFacing.getFront(facing);
+        //EnumFacing sideBlock = EnumFacing.byIndex(facing);
         /*
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return 0x00FFFFFF;
@@ -203,7 +203,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     
     @Override
     public boolean isRemoteOnly(IBlockAccess world, BlockPos pos, EnumFacing facing) {
-        //EnumFacing sideBlock = EnumFacing.getFront(side);
+        //EnumFacing sideBlock = EnumFacing.byIndex(side);
         /*
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return false;
@@ -227,7 +227,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     
     @Override
     public void setPaintType(IBlockAccess world, BlockPos pos, PaintType paintType, EnumFacing facing) {
-        //EnumFacing sideBlock = EnumFacing.getFront(side);
+        //EnumFacing sideBlock = EnumFacing.byIndex(side);
         /*
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return;
@@ -253,7 +253,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     
     @Override
     public PaintType getPaintType(IBlockAccess world, BlockPos pos, EnumFacing facing) {
-        //EnumFacing sideBlock = EnumFacing.getFront(side);
+        //EnumFacing sideBlock = EnumFacing.byIndex(side);
         /*
         if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
             return PaintType.NORMAL;

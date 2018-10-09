@@ -33,7 +33,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
         /*
         for (int i = 0; i < 3; i++) {
             EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,
-                    colour, EnumFacing.getFront(side));
+                    colour, EnumFacing.byIndex(side));
             ParticleManager.INSTANCE.spawnParticle(world, particle);
         }
         */

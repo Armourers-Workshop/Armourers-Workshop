@@ -271,7 +271,7 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         AxisAlignedBB bb = new AxisAlignedBB(-2, -2, -2, 3, 3, 3);
-        EnumFacing dir = EnumFacing.getFront(getBlockMetadata());
+        EnumFacing dir = EnumFacing.byIndex(getBlockMetadata());
         bb.offset(getPos());
         
         float scale = 0.0625F;

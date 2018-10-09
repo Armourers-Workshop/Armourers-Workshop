@@ -38,7 +38,7 @@ public class PlayerTextureHandler {
     
     public PlayerTextureHandler() {
         MinecraftForge.EVENT_BUS.register(this);
-        profiler = Minecraft.getMinecraft().mcProfiler;
+        profiler = Minecraft.getMinecraft().profiler;
     }
     
     @SubscribeEvent(priority = EventPriority.LOW)

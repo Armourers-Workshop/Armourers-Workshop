@@ -34,18 +34,18 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
     public void onRenderWorldLast(RenderWorldLastEvent event) {
         /*
         Minecraft mc = Minecraft.getMinecraft();
-        mc.mcProfiler.startSection("renderListSort");
+        mc.profiler.startSection("renderListSort");
         Collections.sort(renderList);
-        mc.mcProfiler.endSection();
+        mc.profiler.endSection();
         mc.entityRenderer.enableLightmap();
         RenderHelper.enableStandardItemLighting();
         ModRenderHelper.enableAlphaBlend();
-        Minecraft.getMinecraft().mcProfiler.startSection("skinnableBlock");
+        Minecraft.getMinecraft().profiler.startSection("skinnableBlock");
         for (int i = 0; i < renderList.size(); i++) {
             RenderLast rl = renderList.get(i);
             renderTileEntityAt((TileEntitySkinnable)rl.tileEntity, rl.x, rl.y, rl.z, event.getPartialTicks());
         }
-        Minecraft.getMinecraft().mcProfiler.endSection();
+        Minecraft.getMinecraft().profiler.endSection();
         RenderHelper.disableStandardItemLighting();
         renderList.clear();
         ModRenderHelper.disableAlphaBlend();

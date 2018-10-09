@@ -26,8 +26,8 @@ public class ModItemBlockWithMetadata extends ItemBlock implements ISortOrder {
     }
     
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        return getModdedUnlocalizedName(super.getUnlocalizedName(stack), stack);
+    public String getTranslationKey(ItemStack stack) {
+        return getModdedUnlocalizedName(super.getTranslationKey(stack), stack);
     }
     
     protected String getModdedUnlocalizedName(String unlocalizedName, ItemStack stack) {
@@ -45,7 +45,7 @@ public class ModItemBlockWithMetadata extends ItemBlock implements ISortOrder {
         String unlocalized;
         String localized;
 
-        unlocalized = stack.getUnlocalizedName() + ".flavour";
+        unlocalized = stack.getTranslationKey() + ".flavour";
         localized = I18n.format(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("\r\n")) {

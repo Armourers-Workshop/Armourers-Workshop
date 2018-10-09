@@ -29,7 +29,7 @@ public abstract class AbstractModItem extends Item implements ISortOrder, ICusto
         if (addCreativeTab) {
             setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         }
-        setUnlocalizedName(name);
+        setTranslationKey(name);
         setHasSubtypes(false);
         setMaxStackSize(1);
         setNoRepair();
@@ -37,8 +37,8 @@ public abstract class AbstractModItem extends Item implements ISortOrder, ICusto
     }
     
     @Override
-    public Item setUnlocalizedName(String unlocalizedName) {
-        super.setUnlocalizedName(unlocalizedName);
+    public Item setTranslationKey(String unlocalizedName) {
+        super.setTranslationKey(unlocalizedName);
         setRegistryName(new ResourceLocation(LibModInfo.ID, "item." + unlocalizedName));
         return this;
     }
@@ -49,7 +49,7 @@ public abstract class AbstractModItem extends Item implements ISortOrder, ICusto
         String unlocalized;
         String localized;
 
-        unlocalized = stack.getUnlocalizedName() + ".flavour";
+        unlocalized = stack.getTranslationKey() + ".flavour";
         localized = I18n.format(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("\r\n")) {
@@ -65,8 +65,8 @@ public abstract class AbstractModItem extends Item implements ISortOrder, ICusto
     }
     
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        return getModdedUnlocalizedName(super.getUnlocalizedName(stack), stack);
+    public String getTranslationKey(ItemStack stack) {
+        return getModdedUnlocalizedName(super.getTranslationKey(stack), stack);
     }
     
     protected String getModdedUnlocalizedName(String unlocalizedName) {
@@ -100,6 +100,6 @@ public abstract class AbstractModItem extends Item implements ISortOrder, ICusto
     @SideOnly(Side.CLIENT)
     @Override
     public void registerModels() {
-        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "inventory"));
     }
 }

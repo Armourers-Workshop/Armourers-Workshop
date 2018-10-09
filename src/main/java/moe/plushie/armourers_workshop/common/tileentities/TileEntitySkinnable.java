@@ -392,7 +392,7 @@ public class TileEntitySkinnable extends ModTileEntity {
                     if (SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skin.getProperties())) {
                         renderBounds = new AxisAlignedBB(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
                         EnumFacing dir = getRotation().getOpposite();
-                        renderBounds.offset(dir.getFrontOffsetX(), 0, dir.getFrontOffsetZ());
+                        renderBounds.offset(dir.getXOffset(), 0, dir.getZOffset());
                     } else {
                         renderBounds = new AxisAlignedBB(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
                     }
