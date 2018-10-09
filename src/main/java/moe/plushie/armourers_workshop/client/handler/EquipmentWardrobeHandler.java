@@ -149,16 +149,24 @@ public final class EquipmentWardrobeHandler {
                 if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
                     if (i == 0) {
                         modelPlayer.bipedHead.isHidden = true;
+                        modelPlayer.bipedHeadwear.isHidden = true;
                     } else if(i == 1) {
                         modelPlayer.bipedBody.isHidden = true;
+                        modelPlayer.bipedBodyWear.isHidden = true;
                         modelPlayer.bipedLeftArm.isHidden = true;
+                        modelPlayer.bipedLeftArmwear.isHidden = true;
                         modelPlayer.bipedRightArm.isHidden = true;
+                        modelPlayer.bipedLeftArmwear.isHidden = true;
                     } else if(i == 2) {
                         modelPlayer.bipedLeftLeg.isHidden = true;
+                        modelPlayer.bipedLeftLegwear.isHidden = true;
                         modelPlayer.bipedRightLeg.isHidden = true;
+                        modelPlayer.bipedRightLegwear.isHidden = true;
                     } else if(i == 3) {
                         modelPlayer.bipedLeftLeg.isHidden = true;
+                        modelPlayer.bipedLeftLegwear.isHidden = true;
                         modelPlayer.bipedRightLeg.isHidden = true;
+                        modelPlayer.bipedRightLegwear.isHidden = true;
                     }
                 }
                 
@@ -194,10 +202,18 @@ public final class EquipmentWardrobeHandler {
         
         ModelPlayer modelPlayer = event.getRenderer().getMainModel();
         modelPlayer.bipedHead.isHidden = false;
+        modelPlayer.bipedHeadwear.isHidden = false;
+        
         modelPlayer.bipedBody.isHidden = false;
+        modelPlayer.bipedBodyWear.isHidden = false;
         modelPlayer.bipedLeftArm.isHidden = false;
+        modelPlayer.bipedLeftArmwear.isHidden = false;
         modelPlayer.bipedRightArm.isHidden = false;
+        modelPlayer.bipedLeftArmwear.isHidden = false;
+
         modelPlayer.bipedLeftLeg.isHidden = false;
+        modelPlayer.bipedLeftLegwear.isHidden = false;
         modelPlayer.bipedRightLeg.isHidden = false;
+        modelPlayer.bipedRightLegwear.isHidden = false;
     }
 }
