@@ -120,7 +120,7 @@ public class TileEntityBoundingBox extends ModTileEntity {
     }
     
     public boolean isPaintableSide(int side) {
-        EnumFacing sideBlock = EnumFacing.getFront(side);
+        EnumFacing sideBlock = EnumFacing.byIndex(side);
         if (getWorld().getBlockState(getPos().offset(sideBlock)).getBlock() == getBlockType()) {
             return false;
         }

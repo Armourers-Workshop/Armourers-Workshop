@@ -64,7 +64,7 @@ public class BlockDyeTable extends AbstractModBlockContainer {
     
     
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }
     

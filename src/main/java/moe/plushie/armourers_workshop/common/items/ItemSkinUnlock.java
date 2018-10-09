@@ -49,7 +49,7 @@ public class ItemSkinUnlock extends AbstractModItem {
     @Override
     public void registerModels() {
         for (int i = 0; i < VALID_SKINS.length; i++) {
-            ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()) + "-" + VALID_SKINS[i].getName().toLowerCase(), "inventory"));
+            ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()) + "-" + VALID_SKINS[i].getName().toLowerCase(), "inventory"));
         }
     }
     

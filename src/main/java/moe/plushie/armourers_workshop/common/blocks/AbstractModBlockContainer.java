@@ -32,7 +32,7 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
         setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         setHardness(3.0F);
         setSoundType(SoundType.METAL);
-        setUnlocalizedName(name);
+        setTranslationKey(name);
         ModBlocks.BLOCK_LIST.add(this);
     }
     
@@ -43,7 +43,7 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
         }
         setHardness(3.0F);
         setSoundType(soundType);
-        setUnlocalizedName(name);
+        setTranslationKey(name);
         ModBlocks.BLOCK_LIST.add(this);
     }
     
@@ -79,8 +79,8 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
     }
     
     @Override
-    public Block setUnlocalizedName(String name) {
-        super.setUnlocalizedName(name);
+    public Block setTranslationKey(String name) {
+        super.setTranslationKey(name);
         setRegistryName(new ResourceLocation(LibModInfo.ID, "tile." + name));
         return this;
     }
@@ -103,7 +103,7 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
     @SideOnly(Side.CLIENT)
     @Override
     public void registerModels() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "inventory"));
     }
     
     protected void openGui(EntityPlayer playerIn, int guiId, World worldIn, BlockPos pos) {

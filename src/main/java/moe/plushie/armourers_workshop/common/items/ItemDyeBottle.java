@@ -116,14 +116,14 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
             @Override
             public ModelResourceLocation getModelLocation(ItemStack stack) {
                 if (getToolHasColour(stack)) {
-                    return new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory");
+                    return new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "inventory");
                 } else {
-                    return new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName() + "-empty"), "inventory");
+                    return new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey() + "-empty"), "inventory");
                 }
             }
         });
         ModelBakery.registerItemVariants(this,
-                new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory"),
-                new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName() + "-empty"), "inventory"));
+                new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "inventory"),
+                new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey() + "-empty"), "inventory"));
     }
 }

@@ -112,7 +112,7 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     }
 
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.SOLID;
     }
 
@@ -129,8 +129,8 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     @SideOnly(Side.CLIENT)
     @Override
     public void registerModels() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory-normal"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 1, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory-creative"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "inventory-normal"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 1, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "inventory-creative"));
     }
 
     /*

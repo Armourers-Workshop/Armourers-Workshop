@@ -49,11 +49,11 @@ public final class BlockUtils {
     }
     
     public static EnumFacing determineDirectionSideMeta(int metadata) {
-        return EnumFacing.getFront(determineOrientationSideMeta(metadata));
+        return EnumFacing.byIndex(determineOrientationSideMeta(metadata));
     }
     
     public static EnumFacing determineDirectionSide(EntityLivingBase entity) {
-        return EnumFacing.getFront(determineOrientationSide(entity));
+        return EnumFacing.byIndex(determineOrientationSide(entity));
     }
     
     public static int getColourFromTileEntity(World world, BlockPos pos, int side) {
@@ -89,7 +89,7 @@ public final class BlockUtils {
     }
     
     public static ArrayList<BlockLocation> findTouchingBlockFaces(World world, int x, int y, int z, int side, int radius) {
-        EnumFacing dir = EnumFacing.getFront(side);
+        EnumFacing dir = EnumFacing.byIndex(side);
         ArrayList<BlockLocation> blockFaces = new ArrayList<BlockLocation>();
         ArrayList<BlockLocation> openList = new ArrayList<BlockLocation>();
         ArrayList<BlockLocation> closedList = new ArrayList<BlockLocation>();

@@ -110,9 +110,9 @@ public final class SkinBaker {
         
         for (int i = 0; i < dirs.length; i++) {
             EnumFacing dir = dirs[i];
-            int x = cubeLocation.x + dir.getFrontOffsetX();
-            int y = cubeLocation.y + dir.getFrontOffsetY();
-            int z = cubeLocation.z + dir.getFrontOffsetZ();
+            int x = cubeLocation.x + dir.getXOffset();
+            int y = cubeLocation.y + dir.getYOffset();
+            int z = cubeLocation.z + dir.getZOffset();
             int tarIndex = getIndexForLocation(x, y, z, partBounds, cubeArray);
             
             

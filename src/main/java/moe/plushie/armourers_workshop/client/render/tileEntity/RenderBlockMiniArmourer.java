@@ -19,7 +19,7 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer<TileEntit
     @Override
     public void render(TileEntityMiniArmourer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
     	Minecraft mc = Minecraft.getMinecraft();
-    	mc.mcProfiler.startSection("armourersMiniArmourer");
+    	mc.profiler.startSection("armourersMiniArmourer");
     	float scale = 0.0625F;
         
         GL11.glPushMatrix();
@@ -42,6 +42,6 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer<TileEntit
         }
         GL11.glPopAttrib();
         GL11.glPopMatrix();
-        mc.mcProfiler.endSection();
+        mc.profiler.endSection();
     }
 }

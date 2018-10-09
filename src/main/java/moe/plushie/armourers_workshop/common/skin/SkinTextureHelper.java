@@ -20,7 +20,7 @@ public class SkinTextureHelper {
         ISkinPartTypeTextured skinPart = (ISkinPartTypeTextured) te.getSkinPart();
         Point textureLocation = skinPart.getTextureLocation();
         IPoint3D textureModelSize = skinPart.getTextureModelSize();
-        EnumFacing blockFace = EnumFacing.getFront(side);
+        EnumFacing blockFace = EnumFacing.byIndex(side);
         
         byte blockX = te.getGuideX();
         byte blockY = te.getGuideY();

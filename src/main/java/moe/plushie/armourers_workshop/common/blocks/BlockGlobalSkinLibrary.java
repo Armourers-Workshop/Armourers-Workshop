@@ -65,7 +65,7 @@ public class BlockGlobalSkinLibrary extends AbstractModBlock implements ITileEnt
     }
     
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }
     

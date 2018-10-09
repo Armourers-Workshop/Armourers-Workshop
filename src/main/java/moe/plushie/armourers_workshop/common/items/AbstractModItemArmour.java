@@ -35,15 +35,15 @@ public class AbstractModItemArmour extends ItemArmor implements ISortOrder, ICus
         if (addCreativeTab) {
             setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
         }
-        setUnlocalizedName(name);
+        setTranslationKey(name);
         setHasSubtypes(false);
         setMaxStackSize(1);
         ModItems.ITEM_LIST.add(this);
     }
     
     @Override
-    public Item setUnlocalizedName(String unlocalizedName) {
-        super.setUnlocalizedName(unlocalizedName);
+    public Item setTranslationKey(String unlocalizedName) {
+        super.setTranslationKey(unlocalizedName);
         setRegistryName(new ResourceLocation(LibModInfo.ID, "item." + unlocalizedName));
         return this;
     }
@@ -51,7 +51,7 @@ public class AbstractModItemArmour extends ItemArmor implements ISortOrder, ICus
     @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        String unlocalized = stack.getUnlocalizedName() + ".flavour";
+        String unlocalized = stack.getTranslationKey() + ".flavour";
         String localized = I18n.format(unlocalized);
         if (!unlocalized.equals(localized)) {
             if (localized.contains("%n")) {
@@ -124,6 +124,6 @@ public class AbstractModItemArmour extends ItemArmor implements ISortOrder, ICus
     @SideOnly(Side.CLIENT)
     @Override
     public void registerModels() {
-        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "inventory"));
     }
 }

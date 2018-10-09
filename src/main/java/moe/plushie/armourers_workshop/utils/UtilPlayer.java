@@ -10,7 +10,7 @@ import net.minecraft.util.math.MathHelper;
 public final class UtilPlayer {
     
     public static EnumFacing getDirection(int x, int y, int z, EntityPlayer player) {
-        return EnumFacing.getFront(getOrientation(x, y, z, player));
+        return EnumFacing.byIndex(getOrientation(x, y, z, player));
     }
     
     public static int getOrientation(int x, int y, int z, EntityLivingBase entity) {
@@ -26,7 +26,7 @@ public final class UtilPlayer {
     }
     
     public static EnumFacing getDirectionSide(EntityPlayer player) {
-        return EnumFacing.getFront(getOrientationSide(player));
+        return EnumFacing.byIndex(getOrientationSide(player));
     }
     
     public static int getOrientationSide(EntityLivingBase entity) {

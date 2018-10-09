@@ -166,8 +166,8 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         int xOffset = (point.getX() + 8) - x * 16;
         int zOffset = (point.getY() + 8) - y * 16;
         
-        x -= xBlockOffset * direction.getFrontOffsetZ() + zBlockOffset * direction.getFrontOffsetX();;
-        z -= zBlockOffset * direction.getFrontOffsetZ() + xBlockOffset * direction.getFrontOffsetX();
+        x -= xBlockOffset * direction.getZOffset() + zBlockOffset * direction.getXOffset();;
+        z -= zBlockOffset * direction.getZOffset() + xBlockOffset * direction.getXOffset();
         
         float scale = 1F / 16F;
         

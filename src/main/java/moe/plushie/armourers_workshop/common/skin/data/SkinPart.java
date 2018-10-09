@@ -171,7 +171,7 @@ public class SkinPart implements ISkinPart {
     public EnumFacing getMarkerSide(int index) {
         if (index >= 0 & index < markerBlocks.size()) {
             CubeMarkerData cmd = markerBlocks.get(index);
-            return  EnumFacing.getFront(cmd.meta - 1);
+            return  EnumFacing.byIndex(cmd.meta - 1);
         }
         return null;
     }
