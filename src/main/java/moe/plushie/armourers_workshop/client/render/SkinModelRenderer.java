@@ -24,8 +24,6 @@ import moe.plushie.armourers_workshop.client.model.skin.ModelSkinLegs;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinSword;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinWings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
-import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
@@ -94,7 +92,6 @@ public final class SkinModelRenderer {
         
         // Look for skinned armourer.
         if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
-            
             int slot = 3 - skinType.getVanillaArmourSlotId();
             ItemStack armourStack = EquipmentWardrobeHandler.getArmourInSlot(slot);
             if (SkinNBTHelper.stackHasSkinData(armourStack)) {
@@ -104,6 +101,7 @@ public final class SkinModelRenderer {
         }
         
         // No skinned armour found checking the wardrobe.
+        /*
         IEntitySkinCapability skinCapability = entity.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
         if (skinCapability != null) {
             ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, slotIndex);
@@ -111,7 +109,7 @@ public final class SkinModelRenderer {
                 return getCustomArmourItemData(skinDescriptor);
             }
         }
-        
+        */
         return null;
     }
     

@@ -18,13 +18,18 @@ public class ContainerEntityEquipment extends Container {
     public ContainerEntityEquipment(InventoryPlayer invPlayer, EntitySkinCapability skinCapability) {
         ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
         
+        int maxForType = 1;
+        
         for (int i = 0; i < skinTypes.length; i++) {
-            addSlotToContainer(new SlotSkin(skinTypes[i], skinCapability.getSkinInventoryContainer().getInventoryForSkinType(skinTypes[i]), i, 8 + i * 18, 21));
-            skinSlots++;
+            maxForType = Math.max(maxForType, skinCapability.getSlotCountForSkinType(skinTypes[i]));
+            for (int j = 0; j < skinCapability.getSlotCountForSkinType(skinTypes[i]); j++) {
+                addSlotToContainer(new SlotSkin(skinTypes[i], skinCapability.getSkinInventoryContainer().getInventoryForSkinType(skinTypes[i]), j, 8 + i * 18, 21 + j * 18));
+                skinSlots++;
+            }
         }
         
-        int hotBarY = 124;
-        int playerInvY = 66;
+        int playerInvY = 36 + maxForType * 18;
+        int hotBarY = playerInvY + 58;
         for (int x = 0; x < 9; x++) {
             addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, hotBarY));
         }

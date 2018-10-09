@@ -351,7 +351,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     }
     
     public String getGuiName() {
-        return "globalSkinLibrary";
+        return "global-skin-library";
     }
 
     public void gotSkinFromServer(Skin skin) {

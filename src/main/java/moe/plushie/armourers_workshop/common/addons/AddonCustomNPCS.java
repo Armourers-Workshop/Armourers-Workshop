@@ -153,18 +153,22 @@ public class AddonCustomNPCS extends ModAddon {
 
         @Override
         public void getValidSkinTypes(ArrayList<ISkinType> skinTypes) {
-            
             skinTypes.add(SkinTypeRegistry.skinHead);
             skinTypes.add(SkinTypeRegistry.skinChest);
             skinTypes.add(SkinTypeRegistry.skinLegs);
             skinTypes.add(SkinTypeRegistry.skinFeet);
-            skinTypes.add(SkinTypeRegistry.skinSword);
-            skinTypes.add(SkinTypeRegistry.skinBow);
             skinTypes.add(SkinTypeRegistry.skinWings);
+            
+            skinTypes.add(SkinTypeRegistry.skinSword);
+            skinTypes.add(SkinTypeRegistry.skinShield);
+            skinTypes.add(SkinTypeRegistry.skinBow);
         }
 
         @Override
         public int getSlotsForSkinType(ISkinType skinType) {
+            if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {
+                return 4;
+            }
             return 1;
         }
         
@@ -201,14 +205,16 @@ public class AddonCustomNPCS extends ModAddon {
             byte[] extraColours = null;
             for (int i = 0; i < skinTypes.length; i++) {
                 ISkinType skinType = skinTypes[i];
-                for (int skinIndex = 0; skinIndex < skinCapability.getSlotCountForSkinType(skinType); skinIndex++) {
-                    ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, i);
-                    if (skinDescriptor != null) {
-                        Skin skin = ClientSkinCache .INSTANCE.getSkin(skinDescriptor);
-                        if (skin == null) {
-                            continue;
+                if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {
+                    for (int skinIndex = 0; skinIndex < skinCapability.getSlotCountForSkinType(skinType); skinIndex++) {
+                        ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, skinIndex);
+                        if (skinDescriptor != null) {
+                            Skin skin = ClientSkinCache .INSTANCE.getSkin(skinDescriptor);
+                            if (skin == null) {
+                                continue;
+                            }
+                            modelRenderer.renderEquipmentPart(entitylivingbaseIn, (ModelBiped) renderLivingBase.getMainModel(), skin, skinDescriptor.getSkinDye(), extraColours, 0, true);
                         }
-                        modelRenderer.renderEquipmentPart(entitylivingbaseIn, (ModelBiped) renderLivingBase.getMainModel(), skin, skinDescriptor.getSkinDye(), extraColours, 0, true);
                     }
                 }
             }

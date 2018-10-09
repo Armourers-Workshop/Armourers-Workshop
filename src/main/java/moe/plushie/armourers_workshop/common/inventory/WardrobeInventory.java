@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.common.inventory;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.utils.NBTHelper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,10 +18,10 @@ public class WardrobeInventory implements IInventory {
     private final IInventorySlotUpdate callback;
     private final ISkinType skinType;
     
-    public WardrobeInventory(IInventorySlotUpdate callback, ISkinType skinType) {
+    public WardrobeInventory(IInventorySlotUpdate callback, ISkinType skinType, int size) {
         this.callback = callback;
         this.skinType = skinType;
-        wardrobeItemStacks = NonNullList.<ItemStack>withSize(ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE, ItemStack.EMPTY);
+        wardrobeItemStacks = NonNullList.<ItemStack>withSize(size, ItemStack.EMPTY);
     }
     
     public ISkinType getSkinType() {
