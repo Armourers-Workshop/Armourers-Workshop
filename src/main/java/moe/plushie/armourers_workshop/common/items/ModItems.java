@@ -53,6 +53,7 @@ public class ModItems {
     public static Item debugTool;
     public static Item skinUnlock;
     public static Item linkingTool;
+    public static Item giftSack;
     
     public static Item armourContainerItem;
     public static Item[] armourContainer;
@@ -86,6 +87,7 @@ public class ModItems {
         debugTool = new ItemDebugTool();
         skinUnlock = new ItemSkinUnlock();
         linkingTool = new ItemLinkingTool();
+        giftSack = new ItemGiftSack();
         
         armourContainerItem = new ItemArmourContainerItem();
         armourContainer = new Item[4];

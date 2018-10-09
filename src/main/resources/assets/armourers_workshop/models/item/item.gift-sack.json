@@ -1,0 +1,7 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "armourers_workshop:items/gift-sack-dyable",
+        "layer1": "armourers_workshop:items/gift-sack-dyable-ribbon"
+    }
+}

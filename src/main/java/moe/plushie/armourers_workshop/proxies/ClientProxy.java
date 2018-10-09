@@ -40,6 +40,7 @@ import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
+import moe.plushie.armourers_workshop.common.items.ItemGiftSack;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
@@ -186,6 +187,7 @@ public class ClientProxy extends CommonProxy {
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.dyeBottle);
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.hueTool);
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.soap);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.giftSack);
         
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourable);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourableGlass);
@@ -441,6 +443,9 @@ public class ClientProxy extends CommonProxy {
 
         @Override
         public int colorMultiplier(ItemStack stack, int tintIndex) {
+            if (stack.getItem() == ModItems.giftSack) {
+                return ((ItemGiftSack)stack.getItem()).colorMultiplier(stack, tintIndex);
+            }
             if (tintIndex == 1) {
                 return PaintingHelper.getToolPaintColourRGB(stack);
             }
