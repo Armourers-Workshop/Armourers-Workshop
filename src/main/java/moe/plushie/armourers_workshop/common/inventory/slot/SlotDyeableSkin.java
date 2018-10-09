@@ -41,7 +41,7 @@ public class SlotDyeableSkin extends Slot {
     @Override
     public void onSlotChanged() {
         ItemStack stack = getStack();
-        if (stack == null) {
+        if (stack.isEmpty()) {
             container.skinRemoved();
         } else {
             SkinDescriptor sp = SkinNBTHelper.getSkinDescriptorFromStack(stack);

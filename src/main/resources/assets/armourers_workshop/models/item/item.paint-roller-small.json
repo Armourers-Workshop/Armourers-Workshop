@@ -1,0 +1,7 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "armourers_workshop:items/paint-roller-face-mode",
+        "layer1": "armourers_workshop:items/paint-roller-face-mode-tip"
+    }
+}

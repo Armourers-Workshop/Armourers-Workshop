@@ -107,6 +107,8 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
     }
     
     protected void openGui(EntityPlayer playerIn, int guiId, World worldIn, BlockPos pos) {
-        FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), guiId, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        if (!worldIn.isRemote) {
+            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), guiId, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        }
     }
 }

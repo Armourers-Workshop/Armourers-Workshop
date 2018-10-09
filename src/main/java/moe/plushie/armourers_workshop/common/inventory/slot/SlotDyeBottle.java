@@ -32,7 +32,7 @@ public class SlotDyeBottle extends Slot {
     @Override
     public boolean isItemValid(ItemStack stack) {
         ItemStack skinStack = inventory.getStackInSlot(0);
-        if (skinStack != null && SkinNBTHelper.stackHasSkinData(skinStack)) {
+        if (SkinNBTHelper.stackHasSkinData(skinStack)) {
             if (stack.getItem() == ModItems.dyeBottle) {
                 if (PaintingHelper.getToolHasPaint(stack)) {
                     return true;
@@ -53,7 +53,7 @@ public class SlotDyeBottle extends Slot {
     @Override
     public void onSlotChanged() {
         ItemStack stack = getStack();
-        if (stack == null) {
+        if (stack.isEmpty()) {
             container.dyeRemoved(getSlotIndex() - 1);
         } else {
             if (stack.getItem() == ModItems.dyeBottle) {

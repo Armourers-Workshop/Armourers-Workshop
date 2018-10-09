@@ -15,7 +15,7 @@ public class SkinNBTHelper {
     private static final String TAG_OLD_SKIN_DATA = "armourData";
     
     public static boolean stackHasSkinData(ItemStack stack) {
-        if (stack == null) {
+        if (stack.isEmpty()) {
             return false;
         }
         

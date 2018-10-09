@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,6 +36,27 @@ public final class ModRenderHelper {
         
     }
     */
+    
+    public static void setGLForSkinRender() {
+        
+    }
+    
+    public static void unsetGLForSkinRender() {
+        
+    }
+    
+    public static void setGLForSkinRenderGUI() {
+        enableAlphaBlend();
+        RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.enableAlpha();
+    }
+    
+    public static void unsetGLForSkinRenderGUI() {
+        GlStateManager.enableBlend();
+        GlStateManager.color(1, 1, 1, 1);
+    }
+    
     public static void enableAlphaBlend() {
         enableAlphaBlend(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     }
@@ -47,11 +69,6 @@ public final class ModRenderHelper {
     public static void disableAlphaBlend() {
         GlStateManager.disableBlend();
     }
-    /*
-    public static void renderItemStack(ItemStack stack) {
-        IIcon icon = stack.getItem().getIcon(stack, 0);
-        ItemRenderer.renderItemIn2D(Tessellator.instance, icon.getMaxU(), icon.getMinV(), icon.getMinU(), icon.getMaxV(), icon.getIconWidth(), icon.getIconHeight(), 0.0625F);
-    }*/
     
     public static void enableScissorScaled(int x, int y, int width, int height) {
         Minecraft mc = Minecraft.getMinecraft();

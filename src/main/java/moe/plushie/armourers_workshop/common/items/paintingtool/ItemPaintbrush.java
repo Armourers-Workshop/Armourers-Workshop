@@ -161,7 +161,6 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
                 }
             }
         });
-        //ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory"));
         ModelBakery.registerItemVariants(this, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName()), "inventory"), new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getUnlocalizedName() + "-small"), "inventory"));
     }
 }
