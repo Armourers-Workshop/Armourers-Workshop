@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
@@ -13,13 +14,14 @@ import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability.ExtraColourType;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -27,21 +29,31 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE);
+    private static final ResourceLocation TEXTURE_PALETTE = new ResourceLocation(LibGuiResources.WARDROBE_PALETTE);
     
     private EntityPlayer entityPlayer;
     private IEntitySkinCapability skinCapability;
     private IWardrobeCapability wardrobeCapability;
     
-    private boolean selectingSkinColour = false;
-    private boolean selectingHairColour = false;
+    private ExtraColourType selectingColourType = null;
+    private Color selectingColour = null;
     
-    private Color skinColour;
-    private Color hairColour;
+    private Color colourSkin;
+    private Color colourHair;
+    private Color colourEye;
+    private Color colourAcc;
     
-    private GuiButtonExt selectSkinButton;
-    private GuiButtonExt autoSkinButton;
-    private GuiButtonExt selectHairButton;
-    private GuiButtonExt autoHairButton;
+    private GuiIconButton buttonSkinSelect;
+    private GuiIconButton buttonSkinAuto;
+    
+    private GuiIconButton buttonHairSelect;
+    private GuiIconButton buttonHairAuto;
+    
+    private GuiIconButton buttonEyeSelect;
+    private GuiIconButton buttonEyeAuto;
+    
+    private GuiIconButton buttonAccSelect;
+
     
     String guiName = "equipment-wardrobe";
     
@@ -50,65 +62,95 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         this.entityPlayer = entityPlayer;
         this.skinCapability = skinCapability;
         this.wardrobeCapability = wardrobeCapability;
-        this.skinColour = new Color(wardrobeCapability.getSkinColour());
-        this.hairColour = new Color(wardrobeCapability.getHairColour());
+        this.colourSkin = new Color(wardrobeCapability.getExtraColour(ExtraColourType.SKIN));
+        this.colourHair = new Color(wardrobeCapability.getExtraColour(ExtraColourType.HAIR));
+        this.colourEye = new Color(wardrobeCapability.getExtraColour(ExtraColourType.EYE));
+        this.colourAcc = new Color(wardrobeCapability.getExtraColour(ExtraColourType.ACC));
     }
     
     @Override
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
-        selectSkinButton = new GuiButtonExt(0, 68, 46, 100, 18, GuiHelper.getLocalizedControlName(guiName, "selectSkin"));
-        autoSkinButton = new GuiButtonExt(0, 68 + 105, 46, 50, 18, GuiHelper.getLocalizedControlName(guiName, "autoSkin"));
-        selectHairButton = new GuiButtonExt(0, 68, 98, 100, 18, GuiHelper.getLocalizedControlName(guiName, "selectHair"));
-        autoHairButton = new GuiButtonExt(0, 68 + 105, 98, 50, 18, GuiHelper.getLocalizedControlName(guiName, "autoHair"));
         
-        buttonList.add(selectSkinButton);
-        buttonList.add(autoSkinButton);
-        buttonList.add(selectHairButton);
-        buttonList.add(autoHairButton);
+        buttonSkinSelect = new GuiIconButton(parent, 0, 70 + 18, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectSkin"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
+        buttonSkinAuto = new GuiIconButton(parent, 0, 70 + 40, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoSkin"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
+        
+        buttonHairSelect = new GuiIconButton(parent, 0, 146 + 18, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectHair"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
+        buttonHairAuto = new GuiIconButton(parent, 0, 146 + 40, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoHair"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
+        
+        
+        buttonEyeSelect = new GuiIconButton(parent, 0, 70 + 18, 72 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectEye"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
+        buttonEyeAuto = new GuiIconButton(parent, 0, 70 + 40, 72 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoEye"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
+        
+        buttonAccSelect = new GuiIconButton(parent, 0, 146 + 18, 72 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectAcc"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
+        
+        buttonList.add(buttonSkinSelect);
+        buttonList.add(buttonSkinAuto);
+        
+        buttonList.add(buttonHairSelect);
+        buttonList.add(buttonHairAuto);
+        
+        buttonList.add(buttonEyeSelect);
+        buttonList.add(buttonEyeAuto);
+        
+        buttonList.add(buttonAccSelect);
     }
     
     @Override
     public void mouseClicked(int mouseX, int mouseY, int button) {
-        if (button == 0 & selectingSkinColour) {
-            wardrobeCapability.setSkinColour(skinColour.getRGB());
+        if (button == 0 & selectingColourType != null) {
+            wardrobeCapability.setExtraColour(selectingColourType, selectingColour.getRGB());
             wardrobeCapability.sendUpdateToServer();
-            selectingSkinColour = false;
-        }
-        if (button == 0 & selectingHairColour) {
-            wardrobeCapability.setHairColour(hairColour.getRGB());
-            wardrobeCapability.sendUpdateToServer();
-            selectingHairColour = false;
+            selectingColourType = null;
+            buttonSkinSelect.setPressed(false);
+            buttonHairSelect.setPressed(false);
+            buttonEyeSelect.setPressed(false);
+            buttonAccSelect.setPressed(false);
         }
         super.mouseClicked(mouseX, mouseY, button);
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        
-        if (button == selectSkinButton) {
-            selectingSkinColour = true;
+        if (button == buttonSkinSelect) {
+            selectingColourType = ExtraColourType.SKIN;
+            buttonSkinSelect.setPressed(true);
+        }
+        if (button == buttonHairSelect) {
+            selectingColourType = ExtraColourType.HAIR;
+            buttonHairSelect.setPressed(true);
+        }
+        if (button == buttonEyeSelect) {
+            selectingColourType = ExtraColourType.EYE;
+            buttonEyeSelect.setPressed(true);
+        }
+        if (button == buttonAccSelect) {
+            selectingColourType = ExtraColourType.ACC;
+            buttonAccSelect.setPressed(true);
         }
         
-        if (button == selectHairButton) {
-            selectingHairColour = true;
-        }
-        if (button == autoSkinButton) {
-            int newSkinColour = autoColourSkin((AbstractClientPlayer) this.entityPlayer);
-            wardrobeCapability.setSkinColour(newSkinColour);
+        if (button == buttonSkinAuto) {
+            int newSkinColour = autoColour((AbstractClientPlayer) this.entityPlayer, ExtraColourType.SKIN);
+            wardrobeCapability.setExtraColour(ExtraColourType.SKIN, newSkinColour);
             wardrobeCapability.sendUpdateToServer();
         }
         
-        if (button == autoHairButton) {
-            int newHairColour = autoColourHair((AbstractClientPlayer) this.entityPlayer);
-            wardrobeCapability.setHairColour(newHairColour);
+        if (button == buttonHairAuto) {
+            int newHairColour = autoColour((AbstractClientPlayer) this.entityPlayer, ExtraColourType.HAIR);
+            wardrobeCapability.setExtraColour(ExtraColourType.HAIR, newHairColour);
+            wardrobeCapability.sendUpdateToServer();
+        }
+        
+        if (button == buttonEyeAuto) {
+            int newEyeColour = autoColour((AbstractClientPlayer) this.entityPlayer, ExtraColourType.EYE);
+            wardrobeCapability.setExtraColour(ExtraColourType.EYE, newEyeColour);
             wardrobeCapability.sendUpdateToServer();
         }
     }
     
     @Override
     public void drawBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
-        GL11.glColor4f(1, 1, 1, 1);
+        GlStateManager.color(1F, 1F, 1F, 1F);
         
         //Top half of GUI. (active tab)
         this.drawTexturedModalRect(this.x, this.y, 0, 0, 236, 151);
@@ -116,61 +158,91 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         //Bottom half of GUI. (player inventory)
         this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
         
-        float skinR = (float) skinColour.getRed() / 255;
-        float skinG = (float) skinColour.getGreen() / 255;
-        float skinB = (float) skinColour.getBlue() / 255;
-        
         // Skin colour display
-        this.drawTexturedModalRect(this.x + 68, this.y + 30, 242, 180, 14, 14);
-        GL11.glColor4f(skinR, skinG, skinB, 1F);
-        this.drawTexturedModalRect(this.x + 69, this.y + 31, 243, 181, 12, 12);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        
-        float hairR = (float) hairColour.getRed() / 255;
-        float hairG = (float) hairColour.getGreen() / 255;
-        float hairB = (float) hairColour.getBlue() / 255;
+        drawColourDisplay(70, 38, colourSkin);
         
         // Hair colour display
-        this.drawTexturedModalRect(this.x + 68, this.y + 82, 242, 180, 14, 14);
-        GL11.glColor4f(hairR, hairG, hairB, 1F);
-        this.drawTexturedModalRect(this.x + 69, this.y + 83, 243, 181, 12, 12);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        drawColourDisplay(146, 38, colourHair);
         
+        // Eye colour display
+        drawColourDisplay(70, 72, colourEye);
+        
+        // Acc colour display
+        drawColourDisplay(146, 72, colourAcc);
+        
+        // Palette
+        mc.renderEngine.bindTexture(TEXTURE_PALETTE);
+        this.drawTexturedModalRect(this.x + 72, this.y + 90, 0, 0, 126, 54);
+    }
+    
+    private void drawColourDisplay(int x, int y, Color colour) {
+        float r = (float) colour.getRed() / 255F;
+        float g = (float) colour.getGreen() / 255F;
+        float b = (float) colour.getBlue() / 255F;
+        drawColourDisplay(x, y, r, g, b);
+    }
+    
+    private void drawColourDisplay(int x, int y, float r, float g, float b) {
+        this.drawTexturedModalRect(this.x + x, this.y + y, 242, 180, 14, 14);
+        GlStateManager.color(r, g, b, 1F);
+        this.drawTexturedModalRect(this.x + x + 1, this.y + y + 1, 243, 181, 12, 12);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
     
     @Override
     public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
         super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
-        String labelSkinColour = GuiHelper.getLocalizedControlName(guiName, "label.skinColour");
-        fontRenderer.drawString(labelSkinColour + ":", 70, 18, 4210752); 
         
         //String labelSkinOverride = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.skinOverride");
         //this.fontRendererObj.drawString(labelSkinOverride + ":", 165, 18, 4210752); 
         
-        String labelHairColour = GuiHelper.getLocalizedControlName(guiName, "label.hairColour");
-        fontRenderer.drawString(labelHairColour + ":", 70, 70, 4210752); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.skinColour") + ":", 70, 26, 4210752); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.hairColour") + ":", 146, 26, 4210752); 
         
-        this.skinColour = new Color(wardrobeCapability.getSkinColour());
-        this.hairColour = new Color(wardrobeCapability.getHairColour());
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 70, 60, 4210752); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.accColour") + ":", 146, 60, 4210752); 
+        
+        this.colourSkin = new Color(wardrobeCapability.getExtraColour(ExtraColourType.SKIN));
+        this.colourHair = new Color(wardrobeCapability.getExtraColour(ExtraColourType.HAIR));
+        this.colourEye = new Color(wardrobeCapability.getExtraColour(ExtraColourType.EYE));
+        this.colourAcc = new Color(wardrobeCapability.getExtraColour(ExtraColourType.ACC));
+        
+        if (selectingColourType == ExtraColourType.SKIN & selectingColour != null) {
+            colourSkin = selectingColour;
+        }
+        if (selectingColourType == ExtraColourType.HAIR & selectingColour != null) {
+            colourHair = selectingColour;
+        }
+        if (selectingColourType == ExtraColourType.EYE & selectingColour != null) {
+            colourEye = selectingColour;
+        }
+        if (selectingColourType == ExtraColourType.ACC & selectingColour != null) {
+            colourAcc = selectingColour;
+        }
         
         GL11.glPushMatrix();
         GL11.glTranslated(-x, -y, 0);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         ModRenderHelper.enableAlphaBlend();
         // Draw player preview.
-        if (selectingSkinColour) {
-            skinColour = ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY, true);
-        } else if (selectingHairColour) {
-            hairColour = ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY, true);
+        if (selectingColourType != null) {
+            selectingColour = ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY, true);
         } else {
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             ModRenderHelper.enableAlphaBlend();
             ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY, false);
         }
         GL11.glPopMatrix();
+        for (int i = 0; i < buttonList.size(); i++) {
+            GuiButton button = (GuiButton) buttonList.get(i);
+            if (button instanceof GuiIconButton) {
+                ((GuiIconButton)button).drawRollover(mc, mouseX - x, mouseY - y);
+            }
+        }
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
     
-    public int autoColourHair(AbstractClientPlayer player) {
+    public int autoColour(AbstractClientPlayer player, ExtraColourType type) {
         BufferedImage playerTexture = SkinHelper.getBufferedImageSkin(player);
         if (playerTexture == null) {
             return WardrobeCapability.COLOUR_HAIR_DEFAULT.getRGB();
@@ -178,41 +250,48 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         
         int r = 0, g = 0, b = 0;
         
-        for (int ix = 0; ix < 2; ix++) {
-            for (int iy = 0; iy < 1; iy++) {
-                Color c = new Color(playerTexture.getRGB(ix + 11, iy + 3));
-                r += c.getRed();
-                g += c.getGreen();
-                b += c.getBlue();
+        if (type == ExtraColourType.SKIN) {
+            for (int ix = 0; ix < 2; ix++) {
+                for (int iy = 0; iy < 1; iy++) {
+                    Color c = new Color(playerTexture.getRGB(ix + 11, iy + 13));
+                    r += c.getRed();
+                    g += c.getGreen();
+                    b += c.getBlue();
+                }
             }
+            r = r / 2;
+            g = g / 2;
+            b = b / 2;
         }
-        r = r / 2;
-        g = g / 2;
-        b = b / 2;
-        
-        return new Color(r, g, b).getRGB();
-    }
-    
-    public int autoColourSkin(AbstractClientPlayer player) {
-        BufferedImage playerTexture = SkinHelper.getBufferedImageSkin(player);
-        if (playerTexture == null) {
-            return WardrobeCapability.COLOUR_SKIN_DEFAULT.getRGB();
-        }
-        
-        int r = 0, g = 0, b = 0;
-        
-        for (int ix = 0; ix < 2; ix++) {
-            for (int iy = 0; iy < 1; iy++) {
-                Color c = new Color(playerTexture.getRGB(ix + 11, iy + 13));
-                r += c.getRed();
-                g += c.getGreen();
-                b += c.getBlue();
+        if (type == ExtraColourType.HAIR) {
+            for (int ix = 0; ix < 2; ix++) {
+                for (int iy = 0; iy < 1; iy++) {
+                    Color c = new Color(playerTexture.getRGB(ix + 11, iy + 3));
+                    r += c.getRed();
+                    g += c.getGreen();
+                    b += c.getBlue();
+                }
             }
+            r = r / 2;
+            g = g / 2;
+            b = b / 2;
         }
-        r = r / 2;
-        g = g / 2;
-        b = b / 2;
-        
+        if (type == ExtraColourType.EYE) {
+            Color c1 = new Color(playerTexture.getRGB(10, 13));
+            Color c2 = new Color(playerTexture.getRGB(13, 13));
+            
+            r += c1.getRed();
+            g += c1.getGreen();
+            b += c1.getBlue();
+            
+            r += c2.getRed();
+            g += c2.getGreen();
+            b += c2.getBlue();
+            
+            r = r / 2;
+            g = g / 2;
+            b = b / 2;
+        }
         return new Color(r, g, b).getRGB();
     }
 }

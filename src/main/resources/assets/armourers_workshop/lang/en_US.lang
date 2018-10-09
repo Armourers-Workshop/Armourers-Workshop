@@ -354,12 +354,20 @@ inventory.armourers_workshop:colour-mixer.label.paintType=Paint Type
 inventory.armourers_workshop:equipment-wardrobe.tab.skins=Skins
 inventory.armourers_workshop:equipment-wardrobe.tab.displaySettings=Display Settings
 inventory.armourers_workshop:equipment-wardrobe.tab.colourSettings=Colour Settings
+
 inventory.armourers_workshop:equipment-wardrobe.label.skinColour=Skin Colour
 inventory.armourers_workshop:equipment-wardrobe.label.hairColour=Hair Colour
+inventory.armourers_workshop:equipment-wardrobe.label.eyeColour=Eye Colour
+inventory.armourers_workshop:equipment-wardrobe.label.accColour=Acc Colour
+
 inventory.armourers_workshop:equipment-wardrobe.selectSkin=Pick Skin Colour
-inventory.armourers_workshop:equipment-wardrobe.autoSkin=Auto
+inventory.armourers_workshop:equipment-wardrobe.autoSkin=Auto Skin Colour
 inventory.armourers_workshop:equipment-wardrobe.selectHair=Pick Hair Colour
-inventory.armourers_workshop:equipment-wardrobe.autoHair=Auto
+inventory.armourers_workshop:equipment-wardrobe.autoHair=Auto Hair Colour
+inventory.armourers_workshop:equipment-wardrobe.selectEye=Pick Eye Colour
+inventory.armourers_workshop:equipment-wardrobe.autoEye=Auto Eye Colour
+inventory.armourers_workshop:equipment-wardrobe.selectAcc=Pick Accessory Colour
+
 inventory.armourers_workshop:equipment-wardrobe.label.skinOverride=Skin Override
 inventory.armourers_workshop:equipment-wardrobe.renderHeadArmour=Render head armour?
 inventory.armourers_workshop:equipment-wardrobe.renderChestArmour=Render chest armour?

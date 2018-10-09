@@ -31,12 +31,8 @@ public class WardrobeCapability implements IWardrobeCapability {
     private final EntityPlayer entityPlayer;
 
     private final ISkinnableEntity skinnableEntity;
-
-    /** Colour of the players skin */
-    public int skinColour;
-
-    /** Colour of the players hair */
-    public int hairColour;
+    
+    public final int[] extraColours;
 
     /** Bit set of what armour is hidden on the player. */
     public BitSet armourOverride;
@@ -47,8 +43,14 @@ public class WardrobeCapability implements IWardrobeCapability {
     public WardrobeCapability(EntityPlayer entityPlayer, ISkinnableEntity skinnableEntity) {
         this.entityPlayer = entityPlayer;
         this.skinnableEntity = skinnableEntity;
-        skinColour = COLOUR_SKIN_DEFAULT.getRGB();
-        hairColour = COLOUR_HAIR_DEFAULT.getRGB();
+        
+        extraColours = new int[ExtraColourType.values().length];
+        
+        setExtraColour(ExtraColourType.SKIN, COLOUR_SKIN_DEFAULT.getRGB());
+        setExtraColour(ExtraColourType.HAIR, COLOUR_HAIR_DEFAULT.getRGB());
+        setExtraColour(ExtraColourType.EYE, 0xFFFFFF);
+        setExtraColour(ExtraColourType.ACC, 0xFFFFFF);
+        
         armourOverride = new BitSet(4);
         slotsUnlocked = new HashMap<String, Integer>();
         ArrayList<ISkinType> validSkinTypes = new ArrayList<ISkinType>();
@@ -60,23 +62,13 @@ public class WardrobeCapability implements IWardrobeCapability {
     }
     
     @Override
-    public int getSkinColour() {
-        return skinColour;
+    public int getExtraColour(ExtraColourType type) {
+        return extraColours[type.ordinal()];
     }
     
     @Override
-    public void setSkinColour(int skinColour) {
-        this.skinColour = skinColour;
-    }
-    
-    @Override
-    public int getHairColour() {
-        return hairColour;
-    }
-    
-    @Override
-    public void setHairColour(int hairColour) {
-        this.hairColour = hairColour;
+    public void setExtraColour(ExtraColourType type, int colour) {
+        extraColours[type.ordinal()] = colour;
     }
     
     @Override
@@ -90,6 +82,7 @@ public class WardrobeCapability implements IWardrobeCapability {
     }
 
     public int getUnlockedSlotsForSkinType(ISkinType skinType) {
+        //return skinnableEntity.getSlotsForSkinType(skinType);
         if (skinType == SkinTypeRegistry.skinBow) {
             return 1;
         }

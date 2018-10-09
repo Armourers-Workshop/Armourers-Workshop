@@ -66,14 +66,14 @@ public class ContainerSkinWardrobe extends Container {
             }
         }
         
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 0, 8, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShield, shieldInv, 0, 28, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinBow, bowInv, 0, 48, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 0, 68, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShield, shieldInv, 0, 88, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinBow, bowInv, 0, 108, 113));
         
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinPickaxe, pickaxeInv, 0, 108, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinAxe, axeInv, 0, 128, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShovel, shovelInv, 0, 148, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHoe, hoeInv, 0, 168, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinPickaxe, pickaxeInv, 0, 148, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinAxe, axeInv, 0, 168, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShovel, shovelInv, 0, 188, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHoe, hoeInv, 0, 208, 113));
         skinSlots += 7;
         
         

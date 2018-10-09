@@ -6,13 +6,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public interface IWardrobeCapability {
     
-    public int getSkinColour();
+    public int getExtraColour(ExtraColourType type);
     
-    public void setSkinColour(int skinColour);
-    
-    public int getHairColour();
-    
-    public void setHairColour(int hairColour);
+    public void setExtraColour(ExtraColourType type, int colour);
     
     public BitSet getArmourOverride();
     
@@ -39,4 +35,11 @@ public interface IWardrobeCapability {
     public void syncToAllAround();
     
     public void sendUpdateToServer();
+    
+    public enum ExtraColourType {
+        SKIN,
+        HAIR,
+        EYE,
+        ACC
+    }
 }
