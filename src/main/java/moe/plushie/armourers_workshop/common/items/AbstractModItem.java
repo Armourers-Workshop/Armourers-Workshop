@@ -52,8 +52,8 @@ public abstract class AbstractModItem extends Item implements ISortOrder, ICusto
         unlocalized = stack.getUnlocalizedName() + ".flavour";
         localized = I18n.format(unlocalized);
         if (!unlocalized.equals(localized)) {
-            if (localized.contains("%n")) {
-                String[] split = localized.split("%n");
+            if (localized.contains("\r\n")) {
+                String[] split = localized.split("\r\n");
                 for (int i = 0; i < split.length; i++) {
                     tooltip.add(split[i]);
                 }

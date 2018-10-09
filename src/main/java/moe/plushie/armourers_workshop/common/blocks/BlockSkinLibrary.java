@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.common.items.block.ModItemBlockWithMetadata;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
@@ -16,7 +17,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -123,7 +123,7 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
 
     @Override
     public void registerItemBlock(IForgeRegistry<Item> registry) {
-        registry.register(new ItemBlock(this).setRegistryName(getRegistryName()).setHasSubtypes(true));
+        registry.register(new ModItemBlockWithMetadata(this).setRegistryName(getRegistryName()).setHasSubtypes(true));
     }
 
     @SideOnly(Side.CLIENT)

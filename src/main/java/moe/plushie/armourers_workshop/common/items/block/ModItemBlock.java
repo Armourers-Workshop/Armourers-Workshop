@@ -1,9 +1,17 @@
 package moe.plushie.armourers_workshop.common.items.block;
 
+import java.util.List;
+
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModItemBlock extends ItemBlock implements ISortOrder {
 
@@ -15,28 +23,42 @@ public class ModItemBlock extends ItemBlock implements ISortOrder {
     public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
         return super.getUnlocalizedNameInefficiently(par1ItemStack);
     }
-/*
+    
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+    public String getUnlocalizedName(ItemStack stack) {
+        return getModdedUnlocalizedName(super.getUnlocalizedName(stack), stack);
+    }
+    
+    protected String getModdedUnlocalizedName(String unlocalizedName, ItemStack stack) {
+        String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+        if (hasSubtypes) {
+            return "tile." + LibModInfo.ID.toLowerCase() + ":" + name + "." + stack.getItemDamage();
+        } else {
+            return "tile." + LibModInfo.ID.toLowerCase() + ":" + name;
+        }
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         String unlocalized;
         String localized;
 
-        unlocalized = itemStack.getUnlocalizedName() + ".flavour";
+        unlocalized = stack.getUnlocalizedName() + ".flavour";
         localized = I18n.format(unlocalized);
         if (!unlocalized.equals(localized)) {
-            if (localized.contains("%n")) {
-                String[] split = localized.split("%n");
+            if (localized.contains("\r\n")) {
+                String[] split = localized.split("\r\n");
                 for (int i = 0; i < split.length; i++) {
-                    list.add(split[i]);
+                    tooltip.add(split[i]);
                 }
             } else {
-                list.add(localized);
+                tooltip.add(localized);
             }
         }
-        
-        super.addInformation(itemStack, player, list, par4);
+        super.addInformation(stack, worldIn, tooltip, flagIn);
     }
-*/
+    
     @Override
     public int getSortPriority() {
         if (block instanceof ISortOrder) {
