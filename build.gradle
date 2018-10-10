@@ -19,7 +19,7 @@ if (System.env.BUILD_NUMBER != null) {
     version = "$minecraftVersion-$modVersion"
 }
 
-group= "riskyken.armourersWorkshop"
+group= "moe.plushie.armourers_workshop"
 archivesBaseName = "Armourers-Workshop"
 
 minecraft {
