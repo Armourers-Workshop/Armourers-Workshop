@@ -1,14 +1,11 @@
 package moe.plushie.armourers_workshop.common.items.paintingtool;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.lib.LibSounds;
@@ -19,7 +16,6 @@ import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import moe.plushie.armourers_workshop.utils.ModLogger;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -29,7 +25,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -117,30 +112,9 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
     }
     
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        if (playerIn.isSneaking()) {
-            if (worldIn.isRemote) {
-                playerIn.openGui(ArmourersWorkshop.getInstance(), LibGuiIds.TOOL_OPTIONS, worldIn, 0, 0, 0);
-            }
-            return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
-        }
-        return super.onItemRightClick(worldIn, playerIn, handIn);
-    }
-    
-    @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        Color c = new Color(getToolColour(stack));
-        PaintType paintType = getToolPaintType(stack);
-        String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
-        String colourText = TranslateUtils.translate("item.armourers_workshop:rollover.colour", c.getRGB());
-        String hexText = TranslateUtils.translate("item.armourers_workshop:rollover.hex", hex);
-        String paintText = TranslateUtils.translate("item.armourers_workshop:rollover.paintType", paintType.getLocalizedName());
-        
-        tooltip.add(colourText);
-        tooltip.add(hexText);
-        tooltip.add(paintText);
-        tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.openSettings"));
+        addOpenSettingsInformation(stack, worldIn, tooltip, flagIn);
     }
     
     @Override
