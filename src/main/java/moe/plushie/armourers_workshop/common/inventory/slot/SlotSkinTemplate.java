@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.common.inventory.slot;
 
+import moe.plushie.armourers_workshop.common.items.ItemArmourContainerItem;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
 import moe.plushie.armourers_workshop.common.items.ItemSkinTemplate;
 import net.minecraft.inventory.IInventory;
@@ -20,10 +21,13 @@ public class SlotSkinTemplate extends SlotHidable {
     
     @Override
     public boolean isItemValid(ItemStack stack) {
-        if (stack.getItem() instanceof ItemSkinTemplate && stack.getItemDamage() == 0) {
+        if (stack.getItem() instanceof ItemSkinTemplate) {
             return true;
         }
         if (stack.getItem() instanceof ItemSkin) {
+            return true;
+        }
+        if (stack.getItem() instanceof ItemArmourContainerItem) {
             return true;
         }
         return false;
