@@ -3,15 +3,21 @@ package moe.plushie.armourers_workshop.common.inventory.slot;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.inventory.ContainerDyeTable;
 import moe.plushie.armourers_workshop.common.items.ModItems;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SlotDyeBottle extends Slot {
     
+    private static final ResourceLocation BACKGROUND_IMAGE = new ResourceLocation(LibModInfo.ID, "textures/items/slot/dye-bottle.png");
     private final ContainerDyeTable container;
     private boolean locked;
     
@@ -62,9 +68,44 @@ public class SlotDyeBottle extends Slot {
         }
         super.onSlotChanged();
     }
-    /*
+    
+    @SideOnly(Side.CLIENT)
     @Override
-    public IIcon getBackgroundIconIndex() {
-        return ClientProxy.dyeBottleSlotIcon;
-    }*/
+    public ResourceLocation getBackgroundLocation() {
+        return BACKGROUND_IMAGE;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public TextureAtlasSprite getBackgroundSprite() {
+        return new DummySprite("");
+    }
+    
+    @SideOnly(Side.CLIENT)
+    private class DummySprite extends TextureAtlasSprite {
+
+        protected DummySprite(String spriteName) {
+            super(spriteName);
+        }
+        
+        @Override
+        public float getMaxU() {
+            return 1;
+        }
+        
+        @Override
+        public float getMaxV() {
+            return 1;
+        }
+        
+        @Override
+        public float getMinU() {
+            return 0;
+        }
+        
+        @Override
+        public float getMinV() {
+            return 0;
+        }
+    }
 }

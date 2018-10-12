@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -17,7 +18,6 @@ public class SlotSkin extends SlotHidable {
     public SlotSkin(ISkinType skinType, IInventory inventory, int slotIndex, int xDisplayPosition, int yDisplayPosition) {
         super(inventory, slotIndex, xDisplayPosition, yDisplayPosition);
         this.skinType = skinType;
-        setBackgroundLocation(skinType.getSlotIcon());
     }
     @Override
     public boolean isItemValid(ItemStack stack) {
@@ -34,12 +34,18 @@ public class SlotSkin extends SlotHidable {
     
     @SideOnly(Side.CLIENT)
     @Override
+    public ResourceLocation getBackgroundLocation() {
+        return skinType.getSlotIcon();
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
     public TextureAtlasSprite getBackgroundSprite() {
         return new DummySprite("");
     }
     
     @SideOnly(Side.CLIENT)
-    public static class DummySprite extends TextureAtlasSprite {
+    private class DummySprite extends TextureAtlasSprite {
 
         protected DummySprite(String spriteName) {
             super(spriteName);
