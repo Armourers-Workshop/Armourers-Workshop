@@ -68,36 +68,36 @@ public class BlockColourable extends AbstractModBlockContainer implements IPanta
 
     @Override
     public int getColour(IBlockAccess world, BlockPos pos, EnumFacing facing) {
-        /*TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof IPantable) {
-            return ((IPantable)te).getColour(side);
-        }*/
+            return ((IPantable)te).getColour(facing.ordinal());
+        }
         return 0;
     }
     
     @Override
     public ICubeColour getColour(IBlockAccess world, BlockPos pos) {
-        /*TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof IPantable) {
             return ((IPantable)te).getColour();
-        }*/
+        }
         return new CubeColour();
     }
     
     @Override
     public void setPaintType(IBlockAccess world, BlockPos pos, PaintType paintType, EnumFacing facing) {
-        /*TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof IPantable) {
-            ((IPantable)te).setPaintType(paintType, side);
-        }*/
+            ((IPantable)te).setPaintType(paintType, facing.ordinal());
+        }
     }
     
     @Override
     public PaintType getPaintType(IBlockAccess world, BlockPos pos, EnumFacing facing) {
-        /*TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof IPantable) {
-            return ((IPantable)te).getPaintType(side);
-        }*/
+            return ((IPantable)te).getPaintType(facing.ordinal());
+        }
         return PaintType.NORMAL;
     }
     

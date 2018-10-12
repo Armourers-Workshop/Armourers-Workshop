@@ -192,6 +192,8 @@ paintType.armourers_workshop:dye_8.name=Dye 8
 paintType.armourers_workshop:none.name=None
 paintType.armourers_workshop:skin.name=Skin
 paintType.armourers_workshop:hair.name=Hair
+paintType.armourers_workshop:eye.name=Eye
+paintType.armourers_workshop:acc.name=Accessory
 
 # Colour Families
 colourFamily.armourers_workshop:wool.name=Wool

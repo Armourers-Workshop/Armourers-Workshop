@@ -8,7 +8,13 @@ public interface IWardrobeCapability {
     
     public int getExtraColour(ExtraColourType type);
     
+    public byte[] getExtraColourByte(ExtraColourType type);
+    
     public void setExtraColour(ExtraColourType type, int colour);
+    
+    public void setExtraColourByte(ExtraColourType type, byte[] colour);
+    
+    public byte[] getAllExtraColours();
     
     public BitSet getArmourOverride();
     

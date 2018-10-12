@@ -5,32 +5,41 @@ import moe.plushie.armourers_workshop.utils.BitwiseUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 
 public enum PaintType {
-    NORMAL(255),
-    DYE_1(1),
-    DYE_2(2),
-    DYE_3(3),
-    DYE_4(4),
-    DYE_5(5),
-    DYE_6(6),
-    DYE_7(7),
-    DYE_8(8),
-    NONE(0),
+    NORMAL(255, -1),
+    DYE_1(1, 1),
+    DYE_2(2, 2),
+    DYE_3(3, 3),
+    DYE_4(4, 4),
+    DYE_5(5, 5),
+    DYE_6(6, 6),
+    DYE_7(7, 7),
+    DYE_8(8, 8),
     //WATER(248),
     //LAVA(249),
     //SKY(250),
     //STAR_FIELD(251),
     //RAINBOW(252),
-    SKIN(253),
-    HAIR(254);
+    SKIN(253, 10),
+    HAIR(254, 11),
+    EYE(251, 12),
+    ACC(252, 13),
+    NONE(0, 9);
+    
     
     private final int key;
+    private final int markerId;
     
-    private PaintType(int key) {
+    private PaintType(int key, int markerId) {
         this.key = key;
+        this.markerId = markerId;
     }
     
     public int getKey() {
         return key;
+    }
+    
+    public int getMarkerId() {
+        return markerId;
     }
     
     public static PaintType getPaintTypeFormSKey(byte key) {

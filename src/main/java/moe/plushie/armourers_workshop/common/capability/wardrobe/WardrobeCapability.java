@@ -67,8 +67,36 @@ public class WardrobeCapability implements IWardrobeCapability {
     }
     
     @Override
+    public byte[] getExtraColourByte(ExtraColourType type) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    @Override
     public void setExtraColour(ExtraColourType type, int colour) {
         extraColours[type.ordinal()] = colour;
+    }
+    
+    @Override
+    public void setExtraColourByte(ExtraColourType type, byte[] colour) {
+        //extraColours[type.ordinal()] = colour
+    }
+    
+    @Override
+    public byte[] getAllExtraColours() {
+        return new byte[] {};
+        
+        /*ec[0] = (byte) (skin >>> 16 & 0xFF);
+        ec[1] = (byte) (skin >>> 8 & 0xFF);
+        ec[2] = (byte) (skin & 0xFF);*/
+    }
+    
+    private byte[] intToByte(int value) {
+        return new byte[] {(byte) (value >>> 16 & 0xFF), (byte) (value >>> 16 & 0xFF), (byte) (value & 0xFF)};
+    }
+    
+    private int byteToInt(byte[] value) {
+        return 0;
     }
     
     @Override

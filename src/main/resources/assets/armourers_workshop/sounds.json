@@ -2,9 +2,9 @@
     "pageTurn":
 	{"category": "master","sounds":
 	[
-	{"name": "armourers_workshop:book/pageTurn1","stream": false},
-	{"name": "armourers_workshop:book/pageTurn2","stream": false},
-	{"name": "armourers_workshop:book/pageTurn3","stream": false}
+	{"name": "armourers_workshop:book/page-turn1","stream": false},
+	{"name": "armourers_workshop:book/page-turn2","stream": false},
+	{"name": "armourers_workshop:book/page-turn3","stream": false}
 	]},
 	
 	"paint":

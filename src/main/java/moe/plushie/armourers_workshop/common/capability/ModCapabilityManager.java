@@ -22,36 +22,41 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber(modid = LibModInfo.ID)
 public final class ModCapabilityManager {
-    
-    private ModCapabilityManager() {}
-    
+
+    private static final ResourceLocation KEY_ENTITY_SKIN_PROVIDER = new ResourceLocation(LibModInfo.ID, "entity-skin-provider");
+    private static final ResourceLocation KEY_WARDROBE_PROVIDER = new ResourceLocation(LibModInfo.ID, "wardrobe-provider");
+
+    private ModCapabilityManager() {
+    }
+
     public static void register() {
         CapabilityManager.INSTANCE.register(IEntitySkinCapability.class, new EntitySkinStorage(), new Callable<IEntitySkinCapability>() {
-            
+
             @Override
             public IEntitySkinCapability call() throws Exception {
                 return null;
-            }});
-        
+            }
+        });
+
         CapabilityManager.INSTANCE.register(IWardrobeCapability.class, new WardrobeStorage(), new Callable<IWardrobeCapability>() {
-            
+
             @Override
             public IWardrobeCapability call() throws Exception {
                 return null;
             }
         });
     }
-    
+
     @SubscribeEvent
     public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof EntityLivingBase) {
             ISkinnableEntity skinnableEntity = EntitySkinHandler.INSTANCE.getSkinnableEntity((EntityLivingBase) event.getObject());
             if (skinnableEntity != null) {
-                event.addCapability(new ResourceLocation(LibModInfo.ID, "entity-skin-provider"), new EntitySkinProvider(event.getObject(), skinnableEntity));
+                event.addCapability(KEY_ENTITY_SKIN_PROVIDER, new EntitySkinProvider(event.getObject(), skinnableEntity));
                 if (event.getObject() instanceof EntityPlayer) {
-                    event.addCapability(new ResourceLocation(LibModInfo.ID, "wardrobe-provider"), new WardrobeProvider((EntityPlayer) event.getObject(), skinnableEntity));
+                    event.addCapability(KEY_WARDROBE_PROVIDER, new WardrobeProvider((EntityPlayer) event.getObject(), skinnableEntity));
                 }
             }
-        }  
+        }
     }
 }
