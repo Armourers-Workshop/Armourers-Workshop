@@ -6,6 +6,7 @@ import java.util.HashSet;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.SkinTextureKey;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.data.ExpiringHashMap;
 import moe.plushie.armourers_workshop.common.data.ExpiringHashMap.IExpiringMapCallback;
@@ -37,9 +38,9 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
         FMLCommonHandler.instance().bus().register(this);
     }
     
-    public SkinModelTexture getTextureForSkin(Skin skin, ISkinDye skinDye, byte[] extraColours) {
+    public SkinModelTexture getTextureForSkin(Skin skin, ISkinDye skinDye, ExtraColours extraColours) {
         if (extraColours == null) {
-            extraColours = new byte[] {127, 127, 127, 127, 127, 127};
+            extraColours = ExtraColours.EMPTY_COLOUR;
         }
         SkinTextureKey cmk = new SkinTextureKey(skin.lightHash(), skinDye, extraColours);
         return getTextureForSkin(skin, cmk);

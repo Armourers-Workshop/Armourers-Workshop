@@ -13,9 +13,11 @@ import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability.ExtraColourType;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
+import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -62,10 +64,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         this.entityPlayer = entityPlayer;
         this.skinCapability = skinCapability;
         this.wardrobeCapability = wardrobeCapability;
-        this.colourSkin = new Color(wardrobeCapability.getExtraColour(ExtraColourType.SKIN));
-        this.colourHair = new Color(wardrobeCapability.getExtraColour(ExtraColourType.HAIR));
-        this.colourEye = new Color(wardrobeCapability.getExtraColour(ExtraColourType.EYE));
-        this.colourAcc = new Color(wardrobeCapability.getExtraColour(ExtraColourType.ACC));
+        getColours();
     }
     
     @Override
@@ -96,10 +95,20 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         buttonList.add(buttonAccSelect);
     }
     
+    private void getColours() {
+        ExtraColours extraColours = wardrobeCapability.getExtraColours();
+        this.colourSkin = new Color(extraColours.getColour(ExtraColourType.SKIN));
+        this.colourHair = new Color(extraColours.getColour(ExtraColourType.HAIR));
+        this.colourEye = new Color(extraColours.getColour(ExtraColourType.EYE));
+        this.colourAcc = new Color(extraColours.getColour(ExtraColourType.ACC));
+    }
+    
     @Override
     public void mouseClicked(int mouseX, int mouseY, int button) {
         if (button == 0 & selectingColourType != null) {
-            wardrobeCapability.setExtraColour(selectingColourType, selectingColour.getRGB());
+            byte[] newColour = PaintingHelper.intToBytes(selectingColour.getRGB());
+            newColour[3] = (byte) PaintType.NORMAL.getKey();
+            wardrobeCapability.getExtraColours().setColourBytes(selectingColourType, newColour);
             wardrobeCapability.sendUpdateToServer();
             selectingColourType = null;
             buttonSkinSelect.setPressed(false);
@@ -131,19 +140,19 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         
         if (button == buttonSkinAuto) {
             int newSkinColour = autoColour((AbstractClientPlayer) this.entityPlayer, ExtraColourType.SKIN);
-            wardrobeCapability.setExtraColour(ExtraColourType.SKIN, newSkinColour);
+            wardrobeCapability.getExtraColours().setColour(ExtraColourType.SKIN, newSkinColour);
             wardrobeCapability.sendUpdateToServer();
         }
         
         if (button == buttonHairAuto) {
             int newHairColour = autoColour((AbstractClientPlayer) this.entityPlayer, ExtraColourType.HAIR);
-            wardrobeCapability.setExtraColour(ExtraColourType.HAIR, newHairColour);
+            wardrobeCapability.getExtraColours().setColour(ExtraColourType.HAIR, newHairColour);
             wardrobeCapability.sendUpdateToServer();
         }
         
         if (button == buttonEyeAuto) {
             int newEyeColour = autoColour((AbstractClientPlayer) this.entityPlayer, ExtraColourType.EYE);
-            wardrobeCapability.setExtraColour(ExtraColourType.EYE, newEyeColour);
+            wardrobeCapability.getExtraColours().setColour(ExtraColourType.EYE, newEyeColour);
             wardrobeCapability.sendUpdateToServer();
         }
     }
@@ -202,10 +211,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 70, 60, 4210752); 
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.accColour") + ":", 146, 60, 4210752); 
         
-        this.colourSkin = new Color(wardrobeCapability.getExtraColour(ExtraColourType.SKIN));
-        this.colourHair = new Color(wardrobeCapability.getExtraColour(ExtraColourType.HAIR));
-        this.colourEye = new Color(wardrobeCapability.getExtraColour(ExtraColourType.EYE));
-        this.colourAcc = new Color(wardrobeCapability.getExtraColour(ExtraColourType.ACC));
+        getColours();
         
         if (selectingColourType == ExtraColourType.SKIN & selectingColour != null) {
             colourSkin = selectingColour;
@@ -245,7 +251,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     public int autoColour(AbstractClientPlayer player, ExtraColourType type) {
         BufferedImage playerTexture = SkinHelper.getBufferedImageSkin(player);
         if (playerTexture == null) {
-            return WardrobeCapability.COLOUR_HAIR_DEFAULT.getRGB();
+            return ExtraColours.COLOUR_HAIR_DEFAULT.getRGB();
         }
         
         int r = 0, g = 0, b = 0;

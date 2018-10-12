@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.common.ApiRegistrar;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
@@ -21,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelSkinHead extends AbstractModelSkin {
     
     @Override
-    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
+    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         if (skin == null) {
             return;
         }
@@ -44,10 +45,10 @@ public class ModelSkinHead extends AbstractModelSkin {
         RenderHelper.enableGUIStandardItemLighting();
         
         if (skin.hasPaintData() & showSkinPaint) {
-            if (extraColour == null) {
-                extraColour = PaintingHelper.getLocalPlayerExtraColours();
+            if (extraColours == null) {
+                extraColours = PaintingHelper.getLocalPlayerExtraColours();
             }
-            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(skin, skinDye, extraColour);
+            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(skin, skinDye, extraColours);
             st.bindTexture();
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glDisable(GL11.GL_CULL_FACE);
@@ -74,7 +75,7 @@ public class ModelSkinHead extends AbstractModelSkin {
                 GL11.glTranslated(0, 1 * SCALE, 0);
             }
 
-            renderHead(skin.getParts().get(0), SCALE, skinDye, extraColour, distance, doLodLoading);
+            renderHead(skin.getParts().get(0), SCALE, skinDye, extraColours, distance, doLodLoading);
             
             GL11.glPopMatrix();
         }
@@ -82,7 +83,7 @@ public class ModelSkinHead extends AbstractModelSkin {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderHead(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColours, double distance, boolean doLodLoading) {
+    private void renderHead(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);

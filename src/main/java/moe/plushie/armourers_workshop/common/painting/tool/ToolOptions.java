@@ -14,9 +14,9 @@ public class ToolOptions {
     
     public static final ToolOptionCheck FULL_BLOCK_MODE = new ToolOptionCheck(TAG_FULL_BLOCK_MODE, true);
     public static final ToolOptionCheck CHANGE_HUE = new ToolOptionCheck(TAG_CHANGE_HUE, false);
-    public static final ToolOptionCheck CHANGE_SATURATION = new ToolOptionCheck(TAG_CHANGE_SATURATION, false);
-    public static final ToolOptionCheck CHANGE_BRIGHTNESS = new ToolOptionCheck(TAG_CHANGE_BRIGHTNESS, false);
-    public static final ToolOptionCheck CHANGE_PAINT_TYPE = new ToolOptionCheck(TAG_CHANGE_PAINT_TYPE, false);
+    public static final ToolOptionCheck CHANGE_SATURATION = new ToolOptionCheck(TAG_CHANGE_SATURATION, true);
+    public static final ToolOptionCheck CHANGE_BRIGHTNESS = new ToolOptionCheck(TAG_CHANGE_BRIGHTNESS, true);
+    public static final ToolOptionCheck CHANGE_PAINT_TYPE = new ToolOptionCheck(TAG_CHANGE_PAINT_TYPE, true);
     public static final ToolOptionIntensity INTENSITY = new ToolOptionIntensity(TAG_INTENSITY, 3);
     public static final ToolOptionRadius RADIUS = new ToolOptionRadius(TAG_RADIUS, 3);
     public static final ToolOptionRadius RADIUS_SAMPLE = new ToolOptionRadius(TAG_RADIUS_SAMPLE, 2);

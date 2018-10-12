@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.common.ApiRegistrar;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
@@ -23,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelSkinFeet extends AbstractModelSkin {
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         if (armourData == null) { return; }
         ArrayList<SkinPart> parts = armourData.getParts();
         
@@ -45,10 +46,10 @@ public class ModelSkinFeet extends AbstractModelSkin {
         RenderHelper.enableGUIStandardItemLighting();
         
         if (armourData.hasPaintData() & showSkinPaint) {
-            if (extraColour == null) {
-                extraColour = PaintingHelper.getLocalPlayerExtraColours();
+            if (extraColours == null) {
+                extraColours = PaintingHelper.getLocalPlayerExtraColours();
             }
-            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(armourData, skinDye, extraColour);
+            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(armourData, skinDye, extraColours);
             st.bindTexture();
             GL11.glPushMatrix();
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -76,9 +77,9 @@ public class ModelSkinFeet extends AbstractModelSkin {
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             if (part.getPartType().getPartName().equals("leftFoot")) {
-                renderLeftFoot(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
+                renderLeftFoot(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);
             } else if (part.getPartType().getPartName().equals("rightFoot")) {
-                renderRightFoot(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
+                renderRightFoot(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);
             }
             
             GL11.glPopMatrix();
@@ -87,7 +88,7 @@ public class ModelSkinFeet extends AbstractModelSkin {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderLeftFoot(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
+    private void renderLeftFoot(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
@@ -102,11 +103,11 @@ public class ModelSkinFeet extends AbstractModelSkin {
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
         
         
-        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
+        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
         GL11.glPopMatrix();
     }
     
-    private void renderRightFoot(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
+    private void renderRightFoot(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
@@ -120,7 +121,7 @@ public class ModelSkinFeet extends AbstractModelSkin {
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
         
-        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
+        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
         GL11.glPopMatrix();
     }
 }

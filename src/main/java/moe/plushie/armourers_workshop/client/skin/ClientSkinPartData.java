@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.client.skin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -9,6 +8,7 @@ import java.util.Set;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.model.SkinModel;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,15 +22,15 @@ public class ClientSkinPartData {
     public HashMap<ModelKey, SkinModel> dyeModels;
     public int[] totalCubesInPart;
     
-    private int[] averageR = new int[10];
-    private int[] averageG = new int[10];
-    private int[] averageB = new int[10];
+    private int[] averageR = new int[12];
+    private int[] averageG = new int[12];
+    private int[] averageB = new int[12];
     
     public ClientSkinPartData() {
         dyeModels = new HashMap<ModelKey, SkinModel>();
     }
     
-    public SkinModel getModelForDye(ISkinDye skinDye, byte[] extraColours) {
+    public SkinModel getModelForDye(ISkinDye skinDye, ExtraColours extraColours) {
         if (skinDye == null) {
             skinDye = blankDye;
         }
@@ -73,9 +73,9 @@ public class ClientSkinPartData {
     private class ModelKey {
         
         private ISkinDye skinDye;
-        byte[] extraColours;
+        private ExtraColours extraColours;
         
-        public ModelKey(ISkinDye skinDye, byte[] extraColours) {
+        public ModelKey(ISkinDye skinDye, ExtraColours extraColours) {
             this.skinDye = skinDye;
             this.extraColours = extraColours;
         }
@@ -84,9 +84,9 @@ public class ClientSkinPartData {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + Arrays.hashCode(extraColours);
-            result = prime * result
-                    + ((skinDye == null) ? 0 : skinDye.hashCode());
+            result = prime * result + getOuterType().hashCode();
+            result = prime * result + ((extraColours == null) ? 0 : extraColours.hashCode());
+            result = prime * result + ((skinDye == null) ? 0 : skinDye.hashCode());
             return result;
         }
 
@@ -99,7 +99,12 @@ public class ClientSkinPartData {
             if (getClass() != obj.getClass())
                 return false;
             ModelKey other = (ModelKey) obj;
-            if (!Arrays.equals(extraColours, other.extraColours))
+            if (!getOuterType().equals(other.getOuterType()))
+                return false;
+            if (extraColours == null) {
+                if (other.extraColours != null)
+                    return false;
+            } else if (!extraColours.equals(other.extraColours))
                 return false;
             if (skinDye == null) {
                 if (other.skinDye != null)
@@ -108,5 +113,11 @@ public class ClientSkinPartData {
                 return false;
             return true;
         }
+
+        private ClientSkinPartData getOuterType() {
+            return ClientSkinPartData.this;
+        }
+        
+        
     }
 }

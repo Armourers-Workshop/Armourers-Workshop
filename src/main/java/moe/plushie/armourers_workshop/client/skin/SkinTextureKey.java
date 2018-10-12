@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.client.skin;
 
-import java.util.Arrays;
-
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -11,9 +10,9 @@ public class SkinTextureKey {
     
     private final int skinId;
     private final ISkinDye skinDye;
-    private final byte[] extraColours;
+    private final ExtraColours extraColours;
     
-    public SkinTextureKey(int skinId, ISkinDye skinDye, byte[] extraColours) {
+    public SkinTextureKey(int skinId, ISkinDye skinDye, ExtraColours extraColours) {
         this.skinId = skinId;
         this.skinDye = skinDye;
         this.extraColours = extraColours;
@@ -23,7 +22,7 @@ public class SkinTextureKey {
         return skinDye;
     }
     
-    public byte[] getExtraColours() {
+    public ExtraColours getExtraColours() {
         return extraColours;
     }
 
@@ -31,7 +30,7 @@ public class SkinTextureKey {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Arrays.hashCode(extraColours);
+        result = prime * result + ((extraColours == null) ? 0 : extraColours.hashCode());
         result = prime * result + ((skinDye == null) ? 0 : skinDye.hashCode());
         result = prime * result + skinId;
         return result;
@@ -46,7 +45,10 @@ public class SkinTextureKey {
         if (getClass() != obj.getClass())
             return false;
         SkinTextureKey other = (SkinTextureKey) obj;
-        if (!Arrays.equals(extraColours, other.extraColours))
+        if (extraColours == null) {
+            if (other.extraColours != null)
+                return false;
+        } else if (!extraColours.equals(other.extraColours))
             return false;
         if (skinDye == null) {
             if (other.skinDye != null)
@@ -57,4 +59,6 @@ public class SkinTextureKey {
             return false;
         return true;
     }
+    
+    
 }

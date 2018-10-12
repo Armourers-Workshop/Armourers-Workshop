@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.common.ApiRegistrar;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -21,7 +22,7 @@ import net.minecraft.util.EnumFacing;
 public class ModelSkinWings extends AbstractModelSkin  {
 
     @Override
-    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
+    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         if (skin == null) {
             return;
         }
@@ -66,10 +67,10 @@ public class ModelSkinWings extends AbstractModelSkin  {
             }
             
             if (part.getPartType().getPartName().equals("leftWing")) {
-                renderLeftWing(part, SCALE, skinDye, extraColour, distance, angle, doLodLoading, movmentType);
+                renderLeftWing(part, SCALE, skinDye, extraColours, distance, angle, doLodLoading, movmentType);
             }
             if (part.getPartType().getPartName().equals("rightWing")) {
-                renderRightWing(part, SCALE, skinDye, extraColour, distance, -angle, doLodLoading, movmentType);
+                renderRightWing(part, SCALE, skinDye, extraColours, distance, -angle, doLodLoading, movmentType);
             }
             GL11.glPopMatrix();
         }
@@ -77,7 +78,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderLeftWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
+    private void renderLeftWing(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
         GL11.glPushMatrix();
         
         Point3D point = new Point3D(0, 0, 0);
@@ -118,11 +119,11 @@ public class ModelSkinWings extends AbstractModelSkin  {
         GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
         GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
         
-        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
+        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
         GL11.glPopMatrix();
     }
     
-    private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
+    private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
         GL11.glPushMatrix();
         Point3D point = new Point3D(0, 0, 0);
         EnumFacing axis = EnumFacing.DOWN;
@@ -162,7 +163,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
         GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
         
-        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
+        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
         GL11.glPopMatrix();
     }
 }

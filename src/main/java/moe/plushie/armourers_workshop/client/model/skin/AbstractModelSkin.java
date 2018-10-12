@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.model.ModelMannequin;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import net.minecraft.client.model.ModelBiped;
@@ -95,9 +96,9 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
+    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint, skinDye, extraColour, itemRender, distance, doLodLoading);
+        render(entity, armourData, showSkinPaint, skinDye, extraColours, itemRender, distance, doLodLoading);
     }
     
     @Override
@@ -111,7 +112,7 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
         GL11.glPopAttrib();
     }
     
-    public abstract void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading);
+    public abstract void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading);
     
     protected void setRotationFromModelBiped(ModelBiped modelBiped) {
         this.isRiding = false;
@@ -143,7 +144,7 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
         }
     }
     
-    protected void renderPart(SkinPart armourPart, float scale, ISkinDye skinDye, byte[] extraColour, double distance, boolean doLodLoading) {
-        SkinPartRenderer.INSTANCE.renderPart(armourPart, scale, skinDye, extraColour, distance, doLodLoading);
+    protected void renderPart(SkinPart armourPart, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
+        SkinPartRenderer.INSTANCE.renderPart(armourPart, scale, skinDye, extraColours, distance, doLodLoading);
     }
 }

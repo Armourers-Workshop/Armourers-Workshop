@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntity;
@@ -202,7 +203,7 @@ public class AddonCustomNPCS extends ModAddon {
             
             ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
             SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
-            byte[] extraColours = null;
+            ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
             for (int i = 0; i < skinTypes.length; i++) {
                 ISkinType skinType = skinTypes[i];
                 if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {

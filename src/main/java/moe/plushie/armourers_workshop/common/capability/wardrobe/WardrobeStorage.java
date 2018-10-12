@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.common.capability.wardrobe;
 
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability.ExtraColourType;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -23,7 +23,7 @@ public class WardrobeStorage implements IStorage<IWardrobeCapability> {
         NBTTagCompound compound = new NBTTagCompound();
         for (int i = 0; i < ExtraColourType.values().length; i++) {
             ExtraColourType type = ExtraColourType.values()[i];
-            compound.setInteger(TAG_EXTRA_COLOUR + type.toString().toLowerCase(), instance.getExtraColour(type));
+            compound.setInteger(TAG_EXTRA_COLOUR + type.toString().toLowerCase(), instance.getExtraColours().getColour(type));
         }
         for (int i = 0; i < 4; i++) {
             compound.setBoolean(TAG_ARMOUR_OVERRIDE + i, instance.getArmourOverride().get(i));
@@ -37,7 +37,7 @@ public class WardrobeStorage implements IStorage<IWardrobeCapability> {
         for (int i = 0; i < ExtraColourType.values().length; i++) {
             ExtraColourType type = ExtraColourType.values()[i];
             if (compound.hasKey(TAG_EXTRA_COLOUR + type.toString().toLowerCase(), NBT.TAG_INT)) {
-                instance.setExtraColour(type, compound.getInteger(TAG_EXTRA_COLOUR + type.toString().toLowerCase()));
+                instance.getExtraColours().setColour(type, compound.getInteger(TAG_EXTRA_COLOUR + type.toString().toLowerCase()));
             }
         }
         for (int i = 0; i < 4; i++) {

@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.common.painting;
 
 import java.awt.Color;
 
-import moe.plushie.armourers_workshop.common.data.PlayerPointer;
-import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
-import moe.plushie.armourers_workshop.proxies.ClientProxy;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -134,38 +134,25 @@ public final class PaintingHelper {
         return new byte[] {(byte)255, (byte)255, (byte)255, (byte)255};
     }
     
-    @SideOnly(Side.CLIENT)
-    public static int getLocalPlayersSkinColour() {
-        PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().player);
-        PlayerWardrobe ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
-        if (ewd != null) {
-            return ewd.skinColour;
-        }
-        return Color.decode("#F9DFD2").getRGB();
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public static int getLocalPlayersHairColour() {
-        PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().player);
-        PlayerWardrobe ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
-        if (ewd != null) {
-            return ewd.hairColour;
-        }
-        return Color.decode("#804020").getRGB();
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public static byte[] getLocalPlayerExtraColours() {
-        int skin = getLocalPlayersSkinColour();
-        int hair = getLocalPlayersHairColour();
-        byte[] ec = new byte[6];
+    public static byte[] intToBytes(int trgb) {
+        int t = 0xFF & (trgb >> 24);
+        int r = 0xFF & (trgb >> 16);
+        int g = 0xFF & (trgb >> 8);
+        int b = 0xFF & (trgb >> 0);
         
-        ec[0] = (byte) (skin >>> 16 & 0xFF);
-        ec[1] = (byte) (skin >>> 8 & 0xFF);
-        ec[2] = (byte) (skin & 0xFF);
-        ec[3] = (byte) (hair >>> 16 & 0xFF);
-        ec[4] = (byte) (hair >>> 8 & 0xFF);
-        ec[5] = (byte) (hair & 0xFF);
-        return ec;
+        return new byte[] { (byte)r, (byte) g, (byte) b, (byte) t };
+    }
+
+    public static int bytesToInt(byte[] rgbt) {
+        return ((rgbt[3] & 0xFF) << 24) | ((rgbt[0] & 0xFF) << 16) | ((rgbt[1] & 0xFF) << 8) | (rgbt[2] & 0xFF);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public static ExtraColours getLocalPlayerExtraColours() {
+        IWardrobeCapability wardrobeCapability = WardrobeCapability.get(Minecraft.getMinecraft().player);
+        if (wardrobeCapability != null) {
+            return wardrobeCapability.getExtraColours();
+        }
+        return null;
     }
 }

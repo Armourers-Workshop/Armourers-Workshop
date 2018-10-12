@@ -15,11 +15,12 @@ import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
+import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
-import moe.plushie.armourers_workshop.utils.BitwiseUtils;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -114,11 +115,13 @@ public final class ModelBakery {
             long startTime = System.currentTimeMillis();
             skin.lightHash();
             
+            int extraDyes = 12;
+            
             int[][] dyeColour;
             int[] dyeUseCount;
             
-            dyeColour = new int[3][10];
-            dyeUseCount = new int[10];
+            dyeColour = new int[3][extraDyes];
+            dyeUseCount = new int[extraDyes];
             
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart partData = skin.getParts().get(i);
@@ -133,7 +136,7 @@ public final class ModelBakery {
                 for (int ix = 0; ix < SkinTexture.TEXTURE_WIDTH; ix++) {
                     for (int iy = 0; iy < SkinTexture.TEXTURE_HEIGHT; iy++) {
                         int paintColour = skin.getPaintData()[ix + (iy * SkinTexture.TEXTURE_WIDTH)];
-                        int paintType = BitwiseUtils.getUByteFromInt(paintColour, 0);
+                        int paintType = PaintingHelper.intToBytes(paintColour)[3] & 0xFF;
                         
                         byte r = (byte) (paintColour >>> 16 & 0xFF);
                         byte g = (byte) (paintColour >>> 8 & 0xFF);
@@ -145,27 +148,39 @@ public final class ModelBakery {
                             dyeColour[1][paintType - 1] += g & 0xFF;
                             dyeColour[2][paintType - 1] += b & 0xFF;
                         }
-                        if (paintType == 253) {
+                        if (paintType == PaintType.SKIN.getKey()) {
                             dyeUseCount[8]++;
                             dyeColour[0][8] += r & 0xFF;
                             dyeColour[1][8] += g & 0xFF;
                             dyeColour[2][8] += b & 0xFF;
                         }
-                        if (paintType == 254) {
+                        if (paintType == PaintType.HAIR.getKey()) {
                             dyeUseCount[9]++;
                             dyeColour[0][9] += r  & 0xFF;
                             dyeColour[1][9] += g  & 0xFF;
                             dyeColour[2][9] += b  & 0xFF;
                         }
+                        if (paintType == PaintType.EYE.getKey()) {
+                            dyeUseCount[10]++;
+                            dyeColour[0][10] += r  & 0xFF;
+                            dyeColour[1][10] += g  & 0xFF;
+                            dyeColour[2][10] += b  & 0xFF;
+                        }
+                        if (paintType == PaintType.ACC.getKey()) {
+                            dyeUseCount[11]++;
+                            dyeColour[0][11] += r  & 0xFF;
+                            dyeColour[1][11] += g  & 0xFF;
+                            dyeColour[2][11] += b  & 0xFF;
+                        }
                     }
                 }
             }
             
-            int[] averageR = new int[10];
-            int[] averageG = new int[10];
-            int[] averageB = new int[10];
+            int[] averageR = new int[extraDyes];
+            int[] averageG = new int[extraDyes];
+            int[] averageB = new int[extraDyes];
             
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < extraDyes; i++) {
                 averageR[i] = (int) ((double)dyeColour[0][i] / (double)dyeUseCount[i]);
                 averageG[i] = (int) ((double)dyeColour[1][i] / (double)dyeUseCount[i]);
                 averageB[i] = (int) ((double)dyeColour[2][i] / (double)dyeUseCount[i]);

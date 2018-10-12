@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
+import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.cubes.ICube;
 import moe.plushie.armourers_workshop.common.skin.data.SkinCubeData;
@@ -227,17 +228,29 @@ public final class SkinBaker {
                                 dyeColour[1][paint - 1] += g[j]  & 0xFF;
                                 dyeColour[2][paint - 1] += b[j]  & 0xFF;
                             }
-                            if (paint == 253) {
+                            if (paint == PaintType.SKIN.getKey()) {
                                 dyeUseCount[8]++;
                                 dyeColour[0][8] += r[j]  & 0xFF;
                                 dyeColour[1][8] += g[j]  & 0xFF;
                                 dyeColour[2][8] += b[j]  & 0xFF;
                             }
-                            if (paint == 254) {
+                            if (paint == PaintType.HAIR.getKey()) {
                                 dyeUseCount[9]++;
                                 dyeColour[0][9] += r[j]  & 0xFF;
                                 dyeColour[1][9] += g[j]  & 0xFF;
                                 dyeColour[2][9] += b[j]  & 0xFF;
+                            }
+                            if (paint == PaintType.EYE.getKey()) {
+                                dyeUseCount[10]++;
+                                dyeColour[0][10] += r[j]  & 0xFF;
+                                dyeColour[1][10] += g[j]  & 0xFF;
+                                dyeColour[2][10] += b[j]  & 0xFF;
+                            }
+                            if (paint == PaintType.ACC.getKey()) {
+                                dyeUseCount[11]++;
+                                dyeColour[0][11] += r[j]  & 0xFF;
+                                dyeColour[1][11] += g[j]  & 0xFF;
+                                dyeColour[2][11] += b[j]  & 0xFF;
                             }
                         }
                         

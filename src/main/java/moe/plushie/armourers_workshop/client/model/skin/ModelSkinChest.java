@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.common.ApiRegistrar;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
@@ -24,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelSkinChest extends AbstractModelSkin {
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         if (armourData == null) { return; }
         ArrayList<SkinPart> parts = armourData.getParts();
         
@@ -46,10 +47,10 @@ public class ModelSkinChest extends AbstractModelSkin {
         RenderHelper.enableGUIStandardItemLighting();
         
         if (armourData.hasPaintData() & showSkinPaint) {
-            if (extraColour == null) {
-                extraColour = PaintingHelper.getLocalPlayerExtraColours();
+            if (extraColours == null) {
+                extraColours = PaintingHelper.getLocalPlayerExtraColours();
             }
-            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(armourData, skinDye, extraColour);
+            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(armourData, skinDye, extraColours);
             st.bindTexture();
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glDisable(GL11.GL_CULL_FACE);
@@ -75,11 +76,11 @@ public class ModelSkinChest extends AbstractModelSkin {
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             if (part.getPartType().getPartName().equals("base")) {
-                renderChest(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
+                renderChest(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);
             } else if (part.getPartType().getPartName().equals("leftArm")) {
-                renderLeftArm(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading, override);
+                renderLeftArm(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading, override);
             } else if (part.getPartType().getPartName().equals("rightArm")) {
-                renderRightArm(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading, override);
+                renderRightArm(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading, override);
             }
             
             GL11.glPopMatrix();
@@ -89,7 +90,7 @@ public class ModelSkinChest extends AbstractModelSkin {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderChest(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
+    private void renderChest(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         if (isSneak) {
             GL11.glRotated(28F, 1F, 0, 0);
@@ -98,11 +99,11 @@ public class ModelSkinChest extends AbstractModelSkin {
         //GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         //GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         //GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
-        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
+        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
         GL11.glPopMatrix();
     }
     
-    private void renderLeftArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading, boolean override) {
+    private void renderLeftArm(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading, boolean override) {
         GL11.glPushMatrix();
         
         //GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
@@ -123,12 +124,12 @@ public class ModelSkinChest extends AbstractModelSkin {
             GL11.glScalef(0.75F, 1F, 1F);
         }
         
-        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
+        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
         
         GL11.glPopMatrix();
     }
     
-    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading, boolean override) {
+    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading, boolean override) {
         GL11.glPushMatrix();
         
         //GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
@@ -148,7 +149,7 @@ public class ModelSkinChest extends AbstractModelSkin {
             GL11.glScalef(0.75F, 1F, 1F);
         }
         
-        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
+        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
         GL11.glPopMatrix();
     }
 }

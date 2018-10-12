@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.common.ApiRegistrar;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -19,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelSkinSword extends AbstractModelSkin {
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, byte[] extraColour, boolean itemRender, double distance, boolean doLodLoading) {
+    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         if (armourData == null) { return; }
         
         ArrayList<SkinPart> parts = armourData.getParts();
@@ -53,7 +54,7 @@ public class ModelSkinSword extends AbstractModelSkin {
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             if (part.getPartType().getPartName().equals("base")) {
-                renderRightArm(part, SCALE, skinDye, extraColour, distance, doLodLoading);
+                renderRightArm(part, SCALE, skinDye, extraColours, distance, doLodLoading);
             }
             
             GL11.glPopMatrix();
@@ -64,7 +65,7 @@ public class ModelSkinSword extends AbstractModelSkin {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, byte[] extraColour, double distance, boolean doLodLoading) {
+    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
@@ -78,7 +79,7 @@ public class ModelSkinSword extends AbstractModelSkin {
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
         
-        renderPart(part, scale, skinDye, extraColour, distance, doLodLoading);
+        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
         GL11.glPopMatrix();
     }
 }

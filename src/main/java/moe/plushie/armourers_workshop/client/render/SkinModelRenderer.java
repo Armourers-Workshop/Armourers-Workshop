@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.client.render;
 
-import java.awt.Color;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
@@ -24,6 +23,9 @@ import moe.plushie.armourers_workshop.client.model.skin.ModelSkinLegs;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinSword;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinWings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
@@ -305,14 +307,10 @@ public final class SkinModelRenderer {
             return;
         }
         
-        PlayerWardrobe ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(new PlayerPointer(player));
-        byte[] extraColours = null;
-        if (ewd != null) {
-            Color skinColour = new Color(ewd.skinColour);
-            Color hairColour = new Color(ewd.hairColour);
-            extraColours = new byte[] {
-                    (byte)skinColour.getRed(), (byte)skinColour.getGreen(), (byte)skinColour.getBlue(),
-                    (byte)hairColour.getRed(), (byte)hairColour.getGreen(), (byte)hairColour.getBlue()};
+        IWardrobeCapability wardrobeCapability = WardrobeCapability.get(player);
+        ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
+        if (wardrobeCapability != null) {
+            extraColours = wardrobeCapability.getExtraColours();
         }
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_CULL_FACE);
@@ -382,7 +380,7 @@ public final class SkinModelRenderer {
         return null;
     }
     
-    public boolean renderEquipmentPartFromStack(Entity entity, ItemStack stack, ModelBiped modelBiped, byte[] extraColours, double distance, boolean doLodLoading) {
+    public boolean renderEquipmentPartFromStack(Entity entity, ItemStack stack, ModelBiped modelBiped, ExtraColours extraColours, double distance, boolean doLodLoading) {
         SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (skinPointer == null) {
             return false;
@@ -391,7 +389,7 @@ public final class SkinModelRenderer {
         return renderEquipmentPart(entity, modelBiped, data, skinPointer.getSkinDye(), extraColours, distance, doLodLoading);
     }
     
-    public boolean renderEquipmentPartFromStack(ItemStack stack, ModelBiped modelBiped, byte[] extraColours, double distance, boolean doLodLoading) {
+    public boolean renderEquipmentPartFromStack(ItemStack stack, ModelBiped modelBiped, ExtraColours extraColours, double distance, boolean doLodLoading) {
         SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (skinPointer == null) {
             return false;
@@ -405,7 +403,7 @@ public final class SkinModelRenderer {
         return renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
     }
     
-    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data, ISkinDye skinDye, byte[] extraColours, double distance, boolean doLodLoading) {
+    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
         if (data == null) {
             return false;
         }

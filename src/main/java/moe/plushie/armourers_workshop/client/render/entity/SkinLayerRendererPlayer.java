@@ -7,11 +7,15 @@ import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.proxies.ClientProxy.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -43,19 +47,24 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         }
         ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
         SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
-        byte[] extraColours = null;
+        ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
+        IWardrobeCapability wardrobeCapability = WardrobeCapability.get(entitylivingbaseIn);
+        if (wardrobeCapability != null) {
+            extraColours = wardrobeCapability.getExtraColours();
+        }
+
         for (int i = 0; i < skinTypes.length; i++) {
             ISkinType skinType = skinTypes[i];
-            
+
             ISkinDescriptor skinDescriptorArmour = getSkinDescriptorFromArmourer(entitylivingbaseIn, skinType);
             if (skinDescriptorArmour != null) {
-                renderSkin(entitylivingbaseIn, renderPlayer.getMainModel(), skinDescriptorArmour, extraColours, 0, true);
+                renderSkin(entitylivingbaseIn, renderPlayer.getMainModel(), skinDescriptorArmour, extraColours, 0, entitylivingbaseIn != Minecraft.getMinecraft().player);
             } else {
                 if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {
                     for (int skinIndex = 0; skinIndex < skinCapability.getSlotCountForSkinType(skinType); skinIndex++) {
                         ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, skinIndex);
                         if (skinDescriptor != null) {
-                            renderSkin(entitylivingbaseIn, renderPlayer.getMainModel(), skinDescriptor, extraColours, 0, true);
+                            renderSkin(entitylivingbaseIn, renderPlayer.getMainModel(), skinDescriptor, extraColours, 0, entitylivingbaseIn != Minecraft.getMinecraft().player);
                         }
                     }
                 }
@@ -63,7 +72,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         }
     }
 
-    private void renderSkin(Entity entity, ModelBiped modelBiped, ISkinDescriptor skinDescriptor, byte[] extraColours, double distance, boolean doLodLoading) {
+    private void renderSkin(Entity entity, ModelBiped modelBiped, ISkinDescriptor skinDescriptor, ExtraColours extraColours, double distance, boolean doLodLoading) {
         SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
         if (skin != null) {
