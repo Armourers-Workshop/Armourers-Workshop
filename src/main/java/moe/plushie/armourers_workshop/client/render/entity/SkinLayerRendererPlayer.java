@@ -8,8 +8,9 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -48,7 +49,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
         SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
         ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
-        IWardrobeCapability wardrobe = WardrobeCapability.get(entitylivingbaseIn);
+        IPlayerWardrobeCap wardrobe = PlayerWardrobeCap.get(entitylivingbaseIn);
         if (wardrobe != null) {
             extraColours = wardrobe.getExtraColours();
         }
@@ -72,7 +73,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         }
     }
 
-    private void renderSkin(Entity entity, ISkinDescriptor skinDescriptor, IWardrobeCapability wardrobe, ExtraColours extraColours, double distance, boolean doLodLoading) {
+    private void renderSkin(Entity entity, ISkinDescriptor skinDescriptor, IWardrobeCap wardrobe, ExtraColours extraColours, double distance, boolean doLodLoading) {
         SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
         if (skin != null) {

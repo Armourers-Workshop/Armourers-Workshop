@@ -9,8 +9,8 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -78,7 +78,7 @@ public class ModelRendererAttachment extends ModelRenderer {
             return;
         }
         
-        IWardrobeCapability wardrobeCapability = WardrobeCapability.get(player);
+        IWardrobeCap wardrobeCapability = WardrobeCap.get(player);
         ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
         if (wardrobeCapability != null) {
             extraColours = wardrobeCapability.getExtraColours();

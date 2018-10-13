@@ -22,8 +22,9 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientRequestGameProfile;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientRequestSkinData;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientSkinPart;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdateWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientToolPaintBlock;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdatePlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdateWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerClientCommand;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerEntitySkinData;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerGameProfile;
@@ -33,9 +34,10 @@ import moe.plushie.armourers_workshop.common.network.messages.server.MessageServ
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerMiniArmourerSkinData;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerPlayerLeftTrackingRange;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSendSkinData;
+import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncConfig;
+import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncSkinCap;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncWardrobeCap;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -57,9 +59,11 @@ public final class PacketHandler {
     
     public static void init() {
         // Client messages.
+        registerMessage(MessageClientUpdateWardrobeCap.class, MessageClientUpdateWardrobeCap.class, Side.SERVER);
+        registerMessage(MessageClientUpdatePlayerWardrobeCap.class, MessageClientUpdatePlayerWardrobeCap.class, Side.SERVER);
+        
         registerMessage(MessageClientLoadArmour.class, MessageClientLoadArmour.class, Side.SERVER);
         registerMessage(MessageClientKeyPress.class, MessageClientKeyPress.class, Side.SERVER);
-        registerMessage(MessageClientUpdateWardrobeCap.class, MessageClientUpdateWardrobeCap.class, Side.SERVER);
         registerMessage(MessageClientRequestSkinData.class, MessageClientRequestSkinData.class, Side.SERVER);
         registerMessage(MessageClientSkinPart.class, MessageClientSkinPart.class, Side.SERVER);
         registerMessage(MessageClientToolPaintBlock.class, MessageClientToolPaintBlock.class, Side.SERVER);
@@ -83,9 +87,11 @@ public final class PacketHandler {
         
         //Server messages.
         registerMessage(MessageServerSyncSkinCap.class, MessageServerSyncSkinCap.class, Side.CLIENT);
+        registerMessage(MessageServerSyncWardrobeCap.class, MessageServerSyncWardrobeCap.class, Side.CLIENT);
+        registerMessage(MessageServerSyncPlayerWardrobeCap.class, MessageServerSyncPlayerWardrobeCap.class, Side.CLIENT);
+        
         registerMessage(MessageServerPlayerLeftTrackingRange.class, MessageServerPlayerLeftTrackingRange.class, Side.CLIENT);
         registerMessage(MessageServerLibraryFileList.class, MessageServerLibraryFileList.class, Side.CLIENT);
-        registerMessage(MessageServerSyncWardrobeCap.class, MessageServerSyncWardrobeCap.class, Side.CLIENT);
         registerMessage(MessageServerSendSkinData.class, MessageServerSendSkinData.class, Side.CLIENT);
         registerMessage(MessageServerClientCommand.class, MessageServerClientCommand.class, Side.CLIENT);
         registerMessage(MessageServerEntitySkinData.class, MessageServerEntitySkinData.class, Side.CLIENT);

@@ -141,11 +141,6 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
         PacketHandler.networkWrapper.sendToAllTracking(getUpdateMessage(), entity);
     }
     
-    @Override
-    public void sendUpdateToServer() {
-        PacketHandler.networkWrapper.sendToServer(getUpdateMessage());
-    }
-    
     public static IEntitySkinCapability get(Entity entity) {
         return entity.getCapability(ENTITY_SKIN_CAP, null);
     }

@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.common.handler;
 
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,7 +25,7 @@ public final class CapabilitySyncHandler {
             }
         }
         if (event.getTarget() instanceof EntityPlayer) {
-            IWardrobeCapability wardrobeCapability = WardrobeCapability.get((EntityPlayer) event.getTarget());
+            IWardrobeCap wardrobeCapability = WardrobeCap.get((EntityPlayer) event.getTarget());
             if (wardrobeCapability != null) {
                 wardrobeCapability.syncToPlayerDelayed((EntityPlayerMP) event.getEntityPlayer(), 2);
             }
@@ -39,7 +39,7 @@ public final class CapabilitySyncHandler {
             skinCapability.syncToPlayer((EntityPlayerMP) event.player);
         }
         
-        IWardrobeCapability wardrobeCapability = WardrobeCapability.get(event.player);
+        IWardrobeCap wardrobeCapability = WardrobeCap.get(event.player);
         if (wardrobeCapability != null) {
             wardrobeCapability.syncToPlayer((EntityPlayerMP) event.player);
         }

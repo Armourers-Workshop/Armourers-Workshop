@@ -15,7 +15,7 @@ import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -35,7 +35,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     
     private EntityPlayer entityPlayer;
     private IEntitySkinCapability skinCapability;
-    private IWardrobeCapability wardrobeCapability;
+    private IWardrobeCap wardrobeCapability;
     
     private ExtraColourType selectingColourType = null;
     private Color selectingColour = null;
@@ -59,7 +59,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     
     String guiName = "equipment-wardrobe";
     
-    public GuiTabWardrobeColourSettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IWardrobeCapability wardrobeCapability) {
+    public GuiTabWardrobeColourSettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IWardrobeCap wardrobeCapability) {
         super(tabId, parent, false);
         this.entityPlayer = entityPlayer;
         this.skinCapability = skinCapability;

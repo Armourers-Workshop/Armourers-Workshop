@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.client.gui.GuiAdminPanel;
 import moe.plushie.armourers_workshop.client.gui.GuiColourMixer;
 import moe.plushie.armourers_workshop.client.gui.GuiDebugTool;
 import moe.plushie.armourers_workshop.client.gui.GuiDyeTable;
-import moe.plushie.armourers_workshop.client.gui.GuiEntityEquipment;
 import moe.plushie.armourers_workshop.client.gui.GuiGuideBook;
 import moe.plushie.armourers_workshop.client.gui.GuiSkinnable;
 import moe.plushie.armourers_workshop.client.gui.GuiSkinningTable;
@@ -21,13 +20,14 @@ import moe.plushie.armourers_workshop.client.gui.miniarmourer.GuiMiniArmourerBui
 import moe.plushie.armourers_workshop.client.gui.skinlibrary.GuiSkinLibrary;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourLibrary;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
 import moe.plushie.armourers_workshop.common.inventory.ContainerDyeTable;
-import moe.plushie.armourers_workshop.common.inventory.ContainerEntityEquipment;
 import moe.plushie.armourers_workshop.common.inventory.ContainerGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.common.inventory.ContainerHologramProjector;
 import moe.plushie.armourers_workshop.common.inventory.ContainerMannequin;
@@ -93,7 +93,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
                 EntitySkinCapability skinCapabilityPlayer = (EntitySkinCapability) player.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
-                IWardrobeCapability wardrobeCapability = WardrobeCapability.get(player);
+                IPlayerWardrobeCap wardrobeCapability = PlayerWardrobeCap.get(player);
                 if (skinCapabilityPlayer != null & wardrobeCapability != null) {
                     return new ContainerSkinWardrobe(player.inventory, skinCapabilityPlayer, wardrobeCapability);
                 } else {
@@ -118,10 +118,14 @@ public class GuiHandler implements IGuiHandler {
                 Entity entity = player.getEntityWorld().getEntityByID(x);
                 if (entity != null) {
                     EntitySkinCapability skinCapability = (EntitySkinCapability) entity.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
+                    IWardrobeCap wardrobeCap = WardrobeCap.get(entity);
                     if (skinCapability == null) {
                         break;
                     }
-                    return new ContainerEntityEquipment(player.inventory, skinCapability);
+                    if (wardrobeCap == null) {
+                        break;
+                    }
+                    return new ContainerSkinWardrobe(player.inventory, skinCapability, wardrobeCap);
                 } else {
                     ModLogger.log(Level.WARN, "Error entity not found");
                 }
@@ -191,7 +195,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
                 EntitySkinCapability skinCapabilityPlayer = (EntitySkinCapability) player.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
-                IWardrobeCapability wardrobeCapability = WardrobeCapability.get(player);
+                IPlayerWardrobeCap wardrobeCapability = PlayerWardrobeCap.get(player);
                 if (skinCapabilityPlayer != null & wardrobeCapability != null) {
                     return new GuiWardrobe(player.inventory, skinCapabilityPlayer, wardrobeCapability);
                 } else {
@@ -221,10 +225,14 @@ public class GuiHandler implements IGuiHandler {
                 Entity entity = player.getEntityWorld().getEntityByID(x);
                 if (entity != null) {
                     EntitySkinCapability skinCapability = (EntitySkinCapability) entity.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
+                    IWardrobeCap wardrobeCap = WardrobeCap.get(entity);
                     if (skinCapability == null) {
                         break;
                     }
-                    return new GuiEntityEquipment(player.inventory, skinCapability);
+                    if (wardrobeCap == null) {
+                        break;
+                    }
+                    return new GuiWardrobe(player.inventory, skinCapability, wardrobeCap);
                 } else {
                     ModLogger.log(Level.WARN, "Error entity not found");
                 }

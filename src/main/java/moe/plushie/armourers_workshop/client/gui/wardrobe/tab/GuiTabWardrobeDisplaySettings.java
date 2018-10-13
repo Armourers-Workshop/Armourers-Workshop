@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,7 +25,7 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
     
     private EntityPlayer entityPlayer;
     private IEntitySkinCapability skinCapability;
-    private IWardrobeCapability wardrobeCapability;
+    private IPlayerWardrobeCap wardrobeCapability;
     
     private BitSet armourOverride;
     
@@ -33,7 +33,7 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
     
     String guiName = "equipment-wardrobe";
     
-    public GuiTabWardrobeDisplaySettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IWardrobeCapability wardrobeCapability) {
+    public GuiTabWardrobeDisplaySettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IPlayerWardrobeCap wardrobeCapability) {
         super(tabId, parent, false);
         this.entityPlayer = entityPlayer;
         this.skinCapability = skinCapability;

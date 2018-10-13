@@ -8,8 +8,8 @@ import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
@@ -100,7 +100,7 @@ public final class EquipmentWardrobeHandler {
             armour[i] = ItemStack.EMPTY;
         }
         
-        IWardrobeCapability wardrobeCapability = WardrobeCapability.get(player);
+        IPlayerWardrobeCap wardrobeCapability = PlayerWardrobeCap.get(player);
         for (int i = 0; i < armour.length; i++) {
             armour[i] = player.inventory.armorInventory.get(i);
             if (wardrobeCapability != null) {

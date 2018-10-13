@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -24,9 +24,9 @@ public class GuiTabWardrobeDyes extends GuiTabPanel {
     
     private EntityPlayer entityPlayer;
     private IEntitySkinCapability skinCapability;
-    private IWardrobeCapability wardrobeCapability;
+    private IWardrobeCap wardrobeCapability;
     
-    public GuiTabWardrobeDyes(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IWardrobeCapability wardrobeCapability) {
+    public GuiTabWardrobeDyes(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IWardrobeCap wardrobeCapability) {
         super(tabId, parent, false);
         this.entityPlayer = entityPlayer;
         this.skinCapability = skinCapability;

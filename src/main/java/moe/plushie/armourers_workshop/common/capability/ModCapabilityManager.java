@@ -6,9 +6,12 @@ import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinProvider;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinStorage;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeProvider;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeStorage;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeProvider;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeStorage;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import net.minecraft.entity.Entity;
@@ -25,7 +28,8 @@ public final class ModCapabilityManager {
 
     private static final ResourceLocation KEY_ENTITY_SKIN_PROVIDER = new ResourceLocation(LibModInfo.ID, "entity-skin-provider");
     private static final ResourceLocation KEY_WARDROBE_PROVIDER = new ResourceLocation(LibModInfo.ID, "wardrobe-provider");
-
+    private static final ResourceLocation KEY_PLAYER_WARDROBE_PROVIDER = new ResourceLocation(LibModInfo.ID, "player-wardrobe-provider");
+    
     private ModCapabilityManager() {
     }
 
@@ -38,10 +42,18 @@ public final class ModCapabilityManager {
             }
         });
 
-        CapabilityManager.INSTANCE.register(IWardrobeCapability.class, new WardrobeStorage(), new Callable<IWardrobeCapability>() {
+        CapabilityManager.INSTANCE.register(IWardrobeCap.class, new WardrobeStorage(), new Callable<IWardrobeCap>() {
 
             @Override
-            public IWardrobeCapability call() throws Exception {
+            public IWardrobeCap call() throws Exception {
+                return null;
+            }
+        });
+        
+        CapabilityManager.INSTANCE.register(IPlayerWardrobeCap.class, new PlayerWardrobeStorage(), new Callable<IPlayerWardrobeCap>() {
+
+            @Override
+            public IPlayerWardrobeCap call() throws Exception {
                 return null;
             }
         });
@@ -54,7 +66,9 @@ public final class ModCapabilityManager {
             if (skinnableEntity != null) {
                 event.addCapability(KEY_ENTITY_SKIN_PROVIDER, new EntitySkinProvider(event.getObject(), skinnableEntity));
                 if (event.getObject() instanceof EntityPlayer) {
-                    event.addCapability(KEY_WARDROBE_PROVIDER, new WardrobeProvider((EntityPlayer) event.getObject(), skinnableEntity));
+                    event.addCapability(KEY_PLAYER_WARDROBE_PROVIDER, new PlayerWardrobeProvider((EntityPlayer) event.getObject(), skinnableEntity));
+                } else {
+                    event.addCapability(KEY_WARDROBE_PROVIDER, new WardrobeProvider(event.getObject(), skinnableEntity));
                 }
             }
         }

@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.common.painting;
 import java.awt.Color;
 
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -149,7 +149,7 @@ public final class PaintingHelper {
     
     @SideOnly(Side.CLIENT)
     public static ExtraColours getLocalPlayerExtraColours() {
-        IWardrobeCapability wardrobeCapability = WardrobeCapability.get(Minecraft.getMinecraft().player);
+        IWardrobeCap wardrobeCapability = WardrobeCap.get(Minecraft.getMinecraft().player);
         if (wardrobeCapability != null) {
             return wardrobeCapability.getExtraColours();
         }

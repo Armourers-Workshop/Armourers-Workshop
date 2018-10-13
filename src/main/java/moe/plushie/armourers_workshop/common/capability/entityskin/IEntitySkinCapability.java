@@ -86,6 +86,4 @@ public interface IEntitySkinCapability {
      * Syncs capability data to all players tracking the entity.
      */
     public void syncToAllAround();
-    
-    public void sendUpdateToServer();
 }

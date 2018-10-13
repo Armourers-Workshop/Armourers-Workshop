@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.common.capability.wardrobe;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.HashMap;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
@@ -17,32 +16,29 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class WardrobeCapability implements IWardrobeCapability {
+public class WardrobeCap implements IWardrobeCap {
 
-    @CapabilityInject(IWardrobeCapability.class)
-    public static final Capability<IWardrobeCapability> WARDROBE_CAP = null;
+    @CapabilityInject(IWardrobeCap.class)
+    public static final Capability<IWardrobeCap> WARDROBE_CAP = null;
 
-    private final Entity entity;
+    protected final Entity entity;
 
     private final ISkinnableEntity skinnableEntity;
 
     public final ExtraColours extraColours;
     
     public final SkinDye dye;
-    
-    /** Bit set of what armour is hidden on the player. */
-    public BitSet armourOverride;
 
     /** Number of slots the player has unlocked in the wardrobe */
     public HashMap<String, Integer> slotsUnlocked;
 
-    public WardrobeCapability(Entity entity, ISkinnableEntity skinnableEntity) {
+    public WardrobeCap(Entity entity, ISkinnableEntity skinnableEntity) {
         this.entity = entity;
         this.skinnableEntity = skinnableEntity;
         extraColours = new ExtraColours();
         dye = new SkinDye();
-        armourOverride = new BitSet(4);
         slotsUnlocked = new HashMap<String, Integer>();
         ArrayList<ISkinType> validSkinTypes = new ArrayList<ISkinType>();
         skinnableEntity.getValidSkinTypes(validSkinTypes);
@@ -70,15 +66,6 @@ public class WardrobeCapability implements IWardrobeCapability {
         return 0;
     }
 
-    @Override
-    public BitSet getArmourOverride() {
-        return armourOverride;
-    }
-
-    @Override
-    public void setArmourOverride(BitSet armourOverride) {
-        this.armourOverride = armourOverride;
-    }
 
     public int getUnlockedSlotsForSkinType(ISkinType skinType) {
         // return skinnableEntity.getSlotsForSkinType(skinType);
@@ -99,7 +86,7 @@ public class WardrobeCapability implements IWardrobeCapability {
         slotsUnlocked.put(skinType.getRegistryName(), value);
     }
     
-    private MessageServerSyncWardrobeCap getUpdateMessage() {
+    protected IMessage getUpdateMessage() {
         NBTTagCompound compound = (NBTTagCompound)WARDROBE_CAP.getStorage().writeNBT(WARDROBE_CAP, this, null);
         return new MessageServerSyncWardrobeCap(entity.getEntityId(), compound);
     }
@@ -121,10 +108,9 @@ public class WardrobeCapability implements IWardrobeCapability {
 
     @Override
     public void sendUpdateToServer() {
-        PacketHandler.networkWrapper.sendToServer(getUpdateMessage());
     }
 
-    public static IWardrobeCapability get(Entity entity) {
+    public static IWardrobeCap get(Entity entity) {
         return entity.getCapability(WARDROBE_CAP, null);
     }
 }
