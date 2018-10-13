@@ -117,7 +117,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
     @Override
     public void setInventorySlotContents(IInventory inventory, int slotId, ItemStack stack) {
         if (!entity.getEntityWorld().isRemote) {
-            syncToAllAround();
+            syncToAllTracking();
         }
     }
     
@@ -125,19 +125,14 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
         NBTTagCompound compound = (NBTTagCompound)ENTITY_SKIN_CAP.getStorage().writeNBT(ENTITY_SKIN_CAP, this, null);
         return new MessageServerSyncSkinCap(entity.getEntityId(), compound);
     }
-
-    @Override
-    public void syncToPlayerDelayed(EntityPlayerMP entityPlayer, int delay) {
-        PacketHandler.sendToDelayed(getUpdateMessage(), entityPlayer, delay);
-    }
     
     @Override
     public void syncToPlayer(EntityPlayerMP entityPlayer) {
-        syncToPlayerDelayed(entityPlayer, 0);
+        PacketHandler.networkWrapper.sendTo(getUpdateMessage(), entityPlayer);
     }
 
     @Override
-    public void syncToAllAround() {
+    public void syncToAllTracking() {
         PacketHandler.networkWrapper.sendToAllTracking(getUpdateMessage(), entity);
     }
     

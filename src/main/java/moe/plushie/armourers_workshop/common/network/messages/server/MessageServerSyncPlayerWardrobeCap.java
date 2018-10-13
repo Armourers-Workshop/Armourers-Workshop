@@ -5,6 +5,8 @@ import org.apache.logging.log4j.Level;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.network.messages.client.DelayedMessageHandler;
+import moe.plushie.armourers_workshop.common.network.messages.client.DelayedMessageHandler.IDelayedMessage;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -15,7 +17,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageServerSyncPlayerWardrobeCap implements IMessage, IMessageHandler<MessageServerSyncPlayerWardrobeCap, IMessage> {
+public class MessageServerSyncPlayerWardrobeCap implements IMessage, IMessageHandler<MessageServerSyncPlayerWardrobeCap, IMessage>, IDelayedMessage {
 
     private int entityId;
     private NBTTagCompound compound;
@@ -42,18 +44,30 @@ public class MessageServerSyncPlayerWardrobeCap implements IMessage, IMessageHan
 
     @Override
     public IMessage onMessage(MessageServerSyncPlayerWardrobeCap message, MessageContext ctx) {
+        DelayedMessageHandler.addDelayedMessage(message);
+        return null;
+    }
+
+    @Override
+    public boolean isReady() {
         if (Minecraft.getMinecraft().world != null) {
-            Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.entityId);
+            return Minecraft.getMinecraft().world.getEntityByID(entityId) != null;
+        }
+        return false;
+    }
+
+    @Override
+    public void onDelayedMessage() {
+        if (Minecraft.getMinecraft().world != null) {
+            Entity entity = Minecraft.getMinecraft().world.getEntityByID(entityId);
             if (entity != null) {
                 IPlayerWardrobeCap wardrobeCapability = PlayerWardrobeCap.get((EntityPlayer) entity);
                 if (wardrobeCapability != null) {
-                    PlayerWardrobeCap.PLAYER_WARDROBE_CAP.getStorage().readNBT(PlayerWardrobeCap.PLAYER_WARDROBE_CAP, wardrobeCapability, null, message.compound);
+                    PlayerWardrobeCap.PLAYER_WARDROBE_CAP.getStorage().readNBT(PlayerWardrobeCap.PLAYER_WARDROBE_CAP, wardrobeCapability, null, compound);
                 }
             } else {
-                ModLogger.log(Level.WARN, String.format("Failed to get entity with %d when updating IWardrobeCapability.", message.entityId));
+                ModLogger.log(Level.WARN, String.format("Failed to get entity with %d when updating IWardrobeCapability.", entityId));
             }
-
         }
-        return null;
     }
 }

@@ -20,22 +20,21 @@ public final class CapabilitySyncHandler {
     
     @SubscribeEvent
     public static void onStartTracking(PlayerEvent.StartTracking event) {
-        int packetDelay = 10;
         if (event.getTarget() instanceof EntityLivingBase) {
             IEntitySkinCapability skinCapability = EntitySkinCapability.get((EntityLivingBase) event.getTarget());
             if (skinCapability != null) {
-                skinCapability.syncToPlayerDelayed((EntityPlayerMP) event.getEntityPlayer(), packetDelay);
+                skinCapability.syncToPlayer((EntityPlayerMP) event.getEntityPlayer());
             }
         }
         if (event.getTarget() instanceof EntityPlayer) {
             IPlayerWardrobeCap wardrobeCapability = PlayerWardrobeCap.get((EntityPlayer) event.getTarget());
             if (wardrobeCapability != null) {
-                wardrobeCapability.syncToPlayerDelayed((EntityPlayerMP) event.getEntityPlayer(), packetDelay);
+                wardrobeCapability.syncToPlayer((EntityPlayerMP) event.getEntityPlayer());
             }
         } else {
             IWardrobeCap wardrobeCapability = WardrobeCap.get(event.getTarget());
             if (wardrobeCapability != null) {
-                wardrobeCapability.syncToPlayerDelayed((EntityPlayerMP) event.getEntityPlayer(), packetDelay);
+                wardrobeCapability.syncToPlayer((EntityPlayerMP) event.getEntityPlayer());
             }
         }
     }

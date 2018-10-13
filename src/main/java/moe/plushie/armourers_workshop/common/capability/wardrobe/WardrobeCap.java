@@ -93,17 +93,12 @@ public class WardrobeCap implements IWardrobeCap {
     }
 
     @Override
-    public void syncToPlayerDelayed(EntityPlayerMP entityPlayer, int delay) {
-        PacketHandler.sendToDelayed(getUpdateMessage(), entityPlayer, delay);
-    }
-
-    @Override
     public void syncToPlayer(EntityPlayerMP entityPlayer) {
-        syncToPlayerDelayed(entityPlayer, 0);
+        PacketHandler.networkWrapper.sendTo(getUpdateMessage(), entityPlayer);
     }
 
     @Override
-    public void syncToAllAround() {
+    public void syncToAllTracking() {
         PacketHandler.networkWrapper.sendToAllTracking(getUpdateMessage(), entity);
     }
 

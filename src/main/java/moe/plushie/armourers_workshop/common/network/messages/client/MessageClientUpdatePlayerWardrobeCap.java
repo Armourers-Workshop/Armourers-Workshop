@@ -44,7 +44,7 @@ public class MessageClientUpdatePlayerWardrobeCap implements IMessage, IMessageH
         IPlayerWardrobeCap wardrobeCapability = PlayerWardrobeCap.get((EntityPlayer) ctx.getServerHandler().player);
         if (wardrobeCapability != null) {
             PlayerWardrobeCap.PLAYER_WARDROBE_CAP.getStorage().readNBT(PlayerWardrobeCap.PLAYER_WARDROBE_CAP, wardrobeCapability, null, message.compound);
-            wardrobeCapability.syncToAllAround();
+            wardrobeCapability.syncToAllTracking();
         } else {
             ModLogger.log(Level.WARN, "Failed to get wardrobe capability when updating players wardrobe.");
         }

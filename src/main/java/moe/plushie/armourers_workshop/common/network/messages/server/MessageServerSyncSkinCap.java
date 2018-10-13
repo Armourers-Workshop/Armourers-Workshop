@@ -5,6 +5,8 @@ import org.apache.logging.log4j.Level;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.network.messages.client.DelayedMessageHandler;
+import moe.plushie.armourers_workshop.common.network.messages.client.DelayedMessageHandler.IDelayedMessage;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -21,7 +23,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * @author RiskyKen
  *
  */
-public class MessageServerSyncSkinCap implements IMessage, IMessageHandler<MessageServerSyncSkinCap, IMessage> {
+public class MessageServerSyncSkinCap implements IMessage, IMessageHandler<MessageServerSyncSkinCap, IMessage>, IDelayedMessage {
 
     private int entityId;
     private NBTTagCompound compound;
@@ -47,18 +49,30 @@ public class MessageServerSyncSkinCap implements IMessage, IMessageHandler<Messa
     
     @Override
     public IMessage onMessage(MessageServerSyncSkinCap message, MessageContext ctx) {
+        DelayedMessageHandler.addDelayedMessage(message);
+        return null;
+    }
+
+    @Override
+    public boolean isReady() {
         if (Minecraft.getMinecraft().world != null) {
-            Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.entityId);
+            return Minecraft.getMinecraft().world.getEntityByID(entityId) != null;
+        }
+        return false;
+    }
+
+    @Override
+    public void onDelayedMessage() {
+        if (Minecraft.getMinecraft().world != null) {
+            Entity entity = Minecraft.getMinecraft().world.getEntityByID(entityId);
             if (entity != null) {
                 IEntitySkinCapability skinCapability = EntitySkinCapability.get((EntityLivingBase) entity);
                 if (skinCapability != null) {
-                    EntitySkinCapability.ENTITY_SKIN_CAP.getStorage().readNBT(EntitySkinCapability.ENTITY_SKIN_CAP, skinCapability, null, message.compound);
+                    EntitySkinCapability.ENTITY_SKIN_CAP.getStorage().readNBT(EntitySkinCapability.ENTITY_SKIN_CAP, skinCapability, null, compound);
                 }
             } else {
-                ModLogger.log(Level.WARN, String.format("Failed to get entity with %d when updating IEntitySkinCapability.", message.entityId));
+                ModLogger.log(Level.WARN, String.format("Failed to get entity with %d when updating IEntitySkinCapability.", entityId));
             }
-
         }
-        return null;
     }
 }

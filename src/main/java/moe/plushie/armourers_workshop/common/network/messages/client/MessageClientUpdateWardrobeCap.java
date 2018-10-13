@@ -50,7 +50,7 @@ public class MessageClientUpdateWardrobeCap implements IMessage, IMessageHandler
             IWardrobeCap wardrobeCapability = WardrobeCap.get(entity);
             if (wardrobeCapability != null) {
                 WardrobeCap.WARDROBE_CAP.getStorage().readNBT(WardrobeCap.WARDROBE_CAP, wardrobeCapability, null, message.compound);
-                wardrobeCapability.syncToAllAround();
+                wardrobeCapability.syncToAllTracking();
             } else {
                 ModLogger.log(Level.WARN, "Failed to get wardrobe capability when updating players wardrobe.");
             }
