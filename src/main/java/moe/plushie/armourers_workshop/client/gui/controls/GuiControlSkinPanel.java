@@ -12,8 +12,8 @@ import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -178,6 +178,8 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                     
                     fontRenderer.drawSplitString(name, x + 1, textY, iconSize - 2, 0xFFEEEEEE);
                 }
+                Minecraft.getMinecraft().renderEngine.bindTexture(skin.getSkinType().getIcon());
+                Gui.drawScaledCustomSizeModalRect(x, y, 0, 0, 16, 16, (int) ((float)iconSize / 4F), (int) ((float)iconSize / 4F), 16, 16);
                 
                 float scale = iconSize / 2;
                 GlStateManager.pushMatrix();
