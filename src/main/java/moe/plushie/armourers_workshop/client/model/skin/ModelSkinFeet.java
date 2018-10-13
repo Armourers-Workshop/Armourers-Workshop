@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -73,6 +74,10 @@ public class ModelSkinFeet extends AbstractModelSkin {
                 GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
                 GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F); 
             }
+            if (isSneak) {
+                GlStateManager.translate(0.0F, 0.2F, 0.0F);
+                GL11.glTranslated(0, -3 * SCALE, 4 * SCALE);
+            }
 
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
@@ -90,9 +95,6 @@ public class ModelSkinFeet extends AbstractModelSkin {
     
     private void renderLeftFoot(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
-        if (isSneak) {
-            GL11.glTranslated(0, -3 * scale, 4 * scale);
-        }
         GL11.glColor3f(1F, 1F, 1F);
         if (!itemRender) {
             GL11.glTranslated(0, 12 * scale, 0);
@@ -109,9 +111,6 @@ public class ModelSkinFeet extends AbstractModelSkin {
     
     private void renderRightFoot(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
-        if (isSneak) {
-            GL11.glTranslated(0, -3 * scale, 4 * scale);
-        }
         GL11.glColor3f(1F, 1F, 1F);
         if (!itemRender) {
             GL11.glTranslated(0, 12 * scale, 0);
