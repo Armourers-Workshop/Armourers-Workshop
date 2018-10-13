@@ -260,7 +260,7 @@ inventory.armourers_workshop:entity-equipment.name=Entity Equipment
 inventory.armourers_workshop:skinning-table.name=Skinning Table
 inventory.armourers_workshop:dyeTable.name=Dye Table
 inventory.armourers_workshop:skinnable.name=Skinnable Block
-inventory.armourers_workshop:hologramProjector.name=Hologram Projector
+inventory.armourers_workshop:hologram-projector.name=Hologram Projector
 
 # Inventory controls
 inventory.armourers_workshop:armour-library.label.search=Search:
@@ -493,18 +493,18 @@ inventory.armourers_workshop:global-skin-library.edit.dialog.delete.ok=OK
 inventory.armourers_workshop:global-skin-library.edit.dialog.delete.cancel=Cancel
 
 # Hologram Projector
-inventory.armourers_workshop:hologramProjector.tab.inventory=Inventory
-inventory.armourers_workshop:hologramProjector.tab.offset=Offset
-inventory.armourers_workshop:hologramProjector.tab.angle=Angle
-inventory.armourers_workshop:hologramProjector.tab.rotationOffset=Rotation Offset
-inventory.armourers_workshop:hologramProjector.tab.rotationSpeed=Rotation Speed
-inventory.armourers_workshop:hologramProjector.tab.extra=Extra
-inventory.armourers_workshop:hologramProjector.showRotationPoint=Show Rotation Point?
-inventory.armourers_workshop:hologramProjector.glowing=Glowing?
-inventory.armourers_workshop:hologramProjector.label.powerMode=Redstone Power Mode:
-inventory.armourers_workshop:hologramProjector.powerMode.ignored=Ignored
-inventory.armourers_workshop:hologramProjector.powerMode.high=High
-inventory.armourers_workshop:hologramProjector.powerMode.low=Low
+inventory.armourers_workshop:hologram-projector.tab.inventory=Inventory
+inventory.armourers_workshop:hologram-projector.tab.offset=Offset
+inventory.armourers_workshop:hologram-projector.tab.angle=Angle
+inventory.armourers_workshop:hologram-projector.tab.rotationOffset=Rotation Offset
+inventory.armourers_workshop:hologram-projector.tab.rotationSpeed=Rotation Speed
+inventory.armourers_workshop:hologram-projector.tab.extra=Extra
+inventory.armourers_workshop:hologram-projector.showRotationPoint=Show Rotation Point?
+inventory.armourers_workshop:hologram-projector.glowing=Glowing?
+inventory.armourers_workshop:hologram-projector.label.powerMode=Redstone Power Mode:
+inventory.armourers_workshop:hologram-projector.powerMode.ignored=Ignored
+inventory.armourers_workshop:hologram-projector.powerMode.high=High
+inventory.armourers_workshop:hologram-projector.powerMode.low=Low
 
 # Chat Messages
 chat.armourers_workshop:undo.outOfUndos=No more undos

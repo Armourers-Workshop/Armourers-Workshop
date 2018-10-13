@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.utils.BitwiseUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 
 public enum PaintType {
-    NORMAL(255, -1),
+    NORMAL(255, 0),
     DYE_1(1, 1),
     DYE_2(2, 2),
     DYE_3(3, 3),
@@ -14,15 +14,17 @@ public enum PaintType {
     DYE_6(6, 6),
     DYE_7(7, 7),
     DYE_8(8, 8),
-    //WATER(248),
-    //LAVA(249),
-    //SKY(250),
-    //STAR_FIELD(251),
-    //RAINBOW(252),
+    //WATER(100),
+    //LAVA(101),
+    //SKY(102),
+    //STAR_FIELD(103),
+    //RAINBOW(104),
     SKIN(253, 10),
     HAIR(254, 11),
     EYE(251, 12),
     MISC(252, 13),
+    
+    
     NONE(0, 9);
     
     

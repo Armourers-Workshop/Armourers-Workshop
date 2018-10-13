@@ -7,7 +7,9 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -26,16 +28,13 @@ public final class ModRenderHelper {
     public static void enableLighting() {
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightX, lightY);
     }
-    /*
-    public static void setLightingForBlock(World world, int x, int y, int z) {
-        
-        int i = world.getLightBrightnessForSkyBlocks(x, y, z, 0);
+    
+    public static void setLightingForBlock(World world, BlockPos pos) {
+        int i = world.getCombinedLight(pos, 0);
         int j = i % 65536;
         int k = i / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
-        
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
     }
-    */
     
     public static void setGLForSkinRender() {
         

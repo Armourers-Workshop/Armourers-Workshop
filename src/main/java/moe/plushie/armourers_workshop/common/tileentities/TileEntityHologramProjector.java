@@ -195,7 +195,7 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     }
     
     public void updatePoweredState() {
-        if (getWorld() != null) {
+        if (getWorld() != null && !world.isRemote) {
             setPoweredState(getWorld().getStrongPower(getPos()) > 0);
         }
     }
@@ -272,7 +272,7 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     public AxisAlignedBB getRenderBoundingBox() {
         AxisAlignedBB bb = new AxisAlignedBB(-2, -2, -2, 3, 3, 3);
         EnumFacing dir = EnumFacing.byIndex(getBlockMetadata());
-        bb.offset(getPos());
+        bb = bb.offset(getPos());
         
         float scale = 0.0625F;
         
@@ -310,6 +310,7 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         default:
             break;
         }
+        
         return bb;
     }
     

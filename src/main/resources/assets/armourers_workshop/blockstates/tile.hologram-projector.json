@@ -2,6 +2,11 @@
     "forge_marker": 1,
     "variants": {
         "normal": { "model": "armourers_workshop:hologram-projector" },
-		"inventory": { "model": "armourers_workshop:hologram-projector" }
+        "facing=north": {"model": "armourers_workshop:hologram-projector"},
+        "facing=east": {"model": "armourers_workshop:hologram-projector", "y": 90},
+        "facing=south": {"model": "armourers_workshop:hologram-projector", "y": 180},
+        "facing=west": {"model": "armourers_workshop:hologram-projector", "y": 270},
+        "facing=up": {"model": "armourers_workshop:hologram-projector"},
+        "facing=down": {"model": "armourers_workshop:hologram-projector", "x": 180}
     }
 }

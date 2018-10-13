@@ -20,6 +20,10 @@ public final class BlockUtils {
     
     private BlockUtils() {}
     
+    public static int determineOrientation(BlockPos pos, EntityLivingBase entity) {
+        return determineOrientation(pos.getX(), pos.getY(), pos.getZ(), entity);
+    }
+    
     public static int determineOrientation(int x, int y, int z, EntityLivingBase entity) {
         if (MathHelper.abs((float) entity.posX - (float) x) < 2.0F && MathHelper.abs((float) entity.posZ - (float) z) < 2.0F) {
             double d0 = entity.posY + entity.getEyeHeight() - (double) entity.getYOffset();

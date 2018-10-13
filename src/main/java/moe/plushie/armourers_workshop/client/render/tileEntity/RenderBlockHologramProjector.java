@@ -31,7 +31,6 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
             renderBox(aabb, 1.0F, 1.0F, 0.0F);
             */
         }
-        
         if (tileEntity.getPowerMode() != PowerMode.IGNORED) {
             if (tileEntity.getPowerMode() == PowerMode.HIGH) {
                 if (!tileEntity.isPowered()) {
@@ -45,6 +44,7 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         }
 
         ItemStack itemStack = tileEntity.getStackInSlot(0);
+        
         SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
         if (skinPointer == null) {
             return;
@@ -145,7 +145,7 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
                 zLight += offsetZ * scale;
                 break;
             }
-            //ModRenderHelper.setLightingForBlock(tileEntity.getWorld(), (int)(xLight + 0.5F), (int)(yLight + 0.5F), (int)(zLight + 0.5F));
+            ModRenderHelper.setLightingForBlock(tileEntity.getWorld(), tileEntity.getPos());
         }
 
         GL11.glPushMatrix();

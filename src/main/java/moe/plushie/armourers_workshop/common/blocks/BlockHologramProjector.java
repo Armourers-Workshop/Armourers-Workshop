@@ -1,78 +1,95 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
+import java.util.Random;
+
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
+import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
+import moe.plushie.armourers_workshop.utils.BlockUtils;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockHologramProjector extends AbstractModBlockContainer {
 
+    public static final PropertyDirection STATE_FACING = PropertyDirection.create("facing");
+    
     public BlockHologramProjector() {
         super(LibBlockNames.HOLOGRAM_PROJECTOR);
+        this.setDefaultState(this.blockState.getBaseState().withProperty(STATE_FACING, EnumFacing.NORTH));
         setSortPriority(150);
     }
-    /*
+    
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        BlockUtils.dropInventoryBlocks(world, x, y, z);
-        super.breakBlock(world, x, y, z, block, meta);
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[] { STATE_FACING });
+    }
+    
+    public IBlockState getStateFromMeta(int meta) {
+        EnumFacing facing = EnumFacing.byIndex(meta);
+        return this.getDefaultState().withProperty(STATE_FACING, facing);
+    }
+
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(STATE_FACING).ordinal();
     }
     
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLivingBase, ItemStack itemStack) {
-        int dir = BlockUtils.determineOrientation(x, y, z, entityLivingBase);
-        world.setBlockMetadataWithNotify(x, y, z, dir, 2);
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        BlockUtils.dropInventoryBlocks(worldIn, pos);
+        super.breakBlock(worldIn, pos, state);
     }
     
     @Override
-    public void onPostBlockPlaced(World world, int x, int y, int z, int p_149714_5_) {
-        updatePoweredState(world, x, y, z);
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+        int dir = BlockUtils.determineOrientation(pos, placer);
+        EnumFacing enumfacing = EnumFacing.byIndex(dir);
+        return getDefaultState().withProperty(STATE_FACING, enumfacing);
     }
     
     @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
-        return new TileEntityHologramProjector();
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        updatePoweredState(worldIn, pos);
     }
     
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
-            return false;
-        }
-        if (!world.isRemote) {
-            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.HOLOGRAM_PROJECTOR, world, x, y, z);
-        }
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        openGui(playerIn, LibGuiIds.HOLOGRAM_PROJECTOR, worldIn, pos);
         return true;
     }
     
     @Override
-    public boolean rotateBlock(World world, int x, int y, int z, EnumFacing axis) {
-        world.setBlockMetadataWithNotify(x, y, z, axis.ordinal(), 2);
-        return true;
+    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
+        super.onNeighborChange(world, pos, neighbor);
+        updatePoweredState(world, pos);
     }
     
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block neighborBlock) {
-        updatePoweredState(world, x, y, z);
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+        super.updateTick(worldIn, pos, state, rand);
+        updatePoweredState(worldIn, pos);
     }
     
-    @Override
-    public void updateTick(World world, int x, int y, int z, Random random) {
-        updatePoweredState(world, x, y, z);
-    }
-    */
-    private void updatePoweredState(World world, BlockPos pos) {
-        if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity != null && tileEntity instanceof TileEntityHologramProjector) {
-                ((TileEntityHologramProjector)tileEntity).updatePoweredState();
-            }
+    private void updatePoweredState(IBlockAccess world, BlockPos pos) {
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if (tileEntity != null && tileEntity instanceof TileEntityHologramProjector) {
+            ((TileEntityHologramProjector)tileEntity).updatePoweredState();
         }
     }
+    
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        // TODO Auto-generated method stub
         return new TileEntityHologramProjector();
     }
 }
