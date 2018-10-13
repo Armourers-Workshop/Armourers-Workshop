@@ -41,8 +41,8 @@ import moe.plushie.armourers_workshop.common.network.messages.server.MessageServ
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -118,7 +118,7 @@ public final class PacketHandler {
     }
     
     @SubscribeEvent
-    public static void onClientTick(ClientTickEvent event) {
+    public static void onClientTick(ServerTickEvent event) {
         if (event.phase == Phase.END) {
             synchronized (delayedPackets) {
                 for (int i = 0; i < delayedPackets.size(); i++) {
