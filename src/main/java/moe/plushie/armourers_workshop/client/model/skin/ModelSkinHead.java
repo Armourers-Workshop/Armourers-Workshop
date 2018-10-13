@@ -65,15 +65,12 @@ public class ModelSkinHead extends AbstractModelSkin {
             if (isSneak) {
                 GlStateManager.translate(0.0F, 0.2F, 0.0F);
                 GlStateManager.translate(0.0F, 1 * SCALE, 0.0F);
-                //GL11.glTranslated(0, 1 * SCALE, 0);
             }
             
             GL11.glColor3f(1F, 1F, 1F);
             GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleZ), 0, 0, 1);
             GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleY), 0, 1, 0);
             GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleX), 1, 0, 0);
-            
-
 
             renderHead(skin.getParts().get(0), SCALE, skinDye, extraColours, distance, doLodLoading);
             

@@ -8,7 +8,9 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
@@ -156,9 +158,9 @@ public final class GameProfileCache {
         }
         
         private GameProfile fillProfileProperties(GameProfile gameProfile) {
-            /*
+            
             if (!gameProfile.isComplete()) {
-                //gameProfile = ArmourersWorkshop.getProxy().getServer().getPlayerProfileCache().getGameProfileForUsername(gameProfile.getName());
+                gameProfile = ArmourersWorkshop.getProxy().getServer().getPlayerProfileCache().getGameProfileForUsername(gameProfile.getName());
             }
             if (gameProfile == null) {
                 return null;
@@ -168,11 +170,11 @@ public final class GameProfileCache {
                 if (!gameProfile.getProperties().containsKey("textures")) {
                     Property property = (Property)Iterables.getFirst(gameProfile.getProperties().get("textures"), (Object)null);
                     if (property == null) {
-                        //gameProfile = ArmourersWorkshop.getProxy().getServer().getMinecraftSessionService().fillProfileProperties(gameProfile, false);
+                        gameProfile = ArmourersWorkshop.getProxy().getServer().getMinecraftSessionService().fillProfileProperties(gameProfile, false);
                         return gameProfile;
                     }
                 }
-            }*/
+            }
             return gameProfile;
         }
     }

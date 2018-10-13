@@ -47,16 +47,20 @@ import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 @Mod.EventBusSubscriber(modid = LibModInfo.ID)
 public class CommonProxy implements ILibraryCallback {
     
+    private static MinecraftServer server;
     private static ModItems modItems;
     private static ModBlocks modBlocks;
     public ILibraryManager libraryManager;
@@ -236,5 +240,15 @@ public class CommonProxy implements ILibraryCallback {
     
     public GameProfile getLocalGameProfile() {
         return null;
+    }
+    
+    @SubscribeEvent
+    public void serverStart(FMLServerStartingEvent event) {
+        server = event.getServer();
+    }
+    
+    @SubscribeEvent
+    public MinecraftServer getServer() {
+        return server;
     }
 }
