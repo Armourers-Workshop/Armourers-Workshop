@@ -45,10 +45,10 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
         armourOverrideCheck = new GuiCheckBox[4];
-        armourOverrideCheck[0] = new GuiCheckBox(2, 68, 17, GuiHelper.getLocalizedControlName(guiName, "renderHeadArmour"), !armourOverride.get(0));
-        armourOverrideCheck[1] = new GuiCheckBox(3, 68, 37, GuiHelper.getLocalizedControlName(guiName, "renderChestArmour"), !armourOverride.get(1));
-        armourOverrideCheck[2] = new GuiCheckBox(4, 68, 75, GuiHelper.getLocalizedControlName(guiName, "renderLegArmour"), !armourOverride.get(2));
-        armourOverrideCheck[3] = new GuiCheckBox(5, 68, 94, GuiHelper.getLocalizedControlName(guiName, "renderFootArmour"), !armourOverride.get(3));
+        armourOverrideCheck[0] = new GuiCheckBox(2, 70, 26, GuiHelper.getLocalizedControlName(guiName, "renderHeadArmour"), !armourOverride.get(0));
+        armourOverrideCheck[1] = new GuiCheckBox(3, 70, 46, GuiHelper.getLocalizedControlName(guiName, "renderChestArmour"), !armourOverride.get(1));
+        armourOverrideCheck[2] = new GuiCheckBox(4, 70, 66, GuiHelper.getLocalizedControlName(guiName, "renderLegArmour"), !armourOverride.get(2));
+        armourOverrideCheck[3] = new GuiCheckBox(5, 70, 86, GuiHelper.getLocalizedControlName(guiName, "renderFootArmour"), !armourOverride.get(3));
         
         buttonList.add(armourOverrideCheck[0]);
         buttonList.add(armourOverrideCheck[1]);

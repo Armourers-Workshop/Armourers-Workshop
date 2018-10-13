@@ -31,7 +31,7 @@ public class ExtraColours {
         setColour(ExtraColourType.SKIN, COLOUR_SKIN_DEFAULT.getRGB());
         setColour(ExtraColourType.HAIR, COLOUR_HAIR_DEFAULT.getRGB());
         setColour(ExtraColourType.EYE, 0xFFFFFFFF);
-        setColour(ExtraColourType.ACC, 0xFFFFFFFF);
+        setColour(ExtraColourType.MISC, 0xFFFFFFFF);
     }
 
     public int getColour(ExtraColourType type) {
@@ -74,6 +74,6 @@ public class ExtraColours {
         SKIN,
         HAIR,
         EYE,
-        ACC
+        MISC;
     }
 }

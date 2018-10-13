@@ -33,7 +33,6 @@ public class WardrobeStorage implements IStorage<IWardrobeCapability> {
         NBTTagCompound dyeCompund = new NBTTagCompound();
         ((SkinDye)instance.getDye()).writeToCompound(dyeCompund);
         compound.setTag(TAG_DYE, dyeCompund);
-        //ModLogger.log("----------------------------saving wardrobe----------------------------");
         return compound;
     }
 
@@ -50,7 +49,6 @@ public class WardrobeStorage implements IStorage<IWardrobeCapability> {
             instance.getArmourOverride().set(i, compound.getBoolean(TAG_ARMOUR_OVERRIDE + i));
         }
         if (compound.hasKey(TAG_DYE, NBT.TAG_COMPOUND)) {
-            //ModLogger.log("----------------------------loading wardrobe----------------------------");
             NBTTagCompound dyeCompund = compound.getCompoundTag(TAG_DYE);
             ((SkinDye)instance.getDye()).readFromCompound(dyeCompund);
         }

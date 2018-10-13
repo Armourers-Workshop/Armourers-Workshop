@@ -203,7 +203,7 @@ public class GuiWardrobe extends GuiTabbed {
         }
         
         
-        RenderHelper.enableStandardItemLighting();
+        //RenderHelper.enableStandardItemLighting();
         
         
         GlStateManager.pushMatrix();

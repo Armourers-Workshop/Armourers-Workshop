@@ -9,26 +9,6 @@ import net.minecraft.item.ItemStack;
 public interface IEntitySkinCapability {
     
     /**
-     * Syncs capability data to a player with a delay.
-     * 
-     * @param entityPlayer Player to sync to.
-     * @param delay Delay time in ticks.
-     */
-    public void syncToPlayerDelayed(EntityPlayerMP entityPlayer, int delay);
-    
-    /**
-     * Syncs capability data to a player.
-     * 
-     * @param entityPlayer Player to sync to.
-     */
-    public void syncToPlayer(EntityPlayerMP entityPlayer);
-    
-    /**
-     * Syncs capability data to all players tracking the entity.
-     */
-    public void syncToAllAround();
-    
-    /**
      * 
      * @return
      */
@@ -86,4 +66,26 @@ public interface IEntitySkinCapability {
     
     //TODO Change this to use CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
     public SkinInventoryContainer getSkinInventoryContainer();
+    
+    /**
+     * Syncs capability data to a player with a delay.
+     * 
+     * @param entityPlayer Player to sync to.
+     * @param delay Delay time in ticks.
+     */
+    public void syncToPlayerDelayed(EntityPlayerMP entityPlayer, int delay);
+    
+    /**
+     * Syncs capability data to a player.
+     * 
+     * @param entityPlayer Player to sync to.
+     */
+    public void syncToPlayer(EntityPlayerMP entityPlayer);
+    
+    /**
+     * Syncs capability data to all players tracking the entity.
+     */
+    public void syncToAllAround();
+    
+    public void sendUpdateToServer();
 }

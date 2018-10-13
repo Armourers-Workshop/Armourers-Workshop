@@ -6,9 +6,9 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog;
-import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.DialogResult;
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.IDialogCallback;
+import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.armourer.tab.GuiTabArmourerBlockUtils;
 import moe.plushie.armourers_workshop.client.gui.armourer.tab.GuiTabArmourerDisplaySettings;
 import moe.plushie.armourers_workshop.client.gui.armourer.tab.GuiTabArmourerMain;

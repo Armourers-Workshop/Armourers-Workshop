@@ -246,7 +246,7 @@ public final class SkinBaker {
                                 dyeColour[1][10] += g[j]  & 0xFF;
                                 dyeColour[2][10] += b[j]  & 0xFF;
                             }
-                            if (paint == PaintType.ACC.getKey()) {
+                            if (paint == PaintType.MISC.getKey()) {
                                 dyeUseCount[11]++;
                                 dyeColour[0][11] += r[j]  & 0xFF;
                                 dyeColour[1][11] += g[j]  & 0xFF;

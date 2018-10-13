@@ -193,7 +193,7 @@ paintType.armourers_workshop:none.name=None
 paintType.armourers_workshop:skin.name=Skin
 paintType.armourers_workshop:hair.name=Hair
 paintType.armourers_workshop:eye.name=Eye
-paintType.armourers_workshop:acc.name=Accessory
+paintType.armourers_workshop:misc.name=Miscellaneous
 
 # Colour Families
 colourFamily.armourers_workshop:wool.name=Wool
@@ -361,7 +361,7 @@ inventory.armourers_workshop:equipment-wardrobe.tab.dyes=Dyes
 inventory.armourers_workshop:equipment-wardrobe.label.skinColour=Skin Colour
 inventory.armourers_workshop:equipment-wardrobe.label.hairColour=Hair Colour
 inventory.armourers_workshop:equipment-wardrobe.label.eyeColour=Eye Colour
-inventory.armourers_workshop:equipment-wardrobe.label.accColour=Acc Colour
+inventory.armourers_workshop:equipment-wardrobe.label.miscColour=Misc. Colour
 
 inventory.armourers_workshop:equipment-wardrobe.selectSkin=Pick Skin Colour
 inventory.armourers_workshop:equipment-wardrobe.autoSkin=Auto Skin Colour

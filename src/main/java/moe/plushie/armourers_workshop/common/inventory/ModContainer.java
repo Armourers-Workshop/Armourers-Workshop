@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.inventory;
 
 import javax.annotation.Nonnull;
 
+import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -24,11 +25,11 @@ public abstract class ModContainer extends Container {
         int playerInvY = posY;
         int hotBarY = playerInvY + 58;
         for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new Slot(invPlayer, x, posX + 18 * x, hotBarY));
+            addSlotToContainer(new SlotHidable(invPlayer, x, posX + 18 * x, hotBarY));
         }
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, posX + 18 * x, playerInvY + y * 18));
+                addSlotToContainer(new SlotHidable(invPlayer, x + y * 9 + 9, posX + 18 * x, playerInvY + y * 18));
             }
         }
         playerInvEndIndex  = inventorySlots.size();

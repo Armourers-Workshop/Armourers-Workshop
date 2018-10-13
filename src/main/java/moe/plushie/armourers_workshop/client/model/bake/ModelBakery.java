@@ -166,7 +166,7 @@ public final class ModelBakery {
                             dyeColour[1][10] += g  & 0xFF;
                             dyeColour[2][10] += b  & 0xFF;
                         }
-                        if (paintType == PaintType.ACC.getKey()) {
+                        if (paintType == PaintType.MISC.getKey()) {
                             dyeUseCount[11]++;
                             dyeColour[0][11] += r  & 0xFF;
                             dyeColour[1][11] += g  & 0xFF;

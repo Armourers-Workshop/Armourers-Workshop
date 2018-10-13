@@ -22,7 +22,7 @@ public enum PaintType {
     SKIN(253, 10),
     HAIR(254, 11),
     EYE(251, 12),
-    ACC(252, 13),
+    MISC(252, 13),
     NONE(0, 9);
     
     

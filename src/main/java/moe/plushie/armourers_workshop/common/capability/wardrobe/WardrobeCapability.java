@@ -9,15 +9,13 @@ import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdateWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
 public class WardrobeCapability implements IWardrobeCapability {
@@ -25,7 +23,7 @@ public class WardrobeCapability implements IWardrobeCapability {
     @CapabilityInject(IWardrobeCapability.class)
     public static final Capability<IWardrobeCapability> WARDROBE_CAP = null;
 
-    private final EntityPlayer entityPlayer;
+    private final Entity entity;
 
     private final ISkinnableEntity skinnableEntity;
 
@@ -39,8 +37,8 @@ public class WardrobeCapability implements IWardrobeCapability {
     /** Number of slots the player has unlocked in the wardrobe */
     public HashMap<String, Integer> slotsUnlocked;
 
-    public WardrobeCapability(EntityPlayer entityPlayer, ISkinnableEntity skinnableEntity) {
-        this.entityPlayer = entityPlayer;
+    public WardrobeCapability(Entity entity, ISkinnableEntity skinnableEntity) {
+        this.entity = entity;
         this.skinnableEntity = skinnableEntity;
         extraColours = new ExtraColours();
         dye = new SkinDye();
@@ -100,13 +98,15 @@ public class WardrobeCapability implements IWardrobeCapability {
     public void setUnlockedSlotsForSkinType(ISkinType skinType, int value) {
         slotsUnlocked.put(skinType.getRegistryName(), value);
     }
+    
+    private MessageServerSyncWardrobeCap getUpdateMessage() {
+        NBTTagCompound compound = (NBTTagCompound)WARDROBE_CAP.getStorage().writeNBT(WARDROBE_CAP, this, null);
+        return new MessageServerSyncWardrobeCap(entity.getEntityId(), compound);
+    }
 
     @Override
     public void syncToPlayerDelayed(EntityPlayerMP entityPlayer, int delay) {
-        IStorage<IWardrobeCapability> storage = WARDROBE_CAP.getStorage();
-        NBTTagCompound compound = (NBTTagCompound) storage.writeNBT(WARDROBE_CAP, this, null);
-        MessageServerSyncWardrobeCap message = new MessageServerSyncWardrobeCap(entityPlayer.getEntityId(), compound);
-        PacketHandler.sendToDelayed(message, entityPlayer, delay);
+        PacketHandler.sendToDelayed(getUpdateMessage(), entityPlayer, delay);
     }
 
     @Override
@@ -116,19 +116,15 @@ public class WardrobeCapability implements IWardrobeCapability {
 
     @Override
     public void syncToAllAround() {
-        NBTTagCompound compound = (NBTTagCompound) WARDROBE_CAP.getStorage().writeNBT(WARDROBE_CAP, this, null);
-        MessageServerSyncWardrobeCap message = new MessageServerSyncWardrobeCap(entityPlayer.getEntityId(), compound);
-        PacketHandler.networkWrapper.sendToAllTracking(message, entityPlayer);
+        PacketHandler.networkWrapper.sendToAllTracking(getUpdateMessage(), entity);
     }
 
     @Override
     public void sendUpdateToServer() {
-        NBTTagCompound compound = (NBTTagCompound) WARDROBE_CAP.getStorage().writeNBT(WARDROBE_CAP, this, null);
-        MessageClientUpdateWardrobeCap message = new MessageClientUpdateWardrobeCap(compound);
-        PacketHandler.networkWrapper.sendToServer(message);
+        PacketHandler.networkWrapper.sendToServer(getUpdateMessage());
     }
 
-    public static IWardrobeCapability get(EntityPlayer entity) {
+    public static IWardrobeCapability get(Entity entity) {
         return entity.getCapability(WARDROBE_CAP, null);
     }
 }

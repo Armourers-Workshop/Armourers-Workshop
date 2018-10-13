@@ -43,7 +43,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     private Color colourSkin;
     private Color colourHair;
     private Color colourEye;
-    private Color colourAcc;
+    private Color colourMisc;
     
     private GuiIconButton buttonSkinSelect;
     private GuiIconButton buttonSkinAuto;
@@ -54,7 +54,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     private GuiIconButton buttonEyeSelect;
     private GuiIconButton buttonEyeAuto;
     
-    private GuiIconButton buttonAccSelect;
+    private GuiIconButton buttonMiscSelect;
 
     
     String guiName = "equipment-wardrobe";
@@ -78,10 +78,10 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         buttonHairAuto = new GuiIconButton(parent, 0, 146 + 40, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoHair"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
         
         
-        buttonEyeSelect = new GuiIconButton(parent, 0, 70 + 18, 72 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectEye"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
-        buttonEyeAuto = new GuiIconButton(parent, 0, 70 + 40, 72 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoEye"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
+        buttonEyeSelect = new GuiIconButton(parent, 0, 70 + 18, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectEye"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
+        buttonEyeAuto = new GuiIconButton(parent, 0, 70 + 40, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoEye"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
         
-        buttonAccSelect = new GuiIconButton(parent, 0, 146 + 18, 72 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectAcc"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
+        buttonMiscSelect = new GuiIconButton(parent, 0, 146 + 18, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectAcc"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
         
         buttonList.add(buttonSkinSelect);
         buttonList.add(buttonSkinAuto);
@@ -92,7 +92,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         buttonList.add(buttonEyeSelect);
         buttonList.add(buttonEyeAuto);
         
-        buttonList.add(buttonAccSelect);
+        buttonList.add(buttonMiscSelect);
     }
     
     private void getColours() {
@@ -100,7 +100,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         this.colourSkin = new Color(extraColours.getColour(ExtraColourType.SKIN));
         this.colourHair = new Color(extraColours.getColour(ExtraColourType.HAIR));
         this.colourEye = new Color(extraColours.getColour(ExtraColourType.EYE));
-        this.colourAcc = new Color(extraColours.getColour(ExtraColourType.ACC));
+        this.colourMisc = new Color(extraColours.getColour(ExtraColourType.MISC));
     }
     
     @Override
@@ -114,7 +114,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
             buttonSkinSelect.setPressed(false);
             buttonHairSelect.setPressed(false);
             buttonEyeSelect.setPressed(false);
-            buttonAccSelect.setPressed(false);
+            buttonMiscSelect.setPressed(false);
         }
         super.mouseClicked(mouseX, mouseY, button);
     }
@@ -133,9 +133,9 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
             selectingColourType = ExtraColourType.EYE;
             buttonEyeSelect.setPressed(true);
         }
-        if (button == buttonAccSelect) {
-            selectingColourType = ExtraColourType.ACC;
-            buttonAccSelect.setPressed(true);
+        if (button == buttonMiscSelect) {
+            selectingColourType = ExtraColourType.MISC;
+            buttonMiscSelect.setPressed(true);
         }
         
         if (button == buttonSkinAuto) {
@@ -174,14 +174,14 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         drawColourDisplay(146, 38, colourHair);
         
         // Eye colour display
-        drawColourDisplay(70, 72, colourEye);
+        drawColourDisplay(70, 70, colourEye);
         
         // Acc colour display
-        drawColourDisplay(146, 72, colourAcc);
+        drawColourDisplay(146, 70, colourMisc);
         
         // Palette
         mc.renderEngine.bindTexture(TEXTURE_PALETTE);
-        this.drawTexturedModalRect(this.x + 72, this.y + 90, 0, 0, 126, 54);
+        this.drawTexturedModalRect(this.x + 70, this.y + 89, 0, 0, 128, 54);
     }
     
     private void drawColourDisplay(int x, int y, Color colour) {
@@ -208,8 +208,8 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.skinColour") + ":", 70, 26, 4210752); 
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.hairColour") + ":", 146, 26, 4210752); 
         
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 70, 60, 4210752); 
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.accColour") + ":", 146, 60, 4210752); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 70, 58, 4210752); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.miscColour") + ":", 146, 58, 4210752); 
         
         getColours();
         
@@ -222,8 +222,8 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         if (selectingColourType == ExtraColourType.EYE & selectingColour != null) {
             colourEye = selectingColour;
         }
-        if (selectingColourType == ExtraColourType.ACC & selectingColour != null) {
-            colourAcc = selectingColour;
+        if (selectingColourType == ExtraColourType.MISC & selectingColour != null) {
+            colourMisc = selectingColour;
         }
         
         GL11.glPushMatrix();
