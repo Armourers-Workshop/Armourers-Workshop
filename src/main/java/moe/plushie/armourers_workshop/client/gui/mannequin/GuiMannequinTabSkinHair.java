@@ -102,7 +102,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
     }
     
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (selectingSkinColour) {
             selectingSkinColour = false;
             if (hoverColour != null) {
@@ -117,7 +117,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
             }
             ((GuiMannequin)parent).tabOffset.sendData();
         }
-        super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
     
     @Override

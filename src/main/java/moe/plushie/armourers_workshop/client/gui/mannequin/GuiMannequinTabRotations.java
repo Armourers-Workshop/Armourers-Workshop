@@ -8,8 +8,8 @@ import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.data.BipedRotations;
-import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.data.BipedRotations.BipedPart;
+import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiBipedRotations;
 import net.minecraft.client.gui.GuiButton;
@@ -120,14 +120,14 @@ public class GuiMannequinTabRotations extends GuiTabPanel implements ISlider {
     }
     
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         for (int i = 0; i < bipedParts.length; i++) {
             if (bipedParts[i].isInside(mouseX, mouseY)) {
                 bipedPartChange(i);
                 break;
             }
         }
-        super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
     
     @Override

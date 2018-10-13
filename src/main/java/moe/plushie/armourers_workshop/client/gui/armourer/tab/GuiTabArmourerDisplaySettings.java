@@ -4,8 +4,8 @@ import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.armourer.GuiArmourer;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.data.TextureType;
@@ -68,9 +68,10 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
     }
     
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        boolean clicked = super.mouseClicked(mouseX, mouseY, button);
         textUserSkin.mouseClicked(mouseX, mouseY, button);
+        return clicked;
     }
     
     @Override

@@ -58,23 +58,33 @@ public abstract class GuiTabbed extends GuiContainer {
     
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
-        super.mouseClicked(mouseX, mouseY, button);
+        boolean clicked = false;
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {
-                tab.mouseClicked(mouseX, mouseY, button);
+                if (tab.mouseClicked(mouseX, mouseY, button)) {
+                    clicked = true;
+                }
             }
+        }
+        if (!clicked) {
+            super.mouseClicked(mouseX, mouseY, button);
         }
     }
     
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
-        super.mouseReleased(mouseX, mouseY, state);
+        boolean clicked = false;
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {
-                tab.mouseMovedOrUp(mouseX, mouseY, state);
+                if (tab.mouseMovedOrUp(mouseX, mouseY, state)) {
+                    clicked = true;
+                }
             }
+        }
+        if (!clicked) {
+            super.mouseReleased(mouseX, mouseY, state);
         }
     }
 

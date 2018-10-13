@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.client.gui.mannequin;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.data.TextureType;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
@@ -66,13 +66,14 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
     }
     
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        boolean clicked = super.mouseClicked(mouseX, mouseY, button);
         if (button == 1) {
             nameTextbox.setText("");
         } else {
             nameTextbox.mouseClicked(mouseX, mouseY, button);
         }
+        return clicked;
     }
     
     @Override

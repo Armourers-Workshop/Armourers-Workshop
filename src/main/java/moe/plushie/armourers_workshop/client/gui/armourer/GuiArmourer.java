@@ -22,6 +22,7 @@ import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -143,6 +144,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        GlStateManager.disableDepth();
         GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, tileEntity.getName());
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
@@ -159,6 +161,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
         GL11.glTranslatef(-guiLeft, -guiTop, 0F);
         tabController.drawHoverText(mc, mouseX, mouseY);
         GL11.glPopMatrix();
+        GlStateManager.enableDepth();
     }
     
     @Override

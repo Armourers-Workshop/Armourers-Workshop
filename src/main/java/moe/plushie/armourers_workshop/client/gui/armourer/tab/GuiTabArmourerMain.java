@@ -121,14 +121,15 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     }
     
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        boolean clicked = super.mouseClicked(mouseX, mouseY, button);
         textItemName.mouseClicked(mouseX, mouseY, button);
         if (button == 1) {
             if (textItemName.isFocused()) {
                 textItemName.setText("");
             }
         }
+        return clicked;
     }
     
     int fidgCount = 0;

@@ -104,7 +104,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     }
     
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (button == 0 & selectingColourType != null) {
             byte[] newColour = PaintingHelper.intToBytes(selectingColour.getRGB());
             newColour[3] = (byte) PaintType.NORMAL.getKey();
@@ -116,7 +116,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
             buttonEyeSelect.setPressed(false);
             buttonMiscSelect.setPressed(false);
         }
-        super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
     
     @Override
