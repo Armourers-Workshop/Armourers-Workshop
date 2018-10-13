@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.skin;
+package moe.plushie.armourers_workshop.common.world;
 
 import java.util.ArrayList;
 
@@ -27,6 +27,7 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -255,39 +256,40 @@ public final class ArmourerWorldHelper {
         BlockPos target = pos.add(shiftX + origin.getX(), origin.getY() - shiftY, shiftZ + origin.getZ());
         
         if (world.getBlockState(target).getBlock() == ModBlocks.boundingBox) {
-            world.setBlockToAir(target);
-            world.removeTileEntity(target);
+            SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdate(Blocks.AIR.getDefaultState(), target, world));
+            //world.setBlockToAir(target);
+            //world.removeTileEntity(target);
         }
         
         if (world.isAirBlock(target)) {
             Block targetBlock = blockData.getMinecraftBlock();
             IBlockState targetState = targetBlock.getStateFromMeta(meta);
             
-            world.setBlockState(target, targetState, 2);
-            TileEntity te = world.getTileEntity(target);
-            if (te != null && te instanceof TileEntityColourable) {
-                CubeColour cc = new CubeColour();
-                for (int i = 0; i < 6; i++) {
-                    byte[] c = cubeData.getCubeColour(index, i);
-                    byte paintType = cubeData.getCubePaintType(index, i);
-                    if (mirror) {
-                        if (i == 4) {
-                            c = cubeData.getCubeColour(index, 5);
-                            paintType = cubeData.getCubePaintType(index, 5);
-                        }
-                        if (i == 5) {
-                            c = cubeData.getCubeColour(index, 4);
-                            paintType = cubeData.getCubePaintType(index, 4);
-                        }
+            
+            CubeColour cc = new CubeColour();
+            for (int i = 0; i < 6; i++) {
+                byte[] c = cubeData.getCubeColour(index, i);
+                byte paintType = cubeData.getCubePaintType(index, i);
+                if (mirror) {
+                    if (i == 4) {
+                        c = cubeData.getCubeColour(index, 5);
+                        paintType = cubeData.getCubePaintType(index, 5);
                     }
-                    cc.setRed(c[0], i);
-                    cc.setGreen(c[1], i);
-                    cc.setBlue(c[2], i);
-                    cc.setPaintType(paintType, i);
+                    if (i == 5) {
+                        c = cubeData.getCubeColour(index, 4);
+                        paintType = cubeData.getCubePaintType(index, 4);
+                    }
                 }
-
-                ((TileEntityColourable)te).setColour(cc);
+                cc.setRed(c[0], i);
+                cc.setGreen(c[1], i);
+                cc.setBlue(c[2], i);
+                cc.setPaintType(paintType, i);
             }
+            TileEntityColourable colourable = new TileEntityColourable();
+            colourable.setColour(cc);
+            
+            SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdate(targetState, target, world).setTileEntity(colourable).setDelay(index / 5));
+            //world.setBlockState(target, targetState, 2);
         }
     }
     
@@ -322,15 +324,21 @@ public final class ArmourerWorldHelper {
                     byte guideZ = (byte) iz;
                     
                     if (world.isAirBlock(target)) {
-                        world.setBlockState(target, ModBlocks.boundingBox.getDefaultState());
-                        TileEntity te = null;
+                        TileEntity te = new TileEntityBoundingBox(parentPos, guideX, guideY, guideZ, guidePart);
+                        SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdate(ModBlocks.boundingBox.getDefaultState(), target, world).setTileEntity(te));
+                        
+                        //world.setBlockState(target, ModBlocks.boundingBox.getDefaultState());
+                        
+                        
+                        /*TileEntity te = null;
                         te = world.getTileEntity(target);
                         if (te != null && te instanceof TileEntityBoundingBox) {
                             ((TileEntityBoundingBox)te).setParent(parentPos, guideX, guideY, guideZ, guidePart);
                         } else {
                             te = new TileEntityBoundingBox(parentPos, guideX, guideY, guideZ, guidePart);
                             world.setTileEntity(target, te);
-                        }
+                        }*/
+                        
                     }
                     
                 }
@@ -364,7 +372,8 @@ public final class ArmourerWorldHelper {
                     
                     if (world.isValid(pos)) {
                         if (world.getBlockState(target).getBlock() == ModBlocks.boundingBox) {
-                            world.setBlockToAir(target);
+                            SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdate(Blocks.AIR.getDefaultState(), target, world));
+                            //world.setBlockToAir(target);
                         }
                     }
                     
@@ -484,8 +493,9 @@ public final class ArmourerWorldHelper {
                         IBlockState state = world.getBlockState(target);
                         Block block = state.getBlock();
                         if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
-                            world.setBlockToAir(target);
-                            world.removeTileEntity(target);
+                            SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdate(Blocks.AIR.getDefaultState(), target, world).setDelay(blockCount / 5));
+                            //world.setBlockToAir(target);
+                            //world.removeTileEntity(target);
                             blockCount++;
                         }
                     }
