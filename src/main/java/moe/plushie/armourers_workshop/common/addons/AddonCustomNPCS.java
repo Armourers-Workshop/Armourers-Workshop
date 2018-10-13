@@ -11,7 +11,10 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntity;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -204,6 +207,10 @@ public class AddonCustomNPCS extends ModAddon {
             ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
             SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
             ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
+            IWardrobeCap wardrobe = WardrobeCap.get(entitylivingbaseIn);
+            if (wardrobe != null) {
+                extraColours = wardrobe.getExtraColours();
+            }
             for (int i = 0; i < skinTypes.length; i++) {
                 ISkinType skinType = skinTypes[i];
                 if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {
@@ -214,7 +221,13 @@ public class AddonCustomNPCS extends ModAddon {
                             if (skin == null) {
                                 continue;
                             }
-                            modelRenderer.renderEquipmentPart(entitylivingbaseIn, (ModelBiped) renderLivingBase.getMainModel(), skin, skinDescriptor.getSkinDye(), extraColours, 0, true);
+                            SkinDye dye = new SkinDye(wardrobe.getDye());
+                            for (int dyeIndex = 0; dyeIndex < 8; dyeIndex++) {
+                                if (skinDescriptor.getSkinDye().haveDyeInSlot(dyeIndex)) {
+                                    dye.addDye(dyeIndex, skinDescriptor.getSkinDye().getDyeColour(dyeIndex));
+                                }
+                            }
+                            modelRenderer.renderEquipmentPart(entitylivingbaseIn, (ModelBiped) renderLivingBase.getMainModel(), skin, dye, extraColours, 0, true);
                         }
                     }
                 }

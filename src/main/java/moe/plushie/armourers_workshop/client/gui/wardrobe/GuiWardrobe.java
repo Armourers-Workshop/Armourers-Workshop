@@ -198,13 +198,13 @@ public class GuiWardrobe extends GuiTabbed {
         */
         boolean overPlayerBox = false;
         if (mouseX >= x + 8 & mouseX < x + 8 + 57) {
-            if (mouseY >= y + 18 & mouseY < y + 18 + 92) {
+            if (mouseY >= y + 27 & mouseY < y + 27 + 92) {
                 overPlayerBox = true;
             }
         }
         
         if (!overPlayerBox) {
-            ModRenderHelper.enableScissorScaled(x + 8, y + 18, 57, 92);
+            ModRenderHelper.enableScissorScaled(x + 8, y + 27, 57, 92);
         }
         
         
