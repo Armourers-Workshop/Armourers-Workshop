@@ -16,7 +16,7 @@ public class ModInventory implements IInventory {
     private static final String TAG_ITEMS = "items";
     
     private final String name;
-    private final NonNullList<ItemStack> slots;
+    protected final NonNullList<ItemStack> slots;
     private final IInventorySlotUpdate callback;
     private final TileEntity parent;
     

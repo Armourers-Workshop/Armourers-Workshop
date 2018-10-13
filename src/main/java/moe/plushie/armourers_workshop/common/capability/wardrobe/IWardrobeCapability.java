@@ -2,11 +2,14 @@ package moe.plushie.armourers_workshop.common.capability.wardrobe;
 
 import java.util.BitSet;
 
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public interface IWardrobeCapability {
     
     public ExtraColours getExtraColours();
+    
+    public ISkinDye getDye();
     
     public BitSet getArmourOverride();
     

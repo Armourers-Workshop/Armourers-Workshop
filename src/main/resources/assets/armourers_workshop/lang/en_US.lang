@@ -356,6 +356,7 @@ inventory.armourers_workshop:colour-mixer.label.paintType=Paint Type
 inventory.armourers_workshop:equipment-wardrobe.tab.skins=Skins
 inventory.armourers_workshop:equipment-wardrobe.tab.displaySettings=Display Settings
 inventory.armourers_workshop:equipment-wardrobe.tab.colourSettings=Colour Settings
+inventory.armourers_workshop:equipment-wardrobe.tab.dyes=Dyes
 
 inventory.armourers_workshop:equipment-wardrobe.label.skinColour=Skin Colour
 inventory.armourers_workshop:equipment-wardrobe.label.hairColour=Hair Colour

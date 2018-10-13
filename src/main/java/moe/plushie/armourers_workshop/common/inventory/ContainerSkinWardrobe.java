@@ -1,48 +1,55 @@
 
 package moe.plushie.armourers_workshop.common.inventory;
 
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCapability;
+import moe.plushie.armourers_workshop.common.inventory.slot.SlotDyeBottle;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
+import moe.plushie.armourers_workshop.common.items.ItemDyeBottle;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
+import moe.plushie.armourers_workshop.common.items.ModItems;
+import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerSkinWardrobe extends Container {
-    
-    private EntitySkinCapability skinCapability;
+public class ContainerSkinWardrobe extends ModContainer {
+
+    private final EntitySkinCapability skinCapability;
+    private final IWardrobeCapability wardrobeCapability;
+    private final DyeInventory dyeInventory;
     private int slotsUnlocked;
     private int skinSlots = 0;
-    
-    public ContainerSkinWardrobe(InventoryPlayer invPlayer, EntitySkinCapability skinCapability) {
+
+    public ContainerSkinWardrobe(InventoryPlayer invPlayer, EntitySkinCapability skinCapability, IWardrobeCapability wardrobeCapability) {
+        super(invPlayer);
         this.skinCapability = skinCapability;
-        
-        //EquipmentWardrobeData ewd = customEquipmentData.getEquipmentWardrobeData();
-        
-        SkinInventoryContainer skinInvContainer = skinCapability.getSkinInventoryContainer();
-        
-        WardrobeInventory headInv = skinInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinHead);
-        WardrobeInventory chestInv = skinInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinChest);
-        WardrobeInventory legsInv = skinInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinLegs);
-        WardrobeInventory feetInv = skinInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinFeet);
-        WardrobeInventory wingInv = skinInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinWings);
-        
-        WardrobeInventory swordInv = skinInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinSword);
-        WardrobeInventory shieldInv = skinInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinShield);
-        WardrobeInventory bowInv = skinInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinBow);
-        
-        WardrobeInventory pickaxeInv = skinInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinPickaxe);
-        WardrobeInventory axeInv = skinInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinAxe);
-        WardrobeInventory shovelInv = skinInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinShovel);
-        WardrobeInventory hoeInv = skinInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinHoe);
-        
-        
+        this.wardrobeCapability = wardrobeCapability;
+        this.dyeInventory = new DyeInventory(wardrobeCapability);
+
+        SkinInventoryContainer skinInv = skinCapability.getSkinInventoryContainer();
+
+        WardrobeInventory headInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinHead);
+        WardrobeInventory chestInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinChest);
+        WardrobeInventory legsInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinLegs);
+        WardrobeInventory feetInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinFeet);
+        WardrobeInventory wingInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinWings);
+
+        WardrobeInventory swordInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinSword);
+        WardrobeInventory shieldInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinShield);
+        WardrobeInventory bowInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinBow);
+
+        WardrobeInventory pickaxeInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinPickaxe);
+        WardrobeInventory axeInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinAxe);
+        WardrobeInventory shovelInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinShovel);
+        WardrobeInventory hoeInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinHoe);
+
         for (int i = 0; i < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; i++) {
             if (i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinHead)) {
                 addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHead, headInv, i, 68 + i * 20, 18));
@@ -65,31 +72,24 @@ public class ContainerSkinWardrobe extends Container {
                 skinSlots += 1;
             }
         }
-        
+
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 0, 68, 113));
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShield, shieldInv, 0, 88, 113));
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinBow, bowInv, 0, 108, 113));
-        
+
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinPickaxe, pickaxeInv, 0, 148, 113));
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinAxe, axeInv, 0, 168, 113));
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShovel, shovelInv, 0, 188, 113));
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHoe, hoeInv, 0, 208, 113));
         skinSlots += 7;
-        
-        
-        int playerInvX = 38;
-        int playerInvY = 158;
-        int hotBarY = playerInvY + 58;
-        for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new SlotHidable(invPlayer, x, playerInvX + 18 * x, hotBarY));
+
+        for (int i = 0; i < 8; i++) {
+            addSlotToContainer(new SlotDyeBottle(dyeInventory, i, 68 + 18 * i, 20));
         }
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new SlotHidable(invPlayer, x + y * 9 + 9, playerInvX + 18 * x, playerInvY + y * 18));
-            }
-        }
+
+        addPlayerSlots(38, 158);
     }
-    
+
     public int getSkinSlots() {
         return skinSlots;
     }
@@ -98,26 +98,31 @@ public class ContainerSkinWardrobe extends Container {
     public boolean canInteractWith(EntityPlayer player) {
         return !player.isDead & skinCapability.getEntity().equals(player);
     }
-    
+
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
-        Slot slot = getSlot(slotId);
+    protected ItemStack transferStackFromPlayer(EntityPlayer playerIn, int index) {
+        Slot slot = getSlot(index);
         if (slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
 
-            if (slotId < skinSlots) {
-                //Moving item to main inv
-                if (!this.mergeItemStack(stack, skinSlots + 9, skinSlots + 36, false)) {
-                    //Moving item to hotbar
-                    if (!this.mergeItemStack(stack, skinSlots, skinSlots + 9, false)) {
-                        return null;
+            boolean slotted = false;
+            
+            // Putting skin in inv
+            if (stack.getItem() instanceof ItemSkin & SkinNBTHelper.stackHasSkinData(stack)) {
+                for (int i = 0; i < skinSlots; i++) {
+                    Slot targetSlot = getSlot(i);
+                    if (targetSlot.isItemValid(stack)) {
+                        if (this.mergeItemStack(stack, i, i + 1, false)) {
+                            slotted = true;
+                            break;
+                        }
                     }
                 }
-            } else {
-                if (stack.getItem() instanceof ItemSkin & SkinNBTHelper.stackHasSkinData(stack)) {
-                    boolean slotted = false;
-                    for (int i = 0; i < skinSlots; i++) {
+            }
+            if (stack.getItem() == ModItems.dyeBottle) {
+                if (((ItemDyeBottle)stack.getItem()).getToolHasColour(stack)) {
+                    for (int i = skinSlots; i < skinSlots + 8; i++) {
                         Slot targetSlot = getSlot(i);
                         if (targetSlot.isItemValid(stack)) {
                             if (this.mergeItemStack(stack, i, i + 1, false)) {
@@ -126,12 +131,11 @@ public class ContainerSkinWardrobe extends Container {
                             }
                         }
                     }
-                    if (!slotted) {
-                        return ItemStack.EMPTY;
-                    }
-                } else {
-                    return ItemStack.EMPTY;
                 }
+            }
+
+            if (!slotted) {
+                return ItemStack.EMPTY;
             }
 
             if (stack.getCount() == 0) {
@@ -140,11 +144,50 @@ public class ContainerSkinWardrobe extends Container {
                 slot.onSlotChanged();
             }
 
-            slot.onTake(player, stack);
+            slot.onTake(playerIn, stack);
 
             return result;
+
         }
         return ItemStack.EMPTY;
     }
 
+    private class DyeInventory extends ModInventory {
+
+        private final IWardrobeCapability wardrobeCapability;
+
+        public DyeInventory(IWardrobeCapability wardrobeCapability) {
+            super("dyeInventory", 8);
+            this.wardrobeCapability = wardrobeCapability;
+            ISkinDye dye = wardrobeCapability.getDye();
+            for (int i = 0; i < 8; i++) {
+                if (dye.haveDyeInSlot(i)) {
+                    byte[] rgbt = dye.getDyeColour(i);
+                    ItemStack bottle = new ItemStack(ModItems.dyeBottle, 1, 1);
+                    PaintingHelper.setToolPaintColour(bottle, rgbt);
+                    PaintingHelper.setToolPaint(bottle, PaintType.getPaintTypeFormSKey(rgbt[3]));
+                    if (dye.hasName(i)) {
+                        bottle.setStackDisplayName(dye.getDyeName(i));
+                    }
+                    slots.set(i, bottle);
+                } else {
+                    slots.set(i, ItemStack.EMPTY);
+                }
+            }
+        }
+        
+        @Override
+        public void setInventorySlotContents(int slotId, ItemStack stack) {
+            super.setInventorySlotContents(slotId, stack);
+            if (stack.isEmpty()) {
+                wardrobeCapability.getDye().removeDye(slotId);
+            } else {
+                if (PaintingHelper.getToolHasPaint(stack)) {
+                    byte[] rgbt = PaintingHelper.getToolPaintData(stack);
+                    wardrobeCapability.getDye().addDye(slotId, rgbt);
+                }
+            }
+            wardrobeCapability.syncToAllAround();
+        }
+    }
 }

@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.apache.logging.log4j.Level;
 
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -12,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class SkinDye implements ISkinDye {
     
@@ -149,7 +149,7 @@ public class SkinDye implements ISkinDye {
         }
     }
     
-    public void writeToCompound(NBTTagCompound compound) {
+    public NBTTagCompound writeToCompound(NBTTagCompound compound) {
         NBTTagCompound dyeCompound = new NBTTagCompound();
         for (int i = 0; i < MAX_SKIN_DYES; i++) {
             if (hasDye[i]) {
@@ -163,6 +163,7 @@ public class SkinDye implements ISkinDye {
             }
         }
         compound.setTag(TAG_SKIN_DYE, dyeCompound);
+        return compound;
     }
 
     public void readFromCompound(NBTTagCompound compound) {

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.common.capability.wardrobe;
 
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -11,6 +12,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 public class WardrobeStorage implements IStorage<IWardrobeCapability> {
 
     private static final String TAG_EXTRA_COLOUR = "extra-colour-";
+    private static final String TAG_DYE = "dye";
     private static final String TAG_ARMOUR_OVERRIDE = "armourOverride";
     /*
     private static final String TAG_SLOTS_UNLOCKED = "slotsUnlocked";
@@ -28,6 +30,10 @@ public class WardrobeStorage implements IStorage<IWardrobeCapability> {
         for (int i = 0; i < 4; i++) {
             compound.setBoolean(TAG_ARMOUR_OVERRIDE + i, instance.getArmourOverride().get(i));
         }
+        NBTTagCompound dyeCompund = new NBTTagCompound();
+        ((SkinDye)instance.getDye()).writeToCompound(dyeCompund);
+        compound.setTag(TAG_DYE, dyeCompund);
+        //ModLogger.log("----------------------------saving wardrobe----------------------------");
         return compound;
     }
 
@@ -42,6 +48,11 @@ public class WardrobeStorage implements IStorage<IWardrobeCapability> {
         }
         for (int i = 0; i < 4; i++) {
             instance.getArmourOverride().set(i, compound.getBoolean(TAG_ARMOUR_OVERRIDE + i));
+        }
+        if (compound.hasKey(TAG_DYE, NBT.TAG_COMPOUND)) {
+            //ModLogger.log("----------------------------loading wardrobe----------------------------");
+            NBTTagCompound dyeCompund = compound.getCompoundTag(TAG_DYE);
+            ((SkinDye)instance.getDye()).readFromCompound(dyeCompund);
         }
     }
 }

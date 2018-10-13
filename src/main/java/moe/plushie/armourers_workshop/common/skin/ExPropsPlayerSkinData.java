@@ -77,7 +77,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
     public void setEquipmentStack(ItemStack stack, int index) {
         SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (skinPointer.getIdentifier().getSkinType() != null) {
-            WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinPointer.getIdentifier().getSkinType());
+            WardrobeInventory wi = wardrobeInventoryContainer.getSkinTypeInv(skinPointer.getIdentifier().getSkinType());
             if (wi != null) {
                 wi.setInventorySlotContents(index, stack);
             }
@@ -87,7 +87,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
     public boolean setStackInNextFreeSlot(ItemStack stack) {
         SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (skinPointer.getIdentifier().getSkinType() != null) {
-            WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinPointer.getIdentifier().getSkinType());
+            WardrobeInventory wi = wardrobeInventoryContainer.getSkinTypeInv(skinPointer.getIdentifier().getSkinType());
             if (wi != null) {
                 for (int i = 0; i < equipmentWardrobeData.getUnlockedSlotsForSkinType(skinPointer.getIdentifier().getSkinType()); i++) {
                     if (wi.getStackInSlot(i) == null) {
@@ -101,7 +101,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
     }
     
     public ItemStack getEquipmentStack(ISkinType skinType, int index) {
-        WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinType);
+        WardrobeInventory wi = wardrobeInventoryContainer.getSkinTypeInv(skinType);
         if (wi != null) {
             return wi.getStackInSlot(index);
         }
@@ -112,7 +112,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
         ArrayList<ISkinType> skinList = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
         for (int i = 0; i < skinList.size(); i++) {
             ISkinType skinType = skinList.get(i);
-            WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinType);
+            WardrobeInventory wi = wardrobeInventoryContainer.getSkinTypeInv(skinType);
             if (wi != null) {
                 for (int j = 0; j < wi.getSizeInventory(); j++) {
                     wi.setInventorySlotContents(j, null);
@@ -122,7 +122,7 @@ public class ExPropsPlayerSkinData implements /*IExtendedEntityProperties,*/ IIn
     }
     
     public void clearEquipmentStack(ISkinType skinType, int index) {
-        WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinType);
+        WardrobeInventory wi = wardrobeInventoryContainer.getSkinTypeInv(skinType);
         if (wi != null) {
             wi.setInventorySlotContents(index, null);
         }

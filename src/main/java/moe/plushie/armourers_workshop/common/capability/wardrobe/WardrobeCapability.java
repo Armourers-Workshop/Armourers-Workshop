@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
 
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdateWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncWardrobeCap;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -28,7 +30,9 @@ public class WardrobeCapability implements IWardrobeCapability {
     private final ISkinnableEntity skinnableEntity;
 
     public final ExtraColours extraColours;
-
+    
+    public final SkinDye dye;
+    
     /** Bit set of what armour is hidden on the player. */
     public BitSet armourOverride;
 
@@ -39,6 +43,7 @@ public class WardrobeCapability implements IWardrobeCapability {
         this.entityPlayer = entityPlayer;
         this.skinnableEntity = skinnableEntity;
         extraColours = new ExtraColours();
+        dye = new SkinDye();
         armourOverride = new BitSet(4);
         slotsUnlocked = new HashMap<String, Integer>();
         ArrayList<ISkinType> validSkinTypes = new ArrayList<ISkinType>();
@@ -52,6 +57,11 @@ public class WardrobeCapability implements IWardrobeCapability {
     @Override
     public ExtraColours getExtraColours() {
         return extraColours;
+    }
+    
+    @Override
+    public ISkinDye getDye() {
+        return dye;
     }
 
     private byte[] intToByte(int value) {

@@ -96,7 +96,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
 
     @Override
     public ISkinDescriptor getSkinDescriptor(ISkinType skinType, int slotIndex) {
-        WardrobeInventory wardrobeInventory = skinInventoryContainer.getInventoryForSkinType(skinType);
+        WardrobeInventory wardrobeInventory = skinInventoryContainer.getSkinTypeInv(skinType);
         if (wardrobeInventory != null) {
             SkinDescriptor skinDescriptor = SkinNBTHelper.getSkinDescriptorFromStack(wardrobeInventory.getStackInSlot(slotIndex));
             return skinDescriptor;
@@ -106,7 +106,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
 
     @Override
     public ISkinDescriptor setSkinDescriptor(ISkinType skinType, int slotIndex, ISkinDescriptor skinDescriptor) {
-        WardrobeInventory wardrobeInventory = skinInventoryContainer.getInventoryForSkinType(skinType);
+        WardrobeInventory wardrobeInventory = skinInventoryContainer.getSkinTypeInv(skinType);
         if (wardrobeInventory != null) {
             SkinDescriptor oldSkinDescriptor = SkinNBTHelper.getSkinDescriptorFromStack(wardrobeInventory.getStackInSlot(slotIndex));
             ItemStack itemStack = SkinNBTHelper.makeEquipmentSkinStack((SkinDescriptor)skinDescriptor);
@@ -118,7 +118,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
 
     @Override
     public ItemStack getSkinStack(ISkinType skinType, int slotIndex) {
-        WardrobeInventory wardrobeInventory = skinInventoryContainer.getInventoryForSkinType(skinType);
+        WardrobeInventory wardrobeInventory = skinInventoryContainer.getSkinTypeInv(skinType);
         if (wardrobeInventory != null) {
             return wardrobeInventory.getStackInSlot(slotIndex);
         }
@@ -127,7 +127,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
 
     @Override
     public ItemStack setSkinStack(ISkinType skinType, int slotIndex, ItemStack skinStack) {
-        WardrobeInventory wardrobeInventory = skinInventoryContainer.getInventoryForSkinType(skinType);
+        WardrobeInventory wardrobeInventory = skinInventoryContainer.getSkinTypeInv(skinType);
         if (wardrobeInventory != null) {
             ItemStack oldItemStack = wardrobeInventory.getStackInSlot(slotIndex);
             wardrobeInventory.setInventorySlotContents(slotIndex, skinStack);

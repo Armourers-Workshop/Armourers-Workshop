@@ -21,7 +21,7 @@ public class SkinInventoryContainer {
         }
     }
     
-    public WardrobeInventory getInventoryForSkinType(ISkinType skinType) {
+    public WardrobeInventory getSkinTypeInv(ISkinType skinType) {
         return skinInventorys.get(skinType);
     }
     

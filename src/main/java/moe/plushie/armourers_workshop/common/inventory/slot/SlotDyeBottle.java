@@ -9,17 +9,20 @@ import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SlotDyeBottle extends Slot {
+public class SlotDyeBottle extends SlotHidable {
     
     private static final ResourceLocation BACKGROUND_IMAGE = new ResourceLocation(LibModInfo.ID, "textures/items/slot/dye-bottle.png");
     private final ContainerDyeTable container;
     private boolean locked;
+    
+    public SlotDyeBottle(IInventory inventory, int slotIndex, int xPosition, int yPosition) {
+        this(inventory, slotIndex, xPosition, yPosition, null);
+    }
     
     public SlotDyeBottle(IInventory inventory, int slotIndex, int xPosition, int yPosition, ContainerDyeTable container) {
         super(inventory, slotIndex, xPosition, yPosition);
@@ -37,12 +40,15 @@ public class SlotDyeBottle extends Slot {
     
     @Override
     public boolean isItemValid(ItemStack stack) {
-        ItemStack skinStack = inventory.getStackInSlot(0);
-        if (SkinNBTHelper.stackHasSkinData(skinStack)) {
-            if (stack.getItem() == ModItems.dyeBottle) {
-                if (PaintingHelper.getToolHasPaint(stack)) {
-                    return true;
-                }
+        if (container != null) {
+            ItemStack skinStack = inventory.getStackInSlot(0);
+            if (!SkinNBTHelper.stackHasSkinData(skinStack)) {
+                return false;
+            }
+        }
+        if (stack.getItem() == ModItems.dyeBottle) {
+            if (PaintingHelper.getToolHasPaint(stack)) {
+                return true;
             }
         }
         return false;
@@ -50,20 +56,26 @@ public class SlotDyeBottle extends Slot {
     
     @Override
     public boolean canTakeStack(EntityPlayer player) {
-        if (!ConfigHandler.lockDyesOnSkins) {
+        if (container != null) {
+            if (!ConfigHandler.lockDyesOnSkins) {
+                return true;
+            }
+            return !locked;
+        } else {
             return true;
         }
-        return !locked;
     }
     
     @Override
     public void onSlotChanged() {
-        ItemStack stack = getStack();
-        if (stack.isEmpty()) {
-            container.dyeRemoved(getSlotIndex() - 1);
-        } else {
-            if (stack.getItem() == ModItems.dyeBottle) {
-                container.dyeAdded(stack, getSlotIndex() - 1);
+        if (container != null) {
+            ItemStack stack = getStack();
+            if (stack.isEmpty()) {
+                container.dyeRemoved(getSlotIndex() - 1);
+            } else {
+                if (stack.getItem() == ModItems.dyeBottle) {
+                    container.dyeAdded(stack, getSlotIndex() - 1);
+                }
             }
         }
         super.onSlotChanged();

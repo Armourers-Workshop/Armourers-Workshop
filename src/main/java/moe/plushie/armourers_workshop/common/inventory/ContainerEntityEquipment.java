@@ -23,7 +23,7 @@ public class ContainerEntityEquipment extends Container {
         for (int i = 0; i < skinTypes.length; i++) {
             maxForType = Math.max(maxForType, skinCapability.getSlotCountForSkinType(skinTypes[i]));
             for (int j = 0; j < skinCapability.getSlotCountForSkinType(skinTypes[i]); j++) {
-                addSlotToContainer(new SlotSkin(skinTypes[i], skinCapability.getSkinInventoryContainer().getInventoryForSkinType(skinTypes[i]), j, 8 + i * 18, 21 + j * 18));
+                addSlotToContainer(new SlotSkin(skinTypes[i], skinCapability.getSkinInventoryContainer().getSkinTypeInv(skinTypes[i]), j, 8 + i * 18, 21 + j * 18));
                 skinSlots++;
             }
         }
