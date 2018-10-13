@@ -48,12 +48,12 @@ public abstract class SkinLayerRenderer<E extends EntityLivingBase> implements L
         for (int i = 0; i < skinCapability.getSlotCountForSkinType(skinType); i++) {
             ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, i);
             if (skinDescriptor == null) {
-                return;
+                continue;
             }
             
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
             if (skin == null) {
-                return;
+                continue;
             }
             
             ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;

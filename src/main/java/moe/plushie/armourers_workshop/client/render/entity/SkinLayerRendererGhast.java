@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.client.render.entity;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.api.client.render.entity.ISkinnableEntityRenderer;
 import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.handler.ModClientFMLEventHandler;
 import net.minecraft.client.renderer.entity.RenderEntity;
 import net.minecraft.entity.monster.EntityGhast;
@@ -12,11 +12,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class SkinLayerRendererGhast implements ISkinnableEntityRenderer<EntityGhast> {
+public class SkinLayerRendererGhast extends SkinLayerRenderer<EntityGhast> {
 
-    //@Override
-    public void render(EntityGhast entity, RenderEntity renderer,
-            double x, double y, double z, IEntityEquipment entityEquipment) {
+    public void render(EntityGhast entity, RenderEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
         GL11.glPushMatrix();
         float scale = 0.0625F;
         
@@ -45,20 +43,11 @@ public class SkinLayerRendererGhast implements ISkinnableEntityRenderer<EntityGh
         //renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
         GL11.glPopMatrix();
     }
-    /*
-    private void renderEquipmentType(EntityLivingBase entity, RendererLivingEntity renderer, ISkinType skinType, IEntityEquipment equipmentData) {
-        if (equipmentData.haveEquipment(skinType, 0)) {
-            ISkinPointer skinPointer = equipmentData.getSkinPointer(skinType, 0);
-            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-            if (skin == null) {
-                return;
-            }
-            GL11.glEnable(GL11.GL_NORMALIZE);
-            float scale = 1F / 16F;
-            for (int i = 0; i < skin.getParts().size(); i++) {
-                SkinPartRenderer.INSTANCE.renderPart(skin.getParts().get(i), scale, skinPointer.getSkinDye(), null, false);
-            }
-            GL11.glDisable(GL11.GL_NORMALIZE);
-        }
-    }*/
+    
+    @Override
+    protected void setRotTranForPartType(EntityGhast entitylivingbaseIn, ISkinType skinType, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+        GL11.glTranslated(0, 25.65 * scale, 0);
+        float headScale = 2.0001F;
+        GL11.glScalef(headScale, headScale, headScale);
+    }
 }

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.common.skin.entity;
 
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
+import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererDummy;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -26,7 +27,7 @@ public abstract class SkinnableEntity implements ISkinnableEntity {
     
     @SideOnly(Side.CLIENT)
     public LayerRenderer<? extends EntityLivingBase> getLayerRenderer() {
-        return null;
+        return new SkinLayerRendererDummy();
     }
     
     @Override
