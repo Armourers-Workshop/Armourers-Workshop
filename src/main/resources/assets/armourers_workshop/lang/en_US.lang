@@ -262,7 +262,8 @@ inventory.armourers_workshop:dyeTable.name=Dye Table
 inventory.armourers_workshop:skinnable.name=Skinnable Block
 inventory.armourers_workshop:hologram-projector.name=Hologram Projector
 
-# Inventory controls
+# Inventory Controls
+# Armour Library
 inventory.armourers_workshop:armour-library.label.search=Search:
 inventory.armourers_workshop:armour-library.label.filename=File Name:
 inventory.armourers_workshop:armour-library.label.files=Files:
@@ -298,6 +299,7 @@ inventory.armourers_workshop:armour-library.dialog.overwrite.close=Close
 inventory.armourers_workshop:armour-library.dialog.overwrite.ok=OK
 inventory.armourers_workshop:armour-library.dialog.overwrite.overwriteFile=Overwrite file "%s"?
 
+# Armourer
 inventory.armourers_workshop:armourer.label.itemName=Item Name:
 inventory.armourers_workshop:armourer.label.skinType=Skin Type:
 inventory.armourers_workshop:armourer.label.username=Username:
@@ -346,6 +348,7 @@ inventory.armourers_workshop:armourer.dialog.copy.srcPart=Source Part:
 inventory.armourers_workshop:armourer.dialog.copy.desPart=Destination Part:
 inventory.armourers_workshop:armourer.dialog.copy.mirror=Mirror?
 
+# Colour Mixer
 inventory.armourers_workshop:colour-mixer.label.hue=Hue
 inventory.armourers_workshop:colour-mixer.label.saturation=Saturation
 inventory.armourers_workshop:colour-mixer.label.brightness=Brightness
@@ -353,7 +356,9 @@ inventory.armourers_workshop:colour-mixer.label.hex=Hex
 inventory.armourers_workshop:colour-mixer.label.presets=Presets
 inventory.armourers_workshop:colour-mixer.label.paintType=Paint Type
 
+# Wardrobe
 inventory.armourers_workshop:equipment-wardrobe.tab.skins=Skins
+inventory.armourers_workshop:equipment-wardrobe.tab.outfits=Outfits
 inventory.armourers_workshop:equipment-wardrobe.tab.displaySettings=Display Settings
 inventory.armourers_workshop:equipment-wardrobe.tab.colourSettings=Colour Settings
 inventory.armourers_workshop:equipment-wardrobe.tab.dyes=Dyes
