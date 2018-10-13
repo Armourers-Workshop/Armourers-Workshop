@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdateWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -108,6 +109,8 @@ public class WardrobeCap implements IWardrobeCap {
 
     @Override
     public void sendUpdateToServer() {
+        NBTTagCompound compound = (NBTTagCompound)WARDROBE_CAP.getStorage().writeNBT(WARDROBE_CAP, this, null);
+        PacketHandler.networkWrapper.sendToServer(new MessageClientUpdateWardrobeCap(entity.getEntityId(), compound));
     }
 
     public static IWardrobeCap get(Entity entity) {
