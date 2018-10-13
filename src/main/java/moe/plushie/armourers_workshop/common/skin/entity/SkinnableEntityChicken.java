@@ -15,8 +15,6 @@ public class SkinnableEntityChicken extends SkinnableEntity {
 
     @Override
     public Class<? extends EntityLivingBase> getEntityClass() {
-        ArrayList<Class<? extends EntityLivingBase>> classes = new ArrayList<Class<? extends EntityLivingBase>>();
-        classes.add(EntityChicken.class);
         return EntityChicken.class;
     }
     
@@ -33,6 +31,6 @@ public class SkinnableEntityChicken extends SkinnableEntity {
     
     @Override
     public int getSlotsForSkinType(ISkinType skinType) {
-        return 1;
+        return 2;
     }
 }
