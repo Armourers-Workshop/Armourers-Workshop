@@ -14,6 +14,7 @@ public class ModAddon {
     private final String modName;
     private final boolean isModLoaded;
     private final ArrayList<String> overrrides;
+    private boolean itemSkinningSupport;
     
     public ModAddon(String modId, String modName) {
         this.modId = modId;
@@ -23,6 +24,7 @@ public class ModAddon {
             ModLogger.log(String.format("Loading %s Compatibility Addon", getModName()));
         }
         this.overrrides = new ArrayList<String>();
+        itemSkinningSupport = true;
     }
     
     protected boolean setIsModLoaded() {
@@ -56,6 +58,18 @@ public class ModAddon {
     
     protected void addItemOverride(ItemOverrideType type, String itemName) {
         overrrides.add(type.toString().toLowerCase() + ":" + getModId() + ":" + itemName);
+    }
+    
+    public void setItemSkinningSupport(boolean itemSkinningSupport) {
+        this.itemSkinningSupport = itemSkinningSupport;
+    }
+    
+    public boolean isItemSkinningSupport() {
+        return itemSkinningSupport;
+    }
+    
+    public boolean hasItemOverrides() {
+        return overrrides.size() > 0;
     }
     
     public static enum ItemOverrideType {

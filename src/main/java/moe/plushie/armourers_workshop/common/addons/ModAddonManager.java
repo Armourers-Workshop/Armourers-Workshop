@@ -6,6 +6,8 @@ import java.util.HashSet;
 import moe.plushie.armourers_workshop.common.addons.ModAddon.ItemOverrideType;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.item.Item;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class ModAddonManager {
     
@@ -19,7 +21,7 @@ public final class ModAddonManager {
     public static AddonBetterStorage addonBetterStorage;
     public static AddonBotania addonBotania;
     public static AddonBuildCraft addonBuildCraft;
-    public static AddonColoredLights addonColoredLights;
+    public static ModAddon addonColoredLights;
     public static AddonCustomNPCS addonCustomNPCS;
     public static AddonGlassShards addonGlassShards;
     public static AddonJBRAClient addonJBRAClient;
@@ -29,12 +31,12 @@ public final class ModAddonManager {
     public static AddonMetallurgy addonMetallurgy;
     public static AddonMinecraft addonMinecraft;
     public static AddonMinecraftComesAlive addonMinecraftComesAlive;
-    public static AddonMorePlayerModels addonMorePlayerModels;
+    public static ModAddon addonMorePlayerModels;
     public static AddonMoreSwordsMod addonMoreSwordsMod;
     public static AddonNEI addonNEI;
     public static AddonOreSpawn addonOreSpawn;
     public static AddonShaders addonShaders;
-    public static AddonSmartMoving addonSmartMoving;
+    public static ModAddon addonSmartMoving;
     public static AddonThaumcraft addonThaumcraft;
     public static AddonTinkersConstruct addonTinkersConstruct;
     public static AddonTwilightForest addonTwilightForest;
@@ -45,10 +47,8 @@ public final class ModAddonManager {
     
     public static void preInit() {
         loadAddons();
-        for (int i = 0; i < LOADED_ADDONS.size(); i++) {
-            if (LOADED_ADDONS.get(i).isModLoaded()) {
-                LOADED_ADDONS.get(i).preInit();
-            }
+        for (ModAddon modAddon : LOADED_ADDONS) {
+            modAddon.preInit();
         }
     }
     
@@ -60,7 +60,7 @@ public final class ModAddonManager {
         addonBetterStorage = new AddonBetterStorage();
         addonBotania = new AddonBotania();
         addonBuildCraft = new AddonBuildCraft();
-        addonColoredLights = new AddonColoredLights();
+        addonColoredLights = new ModAddon("easycoloredlights", "Colored Lights");
         addonCustomNPCS = new AddonCustomNPCS();
         addonGlassShards = new AddonGlassShards();
         addonJBRAClient = new AddonJBRAClient();
@@ -70,12 +70,12 @@ public final class ModAddonManager {
         addonMetallurgy = new AddonMetallurgy();
         addonMinecraft = new AddonMinecraft();
         addonMinecraftComesAlive = new AddonMinecraftComesAlive();
-        addonMorePlayerModels = new AddonMorePlayerModels();
+        addonMorePlayerModels = new ModAddon("moreplayermodels", "More Player Models");
         addonMoreSwordsMod = new AddonMoreSwordsMod();
         addonNEI = new AddonNEI();
         addonOreSpawn = new AddonOreSpawn();
         addonShaders = new AddonShaders();
-        addonSmartMoving = new AddonSmartMoving();
+        addonSmartMoving = new ModAddon("SmartMoving", "Smart Moving");
         addonThaumcraft = new AddonThaumcraft();
         addonTinkersConstruct = new AddonTinkersConstruct();
         addonTwilightForest = new AddonTwilightForest();
@@ -106,10 +106,10 @@ public final class ModAddonManager {
     }
     
     public static void init() {
-        for (int i = 0; i < LOADED_ADDONS.size(); i++) {
-            if (LOADED_ADDONS.get(i).isModLoaded()) {
-                LOADED_ADDONS.get(i).init();
-                ITEM_OVERRIDES.addAll(LOADED_ADDONS.get(i).getItemOverrides());
+        for (ModAddon modAddon : LOADED_ADDONS) {
+            modAddon.init();
+            if (modAddon.isItemSkinningSupport()) {
+                ITEM_OVERRIDES.addAll(modAddon.getItemOverrides());
             }
         }
         String[] keys = ITEM_OVERRIDES.toArray(new String[ITEM_OVERRIDES.size()]);
@@ -119,23 +119,24 @@ public final class ModAddonManager {
     }
     
     public static void postInit() {
-        for (int i = 0; i < LOADED_ADDONS.size(); i++) {
-            if (LOADED_ADDONS.get(i).isModLoaded()) {
-                LOADED_ADDONS.get(i).postInit();
-            }
+        for (ModAddon modAddon : LOADED_ADDONS) {
+            modAddon.postInit();
         }
     }
     
+    @SideOnly(Side.CLIENT)
     public static void initRenderers() {
-        for (int i = 0; i < LOADED_ADDONS.size(); i++) {
-            if (LOADED_ADDONS.get(i).isModLoaded()) {
-                LOADED_ADDONS.get(i).initRenderers();
-            }
+        for (ModAddon modAddon : LOADED_ADDONS) {
+            modAddon.initRenderers();
         }
     }
     
     public static HashSet<String> getItemOverrides() {
         return ITEM_OVERRIDES;
+    }
+    
+    public static ArrayList<ModAddon> getLoadedAddons() {
+        return LOADED_ADDONS;
     }
     
     public static void setItemOverrides(String[] itemOverrides) {
