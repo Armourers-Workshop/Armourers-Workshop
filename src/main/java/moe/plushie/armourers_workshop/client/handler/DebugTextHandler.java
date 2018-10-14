@@ -15,6 +15,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,6 +27,9 @@ public class DebugTextHandler {
     @SideOnly(Side.CLIENT)
     public void onDebugText(RenderGameOverlayEvent.Text event) {
         if (!ConfigHandlerClient.showF3DebugInfo) {
+            return;
+        }
+        if (event.getType() != ElementType.TEXT) {
             return;
         }
         if (event.getLeft() != null && event.getLeft().size() > 0) {
