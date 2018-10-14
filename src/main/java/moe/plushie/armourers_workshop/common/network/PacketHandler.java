@@ -24,13 +24,11 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdatePlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdateWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerClientCommand;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerEntitySkinData;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerGameProfile;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerLibraryFileList;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerLibrarySendSkin;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerMiniArmourerCubeEdit;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerMiniArmourerSkinData;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerPlayerLeftTrackingRange;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSendSkinData;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncConfig;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncPlayerWardrobeCap;
@@ -81,11 +79,9 @@ public final class PacketHandler {
         registerMessage(MessageServerSyncWardrobeCap.class, MessageServerSyncWardrobeCap.class, Side.CLIENT);
         registerMessage(MessageServerSyncPlayerWardrobeCap.class, MessageServerSyncPlayerWardrobeCap.class, Side.CLIENT);
         
-        registerMessage(MessageServerPlayerLeftTrackingRange.class, MessageServerPlayerLeftTrackingRange.class, Side.CLIENT);
         registerMessage(MessageServerLibraryFileList.class, MessageServerLibraryFileList.class, Side.CLIENT);
         registerMessage(MessageServerSendSkinData.class, MessageServerSendSkinData.class, Side.CLIENT);
         registerMessage(MessageServerClientCommand.class, MessageServerClientCommand.class, Side.CLIENT);
-        registerMessage(MessageServerEntitySkinData.class, MessageServerEntitySkinData.class, Side.CLIENT);
         registerMessage(MessageServerLibrarySendSkin.class, MessageServerLibrarySendSkin.class, Side.CLIENT);
         registerMessage(MessageServerMiniArmourerSkinData.class, MessageServerMiniArmourerSkinData.class, Side.CLIENT);
         registerMessage(MessageServerMiniArmourerCubeEdit.class, MessageServerMiniArmourerCubeEdit.class, Side.CLIENT);

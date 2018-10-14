@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.client.handler;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import moe.plushie.armourers_workshop.api.client.render.ISkinRenderHandler;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkin;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
@@ -11,17 +9,19 @@ import moe.plushie.armourers_workshop.client.model.armourer.ModelHand;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
-import moe.plushie.armourers_workshop.common.data.PlayerPointer;
-import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.proxies.ClientProxy;
+import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EquipmentRenderHandler implements ISkinRenderHandler {
 
@@ -171,17 +171,10 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     }
     
     @Override
-    public boolean isArmourRenderOverridden(EntityPlayer player, int slotId) {
-        if (slotId < 4 & slotId >= 0) {
-            return false;
-        }
-        if (player == null) {
-            return false;
-        }
-        EquipmentWardrobeHandler ewh = ClientProxy.equipmentWardrobeHandler;
-        PlayerWardrobe ewd = ewh.getEquipmentWardrobeData(new PlayerPointer(player));
-        if (ewd != null) {
-            return ewd.armourOverride.get(slotId);
+    public boolean isArmourRenderOverridden(EntityPlayer player, EntityEquipmentSlot slotId) {
+        IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(player);
+        if (wardrobeCap != null) {
+            return wardrobeCap.getArmourOverride().get(slotId.getSlotIndex());
         }
         return false;
     }

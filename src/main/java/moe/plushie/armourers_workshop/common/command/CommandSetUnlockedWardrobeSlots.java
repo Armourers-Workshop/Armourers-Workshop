@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -61,6 +62,10 @@ public class CommandSetUnlockedWardrobeSlots extends ModCommand {
             throw new WrongUsageException(getUsage(sender), (Object)args);
         }
         
-        ExPropsPlayerSkinData.get(player).setSkinColumnCount(skinType, count);
+        IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(player);
+        if (wardrobeCap != null) {
+            //wardrobeCap.setSkinUnlockCount(skinType, count);
+            wardrobeCap.syncToAllTracking();
+        }
     }
 }

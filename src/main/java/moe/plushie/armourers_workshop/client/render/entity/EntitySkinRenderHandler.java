@@ -5,16 +5,11 @@ import java.util.HashMap;
 
 import moe.plushie.armourers_workshop.api.client.render.entity.ISkinnableEntityRenderer;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
-import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
-import moe.plushie.armourers_workshop.common.skin.entity.ExPropsEntityEquipmentData;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -55,26 +50,6 @@ public final class EntitySkinRenderHandler {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-        }
-    }
-    
-    @SubscribeEvent
-    public void onRenderLivingEvent(RenderLivingEvent.Post event) {
-        EntityLivingBase entity = event.getEntity();
-        if (entity instanceof EntityPlayer) {
-            return;
-        }
-        if (entityRenderer.containsKey(entity.getClass())) {
-            ISkinnableEntityRenderer renderer = entityRenderer.get(entity.getClass());
-            ExPropsEntityEquipmentData props = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
-            if (props == null) {
-                return;
-            }
-            Minecraft.getMinecraft().profiler.startSection("wandOfStyleRender");
-            ModRenderHelper.enableAlphaBlend();
-            //renderer.render(entity, event.getRenderer(), event.getX(), event.getY(), event.getZ(), props.getEquipmentData());
-            ModRenderHelper.disableAlphaBlend();
-            Minecraft.getMinecraft().profiler.endSection();
         }
     }
 }

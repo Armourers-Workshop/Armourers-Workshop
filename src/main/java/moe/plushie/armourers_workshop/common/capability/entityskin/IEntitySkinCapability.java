@@ -67,6 +67,8 @@ public interface IEntitySkinCapability {
     //TODO Change this to use CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
     public SkinInventoryContainer getSkinInventoryContainer();
     
+    public void clear();
+    
     /**
      * Syncs capability data to a player.
      * 

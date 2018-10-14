@@ -3,13 +3,16 @@ package moe.plushie.armourers_workshop.utils;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.common.items.ItemGiftSack;
 import moe.plushie.armourers_workshop.common.items.ModItems;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 public final class HolidayHelper {
     
@@ -61,15 +64,32 @@ public final class HolidayHelper {
         return Calendar.getInstance().get(Calendar.YEAR);
     }
     
-    public static void giftPlayer(EntityPlayerMP player) {
-        if (christmas_season.isHolidayActive()) {
-            ExPropsPlayerSkinData playerData = ExPropsPlayerSkinData.get(player);
-            if (playerData.lastXmasYear < getYear()) {
-                ItemStack giftSack = new ItemStack(ModItems.SkinTemplate, 1, 1000);
-                if (!player.inventory.addItemStackToInventory(giftSack)) {
-                    player.sendMessage(new TextComponentString(I18n.format("chat.armourersworkshop:inventoryGiftFail")));
-                } else {
-                    playerData.lastXmasYear = getYear();
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
+        giftPlayer(event.player);
+    }
+    
+    public static void giftPlayer(EntityPlayer player) {
+        for (Holiday holiday : holidayList) {
+            if (holiday.isHolidayActive()) {
+                ItemStack giftSack = ((ItemGiftSack)ModItems.giftSack).createStackForHoliday(holiday);
+                if (!giftSack.isEmpty()) {
+                    if (!player.inventory.addItemStackToInventory(giftSack)) {
+                        player.sendMessage(new TextComponentTranslation("chat.armourersworkshop:inventoryGiftFail"));
+                    } else {
+                        //playerData.lastXmasYear = getYear();
+                    }
+                    IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(player);
+                    
+                    if (wardrobeCap != null) {
+                        
+                        /*
+                        if (playerData.lastXmasYear < getYear()) {
+                            ItemStack giftSack = new ItemStack(ModItems.giftSack, 1, 1000);
+
+                        }
+                        */
+                    }
                 }
             }
         }

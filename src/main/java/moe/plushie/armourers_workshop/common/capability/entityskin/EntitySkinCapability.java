@@ -24,6 +24,8 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
     
     @CapabilityInject(IEntitySkinCapability.class)
     public static final Capability<IEntitySkinCapability> ENTITY_SKIN_CAP = null;
+
+    public static final int MAX_SLOTS_PER_SKIN_TYPE = 8;
     
     private final Entity entity;
     private ISkinnableEntity skinnableEntity;
@@ -112,6 +114,11 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
             return oldItemStack;
         }
         return ItemStack.EMPTY;
+    }
+    
+    @Override
+    public void clear() {
+        skinInventoryContainer.clear();
     }
 
     @Override

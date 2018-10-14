@@ -2,19 +2,12 @@ package moe.plushie.armourers_workshop.client.handler;
 
 import java.util.HashMap;
 
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.render.EntityTextureInfo;
-import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.common.data.PlayerPointer;
-import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
-import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -57,17 +50,14 @@ public class PlayerTextureHandler {
         if (player.getGameProfile() == null) {
             return;
         }
-        PlayerPointer playerPointer = new PlayerPointer(player);
-        PlayerWardrobe ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
-        if (ewd == null) {
-            return;
-        }
+        /*
         profiler.startSection("textureBuild");
         if (playerTextureMap.containsKey(playerPointer)) {
             EntityTextureInfo textureInfo = playerTextureMap.get(playerPointer);
             textureInfo.updateTexture(player.getLocationSkin());
             textureInfo.updateHairColour(ewd.hairColour);
             textureInfo.updateSkinColour(ewd.skinColour);
+            
             Skin[] skins = new Skin[4 * ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE];
             
             for (int skinIndex = 0; skinIndex < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
@@ -92,7 +82,7 @@ public class PlayerTextureHandler {
             //player.func_152121_a(Type.SKIN, replacmentTexture);
             
         }
-        profiler.endSection();
+        profiler.endSection();*/
     }
     
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -110,12 +100,7 @@ public class PlayerTextureHandler {
         if (player.getGameProfile() == null) {
             return;
         }
-        PlayerPointer playerPointer = new PlayerPointer(player);
-        PlayerWardrobe ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
-        if (ewd == null) {
-            return;
-        }
-        
+        /*
         profiler.startSection("textureReset");
         if (playerTextureMap.containsKey(playerPointer)) {
             EntityTextureInfo textureInfo = playerTextureMap.get(playerPointer);
@@ -125,5 +110,6 @@ public class PlayerTextureHandler {
             playerTextureMap.put(playerPointer, new EntityTextureInfo());
         }
         profiler.endSection();
+        */
     }
 }

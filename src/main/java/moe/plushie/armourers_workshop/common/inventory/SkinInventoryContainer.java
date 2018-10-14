@@ -53,4 +53,11 @@ public class SkinInventoryContainer {
             skinInventorys.get(skinType).dropItems(player);
         }
     }
+
+    public void clear() {
+        for (int i = 0; i < skinInventorys.size(); i++) {
+            ISkinType skinType = (ISkinType) skinInventorys.keySet().toArray()[i];
+            skinInventorys.get(skinType).clear();
+        }
+    }
 }

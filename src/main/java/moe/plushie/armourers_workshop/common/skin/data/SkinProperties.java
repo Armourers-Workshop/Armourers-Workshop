@@ -18,6 +18,7 @@ public class SkinProperties {
     
     public static final SkinProperty<Boolean> PROP_ARMOUR_OVERRIDE = new SkinProperty<Boolean>("armourOverride", false);
     public static final SkinProperty<Boolean> PROP_ARMOUR_HIDE_OVERLAY = new SkinProperty<Boolean>("armourHideOverlay", false);
+    public static final SkinProperty<Boolean> PROP_ARMOUR_LIMIT_LIMBS = new SkinProperty<Boolean>("limitLimbs", false);
     
     public static final SkinProperty<Boolean> PROP_BLOCK_GLOWING = new SkinProperty<Boolean>("blockGlowing", false);
     public static final SkinProperty<Boolean> PROP_BLOCK_LADDER = new SkinProperty<Boolean>("blockLadder", false);

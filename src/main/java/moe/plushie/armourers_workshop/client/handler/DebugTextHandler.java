@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
 import moe.plushie.armourers_workshop.client.render.DisplayList;
-import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
@@ -45,7 +44,6 @@ public class DebugTextHandler {
                     event.getLeft().add("Common Skin Cache: S[" + CommonSkinCache.INSTANCE.size() + "] F[" + CommonSkinCache.INSTANCE.fileLinkSize() + "] G[" + CommonSkinCache.INSTANCE.globalLinkSize() + "]");
                 }
                 event.getLeft().add("Part Count: " + ClientSkinCache.INSTANCE.getPartCount());
-                event.getLeft().add("Player Data: " + SkinModelRenderer.INSTANCE.getSkinDataMapSize());
                 int bakeQueue = ModelBakery.INSTANCE.getBakingQueueSize();
                 event.getLeft().add("Baking Queue: " + bakeQueue);
                 event.getLeft().add("Request Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue));

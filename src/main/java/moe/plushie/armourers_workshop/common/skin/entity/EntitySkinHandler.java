@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Random;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.entity.IEntitySkinHandler;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
@@ -13,20 +12,10 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.library.ILibraryManager;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.library.LibraryFileList;
-import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
-import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.utils.ModLogger;
-import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
-import moe.plushie.armourers_workshop.utils.UtilItems;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class EntitySkinHandler implements IEntitySkinHandler {
     
@@ -104,7 +93,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
             return;
         }
         int rnd = entity.getEntityWorld().rand.nextInt(99) + 1;
-        if (rnd <= ConfigHandler.entityDropSkinChance) {
+        /*if (rnd <= ConfigHandler.entityDropSkinChance) {
             ExPropsEntityEquipmentData entityEquipmentData = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
             if (entityEquipmentData != null) {
                 ArrayList<ISkinType> skinTypes = entityEquipmentData.getSkinInventory().getSkinTypes();
@@ -116,10 +105,10 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
                     }
                 }
             }
-        }
+        }*/
     }
     
-    public void giveRandomSkin(Entity entity) {
+    /*public void giveRandomSkin(Entity entity) {
         giveRandomSkin(ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity));
     }
     
@@ -151,7 +140,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
             }
             entityEquipmentData.getSkinInventory().setInventorySlotContents(i, skinStack);
         }
-    }
+    }*/
     
     public LibraryFile getRandomSkinOfType(ISkinType skinType) {
         ILibraryManager libraryManager = ArmourersWorkshop.getProxy().libraryManager;
@@ -179,18 +168,6 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
             return validFiles.get(random.nextInt(validFiles.size()));
         }
         return null;
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
-        World world = Minecraft.getMinecraft().world;
-        Entity entity = world.getEntityByID(entityId);
-        if (entity != null) {
-            ExPropsEntityEquipmentData props = ExPropsEntityEquipmentData.getExtendedPropsForEntity(entity);
-            if (props != null) {
-                props.setEquipmentData(equipmentData);
-            }
-        }
     }
 
     public ArrayList<ISkinnableEntity> getRegisteredEntities() {

@@ -3,17 +3,20 @@ package moe.plushie.armourers_workshop.client.model;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
+import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -66,6 +69,12 @@ public class ModelRendererAttachment extends ModelRenderer {
             mc.profiler.endSection();
             return;
         }
+        
+        IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
+        if (skinCapability == null) {
+            return;
+        }
+        
         /*if (player instanceof MannequinFakePlayer) {
             mc.profiler.endSection();
             return;
@@ -84,18 +93,31 @@ public class ModelRendererAttachment extends ModelRenderer {
             extraColours = wardrobeCapability.getExtraColours();
         }
         
-        for (int skinIndex = 0; skinIndex < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
-            Skin data = modelRenderer.getPlayerCustomArmour(player, skinType, skinIndex);
-            if (data == null) {
+        for (int skinIndex = 0; skinIndex < EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
+            ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, skinIndex);
+            if (skinDescriptor == null) {
                 continue;
             }
-            ISkinDye skinDye = modelRenderer.getPlayerDyeData(player, skinType, skinIndex);
             
-            MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(data.getProperties()));
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
+            if (skin == null) {
+                continue;
+            }
             
-            int size = data.getParts().size();
+            SkinDye dye = new SkinDye(skinDescriptor.getSkinDye());
+            if (wardrobeCapability != null) {
+                for (int i = 0; i < 8; i++) {
+                    if (wardrobeCapability.getDye().haveDyeInSlot(i)) {
+                        dye.addDye(i, wardrobeCapability.getDye().getDyeColour(i));
+                    }
+                }
+            }
+            
+            MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
+            
+            int size = skin.getParts().size();
             for (int i = 0; i < size; i++) {
-                SkinPart partData = data.getParts().get(i);
+                SkinPart partData = skin.getParts().get(i);
                 if (partData.getPartType() == skinPart) {
                     GL11.glPushMatrix();
                     
@@ -114,7 +136,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                     
                     if (skinType == SkinTypeRegistry.skinWings) {
                         GL11.glTranslated(0, 0, scale * 2);
-                        double angle = SkinUtils.getFlapAngleForWings(player, data);
+                        double angle = SkinUtils.getFlapAngleForWings(player, skin);
                         Point3D point = new Point3D(0, 0, 0);
                         EnumFacing axis = EnumFacing.DOWN;
                         
@@ -159,7 +181,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                     GL11.glEnable(GL11.GL_CULL_FACE);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     GL11.glEnable(GL11.GL_BLEND);
-                    SkinPartRenderer.INSTANCE.renderPart(partData, scale, skinDye, extraColours, distance, true);
+                    SkinPartRenderer.INSTANCE.renderPart(partData, scale, dye, extraColours, distance, true);
                     GlStateManager.resetColor();
                     GlStateManager.color(1, 1, 1, 1);
                     GL11.glDisable(GL11.GL_CULL_FACE);

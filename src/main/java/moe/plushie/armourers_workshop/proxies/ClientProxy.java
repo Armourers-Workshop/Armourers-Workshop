@@ -40,7 +40,6 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.client.texture.PlayerTextureDownloader;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
-import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.items.ItemGiftSack;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
@@ -50,10 +49,8 @@ import moe.plushie.armourers_workshop.common.library.LibraryFileType;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
-import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
@@ -342,22 +339,11 @@ public class ClientProxy extends CommonProxy {
             ModLogger.log("Integrated Circuits detected! - Applying cosplay to mannequins.");
         }
     }
-    
-    //TODO Remove this and use IWorldAccess
-    public static void playerLeftTrackingRange(PlayerPointer playerPointer) {
-        SkinModelRenderer.INSTANCE.removeEquipmentData(playerPointer);
-        equipmentWardrobeHandler.removeEquipmentWardrobeData(playerPointer);
-    }
 
     @Override
     public void registerKeyBindings() {
         ClientRegistry.registerKeyBinding(Keybindings.openCustomArmourGui);
         ClientRegistry.registerKeyBinding(Keybindings.undo);
-    }
-    
-    @Override
-    public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
-        SkinModelRenderer.INSTANCE.addEquipmentData(playerPointer, equipmentData);
     }
 
     @Override
@@ -377,11 +363,6 @@ public class ClientProxy extends CommonProxy {
             player.openGui(ArmourersWorkshop.instance, LibGuiIds.ADMIN_PANEL, player.getEntityWorld(), 0, 0, 0);
             break;
         }
-    }
-    
-    @Override
-    public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
-        EntitySkinHandler.INSTANCE.receivedEquipmentData(equipmentData, entityId);
     }
     
     @Override

@@ -1,13 +1,11 @@
 package moe.plushie.armourers_workshop.client.render;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
@@ -24,13 +22,11 @@ import moe.plushie.armourers_workshop.client.model.skin.ModelSkinLegs;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinSword;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinWings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
-import moe.plushie.armourers_workshop.common.data.PlayerPointer;
-import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
-import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -69,7 +65,6 @@ public final class SkinModelRenderer {
         INSTANCE = new SkinModelRenderer();
     }
     
-    private final HashMap<PlayerPointer, EntityEquipmentData> playerEquipmentMap;
     private final Set<ModelBiped> attachedBipedSet;
     
     public final ModelSkinChest customChest = new ModelSkinChest();
@@ -84,7 +79,6 @@ public final class SkinModelRenderer {
     
     private SkinModelRenderer() {
         MinecraftForge.EVENT_BUS.register(this);
-        playerEquipmentMap = new HashMap<PlayerPointer, EntityEquipmentData>();
         attachedBipedSet = Collections.newSetFromMap(new WeakHashMap<ModelBiped, Boolean>());
     }
     
@@ -115,94 +109,21 @@ public final class SkinModelRenderer {
         return null;
     }
     
-    public ISkinDye getPlayerDyeData(Entity entity, ISkinType skinType, int slotIndex) {
-        if (!(entity instanceof AbstractClientPlayer)) {
-            return null;
-        }
-        AbstractClientPlayer player = (AbstractClientPlayer) entity;
-        
-        EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
-        
-        //Look for skinned armourer.
-        if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
-            int slot = 3 - skinType.getVanillaArmourSlotId();
-            /*
-            ItemStack armourStack = player.getCurrentArmor(slot);
-            if (SkinNBTHelper.stackHasSkinData(armourStack)) {
-                SkinPointer sp = SkinNBTHelper.getSkinPointerFromStack(armourStack);
-                return sp.getSkinDye();
-            }
-            */
-        }
-        
-        //No skinned armour found checking the equipment wardrobe.
-        if (equipmentData == null) {
-            return null;
-        }
-        
-        if (!equipmentData.haveEquipment(skinType, slotIndex)) {
-            return null;
-        }
-        
-        ISkinDye skinDye = equipmentData.getSkinPointer(skinType, slotIndex).getSkinDye();
-        return skinDye;
-    }
-    
-    public byte[] getPlayerExtraColours(Entity entity) {
-        if (!(entity instanceof AbstractClientPlayer)) {
-            return null;
-        }
-        AbstractClientPlayer player = (AbstractClientPlayer) entity;
-        
-        EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
-        
-        return null;
-    }
-    
-    public IEntityEquipment getPlayerCustomEquipmentData(Entity entity) {
-        if (!(entity instanceof AbstractClientPlayer)) { return null; }
-        AbstractClientPlayer player = (AbstractClientPlayer) entity;
-        
-        EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
-        
-        return equipmentData;
-    }
-    
-    public int getSkinDataMapSize() {
-        return playerEquipmentMap.size();
-    }
-    
     public Skin getCustomArmourItemData(ISkinDescriptor skinPointer) {
         return ClientSkinCache.INSTANCE.getSkin(skinPointer);
     }
     
-    public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
-        if (playerEquipmentMap.containsKey(playerPointer)) {
-            playerEquipmentMap.remove(playerPointer);
+    private boolean isPlayerWearingSkirt(EntityPlayer player) {
+        IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
+        if (skinCapability == null) {
+            return false;
         }
-        playerEquipmentMap.put(playerPointer, equipmentData);
-    }
-    
-    public void removeEquipmentData(PlayerPointer playerPointer) {
-        if (playerEquipmentMap.containsKey(playerPointer)) {
-            playerEquipmentMap.remove(playerPointer);
-        }
-    }
-    
-    private boolean isPlayerWearingSkirt(PlayerPointer playerPointer) {
-        EntityEquipmentData equipmentData = playerEquipmentMap.get(playerPointer);
-        if (equipmentData != null) { 
-            for (int i = 0; i < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; i++) {
-                ISkinDescriptor skinPointer = equipmentData.getSkinPointer(SkinTypeRegistry.skinLegs, i);
-                if (skinPointer != null) {
-                    Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-                    if (skin != null) {
-                        for (int j = 0; j < skin.getPartCount(); j++) {
-                            if (skin.getParts().get(j).getPartType().getPartName().equals("skirt")) {
-                                return true;
-                            }
-                        }
-                    }
+        for (int i = 0; i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinLegs); i++) {
+            ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(SkinTypeRegistry.skinLegs, i);
+            if (skinDescriptor != null) {
+                Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
+                if (skin != null) {
+                    return SkinProperties.PROP_ARMOUR_LIMIT_LIMBS.getValue(skin.getProperties());
                 }
             }
         }
@@ -210,19 +131,20 @@ public final class SkinModelRenderer {
     }
     
     public boolean playerHasCustomHead(EntityPlayer player) {
-        EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
-        if (equipmentData != null) {
-            for (int i = 0; i < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; i++) {
-                ISkinDescriptor sp = equipmentData.getSkinPointer(SkinTypeRegistry.skinHead, i);
-                if (sp != null) {
-                    Skin skin = ClientSkinCache.INSTANCE.getSkin(sp, false);
-                    if (skin!= null) {
-                        if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
-                            return true;
-                        }
-                        if (SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skin.getProperties())) {
-                            return true;
-                        }
+        IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
+        if (skinCapability == null) {
+            return false;
+        }
+        for (int i = 0; i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinHead); i++) {
+            ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(SkinTypeRegistry.skinHead, i);
+            if (skinDescriptor != null) {
+                Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
+                if (skin!= null) {
+                    if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
+                        return true;
+                    }
+                    if (SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skin.getProperties())) {
+                        return true;
                     }
                 }
             }
@@ -239,22 +161,13 @@ public final class SkinModelRenderer {
             attachModelsToBiped(event.getRenderer().getMainModel(), event.getRenderer());
         }
         
-        
-        if (player.getGameProfile() == null) {
-            return;
-        }
-        PlayerPointer playerPointer = new PlayerPointer(player);
-        
         //Limit the players limbs if they have a skirt equipped.
         //A proper lady should not swing her legs around!
-        if (isPlayerWearingSkirt(playerPointer)) {
-            PlayerWardrobe ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
-            if (ewd != null && ewd.limitLimbs) {
-                if (player.limbSwingAmount > 0.25F) {
-                    player.limbSwingAmount = 0.25F;
-                    player.prevLimbSwingAmount = 0.25F;
-                } 
-            }
+        if (isPlayerWearingSkirt(player)) {
+            if (player.limbSwingAmount > 0.25F) {
+                player.limbSwingAmount = 0.25F;
+                player.prevLimbSwingAmount = 0.25F;
+            } 
         }
     }
     
@@ -284,17 +197,15 @@ public final class SkinModelRenderer {
     }
     
     @SubscribeEvent
-    public void onRenderSpecialsPost(RenderPlayerEvent.Specials.Post event) {
+    public void onRenderSpecialsPost(RenderPlayerEvent.Post event) {
         if (ClientProxy.getSkinRenderType() != SkinRenderType.RENDER_EVENT) {
             return;
         }
         EntityPlayer player = event.getEntityPlayer();
         RenderPlayer render = event.getRenderer();
-        if (player.getGameProfile() == null) {
-            return;
-        }
-        PlayerPointer playerPointer = new PlayerPointer(player);
-        if (!playerEquipmentMap.containsKey(playerPointer)) {
+        
+        IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(player);
+        if (wardrobeCap == null) {
             return;
         }
         
@@ -307,17 +218,17 @@ public final class SkinModelRenderer {
             return;
         }
         
-        IWardrobeCap wardrobeCapability = WardrobeCap.get(player);
         ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
-        if (wardrobeCapability != null) {
-            extraColours = wardrobeCapability.getExtraColours();
+        if (wardrobeCap != null) {
+            extraColours = wardrobeCap.getExtraColours();
         }
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_BLEND);
+        /*
         for (int slot = 0; slot < 4; slot++) {
-
+            
             for (int skinIndex = 0; skinIndex < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
                 if (slot == SkinTypeRegistry.skinHead.getVanillaArmourSlotId()) {
                     Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
@@ -356,6 +267,7 @@ public final class SkinModelRenderer {
                 }
             }
         }
+        */
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_CULL_FACE);
         GL11.glPopMatrix();

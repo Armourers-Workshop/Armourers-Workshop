@@ -7,21 +7,20 @@ import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.Level;
 
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
-import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
@@ -135,8 +134,11 @@ public class CommandSetSkin extends ModCommand {
         }
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
         SkinIdentifier skinIdentifier = new SkinIdentifier(0, libraryFile, 0, skin.getSkinType());
-        ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinDescriptor(skinIdentifier, skinDye));
-        ExPropsPlayerSkinData.get(player).setEquipmentStack(skinStack, slotNum - 1);
+        SkinDescriptor skinDescriptor = new SkinDescriptor(skinIdentifier);
+        IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
+        if (skinCapability != null) {
+            skinCapability.setSkinDescriptor(skinIdentifier.getSkinType(), slotNum, skinDescriptor);
+        }
     }
     
     private boolean isValidHex (String colorStr) {

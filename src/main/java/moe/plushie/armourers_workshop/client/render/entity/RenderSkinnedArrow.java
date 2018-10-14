@@ -2,20 +2,20 @@ package moe.plushie.armourers_workshop.client.render.entity;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.renderer.entity.RenderArrow;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -34,28 +34,25 @@ public class RenderSkinnedArrow extends RenderArrow {
     
     @Override
     public void doRender(EntityArrow entityArrow, double x, double y, double z, float yaw, float partialTickTime) {
-        if (entityArrow.shootingEntity != null && entityArrow.shootingEntity instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) entityArrow.shootingEntity;
-            IEntityEquipment entityEquipment = equipmentModelRenderer.getPlayerCustomEquipmentData(player);
-            if (entityEquipment != null && entityEquipment.haveEquipment(SkinTypeRegistry.skinBow, 0)) {
-                ISkinDescriptor skinPointer = entityEquipment.getSkinPointer(SkinTypeRegistry.skinBow, 0);
-                if (ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
-                    Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
+        IEntitySkinCapability skinCapability = EntitySkinCapability.get(entityArrow.shootingEntity);
+        boolean didRender = false;
+        if (skinCapability != null) {
+            for (int i = 0; i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinBow); i++) {
+                ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(SkinTypeRegistry.skinBow, i);
+                if (skinDescriptor != null) {
+                    Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
                     if (skin != null) {
                         SkinPart skinPart = skin.getPart("armourers:bow.arrow");
                         if (skinPart != null) {
                             ModRenderHelper.enableAlphaBlend();
-                            renderArrowSkin(entityArrow, x, y, z, partialTickTime, skinPart, skinPointer.getSkinDye());
+                            renderArrowSkin(entityArrow, x, y, z, partialTickTime, skinPart, skinDescriptor.getSkinDye());
                             ModRenderHelper.disableAlphaBlend();
-                            return;
+                            didRender = true;
                         }
                     }
-                } else {
-                    ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer);
                 }
             }
         }
-        
         super.doRender(entityArrow, x, y, z, yaw, partialTickTime);
     }
     

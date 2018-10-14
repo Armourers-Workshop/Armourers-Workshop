@@ -18,7 +18,6 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerOverrides;
 import moe.plushie.armourers_workshop.common.config.ConfigSynchronizeHandler;
 import moe.plushie.armourers_workshop.common.crafting.CraftingManager;
-import moe.plushie.armourers_workshop.common.data.PlayerPointer;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.CommonLibraryManager;
@@ -33,8 +32,6 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand.SkinLibraryCommand;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
-import moe.plushie.armourers_workshop.common.skin.EntityEquipmentData;
-import moe.plushie.armourers_workshop.common.skin.EntityEquipmentDataManager;
 import moe.plushie.armourers_workshop.common.skin.SkinExtractor;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
@@ -106,7 +103,6 @@ public class CommonProxy implements ILibraryCallback {
         new ConfigSynchronizeHandler();
         
         PacketHandler.init();
-        EntityEquipmentDataManager.init();
         
         permissionSystem = new PermissionSystem();
         ModAddonManager.init();
@@ -122,10 +118,6 @@ public class CommonProxy implements ILibraryCallback {
     }
     
     public void registerKeyBindings() {
-        
-    }
-    
-    public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
         
     }
     
@@ -149,10 +141,6 @@ public class CommonProxy implements ILibraryCallback {
             SkinIOUtils.updateSkins(player);
             break;
         }
-    }
-    
-    public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
-        
     }
     
     public void receivedSkinFromLibrary(String fileName, String filePath, Skin skin, SendType sendType) {

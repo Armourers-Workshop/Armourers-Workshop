@@ -2,7 +2,8 @@ package moe.plushie.armourers_workshop.common.command;
 
 import java.util.List;
 
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -35,6 +36,9 @@ public class CommandResyncWardrobe extends ModCommand {
         if (player == null) {
             return;
         }
-        ExPropsPlayerSkinData.get(player).updateEquipmentDataToPlayersAround();
+        IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
+        if (skinCapability != null) {
+            skinCapability.syncToAllTracking();
+        }
     }
 }

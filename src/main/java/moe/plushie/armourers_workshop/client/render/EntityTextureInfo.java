@@ -9,9 +9,9 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
 import moe.plushie.armourers_workshop.common.SkinHelper;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -59,15 +59,15 @@ public class EntityTextureInfo {
     private boolean loading;
     
     public EntityTextureInfo() {
-        this(64, 32);
+        this(64, 64);
     }
     
     public EntityTextureInfo(int width, int height) {
         textureWidth = width;
         textureHeight = height;
         lastEntityTextureHash = -1;
-        lastSkinHashs = new int[4 * ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE];
-        lastDyeHashs = new int[4 * ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE];
+        lastSkinHashs = new int[4 * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
+        lastDyeHashs = new int[4 * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
         normalTexture = null;
         replacementTexture = null;
         for (int i = 0; i < lastSkinHashs.length; i++) {

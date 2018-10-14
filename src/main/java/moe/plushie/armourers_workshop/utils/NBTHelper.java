@@ -9,7 +9,6 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 public final class NBTHelper {
     
-    private static final String TAG_SLOT = "slot";
     private static final String TAG_POS_X = "posX";
     private static final String TAG_POS_Y = "posY";
     private static final String TAG_POS_Z = "posZ";
@@ -37,6 +36,20 @@ public final class NBTHelper {
             return true;
         }
         return false;
+    }
+    
+    public static void writeStackToNBT(NBTTagCompound compound, String key, ItemStack itemStack) {
+        NBTTagCompound stackCompund = new NBTTagCompound();
+        itemStack.writeToNBT(stackCompund);
+        compound.setTag(key, stackCompund);
+    }
+    
+    public static ItemStack readStackfromNBT(NBTTagCompound compound, String key) {
+        ItemStack returnStack = ItemStack.EMPTY;
+        if (compound.hasKey(key, NBT.TAG_COMPOUND)) {
+            returnStack = new ItemStack(compound.getCompoundTag(key));
+        }
+        return returnStack;
     }
     
     public static void writeStackArrayToNBT(NBTTagCompound compound, String key,  NonNullList<ItemStack> itemStacks) {

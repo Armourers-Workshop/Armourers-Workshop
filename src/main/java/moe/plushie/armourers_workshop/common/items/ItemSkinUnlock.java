@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.common.items;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
@@ -14,7 +13,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -59,7 +57,7 @@ public class ItemSkinUnlock extends AbstractModItem {
         if (worldIn.isRemote) {
             return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStack);
         }
-        
+        /*
         ISkinType skinType = getSkinTypeFormStack(playerIn.getHeldItem(handIn));
         
         ExPropsPlayerSkinData equipmentData = ExPropsPlayerSkinData.get(playerIn);
@@ -75,6 +73,7 @@ public class ItemSkinUnlock extends AbstractModItem {
         } else {
             playerIn.sendMessage(new TextComponentTranslation("chat.armourersworkshop:slotUnlockedFailed", localizedSkinName));
         }
+        */
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
     

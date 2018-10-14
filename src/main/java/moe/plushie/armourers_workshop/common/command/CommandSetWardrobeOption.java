@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.common.command;
 
 import java.util.List;
 
-import moe.plushie.armourers_workshop.common.skin.PlayerWardrobe;
-import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class CommandSetWardrobeOption extends ModCommand {
 
-    private static final String[] SUB_OPTIONS = new String[] {"showHeadArmour", "showChestArmour", "showLegArmour", "showFootArmour", "showHeadOverlay"};
+    private static final String[] SUB_OPTIONS = new String[] {"showHeadArmour", "showChestArmour", "showLegArmour", "showFootArmour"};
     
     @Override
     public String getName() {
@@ -57,16 +57,12 @@ public class CommandSetWardrobeOption extends ModCommand {
             throw new WrongUsageException(getUsage(sender), (Object)args);
         }
         
-        ExPropsPlayerSkinData playerEquipmentData = ExPropsPlayerSkinData.get(player);
-        if (playerEquipmentData != null) {
-            PlayerWardrobe ewd = playerEquipmentData.getEquipmentWardrobeData();
+        IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(player);
+        if (wardrobeCap != null) {
             if (subOptionIndex < 4) {
-                ewd.armourOverride.set(subOptionIndex, !value);
+                wardrobeCap.getArmourOverride().set(subOptionIndex, !value);
+                wardrobeCap.syncToAllTracking();
             }
-            if (subOptionIndex == 4) {
-                ewd.headOverlay = !value;
-            }
-            playerEquipmentData.setSkinInfo(ewd, true);
         }
     }
 }

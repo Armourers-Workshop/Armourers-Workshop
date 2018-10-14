@@ -4,52 +4,39 @@ import java.io.InputStream;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public interface ISkinDataHandler {
         
-    /** Set a skin in the players wardrobe.
+    /** Set a skin in the entity wardrobe.
      * 
-     * @param player Target player.
+     * @param entityLivingBase Target entity.
      * @param stack Stack with skin.
      * @param index Index for this skin type.
      */
-    public void setSkinOnPlayer(EntityPlayer player, ItemStack stack, int index);
+    public void setEntitySkin(EntityLivingBase entityLivingBase, ItemStack stack, int index);
     
-    /**
-     * Set a skin in the players wardrobe.
-     * 
-     * @Deprecated Use the {@link #setSkinOnPlayer(EntityPlayer, ItemStack, int)} method.
-     * @return Deprecated always returns false.
-     */
-    @Deprecated
-    public boolean setSkinOnPlayer(EntityPlayer player, ItemStack stack);
+    public ItemStack getEntitySkin(EntityLivingBase entityLivingBase, ISkinType skinType, int index);
     
-    public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType, int index);
+    public void removeEntitySkin(EntityLivingBase entityLivingBase, ISkinType skinType, int index);
     
-    @Deprecated
-    public ItemStack getSkinFormPlayer(EntityPlayer player, ISkinType skinType);
+    public boolean isValidSkin(ItemStack stack);
     
-    public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType, int index);
+    public boolean stackHasSkinDescriptor(ItemStack stack);
     
-    @Deprecated
-    public void removeSkinFromPlayer(EntityPlayer player, ISkinType skinType);
+    public ISkinDescriptor getSkinDescriptorFromStack(ItemStack stack);
     
-    public boolean isValidEquipmentSkin(ItemStack stack);
+    public void saveSkinDescriptorOnStack(ISkinDescriptor skinDescriptor, ItemStack stack);
     
-    public boolean stackHasSkinPointer(ItemStack stack);
+    public boolean compoundHasSkinDescriptor(NBTTagCompound compound);
     
-    public ISkinDescriptor getSkinPointerFromStack(ItemStack stack);
+    public ISkinDescriptor readSkinDescriptorFromCompound(NBTTagCompound compound);
     
-    public void saveSkinPointerOnStack(ISkinDescriptor skinPointer, ItemStack stack);
-    
-    public boolean compoundHasSkinPointer(NBTTagCompound compound);
-    
-    public ISkinDescriptor readSkinPointerFromCompound(NBTTagCompound compound);
-    
-    public void writeSkinPointerToCompound(ISkinDescriptor skinPointer, NBTTagCompound compound);
+    public void writeSkinDescriptorToCompound(ISkinDescriptor skinDescriptor, NBTTagCompound compound);
     
     public ISkinDescriptor addSkinToCache(InputStream inputStream);
     
@@ -59,7 +46,5 @@ public interface ISkinDataHandler {
      * @param slotId
      * @return
      */
-    public boolean isArmourRenderOverridden(EntityPlayer player, int slotId);
-    
-    //public void setItemAsSkinnable(Item item);
+    public boolean isArmourRenderOverridden(EntityPlayer player, EntityEquipmentSlot equipmentSlot);
 }
