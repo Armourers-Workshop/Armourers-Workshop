@@ -9,13 +9,21 @@ import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
+import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -24,15 +32,15 @@ public final class SkinPreviewHandler {
     
     private final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.SKIN_PREVIEW);
     
-    private SkinDescriptor lastSkinPointer;
+    private SkinDescriptor lastSkinDescriptor;
     private List<String> lastList;
     
     public SkinPreviewHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
-    /*
+    
     @SubscribeEvent
-    public void onDrawScreenPre(DrawScreenEvent.Post event) {
+    public void onDrawScreenPost(DrawScreenEvent.Post event) {
         if (!ConfigHandlerClient.skinPreEnabled) {
             return;
         }
@@ -40,21 +48,21 @@ public final class SkinPreviewHandler {
             return;
         }
         
-        SkinPointer skinPointer = lastSkinPointer;
+        SkinDescriptor skinDescriptor = lastSkinDescriptor;
         List<String> list = lastList;
         
-        lastSkinPointer = null;
+        lastSkinDescriptor = null;
         lastList = null;
         
-        if (skinPointer != null & list != null) {
+        if (skinDescriptor != null & list != null) {
             Minecraft mc = Minecraft.getMinecraft();
             
             float skinPreSize = ConfigHandlerClient.skinPreSize;
 
-            int[] toolTipSize = getTooltipSize(list, mc.currentScreen.width, mc.currentScreen.height, event.mouseX + 8, event.mouseY, mc.fontRenderer);
+            int[] toolTipSize = getTooltipSize(list, mc.currentScreen.width, mc.currentScreen.height, event.getMouseX() + 8, event.getMouseY(), mc.fontRenderer);
             int x = (int) (toolTipSize[0] - skinPreSize - 28);
             int y = (int) (toolTipSize[1] - 4);
-            if (tooltipOnLeft(list, mc.currentScreen.width, mc.currentScreen.height, event.mouseX + 8, event.mouseY, mc.fontRenderer)) {
+            if (tooltipOnLeft(list, mc.currentScreen.width, mc.currentScreen.height, event.getMouseX() + 8, event.getMouseY(), mc.fontRenderer)) {
                 x = (int) (toolTipSize[0] + toolTipSize[2] + 15);
             }
             if (y < 0) {
@@ -64,13 +72,12 @@ public final class SkinPreviewHandler {
                 y = mc.currentScreen.height - (int)skinPreSize;
             }
             
-            drawSkinBox(mc, x, y, skinPreSize, skinPointer);
+            drawSkinBox(mc, x, y, skinPreSize, skinDescriptor);
         }
     }
-    */
-    /*
+    
     @SubscribeEvent
-    public void onDrawScreenPost(DrawScreenEvent.Pre event) {
+    public void onDrawScreenPre(DrawScreenEvent.Pre event) {
         if (!ConfigHandlerClient.skinPreEnabled) {
             return;
         }
@@ -78,35 +85,35 @@ public final class SkinPreviewHandler {
             return;
         }
         
-        SkinPointer skinPointer = lastSkinPointer;
+        SkinDescriptor skinDescriptor = lastSkinDescriptor;
         List<String> list = lastList;
         
-        lastSkinPointer = null;
+        lastSkinDescriptor = null;
         lastList = null;
         
-        if (skinPointer != null & list != null) {
+        if (skinDescriptor != null & list != null) {
             Minecraft mc = Minecraft.getMinecraft();
             
             float skinPreSize = ConfigHandlerClient.skinPreSize;
             float skinPreLocHorizontal = ConfigHandlerClient.skinPreLocHorizontal;
             float skinPreLocVertical = ConfigHandlerClient.skinPreLocVertical;
-            ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+            ScaledResolution sr = new ScaledResolution(mc);
             
             double widthClip = sr.getScaledWidth_double() - skinPreSize;
             double heightClip = sr.getScaledHeight_double() - skinPreSize;
             
-            int x = MathHelper.ceiling_double_int(widthClip * skinPreLocHorizontal);
-            int y = MathHelper.ceiling_double_int(heightClip * skinPreLocVertical);
+            int x = MathHelper.ceil(widthClip * skinPreLocHorizontal);
+            int y = MathHelper.ceil(heightClip * skinPreLocVertical);
             
-            drawSkinBox(mc, x, y, skinPreSize, skinPointer);
+            drawSkinBox(mc, x, y, skinPreSize, skinDescriptor);
             
-            skinPointer = null;
+            skinDescriptor = null;
         }
     }
-    */
+    
     private void drawSkinBox(Minecraft mc, int x, int y, float skinPreSize, SkinDescriptor skinPointer) {
         boolean skinPreDrawBackground = ConfigHandlerClient.skinPreDrawBackground;
-        if (skinPreDrawBackground) {
+        if (skinPreDrawBackground & ClientSkinCache.INSTANCE.isSkinInCache(skinPointer)) {
             RenderHelper.disableStandardItemLighting();
             mc.renderEngine.bindTexture(TEXTURE);
             ModRenderHelper.enableAlphaBlend();
@@ -201,13 +208,12 @@ public final class SkinPreviewHandler {
         }
         return false;
     }
-    /*
+    
     @SubscribeEvent(priority=EventPriority.LOWEST)
     public void onItemTooltipEvent(ItemTooltipEvent event) {
         if (ConfigHandlerClient.skinPreEnabled) {
-            lastSkinPointer = SkinNBTHelper.getSkinPointerFromStack(event.itemStack);
-            lastList = event.toolTip;
+            lastSkinDescriptor = SkinNBTHelper.getSkinDescriptorFromStack(event.getItemStack());
+            lastList = event.getToolTip();
         }
     }
-    */
 }
