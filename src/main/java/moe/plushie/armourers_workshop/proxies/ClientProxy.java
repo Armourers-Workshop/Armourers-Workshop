@@ -180,8 +180,6 @@ public class ClientProxy extends CommonProxy {
         
         
         //Register block renderers.
-        RenderingRegistry.registerBlockHandler(new RenderBlockColourMixer());
-        RenderingRegistry.registerBlockHandler(new RenderBlockGlowing());
         */
         
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.paintbrush);

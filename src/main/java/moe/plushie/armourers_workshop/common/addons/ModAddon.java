@@ -26,6 +26,7 @@ public class ModAddon {
         }
         this.overrrides = new ArrayList<String>();
         itemSkinningSupport = true;
+        ModAddonManager.getLoadedAddons().add(this);
     }
     
     protected boolean setIsModLoaded() {

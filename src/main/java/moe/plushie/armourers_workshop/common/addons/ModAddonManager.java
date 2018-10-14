@@ -14,32 +14,32 @@ public final class ModAddonManager {
     
     private static final HashSet<String> ITEM_OVERRIDES = new HashSet<String>();
     
-    public static AddonAquaTweaks addonAquaTweaks;
-    public static AddonBalkonsWeaponMod addonBalkonsWeaponMod;
-    public static AddonBattlegear2 addonBattlegear2;
-    public static AddonBetterStorage addonBetterStorage;
-    public static AddonBotania addonBotania;
+    //public static AddonAquaTweaks addonAquaTweaks;
+    //public static AddonBalkonsWeaponMod addonBalkonsWeaponMod;
+    //public static AddonBattlegear2 addonBattlegear2;
+    //public static AddonBetterStorage addonBetterStorage;
+    //public static AddonBotania addonBotania;
     public static AddonBuildCraft addonBuildCraft;
     public static ModAddon addonColoredLights;
     public static AddonCustomNPCS addonCustomNPCS;
-    public static AddonGlassShards addonGlassShards;
+    //public static AddonGlassShards addonGlassShards;
     public static AddonJBRAClient addonJBRAClient;
-    public static AddonLittleMaidMob addonLittleMaidMob;
-    public static AddonMaplecrafted addonMaplecrafted;
-    public static AddonMekanismTools addonMekanismTools;
-    public static AddonMetallurgy addonMetallurgy;
+    //public static AddonLittleMaidMob addonLittleMaidMob;
+    //public static AddonMaplecrafted addonMaplecrafted;
+    //public static AddonMekanismTools addonMekanismTools;
+    //public static AddonMetallurgy addonMetallurgy;
     public static AddonMinecraft addonMinecraft;
-    public static AddonMinecraftComesAlive addonMinecraftComesAlive;
+    //public static AddonMinecraftComesAlive addonMinecraftComesAlive;
     public static ModAddon addonMorePlayerModels;
-    public static AddonMoreSwordsMod addonMoreSwordsMod;
+    //public static AddonMoreSwordsMod addonMoreSwordsMod;
     public static AddonNEI addonNEI;
-    public static AddonOreSpawn addonOreSpawn;
+    //public static AddonOreSpawn addonOreSpawn;
     public static AddonShaders addonShaders;
     public static ModAddon addonSmartMoving;
-    public static AddonThaumcraft addonThaumcraft;
-    public static AddonTinkersConstruct addonTinkersConstruct;
-    public static AddonTwilightForest addonTwilightForest;
-    public static AddonZeldaSwordSkills addonZeldaSwordSkills;
+    //public static AddonThaumcraft addonThaumcraft;
+    //public static AddonTinkersConstruct addonTinkersConstruct;
+    //public static AddonTwilightForest addonTwilightForest;
+    //public static AddonZeldaSwordSkills addonZeldaSwordSkills;
     
     private ModAddonManager() {
     }
@@ -53,55 +53,32 @@ public final class ModAddonManager {
     
     private static void loadAddons() {
         ModLogger.log("Loading addons");
-        addonAquaTweaks = new AddonAquaTweaks();
-        addonBalkonsWeaponMod = new AddonBalkonsWeaponMod();
-        addonBattlegear2 = new AddonBattlegear2();
-        addonBetterStorage = new AddonBetterStorage();
-        addonBotania = new AddonBotania();
+        //addonAquaTweaks = new AddonAquaTweaks();
+        //addonBalkonsWeaponMod = new AddonBalkonsWeaponMod();
+        //addonBattlegear2 = new AddonBattlegear2();
+        //addonBetterStorage = new AddonBetterStorage();
+        //addonBotania = new AddonBotania();
         addonBuildCraft = new AddonBuildCraft();
         addonColoredLights = new ModAddon("easycoloredlights", "Colored Lights");
         addonCustomNPCS = new AddonCustomNPCS();
-        addonGlassShards = new AddonGlassShards();
+        //addonGlassShards = new AddonGlassShards();
         addonJBRAClient = new AddonJBRAClient();
-        addonLittleMaidMob = new AddonLittleMaidMob();
-        addonMaplecrafted = new AddonMaplecrafted();
-        addonMekanismTools = new AddonMekanismTools();
-        addonMetallurgy = new AddonMetallurgy();
+        //addonLittleMaidMob = new AddonLittleMaidMob();
+        //addonMaplecrafted = new AddonMaplecrafted();
+        //addonMekanismTools = new AddonMekanismTools();
+        //addonMetallurgy = new AddonMetallurgy();
         addonMinecraft = new AddonMinecraft();
-        addonMinecraftComesAlive = new AddonMinecraftComesAlive();
+        //addonMinecraftComesAlive = new AddonMinecraftComesAlive();
         addonMorePlayerModels = new ModAddon("moreplayermodels", "More Player Models");
-        addonMoreSwordsMod = new AddonMoreSwordsMod();
+        //addonMoreSwordsMod = new AddonMoreSwordsMod();
         addonNEI = new AddonNEI();
-        addonOreSpawn = new AddonOreSpawn();
+        //addonOreSpawn = new AddonOreSpawn();
         addonShaders = new AddonShaders();
         addonSmartMoving = new ModAddon("SmartMoving", "Smart Moving");
-        addonThaumcraft = new AddonThaumcraft();
-        addonTinkersConstruct = new AddonTinkersConstruct();
-        addonTwilightForest = new AddonTwilightForest();
-        addonZeldaSwordSkills = new AddonZeldaSwordSkills();
-        
-        LOADED_ADDONS.add(addonAquaTweaks);
-        LOADED_ADDONS.add(addonBalkonsWeaponMod);
-        LOADED_ADDONS.add(addonBattlegear2);
-        LOADED_ADDONS.add(addonCustomNPCS);
-        LOADED_ADDONS.add(addonBetterStorage);
-        LOADED_ADDONS.add(addonBotania);
-        LOADED_ADDONS.add(addonBuildCraft);
-        LOADED_ADDONS.add(addonGlassShards);
-        LOADED_ADDONS.add(addonJBRAClient);
-        LOADED_ADDONS.add(addonLittleMaidMob);
-        LOADED_ADDONS.add(addonMaplecrafted);
-        LOADED_ADDONS.add(addonMekanismTools);
-        LOADED_ADDONS.add(addonMetallurgy);
-        LOADED_ADDONS.add(addonMinecraft);
-        LOADED_ADDONS.add(addonMinecraftComesAlive);
-        LOADED_ADDONS.add(addonMoreSwordsMod);
-        LOADED_ADDONS.add(addonNEI);
-        LOADED_ADDONS.add(addonOreSpawn);
-        LOADED_ADDONS.add(addonThaumcraft);
-        LOADED_ADDONS.add(addonTinkersConstruct);
-        LOADED_ADDONS.add(addonTwilightForest);
-        LOADED_ADDONS.add(addonZeldaSwordSkills);
+        //addonThaumcraft = new AddonThaumcraft();
+        //addonTinkersConstruct = new AddonTinkersConstruct();
+        //addonTwilightForest = new AddonTwilightForest();
+        //addonZeldaSwordSkills = new AddonZeldaSwordSkills();
     }
     
     public static void init() {
