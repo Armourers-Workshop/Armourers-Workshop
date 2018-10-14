@@ -215,8 +215,8 @@ public class ClientProxy extends CommonProxy {
         super.postInit(event);
         ModAddonManager.initRenderers();
         EntitySkinRenderHandler.INSTANCE.initRenderer();
-        if (HolidayHelper.valentins.isHolidayActive()) {
-            enableValentinsClouds();
+        if (HolidayHelper.valentines.isHolidayActive()) {
+            enableValentinesClouds();
         }
         
         FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable()
@@ -240,11 +240,11 @@ public class ClientProxy extends CommonProxy {
         });
     }
     
-    private void enableValentinsClouds() {
+    private void enableValentinesClouds() {
         ModLogger.log("Love is in the air!");
         try {
-            Object o = ReflectionHelper.getPrivateValue(RenderGlobal.class, null, "locationCloudsPng", "field_110925_j");
-            Field f = ReflectionHelper.findField(ResourceLocation.class, "resourceDomain", "field_110626_a");
+            Object o = ReflectionHelper.getPrivateValue(RenderGlobal.class, null, "CLOUDS_TEXTURES", "field_110925_j");
+            Field f = ReflectionHelper.findField(ResourceLocation.class, "namespace", "field_110626_a");
             f.setAccessible(true);
             f.set(o, LibModInfo.ID.toLowerCase());
         } catch (Exception e) {

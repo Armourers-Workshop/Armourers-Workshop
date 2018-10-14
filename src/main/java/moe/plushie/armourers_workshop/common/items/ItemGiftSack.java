@@ -42,7 +42,7 @@ public class ItemGiftSack extends AbstractModItem {
             super.getSubItems(tab, items);
             items.add(createStackForHoliday(HolidayHelper.christmas_season));
             items.add(createStackForHoliday(HolidayHelper.halloween_season));
-            items.add(createStackForHoliday(HolidayHelper.valentins));
+            items.add(createStackForHoliday(HolidayHelper.valentines));
         }
     }
     
@@ -98,7 +98,7 @@ public class ItemGiftSack extends AbstractModItem {
             stack.getTagCompound().setInteger(TAG_COLOUR_2, 0xEEEEEE);
             NBTHelper.writeStackToNBT(stack.getTagCompound(), TAG_GIFT_ITEM, new ItemStack(Blocks.PUMPKIN));
         }
-        if (holiday == HolidayHelper.valentins) {
+        if (holiday == HolidayHelper.valentines) {
             stack = new ItemStack(this);
             stack.setTagCompound(new NBTTagCompound());
             stack.getTagCompound().setInteger(TAG_COLOUR_1, 0xE5A2E5);
