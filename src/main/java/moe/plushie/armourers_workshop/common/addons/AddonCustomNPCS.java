@@ -21,6 +21,7 @@ import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -211,6 +212,7 @@ public class AddonCustomNPCS extends ModAddon {
             if (wardrobe != null) {
                 extraColours = wardrobe.getExtraColours();
             }
+            GlStateManager.enableRescaleNormal();
             for (int i = 0; i < skinTypes.length; i++) {
                 ISkinType skinType = skinTypes[i];
                 if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {
@@ -232,8 +234,9 @@ public class AddonCustomNPCS extends ModAddon {
                     }
                 }
             }
+            GlStateManager.disableRescaleNormal();
         }
-
+        
         @Override
         public boolean shouldCombineTextures() {
             return false;
