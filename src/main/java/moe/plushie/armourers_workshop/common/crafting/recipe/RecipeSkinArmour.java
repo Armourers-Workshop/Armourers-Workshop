@@ -16,7 +16,7 @@ public class RecipeSkinArmour extends RecipeItemSkinning {
 
     @Override
     public boolean matches(IInventory inventory) {
-        return getCraftingResult(inventory) != ItemStack.EMPTY;
+        return !getCraftingResult(inventory).isEmpty();
     }
 
     @Override

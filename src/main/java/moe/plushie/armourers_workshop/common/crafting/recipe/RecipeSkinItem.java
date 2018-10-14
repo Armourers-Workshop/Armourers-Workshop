@@ -1,62 +1,67 @@
 package moe.plushie.armourers_workshop.common.crafting.recipe;
 
-import moe.plushie.armourers_workshop.common.addons.ModAddon.ItemOverrideType;
-import moe.plushie.armourers_workshop.common.skin.EntityEquipmentDataManager;
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class RecipeSkinSword extends RecipeItemSkinning {
+public class RecipeSkinItem extends RecipeItemSkinning {
     
-    public RecipeSkinSword() {
-        super(SkinTypeRegistry.skinSword);
+    private final ItemOverrideType overrideType;
+    
+    public RecipeSkinItem(ISkinType skinType, ItemOverrideType overrideType) {
+        super(skinType);
+        this.overrideType = overrideType;
     }
     
     @Override
     public boolean matches(IInventory inventory) {
-        return getCraftingResult(inventory) != null;
+        return !getCraftingResult(inventory).isEmpty();
     }
     
     @Override
     public ItemStack getCraftingResult(IInventory inventory) {
-        ItemStack skinStack = null;
-        ItemStack swordStack = null;
+        ItemStack skinStack = ItemStack.EMPTY;
+        ItemStack itemStack = ItemStack.EMPTY;
         
         for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
             ItemStack stack = inventory.getStackInSlot(slotId);
-            if (stack != null) {
+            if (!stack.isEmpty()) {
                 Item item = stack.getItem();
                 
                 if (isValidSkinForType(stack)) {
-                    if (skinStack != null) {
-                        return null;
+                    if (!skinStack.isEmpty()) {
+                        return ItemStack.EMPTY;
                     }
                     skinStack = stack;
-                } else if (EntityEquipmentDataManager.INSTANCE.isRenderItem(ItemOverrideType.SWORD, item) &
-                         !SkinNBTHelper.isSkinLockedOnStack(stack)) {
-                    if (swordStack != null) {
-                        return null;
-                    }
-                    swordStack = stack;
-                } else {
-                    return null;
+                    continue;
                 }
                 
+                if (ModAddonManager.isOverrideItem(overrideType, item) & !SkinNBTHelper.isSkinLockedOnStack(stack)) {
+                    if (!itemStack.isEmpty()) {
+                        return ItemStack.EMPTY;
+                    }
+                    itemStack = stack;
+                    continue;
+                }
+                
+                return ItemStack.EMPTY;
             }
         }
         
-        if (skinStack != null && swordStack != null) {
-            ItemStack returnStack = swordStack.copy();
+        if (!skinStack.isEmpty() && !itemStack.isEmpty()) {
+            ItemStack returnStack = itemStack.copy();
             
             SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(skinStack);
             SkinNBTHelper.addSkinDataToStack(returnStack, skinData.getIdentifier(), skinData.getSkinDye(), true);
             
             return returnStack;
         } else {
-            return null;
+            return ItemStack.EMPTY;
         }
     }
 

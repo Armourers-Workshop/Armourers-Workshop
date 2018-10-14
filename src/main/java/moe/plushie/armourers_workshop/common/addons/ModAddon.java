@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.addons;
 
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -70,18 +71,5 @@ public class ModAddon {
     
     public boolean hasItemOverrides() {
         return overrrides.size() > 0;
-    }
-    
-    public static enum ItemOverrideType {
-        SWORD,
-        SHIELD,
-        BOW,
-        
-        PICKAXE,
-        AXE,
-        SHOVEL,
-        HOE,
-        
-        ITEM;
     }
 }

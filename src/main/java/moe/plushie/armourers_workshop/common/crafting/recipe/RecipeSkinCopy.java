@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.common.crafting.recipe;
 
 import moe.plushie.armourers_workshop.common.items.ModItems;
-import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -16,43 +16,43 @@ public class RecipeSkinCopy extends RecipeItemSkinning {
 
     @Override
     public boolean matches(IInventory inventory) {
-        return getCraftingResult(inventory) != null;
+        return !getCraftingResult(inventory).isEmpty();
     }
     
     @Override
     public ItemStack getCraftingResult(IInventory inventory) {
-        ItemStack skinStack = null;
-        ItemStack blackStack = null;
+        ItemStack skinStack = ItemStack.EMPTY;
+        ItemStack blackStack = ItemStack.EMPTY;
         
         for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
             ItemStack stack = inventory.getStackInSlot(slotId);
-            if (stack != null) {
+            if (!stack.isEmpty()) {
                 Item item = stack.getItem();
                 
                 if (item == ModItems.Skin && SkinNBTHelper.stackHasSkinData(stack)) {
-                    if (skinStack != null) {
-                        return null;
+                    if (!skinStack.isEmpty()) {
+                        return ItemStack.EMPTY;
                     }
                     skinStack = stack;
                 } else if (item == ModItems.SkinTemplate & !SkinNBTHelper.stackHasSkinData(stack)) {
-                    if (blackStack != null) {
-                        return null;
+                    if (!blackStack.isEmpty()) {
+                        return ItemStack.EMPTY;
                     }
                     blackStack = stack;
                 } else {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
                 
             }
         }
         
-        if (skinStack != null && blackStack != null) {
+        if (!skinStack.isEmpty() && !blackStack.isEmpty()) {
             ItemStack returnStack = new ItemStack(ModItems.Skin, 1);
             SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(skinStack);
             SkinNBTHelper.addSkinDataToStack(returnStack, skinData.getIdentifier(), false, new SkinDye(skinData.getSkinDye()));
             return returnStack;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
     
     @Override

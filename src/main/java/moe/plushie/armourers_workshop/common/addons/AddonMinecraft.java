@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.common.addons;
 
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
+
 public class AddonMinecraft extends ModAddon {
 
     public AddonMinecraft() {

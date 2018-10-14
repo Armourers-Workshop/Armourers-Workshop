@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.common.command;
 
 import java.util.List;
 
-import moe.plushie.armourers_workshop.common.addons.ModAddon.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

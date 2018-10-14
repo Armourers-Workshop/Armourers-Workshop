@@ -6,16 +6,14 @@ import java.util.BitSet;
 import moe.plushie.armourers_workshop.api.common.skin.ISkinDataHandler;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.common.crafting.ItemSkinningRecipes;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.skin.ExPropsPlayerSkinData;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -124,11 +122,6 @@ public class SkinDataHandler implements ISkinDataHandler {
             ExPropsPlayerSkinData.register(player);
         }
         return ExPropsPlayerSkinData.get(player);
-    }
-
-    @Override
-    public void setItemAsSkinnable(Item item) {
-        ItemSkinningRecipes.addSkinnableItem(item);
     }
 
     @Override

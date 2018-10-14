@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.common.skin;
 
-import moe.plushie.armourers_workshop.common.addons.ModAddon.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;

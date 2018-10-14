@@ -51,6 +51,5 @@ public class ConfigHandlerOverrides {
                 + "example sword:minecraft:iron_sword");
         Property prop = config.get(CATEGORY_OVERRIDES, "itemOverrides", new String[] {});
         prop.setLanguageKey("itemOverrides");
-        //prop.setComment("");
     }
 }

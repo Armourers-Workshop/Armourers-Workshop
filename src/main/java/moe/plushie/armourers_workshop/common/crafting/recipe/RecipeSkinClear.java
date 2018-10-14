@@ -14,42 +14,42 @@ public class RecipeSkinClear extends RecipeItemSkinning {
 
     @Override
     public boolean matches(IInventory inventory) {
-        return getCraftingResult(inventory) != null;
+        return !getCraftingResult(inventory).isEmpty();
     }
 
     @Override
     public ItemStack getCraftingResult(IInventory inventory) {
-        ItemStack skinItemStack = null;
-        ItemStack soapStack = null;
+        ItemStack skinItemStack = ItemStack.EMPTY;
+        ItemStack soapStack = ItemStack.EMPTY;
         
         for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
             ItemStack stack = inventory.getStackInSlot(slotId);
-            if (stack != null) {
+            if (!stack.isEmpty()) {
                 Item item = stack.getItem();
                 
                 
                 if (item != ModItems.Skin && SkinNBTHelper.stackHasSkinData(stack) && SkinNBTHelper.getSkinDescriptorFromStack(stack).lockSkin) {
-                    if (skinItemStack != null) {
-                        return null;
+                    if (!skinItemStack.isEmpty()) {
+                        return ItemStack.EMPTY;
                     }
                     skinItemStack = stack;
                 } else if (item == ModItems.soap) {
-                    if (soapStack != null) {
-                        return null;
+                    if (!soapStack.isEmpty()) {
+                        return ItemStack.EMPTY;
                     }
                     soapStack = stack;
                 } else {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }
         }
         
-        if (skinItemStack != null && soapStack != null) {
+        if (!skinItemStack.isEmpty() && !soapStack.isEmpty()) {
             ItemStack returnStack = skinItemStack.copy();
             SkinNBTHelper.removeSkinDataFromStack(returnStack, true);
             return returnStack;
         } else {
-            return null;
+            return ItemStack.EMPTY;
         }
     }
 

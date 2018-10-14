@@ -21,14 +21,15 @@ public class GuiSkinningTable extends GuiContainer {
     public GuiSkinningTable(InventoryPlayer invPlayer, TileEntitySkinningTable tileEntity) {
         super(new ContainerSkinningTable(invPlayer, tileEntity));
         this.tileEntity = tileEntity;
+        this.xSize = 176;
+        this.ySize = 176;
     }
     
     @Override
-    public void initGui() {
-        super.initGui();
-        
-        this.xSize = 176;
-        this.ySize = 176;
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
     }
     
     @Override

@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.common.addons;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import moe.plushie.armourers_workshop.common.addons.ModAddon.ItemOverrideType;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.relauncher.Side;
@@ -108,7 +107,7 @@ public final class ModAddonManager {
     public static void init() {
         for (ModAddon modAddon : LOADED_ADDONS) {
             modAddon.init();
-            if (modAddon.isItemSkinningSupport()) {
+            if (modAddon.isItemSkinningSupport() & modAddon.isModLoaded()) {
                 ITEM_OVERRIDES.addAll(modAddon.getItemOverrides());
             }
         }
@@ -144,10 +143,6 @@ public final class ModAddonManager {
         for (int i = 0; i < itemOverrides.length; i++) {
             ITEM_OVERRIDES.add(itemOverrides[i]);
         }
-        String[] keys = ITEM_OVERRIDES.toArray(new String[ITEM_OVERRIDES.size()]);
-        for (int i = 0; i < ITEM_OVERRIDES.size(); i++) {
-            ModLogger.log(keys[i]);
-        }
     }
     
     public static boolean isOverrideItem(ItemOverrideType type, Item item) {
@@ -160,8 +155,16 @@ public final class ModAddonManager {
         ITEM_OVERRIDES.add(key);
     }
     
-    public static enum RenderType {
+    public static enum ItemOverrideType {
         SWORD,
-        BOW;
+        SHIELD,
+        BOW,
+        
+        PICKAXE,
+        AXE,
+        SHOVEL,
+        HOE,
+        
+        ITEM;
     }
 }

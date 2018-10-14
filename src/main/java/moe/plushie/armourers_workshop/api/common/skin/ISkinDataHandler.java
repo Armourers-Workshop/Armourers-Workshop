@@ -5,7 +5,6 @@ import java.io.InputStream;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -62,5 +61,5 @@ public interface ISkinDataHandler {
      */
     public boolean isArmourRenderOverridden(EntityPlayer player, int slotId);
     
-    public void setItemAsSkinnable(Item item);
+    //public void setItemAsSkinnable(Item item);
 }

@@ -1,12 +1,14 @@
 package moe.plushie.armourers_workshop.client.render.entity;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
-import moe.plushie.armourers_workshop.common.addons.ModAddon.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.CullFace;
@@ -63,43 +65,49 @@ public class SkinLayerRendererHeldItem extends LayerHeldItem {
             boolean flag = handSide == EnumHandSide.LEFT;
             GlStateManager.translate((float) (flag ? -1 : 1) / 16.0F, 0.125F, -0.625F);
             
-            ISkinDescriptor descriptorSword = skinCapability.getSkinDescriptor(SkinTypeRegistry.skinSword, 0);
-            ISkinDescriptor descriptorShield = skinCapability.getSkinDescriptor(SkinTypeRegistry.skinShield, 0);
+            ISkinType[] skinTypes = new ISkinType[] {
+                    SkinTypeRegistry.skinSword,
+                    SkinTypeRegistry.skinShield,
+                    SkinTypeRegistry.skinBow,
+                    
+                    SkinTypeRegistry.skinPickaxe,
+                    SkinTypeRegistry.skinAxe,
+                    SkinTypeRegistry.skinShovel,
+                    SkinTypeRegistry.skinHoe,
+                    
+                    SkinTypeRegistry.skinItem
+            };
             
-            if (ModAddonManager.isOverrideItem(ItemOverrideType.SWORD, itemStack.getItem()) & descriptorSword != null) {
-                GlStateManager.pushMatrix();
-                GlStateManager.enableCull();
-                GlStateManager.scale(-1, -1, 1);
-                GlStateManager.translate(0, 0.0625F * 2, 0.0625F * 2);
-                if (flag) {
-                    GlStateManager.scale(-1, 1, 1);
-                    GlStateManager.cullFace(CullFace.FRONT);
+            boolean didRender = false;
+            for (int i = 0; i < ItemOverrideType.values().length; i++) {
+                if (ModAddonManager.isOverrideItem(ItemOverrideType.values()[i], itemStack.getItem())) {
+                    ISkinDescriptor descriptorSword = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
+                    if (descriptorSword == null) {
+                        descriptorSword = skinCapability.getSkinDescriptor(skinTypes[i], 0);
+                    }
+                    if (descriptorSword != null) {
+                        GlStateManager.pushMatrix();
+                        GlStateManager.enableCull();
+                        GlStateManager.scale(-1, -1, 1);
+                        GlStateManager.translate(0, 0.0625F * 2, 0.0625F * 2);
+                        if (flag) {
+                            GlStateManager.scale(-1, 1, 1);
+                            GlStateManager.cullFace(CullFace.FRONT);
+                        }
+                        SkinItemRenderHelper.renderSkinWithoutHelper(descriptorSword, false);
+                        if (flag) {
+                            GlStateManager.cullFace(CullFace.BACK);
+                        }
+                        GlStateManager.disableCull();
+                        GlStateManager.popMatrix();
+                        didRender = true;
+                        break;
+                    }
                 }
-                SkinItemRenderHelper.renderSkinWithoutHelper(descriptorSword, false);
-                if (flag) {
-                    GlStateManager.cullFace(CullFace.BACK);
-                }
-                GlStateManager.disableCull();
-                GlStateManager.popMatrix();
-            } else if (ModAddonManager.isOverrideItem(ItemOverrideType.SHIELD, itemStack.getItem()) & descriptorShield != null) {
-                GlStateManager.pushMatrix();
-                GlStateManager.enableCull();
-                GlStateManager.scale(-1, -1, 1);
-                GlStateManager.translate(0, 0.0625F * 2, 0.0625F * 2);
-                if (flag) {
-                    GlStateManager.scale(-1, 1, 1);
-                    GlStateManager.cullFace(CullFace.FRONT);
-                }
-                SkinItemRenderHelper.renderSkinWithoutHelper(descriptorShield, false);
-                if (flag) {
-                    GlStateManager.cullFace(CullFace.BACK);
-                }
-                GlStateManager.disableCull();
-                GlStateManager.popMatrix();
-            } else {
+            }
+            if (!didRender) {
                 Minecraft.getMinecraft().getItemRenderer().renderItemSide(entityLivingBase, itemStack, transformType, flag);
             }
-            
             GlStateManager.popMatrix();
         }
     }

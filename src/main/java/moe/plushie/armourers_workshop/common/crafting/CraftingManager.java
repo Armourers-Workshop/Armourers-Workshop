@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.event.RegistryEvent;
@@ -46,7 +45,6 @@ public final class CraftingManager {
     
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
-        ModLogger.log("------------registerRecipes------------");
         ModBlockRecipes.init(event.getRegistry());
         ModItemRecipes.init(event.getRegistry()); 
     }

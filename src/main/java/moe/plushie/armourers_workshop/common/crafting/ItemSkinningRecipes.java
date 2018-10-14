@@ -2,49 +2,48 @@ package moe.plushie.armourers_workshop.common.crafting;
 
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.crafting.recipe.RecipeItemSkinning;
 import moe.plushie.armourers_workshop.common.crafting.recipe.RecipeSkinArmour;
 import moe.plushie.armourers_workshop.common.crafting.recipe.RecipeSkinArmourContainer;
+import moe.plushie.armourers_workshop.common.crafting.recipe.RecipeSkinClear;
+import moe.plushie.armourers_workshop.common.crafting.recipe.RecipeSkinCopy;
+import moe.plushie.armourers_workshop.common.crafting.recipe.RecipeSkinItem;
+import moe.plushie.armourers_workshop.common.crafting.recipe.RecipeSkinRecover;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class ItemSkinningRecipes {
     
     public static ArrayList<RecipeItemSkinning> recipes = new ArrayList<RecipeItemSkinning>();
-    private static ArrayList<Item> skinnableItems = new ArrayList<Item>();
     
     public static void init() {
-        /*
-        recipes.add(new RecipeSkinSword());
-        recipes.add(new RecipeSkinBow());
-        recipes.add(new RecipeSkinPickaxe());
+        
+        recipes.add(new RecipeSkinItem(SkinTypeRegistry.skinSword, ItemOverrideType.SWORD));
+        recipes.add(new RecipeSkinItem(SkinTypeRegistry.skinShield, ItemOverrideType.SHIELD));
+        recipes.add(new RecipeSkinItem(SkinTypeRegistry.skinBow, ItemOverrideType.BOW));
+        
+        recipes.add(new RecipeSkinItem(SkinTypeRegistry.skinPickaxe, ItemOverrideType.PICKAXE));
+        recipes.add(new RecipeSkinItem(SkinTypeRegistry.skinAxe, ItemOverrideType.AXE));
+        recipes.add(new RecipeSkinItem(SkinTypeRegistry.skinShovel, ItemOverrideType.SHOVEL));
+        recipes.add(new RecipeSkinItem(SkinTypeRegistry.skinHoe, ItemOverrideType.HOE));
+        
+        recipes.add(new RecipeSkinItem(SkinTypeRegistry.skinItem, ItemOverrideType.ITEM));
+        
         recipes.add(new RecipeSkinCopy());
         recipes.add(new RecipeSkinClear());
         recipes.add(new RecipeSkinRecover());
-        */
+        
         recipes.add(new RecipeSkinArmour(SkinTypeRegistry.skinHead));
         recipes.add(new RecipeSkinArmour(SkinTypeRegistry.skinChest));
         recipes.add(new RecipeSkinArmour(SkinTypeRegistry.skinLegs));
         recipes.add(new RecipeSkinArmour(SkinTypeRegistry.skinFeet));
+        
         recipes.add(new RecipeSkinArmourContainer(SkinTypeRegistry.skinHead));
         recipes.add(new RecipeSkinArmourContainer(SkinTypeRegistry.skinChest));
         recipes.add(new RecipeSkinArmourContainer(SkinTypeRegistry.skinLegs));
         recipes.add(new RecipeSkinArmourContainer(SkinTypeRegistry.skinFeet));
-    }
-    
-    public static void addSkinnableItem(Item item) {
-        skinnableItems.add(item);
-    }
-    
-    public static boolean isItemSkinable(Item item) {
-        for (int i = 0; i < skinnableItems.size(); i++) {
-            if (item == skinnableItems.get(i)) {
-                return true;
-            }
-        }
-        return false;
     }
     
     public static ItemStack getRecipeOutput(IInventory inventory) {
