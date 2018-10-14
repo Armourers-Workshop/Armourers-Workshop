@@ -11,102 +11,82 @@ import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
+import moe.plushie.armourers_workshop.utils.UtilItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerGlobalSkinLibrary extends Container implements IButtonPress {
-    
-    private TileEntityGlobalSkinLibrary tileEntity;
-    private EntityPlayer player;
-    private IInventory inventory;
-    
+public class ContainerGlobalSkinLibrary extends ModTileContainer<TileEntityGlobalSkinLibrary> implements IButtonPress {
+
+    private final IInventory inventory;
+    private final EntityPlayer player;
+
     public ContainerGlobalSkinLibrary(InventoryPlayer invPlayer, TileEntityGlobalSkinLibrary tileEntity) {
-        this.tileEntity = tileEntity;
-        this.player = invPlayer.player;
+        super(invPlayer, tileEntity);
         inventory = new ModInventory("fakeInventory", 2);
-        int playerInvY = 20;
-        int hotBarY = playerInvY + 58;
-        for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new SlotHidable(invPlayer, x, 5 + 18 * x, hotBarY));
-        }
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new SlotHidable(invPlayer, x + y * 9 + 9, 5 + 18 * x, playerInvY + y * 18));
-            }
-        }
+        player = invPlayer.player;
+        addPlayerSlots(5, 20);
         addSlotToContainer(new SlotHidable(inventory, 0, 5, 5));
         addSlotToContainer(new SlotOutput(inventory, 1, 5, 5));
     }
-    
-    public TileEntityGlobalSkinLibrary getTileEntity() {
-        return tileEntity;
-    }
-    
+
     @Override
     public void onContainerClosed(EntityPlayer entityPlayer) {
         super.onContainerClosed(entityPlayer);
         if (!tileEntity.getWorld().isRemote) {
-            Slot slot = getSlot(36);
+            Slot slot = getInputSlot();
             if (slot.getHasStack()) {
-                // TODO entityPlayer.dropPlayerItemWithRandomChoice(slot.getStack(), false);
+                UtilItems.spawnItemAtEntity(entityPlayer, slot.getStack());
             }
-            slot = getSlot(37);
+            slot = getOutputSlot();
             if (slot.getHasStack()) {
-             // TODO entityPlayer.dropPlayerItemWithRandomChoice(slot.getStack(), false);
+                UtilItems.spawnItemAtEntity(entityPlayer, slot.getStack());
             }
         }
     }
     
+    public Slot getInputSlot() {
+        return getSlot(36);
+    }
+    
+    public Slot getOutputSlot() {
+        return getSlot(37);
+    }
+
     public void onSkinUploaded() {
         if (!tileEntity.getWorld().isRemote) {
             ItemStack stack = getSlot(36).getStack();
-            getSlot(36).putStack(null);
-            getSlot(37).putStack(stack);
+            getInputSlot().putStack(ItemStack.EMPTY);
+            getOutputSlot().putStack(stack);
         }
     }
-    
+
     @Override
-    public boolean canInteractWith(EntityPlayer entityPlayer) {
-        return entityPlayer.getDistanceSq(tileEntity.getPos()) <= 64 & !entityPlayer.isDead;
-    }
-    
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotId) {
-        Slot slot = getSlot(slotId);
-        if (slot != null && slot.getHasStack()) {
+    protected ItemStack transferStackFromPlayer(EntityPlayer playerIn, int index) {
+        Slot slot = getSlot(index);
+        if (slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
-            
-            if (slotId > 35) {
-                //Moving from tile entity to player.
-                if (!this.mergeItemStack(stack, 9, 36, false)) {
-                    if (!this.mergeItemStack(stack, 0, 9, false)) {
-                        return null;
-                    }
-                }
-            } else {
-                //Moving from player to tile entity.
-                if (!this.mergeItemStack(stack, 36, 37, false)) {
-                    return null;
-                }
+
+            // Moving from player to tile entity.
+            if (!this.mergeItemStack(stack, 36, 37, false)) {
+                return ItemStack.EMPTY;
             }
-            
+
             if (stack.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
 
-            slot.onTake(entityPlayer, stack);
-            
+            slot.onTake(playerIn, stack);
+
             return result;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override

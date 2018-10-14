@@ -1,11 +1,9 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
@@ -18,9 +16,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 
-public class BlockGlobalSkinLibrary extends AbstractModBlock implements ITileEntityProvider {
+public class BlockGlobalSkinLibrary extends AbstractModBlockContainer {
 
     public static final PropertyDirection STATE_FACING = BlockHorizontal.FACING;
     
@@ -81,9 +78,7 @@ public class BlockGlobalSkinLibrary extends AbstractModBlock implements ITileEnt
     
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (worldIn.isRemote) {
-            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.GLOBAL_SKIN_LIBRARY, worldIn, pos.getX(), pos.getY(), pos.getZ());
-        }
+        openGui(playerIn, LibGuiIds.GLOBAL_SKIN_LIBRARY, worldIn, pos);
         return true;
     }
 
