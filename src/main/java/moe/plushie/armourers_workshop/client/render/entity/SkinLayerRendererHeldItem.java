@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.client.render.entity;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
+import moe.plushie.armourers_workshop.common.addons.ModAddon.ItemOverrideType;
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -13,9 +15,7 @@ import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemShield;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import net.minecraft.util.EnumHandSide;
 
 public class SkinLayerRendererHeldItem extends LayerHeldItem {
@@ -66,7 +66,7 @@ public class SkinLayerRendererHeldItem extends LayerHeldItem {
             ISkinDescriptor descriptorSword = skinCapability.getSkinDescriptor(SkinTypeRegistry.skinSword, 0);
             ISkinDescriptor descriptorShield = skinCapability.getSkinDescriptor(SkinTypeRegistry.skinShield, 0);
             
-            if (itemStack.getItem() instanceof ItemSword & descriptorSword != null) {
+            if (ModAddonManager.isOverrideItem(ItemOverrideType.SWORD, itemStack.getItem()) & descriptorSword != null) {
                 GlStateManager.pushMatrix();
                 GlStateManager.enableCull();
                 GlStateManager.scale(-1, -1, 1);
@@ -81,7 +81,7 @@ public class SkinLayerRendererHeldItem extends LayerHeldItem {
                 }
                 GlStateManager.disableCull();
                 GlStateManager.popMatrix();
-            } else if (itemStack.getItem() instanceof ItemShield & descriptorShield != null) {
+            } else if (ModAddonManager.isOverrideItem(ItemOverrideType.SHIELD, itemStack.getItem()) & descriptorShield != null) {
                 GlStateManager.pushMatrix();
                 GlStateManager.enableCull();
                 GlStateManager.scale(-1, -1, 1);

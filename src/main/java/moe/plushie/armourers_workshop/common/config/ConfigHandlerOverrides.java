@@ -1,11 +1,8 @@
 package moe.plushie.armourers_workshop.common.config;
 
 import java.io.File;
-import java.util.Arrays;
 
-import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 
 public class ConfigHandlerOverrides {
 
@@ -28,6 +25,7 @@ public class ConfigHandlerOverrides {
     }
     
     private static void loadCategoryCompatibility() {
+        /*
         Property prop = config.get(CATEGORY_OVERRIDES, "itemOverrides", ModAddonManager.getDefaultOverrides());
         prop.setLanguageKey("itemOverrides");
         prop.setComment("List of items that can have skins applied.\n"
@@ -42,5 +40,6 @@ public class ConfigHandlerOverrides {
                 + "bow");
         ModAddonManager.itemOverrides.clear();
         ModAddonManager.itemOverrides.addAll(Arrays.asList(prop.getStringList()));
+        */
     }
 }

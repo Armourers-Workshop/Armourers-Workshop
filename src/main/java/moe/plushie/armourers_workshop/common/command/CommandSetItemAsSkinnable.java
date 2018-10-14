@@ -1,14 +1,18 @@
 package moe.plushie.armourers_workshop.common.command;
 
+import java.util.List;
+
+import moe.plushie.armourers_workshop.common.addons.ModAddon.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 
 public class CommandSetItemAsSkinnable extends ModCommand {
 
@@ -16,31 +20,33 @@ public class CommandSetItemAsSkinnable extends ModCommand {
     public String getName() {
         return "setItemAsSkinnable";
     }
+    
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
+        if (args.length == 2) {
+            String[] values = new String[ItemOverrideType.values().length];
+            for (int i = 0; i < values.length; i++) {
+                values[i] = ItemOverrideType.values()[i].toString().toLowerCase();
+            }
+            return getListOfStringsMatchingLastWord(args, values);
+        }
+        return null;
+    }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        if (args.length != 2) {
+            throw new WrongUsageException(getUsage(sender), (Object)args);
+        }
         EntityPlayerMP player = getCommandSenderAsPlayer(sender);
         if (player == null) {
             return;
         }
-        
+        ItemOverrideType type = ItemOverrideType.valueOf(args[1]);
         ItemStack stack = player.getHeldItemMainhand();
-        if (stack != null) {
+        if (!stack.isEmpty()) {
             Configuration config = ConfigHandler.config;
-            
-            Property prop = config.get(ConfigHandler.CATEGORY_COMPATIBILITY, "itemOverrides", ModAddonManager.getDefaultOverrides());
-            String[] itemOverrides = prop.getStringList();
-            String[] newItemOverrides = new String[itemOverrides.length + 1];
-            System.arraycopy(itemOverrides, 0, newItemOverrides, 0, itemOverrides.length);
-            //UniqueIdentifier uniqueIdentifier = GameRegistry.findUniqueIdentifierFor(stack.getItem());
-            /*
-            newItemOverrides[newItemOverrides.length - 1] = "sword:" + uniqueIdentifier.toString();
-            
-            ModLogger.log(String.format("Setting item %s as skinnable.", uniqueIdentifier.toString()));
-            
-            prop.set(newItemOverrides);
-            config.save();
-            */
+            ModAddonManager.addOverrideItem(type, stack.getItem());
         }
     }
 }

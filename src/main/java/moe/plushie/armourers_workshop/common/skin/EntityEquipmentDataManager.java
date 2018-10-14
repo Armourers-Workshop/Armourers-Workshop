@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -32,15 +31,7 @@ public final class EntityEquipmentDataManager {
     }
     
     public boolean isRenderItem(ItemOverrideType  type, Item item) {
-        ResourceLocation itemName = item.REGISTRY.getNameForObject(item);
-        if (itemName != null) {
-            for (int i = 0; i < ModAddonManager.itemOverrides.size(); i++) {
-                if (ModAddonManager.itemOverrides.get(i).equals(type.toString().toLowerCase() + ":" + itemName)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return ModAddonManager.isOverrideItem(type, item);
     }
     
     @SubscribeEvent

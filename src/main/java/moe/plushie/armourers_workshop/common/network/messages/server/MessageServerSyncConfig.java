@@ -1,18 +1,17 @@
 package moe.plushie.armourers_workshop.common.network.messages.server;
 
-import java.util.Arrays;
 import java.util.UUID;
 
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.network.ByteBufHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Sent from the server to a client when they connect to sync configs.
@@ -38,7 +37,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     public MessageServerSyncConfig() {
         this.allowClientsToDownloadSkins = ConfigHandler.allowClientsToDownloadSkins;
         this.allowClientsToUploadSkins = ConfigHandler.allowClientsToUploadSkins;
-        this.itemOverrides = ModAddonManager.itemOverrides.toArray(new String[ModAddonManager.itemOverrides.size()]);
+        this.itemOverrides = ModAddonManager.getItemOverrides().toArray(new String[ModAddonManager.getItemOverrides().size()]);
         this.libraryShowsModelPreviews = ConfigHandler.libraryShowsModelPreviews;
         this.lockDyesOnSkins = ConfigHandler.lockDyesOnSkins;
         this.instancedDyeTable = ConfigHandler.instancedDyeTable;
@@ -87,8 +86,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     private void setConfigsOnClient(MessageServerSyncConfig message) {
         ConfigHandler.allowClientsToDownloadSkins = message.allowClientsToDownloadSkins;
         ConfigHandler.allowClientsToUploadSkins = message.allowClientsToUploadSkins;
-        ModAddonManager.itemOverrides.clear();
-        ModAddonManager.itemOverrides.addAll(Arrays.asList(message.itemOverrides));
+        ModAddonManager.setItemOverrides(message.itemOverrides);
         ConfigHandler.libraryShowsModelPreviews = message.libraryShowsModelPreviews;
         ConfigHandler.lockDyesOnSkins = message.lockDyesOnSkins;
         ConfigHandler.remotePlayerId = message.playerId;

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 
-public abstract class ModAddon {
+public class ModAddon {
     
     private final String modId;
     private final String modName;
@@ -33,6 +35,9 @@ public abstract class ModAddon {
     
     public void postInit() {}
     
+    @SideOnly(Side.CLIENT)
+    public void initRenderers() {}
+    
     public String getModId() {
         return this.modId;
     }
@@ -55,11 +60,14 @@ public abstract class ModAddon {
     
     public static enum ItemOverrideType {
         SWORD,
-        ITEM,
+        SHIELD,
+        BOW,
+        
         PICKAXE,
         AXE,
         SHOVEL,
         HOE,
-        BOW
+        
+        ITEM;
     }
 }

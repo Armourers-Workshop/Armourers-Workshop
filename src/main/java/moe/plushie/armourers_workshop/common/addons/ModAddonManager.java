@@ -1,17 +1,17 @@
 package moe.plushie.armourers_workshop.common.addons;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
-import org.apache.logging.log4j.Level;
-
+import moe.plushie.armourers_workshop.common.addons.ModAddon.ItemOverrideType;
 import moe.plushie.armourers_workshop.utils.ModLogger;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraft.item.Item;
 
 public final class ModAddonManager {
     
-    private static ArrayList<ModAddon> loadedAddons = new ArrayList<ModAddon>(); 
+    private static final ArrayList<ModAddon> LOADED_ADDONS = new ArrayList<ModAddon>(); 
     
-    public static ArrayList<String> itemOverrides = new ArrayList<String>();
+    private static final HashSet<String> ITEM_OVERRIDES = new HashSet<String>();
     
     public static AddonAquaTweaks addonAquaTweaks;
     public static AddonBalkonsWeaponMod addonBalkonsWeaponMod;
@@ -40,10 +40,15 @@ public final class ModAddonManager {
     public static AddonTwilightForest addonTwilightForest;
     public static AddonZeldaSwordSkills addonZeldaSwordSkills;
     
+    private ModAddonManager() {
+    }
+    
     public static void preInit() {
         loadAddons();
-        for (int i = 0; i < loadedAddons.size(); i++) {
-            loadedAddons.get(i).preInit();
+        for (int i = 0; i < LOADED_ADDONS.size(); i++) {
+            if (LOADED_ADDONS.get(i).isModLoaded()) {
+                LOADED_ADDONS.get(i).preInit();
+            }
         }
     }
     
@@ -76,145 +81,83 @@ public final class ModAddonManager {
         addonTwilightForest = new AddonTwilightForest();
         addonZeldaSwordSkills = new AddonZeldaSwordSkills();
         
-        loadedAddons.add(addonAquaTweaks);
-        loadedAddons.add(addonBalkonsWeaponMod);
-        loadedAddons.add(addonBattlegear2);
-        loadedAddons.add(addonCustomNPCS);
-        loadedAddons.add(addonBetterStorage);
-        loadedAddons.add(addonBotania);
-        loadedAddons.add(addonBuildCraft);
-        loadedAddons.add(addonGlassShards);
-        loadedAddons.add(addonJBRAClient);
-        loadedAddons.add(addonLittleMaidMob);
-        loadedAddons.add(addonMaplecrafted);
-        loadedAddons.add(addonMekanismTools);
-        loadedAddons.add(addonMetallurgy);
-        loadedAddons.add(addonMinecraft);
-        loadedAddons.add(addonMinecraftComesAlive);
-        loadedAddons.add(addonMoreSwordsMod);
-        loadedAddons.add(addonNEI);
-        loadedAddons.add(addonOreSpawn);
-        loadedAddons.add(addonThaumcraft);
-        loadedAddons.add(addonTinkersConstruct);
-        loadedAddons.add(addonTwilightForest);
-        loadedAddons.add(addonZeldaSwordSkills);
-    }
-    
-    public static String[] getDefaultOverrides() {
-        ArrayList<String> overrides = new ArrayList<String>();
-        for (int i = 0; i < loadedAddons.size(); i++) {
-            if (loadedAddons.get(i).getItemOverrides().size() > 0) {
-                overrides.addAll(loadedAddons.get(i).getItemOverrides());
-                if (i != loadedAddons.size() - 1) {
-                    overrides.add("");
-                }
-            }
-        }
-        return overrides.toArray(new String[0]);
+        LOADED_ADDONS.add(addonAquaTweaks);
+        LOADED_ADDONS.add(addonBalkonsWeaponMod);
+        LOADED_ADDONS.add(addonBattlegear2);
+        LOADED_ADDONS.add(addonCustomNPCS);
+        LOADED_ADDONS.add(addonBetterStorage);
+        LOADED_ADDONS.add(addonBotania);
+        LOADED_ADDONS.add(addonBuildCraft);
+        LOADED_ADDONS.add(addonGlassShards);
+        LOADED_ADDONS.add(addonJBRAClient);
+        LOADED_ADDONS.add(addonLittleMaidMob);
+        LOADED_ADDONS.add(addonMaplecrafted);
+        LOADED_ADDONS.add(addonMekanismTools);
+        LOADED_ADDONS.add(addonMetallurgy);
+        LOADED_ADDONS.add(addonMinecraft);
+        LOADED_ADDONS.add(addonMinecraftComesAlive);
+        LOADED_ADDONS.add(addonMoreSwordsMod);
+        LOADED_ADDONS.add(addonNEI);
+        LOADED_ADDONS.add(addonOreSpawn);
+        LOADED_ADDONS.add(addonThaumcraft);
+        LOADED_ADDONS.add(addonTinkersConstruct);
+        LOADED_ADDONS.add(addonTwilightForest);
+        LOADED_ADDONS.add(addonZeldaSwordSkills);
     }
     
     public static void init() {
-        for (int i = 0; i < loadedAddons.size(); i++) {
-            loadedAddons.get(i).init();
+        for (int i = 0; i < LOADED_ADDONS.size(); i++) {
+            if (LOADED_ADDONS.get(i).isModLoaded()) {
+                LOADED_ADDONS.get(i).init();
+                ITEM_OVERRIDES.addAll(LOADED_ADDONS.get(i).getItemOverrides());
+            }
+        }
+        String[] keys = ITEM_OVERRIDES.toArray(new String[ITEM_OVERRIDES.size()]);
+        for (int i = 0; i < ITEM_OVERRIDES.size(); i++) {
+            ModLogger.log(keys[i]);
         }
     }
     
     public static void postInit() {
-        for (int i = 0; i < loadedAddons.size(); i++) {
-            loadedAddons.get(i).postInit();
+        for (int i = 0; i < LOADED_ADDONS.size(); i++) {
+            if (LOADED_ADDONS.get(i).isModLoaded()) {
+                LOADED_ADDONS.get(i).postInit();
+            }
         }
     }
     
     public static void initRenderers() {
-        checkForDuplicateItemOverrides();
-        overrideItemRenders();
-    }
-    
-    private static void overrideItemRenders() {
-        for (int i = 0; i < itemOverrides.size(); i++) {
-            String arrayItem = itemOverrides.get(i);
-            int splitterCount = arrayItem.length() - arrayItem.replace(":", "").length();
-            if (splitterCount > 1) {
-                String type = arrayItem.substring(0, arrayItem.indexOf(":"));
-                arrayItem = arrayItem.substring(arrayItem.indexOf(":") + 1);
-                String modId = arrayItem.substring(0, arrayItem.indexOf(":"));
-                String itemId = arrayItem.substring(arrayItem.indexOf(":") + 1);
-                if (Loader.isModLoaded(modId) | modId.equalsIgnoreCase("minecraft")) {
-                    if (type.equalsIgnoreCase("bow")) {
-                        overrideItemRenderer(modId, itemId, RenderType.BOW);
-                    } else {
-                        overrideItemRenderer(modId, itemId, RenderType.SWORD);
-                    }
-                }
-            } else {
-                if (!arrayItem.isEmpty()) {
-                    ModLogger.log(Level.ERROR, String.format("Invalid item override in config file: %s", arrayItem));
-                }
+        for (int i = 0; i < LOADED_ADDONS.size(); i++) {
+            if (LOADED_ADDONS.get(i).isModLoaded()) {
+                LOADED_ADDONS.get(i).initRenderers();
             }
         }
     }
     
-    private static void checkForDuplicateItemOverrides() {
-        for (int i = 0; i < itemOverrides.size(); i++) {
-            if (!itemOverrides.get(i).isEmpty()) {
-                if (countNumberOfAppearancesInArray(itemOverrides, itemOverrides.get(i)) > 1) {
-                    ModLogger.log("Removing duplicate item override: " + itemOverrides.get(i));
-                    itemOverrides.remove(i);
-                }
-            }
+    public static HashSet<String> getItemOverrides() {
+        return ITEM_OVERRIDES;
+    }
+    
+    public static void setItemOverrides(String[] itemOverrides) {
+        ITEM_OVERRIDES.clear();
+        for (int i = 0; i < itemOverrides.length; i++) {
+            ITEM_OVERRIDES.add(itemOverrides[i]);
+        }
+        String[] keys = ITEM_OVERRIDES.toArray(new String[ITEM_OVERRIDES.size()]);
+        for (int i = 0; i < ITEM_OVERRIDES.size(); i++) {
+            ModLogger.log(keys[i]);
         }
     }
     
-    private static int countNumberOfAppearancesInArray(ArrayList<String> list, String item) {
-        int count = 0;
-        item = item.trim();
-        for (int i = 0; i < list.size(); i++) {
-            if (item.equalsIgnoreCase(list.get(i).trim())) {
-                count++;
-            }
-        }
-        return count;
+    public static boolean isOverrideItem(ItemOverrideType type, Item item) {
+        String key = type.toString().toLowerCase() + ":" + item.getRegistryName().toString();
+        return ITEM_OVERRIDES.contains(key);
     }
     
-    private static void overrideItemRenderer(String modId, String itemName, RenderType renderType) {
-        /*
-        Item item = GameRegistry.findItem(modId, itemName);
-        if (item != null) {
-            ItemStack stack = new ItemStack(item);
-            IItemRenderer renderer = getItemRenderer(stack);
-            
-            if (renderer != null && renderer instanceof RenderItemEquipmentSkin) {
-                ModLogger.log(Level.WARN, String.format("Tried to override the render on %s:%s but it has already been overridden.", modId, itemName));
-                return;
-            }
-            
-            ModLogger.log(String.format("Overriding render on %s:%s.", modId, itemName));
-            switch (renderType) {
-            case SWORD:
-                MinecraftForgeClient.registerItemRenderer(item, new RenderItemSwordSkin(renderer));
-                break;
-            case BOW:
-                MinecraftForgeClient.registerItemRenderer(item, new RenderItemBowSkin(renderer));
-                break;
-            }
-        } else {
-            ModLogger.log(Level.WARN, String.format("Unable to override item renderer for %s:%s. Can not find item.", modId, itemName));
-        }
-        */
+    public static void addOverrideItem(ItemOverrideType type, Item item) {
+        String key = type.toString().toLowerCase() + item.getRegistryName().toString();
+        ITEM_OVERRIDES.add(key);
     }
-    /*
-    private static IItemRenderer getItemRenderer(ItemStack stack) {
-        try {
-            IdentityHashMap<Item, IItemRenderer> customItemRenderers = null;
-            customItemRenderers = ReflectionHelper.getPrivateValue(MinecraftForgeClient.class, null, "customItemRenderers");
-            IItemRenderer renderer = customItemRenderers.get(stack.getItem());
-            if (renderer != null) {
-                return renderer;
-            }
-        } catch (Exception e) {
-        }
-        return null;
-    }*/
     
     public static enum RenderType {
         SWORD,
