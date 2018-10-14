@@ -27,7 +27,7 @@ public final class HolidayHelper {
     public static final Holiday christmas_season = new Holiday(1, Calendar.DECEMBER, 31, 0);
     
     // Forever alone.
-    public static final Holiday valentins = new Holiday(14, Calendar.FEBRUARY, 1, 0);
+    public static final Holiday valentines = new Holiday(14, Calendar.FEBRUARY, 1, 0);
     
     // year++
     public static final Holiday newYears = new Holiday(1, Calendar.JANUARY, 1, 0);
@@ -44,7 +44,7 @@ public final class HolidayHelper {
         holidayList.add(halloween_season);
         holidayList.add(christmas);
         holidayList.add(christmas_season);
-        holidayList.add(valentins);
+        holidayList.add(valentines);
         holidayList.add(newYears);
         holidayList.add(ponytailDay);
         holidayList.add(aprilFools);
