@@ -1,9 +1,12 @@
-package moe.plushie.armourers_workshop.common.config;
+package moe.plushie.armourers_workshop.client.config;
 
 import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class ConfigHandlerClient {
     
     public static String CATEGORY_CLIENT = "client";

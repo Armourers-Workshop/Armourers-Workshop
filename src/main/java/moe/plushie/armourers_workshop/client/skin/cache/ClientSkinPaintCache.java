@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.SkinTextureKey;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.data.ExpiringHashMap;
 import moe.plushie.armourers_workshop.common.data.ExpiringHashMap.IExpiringMapCallback;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;

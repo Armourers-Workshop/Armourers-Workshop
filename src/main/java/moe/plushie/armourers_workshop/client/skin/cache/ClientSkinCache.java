@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.BakedSkin;
-import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.data.ExpiringHashMap;
 import moe.plushie.armourers_workshop.common.data.ExpiringHashMap.IExpiringMapCallback;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;

@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.client.model;
 
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
 import moe.plushie.armourers_workshop.client.render.DisplayList;
-import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

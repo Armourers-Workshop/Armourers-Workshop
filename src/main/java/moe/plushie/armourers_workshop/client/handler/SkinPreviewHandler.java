@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
-import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
