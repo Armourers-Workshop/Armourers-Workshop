@@ -15,7 +15,6 @@ import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable.Seat;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.capability.ModCapabilityManager;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
-import moe.plushie.armourers_workshop.common.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerOverrides;
 import moe.plushie.armourers_workshop.common.config.ConfigSynchronizeHandler;
 import moe.plushie.armourers_workshop.common.crafting.CraftingManager;
@@ -72,10 +71,8 @@ public class CommonProxy implements ILibraryCallback {
         if (!configDir.exists()) {
             configDir.mkdirs();
         }
-
         ModAddonManager.preInit();
         ConfigHandler.init(new File(configDir, "common.cfg"));
-        ConfigHandlerClient.init(new File(configDir, "client.cfg"));
         ConfigHandlerOverrides.init(new File(configDir, "overrides.cfg"));
         
         EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "seat"), Seat.class, "seat", 1, ArmourersWorkshop.instance, 10, 20, false);

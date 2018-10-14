@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.proxies;
 
+import java.io.File;
 import java.lang.reflect.Field;
 
 import org.apache.logging.log4j.Level;
@@ -133,6 +134,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
+        File configDir = event.getSuggestedConfigurationFile().getParentFile();
+        configDir = new File(configDir, LibModInfo.ID);
+        ConfigHandlerClient.init(new File(configDir, "client.cfg"));
+        
         enableCrossModSupport();
         spamSillyMessages();
         new RehostedJarHandler(event.getSourceFile(), "Armourers-Workshop-" + LibModInfo.VERSION + ".jar");
