@@ -5,7 +5,7 @@ public class LibModInfo {
     public static final String NAME = "Armourer's Workshop";
     public static final String VERSION = "@VERSION@";
     public static final String CHANNEL = "arms-ws";
-    public static final String DEPENDENCIES = "required:forge@[14.23.2.2638,);after:galacticraftcore;";
+    public static final String DEPENDENCIES = "required-after:forge@[14.23.3.2694,);after:galacticraftcore;";
     public static final boolean DEVELOPMENT_VERSION = true;
     public static final String DOWNLOAD_URL = "https://minecraft.curseforge.com/projects/armourers-workshop/files";
 
