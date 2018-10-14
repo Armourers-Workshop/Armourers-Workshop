@@ -33,7 +33,7 @@ public class ContainerSkinWardrobe extends ModContainer {
         super(invPlayer);
         this.skinCapability = skinCapability;
         this.wardrobeCapability = wardrobeCapability;
-        this.dyeInventory = new DyeInventory(wardrobeCapability);
+        this.dyeInventory = new DyeInventory(wardrobeCapability, invPlayer.player.getEntityWorld().isRemote);
 
         if (wardrobeCapability instanceof IPlayerWardrobeCap) {
             
@@ -173,10 +173,12 @@ public class ContainerSkinWardrobe extends ModContainer {
     private class DyeInventory extends ModInventory {
 
         private final IWardrobeCap wardrobeCapability;
+        private final boolean isRemote;
 
-        public DyeInventory(IWardrobeCap wardrobeCapability) {
+        public DyeInventory(IWardrobeCap wardrobeCapability, boolean isRemote) {
             super("dyeInventory", 8);
             this.wardrobeCapability = wardrobeCapability;
+            this.isRemote = isRemote;
             ISkinDye dye = wardrobeCapability.getDye();
             for (int i = 0; i < 8; i++) {
                 if (dye.haveDyeInSlot(i)) {
@@ -205,7 +207,9 @@ public class ContainerSkinWardrobe extends ModContainer {
                     wardrobeCapability.getDye().addDye(slotId, rgbt);
                 }
             }
-            //wardrobeCapability.syncToAllAround();
+            if (!isRemote) {
+                wardrobeCapability.syncToAllTracking();
+            }
         }
     }
 }
