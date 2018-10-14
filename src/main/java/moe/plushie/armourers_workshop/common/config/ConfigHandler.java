@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.UUID;
 
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
-import moe.plushie.armourers_workshop.common.update.UpdateCheck;
 import net.minecraftforge.common.config.Configuration;
 
 public class ConfigHandler {
@@ -113,9 +112,6 @@ public class ConfigHandler {
                 .get(CATEGORY_GENERAL, "maxUndos", 100,
                 "Max number of undos a player has for block painting.")
                 .getInt(100);
-        
-        UpdateCheck.checkForUpdates = config.get(CATEGORY_GENERAL, "checkForUpdates", true,
-                "Should the mod check for new versions?").getBoolean(true);
         
         dropSkinsOnDeath = config.get(CATEGORY_GENERAL, "dropSkinsOnDeath", 0,
                 "Should skins be dropped on player death.\n"

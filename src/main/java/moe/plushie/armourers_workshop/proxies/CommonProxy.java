@@ -38,7 +38,6 @@ import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import moe.plushie.armourers_workshop.common.update.UpdateCheck;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -75,7 +74,6 @@ public class CommonProxy implements ILibraryCallback {
         EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "seat"), Seat.class, "seat", 1, ArmourersWorkshop.instance, 10, 20, false);
         
         SkinIOUtils.makeLibraryDirectory();
-        UpdateCheck.checkForUpdates();
         SkinExtractor.extractSkins();
         
         SkinTypeRegistry.init();
