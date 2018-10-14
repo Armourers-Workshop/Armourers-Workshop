@@ -16,7 +16,7 @@ public final class ModItemRecipes {
             "  w",
             " i ",
             "s  ",
-            'w', ModBlocks.colourable,
+            'w', ModBlocks.skinCube,
             'i', "ingotIron",
             's', "stickWood"});
         
@@ -24,7 +24,7 @@ public final class ModItemRecipes {
             " w ",
             " iw",
             "s  ",
-            'w', ModBlocks.colourable,
+            'w', ModBlocks.skinCube,
             'i', "ingotIron",
             's', "stickWood"});
         
@@ -32,7 +32,7 @@ public final class ModItemRecipes {
             " lg",
             "lwl",
             "ll ",
-            'w', ModBlocks.colourable,
+            'w', ModBlocks.skinCube,
             'g', "blockGlass",
             'l', Items.LEATHER});
         
@@ -40,7 +40,7 @@ public final class ModItemRecipes {
             " wd",
             " iw",
             "s  ",
-            'w', ModBlocks.colourable,
+            'w', ModBlocks.skinCube,
             'i', "ingotIron",
             'd', "dyeBlack",
             's', "stickWood"});
@@ -49,7 +49,7 @@ public final class ModItemRecipes {
             " wd",
             " iw",
             "s  ",
-            'w', ModBlocks.colourable,
+            'w', ModBlocks.skinCube,
             'i', "ingotIron",
             'd', "dyeWhite",
             's', "stickWood"});
@@ -58,7 +58,7 @@ public final class ModItemRecipes {
             " wc",
             " ib",
             "s  ",
-            'c', ModBlocks.colourable,
+            'c', ModBlocks.skinCube,
             'i', "ingotIron",
             'w', "dyeWhite",
             'b', "dyeBlack",
@@ -68,7 +68,7 @@ public final class ModItemRecipes {
             " bc",
             " iw",
             "s  ",
-            'c', ModBlocks.colourable,
+            'c', ModBlocks.skinCube,
             'i', "ingotIron",
             'w', "dyeWhite",
             'b', "dyeBlack",
@@ -78,7 +78,7 @@ public final class ModItemRecipes {
             "  b",
             " c ",
             "b  ",
-            'c', ModBlocks.colourable,
+            'c', ModBlocks.skinCube,
             'b', "dyeBlack"});
         
         
@@ -86,7 +86,7 @@ public final class ModItemRecipes {
             " wd",
             " iw",
             "s  ",
-            'w', ModBlocks.colourable,
+            'w', ModBlocks.skinCube,
             'i', "ingotIron",
             'd', "cobblestone",
             's', "stickWood"});
@@ -95,7 +95,7 @@ public final class ModItemRecipes {
             " wd",
             " iw",
             "s  ",
-            'w', ModBlocks.colourable,
+            'w', ModBlocks.skinCube,
             'i', "ingotIron",
             'd', "dyeGray",
             's', "stickWood"});
@@ -104,7 +104,7 @@ public final class ModItemRecipes {
             " wd",
             " iw",
             "s  ",
-            'w', ModBlocks.colourable,
+            'w', ModBlocks.skinCube,
             'i', "ingotIron",
             'd', Blocks.MOSSY_COBBLESTONE,
             's', "stickWood"});
@@ -113,28 +113,28 @@ public final class ModItemRecipes {
             " wd",
             " iw",
             "s  ",
-            'w', ModBlocks.colourable,
+            'w', ModBlocks.skinCube,
             'i', "ingotIron",
             'd', "plankWood",
             's', "stickWood"});
         
-        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.equipmentSkinTemplate, 8, 0), new Object[] {
+        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.SkinTemplate, 8, 0), new Object[] {
             "cc",
             "cc",
-            'c', ModBlocks.colourable});
+            'c', ModBlocks.skinCube});
         
         CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.dyeBottle, 1, 0), new Object[] {
                 "gcg",
                 "g g",
                 "ggg",
-                'c', ModBlocks.colourable,
+                'c', ModBlocks.skinCube,
                 'g', "paneGlass"});
         
         CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.armourersHammer, 1, 0), new Object[] {
                 " iw",
                 " ii",
                 "s  ",
-                'w', ModBlocks.colourable,
+                'w', ModBlocks.skinCube,
                 'i', "ingotIron",
                 's', "stickWood"});
         
@@ -142,14 +142,14 @@ public final class ModItemRecipes {
                 " iw",
                 " ci",
                 "s  ",
-                'w', ModBlocks.colourable,
+                'w', ModBlocks.skinCube,
                 'i', "ingotIron",
                 'c', Blocks.CHEST,
                 's', "stickWood"});
         
         CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.guideBook, 1, 0), new Object[] {
             new ItemStack(Items.BOOK, 1),
-            new ItemStack(ModBlocks.colourable, 1)});
+            new ItemStack(ModBlocks.skinCube, 1)});
         
         CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.soap, 1, 0), new Object[] {
             new ItemStack(Items.WATER_BUCKET, 1),
@@ -158,27 +158,27 @@ public final class ModItemRecipes {
         
         CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.skinUnlock, 1, 0), new Object[] {
                 new ItemStack(Items.DIAMOND_HELMET, 1),
-                new ItemStack(ModItems.equipmentSkinTemplate, 1),
+                new ItemStack(ModItems.SkinTemplate, 1),
                 new ItemStack(Items.NETHER_STAR, 1)});
         
         CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.skinUnlock, 1, 1), new Object[] {
                 new ItemStack(Items.DIAMOND_CHESTPLATE, 1),
-                new ItemStack(ModItems.equipmentSkinTemplate, 1),
+                new ItemStack(ModItems.SkinTemplate, 1),
                 new ItemStack(Items.NETHER_STAR, 1)});
         
         CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.skinUnlock, 1, 2), new Object[] {
                 new ItemStack(Items.DIAMOND_LEGGINGS, 1),
-                new ItemStack(ModItems.equipmentSkinTemplate, 1),
+                new ItemStack(ModItems.SkinTemplate, 1),
                 new ItemStack(Items.NETHER_STAR, 1)});
         
         CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.skinUnlock, 1, 3), new Object[] {
                 new ItemStack(Items.DIAMOND_BOOTS, 1),
-                new ItemStack(ModItems.equipmentSkinTemplate, 1),
+                new ItemStack(ModItems.SkinTemplate, 1),
                 new ItemStack(Items.NETHER_STAR, 1)});
         
         CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.skinUnlock, 1, 4), new Object[] {
                 new ItemStack(Items.FEATHER, 1),
-                new ItemStack(ModItems.equipmentSkinTemplate, 1),
+                new ItemStack(ModItems.SkinTemplate, 1),
                 new ItemStack(Items.NETHER_STAR, 1)});
     }
 }

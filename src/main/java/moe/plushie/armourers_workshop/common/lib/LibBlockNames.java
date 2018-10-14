@@ -1,14 +1,14 @@
 package moe.plushie.armourers_workshop.common.lib;
 
 public class LibBlockNames {
-    public static final String ARMOURER_BRAIN = "armourer";
+    public static final String ARMOURER = "armourer";
     public static final String MINI_ARMOURER = "mini-armourer";
-    public static final String ARMOUR_LIBRARY = "armour-library";
+    public static final String ARMOUR_LIBRARY = "skin-library";
     public static final String BOUNDING_BOX = "aw-bounding-box";
-    public static final String COLOURABLE = "colourable";
-    public static final String COLOURABLE_GLOWING = "colourable-glowing";
-    public static final String COLOURABLE_GLASS = "colourable-glass";
-    public static final String COLOURABLE_GLASS_GLOWING = "colourable-glass-glowing";
+    public static final String SKIN_CUBE = "skin-cube";
+    public static final String SKIN_CUBE_GLOWING = "skin-cube-glowing";
+    public static final String SKIN_CUBE_GLASS = "skin-cube-glass";
+    public static final String SKIN_CUBE_GLASS_GLOWING = "skin-cube-glass-glowing";
     public static final String COLOUR_MIXER = "colour-mixer";
     public static final String MANNEQUIN = "mannequin";
     public static final String DOLL = "doll";

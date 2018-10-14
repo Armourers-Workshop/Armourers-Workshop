@@ -69,7 +69,7 @@ public class GuiHandler implements IGuiHandler {
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity te = null;
         
-        if (ID != LibGuiIds.ENTITY_SKIN_INVENTORY) {
+        if (ID != LibGuiIds.WARDROBE_ENTITY | ID != LibGuiIds.WARDROBE_PLAYER) {
             BlockPos pos = new BlockPos(x, y, z);
             te = world.getTileEntity(pos);
         }
@@ -91,7 +91,7 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerArmourLibrary(player.inventory, (TileEntitySkinLibrary)te);
                 }
                 break;
-            case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
+            case LibGuiIds.WARDROBE_PLAYER:
                 EntitySkinCapability skinCapabilityPlayer = (EntitySkinCapability) player.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
                 IPlayerWardrobeCap wardrobeCapability = PlayerWardrobeCap.get(player);
                 if (skinCapabilityPlayer != null & wardrobeCapability != null) {
@@ -114,7 +114,7 @@ public class GuiHandler implements IGuiHandler {
                 if (te instanceof TileEntityMiniArmourer) {
                     return new ContainerMiniArmourerBuilding((TileEntityMiniArmourer)te);
                 }
-            case LibGuiIds.ENTITY_SKIN_INVENTORY:
+            case LibGuiIds.WARDROBE_ENTITY:
                 Entity entity = player.getEntityWorld().getEntityByID(x);
                 if (entity != null) {
                     EntitySkinCapability skinCapability = (EntitySkinCapability) entity.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
@@ -166,7 +166,7 @@ public class GuiHandler implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity te = null;
         
-        if (ID != LibGuiIds.ENTITY_SKIN_INVENTORY) {
+        if (ID != LibGuiIds.WARDROBE_ENTITY | ID != LibGuiIds.WARDROBE_PLAYER) {
             BlockPos pos = new BlockPos(x, y, z);
             te = world.getTileEntity(pos);
         }
@@ -193,7 +193,7 @@ public class GuiHandler implements IGuiHandler {
                     return new GuiSkinLibrary(player.inventory, (TileEntitySkinLibrary)te);
                 }
                 break;
-            case LibGuiIds.CUSTOM_ARMOUR_INVENTORY:
+            case LibGuiIds.WARDROBE_PLAYER:
                 EntitySkinCapability skinCapabilityPlayer = (EntitySkinCapability) player.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
                 IPlayerWardrobeCap wardrobeCapability = PlayerWardrobeCap.get(player);
                 if (skinCapabilityPlayer != null & wardrobeCapability != null) {
@@ -221,7 +221,7 @@ public class GuiHandler implements IGuiHandler {
                 if (te instanceof TileEntityMiniArmourer) {
                     return new GuiMiniArmourerBuilding((TileEntityMiniArmourer)te);
                 }
-            case LibGuiIds.ENTITY_SKIN_INVENTORY:
+            case LibGuiIds.WARDROBE_ENTITY:
                 Entity entity = player.getEntityWorld().getEntityByID(x);
                 if (entity != null) {
                     EntitySkinCapability skinCapability = (EntitySkinCapability) entity.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);

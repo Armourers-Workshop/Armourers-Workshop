@@ -130,7 +130,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
             return EnumActionResult.SUCCESS;
         }
         
-        if (state.getBlock() == ModBlocks.armourerBrain & player.isSneaking()) {
+        if (state.getBlock() == ModBlocks.armourer & player.isSneaking()) {
             if (!worldIn.isRemote) {
                 TileEntity te = worldIn.getTileEntity(pos);
                 if (te != null && te instanceof TileEntityArmourer) {

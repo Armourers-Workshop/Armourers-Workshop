@@ -43,7 +43,7 @@ public class GuiWardrobe extends GuiTabbed {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE);
     private static final ResourceLocation TEXTURE_TAB = new ResourceLocation(LibGuiResources.WARDROBE_TABS);
-    private static final String GUI_NAME = "equipment-wardrobe";
+    private static final String GUI_NAME = "wardrobe";
     
     private final GuiTabWardrobeSkins tabSkins;
     //private final GuiTabWardrobeDisplaySettings tabDisplaySettings;
@@ -125,7 +125,7 @@ public class GuiWardrobe extends GuiTabbed {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         // Title label.
-        GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, "equipment-wardrobe");
+        GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, GUI_NAME);
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {

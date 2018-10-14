@@ -26,7 +26,7 @@ public class ItemWandOfStyle extends AbstractModItem {
                 if (entity.getEntityWorld().isRemote) {
                     return true;
                 }
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.ENTITY_SKIN_INVENTORY, entity.getEntityWorld(), entity.getEntityId(), 0, 0);
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.WARDROBE_ENTITY, entity.getEntityWorld(), entity.getEntityId(), 0, 0);
                 return true;
             } else {
                 if (entity.getEntityWorld().isRemote) {
@@ -44,7 +44,7 @@ public class ItemWandOfStyle extends AbstractModItem {
             if (target.getEntityWorld().isRemote) {
                 return true;
             }
-            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.ENTITY_SKIN_INVENTORY, target.getEntityWorld(), target.getEntityId(), 0, 0);
+            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.WARDROBE_ENTITY, target.getEntityWorld(), target.getEntityId(), 0, 0);
             return true;
         } else {
             if (target.getEntityWorld().isRemote) {

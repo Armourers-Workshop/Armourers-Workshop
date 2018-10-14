@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.common.lib;
 
 public class LibItemNames {
     
-    public static final String EQUIPMENT_SKIN_TEMPLATE = "equipment-skin-template";
-    public static final String EQUIPMENT_SKIN = "equipment-skin";
+    public static final String SKIN_TEMPLATE = "skin-template";
+    public static final String SKIN = "skin";
     
     public static final String PAINTBRUSH = "paintbrush";
     public static final String PAINT_ROLLER = "paint-roller";

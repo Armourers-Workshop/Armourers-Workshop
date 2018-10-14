@@ -57,7 +57,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     private GuiIconButton buttonMiscSelect;
 
     
-    String guiName = "equipment-wardrobe";
+    String guiName = "wardrobe";
     
     public GuiTabWardrobeColourSettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IWardrobeCap wardrobeCapability) {
         super(tabId, parent, false);

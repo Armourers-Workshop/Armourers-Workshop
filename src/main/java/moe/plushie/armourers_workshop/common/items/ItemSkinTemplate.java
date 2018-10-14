@@ -11,7 +11,7 @@ public class ItemSkinTemplate extends AbstractModItem implements ISkinHolder {
     private static final String TAG_OWNER = "owner";
     
     public ItemSkinTemplate() {
-        super(LibItemNames.EQUIPMENT_SKIN_TEMPLATE);
+        super(LibItemNames.SKIN_TEMPLATE);
         setMaxStackSize(64);
     }
     

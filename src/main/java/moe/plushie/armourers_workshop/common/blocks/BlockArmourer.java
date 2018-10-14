@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 public class BlockArmourer extends AbstractModBlockContainer {
 
     public BlockArmourer() {
-        super(LibBlockNames.ARMOURER_BRAIN);
+        super(LibBlockNames.ARMOURER);
         setSortPriority(200);
     }
     

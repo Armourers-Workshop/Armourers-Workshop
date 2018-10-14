@@ -28,7 +28,7 @@ public class RecipeSkinClear extends RecipeItemSkinning {
                 Item item = stack.getItem();
                 
                 
-                if (item != ModItems.equipmentSkin && SkinNBTHelper.stackHasSkinData(stack) && SkinNBTHelper.getSkinDescriptorFromStack(stack).lockSkin) {
+                if (item != ModItems.Skin && SkinNBTHelper.stackHasSkinData(stack) && SkinNBTHelper.getSkinDescriptorFromStack(stack).lockSkin) {
                     if (skinItemStack != null) {
                         return null;
                     }

@@ -65,7 +65,7 @@ public final class HolidayHelper {
         if (christmas_season.isHolidayActive()) {
             ExPropsPlayerSkinData playerData = ExPropsPlayerSkinData.get(player);
             if (playerData.lastXmasYear < getYear()) {
-                ItemStack giftSack = new ItemStack(ModItems.equipmentSkinTemplate, 1, 1000);
+                ItemStack giftSack = new ItemStack(ModItems.SkinTemplate, 1, 1000);
                 if (!player.inventory.addItemStackToInventory(giftSack)) {
                     player.sendMessage(new TextComponentString(I18n.format("chat.armourersworkshop:inventoryGiftFail")));
                 } else {

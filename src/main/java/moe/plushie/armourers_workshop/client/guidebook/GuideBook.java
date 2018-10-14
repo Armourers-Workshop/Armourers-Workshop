@@ -39,12 +39,12 @@ public class GuideBook extends BookBase {
         chapterContents.addPage(new BookPageContents(this));
         
         //Blocks
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.armourerBrain));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.armourLibrary));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourable));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourableGlass));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourableGlowing));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourableGlassGlowing));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.armourer));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinLibrary));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinCube));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinCubeGlass));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinCubeGlowing));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinCubeGlassGlowing));
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourMixer));
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.mannequin));
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinningTable));

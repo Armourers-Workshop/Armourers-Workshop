@@ -12,6 +12,6 @@ public class CubeGlass extends Cube {
     
     @Override
     public Block getMinecraftBlock() {
-        return ModBlocks.colourableGlass;
+        return ModBlocks.skinCubeGlass;
     }
 }

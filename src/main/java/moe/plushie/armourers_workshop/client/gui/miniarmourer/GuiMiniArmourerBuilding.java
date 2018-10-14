@@ -152,10 +152,10 @@ public class GuiMiniArmourerBuilding extends GuiScreen implements IDropDownListC
     
     private void renderCubeButtons() {
         ItemStack[] buildingBlocks = {
-                new ItemStack(ModBlocks.colourable, 1),
-                new ItemStack(ModBlocks.colourableGlass, 1),
-                new ItemStack(ModBlocks.colourableGlowing, 1),
-                new ItemStack(ModBlocks.colourableGlassGlowing, 1)
+                new ItemStack(ModBlocks.skinCube, 1),
+                new ItemStack(ModBlocks.skinCubeGlass, 1),
+                new ItemStack(ModBlocks.skinCubeGlowing, 1),
+                new ItemStack(ModBlocks.skinCubeGlassGlowing, 1)
         };
         
         for (int i = 0; i < buildingBlocks.length; i++) {

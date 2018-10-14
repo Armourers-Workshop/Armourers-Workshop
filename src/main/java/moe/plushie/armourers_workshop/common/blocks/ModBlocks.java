@@ -30,15 +30,15 @@ public class ModBlocks {
 
     public static ArrayList<Block> BLOCK_LIST = new ArrayList<Block>();
     
-    public static Block armourerBrain;
+    public static Block armourer;
     //public static Block miniArmourer;
-    public static Block armourLibrary;
+    public static Block skinLibrary;
     public static Block globalSkinLibrary;
     public static Block boundingBox;
-    public static Block colourable;
-    public static Block colourableGlowing;
-    public static Block colourableGlass;
-    public static Block colourableGlassGlowing;
+    public static Block skinCube;
+    public static Block skinCubeGlowing;
+    public static Block skinCubeGlass;
+    public static Block skinCubeGlassGlowing;
     public static Block colourMixer;
     public static Block mannequin;
     public static Block doll;
@@ -52,15 +52,15 @@ public class ModBlocks {
     
     public ModBlocks() {
         MinecraftForge.EVENT_BUS.register(this);
-        armourerBrain = new BlockArmourer();
+        armourer = new BlockArmourer();
         //miniArmourer = new BlockMiniArmourer();
-        armourLibrary = new BlockSkinLibrary();
+        skinLibrary = new BlockSkinLibrary();
         globalSkinLibrary = new BlockGlobalSkinLibrary();
         boundingBox = new BlockBoundingBox();
-        colourable = new BlockColourable(LibBlockNames.COLOURABLE, false);
-        colourableGlowing = new BlockColourable(LibBlockNames.COLOURABLE_GLOWING, true);
-        colourableGlass = new BlockColourableGlass(LibBlockNames.COLOURABLE_GLASS, false);
-        colourableGlassGlowing = new BlockColourableGlass(LibBlockNames.COLOURABLE_GLASS_GLOWING, true);
+        skinCube = new BlockSkinCube(LibBlockNames.SKIN_CUBE, false);
+        skinCubeGlowing = new BlockSkinCube(LibBlockNames.SKIN_CUBE_GLOWING, true);
+        skinCubeGlass = new BlockSkinCubeGlass(LibBlockNames.SKIN_CUBE_GLASS, false);
+        skinCubeGlassGlowing = new BlockSkinCubeGlass(LibBlockNames.SKIN_CUBE_GLASS_GLOWING, true);
         colourMixer = new BlockColourMixer();
         mannequin = new BlockMannequin();
         doll = new BlockDoll();
@@ -94,11 +94,11 @@ public class ModBlocks {
     }
 
     public void registerTileEntities() {
-        registerTileEntity(TileEntityArmourer.class, LibBlockNames.ARMOURER_BRAIN);
+        registerTileEntity(TileEntityArmourer.class, LibBlockNames.ARMOURER);
         //registerTileEntity(TileEntityMiniArmourer.class, LibBlockNames.MINI_ARMOURER);
         registerTileEntity(TileEntitySkinLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
         registerTileEntity(TileEntityGlobalSkinLibrary.class, LibBlockNames.GLOBAL_SKIN_LIBRARY);
-        registerTileEntity(TileEntityColourable.class, LibBlockNames.COLOURABLE);
+        registerTileEntity(TileEntityColourable.class, LibBlockNames.SKIN_CUBE);
         registerTileEntity(TileEntityColourMixer.class, LibBlockNames.COLOUR_MIXER);
         registerTileEntity(TileEntityBoundingBox.class, LibBlockNames.BOUNDING_BOX);
         registerTileEntity(TileEntityMannequin.class, LibBlockNames.MANNEQUIN);

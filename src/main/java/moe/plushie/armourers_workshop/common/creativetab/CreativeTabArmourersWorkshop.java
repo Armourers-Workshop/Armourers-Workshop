@@ -19,7 +19,7 @@ public class CreativeTabArmourersWorkshop extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(ModBlocks.armourerBrain);
+        return new ItemStack(ModBlocks.armourer);
     }
     
     @SideOnly(Side.CLIENT)

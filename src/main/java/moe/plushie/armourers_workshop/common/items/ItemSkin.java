@@ -31,7 +31,7 @@ import net.minecraft.util.text.TextFormatting;
 public class ItemSkin extends AbstractModItem {
 
     public ItemSkin() {
-        super(LibItemNames.EQUIPMENT_SKIN, false);
+        super(LibItemNames.SKIN, false);
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, dispenserBehavior);
     }
     
@@ -53,7 +53,7 @@ public class ItemSkin extends AbstractModItem {
     public static void addTooltipToSkinItem(ItemStack stack, EntityPlayer player, List tooltip, ITooltipFlag flagIn) {
         String cRed = TextFormatting.RED.toString();
         
-        boolean isEquipmentSkin = stack.getItem() == ModItems.equipmentSkin;
+        boolean isEquipmentSkin = stack.getItem() == ModItems.Skin;
         boolean isEquipmentContainer = stack.getItem() instanceof AbstractModItemArmour;
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
@@ -70,7 +70,7 @@ public class ItemSkin extends AbstractModItem {
             
             if (ClientSkinCache.INSTANCE.isSkinInCache(skinData)) {
                 Skin data = ClientSkinCache.INSTANCE.getSkin(skinData);
-                if (stack.getItem() != ModItems.equipmentSkin & !data.getCustomName().trim().isEmpty()) {
+                if (stack.getItem() != ModItems.Skin & !data.getCustomName().trim().isEmpty()) {
                     tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinName", data.getCustomName()));
                 }
                 if (!data.getAuthorName().trim().isEmpty()) {

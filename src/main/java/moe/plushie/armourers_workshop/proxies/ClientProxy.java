@@ -123,7 +123,7 @@ public class ClientProxy extends CommonProxy {
                 ((ICustomModel)item).registerModels();
             }
         }
-        ModItems.equipmentSkin.setTileEntityItemStackRenderer(new RenderItemEquipmentSkin());
+        ModItems.Skin.setTileEntityItemStackRenderer(new RenderItemEquipmentSkin());
         ModelMannequin modelSteve = new ModelMannequin(false);
         ModelMannequin modelAlex = new ModelMannequin(true);
         RenderItemMannequin renderItemMannequin = new RenderItemMannequin(modelSteve, modelAlex);
@@ -195,10 +195,10 @@ public class ClientProxy extends CommonProxy {
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.soap);
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.giftSack);
         
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourable);
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourableGlass);
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourableGlowing);
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourableGlassGlowing);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.skinCube);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.skinCubeGlass);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.skinCubeGlowing);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.skinCubeGlassGlowing);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourMixer);
     }
     

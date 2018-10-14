@@ -127,7 +127,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             }
             inputItem = (ISkinHolder)stackInput.getItem();
         } else {
-            inputItem = (ISkinHolder) ModItems.equipmentSkinTemplate;
+            inputItem = (ISkinHolder) ModItems.SkinTemplate;
         }
 
         Skin armourItemData = null;
@@ -420,7 +420,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     
     @Override
     public String getName() {
-        return LibBlockNames.ARMOURER_BRAIN;
+        return LibBlockNames.ARMOURER;
     }
     
     @Override

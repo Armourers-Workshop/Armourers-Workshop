@@ -5,9 +5,9 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
-public class BlockColourableGlass extends BlockColourable {
+public class BlockSkinCubeGlass extends BlockSkinCube {
 
-    public BlockColourableGlass(String name, boolean glowing) {
+    public BlockSkinCubeGlass(String name, boolean glowing) {
         super(name, glowing);
         setSortPriority(121);
         if (glowing) {

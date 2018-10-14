@@ -12,20 +12,20 @@ public final class ModBlockRecipes {
 
     public static void init(IForgeRegistry<IRecipe> iForgeRegistry) {
 
-        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModBlocks.colourable, 16, 0), new Object[] {
+        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModBlocks.skinCube, 16, 0), new Object[] {
             "www",
             "wiw",
             "www",
             'w',  new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE),
             'i', "ingotIron"});
         
-        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModBlocks.armourLibrary, 1, 0), new Object[] {
+        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModBlocks.skinLibrary, 1, 0), new Object[] {
             "srs",
             "bcb",
             "sss",
             'r', new ItemStack(Blocks.WOOL, 1, 14),
             's', "stone",
-            'c', ModBlocks.colourable,
+            'c', ModBlocks.skinCube,
             'b', Items.BOOK});
         
         CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModBlocks.globalSkinLibrary, 1, 0), new Object[] {
@@ -34,7 +34,7 @@ public final class ModBlockRecipes {
             "sss",
             'r', "enderpearl",
             's', "stone",
-            'c', ModBlocks.colourable,
+            'c', ModBlocks.skinCube,
             'b', Items.BOOK});
         /*
         CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModBlocks.hologramProjector, 1, 0), new Object[] {

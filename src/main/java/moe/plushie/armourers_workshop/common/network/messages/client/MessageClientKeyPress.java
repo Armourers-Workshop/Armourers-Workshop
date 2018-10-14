@@ -36,7 +36,7 @@ public class MessageClientKeyPress implements IMessage, IMessageHandler<MessageC
         EntityPlayerMP player = ctx.getServerHandler().player;
         switch (message.keyId) {
         case 0:
-            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.CUSTOM_ARMOUR_INVENTORY, player.getEntityWorld(), 0, 0, 0);
+            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.WARDROBE_PLAYER, player.getEntityWorld(), 0, 0, 0);
             break;
         case 1:
             UndoManager.undoPressed(player);

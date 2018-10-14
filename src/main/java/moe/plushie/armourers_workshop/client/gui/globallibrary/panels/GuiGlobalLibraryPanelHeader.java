@@ -129,9 +129,8 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         } else {
             this.fontRenderer.drawString("Not logged in.", this.x + 90, this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFAAAA);
         }
-        
-        String titleText = ((GuiGlobalLibrary)parent).tileEntity.getBlockType().getLocalizedName();
-        drawCenteredString(fontRenderer, titleText, x + (width / 2), this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFEEEEEE);
+        String titleText = ((GuiGlobalLibrary)parent).getGuiName();
+        drawCenteredString(fontRenderer, GuiHelper.getLocalizedControlName(titleText, "name"), x + (width / 2), this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFEEEEEE);
     }
     
     private void drawPlayerHead(String username) {

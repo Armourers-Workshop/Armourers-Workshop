@@ -12,9 +12,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockColourable extends AbstractModBlockContainer implements IPantableBlock {
+public class BlockSkinCube extends AbstractModBlockContainer implements IPantableBlock {
     
-    public BlockColourable(String name, boolean glowing) {
+    public BlockSkinCube(String name, boolean glowing) {
         super(name);
         if (glowing) {
             setLightLevel(1.0F);

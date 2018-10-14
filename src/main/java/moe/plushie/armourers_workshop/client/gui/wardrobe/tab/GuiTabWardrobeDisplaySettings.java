@@ -31,7 +31,7 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
     
     private GuiCheckBox[] armourOverrideCheck;
     
-    String guiName = "equipment-wardrobe";
+    String guiName = "wardrobe";
     
     public GuiTabWardrobeDisplaySettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IPlayerWardrobeCap wardrobeCapability) {
         super(tabId, parent, false);
