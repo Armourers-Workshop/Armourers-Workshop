@@ -19,6 +19,8 @@ public class AddonMinecraft extends ModAddon {
         addItemOverride(ItemOverrideType.SWORD, "golden_sword");
         addItemOverride(ItemOverrideType.SWORD, "diamond_sword");
         
+        addItemOverride(ItemOverrideType.SHIELD, "shield");
+        
         addItemOverride(ItemOverrideType.BOW, "bow");
         
         addItemOverride(ItemOverrideType.PICKAXE, "wooden_pickaxe");
