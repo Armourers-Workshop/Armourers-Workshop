@@ -39,6 +39,7 @@ public class ItemGiftSack extends AbstractModItem {
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
         if (this.isInCreativeTab(tab)) {
+            super.getSubItems(tab, items);
             items.add(createStackForHoliday(HolidayHelper.christmas_season));
             items.add(createStackForHoliday(HolidayHelper.halloween_season));
             items.add(createStackForHoliday(HolidayHelper.valentins));
@@ -57,7 +58,10 @@ public class ItemGiftSack extends AbstractModItem {
                 return stack.getTagCompound().getInteger(TAG_COLOUR_2);
             }
         }
-        return 0xFFFFFFFF;
+        if (tintIndex == 1) {
+            return 0x333333;
+        }
+        return 0xFFFFFF;
     }
     
     @Override
@@ -83,22 +87,22 @@ public class ItemGiftSack extends AbstractModItem {
         if (holiday == HolidayHelper.christmas_season) {
             stack = new ItemStack(this);
             stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setInteger(TAG_COLOUR_1, 0xFF0000);
-            stack.getTagCompound().setInteger(TAG_COLOUR_2, 0x00FF00);
+            stack.getTagCompound().setInteger(TAG_COLOUR_1, 0x990000);
+            stack.getTagCompound().setInteger(TAG_COLOUR_2, 0x267F00);
             NBTHelper.writeStackToNBT(stack.getTagCompound(), TAG_GIFT_ITEM, new ItemStack(ModBlocks.doll));
         }
         if (holiday == HolidayHelper.halloween_season) {
             stack = new ItemStack(this);
             stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setInteger(TAG_COLOUR_1, 0xFFFFFF);
-            stack.getTagCompound().setInteger(TAG_COLOUR_2, 0x000000);
+            stack.getTagCompound().setInteger(TAG_COLOUR_1, 0xE05900);
+            stack.getTagCompound().setInteger(TAG_COLOUR_2, 0xEEEEEE);
             NBTHelper.writeStackToNBT(stack.getTagCompound(), TAG_GIFT_ITEM, new ItemStack(Blocks.PUMPKIN));
         }
         if (holiday == HolidayHelper.valentins) {
             stack = new ItemStack(this);
             stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setInteger(TAG_COLOUR_1, 0x000000);
-            stack.getTagCompound().setInteger(TAG_COLOUR_2, 0xFFFFFF);
+            stack.getTagCompound().setInteger(TAG_COLOUR_1, 0xE5A2E5);
+            stack.getTagCompound().setInteger(TAG_COLOUR_2, 0x961596);
             NBTHelper.writeStackToNBT(stack.getTagCompound(), TAG_GIFT_ITEM, new ItemStack(Items.CAKE));
         }
         return stack;
