@@ -1,14 +1,14 @@
 package moe.plushie.armourers_workshop.common.tileentities;
 
 import moe.plushie.armourers_workshop.common.crafting.ItemSkinningRecipes;
-import moe.plushie.armourers_workshop.common.inventory.IInventorySlotUpdate;
 import moe.plushie.armourers_workshop.common.inventory.ModInventory;
+import moe.plushie.armourers_workshop.common.inventory.ModInventory.IInventoryCallback;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntitySkinningTable extends TileEntity implements IInventorySlotUpdate {
+public class TileEntitySkinningTable extends TileEntity implements IInventoryCallback {
 
     private final ModInventory craftingInventory;
     private final ModInventory outputInventory;
