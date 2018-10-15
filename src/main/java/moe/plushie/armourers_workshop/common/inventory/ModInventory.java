@@ -105,6 +105,7 @@ public class ModInventory implements IInventory {
     }
     
     public void loadItemsFromNBT(NBTTagCompound compound) {
+        clear();
         NBTHelper.readStackArrayFromNBT(compound, TAG_ITEMS, slots);
     }
 
