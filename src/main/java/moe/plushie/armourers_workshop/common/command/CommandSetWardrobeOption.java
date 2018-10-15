@@ -8,12 +8,13 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 public class CommandSetWardrobeOption extends ModCommand {
 
-    private static final String[] SUB_OPTIONS = new String[] {"showHeadArmour", "showChestArmour", "showLegArmour", "showFootArmour"};
+    private static final String[] SUB_OPTIONS = new String[] {"showFootArmour", "showLegArmour", "showChestArmour", "showHeadArmour"};
     
     @Override
     public String getName() {
@@ -60,7 +61,8 @@ public class CommandSetWardrobeOption extends ModCommand {
         IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(player);
         if (wardrobeCap != null) {
             if (subOptionIndex < 4) {
-                wardrobeCap.getArmourOverride().set(subOptionIndex, !value);
+                EntityEquipmentSlot slot = EntityEquipmentSlot.values()[subOptionIndex + 2];
+                wardrobeCap.setArmourOverride(slot, !value);
                 wardrobeCap.syncToAllTracking();
             }
         }

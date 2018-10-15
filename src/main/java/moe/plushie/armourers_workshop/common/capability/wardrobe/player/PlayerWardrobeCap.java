@@ -8,6 +8,8 @@ import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdatePlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncPlayerWardrobeCap;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -27,13 +29,18 @@ public class PlayerWardrobeCap extends WardrobeCap implements IPlayerWardrobeCap
     }
 
     @Override
-    public BitSet getArmourOverride() {
-        return armourOverride;
+    public boolean getArmourOverride(EntityEquipmentSlot equipmentSlot) {
+        if (equipmentSlot.getSlotType() == Type.ARMOR) {
+            return armourOverride.get(equipmentSlot.getSlotIndex());
+        }
+        return false;
     }
-
+    
     @Override
-    public void setArmourOverride(BitSet armourOverride) {
-        this.armourOverride = armourOverride;
+    public void setArmourOverride(EntityEquipmentSlot equipmentSlot, boolean override) {
+        if (equipmentSlot.getSlotType() == Type.ARMOR) {
+            armourOverride.set(equipmentSlot.getSlotIndex(), override);
+        }
     }
     
     public static IPlayerWardrobeCap get(EntityPlayer entity) {

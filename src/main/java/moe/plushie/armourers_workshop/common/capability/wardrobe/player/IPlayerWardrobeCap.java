@@ -1,12 +1,11 @@
 package moe.plushie.armourers_workshop.common.capability.wardrobe.player;
 
-import java.util.BitSet;
-
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
+import net.minecraft.inventory.EntityEquipmentSlot;
 
 public interface IPlayerWardrobeCap extends IWardrobeCap {
     
-    public BitSet getArmourOverride();
+    public boolean getArmourOverride(EntityEquipmentSlot equipmentSlot);
     
-    public void setArmourOverride(BitSet armourOverride);
+    public void setArmourOverride(EntityEquipmentSlot equipmentSlot, boolean override);
 }

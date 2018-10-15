@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -56,14 +57,16 @@ public final class EquipmentWardrobeHandler {
         }
         
         IPlayerWardrobeCap wardrobeCapability = PlayerWardrobeCap.get(player);
-        for (int i = 0; i < armour.length; i++) {
-            armour[i] = player.inventory.armorInventory.get(i);
-            if (wardrobeCapability != null) {
-                if (wardrobeCapability.getArmourOverride().get(-i + 3)) {
+        if (wardrobeCapability != null) {
+            for (int i = 0; i < armour.length; i++) {
+                EntityEquipmentSlot slot = EntityEquipmentSlot.values()[i + 2];
+                armour[i] = player.inventory.armorInventory.get(i);
+                if (wardrobeCapability.getArmourOverride(slot)) {
                     player.inventory.armorInventory.set(i, ItemStack.EMPTY);
                 }
             }
         }
+
         
         // Hide the head overlay if the player has turned it off.
         RenderPlayer renderer = event.getRenderer();

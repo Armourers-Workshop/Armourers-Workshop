@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.client.gui.wardrobe.tab;
 
-import java.util.BitSet;
-
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
@@ -14,6 +12,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerW
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,7 +26,7 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
     private IEntitySkinCapability skinCapability;
     private IPlayerWardrobeCap wardrobeCapability;
     
-    private BitSet armourOverride;
+    private boolean[] armourOverride;
     
     private GuiCheckBox[] armourOverrideCheck;
     
@@ -38,17 +37,21 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
         this.entityPlayer = entityPlayer;
         this.skinCapability = skinCapability;
         this.wardrobeCapability = wardrobeCapability;
-        this.armourOverride = wardrobeCapability.getArmourOverride();
+        armourOverride = new boolean[4];
+        for (int i = 0; i < armourOverride.length; i++) {
+            EntityEquipmentSlot slot = EntityEquipmentSlot.values()[i + 2];
+            armourOverride[i] = wardrobeCapability.getArmourOverride(slot);
+        }
     }
     
     @Override
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
         armourOverrideCheck = new GuiCheckBox[4];
-        armourOverrideCheck[0] = new GuiCheckBox(2, 70, 26, GuiHelper.getLocalizedControlName(guiName, "renderHeadArmour"), !armourOverride.get(0));
-        armourOverrideCheck[1] = new GuiCheckBox(3, 70, 46, GuiHelper.getLocalizedControlName(guiName, "renderChestArmour"), !armourOverride.get(1));
-        armourOverrideCheck[2] = new GuiCheckBox(4, 70, 66, GuiHelper.getLocalizedControlName(guiName, "renderLegArmour"), !armourOverride.get(2));
-        armourOverrideCheck[3] = new GuiCheckBox(5, 70, 86, GuiHelper.getLocalizedControlName(guiName, "renderFootArmour"), !armourOverride.get(3));
+        armourOverrideCheck[0] = new GuiCheckBox(2, 70, 26, GuiHelper.getLocalizedControlName(guiName, "renderHeadArmour"), !armourOverride[3]);
+        armourOverrideCheck[1] = new GuiCheckBox(3, 70, 46, GuiHelper.getLocalizedControlName(guiName, "renderChestArmour"), !armourOverride[2]);
+        armourOverrideCheck[2] = new GuiCheckBox(4, 70, 66, GuiHelper.getLocalizedControlName(guiName, "renderLegArmour"), !armourOverride[1]);
+        armourOverrideCheck[3] = new GuiCheckBox(5, 70, 86, GuiHelper.getLocalizedControlName(guiName, "renderFootArmour"), !armourOverride[0]);
         
         buttonList.add(armourOverrideCheck[0]);
         buttonList.add(armourOverrideCheck[1]);
@@ -59,13 +62,16 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button instanceof GuiCheckBox) {
-            for (int i = 0; i < 4; i++) {
-                armourOverride.set(i, !armourOverrideCheck[i].isChecked());
+            for (int i = 0; i < armourOverride.length; i++) {
+                armourOverride[i] = !armourOverrideCheck[3 - i].isChecked();
             }
         }
         
         if (button.id >= 1) {
-            wardrobeCapability.setArmourOverride(armourOverride);
+            for (int i = 0; i < armourOverride.length; i++) {
+                EntityEquipmentSlot slot = EntityEquipmentSlot.values()[i + 2];
+                wardrobeCapability.setArmourOverride(slot, armourOverride[i]);
+            }
             wardrobeCapability.sendUpdateToServer();
         }
     }

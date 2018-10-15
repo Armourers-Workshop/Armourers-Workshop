@@ -171,10 +171,10 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
     }
     
     @Override
-    public boolean isArmourRenderOverridden(EntityPlayer player, EntityEquipmentSlot slotId) {
+    public boolean isArmourRenderOverridden(EntityPlayer player, EntityEquipmentSlot equipmentSlot) {
         IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(player);
         if (wardrobeCap != null) {
-            return wardrobeCap.getArmourOverride().get(slotId.getSlotIndex());
+            return wardrobeCap.getArmourOverride(equipmentSlot);
         }
         return false;
     }
