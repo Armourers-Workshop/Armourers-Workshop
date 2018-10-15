@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCap
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -37,9 +38,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public final class EquipmentWardrobeHandler {
+public final class ClientWardrobeHandler {
     
-    public EquipmentWardrobeHandler() {
+    public ClientWardrobeHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
     
@@ -58,6 +59,10 @@ public final class EquipmentWardrobeHandler {
     public void onRenderSpecificHand(RenderSpecificHandEvent event) {
         EntityPlayer player = Minecraft.getMinecraft().player;
         ItemStack itemStack = event.getItemStack();
+        
+        if (itemStack.getItem() == ModItems.skin) {
+            return;
+        }
         
         ISkinType[] skinTypes = new ISkinType[] {
                 SkinTypeRegistry.skinSword,

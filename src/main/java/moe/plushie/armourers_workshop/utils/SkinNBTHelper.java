@@ -126,28 +126,28 @@ public class SkinNBTHelper {
     }
     
     public static ItemStack makeEquipmentSkinStack(Skin skin, ISkinDye skinDye) {
-        ItemStack stack = new ItemStack(ModItems.Skin, 1);
+        ItemStack stack = new ItemStack(ModItems.skin, 1);
         stack.setTagCompound(new NBTTagCompound());
         addSkinDataToStack(stack, new SkinIdentifier(skin), false, skinDye);
         return stack;
     }
     
     public static ItemStack makeEquipmentSkinStack(Skin skin, SkinIdentifier identifier) {
-        ItemStack stack = new ItemStack(ModItems.Skin, 1);
+        ItemStack stack = new ItemStack(ModItems.skin, 1);
         stack.setTagCompound(new NBTTagCompound());
         addSkinDataToStack(stack, identifier, false, null);
         return stack;
     }
     
     public static ItemStack makeEquipmentSkinStack(Skin skin) {
-        ItemStack stack = new ItemStack(ModItems.Skin, 1);
+        ItemStack stack = new ItemStack(ModItems.skin, 1);
         stack.setTagCompound(new NBTTagCompound());
         addSkinDataToStack(stack, new SkinIdentifier(skin), false, null);
         return stack;
     }
     
     public static ItemStack makeEquipmentSkinStack(SkinDescriptor skinDescriptor) {
-        ItemStack stack = new ItemStack(ModItems.Skin, 1);
+        ItemStack stack = new ItemStack(ModItems.skin, 1);
         stack.setTagCompound(new NBTTagCompound());
         addSkinDataToStack(stack, skinDescriptor.getIdentifier(), false, new SkinDye(skinDescriptor.getSkinDye()));
         return stack;

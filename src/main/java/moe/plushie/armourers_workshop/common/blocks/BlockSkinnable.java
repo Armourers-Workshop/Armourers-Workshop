@@ -458,7 +458,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         SkinDescriptor skinPointer = getSkinPointer(world, pos);
         if (skinPointer != null) {
-            ItemStack returnStack = new ItemStack(ModItems.Skin, 1);
+            ItemStack returnStack = new ItemStack(ModItems.skin, 1);
             SkinNBTHelper.addSkinDataToStack(returnStack, skinPointer);
             return returnStack;
         }
@@ -481,7 +481,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             SkinDescriptor skinPointer = te.getSkinPointer();
             if (skinPointer != null) {
                 if (!isCreativeMode) {
-                    ItemStack skinStack = new ItemStack(ModItems.Skin, 1);
+                    ItemStack skinStack = new ItemStack(ModItems.skin, 1);
                     SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
                     UtilItems.spawnItemInWorld(world, pos, skinStack);
                 }

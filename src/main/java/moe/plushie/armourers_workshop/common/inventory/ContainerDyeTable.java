@@ -246,7 +246,7 @@ public class ContainerDyeTable extends Container {
             } else {
                 // Moving from player to tile entity.
                 SkinDescriptor sp = SkinNBTHelper.getSkinDescriptorFromStack(stack);
-                if (sp != null && (sp.lockSkin | stack.getItem() == ModItems.Skin)) {
+                if (sp != null && (sp.lockSkin | stack.getItem() == ModItems.skin)) {
                     if (!this.mergeItemStack(stack, 36, 37, false)) {
                         return ItemStack.EMPTY;
                     }

@@ -118,7 +118,7 @@ public final class ModItemRecipes {
             'd', "plankWood",
             's', "stickWood"});
         
-        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.SkinTemplate, 8, 0), new Object[] {
+        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.skinTemplate, 8, 0), new Object[] {
             "cc",
             "cc",
             'c', ModBlocks.skinCube});
@@ -158,27 +158,27 @@ public final class ModItemRecipes {
         
         CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.skinUnlock, 1, 0), new Object[] {
                 new ItemStack(Items.DIAMOND_HELMET, 1),
-                new ItemStack(ModItems.SkinTemplate, 1),
+                new ItemStack(ModItems.skinTemplate, 1),
                 new ItemStack(Items.NETHER_STAR, 1)});
         
         CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.skinUnlock, 1, 1), new Object[] {
                 new ItemStack(Items.DIAMOND_CHESTPLATE, 1),
-                new ItemStack(ModItems.SkinTemplate, 1),
+                new ItemStack(ModItems.skinTemplate, 1),
                 new ItemStack(Items.NETHER_STAR, 1)});
         
         CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.skinUnlock, 1, 2), new Object[] {
                 new ItemStack(Items.DIAMOND_LEGGINGS, 1),
-                new ItemStack(ModItems.SkinTemplate, 1),
+                new ItemStack(ModItems.skinTemplate, 1),
                 new ItemStack(Items.NETHER_STAR, 1)});
         
         CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.skinUnlock, 1, 3), new Object[] {
                 new ItemStack(Items.DIAMOND_BOOTS, 1),
-                new ItemStack(ModItems.SkinTemplate, 1),
+                new ItemStack(ModItems.skinTemplate, 1),
                 new ItemStack(Items.NETHER_STAR, 1)});
         
         CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.skinUnlock, 1, 4), new Object[] {
                 new ItemStack(Items.FEATHER, 1),
-                new ItemStack(ModItems.SkinTemplate, 1),
+                new ItemStack(ModItems.skinTemplate, 1),
                 new ItemStack(Items.NETHER_STAR, 1)});
     }
 }

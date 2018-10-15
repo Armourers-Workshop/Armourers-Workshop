@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.handler.BlockHighlightRenderHandler;
 import moe.plushie.armourers_workshop.client.handler.DebugTextHandler;
-import moe.plushie.armourers_workshop.client.handler.EquipmentWardrobeHandler;
+import moe.plushie.armourers_workshop.client.handler.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.client.handler.ItemTooltipHandler;
 import moe.plushie.armourers_workshop.client.handler.ModClientFMLEventHandler;
 import moe.plushie.armourers_workshop.client.handler.PlayerTextureHandler;
@@ -96,7 +96,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
     
-    public static EquipmentWardrobeHandler equipmentWardrobeHandler;
+    public static ClientWardrobeHandler equipmentWardrobeHandler;
     public static PlayerTextureHandler playerTextureHandler;
     public static PlayerTextureDownloader playerTextureDownloader;
     
@@ -120,7 +120,7 @@ public class ClientProxy extends CommonProxy {
                 ((ICustomModel)item).registerModels();
             }
         }
-        ModItems.Skin.setTileEntityItemStackRenderer(new RenderItemEquipmentSkin());
+        ModItems.skin.setTileEntityItemStackRenderer(new RenderItemEquipmentSkin());
         ModelMannequin modelSteve = new ModelMannequin(false);
         ModelMannequin modelAlex = new ModelMannequin(true);
         RenderItemMannequin renderItemMannequin = new RenderItemMannequin(modelSteve, modelAlex);
@@ -200,7 +200,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
-        equipmentWardrobeHandler = new EquipmentWardrobeHandler();
+        equipmentWardrobeHandler = new ClientWardrobeHandler();
         playerTextureHandler = new PlayerTextureHandler();
         playerTextureDownloader = new PlayerTextureDownloader();
         ClientSkinCache.init();

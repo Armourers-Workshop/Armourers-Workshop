@@ -127,7 +127,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             }
             inputItem = (ISkinHolder)stackInput.getItem();
         } else {
-            inputItem = (ISkinHolder) ModItems.SkinTemplate;
+            inputItem = (ISkinHolder) ModItems.skinTemplate;
         }
 
         Skin armourItemData = null;

@@ -28,8 +28,8 @@ public class ModItems {
     
     public static ArrayList<Item> ITEM_LIST = new ArrayList<Item>();
     
-    public static Item SkinTemplate;
-    public static Item Skin;
+    public static Item skinTemplate;
+    public static Item skin;
     
     public static Item paintbrush;
     public static Item paintRoller;
@@ -61,7 +61,7 @@ public class ModItems {
     
     public ModItems() {
         MinecraftForge.EVENT_BUS.register(this);
-        SkinTemplate = new ItemSkinTemplate();
+        skinTemplate = new ItemSkinTemplate();
         setEquipmentSkinType();
         
         //Tools
@@ -114,7 +114,7 @@ public class ModItems {
                 Object classObject = c.newInstance();
                 
                 if (classObject instanceof ItemSkin) {
-                    Skin = (ItemSkin)classObject;
+                    skin = (ItemSkin)classObject;
                 } else {
                     skinTypeSet = false;
                 }
@@ -129,7 +129,7 @@ public class ModItems {
         }
         
         if (!skinTypeSet) {
-            Skin = new ItemSkin();
+            skin = new ItemSkin();
         }
     }
 }

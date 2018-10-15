@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
-import moe.plushie.armourers_workshop.client.handler.EquipmentWardrobeHandler;
+import moe.plushie.armourers_workshop.client.handler.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.client.model.ModelRendererAttachment;
 import moe.plushie.armourers_workshop.client.model.skin.AbstractModelSkin;
 import moe.plushie.armourers_workshop.client.model.skin.IEquipmentModel;
@@ -89,7 +89,7 @@ public final class SkinModelRenderer {
         // Look for skinned armourer.
         if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
             int slot = 3 - skinType.getVanillaArmourSlotId();
-            ItemStack armourStack = EquipmentWardrobeHandler.getArmourInSlot(slot);
+            ItemStack armourStack = ClientWardrobeHandler.getArmourInSlot(slot);
             if (SkinNBTHelper.stackHasSkinData(armourStack)) {
                 SkinDescriptor sd = SkinNBTHelper.getSkinDescriptorFromStack(armourStack);
                 return getCustomArmourItemData(sd);

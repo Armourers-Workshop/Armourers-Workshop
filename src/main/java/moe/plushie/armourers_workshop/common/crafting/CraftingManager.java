@@ -66,7 +66,7 @@ public final class CraftingManager {
         hideItemInNEI(new ItemStack(ModItems.armourContainer[1], 1));
         hideItemInNEI(new ItemStack(ModItems.armourContainer[2], 1));
         hideItemInNEI(new ItemStack(ModItems.armourContainer[3], 1));
-        hideItemInNEI(new ItemStack(ModItems.Skin, 1));
+        hideItemInNEI(new ItemStack(ModItems.skin, 1));
         hideItemInNEI(new ItemStack(ModBlocks.skinnable, 1));
         hideItemInNEI(new ItemStack(ModBlocks.skinnableGlowing, 1));
         hideItemInNEI(new ItemStack(ModBlocks.skinnableChild, 1));

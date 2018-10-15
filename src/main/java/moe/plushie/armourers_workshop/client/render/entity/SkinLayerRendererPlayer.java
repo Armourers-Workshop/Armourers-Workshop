@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.client.render.entity;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
-import moe.plushie.armourers_workshop.client.handler.EquipmentWardrobeHandler;
+import moe.plushie.armourers_workshop.client.handler.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
@@ -113,7 +113,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
     private ISkinDescriptor getSkinDescriptorFromArmourer(Entity entity, ISkinType skinType) {
         if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4) {
             int slot = 3 - skinType.getVanillaArmourSlotId();
-            ItemStack armourStack = EquipmentWardrobeHandler.getArmourInSlot(slot);
+            ItemStack armourStack = ClientWardrobeHandler.getArmourInSlot(slot);
             return SkinNBTHelper.getSkinDescriptorFromStack(armourStack);
         }
         return null;

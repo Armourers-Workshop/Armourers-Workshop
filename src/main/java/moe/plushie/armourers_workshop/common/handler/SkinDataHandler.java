@@ -56,7 +56,7 @@ public class SkinDataHandler implements ISkinDataHandler {
     
     @Override
     public boolean isValidSkin(ItemStack stack) {
-        return stack.getItem() == ModItems.Skin && stackHasSkinDescriptor(stack);
+        return stack.getItem() == ModItems.skin && stackHasSkinDescriptor(stack);
     }
     
     @Override

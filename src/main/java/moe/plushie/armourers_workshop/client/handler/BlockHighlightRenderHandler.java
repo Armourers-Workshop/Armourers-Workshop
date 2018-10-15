@@ -1,146 +1,72 @@
 package moe.plushie.armourers_workshop.client.handler;
 
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.common.items.ModItems;
+import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
+import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
+import moe.plushie.armourers_workshop.utils.UtilPlayer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.World;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class BlockHighlightRenderHandler {
-/*
+
     public BlockHighlightRenderHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
-    
+
     @SubscribeEvent
     public void onDrawBlockHighlightEvent(DrawBlockHighlightEvent event) {
-        EntityPlayer player = event.player;
-        World world = event.player.worldObj;
-        MovingObjectPosition target = event.target;
-        
-        if (target != null && target.typeOfHit != MovingObjectType.BLOCK) {
+        EntityPlayer player = event.getPlayer();
+        World world = event.getPlayer().getEntityWorld();
+        RayTraceResult target = event.getTarget();
+
+        if (target != null && target.typeOfHit != RayTraceResult.Type.BLOCK) {
             return;
         }
-        
-        int x = target.blockX;
-        int y = target.blockY;
-        int z = target.blockZ;
-        int side = target.sideHit;
-        
-        Block block = world.getBlock(x, y, z);
-        
-        if (block == ModBlocks.mannequin) {
-            drawMannequinBlockBounds(world, x, y, z, player, block, event.partialTicks);
-            event.setCanceled(true);
-        }
-        
-        if (event.currentItem != null && event.currentItem.getItem() == ModItems.equipmentSkin) {
-            ISkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(event.currentItem);
-            ForgeDirection sideDir = ForgeDirection.getOrientation(side);
-            
-            if (skinPointer != null && skinPointer.getIdentifier().getSkinType() == SkinTypeRegistry.skinBlock) {
-                x += sideDir.offsetX;
-                y += sideDir.offsetY;
-                z += sideDir.offsetZ;
-                drawSkinnableBlockHelper(world, x, y, z, side, player, event.partialTicks, skinPointer);
+
+        BlockPos pos = target.getBlockPos();
+        EnumFacing facing = target.sideHit;
+        IBlockState state = world.getBlockState(pos);
+        ItemStack stack = player.getHeldItemMainhand();
+
+        if (stack.getItem()  == ModItems.skin) {
+            ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(stack);
+
+            if (descriptor != null && descriptor.getIdentifier().getSkinType() == SkinTypeRegistry.skinBlock) {
+                drawSkinnableBlockHelper(world, pos.offset(facing), facing, player, event.getPartialTicks(), descriptor);
             }
         }
     }
     
-    @SubscribeEvent
-    public void onRenderGameOverlayEvent(RenderGameOverlayEvent event) {
-        Minecraft mc = Minecraft.getMinecraft();
-        EntityPlayer player  = mc.thePlayer;
-        World world = player.worldObj;
-        if (player.getCurrentEquippedItem() == null || player.getCurrentEquippedItem().getItem() != ModItems.debugTool) {
-            return;
-        }
-        
-        if (event.type != ElementType.TEXT) {
-            return;
-        }
-        
-        MovingObjectPosition target = Minecraft.getMinecraft().objectMouseOver;
-        
-        if (target != null && target.typeOfHit != MovingObjectType.BLOCK) {
-            return;
-        }
-        int x = target.blockX;
-        int y = target.blockY;
-        int z = target.blockZ;
-        
-        Block block = world.getBlock(x, y, z);
-        
-        FontRenderer fontRenderer = mc.fontRenderer;
-        
-        ArrayList<String> textLines = new ArrayList<String>();
-        textLines.add("name: " + block.getLocalizedName());
-        textLines.add("meta: " + world.getBlockMetadata(x, y, z));
-        
-        if (block instanceof IDebug) {
-            IDebug debug = (IDebug) block;
-            debug.getDebugHoverText(world, x, y, z, textLines);
-        }
-        int centerX = event.resolution.getScaledWidth() / 2;
-        int centerY = event.resolution.getScaledHeight() / 2;
-        
-        int longestLine = 0;
-        
-        for (int i = 0; i < textLines.size(); i++) {
-            int sWidth = fontRenderer.getStringWidth(textLines.get(i));
-            longestLine = Math.max(longestLine, sWidth);
-        }
-        
-        for (int i = 0; i < textLines.size(); i++) {
-            fontRenderer.drawStringWithShadow(textLines.get(i), centerX - longestLine / 2, 5 + fontRenderer.FONT_HEIGHT * i, 0xFFFFFFFF);
-        }
-    }
-    
-    private void drawMannequinBlockBounds(World world, int x, int y, int z, EntityPlayer player, Block block, float partialTicks) {
-        int meta = world.getBlockMetadata(x, y, z);
-        
-        double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
-        double yOff = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
-        double zOff = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
-        
-        double minX = x + block.getBlockBoundsMinX();
-        double minY = y + block.getBlockBoundsMinY();
-        double minZ = z + block.getBlockBoundsMinZ();
-        double maxX = x + block.getBlockBoundsMaxX();
-        double maxY = y + block.getBlockBoundsMaxY();
-        double maxZ = z + block.getBlockBoundsMaxZ();
-        
-        if (meta == 0) {
-            maxY += 1;
-        }
-        if (meta == 1) {
-            minY -= 1;
-        }
-        float f1 = 0.002F;
-        AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
-        
-        aabb.offset(-xOff, -yOff, -zOff);
-        
-        GL11.glEnable(GL11.GL_BLEND);
-        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-        GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.4F);
-        GL11.glLineWidth(2.0F);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glDepthMask(false);
-        RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
-        GL11.glDepthMask(true);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_BLEND);
-    }
-    
-    private void drawSkinnableBlockHelper(World world, int x, int y, int z, int side, EntityPlayer player, float partialTicks, ISkinPointer skinPointer) {
+    private void drawSkinnableBlockHelper(World world, BlockPos pos, EnumFacing facing, EntityPlayer player, float partialTicks, ISkinDescriptor descriptor) {
         //int meta = world.getBlockMetadata(x, y, z);
         
         //Rectangle3D[][][] blockGrid;
-        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
-        if (skin != null) {
-            //blockGrid = skin.getParts().get(0).getBlockGrid();
-        } else {
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(descriptor, false);
+        if (skin == null) {
             return;
         }
+        
+        //blockGrid = skin.getParts().get(0).getBlockGrid();
         
         double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
         double yOff = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
@@ -149,7 +75,7 @@ public class BlockHighlightRenderHandler {
         float f1 = 0.002F;
         float scale = 0.0625F;
         
-        ForgeDirection dir = UtilPlayer.getDirectionSide(player).getOpposite();
+        EnumFacing dir = UtilPlayer.getDirectionSide(player).getOpposite();
         
         for (int ix = 0; ix < 3; ix++) {
             for (int iy = 0; iy < 3; iy++) {
@@ -163,30 +89,84 @@ public class BlockHighlightRenderHandler {
                         double maxY = bounds[4];
                         double maxZ = bounds[5];
                         
-                        AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
-                        aabb.offset(-xOff - 1, -yOff, -zOff - 1);
-                        aabb.offset(dir.offsetX * -1, 0, dir.offsetZ * -1);
-                        aabb.offset(x, y, z);
-                        aabb.offset(ix, iy, iz);
-                        GL11.glEnable(GL11.GL_BLEND);
-                        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-                        GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.75F);
-                        if (!world.isAirBlock(x + ix - 1 - dir.offsetX, y + iy, z + iz - 1 - dir.offsetZ)) {
-                            GL11.glColor4f(1.0F, 0.0F, 0.0F, 0.75F);
+                        AxisAlignedBB aabb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
+                        aabb = aabb.offset(-xOff - 1, -yOff, -zOff - 1);
+                        aabb = aabb.offset(dir.getXOffset() * -1, 0, dir.getZOffset() * -1);
+                        aabb = aabb.offset(pos);
+                        aabb = aabb.offset(ix, iy, iz);
+
+                        BlockPos target = pos.add(ix - 1 - dir.getXOffset(), 0, iz - 1 - dir.getZOffset());
+                        boolean blocked = false;
+                        if (!world.isAirBlock(target)) {
+                            blocked = true;
                         }
-                        GL11.glLineWidth(1F);
-                        GL11.glDisable(GL11.GL_TEXTURE_2D);
-                        GL11.glDepthMask(false);
-                        GL11.glDisable(GL11.GL_DEPTH_TEST);
-                        RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
-                        GL11.glEnable(GL11.GL_DEPTH_TEST);
-                        GL11.glDepthMask(true);
-                        GL11.glEnable(GL11.GL_TEXTURE_2D);
-                        GL11.glDisable(GL11.GL_BLEND);
+                        GlStateManager.enableBlend();
+                        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+                        GlStateManager.glLineWidth(1F);
+                        GlStateManager.disableDepth();
+                        GlStateManager.disableTexture2D();
+                        GlStateManager.disableAlpha();
+                        if (!blocked) {
+                            RenderGlobal.drawSelectionBoundingBox(aabb.contract(f1, f1, f1), 1F, 1F, 1F, 0.75F);
+                        } else {
+                            RenderGlobal.drawSelectionBoundingBox(aabb.contract(f1, f1, f1), 1F, 0F, 0F, 0.75F);
+                        }
+                        GlStateManager.enableAlpha();
+                        GlStateManager.enableTexture2D();
+                        GlStateManager.enableDepth();
+                        GlStateManager.disableBlend();;
                     }
                 }
             }
         }
     }
-    */
+
+    /*@SubscribeEvent
+    public void onRenderGameOverlayEvent(RenderGameOverlayEvent event) {
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayer player = mc.thePlayer;
+        World world = player.worldObj;
+        if (player.getCurrentEquippedItem() == null || player.getCurrentEquippedItem().getItem() != ModItems.debugTool) {
+            return;
+        }
+
+        if (event.type != ElementType.TEXT) {
+            return;
+        }
+
+        RayTraceResult target = Minecraft.getMinecraft().objectMouseOver;
+
+        if (target != null && target.typeOfHit != RayTraceResult.Type.BLOCK) {
+            return;
+        }
+        int x = target.blockX;
+        int y = target.blockY;
+        int z = target.blockZ;
+
+        Block block = world.getBlock(x, y, z);
+
+        FontRenderer fontRenderer = mc.fontRenderer;
+
+        ArrayList<String> textLines = new ArrayList<String>();
+        textLines.add("name: " + block.getLocalizedName());
+        textLines.add("meta: " + world.getBlockMetadata(x, y, z));
+
+        if (block instanceof IDebug) {
+            IDebug debug = (IDebug) block;
+            debug.getDebugHoverText(world, x, y, z, textLines);
+        }
+        int centerX = event.resolution.getScaledWidth() / 2;
+        int centerY = event.resolution.getScaledHeight() / 2;
+
+        int longestLine = 0;
+
+        for (int i = 0; i < textLines.size(); i++) {
+            int sWidth = fontRenderer.getStringWidth(textLines.get(i));
+            longestLine = Math.max(longestLine, sWidth);
+        }
+
+        for (int i = 0; i < textLines.size(); i++) {
+            fontRenderer.drawStringWithShadow(textLines.get(i), centerX - longestLine / 2, 5 + fontRenderer.FONT_HEIGHT * i, 0xFFFFFFFF);
+        }
+    }*/
 }

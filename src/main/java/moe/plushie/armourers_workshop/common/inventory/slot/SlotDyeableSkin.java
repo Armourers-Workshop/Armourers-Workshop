@@ -22,7 +22,7 @@ public class SlotDyeableSkin extends Slot {
     public boolean isItemValid(ItemStack stack) {
         SkinDescriptor sp = SkinNBTHelper.getSkinDescriptorFromStack(stack);
         if (sp != null) {
-            if (stack.getItem() == ModItems.Skin) {
+            if (stack.getItem() == ModItems.skin) {
                 return true;
             } else {
                 if (sp.lockSkin) {
@@ -46,7 +46,7 @@ public class SlotDyeableSkin extends Slot {
         } else {
             SkinDescriptor sp = SkinNBTHelper.getSkinDescriptorFromStack(stack);
             if (sp != null) {
-                if (stack.getItem() == ModItems.Skin) {
+                if (stack.getItem() == ModItems.skin) {
                     container.skinAdded(stack);
                 } else {
                     if (sp.lockSkin) {
