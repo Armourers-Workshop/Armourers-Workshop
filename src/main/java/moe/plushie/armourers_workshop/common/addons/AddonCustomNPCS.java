@@ -29,6 +29,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -179,10 +180,10 @@ public class AddonCustomNPCS extends ModAddon {
         }
         
         @Override
-        public boolean canUseWandOfStyle() {
-
-            return super.canUseWandOfStyle();
+        public boolean canUseWandOfStyle(EntityPlayer user) {
+            return true;
         }
+        
     }
     
     
