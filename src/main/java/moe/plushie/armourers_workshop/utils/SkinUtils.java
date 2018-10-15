@@ -4,19 +4,20 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class SkinUtils {
     
@@ -28,15 +29,15 @@ public final class SkinUtils {
         return getSkinDetectSide(skinPointer, serverSoftLoad, clientRequestSkin);
     }
     
-    public static Skin getSkinDetectSide(SkinDescriptor skinPointer, boolean serverSoftLoad, boolean clientRequestSkin) {
-        if (skinPointer != null) {
-            SkinIdentifier skinIdentifier = skinPointer.getIdentifier();
+    public static Skin getSkinDetectSide(ISkinDescriptor descriptor, boolean serverSoftLoad, boolean clientRequestSkin) {
+        if (descriptor != null) {
+            ISkinIdentifier skinIdentifier = descriptor.getIdentifier();
             return getSkinDetectSide(skinIdentifier, serverSoftLoad, clientRequestSkin);
         }
         return null;
     }
     
-    public static Skin getSkinDetectSide(SkinIdentifier skinIdentifier, boolean serverSoftLoad, boolean clientRequestSkin) {
+    public static Skin getSkinDetectSide(ISkinIdentifier skinIdentifier, boolean serverSoftLoad, boolean clientRequestSkin) {
         if (skinIdentifier != null) {
             if (ArmourersWorkshop.isDedicated()) {
                 return getSkinForSide(skinIdentifier, Side.SERVER, serverSoftLoad, clientRequestSkin);
@@ -48,7 +49,7 @@ public final class SkinUtils {
         return null;
     }
     
-    public static Skin getSkinForSide(SkinIdentifier skinIdentifier, Side side, boolean softLoad, boolean requestSkin) {
+    public static Skin getSkinForSide(ISkinIdentifier skinIdentifier, Side side, boolean softLoad, boolean requestSkin) {
         if (side == Side.CLIENT) {
             return getSkinOnClient(skinIdentifier, requestSkin);
         } else {
@@ -56,7 +57,7 @@ public final class SkinUtils {
         }
     }
     
-    private static Skin getSkinOnServer(SkinIdentifier skinIdentifier, boolean softLoad) {
+    private static Skin getSkinOnServer(ISkinIdentifier skinIdentifier, boolean softLoad) {
         if (softLoad) {
             return CommonSkinCache.INSTANCE.softGetSkin(skinIdentifier);
         } else {
@@ -65,7 +66,7 @@ public final class SkinUtils {
     }
     
     @SideOnly(Side.CLIENT)
-    private static Skin getSkinOnClient(SkinIdentifier skinIdentifier, boolean requestSkin) {
+    private static Skin getSkinOnClient(ISkinIdentifier skinIdentifier, boolean requestSkin) {
         return ClientSkinCache.INSTANCE.getSkin(skinIdentifier, requestSkin);
     }
     

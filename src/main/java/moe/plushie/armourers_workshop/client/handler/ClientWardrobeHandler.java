@@ -279,11 +279,8 @@ public final class ClientWardrobeHandler {
                         modelPlayer.bipedRightLegwear.isHidden = true;
                     }
                 }
-                
-                
             }
         }
-
     }
     
     @SubscribeEvent

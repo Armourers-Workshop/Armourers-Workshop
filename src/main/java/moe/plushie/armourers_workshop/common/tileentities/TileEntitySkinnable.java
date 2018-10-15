@@ -14,8 +14,8 @@ import moe.plushie.armourers_workshop.common.inventory.ModInventory;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.utils.ModConstants;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -48,9 +48,9 @@ public class TileEntitySkinnable extends ModTileEntity {
     private static final int NBT_VERSION = 1;
 
     private int nbtVersion;
-    private SkinDescriptor skinPointer;
+    private ISkinDescriptor descriptor;
     private boolean haveBlockBounds = false;
-    private ArrayList<BlockLocation> relatedBlocks;
+    private ArrayList<BlockPos> relatedBlocks;
     private boolean bedOccupied;
     private ModInventory inventory;
     private boolean blockInventory;
@@ -68,15 +68,15 @@ public class TileEntitySkinnable extends ModTileEntity {
     public float maxZ;
 
     public boolean hasSkin() {
-        return skinPointer != null;
+        return descriptor != null;
     }
 
-    public SkinDescriptor getSkinPointer() {
-        return skinPointer;
+    public ISkinDescriptor getSkinPointer() {
+        return descriptor;
     }
 
-    public void setSkinPointer(Skin skin, SkinDescriptor skinPointer) {
-        this.skinPointer = skinPointer;
+    public void setSkinPointer(Skin skin, ISkinDescriptor descriptor) {
+        this.descriptor = descriptor;
         if (skin != null & isParent()) {
             SkinProperties skinProps = skin.getProperties();
             if (SkinProperties.PROP_BLOCK_INVENTORY.getValue(skin.getProperties())) {
@@ -125,7 +125,7 @@ public class TileEntitySkinnable extends ModTileEntity {
         if (hasSkin()) {
             BlockSkinnable blockSkinnable = (BlockSkinnable) block;
             Skin skin = null;
-            skin = getSkin(skinPointer);
+            skin = getSkin(descriptor);
             if (skin != null) {
                 EnumFacing dir = blockSkinnable.getFacingDirection(getBlockMetadata());
                 float[] bounds = getBlockBounds(skin, offset.getX(), offset.getY(), offset.getZ(), dir);
@@ -250,11 +250,11 @@ public class TileEntitySkinnable extends ModTileEntity {
         return CommonSkinCache.INSTANCE.getSkin(skinPointer);
     }
     
-    public void setRelatedBlocks(ArrayList<BlockLocation> relatedBlocks) {
+    public void setRelatedBlocks(ArrayList<BlockPos> relatedBlocks) {
         this.relatedBlocks = relatedBlocks;
     }
     
-    public ArrayList<BlockLocation> getRelatedBlocks() {
+    public ArrayList<BlockPos> getRelatedBlocks() {
         return relatedBlocks;
     }
     
@@ -270,12 +270,9 @@ public class TileEntitySkinnable extends ModTileEntity {
         return inventory;
     }
     
-    
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
-        NBTTagCompound compound = new NBTTagCompound();
-        writeToNBT(compound);
-        return new SPacketUpdateTileEntity(getPos(), 0, compound);
+        return new SPacketUpdateTileEntity(getPos(), 0, getUpdateTag());
     }
 
     @Override
@@ -294,6 +291,13 @@ public class TileEntitySkinnable extends ModTileEntity {
         }
         return null;
     }
+    
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound compound = new NBTTagCompound();
+        writeToNBT(compound);
+        return compound;
+    }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
@@ -304,15 +308,15 @@ public class TileEntitySkinnable extends ModTileEntity {
             compound.setIntArray(TAG_LINKED_BLOCK, new int[] {linkedBlock.x, linkedBlock.y, linkedBlock.z});
         }
         if (hasSkin()) {
-            skinPointer.writeToCompound(compound);
+            ((SkinDescriptor)descriptor).writeToCompound(compound);
             if (relatedBlocks != null) {
                 NBTTagList list = new NBTTagList();
                 for (int i = 0; i < relatedBlocks.size(); i++) {
                     NBTTagCompound blockCompound = new NBTTagCompound();
-                    BlockLocation blockLoc = relatedBlocks.get(i);
-                    blockCompound.setInteger(TAG_X, blockLoc.x);
-                    blockCompound.setInteger(TAG_Y, blockLoc.y);
-                    blockCompound.setInteger(TAG_Z, blockLoc.z);
+                    BlockPos blockLoc = relatedBlocks.get(i);
+                    blockCompound.setInteger(TAG_X, blockLoc.getX());
+                    blockCompound.setInteger(TAG_Y, blockLoc.getY());
+                    blockCompound.setInteger(TAG_Z, blockLoc.getZ());
                     list.appendTag(blockCompound);
                 }
                 compound.setTag(TAG_RELATED_BLOCKS, list);
@@ -343,17 +347,17 @@ public class TileEntitySkinnable extends ModTileEntity {
             linkedBlock = null;
         }
         if (hasSkin) {
-            skinPointer = new SkinDescriptor();
-            skinPointer.readFromCompound(compound);
+            descriptor = new SkinDescriptor();
+            ((SkinDescriptor)descriptor).readFromCompound(compound);
             if (compound.hasKey(TAG_RELATED_BLOCKS, Constants.NBT.TAG_LIST)) {
                 NBTTagList list = compound.getTagList(TAG_RELATED_BLOCKS, Constants.NBT.TAG_COMPOUND);
-                relatedBlocks = new ArrayList<BlockLocation>();
+                relatedBlocks = new ArrayList<BlockPos>();
                 for (int i = 0; i < list.tagCount(); i++) {
                     NBTTagCompound blockCompound = (NBTTagCompound)list.getCompoundTagAt(i);
                     int x = blockCompound.getInteger(TAG_X);
                     int y = blockCompound.getInteger(TAG_Y);
                     int z = blockCompound.getInteger(TAG_Z);
-                    BlockLocation blockLoc = new BlockLocation(x, y, z);
+                    BlockPos blockLoc = new BlockPos(x, y, z);
                     relatedBlocks.add(blockLoc);
                 }
             } else {
@@ -373,7 +377,7 @@ public class TileEntitySkinnable extends ModTileEntity {
                 }
             }
         } else {
-            skinPointer = null;
+            descriptor = null;
             relatedBlocks = null;
             ModLogger.log(Level.WARN, String.format("Skinnable tile at X:%d Y:%d Z:%d has no skin data.", getPos().getX(), getPos().getY(), getPos().getZ()));
         }
@@ -415,7 +419,7 @@ public class TileEntitySkinnable extends ModTileEntity {
     public void killChildren(World world) {
         if (relatedBlocks != null) {
             for (int i = 0; i < relatedBlocks.size(); i++) {
-                BlockLocation loc = relatedBlocks.get(i);
+                BlockPos loc = relatedBlocks.get(i);
                 /*
                 if (!(xCoord == loc.x & yCoord == loc.y & zCoord == loc.z)) {
                     ModLogger.log("Removing child: " + loc.toString());

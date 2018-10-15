@@ -15,6 +15,9 @@ public abstract class ModTileEntity extends TileEntity {
      * Sync the tile entity with the clients.
      */
     public void syncWithClients() {
+        if (getWorld() == null) {
+            return;
+        }
         if (!getWorld().isRemote) {
             syncWithNearbyPlayers(this);
         } else {
@@ -31,6 +34,9 @@ public abstract class ModTileEntity extends TileEntity {
     }
     
     public static void syncWithNearbyPlayers(TileEntity tileEntity) {
+        if (tileEntity.getWorld() == null) {
+            return;
+        }
         World world = tileEntity.getWorld();
         List<EntityPlayer> players = world.playerEntities;
         for (EntityPlayer player : players) {

@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Level;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.common.items.ItemDebugTool.IDebug;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
@@ -19,8 +20,12 @@ import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.UtilItems;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -47,12 +52,44 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class BlockSkinnable extends AbstractModBlockContainer implements IDebug {
 
+    public static final PropertyDirection STATE_FACING = BlockHorizontal.FACING;
+    
     public BlockSkinnable() {
         this(LibBlockNames.SKINNABLE);
     }
     
     public BlockSkinnable(String name) {
         super(name, Material.IRON, SoundType.METAL, false);
+        setDefaultState(this.blockState.getBaseState().withProperty(STATE_FACING, EnumFacing.NORTH));
+    }
+    
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[] {STATE_FACING});
+    }
+    
+    public IBlockState getStateFromMeta(int meta) {
+        boolean northSouthBit = getBitBool(meta, 0);
+        boolean posNegBit = getBitBool(meta, 1);
+        EnumFacing facing = EnumFacing.EAST;
+        if (northSouthBit) {
+            if (posNegBit) { facing = EnumFacing.SOUTH; } else { facing = EnumFacing.NORTH; }
+        } else {
+            if (posNegBit) { facing = EnumFacing.EAST; } else { facing = EnumFacing.WEST; }
+        }
+        return this.getDefaultState().withProperty(STATE_FACING, facing);
+    }
+    
+    public int getMetaFromState(IBlockState state) {
+        EnumFacing facing = state.getValue(STATE_FACING);
+        int meta = 0;
+        if (facing == EnumFacing.NORTH | facing == EnumFacing.SOUTH) {
+            meta = setBit(meta, 0, true);
+        }
+        if (facing == EnumFacing.EAST | facing == EnumFacing.SOUTH) {
+            meta = setBit(meta, 1, true);
+        }
+        return meta;
     }
     
     @Override
@@ -430,7 +467,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     private SkinDescriptor getSkinPointer(IBlockAccess world, BlockPos pos) {
         TileEntitySkinnable te = getTileEntity(world, pos);
         if (te != null) {
-            return te.getSkinPointer();
+            return (SkinDescriptor) te.getSkinPointer();
         } else {
             ModLogger.log(Level.WARN, String.format("Block skin at x:%d y:%d z:%d has no skin data.", pos.getX(), pos.getY(), pos.getZ()));
         }
@@ -478,11 +515,11 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     private void dropSkin(World world, BlockPos pos, boolean isCreativeMode) {
         TileEntitySkinnable te = getTileEntity(world, pos);
         if (te != null) {
-            SkinDescriptor skinPointer = te.getSkinPointer();
-            if (skinPointer != null) {
+            ISkinDescriptor descriptor = te.getSkinPointer();
+            if (descriptor != null) {
                 if (!isCreativeMode) {
                     ItemStack skinStack = new ItemStack(ModItems.skin, 1);
-                    SkinNBTHelper.addSkinDataToStack(skinStack, skinPointer);
+                    SkinNBTHelper.addSkinDataToStack(skinStack, (SkinDescriptor) descriptor);
                     UtilItems.spawnItemInWorld(world, pos, skinStack);
                 }
                 te.killChildren(world);

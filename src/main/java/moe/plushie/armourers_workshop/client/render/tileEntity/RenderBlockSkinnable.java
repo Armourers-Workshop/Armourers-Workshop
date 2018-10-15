@@ -4,15 +4,22 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.model.block.ModelBlockSkinnable;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
+import moe.plushie.armourers_workshop.client.render.item.RenderItemEquipmentSkin;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnableChild;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -20,7 +27,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
+public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySkinnable> {
 
     private static final ModelBlockSkinnable loadingModel = new ModelBlockSkinnable();
     private ArrayList<RenderLast> renderList;
@@ -53,22 +60,52 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         */
     }
     
-    public void renderTileEntityAt(TileEntitySkinnable tileEntity, double x, double y, double z, float partialTickTime) {
-        //ModRenderHelper.setLightingForBlock(tileEntity.getWorld(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-        SkinDescriptor skinPointer = tileEntity.getSkinPointer();
+    @Override
+    public void render(TileEntitySkinnable te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        ISkinDescriptor skinPointer = te.getSkinPointer();
+        IBlockState state = te.getWorld().getBlockState(te.getPos());
         if (skinPointer != null) {
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             if (skin != null) {
-                //renderSkin(tileEntity, x, y, z, skin);
+                if (te.isParent()) {
+                    EnumFacing facing = state.getValue(BlockSkinnable.STATE_FACING);
+                    GL11.glPushMatrix();
+                    GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
+                    RenderItemEquipmentSkin.renderLoadingIcon(te.getSkinPointer());
+                    if (facing == EnumFacing.EAST) {
+                        GL11.glRotatef(-90F, 0, 1, 0);
+                    }
+                    if (facing == EnumFacing.SOUTH) {
+                        GL11.glRotatef(180F, 0, 1, 0);
+                    }
+                    if (facing == EnumFacing.WEST) {
+                        GL11.glRotatef(90F, 0, 1, 0);
+                    }
+                    
+                    //GL11.glRotatef((90F * ((-facing.getIndex() + 4))), 0, 1, 0);
+                    GL11.glScalef(-1, -1, 1);
+                    for (int i = 0; i < skin.getParts().size(); i++) {
+                        SkinPart skinPart = skin.getParts().get(i);
+                        SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, te.getSkinPointer().getSkinDye(), null, 0, true);
+                    }
+                    GL11.glPopMatrix();
+                    //renderSkin(tileEntity, x, y, z, skin);
+                } else {
+                    if (!((TileEntitySkinnableChild)te).isParentValid()) {
+                        GL11.glPushMatrix();
+                        GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
+                        RenderItemEquipmentSkin.renderLoadingIcon(te.getSkinPointer());
+                        GL11.glPopMatrix();
+                    }
+                }
+                return;
             } else {
                 ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer);
-                GL11.glPushMatrix();
-                GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
-                loadingModel.render(tileEntity, partialTickTime, 0.0625F);
-                GL11.glPopMatrix();
             }
         }
+        RenderItemEquipmentSkin.renderLoadingIcon(te.getSkinPointer());
     }
+    
     /*
     private void renderSkin(TileEntitySkinnable tileEntity, double x, double y, double z, Skin skin) {
         int rotation = tileEntity.getBlockMetadata();

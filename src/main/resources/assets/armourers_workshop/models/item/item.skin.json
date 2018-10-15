@@ -2,9 +2,9 @@
   "parent": "builtin/entity",
   "display": {
     "gui": {
-      "rotation": [ 30, 45, 0 ],
-      "translation": [ 9, 6, 0],
-      "scale":[ 0.8, 0.8, 0.8 ]
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 0, 0],
+      "scale":[ 1, 1, 1 ]
     },
     "ground": {
       "rotation": [ 0, 0, 0 ],
