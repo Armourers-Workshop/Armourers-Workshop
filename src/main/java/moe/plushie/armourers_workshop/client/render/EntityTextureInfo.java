@@ -27,6 +27,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class EntityTextureInfo {
     
+    private static final int TEXURE_REPLACMENT_WIDTH = 64;
+    private static final int TEXURE_REPLACMENT_HEIGHT = 32;
+    
     /** Width of the entities texture. */
     private final int textureWidth;
     /** Height of the entities texture. */
@@ -78,7 +81,6 @@ public class EntityTextureInfo {
         }
         lastEntitySkinColour = -1;
         lastEntityHairColour = -1;
-        bufferedEntitySkinnedImage = new BufferedImage(textureWidth, textureHeight, BufferedImage.TYPE_INT_ARGB);
         needsUpdate = true;
         loading = false;
     }
@@ -174,13 +176,19 @@ public class EntityTextureInfo {
     }
     
     private void applyPlayerToTexture() {
-        for (int ix = 0; ix < textureWidth; ix++) {
-            for (int iy = 0; iy < textureHeight; iy++) {
-                if (bufferedEntityImage == null) {
-                    break;
-                }
-                bufferedEntitySkinnedImage.setRGB(ix, iy, bufferedEntityImage.getRGB(ix, iy));
-            }
+        bufferedEntitySkinnedImage = SkinHelper.deepCopyBufferedImage(bufferedEntityImage);
+    }
+    
+    private void paintTexture(BufferedImage texture, int x, int y, int rgb) {
+        texture.setRGB(x, y, rgb);
+        // Paint left leg.
+        if (x < 16 & y >=16 & y < 32) {
+            texture.setRGB(x + 16, y + 32, rgb);
+        }
+        
+        // Paint right arm.
+        if (x >= 40 & x < 56 & y >=16 & y < 32) {
+            texture.setRGB(x - 8, y + 32, rgb);
         }
     }
     
@@ -188,31 +196,30 @@ public class EntityTextureInfo {
         for (int i = 0; i < skins.length; i++) {
             Skin skin = skins[i];
             if (skin != null && skin.hasPaintData()) {
-                for (int ix = 0; ix < textureWidth; ix++) {
-                    for (int iy = 0; iy < textureHeight; iy++) {
-                        
+                for (int ix = 0; ix < TEXURE_REPLACMENT_WIDTH; ix++) {
+                    for (int iy = 0; iy < TEXURE_REPLACMENT_HEIGHT; iy++) {
                         int paintColour = skin.getPaintData()[ix + (iy * textureWidth)];
                         PaintType paintType = PaintType.getPaintTypeFromColour(paintColour);
                         
                         if (paintType == PaintType.NORMAL) {
-                            bufferedEntitySkinnedImage.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
+                            paintTexture(bufferedEntitySkinnedImage, ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
                         }
                         if (paintType == PaintType.HAIR) {
                             int colour = dyeColour(lastEntityHairColour, paintColour, 9, skin);
-                            bufferedEntitySkinnedImage.setRGB(ix, iy, colour);
+                            paintTexture(bufferedEntitySkinnedImage, ix, iy, colour);
                         }
                         if (paintType == PaintType.SKIN) {
                             int colour = dyeColour(lastEntitySkinColour, paintColour, 8, skin);
-                            bufferedEntitySkinnedImage.setRGB(ix, iy, colour);
+                            paintTexture(bufferedEntitySkinnedImage, ix, iy, colour);
                         }
                         if (paintType.getKey() >= 1 && paintType.getKey() <= 8) {
                             int dyeNumber = paintType.getKey() - 1;
                             if (dyes != null && dyes[i] != null && dyes[i].haveDyeInSlot(dyeNumber)) {
                                 byte[] dye = dyes[i].getDyeColour(dyeNumber);
                                 int colour = dyeColour(dye, paintColour, dyeNumber, skin);
-                                bufferedEntitySkinnedImage.setRGB(ix, iy, colour);
+                                paintTexture(bufferedEntitySkinnedImage, ix, iy, colour);
                             } else {
-                                bufferedEntitySkinnedImage.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
+                                paintTexture(bufferedEntitySkinnedImage, ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
                             }
                         } 
                     }
@@ -329,6 +336,10 @@ public class EntityTextureInfo {
         } else {
             return normalTexture;
         }
+    }
+    
+    public ResourceLocation getReplacementTexture() {
+        return replacementTexture;
     }
     
     public ResourceLocation postRender() {
