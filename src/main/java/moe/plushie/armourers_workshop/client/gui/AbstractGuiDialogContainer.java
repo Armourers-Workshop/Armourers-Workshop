@@ -36,6 +36,13 @@ public abstract class AbstractGuiDialogContainer extends GuiContainer implements
     }
     
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+    }
+    
+    @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         if (isDialogOpen()) {
             dialog.mouseClicked(mouseX, mouseY, button);

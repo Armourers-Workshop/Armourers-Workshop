@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
 import moe.plushie.armourers_workshop.common.items.ItemSkinTemplate;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
+import moe.plushie.armourers_workshop.common.library.ILibraryManager;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.library.LibraryFileType;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
@@ -43,50 +44,6 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         IBlockState blockState = getWorld().getBlockState(getPos());
         return blockState.getValue(BlockSkinLibrary.STATE_TYPE) == EnumLibraryType.CREATIVE;
     }
-    
-    public void sendArmourToClient(String filename, String filePath, EntityPlayerMP player) {
-        if (!ConfigHandler.allowClientsToDownloadSkins) {
-            return;
-        }
-        ItemStack stackInput = getStackInSlot(0);
-        ItemStack stackOutput = getStackInSlot(1);
-        
-        if (stackInput == null) {
-            return;
-        }
-        
-        if (stackOutput != null) {
-            return;
-        }
-        
-        if (!(stackInput.getItem() instanceof ItemSkin)) {
-            return;
-        }
-        
-        if (!SkinNBTHelper.stackHasSkinData(stackInput)) {
-            return;
-        }
-        
-        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stackInput);
-        
-        Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointer);
-        if (skin == null) {
-            return;
-        }
-        
-        LibraryFile file = new LibraryFile(filename, filePath, skin.getSkinType());
-        
-        //if the file was overwritten remove it's old id link
-        CommonSkinCache.INSTANCE.clearFileNameIdLink(file);
-        
-        //ModLogger.log(file.getFullName());
-        
-        MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(filename, filePath, skin, SendType.LIBRARY_SAVE);
-        PacketHandler.networkWrapper.sendTo(message, player);
-        
-        this.decrStackSize(0, 1);
-        this.setInventorySlotContents(1, stackInput);
-    }
 
     /**
      * Save armour data from an items NBT data into a file on the disk.
@@ -99,10 +56,10 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
-        if (stackInput == null) {
+        if (stackInput.isEmpty()) {
             return;
         }
-        if (stackOutput != null) {
+        if (!stackOutput.isEmpty()) {
             return;
         }
         if (!(stackInput.getItem() instanceof ItemSkin)) {
@@ -133,6 +90,8 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         LibraryFile file = new LibraryFile(fileName, filePath, skin.getSkinType());
         
         //if the file was overwritten remove it's old id link
+        ILibraryManager libraryManager = ArmourersWorkshop.getProxy().libraryManager;
+
         CommonSkinCache.INSTANCE.clearFileNameIdLink(file);
 
         if (!SkinIOUtils.saveSkinFromFileName(filePath, fileName + SkinIOUtils.SKIN_FILE_EXTENSION, skin)) {
@@ -141,12 +100,12 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         if (ArmourersWorkshop.isDedicated()) {
             if (publicFiles) {
-                ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.SERVER_PUBLIC, player);
+                libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.SERVER_PUBLIC, player);
             } else {
-                ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.SERVER_PRIVATE, player);
+                libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.SERVER_PRIVATE, player);
             }
         } else {
-            ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.LOCAL, player);
+            libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.LOCAL, player);
         }
         
         this.decrStackSize(0, 1);
@@ -164,28 +123,21 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         ItemStack stackOutput = getStackInSlot(1);
         
         if (!isCreativeLibrary()) {
-            if (stackInput == ItemStack.EMPTY) {
+            if (stackInput.isEmpty()) {
                 return;
             }
         }
-        ModLogger.log("loading");
-        if (stackOutput != ItemStack.EMPTY) {
+        if (!stackOutput.isEmpty()) {
             return;
         }
-        ModLogger.log("loading");
         if (!isCreativeLibrary()) {
             if (!(stackInput.getItem() instanceof ISkinHolder)) {
                 return;
             }
         }
         
-        
-        Skin skin = null;
         String fullFileName = fileName;
-        
-        
-        skin = SkinIOUtils.loadSkinFromFileName(filePath + fileName + SkinIOUtils.SKIN_FILE_EXTENSION);
-        
+        Skin skin = SkinIOUtils.loadSkinFromFileName(filePath + fileName + SkinIOUtils.SKIN_FILE_EXTENSION);
         if (skin == null) {
             return;
         }
@@ -198,15 +150,13 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
             identifier = new SkinIdentifier(skin.lightHash(), null, 0, skin.getSkinType());
         }
         
-        
         // TODO Set master using trackFile
-        
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
         ModLogger.log("Loaded file form lib: " + libraryFile.toString());
         
         ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(skin, identifier);
         
-        if (stackArmour == null) {
+        if (stackArmour.isEmpty()) {
             return;
         }
         
@@ -217,17 +167,61 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         this.setInventorySlotContents(1, stackArmour);
     }
     
+    public void sendArmourToClient(String filename, String filePath, EntityPlayerMP player) {
+        if (!ConfigHandler.allowClientsToDownloadSkins) {
+            return;
+        }
+        ItemStack stackInput = getStackInSlot(0);
+        ItemStack stackOutput = getStackInSlot(1);
+        
+        if (stackInput.isEmpty()) {
+            return;
+        }
+        
+        if (!stackOutput.isEmpty()) {
+            return;
+        }
+        
+        if (!(stackInput.getItem() instanceof ItemSkin)) {
+            return;
+        }
+        
+        if (!SkinNBTHelper.stackHasSkinData(stackInput)) {
+            return;
+        }
+        
+        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stackInput);
+        
+        Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointer);
+        if (skin == null) {
+            return;
+        }
+        
+        LibraryFile file = new LibraryFile(filename, filePath, skin.getSkinType());
+        
+        //if the file was overwritten remove it's old id link
+        //CommonSkinCache.INSTANCE.clearFileNameIdLink(file);
+        
+        //ModLogger.log(file.getFullName());
+        
+        MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(filename, filePath, skin, SendType.LIBRARY_SAVE);
+        PacketHandler.networkWrapper.sendTo(message, player);
+        
+        this.decrStackSize(0, 1);
+        this.setInventorySlotContents(1, stackInput);
+    }
+    
     public void loadArmour(Skin skin, EntityPlayerMP player) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
         if (!isCreativeLibrary()) {
-            if (stackInput == null) {
+            if (stackInput.isEmpty()) {
                 return;
             }
         }
         
-        if (stackOutput != null) {
+        if (!stackOutput.isEmpty()) {
             return;
         }
         
@@ -238,7 +232,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         }
         
         ItemStack inputItem = SkinNBTHelper.makeEquipmentSkinStack(skin);
-        if (inputItem == null) {
+        if (inputItem.isEmpty()) {
             return;
         }
         

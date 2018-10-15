@@ -117,7 +117,7 @@ public abstract class AbstractGuiDialog extends Gui {
         GL11.glColor4f(1, 1, 1, 1);
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        RenderHelper.disableStandardItemLighting();
+        //RenderHelper.disableStandardItemLighting();
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         drawBackground(mouseX, mouseY, partialTickTime);
