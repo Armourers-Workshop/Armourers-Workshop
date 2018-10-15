@@ -26,6 +26,7 @@ public class WardrobeInventory extends ModInventory {
     }
     
     public void readItemsFromNBT(NBTTagCompound compound) {
+        clear();
         NBTHelper.readStackArrayFromNBT(compound, skinType.getRegistryName(), slots);
     }
     
