@@ -234,49 +234,52 @@ public final class ClientWardrobeHandler {
             renderer.getMainModel().bipedHeadwear.isHidden = true;
         }
         
-        ModelPlayer modelPlayer = event.getRenderer().getMainModel();
+        
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
         ISkinType[] skinTypes = new ISkinType[] {SkinTypeRegistry.skinHead, SkinTypeRegistry.skinChest, SkinTypeRegistry.skinLegs, SkinTypeRegistry.skinFeet};
         
-        if (skinCapability != null) {
-            for (int i = 0; i < skinTypes.length; i++) {
-                ISkinType skinType = skinTypes[i];
-                
-                ISkinDescriptor skinDescriptor = SkinNBTHelper.getSkinDescriptorFromStack(armour[3 - i]);
-                
-                if (skinDescriptor == null) {
-                    skinDescriptor = skinCapability.getSkinDescriptor(skinType, 0);
-                }
-                
-                if (skinDescriptor == null) {
-                    continue;
-                }
-                
-                Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
-                if (skin == null) {
-                    continue;
-                }
-                if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
-                    if (i == 0) {
-                        modelPlayer.bipedHead.isHidden = true;
-                        modelPlayer.bipedHeadwear.isHidden = true;
-                    } else if(i == 1) {
-                        modelPlayer.bipedBody.isHidden = true;
-                        modelPlayer.bipedBodyWear.isHidden = true;
-                        modelPlayer.bipedLeftArm.isHidden = true;
-                        modelPlayer.bipedLeftArmwear.isHidden = true;
-                        modelPlayer.bipedRightArm.isHidden = true;
-                        modelPlayer.bipedLeftArmwear.isHidden = true;
-                    } else if(i == 2) {
-                        modelPlayer.bipedLeftLeg.isHidden = true;
-                        modelPlayer.bipedLeftLegwear.isHidden = true;
-                        modelPlayer.bipedRightLeg.isHidden = true;
-                        modelPlayer.bipedRightLegwear.isHidden = true;
-                    } else if(i == 3) {
-                        modelPlayer.bipedLeftLeg.isHidden = true;
-                        modelPlayer.bipedLeftLegwear.isHidden = true;
-                        modelPlayer.bipedRightLeg.isHidden = true;
-                        modelPlayer.bipedRightLegwear.isHidden = true;
+        for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
+            ModelPlayer modelPlayer = playerRender.getMainModel();
+            if (skinCapability != null) {
+                for (int i = 0; i < skinTypes.length; i++) {
+                    ISkinType skinType = skinTypes[i];
+                    
+                    ISkinDescriptor skinDescriptor = SkinNBTHelper.getSkinDescriptorFromStack(armour[3 - i]);
+                    
+                    if (skinDescriptor == null) {
+                        skinDescriptor = skinCapability.getSkinDescriptor(skinType, 0);
+                    }
+                    
+                    if (skinDescriptor == null) {
+                        continue;
+                    }
+                    
+                    Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
+                    if (skin == null) {
+                        continue;
+                    }
+                    if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
+                        if (i == 0) {
+                            modelPlayer.bipedHead.isHidden = true;
+                            modelPlayer.bipedHeadwear.isHidden = true;
+                        } else if(i == 1) {
+                            modelPlayer.bipedBody.isHidden = true;
+                            modelPlayer.bipedBodyWear.isHidden = true;
+                            modelPlayer.bipedLeftArm.isHidden = true;
+                            modelPlayer.bipedLeftArmwear.isHidden = true;
+                            modelPlayer.bipedRightArm.isHidden = true;
+                            modelPlayer.bipedLeftArmwear.isHidden = true;
+                        } else if(i == 2) {
+                            modelPlayer.bipedLeftLeg.isHidden = true;
+                            modelPlayer.bipedLeftLegwear.isHidden = true;
+                            modelPlayer.bipedRightLeg.isHidden = true;
+                            modelPlayer.bipedRightLegwear.isHidden = true;
+                        } else if(i == 3) {
+                            modelPlayer.bipedLeftLeg.isHidden = true;
+                            modelPlayer.bipedLeftLegwear.isHidden = true;
+                            modelPlayer.bipedRightLeg.isHidden = true;
+                            modelPlayer.bipedRightLegwear.isHidden = true;
+                        }
                     }
                 }
             }
@@ -296,21 +299,23 @@ public final class ClientWardrobeHandler {
             player.inventory.armorInventory.set(i, armour[i]);
         }
         
-        //Restore the head overlay.
-        ModelPlayer modelPlayer = event.getRenderer().getMainModel();
-        modelPlayer.bipedHead.isHidden = false;
-        modelPlayer.bipedHeadwear.isHidden = false;
-        
-        modelPlayer.bipedBody.isHidden = false;
-        modelPlayer.bipedBodyWear.isHidden = false;
-        modelPlayer.bipedLeftArm.isHidden = false;
-        modelPlayer.bipedLeftArmwear.isHidden = false;
-        modelPlayer.bipedRightArm.isHidden = false;
-        modelPlayer.bipedLeftArmwear.isHidden = false;
+        for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
+            //Restore the head overlay.
+            ModelPlayer modelPlayer = playerRender.getMainModel();
+            modelPlayer.bipedHead.isHidden = false;
+            modelPlayer.bipedHeadwear.isHidden = false;
+            
+            modelPlayer.bipedBody.isHidden = false;
+            modelPlayer.bipedBodyWear.isHidden = false;
+            modelPlayer.bipedLeftArm.isHidden = false;
+            modelPlayer.bipedLeftArmwear.isHidden = false;
+            modelPlayer.bipedRightArm.isHidden = false;
+            modelPlayer.bipedLeftArmwear.isHidden = false;
 
-        modelPlayer.bipedLeftLeg.isHidden = false;
-        modelPlayer.bipedLeftLegwear.isHidden = false;
-        modelPlayer.bipedRightLeg.isHidden = false;
-        modelPlayer.bipedRightLegwear.isHidden = false;
+            modelPlayer.bipedLeftLeg.isHidden = false;
+            modelPlayer.bipedLeftLegwear.isHidden = false;
+            modelPlayer.bipedRightLeg.isHidden = false;
+            modelPlayer.bipedRightLegwear.isHidden = false;
+        }
     }
 }
