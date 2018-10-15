@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import moe.plushie.armourers_workshop.utils.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +18,7 @@ public class ModInventory implements IInventory {
     
     private final String name;
     protected final NonNullList<ItemStack> slots;
-    private final IInventorySlotUpdate callback;
+    private final IInventoryCallback callback;
     private final TileEntity parent;
     
     public ModInventory(String name, int slotCount) {
@@ -28,11 +29,11 @@ public class ModInventory implements IInventory {
         this(name, slotCount, parent, null);
     }
     
-    public ModInventory(String name, int slotCount, IInventorySlotUpdate callback) {
+    public ModInventory(String name, int slotCount, IInventoryCallback callback) {
         this(name, slotCount, null, callback);
     }
     
-    public ModInventory(String name, int slotCount, TileEntity parent, IInventorySlotUpdate callback) {
+    public ModInventory(String name, int slotCount, TileEntity parent, IInventoryCallback callback) {
         this.name = name;
         this.slots = NonNullList.<ItemStack>withSize(slotCount, ItemStack.EMPTY);
         this.parent = parent;
@@ -50,34 +51,32 @@ public class ModInventory implements IInventory {
     }
 
     @Override
-    public ItemStack decrStackSize(int slotId, int count) {
-        ItemStack itemstack = getStackInSlot(slotId);
+    public ItemStack decrStackSize(int index, int count) {
+        ItemStack itemstack = ItemStackHelper.getAndSplit(slots, index, count);
         if (!itemstack.isEmpty()) {
-            if (itemstack.getCount() <= count){
-                setInventorySlotContents(slotId, ItemStack.EMPTY);
-            }else{
-                itemstack = itemstack.splitStack(count);
-                setInventorySlotContents(slotId, getStackInSlot(slotId));
-                markDirty();
-            }
+            this.markDirty();
         }
         return itemstack;
     }
     
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        return getStackInSlot(index);
+        ItemStack itemstack  = ItemStackHelper.getAndRemove(slots, index);
+        if (!itemstack.isEmpty()) {
+            this.markDirty();
+        }
+        return itemstack;
     }
 
     @Override
-    public void setInventorySlotContents(int slotId, @Nonnull ItemStack stack) {
-        this.slots.set(slotId, stack);
-        if (stack.getCount() > getInventoryStackLimit()) {
-            stack.setCount(getInventoryStackLimit());
+    public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
+        this.slots.set(index, stack);
+        if (stack.getCount() > this.getInventoryStackLimit()) {
+            stack.setCount(this.getInventoryStackLimit());
         }
-        markDirty();
+        this.markDirty();
         if (callback != null) {
-            callback.setInventorySlotContents(this, slotId, stack);
+            callback.setInventorySlotContents(this, index, stack);
         }
     }
 
@@ -88,6 +87,9 @@ public class ModInventory implements IInventory {
 
     @Override
     public void markDirty() {
+        if (callback != null) {
+            callback.markDirty();
+        }
         if (parent != null) {
             parent.markDirty();
         }
@@ -156,5 +158,11 @@ public class ModInventory implements IInventory {
     @Override
     public void clear() {
         slots.clear();
+    }
+    
+    public interface IInventoryCallback {
+        public void setInventorySlotContents(IInventory inventory, int index, @Nonnull ItemStack stack);
+        
+        public void markDirty();
     }
 }

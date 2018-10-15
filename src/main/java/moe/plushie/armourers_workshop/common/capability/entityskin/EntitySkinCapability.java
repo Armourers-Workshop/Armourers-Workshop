@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.common.inventory.IInventorySlotUpdate;
+import moe.plushie.armourers_workshop.common.inventory.ModInventory.IInventoryCallback;
 import moe.plushie.armourers_workshop.common.inventory.SkinInventoryContainer;
 import moe.plushie.armourers_workshop.common.inventory.WardrobeInventory;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
@@ -20,7 +20,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
-public class EntitySkinCapability implements IEntitySkinCapability, IInventorySlotUpdate {
+public class EntitySkinCapability implements IEntitySkinCapability, IInventoryCallback {
     
     @CapabilityInject(IEntitySkinCapability.class)
     public static final Capability<IEntitySkinCapability> ENTITY_SKIN_CAP = null;
@@ -123,6 +123,10 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
 
     @Override
     public void setInventorySlotContents(IInventory inventory, int slotId, ItemStack stack) {
+    }
+    
+    @Override
+    public void markDirty() {
         if (!entity.getEntityWorld().isRemote) {
             syncToAllTracking();
         }
@@ -146,4 +150,6 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventorySl
     public static IEntitySkinCapability get(Entity entity) {
         return entity.getCapability(ENTITY_SKIN_CAP, null);
     }
+
+
 }

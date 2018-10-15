@@ -5,6 +5,7 @@ import java.util.Set;
 
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.common.inventory.ModInventory.IInventoryCallback;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -14,7 +15,7 @@ public class SkinInventoryContainer {
     
     private final HashMap<ISkinType, WardrobeInventory> skinInventorys;
     
-    public SkinInventoryContainer(IInventorySlotUpdate callback, ISkinType[] validSkins, ISkinnableEntity skinnableEntity) {
+    public SkinInventoryContainer(IInventoryCallback callback, ISkinType[] validSkins, ISkinnableEntity skinnableEntity) {
         skinInventorys = new HashMap<ISkinType, WardrobeInventory>();
         for (int i = 0; i < validSkins.length; i++) {
             skinInventorys.put(validSkins[i], new WardrobeInventory(callback, validSkins[i], skinnableEntity.getSlotsForSkinType(validSkins[i])));
