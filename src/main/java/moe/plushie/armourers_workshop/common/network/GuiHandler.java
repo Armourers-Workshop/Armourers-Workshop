@@ -120,6 +120,9 @@ public class GuiHandler implements IGuiHandler {
                     EntitySkinCapability skinCapability = (EntitySkinCapability) entity.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
                     IWardrobeCap wardrobeCap = WardrobeCap.get(entity);
                     if (skinCapability == null) {
+                        wardrobeCap = PlayerWardrobeCap.get(player);
+                    }
+                    if (skinCapability == null) {
                         break;
                     }
                     if (wardrobeCap == null) {
@@ -226,6 +229,9 @@ public class GuiHandler implements IGuiHandler {
                 if (entity != null) {
                     EntitySkinCapability skinCapability = (EntitySkinCapability) entity.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
                     IWardrobeCap wardrobeCap = WardrobeCap.get(entity);
+                    if (skinCapability == null) {
+                        wardrobeCap = PlayerWardrobeCap.get(player);
+                    }
                     if (skinCapability == null) {
                         break;
                     }
