@@ -349,7 +349,8 @@ inventory.armourers_workshop:armourer.bed=Bed?
 inventory.armourers_workshop:armourer.inventory=Inventory?
 inventory.armourers_workshop:armourer.enderInventory=Ender Inventory?
 inventory.armourers_workshop:armourer.overrideBodyPart=Override?
-inventory.armourers_workshop:armourer.hideOverlay=Hide Head Overlay?
+inventory.armourers_workshop:armourer.hideOverlay=Hide Overlay?
+inventory.armourers_workshop:armourer.limitLimbs=Limit limb movement?
 inventory.armourers_workshop:armourer.tab.main=Main
 inventory.armourers_workshop:armourer.tab.displaySettings=Display Settings
 inventory.armourers_workshop:armourer.tab.skinSettings=Skin Settings
@@ -402,8 +403,6 @@ inventory.armourers_workshop:wardrobe.renderHeadArmour=Render head armour?
 inventory.armourers_workshop:wardrobe.renderChestArmour=Render chest armour?
 inventory.armourers_workshop:wardrobe.renderLegArmour=Render leg armour?
 inventory.armourers_workshop:wardrobe.renderFootArmour=Render foot armour?
-inventory.armourers_workshop:wardrobe.renderHeadOverlay=Render head overlay?
-inventory.armourers_workshop:wardrobe.limitLimbMovement=Limit limb movement?
 
 
 # Mannequin

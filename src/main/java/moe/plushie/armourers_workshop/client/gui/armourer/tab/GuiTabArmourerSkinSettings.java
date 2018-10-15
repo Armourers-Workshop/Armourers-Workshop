@@ -5,9 +5,9 @@ import moe.plushie.armourers_workshop.client.gui.armourer.GuiArmourer;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiInventorySize;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
@@ -52,6 +52,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
     
     private GuiCheckBox checkArmourOverrideBodyPart;
     private GuiCheckBox checkArmourHideOverlay;
+    private GuiCheckBox checkLimitLimbMovement;
     private GuiDropDownList dropDownList;
     
     private boolean resetting;
@@ -112,6 +113,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         
         checkArmourOverrideBodyPart = new GuiCheckBox(15, 10, 20, GuiHelper.getLocalizedControlName(guiName, "overrideBodyPart"), SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skinProps));
         checkArmourHideOverlay = new GuiCheckBox(15, 10, 35, GuiHelper.getLocalizedControlName(guiName, "hideOverlay"), SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skinProps));
+        checkLimitLimbMovement = new GuiCheckBox(15, 10, 50, GuiHelper.getLocalizedControlName(guiName, "limitLimbs"), SkinProperties.PROP_ARMOUR_LIMIT_LIMBS.getValue(skinProps));
         
         MovementType skinMovmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skinProps));
         dropDownList = new GuiDropDownList(0, 10, 125, 50, "", this);
@@ -142,6 +144,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         
         buttonList.add(checkArmourOverrideBodyPart);
         buttonList.add(checkArmourHideOverlay);
+        buttonList.add(checkLimitLimbMovement);
         buttonList.add(dropDownList);
     }
     
@@ -186,9 +189,10 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
         
-        if (button == checkArmourOverrideBodyPart | button == checkArmourHideOverlay) {
+        if (button == checkArmourOverrideBodyPart | button == checkArmourHideOverlay | button == checkLimitLimbMovement) {
             SkinProperties.PROP_ARMOUR_OVERRIDE.setValue(skinProps, checkArmourOverrideBodyPart.isChecked());
             SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.setValue(skinProps, checkArmourHideOverlay.isChecked());
+            SkinProperties.PROP_ARMOUR_LIMIT_LIMBS.setValue(skinProps, checkLimitLimbMovement.isChecked());
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
         
@@ -219,6 +223,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         
         checkArmourOverrideBodyPart.setIsChecked(SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skinProperties));
         checkArmourHideOverlay.setIsChecked(SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skinProperties));
+        checkLimitLimbMovement.setIsChecked(SkinProperties.PROP_ARMOUR_LIMIT_LIMBS.getValue(skinProperties));
         
         MovementType skinMovmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skinProperties));
         for (int i = 0; i < MovementType.values().length; i++) {
@@ -252,8 +257,9 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         sliderWingMaxAngle.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinWings;
         dropDownList.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinWings;
         
-        checkArmourOverrideBodyPart.visible = tileEntity.getSkinType().getVanillaArmourSlotId() != -1;
-        checkArmourHideOverlay.visible = tileEntity.getSkinType().getVanillaArmourSlotId() != -1;
+        checkArmourOverrideBodyPart.visible = tileEntity.getSkinType().getProperties().contains(SkinProperties.PROP_ARMOUR_OVERRIDE);
+        checkArmourHideOverlay.visible = tileEntity.getSkinType().getProperties().contains(SkinProperties.PROP_ARMOUR_HIDE_OVERLAY);
+        checkLimitLimbMovement.visible = tileEntity.getSkinType().getProperties().contains(SkinProperties.PROP_ARMOUR_LIMIT_LIMBS);
     }
     
     @Override

@@ -48,7 +48,10 @@ public class ClientSkinPartData {
         Iterator<ModelKey> i = dyeModels.keySet().iterator();
         while (i.hasNext()) {
             ModelKey modelKey = i.next();
-            dyeModels.get(modelKey).cleanUpDisplayLists();
+            SkinModel skinModel = dyeModels.get(modelKey);
+            if (skinModel != null) {
+                skinModel.cleanUpDisplayLists();
+            }
         }
     }
     
