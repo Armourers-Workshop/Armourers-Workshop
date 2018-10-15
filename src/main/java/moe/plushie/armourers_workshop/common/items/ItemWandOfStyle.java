@@ -22,7 +22,7 @@ public class ItemWandOfStyle extends AbstractModItem {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
         if (entity instanceof EntityLivingBase) {
-            if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity((EntityLivingBase) entity)) {
+            if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity((EntityLivingBase) entity, player)) {
                 if (entity.getEntityWorld().isRemote) {
                     return true;
                 }
@@ -40,7 +40,7 @@ public class ItemWandOfStyle extends AbstractModItem {
     
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
-        if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(target)) {
+        if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(target, playerIn)) {
             if (target.getEntityWorld().isRemote) {
                 return true;
             }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,7 +19,7 @@ public interface ISkinnableEntity {
     public void addRenderLayer(RenderManager renderManager);
     
     /** Should the wand of style be usable on this entity? */
-    public boolean canUseWandOfStyle();
+    public boolean canUseWandOfStyle(EntityPlayer user);
     
     /** Should skins be right click-able on this entity? */
     public boolean canUseSkinsOnEntity();

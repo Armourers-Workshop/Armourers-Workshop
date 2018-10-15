@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.common.library.LibraryFileList;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 
 public final class EntitySkinHandler implements IEntitySkinHandler {
@@ -80,10 +81,10 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         return false;
     }
     
-    public boolean canUseWandOfStyleOnEntity(EntityLivingBase entity) {
+    public boolean canUseWandOfStyleOnEntity(EntityLivingBase entity, EntityPlayer user) {
         ISkinnableEntity skinnableEntity = getSkinnableEntity(entity);
         if (skinnableEntity != null) {
-            return skinnableEntity.canUseWandOfStyle();
+            return skinnableEntity.canUseWandOfStyle(user);
         }
         return false;
     }

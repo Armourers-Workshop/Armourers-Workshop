@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -31,7 +32,7 @@ public abstract class SkinnableEntity implements ISkinnableEntity {
     }
     
     @Override
-    public boolean canUseWandOfStyle() {
+    public boolean canUseWandOfStyle(EntityPlayer user) {
         return true;
     }
 
