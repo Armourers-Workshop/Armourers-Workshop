@@ -55,7 +55,7 @@ public class PlayerWardrobeCap extends WardrobeCap implements IPlayerWardrobeCap
     
     @Override
     public void sendUpdateToServer() {
-        NBTTagCompound compound = (NBTTagCompound)WARDROBE_CAP.getStorage().writeNBT(WARDROBE_CAP, this, null);
+        NBTTagCompound compound = (NBTTagCompound)PLAYER_WARDROBE_CAP.getStorage().writeNBT(PLAYER_WARDROBE_CAP, this, null);
         MessageClientUpdatePlayerWardrobeCap message = new MessageClientUpdatePlayerWardrobeCap(compound);
         PacketHandler.networkWrapper.sendToServer(message);
     }
