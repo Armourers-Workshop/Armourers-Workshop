@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
@@ -15,6 +16,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,7 +34,13 @@ public abstract class SkinLayerRenderer<E extends EntityLivingBase> implements L
         if (skinCapability == null) {
             return;
         }
-        
+        double distance = Minecraft.getMinecraft().player.getDistance(
+                entitylivingbaseIn.posX,
+                entitylivingbaseIn.posY,
+                entitylivingbaseIn.posZ);
+        if (distance > ConfigHandlerClient.skinMaxRenderDistance) {
+            return;
+        }
         ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
         for (int i = 0; i < skinTypes.length; i++) {
             GlStateManager.pushMatrix();

@@ -1,37 +1,46 @@
 package moe.plushie.armourers_workshop.client.skin.cache;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.Level;
 
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
+
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.BakedSkin;
-import moe.plushie.armourers_workshop.common.data.ExpiringHashMap;
-import moe.plushie.armourers_workshop.common.data.ExpiringHashMap.IExpiringMapCallback;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientRequestSkinData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.utils.ModLogger;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ClientSkinCache implements IExpiringMapCallback<Skin> {
+public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin> {
     
     public static ClientSkinCache INSTANCE;
     
     /** Cache of skins that are in memory. */
-    private final ExpiringHashMap<ISkinIdentifier, Skin> skinIDMap;
+    private final Cache<ISkinIdentifier, Skin> skinCache;
+    
+    /** List of skins that need to be cleaned up. */
+    private final ArrayList<Skin> cleanupList;
     
     /** Skin IDs that have been requested from the server. */
     private final HashSet<ISkinIdentifier> requestedSkinIDs;
@@ -43,18 +52,25 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     }
     
     protected ClientSkinCache() {
-        skinIDMap = new ExpiringHashMap<ISkinIdentifier, Skin>(ConfigHandlerClient.clientModelCacheTime, this);
+        CacheBuilder builder = CacheBuilder.newBuilder();
+        builder.removalListener(this);
+        builder.expireAfterAccess(ConfigHandlerClient.skinCacheExpireTime, TimeUnit.SECONDS);
+        if (ConfigHandlerClient.skinCacheMaxSize > 1) {
+            builder.maximumSize(ConfigHandlerClient.skinCacheMaxSize);
+        }
+        skinCache = builder.build();
+        cleanupList = new ArrayList<Skin>();
         requestedSkinIDs = new HashSet<ISkinIdentifier>();
         skinRequestExecutor = Executors.newFixedThreadPool(1);
-        FMLCommonHandler.instance().bus().register(this);
+        MinecraftForge.EVENT_BUS.register(this);
     }
     
-    public Skin getSkin(ISkinDescriptor skinPointer) {
-        return getSkin(skinPointer.getIdentifier(), true);
+    public Skin getSkin(ISkinDescriptor descriptor) {
+        return getSkin(descriptor.getIdentifier(), true);
     }
     
-    public Skin getSkin(ISkinDescriptor skinPointer, boolean requestSkin) {
-        return getSkin(skinPointer.getIdentifier(), requestSkin);
+    public Skin getSkin(ISkinDescriptor descriptor, boolean requestSkin) {
+        return getSkin(descriptor.getIdentifier(), requestSkin);
     }
     
     public Skin getSkin(ISkinIdentifier identifier) {
@@ -62,10 +78,9 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     }
     
     public Skin getSkin(ISkinIdentifier identifier, boolean requestSkin) {
-        synchronized (skinIDMap) {
-            if (skinIDMap.containsKey(identifier)) {
-                return skinIDMap.get(identifier);
-            }
+        Skin skin = skinCache.getIfPresent(identifier);
+        if (skinCache.asMap().containsKey(identifier)) {
+            return skinCache.getIfPresent(identifier);
         }
         if (requestSkin) {
             requestSkinFromServer(identifier);
@@ -91,44 +106,36 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     }
     
     public boolean isSkinInCache(ISkinIdentifier identifier) {
-        synchronized (skinIDMap) {
-            return skinIDMap.containsKey(identifier); 
-        }
+        return skinCache.asMap().containsKey(identifier);
     }
     
     public void markSkinAsDirty(ISkinIdentifier identifier) {
-        synchronized (skinIDMap) {
-            skinIDMap.remove(identifier);
-        }
+        skinCache.invalidate(identifier);
     }
     
     public void receivedModelFromBakery(BakedSkin bakedSkin) {
         SkinIdentifier identifierRequested = bakedSkin.getSkinIdentifierRequested();
         synchronized (requestedSkinIDs) {
-            synchronized (skinIDMap) {
-                if (skinIDMap.containsKey(identifierRequested)) {
-                    // We already have this skin, remove the old one before adding the new one.
-                    Skin oldSkin = skinIDMap.get(identifierRequested);
-                    skinIDMap.remove(identifierRequested);
-                    oldSkin.cleanUpDisplayLists();
-                    ModLogger.log("removing skin");
-                }
-                if (requestedSkinIDs.contains(identifierRequested)) {
-                    skinIDMap.put(identifierRequested, bakedSkin.getSkin());
-                    requestedSkinIDs.remove(identifierRequested);
-                } else {
-                    // We did not request this skin.
-                    skinIDMap.put(bakedSkin.getSkinIdentifierUpdated(), bakedSkin.getSkin());
-                    ModLogger.log(Level.WARN, "Got an unknown skin - Identifier: " + bakedSkin.getSkinIdentifierUpdated().toString());
-                }
+            if (skinCache.asMap().containsKey(identifierRequested)) {
+                // We already have this skin, remove the old one before adding the new one.
+                Skin oldSkin = skinCache.getIfPresent(identifierRequested);
+                skinCache.invalidate(identifierRequested);
+                oldSkin.cleanUpDisplayLists();
+                ModLogger.log("removing skin");
+            }
+            if (requestedSkinIDs.contains(identifierRequested)) {
+                skinCache.put(identifierRequested, bakedSkin.getSkin());
+                requestedSkinIDs.remove(identifierRequested);
+            } else {
+                // We did not request this skin.
+                skinCache.put(bakedSkin.getSkinIdentifierUpdated(), bakedSkin.getSkin());
+                ModLogger.log(Level.WARN, "Got an unknown skin - Identifier: " + bakedSkin.getSkinIdentifierUpdated().toString());
             }
         }
     }
     
     public int getCacheSize() {
-        synchronized (skinIDMap) {
-            return skinIDMap.size();
-        }
+        return (int) skinCache.asMap().size();
     }
     
     public int getRequestQueueSize() {
@@ -139,14 +146,13 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     
     public int getModelCount() {
         int count = 0;
-        synchronized (skinIDMap) {
-            Object[] keySet = skinIDMap.getKeySet().toArray();
-            for (int i = 0; i < keySet.length; i++) {
-                ISkinIdentifier key = (ISkinIdentifier) keySet[i];
-                Skin skin = skinIDMap.getQuiet(key);
-                if (skin != null) {
-                    count += skin.getModelCount();
-                }
+        // Used collection view so access time is not reset.
+        Collection<Skin> skins = skinCache.asMap().values();
+        Iterator<Skin> iterator = skins.iterator();
+        while (iterator.hasNext()) {
+            Skin skin = iterator.next();
+            if (skin != null) {
+                count += skin.getModelCount();
             }
         }
         return count;
@@ -154,11 +160,12 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     
     public int getPartCount() {
         int count = 0;
-        synchronized (skinIDMap) {
-            Object[] keySet = skinIDMap.getKeySet().toArray();
-            for (int i = 0; i < keySet.length; i++) {
-                ISkinIdentifier key = (ISkinIdentifier) keySet[i];
-                Skin skin = skinIDMap.getQuiet(key);
+     // Used collection view so access time is not reset.
+        Collection<Skin> skins = skinCache.asMap().values();
+        Iterator<Skin> iterator = skins.iterator();
+        while (iterator.hasNext()) {
+            Skin skin = iterator.next();
+            if (skin != null) {
                 count += skin.getPartCount();
             }
         }
@@ -166,15 +173,7 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     }
     
     public void clearCache() {
-        synchronized (skinIDMap) {
-            Object[] keySet = skinIDMap.getKeySet().toArray();
-            for (int i = 0; i < keySet.length; i++) {
-                ISkinIdentifier key = (ISkinIdentifier) keySet[i];
-                Skin customArmourItemData = skinIDMap.get(key);
-                skinIDMap.remove(key);
-                customArmourItemData.cleanUpDisplayLists();
-            }
-        }
+        skinCache.invalidateAll();
         synchronized (requestedSkinIDs) {
             requestedSkinIDs.clear();
         }
@@ -182,14 +181,25 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {
-            skinIDMap.cleanupCheck();
+        if (event.side == Side.CLIENT & event.phase == Phase.END) {
+            cleanupCheck();
         }
     }
-
+    
+    private void cleanupCheck() {
+        synchronized (cleanupList) {
+            for (int i = cleanupList.size() - 1; i >= 0; i--) {
+                cleanupList.get(i).cleanUpDisplayLists();
+                cleanupList.remove(i);
+            }
+        }
+    }
+    
     @Override
-    public void itemExpired(Skin mapItem) {
-        mapItem.cleanUpDisplayLists();
+    public void onRemoval(RemovalNotification<ISkinIdentifier, Skin> notification) {
+        synchronized (cleanupList) {
+            cleanupList.add(notification.getValue());
+        }
     }
     
     private static class SkinRequestThread implements Runnable {

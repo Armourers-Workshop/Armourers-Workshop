@@ -43,7 +43,7 @@ public final class ModelBakery {
     private final AtomicInteger bakeTimesIndex = new AtomicInteger(0);
     
     public ModelBakery() {
-        skinBakeExecutor = Executors.newFixedThreadPool(ConfigHandlerClient.maxModelBakingThreads);
+        skinBakeExecutor = Executors.newFixedThreadPool(ConfigHandlerClient.modelBakingThreadCount);
         skinCompletion = new ExecutorCompletionService<BakedSkin>(skinBakeExecutor);
         FMLCommonHandler.instance().bus().register(this);
     }

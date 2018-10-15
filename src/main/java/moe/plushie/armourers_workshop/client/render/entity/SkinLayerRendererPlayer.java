@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.client.render.entity;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.handler.EquipmentWardrobeHandler;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
@@ -38,6 +39,16 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
     @Override
     public void doRenderLayer(EntityPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if (ClientProxy.getSkinRenderType() != SkinRenderType.RENDER_LAYER) {
+            return;
+        }
+        double distance = Minecraft.getMinecraft().player.getDistance(
+                entitylivingbaseIn.posX,
+                entitylivingbaseIn.posY,
+                entitylivingbaseIn.posZ);
+        if (distance > ConfigHandlerClient.skinMaxRenderDistance) {
+            return;
+        }
+        if (distance > ConfigHandlerClient.skinMaxRenderDistance) {
             return;
         }
         renderPlayer.getMainModel().bipedLeftArm.isHidden = false;

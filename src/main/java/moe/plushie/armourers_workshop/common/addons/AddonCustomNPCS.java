@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
@@ -200,7 +201,13 @@ public class AddonCustomNPCS extends ModAddon {
             if (skinCapability == null) {
                 return;
             }
-            
+            double distance = Minecraft.getMinecraft().player.getDistance(
+                    entitylivingbaseIn.posX,
+                    entitylivingbaseIn.posY,
+                    entitylivingbaseIn.posZ);
+            if (distance > ConfigHandlerClient.skinMaxRenderDistance) {
+                return;
+            }
             //Object iEntity = AddonCustomNPCS.getiEntity(entitylivingbaseIn);
             //Object display = AddonCustomNPCS.getDisplay(entitylivingbaseIn);
             //ModLogger.log(display);

@@ -24,7 +24,8 @@ public class ConfigHandler {
     public static boolean enableRecoveringSkins;
     
     //server
-    public static int serverModelCacheTime = 600000;
+    public static int skinCacheExpireTime;
+    public static int skinCacheMaxSize;
     public static int serverSkinSendRate = 4000;
     public static boolean serverCompressesSkins = true;
     
@@ -57,6 +58,7 @@ public class ConfigHandler {
      * 2 = always drop
      */
     public static int dropSkinsOnDeath = 0;
+    
 
     public static void init(File file) {
         if (config == null) {
@@ -185,11 +187,12 @@ public class ConfigHandler {
 
     
     private static void loadCategoryServer() {
-        serverModelCacheTime = config
-                .get(CATEGORY_SERVER, "serverModelCacheTime", 600000,
-                "How long in ms the server will keep skins in it's cache.\n" + 
-                "Default 600000 ms is 10 minutes.")
-                .getInt(600000);
+        skinCacheExpireTime = config.getInt("skinCacheExpireTime", CATEGORY_SERVER, 6000, 1, 3600,
+                "How long in seconds the server will keep skins in it's cache.\n"
+                + "Default 600 seconds is 10 minutes.");
+        
+        skinCacheMaxSize = config.getInt("skinCacheMaxSize", CATEGORY_SERVER, 2000, 0, 10000,
+                "Max size the skin cache can reach before skins are removed. Setting to 0 turns off this option.");
         
         serverSkinSendRate = config.getInt("serverModelSendRate", CATEGORY_SERVER, 4000, 0, 8000,
                 "The maximum number of skins the server is allow to send every minute.\n"

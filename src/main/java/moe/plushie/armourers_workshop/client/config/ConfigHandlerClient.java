@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.client.config;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -13,16 +15,20 @@ public class ConfigHandlerClient {
     public static String CATEGORY_SKIN_PREVIEW = "skin-preview";
     public static String CATEGORY_DEBUG = "debug";
     
-    public static int clientModelCacheTime = 600000;
-    public static int clientTextureCacheTime = 600000;
-    public static int maxSkinRenderDistance = 128;
-    public static int maxModelBakingThreads = 1;
+    public static int skinCacheExpireTime;
+    public static int skinCacheMaxSize;
+    public static int textureCacheTime;
+    public static int textureCacheMaxSize;
+    public static int modelBakingThreadCount;
+    public static AtomicInteger modelBakingUpdateRate = new AtomicInteger(40);
+    
+    public static int skinMaxRenderDistance;
     public static boolean slowModelBaking = true;
     public static boolean multipassSkinRendering = true;
     public static int mannequinMaxEquipmentRenderDistance = 1024;
     public static int blockSkinMaxRenderDistance = 2500;
     public static double lodDistance = 32F;
-    public static int skinLoadAnimationTime = 500;
+    public static int skinLoadAnimationTime;
     public static int maxLodLevels = 4;
     
     // Skin preview
@@ -67,27 +73,45 @@ public class ConfigHandlerClient {
     }
     
     private static void loadCategoryClient() {
-        maxSkinRenderDistance = config
-                .get(CATEGORY_CLIENT, "maxSkinRenderDistance", 8192,
+        skinCacheExpireTime = config.getInt("skinCacheExpireTime", CATEGORY_CLIENT, 600, 1, 3600,
+                "How long in seconds the client will keep skins in it's cache.\n"
+                + "Default 600 seconds is 10 minutes.");
+        config.getCategory(CATEGORY_CLIENT).get("skinCacheExpireTime").setRequiresMcRestart(true);
+        
+        skinCacheMaxSize = config.getInt("skinCacheMaxSize", CATEGORY_CLIENT, 2000, 0, 10000,
+                "Max size the skin cache can reach before skins are removed. Setting to 0 turns off this option.");
+        config.getCategory(CATEGORY_CLIENT).get("skinCacheMaxSize").setRequiresMcRestart(true);
+        
+        textureCacheTime = config
+                .getInt("textureCacheTime", CATEGORY_CLIENT, 600, 1, 3600,
+                "How long in seconds the client will keep textures in it's cache.\n" + 
+                "Default 600 seconds is 10 minutes.");
+        config.getCategory(CATEGORY_CLIENT).get("textureCacheTime").setRequiresMcRestart(true);
+        
+        textureCacheTime = config.getInt("textureCacheTime", CATEGORY_CLIENT, 500, 1, 10000,
+                "Max size the texture cache can reach before textures are removed. Setting to 0 turns off this option.");
+        config.getCategory(CATEGORY_CLIENT).get("textureCacheTime").setRequiresMcRestart(true);
+        
+        int cores = Runtime.getRuntime().availableProcessors();
+        int bakingCores = MathHelper.ceil((float)cores / 2F);
+        bakingCores = MathHelper.clamp(bakingCores, 1, 16);
+        
+        modelBakingThreadCount = config.getInt("modelBakingThreadCount", CATEGORY_CLIENT, bakingCores, 1, 16, "");
+        config.getCategory(CATEGORY_CLIENT).get("modelBakingThreadCount").setComment(
+                "The maximum number of threads that will be used to bake models. [range: " + 1 + " ~ " + 16 + ", default: " + "core count / 2" + "]");
+        config.getCategory(CATEGORY_CLIENT).get("modelBakingThreadCount").setRequiresMcRestart(true);
+        
+        int updateRate = config.getInt("modelBakingUpdateRate", CATEGORY_CLIENT, 40, 10, 1000,
+                "How fast models are allowed to bake. Lower values will give smoother frame rate but models will load slower.");
+        modelBakingUpdateRate.set(updateRate);
+        
+        skinMaxRenderDistance = config
+                .get(CATEGORY_CLIENT, "skinMaxRenderDistance", 8192,
                 "The max distance away squared that skins will render.")
                 .getInt(8192);
         
-        maxModelBakingThreads = config.getInt("maxModelBakingThreads", CATEGORY_CLIENT, 1, 1, 20,
-                "The maximum number of threads that will be used to bake models.");
-        
         slowModelBaking = config.getBoolean("slowModelBaking", CATEGORY_CLIENT, true,
                 "Limits how fast models can be baked to provide a smoother frame rate.");
-        
-        clientModelCacheTime = config
-                .get(CATEGORY_CLIENT, "clientModelCacheTime", 600000,
-                "How long in ms the client will keep skins in it's cache.\n" + 
-                "Default 600000 ms is 10 minutes.")
-                .getInt(600000);
-        
-        clientTextureCacheTime = config
-                .getInt("clientTextureCacheTime", CATEGORY_CLIENT, 600, 1, 3600,
-                "How long in seconds the client will keep textures in it's cache.\n" + 
-                "Default 600 seconds is 10 minutes.");
         
         multipassSkinRendering = config.getBoolean("multipassSkinRendering", CATEGORY_CLIENT, true,
                 "When enabled skin will render in multiple passes to reduce visual artifacts.\n"
@@ -99,10 +123,10 @@ public class ConfigHandlerClient {
         blockSkinMaxRenderDistance = config.getInt("blockSkinMaxRenderDistance", CATEGORY_CLIENT, 8192, 1, 65536,
                 "The max distance squared that block skins will be rendered.");
         
-        lodDistance = config.getFloat("lodDistance", CATEGORY_CLIENT, 32F, 8, 128,
+        lodDistance = config.getFloat("lodDistance", CATEGORY_CLIENT, 32F, 8F, 128F,
                 "Distance away that skins will have lod applied to them.");
         
-        skinLoadAnimationTime = config.getInt("skinLoadAnimationTime", CATEGORY_CLIENT, 500, 0, 10000,
+        skinLoadAnimationTime = config.getInt("skinLoadAnimationTime", CATEGORY_CLIENT, 200, 0, 10000,
                 "How long skins will display their loading animation for in milliseconds\n"
                 + "Settings this to 0 will disable loading animations.");
         

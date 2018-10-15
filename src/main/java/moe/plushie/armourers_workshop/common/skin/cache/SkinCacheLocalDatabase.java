@@ -1,29 +1,29 @@
 package moe.plushie.armourers_workshop.common.skin.cache;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.Level;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
-import moe.plushie.armourers_workshop.common.data.ExpiringHashMap;
 import moe.plushie.armourers_workshop.common.data.ExpiringHashMap.IExpiringMapCallback;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
-import net.minecraftforge.fml.relauncher.Side;
 
-public class SkinCacheLocalDatabase implements IExpiringMapCallback<Skin> {
+public class SkinCacheLocalDatabase implements RemovalListener<Integer, Skin> {
     
     /** Cache of skins that are in memory. */
-    private final ExpiringHashMap<Integer, Skin> cacheMapDatabase;
-    private final Object cacheMapLock = new Object();
+    private final LoadingCache<Integer, Skin> skinCache;
     
     /** A list of skin that need to be loaded. */
     private final ArrayList<SkinRequestMessage> skinLoadQueue;
@@ -33,22 +33,31 @@ public class SkinCacheLocalDatabase implements IExpiringMapCallback<Skin> {
     
     public SkinCacheLocalDatabase(IExpiringMapCallback<Skin> callback) {
         this.callback = callback;
-        cacheMapDatabase = new ExpiringHashMap<Integer, Skin>(ConfigHandler.serverModelCacheTime, this);
+        CacheBuilder builder = CacheBuilder.newBuilder();
+        builder.removalListener(this);
+        builder.expireAfterAccess(ConfigHandler.skinCacheExpireTime, TimeUnit.SECONDS);
+        if (ConfigHandler.skinCacheMaxSize > 1) {
+            builder.maximumSize(ConfigHandler.skinCacheMaxSize);
+        }
+        skinCache = builder.build(new SkinLoader());
         skinLoadQueue = new ArrayList<SkinRequestMessage>();
         FMLCommonHandler.instance().bus().register(this);
     }
     
     public void doSkinLoading() {
-        synchronized (cacheMapLock) {
-            synchronized (skinLoadQueueLock) {
-                if (skinLoadQueue.size() > 0) {
-                    SkinRequestMessage requestMessage = skinLoadQueue.get(0);
-                    Skin skin = load(requestMessage.getSkinIdentifier().getSkinLocalId());
-                    if (skin != null) {
-                        CommonSkinCache.INSTANCE.onSkinLoaded(skin, requestMessage);
-                    }
-                    skinLoadQueue.remove(0);
+        synchronized (skinLoadQueueLock) {
+            if (skinLoadQueue.size() > 0) {
+                SkinRequestMessage requestMessage = skinLoadQueue.get(0);
+                Skin skin = null;
+                try {
+                    skin = skinCache.get(requestMessage.getSkinIdentifier().getSkinLocalId());
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
                 }
+                if (skin != null) {
+                    CommonSkinCache.INSTANCE.onSkinLoaded(skin, requestMessage);
+                }
+                skinLoadQueue.remove(0);
             }
         }
     }
@@ -59,78 +68,68 @@ public class SkinCacheLocalDatabase implements IExpiringMapCallback<Skin> {
     
     public Skin get(SkinRequestMessage requestMessage, boolean softLoad) {
         int skinId = requestMessage.getSkinIdentifier().getSkinLocalId();
-        synchronized (cacheMapLock) {
-            if (!cacheMapDatabase.containsKey(skinId)) {
-                if (softLoad) {
-                    synchronized (skinLoadQueueLock) {
-                        skinLoadQueue.add(requestMessage);
-                    }
-                    return null;
-                } else {
-                    load(skinId);
-                }
-            }
-            if (cacheMapDatabase.containsKey(skinId)) {
-                return cacheMapDatabase.get(skinId);
-            } else {
-                if (requestMessage.getPlayer() != null) {
-                    ModLogger.log(Level.ERROR, "Equipment id:" + String.valueOf(skinId) +" was requested by " + requestMessage.getPlayer().getName() + " but was not found.");
-                } else {
-                    ModLogger.log(Level.ERROR, "Equipment id:" + String.valueOf(skinId) +" was requested but was not found.");
-                }
-                return null;
-            }
-        }
-    }
-    
-    private Skin load(int skinId) {
-        if (haveSkinOnDisk(skinId)) {
-            Skin skin;
-            skin = loadSkinFromDisk(skinId);
-            if (skin != null) {
-                addSkinDataToCache(skin, skinId);
-                if (skin.hashCode() != skinId) {
-                    addSkinDataToCache(skin, skin.hashCode());
-                }
-                return skin;
-            } else {
-                ModLogger.log(Level.ERROR, String.format("Failed to load skin id:%s from disk.", String.valueOf(skinId)));
+        if (!softLoad) {
+            try {
+                return skinCache.get(skinId);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
         } else {
-            ModLogger.log(Level.WARN, String.format("The skin id:%s was not found on the disk.", String.valueOf(skinId)));
+            Skin skin = skinCache.getIfPresent(skinId);
+            if (skin != null) {
+                return skin;
+            } else {
+                synchronized (skinLoadQueueLock) {
+                    skinLoadQueue.add(requestMessage);
+                }
+            }
         }
         return null;
     }
     
     public void add(Skin skin) {
-        synchronized (cacheMapLock) {
-            addSkinDataToCache(skin, skin.lightHash());
-        }
+        addSkinDataToCache(skin, skin.lightHash());
     }
     
     public int size() {
-        synchronized (cacheMapLock) {
-            return cacheMapDatabase.size();
-        }
+        return skinCache.asMap().size();
     }
     
     public void clear() {
-        synchronized (cacheMapLock) {
-            cacheMapDatabase.clear();
-        }
-    }
-    
-    @SubscribeEvent
-    public void onServerTickEvent(TickEvent.ServerTickEvent event) {
-        if (event.side == Side.SERVER && event.type == Type.SERVER && event.phase == Phase.END) {
-            cacheMapDatabase.cleanupCheck();
-        }
+        skinCache.invalidateAll();
     }
     
     @Override
-    public void itemExpired(Skin mapItem) {
+    public void onRemoval(RemovalNotification<Integer, Skin> notification) {
         if (callback != null) {
-            callback.itemExpired(mapItem);
+            callback.itemExpired(notification.getValue());
+        }
+    }
+    
+    private class SkinLoader extends CacheLoader<Integer, Skin> {
+
+        @Override
+        public Skin load(Integer key) throws Exception {
+            ModLogger.log("Loading skin on " + Thread.currentThread());
+            return loadSkin(key);
+        }
+        
+        private Skin loadSkin(int skinId) throws IOException {
+            if (haveSkinOnDisk(skinId)) {
+                Skin skin;
+                skin = loadSkinFromDisk(skinId);
+                if (skin != null) {
+                    //addSkinDataToCache(skin, skinId);
+                    if (skin.hashCode() != skinId) {
+                        addSkinDataToCache(skin, skin.hashCode());
+                    }
+                    return skin;
+                } else {
+                    throw new IOException(String.format("Failed to load skin id:%s from disk.", String.valueOf(skinId)));
+                }
+            } else {
+                throw new IOException(String.format("The skin id:%s was not found on the disk.", String.valueOf(skinId)));
+            }
         }
     }
     
@@ -141,9 +140,7 @@ public class SkinCacheLocalDatabase implements IExpiringMapCallback<Skin> {
         if (!haveSkinOnDisk(skinId)) {
             saveSkinToDisk(skin);
         }
-        if (!cacheMapDatabase.containsKey(skinId)) {
-            cacheMapDatabase.put(skinId, skin);
-        }
+        skinCache.asMap().putIfAbsent(skinId, skin);
     }
     
     private void saveSkinToDisk(Skin skin) {
