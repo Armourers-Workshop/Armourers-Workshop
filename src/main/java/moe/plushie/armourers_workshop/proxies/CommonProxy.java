@@ -119,10 +119,6 @@ public class CommonProxy implements ILibraryCallback {
         
     }
     
-    public int getPlayerModelCacheSize() {
-        return 0;
-    }
-    
     public void receivedCommandFromSever(CommandType command) {
         
     }

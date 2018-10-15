@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Level;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheStats;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 
@@ -177,6 +178,10 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin> {
         synchronized (requestedSkinIDs) {
             requestedSkinIDs.clear();
         }
+    }
+    
+    public CacheStats getStats() {
+        return skinCache.stats();
     }
     
     @SubscribeEvent

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.client.handler;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import com.google.common.cache.CacheStats;
+
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
 import moe.plushie.armourers_workshop.client.render.DisplayList;
@@ -39,7 +40,10 @@ public class DebugTextHandler {
             event.getLeft().add("Skins Rendered: " + ModClientFMLEventHandler.skinRenderLastTick);
             event.getLeft().add("Model Count: " + ClientSkinCache.INSTANCE.getModelCount());
             if (GuiScreen.isCtrlKeyDown() != LibModInfo.DEVELOPMENT_VERSION) {
-                event.getLeft().add("Client Skin Count: " + ArmourersWorkshop.proxy.getPlayerModelCacheSize());
+                int size = ClientSkinCache.INSTANCE.getCacheSize();
+                CacheStats stats = ClientSkinCache.INSTANCE.getStats();
+                event.getLeft().add(String.format("Client Skin Cache: %d", size));
+                
                 if (Minecraft.getMinecraft().isIntegratedServerRunning()) {
                     event.getLeft().add("Common Skin Cache: S[" + CommonSkinCache.INSTANCE.size() + "] F[" + CommonSkinCache.INSTANCE.fileLinkSize() + "] G[" + CommonSkinCache.INSTANCE.globalLinkSize() + "]");
                 }

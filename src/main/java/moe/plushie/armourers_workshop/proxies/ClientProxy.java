@@ -12,8 +12,8 @@ import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.handler.BlockHighlightRenderHandler;
-import moe.plushie.armourers_workshop.client.handler.DebugTextHandler;
 import moe.plushie.armourers_workshop.client.handler.ClientWardrobeHandler;
+import moe.plushie.armourers_workshop.client.handler.DebugTextHandler;
 import moe.plushie.armourers_workshop.client.handler.ItemTooltipHandler;
 import moe.plushie.armourers_workshop.client.handler.ModClientFMLEventHandler;
 import moe.plushie.armourers_workshop.client.handler.PlayerTextureHandler;
@@ -342,11 +342,6 @@ public class ClientProxy extends CommonProxy {
     public void registerKeyBindings() {
         ClientRegistry.registerKeyBinding(Keybindings.KEY_UNDO);
         ClientRegistry.registerKeyBinding(Keybindings.OPEN_WARDROBE);
-    }
-
-    @Override
-    public int getPlayerModelCacheSize() {
-        return ClientSkinCache.INSTANCE.getCacheSize();
     }
     
     @Override
