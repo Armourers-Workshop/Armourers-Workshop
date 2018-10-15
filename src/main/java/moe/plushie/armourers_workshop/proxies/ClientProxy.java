@@ -340,8 +340,8 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void registerKeyBindings() {
-        ClientRegistry.registerKeyBinding(Keybindings.openCustomArmourGui);
-        ClientRegistry.registerKeyBinding(Keybindings.undo);
+        ClientRegistry.registerKeyBinding(Keybindings.KEY_UNDO);
+        ClientRegistry.registerKeyBinding(Keybindings.OPEN_WARDROBE);
     }
 
     @Override

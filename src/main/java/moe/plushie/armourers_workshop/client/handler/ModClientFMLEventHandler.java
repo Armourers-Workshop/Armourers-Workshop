@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientKeyPress;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientKeyPress.Button;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -47,11 +48,11 @@ public class ModClientFMLEventHandler {
     
     @SubscribeEvent
     public void onKeyInputEvent(InputEvent.KeyInputEvent event) {
-        if (Keybindings.openCustomArmourGui.isPressed() & ConfigHandler.allowEquipmentWardrobe) {
-            PacketHandler.networkWrapper.sendToServer(new MessageClientKeyPress((byte) 0));
+        if (Keybindings.KEY_UNDO.isPressed()) {
+            PacketHandler.networkWrapper.sendToServer(new MessageClientKeyPress(Button.UNDO));
         }
-        if (Keybindings.undo.isPressed()) {
-            PacketHandler.networkWrapper.sendToServer(new MessageClientKeyPress((byte) 1));
+        if (Keybindings.OPEN_WARDROBE.isPressed() & ConfigHandler.allowEquipmentWardrobe) {
+            PacketHandler.networkWrapper.sendToServer(new MessageClientKeyPress(Button.OPEN_WARDROBE));
         }
     }
     

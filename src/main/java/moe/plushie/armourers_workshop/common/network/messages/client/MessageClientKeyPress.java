@@ -12,39 +12,41 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageClientKeyPress implements IMessage, IMessageHandler<MessageClientKeyPress, IMessage> {
 
-    byte keyId;
+    Button button;
     
     public MessageClientKeyPress() {
     }
     
-    public MessageClientKeyPress(byte keyId) {
-        this.keyId = keyId;
+    public MessageClientKeyPress(Button button) {
+        this.button = button;
     }
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.keyId = buf.readByte();
+        button = Button.values()[buf.readByte()];
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeByte(this.keyId);
+        buf.writeByte(button.ordinal());
     }
     
     @Override
     public IMessage onMessage(MessageClientKeyPress message, MessageContext ctx) {
         EntityPlayerMP player = ctx.getServerHandler().player;
-        switch (message.keyId) {
-        case 0:
-            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.WARDROBE_PLAYER, player.getEntityWorld(), 0, 0, 0);
-            break;
-        case 1:
+        switch (message.button) {
+        case UNDO:
             UndoManager.undoPressed(player);
             break;
-        default:
+        case OPEN_WARDROBE:
+            FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.WARDROBE_PLAYER, player.getEntityWorld(), 0, 0, 0);
             break;
         }
-        
         return null;
+    }
+    
+    public enum Button {
+        UNDO,
+        OPEN_WARDROBE;
     }
 }
