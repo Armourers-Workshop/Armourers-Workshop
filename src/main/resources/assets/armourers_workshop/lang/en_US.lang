@@ -591,7 +591,7 @@ itemGroup.armourers_workshop=Armourer's Workshop
 
 # Keybindings
 keys.armourers_workshop:category=Armourer's Workshop
-keys.armourers_workshop.equipment-wardrobe=Wardrobe
+keys.armourers_workshop.open-wardrobe=Open Wardrobe
 keys.armourers_workshop.undo=Undo
 
 
