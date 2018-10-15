@@ -132,7 +132,7 @@ public class ItemSkin extends AbstractModItem {
                     tooltip.add("  " + TranslateUtils.translate("item.armourers_workshop:rollover.skinGlobalId", identifier.getSkinGlobalId()));
                 }
             }
-            String keyName = Keyboard.getKeyName(Keybindings.openCustomArmourGui.getKeyCode());
+            String keyName = Keyboard.getKeyName(Keybindings.OPEN_WARDROBE.getKeyCode());
             if (isEquipmentSkin) {
                 tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinOpenWardrobe", keyName));
             }
