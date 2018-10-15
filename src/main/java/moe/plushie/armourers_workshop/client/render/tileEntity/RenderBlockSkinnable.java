@@ -64,14 +64,15 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySk
     public void render(TileEntitySkinnable te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         ISkinDescriptor skinPointer = te.getSkinPointer();
         IBlockState state = te.getWorld().getBlockState(te.getPos());
+
         if (skinPointer != null) {
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             if (skin != null) {
                 if (te.isParent()) {
-                    EnumFacing facing = state.getValue(BlockSkinnable.STATE_FACING);
                     GL11.glPushMatrix();
                     GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
-                    RenderItemEquipmentSkin.renderLoadingIcon(te.getSkinPointer());
+                    EnumFacing facing = state.getValue(BlockSkinnable.STATE_FACING);
+                    //RenderItemEquipmentSkin.renderLoadingIcon(te.getSkinPointer());
                     if (facing == EnumFacing.EAST) {
                         GL11.glRotatef(-90F, 0, 1, 0);
                     }
@@ -88,8 +89,9 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySk
                         SkinPart skinPart = skin.getParts().get(i);
                         SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, te.getSkinPointer().getSkinDye(), null, 0, true);
                     }
-                    GL11.glPopMatrix();
                     //renderSkin(tileEntity, x, y, z, skin);
+                    GL11.glPopMatrix();
+                    return;
                 } else {
                     if (!((TileEntitySkinnableChild)te).isParentValid()) {
                         GL11.glPushMatrix();
@@ -97,13 +99,16 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySk
                         RenderItemEquipmentSkin.renderLoadingIcon(te.getSkinPointer());
                         GL11.glPopMatrix();
                     }
+                    return;
                 }
-                return;
             } else {
                 ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer);
             }
         }
+        GL11.glPushMatrix();
+        GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
         RenderItemEquipmentSkin.renderLoadingIcon(te.getSkinPointer());
+        GL11.glPopMatrix();
     }
     
     /*
