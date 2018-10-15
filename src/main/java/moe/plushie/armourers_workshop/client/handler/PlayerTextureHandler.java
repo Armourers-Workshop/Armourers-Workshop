@@ -116,9 +116,11 @@ public class PlayerTextureHandler {
             ResourceLocation replacmentTexture = textureInfo.preRender();
             
             NetworkPlayerInfo playerInfo = Minecraft.getMinecraft().getConnection().getPlayerInfo(player.getUniqueID());
-            Map<Type, ResourceLocation> playerTextures = ReflectionHelper.getPrivateValue(NetworkPlayerInfo.class, playerInfo, "field_187107_a", "playerTextures");
-            if (playerTextures != null) {
-                playerTextures.put(Type.SKIN, replacmentTexture);
+            if (playerInfo != null) {
+                Map<Type, ResourceLocation> playerTextures = ReflectionHelper.getPrivateValue(NetworkPlayerInfo.class, playerInfo, "field_187107_a", "playerTextures");
+                if (playerTextures != null) {
+                    playerTextures.put(Type.SKIN, replacmentTexture);
+                }
             }
         }
         profiler.endSection();
@@ -146,11 +148,13 @@ public class PlayerTextureHandler {
             ResourceLocation replacmentTexture = textureInfo.getReplacementTexture();
             ResourceLocation normalTexture = textureInfo.postRender();
             NetworkPlayerInfo playerInfo = Minecraft.getMinecraft().getConnection().getPlayerInfo(player.getUniqueID());
-            Map<Type, ResourceLocation> playerTextures = ReflectionHelper.getPrivateValue(NetworkPlayerInfo.class, playerInfo, "field_187107_a", "playerTextures");
-            if (playerTextures != null) {
-                ResourceLocation curTexture = player.getLocationSkin();
-                if (curTexture == replacmentTexture) {
-                    playerTextures.put(Type.SKIN, normalTexture);
+            if (playerInfo != null) {
+                Map<Type, ResourceLocation> playerTextures = ReflectionHelper.getPrivateValue(NetworkPlayerInfo.class, playerInfo, "field_187107_a", "playerTextures");
+                if (playerTextures != null) {
+                    ResourceLocation curTexture = player.getLocationSkin();
+                    if (curTexture == replacmentTexture) {
+                        playerTextures.put(Type.SKIN, normalTexture);
+                    }
                 }
             }
         } else {
