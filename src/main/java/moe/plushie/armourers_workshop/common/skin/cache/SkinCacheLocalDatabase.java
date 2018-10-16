@@ -117,7 +117,7 @@ public class SkinCacheLocalDatabase implements RemovalListener<Integer, Skin> {
                 Skin skin;
                 skin = loadSkinFromDisk(skinId);
                 if (skin != null) {
-                    //addSkinDataToCache(skin, skinId);
+                    addSkinDataToCache(skin, skinId);
                     if (skin.hashCode() != skinId) {
                         addSkinDataToCache(skin, skin.hashCode());
                     }
