@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -91,6 +92,57 @@ public final class DownloadUtils {
         public JsonObject call() throws Exception {
             JsonObject array = downloadJsonObject(url);
             return array;
+        }
+    }
+    
+    public static class DownloadJsonMultipartForm implements Callable<JsonObject> {
+
+        private final MultipartForm multipartForm;
+        
+        public DownloadJsonMultipartForm(MultipartForm multipartForm) {
+            this.multipartForm = multipartForm;
+        }
+        
+        @Override
+        public JsonObject call() throws Exception {
+            String data = multipartForm.upload();
+            if (StringUtils.isEmpty(data)) {
+                return null;
+            }
+            JsonObject json = null;
+            try {
+                json = (JsonObject) new JsonParser().parse(data);
+            } catch (Exception e) {
+                ModLogger.log(data);
+                e.printStackTrace();
+                return null;
+            }
+            return json;
+        }
+    }
+    
+    public static class DownloadJsonArrayMultipartForm implements Callable<JsonArray> {
+
+        private final MultipartForm multipartForm;
+        
+        public DownloadJsonArrayMultipartForm(MultipartForm multipartForm) {
+            this.multipartForm = multipartForm;
+        }
+        
+        @Override
+        public JsonArray call() throws Exception {
+            String data = multipartForm.upload();
+            if (StringUtils.isEmpty(data)) {
+                return null;
+            }
+            JsonArray json = null;
+            try {
+                json = (JsonArray) new JsonParser().parse(data);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            return json;
         }
     }
     

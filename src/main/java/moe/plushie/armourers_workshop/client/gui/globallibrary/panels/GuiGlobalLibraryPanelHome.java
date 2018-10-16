@@ -1,23 +1,27 @@
 package moe.plushie.armourers_workshop.client.gui.globallibrary.panels;
 
+import java.util.ArrayList;
 import java.util.concurrent.FutureTask;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel.SkinIcon;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
-import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonCallable;
+import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonArrayMultipartForm;
+import moe.plushie.armourers_workshop.common.library.global.MultipartForm;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelHome extends GuiPanel {
@@ -75,9 +79,24 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
         int iconCountMostDownloaded = skinPanelMostDownloaded.getIconCount();
         int iconCountMostLiked = skinPanelMostLiked.getIconCount();
         
-        taskDownloadJsonRecentlyUploaded = new FutureTask<JsonArray>(new DownloadJsonCallable(RECENTLY_UPLOADED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION)));
-        taskDownloadJsonMostDownloaded = new FutureTask<JsonArray>(new DownloadJsonCallable(MOST_DOWNLOADED_URL + "?limit=" + iconCountMostDownloaded + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION)));
-        taskDownloadJsonMostLiked = new FutureTask<JsonArray>(new DownloadJsonCallable(MOST_LIKED_URL + "?limit=" + iconCountMostLiked + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION)));
+        ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
+        String searchTypes = "";
+        for (int i = 0; i < skinTypes.size(); i++) {
+            searchTypes += (skinTypes.get(i).getRegistryName());
+            if (i < skinTypes.size() - 1) {
+                searchTypes += ";";
+            }
+        }
+        MultipartForm multipartFormRecently = new MultipartForm(RECENTLY_UPLOADED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION));
+        MultipartForm multipartFormMostDownloaded = new MultipartForm(MOST_DOWNLOADED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION));
+        MultipartForm multipartFormMostLiked = new MultipartForm(MOST_LIKED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION));
+        multipartFormRecently.addText("searchTypes", searchTypes);
+        multipartFormMostDownloaded.addText("searchTypes", searchTypes);
+        multipartFormMostLiked.addText("searchTypes", searchTypes);
+        
+        taskDownloadJsonRecentlyUploaded = new FutureTask<JsonArray>(new DownloadJsonArrayMultipartForm(multipartFormRecently));
+        taskDownloadJsonMostDownloaded = new FutureTask<JsonArray>(new DownloadJsonArrayMultipartForm(multipartFormMostDownloaded));
+        taskDownloadJsonMostLiked = new FutureTask<JsonArray>(new DownloadJsonArrayMultipartForm(multipartFormMostLiked));
         
         ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDownloadJsonRecentlyUploaded);
         ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDownloadJsonMostDownloaded);
