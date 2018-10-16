@@ -47,7 +47,6 @@ public class SkinPartRenderer extends ModelBase {
     private void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, ExtraColours extraColours, int lod, boolean doLodLoading) {
         //mc.profiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
-        //GL11.glColor3f(1F, 1F, 1F);
         
         ClientSkinPartData cspd = skinPart.getClientSkinPartData();
         SkinModel skinModel = cspd.getModelForDye(skinDye, extraColours);
@@ -94,7 +93,6 @@ public class SkinPartRenderer extends ModelBase {
         } else {
             endIndex = startIndex + 2;
         }
-
         
         int listCount = skinModel.displayList.length;
         for (int i = startIndex; i < endIndex; i++) {
@@ -133,7 +131,9 @@ public class SkinPartRenderer extends ModelBase {
         if (!ClientProxy.useSafeTextureRender()) {
             GlStateManager.enableTexture2D();
         }
+        
         GlStateManager.resetColor();
+        GlStateManager.color(1F, 1F, 1F, 1F);
         //mc.profiler.endSection();
     }
     

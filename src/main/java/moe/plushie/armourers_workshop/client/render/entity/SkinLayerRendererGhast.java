@@ -6,14 +6,19 @@ import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.handler.ModClientFMLEventHandler;
 import net.minecraft.client.renderer.entity.RenderEntity;
+import net.minecraft.client.renderer.entity.RenderGhast;
 import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class SkinLayerRendererGhast extends SkinLayerRenderer<EntityGhast> {
+public class SkinLayerRendererGhast extends SkinLayerRenderer<EntityGhast, RenderGhast> {
 
+    public SkinLayerRendererGhast(RenderGhast renderGhast) {
+        super(renderGhast);
+    }
+    
     public void render(EntityGhast entity, RenderEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
         GL11.glPushMatrix();
         float scale = 0.0625F;

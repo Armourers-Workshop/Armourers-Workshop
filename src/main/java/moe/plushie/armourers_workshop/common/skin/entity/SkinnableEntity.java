@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,9 +16,9 @@ public abstract class SkinnableEntity implements ISkinnableEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public void addRenderLayer(RenderManager renderManager) {
-        Render<Entity> renderer = renderManager.getEntityClassRenderObject(getEntityClass());
+        Render<EntityLivingBase> renderer = renderManager.getEntityClassRenderObject(getEntityClass());
         if (renderer != null && renderer instanceof RenderLivingBase) {
-            LayerRenderer<? extends EntityLivingBase> layerRenderer = getLayerRenderer();
+            LayerRenderer<? extends EntityLivingBase> layerRenderer = getLayerRenderer((RenderLivingBase) renderer);
             if (layerRenderer != null) {
                 ((RenderLivingBase<?>) renderer).addLayer(layerRenderer);
             }
@@ -27,8 +26,8 @@ public abstract class SkinnableEntity implements ISkinnableEntity {
     }
     
     @SideOnly(Side.CLIENT)
-    public LayerRenderer<? extends EntityLivingBase> getLayerRenderer() {
-        return new SkinLayerRendererDummy();
+    public LayerRenderer<? extends EntityLivingBase> getLayerRenderer(RenderLivingBase renderLivingBase) {
+        return new SkinLayerRendererDummy(renderLivingBase);
     }
     
     @Override

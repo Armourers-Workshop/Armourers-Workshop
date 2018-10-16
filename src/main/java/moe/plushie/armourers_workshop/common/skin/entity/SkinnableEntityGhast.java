@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererGhast;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import net.minecraft.client.renderer.entity.RenderGhast;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityGhast;
@@ -20,8 +22,8 @@ public class SkinnableEntityGhast extends SkinnableEntity {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public LayerRenderer<? extends EntityLivingBase> getLayerRenderer() {
-        return new SkinLayerRendererGhast();
+    public LayerRenderer<? extends EntityLivingBase> getLayerRenderer(RenderLivingBase renderLivingBase) {
+        return new SkinLayerRendererGhast((RenderGhast) renderLivingBase);
     }
     
     @Override

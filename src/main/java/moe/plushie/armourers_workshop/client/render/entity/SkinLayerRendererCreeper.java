@@ -3,13 +3,18 @@ package moe.plushie.armourers_workshop.client.render.entity;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import net.minecraft.client.renderer.entity.RenderCreeper;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class SkinLayerRendererCreeper extends SkinLayerRenderer<EntityCreeper> {
+public class SkinLayerRendererCreeper extends SkinLayerRenderer<EntityCreeper, RenderCreeper> {
 
+    public SkinLayerRendererCreeper(RenderCreeper renderCreeper) {
+        super(renderCreeper);
+    }
+    
     @Override
     protected void setRotTranForPartType(EntityCreeper entitylivingbaseIn, ISkinType skinType, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         

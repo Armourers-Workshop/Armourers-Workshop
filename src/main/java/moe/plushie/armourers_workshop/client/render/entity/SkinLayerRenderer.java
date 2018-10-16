@@ -15,18 +15,23 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
-import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public abstract class SkinLayerRenderer<E extends EntityLivingBase> implements LayerRenderer<E> {
+public abstract class SkinLayerRenderer<E extends EntityLivingBase, R extends RenderLivingBase> implements LayerRenderer<E> {
     
     protected static final float SCALE = 0.0625F;
+    protected final R renderer;
+    
+    public SkinLayerRenderer(R renderer) {
+        this.renderer = renderer;
+    }
     
     @Override
     public void doRenderLayer(E entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
@@ -45,7 +50,7 @@ public abstract class SkinLayerRenderer<E extends EntityLivingBase> implements L
         for (int i = 0; i < skinTypes.length; i++) {
             GlStateManager.pushMatrix();
             setRotTranForPartType(entitylivingbaseIn, skinTypes[i], limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
-            renderSkinType(entitylivingbaseIn, SkinTypeRegistry.skinHead, skinCapability, WardrobeCap.get(entitylivingbaseIn));
+            renderSkinType(entitylivingbaseIn, skinTypes[i], skinCapability, WardrobeCap.get(entitylivingbaseIn));
             GlStateManager.popMatrix();
         }
     }
@@ -75,7 +80,7 @@ public abstract class SkinLayerRenderer<E extends EntityLivingBase> implements L
                     }
                 }
             }
-
+            
             GL11.glEnable(GL11.GL_NORMALIZE);
             for (int partIndex = 0; partIndex < skin.getParts().size(); partIndex++) {
                 SkinPartRenderer.INSTANCE.renderPart(skin.getParts().get(partIndex), SCALE, dye, extraColours, false);
