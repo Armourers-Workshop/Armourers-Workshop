@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.hologramprojector.GuiHologramProjector;
 import moe.plushie.armourers_workshop.client.gui.mannequin.GuiMannequin;
 import moe.plushie.armourers_workshop.client.gui.miniarmourer.GuiMiniArmourer;
-import moe.plushie.armourers_workshop.client.gui.miniarmourer.GuiMiniArmourerBuilding;
 import moe.plushie.armourers_workshop.client.gui.skinlibrary.GuiSkinLibrary;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
@@ -31,8 +30,6 @@ import moe.plushie.armourers_workshop.common.inventory.ContainerDyeTable;
 import moe.plushie.armourers_workshop.common.inventory.ContainerGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.common.inventory.ContainerHologramProjector;
 import moe.plushie.armourers_workshop.common.inventory.ContainerMannequin;
-import moe.plushie.armourers_workshop.common.inventory.ContainerMiniArmourer;
-import moe.plushie.armourers_workshop.common.inventory.ContainerMiniArmourerBuilding;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinnable;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinningTable;
@@ -46,7 +43,6 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntityDyeTable;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityMiniArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinLibrary;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinningTable;
@@ -105,15 +101,6 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerMannequin(player.inventory, (TileEntityMannequin)te);
                 }
                 break;
-            case LibGuiIds.MINI_ARMOURER:
-                if (te instanceof TileEntityMiniArmourer) {
-                    return new ContainerMiniArmourer(player.inventory, (TileEntityMiniArmourer)te);
-                }
-                break;
-            case LibGuiIds.MINI_ARMOURER_BUILDING:
-                if (te instanceof TileEntityMiniArmourer) {
-                    return new ContainerMiniArmourerBuilding((TileEntityMiniArmourer)te);
-                }
             case LibGuiIds.WARDROBE_ENTITY:
                 Entity entity = player.getEntityWorld().getEntityByID(x);
                 if (entity != null) {
@@ -216,14 +203,7 @@ public class GuiHandler implements IGuiHandler {
                 }
                 break;
             case LibGuiIds.MINI_ARMOURER:
-                if (te instanceof TileEntityMiniArmourer) {
-                    return new GuiMiniArmourer(player.inventory, (TileEntityMiniArmourer)te);
-                }
-                break;
-            case LibGuiIds.MINI_ARMOURER_BUILDING:
-                if (te instanceof TileEntityMiniArmourer) {
-                    return new GuiMiniArmourerBuilding((TileEntityMiniArmourer)te);
-                }
+                return new GuiMiniArmourer(player);
             case LibGuiIds.WARDROBE_ENTITY:
                 Entity entity = player.getEntityWorld().getEntityByID(x);
                 if (entity != null) {

@@ -33,7 +33,6 @@ import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockColour
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockHologramProjector;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockMannequin;
-import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockMiniArmourer;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockSkinnable;
 import moe.plushie.armourers_workshop.client.settings.Keybindings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
@@ -56,7 +55,6 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityMiniArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
 import moe.plushie.armourers_workshop.utils.HolidayHelper;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -161,7 +159,6 @@ public class ClientProxy extends CommonProxy {
         //Register tile entity renderers.
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourer.class, new RenderBlockArmourer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMiniArmourer.class, new RenderBlockMiniArmourer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkinnable.class, new RenderBlockSkinnable());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityColourable.class, new RenderBlockColourable());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBoundingBox.class, new RenderBlockColourable());

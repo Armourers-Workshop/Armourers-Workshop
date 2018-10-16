@@ -3,10 +3,8 @@ package moe.plushie.armourers_workshop.common.network.messages.client;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
-import moe.plushie.armourers_workshop.common.inventory.ContainerMiniArmourerBuilding;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityMiniArmourer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -50,11 +48,6 @@ public class MessageClientGuiSetArmourerSkinType implements IMessage, IMessageHa
         
         if (container != null && container instanceof ContainerArmourer) {
             TileEntityArmourer te = ((ContainerArmourer)container).getTileEntity();
-            te.setSkinType(message.skinType);
-        }
-        
-        if (container != null && container instanceof ContainerMiniArmourerBuilding) {
-            TileEntityMiniArmourer te = ((ContainerMiniArmourerBuilding) container).getTileEntity();
             te.setSkinType(message.skinType);
         }
         

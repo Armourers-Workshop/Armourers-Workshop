@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiHologramProjector;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiLoadSaveArmour;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiMannequinData;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiMiniArmourerCubeEdit;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSetArmourerSkinProps;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSetArmourerSkinType;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSetSkin;
@@ -27,8 +26,6 @@ import moe.plushie.armourers_workshop.common.network.messages.server.MessageServ
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerGameProfile;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerLibraryFileList;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerLibrarySendSkin;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerMiniArmourerCubeEdit;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerMiniArmourerSkinData;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSendSkinData;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncConfig;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncPlayerWardrobeCap;
@@ -67,7 +64,6 @@ public final class PacketHandler {
         registerMessage(MessageClientGuiSetArmourerSkinProps.class, MessageClientGuiSetArmourerSkinProps.class, Side.SERVER);
         registerMessage(MessageClientGuiBipedRotations.class, MessageClientGuiBipedRotations.class, Side.SERVER);
         registerMessage(MessageClientGuiSetArmourerSkinType.class, MessageClientGuiSetArmourerSkinType.class, Side.SERVER);
-        registerMessage(MessageClientGuiMiniArmourerCubeEdit.class, MessageClientGuiMiniArmourerCubeEdit.class, Side.SERVER);
         registerMessage(MessageClientGuiMannequinData.class, MessageClientGuiMannequinData.class, Side.SERVER);
         registerMessage(MessageClientGuiAdminPanel.class, MessageClientGuiAdminPanel.class, Side.SERVER);
         registerMessage(MessageClientGuiSkinLibraryCommand.class, MessageClientGuiSkinLibraryCommand.class, Side.SERVER);
@@ -83,8 +79,6 @@ public final class PacketHandler {
         registerMessage(MessageServerSendSkinData.class, MessageServerSendSkinData.class, Side.CLIENT);
         registerMessage(MessageServerClientCommand.class, MessageServerClientCommand.class, Side.CLIENT);
         registerMessage(MessageServerLibrarySendSkin.class, MessageServerLibrarySendSkin.class, Side.CLIENT);
-        registerMessage(MessageServerMiniArmourerSkinData.class, MessageServerMiniArmourerSkinData.class, Side.CLIENT);
-        registerMessage(MessageServerMiniArmourerCubeEdit.class, MessageServerMiniArmourerCubeEdit.class, Side.CLIENT);
         registerMessage(MessageServerSyncConfig.class, MessageServerSyncConfig.class, Side.CLIENT);
         registerMessage(MessageServerGameProfile.class, MessageServerGameProfile.class, Side.CLIENT);
     }

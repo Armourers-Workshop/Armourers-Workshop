@@ -1,11 +1,8 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityMiniArmourer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
-public class BlockMiniArmourer extends AbstractModBlockContainer {
+public class BlockMiniArmourer extends AbstractModBlock {
 
     public BlockMiniArmourer() {
         super(LibBlockNames.MINI_ARMOURER);
@@ -26,9 +23,4 @@ public class BlockMiniArmourer extends AbstractModBlockContainer {
         }
         return true;
     }*/
-
-    @Override
-    public TileEntity createNewTileEntity(World world, int p_149915_2_) {
-        return new TileEntityMiniArmourer();
-    }
 }
