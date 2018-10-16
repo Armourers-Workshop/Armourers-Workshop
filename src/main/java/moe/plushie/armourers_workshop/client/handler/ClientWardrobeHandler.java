@@ -29,6 +29,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderSpecificHandEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -227,59 +228,67 @@ public final class ClientWardrobeHandler {
             }
         }
 
-        
         // Hide the head overlay if the player has turned it off.
         RenderPlayer renderer = event.getRenderer();
         if (SkinModelRenderer.INSTANCE.playerHasCustomHead(player)) {
             renderer.getMainModel().bipedHeadwear.isHidden = true;
         }
-        
-        
-        IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
+    }
+    
+    @SubscribeEvent
+    public void onRender(RenderPlayerEvent.Post event) {
+        EntityPlayer player = event.getEntityPlayer();
+        // Restore the players armour stacks.
+        for (int i = 0; i < armour.length; i++) {
+            player.inventory.armorInventory.set(i, armour[i]);
+        }
+    }
+    
+    @SubscribeEvent
+    public void onRenderLivingPre(RenderLivingEvent.Pre<EntityPlayer> event) {
+        IEntitySkinCapability skinCapability = EntitySkinCapability.get(event.getEntity());
+        if (skinCapability == null) {
+            return;
+        }
+        // Hide parts of the player model.
         ISkinType[] skinTypes = new ISkinType[] {SkinTypeRegistry.skinHead, SkinTypeRegistry.skinChest, SkinTypeRegistry.skinLegs, SkinTypeRegistry.skinFeet};
-        
         for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
             ModelPlayer modelPlayer = playerRender.getMainModel();
-            if (skinCapability != null) {
-                for (int i = 0; i < skinTypes.length; i++) {
-                    ISkinType skinType = skinTypes[i];
-                    
-                    ISkinDescriptor skinDescriptor = SkinNBTHelper.getSkinDescriptorFromStack(armour[3 - i]);
-                    
-                    if (skinDescriptor == null) {
-                        skinDescriptor = skinCapability.getSkinDescriptor(skinType, 0);
-                    }
-                    
-                    if (skinDescriptor == null) {
-                        continue;
-                    }
-                    
-                    Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
-                    if (skin == null) {
-                        continue;
-                    }
-                    if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
-                        if (i == 0) {
-                            modelPlayer.bipedHead.isHidden = true;
-                            modelPlayer.bipedHeadwear.isHidden = true;
-                        } else if(i == 1) {
-                            modelPlayer.bipedBody.isHidden = true;
-                            modelPlayer.bipedBodyWear.isHidden = true;
-                            modelPlayer.bipedLeftArm.isHidden = true;
-                            modelPlayer.bipedLeftArmwear.isHidden = true;
-                            modelPlayer.bipedRightArm.isHidden = true;
-                            modelPlayer.bipedLeftArmwear.isHidden = true;
-                        } else if(i == 2) {
-                            modelPlayer.bipedLeftLeg.isHidden = true;
-                            modelPlayer.bipedLeftLegwear.isHidden = true;
-                            modelPlayer.bipedRightLeg.isHidden = true;
-                            modelPlayer.bipedRightLegwear.isHidden = true;
-                        } else if(i == 3) {
-                            modelPlayer.bipedLeftLeg.isHidden = true;
-                            modelPlayer.bipedLeftLegwear.isHidden = true;
-                            modelPlayer.bipedRightLeg.isHidden = true;
-                            modelPlayer.bipedRightLegwear.isHidden = true;
-                        }
+            for (int i = 0; i < skinTypes.length; i++) {
+                ISkinType skinType = skinTypes[i];
+                ISkinDescriptor skinDescriptor = SkinNBTHelper.getSkinDescriptorFromStack(armour[3 - i]);
+                if (skinDescriptor == null) {
+                    skinDescriptor = skinCapability.getSkinDescriptor(skinType, 0);
+                }
+                if (skinDescriptor == null) {
+                    continue;
+                }
+                
+                Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
+                if (skin == null) {
+                    continue;
+                }
+                if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
+                    if (i == 0) {
+                        modelPlayer.bipedHead.isHidden = true;
+                        modelPlayer.bipedHeadwear.isHidden = true;
+                    } else if(i == 1) {
+                        modelPlayer.bipedBody.isHidden = true;
+                        modelPlayer.bipedBodyWear.isHidden = true;
+                        modelPlayer.bipedLeftArm.isHidden = true;
+                        modelPlayer.bipedLeftArmwear.isHidden = true;
+                        modelPlayer.bipedRightArm.isHidden = true;
+                        modelPlayer.bipedLeftArmwear.isHidden = true;
+                    } else if(i == 2) {
+                        modelPlayer.bipedLeftLeg.isHidden = true;
+                        modelPlayer.bipedLeftLegwear.isHidden = true;
+                        modelPlayer.bipedRightLeg.isHidden = true;
+                        modelPlayer.bipedRightLegwear.isHidden = true;
+                    } else if(i == 3) {
+                        modelPlayer.bipedLeftLeg.isHidden = true;
+                        modelPlayer.bipedLeftLegwear.isHidden = true;
+                        modelPlayer.bipedRightLeg.isHidden = true;
+                        modelPlayer.bipedRightLegwear.isHidden = true;
                     }
                 }
             }
@@ -287,20 +296,9 @@ public final class ClientWardrobeHandler {
     }
     
     @SubscribeEvent
-    public void onRender(RenderPlayerEvent.Post event) {
-        EntityPlayer player = event.getEntityPlayer();
-        /*if (player instanceof MannequinFakePlayer) {
-            return;
-        }*/
-        if (player instanceof FakePlayer) {
-            return;
-        }
-        for (int i = 0; i < armour.length; i++) {
-            player.inventory.armorInventory.set(i, armour[i]);
-        }
-        
+    public void onRenderLivingPost(RenderLivingEvent.Post<EntityPlayer> event) {
+        // Restore the player model.
         for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
-            //Restore the head overlay.
             ModelPlayer modelPlayer = playerRender.getMainModel();
             modelPlayer.bipedHead.isHidden = false;
             modelPlayer.bipedHeadwear.isHidden = false;
