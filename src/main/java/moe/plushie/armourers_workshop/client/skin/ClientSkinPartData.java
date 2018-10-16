@@ -1,25 +1,31 @@
 package moe.plushie.armourers_workshop.client.skin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.SkinModel;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
+import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData.ModelKey;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ClientSkinPartData {
+public class ClientSkinPartData implements RemovalListener<ModelKey, SkinModel> {
 
     /** Blank dye that is used if no dye is applied. */
-    public static final SkinDye blankDye = new SkinDye();
+    public static final SkinDye BLANK_DYE = new SkinDye();
     public ArrayList<ColouredFace>[] vertexLists;
-    public HashMap<ModelKey, SkinModel> dyeModels;
+    public final LoadingCache<ModelKey, SkinModel> modelCache;
     public int[] totalCubesInPart;
     
     private int[] averageR = new int[12];
@@ -27,36 +33,29 @@ public class ClientSkinPartData {
     private int[] averageB = new int[12];
     
     public ClientSkinPartData() {
-        dyeModels = new HashMap<ModelKey, SkinModel>();
+        CacheBuilder builder = CacheBuilder.newBuilder();
+        builder.removalListener(this);
+        builder.expireAfterAccess(ConfigHandlerClient.skinCacheExpireTime, TimeUnit.SECONDS);
+        if (ConfigHandlerClient.skinCacheMaxSize > 1) {
+            builder.maximumSize(ConfigHandlerClient.skinCacheMaxSize);
+        }
+        modelCache = builder.build(new ModelLoader());
     }
     
     public SkinModel getModelForDye(ISkinDye skinDye, ExtraColours extraColours) {
         if (skinDye == null) {
-            skinDye = blankDye;
+            skinDye = BLANK_DYE;
         }
         ModelKey modelKey = new ModelKey(skinDye, extraColours);
-        SkinModel skinModel = dyeModels.get(modelKey);
-        if (skinModel == null) {
-            skinModel = new SkinModel(vertexLists);
-            dyeModels.put(modelKey, skinModel);
-        }
-        return skinModel;
+        return modelCache.getUnchecked(modelKey);
     }
     
     public void cleanUpDisplayLists() {
-        Set keys = dyeModels.keySet();
-        Iterator<ModelKey> i = dyeModels.keySet().iterator();
-        while (i.hasNext()) {
-            ModelKey modelKey = i.next();
-            SkinModel skinModel = dyeModels.get(modelKey);
-            if (skinModel != null) {
-                skinModel.cleanUpDisplayLists();
-            }
-        }
+        modelCache.invalidateAll();
     }
     
     public int getModelCount() {
-        return dyeModels.size();
+        return (int) modelCache.size();
     }
 
     public void setVertexLists(ArrayList<ColouredFace>[] vertexLists) {
@@ -73,7 +72,20 @@ public class ClientSkinPartData {
         return new int[] { averageR[dyeNumber], averageG[dyeNumber], averageB[dyeNumber] };
     }
     
-    private class ModelKey {
+    @Override
+    public void onRemoval(RemovalNotification<ModelKey, SkinModel> notification) {
+        notification.getValue().cleanUpDisplayLists();
+    }
+    
+    private class ModelLoader extends CacheLoader<ModelKey, SkinModel> {
+        
+        @Override
+        public SkinModel load(ModelKey key) throws Exception {
+            return new SkinModel(vertexLists);
+        }
+    }
+    
+    public static class ModelKey {
         
         private ISkinDye skinDye;
         private ExtraColours extraColours;
@@ -87,7 +99,6 @@ public class ClientSkinPartData {
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + getOuterType().hashCode();
             result = prime * result + ((extraColours == null) ? 0 : extraColours.hashCode());
             result = prime * result + ((skinDye == null) ? 0 : skinDye.hashCode());
             return result;
@@ -102,8 +113,6 @@ public class ClientSkinPartData {
             if (getClass() != obj.getClass())
                 return false;
             ModelKey other = (ModelKey) obj;
-            if (!getOuterType().equals(other.getOuterType()))
-                return false;
             if (extraColours == null) {
                 if (other.extraColours != null)
                     return false;
@@ -116,11 +125,5 @@ public class ClientSkinPartData {
                 return false;
             return true;
         }
-
-        private ClientSkinPartData getOuterType() {
-            return ClientSkinPartData.this;
-        }
-        
-        
     }
 }
