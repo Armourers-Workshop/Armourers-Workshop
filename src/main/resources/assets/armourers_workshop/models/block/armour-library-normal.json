@@ -7,7 +7,7 @@
 		"Clay": "blocks/hardened_clay",
 		"spruce": "blocks/planks_spruce",
 		"particle": "blocks/e_particle",
-		"texture": "armourers_workshop:blocks/libraryblock1"
+		"texture": "armourers_workshop:blocks/skin-library/libraryblock1"
 	},
 	"elements": [ 	 
 		{

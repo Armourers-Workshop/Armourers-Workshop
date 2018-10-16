@@ -9,10 +9,10 @@
 		"Clay": "blocks/hardened_clay",
 		"spruce": "blocks/planks_spruce",
 		"redstone": "blocks/redstone_block",
-		"globalskin": "armourers_workshop:blocks/globalskinlibrary1",
+		"globalskin": "armourers_workshop:blocks/global-skin-library/globalskinlibrary1",
 		"texture1": "blocks/iron_block",
-		"globalskin2": "armourers_workshop:blocks/globalskinlibrary2",
-		"globalskin3": "armourers_workshop:blocks/globalskinlibrary3"
+		"globalskin2": "armourers_workshop:blocks/global-skin-library/globalskinlibrary2",
+		"globalskin3": "armourers_workshop:blocks/global-skin-library/globalskinlibrary3"
 	},
 	"elements": [ 	 
 		{
