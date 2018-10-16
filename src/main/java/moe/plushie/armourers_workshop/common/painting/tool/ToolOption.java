@@ -85,13 +85,13 @@ public abstract class ToolOption<T> {
     }
     
     protected Object readFromNBT(ItemStack stack, T defaultValue) {
-        if (!stack.hasTagCompound()) {
-            return defaultValue;
-        }
         return readFromNBT(stack.getTagCompound(), defaultValue);
     }
     
     protected Object readFromNBT(NBTTagCompound compound, T defaultValue) {
+        if (compound == null) {
+            return defaultValue;
+        }
         if (!compound.hasKey(TAG_TOOL_OPTIONS, NBT.TAG_COMPOUND)) {
             return defaultValue;
         }
