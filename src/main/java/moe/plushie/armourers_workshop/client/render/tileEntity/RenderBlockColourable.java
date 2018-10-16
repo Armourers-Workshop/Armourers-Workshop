@@ -73,7 +73,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
                 bindTexture(MARKERS);
                 //GL11.glColor3f(0.77F, 0.77F, 0.77F);
                 PaintType pt = PaintType.getPaintTypeFromUKey(paintType);
-                renderFaceWithMarker(x, y, z, dir, pt.getMarkerId());
+                renderFaceWithMarker(renderer, x, y, z, dir, pt.getMarkerId());
             }
         }
             
@@ -99,7 +99,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
                 if (paintType != PaintType.NONE) {
                     bindTexture(MARKERS);
                     GL11.glColor3f(0.77F, 0.77F, 0.77F);
-                    renderFaceWithMarker(x, y, z, dir, paintType.getMarkerId());
+                    renderFaceWithMarker(renderer, x, y, z, dir, paintType.getMarkerId());
                 }
             }
         }
@@ -110,7 +110,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
         RenderHelper.enableStandardItemLighting();
     }
     
-    private void renderFaceWithMarker(double x, double y, double z, EnumFacing face, int marker) {
+    public static void renderFaceWithMarker(IRenderBuffer renderer, double x, double y, double z, EnumFacing face, int marker) {
         Tessellator tess = Tessellator.getInstance();
         float tileScale = 0.25F;
         float ySrc = (float) Math.floor((double)marker / 4F);

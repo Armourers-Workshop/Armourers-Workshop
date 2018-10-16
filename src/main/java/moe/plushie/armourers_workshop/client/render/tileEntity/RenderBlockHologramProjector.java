@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProj
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector.PowerMode;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -25,11 +26,8 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
     @Override
     public void render(TileEntityHologramProjector tileEntity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         if (ConfigHandlerClient.showSkinRenderBounds) {
-            /*
-            AxisAlignedBB aabb = new tileEntity.
-            aabb.offset(tileEntity.getPos());
+            AxisAlignedBB aabb = new AxisAlignedBB(tileEntity.getPos());
             renderBox(aabb, 1.0F, 1.0F, 0.0F);
-            */
         }
         if (tileEntity.getPowerMode() != PowerMode.IGNORED) {
             if (tileEntity.getPowerMode() == PowerMode.HIGH) {
@@ -210,9 +208,7 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(false);
-        
-        //RenderGlobal.drawOutlinedBoundingBox(aabb.contract(f1, f1, f1), -1);
-        
+        RenderGlobal.drawSelectionBoundingBox(aabb.contract(f1, f1, f1), r, g, b, 0.4F);
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_TEXTURE_2D);

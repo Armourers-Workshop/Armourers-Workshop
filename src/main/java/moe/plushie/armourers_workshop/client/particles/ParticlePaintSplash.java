@@ -1,14 +1,23 @@
 package moe.plushie.armourers_workshop.client.particles;
 
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import net.minecraft.client.particle.IParticleFactory;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class EntityFXPaintSplash /*extends EntityFX*/ {
-    /*
-    private static final ResourceLocation paintSplashTextures = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/particles/paintSplash.png");
-    private static final ResourceLocation particleTextures = ReflectionHelper.getPrivateValue(EffectRenderer.class, null, "particleTextures", "field_110737_b", "b");
+public class ParticlePaintSplash extends Particle {
+
+    private static final ResourceLocation paintSplashTextures = new ResourceLocation(LibModInfo.ID, "textures/particles/paintSplash.png");
+    //private static final ResourceLocation particleTextures = ReflectionHelper.getPrivateValue(EffectRenderer.class, null, "particleTextures", "field_110737_b", "b");
     
+    protected ParticlePaintSplash(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn) {
+        super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
+    }
+    /*
     public EntityFXPaintSplash(World world, double x, double y, double z, int colour, ForgeDirection dir) {
         super(world, x + dir.offsetX * 0.5D, y + dir.offsetY * 0.5D, z + dir.offsetZ * 0.5D);
         this.particleScale = 0.2F + world.rand.nextFloat() * 0.4F;
@@ -103,4 +112,12 @@ public class EntityFXPaintSplash /*extends EntityFX*/ {
         UtilRender.bindTexture(particleTextures);
         renderBuffer.startDrawingQuads();
     }*/
+    
+    @SideOnly(Side.CLIENT)
+    public static class Factory implements IParticleFactory {
+        @Override
+        public Particle createParticle(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_) {
+            return new ParticlePaintSplash(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
+        }
+    }
 }

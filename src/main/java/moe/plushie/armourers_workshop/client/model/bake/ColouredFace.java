@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.util.math.MathHelper;
 
 public class ColouredFace {
@@ -124,7 +123,6 @@ public class ColouredFace {
     public static byte[] dyeColour(byte r, byte g, byte b, byte[] dyeColour, int[] modelAverageColour) {
         if (dyeColour.length == 4) {
             if ((dyeColour[3] & 0xFF) == 0) {
-                ModLogger.log("fail?");
                 return new byte[] { r, g, b };
             }
         }

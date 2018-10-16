@@ -18,7 +18,7 @@ public class RenderItemMannequin extends TileEntityItemStackRenderer {
     }
     
     @Override
-    public void renderByItem(ItemStack itemStackIn) {
+    public void renderByItem(ItemStack itemStackIn, float partialTicks) {
         Minecraft.getMinecraft().renderEngine.bindTexture(DefaultPlayerSkin.getDefaultSkinLegacy());
         float scale = 0.0625F;
         GlStateManager.pushMatrix();
@@ -35,16 +35,6 @@ public class RenderItemMannequin extends TileEntityItemStackRenderer {
         GlStateManager.popMatrix();
     }
     /*
-    @Override
-    public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-        return true;
-    }
-
-    @Override
-    public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-        return true;
-    }
-
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
         GL11.glPushMatrix();

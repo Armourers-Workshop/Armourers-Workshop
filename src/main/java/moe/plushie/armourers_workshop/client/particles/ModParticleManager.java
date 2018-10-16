@@ -4,9 +4,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ParticleManager {
+public class ModParticleManager {
 
-	public static final ParticleManager INSTANCE = new ParticleManager();
+	public static final ModParticleManager INSTANCE = new ModParticleManager();
 	/*
 	public void spawnParticle(World world, EntityFX particle) {
 		spawnParticle(world, particle, false);
