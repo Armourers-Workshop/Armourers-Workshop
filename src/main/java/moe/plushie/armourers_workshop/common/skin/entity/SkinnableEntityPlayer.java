@@ -3,6 +3,8 @@ package moe.plushie.armourers_workshop.common.skin.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.Level;
+
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.entity.ModelResetLayer;
 import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererHeldItem;
@@ -30,29 +32,34 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public void addRenderLayer(RenderManager renderManager) {
+        ModLogger.log("Setting up player render layers.");
         for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
             try {
                 Object object = ReflectionHelper.getPrivateValue(RenderLivingBase.class, playerRender, "field_177097_h", "layerRenderers");
                 if (object != null) {
                     List<LayerRenderer<?>> layerRenderers = (List<LayerRenderer<?>>) object;
                     layerRenderers.add(0, new ModelResetLayer(playerRender));
-                    ModLogger.log("Adding reset layer");
+                    ModLogger.log("Adding reset layer to " + playerRender);
                     for (int i = 0; i < layerRenderers.size(); i++) {
                         LayerRenderer<?> layerRenderer = layerRenderers.get(i);
                         if (layerRenderer.getClass().getName().contains("LayerHeldItem")) {
-                            ModLogger.log("Removing held item layer");
+                            ModLogger.log("Removing held item layer from " + playerRender);
                             layerRenderers.remove(i);
-                            ModLogger.log("Adding skinned held item layer");
+                            ModLogger.log("Adding skinned held item layer to " + playerRender);
                             layerRenderers.add(new SkinLayerRendererHeldItem(playerRender, layerRenderer));
                             break;
                         }
                     }
+                } else {
+                    ModLogger.log(Level.WARN, "Failed to get 'layerRenderers' on " + playerRender);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            ModLogger.log("Adding 'SkinLayerRendererPlayer' to " + playerRender);
             playerRender.addLayer(new SkinLayerRendererPlayer(playerRender));
         }
+        ModLogger.log("Finished setting up player render layers.");
     }
 
     @Override
