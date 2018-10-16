@@ -6,7 +6,7 @@
 		"stone": "blocks/stone",
 		"clay": "blocks/hardened_clay",
 		"wood": "blocks/planks_oak",
-		"skinningtable1": "armourers_workshop:blocks/skinningtable1",
+		"skinningtable1": "armourers_workshop:blocks/skinning-table/skinningtable1",
 		"blackclay": "blocks/hardened_clay_stained_black"
 	},
 	"elements": [ 	 
