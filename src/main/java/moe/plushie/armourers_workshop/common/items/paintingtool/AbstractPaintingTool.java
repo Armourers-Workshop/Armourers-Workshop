@@ -1,20 +1,31 @@
 package moe.plushie.armourers_workshop.common.items.paintingtool;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.painting.IPaintingTool;
+import moe.plushie.armourers_workshop.api.common.painting.IPantable;
+import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
+import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.items.AbstractModItem;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
+import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
+import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
+import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -38,6 +49,87 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
             return true;
         }
         return false;
+    }
+    
+    @Override
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        IBlockState state = worldIn.getBlockState(pos);
+        ItemStack stack = player.getHeldItem(hand);
+        
+        if (useOnColourMixer(player, worldIn, pos, stack)) {
+            return EnumActionResult.SUCCESS;
+        }
+        
+        if (state.getBlock() instanceof IPantableBlock) {
+            int newColour = getToolColour(stack);
+            if (!worldIn.isRemote) {
+                UndoManager.begin(player);
+                boolean fullBlock = false;
+                if (this instanceof IConfigurableTool) {
+                    ArrayList<ToolOption<?>> toolOptionList = new ArrayList<ToolOption<?>>();
+                    ((IConfigurableTool)this).getToolOptions(toolOptionList);
+                    if (toolOptionList.contains(ToolOptions.FULL_BLOCK_MODE)) {
+                        fullBlock = ToolOptions.FULL_BLOCK_MODE.getValue(stack);
+                    }
+                }
+                if (fullBlock) {
+                    for (int i = 0; i < 6; i++) {
+                        onPaint(stack, player, worldIn, pos, state.getBlock(), EnumFacing.VALUES[i]);
+                    }
+                } else {
+                    onPaint(stack, player, worldIn, pos, state.getBlock(), facing);
+                }
+                UndoManager.end(player);
+                playToolSound(worldIn, pos, stack);
+            } else {
+                spawnPaintParticles(worldIn, pos, facing, newColour);
+            }
+            return EnumActionResult.SUCCESS;
+        }
+        
+        if (useOnArmourer(player, worldIn, pos, stack)) {
+            return EnumActionResult.SUCCESS;
+        }
+        
+        return EnumActionResult.PASS;
+    }
+    
+    public boolean useOnColourMixer(EntityPlayer player, World worldIn, BlockPos pos, ItemStack stack) {
+        IBlockState state = worldIn.getBlockState(pos);
+        if (player.isSneaking() & state.getBlock() == ModBlocks.colourMixer) {
+            TileEntity te = worldIn.getTileEntity(pos);
+            if (te != null && te instanceof IPantable) {
+                if (!worldIn.isRemote) {
+                    int colour = ((IPantable)te).getColour(0);
+                    PaintType paintType = ((IPantable)te).getPaintType(0);
+                    setToolColour(stack, colour);
+                    setToolPaintType(stack, paintType);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean useOnArmourer(EntityPlayer player, World worldIn, BlockPos pos, ItemStack stack) {
+        IBlockState state = worldIn.getBlockState(pos);
+        if (state.getBlock() == ModBlocks.armourer & player.isSneaking()) {
+            if (!worldIn.isRemote) {
+                TileEntity te = worldIn.getTileEntity(pos);
+                if (te != null && te instanceof TileEntityArmourer) {
+                    ((TileEntityArmourer)te).toolUsedOnArmourer(this, worldIn, stack, player);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    
+    public void onPaint(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing side) {
+        usedOnBlockSide(stack, player, world, pos, block, side);
+    }
+    
+    public void playToolSound(World world, BlockPos pos, ItemStack stack) {
     }
     
     @SideOnly(Side.CLIENT)

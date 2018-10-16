@@ -6,7 +6,6 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     
     private String key;
     private T defaultValue;
-    private T property;
     
     public SkinProperty(String key, T defaultValue) {
         this.key = key;
