@@ -2,10 +2,13 @@ package moe.plushie.armourers_workshop.common.items.paintingtool;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.items.AbstractModItem;
+import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientToolPaintBlock;
@@ -14,15 +17,25 @@ import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.UtilColour;
 import moe.plushie.armourers_workshop.utils.UtilItems;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemColourNoiseTool extends AbstractModItem implements IConfigurableTool, IBlockPainter {
 
@@ -30,43 +43,42 @@ public class ItemColourNoiseTool extends AbstractModItem implements IConfigurabl
         super(LibItemNames.COLOUR_NOISE_TOOL);
         setSortPriority(15);
     }
-/*
-    @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world,
-            int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        Block block = world.getBlock(x, y, z);
 
-        if (!player.isSneaking() & block instanceof IPantableBlock) {
-            if (!world.isRemote) {
+    @Override
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        IBlockState state = worldIn.getBlockState(pos);
+        ItemStack stack = player.getHeldItem(hand);
+        
+        if (state.getBlock() instanceof IPantableBlock) {
+            if (!worldIn.isRemote) {
                 UndoManager.begin(player);
             }
-            
-            if ((Boolean) ToolOptions.FULL_BLOCK_MODE.readFromNBT(stack.getTagCompound())) {
+            if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
                 for (int i = 0; i < 6; i++) {
-                    usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, i);
+                    usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), EnumFacing.values()[i]);
                 }
             } else {
-                usedOnBlockSide(stack, player, world, new BlockLocation(x, y, z), block, side);
+                usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), facing);
             }
-            if (!world.isRemote) {
+            if (!worldIn.isRemote) {
                 UndoManager.end(player);
-                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.BURN, 1.0F, 1.0F);
+                //worldIn.playSound(null, pos, new SoundEvent(new ResourceLocation(LibSounds.BURN)), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
             }
-            return true;
+            return EnumActionResult.SUCCESS;
         }
         
-        if (block == ModBlocks.armourerBrain & player.isSneaking()) {
-            if (!world.isRemote) {
-                TileEntity te = world.getTileEntity(x, y, z);
+        if (state.getBlock() == ModBlocks.armourer & player.isSneaking()) {
+            if (!worldIn.isRemote) {
+                TileEntity te = worldIn.getTileEntity(pos);
                 if (te != null && te instanceof TileEntityArmourer) {
-                    ((TileEntityArmourer)te).toolUsedOnArmourer(this, world, stack, player);
+                    ((TileEntityArmourer)te).toolUsedOnArmourer(this, worldIn, stack, player);
                 }
             }
-            return true;
+            return EnumActionResult.SUCCESS;
         }
         
-        return false;
-    }*/
+        return EnumActionResult.PASS;
+    }
     
     @SuppressWarnings("deprecation")
     @Override
@@ -95,25 +107,27 @@ public class ItemColourNoiseTool extends AbstractModItem implements IConfigurabl
             ((IPantableBlock) block).setColour(world, pos, newColour, facing);
         }
     }
-    /*
+    
     @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-        if (world.isRemote & player.isSneaking()) {
-            player.openGui(ArmourersWorkshop.instance, LibGuiIds.TOOL_OPTIONS, world, 0, 0, 0);
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        if (playerIn.isSneaking()) {
+            if (worldIn.isRemote) {
+                playerIn.openGui(ArmourersWorkshop.getInstance(), LibGuiIds.TOOL_OPTIONS, worldIn, 0, 0, 0);
+            }
+            return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
         }
-        return stack;
+        return super.onItemRightClick(worldIn, playerIn, handIn);
     }
     
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
-        super.addInformation(stack, player, list, p_77624_4_);
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
         int intensity = UtilItems.getIntensityFromStack(stack, 16);
-        String rollover = TranslateUtils.translate("item.armourersworkshop:rollover.intensity", intensity);
-        list.add(rollover);
-        list.add(TranslateUtils.translate("item.armourersworkshop:rollover.openSettings"));
+        tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.intensity", intensity));
+        tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.openSettings"));
     }
-    */
+    
     @Override
     public void getToolOptions(ArrayList<ToolOption<?>> toolOptionList) {
         toolOptionList.add(ToolOptions.FULL_BLOCK_MODE);

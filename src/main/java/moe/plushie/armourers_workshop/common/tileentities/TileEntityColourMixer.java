@@ -19,21 +19,20 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-
 public class TileEntityColourMixer extends AbstractTileEntityInventory implements IPantable {
-    
+
     private static final String TAG_ITEM_UPDATE = "itemUpdate";
     private static final String TAG_COLOUR_FAMILY = "colourFamily";
     private static final String TAG_PAINT_TYPE = "paintType";
     private static final int INVENTORY_SIZE = 2;
-    
+
     public int colour;
     private PaintType paintType;
     private ColourFamily colourFamily;
-    
+
     private boolean itemUpdate;
     private boolean colourUpdate;
-    
+
     public TileEntityColourMixer() {
         super(INVENTORY_SIZE);
         colour = 16777215;
@@ -41,7 +40,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         colourUpdate = false;
         colourFamily = ColourFamily.MINECRAFT_WOOL;
     }
-    
+
     public boolean isSpecial() {
         int meta = getBlockMetadata();
         if (meta == 1) {
@@ -49,42 +48,42 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         }
         return false;
     }
-    
+
     @Override
     public void setInventorySlotContents(int i, ItemStack itemstack) {
         super.setInventorySlotContents(i, itemstack);
         checkForPaintBrush();
     }
-    
+
     private void checkForPaintBrush() {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
-        
+
         if (stackInput.getItem() instanceof IPaintingTool) {
             if (!stackOutput.isEmpty()) {
                 return;
             }
             setInventorySlotContents(0, ItemStack.EMPTY);
             setInventorySlotContents(1, stackInput);
-            
+
             if (stackInput.getItem() instanceof IPaintingTool && stackInput.getItem() != ModItems.colourPicker) {
                 IPaintingTool paintingTool = (IPaintingTool) stackInput.getItem();
                 paintingTool.setToolColour(stackInput, colour);
                 paintingTool.setToolPaintType(stackInput, getPaintType(0));
             }
             if (stackInput.getItem() == ModItems.colourPicker) {
-                setPaintType(((ItemColourPicker)stackInput.getItem()).getToolPaintType(stackInput), 0);
-                setColour(((ItemColourPicker)stackInput.getItem()).getToolColour(stackInput), true);
+                setPaintType(((ItemColourPicker) stackInput.getItem()).getToolPaintType(stackInput), 0);
+                setColour(((ItemColourPicker) stackInput.getItem()).getToolColour(stackInput), true);
             }
             markDirty();
         }
     }
-    
+
     public void setColourFamily(ColourFamily colourFamily) {
         this.colourFamily = colourFamily;
         markDirty();
     }
-    
+
     public ColourFamily getColourFamily() {
         return colourFamily;
     }
@@ -98,18 +97,15 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         setColour(colour, item);
         setPaintType(paintType, 0);
     }
-    
+
     public void setColour(int colour, boolean item) {
-        if (getWorld().isRemote) {
-            return;
-        }
         if (item) {
             itemUpdate = true;
         }
         this.colour = colour;
         dirtySync();
     }
-    
+
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
@@ -130,7 +126,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         compound.setInteger(TAG_PAINT_TYPE, paintType.getKey());
         return compound;
     }
-    
+
     @Override
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound compound = new NBTTagCompound();
@@ -140,11 +136,13 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         compound.setBoolean(TAG_ITEM_UPDATE, itemUpdate);
         return compound;
     }
-    
+
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
-        if (itemUpdate) { itemUpdate = false; }
-        return new SPacketUpdateTileEntity(getPos(), 3, getUpdateTag());
+        if (itemUpdate) {
+            itemUpdate = false;
+        }
+        return new SPacketUpdateTileEntity(getPos(), 0, getUpdateTag());
     }
 
     @Override
@@ -157,7 +155,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         syncWithClients();
         colourUpdate = true;
     }
-    
+
     @SideOnly(Side.CLIENT)
     public boolean getHasItemUpdateAndReset() {
         if (itemUpdate) {
@@ -166,46 +164,46 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         }
         return false;
     }
-    
+
     @Override
     public int getColour(int side) {
         return this.colour;
     }
-    
+
     @Override
     public ICubeColour getColour() {
         return new CubeColour(colour);
     }
-    
+
     @Deprecated
     @Override
     public void setColour(int colour) {
         setColour(colour, false);
     }
-    
+
     @Override
     public void setColour(byte[] rgb, int side) {
         setColour(new Color(rgb[0] & 0xFF, rgb[1] & 0xFF, rgb[2] & 0xFF).getRGB(), false);
     }
-    
+
     @Deprecated
     @Override
     public void setColour(int colour, int side) {
         setColour(colour, false);
     }
-    
+
     @Override
     public void setColour(ICubeColour colour) {
-        //NO-OP
-        //setColour(colour.g);
+        // NO-OP
+        // setColour(colour.g);
     }
-    
+
     @Override
     public void setPaintType(PaintType paintType, int side) {
         this.paintType = paintType;
         dirtySync();
     }
-    
+
     @Override
     public PaintType getPaintType(int side) {
         return paintType;

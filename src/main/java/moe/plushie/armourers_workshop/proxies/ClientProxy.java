@@ -432,6 +432,12 @@ public class ClientProxy extends CommonProxy {
                 }
                 return 0xFFFFFFFF;
             }
+            if (stack.getItem() == ModItems.colourPicker) {
+                if (tintIndex == 0) {
+                    return PaintingHelper.getToolPaintColourRGB(stack);
+                }
+                return 0xFFFFFFFF;
+            }
             if (tintIndex == 1) {
                 return PaintingHelper.getToolPaintColourRGB(stack);
             }

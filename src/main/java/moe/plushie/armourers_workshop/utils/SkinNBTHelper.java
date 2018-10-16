@@ -12,13 +12,13 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class SkinNBTHelper {
     
-    private static final String TAG_OLD_SKIN_DATA = "armourData";
-    
     public static boolean stackHasSkinData(ItemStack stack) {
+        if (stack == null) {
+            return false;
+        }
         if (stack.isEmpty()) {
             return false;
         }
-        
         if (!stack.hasTagCompound()) {
             return false;
         }
