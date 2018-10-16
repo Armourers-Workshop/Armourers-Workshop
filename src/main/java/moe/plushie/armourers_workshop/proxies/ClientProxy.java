@@ -426,6 +426,12 @@ public class ClientProxy extends CommonProxy {
             if (stack.getItem() == ModItems.giftSack) {
                 return ((ItemGiftSack)stack.getItem()).colorMultiplier(stack, tintIndex);
             }
+            if (stack.getItem() == ModItems.dyeBottle) {
+                if (tintIndex == 0) {
+                    return PaintingHelper.getToolPaintColourRGB(stack);
+                }
+                return 0xFFFFFFFF;
+            }
             if (tintIndex == 1) {
                 return PaintingHelper.getToolPaintColourRGB(stack);
             }
