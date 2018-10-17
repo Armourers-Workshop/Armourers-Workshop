@@ -2,51 +2,76 @@ package moe.plushie.armourers_workshop.client.render.entity;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.api.common.skin.IEntityEquipment;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.client.handler.ModClientFMLEventHandler;
-import net.minecraft.client.renderer.entity.RenderEntity;
+import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
+import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import net.minecraft.client.model.ModelGhast;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.RenderGhast;
 import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class SkinLayerRendererGhast extends SkinLayerRenderer<EntityGhast, RenderGhast> {
 
+    private ModelRenderer body = null;
+    private ModelRenderer[] tentacles = null;
+    
     public SkinLayerRendererGhast(RenderGhast renderGhast) {
         super(renderGhast);
+        if (renderGhast.getMainModel() instanceof ModelGhast) {
+            try {
+                body = ReflectionHelper.getPrivateValue(ModelGhast.class, (ModelGhast)renderGhast.getMainModel(), "field_78128_a", "body");
+                tentacles = ReflectionHelper.getPrivateValue(ModelGhast.class, (ModelGhast)renderGhast.getMainModel(), "field_78127_b", "tentacles");
+                MinecraftForge.EVENT_BUS.register(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
     
-    public void render(EntityGhast entity, RenderEntity renderer, double x, double y, double z, IEntityEquipment entityEquipment) {
-        GL11.glPushMatrix();
-        float scale = 0.0625F;
-        
-        GL11.glTranslated(x, y, z);
-        GL11.glScalef(1, -1, -1);
-        
-        double rot = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset) * ModClientFMLEventHandler.renderTickTime;
-        GL11.glRotated(rot, 0, 1, 0);
-        
-        if (entity.deathTime > 0) {
-            float angle = ((float)entity.deathTime + ModClientFMLEventHandler.renderTickTime - 1.0F) / 20.0F * 1.6F;
-            angle = MathHelper.sqrt(angle);
-            if (angle > 1.0F) {
-                angle = 1.0F;
-            }
-            GL11.glRotatef(angle * 90F, 0.0F, 0.0F, 1.0F);
+    @SubscribeEvent()
+    public void onRenderLivingPre(RenderLivingEvent.Pre<EntityGhast> event) {
+        IEntitySkinCapability skinCapability = EntitySkinCapability.get(event.getEntity());
+        if (skinCapability == null) {
+            return;
         }
-        
-        GL11.glTranslated(0, 6.65F * scale, 0);
-        
-        double headRot = entity.prevRotationYawHead + (entity.rotationYawHead - entity.prevRotationYawHead) * ModClientFMLEventHandler.renderTickTime;
-        GL11.glRotatef(entity.rotationPitch, 1, 0, 0);
-        
-        float headScale = 9.01F;
-        GL11.glScalef(headScale, headScale, headScale);
-        //renderEquipmentType(entity, renderer, SkinTypeRegistry.skinHead, entityEquipment);
-        GL11.glPopMatrix();
+        ISkinType skinType = SkinTypeRegistry.skinHead;
+        // Hide parts of the model.
+        for (int i = 0; i < skinCapability.getSlotCountForSkinType(skinType); i++) {
+            ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, i);
+            if (skinDescriptor != null) {
+                Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
+                if (skin == null) {
+                    continue;
+                }
+                if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
+                    body.isHidden = true;
+                    for (ModelRenderer tentacle : tentacles) {
+                        tentacle.isHidden = true;
+                    }
+                    return;
+                }
+            }
+        }
+    }
+    
+    @SubscribeEvent()
+    public void onRenderLivingPost(RenderLivingEvent.Post<EntityGhast> event) {
+        body.isHidden = false;
+        for (ModelRenderer tentacle : tentacles) {
+            tentacle.isHidden = false;
+        }
     }
     
     @Override
