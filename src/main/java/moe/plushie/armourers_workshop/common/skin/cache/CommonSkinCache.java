@@ -2,12 +2,14 @@ package moe.plushie.armourers_workshop.common.skin.cache;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.api.common.library.ILibraryFile;
-import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.data.ExpiringHashMap.IExpiringMapCallback;
@@ -37,7 +39,7 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
     
     private volatile Thread serverSkinThread = null;
     
-    private ArrayList<SkinRequestMessage> messageQueue = new ArrayList<SkinRequestMessage>();
+    private final Queue<SkinRequestMessage> messageQueue = new LinkedList<SkinRequestMessage>();
     private final Object messageQueueLock = new Object();
     
     private ArrayList<SkinRequestMessage> messageWaitQueue = new ArrayList<SkinRequestMessage>();
@@ -107,9 +109,8 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
     
     private void processNextMessage() {
         synchronized (messageQueueLock) {
-            if (messageQueue.size() > 0) {
-                processMessage(messageQueue.get(0));
-                messageQueue.remove(0);
+            if (!messageQueue.isEmpty()) {
+                processMessage(messageQueue.remove());
             }
         }
     }

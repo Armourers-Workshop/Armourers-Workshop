@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.common.skin.cache;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.apache.logging.log4j.Level;
 
@@ -20,7 +21,7 @@ public class SkinCacheLocalFile {
     private final Object cacheMapLock = new Object();
     
     /** A list of skin that need to be loaded. */
-    private final ArrayList<SkinRequestMessage> skinLoadQueue;
+    private final Queue<SkinRequestMessage> skinLoadQueue;
     private final Object skinLoadQueueLock = new Object();
     
     private final SkinCacheLocalDatabase cacheLocalDatabase;
@@ -28,19 +29,18 @@ public class SkinCacheLocalFile {
     public SkinCacheLocalFile(SkinCacheLocalDatabase cacheLocalDatabase) {
         this.cacheLocalDatabase = cacheLocalDatabase;
         cacheMapFileLink = new BidirectionalHashMap<ILibraryFile, Integer>();
-        skinLoadQueue = new ArrayList<SkinRequestMessage>();
+        skinLoadQueue = new LinkedList<SkinRequestMessage>();
     }
     
     public void doSkinLoading() {
         synchronized (cacheMapLock) {
             synchronized (skinLoadQueueLock) {
-                if (skinLoadQueue.size() > 0) {
-                    SkinRequestMessage requestMessage = skinLoadQueue.get(0);
+                if (!skinLoadQueue.isEmpty()) {
+                    SkinRequestMessage requestMessage = skinLoadQueue.remove();
                     Skin skin = load(requestMessage.getSkinIdentifier());
                     if (skin != null) {
                         CommonSkinCache.INSTANCE.onSkinLoaded(skin, requestMessage);
                     }
-                    skinLoadQueue.remove(0);
                 }
             }
         }

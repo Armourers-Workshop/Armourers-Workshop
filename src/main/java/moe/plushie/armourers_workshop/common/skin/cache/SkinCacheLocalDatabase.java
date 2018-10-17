@@ -2,7 +2,8 @@ package moe.plushie.armourers_workshop.common.skin.cache;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +26,7 @@ public class SkinCacheLocalDatabase implements RemovalListener<Integer, Skin> {
     private final LoadingCache<Integer, Skin> skinCache;
     
     /** A list of skin that need to be loaded. */
-    private final ArrayList<SkinRequestMessage> skinLoadQueue;
+    private final Queue<SkinRequestMessage> skinLoadQueue;
     private final Object skinLoadQueueLock = new Object();
     
     private final IExpiringMapCallback<Skin> callback;
@@ -39,14 +40,14 @@ public class SkinCacheLocalDatabase implements RemovalListener<Integer, Skin> {
             builder.maximumSize(ConfigHandler.skinCacheMaxSize);
         }
         skinCache = builder.build(new SkinLoader());
-        skinLoadQueue = new ArrayList<SkinRequestMessage>();
+        skinLoadQueue = new LinkedList<SkinRequestMessage>();
         FMLCommonHandler.instance().bus().register(this);
     }
     
     public void doSkinLoading() {
         synchronized (skinLoadQueueLock) {
-            if (skinLoadQueue.size() > 0) {
-                SkinRequestMessage requestMessage = skinLoadQueue.get(0);
+            if (!skinLoadQueue.isEmpty()) {
+                SkinRequestMessage requestMessage = skinLoadQueue.remove();
                 Skin skin = null;
                 try {
                     skin = skinCache.get(requestMessage.getSkinIdentifier().getSkinLocalId());
@@ -56,7 +57,6 @@ public class SkinCacheLocalDatabase implements RemovalListener<Integer, Skin> {
                 if (skin != null) {
                     CommonSkinCache.INSTANCE.onSkinLoaded(skin, requestMessage);
                 }
-                skinLoadQueue.remove(0);
             }
         }
     }

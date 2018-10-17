@@ -22,8 +22,6 @@ public class SkinCacheGlobal {
     private final BidirectionalHashMap<Integer, Integer> cacheMapFileLink;
     private final Object cacheMapLock = new Object();
     
-    //private final Lock mapLock = new ReentrantLock();
-    
     private final SkinCacheLocalDatabase cacheLocalDatabase;
     
     private final HashSet<Integer> downloadingSet;
