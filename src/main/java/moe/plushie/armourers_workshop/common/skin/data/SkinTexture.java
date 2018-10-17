@@ -8,17 +8,17 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.IOUtils;
-import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.utils.BitwiseUtils;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 /**
  * 
@@ -140,6 +140,6 @@ public class SkinTexture {
         if (needsUpdate) {
             updateTexture();
         }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId);
+        GlStateManager.bindTexture(textureId);
     }
 }

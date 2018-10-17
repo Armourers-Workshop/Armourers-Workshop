@@ -339,11 +339,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     public AxisAlignedBB getRenderBoundingBox() {
         return INFINITE_EXTENT_AABB;
     }
-    
-    @Override
-    public boolean shouldRenderInPass(int pass) {
-        return pass == 1;
-    }
 
     public ISkinType getSkinType() {
         return skinType;
