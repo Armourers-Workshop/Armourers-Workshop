@@ -152,7 +152,7 @@ public class ConfigHandlerClient {
         textureCacheExpireTime = config.getInt("textureCacheExpireTime", CATEGORY_CACHE, 600, 1, 3600,
                 "How long in seconds the client will keep textures in it's cache.\n" + 
                 "Default 600 seconds is 10 minutes.");
-        config.getCategory(CATEGORY_CACHE).get("textureCacheTime").setRequiresMcRestart(true);
+        config.getCategory(CATEGORY_CACHE).get("textureCacheExpireTime").setRequiresMcRestart(true);
         
         textureCacheMaxSize = config.getInt("textureCacheMaxSize", CATEGORY_CACHE, 1000, 0, 5000,
                 "Max size the texture cache can reach before textures are removed. Setting to 0 turns off this option.");
