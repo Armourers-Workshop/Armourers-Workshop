@@ -61,10 +61,9 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         if (wardrobe != null) {
             extraColours = wardrobe.getExtraColours();
         }
-
+        
         for (int i = 0; i < skinTypes.length; i++) {
             ISkinType skinType = skinTypes[i];
-
             ISkinDescriptor skinDescriptorArmour = getSkinDescriptorFromArmourer(entitylivingbaseIn, skinType);
             if (skinDescriptorArmour != null) {
                 renderSkin(entitylivingbaseIn, skinDescriptorArmour, wardrobe, extraColours, 0, entitylivingbaseIn != Minecraft.getMinecraft().player);
