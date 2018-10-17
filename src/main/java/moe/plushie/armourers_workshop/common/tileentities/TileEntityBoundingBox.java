@@ -62,6 +62,11 @@ public class TileEntityBoundingBox extends ModTileEntity {
     }
     
     @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
+    }
+    
+    @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeToNBT(compound);
@@ -127,9 +132,10 @@ public class TileEntityBoundingBox extends ModTileEntity {
         return true;
     }
     
-    public PaintType getPaintType(int side) {
+    public PaintType getPaintType(EnumFacing facing) {
         if (isParentValid() && skinPart instanceof ISkinPartTypeTextured) {
-            Point texPoint = SkinTextureHelper.getTextureLocationFromWorldBlock(this, side);
+            
+            Point texPoint = SkinTextureHelper.getTextureLocationFromWorldBlock(this, facing);
             int colour = getParent().getPaintData(texPoint.x, texPoint.y);
             return PaintType.getPaintTypeFromColour(colour);
         } else {

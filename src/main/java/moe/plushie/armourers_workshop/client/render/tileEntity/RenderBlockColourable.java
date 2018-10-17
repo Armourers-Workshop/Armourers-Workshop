@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.client.render.tileEntity;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
-import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.RenderBridge;
@@ -11,7 +10,6 @@ import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -21,6 +19,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,19 +28,46 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityColourable> {
     
-    private static final ResourceLocation MARKERS = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/tile-entities/markers.png");
-    private final IRenderBuffer renderer;
-    private final Minecraft mc;
-    private static float markerAlpha = 0F;
+    public static final ResourceLocation MARKERS = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/tile-entities/markers.png");
+    public static float markerAlpha = 0F;
     private static long lastWorldTimeUpdate;
+    
+    private final IRenderBuffer renderer;
     
     public RenderBlockColourable() {
         renderer = RenderBridge.INSTANCE;
-        mc = Minecraft.getMinecraft();
     }
     
     @Override
     public void render(TileEntityColourable tileEntity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        updateAlpha(tileEntity);
+        if (!(markerAlpha > 0)) {
+            return;
+        }
+        
+        ICubeColour cubeColour = tileEntity.getColour();
+        //ModRenderHelper.disableLighting();
+        GL11.glDisable(GL11.GL_LIGHTING);
+        ModRenderHelper.enableAlphaBlend();
+        GL11.glColor4f(1F, 1F, 1F, markerAlpha);
+        bindTexture(MARKERS);
+        renderer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX);
+        for (int i = 0; i < 6; i++) {
+            EnumFacing dir = EnumFacing.byIndex(i);
+            int paintType = cubeColour.getPaintType(i) & 0xFF;
+            if (paintType != 255) {
+                PaintType pt = PaintType.getPaintTypeFromUKey(paintType);
+                renderFaceWithMarker(renderer, x, y, z, dir, pt.getMarkerId());
+            }
+        }
+        renderer.draw();
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        ModRenderHelper.disableAlphaBlend();
+        ModRenderHelper.enableLighting();
+        RenderHelper.enableStandardItemLighting();
+    }
+    
+    public static void updateAlpha(TileEntity tileEntity) {
         if (lastWorldTimeUpdate != tileEntity.getWorld().getTotalWorldTime()) {
             lastWorldTimeUpdate = tileEntity.getWorld().getTotalWorldTime();
             if (isPlayerHoldingPaintingTool()) {
@@ -56,58 +82,6 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
                 }
             }
         }
-        if (!(markerAlpha > 0)) {
-            return;
-        }
-        
-        ICubeColour cubeColour = tileEntity.getColour();
-        //ModRenderHelper.disableLighting();
-        GL11.glDisable(GL11.GL_LIGHTING);
-        ModRenderHelper.enableAlphaBlend();
-        GL11.glColor4f(1F, 1F, 1F, markerAlpha);
-        renderer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX);
-        for (int i = 0; i < 6; i++) {
-            EnumFacing dir = EnumFacing.byIndex(i);
-            int paintType = cubeColour.getPaintType(i) & 0xFF;
-            if (paintType != 255) {
-                bindTexture(MARKERS);
-                //GL11.glColor3f(0.77F, 0.77F, 0.77F);
-                PaintType pt = PaintType.getPaintTypeFromUKey(paintType);
-                renderFaceWithMarker(renderer, x, y, z, dir, pt.getMarkerId());
-            }
-        }
-            
-        renderer.draw();
-        GL11.glColor4f(1F, 1F, 1F, 1F);
-        ModRenderHelper.disableAlphaBlend();
-        ModRenderHelper.enableLighting();
-        RenderHelper.enableStandardItemLighting();
-    }
-    
-    public void renderTileEntityAt(TileEntityBoundingBox tileEntity, double x, double y, double z, float partialTickTime) {
-        if (!(tileEntity.getSkinPart() instanceof ISkinPartTypeTextured)) {
-            return;
-        }
-        GL11.glDisable(GL11.GL_LIGHTING);
-        ModRenderHelper.enableAlphaBlend();
-        GL11.glColor4f(1F, 1F, 1F, markerAlpha);
-        renderer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX);
-        for (int i = 0; i < 6; i++) {
-            if (tileEntity.isPaintableSide(i)) {
-                EnumFacing dir = EnumFacing.byIndex(i);
-                PaintType paintType = tileEntity.getPaintType(i);
-                if (paintType != PaintType.NONE) {
-                    bindTexture(MARKERS);
-                    GL11.glColor3f(0.77F, 0.77F, 0.77F);
-                    renderFaceWithMarker(renderer, x, y, z, dir, paintType.getMarkerId());
-                }
-            }
-        }
-        renderer.draw();
-        GL11.glColor4f(1F, 1F, 1F, 1F);
-        ModRenderHelper.disableAlphaBlend();
-        ModRenderHelper.enableLighting();
-        RenderHelper.enableStandardItemLighting();
     }
     
     public static void renderFaceWithMarker(IRenderBuffer renderer, double x, double y, double z, EnumFacing face, int marker) {
@@ -121,39 +95,27 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
         float yEnd = yStart + tileScale * 1;
         float offset = 0.001F;
         
-        if (face != EnumFacing.UP) {
-            //return;
-        }
-        
         switch (face) {
         case DOWN:
             tess.getBuffer().pos(x, y - offset, z).tex(xStart, yEnd).endVertex();
-
             renderer.addVertexWithUV(x + 1F, y - offset, z, xEnd, yEnd);
             renderer.endVertex();
             renderer.addVertexWithUV(x + 1F, y - offset, z + 1F, xEnd, yStart);
             renderer.endVertex();
             renderer.addVertexWithUV(x, y - offset, z + 1F, xStart, yStart);
             renderer.endVertex();
-            //renderer.draw();
             break;
         case UP:
-            //renderer.startDrawingQuads();
             renderer.addVertexWithUV(x, y + 1F + offset, z + 1F, xStart, yEnd);
             renderer.endVertex();
-            
             renderer.addVertexWithUV(x + 1F, y + 1F + offset, z + 1F, xEnd, yEnd);
             renderer.endVertex();
-            
             renderer.addVertexWithUV(x + 1F, y + 1F + offset, z, xEnd, yStart);
             renderer.endVertex();
-            
             renderer.addVertexWithUV(x, y + 1F + offset, z, xStart, yStart);
             renderer.endVertex();
-            //renderer.draw();
             break;
         case NORTH:
-            //renderer.startDrawingQuads();
             renderer.addVertexWithUV(x + 1F, y, z - offset, xStart, yEnd);
             renderer.endVertex();
             renderer.addVertexWithUV(x, y, z - offset, xEnd, yEnd);
@@ -162,10 +124,8 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
             renderer.endVertex();
             renderer.addVertexWithUV(x + 1F, y + 1F, z - offset, xStart, yStart);
             renderer.endVertex();
-            //renderer.draw();
             break;
         case SOUTH:
-            //renderer.startDrawingQuads();
             renderer.addVertexWithUV(x, y, z + 1F + offset, xStart, yEnd);
             renderer.endVertex();
             renderer.addVertexWithUV(x + 1F, y, z + 1F + offset, xEnd, yEnd);
@@ -174,10 +134,8 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
             renderer.endVertex();
             renderer.addVertexWithUV(x, y + 1F, z + 1F + offset, xStart, yStart);
             renderer.endVertex();
-            //renderer.draw();
             break;
         case WEST:
-            //renderer.startDrawingQuads();
             renderer.addVertexWithUV(x - offset, y, z , xStart, yEnd);
             renderer.endVertex();
             renderer.addVertexWithUV(x - offset, y, z + 1F, xEnd, yEnd);
@@ -186,10 +144,8 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
             renderer.endVertex();
             renderer.addVertexWithUV(x - offset, y + 1F, z, xStart, yStart);
             renderer.endVertex();
-            //renderer.draw();
             break;
         case EAST:
-            //renderer.startDrawingQuads();
             renderer.addVertexWithUV(x + 1 + offset, y, z + 1F, xStart, yEnd);
             renderer.endVertex();
             renderer.addVertexWithUV(x + 1 + offset, y, z, xEnd, yEnd);
@@ -198,13 +154,12 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
             renderer.endVertex();
             renderer.addVertexWithUV(x + 1 + offset, y + 1F, z + 1F, xStart, yStart);
             renderer.endVertex();
-            //renderer.draw();
             break;
         }
     }
     
-    private boolean isPlayerHoldingPaintingTool() {
-        EntityPlayerSP player = mc.player;
+    private static boolean isPlayerHoldingPaintingTool() {
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
         ItemStack stack = player.getHeldItemMainhand();
         if (stack != null) {
             Item item = stack.getItem();

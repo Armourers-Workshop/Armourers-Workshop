@@ -26,19 +26,6 @@ public class BlockSkinCube extends AbstractModBlockContainer implements IPantabl
             setSortPriority(122);
         }
     }
-    /*
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
-            return false;
-        }
-        if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == Items.DYE) {
-            if (world.isRemote) { return true; }
-            this.setColour(world, x, y, z, UtilColour.getMinecraftColor(-player.getCurrentEquippedItem().getItemDamage() + 15, ColourFamily.MINECRAFT), side);
-            return true;
-        }
-        return false;
-    }*/
     
     @Override
     public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {

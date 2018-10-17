@@ -58,7 +58,7 @@ public final class AsyncWorldUpdate {
     }
 
     public void doUpdate(World world) {
-        world.setBlockState(pos, state, 3);
+        world.setBlockState(pos, state, 2);
         if (tileEntity != null) {
             world.setTileEntity(getPos(), tileEntity);
         }

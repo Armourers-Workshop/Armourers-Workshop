@@ -326,7 +326,6 @@ public final class ArmourerWorldHelper {
                     if (world.isAirBlock(target)) {
                         TileEntity te = new TileEntityBoundingBox(parentPos, guideX, guideY, guideZ, guidePart);
                         SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdate(ModBlocks.boundingBox.getDefaultState(), target, world).setTileEntity(te));
-                        
                         //world.setBlockState(target, ModBlocks.boundingBox.getDefaultState());
                         
                         

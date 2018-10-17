@@ -1,13 +1,23 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
 
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.skin.SkinTextureHelper;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
+import moe.plushie.armourers_workshop.proxies.ClientProxy;
+import moe.plushie.armourers_workshop.utils.BitwiseUtils;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -62,7 +72,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     @Override
     public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
         if (world.isRemote) {
-            return true;
+            //return true;
         }
         TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity != null && tileEntity instanceof TileEntityBoundingBox) {
@@ -128,19 +138,16 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     
     @Override
     public boolean setColour(IBlockAccess world, BlockPos pos, int colour, EnumFacing facing) {
-        //EnumFacing sideBlock = EnumFacing.byIndex(side);
-        /*
-        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+        if (world.getBlockState(pos.offset(facing)).getBlock() == this) {
             return false;
         }
-        
-        TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
                 if (parent != null) {
                     ISkinType skinType = parent.getSkinType();
-                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
+                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, facing);
                     int oldColour = parent.getPaintData(texturePoint.x, texturePoint.y);
                     int paintType = BitwiseUtils.getUByteFromInt(oldColour, 0);
                     int newColour = BitwiseUtils.setUByteToInt(colour, 0, paintType);
@@ -149,7 +156,6 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                 }
             }
         }
-        */
         return false;
     }
     
@@ -168,24 +174,21 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
 
     @Override
     public int getColour(IBlockAccess world, BlockPos pos, EnumFacing facing) {
-        //EnumFacing sideBlock = EnumFacing.byIndex(facing);
-        /*
-        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+        if (world.getBlockState(pos.offset(facing)).getBlock() == this) {
             return 0x00FFFFFF;
         }
-        
-        TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (parent != null) {
                 if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
-                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
+                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, facing);
                     int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
                     int paintType = BitwiseUtils.getUByteFromInt(colour, 0);
                     if (paintType != 0) {
                         return colour;
                     } else {
-                        if (te.getWorldObj().isRemote) {
+                        if (te.getWorld().isRemote) {
                             PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(parent.getTexture());
                             BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(playerTexture.getResourceLocation());
                             if (playerSkin != null) {
@@ -197,80 +200,66 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                 }
             }
         }
-        */
         return 0x00FFFFFF;
     }
     
     @Override
     public boolean isRemoteOnly(IBlockAccess world, BlockPos pos, EnumFacing facing) {
-        //EnumFacing sideBlock = EnumFacing.byIndex(side);
-        /*
-        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+        if (world.getBlockState(pos.offset(facing)).getBlock() == this) {
             return false;
         }
-        
-        TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (parent != null) {
                 if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
-                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
+                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, facing);
                     int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
                     int paintType = BitwiseUtils.getUByteFromInt(colour, 0);
                     return paintType == 0;
                 }
             }
         }
-        */
         return false;
     }
     
     @Override
     public void setPaintType(IBlockAccess world, BlockPos pos, PaintType paintType, EnumFacing facing) {
-        //EnumFacing sideBlock = EnumFacing.byIndex(side);
-        /*
-        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+        if (world.getBlockState(pos.offset(facing)).getBlock() == this) {
             return;
         }
-        
-        TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
                 if (parent != null) {
                     ISkinType skinType = parent.getSkinType();
-                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
-                    
+                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, facing);
                     int oldColour = parent.getPaintData(texturePoint.x, texturePoint.y);
-                    
                     int newColour = PaintType.setPaintTypeOnColour(paintType, oldColour);
                     parent.updatePaintData(texturePoint.x, texturePoint.y, newColour);
                 }
             }
         }
-        */
     }
     
     @Override
     public PaintType getPaintType(IBlockAccess world, BlockPos pos, EnumFacing facing) {
-        //EnumFacing sideBlock = EnumFacing.byIndex(side);
-        /*
-        if (world.getBlock(x + sideBlock.offsetX, y + sideBlock.offsetY, z + sideBlock.offsetZ) == this) {
+        if (world.getBlockState(pos.offset(facing)).getBlock() == this) {
             return PaintType.NORMAL;
         }
         
-        TileEntity te = world.getTileEntity(x, y, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityBoundingBox) {
             TileEntityArmourer parent = ((TileEntityBoundingBox)te).getParent();
             if (parent != null) {
                 if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
-                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, side);
+                    Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, facing);
                     int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
                     return PaintType.getPaintTypeFromColour(colour);
                 }
             }
         }
-        */
         return PaintType.NORMAL;
     }
 

@@ -29,6 +29,7 @@ import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandl
 import moe.plushie.armourers_workshop.client.render.item.RenderItemEquipmentSkin;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemMannequin;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockArmourer;
+import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockBoundingBox;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockColourable;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockHologramProjector;
@@ -51,6 +52,7 @@ import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
@@ -156,29 +158,17 @@ public class ClientProxy extends CommonProxy {
         arrowRender.setRenderManager(RenderManager.instance);
         RenderManager.instance.entityRenderMap.put(EntityArrow.class, arrowRender);
         */
-        //Register tile entity renderers.
+        // Register tile entity renderers.
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourer.class, new RenderBlockArmourer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySkinnable.class, new RenderBlockSkinnable());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityColourable.class, new RenderBlockColourable());
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBoundingBox.class, new RenderBlockColourable());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBoundingBox.class, new RenderBlockBoundingBox());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGlobalSkinLibrary.class, new RenderBlockGlobalSkinLibrary());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHologramProjector.class, new RenderBlockHologramProjector());
         
-        //Register item renderers.
-        /*
-        ModelMannequin modelSteve = new ModelMannequin(false);
-        ModelMannequin modelAlex = new ModelMannequin(true);
         
-        MinecraftForgeClient.registerItemRenderer(ModItems.equipmentSkin, new RenderItemEquipmentSkin());
-        //MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.miniArmourer), new RenderItemBlockMiniArmourer());
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.mannequin), new RenderItemMannequin(modelSteve, modelAlex));
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.doll), new RenderItemMannequin(modelSteve, modelAlex));
-        
-        
-        //Register block renderers.
-        */
-        
+        // Register coloured items and blocks.
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.paintbrush);
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.paintRoller);
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.colourPicker);
