@@ -50,7 +50,6 @@ public class MessageClientToolPaintBlock implements IMessage, IMessageHandler<Me
         buf.readBytes(rgbt);
     }
     
-    @SuppressWarnings("deprecation")
     @Override
     public IMessage onMessage(MessageClientToolPaintBlock message, MessageContext ctx) {
         EntityPlayerMP player = ctx.getServerHandler().player;

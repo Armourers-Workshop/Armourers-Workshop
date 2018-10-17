@@ -92,7 +92,6 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         world.playSound(null, pos, new SoundEvent(new ResourceLocation(LibSounds.PAINT)), SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
     }
     
-    @SuppressWarnings("deprecation")
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
         if (block instanceof IPantableBlock) {

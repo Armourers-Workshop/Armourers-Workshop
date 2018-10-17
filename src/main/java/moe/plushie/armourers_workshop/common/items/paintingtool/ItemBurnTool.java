@@ -84,7 +84,6 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool, 
         return EnumActionResult.PASS;
     }
     
-    @SuppressWarnings("deprecation")
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
         int intensity = ToolOptions.INTENSITY.getValue(stack);

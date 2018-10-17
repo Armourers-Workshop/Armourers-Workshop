@@ -92,7 +92,6 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         return EnumActionResult.PASS;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
         boolean changeHue = ToolOptions.CHANGE_HUE.getValue(stack);

@@ -32,7 +32,6 @@ public class BlockSkinCube extends AbstractModBlockContainer implements IPantabl
         return new TileEntityColourable();
     }
     
-    @SuppressWarnings("deprecation")
     @Override
     public boolean setColour(IBlockAccess world, BlockPos pos, int colour, EnumFacing facing) {
         TileEntity te = world.getTileEntity(pos);

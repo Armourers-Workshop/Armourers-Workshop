@@ -25,7 +25,6 @@ public class TileEntityColourable extends ModTileEntity implements IPantable {
         this.colour = new CubeColour(colour);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
@@ -57,7 +56,6 @@ public class TileEntityColourable extends ModTileEntity implements IPantable {
         syncWithClients();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void setColour(int colour) {
         this.colour.setColour(colour);

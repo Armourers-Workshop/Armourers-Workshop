@@ -3,10 +3,12 @@ package moe.plushie.armourers_workshop.utils;
 import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
+import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
 import moe.plushie.armourers_workshop.common.blocks.BlockLocation;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -92,40 +94,39 @@ public final class BlockUtils {
         }
     }
     
-    public static ArrayList<BlockLocation> findTouchingBlockFaces(World world, int x, int y, int z, int side, int radius) {
-        EnumFacing dir = EnumFacing.byIndex(side);
-        ArrayList<BlockLocation> blockFaces = new ArrayList<BlockLocation>();
-        ArrayList<BlockLocation> openList = new ArrayList<BlockLocation>();
-        ArrayList<BlockLocation> closedList = new ArrayList<BlockLocation>();
-        /*
-        openList.add(new BlockLocation(x, y ,z).offset(dir));
+    public static ArrayList<BlockPos> findTouchingBlockFaces(World world, BlockPos pos, EnumFacing facing, int radius) {
+        ArrayList<BlockPos> blockFaces = new ArrayList<BlockPos>();
+        ArrayList<BlockPos> openList = new ArrayList<BlockPos>();
+        ArrayList<BlockPos> closedList = new ArrayList<BlockPos>();
+        
+        openList.add(pos.offset(facing));
         EnumFacing[] sides = EnumFacing.VALUES;
         
         while (!openList.isEmpty()) {
-            BlockLocation loc = openList.get(0);
+            BlockPos loc = openList.get(0);
             openList.remove(0);
-            Block block = world.getBlock(loc.x, loc.y, loc.z);
-            if (block instanceof BlockColourable) {
+            IBlockState state = world.getBlockState(loc);
+            if (state.getBlock() instanceof IPantableBlock) {
                 blockFaces.add(loc);
             }
-            if (world.isAirBlock(loc.x, loc.y, loc.z)) {
+            if (world.isAirBlock(loc)) {
                 for (int i = 0; i < sides.length; i++) {
-                    BlockLocation sideLoc = loc.offset(sides[i]);
-                    Block sideBlock = world.getBlock(sideLoc.x, sideLoc.y, sideLoc.z);
+                    BlockPos sideLoc = loc.offset(EnumFacing.values()[i]);
+                    IBlockState stateSide = world.getBlockState(sideLoc);
                     if (!closedList.contains(sideLoc)) {
                         closedList.add(sideLoc);
                         boolean validCube = false;
                         for (int ix = 0; ix < 3; ix++) {
                             for (int iy = 0; iy < 3; iy++) {
                                 for (int iz = 0; iz < 3; iz++) {
-                                    Block validBlock = world.getBlock(sideLoc.x + ix - 1, sideLoc.y + iy - 1, sideLoc.z + iz - 1);
-                                    if (validBlock instanceof BlockColourable) {
+                                    IBlockState stateValid = world.getBlockState(sideLoc.add(ix - 1, iy - 1, iz - 1));
+                                    if (stateValid.getBlock() instanceof IPantableBlock) {
                                         validCube = true;
                                     }
                                 }
                             }
                         }
-                        if (sideLoc.getDistance(x, y, z) < radius & validCube) {
+                        if (sideLoc.getDistance(pos.getX(), pos.getY(), pos.getZ()) < radius & validCube) {
                             openList.add(sideLoc);
                             //blocks.add(sideLoc);
                         }
@@ -137,7 +138,7 @@ public final class BlockUtils {
                 break;
             }
         }
-        */
+        
         return blockFaces;
     }
     

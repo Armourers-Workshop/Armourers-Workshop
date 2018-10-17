@@ -80,7 +80,6 @@ public class ItemColourNoiseTool extends AbstractModItem implements IConfigurabl
         return EnumActionResult.PASS;
     }
     
-    @SuppressWarnings("deprecation")
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
         int intensity = UtilItems.getIntensityFromStack(stack, 16);
