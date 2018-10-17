@@ -261,36 +261,34 @@ public final class ArmourerWorldHelper {
             //world.removeTileEntity(target);
         }
         
-        if (world.isAirBlock(target)) {
-            Block targetBlock = blockData.getMinecraftBlock();
-            IBlockState targetState = targetBlock.getStateFromMeta(meta);
-            
-            
-            CubeColour cc = new CubeColour();
-            for (int i = 0; i < 6; i++) {
-                byte[] c = cubeData.getCubeColour(index, i);
-                byte paintType = cubeData.getCubePaintType(index, i);
-                if (mirror) {
-                    if (i == 4) {
-                        c = cubeData.getCubeColour(index, 5);
-                        paintType = cubeData.getCubePaintType(index, 5);
-                    }
-                    if (i == 5) {
-                        c = cubeData.getCubeColour(index, 4);
-                        paintType = cubeData.getCubePaintType(index, 4);
-                    }
+        Block targetBlock = blockData.getMinecraftBlock();
+        IBlockState targetState = targetBlock.getStateFromMeta(meta);
+        
+        
+        CubeColour cc = new CubeColour();
+        for (int i = 0; i < 6; i++) {
+            byte[] c = cubeData.getCubeColour(index, i);
+            byte paintType = cubeData.getCubePaintType(index, i);
+            if (mirror) {
+                if (i == 4) {
+                    c = cubeData.getCubeColour(index, 5);
+                    paintType = cubeData.getCubePaintType(index, 5);
                 }
-                cc.setRed(c[0], i);
-                cc.setGreen(c[1], i);
-                cc.setBlue(c[2], i);
-                cc.setPaintType(paintType, i);
+                if (i == 5) {
+                    c = cubeData.getCubeColour(index, 4);
+                    paintType = cubeData.getCubePaintType(index, 4);
+                }
             }
-            TileEntityColourable colourable = new TileEntityColourable();
-            colourable.setColour(cc);
-            
-            SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdate(targetState, target, world).setTileEntity(colourable).setDelay(index / 5));
-            //world.setBlockState(target, targetState, 2);
+            cc.setRed(c[0], i);
+            cc.setGreen(c[1], i);
+            cc.setBlue(c[2], i);
+            cc.setPaintType(paintType, i);
         }
+        TileEntityColourable colourable = new TileEntityColourable();
+        colourable.setColour(cc);
+        
+        SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdate(targetState, target, world).setTileEntity(colourable).setDelay(index / 5).setOnlyReplaceable(true));
+        //world.setBlockState(target, targetState, 2);
     }
     
     public static void createBoundingBoxes(World world, BlockPos pos, BlockPos parentPos, ISkinType skinType) {

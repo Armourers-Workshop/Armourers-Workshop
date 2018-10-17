@@ -50,6 +50,10 @@ public class BlockArmourer extends AbstractModBlockContainer {
     
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te != null & te instanceof TileEntityArmourer) {
+            ((TileEntityArmourer)te).preRemove();
+        }
         BlockUtils.dropInventoryBlocks(worldIn, pos);
         super.breakBlock(worldIn, pos, state);
     }

@@ -11,6 +11,7 @@ public final class AsyncWorldUpdate {
     private final IBlockState state;
     private final BlockPos pos;
     private final int dimensionId;
+    private boolean onlyReplaceable;
     private TileEntity tileEntity;
     
     public AsyncWorldUpdate(IBlockState state, BlockPos pos, World world) {
@@ -21,6 +22,7 @@ public final class AsyncWorldUpdate {
         this.state = state;
         this.pos = pos;
         this.dimensionId = dimensionId;
+        onlyReplaceable = false;
     }
     
     public AsyncWorldUpdate setDelay(int delay) {
@@ -30,6 +32,11 @@ public final class AsyncWorldUpdate {
     
     public AsyncWorldUpdate setTileEntity(TileEntity tileEntity) {
         this.tileEntity = tileEntity;
+        return this;
+    }
+    
+    public AsyncWorldUpdate setOnlyReplaceable(boolean onlyReplaceable) {
+        this.onlyReplaceable = onlyReplaceable;
         return this;
     }
     
@@ -58,6 +65,11 @@ public final class AsyncWorldUpdate {
     }
 
     public void doUpdate(World world) {
+        if (onlyReplaceable) {
+            if (!world.getBlockState(pos).getBlock().isReplaceable(world, pos)) {
+                return;
+            }
+        }
         world.setBlockState(pos, state, 2);
         if (tileEntity != null) {
             world.setTileEntity(getPos(), tileEntity);
