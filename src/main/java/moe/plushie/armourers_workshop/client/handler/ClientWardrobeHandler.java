@@ -34,6 +34,7 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderSpecificHandEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -244,7 +245,7 @@ public final class ClientWardrobeHandler {
         }
     }
     
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderLivingPre(RenderLivingEvent.Pre<EntityPlayer> event) {
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(event.getEntity());
         if (skinCapability == null) {
@@ -295,7 +296,7 @@ public final class ClientWardrobeHandler {
         }
     }
     
-    @SubscribeEvent
+    @SubscribeEvent()
     public void onRenderLivingPost(RenderLivingEvent.Post<EntityPlayer> event) {
         // Restore the player model.
         for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
