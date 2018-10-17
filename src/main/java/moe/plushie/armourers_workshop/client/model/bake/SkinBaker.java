@@ -24,7 +24,7 @@ public final class SkinBaker {
     
     public static boolean withinMaxRenderDistance(double x, double y, double z) {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
-        if (player.getDistance(x, y, z) > ConfigHandlerClient.skinMaxRenderDistance) {
+        if (player.getDistance(x, y, z) > ConfigHandlerClient.renderDistanceSkin) {
             return false;
         }
         return true;

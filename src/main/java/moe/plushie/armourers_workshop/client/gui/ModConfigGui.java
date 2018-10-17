@@ -6,12 +6,12 @@ import java.util.List;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.common.config.ConfigElement;
 
 @SideOnly(Side.CLIENT)
 public class ModConfigGui extends GuiConfig {
@@ -44,7 +44,15 @@ public class ModConfigGui extends GuiConfig {
                 .getChildElements());
         
         configs.addAll(new ConfigElement(ConfigHandlerClient.config
-                .getCategory(ConfigHandlerClient.CATEGORY_CLIENT))
+                .getCategory(ConfigHandlerClient.CATEGORY_MISC))
+                .getChildElements());
+        
+        configs.addAll(new ConfigElement(ConfigHandlerClient.config
+                .getCategory(ConfigHandlerClient.CATEGORY_PERFORMANCE))
+                .getChildElements());
+        
+        configs.addAll(new ConfigElement(ConfigHandlerClient.config
+                .getCategory(ConfigHandlerClient.CATEGORY_CACHE))
                 .getChildElements());
         
         configs.addAll(new ConfigElement(ConfigHandlerClient.config

@@ -2,9 +2,6 @@ package moe.plushie.armourers_workshop.common;
 
 import java.util.LinkedHashMap;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
-
 import org.apache.logging.log4j.Level;
 
 import com.mojang.authlib.GameProfile;
@@ -15,11 +12,12 @@ import moe.plushie.armourers_workshop.api.common.IArmourersCommonManager;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.handler.EquipmentRenderHandler;
-import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.handler.SkinDataHandler;
 import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
+import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
 
 public final class ApiRegistrar {
     
@@ -29,9 +27,6 @@ public final class ApiRegistrar {
     public LinkedHashMap<String, IArmourersClientManager> equipmentRenderManagers = new LinkedHashMap<String, IArmourersClientManager>();
     
     public void addApiRequest(String modName, String className) {
-        if (!ConfigHandler.allowModsToRegisterWithAPI) {
-            return;
-        }
         try {
             Class<?> c = Class.forName(className);
             Object classObject = c.newInstance();

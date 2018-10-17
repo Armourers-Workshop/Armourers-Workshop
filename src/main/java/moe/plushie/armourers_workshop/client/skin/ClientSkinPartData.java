@@ -35,8 +35,8 @@ public class ClientSkinPartData implements RemovalListener<ModelKey, SkinModel> 
     public ClientSkinPartData() {
         CacheBuilder builder = CacheBuilder.newBuilder();
         builder.removalListener(this);
-        builder.expireAfterAccess(ConfigHandlerClient.skinCacheExpireTime, TimeUnit.SECONDS);
-        if (ConfigHandlerClient.skinCacheMaxSize > 1) {
+        builder.expireAfterAccess(ConfigHandlerClient.modelPartCacheExpireTime, TimeUnit.SECONDS);
+        if (ConfigHandlerClient.modelPartCacheMaxSize > 1) {
             builder.maximumSize(ConfigHandlerClient.skinCacheMaxSize);
         }
         modelCache = builder.build(new ModelLoader());

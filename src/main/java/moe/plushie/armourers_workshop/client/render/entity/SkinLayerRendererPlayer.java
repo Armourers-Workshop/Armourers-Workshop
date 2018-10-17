@@ -45,10 +45,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
                 entitylivingbaseIn.posX,
                 entitylivingbaseIn.posY,
                 entitylivingbaseIn.posZ);
-        if (distance > ConfigHandlerClient.skinMaxRenderDistance) {
-            return;
-        }
-        if (distance > ConfigHandlerClient.skinMaxRenderDistance) {
+        if (distance > ConfigHandlerClient.renderDistanceSkin) {
             return;
         }
         renderPlayer.getMainModel().bipedLeftArm.isHidden = false;

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.client.config;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
@@ -11,25 +12,32 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ConfigHandlerClient {
     
-    public static String CATEGORY_CLIENT = "client";
-    public static String CATEGORY_SKIN_PREVIEW = "skin-preview";
-    public static String CATEGORY_DEBUG = "debug";
+    public static final String CATEGORY_MISC = "misc";
+    public static final String CATEGORY_PERFORMANCE = "performance";
+    public static final String CATEGORY_CACHE = "cache";
+    public static final String CATEGORY_SKIN_PREVIEW = "skin-preview";
+    public static final String CATEGORY_DEBUG = "debug";
     
+    // Performance
+    public static int renderDistanceSkin;
+    public static int renderDistanceBlockSkin;
+    public static int renderDistanceMannequinEquipment;
+    
+    public static int skinLoadAnimationTime;
+    public static double lodDistance = 32F;
+    public static int modelBakingThreadCount;
+    public static boolean multipassSkinRendering = true;
+    public static boolean slowModelBaking = true;
+    public static AtomicInteger modelBakingUpdateRate = new AtomicInteger(40);
+    public static int maxLodLevels = 4;
+    
+    // Cache
     public static int skinCacheExpireTime;
     public static int skinCacheMaxSize;
-    public static int textureCacheTime;
+    public static int modelPartCacheExpireTime;
+    public static int modelPartCacheMaxSize;
+    public static int textureCacheExpireTime;
     public static int textureCacheMaxSize;
-    public static int modelBakingThreadCount;
-    public static AtomicInteger modelBakingUpdateRate = new AtomicInteger(40);
-    
-    public static int skinMaxRenderDistance;
-    public static boolean slowModelBaking = true;
-    public static boolean multipassSkinRendering = true;
-    public static int mannequinMaxEquipmentRenderDistance = 1024;
-    public static int blockSkinMaxRenderDistance = 2500;
-    public static double lodDistance = 32F;
-    public static int skinLoadAnimationTime;
-    public static int maxLodLevels = 4;
     
     // Skin preview
     public static boolean skinPreEnabled = false;
@@ -55,16 +63,15 @@ public class ConfigHandlerClient {
     
     public static void init(File file) {
         if (config == null) {
-            config = new Configuration(file, "2");
-            if (config.getLoadedConfigVersion().equals("1")) {
-                config.getCategory(CATEGORY_DEBUG).remove("disableTexturePainting");
-            }
+            config = new Configuration(file, "1");
             loadConfigFile();
         }
     }
     
     public static void loadConfigFile() {
-        loadCategoryClient();
+        loadCategoryMisc();
+        loadCategoryPerformance();
+        loadCategoryCache();
         loadCategorySkinPreview();
         loadCategoryDebug();
         if (config.hasChanged()) {
@@ -72,69 +79,88 @@ public class ConfigHandlerClient {
         }
     }
     
-    private static void loadCategoryClient() {
-        skinCacheExpireTime = config.getInt("skinCacheExpireTime", CATEGORY_CLIENT, 600, 1, 3600,
-                "How long in seconds the client will keep skins in it's cache.\n"
-                + "Default 600 seconds is 10 minutes.");
-        config.getCategory(CATEGORY_CLIENT).get("skinCacheExpireTime").setRequiresMcRestart(true);
+    private static void loadCategoryMisc() {
+        config.setCategoryComment(CATEGORY_MISC, "Miscellaneous settings.");
+        skinLoadAnimationTime = config.getInt("skinLoadAnimationTime", CATEGORY_MISC, 200, 0, 10000,
+                "How long skins will display their loading animation for in milliseconds\n"
+                + "Settings this to 0 will disable loading animations.");
+    }
+    
+    private static void loadCategoryPerformance() {
+        config.setCategoryComment(CATEGORY_PERFORMANCE, "Change (visual quality/performance) ratio by category setting in this category.");
+        renderDistanceSkin = config.getInt("renderDistanceSkin", CATEGORY_PERFORMANCE, 128, 16, 512,
+                "The max distance in blocks that skins will render.");
         
-        skinCacheMaxSize = config.getInt("skinCacheMaxSize", CATEGORY_CLIENT, 2000, 0, 10000,
-                "Max size the skin cache can reach before skins are removed. Setting to 0 turns off this option.");
-        config.getCategory(CATEGORY_CLIENT).get("skinCacheMaxSize").setRequiresMcRestart(true);
+        renderDistanceMannequinEquipment = config.getInt("renderDistanceMannequinEquipment", CATEGORY_PERFORMANCE, 64, 16, 512,
+                "The max distance in blocks that equipment will be rendered on mannequins.");
         
-        textureCacheTime = config
-                .getInt("textureCacheTime", CATEGORY_CLIENT, 600, 1, 3600,
-                "How long in seconds the client will keep textures in it's cache.\n" + 
-                "Default 600 seconds is 10 minutes.");
-        config.getCategory(CATEGORY_CLIENT).get("textureCacheTime").setRequiresMcRestart(true);
+        renderDistanceBlockSkin = config.getInt("renderDistanceBlockSkin", CATEGORY_PERFORMANCE, 128, 16, 512,
+                "The max distance in blocks that block skins will be rendered.");
+        renderDistanceBlockSkin *= renderDistanceBlockSkin;
+        ModLogger.log("renderDistanceBlockSkin:" + renderDistanceBlockSkin);
         
-        textureCacheTime = config.getInt("textureCacheTime", CATEGORY_CLIENT, 500, 1, 10000,
-                "Max size the texture cache can reach before textures are removed. Setting to 0 turns off this option.");
-        config.getCategory(CATEGORY_CLIENT).get("textureCacheTime").setRequiresMcRestart(true);
+        slowModelBaking = config.getBoolean("slowModelBaking", CATEGORY_PERFORMANCE, true,
+                "Limits how fast models can be baked to provide a smoother frame rate.");
         
         int cores = Runtime.getRuntime().availableProcessors();
         int bakingCores = MathHelper.ceil((float)cores / 2F);
         bakingCores = MathHelper.clamp(bakingCores, 1, 16);
-        
-        modelBakingThreadCount = config.getInt("modelBakingThreadCount", CATEGORY_CLIENT, bakingCores, 1, 16, "");
-        config.getCategory(CATEGORY_CLIENT).get("modelBakingThreadCount").setComment(
+        modelBakingThreadCount = config.getInt("modelBakingThreadCount", CATEGORY_PERFORMANCE, bakingCores, 1, 16, "");
+        config.getCategory(CATEGORY_PERFORMANCE).get("modelBakingThreadCount").setComment(
                 "The maximum number of threads that will be used to bake models. [range: " + 1 + " ~ " + 16 + ", default: " + "core count / 2" + "]");
-        config.getCategory(CATEGORY_CLIENT).get("modelBakingThreadCount").setRequiresMcRestart(true);
+        config.getCategory(CATEGORY_PERFORMANCE).get("modelBakingThreadCount").setRequiresMcRestart(true);
         
-        int updateRate = config.getInt("modelBakingUpdateRate", CATEGORY_CLIENT, 40, 10, 1000,
-                "How fast models are allowed to bake. Lower values will give smoother frame rate but models will load slower.");
+        int updateRate = config.getInt("modelBakingUpdateRate", CATEGORY_PERFORMANCE, 40, 10, 1000,
+                "How fast models are allowed to bake. Lower values will give smoother frame rate but models will load slower.\n"
+                + "Has no effect if 'slowModelBaking' is turned off.");
         modelBakingUpdateRate.set(updateRate);
-        
-        skinMaxRenderDistance = config
-                .get(CATEGORY_CLIENT, "skinMaxRenderDistance", 8192,
-                "The max distance away squared that skins will render.")
-                .getInt(8192);
-        
-        slowModelBaking = config.getBoolean("slowModelBaking", CATEGORY_CLIENT, true,
-                "Limits how fast models can be baked to provide a smoother frame rate.");
-        
-        multipassSkinRendering = config.getBoolean("multipassSkinRendering", CATEGORY_CLIENT, true,
+
+        multipassSkinRendering = config.getBoolean("multipassSkinRendering", CATEGORY_PERFORMANCE, true,
                 "When enabled skin will render in multiple passes to reduce visual artifacts.\n"
                 + "Disabling this will improve skin rendering performance at the cost of visual quality.");
         
-        mannequinMaxEquipmentRenderDistance = config.getInt("mannequinMaxEquipmentRenderDistance", CATEGORY_CLIENT, 2048, 1, 4096,
-                "The max distance squared that equipment will be rendered on mannequins.");
-        
-        blockSkinMaxRenderDistance = config.getInt("blockSkinMaxRenderDistance", CATEGORY_CLIENT, 8192, 1, 65536,
-                "The max distance squared that block skins will be rendered.");
-        
-        lodDistance = config.getFloat("lodDistance", CATEGORY_CLIENT, 32F, 8F, 128F,
+        lodDistance = config.getFloat("lodDistance", CATEGORY_PERFORMANCE, 32F, 8F, 128F,
                 "Distance away that skins will have lod applied to them.");
         
-        skinLoadAnimationTime = config.getInt("skinLoadAnimationTime", CATEGORY_CLIENT, 200, 0, 10000,
-                "How long skins will display their loading animation for in milliseconds\n"
-                + "Settings this to 0 will disable loading animations.");
-        
-        maxLodLevels = config.getInt("maxLodLevels", CATEGORY_CLIENT, 4, 0, 4,
+        maxLodLevels = config.getInt("maxLodLevels", CATEGORY_PERFORMANCE, 4, 0, 4,
                 "Number of LOD models to create. Higher number should give a boost to framerate at a small cost to VRAM.");
     }
     
+    private static void loadCategoryCache() {
+        config.setCategoryComment(CATEGORY_CACHE, "Change (memory use/IO access) ratio by category setting in this category.");
+        // Skin cache
+        skinCacheExpireTime = config.getInt("skinCacheExpireTime", CATEGORY_CACHE, 600, 1, 3600,
+                "How long in seconds the client will keep skins in it's cache.\n"
+                + "Default 600 seconds is 10 minutes.");
+        config.getCategory(CATEGORY_CACHE).get("skinCacheExpireTime").setRequiresMcRestart(true);
+        
+        skinCacheMaxSize = config.getInt("skinCacheMaxSize", CATEGORY_CACHE, 2000, 0, 10000,
+                "Max size the skin cache can reach before skins are removed. Setting to 0 turns off this option.");
+        config.getCategory(CATEGORY_CACHE).get("skinCacheMaxSize").setRequiresMcRestart(true);
+        
+        // Model cache
+        modelPartCacheExpireTime = config.getInt("modelPartCacheExpireTime", CATEGORY_CACHE, 600, 1, 3600,
+                "How long in seconds the client will keep skins in it's cache.\n"
+                + "Default 600 seconds is 10 minutes.");
+        config.getCategory(CATEGORY_CACHE).get("modelPartCacheExpireTime").setRequiresMcRestart(true);
+        
+        modelPartCacheMaxSize = config.getInt("modelPartCacheMaxSize", CATEGORY_CACHE, 2000, 0, 10000,
+                "Max size the skin cache can reach before skins are removed. Setting to 0 turns off this option.");
+        config.getCategory(CATEGORY_CACHE).get("modelPartCacheMaxSize").setRequiresMcRestart(true);
+        
+        // Texture cache
+        textureCacheExpireTime = config.getInt("textureCacheExpireTime", CATEGORY_CACHE, 600, 1, 3600,
+                "How long in seconds the client will keep textures in it's cache.\n" + 
+                "Default 600 seconds is 10 minutes.");
+        config.getCategory(CATEGORY_CACHE).get("textureCacheTime").setRequiresMcRestart(true);
+        
+        textureCacheMaxSize = config.getInt("textureCacheMaxSize", CATEGORY_CACHE, 1000, 0, 5000,
+                "Max size the texture cache can reach before textures are removed. Setting to 0 turns off this option.");
+        config.getCategory(CATEGORY_CACHE).get("textureCacheMaxSize").setRequiresMcRestart(true);
+    }
+    
     private static void loadCategorySkinPreview() {
+        config.setCategoryComment(CATEGORY_SKIN_PREVIEW, "Setting to configure the skin preview box.");
         skinPreEnabled = config.getBoolean("skinPreEnabled", CATEGORY_SKIN_PREVIEW, true,
                 "Enables a larger skin preview box when hovering the mouse over a skin.");
         
@@ -155,6 +181,7 @@ public class ConfigHandlerClient {
     }
     
     private static void loadCategoryDebug() {
+        config.setCategoryComment(CATEGORY_DEBUG, "Debug settings.");
         skinRenderType = config
                 .getInt("skinRenderType", CATEGORY_DEBUG, 0, 0, 3,
                 "Only change this if you are having rendering issues with skins on players." +

@@ -83,7 +83,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                 player.posX,
                 player.posY,
                 player.posZ);
-        if (distance > ConfigHandlerClient.skinMaxRenderDistance) {
+        if (distance > ConfigHandlerClient.renderDistanceSkin) {
             return;
         }
         

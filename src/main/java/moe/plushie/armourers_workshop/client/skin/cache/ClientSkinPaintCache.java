@@ -30,7 +30,7 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
     private volatile Thread textureGenThread;
     
     public ClientSkinPaintCache() {
-        textureMap = new ExpiringHashMap<SkinTextureKey, SkinModelTexture>(1000 * ConfigHandlerClient.textureCacheTime, this);
+        textureMap = new ExpiringHashMap<SkinTextureKey, SkinModelTexture>(1000 * ConfigHandlerClient.textureCacheExpireTime, this);
         requestSet = new HashSet<TextureGenInfo>();
         requestList = new ArrayList<TextureGenInfo>();
         textureGenThread = new Thread(this, "Texture Gen Thread");

@@ -413,7 +413,7 @@ public class TileEntitySkinnable extends ModTileEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public double getMaxRenderDistanceSquared() {
-        return ConfigHandlerClient.blockSkinMaxRenderDistance;
+        return ConfigHandlerClient.renderDistanceBlockSkin;
     }
 
     public void killChildren(World world) {

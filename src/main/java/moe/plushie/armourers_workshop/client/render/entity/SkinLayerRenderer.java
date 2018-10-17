@@ -43,7 +43,7 @@ public abstract class SkinLayerRenderer<E extends EntityLivingBase, R extends Re
                 entitylivingbaseIn.posX,
                 entitylivingbaseIn.posY,
                 entitylivingbaseIn.posZ);
-        if (distance > ConfigHandlerClient.skinMaxRenderDistance) {
+        if (distance > ConfigHandlerClient.renderDistanceSkin) {
             return;
         }
         ISkinType[] skinTypes = skinCapability.getValidSkinTypes();

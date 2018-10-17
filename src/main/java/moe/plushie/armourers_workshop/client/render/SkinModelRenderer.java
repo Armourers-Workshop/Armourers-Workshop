@@ -214,7 +214,7 @@ public final class SkinModelRenderer {
                 player.posY,
                 player.posZ);
         
-        if (distance > ConfigHandlerClient.skinMaxRenderDistance) {
+        if (distance > ConfigHandlerClient.renderDistanceSkin) {
             return;
         }
         

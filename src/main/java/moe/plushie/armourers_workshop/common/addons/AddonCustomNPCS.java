@@ -206,7 +206,7 @@ public class AddonCustomNPCS extends ModAddon {
                     entitylivingbaseIn.posX,
                     entitylivingbaseIn.posY,
                     entitylivingbaseIn.posZ);
-            if (distance > ConfigHandlerClient.skinMaxRenderDistance) {
+            if (distance > ConfigHandlerClient.renderDistanceSkin) {
                 return;
             }
             //Object iEntity = AddonCustomNPCS.getiEntity(entitylivingbaseIn);

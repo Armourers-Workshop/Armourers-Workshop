@@ -45,9 +45,6 @@ public class ConfigHandler {
     public static int entityDropSkinChance = 10;
     public static String enitiySpawnSkinTargetPath = "/";
     
-    //compatibility
-    public static boolean allowModsToRegisterWithAPI = true;
-    
     public static UUID remotePlayerId;
     
     //Register
@@ -70,7 +67,6 @@ public class ConfigHandler {
     public static void loadConfigFile() {
         loadCategoryGeneral();
         loadCategoryRecipe();
-        loadCategoryCompatibility();
         loadCategoryServer();
         loadCategoryEntitySkins();
         if (config.hasChanged()) {
@@ -176,15 +172,6 @@ public class ConfigHandler {
                 "Enable copying the skin off an item in the skinning table.")
                 .getBoolean(false);
     }
-    
-    private static void loadCategoryCompatibility() {
-        allowModsToRegisterWithAPI = config
-                .get(CATEGORY_COMPATIBILITY, "allowModsToRegisterWithAPI", true,
-                "Allow other mods to register with the Armourer's Workshop API.")
-                .getBoolean(true);
-    }
-    
-
     
     private static void loadCategoryServer() {
         skinCacheExpireTime = config.getInt("skinCacheExpireTime", CATEGORY_SERVER, 6000, 1, 3600,
