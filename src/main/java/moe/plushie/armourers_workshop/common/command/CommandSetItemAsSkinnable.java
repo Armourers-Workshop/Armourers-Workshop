@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.common.command;
 
+import java.util.Arrays;
 import java.util.List;
 
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -42,7 +44,13 @@ public class CommandSetItemAsSkinnable extends ModCommand {
         if (player == null) {
             return;
         }
-        ItemOverrideType type = ItemOverrideType.valueOf(args[1]);
+        ModLogger.log(Arrays.toString(args));
+        ItemOverrideType type = null;
+        try {
+            type = ItemOverrideType.valueOf(args[1].toUpperCase());
+        } catch (Exception e) {
+            throw new WrongUsageException(getUsage(sender), (Object)args);
+        }
         ItemStack stack = player.getHeldItemMainhand();
         if (!stack.isEmpty()) {
             Configuration config = ConfigHandler.config;
