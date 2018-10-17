@@ -126,7 +126,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventoryCa
     }
     
     @Override
-    public void markDirty() {
+    public void dirty() {
         if (!entity.getEntityWorld().isRemote) {
             syncToAllTracking();
         }

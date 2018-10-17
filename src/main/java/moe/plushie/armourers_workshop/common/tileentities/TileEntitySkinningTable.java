@@ -33,6 +33,11 @@ public class TileEntitySkinningTable extends TileEntity implements IInventoryCal
         }
     }
     
+    @Override
+    public void dirty() {
+        markDirty();
+    }
+    
     private void checkForValidRecipe() {
         ItemStack stack = ItemSkinningRecipes.getRecipeOutput(craftingInventory);
         outputInventory.setInventorySlotContents(0, stack);

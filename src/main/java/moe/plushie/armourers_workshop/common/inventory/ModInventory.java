@@ -88,7 +88,7 @@ public class ModInventory implements IInventory {
     @Override
     public void markDirty() {
         if (callback != null) {
-            callback.markDirty();
+            callback.dirty();
         }
         if (parent != null) {
             parent.markDirty();
@@ -164,6 +164,6 @@ public class ModInventory implements IInventory {
     public interface IInventoryCallback {
         public void setInventorySlotContents(IInventory inventory, int index, @Nonnull ItemStack stack);
         
-        public void markDirty();
+        public void dirty();
     }
 }
