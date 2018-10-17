@@ -86,7 +86,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     private void setConfigsOnClient(MessageServerSyncConfig message) {
         ConfigHandler.allowClientsToDownloadSkins = message.allowClientsToDownloadSkins;
         ConfigHandler.allowClientsToUploadSkins = message.allowClientsToUploadSkins;
-        ModAddonManager.setItemOverrides(message.itemOverrides);
+        ModAddonManager.setOverridesFromServer(message.itemOverrides);
         ConfigHandler.libraryShowsModelPreviews = message.libraryShowsModelPreviews;
         ConfigHandler.lockDyesOnSkins = message.lockDyesOnSkins;
         ConfigHandler.remotePlayerId = message.playerId;

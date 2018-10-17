@@ -81,11 +81,11 @@ public class SkinLayerRendererHeldItem extends LayerHeldItem {
             boolean didRender = false;
             for (int i = 0; i < ItemOverrideType.values().length; i++) {
                 if (ModAddonManager.isOverrideItem(ItemOverrideType.values()[i], itemStack.getItem())) {
-                    ISkinDescriptor descriptorSword = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
-                    if (descriptorSword == null) {
-                        descriptorSword = skinCapability.getSkinDescriptor(skinTypes[i], 0);
+                    ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
+                    if (descriptor == null) {
+                        descriptor = skinCapability.getSkinDescriptor(skinTypes[i], 0);
                     }
-                    if (descriptorSword != null) {
+                    if (descriptor != null) {
                         GlStateManager.pushMatrix();
                         GlStateManager.enableCull();
                         GlStateManager.scale(-1, -1, 1);
@@ -94,7 +94,7 @@ public class SkinLayerRendererHeldItem extends LayerHeldItem {
                             GlStateManager.scale(-1, 1, 1);
                             GlStateManager.cullFace(CullFace.FRONT);
                         }
-                        SkinItemRenderHelper.renderSkinWithoutHelper(descriptorSword, false);
+                        SkinItemRenderHelper.renderSkinWithoutHelper(descriptor, false);
                         if (flag) {
                             GlStateManager.cullFace(CullFace.BACK);
                         }

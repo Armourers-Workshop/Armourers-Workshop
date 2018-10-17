@@ -1,9 +1,12 @@
 package moe.plushie.armourers_workshop.common.config;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.common.addons.ModAddon;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -13,6 +16,9 @@ public class ConfigHandlerOverrides {
     public static String CATEGORY_OVERRIDES = "overrides";
 
     public static Configuration config;
+    
+    private static Property propOverrides;
+    private static ArrayList<String> overrides = new ArrayList<String>();
 
     public static void init(File file) {
         if (config == null) {
@@ -49,7 +55,44 @@ public class ConfigHandlerOverrides {
                 + "Format [override type:mod id:item name]\n"
                 + "Valid override types are: sword, shield, bow, pickaxe, axe, shovel, hoe and item\n"
                 + "example sword:minecraft:iron_sword");
-        Property prop = config.get(CATEGORY_OVERRIDES, "itemOverrides", new String[] {});
-        prop.setLanguageKey("itemOverrides");
+        if (propOverrides == null) {
+            propOverrides = config.get(CATEGORY_OVERRIDES, "itemOverrides", new String[] {});
+            propOverrides.setLanguageKey("itemOverrides");
+            overrides.clear();
+            for (String override : propOverrides.getStringList()) {
+                overrides.add(override);
+            }
+        }
+    }
+    
+    private static void setOverrides() {
+        propOverrides.set(overrides.toArray(new String[overrides.size()]));
+        if (config.hasChanged()) {
+            config.save();
+        }
+    }
+    
+    public static void addOverride(ItemOverrideType type, Item item) {
+        String key = type.toString().toLowerCase() + ":" + item.getRegistryName();
+        if (!overrides.contains(key)) {
+            overrides.add(key);
+            setOverrides();
+            ModAddonManager.buildOverridesList();
+        }
+        ConfigSynchronizeHandler.resyncConfigs();
+    }
+    
+    public static void removeOverride(ItemOverrideType type, Item item) {
+        String key = type.toString().toLowerCase() + ":" + item.getRegistryName();
+        if (overrides.contains(key)) {
+            overrides.remove(key);
+            setOverrides();
+            ModAddonManager.buildOverridesList();
+        }
+        ConfigSynchronizeHandler.resyncConfigs();
+    }
+    
+    public static ArrayList<String> getOverrides() {
+        return overrides;
     }
 }

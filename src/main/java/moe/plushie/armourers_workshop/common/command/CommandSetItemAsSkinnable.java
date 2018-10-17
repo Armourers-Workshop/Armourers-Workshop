@@ -3,9 +3,8 @@ package moe.plushie.armourers_workshop.common.command;
 import java.util.Arrays;
 import java.util.List;
 
-import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
-import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.common.config.ConfigHandlerOverrides;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -14,13 +13,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.config.Configuration;
 
 public class CommandSetItemAsSkinnable extends ModCommand {
 
     @Override
     public String getName() {
-        return "setItemAsSkinnable";
+        return "setItemSkinnable";
     }
     
     @Override
@@ -32,12 +30,16 @@ public class CommandSetItemAsSkinnable extends ModCommand {
             }
             return getListOfStringsMatchingLastWord(args, values);
         }
+        if (args.length == 3) {
+            String[] values = new String[] {"add", "remove"};
+            return getListOfStringsMatchingLastWord(args, values);
+        }
         return null;
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (args.length != 2) {
+        if (args.length != 3) {
             throw new WrongUsageException(getUsage(sender), (Object)args);
         }
         EntityPlayerMP player = getCommandSenderAsPlayer(sender);
@@ -53,8 +55,13 @@ public class CommandSetItemAsSkinnable extends ModCommand {
         }
         ItemStack stack = player.getHeldItemMainhand();
         if (!stack.isEmpty()) {
-            Configuration config = ConfigHandler.config;
-            ModAddonManager.addOverrideItem(type, stack.getItem());
+            if (args[2].equals("add")) {
+                ConfigHandlerOverrides.addOverride(type, stack.getItem());
+            } else if (args[2].equals("remove")) {
+                ConfigHandlerOverrides.removeOverride(type, stack.getItem());
+            } else {
+                throw new WrongUsageException(getUsage(sender), (Object)args);
+            }
         }
     }
 }

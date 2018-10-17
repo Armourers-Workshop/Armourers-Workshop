@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.common.addons;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import moe.plushie.armourers_workshop.common.config.ConfigHandlerOverrides;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.relauncher.Side;
@@ -84,13 +85,6 @@ public final class ModAddonManager {
     public static void init() {
         for (ModAddon modAddon : LOADED_ADDONS) {
             modAddon.init();
-            if (modAddon.isItemSkinningSupport() & modAddon.isModLoaded()) {
-                ITEM_OVERRIDES.addAll(modAddon.getItemOverrides());
-            }
-        }
-        String[] keys = ITEM_OVERRIDES.toArray(new String[ITEM_OVERRIDES.size()]);
-        for (int i = 0; i < ITEM_OVERRIDES.size(); i++) {
-            ModLogger.log(keys[i]);
         }
     }
     
@@ -98,6 +92,7 @@ public final class ModAddonManager {
         for (ModAddon modAddon : LOADED_ADDONS) {
             modAddon.postInit();
         }
+        buildOverridesList();
     }
     
     @SideOnly(Side.CLIENT)
@@ -105,6 +100,16 @@ public final class ModAddonManager {
         for (ModAddon modAddon : LOADED_ADDONS) {
             modAddon.initRenderers();
         }
+    }
+    
+    public static void buildOverridesList() {
+        ITEM_OVERRIDES.clear();
+        for (ModAddon modAddon : LOADED_ADDONS) {
+            if (modAddon.isItemSkinningSupport() & modAddon.isModLoaded()) {
+                ITEM_OVERRIDES.addAll(modAddon.getItemOverrides());
+            }
+        }
+        ITEM_OVERRIDES.addAll(ConfigHandlerOverrides.getOverrides());
     }
     
     public static HashSet<String> getItemOverrides() {
@@ -115,7 +120,7 @@ public final class ModAddonManager {
         return LOADED_ADDONS;
     }
     
-    public static void setItemOverrides(String[] itemOverrides) {
+    public static void setOverridesFromServer(String[] itemOverrides) {
         ITEM_OVERRIDES.clear();
         for (int i = 0; i < itemOverrides.length; i++) {
             ITEM_OVERRIDES.add(itemOverrides[i]);
@@ -125,11 +130,6 @@ public final class ModAddonManager {
     public static boolean isOverrideItem(ItemOverrideType type, Item item) {
         String key = type.toString().toLowerCase() + ":" + item.getRegistryName().toString();
         return ITEM_OVERRIDES.contains(key);
-    }
-    
-    public static void addOverrideItem(ItemOverrideType type, Item item) {
-        String key = type.toString().toLowerCase() + item.getRegistryName().toString();
-        ITEM_OVERRIDES.add(key);
     }
     
     public static enum ItemOverrideType {
