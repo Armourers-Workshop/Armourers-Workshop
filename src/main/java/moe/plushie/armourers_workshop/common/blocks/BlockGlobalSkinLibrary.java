@@ -63,7 +63,7 @@ public class BlockGlobalSkinLibrary extends AbstractModBlockContainer {
     
     @Override
     public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
+        return BlockRenderLayer.CUTOUT_MIPPED;
     }
     
     @Override

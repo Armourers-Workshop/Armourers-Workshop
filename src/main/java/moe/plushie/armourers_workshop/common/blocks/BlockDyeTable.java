@@ -62,10 +62,9 @@ public class BlockDyeTable extends AbstractModBlockContainer {
         return getDefaultState().withProperty(STATE_FACING, enumfacing);
     }
     
-    
     @Override
     public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
+        return BlockRenderLayer.CUTOUT_MIPPED;
     }
     
     @Override
