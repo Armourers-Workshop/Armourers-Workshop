@@ -245,7 +245,7 @@ public final class ClientWardrobeHandler {
         }
     }
     
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderLivingPre(RenderLivingEvent.Pre<EntityPlayer> event) {
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(event.getEntity());
         if (skinCapability == null) {
