@@ -125,11 +125,11 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
             Color c = new Color(getToolColour(stack));
             PaintType paintType = getToolPaintType(stack);
             String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
-            tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.colour", c.getRGB()));
-            tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.hex", hex));
-            tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.paintType", paintType.getLocalizedName()));
+            tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.colour", c.getRGB()));
+            tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.hex", hex));
+            tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.paintType", paintType.getLocalizedName()));
         } else {
-            tooltip.add(TranslateUtils.translate("item.armourersworkshop:rollover.nopaint"));
+            tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.nopaint"));
         }
     }
     
