@@ -36,6 +36,7 @@ public class MessageClientGuiAdminPanel implements IMessage, IMessageHandler<Mes
     public static enum AdminPanelCommand {
         RECOVER_SKINS,
         RELOAD_LIBRARY,
-        UPDATE_SKINS
+        UPDATE_SKINS,
+        RELOAD_CACHE;
     }
 }

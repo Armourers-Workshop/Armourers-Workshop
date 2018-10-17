@@ -545,6 +545,13 @@ inventory.armourers_workshop:hologram-projector.powerMode.high=High
 inventory.armourers_workshop:hologram-projector.powerMode.low=Low
 
 
+# Admin Panel
+inventory.armourers_workshop:admin-panel.recover_skins=Recover Skins
+inventory.armourers_workshop:admin-panel.reload_library=Reload Library
+inventory.armourers_workshop:admin-panel.update_skins=Update Skins
+inventory.armourers_workshop:admin-panel.clear_cache=Clear Cache
+
+
 # Chat Messages
 chat.armourers_workshop:undo.outOfUndos=No more undos
 chat.armourers_workshop:undo.undoing=Undoing

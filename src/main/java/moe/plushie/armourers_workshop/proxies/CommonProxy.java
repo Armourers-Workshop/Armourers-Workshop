@@ -129,10 +129,13 @@ public class CommonProxy implements ILibraryCallback {
             SkinIOUtils.recoverSkins(player);
             break;
         case RELOAD_LIBRARY:
-            ArmourersWorkshop.proxy.libraryManager.reloadLibrary();
+            ArmourersWorkshop.getProxy().getLibraryManager().reloadLibrary();
             break;
         case UPDATE_SKINS:
             SkinIOUtils.updateSkins(player);
+            break;
+        case RELOAD_CACHE:
+            CommonSkinCache.INSTANCE.clearAll();
             break;
         }
     }
@@ -219,6 +222,10 @@ public class CommonProxy implements ILibraryCallback {
     
     public GameProfile getLocalGameProfile() {
         return null;
+    }
+    
+    public ILibraryManager getLibraryManager() {
+        return libraryManager;
     }
     
     @SubscribeEvent

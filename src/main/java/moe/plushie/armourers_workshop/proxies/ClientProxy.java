@@ -340,7 +340,7 @@ public class ClientProxy extends CommonProxy {
             CommonSkinCache.INSTANCE.clearAll();
             break;
         case OPEN_ADMIN_PANEL:
-            player.openGui(ArmourersWorkshop.instance, LibGuiIds.ADMIN_PANEL, player.getEntityWorld(), 0, 0, 0);
+            player.openGui(ArmourersWorkshop.getInstance(), LibGuiIds.ADMIN_PANEL, player.getEntityWorld(), 0, 0, 0);
             break;
         }
     }

@@ -11,19 +11,18 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 public class GuiAdminPanel extends GuiScreen {
     
+    private static final String GUI_NAME = "admin-panel";
+    
     protected final int guiWidth;
     protected final int guiHeight;
     
     protected int guiLeft;
     protected int guiTop;
     
-    private GuiButtonExt recoverSkins;
-    private GuiButtonExt reloadLibrary;
-    private GuiButtonExt updateSkins;
-    
     public GuiAdminPanel() {
-        this.guiWidth = 180;
-        this.guiHeight = 128;
+        this.guiWidth = 320;
+        this.guiHeight = 240;
+        
     }
     
     @Override
@@ -33,13 +32,9 @@ public class GuiAdminPanel extends GuiScreen {
         
         buttonList.clear();
         
-        recoverSkins = new GuiButtonExt(0, guiLeft + 5, guiTop + 5, 100, 15, "Recover Skins");
-        reloadLibrary = new GuiButtonExt(0, guiLeft + 5, guiTop + 25, 100, 15, "Reload Library");
-        updateSkins = new GuiButtonExt(0, guiLeft + 5, guiTop + 45, 100, 15, "Update Skins");
-        
-        buttonList.add(recoverSkins);
-        buttonList.add(reloadLibrary);
-        buttonList.add(updateSkins);
+        for (EnumButtons button : EnumButtons.values()) {
+            buttonList.add(new GuiButtonExt(button.ordinal(), guiLeft + button.x, guiTop + button.y, 100, 15, GuiHelper.getLocalizedControlName(GUI_NAME, button.name().toLowerCase())));
+        }
     }
     
     @Override
@@ -57,23 +52,42 @@ public class GuiAdminPanel extends GuiScreen {
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (button == recoverSkins) {
+        if (button.id == EnumButtons.RECOVER_SKINS.ordinal()) {
             MessageClientGuiAdminPanel message = new MessageClientGuiAdminPanel(AdminPanelCommand.RECOVER_SKINS);
             PacketHandler.networkWrapper.sendToServer(message);
         }
-        if (button == reloadLibrary) {
+        if (button.id == EnumButtons.RELOAD_LIBRARY.ordinal()) {
             MessageClientGuiAdminPanel message = new MessageClientGuiAdminPanel(AdminPanelCommand.RELOAD_LIBRARY);
             PacketHandler.networkWrapper.sendToServer(message);
         }
-        if (button == updateSkins) {
+        if (button.id == EnumButtons.UPDATE_SKINS.ordinal()) {
             MessageClientGuiAdminPanel message = new MessageClientGuiAdminPanel(AdminPanelCommand.UPDATE_SKINS);
+            PacketHandler.networkWrapper.sendToServer(message);
+        }
+        if (button.id == EnumButtons.CLEAR_CACHE.ordinal()) {
+            MessageClientGuiAdminPanel message = new MessageClientGuiAdminPanel(AdminPanelCommand.RELOAD_CACHE);
             PacketHandler.networkWrapper.sendToServer(message);
         }
     }
     
     @Override
-    public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawGradientRect(this.guiLeft, this.guiTop, this.guiLeft + this.guiWidth, this.guiTop + guiHeight, 0xC0101010, 0xD0101010);
-        super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
+        super.drawScreen(mouseX, mouseY, partialTicks);
+    }
+    
+    private enum EnumButtons {
+        RECOVER_SKINS(5, 5),
+        RELOAD_LIBRARY(5, 25),
+        UPDATE_SKINS(5, 45),
+        CLEAR_CACHE(5, 65);
+        
+        private final int x;
+        private final int y;
+        
+        private EnumButtons(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 }
