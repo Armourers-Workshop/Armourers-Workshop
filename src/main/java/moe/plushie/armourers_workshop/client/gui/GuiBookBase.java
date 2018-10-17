@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class GuiBookBase extends GuiScreen {
     
-    protected static final ResourceLocation bookTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/guideBook.png");
+    protected static final ResourceLocation bookTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/guide-book.png");
     
     protected final int guiWidth;
     protected final int guiHeight;

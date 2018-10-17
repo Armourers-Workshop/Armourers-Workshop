@@ -31,7 +31,7 @@ public class GuideBook extends BookBase {
         chapterArmourer = new BookChapter(this, "armourer", 2);
         chapterEquipmentTemplates = new BookChapter(this, "equipmentTemplates", 1);
         chapterPaintingTools = new BookChapter(this, "paintingTools", 4);
-        chapterEquipmentWardrobe = new  BookChapter(this, "equipmentWardrobe", 2);
+        chapterEquipmentWardrobe = new  BookChapter(this, "equipment-wardrobe", 2);
         chapterRecipes = new  BookChapter(this, "recipes", 0);
         chapterCredits = new BookChapterCredits(this, "credits");
         
@@ -59,7 +59,7 @@ public class GuideBook extends BookBase {
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourNoiseTool));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourPicker));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.soap));
-        //chapterRecipes.addPage(new BookPageRecipe(this, ModRegistry.getMinecraftItem(ModItems.wandOfStyle)));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.wandOfStyle));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.hueTool));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.guideBook));
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.mannequinTool));

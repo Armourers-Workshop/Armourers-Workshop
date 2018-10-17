@@ -3,12 +3,11 @@ package moe.plushie.armourers_workshop.client.guidebook;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import moe.plushie.armourers_workshop.utils.UtilColour;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -34,7 +33,7 @@ public class BookPage extends BookPageBase {
         ItemStack stack = new ItemStack(Blocks.stone);
         */
         mc.renderEngine.bindTexture(bookPageTexture);
-        GL11.glColor4f(1, 1, 1, 1);
+        GlStateManager.color(1F, 1F, 1F, 1F);
         
         //drawTexturedModalRect(0, 0, 0, 0, PAGE_TEXTURE_WIDTH, PAGE_TEXTURE_HEIGHT);
         //drawTexturedModalRect(0, 0, 0, 0, PAGE_TEXTURE_WIDTH, PAGE_TEXTURE_HEIGHT);

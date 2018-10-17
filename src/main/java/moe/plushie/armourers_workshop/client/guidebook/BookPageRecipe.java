@@ -3,13 +3,12 @@ package moe.plushie.armourers_workshop.client.guidebook;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -21,19 +20,26 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BookPageRecipe extends BookPageBase {
     
     private static final int TEXT_COLOUR = 0xFF000000;
-    //private static RenderItem itemRender = new RenderItem();
+    private static RenderItem renderItem;
     
     private Item item;
     private List<IRecipe> validRecipes;
     
     public BookPageRecipe(IBook parentBook, Block block) {
         this(parentBook, Item.getItemFromBlock(block));
+        renderItem = Minecraft.getMinecraft().getRenderItem();
     }
     
     public BookPageRecipe(IBook parentBook, Item item) {
         super(parentBook);
         this.item = item;
         validRecipes = new ArrayList<IRecipe>();
+        /*
+        IRecipe recipe = CraftingManager.getRecipe(item.getRegistryName());
+        if (recipe != null) {
+            validRecipes.add(recipe);
+        }
+        */
         /*
         List<IRecipe> recipeList = CraftingManager.getInstance().getRecipeList();
         for (int i = 0; i < recipeList.size(); i++) {
@@ -50,7 +56,7 @@ public class BookPageRecipe extends BookPageBase {
     
     @Override
     public void renderPage(FontRenderer fontRenderer, int mouseX, int mouseY, boolean turning, int pageNumber) {
-        GL11.glEnable(GL11.GL_BLEND);
+        //GL11.glEnable(GL11.GL_BLEND);
         drawPageTitleAndNumber(fontRenderer, pageNumber);
         ItemStack result = new ItemStack(item);
         
@@ -64,7 +70,7 @@ public class BookPageRecipe extends BookPageBase {
         Minecraft mc = Minecraft.getMinecraft();
         
         //mc.renderEngine.bindTexture(bookPageTexture);
-        GL11.glColor4f(1, 1, 1, 1);
+        GlStateManager.color(1F, 1F, 1F, 1F);
         //drawTexturedModalRect(0, 0, 0, 0, PAGE_TEXTURE_WIDTH, PAGE_TEXTURE_HEIGHT);
         //drawPageTitleAndNumber(fontRenderer, pageNumber);
         if (validRecipes.size() > 0) {
@@ -74,17 +80,20 @@ public class BookPageRecipe extends BookPageBase {
     }
     
     private void renderRecipe(Minecraft mc, FontRenderer fontRenderer, IRecipe recipe, int x, int y) {
+        GlStateManager.pushAttrib();
         RenderHelper.enableGUIStandardItemLighting();
         //ModRenderHelper.disableLighting();
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        
+        //GL11.glEnable(GL11.GL_BLEND);
+        //GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        //GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        //GL11.glEnable(GL11.GL_DEPTH_TEST);
         
         if (recipe instanceof ShapedRecipes) {
             ShapedRecipes shapedRecipe = (ShapedRecipes) recipe;
             for (int ix = 0; ix < shapedRecipe.recipeWidth; ix++) {
                 for (int iy = 0; iy < shapedRecipe.recipeHeight; iy++) {
+                    //renderItem.renderItemAndEffectIntoGUI(shapedRecipe.getIngredients().get(0), x, y);
                     /*
                     itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.getTextureManager(),
                             shapedRecipe.recipeItems[0], x, y + 10);
@@ -161,6 +170,7 @@ public class BookPageRecipe extends BookPageBase {
         itemRender.renderItemAndEffectIntoGUI(fontRenderer, mc.getTextureManager(),
                 recipe.getRecipeOutput(), x + 50, y + 100);
         GL11.glDisable(GL11.GL_LIGHTING);*/
+        GlStateManager.popAttrib();
     }
     
     public void drawTexturedModalRect(int p_73729_1_, int p_73729_2_, int p_73729_3_, int p_73729_4_, int p_73729_5_, int p_73729_6_) {
