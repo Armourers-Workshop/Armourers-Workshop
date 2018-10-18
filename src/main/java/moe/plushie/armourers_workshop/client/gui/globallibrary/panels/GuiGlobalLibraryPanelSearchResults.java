@@ -50,6 +50,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     protected static int iconScale = 110;
     
     protected String search = null;
+    protected ISkinType skinType = null;
     protected JsonArray[] pageList;
     protected HashSet<Integer> downloadedPageList;
     protected JsonArray jsonCurrentPage;
@@ -65,9 +66,10 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         downloadedPageList = new HashSet<Integer>();
     }
     
-    public void doSearch(String search) {
+    public void doSearch(String search, ISkinType skinType) {
         clearResults();
         this.search = search;
+        this.skinType = skinType;
         if (this.search == null) {
             return;
         }
@@ -76,6 +78,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     
     public void clearResults() {
         search = null;
+        skinType = null;
         pageList = null;
         jsonCurrentPage = null;
         currentPageIndex = 0;
@@ -87,9 +90,10 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
 
     protected void resize() {
         String thisSearch = search;
+        ISkinType thisSkinType = skinType;
         int thisPage = currentPageIndex;
         clearResults();
-        doSearch(thisSearch);
+        doSearch(thisSearch, thisSkinType);
     }
     
     protected void fetchPage(int pageIndex) {
@@ -106,12 +110,17 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
             searchUrl += "&pageSize=" + String.valueOf(skinPanelResults.getIconCount());
             ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
             String searchTypes = "";
-            for (int i = 0; i < skinTypes.size(); i++) {
-                searchTypes += (skinTypes.get(i).getRegistryName());
-                if (i < skinTypes.size() - 1) {
-                    searchTypes += ";";
+            if (skinType == null) {
+                for (int i = 0; i < skinTypes.size(); i++) {
+                    searchTypes += (skinTypes.get(i).getRegistryName());
+                    if (i < skinTypes.size() - 1) {
+                        searchTypes += ";";
+                    }
                 }
+            } else {
+                searchTypes = skinType.getRegistryName();
             }
+
             MultipartForm multipartForm = new MultipartForm(searchUrl);
             multipartForm.addText("searchTypes", searchTypes);
             pageCompletion.submit(new DownloadJsonMultipartForm(multipartForm));
