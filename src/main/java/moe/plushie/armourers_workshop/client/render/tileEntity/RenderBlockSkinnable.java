@@ -64,7 +64,11 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySk
     public void render(TileEntitySkinnable te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         ISkinDescriptor skinPointer = te.getSkinPointer();
         IBlockState state = te.getWorld().getBlockState(te.getPos());
-
+        
+        if (!(state.getBlock() instanceof BlockSkinnable)) {
+            return;
+        }
+        
         if (skinPointer != null) {
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             if (skin != null) {
