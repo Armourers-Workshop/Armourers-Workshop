@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCap
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotDyeBottle;
+import moe.plushie.armourers_workshop.common.inventory.slot.SlotOutfit;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
 import moe.plushie.armourers_workshop.common.items.ItemDyeBottle;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
@@ -17,6 +18,7 @@ import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -26,8 +28,16 @@ public class ContainerSkinWardrobe extends ModContainer {
     private final IWardrobeCap wardrobeCapability;
     private final DyeInventory dyeInventory;
     private int slotsUnlocked;
-    private int skinSlots = 0;
-
+    
+    private int indexStartSkins = 0;
+    private int indexEndSkins = 0;
+    
+    private int indexStartDye = 0;
+    private int indexEndDye = 0;
+    
+    private int indexStartOutfit = 0;
+    private int indexEndOutfit = 0;
+    
     public ContainerSkinWardrobe(InventoryPlayer invPlayer, EntitySkinCapability skinCapability, IWardrobeCap wardrobeCapability) {
         super(invPlayer);
         this.skinCapability = skinCapability;
@@ -56,23 +66,23 @@ public class ContainerSkinWardrobe extends ModContainer {
             for (int i = 0; i < EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE; i++) {
                 if (i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinHead)) {
                     addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHead, headInv, i, 70 + i * 20, 27));
-                    skinSlots += 1;
+                    indexEndSkins += 1;
                 }
                 if (i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinChest)) {
                     addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinChest, chestInv, i, 70 + i * 20, 46));
-                    skinSlots += 1;
+                    indexEndSkins += 1;
                 }
                 if (i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinLegs)) {
                     addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinLegs, legsInv, i, 70 + i * 20, 65));
-                    skinSlots += 1;
+                    indexEndSkins += 1;
                 }
                 if (i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinFeet)) {
                     addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinFeet, feetInv, i, 70 + i * 20, 84));
-                    skinSlots += 1;
+                    indexEndSkins += 1;
                 }
                 if (i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinWings)) {
                     addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinWings, wingInv, i, 70 + i * 20, 103));
-                    skinSlots += 1;
+                    indexEndSkins += 1;
                 }
             }
 
@@ -84,7 +94,7 @@ public class ContainerSkinWardrobe extends ModContainer {
             addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinAxe, axeInv, 0, 170, 122));
             addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShovel, shovelInv, 0, 190, 122));
             addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHoe, hoeInv, 0, 210, 122));
-            skinSlots += 7;
+            indexEndSkins += 7;
             
         } else {
             ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
@@ -95,20 +105,31 @@ public class ContainerSkinWardrobe extends ModContainer {
                     } else {
                         addSlotToContainer(new SlotSkin(skinTypes[i], skinCapability.getSkinInventoryContainer().getSkinTypeInv(skinTypes[i]), j, 70 + (i - 5) * 20, 122 + j * 19));
                     }
-                    skinSlots++;
+                    indexEndSkins++;
                 }
             }
         }
 
+        indexStartDye = indexEndSkins;
+        indexEndDye = indexEndSkins;
         for (int i = 0; i < 8; i++) {
             addSlotToContainer(new SlotDyeBottle(dyeInventory, i, 70 + 20 * i, 27));
+            indexEndDye += 1;
+        }
+        
+        indexStartOutfit = indexEndDye;
+        indexEndOutfit = indexEndDye;
+        IInventory invOutfit = skinCapability.getInventoryOutfits();
+        for (int i = 0; i < invOutfit.getSizeInventory(); i++) {
+            addSlotToContainer(new SlotOutfit(invOutfit, i, 70 + 20 * i, 27));
+            indexEndOutfit += 1;
         }
 
         addPlayerSlots(38, 158);
     }
 
     public int getSkinSlots() {
-        return skinSlots;
+        return indexEndSkins;
     }
 
     @Override
@@ -127,7 +148,7 @@ public class ContainerSkinWardrobe extends ModContainer {
             
             // Putting skin in inv
             if (stack.getItem() instanceof ItemSkin & SkinNBTHelper.stackHasSkinData(stack)) {
-                for (int i = 0; i < skinSlots; i++) {
+                for (int i = indexStartSkins; i < indexEndSkins; i++) {
                     Slot targetSlot = getSlot(i);
                     if (targetSlot.isItemValid(stack)) {
                         if (this.mergeItemStack(stack, i, i + 1, false)) {
@@ -137,15 +158,29 @@ public class ContainerSkinWardrobe extends ModContainer {
                     }
                 }
             }
+            
             if (stack.getItem() == ModItems.dyeBottle) {
                 if (((ItemDyeBottle)stack.getItem()).getToolHasColour(stack)) {
-                    for (int i = skinSlots; i < skinSlots + 8; i++) {
+                    for (int i = indexStartDye; i < indexEndDye; i++) {
                         Slot targetSlot = getSlot(i);
                         if (targetSlot.isItemValid(stack)) {
                             if (this.mergeItemStack(stack, i, i + 1, false)) {
                                 slotted = true;
                                 break;
                             }
+                        }
+                    }
+                }
+            }
+            
+            // TODO Add check for valid outfit.
+            if (stack.getItem() == ModItems.outfit) {
+                for (int i = indexStartOutfit; i < indexEndOutfit; i++) {
+                    Slot targetSlot = getSlot(i);
+                    if (targetSlot.isItemValid(stack)) {
+                        if (this.mergeItemStack(stack, i, i + 1, false)) {
+                            slotted = true;
+                            break;
                         }
                     }
                 }

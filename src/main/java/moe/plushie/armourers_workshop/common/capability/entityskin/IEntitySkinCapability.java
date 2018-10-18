@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.inventory.SkinInventoryContainer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 public interface IEntitySkinCapability {
@@ -66,6 +67,8 @@ public interface IEntitySkinCapability {
     
     //TODO Change this to use CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
     public SkinInventoryContainer getSkinInventoryContainer();
+    
+    public IInventory getInventoryOutfits();
     
     public void clear();
     

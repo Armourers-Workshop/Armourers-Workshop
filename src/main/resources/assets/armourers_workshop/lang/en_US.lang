@@ -111,6 +111,7 @@ item.armourers_workshop:armour-container-head.name=Head Armour Container
 item.armourers_workshop:armour-container-chest.name=Chest Armour Container
 item.armourers_workshop:armour-container-legs.name=Legs Armour Container
 item.armourers_workshop:armour-container-feet.name=Feet Armour Container
+item.armourers_workshop:outfit.name=Outfit
 
 
 # Item flavour text

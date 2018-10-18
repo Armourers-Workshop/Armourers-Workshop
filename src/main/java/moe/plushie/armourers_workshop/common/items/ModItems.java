@@ -54,6 +54,7 @@ public class ModItems {
     public static Item skinUnlock;
     public static Item linkingTool;
     public static Item giftSack;
+    public static Item outfit;
     
     public static Item armourContainerItem;
     public static Item[] armourContainer;
@@ -88,6 +89,7 @@ public class ModItems {
         skinUnlock = new ItemSkinUnlock();
         linkingTool = new ItemLinkingTool();
         giftSack = new ItemGiftSack();
+        outfit = new ItemOutfit();
         
         armourContainerItem = new ItemArmourContainerItem();
         armourContainer = new Item[4];

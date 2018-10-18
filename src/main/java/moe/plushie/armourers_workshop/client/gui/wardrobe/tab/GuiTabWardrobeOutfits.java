@@ -7,9 +7,12 @@ import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
+import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -39,6 +42,14 @@ public class GuiTabWardrobeOutfits extends GuiTabPanel {
         
         //Bottom half of GUI. (player inventory)
         this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
+        
+        int sloImageSize = 18;
+        GuiContainer guiContainer = (GuiContainer) parent;
+        ContainerSkinWardrobe skinWardrobe = (ContainerSkinWardrobe) guiContainer.inventorySlots;
+        for (int i = skinWardrobe.getSkinSlots() + 8; i <  skinWardrobe.getSkinSlots() + 12; i++) {
+            Slot slot = (Slot) skinWardrobe.inventorySlots.get(i);
+            this.drawTexturedModalRect(this.x + slot.xPos - 1,  this.y + slot.yPos - 1, 238, 194, sloImageSize, sloImageSize);
+        }
     }
     
     @Override

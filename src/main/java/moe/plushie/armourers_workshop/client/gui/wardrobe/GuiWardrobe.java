@@ -46,6 +46,7 @@ public class GuiWardrobe extends GuiTabbed {
     private static final String GUI_NAME = "wardrobe";
     
     private final GuiTabWardrobeSkins tabSkins;
+    private final GuiTabWardrobeOutfits tabOutfits;
     //private final GuiTabWardrobeDisplaySettings tabDisplaySettings;
     //private final GuiTabWardrobeColourSettings tabColourSettings;
     private final GuiTabWardrobeDyes tabDyes;
@@ -72,8 +73,9 @@ public class GuiWardrobe extends GuiTabbed {
         tabSkins = new GuiTabWardrobeSkins(tabList.size(), this);
         tabList.add(tabSkins);
         
+        tabOutfits = new GuiTabWardrobeOutfits(tabList.size(), this, player, skinCapability, wardrobeCapability);
+        tabList.add(tabOutfits);
         
-        tabList.add(new GuiTabWardrobeOutfits(tabList.size(), this, player, skinCapability, wardrobeCapability));
         if (wardrobeCapability instanceof IPlayerWardrobeCap) {
             tabList.add(new GuiTabWardrobeDisplaySettings(tabList.size(), this, player, skinCapability, (IPlayerWardrobeCap) wardrobeCapability));
         }
@@ -114,11 +116,21 @@ public class GuiWardrobe extends GuiTabbed {
         }
     }
     
+    private void setSlotVisibilityOutfits(boolean visible) {
+        for (int i = ((ContainerSkinWardrobe)inventorySlots).getSkinSlots() + 8; i < ((ContainerSkinWardrobe)inventorySlots).getSkinSlots() + 12; i++) {
+            Object slot = inventorySlots.inventorySlots.get(i);
+            if (slot != null && slot instanceof SlotHidable) {
+                ((SlotHidable)slot).setVisible(visible);
+            }
+        }
+    }
+    
     @Override
     protected void tabChanged() {
         super.tabChanged();
         setSlotVisibilitySkins(activeTab == tabSkins.getTabId());
         setSlotVisibilityDyes(activeTab == tabDyes.getTabId());
+        setSlotVisibilityOutfits(activeTab == tabOutfits.getTabId());
     }
     
     @Override
