@@ -389,7 +389,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             int skinId = skinJson.get("id").getAsInt();
             String idString = String.format ("%04d", skinId);
             String skinName = skinJson.get("name").getAsString();
-            File path = new File(SkinIOUtils.getSkinLibraryDirectory(), "downloads/");
+            File path = new File(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), "downloads/");
             target = new File(path, SkinIOUtils.makeFileNameValid(idString + " - " + skinName + ".armour"));
             if (!path.exists()) {
                 path.mkdirs();

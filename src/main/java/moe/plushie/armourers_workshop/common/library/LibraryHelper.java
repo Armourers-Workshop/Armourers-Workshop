@@ -7,6 +7,7 @@ import java.util.Collections;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.Level;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
@@ -23,7 +24,7 @@ public final class LibraryHelper {
             return fileList;
         }
         
-        File libraryDir = SkinIOUtils.getSkinLibraryDirectory();
+        File libraryDir = ArmourersWorkshop.getProxy().getSkinLibraryDirectory();
         
         
         File[] templateFiles;
@@ -50,7 +51,7 @@ public final class LibraryHelper {
                     
                     String name = templateFiles[i].getName();
                     String path = templateFiles[i].getParent() + "/";
-                    path = path.replace(SkinIOUtils.getSkinLibraryDirectory().getPath(), "");
+                    path = path.replace(ArmourersWorkshop.getProxy().getSkinLibraryDirectory().getPath(), "");
                     path = path.replace("\\", "/");
                     
                     if (!name.equals("private")) {

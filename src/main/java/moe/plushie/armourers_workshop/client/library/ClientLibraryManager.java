@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.client.library;
 import java.io.File;
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.ILibraryCallback;
 import moe.plushie.armourers_workshop.common.library.ILibraryManager;
@@ -11,14 +12,13 @@ import moe.plushie.armourers_workshop.common.library.LibraryFileList;
 import moe.plushie.armourers_workshop.common.library.LibraryFileType;
 import moe.plushie.armourers_workshop.common.library.LibraryHelper;
 import moe.plushie.armourers_workshop.utils.ModLogger;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 @SideOnly(Side.CLIENT)
 public class ClientLibraryManager implements ILibraryManager {
@@ -142,7 +142,7 @@ public class ClientLibraryManager implements ILibraryManager {
         public void run() {
             long startTime = System.currentTimeMillis();
             ModLogger.log("Loading library skins");
-            File directory = SkinIOUtils.getSkinLibraryDirectory();
+            File directory = ArmourersWorkshop.getProxy().getSkinLibraryDirectory();
             ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory, true);
             libraryManager.setFileList(fileList, LibraryFileType.LOCAL);
             ModLogger.log(String.format("Finished loading %d client library skins in %d ms", libraryManager.clientFiles.getFileCount(), System.currentTimeMillis() - startTime));

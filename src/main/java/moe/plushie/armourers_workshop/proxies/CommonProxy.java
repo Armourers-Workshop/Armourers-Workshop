@@ -55,6 +55,10 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 @Mod.EventBusSubscriber(modid = LibModInfo.ID)
 public class CommonProxy implements ILibraryCallback {
     
+    private static File instanceDirectory;
+    private static File modDirectory;
+    private static File skinLibraryDirectory;
+    
     private static MinecraftServer server;
     private static ModItems modItems;
     private static ModBlocks modBlocks;
@@ -67,13 +71,22 @@ public class CommonProxy implements ILibraryCallback {
         if (!configDir.exists()) {
             configDir.mkdirs();
         }
+        instanceDirectory = event.getSuggestedConfigurationFile().getParentFile().getParentFile();
+        modDirectory = new File(instanceDirectory, LibModInfo.ID);
+        if (!modDirectory.exists()) {
+            modDirectory.mkdir();
+        }
+        skinLibraryDirectory = new File(modDirectory, "skin-library");
+        if (!skinLibraryDirectory.exists()) {
+            skinLibraryDirectory.mkdir();
+        }
+        
         ModAddonManager.preInit();
         ConfigHandler.init(new File(configDir, "common.cfg"));
         ConfigHandlerOverrides.init(new File(configDir, "overrides.cfg"));
         
         EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "seat"), Seat.class, "seat", 1, ArmourersWorkshop.instance, 10, 20, false);
         
-        SkinIOUtils.makeLibraryDirectory();
         SkinExtractor.extractSkins();
         
         SkinTypeRegistry.init();
@@ -148,7 +161,7 @@ public class CommonProxy implements ILibraryCallback {
         switch (command) {
         case DELETE:
             if (!publicList) {
-                File dir = new File(SkinIOUtils.getSkinLibraryDirectory(), file.filePath);
+                File dir = new File(getSkinLibraryDirectory(), file.filePath);
                 if (file.isDirectory()) {
                     dir = new File(dir, file.fileName + "/");
                 } else {
@@ -183,7 +196,7 @@ public class CommonProxy implements ILibraryCallback {
             break;
         case NEW_FOLDER:
             if (!publicList) {
-                File dir = new File(SkinIOUtils.getSkinLibraryDirectory(), file.filePath);
+                File dir = new File(getSkinLibraryDirectory(), file.filePath);
                 dir = new File(dir, file.fileName);
                 if (!SkinIOUtils.isInLibraryDir(dir)) {
                     ModLogger.log(Level.WARN, String.format("Player '%s' tried to make the folder '%s' that is outside the library directory.", player.getGameProfile().toString(), dir.getAbsolutePath()));
@@ -226,6 +239,22 @@ public class CommonProxy implements ILibraryCallback {
     
     public ILibraryManager getLibraryManager() {
         return libraryManager;
+    }
+    
+    public static File getInstanceDirectory() {
+        return instanceDirectory;
+    }
+    
+    public static File getModDirectory() {
+        return modDirectory;
+    }
+    
+    public File getSkinLibraryDirectory() {
+        return skinLibraryDirectory;
+    }
+    
+    public static File getGlobalSkinDatabaseDirectory() {
+        return new File(modDirectory, "global-skin-database");
     }
     
     @SubscribeEvent

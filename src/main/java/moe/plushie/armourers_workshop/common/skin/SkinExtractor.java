@@ -8,9 +8,9 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.utils.ModLogger;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 
 /**
  * Extracts skins from the jar file and places them into the library folder.
@@ -83,7 +83,7 @@ public final class SkinExtractor {
         InputStream input = null;
         FileOutputStream output = null;
         
-        File outputDir = new File(SkinIOUtils.getSkinLibraryDirectory(), "official");
+        File outputDir = new File(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), "official");
         
         if (!outputDir.exists()) {
             outputDir.mkdirs();

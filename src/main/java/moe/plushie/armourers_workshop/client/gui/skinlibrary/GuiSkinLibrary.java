@@ -461,7 +461,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                 GuiDialogNewFolder newFolderDialog = (GuiDialogNewFolder) dialog;
                 
                 if (fileSwitchType == LibraryFileType.LOCAL) {
-                    File dir = new File(SkinIOUtils.getSkinLibraryDirectory(), currentFolder);
+                    File dir = new File(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), currentFolder);
                     dir = new File(dir, newFolderDialog.getFolderName());
                     if (!dir.exists()) {
                         dir.mkdir();
@@ -482,7 +482,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                 String name = deleteDialog.getFileName();
                 
                 if (fileSwitchType == LibraryFileType.LOCAL) {
-                    File dir = new File(SkinIOUtils.getSkinLibraryDirectory(), currentFolder);
+                    File dir = new File(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), currentFolder);
                     
                     if (deleteDialog.isFolder()) {
                         dir = new File(dir, name + "/");

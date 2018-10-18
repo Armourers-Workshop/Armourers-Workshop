@@ -16,10 +16,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.common.exception.NewerFileVersionException;
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
@@ -35,7 +35,7 @@ public final class SkinIOUtils {
     public static boolean saveSkinFromFileName(String filePath, String fileName, Skin skin) {
         filePath = makeFilePathValid(filePath);
         fileName = makeFileNameValid(fileName);
-        File file = new File(getSkinLibraryDirectory(), filePath + fileName);
+        File file = new File(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), filePath + fileName);
         return saveSkinToFile(file, skin);
     }
     
@@ -54,7 +54,7 @@ public final class SkinIOUtils {
     }
     
     public static boolean isInLibraryDir(File file) {
-        return isInSubDirectory(file, getSkinLibraryDirectory());
+        return isInSubDirectory(file, ArmourersWorkshop.getProxy().getSkinLibraryDirectory());
     }
     
     public static boolean saveSkinToFile(File file, Skin skin) {
@@ -88,8 +88,8 @@ public final class SkinIOUtils {
     }
     
     public static Skin loadSkinFromFileName(String fileName) {
-        File file = new File(getSkinLibraryDirectory(), fileName);
-        if (!isInSubDirectory(getSkinLibraryDirectory(), file)) {
+        File file = new File(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), fileName);
+        if (!isInSubDirectory(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), file)) {
             ModLogger.log(Level.WARN, "Player tried to load a file in a invalid location.");
             ModLogger.log(Level.WARN, String.format("The file was: %s", file.getAbsolutePath().replace("%", "")));
             return null;
@@ -202,15 +202,8 @@ public final class SkinIOUtils {
         }
     }
     
-    public static void makeLibraryDirectory() {
-        File directory = getSkinLibraryDirectory();
-        if (!directory.exists()) {
-            directory.mkdir();
-        }
-    }
-    
     public static void copyGlobalDatabase() {
-        File dirGlobalDatabase = getGlobalSkinDatabaseDirectory();
+        File dirGlobalDatabase = ArmourersWorkshop.getInstance().getProxy().getGlobalSkinDatabaseDirectory();
         if (dirGlobalDatabase.exists()) {
             File dirWorldDatabase = getSkinDatabaseDirectory();
             File[] globalFiles = dirGlobalDatabase.listFiles();
@@ -230,9 +223,9 @@ public final class SkinIOUtils {
     }
     
     private static void createGlobalDatabaseReadme() {
-        File globalDatabaseReadme = new File(getGlobalSkinDatabaseDirectory(), "readme.txt");
-        if (!getGlobalSkinDatabaseDirectory().exists()) {
-            getGlobalSkinDatabaseDirectory().mkdirs();
+        File globalDatabaseReadme = new File(ArmourersWorkshop.getInstance().getProxy().getGlobalSkinDatabaseDirectory(), "readme.txt");
+        if (!ArmourersWorkshop.getInstance().getProxy().getGlobalSkinDatabaseDirectory().exists()) {
+            ArmourersWorkshop.getInstance().getProxy().getGlobalSkinDatabaseDirectory().mkdirs();
         }
         if (!globalDatabaseReadme.exists()) {
             DataOutputStream outputStream = null;
@@ -253,14 +246,6 @@ public final class SkinIOUtils {
     
     public static File getSkinDatabaseDirectory() {
         return new File(DimensionManager.getCurrentSaveRootDirectory(), "skin-database");
-    }
-    
-    public static File getGlobalSkinDatabaseDirectory() {
-        return new File(System.getProperty("user.dir"), "global-skin-database");
-    }
-    
-    public static File getSkinLibraryDirectory() {
-        return new File(System.getProperty("user.dir"), LibModInfo.ID);
     }
     
     public static boolean createDirectory(File file) {

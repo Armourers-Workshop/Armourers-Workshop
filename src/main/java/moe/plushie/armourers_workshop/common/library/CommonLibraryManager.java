@@ -7,9 +7,9 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.Level;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.utils.ModLogger;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -50,7 +50,7 @@ public class CommonLibraryManager implements ILibraryManager {
     }
     
     private int loadPublicFiles() {
-        File directory = SkinIOUtils.getSkinLibraryDirectory();
+        File directory = ArmourersWorkshop.getProxy().getSkinLibraryDirectory();
         ArrayList<LibraryFile> fileList = LibraryHelper.getSkinFilesInDirectory(directory, true);
         setFileList(fileList, LibraryFileType.SERVER_PUBLIC);
         return fileList.size();
@@ -58,7 +58,7 @@ public class CommonLibraryManager implements ILibraryManager {
     
     private int loadPrivateFiles() {
         int count = 0;
-        File directory = SkinIOUtils.getSkinLibraryDirectory();
+        File directory = ArmourersWorkshop.getProxy().getSkinLibraryDirectory();
         directory = new File(directory, "private");
         if (!directory.exists()) {
             directory.mkdirs();
