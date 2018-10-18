@@ -197,7 +197,7 @@ public class ClientProxy extends CommonProxy {
         super.postInit(event);
         ModAddonManager.initRenderers();
         EntitySkinRenderHandler.INSTANCE.initRenderer();
-        if (HolidayHelper.valentines.isHolidayActive()) {
+        if (HolidayHelper.VALENTINES.isHolidayActive()) {
             enableValentinesClouds();
         }
         

@@ -56,7 +56,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         super(LibBlockNames.MANNEQUIN, Material.ROCK, SoundType.METAL, true);
         setLightOpacity(0);
         //setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
-        isValentins = HolidayHelper.valentines.isHolidayActive();
+        isValentins = HolidayHelper.VALENTINES.isHolidayActive();
         setSortPriority(199);
     }
     

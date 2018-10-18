@@ -64,8 +64,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
     public void render(TileEntityMannequin te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         mc.profiler.startSection("armourersMannequin");
         mc.profiler.startSection("holidayCheck");
-        isHalloweenSeason = HolidayHelper.halloween_season.isHolidayActive();
-        isHalloween = HolidayHelper.halloween.isHolidayActive();
+        isHalloweenSeason = HolidayHelper.HALLOWEEN_SEASON.isHolidayActive();
+        isHalloween = HolidayHelper.HALLOWEEN.isHolidayActive();
         //MannequinFakePlayer fakePlayer = te.getFakePlayer();
         
         mc.profiler.endStartSection("move");

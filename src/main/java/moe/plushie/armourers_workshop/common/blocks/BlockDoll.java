@@ -34,7 +34,7 @@ public class BlockDoll extends AbstractModBlockContainer {
         super(LibBlockNames.DOLL, Material.ROCK, SoundType.METAL, !ConfigHandler.hideDollFromCreativeTabs);
         setLightOpacity(0);
         //setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
-        isValentins = HolidayHelper.valentines.isHolidayActive();
+        isValentins = HolidayHelper.VALENTINES.isHolidayActive();
         setSortPriority(198);
     }
     

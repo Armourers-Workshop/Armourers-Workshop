@@ -40,9 +40,9 @@ public class ItemGiftSack extends AbstractModItem {
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
         if (this.isInCreativeTab(tab)) {
             super.getSubItems(tab, items);
-            items.add(createStackForHoliday(HolidayHelper.christmas_season));
-            items.add(createStackForHoliday(HolidayHelper.halloween_season));
-            items.add(createStackForHoliday(HolidayHelper.valentines));
+            items.add(createStackForHoliday(HolidayHelper.CHRISTMAS_SEASON));
+            items.add(createStackForHoliday(HolidayHelper.HALLOWEEN_SEASON));
+            items.add(createStackForHoliday(HolidayHelper.VALENTINES));
         }
     }
     
@@ -84,21 +84,21 @@ public class ItemGiftSack extends AbstractModItem {
     
     public ItemStack createStackForHoliday(Holiday holiday) {
         ItemStack stack = ItemStack.EMPTY;
-        if (holiday == HolidayHelper.christmas_season) {
+        if (holiday == HolidayHelper.CHRISTMAS_SEASON) {
             stack = new ItemStack(this);
             stack.setTagCompound(new NBTTagCompound());
             stack.getTagCompound().setInteger(TAG_COLOUR_1, 0x990000);
             stack.getTagCompound().setInteger(TAG_COLOUR_2, 0x267F00);
             NBTHelper.writeStackToNBT(stack.getTagCompound(), TAG_GIFT_ITEM, new ItemStack(ModBlocks.doll));
         }
-        if (holiday == HolidayHelper.halloween_season) {
+        if (holiday == HolidayHelper.HALLOWEEN_SEASON) {
             stack = new ItemStack(this);
             stack.setTagCompound(new NBTTagCompound());
             stack.getTagCompound().setInteger(TAG_COLOUR_1, 0xE05900);
             stack.getTagCompound().setInteger(TAG_COLOUR_2, 0xEEEEEE);
             NBTHelper.writeStackToNBT(stack.getTagCompound(), TAG_GIFT_ITEM, new ItemStack(Blocks.PUMPKIN));
         }
-        if (holiday == HolidayHelper.valentines) {
+        if (holiday == HolidayHelper.VALENTINES) {
             stack = new ItemStack(this);
             stack.setTagCompound(new NBTTagCompound());
             stack.getTagCompound().setInteger(TAG_COLOUR_1, 0xE5A2E5);
