@@ -138,6 +138,8 @@ public class CommandSetSkin extends ModCommand {
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
         if (skinCapability != null) {
             skinCapability.setSkinDescriptor(skinIdentifier.getSkinType(), slotNum, skinDescriptor);
+            skinCapability.syncToPlayer(player);
+            skinCapability.syncToAllTracking();
         }
     }
     

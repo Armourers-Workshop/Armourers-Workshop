@@ -39,6 +39,8 @@ public class CommandClearSkins extends ModCommand {
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
         if (skinCapability != null) {
             skinCapability.clear();
+            skinCapability.syncToPlayer(player);
+            skinCapability.syncToAllTracking();
         }
     }
 }

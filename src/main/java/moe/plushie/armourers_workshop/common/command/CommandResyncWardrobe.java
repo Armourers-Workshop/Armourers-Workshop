@@ -38,6 +38,7 @@ public class CommandResyncWardrobe extends ModCommand {
         }
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
         if (skinCapability != null) {
+            skinCapability.syncToPlayer(player);
             skinCapability.syncToAllTracking();
         }
     }

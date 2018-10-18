@@ -63,6 +63,7 @@ public class CommandSetWardrobeOption extends ModCommand {
             if (subOptionIndex < 4) {
                 EntityEquipmentSlot slot = EntityEquipmentSlot.values()[subOptionIndex + 2];
                 wardrobeCap.setArmourOverride(slot, !value);
+                wardrobeCap.syncToPlayer(player);
                 wardrobeCap.syncToAllTracking();
             }
         }
