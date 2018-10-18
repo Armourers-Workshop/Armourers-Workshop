@@ -12,7 +12,7 @@
 #
 # Please also send your Minecraft username/uuid so I can add you to the credits.
 #
-# The following color codes can be added to the start of text to colur it.
+# The following colour codes can be added to the start of text to colour it.
 # &0 Black
 # &1 Dark Blue
 # &2 Dark Green
@@ -39,8 +39,8 @@
 
 
 # Block names
-tile.armourers_workshop:armourer.name=Armorer
-tile.armourers_workshop:miniArmourer.name=Mini Armorer - (WIP)
+tile.armourers_workshop:armourer.name=Armourer
+tile.armourers_workshop:miniArmourer.name=Mini Armourer - (WIP)
 tile.armourers_workshop:skin-library.0.name=Skin Library
 tile.armourers_workshop:skin-library.1.name=Skin Library - (Creative)
 tile.armourers_workshop:global-skin-library.name=Global Skin Library
@@ -48,7 +48,7 @@ tile.armourers_workshop:skin-cube.name=Skin Cube
 tile.armourers_workshop:skin-cube-glowing.name=Skin Cube (Glowing)
 tile.armourers_workshop:skin-cube-glass.name=Glass Skin Cube
 tile.armourers_workshop:skin-cube-glass-glowing.name=Glass Skin Cube (Glowing)
-tile.armourers_workshop:colour-mixer.name=Color Mixer
+tile.armourers_workshop:colour-mixer.name=Colour Mixer
 tile.armourers_workshop:mannequin.name=Mannequin
 tile.armourers_workshop:doll.name=Doll
 tile.armourers_workshop:skinning-table.name=Skinning Table
@@ -66,7 +66,7 @@ tile.armourers_workshop:skin-cube.flavour=Main building block for custom equipme
 tile.armourers_workshop:skin-cube-glowing.flavour=Glow in the dark equipment cubes!%n(Paintable)
 tile.armourers_workshop:skin-cube-glass.flavour=Transparent equipment cube.%n(Paintable)
 tile.armourers_workshop:skin-cube-glass-glowing.flavour=Glowing transparent equipment cube!%n(Paintable)
-tile.armourers_workshop:colour-mixer.flavour=Mix up colors to paint your equipment with.%nSneak right click with tool to quickly paint.
+tile.armourers_workshop:colour-mixer.flavour=Mix up colours to paint your equipment with.%nSneak right click with tool to quickly paint.
 tile.armourers_workshop:mannequin.flavour=Show your equipment off with a creepy mannequin!%nRight click with a name tag to set a skin.
 tile.armourers_workshop:doll.flavour=Mini mannequin!
 tile.armourers_workshop:skinning-table.flavour=Apply and remove skins from items.
@@ -80,10 +80,10 @@ item.armourers_workshop:Skin.name=Skin
 # Painting tools
 item.armourers_workshop:paintbrush.name=Paintbrush
 item.armourers_workshop:paint-roller.name=Paint Roller
-item.armourers_workshop:colour-picker.name=Color Picker
+item.armourers_workshop:colour-picker.name=Colour Picker
 item.armourers_workshop:burn-tool.name=Burn Tool
 item.armourers_workshop:dodge-tool.name=Dodge Tool
-item.armourers_workshop:colour-noise-tool.name=Color Noise Tool
+item.armourers_workshop:colour-noise-tool.name=Colour Noise Tool
 item.armourers_workshop:shade-noise-tool.name=Shade Noise Tool
 item.armourers_workshop:hue-tool.name=Hue Tool
 item.armourers_workshop:block-marker.name=Block Marker
@@ -118,17 +118,17 @@ item.armourers_workshop:outfit.name=Outfit
 item.armourers_workshop:gift-sack.flavour=A Gift from RiskyKen
 item.armourers_workshop:paintbrush.flavour=Paints a single block.
 item.armourers_workshop:paint-roller.flavour=Paints blocks in a large area.
-item.armourers_workshop:colour-picker.flavour=Used to copy a blocks color.
+item.armourers_workshop:colour-picker.flavour=Used to copy a blocks colour.
 item.armourers_workshop:burn-tool.flavour=Makes a block darker.
 item.armourers_workshop:dodge-tool.flavour=Makes a block lighter.
-item.armourers_workshop:colour-noise-tool.flavour=Applies random color noise to a block.
+item.armourers_workshop:colour-noise-tool.flavour=Applies random colour noise to a block.
 item.armourers_workshop:shade-noise-tool.flavour=Applies random shading to a block.
 item.armourers_workshop:mannequin-tool.flavour=Save and load mannequin rotations.%nRight click to apply setting.%nSneak right click to save settings.
 item.armourers_workshop:guide-book.flavour=Your guide to Armourer's Workshop.
-item.armourers_workshop:armour-container.flavour=Creative mode only item for map developers.%nAllows armor skin to placed on NPC's.%nUse in skinning table to apply skin.
+item.armourers_workshop:armour-container.flavour=Creative mode only item for map developers.%nAllows armour skin to placed on NPC's.%nUse in skinning table to apply skin.
 item.armourers_workshop:wand-of-style.flavour=Allows skins to be placed on NPCs.
 item.armourers_workshop:soap.flavour=Use in the Skinning Table to clear an items skin.
-item.armourers_workshop:hue-tool.flavour=Changes the color of a block%nwithout affecting the shading.
+item.armourers_workshop:hue-tool.flavour=Changes the colour of a block%nwithout affecting the shading.
 item.armourers_workshop:block-marker.flavour=Creates a marker on an equipment cube.%nOnly use with skins that need marker blocks.
 item.armourers_workshop:dye-bottle.flavour=Used in the dye table to dye skins.
 item.armourers_workshop:armourers-hammer.flavour=Used to rotate blocks.
@@ -142,7 +142,7 @@ item.armourers_workshop:linking-tool.flavour=Use to link usable blocks to block 
 
 # Rollover Text
 item.armourers_workshop:rollover.intensity=&6Intensity:&7 %s
-item.armourers_workshop:rollover.colour=&6Color:&7 %s
+item.armourers_workshop:rollover.colour=&6Colour:&7 %s
 item.armourers_workshop:rollover.hex=&6Hex:&7 %s
 item.armourers_workshop:rollover.paintType=&6Paint Type:&7 %s
 item.armourers_workshop:rollover.radius=&6Radius:&7 %d*%d*%d
@@ -266,7 +266,7 @@ movmentType.armourers_workshop:linear=Linear
 
 
 # Inventory names
-inventory.armourers_workshop:colour-mixer.name=Color Mixer
+inventory.armourers_workshop:colour-mixer.name=Colour Mixer
 inventory.armourers_workshop:armourer.name=Armourer
 inventory.armourers_workshop:skin-library0.name=Skin Library
 inventory.armourers_workshop:skin-library1.name=Skin Library - (Creative)
@@ -274,7 +274,7 @@ inventory.armourers_workshop:global-skin-library.name=Global Skin Library
 inventory.armourers_workshop:wardrobe.name=Wardrobe
 inventory.armourers_workshop:mannequin.name=Mannequin
 inventory.armourers_workshop:doll.name=Doll
-inventory.armourers_workshop:miniArmourer.name=Mini Armorer - (WIP)
+inventory.armourers_workshop:miniArmourer.name=Mini Armourer - (WIP)
 inventory.armourers_workshop:skinning-table.name=Skinning Table
 inventory.armourers_workshop:dye-table.name=Dye Table
 inventory.armourers_workshop:skinnable.name=Skinnable Block
@@ -370,7 +370,7 @@ inventory.armourers_workshop:armourer.dialog.copy.desPart=Destination Part:
 inventory.armourers_workshop:armourer.dialog.copy.mirror=Mirror?
 
 
-# Color Mixer
+# Colour Mixer
 inventory.armourers_workshop:colour-mixer.label.hue=Hue
 inventory.armourers_workshop:colour-mixer.label.saturation=Saturation
 inventory.armourers_workshop:colour-mixer.label.brightness=Brightness
@@ -383,27 +383,27 @@ inventory.armourers_workshop:colour-mixer.label.paintType=Paint Type
 inventory.armourers_workshop:wardrobe.tab.skins=Skins
 inventory.armourers_workshop:wardrobe.tab.outfits=Outfits
 inventory.armourers_workshop:wardrobe.tab.displaySettings=Display Settings
-inventory.armourers_workshop:wardrobe.tab.colourSettings=Color Settings
+inventory.armourers_workshop:wardrobe.tab.colourSettings=Colour Settings
 inventory.armourers_workshop:wardrobe.tab.dyes=Dyes
 
-inventory.armourers_workshop:wardrobe.label.skinColour=Skin Color
-inventory.armourers_workshop:wardrobe.label.hairColour=Hair Color
-inventory.armourers_workshop:wardrobe.label.eyeColour=Eye Color
-inventory.armourers_workshop:wardrobe.label.miscColour=Misc. Color
+inventory.armourers_workshop:wardrobe.label.skinColour=Skin Colour
+inventory.armourers_workshop:wardrobe.label.hairColour=Hair Colour
+inventory.armourers_workshop:wardrobe.label.eyeColour=Eye Colour
+inventory.armourers_workshop:wardrobe.label.miscColour=Misc. Colour
 
-inventory.armourers_workshop:wardrobe.selectSkin=Pick Skin Color
-inventory.armourers_workshop:wardrobe.autoSkin=Auto Skin Color
-inventory.armourers_workshop:wardrobe.selectHair=Pick Hair Color
-inventory.armourers_workshop:wardrobe.autoHair=Auto Hair Color
-inventory.armourers_workshop:wardrobe.selectEye=Pick Eye Color
-inventory.armourers_workshop:wardrobe.autoEye=Auto Eye Color
-inventory.armourers_workshop:wardrobe.selectAcc=Pick Accessory Color
+inventory.armourers_workshop:wardrobe.selectSkin=Pick Skin Colour
+inventory.armourers_workshop:wardrobe.autoSkin=Auto Skin Colour
+inventory.armourers_workshop:wardrobe.selectHair=Pick Hair Colour
+inventory.armourers_workshop:wardrobe.autoHair=Auto Hair Colour
+inventory.armourers_workshop:wardrobe.selectEye=Pick Eye Colour
+inventory.armourers_workshop:wardrobe.autoEye=Auto Eye Colour
+inventory.armourers_workshop:wardrobe.selectAcc=Pick Accessory Colour
 
 inventory.armourers_workshop:wardrobe.label.skinOverride=Skin Override
-inventory.armourers_workshop:wardrobe.renderHeadArmour=Render head armor?
-inventory.armourers_workshop:wardrobe.renderChestArmour=Render chest armor?
-inventory.armourers_workshop:wardrobe.renderLegArmour=Render leg armor?
-inventory.armourers_workshop:wardrobe.renderFootArmour=Render foot armor?
+inventory.armourers_workshop:wardrobe.renderHeadArmour=Render head armour?
+inventory.armourers_workshop:wardrobe.renderChestArmour=Render chest armour?
+inventory.armourers_workshop:wardrobe.renderLegArmour=Render leg armour?
+inventory.armourers_workshop:wardrobe.renderFootArmour=Render foot armour?
 
 
 # Mannequin
@@ -428,7 +428,7 @@ inventory.armourers_workshop:mannequin.autoHair=Auto Hair
 inventory.armourers_workshop:mannequin.tab.inventory=Inventory
 inventory.armourers_workshop:mannequin.tab.rotations=Rotations
 inventory.armourers_workshop:mannequin.tab.offset=Offset
-inventory.armourers_workshop:mannequin.tab.skinAndHair=Skin & Hair Color
+inventory.armourers_workshop:mannequin.tab.skinAndHair=Skin & Hair Colour
 inventory.armourers_workshop:mannequin.tab.name=Name
 inventory.armourers_workshop:mannequin.tab.extraRenders=Extra Renders
 
@@ -439,7 +439,7 @@ inventory.armourers_workshop:global-skin-library.invalidJava=[Java %d Update %d]
 
 # Global Skin Library (Header)
 inventory.armourers_workshop:global-skin-library.header.home=Home
-inventory.armourers_workshop:global-skin-library.header.favourites=Favorites
+inventory.armourers_workshop:global-skin-library.header.favourites=Favourites
 inventory.armourers_workshop:global-skin-library.header.myFiles=My Files
 inventory.armourers_workshop:global-skin-library.header.uploadSkin=Upload Skin
 inventory.armourers_workshop:global-skin-library.header.uploadSkinBan=You are banned from upload skins
@@ -612,9 +612,9 @@ book.armourers_workshop:guideBook.introduction.paragraph1=Note: This book is sti
 book.armourers_workshop:guideBook.introduction.paragraph2=Armourer's Workshop will let you build your own equipment skins for armour and weapons to replace their look!
 
 # Chapter 3
-book.armourers_workshop:guideBook.armourer.name=Armorer
-book.armourers_workshop:guideBook.armourer.paragraph1=The first thing you will need to get started building your custom armor is the armorer.&pAfter placing the block down right click it to open the GUI. Down the left side you will see all the types of equipment that can be build.
-book.armourers_workshop:guideBook.armorer.paragraph2=Select the type of equipment that you would like to crate then start building your equipment using Equipment Cubes.&pAfter you have finished place an equipment template into the armorer type in a name and press save.
+book.armourers_workshop:guideBook.armourer.name=Armourer
+book.armourers_workshop:guideBook.armourer.paragraph1=The first thing you will need to get started building your custom armour is the armourer.&pAfter placing the block down right click it to open the GUI. Down the left side you will see all the types of equipment that can be build.
+book.armourers_workshop:guideBook.armourer.paragraph2=Select the type of equipment that you would like to crate then start building your equipment using Equipment Cubes.&pAfter you have finished place an equipment template into the armourer type in a name and press save.
 
 # Chapter 4
 book.armourers_workshop:guideBook.equipmentTemplates.name=Equipment Templates
@@ -622,9 +622,9 @@ book.armourers_workshop:guideBook.equipmentTemplates.paragraph1=Equipment templa
 
 # Chapter 5
 book.armourers_workshop:guideBook.paintingTools.name=Painting Tools
-book.armourers_workshop:guideBook.paintingTools.paragraph1=A number of painting tool have been provided to help with your creative endeavour!&pColour Mixer&nAllows you to mix up any color you like.&pPaintbrush&nPaints a single Equipment Cube.
-book.armourers_workshop:guideBook.paintingTools.paragraph2=Color Picker&nLets you pick a color from an Equipment Cube and set a Color Mixer to that color.&pPaint Roller&nPaints Equipment Cube's in a 3*3*1 area.
-book.armourers_workshop:guideBook.paintingTools.paragraph3=Burn Tool&nMakes an Equipment Cube darker.&pDodge Tool&nMakes an Equipment Cube lighter.&pColour Noise Tool&nApplies random color noise to an Equipment Cube.
+book.armourers_workshop:guideBook.paintingTools.paragraph1=A number of painting tool have been provided to help with your creative endeavour!&pColour Mixer&nAllows you to mix up any colour you like.&pPaintbrush&nPaints a single Equipment Cube.
+book.armourers_workshop:guideBook.paintingTools.paragraph2=Colour Picker&nLets you pick a colour from an Equipment Cube and set a Colour Mixer to that colour.&pPaint Roller&nPaints Equipment Cube's in a 3*3*1 area.
+book.armourers_workshop:guideBook.paintingTools.paragraph3=Burn Tool&nMakes an Equipment Cube darker.&pDodge Tool&nMakes an Equipment Cube lighter.&pColour Noise Tool&nApplies random colour noise to an Equipment Cube.
 book.armourers_workshop:guideBook.paintingTools.paragraph4=Shade Noise Tool&nApplies random shading to am Armour Cube.&pSome tools can be configured by sneaking and pressing right click.
 
 # Chapter 6
@@ -641,4 +641,4 @@ book.armourers_workshop:guideBook.credits.programing=Programing
 book.armourers_workshop:guideBook.credits.premade Skins=Premade Skins
 book.armourers_workshop:guideBook.credits.textures=Textures
 book.armourers_workshop:guideBook.credits.sound=Sound
-book.armourers_workshop:guideBook.credits.localisations=Localizations
+book.armourers_workshop:guideBook.credits.localisations=Localisations
