@@ -158,6 +158,4 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventoryCa
     public static IEntitySkinCapability get(Entity entity) {
         return entity.getCapability(ENTITY_SKIN_CAP, null);
     }
-
-
 }

@@ -12,6 +12,10 @@ import moe.plushie.armourers_workshop.client.settings.Keybindings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -36,7 +40,9 @@ import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -181,27 +187,34 @@ public class ItemSkin extends AbstractModItem {
         return EnumActionResult.PASS;
     }
     
-    /*
     @Override
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(itemStack);
-        if (!world.isRemote) {
-            if (skinPointer != null) {
-                if (equipSkin(player, itemStack.copy())) {
-                    itemStack.stackSize--;
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack itemStack = playerIn.getHeldItem(handIn);
+        IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(playerIn);
+        IEntitySkinCapability skinCapability = EntitySkinCapability.get(playerIn);
+        ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
+        if (wardrobeCap == null | skinCapability == null |  descriptor == null) {
+            return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStack);
+        }
+        ISkinType skinType = descriptor.getIdentifier().getSkinType();
+        
+        
+        for (int i = 0; i < wardrobeCap.getUnlockedSlotsForSkinType(skinType); i++) {
+            ISkinDescriptor descriptor2 = skinCapability.getSkinDescriptor(skinType, i);
+            if (descriptor2 == null) {
+                if (!worldIn.isRemote) {
+                    skinCapability.setSkinStack(skinType, i, itemStack);
+                    skinCapability.setSkinDescriptor(skinType, i, descriptor);
+                    skinCapability.syncToPlayer((EntityPlayerMP) playerIn);
+                    skinCapability.syncToAllTracking();
+                    itemStack.shrink(1);
                 }
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStack);
             }
         }
-        return itemStack;
+        
+        return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStack);
     }
-    
-    private boolean equipSkin(EntityPlayer player, ItemStack itemStack) {
-        ExPropsPlayerSkinData equipmentData = ExPropsPlayerSkinData.get(player);
-        if (equipmentData.setStackInNextFreeSlot(itemStack)) {
-            return true;
-        }
-        return false;
-    }*/
     
     private boolean placeSkinAtLocation(World world, EntityPlayer player, EnumFacing facing, ItemStack stack, BlockPos pos, Skin skin, ISkinDescriptor descriptor) {
         if (!canPlaceSkinAtLocation(world, player, facing, stack, pos, descriptor)) {
