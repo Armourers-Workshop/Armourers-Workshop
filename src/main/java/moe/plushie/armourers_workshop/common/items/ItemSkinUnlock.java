@@ -1,18 +1,22 @@
 package moe.plushie.armourers_workshop.common.items;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -32,6 +36,7 @@ public class ItemSkinUnlock extends AbstractModItem {
         super(LibItemNames.SKIN_UNLOCK);
         setHasSubtypes(true);
         setSortPriority(7);
+        setMaxStackSize(8);
     }
     
     @Override
@@ -54,27 +59,29 @@ public class ItemSkinUnlock extends AbstractModItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemStack = playerIn.getHeldItem(handIn);
-        if (worldIn.isRemote) {
-            return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStack);
-        }
-        /*
         ISkinType skinType = getSkinTypeFormStack(playerIn.getHeldItem(handIn));
-        
-        ExPropsPlayerSkinData equipmentData = ExPropsPlayerSkinData.get(playerIn);
-        int count = equipmentData.getEquipmentWardrobeData().getUnlockedSlotsForSkinType(skinType);
-        count++;
-        
         String localizedSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType);
         
-        if (count <= ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE) {
-            equipmentData.setSkinColumnCount(skinType, count);
-            playerIn.sendMessage(new TextComponentTranslation("chat.armourersworkshop:slotUnlocked", localizedSkinName.toLowerCase(), Integer.toString(count)));
-            itemStack.shrink(1);
-        } else {
-            playerIn.sendMessage(new TextComponentTranslation("chat.armourersworkshop:slotUnlockedFailed", localizedSkinName));
+        IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(playerIn);
+        if (wardrobeCap == null) {
+            return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStack);
         }
-        */
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        int count = wardrobeCap.getUnlockedSlotsForSkinType(skinType) + 1;
+        if (count <= wardrobeCap.getMaxSlotsForSkinType(skinType)) {
+            if (!worldIn.isRemote) {
+                wardrobeCap.setUnlockedSlotsForSkinType(skinType, count);
+                wardrobeCap.syncToPlayer((EntityPlayerMP) playerIn);
+                wardrobeCap.syncToAllTracking();
+                itemStack.shrink(1);
+                playerIn.sendMessage(new TextComponentTranslation("chat.armourers_workshop:slotUnlocked", localizedSkinName.toLowerCase(), Integer.toString(count)));
+            }
+            return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStack);
+        } else {
+            if (!worldIn.isRemote) {
+                playerIn.sendMessage(new TextComponentTranslation("chat.armourers_workshop:slotUnlockedFailed", localizedSkinName));
+            }
+            return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStack);
+        }
     }
     
     private ISkinType getSkinTypeFormStack(ItemStack itemStack) {
