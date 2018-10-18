@@ -57,7 +57,9 @@ public class AddonCustomNPCS extends ModAddon {
     
     @Override
     public void postInit() {
-        npcAPI = getApi();
+        if (setIsModLoaded()) {
+            npcAPI = getApi();
+        }
     }
     
     private static Object getApi() {
