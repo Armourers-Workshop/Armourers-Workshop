@@ -178,20 +178,22 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                     
                     fontRenderer.drawSplitString(name, x + 1, textY, iconSize - 2, 0xFFEEEEEE);
                 }
+                
                 Minecraft.getMinecraft().renderEngine.bindTexture(skin.getSkinType().getIcon());
+                GlStateManager.color(1F, 1F, 1F, 1F);
                 Gui.drawScaledCustomSizeModalRect(x, y, 0, 0, 16, 16, (int) ((float)iconSize / 4F), (int) ((float)iconSize / 4F), 16, 16);
                 
                 float scale = iconSize / 2;
                 GlStateManager.pushMatrix();
                 GlStateManager.pushAttrib();
                 if (showName) {
-                    GL11.glTranslatef(x + iconSize / 2, y + iconSize / 2 - 4, 200.0F);
+                    GlStateManager.translate(x + iconSize / 2, y + iconSize / 2 - 4, 200.0F);
                 } else {
-                    GL11.glTranslatef(x + iconSize / 2, y + iconSize / 2, 200.0F);
+                    GlStateManager.translate(x + iconSize / 2, y + iconSize / 2, 200.0F);
                 }
-                GL11.glScalef((float)(-10), (float)10, (float)10);
+                GlStateManager.scale((float)(-10), (float)10, (float)10);
                 if (mouseOver(x, y, mouseX, mouseY, iconSize)) {
-                    GL11.glScalef(1.5F, 1.5F, 1.5F);
+                    GlStateManager.scale(1.5F, 1.5F, 1.5F);
                 }
                 GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
                 GlStateManager.rotate(20.0F, 1.0F, 0.0F, 0.0F);
@@ -199,11 +201,13 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
                 RenderHelper.enableGUIStandardItemLighting();
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                GL11.glColor4f(1, 1, 1, 1);
                 GlStateManager.enableNormalize();
                 GlStateManager.enableColorMaterial();
                 ModRenderHelper.enableAlphaBlend();
+                GlStateManager.enableDepth();
                 SkinItemRenderHelper.renderSkinAsItem(skin, new SkinDescriptor(skin), true, false, iconSize, iconSize);
+                GlStateManager.disableDepth();
+                
                 ModRenderHelper.disableAlphaBlend();
                 GlStateManager.disableNormalize();
                 GlStateManager.disableColorMaterial();

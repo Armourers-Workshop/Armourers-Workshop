@@ -594,7 +594,17 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             mouseX = mouseY = 0;
         }
         //GlStateManager.pushAttrib();
-        super.drawScreen(mouseX, mouseY, partialTickTime);
+        GlStateManager.disableLighting();
+        if (dropDownList.getIsDroppedDown()) {
+            super.drawScreen(0, 0, partialTickTime);
+        } else {
+            super.drawScreen(mouseX, mouseY, partialTickTime);
+        }
+        GlStateManager.resetColor();
+        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.disableLighting();
+        
+        dropDownList.drawForeground(mc, mouseX, mouseY, partialTickTime);
         //GlStateManager.popAttrib();
         RenderHelper.disableStandardItemLighting();
         ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;

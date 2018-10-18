@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.client.gui.hologramprojector;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiHologramProjector;
@@ -63,6 +63,7 @@ public class GuiHologramProjectorTabExtra extends GuiTabPanel implements IDropDo
     @Override
     public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
         super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
+        dropDownPowerMode.drawForeground(mc, mouseX, mouseY, partialTickTime);
         String labelPowerMode = GuiHelper.getLocalizedControlName(inventoryName, "label.powerMode");
         fontRenderer.drawString(labelPowerMode, (int)((width / 2F) - (200 / 2F)) + 10, 45, 4210752);
     }

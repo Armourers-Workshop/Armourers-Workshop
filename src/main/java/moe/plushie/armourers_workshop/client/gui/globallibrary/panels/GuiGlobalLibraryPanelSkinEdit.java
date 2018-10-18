@@ -9,9 +9,9 @@ import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog;
-import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.DialogResult;
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.IDialogCallback;
+import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiLabeledTextField;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
@@ -99,14 +99,20 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
     }
     
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (!visible | !enabled) {
-            return;
+            return false;
         }
-        super.mouseClicked(mouseX, mouseY, button);
-        textName.mouseClicked(mouseX, mouseY, button);
-        textTags.mouseClicked(mouseX, mouseY, button);
-        textDescription.mouseClicked(mouseX, mouseY, button);
+        boolean clicked = super.mouseClicked(mouseX, mouseY, button);
+        if (!clicked) {
+            clicked = textName.mouseClicked(mouseX, mouseY, button);
+        }
+        if (!clicked) {
+            clicked = textTags.mouseClicked(mouseX, mouseY, button);
+        }
+        if (!clicked) {
+            clicked = textDescription.mouseClicked(mouseX, mouseY, button);
+        }
         if (button == 1) {
             if (textName.isFocused()) {
                 textName.setText("");
@@ -118,6 +124,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
                 textDescription.setText("");
             }
         }
+        return clicked;
     }
     
     @Override

@@ -55,24 +55,27 @@ public class GuiDropDownList extends GuiButtonExt {
             
             drawDropDownButton(mc, mouseX, mouseY);
             
-            this.hoverIndex = -1;
-            if (this.isDroppedDown) {
-                int listSize = listItems.size();
-                GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x, this.y + this.height + 1, 0, 46, this.width, 10 * listSize + 4, 200, 20, 2, 3, 2, 2, this.zLevel);
-                for (int i = 0; i < listSize; i++) {
-                    DropDownListItem listItem = listItems.get(i);
-                    int textX = this.x + 4;
-                    int textY = this.y + this.height + 4 + (i * 10);
-                    if (listItem.isMouseOver(this, textX, textY, mouseX, mouseY) & listItem.enabled) {
-                        hoverIndex = i;
-                    }
-                    listItem.drawItem(mc, this, textX, textY, mouseX, mouseY, partial, false);
-                } 
-            }
             if (getListSelectedItem() != null) {
                 getListSelectedItem().drawItem(mc, this, this.x + 3, this.y + 3, mouseX, mouseY, partial, true);
             }
             //mc.fontRenderer.drawString(this.displayString, this.x + 3, this.y + 3, 16777215);
+        }
+    }
+    
+    public void drawForeground(Minecraft mc, int mouseX, int mouseY, float partial) {
+        this.hoverIndex = -1;
+        if (this.isDroppedDown) {
+            int listSize = listItems.size();
+            GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x, this.y + this.height + 1, 0, 46, this.width, 10 * listSize + 4, 200, 20, 2, 3, 2, 2, this.zLevel);
+            for (int i = 0; i < listSize; i++) {
+                DropDownListItem listItem = listItems.get(i);
+                int textX = this.x + 4;
+                int textY = this.y + this.height + 4 + (i * 10);
+                if (listItem.isMouseOver(this, textX, textY, mouseX, mouseY) & listItem.enabled) {
+                    hoverIndex = i;
+                }
+                listItem.drawItem(mc, this, textX, textY, mouseX, mouseY, partial, false);
+            } 
         }
     }
     

@@ -39,7 +39,7 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
         buttonList.add(new GuiButtonExt(0, x + width - 85, y + 3, 80, 16, GuiHelper.getLocalizedControlName(guiName, "searchBox.search")));
         
         SkinTypeRegistry str = SkinTypeRegistry.INSTANCE;
-        GuiDropDownList dropDownList = new GuiDropDownList(1, x + width - 160, y + 4, 70, "", this);
+        dropDownList = new GuiDropDownList(1, x + width - 160, y + 4, 70, "", this);
         ArrayList<ISkinType> skinList = str.getRegisteredSkinTypes();
         dropDownList.addListItem("*");
         for (int i = 0; i < skinList.size(); i++) {
@@ -64,17 +64,21 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
     }
     
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (!visible | !enabled) {
-            return;
+            return false;
         }
-        super.mouseClicked(mouseX, mouseY, button);
-        searchTextbox.mouseClicked(mouseX, mouseY, button);
-        if (button == 1) {
-            if (searchTextbox.isFocused()) {
-                searchTextbox.setText("");
+        boolean clicked = super.mouseClicked(mouseX, mouseY, button);
+        if (!clicked) {
+            clicked = searchTextbox.mouseClicked(mouseX, mouseY, button);
+            if (button == 1) {
+                if (searchTextbox.isFocused()) {
+                    searchTextbox.setText("");
+                }
+                return true;
             }
         }
+        return clicked;
     }
     
     @Override
@@ -94,7 +98,6 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
         if (button.id == 0) {
             doSearch();
         }
-        
     }
     
     private void doSearch() {
@@ -105,12 +108,21 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
     }
     
     @Override
-    public void draw(int mouseX, int mouseY, float partialTickTime) {
+    public void drawBackground(int mouseX, int mouseY, float partialTickTime) {
         if (!visible) {
             return;
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
+    }
+    
+    @Override
+    public void draw(int mouseX, int mouseY, float partialTickTime) {
         super.draw(mouseX, mouseY, partialTickTime);
         searchTextbox.drawTextBox();
+    }
+    
+    @Override
+    public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
+        dropDownList.drawForeground(mc, mouseX, mouseY, partialTickTime);
     }
 }

@@ -160,6 +160,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
             ((GuiGlobalLibrary)parent).panelSearchResults.clearResults();
             ((GuiGlobalLibrary)parent).switchScreen(Screen.SEARCH);
             ((GuiGlobalLibrary)parent).panelSearchBox.selectedSkinType = null;
+            ((GuiGlobalLibrary)parent).panelSearchBox.initGui();
             ((GuiGlobalLibrary)parent).panelSearchResults.doSearch("", null);
         }
         if (button == skinPanelRecentlyUploaded | button == skinPanelMostDownloaded | button == skinPanelMostLiked) {

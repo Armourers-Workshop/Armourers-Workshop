@@ -24,8 +24,10 @@ import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
@@ -263,24 +265,27 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     public void updateScreen() {
         super.updateScreen();
         PlushieAuth.taskCheck();
-        for (int i = 0; i < panelList.size(); i++) {
-            panelList.get(i).update();
+        for (GuiPanel panel : panelList) {
+            panel.update();
         }
     }
     
     public void switchScreen(Screen screen) {
         this.screen = screen;
         setupPanels();
-        for (int i = 0; i < panelList.size(); i++) {
-            panelList.get(i).initGui();
+        for (GuiPanel panel : panelList) {
+            panel.initGui();
         }
     }
     
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         if (!isDialogOpen()) {
-            for (int i = 0; i < panelList.size(); i++) {
-                panelList.get(i).mouseClicked(mouseX, mouseY, button);
+            for (GuiPanel panel : panelList) {
+                if (panel.mouseClicked(mouseX, mouseY, button)) {
+                    ModLogger.log(panel);
+                    return;
+                }
             }
         }
         super.mouseClicked(mouseX, mouseY, button);
@@ -289,8 +294,8 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
         if (!isDialogOpen()) {
-            for (int i = 0; i < panelList.size(); i++) {
-                panelList.get(i).mouseMovedOrUp(mouseX, mouseY, state);
+            for (GuiPanel panel : panelList) {
+                panel.mouseMovedOrUp(mouseX, mouseY, state);
             }
         }
         super.mouseReleased(mouseX, mouseY, state);
@@ -300,8 +305,8 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     protected void keyTyped(char c, int keycode) throws IOException {
         boolean keyTyped = false;
         if (!isDialogOpen()) {
-            for (int i = 0; i < panelList.size(); i++) {
-                if (panelList.get(i).keyTyped(c, keycode)) {
+            for (GuiPanel panel : panelList) {
+                if (panel.keyTyped(c, keycode)) {
                     keyTyped = true;
                 }
             }
@@ -336,9 +341,23 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
-        for (int i = 0; i < panelList.size(); i++) {
-            panelList.get(i).draw(mouseX, mouseY, partialTickTime);
+        GlStateManager.disableDepth();
+        GlStateManager.pushAttrib();
+        for (GuiPanel panel : panelList) {
+            panel.drawBackground(mouseX, mouseY, partialTickTime);
         }
+        GlStateManager.popAttrib();
+        GlStateManager.pushAttrib();
+        for (GuiPanel panel : panelList) {
+            panel.draw(mouseX, mouseY, partialTickTime);
+        }
+        GlStateManager.popAttrib();
+        GlStateManager.pushAttrib();
+        for (GuiPanel panel : panelList) {
+            panel.drawForeground(mouseX, mouseY, partialTickTime);
+        }
+        GlStateManager.popAttrib();
+        GlStateManager.enableDepth();
     }
     
     @Override

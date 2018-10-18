@@ -111,14 +111,20 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     }
     
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (!visible | !enabled) {
-            return;
+            return false;
         }
-        super.mouseClicked(mouseX, mouseY, button);
-        textName.mouseClicked(mouseX, mouseY, button);
-        textTags.mouseClicked(mouseX, mouseY, button);
-        textDescription.mouseClicked(mouseX, mouseY, button);
+        boolean clicked = super.mouseClicked(mouseX, mouseY, button);
+        if (!clicked) {
+            clicked = textName.mouseClicked(mouseX, mouseY, button);
+        }
+        if (!clicked) {
+            clicked = textTags.mouseClicked(mouseX, mouseY, button);
+        }
+        if (!clicked) {
+            clicked = textDescription.mouseClicked(mouseX, mouseY, button);
+        }
         if (button == 1) {
             if (textName.isFocused()) {
                 textName.setText("");
@@ -130,6 +136,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
                 textDescription.setText("");
             }
         }
+        return clicked;
     }
     
     @Override

@@ -25,6 +25,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -87,6 +88,10 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepth();
+        colourFamilyList.drawForeground(mc, mouseX, mouseY, partialTicks);
+        paintTypeDropDown.drawForeground(mc, mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
     }
     
@@ -139,12 +144,28 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+        if (colourFamilyList.getIsDroppedDown()) {
+            colourFamilyList.mousePressed(mc, mouseX, mouseY);
+            return;
+        }
+        if (paintTypeDropDown.getIsDroppedDown()) {
+            paintTypeDropDown.mousePressed(mc, mouseX, mouseY);
+            return;
+        }
         super.mouseClicked(mouseX, mouseY, button);
         colourHex.mouseClicked(mouseX, mouseY, button);
     }
     
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
+        if (colourFamilyList.getIsDroppedDown()) {
+            colourFamilyList.mouseReleased(mouseX, mouseY);
+            return;
+        }
+        if (paintTypeDropDown.getIsDroppedDown()) {
+            paintTypeDropDown.mouseReleased(mouseX, mouseY);
+            return;
+        }
         super.mouseReleased(mouseX, mouseY, state);
         if (state != 0) {
             return;

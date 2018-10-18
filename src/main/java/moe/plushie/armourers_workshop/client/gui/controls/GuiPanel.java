@@ -77,9 +77,9 @@ public abstract class GuiPanel extends Gui {
         return enabled;
     }
     
-    public void mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (!this.enabled | !this.visible) {
-            return;
+            return false;
         }
         if (button == 0) {
             for (int i = 0; i < buttonList.size(); i++) {
@@ -95,9 +95,11 @@ public abstract class GuiPanel extends Gui {
                     if (parent.equals(this.mc.currentScreen)) {
                         MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(parent, event.getButton(), this.buttonList));
                     }
+                    return true;
                 }
             }
         }
+        return false;
     }
     
     protected void actionPerformed(GuiButton button) {}
@@ -130,11 +132,23 @@ public abstract class GuiPanel extends Gui {
         }
     }
     
+    public void drawBackground(int mouseX, int mouseY, float partialTickTime) {
+        if (!this.visible) {
+            return;
+        }
+    }
+    
     public void draw(int mouseX, int mouseY, float partialTickTime) {
         if (!this.visible) {
             return;
         }
         drawbuttons(mouseX, mouseY, partialTickTime);
+    }
+    
+    public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
+        if (!this.visible) {
+            return;
+        }
     }
     
     public void update() {
