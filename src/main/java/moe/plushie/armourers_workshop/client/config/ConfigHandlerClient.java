@@ -23,6 +23,7 @@ public class ConfigHandlerClient {
     public static int renderDistanceBlockSkin;
     public static int renderDistanceMannequinEquipment;
     
+    // Misc
     public static int skinLoadAnimationTime;
     public static double lodDistance = 32F;
     public static int modelBakingThreadCount;
@@ -52,12 +53,15 @@ public class ConfigHandlerClient {
     public static int skinRenderType;
     public static boolean showF3DebugInfo;
     public static boolean showSkinTooltipDebugInfo;
+    public static int texturePainting;
+    
+    // Debug tool
     public static boolean showArmourerDebugRender;
     public static boolean wireframeRender;
-    public static int texturePainting;
     public static boolean showLodLevels;
     public static boolean showSkinBlockBounds;
     public static boolean showSkinRenderBounds;
+    public static boolean showSortOrderToolTip;
     
     public static Configuration config;
     

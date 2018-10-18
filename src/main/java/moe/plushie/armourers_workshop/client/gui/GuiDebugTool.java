@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.client.gui;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiDebugTool extends GuiScreen {
@@ -23,6 +23,7 @@ public class GuiDebugTool extends GuiScreen {
     private GuiCheckBox checkShowSkinBlockBounds;
     private GuiCheckBox checkShowSkinRenderBounds;
     private GuiCheckBox checkDebugItemRenders;
+    private GuiCheckBox checkSortOrderTooltips;
     
     public GuiDebugTool() {
         this.guiWidth = 180;
@@ -54,12 +55,16 @@ public class GuiDebugTool extends GuiScreen {
         checkDebugItemRenders = new GuiCheckBox(-1, guiLeft + 5, guiTop + 55, "show item debug renders", SkinItemRenderHelper.debugShowFullBounds);
         checkDebugItemRenders.setTextColour(0xFFEEEEEE);
         
+        checkSortOrderTooltips = new GuiCheckBox(-1, guiLeft + 5, guiTop + 65, "show sort order tooltip", ConfigHandlerClient.showSortOrderToolTip);
+        checkSortOrderTooltips.setTextColour(0xFFEEEEEE);
+        
         buttonList.add(checkWireframe);
         buttonList.add(checkArmourerDebugRenders);
         buttonList.add(checkShowLodLevel);
         buttonList.add(checkShowSkinBlockBounds);
         buttonList.add(checkShowSkinRenderBounds);
         buttonList.add(checkDebugItemRenders);
+        buttonList.add(checkSortOrderTooltips);
     }
     
     @Override
@@ -84,6 +89,9 @@ public class GuiDebugTool extends GuiScreen {
             SkinItemRenderHelper.debugShowPartBounds = checkDebugItemRenders.isChecked();
             SkinItemRenderHelper.debugShowTextureBounds = checkDebugItemRenders.isChecked();
             SkinItemRenderHelper.debugShowTargetBounds = checkDebugItemRenders.isChecked();
+        }
+        if (button == checkSortOrderTooltips) {
+            ConfigHandlerClient.showSortOrderToolTip = checkSortOrderTooltips.isChecked();
         }
     }
     

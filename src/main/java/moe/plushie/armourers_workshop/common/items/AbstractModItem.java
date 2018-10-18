@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.common.items;
 import java.util.List;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
@@ -61,7 +62,9 @@ public abstract class AbstractModItem extends Item implements ISortOrder, ICusto
                 tooltip.add(localized);
             }
         }
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+        if (ConfigHandlerClient.showSortOrderToolTip) {
+            tooltip.add("sortPriority" + String.valueOf(sortPriority));
+        }
     }
     
     @Override

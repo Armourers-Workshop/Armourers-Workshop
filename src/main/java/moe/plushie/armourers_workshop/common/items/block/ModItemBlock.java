@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.items.block;
 
 import java.util.List;
 
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraft.block.Block;
@@ -57,6 +58,9 @@ public class ModItemBlock extends ItemBlock implements ISortOrder {
             }
         }
         super.addInformation(stack, worldIn, tooltip, flagIn);
+        if (block instanceof ISortOrder & ConfigHandlerClient.showSortOrderToolTip) {
+            tooltip.add("sortPriority" + String.valueOf(getSortPriority()));
+        }
     }
     
     @Override
