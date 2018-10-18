@@ -9,7 +9,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public abstract class ModContainer extends Container {
+public class ModContainer extends Container {
 
     protected final InventoryPlayer invPlayer;
     
@@ -84,7 +84,9 @@ public abstract class ModContainer extends Container {
     }
     
     @Nonnull
-    protected abstract ItemStack transferStackFromPlayer(EntityPlayer playerIn, int index);
+    protected ItemStack transferStackFromPlayer(EntityPlayer playerIn, int index) {
+        return ItemStack.EMPTY;
+    }
     
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {

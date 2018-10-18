@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.common.network.messages.server;
 
+import io.netty.buffer.ByteBuf;
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 
 public class MessageServerClientCommand implements IMessage, IMessageHandler<MessageServerClientCommand, IMessage> {
 
@@ -34,7 +34,6 @@ public class MessageServerClientCommand implements IMessage, IMessageHandler<Mes
     }
     
     public enum CommandType {
-        CLEAR_MODEL_CACHE,
-        OPEN_ADMIN_PANEL
+        CLEAR_MODEL_CACHE
     }
 }

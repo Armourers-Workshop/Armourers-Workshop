@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.common.command;
 
-import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerClientCommand;
-import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerClientCommand.CommandType;
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 
 public class CommandAdminPanel extends ModCommand {
 
@@ -21,7 +21,6 @@ public class CommandAdminPanel extends ModCommand {
         if (player == null) {
             return;
         }
-        MessageServerClientCommand message = new MessageServerClientCommand(CommandType.OPEN_ADMIN_PANEL);
-        PacketHandler.networkWrapper.sendTo(message, player);
+        FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), LibGuiIds.ADMIN_PANEL, player.getEntityWorld(), 0, 0, 0);
     }
 }

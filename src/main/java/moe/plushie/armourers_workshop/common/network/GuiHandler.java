@@ -33,6 +33,7 @@ import moe.plushie.armourers_workshop.common.inventory.ContainerMannequin;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinnable;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinningTable;
+import moe.plushie.armourers_workshop.common.inventory.ModContainer;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
@@ -135,6 +136,8 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerGlobalSkinLibrary(player.inventory, (TileEntityGlobalSkinLibrary)te);
                 }
                 break;
+            case LibGuiIds.ADMIN_PANEL:
+                return new ModContainer(player.inventory);
             case LibGuiIds.SKINNABLE:
                 if (te instanceof TileEntitySkinnable) {
                     Skin skin = ((TileEntitySkinnable)te).getSkin(((TileEntitySkinnable)te).getSkinPointer());
@@ -241,7 +244,7 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.DEBUG_TOOL:
                 return new GuiDebugTool();
             case LibGuiIds.ADMIN_PANEL:
-                return new GuiAdminPanel();
+                return new GuiAdminPanel(player);
             case LibGuiIds.SKINNABLE:
                 if (te instanceof TileEntitySkinnable) {
                     Skin skin = ((TileEntitySkinnable)te).getSkin(((TileEntitySkinnable)te).getSkinPointer());

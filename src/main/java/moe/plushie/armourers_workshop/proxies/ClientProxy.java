@@ -42,7 +42,6 @@ import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.items.ItemGiftSack;
 import moe.plushie.armourers_workshop.common.items.ModItems;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.library.LibraryFileType;
@@ -338,9 +337,6 @@ public class ClientProxy extends CommonProxy {
         case CLEAR_MODEL_CACHE:
             ClientSkinCache.INSTANCE.clearCache();
             CommonSkinCache.INSTANCE.clearAll();
-            break;
-        case OPEN_ADMIN_PANEL:
-            player.openGui(ArmourersWorkshop.getInstance(), LibGuiIds.ADMIN_PANEL, player.getEntityWorld(), 0, 0, 0);
             break;
         }
     }
