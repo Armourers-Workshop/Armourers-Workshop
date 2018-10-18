@@ -15,12 +15,20 @@ public abstract class GuiTabbed extends GuiContainer {
     
     protected GuiTabController tabController;
     protected ArrayList<GuiTabPanel> tabList;
-    protected static int activeTab = 0;
+    private static int activeTabIndex = 0;
     
     public GuiTabbed(Container container, boolean fullscreen, ResourceLocation texture) {
         super(container);
         tabController = new GuiTabController(this, fullscreen, texture);
         tabList = new ArrayList<GuiTabPanel>();
+    }
+    
+    protected int getActiveTab() {
+        return activeTabIndex;
+    }
+    
+    protected void setActiveTab(int value) {
+        activeTabIndex = value;
     }
     
     @Override
@@ -31,7 +39,7 @@ public abstract class GuiTabbed extends GuiContainer {
         
         tabController.initGui(guiLeft - 17, guiTop, xSize, ySize);
         
-        tabController.setActiveTabIndex(activeTab);
+        tabController.setActiveTabIndex(getActiveTab());
         
         for (int i = 0; i < tabList.size(); i++) {
             tabList.get(i).initGui(guiLeft, guiTop, xSize, ySize);
@@ -49,10 +57,10 @@ public abstract class GuiTabbed extends GuiContainer {
     }
 
     protected void tabChanged() {
-        this.activeTab = tabController.getActiveTabIndex();
+        setActiveTab(tabController.getActiveTabIndex());
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            tab.tabChanged(activeTab);
+            tab.tabChanged(getActiveTab());
         }
     }
     
@@ -61,7 +69,7 @@ public abstract class GuiTabbed extends GuiContainer {
         boolean clicked = false;
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
+            if (tab.getTabId() == getActiveTab()) {
                 if (tab.mouseClicked(mouseX, mouseY, button)) {
                     clicked = true;
                 }
@@ -77,7 +85,7 @@ public abstract class GuiTabbed extends GuiContainer {
         boolean clicked = false;
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
+            if (tab.getTabId() == getActiveTab()) {
                 if (tab.mouseMovedOrUp(mouseX, mouseY, state)) {
                     clicked = true;
                 }
@@ -100,7 +108,7 @@ public abstract class GuiTabbed extends GuiContainer {
         boolean keyTyped = false;
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
+            if (tab.getTabId() == getActiveTab()) {
                 keyTyped = tab.keyTyped(c, keycode);
             }
         }

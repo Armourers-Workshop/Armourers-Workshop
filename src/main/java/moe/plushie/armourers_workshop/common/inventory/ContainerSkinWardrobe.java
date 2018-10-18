@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotDyeBottle;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotOutfit;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
@@ -29,73 +30,74 @@ public class ContainerSkinWardrobe extends ModContainer {
     private final DyeInventory dyeInventory;
     private int slotsUnlocked;
     
-    private int indexStartSkins = 0;
-    private int indexEndSkins = 0;
+    private int indexSkinsStart = 0;
+    private int indexSkinsEnd = 0;
     
-    private int indexStartDye = 0;
-    private int indexEndDye = 0;
+    private int indexDyeStart = 0;
+    private int indexDyeEnd = 0;
     
-    private int indexStartOutfit = 0;
-    private int indexEndOutfit = 0;
+    private int indexOutfitStart = 0;
+    private int indexOutfitEnd = 0;
     
     public ContainerSkinWardrobe(InventoryPlayer invPlayer, EntitySkinCapability skinCapability, IWardrobeCap wardrobeCapability) {
         super(invPlayer);
         this.skinCapability = skinCapability;
         this.wardrobeCapability = wardrobeCapability;
         this.dyeInventory = new DyeInventory(wardrobeCapability, invPlayer.player.getEntityWorld().isRemote);
+        boolean isPlayer = wardrobeCapability instanceof IPlayerWardrobeCap;
+        if (isPlayer) {
+            if (ConfigHandler.wardrobeTabSkins) {
+                IPlayerWardrobeCap playerWardrobe = (IPlayerWardrobeCap) wardrobeCapability;
+                SkinInventoryContainer skinInv = skinCapability.getSkinInventoryContainer();
 
-        if (wardrobeCapability instanceof IPlayerWardrobeCap) {
-            IPlayerWardrobeCap playerWardrobe = (IPlayerWardrobeCap) wardrobeCapability;
-            SkinInventoryContainer skinInv = skinCapability.getSkinInventoryContainer();
+                WardrobeInventory headInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinHead);
+                WardrobeInventory chestInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinChest);
+                WardrobeInventory legsInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinLegs);
+                WardrobeInventory feetInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinFeet);
+                WardrobeInventory wingInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinWings);
 
-            WardrobeInventory headInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinHead);
-            WardrobeInventory chestInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinChest);
-            WardrobeInventory legsInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinLegs);
-            WardrobeInventory feetInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinFeet);
-            WardrobeInventory wingInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinWings);
+                WardrobeInventory swordInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinSword);
+                WardrobeInventory shieldInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinShield);
+                WardrobeInventory bowInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinBow);
 
-            WardrobeInventory swordInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinSword);
-            WardrobeInventory shieldInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinShield);
-            WardrobeInventory bowInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinBow);
+                WardrobeInventory pickaxeInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinPickaxe);
+                WardrobeInventory axeInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinAxe);
+                WardrobeInventory shovelInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinShovel);
+                WardrobeInventory hoeInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinHoe);
 
-            WardrobeInventory pickaxeInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinPickaxe);
-            WardrobeInventory axeInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinAxe);
-            WardrobeInventory shovelInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinShovel);
-            WardrobeInventory hoeInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinHoe);
+                for (int i = 0; i < EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE; i++) {
+                    if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinHead)) {
+                        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHead, headInv, i, 70 + i * 20, 27));
+                        indexSkinsEnd += 1;
+                    }
+                    if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinChest)) {
+                        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinChest, chestInv, i, 70 + i * 20, 46));
+                        indexSkinsEnd += 1;
+                    }
+                    if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinLegs)) {
+                        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinLegs, legsInv, i, 70 + i * 20, 65));
+                        indexSkinsEnd += 1;
+                    }
+                    if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinFeet)) {
+                        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinFeet, feetInv, i, 70 + i * 20, 84));
+                        indexSkinsEnd += 1;
+                    }
+                    if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinWings)) {
+                        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinWings, wingInv, i, 70 + i * 20, 103));
+                        indexSkinsEnd += 1;
+                    }
+                }
 
-            for (int i = 0; i < EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE; i++) {
-                if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinHead)) {
-                    addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHead, headInv, i, 70 + i * 20, 27));
-                    indexEndSkins += 1;
-                }
-                if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinChest)) {
-                    addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinChest, chestInv, i, 70 + i * 20, 46));
-                    indexEndSkins += 1;
-                }
-                if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinLegs)) {
-                    addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinLegs, legsInv, i, 70 + i * 20, 65));
-                    indexEndSkins += 1;
-                }
-                if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinFeet)) {
-                    addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinFeet, feetInv, i, 70 + i * 20, 84));
-                    indexEndSkins += 1;
-                }
-                if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinWings)) {
-                    addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinWings, wingInv, i, 70 + i * 20, 103));
-                    indexEndSkins += 1;
-                }
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 0, 70, 122));
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShield, shieldInv, 0, 90, 122));
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinBow, bowInv, 0, 110, 122));
+
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinPickaxe, pickaxeInv, 0, 150, 122));
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinAxe, axeInv, 0, 170, 122));
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShovel, shovelInv, 0, 190, 122));
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHoe, hoeInv, 0, 210, 122));
+                indexSkinsEnd += 7;
             }
-
-            addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 0, 70, 122));
-            addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShield, shieldInv, 0, 90, 122));
-            addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinBow, bowInv, 0, 110, 122));
-
-            addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinPickaxe, pickaxeInv, 0, 150, 122));
-            addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinAxe, axeInv, 0, 170, 122));
-            addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShovel, shovelInv, 0, 190, 122));
-            addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHoe, hoeInv, 0, 210, 122));
-            indexEndSkins += 7;
-            
         } else {
             ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
             for (int i = 0; i < skinTypes.length; i++) {
@@ -105,36 +107,60 @@ public class ContainerSkinWardrobe extends ModContainer {
                     } else {
                         addSlotToContainer(new SlotSkin(skinTypes[i], skinCapability.getSkinInventoryContainer().getSkinTypeInv(skinTypes[i]), j, 70 + (i - 5) * 20, 122 + j * 19));
                     }
-                    indexEndSkins++;
+                    indexSkinsEnd++;
                 }
             }
         }
-
-        indexStartDye = indexEndSkins;
-        indexEndDye = indexEndSkins;
-        for (int i = 0; i < 8; i++) {
-            addSlotToContainer(new SlotDyeBottle(dyeInventory, i, 70 + 20 * i, 27));
-            indexEndDye += 1;
+        
+        indexDyeStart = indexSkinsEnd;
+        indexDyeEnd = indexSkinsEnd;
+        if (!isPlayer | (isPlayer & ConfigHandler.wardrobeTabDyes)) {
+            for (int i = 0; i < 8; i++) {
+                addSlotToContainer(new SlotDyeBottle(dyeInventory, i, 70 + 20 * i, 27));
+                indexDyeEnd += 1;
+            }
         }
         
-        indexStartOutfit = indexEndDye;
-        indexEndOutfit = indexEndDye;
-        IInventory invOutfit = skinCapability.getInventoryOutfits();
-        for (int i = 0; i < invOutfit.getSizeInventory(); i++) {
-            addSlotToContainer(new SlotOutfit(invOutfit, i, 70 + 20 * i, 27));
-            indexEndOutfit += 1;
+        indexOutfitStart = indexDyeEnd;
+        indexOutfitEnd = indexDyeEnd;
+        if (!isPlayer | (isPlayer & ConfigHandler.wardrobeTabOutfits)) {
+            IInventory invOutfit = skinCapability.getInventoryOutfits();
+            for (int i = 0; i < invOutfit.getSizeInventory(); i++) {
+                addSlotToContainer(new SlotOutfit(invOutfit, i, 70 + 20 * i, 27));
+                indexOutfitEnd += 1;
+            }
         }
 
         addPlayerSlots(38, 158);
     }
 
-    public int getSkinSlots() {
-        return indexEndSkins;
-    }
-
     @Override
     public boolean canInteractWith(EntityPlayer player) {
         return !player.isDead;
+    }
+    
+    public int getIndexSkinsStart() {
+        return indexSkinsStart;
+    }
+    
+    public int getIndexSkinsEnd() {
+        return indexSkinsEnd;
+    }
+    
+    public int getIndexDyeStart() {
+        return indexDyeStart;
+    }
+    
+    public int getIndexDyeEnd() {
+        return indexDyeEnd;
+    }
+    
+    public int getIndexOutfitStart() {
+        return indexOutfitStart;
+    }
+    
+    public int getIndexOutfitEnd() {
+        return indexOutfitEnd;
     }
 
     @Override
@@ -148,7 +174,7 @@ public class ContainerSkinWardrobe extends ModContainer {
             
             // Putting skin in inv
             if (stack.getItem() instanceof ItemSkin & SkinNBTHelper.stackHasSkinData(stack)) {
-                for (int i = indexStartSkins; i < indexEndSkins; i++) {
+                for (int i = indexSkinsStart; i < indexSkinsEnd; i++) {
                     Slot targetSlot = getSlot(i);
                     if (targetSlot.isItemValid(stack)) {
                         if (this.mergeItemStack(stack, i, i + 1, false)) {
@@ -161,7 +187,7 @@ public class ContainerSkinWardrobe extends ModContainer {
             
             if (stack.getItem() == ModItems.dyeBottle) {
                 if (((ItemDyeBottle)stack.getItem()).getToolHasColour(stack)) {
-                    for (int i = indexStartDye; i < indexEndDye; i++) {
+                    for (int i = indexDyeStart; i < indexDyeEnd; i++) {
                         Slot targetSlot = getSlot(i);
                         if (targetSlot.isItemValid(stack)) {
                             if (this.mergeItemStack(stack, i, i + 1, false)) {
@@ -175,7 +201,7 @@ public class ContainerSkinWardrobe extends ModContainer {
             
             // TODO Add check for valid outfit.
             if (stack.getItem() == ModItems.outfit) {
-                for (int i = indexStartOutfit; i < indexEndOutfit; i++) {
+                for (int i = indexOutfitStart; i < indexOutfitEnd; i++) {
                     Slot targetSlot = getSlot(i);
                     if (targetSlot.isItemValid(stack)) {
                         if (this.mergeItemStack(stack, i, i + 1, false)) {

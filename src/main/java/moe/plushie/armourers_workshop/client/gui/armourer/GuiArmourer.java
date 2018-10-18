@@ -67,7 +67,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.skinSettings")).setIconLocation(52 + 32, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3).setAnimation(8, 150));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.blockUtils")).setIconLocation(52 + 48, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3).setAnimation(8, 150));
         
-        tabController.setActiveTabIndex(activeTab);
+        tabController.setActiveTabIndex(getActiveTab());
         
         tabChanged();
         skinTypeUpdate(tileEntity.getSkinType());
@@ -85,7 +85,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
     @Override
     protected void tabChanged() {
         super.tabChanged();
-        setSlotVisibility(activeTab == 0);
+        setSlotVisibility(getActiveTab() == 0);
     }
     
     @Override
@@ -136,7 +136,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
         mc.renderEngine.bindTexture(texture);
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
+            if (tab.getTabId() == getActiveTab()) {
                 tab.drawBackgroundLayer(partialTickTime, mouseX, mouseY);
             }
         }
@@ -148,7 +148,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
         GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, tileEntity.getName());
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
+            if (tab.getTabId() == getActiveTab()) {
                 tab.drawForegroundLayer(mouseX, mouseY, 0);
             }
         }
@@ -213,7 +213,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
     public void dialogResult(AbstractGuiDialog dialog, DialogResult result) {
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
+            if (tab.getTabId() == getActiveTab()) {
                 if (tab instanceof IDialogCallback) {
                     ((IDialogCallback)tab).dialogResult(dialog, result);
                 }

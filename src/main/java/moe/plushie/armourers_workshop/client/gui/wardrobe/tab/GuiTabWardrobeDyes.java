@@ -45,7 +45,7 @@ public class GuiTabWardrobeDyes extends GuiTabPanel {
         int sloImageSize = 18;
         GuiContainer guiContainer = (GuiContainer) parent;
         ContainerSkinWardrobe skinWardrobe = (ContainerSkinWardrobe) guiContainer.inventorySlots;
-        for (int i = skinWardrobe.getSkinSlots(); i <  skinWardrobe.getSkinSlots() + 8; i++) {
+        for (int i = skinWardrobe.getIndexDyeStart(); i <  skinWardrobe.getIndexDyeEnd(); i++) {
             Slot slot = (Slot) skinWardrobe.inventorySlots.get(i);
             this.drawTexturedModalRect(this.x + slot.xPos - 1,  this.y + slot.yPos - 1, 238, 194, sloImageSize, sloImageSize);
         }

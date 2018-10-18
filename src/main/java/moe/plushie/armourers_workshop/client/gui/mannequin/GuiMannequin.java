@@ -55,7 +55,7 @@ public class GuiMannequin extends GuiTabbed {
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.skinAndHair")).setIconLocation(126, 0).setAnimation(8, 150));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.name")).setIconLocation(142, 0).setAnimation(8, 150));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.extraRenders")).setIconLocation(158, 0).setAnimation(8, 150));
-        tabController.setActiveTabIndex(activeTab);
+        tabController.setActiveTabIndex(getActiveTab());
         tabChanged();
     }
     
@@ -85,7 +85,7 @@ public class GuiMannequin extends GuiTabbed {
         
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
+            if (tab.getTabId() == getActiveTab()) {
                 tab.drawForegroundLayer(mouseX, mouseY, 0);
             }
         }
@@ -100,7 +100,7 @@ public class GuiMannequin extends GuiTabbed {
         mc.renderEngine.bindTexture(texture);
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
+            if (tab.getTabId() == getActiveTab()) {
                 tab.drawBackgroundLayer(partialTickTime, mouseX, mouseY);
             }
         }

@@ -66,7 +66,7 @@ public class PlayerWardrobeCap extends WardrobeCap implements IPlayerWardrobeCap
         if (slotsUnlocked.containsKey(skinType.getRegistryName())) {
             return slotsUnlocked.get(skinType.getRegistryName());
         } else {
-            return Math.min(ConfigHandler.startingWardrobeSlots, getMaxSlotsForSkinType(skinType));
+            return Math.min(ConfigHandler.wardrobeStartingSlots, getMaxSlotsForSkinType(skinType));
         }
     }
     

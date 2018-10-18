@@ -59,7 +59,7 @@ public class GuiHologramProjector extends GuiTabbed {
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationOffset")).setIconLocation(68, 0).setAnimation(8, 150));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationSpeed")).setIconLocation(100, 0).setAnimation(4, 150));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.extra")).setIconLocation(132, 0).setAnimation(8, 150));
-        tabController.setActiveTabIndex(activeTab);
+        tabController.setActiveTabIndex(getActiveTab());
         
         tabChanged();
     }
@@ -82,7 +82,7 @@ public class GuiHologramProjector extends GuiTabbed {
         mc.renderEngine.bindTexture(texture);
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
+            if (tab.getTabId() == getActiveTab()) {
                 tab.drawBackgroundLayer(partialTickTime, mouseX, mouseY);
             }
         }
@@ -93,7 +93,7 @@ public class GuiHologramProjector extends GuiTabbed {
         GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getName());
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
+            if (tab.getTabId() == getActiveTab()) {
                 tab.drawForegroundLayer(mouseX, mouseY, 0);
             }
         }

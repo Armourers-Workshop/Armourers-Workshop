@@ -51,7 +51,7 @@ public class ModClientFMLEventHandler {
         if (Keybindings.KEY_UNDO.isPressed()) {
             PacketHandler.networkWrapper.sendToServer(new MessageClientKeyPress(Button.UNDO));
         }
-        if (Keybindings.OPEN_WARDROBE.isPressed() & ConfigHandler.allowOpeningWardrobe) {
+        if (Keybindings.OPEN_WARDROBE.isPressed() & ConfigHandler.canOpenWardrobe()) {
             PacketHandler.networkWrapper.sendToServer(new MessageClientKeyPress(Button.OPEN_WARDROBE));
         }
     }

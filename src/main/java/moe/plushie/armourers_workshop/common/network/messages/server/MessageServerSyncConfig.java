@@ -20,8 +20,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class MessageServerSyncConfig implements IMessage, IMessageHandler<MessageServerSyncConfig, IMessage> {
     
-    private boolean allowClientsToDownloadSkins;
-    private boolean allowClientsToUploadSkins;
+    private boolean wardrobeAllowOpening;
+    
+    private boolean wardrobeTabSkins;
+    private boolean wardrobeTabOutfits;
+    private boolean wardrobeTabDisplaySettings;
+    private boolean wardrobeTabColourSettings;
+    
+    private boolean allowDownloadingSkins;
+    private boolean allowUploadingSkins;
+    
     private String[] itemOverrides;
     private boolean libraryShowsModelPreviews;
     private boolean lockDyesOnSkins;
@@ -35,19 +43,35 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     }
     
     public MessageServerSyncConfig() {
-        this.allowClientsToDownloadSkins = ConfigHandler.allowDownloadingSkins;
-        this.allowClientsToUploadSkins = ConfigHandler.allowUploadingSkins;
-        this.itemOverrides = ModAddonManager.getItemOverrides().toArray(new String[ModAddonManager.getItemOverrides().size()]);
-        this.libraryShowsModelPreviews = ConfigHandler.libraryShowsModelPreviews;
-        this.lockDyesOnSkins = ConfigHandler.lockDyesOnSkins;
-        this.instancedDyeTable = ConfigHandler.instancedDyeTable;
-        this.enableRecoveringSkins = ConfigHandler.enableRecoveringSkins;
+        wardrobeAllowOpening = ConfigHandler.wardrobeAllowOpening;
+        
+        wardrobeTabSkins = ConfigHandler.wardrobeTabSkins;
+        wardrobeTabOutfits = ConfigHandler.wardrobeTabOutfits;
+        wardrobeTabDisplaySettings = ConfigHandler.wardrobeTabDisplaySettings;
+        wardrobeTabColourSettings = ConfigHandler.wardrobeTabColourSettings;
+        
+        allowDownloadingSkins = ConfigHandler.allowDownloadingSkins;
+        allowUploadingSkins = ConfigHandler.allowUploadingSkins;
+        
+        itemOverrides = ModAddonManager.getItemOverrides().toArray(new String[ModAddonManager.getItemOverrides().size()]);
+        libraryShowsModelPreviews = ConfigHandler.libraryShowsModelPreviews;
+        lockDyesOnSkins = ConfigHandler.lockDyesOnSkins;
+        instancedDyeTable = ConfigHandler.instancedDyeTable;
+        enableRecoveringSkins = ConfigHandler.enableRecoveringSkins;
     }
     
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeBoolean(allowClientsToDownloadSkins);
-        buf.writeBoolean(allowClientsToUploadSkins);
+        buf.writeBoolean(wardrobeAllowOpening);
+        
+        buf.writeBoolean(wardrobeTabSkins);
+        buf.writeBoolean(wardrobeTabOutfits);
+        buf.writeBoolean(wardrobeTabDisplaySettings);
+        buf.writeBoolean(wardrobeTabColourSettings);
+        
+        buf.writeBoolean(allowDownloadingSkins);
+        buf.writeBoolean(allowUploadingSkins);
+        
         ByteBufHelper.writeStringArrayToBuf(buf, itemOverrides);
         buf.writeBoolean(libraryShowsModelPreviews);
         buf.writeBoolean(lockDyesOnSkins);
@@ -64,8 +88,16 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        allowClientsToDownloadSkins = buf.readBoolean();
-        allowClientsToUploadSkins = buf.readBoolean();
+        wardrobeAllowOpening = buf.readBoolean();
+        
+        wardrobeTabSkins = buf.readBoolean();
+        wardrobeTabOutfits = buf.readBoolean();
+        wardrobeTabDisplaySettings = buf.readBoolean();
+        wardrobeTabColourSettings = buf.readBoolean();
+        
+        allowDownloadingSkins = buf.readBoolean();
+        allowUploadingSkins = buf.readBoolean();
+        
         itemOverrides = ByteBufHelper.readStringArrayFromBuf(buf);
         libraryShowsModelPreviews = buf.readBoolean();
         lockDyesOnSkins = buf.readBoolean();
@@ -84,8 +116,16 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     
     @SideOnly(Side.CLIENT)
     private void setConfigsOnClient(MessageServerSyncConfig message) {
-        ConfigHandler.allowDownloadingSkins = message.allowClientsToDownloadSkins;
-        ConfigHandler.allowUploadingSkins = message.allowClientsToUploadSkins;
+        ConfigHandler.wardrobeAllowOpening = message.wardrobeAllowOpening;
+        
+        ConfigHandler.wardrobeTabSkins = message.wardrobeTabSkins;
+        ConfigHandler.wardrobeTabOutfits = message.wardrobeTabOutfits;
+        ConfigHandler.wardrobeTabDisplaySettings = message.wardrobeTabDisplaySettings;
+        ConfigHandler.wardrobeTabColourSettings = message.wardrobeTabColourSettings;
+        
+        ConfigHandler.allowDownloadingSkins = message.allowDownloadingSkins;
+        ConfigHandler.allowUploadingSkins = message.allowUploadingSkins;
+        
         ModAddonManager.setOverridesFromServer(message.itemOverrides);
         ConfigHandler.libraryShowsModelPreviews = message.libraryShowsModelPreviews;
         ConfigHandler.lockDyesOnSkins = message.lockDyesOnSkins;

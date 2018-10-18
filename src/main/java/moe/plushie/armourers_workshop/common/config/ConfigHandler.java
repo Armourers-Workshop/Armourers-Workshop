@@ -10,6 +10,8 @@ import java.util.UUID;
 
 import moe.plushie.armourers_workshop.common.holiday.Holiday;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraftforge.common.config.Configuration;
 
 public class ConfigHandler {
@@ -32,15 +34,14 @@ public class ConfigHandler {
     public static boolean serverCompressesSkins = true;
     
     // Wardrobe
-    public static boolean allowOpeningWardrobe = true;
-    public static boolean enableWardrobeTabSkins = true;
-    public static boolean enableWardrobeTabOutfits = true;
-    public static boolean enableWardrobeTabDisplaySettings = true;
-    public static boolean enableWardrobeTabColourSettings = true;
-    public static boolean enableWardrobeTabDyes = true;
-    public static int startingWardrobeSlots = 3;
-    public static String storageId;
-    public static int dropSkinsOnDeath = 0;
+    public static boolean wardrobeAllowOpening = true;
+    public static boolean wardrobeTabSkins = true;
+    public static boolean wardrobeTabOutfits = true;
+    public static boolean wardrobeTabDisplaySettings = true;
+    public static boolean wardrobeTabColourSettings = true;
+    public static boolean wardrobeTabDyes = true;
+    public static int wardrobeStartingSlots = 3;
+    public static int wardrobeDropSkinsOnDeath = 0;
     
     // Library
     public static boolean extractOfficialSkins;
@@ -67,9 +68,11 @@ public class ConfigHandler {
     public static int skinCacheExpireTime;
     public static int skinCacheMaxSize;
     
-    // Config sync
+    // Other
     public static UUID remotePlayerId;
-
+    public static String lastVersion;
+    public static boolean hasUpdated;
+    
     public static void init(File file) {
         if (config == null) {
             config = new Configuration(file, "1");
@@ -85,9 +88,37 @@ public class ConfigHandler {
         loadCategoryHolidayEvents();
         loadCategoryEntitySkins();
         loadCategoryCache();
-        
+        checkIfUpdated();
         if (config.hasChanged()) {
             config.save();
+        }
+    }
+    
+    public static boolean canOpenWardrobe() {
+        if (!wardrobeAllowOpening) {
+            return false;
+        }
+        if (!wardrobeTabSkins & !wardrobeTabOutfits &!wardrobeTabDisplaySettings & !wardrobeTabColourSettings & !wardrobeTabDyes) {
+            // No wardrobe tabs are active.
+            return false;
+        }
+        return true;
+    }
+    
+    private static void checkIfUpdated() {
+        String localVersion = LibModInfo.VERSION;
+        if (LibModInfo.VERSION.startsWith("@VER")) {
+            return;
+        }
+        if (versionCompare(lastVersion.replaceAll("-", "."), localVersion.replaceAll("-", ".")) < 0) {
+            ModLogger.log(String.format("Updated from version %s to version %s.", lastVersion, localVersion));
+            config.getCategory(CATEGORY_GENERAL).get("lastVersion").set(localVersion);
+            if (config.hasChanged()) {
+                config.save();
+            }
+            hasUpdated = true;
+        } else {
+            hasUpdated = false;
         }
     }
     
@@ -110,18 +141,38 @@ public class ConfigHandler {
         serverCompressesSkins = config.getBoolean("serverCompressesSkins", CATEGORY_GENERAL, true,
                 "If enabled the server will compress skins before sending them to clients.\n" +
                 "Highly recommended unless the server has a very slow CPU.");
+        
+        if (!LibModInfo.VERSION.startsWith("@VER")) {
+            lastVersion = config.getString("lastVersion", CATEGORY_GENERAL, "0.0",
+                    "Used by the mod to check if it has been updated.");
+        }
     }
     
     private static void loadCategoryWardrobe() {
         config.setCategoryComment(CATEGORY_WARDROBE, "Setting for the players wardrobe.");
         
-        allowOpeningWardrobe = config.getBoolean("allowOpeningWardrobe", CATEGORY_WARDROBE, true,
+        wardrobeAllowOpening = config.getBoolean("wardrobeAllowOpening", CATEGORY_WARDROBE, true,
                 "Allow the player to open the wardrobe GUI.");
         
-        startingWardrobeSlots = config.getInt("startingWardrobeSlots", CATEGORY_WARDROBE, 3, 1, 8,
+        wardrobeTabSkins = config.getBoolean("wardrobeTabSkins", CATEGORY_WARDROBE, true,
+                "Enable the wardrobe skins tab.");
+        
+        wardrobeTabOutfits = config.getBoolean("wardrobeTabOutfits", CATEGORY_WARDROBE, true,
+                "Enable the wardrobe outfits tab.");
+        
+        wardrobeTabDisplaySettings = config.getBoolean("wardrobeTabDisplaySettings", CATEGORY_WARDROBE, true,
+                "Enable the wardrobe display settings tab.");
+        
+        wardrobeTabColourSettings = config.getBoolean("wardrobeTabColourSettings", CATEGORY_WARDROBE, true,
+                "Enable the wardrobe colour settings tab.");
+        
+        wardrobeTabDyes = config.getBoolean("wardrobeTabDyes", CATEGORY_WARDROBE, true,
+                "Enable the wardrobe dyes tab.");
+        
+        wardrobeStartingSlots = config.getInt("wardrobeStartingSlots", CATEGORY_WARDROBE, 3, 1, 8,
                 "Number of slot columns the player starts with for skins.");
         
-        dropSkinsOnDeath = config.getInt("dropSkinsOnDeath", CATEGORY_WARDROBE, 0, 0, 2,
+        wardrobeDropSkinsOnDeath = config.getInt("wardrobeDropSkinsOnDeath", CATEGORY_WARDROBE, 0, 0, 2,
                 "Should skins be dropped on player death.\n"
                 + "0 = use keep inventory rule\n"
                 + "1 = never drop\n"
@@ -187,8 +238,8 @@ public class ConfigHandler {
             String startDateStr = sdf.format(startDate.getTime());
             String endDateStr = sdf.format(endDate.getTime());
             
-            if (dates.contains(":")) {
-                String[] split = dates.split(":");
+            if (dates.contains("-")) {
+                String[] split = dates.split("-");
                 startDateStr = split[0];
                 endDateStr = split[1];
             }
@@ -239,5 +290,26 @@ public class ConfigHandler {
         skinCacheMaxSize = config.getInt("skinCacheMaxSize", CATEGORY_CACHE, 2000, 0, 10000,
                 "Max size the skin cache can reach before skins are removed. Setting to 0 turns off this option.");
         
+    }
+
+    private static int versionCompare(String str1, String str2) {
+        String[] vals1 = str1.split("\\.");
+        String[] vals2 = str2.split("\\.");
+        int i = 0;
+        // set index to first non-equal ordinal or length of shortest version
+        // string
+        while (i < vals1.length && i < vals2.length && vals1[i].equals(vals2[i])) {
+            i++;
+        }
+        // compare first non-equal ordinal number
+        if (i < vals1.length && i < vals2.length) {
+            int diff = Integer.valueOf(vals1[i]).compareTo(Integer.valueOf(vals2[i]));
+            return Integer.signum(diff);
+        }
+        // the strings are equal or one string is a substring of the other
+        // e.g. "1.2.3" = "1.2.3" or "1.2.3" < "1.2.3.4"
+        else {
+            return Integer.signum(vals1.length - vals2.length);
+        }
     }
 }

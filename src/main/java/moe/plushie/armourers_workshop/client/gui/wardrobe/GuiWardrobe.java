@@ -22,6 +22,7 @@ import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import net.minecraft.client.Minecraft;
@@ -45,10 +46,12 @@ public class GuiWardrobe extends GuiTabbed {
     private static final ResourceLocation TEXTURE_TAB = new ResourceLocation(LibGuiResources.WARDROBE_TABS);
     private static final String GUI_NAME = "wardrobe";
     
+    private static int playerActiveTab;
+    
     private final GuiTabWardrobeSkins tabSkins;
     private final GuiTabWardrobeOutfits tabOutfits;
-    //private final GuiTabWardrobeDisplaySettings tabDisplaySettings;
-    //private final GuiTabWardrobeColourSettings tabColourSettings;
+    private final GuiTabWardrobeDisplaySettings tabDisplaySetting;
+    private final GuiTabWardrobeColourSettings tabColourSettings;
     private final GuiTabWardrobeDyes tabDyes;
 
     EntitySkinCapability skinCapability;
@@ -56,6 +59,7 @@ public class GuiWardrobe extends GuiTabbed {
     
     private boolean rotatingPlayer = false;
     private float playerRotation = 45F;
+    private final boolean isPlayer;
 
     private int lastMouseX;
     private int lastMouseY;
@@ -69,55 +73,97 @@ public class GuiWardrobe extends GuiTabbed {
         
         this.player = inventory.player;
         this.skinCapability = skinCapability;
+        isPlayer = wardrobeCapability instanceof IPlayerWardrobeCap;
         
         tabSkins = new GuiTabWardrobeSkins(tabList.size(), this);
         tabList.add(tabSkins);
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.skins"))
+                .setIconLocation(52, 0)
+                .setTabTextureSize(26, 30)
+                .setPadding(0, 4, 3, 3)
+                .setVisable(!isPlayer | (isPlayer & ConfigHandler.wardrobeTabSkins)));
+        
         
         tabOutfits = new GuiTabWardrobeOutfits(tabList.size(), this, player, skinCapability, wardrobeCapability);
         tabList.add(tabOutfits);
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.outfits"))
+                .setIconLocation(52 + 16 * 4, 0)
+                .setTabTextureSize(26, 30)
+                .setPadding(0, 4, 3, 3)
+                .setVisable(!isPlayer | (isPlayer & ConfigHandler.wardrobeTabOutfits)));
         
-        if (wardrobeCapability instanceof IPlayerWardrobeCap) {
-            tabList.add(new GuiTabWardrobeDisplaySettings(tabList.size(), this, player, skinCapability, (IPlayerWardrobeCap) wardrobeCapability));
+        
+        if (isPlayer) {
+            tabDisplaySetting = new GuiTabWardrobeDisplaySettings(tabList.size(), this, player, skinCapability, (IPlayerWardrobeCap) wardrobeCapability);
+            tabList.add(tabDisplaySetting);
+            tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.displaySettings"))
+                    .setIconLocation(52 + 16, 0)
+                    .setTabTextureSize(26, 30)
+                    .setPadding(0, 4, 3, 3)
+                    .setVisable(!isPlayer | (isPlayer & ConfigHandler.wardrobeTabDisplaySettings)));
+        } else {
+            tabDisplaySetting = null;
         }
-        tabList.add(new GuiTabWardrobeColourSettings(tabList.size(), this, player, skinCapability, wardrobeCapability));
+        
+        
+        tabColourSettings = new GuiTabWardrobeColourSettings(tabList.size(), this, player, skinCapability, wardrobeCapability);
+        tabList.add(tabColourSettings);
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.colourSettings"))
+                .setIconLocation(52 + 16 * 2, 0)
+                .setTabTextureSize(26, 30)
+                .setPadding(0, 4, 3, 3)
+                .setVisable(!isPlayer | (isPlayer & ConfigHandler.wardrobeTabColourSettings)));
+        
         
         tabDyes = new GuiTabWardrobeDyes(tabList.size(), this, player, skinCapability, wardrobeCapability);
         tabList.add(tabDyes);
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.dyes"))
+                .setIconLocation(52 + 16 * 3, 0)
+                .setTabTextureSize(26, 30)
+                .setPadding(0, 4, 3, 3)
+                .setVisable(!isPlayer | (isPlayer & ConfigHandler.wardrobeTabDyes)));
         
-        
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.skins")).setIconLocation(52, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.outfits")).setIconLocation(52 + 16 * 4, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
-        if (wardrobeCapability instanceof IPlayerWardrobeCap) {
-            tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.displaySettings")).setIconLocation(52 + 16, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
-        }
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.colourSettings")).setIconLocation(52 + 16 * 2, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.dyes")).setIconLocation(52 + 16 * 3, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
-        
-        tabController.setActiveTabIndex(activeTab);
+        tabController.setActiveTabIndex(getActiveTab());
         
         tabChanged();
     }
     
-    private void setSlotVisibilitySkins(boolean visible) {
-        for (int i = 0; i < ((ContainerSkinWardrobe)inventorySlots).getSkinSlots(); i++) {
-            Object slot = inventorySlots.inventorySlots.get(i);
-            if (slot != null && slot instanceof SlotHidable) {
-                ((SlotHidable)slot).setVisible(visible);
-            }
+    @Override
+    protected int getActiveTab() {
+        if (isPlayer) {
+            return playerActiveTab;
+        } else {
+            return super.getActiveTab();
         }
+    }
+    
+    @Override
+    protected void setActiveTab(int value) {
+        if (isPlayer) {
+            playerActiveTab = value;
+        } else {
+            super.setActiveTab(value);
+        }
+    }
+    
+    public ContainerSkinWardrobe getContainer() {
+        return (ContainerSkinWardrobe) inventorySlots;
+    }
+    
+    private void setSlotVisibilitySkins(boolean visible) {
+        setSlotVisibility(getContainer().getIndexSkinsStart(), getContainer().getIndexSkinsEnd(), visible);
     }
     
     private void setSlotVisibilityDyes(boolean visible) {
-        for (int i = ((ContainerSkinWardrobe)inventorySlots).getSkinSlots(); i < ((ContainerSkinWardrobe)inventorySlots).getSkinSlots() + 8; i++) {
-            Object slot = inventorySlots.inventorySlots.get(i);
-            if (slot != null && slot instanceof SlotHidable) {
-                ((SlotHidable)slot).setVisible(visible);
-            }
-        }
+        setSlotVisibility(getContainer().getIndexDyeStart(), getContainer().getIndexDyeEnd(), visible);
     }
     
     private void setSlotVisibilityOutfits(boolean visible) {
-        for (int i = ((ContainerSkinWardrobe)inventorySlots).getSkinSlots() + 8; i < ((ContainerSkinWardrobe)inventorySlots).getSkinSlots() + 12; i++) {
+        setSlotVisibility(getContainer().getIndexOutfitStart(), getContainer().getIndexOutfitEnd(), visible);
+    }
+    
+    private void setSlotVisibility(int start, int end, boolean visible) {
+        for (int i = start; i < end; i++) {
             Object slot = inventorySlots.inventorySlots.get(i);
             if (slot != null && slot instanceof SlotHidable) {
                 ((SlotHidable)slot).setVisible(visible);
@@ -128,9 +174,9 @@ public class GuiWardrobe extends GuiTabbed {
     @Override
     protected void tabChanged() {
         super.tabChanged();
-        setSlotVisibilitySkins(activeTab == tabSkins.getTabId());
-        setSlotVisibilityDyes(activeTab == tabDyes.getTabId());
-        setSlotVisibilityOutfits(activeTab == tabOutfits.getTabId());
+        setSlotVisibilitySkins(getActiveTab() == tabSkins.getTabId());
+        setSlotVisibilityDyes(getActiveTab() == tabDyes.getTabId());
+        setSlotVisibilityOutfits(getActiveTab() == tabOutfits.getTabId());
     }
     
     @Override
@@ -140,7 +186,7 @@ public class GuiWardrobe extends GuiTabbed {
         GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, GUI_NAME);
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
+            if (tab.getTabId() == getActiveTab()) {
                 tab.drawForegroundLayer(mouseX, mouseY, 0);
             }
         }
@@ -157,7 +203,7 @@ public class GuiWardrobe extends GuiTabbed {
         mc.renderEngine.bindTexture(TEXTURE);
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == activeTab) {
+            if (tab.getTabId() == getActiveTab()) {
                 tab.drawBackgroundLayer(partialTickTime, mouseX, mouseY);
             }
         }
