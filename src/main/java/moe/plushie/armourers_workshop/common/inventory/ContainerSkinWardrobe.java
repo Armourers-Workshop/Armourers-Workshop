@@ -45,7 +45,7 @@ public class ContainerSkinWardrobe extends ModContainer {
         this.dyeInventory = new DyeInventory(wardrobeCapability, invPlayer.player.getEntityWorld().isRemote);
 
         if (wardrobeCapability instanceof IPlayerWardrobeCap) {
-            
+            IPlayerWardrobeCap playerWardrobe = (IPlayerWardrobeCap) wardrobeCapability;
             SkinInventoryContainer skinInv = skinCapability.getSkinInventoryContainer();
 
             WardrobeInventory headInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinHead);
@@ -64,23 +64,23 @@ public class ContainerSkinWardrobe extends ModContainer {
             WardrobeInventory hoeInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinHoe);
 
             for (int i = 0; i < EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE; i++) {
-                if (i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinHead)) {
+                if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinHead)) {
                     addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHead, headInv, i, 70 + i * 20, 27));
                     indexEndSkins += 1;
                 }
-                if (i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinChest)) {
+                if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinChest)) {
                     addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinChest, chestInv, i, 70 + i * 20, 46));
                     indexEndSkins += 1;
                 }
-                if (i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinLegs)) {
+                if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinLegs)) {
                     addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinLegs, legsInv, i, 70 + i * 20, 65));
                     indexEndSkins += 1;
                 }
-                if (i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinFeet)) {
+                if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinFeet)) {
                     addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinFeet, feetInv, i, 70 + i * 20, 84));
                     indexEndSkins += 1;
                 }
-                if (i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinWings)) {
+                if (i < playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinWings)) {
                     addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinWings, wingInv, i, 70 + i * 20, 103));
                     indexEndSkins += 1;
                 }

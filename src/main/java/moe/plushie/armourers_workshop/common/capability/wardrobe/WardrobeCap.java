@@ -1,17 +1,11 @@
 package moe.plushie.armourers_workshop.common.capability.wardrobe;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
-import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientUpdateWardrobeCap;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerSyncWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
-import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,21 +26,11 @@ public class WardrobeCap implements IWardrobeCap {
     
     public final SkinDye dye;
 
-    /** Number of slots the player has unlocked in the wardrobe */
-    public HashMap<String, Integer> slotsUnlocked;
-
     public WardrobeCap(Entity entity, ISkinnableEntity skinnableEntity) {
         this.entity = entity;
         this.skinnableEntity = skinnableEntity;
         extraColours = new ExtraColours();
         dye = new SkinDye();
-        slotsUnlocked = new HashMap<String, Integer>();
-        ArrayList<ISkinType> validSkinTypes = new ArrayList<ISkinType>();
-        skinnableEntity.getValidSkinTypes(validSkinTypes);
-        for (int i = 0; i < validSkinTypes.size(); i++) {
-            ISkinType skinType = validSkinTypes.get(i);
-            slotsUnlocked.put(skinType.getRegistryName(), getUnlockedSlotsForSkinType(skinType));
-        }
     }
 
     @Override
@@ -58,6 +42,11 @@ public class WardrobeCap implements IWardrobeCap {
     public ISkinDye getDye() {
         return dye;
     }
+    
+    @Override
+    public ISkinnableEntity getSkinnableEntity() {
+        return skinnableEntity;
+    }
 
     private byte[] intToByte(int value) {
         return new byte[] { (byte) (value >>> 16 & 0xFF), (byte) (value >>> 16 & 0xFF), (byte) (value & 0xFF) };
@@ -65,26 +54,6 @@ public class WardrobeCap implements IWardrobeCap {
 
     private int byteToInt(byte[] value) {
         return 0;
-    }
-
-
-    public int getUnlockedSlotsForSkinType(ISkinType skinType) {
-        // return skinnableEntity.getSlotsForSkinType(skinType);
-        if (skinType == SkinTypeRegistry.skinBow) {
-            return 1;
-        }
-        if (skinType == SkinTypeRegistry.skinSword) {
-            return 5;
-        }
-        if (slotsUnlocked.containsKey(skinType.getRegistryName())) {
-            return slotsUnlocked.get(skinType.getRegistryName());
-        } else {
-            return ConfigHandler.startingWardrobeSlots;
-        }
-    }
-
-    public void setUnlockedSlotsForSkinType(ISkinType skinType, int value) {
-        slotsUnlocked.put(skinType.getRegistryName(), value);
     }
     
     protected IMessage getUpdateMessage() {

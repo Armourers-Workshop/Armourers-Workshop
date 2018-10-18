@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -55,7 +56,7 @@ public class CommandSetUnlockedWardrobeSlots extends ModCommand {
         }
         
         int count = 3;
-        count = parseInt(args[3], 1, 8);
+        count = parseInt(args[3], 0, 8);
 
         ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(skinTypeName);
         if (skinType == null) {
@@ -64,7 +65,9 @@ public class CommandSetUnlockedWardrobeSlots extends ModCommand {
         
         IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(player);
         if (wardrobeCap != null) {
-            //wardrobeCap.setSkinUnlockCount(skinType, count);
+            ModLogger.log("setting count " + count + " on " + skinType.getRegistryName());
+            wardrobeCap.setUnlockedSlotsForSkinType(skinType, count);
+            wardrobeCap.syncToPlayer(player);
             wardrobeCap.syncToAllTracking();
         }
     }
