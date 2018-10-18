@@ -105,14 +105,14 @@ public class ContainerDyeTable extends Container {
             for (int i = 0; i < 8; i++) {
                 SlotDyeBottle slot = (SlotDyeBottle) getSlot(37 + i);
                 if (!slot.isLocked()) {
-                    UtilItems.spawnItemAtEntity(entityPlayer, slot.getStack());
+                    UtilItems.spawnItemAtEntity(entityPlayer, slot.getStack(), true);
                 }
             }
 
             // Drop output slot.
             Slot slot = getOutputSlot();
             if (slot.getHasStack()) {
-                UtilItems.spawnItemAtEntity(entityPlayer, slot.getStack());
+                UtilItems.spawnItemAtEntity(entityPlayer, slot.getStack(), true);
             }
         }
     }

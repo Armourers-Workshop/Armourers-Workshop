@@ -10,12 +10,13 @@ import org.apache.logging.log4j.Level;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
+import moe.plushie.armourers_workshop.utils.UtilItems;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -132,10 +133,10 @@ public class CommandGiveSkin extends ModCommand {
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
         SkinIdentifier skinIdentifier = new SkinIdentifier(0, libraryFile, 0, skin.getSkinType());
         ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinDescriptor(skinIdentifier, skinDye));
-        /*
-        EntityItem entityItem = player.dropPlayerItemWithRandomChoice(skinStack, false);
-        entityItem.setNoPickupDelay();
-        entityItem.setOwner(player.getName());*/
+        
+        if (!player.inventory.addItemStackToInventory(skinStack)) {
+            UtilItems.spawnItemAtEntity(player, skinStack, true);
+        }
     }
     
     private boolean isValidHex (String colorStr) {

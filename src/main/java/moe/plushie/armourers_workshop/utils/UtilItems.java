@@ -29,8 +29,13 @@ public final class UtilItems {
         stackNbt.setInteger(LibCommonTags.TAG_INTENSITY, intensity);
     }
     
-    public static void spawnItemAtEntity(Entity entity, ItemStack stack) {
-        spawnItemInWorld(entity.getEntityWorld(), entity.posX, entity.posY, entity.posZ, stack);
+    public static void spawnItemAtEntity(Entity entity, ItemStack stack, boolean pickup) {
+        EntityItem entityitem = createEntityItem(entity.getEntityWorld(), entity.posX, entity.posY, entity.posZ, stack);
+        if (pickup) {
+            entityitem.setNoPickupDelay();
+            entityitem.setOwner(entity.getName());
+        }
+        entity.getEntityWorld().spawnEntity(entityitem);
     }
     
     public static void spawnItemInWorld(World world, BlockPos pos, ItemStack stack) {
@@ -38,11 +43,15 @@ public final class UtilItems {
     }
     
     public static void spawnItemInWorld(World world, double x, double y, double z, ItemStack stack) {
+        EntityItem entityitem = createEntityItem(world, x, y, z, stack);
+        world.spawnEntity(entityitem);
+    }
+    
+    private static EntityItem createEntityItem(World world, double x, double y, double z, ItemStack stack) {
         float f = 0.7F;
         double xV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
         double yV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
         double zV = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-        EntityItem entityitem = new EntityItem(world, x + xV, y + yV, z + zV, stack);
-        world.spawnEntity(entityitem);
+        return new EntityItem(world, x + xV, y + yV, z + zV, stack);
     }
 }

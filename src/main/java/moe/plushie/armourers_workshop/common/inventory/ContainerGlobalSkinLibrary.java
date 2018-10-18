@@ -39,11 +39,11 @@ public class ContainerGlobalSkinLibrary extends ModTileContainer<TileEntityGloba
         if (!tileEntity.getWorld().isRemote) {
             Slot slot = getInputSlot();
             if (slot.getHasStack()) {
-                UtilItems.spawnItemAtEntity(entityPlayer, slot.getStack());
+                UtilItems.spawnItemAtEntity(entityPlayer, slot.getStack(), true);
             }
             slot = getOutputSlot();
             if (slot.getHasStack()) {
-                UtilItems.spawnItemAtEntity(entityPlayer, slot.getStack());
+                UtilItems.spawnItemAtEntity(entityPlayer, slot.getStack(), true);
             }
         }
     }
