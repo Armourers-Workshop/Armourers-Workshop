@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.common.blocks;
 import java.util.Random;
 
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
-import moe.plushie.armourers_workshop.utils.HolidayHelper;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -34,7 +34,7 @@ public class BlockDoll extends AbstractModBlockContainer {
         super(LibBlockNames.DOLL, Material.ROCK, SoundType.METAL, !ConfigHandler.hideDollFromCreativeTabs);
         setLightOpacity(0);
         //setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
-        isValentins = HolidayHelper.VALENTINES.isHolidayActive();
+        isValentins = ModHolidays.VALENTINES.isHolidayActive();
         setSortPriority(198);
     }
     

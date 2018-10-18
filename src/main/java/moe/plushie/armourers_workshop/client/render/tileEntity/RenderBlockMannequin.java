@@ -16,13 +16,13 @@ import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.data.BipedRotations;
+import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.inventory.MannequinSlotType;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
-import moe.plushie.armourers_workshop.utils.HolidayHelper;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
@@ -64,8 +64,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
     public void render(TileEntityMannequin te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         mc.profiler.startSection("armourersMannequin");
         mc.profiler.startSection("holidayCheck");
-        isHalloweenSeason = HolidayHelper.HALLOWEEN_SEASON.isHolidayActive();
-        isHalloween = HolidayHelper.HALLOWEEN.isHolidayActive();
+        isHalloweenSeason = ModHolidays.HALLOWEEN_SEASON.isHolidayActive();
+        isHalloween = ModHolidays.HALLOWEEN.isHolidayActive();
         //MannequinFakePlayer fakePlayer = te.getFakePlayer();
         
         mc.profiler.endStartSection("move");

@@ -1,23 +1,18 @@
 package moe.plushie.armourers_workshop.common.items;
 
-import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.holiday.Holiday;
+import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.utils.HolidayHelper;
-import moe.plushie.armourers_workshop.utils.HolidayHelper.Holiday;
 import moe.plushie.armourers_workshop.utils.NBTHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -40,9 +35,11 @@ public class ItemGiftSack extends AbstractModItem {
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
         if (this.isInCreativeTab(tab)) {
             super.getSubItems(tab, items);
-            items.add(createStackForHoliday(HolidayHelper.CHRISTMAS_SEASON));
-            items.add(createStackForHoliday(HolidayHelper.HALLOWEEN_SEASON));
-            items.add(createStackForHoliday(HolidayHelper.VALENTINES));
+            for (Holiday holiday : ModHolidays.getHolidays()) {
+                if (holiday.hasGift()) {
+                    items.add(holiday.getGift(null));
+                }
+            }
         }
     }
     
@@ -82,34 +79,12 @@ public class ItemGiftSack extends AbstractModItem {
         return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStack);
     }
     
-    public ItemStack createStackForHoliday(Holiday holiday) {
-        ItemStack stack = ItemStack.EMPTY;
-        if (holiday == HolidayHelper.CHRISTMAS_SEASON) {
-            stack = new ItemStack(this);
-            stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setInteger(TAG_COLOUR_1, 0x990000);
-            stack.getTagCompound().setInteger(TAG_COLOUR_2, 0x267F00);
-            NBTHelper.writeStackToNBT(stack.getTagCompound(), TAG_GIFT_ITEM, new ItemStack(ModBlocks.doll));
-        }
-        if (holiday == HolidayHelper.HALLOWEEN_SEASON) {
-            stack = new ItemStack(this);
-            stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setInteger(TAG_COLOUR_1, 0xE05900);
-            stack.getTagCompound().setInteger(TAG_COLOUR_2, 0xEEEEEE);
-            NBTHelper.writeStackToNBT(stack.getTagCompound(), TAG_GIFT_ITEM, new ItemStack(Blocks.PUMPKIN));
-        }
-        if (holiday == HolidayHelper.VALENTINES) {
-            stack = new ItemStack(this);
-            stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setInteger(TAG_COLOUR_1, 0xE5A2E5);
-            stack.getTagCompound().setInteger(TAG_COLOUR_2, 0x961596);
-            NBTHelper.writeStackToNBT(stack.getTagCompound(), TAG_GIFT_ITEM, new ItemStack(Items.CAKE));
-        }
+    public static ItemStack createStack(int colour1, int colour2, ItemStack gift) {
+        ItemStack stack = new ItemStack(ModItems.giftSack);
+        stack.setTagCompound(new NBTTagCompound());
+        stack.getTagCompound().setInteger(TAG_COLOUR_1, colour1);
+        stack.getTagCompound().setInteger(TAG_COLOUR_2, colour2);
+        NBTHelper.writeStackToNBT(stack.getTagCompound(), TAG_GIFT_ITEM, gift);
         return stack;
-    }
-    
-    @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        return EnumActionResult.SUCCESS;
     }
 }

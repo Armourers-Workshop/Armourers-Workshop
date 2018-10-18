@@ -8,12 +8,12 @@ import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.common.Contributors;
 import moe.plushie.armourers_workshop.common.Contributors.Contributor;
+import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.items.ItemDebugTool.IDebug;
 import moe.plushie.armourers_workshop.common.items.block.ItemBlockMannequin;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
-import moe.plushie.armourers_workshop.utils.HolidayHelper;
 import moe.plushie.armourers_workshop.utils.UtilItems;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -56,7 +56,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         super(LibBlockNames.MANNEQUIN, Material.ROCK, SoundType.METAL, true);
         setLightOpacity(0);
         //setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
-        isValentins = HolidayHelper.VALENTINES.isHolidayActive();
+        isValentins = ModHolidays.VALENTINES.isHolidayActive();
         setSortPriority(199);
     }
     

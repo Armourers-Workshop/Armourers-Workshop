@@ -40,6 +40,7 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.client.texture.PlayerTextureDownloader;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.items.ItemGiftSack;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
@@ -57,7 +58,6 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLi
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
-import moe.plushie.armourers_workshop.utils.HolidayHelper;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.block.Block;
@@ -197,7 +197,7 @@ public class ClientProxy extends CommonProxy {
         super.postInit(event);
         ModAddonManager.initRenderers();
         EntitySkinRenderHandler.INSTANCE.initRenderer();
-        if (HolidayHelper.VALENTINES.isHolidayActive()) {
+        if (ModHolidays.VALENTINES.isHolidayActive()) {
             enableValentinesClouds();
         }
         

@@ -1,0 +1,23 @@
+package moe.plushie.armourers_workshop.common.holiday;
+
+import moe.plushie.armourers_workshop.common.items.ItemGiftSack;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+
+public class HolidayHalloweenSeason extends Holiday {
+
+    public HolidayHalloweenSeason(String name, int dayOfMonth, int month, int lengthInDays, int lengthInHours) {
+        super(name, dayOfMonth, month, lengthInDays, lengthInHours);
+    }
+    
+    @Override
+    public boolean hasGift() {
+        return true;
+    }
+    
+    @Override
+    public ItemStack getGift(EntityPlayer player) {
+        return ItemGiftSack.createStack(0xE05900, 0xEEEEEE, new ItemStack(Blocks.PUMPKIN));
+    }
+}

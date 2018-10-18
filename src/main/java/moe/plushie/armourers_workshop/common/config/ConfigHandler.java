@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
-import moe.plushie.armourers_workshop.utils.HolidayHelper;
-import moe.plushie.armourers_workshop.utils.HolidayHelper.Holiday;
+import moe.plushie.armourers_workshop.common.holiday.Holiday;
+import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import net.minecraftforge.common.config.Configuration;
 
 public class ConfigHandler {
@@ -173,7 +173,7 @@ public class ConfigHandler {
         
         SimpleDateFormat sdf = new SimpleDateFormat("MM:dd:HH", Locale.ENGLISH);
         
-        for (Holiday holiday : HolidayHelper.getHolidays()) {
+        for (Holiday holiday : ModHolidays.getHolidays()) {
             boolean holidayEnabled = config.getBoolean("holiday-" + holiday.getName() + "-enabled", CATEGORY_HOLIDAY, true,
                     "Enable holiday.");
             
