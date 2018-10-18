@@ -28,19 +28,27 @@ public class ModConfigGui extends GuiConfig {
                 .getChildElements());
         
         configs.addAll(new ConfigElement(ConfigHandler.config
+                .getCategory(ConfigHandler.CATEGORY_WARDROBE))
+                .getChildElements());
+        
+        configs.addAll(new ConfigElement(ConfigHandler.config
+                .getCategory(ConfigHandler.CATEGORY_LIBRARY))
+                .getChildElements());
+        
+        configs.addAll(new ConfigElement(ConfigHandler.config
                 .getCategory(ConfigHandler.CATEGORY_RECIPE))
                 .getChildElements());
         
         configs.addAll(new ConfigElement(ConfigHandler.config
-                .getCategory(ConfigHandler.CATEGORY_SERVER))
-                .getChildElements());
-        
-        configs.addAll(new ConfigElement(ConfigHandler.config
-                .getCategory(ConfigHandler.CATEGORY_COMPATIBILITY))
+                .getCategory(ConfigHandler.CATEGORY_HOLIDAY))
                 .getChildElements());
         
         configs.addAll(new ConfigElement(ConfigHandler.config
                 .getCategory(ConfigHandler.CATEGORY_ENTITY_SKINS))
+                .getChildElements());
+        
+        configs.addAll(new ConfigElement(ConfigHandler.config
+                .getCategory(ConfigHandler.CATEGORY_CACHE))
                 .getChildElements());
         
         configs.addAll(new ConfigElement(ConfigHandlerClient.config

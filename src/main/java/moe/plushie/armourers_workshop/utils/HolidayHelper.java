@@ -19,24 +19,24 @@ public final class HolidayHelper {
     private static ArrayList<Holiday> holidayList;
     
     // Spooky scary skeletons.
-    public static final Holiday halloween = new Holiday(31, Calendar.OCTOBER, 0, 24);
-    public static final Holiday halloween_season = new Holiday(24, Calendar.OCTOBER, 8, 0);
+    public static final Holiday halloween = new Holiday("halloween", 31, Calendar.OCTOBER, 1, 0);
+    public static final Holiday halloween_season = new Holiday("halloween-season", 24, Calendar.OCTOBER, 8, 0);
     
     // Some guy was born or something.
-    public static final Holiday christmas = new Holiday(25, Calendar.DECEMBER, 0, 24);
-    public static final Holiday christmas_season = new Holiday(1, Calendar.DECEMBER, 31, 0);
+    public static final Holiday christmas = new Holiday("christmas", 25, Calendar.DECEMBER, 0, 24);
+    public static final Holiday christmas_season = new Holiday("christmas-season", 1, Calendar.DECEMBER, 31, 0);
     
     // Forever alone.
-    public static final Holiday valentines = new Holiday(14, Calendar.FEBRUARY, 1, 0);
+    public static final Holiday valentines = new Holiday("valentines", 14, Calendar.FEBRUARY, 1, 0);
     
     // year++
-    public static final Holiday newYears = new Holiday(1, Calendar.JANUARY, 1, 0);
+    public static final Holiday newYears = new Holiday("new-years", 1, Calendar.JANUARY, 1, 0);
     
     // The best holiday!
-    public static final Holiday ponytailDay = new Holiday(7, Calendar.JULY, 1, 0);
+    public static final Holiday ponytailDay = new Holiday("ponytail-day", 7, Calendar.JULY, 1, 0);
     
     // Should be 12 but making it 24 so more people can see it.
-    public static final Holiday aprilFools = new Holiday(1, Calendar.APRIL, 1, 0);
+    public static final Holiday aprilFools = new Holiday("april-fools", 1, Calendar.APRIL, 1, 0);
     
     static {
         holidayList = new ArrayList<HolidayHelper.Holiday>();
@@ -48,6 +48,10 @@ public final class HolidayHelper {
         holidayList.add(newYears);
         holidayList.add(ponytailDay);
         holidayList.add(aprilFools);
+    }
+    
+    public static ArrayList<Holiday> getHolidays() {
+        return holidayList;
     }
     
     public static ArrayList<Holiday> getActiveHolidays() {
@@ -97,8 +101,11 @@ public final class HolidayHelper {
     
     public static class Holiday {
         
-        private final Calendar startDate;
-        private final Calendar endDate;
+        private final String name;
+        private Calendar startDate;
+        private Calendar endDate;
+        private final boolean hasGift;
+        private boolean enabled = true;
         
         /**
          * Creates and new holiday that spans x number of hours.
@@ -107,24 +114,66 @@ public final class HolidayHelper {
          * @param month Month this holiday takes place on. Zero based 0 = Jan, 11 = Dec
          * @param lengthInHours Number of hours this holiday lasts.
          */
-        public Holiday(int dayOfMonth, int month, int lengthInDays, int lengthInHours) {
+        public Holiday(String name, int dayOfMonth, int month, int lengthInDays, int lengthInHours, boolean hasGift) {
+            this.name = name;
             startDate = Calendar.getInstance();
             startDate.set(Calendar.MINUTE, 0);
             startDate.set(Calendar.HOUR_OF_DAY, 0);
             startDate.set(Calendar.MONTH, month);
             startDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             endDate = (Calendar) startDate.clone();
-            endDate.add(Calendar.HOUR_OF_DAY, (lengthInDays * 24) + lengthInHours);
+            endDate.add(Calendar.DAY_OF_MONTH, lengthInDays);
+            endDate.add(Calendar.HOUR_OF_DAY, lengthInHours);
+            this.hasGift = hasGift;
+        }
+        
+        public Holiday(String name, int dayOfMonth, int month, int lengthInDays, int lengthInHours) {
+            this(name, dayOfMonth, month, lengthInDays, lengthInHours, false);
+        }
+        
+        public String getName() {
+            return name;
+        }
+        
+        public Calendar getStartDate() {
+            return startDate;
+        }
+        
+        public void setStartDate(Calendar startDate) {
+            this.startDate = startDate;
+        }
+        
+        public Calendar getEndDate() {
+            return endDate;
+        }
+        
+        public void setEndDate(Calendar endDate) {
+            this.endDate = endDate;
+        }
+        
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+        
+        public boolean isEnabled() {
+            return enabled;
         }
         
         public boolean isHolidayActive() {
             Calendar current = Calendar.getInstance();
-            if (ConfigHandler.enableHolidayEvents) {
+            if (ConfigHandler.disableAllHolidayEvents) {
+                return false;
+            }
+            if (enabled) {
                 if (current.after(startDate) & current.before(endDate)) {
                     return true;
                 }
             }
             return false;
+        }
+        
+        public boolean getHasGift() {
+            return hasGift;
         }
 
         @Override

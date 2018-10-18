@@ -35,8 +35,8 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     }
     
     public MessageServerSyncConfig() {
-        this.allowClientsToDownloadSkins = ConfigHandler.allowClientsToDownloadSkins;
-        this.allowClientsToUploadSkins = ConfigHandler.allowClientsToUploadSkins;
+        this.allowClientsToDownloadSkins = ConfigHandler.allowDownloadingSkins;
+        this.allowClientsToUploadSkins = ConfigHandler.allowUploadingSkins;
         this.itemOverrides = ModAddonManager.getItemOverrides().toArray(new String[ModAddonManager.getItemOverrides().size()]);
         this.libraryShowsModelPreviews = ConfigHandler.libraryShowsModelPreviews;
         this.lockDyesOnSkins = ConfigHandler.lockDyesOnSkins;
@@ -84,8 +84,8 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     
     @SideOnly(Side.CLIENT)
     private void setConfigsOnClient(MessageServerSyncConfig message) {
-        ConfigHandler.allowClientsToDownloadSkins = message.allowClientsToDownloadSkins;
-        ConfigHandler.allowClientsToUploadSkins = message.allowClientsToUploadSkins;
+        ConfigHandler.allowDownloadingSkins = message.allowClientsToDownloadSkins;
+        ConfigHandler.allowUploadingSkins = message.allowClientsToUploadSkins;
         ModAddonManager.setOverridesFromServer(message.itemOverrides);
         ConfigHandler.libraryShowsModelPreviews = message.libraryShowsModelPreviews;
         ConfigHandler.lockDyesOnSkins = message.lockDyesOnSkins;

@@ -22,7 +22,7 @@ public class ConfigHandlerOverrides {
 
     public static void init(File file) {
         if (config == null) {
-            config = new Configuration(file);
+            config = new Configuration(file, "1");
             loadConfigFile();
         }
     }

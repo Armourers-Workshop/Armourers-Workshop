@@ -55,9 +55,10 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 @Mod.EventBusSubscriber(modid = LibModInfo.ID)
 public class CommonProxy implements ILibraryCallback {
     
-    private static File instanceDirectory;
-    private static File modDirectory;
-    private static File skinLibraryDirectory;
+    private File modConfigDirectory;
+    private File instanceDirectory;
+    private File modDirectory;
+    private File skinLibraryDirectory;
     
     private static MinecraftServer server;
     private static ModItems modItems;
@@ -66,11 +67,14 @@ public class CommonProxy implements ILibraryCallback {
     private PermissionSystem permissionSystem;
     
     public void preInit(FMLPreInitializationEvent event) {
-        File configDir = event.getSuggestedConfigurationFile().getParentFile();
-        configDir = new File(configDir, LibModInfo.ID);
-        if (!configDir.exists()) {
-            configDir.mkdirs();
+        modConfigDirectory = new File(event.getSuggestedConfigurationFile().getParentFile(), LibModInfo.ID);
+        if (!modConfigDirectory.exists()) {
+            modConfigDirectory.mkdirs();
         }
+        ModAddonManager.preInit();
+        ConfigHandler.init(new File(modConfigDirectory, "common.cfg"));
+        ConfigHandlerOverrides.init(new File(modConfigDirectory, "overrides.cfg"));
+        
         instanceDirectory = event.getSuggestedConfigurationFile().getParentFile().getParentFile();
         modDirectory = new File(instanceDirectory, LibModInfo.ID);
         if (!modDirectory.exists()) {
@@ -81,9 +85,7 @@ public class CommonProxy implements ILibraryCallback {
             skinLibraryDirectory.mkdir();
         }
         
-        ModAddonManager.preInit();
-        ConfigHandler.init(new File(configDir, "common.cfg"));
-        ConfigHandlerOverrides.init(new File(configDir, "overrides.cfg"));
+        ModLogger.log("user home: " + System.getProperty("user.home"));
         
         EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "seat"), Seat.class, "seat", 1, ArmourersWorkshop.instance, 10, 20, false);
         
@@ -241,11 +243,15 @@ public class CommonProxy implements ILibraryCallback {
         return libraryManager;
     }
     
-    public static File getInstanceDirectory() {
+    public File getModConfigDirectory() {
+        return modConfigDirectory;
+    }
+    
+    public File getInstanceDirectory() {
         return instanceDirectory;
     }
     
-    public static File getModDirectory() {
+    public File getModDirectory() {
         return modDirectory;
     }
     
@@ -253,7 +259,7 @@ public class CommonProxy implements ILibraryCallback {
         return skinLibraryDirectory;
     }
     
-    public static File getGlobalSkinDatabaseDirectory() {
+    public File getGlobalSkinDatabaseDirectory() {
         return new File(modDirectory, "global-skin-database");
     }
     

@@ -623,9 +623,9 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             if (!mc.isIntegratedServerRunning()) {
                 loadSaveButton.enabled = false;
                 if (isLoading()) {
-                    loadSaveButton.enabled = ConfigHandler.allowClientsToUploadSkins;
+                    loadSaveButton.enabled = ConfigHandler.allowUploadingSkins;
                 } else {
-                    loadSaveButton.enabled = ConfigHandler.allowClientsToDownloadSkins;
+                    loadSaveButton.enabled = ConfigHandler.allowDownloadingSkins;
                 }
             }
         } else {

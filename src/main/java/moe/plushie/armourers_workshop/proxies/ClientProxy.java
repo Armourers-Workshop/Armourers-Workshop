@@ -130,9 +130,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
-        File configDir = event.getSuggestedConfigurationFile().getParentFile();
-        configDir = new File(configDir, LibModInfo.ID);
-        ConfigHandlerClient.init(new File(configDir, "client.cfg"));
+        ConfigHandlerClient.init(new File(getModConfigDirectory(), "client.cfg"));
         
         enableCrossModSupport();
         spamSillyMessages();

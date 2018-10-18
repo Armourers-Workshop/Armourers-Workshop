@@ -28,7 +28,7 @@ public final class SkinUploadHelper {
     private static final int MAX_PACKET_SIZE = 30000;
     
     public static void uploadSkinToServer(Skin skin) {
-        if (!ConfigHandler.allowClientsToUploadSkins) {
+        if (!ConfigHandler.allowUploadingSkins) {
             return;
         }
         skin.requestId = new SkinIdentifier(skin);
@@ -80,7 +80,7 @@ public final class SkinUploadHelper {
             ModLogger.log("Downloaded skin " + skin + " from client " + player);
             Container container = player.openContainer;
             
-            if (!ConfigHandler.allowClientsToUploadSkins) {
+            if (!ConfigHandler.allowUploadingSkins) {
                 return;
             }
             

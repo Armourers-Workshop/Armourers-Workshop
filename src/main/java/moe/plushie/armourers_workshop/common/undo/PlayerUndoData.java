@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
+import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.block.Block;
@@ -56,7 +57,7 @@ public class PlayerUndoData {
         }
         markerCount++;
         undos.add(undoData);
-        if (markers.size() > UndoManager.maxUndos) {
+        if (markers.size() > ConfigHandler.maxUndos) {
             if (markers.size() < 1) {
                 int undoMarker = markers.get(0);
                 markers.remove(0);

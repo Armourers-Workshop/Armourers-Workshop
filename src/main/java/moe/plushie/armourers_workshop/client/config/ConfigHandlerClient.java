@@ -85,6 +85,7 @@ public class ConfigHandlerClient {
     
     private static void loadCategoryMisc() {
         config.setCategoryComment(CATEGORY_MISC, "Miscellaneous settings.");
+        
         skinLoadAnimationTime = config.getInt("skinLoadAnimationTime", CATEGORY_MISC, 200, 0, 10000,
                 "How long skins will display their loading animation for in milliseconds\n"
                 + "Settings this to 0 will disable loading animations.");
@@ -92,6 +93,7 @@ public class ConfigHandlerClient {
     
     private static void loadCategoryPerformance() {
         config.setCategoryComment(CATEGORY_PERFORMANCE, "Change (visual quality/performance) ratio by category setting in this category.");
+        
         renderDistanceSkin = config.getInt("renderDistanceSkin", CATEGORY_PERFORMANCE, 128, 16, 512,
                 "The max distance in blocks that skins will render.");
         
@@ -132,6 +134,7 @@ public class ConfigHandlerClient {
     
     private static void loadCategoryCache() {
         config.setCategoryComment(CATEGORY_CACHE, "Change (memory use/IO access) ratio by category setting in this category.");
+        
         // Skin cache
         skinCacheExpireTime = config.getInt("skinCacheExpireTime", CATEGORY_CACHE, 600, 1, 3600,
                 "How long in seconds the client will keep skins in it's cache.\n"
@@ -165,6 +168,7 @@ public class ConfigHandlerClient {
     
     private static void loadCategorySkinPreview() {
         config.setCategoryComment(CATEGORY_SKIN_PREVIEW, "Setting to configure the skin preview box.");
+        
         skinPreEnabled = config.getBoolean("skinPreEnabled", CATEGORY_SKIN_PREVIEW, true,
                 "Enables a larger skin preview box when hovering the mouse over a skin.");
         
@@ -186,6 +190,7 @@ public class ConfigHandlerClient {
     
     private static void loadCategoryDebug() {
         config.setCategoryComment(CATEGORY_DEBUG, "Debug settings.");
+        
         skinRenderType = config
                 .getInt("skinRenderType", CATEGORY_DEBUG, 0, 0, 3,
                 "Only change this if you are having rendering issues with skins on players." +

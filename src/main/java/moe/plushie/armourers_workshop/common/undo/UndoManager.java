@@ -16,8 +16,6 @@ import net.minecraft.world.World;
  *
  */
 public final class UndoManager {
-
-    public static int maxUndos = 50;
     
     private static HashMap<String, PlayerUndoData> playerUndoData = new HashMap<String, PlayerUndoData>();
 

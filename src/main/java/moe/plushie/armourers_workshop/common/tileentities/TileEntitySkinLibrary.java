@@ -168,7 +168,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
     }
     
     public void sendArmourToClient(String filename, String filePath, EntityPlayerMP player) {
-        if (!ConfigHandler.allowClientsToDownloadSkins) {
+        if (!ConfigHandler.allowDownloadingSkins) {
             return;
         }
         ItemStack stackInput = getStackInSlot(0);
