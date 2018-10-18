@@ -198,9 +198,7 @@ public final class SkinIOUtils {
         ModLogger.log("Loading skin database at: " + directory.getAbsolutePath());
         copyGlobalDatabase();
         if (!directory.exists()) {
-            if (directory.mkdir()) {
-                copyOldDatabase();
-            }
+            directory.mkdir();
         }
     }
     
@@ -208,29 +206,6 @@ public final class SkinIOUtils {
         File directory = getSkinLibraryDirectory();
         if (!directory.exists()) {
             directory.mkdir();
-        }
-    }
-    
-    public static void copyOldDatabase() {
-        ModLogger.log("Moving skin database to a new location.");
-        
-        File dirNewDatabase = getSkinDatabaseDirectory();
-        File dirOldDatabase = getOldSkinDatabaseDirectory();
-        if (!dirOldDatabase.exists()) {
-            ModLogger.log("Old database not found.");
-            return;
-        }
-        
-        File[] oldFiles = dirOldDatabase.listFiles();
-        for (int i = 0; i < oldFiles.length; i++) {
-            File oldFile = oldFiles[i];
-            ModLogger.log("Copying file: " + oldFile.getName());
-            File newFile = new File(dirNewDatabase, oldFile.getName());
-            try {
-                FileUtils.copyFile(oldFile, newFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
     
@@ -278,10 +253,6 @@ public final class SkinIOUtils {
     
     public static File getSkinDatabaseDirectory() {
         return new File(DimensionManager.getCurrentSaveRootDirectory(), "skin-database");
-    }
-    
-    public static File getOldSkinDatabaseDirectory() {
-        return new File(System.getProperty("user.dir"), "equipment-database");
     }
     
     public static File getGlobalSkinDatabaseDirectory() {
