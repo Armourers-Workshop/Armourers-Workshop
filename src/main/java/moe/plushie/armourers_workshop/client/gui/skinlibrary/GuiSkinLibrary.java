@@ -672,7 +672,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         if (files!= null) {
             for (int i = 0; i < files.size(); i++) {
                 LibraryFile file = files.get(i);
-                if (skinTypeFilter == null | skinTypeFilter == file.skinType) {
+                if (file.isDirectory() | (skinTypeFilter == null | skinTypeFilter == file.skinType)) {
                     if (file.filePath.equals(currentFolder)) {
                         if (!searchTextbox.getText().equals("")) {
                             if (file.fileName.toLowerCase().contains(searchTextbox.getText().toLowerCase())) {
