@@ -228,11 +228,6 @@ public final class ClientWardrobeHandler {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.getEntityPlayer();
-        /*
-        if (player instanceof MannequinFakePlayer) {
-            return;
-        }
-        */
         if (player instanceof FakePlayer) {
             return;
         }
@@ -268,7 +263,7 @@ public final class ClientWardrobeHandler {
         }
     }
     
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderLivingPre(RenderLivingEvent.Pre<EntityPlayer> event) {
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(event.getEntity());
         if (skinCapability == null) {
@@ -292,25 +287,34 @@ public final class ClientWardrobeHandler {
                 if (skin == null) {
                     continue;
                 }
+                // Check if the skin has override enabled.
                 if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
                     if (i == 0) {
+                        // Head
                         modelPlayer.bipedHead.isHidden = true;
                         modelPlayer.bipedHeadwear.isHidden = true;
                     } else if(i == 1) {
+                        // Chest
                         modelPlayer.bipedBody.isHidden = true;
                         modelPlayer.bipedBodyWear.isHidden = true;
+                        
                         modelPlayer.bipedLeftArm.isHidden = true;
                         modelPlayer.bipedLeftArmwear.isHidden = true;
+                        
                         modelPlayer.bipedRightArm.isHidden = true;
-                        modelPlayer.bipedLeftArmwear.isHidden = true;
+                        modelPlayer.bipedRightArmwear.isHidden = true;
                     } else if(i == 2) {
+                        // Legs
                         modelPlayer.bipedLeftLeg.isHidden = true;
                         modelPlayer.bipedLeftLegwear.isHidden = true;
+                        
                         modelPlayer.bipedRightLeg.isHidden = true;
                         modelPlayer.bipedRightLegwear.isHidden = true;
                     } else if(i == 3) {
+                        // Feet
                         modelPlayer.bipedLeftLeg.isHidden = true;
                         modelPlayer.bipedLeftLegwear.isHidden = true;
+                        
                         modelPlayer.bipedRightLeg.isHidden = true;
                         modelPlayer.bipedRightLegwear.isHidden = true;
                     }
@@ -319,7 +323,7 @@ public final class ClientWardrobeHandler {
         }
     }
     
-    @SubscribeEvent()
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRenderLivingPost(RenderLivingEvent.Post<EntityPlayer> event) {
         // Restore the player model.
         for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
@@ -329,13 +333,16 @@ public final class ClientWardrobeHandler {
             
             modelPlayer.bipedBody.isHidden = false;
             modelPlayer.bipedBodyWear.isHidden = false;
+            
             modelPlayer.bipedLeftArm.isHidden = false;
             modelPlayer.bipedLeftArmwear.isHidden = false;
+            
             modelPlayer.bipedRightArm.isHidden = false;
-            modelPlayer.bipedLeftArmwear.isHidden = false;
+            modelPlayer.bipedRightArmwear.isHidden = false;
 
             modelPlayer.bipedLeftLeg.isHidden = false;
             modelPlayer.bipedLeftLegwear.isHidden = false;
+            
             modelPlayer.bipedRightLeg.isHidden = false;
             modelPlayer.bipedRightLegwear.isHidden = false;
         }
