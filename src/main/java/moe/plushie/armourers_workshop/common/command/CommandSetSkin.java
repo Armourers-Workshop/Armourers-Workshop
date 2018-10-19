@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Level;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
+import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
@@ -89,12 +90,17 @@ public class CommandSetSkin extends ModCommand {
                 throw new WrongUsageException(getUsage(sender), (Object)skinName);
             }
             String commandSplit[] = dyeCommand.split("-");
-            if (commandSplit.length != 2) {
+            if (commandSplit.length < 2 | commandSplit.length > 3) {
                 throw new WrongUsageException(getUsage(sender), (Object)skinName);
             }
             
             int dyeIndex = parseInt(commandSplit[0], 1, 8) - 1;
             String dye = commandSplit[1];
+            PaintType t = PaintType.NORMAL;
+            if (commandSplit.length == 3) {
+                String dyeString = commandSplit[2];
+                t = PaintType.valueOf(dyeString.toUpperCase());
+            }
             
             if (dye.startsWith("#") && dye.length() == 7) {
                 //dye = dye.substring(2, 8);
@@ -103,7 +109,7 @@ public class CommandSetSkin extends ModCommand {
                     int r = dyeColour.getRed();
                     int g = dyeColour.getGreen();
                     int b = dyeColour.getBlue();
-                    skinDye.addDye(dyeIndex, new byte[] {(byte)r, (byte)g, (byte)b, (byte)255});
+                    skinDye.addDye(dyeIndex, new byte[] {(byte)r, (byte)g, (byte)b, (byte)t.getKey()});
                 } else {
                     throw new WrongUsageException("commands.armourers.invalidDyeFormat", (Object)dye);
                 }
@@ -115,7 +121,7 @@ public class CommandSetSkin extends ModCommand {
                 int r = parseInt(dyeValues[0], 0, 255);
                 int g = parseInt(dyeValues[1], 0, 255);
                 int b = parseInt(dyeValues[2], 0, 255);
-                skinDye.addDye(dyeIndex, new byte[] {(byte)r, (byte)g, (byte)b, (byte)255});
+                skinDye.addDye(dyeIndex, new byte[] {(byte)r, (byte)g, (byte)b, (byte)t.getKey()});
             } else {
                 throw new WrongUsageException("commands.armourers.invalidDyeFormat", (Object)dye);
             }
