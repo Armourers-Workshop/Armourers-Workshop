@@ -2,11 +2,15 @@ package moe.plushie.armourers_workshop.client.render.entity;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.client.model.skin.ModelSkinBow;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
@@ -80,7 +84,8 @@ public class SkinLayerRendererHeldItem extends LayerHeldItem {
             
             boolean didRender = false;
             for (int i = 0; i < ItemOverrideType.values().length; i++) {
-                if (ModAddonManager.isOverrideItem(ItemOverrideType.values()[i], itemStack.getItem())) {
+                ItemOverrideType overrideType = ItemOverrideType.values()[i];
+                if (ModAddonManager.isOverrideItem(overrideType, itemStack.getItem())) {
                     ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
                     if (descriptor == null) {
                         descriptor = skinCapability.getSkinDescriptor(skinTypes[i], 0);
@@ -94,7 +99,20 @@ public class SkinLayerRendererHeldItem extends LayerHeldItem {
                             GlStateManager.scale(-1, 1, 1);
                             GlStateManager.cullFace(CullFace.FRONT);
                         }
-                        SkinItemRenderHelper.renderSkinWithoutHelper(descriptor, false);
+                        if (overrideType != ItemOverrideType.BOW) {
+                            SkinItemRenderHelper.renderSkinWithoutHelper(descriptor, false);
+                        } else {
+                            Skin skin = ClientSkinCache.INSTANCE.getSkin(descriptor);
+                            if (skin != null) {
+                                int useCount = entityLivingBase.getItemInUseCount();
+                                ModelSkinBow model = SkinModelRenderer.INSTANCE.customBow;
+                                model.frame = getAnimationFrame(entityLivingBase.getItemInUseMaxCount());
+                                //ModLogger.log("useCount:" + useCount + " maxUse:" + entityLivingBase.getItemInUseMaxCount());
+                                
+                                model.render(entityLivingBase, skin, false, descriptor.getSkinDye(), null, false, 0, false);
+                            }
+                        }
+                        
                         if (flag) {
                             GlStateManager.cullFace(CullFace.BACK);
                         }
@@ -110,5 +128,15 @@ public class SkinLayerRendererHeldItem extends LayerHeldItem {
             }
             GlStateManager.popMatrix();
         }
+    }
+    
+    private int getAnimationFrame(int useCount) {
+        if (useCount >= 18) {
+            return 2;
+        }
+        if (useCount > 13) {
+            return 1;
+        }
+        return 0;
     }
 }

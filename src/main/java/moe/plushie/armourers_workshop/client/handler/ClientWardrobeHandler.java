@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.client.handler;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.client.model.skin.ModelSkinBow;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
@@ -79,12 +80,14 @@ public final class ClientWardrobeHandler {
                 SkinTypeRegistry.skinItem
         };
         
+        ItemOverrideType overrideType = null;
         ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
         if (descriptor == null) {
             IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
             if (skinCapability != null) {
                 for (int i = 0; i < ItemOverrideType.values().length; i++) {
-                    if (ModAddonManager.isOverrideItem(ItemOverrideType.values()[i], itemStack.getItem())) {
+                    overrideType = ItemOverrideType.values()[i];
+                    if (ModAddonManager.isOverrideItem(overrideType, itemStack.getItem())) {
                         
                         ISkinDescriptor descriptorItem = skinCapability.getSkinDescriptor(skinTypes[i], 0);
                         if (descriptorItem != null) {
@@ -114,18 +117,38 @@ public final class ClientWardrobeHandler {
         
         GlStateManager.enableCull();
         GlStateManager.scale(-1, -1, 1);
-        GlStateManager.translate(0, 0.0625F * 2, 0.0625F * 2);
+        GlStateManager.translate(0, 0.0625F * 1, 0.0625F * 1);
         if (flag) {
             GlStateManager.scale(-1, 1, 1);
             GlStateManager.cullFace(CullFace.FRONT);
         }
-        SkinItemRenderHelper.renderSkinWithoutHelper(descriptor, false);
+        if (overrideType != ItemOverrideType.BOW) {
+            SkinItemRenderHelper.renderSkinWithoutHelper(descriptor, false);
+        } else {
+            Skin skin = ClientSkinCache.INSTANCE.getSkin(descriptor);
+            if (skin != null) {
+                int useCount = player.getItemInUseMaxCount();
+                ModelSkinBow model = SkinModelRenderer.INSTANCE.customBow;
+                model.frame = getAnimationFrame(useCount);
+                model.render(player, skin, false, descriptor.getSkinDye(), null, false, 0, false);
+            }
+        }
         if (flag) {
             GlStateManager.cullFace(CullFace.BACK);
         }
         GlStateManager.disableCull();
         
         GlStateManager.popMatrix();
+    }
+    
+    private int getAnimationFrame(int useCount) {
+        if (useCount >= 18) {
+            return 2;
+        }
+        if (useCount > 13) {
+            return 1;
+        }
+        return 0;
     }
     
     public void renderItemInFirstPerson(AbstractClientPlayer player, float p_187457_2_, float p_187457_3_, EnumHand hand, float p_187457_5_, ItemStack stack, float equipProgress) {
