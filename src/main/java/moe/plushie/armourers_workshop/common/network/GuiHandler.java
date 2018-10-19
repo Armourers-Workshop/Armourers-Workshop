@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.client.gui.GuiColourMixer;
 import moe.plushie.armourers_workshop.client.gui.GuiDebugTool;
 import moe.plushie.armourers_workshop.client.gui.GuiDyeTable;
 import moe.plushie.armourers_workshop.client.gui.GuiGuideBook;
+import moe.plushie.armourers_workshop.client.gui.GuiOutfit;
 import moe.plushie.armourers_workshop.client.gui.GuiSkinnable;
 import moe.plushie.armourers_workshop.client.gui.GuiSkinningTable;
 import moe.plushie.armourers_workshop.client.gui.GuiToolOptions;
@@ -30,6 +31,7 @@ import moe.plushie.armourers_workshop.common.inventory.ContainerDyeTable;
 import moe.plushie.armourers_workshop.common.inventory.ContainerGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.common.inventory.ContainerHologramProjector;
 import moe.plushie.armourers_workshop.common.inventory.ContainerMannequin;
+import moe.plushie.armourers_workshop.common.inventory.ContainerOutfit;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinnable;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinningTable;
@@ -151,6 +153,11 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerHologramProjector(player.inventory, (TileEntityHologramProjector)te);
                 }
                 break;
+            case LibGuiIds.OUTFIT:
+                if (player.getHeldItemMainhand().getItem() == ModItems.outfit) {
+                    return new ContainerOutfit(player.inventory, player.getHeldItemMainhand());
+                }
+                break;
         }
         return null;
     }
@@ -256,6 +263,11 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.HOLOGRAM_PROJECTOR:
                 if (te instanceof TileEntityHologramProjector) {
                     return new GuiHologramProjector(player.inventory, (TileEntityHologramProjector)te);
+                }
+                break;
+            case LibGuiIds.OUTFIT:
+                if (player.getHeldItemMainhand().getItem() == ModItems.outfit) {
+                    return new GuiOutfit(player, player.getHeldItemMainhand());
                 }
                 break;
         }

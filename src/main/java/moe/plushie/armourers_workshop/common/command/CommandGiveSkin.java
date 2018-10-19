@@ -100,7 +100,6 @@ public class CommandGiveSkin extends ModCommand {
             }
             
             if (dye.startsWith("#") && dye.length() == 7) {
-                //dye = dye.substring(2, 8);
                 if (isValidHex(dye)) {
                     Color dyeColour = Color.decode(dye);
                     int r = dyeColour.getRed();
