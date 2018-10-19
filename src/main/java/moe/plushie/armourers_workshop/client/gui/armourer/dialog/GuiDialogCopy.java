@@ -1,8 +1,5 @@
 package moe.plushie.armourers_workshop.client.gui.armourer.dialog;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog;
@@ -14,6 +11,9 @@ import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.type.block.SkinBlock;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiDialogCopy extends AbstractGuiDialog {
@@ -94,6 +94,8 @@ public class GuiDialogCopy extends AbstractGuiDialog {
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(name, "srcPart"), x + 10, y + 25, 4210752);
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(name, "desPart"), x + 100, y + 25, 4210752);
         drawTitle();
+        dropDownSrcPart.drawForeground(mc, mouseX, mouseY, partialTickTime);
+        dropDownDesPart.drawForeground(mc, mouseX, mouseY, partialTickTime);
     }
     
     public ISkinPartType getSrcPart() {

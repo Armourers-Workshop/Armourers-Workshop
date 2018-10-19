@@ -1,8 +1,5 @@
 package moe.plushie.armourers_workshop.client.gui.armourer.dialog;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog;
@@ -14,6 +11,9 @@ import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.type.block.SkinBlock;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiDialogClear extends AbstractGuiDialog {
@@ -108,5 +108,6 @@ public class GuiDialogClear extends AbstractGuiDialog {
     public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
         super.drawForeground(mouseX, mouseY, partialTickTime);
         drawTitle();
+        dropDownParts.drawForeground(mc, mouseX, mouseY, partialTickTime);
     }
 }

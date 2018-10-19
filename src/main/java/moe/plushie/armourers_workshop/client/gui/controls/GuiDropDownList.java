@@ -7,6 +7,7 @@ import org.lwjgl.input.Mouse;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.Loader;
@@ -77,6 +78,8 @@ public class GuiDropDownList extends GuiButtonExt {
                 listItem.drawItem(mc, this, textX, textY, mouseX, mouseY, partial, false);
             } 
         }
+        GlStateManager.enableBlend();
+        GlStateManager.color(1, 1, 1, 1);
     }
     
     private boolean mouseDown = false;

@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -41,7 +40,7 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
 
         if (container != null && container instanceof ContainerArmourer) {
             TileEntityArmourer armourerBrain = ((ContainerArmourer) container).getTileEntity();
-            ModLogger.log("load " + message.buttonId);
+            //ModLogger.log("load " + message.buttonId);
             if (message.buttonId == 14) {
                 armourerBrain.loadArmourItem(player);
             }

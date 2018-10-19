@@ -41,6 +41,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     
     private final TileEntityArmourer tileEntity;
     
+    private GuiDropDownList dropDownSkinType;
     private GuiTextField textItemName;
     private boolean resetting;
     
@@ -57,7 +58,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         buttonList.clear();
         
         SkinTypeRegistry str = SkinTypeRegistry.INSTANCE;
-        GuiDropDownList dropDownList = new GuiDropDownList(0, 10, 20, 50, "", this);
+        dropDownSkinType = new GuiDropDownList(0, 10, 20, 50, "", this);
         ArrayList<ISkinType> skinList = str.getRegisteredSkinTypes();
         int skinCount = 0;
         for (int i = 0; i < skinList.size(); i++) {
@@ -66,14 +67,14 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
                 String skinLocalizedName = str.getLocalizedSkinTypeName(skinType);
                 String skinRegistryName = skinType.getRegistryName();
                 DropDownItemSkin item = new DropDownItemSkin(skinLocalizedName, skinRegistryName, skinType.enabled(), skinType);
-                dropDownList.addListItem(item);
+                dropDownSkinType.addListItem(item);
                 if (skinType == tileEntity.getSkinType()) {
-                    dropDownList.setListSelectedIndex(skinCount);
+                    dropDownSkinType.setListSelectedIndex(skinCount);
                 }
                 skinCount++;
             }
         }
-        buttonList.add(dropDownList);
+        buttonList.add(dropDownSkinType);
         
         buttonList.add(new GuiButtonExt(13, 86, 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
         buttonList.add(new GuiButtonExt(14, 86, 16 + 13, 50, 12, GuiHelper.getLocalizedControlName(guiName, "load")));
@@ -213,6 +214,8 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         
         int versionWidth = fontRenderer.getStringWidth(versionLabel);
         this.fontRenderer.drawString(versionLabel, this.width - versionWidth - 7, this.height - 96 + 2, 4210752);
+        GlStateManager.color(1, 1, 1, 1);
+        dropDownSkinType.drawForeground(mc, mouseX - x, mouseY - y, partialTickTime);
     }
     
     @Override

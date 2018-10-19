@@ -287,6 +287,8 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
             this.fontRenderer.drawString(labelInventorySize, 10, 140, 4210752);
             this.fontRenderer.drawString(labelInventorySlots, 10, 150, 4210752);
         }
+        
+        dropDownList.drawForeground(mc, mouseX - x, mouseY - y, partialTickTime);
     }
 
     @Override
