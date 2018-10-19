@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.blocks;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
@@ -30,19 +31,11 @@ public class BlockSkinCubeGlass extends BlockSkinCube {
         return false;
     }
     
-    /*@Override
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos,
-            EnumFacing side) {
-        // TODO Auto-generated method stub
-        return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
-    }
-    
     @Override
-    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side) {
-        Block sideBlock = world.getBlock(x, y, z);
-        if (sideBlock == this) {
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+        if (blockAccess.getBlockState(pos.offset(side)).getBlock() == this) {
             return false;
         }
-        return true;
-    }*/
+        return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+    }
 }
