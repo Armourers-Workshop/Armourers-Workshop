@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.SkinTextureHelper;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -13,7 +14,10 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityBoundingBox extends ModTileEntity {
     
@@ -29,6 +33,7 @@ public class TileEntityBoundingBox extends ModTileEntity {
     private byte guideZ;
     private ISkinPartType skinPart;
     
+    private static final AxisAlignedBB blockBounds = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
     
     public TileEntityBoundingBox() {
         setParent(null, (byte) 0, (byte) 0, (byte) 0, null);
@@ -142,5 +147,17 @@ public class TileEntityBoundingBox extends ModTileEntity {
             //ModLogger.log("x" + parentX);
             return PaintType.DYE_1;
         }
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        return blockBounds.offset(getPos());
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public double getMaxRenderDistanceSquared() {
+        return ConfigHandlerClient.renderDistanceBlockSkin;
     }
 }

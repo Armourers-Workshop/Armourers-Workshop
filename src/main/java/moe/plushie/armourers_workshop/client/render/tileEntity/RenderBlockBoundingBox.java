@@ -8,9 +8,11 @@ import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.profiler.Profiler;
 import net.minecraft.util.EnumFacing;
 
 public class RenderBlockBoundingBox extends TileEntitySpecialRenderer<TileEntityBoundingBox> {
@@ -23,7 +25,8 @@ public class RenderBlockBoundingBox extends TileEntitySpecialRenderer<TileEntity
     
     @Override
     public void render(TileEntityBoundingBox te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        //ModLogger.log(te.isParentValid());
+        Profiler pro = Minecraft.getMinecraft().profiler;
+        pro.startSection("boundingboxTESR");
         if (!(te.getSkinPart() instanceof ISkinPartTypeTextured)) {
             return;
         }
@@ -52,5 +55,7 @@ public class RenderBlockBoundingBox extends TileEntitySpecialRenderer<TileEntity
         ModRenderHelper.disableAlphaBlend();
         ModRenderHelper.enableLighting();
         RenderHelper.enableStandardItemLighting();
+        
+        pro.endSection();
     }
 }
