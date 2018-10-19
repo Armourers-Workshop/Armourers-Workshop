@@ -125,4 +125,9 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer<TileEntityArm
         
         mc.profiler.endSection();
     }
+    
+    @Override
+    public boolean isGlobalRenderer(TileEntityArmourer te) {
+        return true;
+    }
 }

@@ -56,6 +56,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     
     private static final int HEIGHT_OFFSET = 1;
     private static final int INVENTORY_SIZE = 2;
+    private static final AxisAlignedBB AABB = new AxisAlignedBB(-32, -32, -44, 64, 64, 64);
     
     private EnumFacing direction;
     private ISkinType skinType;
@@ -337,7 +338,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
+        return AABB.offset(getPos());
     }
 
     public ISkinType getSkinType() {
