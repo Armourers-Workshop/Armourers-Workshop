@@ -6,6 +6,10 @@ import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -13,6 +17,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockSkinCube extends AbstractModBlockContainer implements IPantableBlock {
+    
+    public static final PropertyInteger STATE_MARKER = PropertyInteger.create("marked_face", 0, 6);
     
     public BlockSkinCube(String name, boolean glowing) {
         super(name);
@@ -25,6 +31,20 @@ public class BlockSkinCube extends AbstractModBlockContainer implements IPantabl
         if (glowing) {
             setSortPriority(122);
         }
+        setDefaultState(this.blockState.getBaseState().withProperty(STATE_MARKER, 0));
+    }
+    
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, new IProperty[] {STATE_MARKER});
+    }
+    
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState().withProperty(STATE_MARKER, meta);
+    }
+
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(STATE_MARKER);
     }
     
     @Override

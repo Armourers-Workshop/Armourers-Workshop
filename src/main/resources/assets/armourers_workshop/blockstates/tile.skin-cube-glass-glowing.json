@@ -1,7 +1,21 @@
 {
     "forge_marker": 1,
+	"defaults": {
+	    "textures": {
+			"all": "armourers_workshop:blocks/colourable/colourable-glass"
+		},
+		"model": "armourers_workshop:skin-cube"
+	},
     "variants": {
-        "normal": { "model": "armourers_workshop:colourable-glass" },
-		"inventory": { "model": "armourers_workshop:colourable-glass" }
+		"inventory": { "model": "cube_all" },
+		"marked_face": {
+			"0": {},
+			"1": {"submodel": "armourers_workshop:skin-cube-marker", "x": 90},
+			"2": {"submodel": "armourers_workshop:skin-cube-marker", "x": -90},
+			"3": {"submodel": "armourers_workshop:skin-cube-marker"},
+			"4": {"submodel": "armourers_workshop:skin-cube-marker", "y": 180},
+			"5": {"submodel": "armourers_workshop:skin-cube-marker", "y": -90},
+			"6": {"submodel": "armourers_workshop:skin-cube-marker", "y": 90}
+		}
     }
 }

@@ -25,6 +25,7 @@ import moe.plushie.armourers_workshop.common.skin.type.block.SkinBlock;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -264,6 +265,7 @@ public final class ArmourerWorldHelper {
         Block targetBlock = blockData.getMinecraftBlock();
         IBlockState targetState = targetBlock.getStateFromMeta(meta);
         
+        ModLogger.log(targetState);
         
         CubeColour cc = new CubeColour();
         for (int i = 0; i < 6; i++) {
@@ -431,15 +433,10 @@ public final class ArmourerWorldHelper {
                             iz + offset.getZ() + buildSpace.getZ());
                     
                     if (world.isValid(target)) {
-                        if (CubeRegistry.INSTANCE.isBuildingBlock(world.getBlockState(target).getBlock())) {
-                            
-                            //TODO fix with block states
-                            
-                            /*if (world.getBlockMetadata(xTar, yTar, zTar) != 0) {
-                                world.setBlockMetadataWithNotify(xTar, yTar, zTar, 0, 2);
-                                blockCount++;
-                            }*/
-                            
+                        IBlockState state = world.getBlockState(target);
+                        if (CubeRegistry.INSTANCE.isBuildingBlock(state.getBlock())) {
+                            IBlockState newState = state.getBlock().getStateFromMeta(0);
+                            SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdate(newState, target, world).setOnlyReplaceable(true));
                         }
                     }
                     

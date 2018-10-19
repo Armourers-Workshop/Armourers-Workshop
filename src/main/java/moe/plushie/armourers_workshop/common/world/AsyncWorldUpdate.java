@@ -65,14 +65,21 @@ public final class AsyncWorldUpdate {
     }
 
     public void doUpdate(World world) {
+        boolean canPlace = true;
         if (onlyReplaceable) {
-            if (!world.getBlockState(pos).getBlock().isReplaceable(world, pos)) {
-                return;
+            IBlockState target = world.getBlockState(pos);
+            if (!target.getBlock().isReplaceable(world, pos)) {
+                canPlace = false;
+            }
+            if (target.getBlock() == state.getBlock()) {
+                canPlace = true;
             }
         }
-        world.setBlockState(pos, state, 2);
-        if (tileEntity != null) {
-            world.setTileEntity(getPos(), tileEntity);
+        if (canPlace) {
+            world.setBlockState(pos, state, 2);
+            if (tileEntity != null) {
+                world.setTileEntity(getPos(), tileEntity);
+            }
         }
     }
 }

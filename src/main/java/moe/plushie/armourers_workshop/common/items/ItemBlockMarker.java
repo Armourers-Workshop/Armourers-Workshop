@@ -22,17 +22,16 @@ public class ItemBlockMarker extends AbstractModItem {
         IBlockState state = worldIn.getBlockState(pos);
         if (CubeRegistry.INSTANCE.isBuildingBlock(state.getBlock())) {
             if (!worldIn.isRemote) {
-                //state.getBlock().getMetaFromState(state)
-                /*
-                int meta = world.getBlockMetadata(x, y, z);
-                int newMeta = side + 1;
+                int meta = state.getBlock().getMetaFromState(state);
+                int newMeta = facing.ordinal() + 1;
+                IBlockState newState = null;
                 if (newMeta == meta) {
-                    //This side is already marked.
-                    world.setBlockMetadataWithNotify(x, y, z, 0, 2);
+                    // This side is already marked.
+                    newState = state.getBlock().getStateFromMeta(0);
                 } else {
-                    world.setBlockMetadataWithNotify(x, y, z, newMeta, 2);
+                    newState = state.getBlock().getStateFromMeta(newMeta);
                 }
-                */
+                worldIn.setBlockState(pos, newState, 2);
             }
             return EnumActionResult.SUCCESS;
         }
