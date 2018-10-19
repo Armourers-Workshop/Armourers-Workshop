@@ -138,7 +138,7 @@ public class ClientProxy extends CommonProxy {
         
         enableCrossModSupport();
         spamSillyMessages();
-        new RehostedJarHandler(event.getSourceFile(), "Armourers-Workshop-" + LibModInfo.VERSION + ".jar");
+        new RehostedJarHandler(event.getSourceFile(), "Armourers-Workshop-" + LibModInfo.MOD_VERSION + ".jar");
     }
     
     @Override

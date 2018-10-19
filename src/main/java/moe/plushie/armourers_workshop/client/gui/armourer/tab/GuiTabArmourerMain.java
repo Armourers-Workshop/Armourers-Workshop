@@ -208,7 +208,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         String itemNameLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.itemName");
         
         String cloneLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.clone");
-        String versionLabel = "Beta: " + LibModInfo.VERSION;
+        String versionLabel = "Beta: " + LibModInfo.MOD_VERSION;
         
         this.fontRenderer.drawString(itemNameLabel, 64, 48, 4210752);
         

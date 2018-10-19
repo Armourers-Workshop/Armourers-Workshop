@@ -106,8 +106,8 @@ public class ConfigHandler {
     }
     
     private static void checkIfUpdated() {
-        String localVersion = LibModInfo.VERSION;
-        if (LibModInfo.VERSION.startsWith("@VER")) {
+        String localVersion = LibModInfo.MOD_VERSION;
+        if (LibModInfo.MOD_VERSION.startsWith("@VER")) {
             return;
         }
         if (versionCompare(lastVersion.replaceAll("-", "."), localVersion.replaceAll("-", ".")) < 0) {
@@ -142,7 +142,7 @@ public class ConfigHandler {
                 "If enabled the server will compress skins before sending them to clients.\n" +
                 "Highly recommended unless the server has a very slow CPU.");
         
-        if (!LibModInfo.VERSION.startsWith("@VER")) {
+        if (!LibModInfo.MOD_VERSION.startsWith("@VER")) {
             lastVersion = config.getString("lastVersion", CATEGORY_GENERAL, "0.0",
                     "Used by the mod to check if it has been updated.");
         }

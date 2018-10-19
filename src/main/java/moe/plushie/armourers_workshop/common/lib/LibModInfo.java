@@ -1,9 +1,11 @@
 package moe.plushie.armourers_workshop.common.lib;
 
 public class LibModInfo {
+    
     public static final String ID = "armourers_workshop";
     public static final String NAME = "Armourer's Workshop";
-    public static final String VERSION = "@VERSION@";
+    public static final String MOD_VERSION = "@VERSION@";
+    public static final String MC_VERSION = "1.12.2";
     public static final String CHANNEL = "arms-ws";
     public static final String DEPENDENCIES = "required-after:forge@[14.23.3.2694,);after:galacticraftcore;";
     public static final boolean DEVELOPMENT_VERSION = true;
