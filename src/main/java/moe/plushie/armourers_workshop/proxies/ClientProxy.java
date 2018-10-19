@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.proxies;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.List;
 
 import org.apache.logging.log4j.Level;
 
@@ -67,6 +68,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -206,13 +210,25 @@ public class ClientProxy extends CommonProxy {
             public String call() throws Exception
             {
                 int bakeQueue = ModelBakery.INSTANCE.getBakingQueueSize();
-                return "\n" + 
-                        "\t\tRender Type: " + getSkinRenderType().toString() + "\n" + 
-                        "\t\tTexture Render: " + useSafeTextureRender() + "\n" + 
-                        "\t\tBaking Queue: " + bakeQueue + "\n" +
-                        "\t\tRequest Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue) + "\n" +
-                        "\t\tTexture Painting: " + useTexturePainting() + "\n" +
-                        "\t\tMultipass Skin Rendering: " + useMultipassSkinRendering();
+                String error = "\n";
+                error += "\t\tRender Type: " + getSkinRenderType().toString() + "\n";
+                error += "\t\tTexture Render: " + useSafeTextureRender() + "\n";
+                error += "\t\tBaking Queue: " + bakeQueue + "\n";
+                error += "\t\tRequest Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue) + "\n";
+                error += "\t\tTexture Painting: " + useTexturePainting() + "\n";
+                error += "\t\tMultipass Skin Rendering: " + useMultipassSkinRendering() + "\n";
+                error += "\tRender Layers:";
+                for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
+                    error += "\n\t\t Render Class: " + playerRender.getClass().getName();
+                    Object object = ReflectionHelper.getPrivateValue(RenderLivingBase.class, playerRender, "field_177097_h", "layerRenderers");
+                    if (object != null) {
+                        List<LayerRenderer<?>> layerRenderers = (List<LayerRenderer<?>>) object;
+                        for (LayerRenderer<?> layerRenderer : layerRenderers) {
+                            error += "\n\t\t\t" + layerRenderer.getClass().getName();
+                        }
+                    }
+                }
+                return error;
             }
 
             public String getLabel()
