@@ -26,6 +26,7 @@ public class ItemGiftSack extends AbstractModItem {
     public static final String TAG_COLOUR_1 = "colour1";
     public static final String TAG_COLOUR_2 = "colour2";
     public static final String TAG_GIFT_ITEM = "giftItem";
+    public static final String TAG_HOLIDAY = "holiday";
     
     public ItemGiftSack() {
         super(LibItemNames.GIFT_SACK);
@@ -36,8 +37,8 @@ public class ItemGiftSack extends AbstractModItem {
         if (this.isInCreativeTab(tab)) {
             super.getSubItems(tab, items);
             for (Holiday holiday : ModHolidays.getHolidays()) {
-                if (holiday.hasGift()) {
-                    items.add(holiday.getGift(null));
+                if (holiday.hasGiftSack()) {
+                    items.add(holiday.getGiftSack());
                 }
             }
         }
@@ -66,17 +67,41 @@ public class ItemGiftSack extends AbstractModItem {
         ItemStack itemStack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote) {
             if (itemStack.hasTagCompound()) {
-                ItemStack giftStack = NBTHelper.readStackfromNBT(itemStack.getTagCompound(), TAG_GIFT_ITEM);
-                if (!giftStack.isEmpty()) {
-                    if (playerIn.inventory.addItemStackToInventory(giftStack)) {
-                        itemStack.shrink(1);
-                    } else {
-                        playerIn.sendMessage(new TextComponentTranslation("chat.armourersworkshop:inventoryFull"));
+                if (itemStack.getTagCompound().hasKey(TAG_GIFT_ITEM, NBT.TAG_COMPOUND)) {
+                    ItemStack giftStack = NBTHelper.readStackfromNBT(itemStack.getTagCompound(), TAG_GIFT_ITEM);
+                    if (!giftStack.isEmpty()) {
+                        if (playerIn.inventory.addItemStackToInventory(giftStack)) {
+                            itemStack.shrink(1);
+                        } else {
+                            playerIn.sendMessage(new TextComponentTranslation("chat.armourersworkshop:inventoryFull"));
+                        }
+                    }
+                }
+                if (itemStack.getTagCompound().hasKey(TAG_HOLIDAY, NBT.TAG_STRING)) {
+                    Holiday holiday =  ModHolidays.getHoliday(itemStack.getTagCompound().getString(TAG_HOLIDAY));
+                    if (holiday != null) {
+                        ItemStack giftStack = holiday.getGift(playerIn);
+                        if (!giftStack.isEmpty()) {
+                            if (playerIn.inventory.addItemStackToInventory(giftStack)) {
+                                itemStack.shrink(1);
+                            } else {
+                                playerIn.sendMessage(new TextComponentTranslation("chat.armourersworkshop:inventoryFull"));
+                            }
+                        }
                     }
                 }
             }
         }
         return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStack);
+    }
+    
+    public static ItemStack createStack(int colour1, int colour2, Holiday holiday) {
+        ItemStack stack = new ItemStack(ModItems.giftSack);
+        stack.setTagCompound(new NBTTagCompound());
+        stack.getTagCompound().setInteger(TAG_COLOUR_1, colour1);
+        stack.getTagCompound().setInteger(TAG_COLOUR_2, colour2);
+        stack.getTagCompound().setString(TAG_HOLIDAY, holiday.getName());
+        return stack;
     }
     
     public static ItemStack createStack(int colour1, int colour2, ItemStack gift) {

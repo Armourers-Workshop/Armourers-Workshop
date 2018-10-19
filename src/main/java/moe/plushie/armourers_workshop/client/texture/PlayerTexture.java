@@ -12,12 +12,14 @@ import com.mojang.authlib.properties.Property;
 
 import moe.plushie.armourers_workshop.common.data.TextureType;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 
 public class PlayerTexture {
     
+    public static final PlayerTexture NO_TEXTURE  = new PlayerTexture("", TextureType.USER);
     private static final String TAG_TEXTURE_STRING = "string";
     private static final String TAG_TEXTURE_TYPE = "type";
     
@@ -35,7 +37,7 @@ public class PlayerTexture {
     }
     
     private ResourceLocation getSteveResourceLocation() {
-        return new ResourceLocation("textures/entity/steve.png");
+        return DefaultPlayerSkin.getDefaultSkinLegacy();
     }
     
     public void textureDownloaded(boolean slimModel) {
@@ -44,7 +46,7 @@ public class PlayerTexture {
             if (textureType == TextureType.URL) {
                 resourceLocation = new ResourceLocation("skins/" + StringUtils.stripControlCodes(textureString));
             } else {
-                resourceLocation = new ResourceLocation(LibModInfo.ID.toLowerCase(), StringUtils.stripControlCodes(textureString));
+                resourceLocation = new ResourceLocation(LibModInfo.ID, StringUtils.stripControlCodes(textureString));
             }
         }
         downloadTime = System.currentTimeMillis();

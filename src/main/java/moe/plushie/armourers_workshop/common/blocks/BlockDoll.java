@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.blocks;
 
 import java.util.Random;
 
+import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
@@ -40,8 +41,14 @@ public class BlockDoll extends AbstractModBlockContainer {
     
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        // TODO Auto-generated method stub
         return AABB;
+    }
+    
+    public static ItemStack getStackWithTexture(PlayerTexture playerTexture) {
+        ItemStack result = new ItemStack(ModBlocks.doll);
+        result.setTagCompound(new NBTTagCompound());
+        playerTexture.writeToNBT(result.getTagCompound());
+        return result;
     }
     
     /*

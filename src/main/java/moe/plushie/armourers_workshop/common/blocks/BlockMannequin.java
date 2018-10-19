@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
+import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.Contributors;
 import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
@@ -71,6 +72,13 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
             }
         }
         super.breakBlock(worldIn, pos, state);
+    }
+    
+    public ItemStack getStackWithTexture(PlayerTexture playerTexture) {
+        ItemStack result = new ItemStack(this);
+        result.setTagCompound(new NBTTagCompound());
+        playerTexture.writeToNBT(result.getTagCompound());
+        return result;
     }
     
     @Override

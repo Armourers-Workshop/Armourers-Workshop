@@ -38,7 +38,6 @@ public final class MannequinTextureHelper {
                 imageUrl = compound.getString(TAG_IMAGE_URL);
             }
         }
-
         if (gameProfile != null) {
             playerTexture = getMannequinTexture(gameProfile.getName(), TextureType.USER);
         }

@@ -12,12 +12,12 @@ public class HolidayHalloweenSeason extends Holiday {
     }
     
     @Override
-    public boolean hasGift() {
-        return true;
+    public ItemStack getGiftSack() {
+        return ItemGiftSack.createStack(0xE05900, 0xEEEEEE, this);
     }
     
     @Override
     public ItemStack getGift(EntityPlayer player) {
-        return ItemGiftSack.createStack(0xE05900, 0xEEEEEE, new ItemStack(Blocks.PUMPKIN));
+        return new ItemStack(Blocks.PUMPKIN);
     }
 }

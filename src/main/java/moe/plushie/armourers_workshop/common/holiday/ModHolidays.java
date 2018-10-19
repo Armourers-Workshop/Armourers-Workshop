@@ -40,6 +40,15 @@ public final class ModHolidays {
         return HOLIDAY_LIST;
     }
     
+    public static Holiday getHoliday(String name) {
+        for (Holiday holiday : HOLIDAY_LIST) {
+            if (holiday.getName().equals(name)) {
+                return holiday;
+            }
+        }
+        return null;
+    }
+    
     public static ArrayList<Holiday> getActiveHolidays() {
         ArrayList<Holiday> activeList = new ArrayList<Holiday>();
         for (int i = 0; i < HOLIDAY_LIST.size(); i++) {
@@ -54,8 +63,8 @@ public final class ModHolidays {
     public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
         EntityPlayer player = event.player;
         for (Holiday holiday : getActiveHolidays()) {
-            if (holiday.hasGift()) {
-                ItemStack gift = holiday.getGift(player);
+            if (holiday.hasGiftSack()) {
+                ItemStack gift = holiday.getGiftSack();
                 if (!gift.isEmpty()) {
                     if (!player.inventory.addItemStackToInventory(gift)) {
                         player.sendMessage(new TextComponentTranslation("chat.armourersworkshop:inventoryGiftFail"));

@@ -1,10 +1,11 @@
 package moe.plushie.armourers_workshop.client.render.item;
 
+import moe.plushie.armourers_workshop.client.helper.MannequinTextureHelper;
 import moe.plushie.armourers_workshop.client.model.ModelMannequin;
+import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.item.ItemStack;
 
 public class RenderItemMannequin extends TileEntityItemStackRenderer {
@@ -19,7 +20,8 @@ public class RenderItemMannequin extends TileEntityItemStackRenderer {
     
     @Override
     public void renderByItem(ItemStack itemStackIn, float partialTicks) {
-        Minecraft.getMinecraft().renderEngine.bindTexture(DefaultPlayerSkin.getDefaultSkinLegacy());
+        PlayerTexture texture = MannequinTextureHelper.getMannequinTexture(itemStackIn);
+        Minecraft.getMinecraft().renderEngine.bindTexture(texture.getResourceLocation());
         float scale = 0.0625F;
         GlStateManager.pushMatrix();
         GlStateManager.scale(-1, -1, 1);

@@ -62,6 +62,10 @@ public class Holiday {
         this.enabled = enabled;
     }
     
+    public ItemStack getGiftSack() {
+        return ItemStack.EMPTY;
+    }
+    
     public ItemStack getGift(EntityPlayer player) {
         return ItemStack.EMPTY;
     }
@@ -83,8 +87,8 @@ public class Holiday {
         return false;
     }
     
-    public boolean hasGift() {
-        return false;
+    public boolean hasGiftSack() {
+        return !getGiftSack().isEmpty();
     }
     
     @SideOnly(Side.CLIENT)
