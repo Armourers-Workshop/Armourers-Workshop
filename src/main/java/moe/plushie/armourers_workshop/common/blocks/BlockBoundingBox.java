@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.utils.BitwiseUtils;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.creativetab.CreativeTabs;
@@ -43,8 +44,10 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class BlockBoundingBox extends AbstractModBlockContainer implements IPantableBlock {
 
+    private static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
+    
     protected BlockBoundingBox() {
-        super(LibBlockNames.BOUNDING_BOX, Material.CLOTH, SoundType.CLOTH, false);
+        super(LibBlockNames.BOUNDING_BOX, Material.CIRCUITS, SoundType.CLOTH, false);
         setBlockUnbreakable();
         setResistance(6000000.0F);
         setLightOpacity(0);
@@ -63,6 +66,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         worldIn.setBlockToAir(pos);
     }
+    
     
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
@@ -112,8 +116,18 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public boolean isBlockNormalCube(IBlockState state) {
+    public boolean isFullBlock(IBlockState state) {
         return false;
+    }
+    
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+        return BlockFaceShape.UNDEFINED;
+    }
+    
+    @Override
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+        return NULL_AABB;
     }
     
     @Override
@@ -124,11 +138,6 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     protected String getModdedUnlocalizedName(String unlocalizedName) {
         String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
         return "tile." + LibModInfo.ID.toLowerCase() + ":" + name;
-    }
-    
-    @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-        return null;
     }
 
     @Override
