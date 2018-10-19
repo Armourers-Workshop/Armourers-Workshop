@@ -134,7 +134,7 @@ public class CommandSetSkin extends ModCommand {
         }
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
         SkinIdentifier skinIdentifier = new SkinIdentifier(0, libraryFile, 0, skin.getSkinType());
-        SkinDescriptor skinDescriptor = new SkinDescriptor(skinIdentifier);
+        SkinDescriptor skinDescriptor = new SkinDescriptor(skinIdentifier, skinDye);
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
         if (skinCapability != null) {
             skinCapability.setSkinDescriptor(skinIdentifier.getSkinType(), slotNum - 1, skinDescriptor);
