@@ -1,15 +1,31 @@
 package moe.plushie.armourers_workshop.common.inventory;
 
+import moe.plushie.armourers_workshop.common.exception.SkinSaveException;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotOutput;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkinTemplate;
 import moe.plushie.armourers_workshop.common.items.ItemArmourContainerItem;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
 import moe.plushie.armourers_workshop.common.items.ItemSkinTemplate;
+import moe.plushie.armourers_workshop.common.items.ModItems;
+import moe.plushie.armourers_workshop.common.library.LibraryFile;
+import moe.plushie.armourers_workshop.common.skin.ISkinHolder;
+import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
+import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
+import moe.plushie.armourers_workshop.common.skin.data.SkinProperty;
+import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
+import moe.plushie.armourers_workshop.common.world.ArmourerWorldHelper;
+import moe.plushie.armourers_workshop.utils.ModLogger;
+import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.TextComponentString;
 
 public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
     
@@ -52,5 +68,142 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
             return result;
         }
         return ItemStack.EMPTY;
+    }
+    
+    /**
+     * Get blocks in the world and saved them onto an items NBT data.
+     * @param player The player that pressed the save button.
+     * @param name Custom name for the item.
+     */
+    public void saveArmourItem(EntityPlayerMP player, String customName, String tags) {
+        if (tileEntity.getWorld().isRemote) {
+            return;
+        }
+
+        ItemStack stackInput = tileEntity.getStackInSlot(0);
+        ItemStack stackOutput = tileEntity.getStackInSlot(1);
+
+        if (!player.capabilities.isCreativeMode) {
+            if (stackInput.isEmpty()) {
+                return;
+            }
+        }
+
+        if (!stackOutput.isEmpty()) {
+            return;
+        }
+
+        ISkinHolder inputItem = null;
+        if (!player.capabilities.isCreativeMode) {
+            if (!(stackInput.getItem() instanceof ISkinHolder)) {
+                return;
+            }
+            inputItem = (ISkinHolder) stackInput.getItem();
+        } else {
+            inputItem = (ISkinHolder) ModItems.skinTemplate;
+        }
+
+        Skin skin = null;
+        SkinProperties skinProps = new SkinProperties();
+        skinProps.setProperty(Skin.KEY_AUTHOR_NAME, player.getName());
+        if (player.getGameProfile() != null && player.getGameProfile().getId() != null) {
+            skinProps.setProperty(Skin.KEY_AUTHOR_UUID, player.getGameProfile().getId().toString());
+        }
+        skinProps.setProperty(Skin.KEY_CUSTOM_NAME, customName);
+
+        for (int i = 0; i < tileEntity.getSkinType().getProperties().size(); i++) {
+            SkinProperty skinProp = (SkinProperty) tileEntity.getSkinType().getProperties().get(i);
+            skinProp.setValue(skinProps, skinProp.getValue(tileEntity.getSkinProps()));
+        }
+
+        try {
+            skin = ArmourerWorldHelper.saveSkinFromWorld(tileEntity.getWorld(), skinProps, tileEntity.getSkinType(),
+                    tileEntity.getPaintData(), tileEntity.getPos().offset(EnumFacing.UP, tileEntity.getHeightOffset()), tileEntity.getDirection());
+        } catch (SkinSaveException e) {
+            switch (e.getType()) {
+            case NO_DATA:
+                player.sendMessage(new TextComponentString(e.getMessage()));
+                break;
+            case MARKER_ERROR:
+                player.sendMessage(new TextComponentString(e.getMessage()));
+                break;
+            case MISSING_PARTS:
+                player.sendMessage(new TextComponentString(e.getMessage()));
+                break;
+            case BED_AND_SEAT:
+                player.sendMessage(new TextComponentString(e.getMessage()));
+                break;
+            case INVALID_MULTIBLOCK:
+                player.sendMessage(new TextComponentString(e.getMessage()));
+                break;
+            }
+        }
+        ModLogger.log("save");
+        if (skin == null) {
+            return;
+        }
+        
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile)null);
+        
+        stackOutput = inputItem.makeStackForEquipment(skin);
+        if (stackOutput.isEmpty()) {
+            return;
+        }
+        if (!player.capabilities.isCreativeMode) {
+            tileEntity.decrStackSize(0, 1);
+        }
+        tileEntity.setInventorySlotContents(1, stackOutput);
+    }
+
+    /**
+     * Reads the NBT data from an item and places blocks in the world.
+     * @param player The player that pressed the load button.
+     */
+    public void loadArmourItem(EntityPlayerMP player) {
+        if (tileEntity.getWorld().isRemote) {
+            return;
+        }
+        ItemStack stackInput = tileEntity.getStackInSlot(0);
+        ItemStack stackOuput = tileEntity.getStackInSlot(1);
+        
+        if (stackInput.isEmpty()) {
+            return;
+        }
+        if (!stackOuput.isEmpty()) {
+            return;
+        }
+        if (!(stackInput.getItem() instanceof ItemSkin)) {
+            return;
+        }
+        SkinDescriptor skinPointerInput = SkinNBTHelper.getSkinDescriptorFromStack(stackInput);
+        if (skinPointerInput == null) {
+            return;
+        }
+        if (tileEntity.getSkinType() == null) {
+            return;
+        }
+        if (tileEntity.getSkinType() != skinPointerInput.getIdentifier().getSkinType()) {
+            if (!(tileEntity.getSkinType() == SkinTypeRegistry.skinLegs && skinPointerInput.getIdentifier().getSkinType() == SkinTypeRegistry.oldSkinSkirt)) {
+                return;
+            }
+        }
+        
+        Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointerInput);
+        if (skin == null) {
+            return;
+        }
+        
+        tileEntity.setSkinProps(new SkinProperties(skin.getProperties()));
+        
+        ArmourerWorldHelper.loadSkinIntoWorld(tileEntity.getWorld(), tileEntity.getPos().offset(EnumFacing.UP, tileEntity.getHeightOffset()), skin, tileEntity.getDirection());
+        if (skin.hasPaintData()) {
+            tileEntity.setPaintData(skin.getPaintData().clone());
+        } else {
+            tileEntity.clearPaintData(true);
+        }
+        tileEntity.dirtySync();
+        
+        tileEntity.setInventorySlotContents(0, ItemStack.EMPTY);
+        tileEntity.setInventorySlotContents(1, stackInput);
     }
 }

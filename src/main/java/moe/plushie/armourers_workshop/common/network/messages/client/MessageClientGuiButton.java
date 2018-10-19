@@ -39,10 +39,11 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
         Container container = player.openContainer;
 
         if (container != null && container instanceof ContainerArmourer) {
-            TileEntityArmourer armourerBrain = ((ContainerArmourer) container).getTileEntity();
+            ContainerArmourer containerArmourer = (ContainerArmourer) container;
+            TileEntityArmourer armourerBrain = containerArmourer.getTileEntity();
             //ModLogger.log("load " + message.buttonId);
             if (message.buttonId == 14) {
-                armourerBrain.loadArmourItem(player);
+                containerArmourer.loadArmourItem(player);
             }
             if (message.buttonId == 7) {
                 armourerBrain.toggleGuides();

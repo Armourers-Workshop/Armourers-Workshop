@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -41,10 +40,7 @@ public class MessageClientLoadArmour implements IMessage, IMessageHandler<Messag
         Container container = player.openContainer;
 
         if (container != null && container instanceof ContainerArmourer) {
-            TileEntityArmourer armourerBrain = ((ContainerArmourer) container).getTileEntity();
-            
-            armourerBrain.saveArmourItem(player, message.name, message.tags);
-            
+            ((ContainerArmourer) container).saveArmourItem(player, message.name, message.tags);
         }
         return null;
     }
