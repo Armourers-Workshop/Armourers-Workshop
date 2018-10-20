@@ -16,10 +16,10 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class SkinProperties {
     
-    public static final SkinProperty<String> PROP_ALL_CUSTOM_NAME = new SkinProperty<String>("", "");
-    public static final SkinProperty<String> PROP_ALL_FLAVOUR_TEXT = new SkinProperty<String>("", "");
-    public static final SkinProperty<String> PROP_ALL_AUTHOR_NAME = new SkinProperty<String>("", "");
-    public static final SkinProperty<String> PROP_ALL_AUTHOR_UUID = new SkinProperty<String>("", "");
+    public static final SkinProperty<String> PROP_ALL_CUSTOM_NAME = new SkinProperty<String>("customName", "");
+    public static final SkinProperty<String> PROP_ALL_FLAVOUR_TEXT = new SkinProperty<String>("flavour", "");
+    public static final SkinProperty<String> PROP_ALL_AUTHOR_NAME = new SkinProperty<String>("authorName", "");
+    public static final SkinProperty<String> PROP_ALL_AUTHOR_UUID = new SkinProperty<String>("authorUUID", "");
     
     public static final SkinProperty<Boolean> PROP_ARMOUR_OVERRIDE = new SkinProperty<Boolean>("armourOverride", false);
     public static final SkinProperty<Boolean> PROP_ARMOUR_HIDE_OVERLAY = new SkinProperty<Boolean>("armourHideOverlay", false);
