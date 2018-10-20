@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.items.block.ModItemBlockWithMetadata;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
@@ -13,6 +14,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,14 +41,14 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     public static final PropertyEnum<EnumLibraryType> STATE_TYPE = PropertyEnum.<EnumLibraryType>create("type", EnumLibraryType.class);
 
     public BlockSkinLibrary() {
-        super(LibBlockNames.ARMOUR_LIBRARY);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(STATE_FACING, EnumFacing.NORTH).withProperty(STATE_TYPE, EnumLibraryType.NORMAL));
+        super(LibBlockNames.SKIN_LIBRARY);
+        this.setDefaultState(this.blockState.getBaseState().withProperty(STATE_TYPE, EnumLibraryType.NORMAL).withProperty(STATE_FACING, EnumFacing.NORTH));
         setSortPriority(198);
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] { STATE_FACING, STATE_TYPE });
+        return new BlockStateContainer(this, new IProperty[] { STATE_TYPE, STATE_FACING });
     }
 
     public IBlockState getStateFromMeta(int meta) {
@@ -71,7 +73,7 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
                 facing = EnumFacing.WEST;
             }
         }
-        return this.getDefaultState().withProperty(STATE_FACING, facing).withProperty(STATE_TYPE, type);
+        return this.getDefaultState().withProperty(STATE_TYPE, type).withProperty(STATE_FACING, facing);
     }
 
     public int getMetaFromState(IBlockState state) {
@@ -111,13 +113,23 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
         return 0;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.SOLID;
+        if (!ConfigHandlerClient.useClassicBlockModels) {
+            return BlockRenderLayer.CUTOUT_MIPPED;
+        } else {
+            return BlockRenderLayer.SOLID;
+        }
     }
 
     @Override
     public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+    
+    @Override
+    public boolean isBlockNormalCube(IBlockState state) {
         return false;
     }
 
@@ -125,12 +137,18 @@ public class BlockSkinLibrary extends AbstractModBlockContainer {
     public void registerItemBlock(IForgeRegistry<Item> registry) {
         registry.register(new ModItemBlockWithMetadata(this).setRegistryName(getRegistryName()).setHasSubtypes(true));
     }
-
+    
     @SideOnly(Side.CLIENT)
     @Override
     public void registerModels() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "inventory-normal"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 1, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "inventory-creative"));
+        if (!ConfigHandlerClient.useClassicBlockModels) {
+            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "normal"));
+            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 1, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "creative"));
+        } else {
+            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey() + "-classic"), "normal"));
+            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 1, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey() + "-classic"), "creative"));
+            ModelLoader.setCustomStateMapper(this, new StateMap.Builder().withSuffix("-classic").ignore(STATE_FACING).build());
+        }
     }
 
     /*

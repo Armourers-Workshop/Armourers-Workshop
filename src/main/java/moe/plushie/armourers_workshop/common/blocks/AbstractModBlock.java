@@ -98,6 +98,6 @@ public abstract class AbstractModBlock extends Block implements ISortOrder, ICus
     @SideOnly(Side.CLIENT)
     @Override
     public void registerModels() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "normal"));
     }
 }

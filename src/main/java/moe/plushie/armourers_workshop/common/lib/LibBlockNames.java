@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.common.lib;
 public class LibBlockNames {
     public static final String ARMOURER = "armourer";
     public static final String MINI_ARMOURER = "mini-armourer";
-    public static final String ARMOUR_LIBRARY = "skin-library";
+    public static final String SKIN_LIBRARY = "skin-library";
     public static final String BOUNDING_BOX = "aw-bounding-box";
     public static final String SKIN_CUBE = "skin-cube";
     public static final String SKIN_CUBE_GLOWING = "skin-cube-glowing";

@@ -7,7 +7,7 @@
 		"model": "armourers_workshop:skin-cube"
 	},
     "variants": {
-		"inventory": { "model": "cube_all" },
+		"normal": { "model": "cube_all" },
 		"marked_face": {
 			"0": {},
 			"1": {"submodel": "armourers_workshop:skin-cube-marker", "x": 90},

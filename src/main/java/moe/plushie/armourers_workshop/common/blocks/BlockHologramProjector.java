@@ -51,6 +51,16 @@ public class BlockHologramProjector extends AbstractModBlockContainer {
     }
     
     @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return true;
+    }
+    
+    @Override
+    public boolean isBlockNormalCube(IBlockState state) {
+        return true;
+    }
+    
+    @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         int dir = BlockUtils.determineOrientation(pos, placer);
         EnumFacing enumfacing = EnumFacing.byIndex(dir);

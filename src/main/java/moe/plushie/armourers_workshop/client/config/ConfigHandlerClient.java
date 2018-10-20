@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.client.config;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,15 +21,16 @@ public class ConfigHandlerClient {
     public static int renderDistanceSkin;
     public static int renderDistanceBlockSkin;
     public static int renderDistanceMannequinEquipment;
+    public static int modelBakingThreadCount;
+    public static AtomicInteger modelBakingUpdateRate = new AtomicInteger(40);
+    public static double lodDistance = 32F;
+    public static boolean multipassSkinRendering = true;
+    public static boolean slowModelBaking = true;
+    public static int maxLodLevels = 4;
+    public static boolean useClassicBlockModels;
     
     // Misc
     public static int skinLoadAnimationTime;
-    public static double lodDistance = 32F;
-    public static int modelBakingThreadCount;
-    public static boolean multipassSkinRendering = true;
-    public static boolean slowModelBaking = true;
-    public static AtomicInteger modelBakingUpdateRate = new AtomicInteger(40);
-    public static int maxLodLevels = 4;
     
     // Cache
     public static int skinCacheExpireTime;
@@ -97,13 +97,13 @@ public class ConfigHandlerClient {
         renderDistanceSkin = config.getInt("renderDistanceSkin", CATEGORY_PERFORMANCE, 128, 16, 512,
                 "The max distance in blocks that skins will render.");
         
-        renderDistanceMannequinEquipment = config.getInt("renderDistanceMannequinEquipment", CATEGORY_PERFORMANCE, 64, 16, 512,
-                "The max distance in blocks that equipment will be rendered on mannequins.");
-        
         renderDistanceBlockSkin = config.getInt("renderDistanceBlockSkin", CATEGORY_PERFORMANCE, 128, 16, 512,
                 "The max distance in blocks that block skins will be rendered.");
         renderDistanceBlockSkin *= renderDistanceBlockSkin;
-        ModLogger.log("renderDistanceBlockSkin:" + renderDistanceBlockSkin);
+        
+        renderDistanceMannequinEquipment = config.getInt("renderDistanceMannequinEquipment", CATEGORY_PERFORMANCE, 64, 16, 512,
+                "The max distance in blocks that equipment will be rendered on mannequins.");
+        
         
         slowModelBaking = config.getBoolean("slowModelBaking", CATEGORY_PERFORMANCE, true,
                 "Limits how fast models can be baked to provide a smoother frame rate.");
@@ -130,6 +130,9 @@ public class ConfigHandlerClient {
         
         maxLodLevels = config.getInt("maxLodLevels", CATEGORY_PERFORMANCE, 4, 0, 4,
                 "Number of LOD models to create. Higher number should give a boost to framerate at a small cost to VRAM.");
+        
+        useClassicBlockModels = config.getBoolean("useClassicBlockModels", CATEGORY_PERFORMANCE, false,
+                "Use classic block models instead of the 3D model versions.");
     }
     
     private static void loadCategoryCache() {

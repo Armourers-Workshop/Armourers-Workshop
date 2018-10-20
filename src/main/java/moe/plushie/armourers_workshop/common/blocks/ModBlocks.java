@@ -95,7 +95,7 @@ public class ModBlocks {
 
     public void registerTileEntities() {
         registerTileEntity(TileEntityArmourer.class, LibBlockNames.ARMOURER);
-        registerTileEntity(TileEntitySkinLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
+        registerTileEntity(TileEntitySkinLibrary.class, LibBlockNames.SKIN_LIBRARY);
         registerTileEntity(TileEntityGlobalSkinLibrary.class, LibBlockNames.GLOBAL_SKIN_LIBRARY);
         registerTileEntity(TileEntityColourable.class, LibBlockNames.SKIN_CUBE);
         registerTileEntity(TileEntityColourMixer.class, LibBlockNames.COLOUR_MIXER);

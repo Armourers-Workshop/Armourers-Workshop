@@ -587,6 +587,11 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+    
+    @Override
     public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
         return super.canRenderInLayer(state, layer);
     }

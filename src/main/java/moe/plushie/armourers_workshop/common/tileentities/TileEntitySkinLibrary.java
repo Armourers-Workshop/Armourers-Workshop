@@ -37,7 +37,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
     
     @Override
     public String getName() {
-        return LibBlockNames.ARMOUR_LIBRARY;
+        return LibBlockNames.SKIN_LIBRARY;
     }
     
     public boolean isCreativeLibrary() {
