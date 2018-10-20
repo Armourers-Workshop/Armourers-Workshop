@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.common.items;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
@@ -141,6 +142,10 @@ public class ItemSkin extends AbstractModItem {
                         tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinIdError2"));
                         tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinIdError3", data.requestId, data.lightHash()));
                     }
+                }
+                String flavour = SkinProperties.PROP_ALL_FLAVOUR_TEXT.getValue(data.getProperties()).trim();
+                if (!StringUtils.isEmpty(flavour)) {
+                    tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.flavour", flavour));
                 }
                 
             } else {

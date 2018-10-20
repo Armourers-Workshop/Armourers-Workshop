@@ -43,6 +43,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     
     private GuiDropDownList dropDownSkinType;
     private GuiTextField textItemName;
+    private GuiTextField textFlavour;
     private boolean resetting;
     
     public GuiTabArmourerMain(int tabId, GuiScreen parent) {
@@ -79,9 +80,13 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         buttonList.add(new GuiButtonExt(13, 86, 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
         buttonList.add(new GuiButtonExt(14, 86, 16 + 13, 50, 12, GuiHelper.getLocalizedControlName(guiName, "load")));
         
-        textItemName = new GuiTextField(-1, fontRenderer, x + 64, y + 58, 103, 16);
+        textItemName = new GuiTextField(-1, fontRenderer, x + 8, y + 58, 158, 16);
         textItemName.setMaxStringLength(40);
         textItemName.setText(tileEntity.getSkinProps().getPropertyString(Skin.KEY_CUSTOM_NAME, ""));
+        
+        textFlavour = new GuiTextField(-1, fontRenderer, x + 8, y + 90, 158, 16);
+        textFlavour.setMaxStringLength(40);
+        textFlavour.setText(SkinProperties.PROP_ALL_FLAVOUR_TEXT.getValue(tileEntity.getSkinProps()));
     }
     
     public static class DropDownItemSkin extends DropDownListItem {
@@ -101,7 +106,6 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
             if (topItem) {
                 mc.fontRenderer.drawString(displayText, x, y, textColour);
             } else {
-                
                 //textWidth -= 7;
                 if (!enabled) {
                     textColour = 0xFFCC0000;
@@ -124,11 +128,17 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         boolean clicked = super.mouseClicked(mouseX, mouseY, button);
-        textItemName.mouseClicked(mouseX, mouseY, button);
-        if (button == 1) {
-            if (textItemName.isFocused()) {
-                textItemName.setText("");
-            }
+        if (!clicked) {
+            textItemName.mouseClicked(mouseX, mouseY, button);
+            textFlavour.mouseClicked(mouseX, mouseY, button);
+            if (button == 1) {
+                if (textItemName.isFocused()) {
+                    textItemName.setText("");
+                }
+                if (textFlavour.isFocused()) {
+                    textFlavour.setText("");
+                }
+            } 
         }
         return clicked;
     }
@@ -138,26 +148,38 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     
     @Override
     public boolean keyTyped(char c, int keycode) {
-        if (!textItemName.textboxKeyTyped(c, keycode)) {
-            return super.keyTyped(c, keycode);
-        } else {
+        boolean typed = super.keyTyped(c, keycode);
+        if (!typed) {
+            typed = textItemName.textboxKeyTyped(c, keycode);
+        }
+        if (!typed) {
+            typed = textFlavour.textboxKeyTyped(c, keycode);
+        }
+        if (typed) {
             SkinProperties skinProps = tileEntity.getSkinProps();
-            String sendText = textItemName.getText().trim();
+            String sendTextName = textItemName.getText().trim();
+            String sendTextFlavour = textFlavour.getText().trim();
             if (fidgCount < 3) {
-                if (sendText.equalsIgnoreCase("fidget spinner")) {
-                    sendText = fidgMessage[fidgCount];
+                if (sendTextName.equalsIgnoreCase("fidget spinner")) {
+                    sendTextName = fidgMessage[fidgCount];
                     fidgCount++;
                 }
             }
             
-            String oldText = skinProps.getPropertyString(Skin.KEY_CUSTOM_NAME, "");
-            if (!sendText.equals(oldText)) {
-                skinProps.setProperty(Skin.KEY_CUSTOM_NAME, sendText);
+            boolean textChanged = false;
+            if (!sendTextName.equals(skinProps.getPropertyString(Skin.KEY_CUSTOM_NAME, ""))) {
+                textChanged = true;
+            }
+            if (!sendTextFlavour.equals(SkinProperties.PROP_ALL_FLAVOUR_TEXT.getValue(skinProps))) {
+                textChanged = true;
+            }
+            if (textChanged) {
+                skinProps.setProperty(Skin.KEY_CUSTOM_NAME, sendTextName);
+                SkinProperties.PROP_ALL_FLAVOUR_TEXT.setValue(skinProps, sendTextFlavour);
                 PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
-                return true;
             }
         }
-        return false;
+        return typed;
     }
     
     @Override
@@ -188,15 +210,26 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         
         this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), this.x + 8, this.y + this.height - 96 + 2, 4210752);
         textItemName.drawTextBox();
+        textFlavour.drawTextBox();
     }
     
     public void resetValues(SkinProperties skinProperties) {
         resetting = true;
-        String newText = skinProperties.getPropertyString(Skin.KEY_CUSTOM_NAME, "");
-        if (!textItemName.getText().startsWith(newText)) {
+        String newNameText = skinProperties.getPropertyString(Skin.KEY_CUSTOM_NAME, "");
+        if (!newNameText.equals("")) {
             int cur = textItemName.getCursorPosition();
-            textItemName.setText(newText);
+            textItemName.setText(newNameText);
             textItemName.setCursorPosition(cur);
+        } else {
+            textItemName.setText(newNameText);
+        }
+        String newFlavourText = SkinProperties.PROP_ALL_FLAVOUR_TEXT.getValue(skinProperties);
+        if (!newFlavourText.equals("")) {
+            int cur = textFlavour.getCursorPosition();
+            textFlavour.setText(newFlavourText);
+            textFlavour.setCursorPosition(cur);
+        } else {
+            textFlavour.setText(newFlavourText);
         }
         resetting = false;
     }
@@ -207,10 +240,11 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     
         String itemNameLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.itemName");
         
-        String cloneLabel = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.clone");
+        String labelFlavour = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.flavour");
         String versionLabel = "Beta: " + LibModInfo.MOD_VERSION;
         
-        this.fontRenderer.drawString(itemNameLabel, 64, 48, 4210752);
+        this.fontRenderer.drawString(itemNameLabel, 8, 48, 4210752);
+        this.fontRenderer.drawString(labelFlavour, 8, 80, 4210752);
         
         int versionWidth = fontRenderer.getStringWidth(versionLabel);
         this.fontRenderer.drawString(versionLabel, this.width - versionWidth - 7, this.height - 96 + 2, 4210752);

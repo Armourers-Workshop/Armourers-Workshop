@@ -179,6 +179,7 @@ item.armourers_workshop:rollover.skinIdError1=&cWarning: This skin is using an o
 item.armourers_workshop:rollover.skinIdError2=&cPlease save and reload it from the library to fix this.
 item.armourers_workshop:rollover.skinIdError3=&cDEBUG - Old ID: %s New ID: %s
 item.armourers_workshop:rollover.skinProperties=&eSkin Properties:
+item.armourers_workshop:rollover.flavour=&5&o%s
 
 
 # Tool Options
@@ -321,6 +322,7 @@ inventory.armourers_workshop:skin-library.dialog.overwrite.overwriteFile=Overwri
 
 # Armourer
 inventory.armourers_workshop:armourer.label.itemName=Item Name:
+inventory.armourers_workshop:armourer.label.flavour=Flavor Text:
 inventory.armourers_workshop:armourer.label.skinType=Skin Type:
 inventory.armourers_workshop:armourer.label.username=Username:
 inventory.armourers_workshop:armourer.label.url=URL:

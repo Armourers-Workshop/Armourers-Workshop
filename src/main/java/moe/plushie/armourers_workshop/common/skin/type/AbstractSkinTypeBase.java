@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperty;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -51,6 +52,7 @@ public abstract class AbstractSkinTypeBase implements ISkinType {
     @Override
     public ArrayList<ISkinProperty<?>> getProperties() {
         ArrayList<ISkinProperty<?>> properties = new ArrayList<ISkinProperty<?>>();
+        properties.add(SkinProperties.PROP_ALL_FLAVOUR_TEXT);
         return properties;
     }
 }
