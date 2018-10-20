@@ -7,7 +7,10 @@
 		"model": "armourers_workshop:skin-cube"
 	},
     "variants": {
-		"normal": { "model": "cube_all" },
+		"normal": {
+			"model": "cube_all",
+			"submodel": "armourers_workshop:skin-cube-glowing-frame"
+		},
 		"marked_face": {
 			"0": {},
 			"1": {"submodel": "armourers_workshop:skin-cube-marker", "x": 90},
