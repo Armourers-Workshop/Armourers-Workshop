@@ -161,9 +161,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     public void clearMarkers(ISkinPartType partType) {
         if (skinType != null) {
             ArmourerWorldHelper.clearMarkers(getWorld(), getPos().offset(EnumFacing.UP, HEIGHT_OFFSET), skinType, skinProps, partType);
-            SkinProperties newSkinProps = new SkinProperties();
-            SkinProperties.PROP_BLOCK_MULTIBLOCK.setValue(newSkinProps, SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps));
-            setSkinProps(newSkinProps);
             dirtySync();
         }
     }
