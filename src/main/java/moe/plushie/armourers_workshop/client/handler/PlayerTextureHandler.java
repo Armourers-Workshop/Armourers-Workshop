@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.client.render.EntityTextureInfo;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -78,9 +77,7 @@ public class PlayerTextureHandler {
             EntityTextureInfo textureInfo = playerTextureMap.get(player);
             textureInfo.updateTexture(player.getLocationSkin());
             
-            
-            textureInfo.updateHairColour(wardrobeCap.getExtraColours().getColour(ExtraColourType.HAIR));
-            textureInfo.updateSkinColour(wardrobeCap.getExtraColours().getColour(ExtraColourType.SKIN));
+            textureInfo.updateExtraColours(wardrobeCap.getExtraColours());
             
             Skin[] skins = new Skin[4 * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
             ISkinDye[] dyes = new ISkinDye[4 * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
