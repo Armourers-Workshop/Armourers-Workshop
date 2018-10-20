@@ -234,7 +234,10 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         }
         removeBoundingBoxes();
         this.skinType = skinType;
+        SkinProperties oldProperties = skinProps;
         skinProps = new SkinProperties();
+        SkinProperties.PROP_ALL_CUSTOM_NAME.setValue(skinProps, SkinProperties.PROP_ALL_CUSTOM_NAME.getValue(oldProperties));
+        SkinProperties.PROP_ALL_FLAVOUR_TEXT.setValue(skinProps, SkinProperties.PROP_ALL_FLAVOUR_TEXT.getValue(oldProperties));
         clearPaintData(true);
         createBoundingBoxes(); 
         dirtySync();
