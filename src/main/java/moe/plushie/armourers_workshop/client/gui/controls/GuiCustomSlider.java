@@ -66,6 +66,9 @@ public class GuiCustomSlider extends GuiSlider {
     
     @Override
     public boolean mousePressed(Minecraft minecraft, int mouseX, int mouseY) {
+        if (!this.visible) {
+            return false;
+        }
         if (fineTuneButtons) {
             if (isPosInRec(x, y, 9, height, mouseX, mouseY)) {
                 //Left button
