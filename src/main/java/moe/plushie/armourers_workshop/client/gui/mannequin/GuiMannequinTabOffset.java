@@ -5,8 +5,6 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.data.TextureType;
-import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiMannequinData;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -48,9 +46,9 @@ public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
         bipedOffsetXslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25, TAB_WIDTH - 20, 10, "X: ", "", -TileEntityMannequin.CONS_OFFSET_MAX, TileEntityMannequin.CONS_OFFSET_MAX, 0D, true, true, this);
         bipedOffsetYslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25 + 12, TAB_WIDTH - 20, 10, "Y: ", "", -TileEntityMannequin.CONS_OFFSET_MAX, TileEntityMannequin.CONS_OFFSET_MAX, 0D, true, true, this);
         bipedOffsetZslider = new GuiCustomSlider(0, (int)((width / 2F) - (TAB_WIDTH / 2F)) + 10, 25 + 24, TAB_WIDTH - 20, 10, "Z: ", "", -TileEntityMannequin.CONS_OFFSET_MAX, TileEntityMannequin.CONS_OFFSET_MAX, 0D, true, true, this);
-        setSliderValue(bipedOffsetXslider, tileEntity.getOffsetX());
-        setSliderValue(bipedOffsetYslider, tileEntity.getOffsetY());
-        setSliderValue(bipedOffsetZslider, tileEntity.getOffsetZ());
+        setSliderValue(bipedOffsetXslider, tileEntity.PROP_OFFSET_X.get());
+        setSliderValue(bipedOffsetYslider, tileEntity.PROP_OFFSET_Y.get());
+        setSliderValue(bipedOffsetZslider, tileEntity.PROP_OFFSET_Z.get());
         
         buttonList.add(resetOffsetButton);
         buttonList.add(bipedOffsetXslider);
@@ -103,9 +101,9 @@ public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
         boolean visible = ((GuiMannequin)parent).tabExtraRenders.isVisible.isChecked();
         TextureType textureType = TextureType.values()[((GuiMannequin)parent).tabTexture.textureTypeList.getListSelectedIndex()];
         String name = ((GuiMannequin)parent).tabTexture.nameTextbox.getText();
-        int skinColour = ((GuiMannequin)parent).tabSkinAndHair.skinColour;
-        int hairColour = ((GuiMannequin)parent).tabSkinAndHair.hairColour;
-        MessageClientGuiMannequinData message = new MessageClientGuiMannequinData(offsetX, offsetY, offsetZ, skinColour,hairColour, name, renderExtras, flying, visible, textureType);
-        PacketHandler.networkWrapper.sendToServer(message);
+        //int skinColour = ((GuiMannequin)parent).tabSkinAndHair.skinColour;
+        //int hairColour = ((GuiMannequin)parent).tabSkinAndHair.hairColour;
+        //MessageClientGuiMannequinData message = new MessageClientGuiMannequinData(offsetX, offsetY, offsetZ, skinColour, hairColour, name, renderExtras, flying, visible, textureType);
+        //PacketHandler.networkWrapper.sendToServer(message);
     }
 }

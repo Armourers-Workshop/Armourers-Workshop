@@ -89,7 +89,7 @@ public class BipedRotations {
         this.isChild = compound.getBoolean(TAG_IS_CHILD);
     }
     
-    public void saveNBTData(NBTTagCompound compound) {
+    public NBTTagCompound saveNBTData(NBTTagCompound compound) {
         head.saveNBTData(compound);
         chest.saveNBTData(compound);
         leftArm.saveNBTData(compound);
@@ -97,6 +97,7 @@ public class BipedRotations {
         leftLeg.saveNBTData(compound);
         rightLeg.saveNBTData(compound);
         compound.setBoolean(TAG_IS_CHILD, this.isChild);
+        return compound;
     }
     
     public void readFromBuf(ByteBuf buf) {
@@ -216,10 +217,11 @@ public class BipedRotations {
             this.rotationZ = compound.getFloat(TAG_ROTATION_Z + this.partName);
         }
         
-        public void saveNBTData(NBTTagCompound compound) {
+        public NBTTagCompound saveNBTData(NBTTagCompound compound) {
             compound.setFloat(TAG_ROTATION_X + this.partName, this.rotationX);
             compound.setFloat(TAG_ROTATION_Y + this.partName, this.rotationY);
             compound.setFloat(TAG_ROTATION_Z + this.partName, this.rotationZ);
+            return compound;
         }
         
         public void writeToBuf(ByteBuf buf) {

@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
 import moe.plushie.armourers_workshop.common.data.TextureType;
 import moe.plushie.armourers_workshop.common.inventory.ContainerMannequin;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
@@ -16,8 +18,7 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
     private float xOffset;
     private float yOffset;
     private float zOffset;
-    private int skinColour;
-    private int hairColour;
+    private final ExtraColours extraColours;
     private String username;
     private boolean renderExtras;
     private boolean flying;
@@ -25,16 +26,16 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
     private TextureType textureType;
     
     public MessageClientGuiMannequinData() {
+        extraColours = new ExtraColours();
     }
     
     public MessageClientGuiMannequinData(float xOffset, float yOffset,
-            float zOffset, int skinColour, int hairColour, String username,
+            float zOffset, ExtraColours extraColours, String username,
             boolean renderExtras, boolean flying, boolean visible, TextureType textureType) {
         this.xOffset = xOffset;
         this.yOffset = yOffset;
         this.zOffset = zOffset;
-        this.skinColour = skinColour;
-        this.hairColour = hairColour;
+        this.extraColours = extraColours;
         this.username = username;
         this.renderExtras = renderExtras;
         this.flying = flying;
@@ -48,8 +49,9 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         buf.writeFloat(xOffset);
         buf.writeFloat(yOffset);
         buf.writeFloat(zOffset);
-        buf.writeInt(skinColour);
-        buf.writeInt(hairColour);
+        for (ExtraColourType colourType : ExtraColourType.values()) {
+            buf.writeInt(extraColours.getColour(colourType));
+        }
         ByteBufUtils.writeUTF8String(buf, username);
         buf.writeBoolean(renderExtras);
         buf.writeBoolean(flying);
@@ -62,8 +64,9 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         xOffset = buf.readFloat();
         yOffset = buf.readFloat();
         zOffset = buf.readFloat();
-        skinColour = buf.readInt();
-        hairColour = buf.readInt();
+        for (ExtraColourType colourType : ExtraColourType.values()) {
+            extraColours.setColour(colourType, buf.readInt());
+        }
         username = ByteBufUtils.readUTF8String(buf);
         renderExtras = buf.readBoolean();
         flying = buf.readBoolean();
@@ -80,8 +83,17 @@ public class MessageClientGuiMannequinData implements IMessage, IMessageHandler<
         Container container = player.openContainer;
         if (container != null && container instanceof ContainerMannequin) {
             TileEntityMannequin tileEntity = ((ContainerMannequin)container).getTileEntity();
-            tileEntity.gotUpdateFromClient(message.xOffset, message.yOffset, message.zOffset,
-                    message.skinColour, message.hairColour, message.username, message.renderExtras, message.flying, message.visible, message.textureType);
+            
+            /*tileEntity.disableSync();
+            tileEntity.setOffset(message.xOffset, message.yOffset, message.zOffset);
+            tileEntity.setExtraColours(extraColours);
+            tileEntity.setImageUrl(username);
+            tileEntity.setRenderExtras(message.renderExtras);
+            tileEntity.setFlying(message.flying);
+            tileEntity.setVisible(message.visible);
+            tileEntity.setTextureType(message.textureType);
+            tileEntity.enableSync();*/
+            
         }
         return null;
     }

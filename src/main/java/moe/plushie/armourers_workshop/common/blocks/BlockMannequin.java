@@ -15,7 +15,6 @@ import moe.plushie.armourers_workshop.common.items.block.ItemBlockMannequin;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
-import moe.plushie.armourers_workshop.utils.UtilItems;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -64,12 +63,8 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         if (!worldIn.isRemote) {
+            BlockUtils.dropInventoryBlocks(worldIn, pos);
             TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
-            if (te != null && te.getDropItems()) {
-                ItemStack dropStack = te.getDropStack();
-                UtilItems.spawnItemInWorld(worldIn, pos, dropStack);
-                BlockUtils.dropInventoryBlocks(worldIn, pos);
-            }
         }
         super.breakBlock(worldIn, pos, state);
     }
@@ -86,17 +81,17 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         TileEntity te = worldIn.getTileEntity(pos);
         if (te != null && te instanceof TileEntityMannequin) {
             int l = MathHelper.floor((double)(placer.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
-            ((TileEntityMannequin)te).setRotation(l);
+            ((TileEntityMannequin)te).PROP_ROTATION.set(l);
             if (!worldIn.isRemote) {
                 if (stack.hasTagCompound()) {
                     NBTTagCompound compound = stack.getTagCompound();
                     GameProfile gameProfile = null;
                     if (compound.hasKey(TAG_OWNER, 10)) {
                         gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
-                        ((TileEntityMannequin)te).setGameProfile(gameProfile);
+                        ((TileEntityMannequin)te).PROP_OWNER.set(gameProfile);
                     }
                     if (compound.hasKey(TAG_IMAGE_URL, Constants.NBT.TAG_STRING)) {
-                        ((TileEntityMannequin)te).setImageUrl(compound.getString(TAG_IMAGE_URL));
+                        ((TileEntityMannequin)te).PROP_IMAGE_URL.set(compound.getString(TAG_IMAGE_URL));
                     }
                 }
             }
@@ -125,9 +120,9 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
                 }
             }
             TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
-            if (te != null && te.isRenderExtras()) {
-                Contributor contributor = Contributors.INSTANCE.getContributor(te.getGameProfile());
-                if (contributor != null & te.isVisible()) {
+            if (te != null && te.PROP_RENDER_EXTRAS.get()) {
+                Contributor contributor = Contributors.INSTANCE.getContributor(te.PROP_OWNER.get());
+                if (contributor != null & te.PROP_VISIBLE.get()) {
                     for (int i = 0; i < 4; i++) {
                         Particle particle = particleManager.spawnEffectParticle(EnumParticleTypes.SPELL.getParticleID(),
                                 pos.getX() - 1 + rand.nextFloat() * 3F,
@@ -382,8 +377,8 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     public void getDebugHoverText(World world, BlockPos pos, ArrayList<String> textLines) {
         textLines.add("top=" + isTopOfMannequin(world, pos));
         TileEntityMannequin te = getMannequinTileEntity(world, pos);
-        if (te != null && te.getGameProfile() != null) {
-            textLines.add("profile=" + te.getGameProfile().getName() + ":" + te.getGameProfile().getId());
+        if (te != null && te.PROP_OWNER.get() != null) {
+            textLines.add("profile=" + te.PROP_OWNER.get().getName() + ":" + te.PROP_OWNER.get().getId());
         } else {
             textLines.add("profile=null");
         }

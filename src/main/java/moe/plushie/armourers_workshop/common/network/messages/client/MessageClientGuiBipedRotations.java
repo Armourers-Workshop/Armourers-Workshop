@@ -44,7 +44,7 @@ public class MessageClientGuiBipedRotations implements IMessage, IMessageHandler
 
         if (container != null && container instanceof ContainerMannequin) {
             TileEntityMannequin tileEntity = ((ContainerMannequin) container).getTileEntity();
-            tileEntity.setBipedRotations(message.bipedRotations);
+            tileEntity.PROP_BIPED_ROTATIONS.set(message.bipedRotations);
         }
 
         return null;

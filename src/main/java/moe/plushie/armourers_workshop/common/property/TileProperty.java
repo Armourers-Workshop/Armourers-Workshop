@@ -4,14 +4,15 @@ public class TileProperty<TYPE> {
     
     private final IPropertyHolder owner;
     private final String key;
-    private final TYPE defaultValue;
+    private final Class type;
     private boolean sync;
     private TYPE value;
     
-    public TileProperty(IPropertyHolder owner, String key, TYPE defaultValue) {
+    public TileProperty(IPropertyHolder owner, String key, Class type, TYPE defaultValue) {
         this.owner = owner;
         this.key = key;
-        this.defaultValue = defaultValue;
+        this.type = type;
+        value = defaultValue;
         sync = true;
         owner.registerProperty(this);
     }
@@ -25,8 +26,8 @@ public class TileProperty<TYPE> {
         return sync;
     }
     
-    public TYPE getDefault() {
-        return defaultValue;
+    public Class getType() {
+        return type;
     }
     
     public String getKey() {
@@ -43,9 +44,6 @@ public class TileProperty<TYPE> {
     }
     
     public TYPE get() {
-        if (value == null) {
-            return defaultValue;
-        }
         return value;
     }
 }

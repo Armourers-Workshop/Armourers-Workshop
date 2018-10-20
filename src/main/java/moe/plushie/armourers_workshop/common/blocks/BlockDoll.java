@@ -137,9 +137,9 @@ public class BlockDoll extends AbstractModBlockContainer {
         TileEntity te = world.getTileEntity(pos);;
         if (te != null && te instanceof TileEntityMannequin) {
             TileEntityMannequin teMan = (TileEntityMannequin) te;
-            if (teMan.getGameProfile() != null) {
+            if (teMan.PROP_OWNER.get() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.writeGameProfile(profileTag, teMan.getGameProfile());
+                NBTUtil.writeGameProfile(profileTag, teMan.PROP_OWNER.get());
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
             }

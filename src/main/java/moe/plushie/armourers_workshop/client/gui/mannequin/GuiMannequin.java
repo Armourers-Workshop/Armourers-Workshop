@@ -36,7 +36,7 @@ public class GuiMannequin extends GuiTabbed {
         this.inventoryName = tileEntity.getName();
         
         tabInventory = new GuiMannequinTabInventory(0, this, tileEntity);
-        tabRotations = new GuiMannequinTabRotations(1, this, inventoryName, tileEntity.getBipedRotations());
+        tabRotations = new GuiMannequinTabRotations(1, this, inventoryName, tileEntity.PROP_BIPED_ROTATIONS.get());
         tabOffset = new GuiMannequinTabOffset(2, this, inventoryName, tileEntity);
         tabSkinAndHair = new GuiMannequinTabSkinHair(3, this, tileEntity);
         tabTexture = new GuiMannequinTabTexture(4, this, tileEntity);
@@ -74,10 +74,10 @@ public class GuiMannequin extends GuiTabbed {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         String append = null;
-        if (tileEntity.getGameProfile() != null) {
-            append = tileEntity.getGameProfile().getName();
+        if (tileEntity.PROP_OWNER.get() != null) {
+            append = tileEntity.PROP_OWNER.get().getName();
         }
-        if (tileEntity.getIsDoll()) {
+        if (tileEntity.PROP_DOLL.get()) {
             GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, "doll", append, 4210752);
         } else {
             GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getName(), append, 4210752);

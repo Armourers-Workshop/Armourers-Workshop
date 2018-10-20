@@ -33,7 +33,7 @@ public class ContainerMannequin extends ModTileContainer<TileEntityMannequin> {
             
             // Moving from player to mannequin.
             boolean slotted = false;
-            for (int i = 0; i < TileEntityMannequin.INVENTORY_SIZE; i++) {
+            for (int i = 0; i < TileEntityMannequin.CONS_INVENTORY_SIZE; i++) {
                 int targetSlotId = i + 36;
                 Slot targetSlot = getSlot(targetSlotId);
                 boolean handSlot = false;

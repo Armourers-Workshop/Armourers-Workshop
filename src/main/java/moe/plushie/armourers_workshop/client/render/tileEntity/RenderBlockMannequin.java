@@ -78,6 +78,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         GlStateManager.translate(x, y, z);
         GlStateManager.scale(-1, -1, 1);
         GlStateManager.translate(-8 * SCALE, -24F * SCALE, 8 * SCALE);
+        int rotaion = te.PROP_ROTATION.get();
+        GlStateManager.rotate(rotaion * 22.5F, 0, 1, 0);
         GlStateManager.enableRescaleNormal();
         
         
@@ -387,18 +389,18 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
     
     private void renderModel(TileEntityMannequin te, ModelBiped targetBiped) {
         if (!hasCustomHead(te)) {
-            if (te.getBipedRotations().isChild) {
+            if (te.PROP_BIPED_ROTATIONS.get().isChild) {
                 ModelHelper.enableChildModelScale(true, SCALE);
             }
             targetBiped.bipedHead.render(SCALE);
             GL11.glDisable(GL11.GL_CULL_FACE);
             targetBiped.bipedHeadwear.render(SCALE);
             GL11.glEnable(GL11.GL_CULL_FACE);
-            if (te.getBipedRotations().isChild) {
+            if (te.PROP_BIPED_ROTATIONS.get().isChild) {
                 ModelHelper.disableChildModelScale();
             };
         }
-        if (te.getBipedRotations().isChild) {
+        if (te.PROP_BIPED_ROTATIONS.get().isChild) {
             ModelHelper.enableChildModelScale(false, SCALE);
         }
 
@@ -408,7 +410,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         targetBiped.bipedRightLeg.render(SCALE);
         targetBiped.bipedLeftLeg.render(SCALE);
         
-        if (te.getBipedRotations().isChild) {
+        if (te.PROP_BIPED_ROTATIONS.get().isChild) {
             ModelHelper.disableChildModelScale();
         }
     }
@@ -545,9 +547,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
     }
     
     private ISkinDescriptor[] getSkinPointers(TileEntityMannequin te) {
-        ISkinDescriptor[] skinPointers = new ISkinDescriptor[4 * TileEntityMannequin.INVENTORY_ROWS_COUNT];
+        ISkinDescriptor[] skinPointers = new ISkinDescriptor[4 * TileEntityMannequin.CONS_INVENTORY_ROWS_COUNT];
         
-        for (int i = 0; i < TileEntityMannequin.INVENTORY_ROWS_COUNT; i++) {
+        for (int i = 0; i < TileEntityMannequin.CONS_INVENTORY_ROWS_COUNT; i++) {
             skinPointers[0 + i * 4] = getSkinPointerForSlot(te, 0 + i * 7);
             skinPointers[1 + i * 4] = getSkinPointerForSlot(te, 1 + i * 7);
             skinPointers[2 + i * 4] = getSkinPointerForSlot(te, 2 + i * 7);

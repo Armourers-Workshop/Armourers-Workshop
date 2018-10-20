@@ -1,6 +1,13 @@
 package moe.plushie.armourers_workshop.common.data;
 
-public enum TextureType {
+import net.minecraft.util.IStringSerializable;
+
+public enum TextureType implements IStringSerializable {
     USER,
-    URL
+    URL;
+
+    @Override
+    public String getName() {
+        return name();
+    }
 }

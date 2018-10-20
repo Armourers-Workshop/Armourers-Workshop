@@ -49,12 +49,12 @@ public final class MannequinTextureHelper {
 
     public static PlayerTexture getMannequinTexture(TileEntityMannequin tileEntity) {
         PlayerTexture playerTexture = NO_TEXTURE;
-        if (tileEntity.getGameProfile() != null && tileEntity.getTextureType() == TextureType.USER) {
-            String name = tileEntity.getGameProfile().getName();
+        if (tileEntity.PROP_OWNER.get() != null && tileEntity.PROP_TEXTURE_TYPE.get() == TextureType.USER) {
+            String name = tileEntity.PROP_OWNER.get().getName();
             playerTexture = getMannequinTexture(name, TextureType.USER);
         }
-        if (!StringUtils.isNullOrEmpty(tileEntity.getImageUrl()) && tileEntity.getTextureType() == TextureType.URL) {
-            playerTexture = getMannequinTexture(tileEntity.getImageUrl(), TextureType.URL);
+        if (!StringUtils.isNullOrEmpty(tileEntity.PROP_IMAGE_URL.get()) && tileEntity.PROP_TEXTURE_TYPE.get() == TextureType.URL) {
+            playerTexture = getMannequinTexture(tileEntity.PROP_IMAGE_URL.get(), TextureType.URL);
         }
         return playerTexture;
     }

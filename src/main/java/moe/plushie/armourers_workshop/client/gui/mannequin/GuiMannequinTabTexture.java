@@ -37,16 +37,16 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
         textureTypeList = new GuiDropDownList(0, width / 2 - 110, 25, 50, "", this);
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getName(), "dropdown.user"), TextureType.USER.toString(), true);
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getName(), "dropdown.url"), TextureType.URL.toString(), true);
-        textureTypeList.setListSelectedIndex(tileEntity.getTextureType().ordinal());
+        textureTypeList.setListSelectedIndex(tileEntity.PROP_TEXTURE_TYPE.get().ordinal());
         nameTextbox = new GuiTextField(-1, fontRenderer, width / 2 - 110 + 55, 25, 165, 14);
         nameTextbox.setMaxStringLength(300);
-        if (tileEntity.getTextureType() == TextureType.USER) {
-            if (tileEntity.getGameProfile() != null) {
-                nameTextbox.setText(tileEntity.getGameProfile().getName());
+        if (tileEntity.PROP_TEXTURE_TYPE.get() == TextureType.USER) {
+            if (tileEntity.PROP_OWNER.get() != null) {
+                nameTextbox.setText(tileEntity.PROP_OWNER.get().getName());
             }
         } else {
-            if (tileEntity.getImageUrl() != null) {
-                nameTextbox.setText(tileEntity.getImageUrl());
+            if (tileEntity.PROP_IMAGE_URL.get() != null) {
+                nameTextbox.setText(tileEntity.PROP_IMAGE_URL.get());
             }
         }
 

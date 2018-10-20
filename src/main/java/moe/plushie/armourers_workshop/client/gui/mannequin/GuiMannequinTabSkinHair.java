@@ -5,11 +5,8 @@ import java.awt.image.BufferedImage;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
-import moe.plushie.armourers_workshop.client.helper.MannequinTextureHelper;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
-import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
@@ -17,7 +14,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,17 +26,17 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
     private static final int TAB_WIDTH = 200;
     private static final int TAB_HEIGHT = 62;
     
-    private GuiButtonExt selectSkinButton;
+    /*private GuiButtonExt selectSkinButton;
     private GuiButtonExt selectHairButton;
     
     private GuiButtonExt autoSkinButton;
-    private GuiButtonExt autoHairButton;
+    private GuiButtonExt autoHairButton;*/
     
     private final TileEntityMannequin tileEntity;
-    public int skinColour;
+    /*public int skinColour;
     public int hairColour;
     public boolean selectingSkinColour = false;
-    public boolean selectingHairColour = false;
+    public boolean selectingHairColour = false;*/
     public Color hoverColour = null;
     
     public GuiMannequinTabSkinHair(int tabId, GuiScreen parent, TileEntityMannequin tileEntity) {
@@ -51,7 +47,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
     @Override
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
-        skinColour = tileEntity.getSkinColour();
+        /*skinColour = tileEntity.getSkinColour();
         hairColour = tileEntity.getHairColour();
         
         selectSkinButton = new GuiButtonExt(0, width / 2 - 90, 25, 80, 14, 
@@ -68,7 +64,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
         buttonList.add(selectHairButton);
         
         buttonList.add(autoSkinButton);
-        buttonList.add(autoHairButton);
+        buttonList.add(autoHairButton);*/
     }
 
     @Override
@@ -77,7 +73,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
         rec.x = width / 2 - rec.width / 2;
         GuiUtils.drawContinuousTexturedBox(rec.x, rec.y, 0, 200, rec.width, rec.height, 38, 38, 4, zLevel);
         
-        if (selectingSkinColour) {
+        /*if (selectingSkinColour) {
             if (hoverColour != null) {
                 drawColourBox(width / 2 - 7, 25, hoverColour.getRGB());
             }
@@ -90,7 +86,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
             }
         } else {
             drawColourBox(width / 2 - 7, 40, hairColour);
-        }
+        }*/
     }
     
     private void drawColourBox(int x, int y, int colour) {
@@ -103,7 +99,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
     
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
-        if (selectingSkinColour) {
+        /*if (selectingSkinColour) {
             selectingSkinColour = false;
             if (hoverColour != null) {
                 skinColour = hoverColour.getRGB();
@@ -116,13 +112,13 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
                 hairColour = hoverColour.getRGB();
             }
             ((GuiMannequin)parent).tabOffset.sendData();
-        }
+        }*/
         return super.mouseClicked(mouseX, mouseY, button);
     }
     
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (button == selectSkinButton) {
+        /*if (button == selectSkinButton) {
             selectingSkinColour = true;
         }
         if (button == autoSkinButton) {
@@ -137,7 +133,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
             PlayerTexture playerTexture = MannequinTextureHelper.getMannequinTexture(tileEntity);
             hairColour = autoColourHair(playerTexture.getResourceLocation());
             ((GuiMannequin)parent).tabOffset.sendData();
-        }
+        }*/
     }
     
     private BufferedImage getBufferedImage(ResourceLocation rl) {
