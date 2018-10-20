@@ -258,7 +258,8 @@ public class EntityTextureInfo {
                                         
                                     }
                                 }
-                                bufferedEntitySkinnedImage.setRGB((int)texLoc.getX() + ix, (int)texLoc.getY() + iy, 0x00FFFFFF);
+                                // Make the players texture blank.
+                                paintTexture(bufferedEntitySkinnedImage, (int)texLoc.getX() + ix, (int)texLoc.getY() + iy, 0x00FFFFFF);
                             }
                         }
                         
