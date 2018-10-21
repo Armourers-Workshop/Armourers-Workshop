@@ -16,6 +16,7 @@ public class ContainerSkinnable extends ModTileContainer<TileEntitySkinnable> {
     public ContainerSkinnable(InventoryPlayer invPlayer, TileEntitySkinnable tileEntity, Skin skin) {
         super(invPlayer, tileEntity);
         
+        
         boolean ender = SkinProperties.PROP_BLOCK_ENDER_INVENTORY.getValue(skin.getProperties());
         int width = SkinProperties.PROP_BLOCK_INVENTORY_WIDTH.getValue(skin.getProperties());
         int height = SkinProperties.PROP_BLOCK_INVENTORY_HEIGHT.getValue(skin.getProperties());
@@ -30,6 +31,13 @@ public class ContainerSkinnable extends ModTileContainer<TileEntitySkinnable> {
         size = width * height;
         
         addPlayerSlots(8, height * 18 + 41);
+        
+        int guiWidth = 176;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                addSlotToContainer(new Slot(inventory, x + y * width, (guiWidth / 2 - (width * 18) / 2) + 1 + 18 * x, 21 + y * 18));
+            }
+}
     }
     
     @Override
@@ -39,10 +47,8 @@ public class ContainerSkinnable extends ModTileContainer<TileEntitySkinnable> {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
             // Moving from tile entity to player.
-            if (!this.mergeItemStack(stack, 9, 36, false)) {
-                if (!this.mergeItemStack(stack, 0, 9, false)) {
-                    return ItemStack.EMPTY;
-                }
+            if (!this.mergeItemStack(stack, getPlayerInvEndIndex(), getPlayerInvEndIndex() + size, false)) {
+                return ItemStack.EMPTY;
             }
             
             if (stack.getCount() == 0) {
