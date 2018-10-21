@@ -5,21 +5,18 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerSkinnable extends Container {
+public class ContainerSkinnable extends ModTileContainer<TileEntitySkinnable> {
 
-    private final TileEntitySkinnable tileEntity;
     private int size;
     
     public ContainerSkinnable(InventoryPlayer invPlayer, TileEntitySkinnable tileEntity, Skin skin) {
-        this.tileEntity = tileEntity;
+        super(invPlayer, tileEntity);
         
         boolean ender = SkinProperties.PROP_BLOCK_ENDER_INVENTORY.getValue(skin.getProperties());
-        
         int width = SkinProperties.PROP_BLOCK_INVENTORY_WIDTH.getValue(skin.getProperties());
         int height = SkinProperties.PROP_BLOCK_INVENTORY_HEIGHT.getValue(skin.getProperties());
         
@@ -32,62 +29,32 @@ public class ContainerSkinnable extends Container {
         
         size = width * height;
         
-        
-        int playerInvY = height * 18 + 41;
-        int hotBarY = playerInvY + 58;
-        for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new Slot(invPlayer, x, 8 + 18 * x, hotBarY));
-        }
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 8 + 18 * x, playerInvY + y * 18));
-            }
-        }
-        
-        int guiWidth = 176;
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                addSlotToContainer(new Slot(inventory, x + y * width, (guiWidth / 2 - (width * 18) / 2) + 1 + 18 * x, 21 + y * 18));
-            }
-        }
+        addPlayerSlots(8, height * 18 + 41);
     }
     
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
-        return player.getDistanceSq(tileEntity.getPos()) <= 64;
-    }
-    
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
-        Slot slot = getSlot(slotId);
+    protected ItemStack transferStackFromPlayer(EntityPlayer playerIn, int index) {
+        Slot slot = getSlot(index);
         if (slot != null && slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
-            
-            if (slotId > 35) {
-                // Moving from tile entity to player.
-                if (!this.mergeItemStack(stack, 9, 36, false)) {
-                    if (!this.mergeItemStack(stack, 0, 9, false)) {
-                        return null;
-                    }
-                }
-            } else {
-                // Moving from player to tile entity.
-                if (!this.mergeItemStack(stack, 36, 36 + size, false)) {
-                    return null;
+            // Moving from tile entity to player.
+            if (!this.mergeItemStack(stack, 9, 36, false)) {
+                if (!this.mergeItemStack(stack, 0, 9, false)) {
+                    return ItemStack.EMPTY;
                 }
             }
             
             if (stack.getCount() == 0) {
-                slot.putStack(null);
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
 
-            slot.onTake(player, stack);
+            slot.onTake(playerIn, stack);
             
             return result;
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 }

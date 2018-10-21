@@ -17,7 +17,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StringUtils;
@@ -25,62 +24,40 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ContainerSkinLibrary extends Container implements ISlotChanged {
+public class ContainerSkinLibrary extends ModTileContainer<TileEntitySkinLibrary> implements ISlotChanged {
 
-    private TileEntitySkinLibrary tileEntity;
-    
     public ContainerSkinLibrary(InventoryPlayer invPlayer, TileEntitySkinLibrary tileEntity) {
-        this.tileEntity = tileEntity;
-
-        for (int x = 0; x < 9; x++) {
-            addSlotToContainer(new Slot(invPlayer, x, 6 + 18 * x, 232));
-        }
-
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(invPlayer, x + y * 9 + 9, 6 + 18 * x, 174 + y * 18));
-            }
-        }
-        
+        super(invPlayer, tileEntity);
+        addPlayerSlots(6, 174);
         addSlotToContainer(new SlotSkinTemplate(tileEntity, 0, 226, 101, this));
         addSlotToContainer(new SlotOutput(tileEntity, 1, 226, 137));
     }
     
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
-        Slot slot = getSlot(slotID);
+    protected ItemStack transferStackFromPlayer(EntityPlayer playerIn, int index) {
+        Slot slot = getSlot(index);
         if (slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
-            if (slotID < 36) {
-                if ((
-                        stack.getItem() instanceof ItemSkinTemplate & stack.getItemDamage() == 0) |
-                        stack.getItem() instanceof ItemSkin) {
-                    if (!this.mergeItemStack(stack, 36, 37, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                } else {
+            
+            if ((stack.getItem() instanceof ItemSkinTemplate) | stack.getItem() instanceof ItemSkin) {
+                if (!this.mergeItemStack(stack, getPlayerInvEndIndex(), getPlayerInvEndIndex() + 1, false)) {
                     return ItemStack.EMPTY;
                 }
             } else {
-                if (!this.mergeItemStack(stack, 9, 36, false)) {
-                    if (!this.mergeItemStack(stack, 0, 9, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                }
+                return ItemStack.EMPTY;
             }
-
+            
             if (stack.getCount() == 0) {
                 slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
 
-            slot.onTake(player, stack);
+            slot.onTake(playerIn, stack);
 
             return result;
         }
-
         return ItemStack.EMPTY;
     }
     
@@ -118,21 +95,12 @@ public class ContainerSkinLibrary extends Container implements ISlotChanged {
     }
     
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
-        return tileEntity.isUsableByPlayer(player);
-    }
-    
-    public TileEntitySkinLibrary getTileEntity() {
-        return tileEntity;
-    }
-    
-    @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
         for (Object player : listeners) {
             if (player instanceof EntityPlayerMP) {
                 EntityPlayerMP playerMp = (EntityPlayerMP) player;
-                ArmourersWorkshop.proxy.libraryManager.syncLibraryWithPlayer(playerMp);
+                ArmourersWorkshop.getProxy().getLibraryManager().syncLibraryWithPlayer(playerMp);
             }
         }
     }
