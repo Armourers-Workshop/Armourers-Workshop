@@ -75,11 +75,11 @@ public class Holiday {
     }
     
     public boolean isHolidayActive() {
-        Calendar current = Calendar.getInstance();
         if (ConfigHandler.disableAllHolidayEvents) {
             return false;
         }
         if (enabled) {
+            Calendar current = Calendar.getInstance();
             if (current.after(startDate) & current.before(endDate)) {
                 return true;
             }

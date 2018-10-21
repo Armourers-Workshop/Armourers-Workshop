@@ -10,8 +10,6 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.data.BipedRotations;
 import moe.plushie.armourers_workshop.common.data.BipedRotations.BipedPart;
 import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
-import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiBipedRotations;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -166,11 +164,13 @@ public class GuiMannequinTabRotations extends GuiTabPanel<GuiMannequin> implemen
                 (float)-bipedRotZslider.getValue());
         
         if (!this.bipedRotations.equals(this.lastBipedRotations)) {
-            NBTTagCompound compound = new NBTTagCompound();
+            parent.tileEntity.PROP_BIPED_ROTATIONS.set(bipedRotations);
+            parent.updateProperty(parent.tileEntity.PROP_BIPED_ROTATIONS);
+            /*NBTTagCompound compound = new NBTTagCompound();
             this.bipedRotations.saveNBTData(compound);
             this.lastBipedRotations.loadNBTData(compound);
             MessageClientGuiBipedRotations message = new MessageClientGuiBipedRotations(bipedRotations);
-            PacketHandler.networkWrapper.sendToServer(message);
+            PacketHandler.networkWrapper.sendToServer(message);*/
         }
     }
 

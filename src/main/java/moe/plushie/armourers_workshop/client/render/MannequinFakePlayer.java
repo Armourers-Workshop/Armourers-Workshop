@@ -1,6 +1,15 @@
 package moe.plushie.armourers_workshop.client.render;
 
-public class MannequinFakePlayer /*extends AbstractClientPlayer*/ {
+import com.mojang.authlib.GameProfile;
+
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.FakePlayer;
+
+public class MannequinFakePlayer extends FakePlayer {
+
+    public MannequinFakePlayer(WorldServer world, GameProfile name) {
+        super(world, name);
+    }
     /*
     public MannequinFakePlayer(World world, GameProfile gameProfile) {
         super(world, gameProfile);
