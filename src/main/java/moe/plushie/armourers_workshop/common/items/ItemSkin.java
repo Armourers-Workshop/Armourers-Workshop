@@ -26,7 +26,7 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnableChild;
-import moe.plushie.armourers_workshop.common.world.AsyncWorldUpdate;
+import moe.plushie.armourers_workshop.common.world.AsyncWorldUpdateBlock;
 import moe.plushie.armourers_workshop.common.world.SyncWorldUpdater;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
@@ -254,7 +254,7 @@ public class ItemSkin extends AbstractModItem {
         te.setSkinPointer(skin, descriptor);
         te.setRelatedBlocks(relatedBlocks);
         //world.setTileEntity(pos, te);
-        SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdate(state, pos, world).setTileEntity(te).setDelay(1));
+        SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(state, pos, world).setTileEntity(te).setDelay(1));
 
         
 

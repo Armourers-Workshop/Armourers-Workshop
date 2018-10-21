@@ -13,10 +13,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public abstract class GuiTabPanel extends Gui {
+public abstract class GuiTabPanel<T extends GuiScreen> extends Gui {
     
     private final int tabId;
-    protected final GuiScreen parent;
+    protected final T parent;
     protected final FontRenderer fontRenderer;
     protected final Minecraft mc;
     
@@ -28,7 +28,7 @@ public abstract class GuiTabPanel extends Gui {
     private final boolean fullscreen;
     private GuiButton selectedButton;
     
-    public GuiTabPanel(int tabId, GuiScreen parent, boolean fullscreen) {
+    public GuiTabPanel(int tabId, T parent, boolean fullscreen) {
         this.tabId = tabId;
         this.parent = parent;
         this.mc = Minecraft.getMinecraft();

@@ -1,5 +1,9 @@
 package moe.plushie.armourers_workshop.client.gui.mannequin;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.mojang.authlib.GameProfile;
+
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
@@ -8,7 +12,6 @@ import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.data.TextureType;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -16,7 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownListCallback {
+public class GuiMannequinTabTexture extends GuiTabPanel<GuiMannequin> implements IDropDownListCallback {
     
     private static final int TAB_WIDTH = 240;
     private static final int TAB_HEIGHT = 68;
@@ -26,7 +29,7 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
     public GuiTextField nameTextbox;
     private GuiButtonExt setNameButton;
     
-    public GuiMannequinTabTexture(int tabId, GuiScreen parent, TileEntityMannequin tileEntity) {
+    public GuiMannequinTabTexture(int tabId, GuiMannequin parent, TileEntityMannequin tileEntity) {
         super(tabId, parent, true);
         this.tileEntity = tileEntity;
     }
@@ -79,7 +82,15 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button == setNameButton) {
-            ((GuiMannequin)parent).tabOffset.sendData();
+            if (tileEntity.PROP_TEXTURE_TYPE.get() == TextureType.USER) {
+                if (!StringUtils.isEmpty(nameTextbox.getText())) {
+                    tileEntity.PROP_OWNER.set(new GameProfile(null, nameTextbox.getText()));
+                    parent.updateProperty(tileEntity.PROP_OWNER);
+                }
+            } else {
+                tileEntity.PROP_IMAGE_URL.set(nameTextbox.getText());
+                parent.updateProperty(tileEntity.PROP_IMAGE_URL);
+            }
         }
     }
     
@@ -96,6 +107,8 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
 
     @Override
     public void onDropDownListChanged(GuiDropDownList dropDownList) {
-        ((GuiMannequin)parent).tabOffset.sendData();
+        TextureType textureType = TextureType.values()[textureTypeList.getListSelectedIndex()];
+        tileEntity.PROP_TEXTURE_TYPE.set(textureType);
+        parent.updateProperty(tileEntity.PROP_TEXTURE_TYPE);
     }
 }

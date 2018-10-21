@@ -4,15 +4,16 @@ import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
+import moe.plushie.armourers_workshop.common.network.PacketHandler;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiUpdateTileProperties;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiMannequinTabExtraRenders extends GuiTabPanel {
+public class GuiMannequinTabExtraRenders extends GuiTabPanel<GuiMannequin> {
     
     private final String inventoryName;
     private final TileEntityMannequin tileEntity;
@@ -21,7 +22,7 @@ public class GuiMannequinTabExtraRenders extends GuiTabPanel {
     public GuiCheckBox isFlying;
     public GuiCheckBox isVisible;
     
-    public GuiMannequinTabExtraRenders(int tabId, GuiScreen parent, String inventoryName, TileEntityMannequin tileEntity) {
+    public GuiMannequinTabExtraRenders(int tabId, GuiMannequin parent, String inventoryName, TileEntityMannequin tileEntity) {
         super(tabId, parent, true);
         this.inventoryName = inventoryName;
         this.tileEntity = tileEntity;
@@ -56,7 +57,9 @@ public class GuiMannequinTabExtraRenders extends GuiTabPanel {
             ((GuiMannequin)parent).tabRotations.checkAndSendRotationValues();
         }
         if (button == isVisible) {
-            ((GuiMannequin)parent).tabOffset.sendData();
+            tileEntity.PROP_VISIBLE.set(isVisible.isChecked());
+            MessageClientGuiUpdateTileProperties message = new MessageClientGuiUpdateTileProperties(tileEntity.PROP_VISIBLE);
+            PacketHandler.networkWrapper.sendToServer(message);
         }
     }
 

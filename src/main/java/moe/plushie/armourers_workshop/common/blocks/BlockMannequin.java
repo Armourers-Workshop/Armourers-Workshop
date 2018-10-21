@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
@@ -13,6 +15,7 @@ import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.items.ItemDebugTool.IDebug;
 import moe.plushie.armourers_workshop.common.items.block.ItemBlockMannequin;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
+import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import net.minecraft.block.SoundType;
@@ -31,6 +34,8 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -55,7 +60,6 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     public BlockMannequin() {
         super(LibBlockNames.MANNEQUIN, Material.ROCK, SoundType.METAL, true);
         setLightOpacity(0);
-        //setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
         isValentins = ModHolidays.VALENTINES.isHolidayActive();
         setSortPriority(199);
     }
@@ -250,27 +254,20 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         ItemStack stack = new ItemStack(ModBlocks.mannequin, 1);
-        /*
-        int meta = world.getBlockMetadata(x, y, z);
-        int yOffset = 0;
-        if (meta == 1) {
-            yOffset = -1;
-        }
-        TileEntity te = world.getTileEntity(x, y + yOffset, z);
+        TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntityMannequin) {
             TileEntityMannequin teMan = (TileEntityMannequin) te;
-            if (teMan.getGameProfile() != null) {
+            if (teMan.PROP_OWNER.get() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.writeGameProfile(profileTag, teMan.getGameProfile());
+                NBTUtil.writeGameProfile(profileTag, teMan.PROP_OWNER.get());
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
             }
-            if (!StringUtils.isNullOrEmpty(teMan.getImageUrl())) {
+            if (!StringUtils.isEmpty(teMan.PROP_IMAGE_URL.get())) {
                 stack.setTagCompound(new NBTTagCompound());
-                stack.getTagCompound().setString(TAG_IMAGE_URL, teMan.getImageUrl());
+                stack.getTagCompound().setString(TAG_IMAGE_URL, teMan.PROP_IMAGE_URL.get());
             }
         }
-        */
         return stack;
     }
     
@@ -287,8 +284,6 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     }
     
     
-    
-    
     /*
     @Override
     public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
@@ -298,45 +293,19 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         } else {
             setBlockBounds(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
         }
-    }
-    
+    }*/
+
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
+        if (!playerIn.canPlayerEdit(pos, facing, playerIn.getHeldItem(hand))) {
             return false;
         }
-        if (!worldIn.isRemote) {
-            if (player.inventory.getCurrentItem() != null) {
-                if (player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
-                    return false;
-                }
-                if (player.inventory.getCurrentItem().getItem() == ModItems.paintbrush) {
-                    return false;
-                }
-            }
-            int meta = world.getBlockMetadata(x, y, z);
-            int yOffset = 0;
-            if (meta == 1) {
-                yOffset = -1;
-            }
-            ItemStack stack = player.getCurrentEquippedItem();
-            if (stack != null && stack.getItem() == Items.NAME_TAG) {
-                TileEntity te = world.getTileEntity(x, y + yOffset, z);;
-                if (te != null && te instanceof TileEntityMannequin) {
-                    if (stack.getItem() == Items.NAME_TAG) {
-                        ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
-                    }
-                }
-            } else {
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, world, x, y + yOffset, z);
-            }
-        }
-        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
-            return false;
-        }
+        // TODO Check top/bottom
+        openGui(playerIn, LibGuiIds.MANNEQUIN, worldIn, pos);
         return true;
     }
-    
+
+    /*
     @Override
     public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
         int meta = world.getBlockMetadata(x, y, z);
@@ -355,13 +324,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     public int quantityDropped(IBlockState state, int fortune, Random random) {
         return 0;
     }
-    
-
-    
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
-    }*/
+    */
     
     
     @Override

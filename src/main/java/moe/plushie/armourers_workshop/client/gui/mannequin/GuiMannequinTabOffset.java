@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.data.TextureType;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
@@ -16,7 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
+public class GuiMannequinTabOffset extends GuiTabPanel<GuiMannequin> implements ISlider {
     
     private static final int TAB_WIDTH = 216;
     private static final int TAB_HEIGHT = 90;
@@ -30,7 +29,7 @@ public class GuiMannequinTabOffset extends GuiTabPanel implements ISlider {
     private GuiCustomSlider bipedOffsetYslider;
     private GuiCustomSlider bipedOffsetZslider;
     
-    public GuiMannequinTabOffset(int tabId, GuiScreen parent, String inventoryName, TileEntityMannequin tileEntity) {
+    public GuiMannequinTabOffset(int tabId, GuiMannequin parent, String inventoryName, TileEntityMannequin tileEntity) {
         super(tabId, parent, true);
         this.inventoryName = inventoryName;
         this.tileEntity = tileEntity;

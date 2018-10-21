@@ -60,7 +60,12 @@ public final class GameProfileCache {
         CommonProxy proxy = ArmourersWorkshop.getProxy();
         if (proxy.isLocalPlayer(gameProfile.getName())) {
             if (proxy.haveFullLocalProfile()) {
-                return proxy.getLocalGameProfile();
+                if (callback == null) {
+                    return proxy.getLocalGameProfile();
+                } else {
+                    callback.profileDownloaded(proxy.getLocalGameProfile());
+                    return null;
+                }
             }
             return null;
         }
@@ -70,7 +75,11 @@ public final class GameProfileCache {
             cachedProfile = downloadedCache.get(gameProfile.getName());
         }
         if (cachedProfile != null) {
-            return cachedProfile;
+            if (callback == null) {
+                return cachedProfile;
+            } else {
+                callback.profileDownloaded(cachedProfile);
+            }
         }
         
         synchronized (submitted) {

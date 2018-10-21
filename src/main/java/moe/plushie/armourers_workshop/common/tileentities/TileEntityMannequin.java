@@ -2,12 +2,15 @@ package moe.plushie.armourers_workshop.common.tileentities;
 
 import com.mojang.authlib.GameProfile;
 
+import moe.plushie.armourers_workshop.common.GameProfileCache;
 import moe.plushie.armourers_workshop.common.GameProfileCache.IGameProfileCallback;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.data.BipedRotations;
 import moe.plushie.armourers_workshop.common.data.TextureType;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.property.TileProperty;
+import moe.plushie.armourers_workshop.common.world.AsyncWorldUpdateGameProfileDownload;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -40,12 +43,19 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         PROP_DOLL.set(isDoll);
         PROP_BIPED_ROTATIONS.set(new BipedRotations());
         PROP_EXTRA_COLOURS.set(ExtraColours.EMPTY_COLOUR);
-        //PROP_TEXTURE_TYPE.
-        
     }
     
     public TileEntityMannequin() {
         this(false);
+    }
+    
+    @Override
+    public void onPropertyChanged(TileProperty<?> property) {
+        if (property == PROP_OWNER) {
+            AsyncWorldUpdateGameProfileDownload profileDownload = new AsyncWorldUpdateGameProfileDownload(getPos(), getWorld());
+            GameProfileCache.getGameProfile(PROP_OWNER.get(), profileDownload);
+        }
+        super.onPropertyChanged(property);
     }
     
     @Override
@@ -89,10 +99,8 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
 
     @Override
     public void profileDownloaded(GameProfile gameProfile) {
-        /*newProfile = gameProfile;
-        markDirty();
-        if (getWorld() != null) {
-            syncWithClients();
-        }*/
+        ModLogger.log("got profile " + gameProfile);
+        PROP_OWNER.loadType(gameProfile);
+        dirtySync();
     }
 }

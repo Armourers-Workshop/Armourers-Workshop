@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.client.gui.mannequin;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -11,7 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiMannequinTabInventory extends GuiTabPanel {
+public class GuiMannequinTabInventory extends GuiTabPanel<GuiMannequin> {
 
     private static final int INV_SLOT_SIZE = 18;
     
@@ -33,7 +32,7 @@ public class GuiMannequinTabInventory extends GuiTabPanel {
     
     private final TileEntityMannequin tileEntity;
     
-    public GuiMannequinTabInventory(int tabId, GuiScreen parent, TileEntityMannequin tileEntity) {
+    public GuiMannequinTabInventory(int tabId, GuiMannequin parent, TileEntityMannequin tileEntity) {
         super(tabId, parent, true);
         this.tileEntity = tileEntity;
     }

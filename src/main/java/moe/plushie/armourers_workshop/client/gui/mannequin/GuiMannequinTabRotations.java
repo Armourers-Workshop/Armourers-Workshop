@@ -13,7 +13,6 @@ import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiBipedRotations;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiSlider;
@@ -22,7 +21,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiMannequinTabRotations extends GuiTabPanel implements ISlider {
+public class GuiMannequinTabRotations extends GuiTabPanel<GuiMannequin> implements ISlider {
     
     private static final int ROT_MAN_TEX_WIDTH = 206;
     private static final int ROT_MAN_TEX_HEIGHT = 62;
@@ -44,7 +43,7 @@ public class GuiMannequinTabRotations extends GuiTabPanel implements ISlider {
     private int activeBipedPart = 0;
     private Rectangle_I_2D[] bipedParts = new Rectangle_I_2D[6];
     
-    public GuiMannequinTabRotations(int tabId, GuiScreen parent, String inventoryName, BipedRotations rots) {
+    public GuiMannequinTabRotations(int tabId, GuiMannequin parent, String inventoryName, BipedRotations rots) {
         super(tabId, parent, true);
         this.inventoryName = inventoryName;
         updateRotationData(rots);

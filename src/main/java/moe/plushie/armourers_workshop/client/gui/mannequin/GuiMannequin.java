@@ -8,6 +8,9 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabbed;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ContainerMannequin;
+import moe.plushie.armourers_workshop.common.network.PacketHandler;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiUpdateTileProperties;
+import moe.plushie.armourers_workshop.common.property.TileProperty;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -57,6 +60,11 @@ public class GuiMannequin extends GuiTabbed {
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.extraRenders")).setIconLocation(158, 0).setAnimation(8, 150));
         tabController.setActiveTabIndex(getActiveTab());
         tabChanged();
+    }
+    
+    public void updateProperty(TileProperty<?> property) {
+        MessageClientGuiUpdateTileProperties message = new MessageClientGuiUpdateTileProperties(property);
+        PacketHandler.networkWrapper.sendToServer(message);
     }
     
     @Override

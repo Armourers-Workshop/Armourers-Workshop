@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public abstract class ModTileEntity extends TileEntity implements IPropertyHolder {
 
-    private final ArrayList<TileProperty<?>> tileProperties;
+    protected final ArrayList<TileProperty<?>> tileProperties;
     private boolean sync = true;
 
     public ModTileEntity() {

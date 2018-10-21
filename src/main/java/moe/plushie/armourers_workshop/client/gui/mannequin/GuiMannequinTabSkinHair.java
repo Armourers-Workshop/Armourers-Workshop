@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -19,7 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiMannequinTabSkinHair extends GuiTabPanel {
+public class GuiMannequinTabSkinHair extends GuiTabPanel<GuiMannequin> {
 
     private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.MANNEQUIN);
     
@@ -39,7 +38,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel {
     public boolean selectingHairColour = false;*/
     public Color hoverColour = null;
     
-    public GuiMannequinTabSkinHair(int tabId, GuiScreen parent, TileEntityMannequin tileEntity) {
+    public GuiMannequinTabSkinHair(int tabId, GuiMannequin parent, TileEntityMannequin tileEntity) {
         super(tabId, parent, true);
         this.tileEntity = tileEntity;
     }

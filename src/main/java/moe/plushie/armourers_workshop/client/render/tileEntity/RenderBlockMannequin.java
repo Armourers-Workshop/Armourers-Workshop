@@ -7,13 +7,14 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.client.helper.MannequinTextureHelper;
 import moe.plushie.armourers_workshop.client.model.ModelHelper;
 import moe.plushie.armourers_workshop.client.model.ModelMannequin;
-import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
 import moe.plushie.armourers_workshop.client.render.MannequinFakePlayer;
-import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
-import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.common.Contributors;
+import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.data.BipedRotations;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
@@ -27,9 +28,11 @@ import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -40,7 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMannequin> {
     
-    private static final ResourceLocation circle = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/other/nanohaCircle.png");
+    private static final ResourceLocation circle = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/other/nanoha-circle.png");
     
     private static RenderBlockMannequinItems renderItems = new RenderBlockMannequinItems();
     private static boolean isHalloweenSeason;
@@ -62,11 +65,16 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
     
     @Override
     public void render(TileEntityMannequin te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        if (!te.PROP_VISIBLE.get()) {
+            return;
+        }
         mc.profiler.startSection("armourersMannequin");
         mc.profiler.startSection("holidayCheck");
         isHalloweenSeason = ModHolidays.HALLOWEEN_SEASON.isHolidayActive();
         isHalloween = ModHolidays.HALLOWEEN.isHolidayActive();
         //MannequinFakePlayer fakePlayer = te.getFakePlayer();
+        
+
         
         mc.profiler.endStartSection("move");
         
@@ -91,9 +99,27 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
             GL11.glTranslatef(0, SCALE * 24, 0);
         }
         
-        bindTexture(DefaultPlayerSkin.getDefaultSkinLegacy());
+        ResourceLocation rl;
+        boolean slimModel = false;
+        boolean download;
+        PlayerTexture playerTexture = MannequinTextureHelper.getMannequinTexture(te);
+        rl = playerTexture.getResourceLocation();
+        slimModel = playerTexture.isSlimModel();
+        download = playerTexture.isDownloaded();
+        bindTexture(rl);
         renderModel(te, modelSteve);
         
+        mc.profiler.endStartSection("magicCircle");
+        //Magic circle.
+        if (te.PROP_RENDER_EXTRAS.get() & te.PROP_VISIBLE.get()) {
+            Contributor contributor = Contributors.INSTANCE.getContributor(te.PROP_OWNER.get());
+            if (contributor != null) {
+                int offset = te.getPos().hashCode();
+                renderMagicCircle(contributor.r, contributor.g, contributor.b, partialTicks, offset, te.PROP_BIPED_ROTATIONS.get().isChild);
+            }
+        }
+        
+        GlStateManager.disableRescaleNormal();
         GlStateManager.popAttrib();
         GlStateManager.popMatrix();
         
@@ -351,40 +377,38 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
     }
     
     private void renderMagicCircle(byte r, byte g, byte b, float partialTickTime, int offset, boolean isChild) {
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
         if (isChild) {
             ModelHelper.enableChildModelScale(false, SCALE);
         }
-        GL11.glColor4ub(r, g, b, (byte)255);
-        //GL11.glColor4f(r, g, b, 1F);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_CULL_FACE);
-        GL11.glTranslatef(0F, 1.48F, 0F);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.disableLighting();
+        GlStateManager.disableCull();
+        GlStateManager.translate(0F, 1.48F, 0F);
         float circleScale = 2.0F;
-        GL11.glScalef(circleScale, circleScale, circleScale);
+        GlStateManager.scale(circleScale, circleScale, circleScale);
         float rotation = (float)((double)(mc.world.getTotalWorldTime() + offset) / 0.8F % 360) + partialTickTime;
         GL11.glRotatef(rotation, 0, 1, 0);
-        ModRenderHelper.disableLighting();
-        ModRenderHelper.enableAlphaBlend();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
         bindTexture(circle);
-        IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
-        
-        renderBuffer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX);
-        renderBuffer.addVertexWithUV(-1, 0, -1, 1, 0);
-        renderBuffer.addVertexWithUV(1, 0, -1, 0, 0);
-        renderBuffer.addVertexWithUV(1, 0, 1, 0, 1);
-        renderBuffer.addVertexWithUV(-1, 0, 1, 1, 1);
-        renderBuffer.draw();
-        
-        ModRenderHelper.disableAlphaBlend();
-        ModRenderHelper.enableLighting();
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glColor4f(1F, 1F, 1F, 1F);
+        Tessellator tess = Tessellator.getInstance();
+        tess.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+        tess.getBuffer().pos(-1, 0, -1).tex(1, 0).color(r & 0xFF, g & 0xFF, b & 0xFF, 255).endVertex();
+        tess.getBuffer().pos(1, 0, -1).tex(0, 0).color(r & 0xFF, g & 0xFF, b & 0xFF, 255).endVertex();
+        tess.getBuffer().pos(1, 0, 1).tex(0, 1).color(r & 0xFF, g & 0xFF, b & 0xFF, 255).endVertex();
+        tess.getBuffer().pos(-1, 0, 1).tex(1, 1).color(r & 0xFF, g & 0xFF, b & 0xFF, 255).endVertex();
+        tess.draw();
+        GlStateManager.disableBlend();
+        GlStateManager.enableCull();
+        GlStateManager.enableLighting();
+        GlStateManager.color(1F, 1F, 1F, 1F);
         if (isChild) {
             ModelHelper.disableChildModelScale();
         }
-        GL11.glPopMatrix();
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
     }
     
     private void renderModel(TileEntityMannequin te, ModelBiped targetBiped) {
