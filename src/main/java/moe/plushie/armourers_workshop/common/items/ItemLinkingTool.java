@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.common.items;
 
 import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable;
-import moe.plushie.armourers_workshop.common.data.BlockLocation;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
 import net.minecraft.block.Block;
@@ -35,36 +34,36 @@ public class ItemLinkingTool extends AbstractModItem {
             Block block = state.getBlock();
             if (!hasLinkLocation(stack)) {
                 if (!(block instanceof BlockSkinnable)) {
-                    setLinkLocation(stack, new BlockLocation(pos.getX(), pos.getY(), pos.getZ()));
-                    player.sendMessage(new TextComponentTranslation("chat.armourersworkshop:linkingTool.start", (Object)null));
+                    setLinkLocation(stack, new BlockPos(pos.getX(), pos.getY(), pos.getZ()));
+                    player.sendMessage(new TextComponentTranslation("chat.armourers_workshop:linkingTool.start", (Object)null));
                     return EnumActionResult.SUCCESS;
                 } else {
-                    player.sendMessage(new TextComponentTranslation("chat.armourersworkshop:linkingTool.linkedToSkinnable", (Object)null));
-                    return EnumActionResult.SUCCESS;
+                    player.sendMessage(new TextComponentTranslation("chat.armourers_workshop:linkingTool.linkedToSkinnable", (Object)null));
+                    return EnumActionResult.FAIL;
                 }
             } else {
-                BlockLocation loc = getLinkLocation(stack);
+                BlockPos loc = getLinkLocation(stack);
                 if (block instanceof BlockSkinnable) {
                     TileEntity te = world.getTileEntity(pos);
                     if (te != null && te instanceof TileEntitySkinnable) {
                         ((TileEntitySkinnable)te).getParent().setLinkedBlock(loc);
-                        player.sendMessage(new TextComponentTranslation("chat.armourersworkshop:linkingTool.finish", (Object)null));
+                        player.sendMessage(new TextComponentTranslation("chat.armourers_workshop:linkingTool.finish", (Object)null));
                         removeLinkLocation(stack);
                         return EnumActionResult.SUCCESS;
                     }
                 }
             }
             removeLinkLocation(stack);
-            player.sendMessage(new TextComponentTranslation("chat.armourersworkshop:linkingTool.fail", (Object)null));
+            player.sendMessage(new TextComponentTranslation("chat.armourers_workshop:linkingTool.fail", (Object)null));
         }
         return EnumActionResult.PASS;
     }
     
-    private void setLinkLocation(ItemStack stack, BlockLocation loc) {
+    private void setLinkLocation(ItemStack stack, BlockPos loc) {
         if (!stack.hasTagCompound()) {
             stack.setTagCompound(new NBTTagCompound());
         }
-        stack.getTagCompound().setIntArray(TAG_LINK_LOCATION, new int[] {loc.x, loc.y, loc.z});
+        stack.getTagCompound().setIntArray(TAG_LINK_LOCATION, new int[] {loc.getX(), loc.getY(), loc.getZ()});
     }
     
     private void removeLinkLocation(ItemStack stack) {
@@ -80,11 +79,11 @@ public class ItemLinkingTool extends AbstractModItem {
         return false;
     }
     
-    private BlockLocation getLinkLocation(ItemStack stack) {
+    private BlockPos getLinkLocation(ItemStack stack) {
         if (hasLinkLocation(stack)) {
             int[] loc = stack.getTagCompound().getIntArray(TAG_LINK_LOCATION);
-            return new BlockLocation(loc[0], loc[1], loc[2]);
+            return new BlockPos(loc[0], loc[1], loc[2]);
         }
-        return new BlockLocation(0, 0, 0);
+        return new BlockPos(0, 0, 0);
     }
 }
