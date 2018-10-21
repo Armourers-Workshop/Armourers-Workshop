@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
-import moe.plushie.armourers_workshop.common.data.BlockLocation;
 import moe.plushie.armourers_workshop.common.data.TextureType;
 import moe.plushie.armourers_workshop.common.exception.SkinSaveException;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
@@ -110,17 +109,17 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     
     private void applyToolToBlocks(IBlockPainter tool, World world, ItemStack stack, EntityPlayer player) {
         if (skinType != null) {
-            ArrayList<BlockLocation> paintableCubes = ArmourerWorldHelper.getListOfPaintableCubes(getWorld(), getPos().offset(EnumFacing.UP, HEIGHT_OFFSET), skinType);
+            ArrayList<BlockPos> paintableCubes = ArmourerWorldHelper.getListOfPaintableCubes(getWorld(), getPos().offset(EnumFacing.UP, HEIGHT_OFFSET), skinType);
             for (int i = 0; i < paintableCubes.size(); i++) {
-                BlockLocation bl = paintableCubes.get(i);
-                IBlockState blockState = world.getBlockState(new BlockPos(bl.x, bl.y, bl.z));
+                BlockPos bl = paintableCubes.get(i);
+                IBlockState blockState = world.getBlockState(bl);
                 //IPantableBlock pBlock = (IPantableBlock) blockState.getBlock();
                 Block block = blockState.getBlock();
                 
                 if (block instanceof IPantableBlock) {
                     for (int side = 0; side < 6; side++) {
                         EnumFacing face = EnumFacing.VALUES[side];
-                        tool.usedOnBlockSide(stack, player, world, bl.getPos(), block, face);
+                        tool.usedOnBlockSide(stack, player, world, bl, block, face);
                     }
                 }
             }

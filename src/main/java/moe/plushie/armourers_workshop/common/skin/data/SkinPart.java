@@ -7,10 +7,10 @@ import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPart;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
-import moe.plushie.armourers_workshop.common.data.BlockLocation;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeMarkerData;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -118,11 +118,11 @@ public class SkinPart implements ISkinPart {
     }
     
     private void setupBlockBounds(int blockX, int blockY, int blockZ, int x, int y, int z) {
-        BlockLocation loc = new BlockLocation(blockX + 1, -blockY, blockZ);
-        if (blockGrid[loc.x][loc.y][loc.z] == null) {
-            blockGrid[loc.x][loc.y][loc.z] = new Rectangle3D(127, 127, 127, -127, -127, -127);
+        BlockPos loc = new BlockPos(blockX + 1, -blockY, blockZ);
+        if (blockGrid[loc.getX()][loc.getY()][loc.getZ()] == null) {
+            blockGrid[loc.getX()][loc.getY()][loc.getZ()] = new Rectangle3D(127, 127, 127, -127, -127, -127);
         }
-        Rectangle3D rec = blockGrid[loc.x][loc.y][loc.z];
+        Rectangle3D rec = blockGrid[loc.getX()][loc.getY()][loc.getZ()];
         rec.setX(Math.min(rec.getX(), x));
         rec.setY(Math.min(rec.getY(), y));
         rec.setZ(Math.min(rec.getZ(), z));

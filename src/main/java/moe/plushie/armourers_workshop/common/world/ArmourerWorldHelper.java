@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
-import moe.plushie.armourers_workshop.common.data.BlockLocation;
 import moe.plushie.armourers_workshop.common.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.common.exception.SkinSaveException;
 import moe.plushie.armourers_workshop.common.exception.SkinSaveException.SkinSaveExceptionType;
@@ -383,7 +382,6 @@ public final class ArmourerWorldHelper {
     
 
     public static void copySkinCubes(World world, BlockPos pos, ISkinPartType srcPart, ISkinPartType desPart, boolean mirror) throws SkinSaveException {
-        ArrayList<BlockLocation> blList = new ArrayList<BlockLocation>();
         SkinPart skinPart = saveArmourPart(world, srcPart, pos, null, false);
         if (skinPart != null) {
             skinPart.setSkinPart(desPart);
@@ -500,8 +498,8 @@ public final class ArmourerWorldHelper {
         return blockCount;
     }
 
-    public static ArrayList<BlockLocation> getListOfPaintableCubes(World world, BlockPos pos, ISkinType skinType) {
-        ArrayList<BlockLocation> blList = new ArrayList<BlockLocation>();
+    public static ArrayList<BlockPos> getListOfPaintableCubes(World world, BlockPos pos, ISkinType skinType) {
+        ArrayList<BlockPos> blList = new ArrayList<BlockPos>();
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
             getBuildingCubesForPart(world, pos, skinPart, blList);
@@ -509,7 +507,7 @@ public final class ArmourerWorldHelper {
         return blList;
     }
     
-    private static void getBuildingCubesForPart(World world, BlockPos pos, ISkinPartType skinPart, ArrayList<BlockLocation> blList) {
+    private static void getBuildingCubesForPart(World world, BlockPos pos, ISkinPartType skinPart, ArrayList<BlockPos> blList) {
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IPoint3D offset = skinPart.getOffset();
         
@@ -524,7 +522,7 @@ public final class ArmourerWorldHelper {
                     if (world.isValid(target)) {
                         IBlockState state = world.getBlockState(target);
                         if (CubeRegistry.INSTANCE.isBuildingBlock(state.getBlock())) {
-                            blList.add(new BlockLocation(target.getX(), target.getY(), target.getZ()));
+                            blList.add(new BlockPos(target.getX(), target.getY(), target.getZ()));
                         }
                     }
                 }
