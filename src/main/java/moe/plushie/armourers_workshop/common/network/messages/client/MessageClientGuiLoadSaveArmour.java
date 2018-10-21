@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.common.inventory.ContainerArmourLibrary;
+import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinLibrary;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -81,8 +81,8 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
         if (player == null) { return null; }
         Container container = player.openContainer;
         
-        if (container != null && container instanceof ContainerArmourLibrary) {
-            TileEntitySkinLibrary te = ((ContainerArmourLibrary) container).getTileEntity();
+        if (container != null && container instanceof ContainerSkinLibrary) {
+            TileEntitySkinLibrary te = ((ContainerSkinLibrary) container).getTileEntity();
             switch (message.packetType) {
             case CLIENT_SAVE:
                 te.sendArmourToClient(message.filename, message.filePath, player);

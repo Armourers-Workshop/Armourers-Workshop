@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPart;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
-import moe.plushie.armourers_workshop.common.blocks.BlockLocation;
+import moe.plushie.armourers_workshop.common.data.BlockLocation;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeMarkerData;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.util.EnumFacing;

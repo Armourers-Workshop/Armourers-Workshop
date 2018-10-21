@@ -24,7 +24,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
-import moe.plushie.armourers_workshop.common.inventory.ContainerArmourLibrary;
+import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
 import moe.plushie.armourers_workshop.common.inventory.ContainerDyeTable;
@@ -87,7 +87,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
             case LibGuiIds.ARMOUR_LIBRARY:
                 if (te instanceof TileEntitySkinLibrary) {
-                    return new ContainerArmourLibrary(player.inventory, (TileEntitySkinLibrary)te);
+                    return new ContainerSkinLibrary(player.inventory, (TileEntitySkinLibrary)te);
                 }
                 break;
             case LibGuiIds.WARDROBE_PLAYER:

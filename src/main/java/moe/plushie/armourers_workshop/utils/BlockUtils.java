@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
-import moe.plushie.armourers_workshop.common.blocks.BlockLocation;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.block.state.IBlockState;
@@ -140,42 +139,5 @@ public final class BlockUtils {
         }
         
         return blockFaces;
-    }
-    
-    public static class BlockFace extends BlockLocation {
-
-        public final int face;
-        
-        public BlockFace(int x, int y, int z, int face) {
-            super(x, y, z);
-            this.face = face;
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = super.hashCode();
-            result = prime * result + face;
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (!super.equals(obj))
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            BlockFace other = (BlockFace) obj;
-            if (face != other.face)
-                return false;
-            return true;
-        }
-
-        @Override
-        public String toString() {
-            return "BlockFace [face=" + face + ", x=" + x + ", y=" + y + ", z=" + z + "]";
-        }
     }
 }

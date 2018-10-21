@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.common.items;
 
-import moe.plushie.armourers_workshop.common.blocks.BlockLocation;
 import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable;
+import moe.plushie.armourers_workshop.common.data.BlockLocation;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
 import net.minecraft.block.Block;

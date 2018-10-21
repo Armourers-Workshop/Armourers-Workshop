@@ -31,7 +31,6 @@ public class BlockArmourer extends AbstractModBlockContainer {
         return EnumBlockRenderType.MODEL;
     }
     
-    
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         if (placer instanceof EntityPlayer) {

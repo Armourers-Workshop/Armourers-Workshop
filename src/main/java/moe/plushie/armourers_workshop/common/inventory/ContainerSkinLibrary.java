@@ -25,11 +25,11 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ContainerArmourLibrary extends Container implements ISlotChanged {
+public class ContainerSkinLibrary extends Container implements ISlotChanged {
 
     private TileEntitySkinLibrary tileEntity;
     
-    public ContainerArmourLibrary(InventoryPlayer invPlayer, TileEntitySkinLibrary tileEntity) {
+    public ContainerSkinLibrary(InventoryPlayer invPlayer, TileEntitySkinLibrary tileEntity) {
         this.tileEntity = tileEntity;
 
         for (int x = 0; x < 9; x++) {

@@ -1,6 +1,5 @@
-package moe.plushie.armourers_workshop.common.blocks;
+package moe.plushie.armourers_workshop.common.data;
 
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
@@ -14,10 +13,6 @@ public class BlockLocation {
         this.x = x;
         this.y = y;
         this.z = z;
-    }
-    
-    public BlockLocation offset(EnumFacing direction) {
-        return new BlockLocation(x + direction.getXOffset(), y + direction.getYOffset(), z + direction.getZOffset());
     }
     
     @Override

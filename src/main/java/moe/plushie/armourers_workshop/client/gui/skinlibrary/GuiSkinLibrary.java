@@ -29,7 +29,7 @@ import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
-import moe.plushie.armourers_workshop.common.inventory.ContainerArmourLibrary;
+import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
 import moe.plushie.armourers_workshop.common.items.ItemSkinTemplate;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.ILibraryManager;
@@ -107,7 +107,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     private int neiBump = 18;
     
     public GuiSkinLibrary(InventoryPlayer invPlayer, TileEntitySkinLibrary armourLibrary) {
-        super(new ContainerArmourLibrary(invPlayer, armourLibrary));
+        super(new ContainerSkinLibrary(invPlayer, armourLibrary));
         player = invPlayer.player;
         this.armourLibrary = armourLibrary;
         isNEIVisible = ModAddonManager.addonNEI.isVisible();

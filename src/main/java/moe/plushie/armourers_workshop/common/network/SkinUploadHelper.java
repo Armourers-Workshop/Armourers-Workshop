@@ -6,7 +6,7 @@ import java.util.HashMap;
 import org.apache.commons.lang3.ArrayUtils;
 
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
-import moe.plushie.armourers_workshop.common.inventory.ContainerArmourLibrary;
+import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientSkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
@@ -84,8 +84,8 @@ public final class SkinUploadHelper {
                 return;
             }
             
-            if (container != null && container instanceof ContainerArmourLibrary) {
-                TileEntitySkinLibrary te = ((ContainerArmourLibrary) container).getTileEntity();
+            if (container != null && container instanceof ContainerSkinLibrary) {
+                TileEntitySkinLibrary te = ((ContainerSkinLibrary) container).getTileEntity();
                 te.loadArmour(skin, player);
             }
         }
