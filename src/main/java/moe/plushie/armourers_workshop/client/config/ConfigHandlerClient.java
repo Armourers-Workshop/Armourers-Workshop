@@ -99,7 +99,7 @@ public class ConfigHandlerClient {
         
         renderDistanceBlockSkin = config.getInt("renderDistanceBlockSkin", CATEGORY_PERFORMANCE, 128, 16, 512,
                 "The max distance in blocks that block skins will be rendered.");
-        renderDistanceBlockSkin *= renderDistanceBlockSkin;
+        renderDistanceBlockSkin = renderDistanceBlockSkin * renderDistanceBlockSkin;
         
         renderDistanceMannequinEquipment = config.getInt("renderDistanceMannequinEquipment", CATEGORY_PERFORMANCE, 64, 16, 512,
                 "The max distance in blocks that equipment will be rendered on mannequins.");

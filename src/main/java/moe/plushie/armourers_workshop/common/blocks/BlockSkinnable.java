@@ -1,16 +1,14 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
-import java.util.ArrayList;
-
 import org.apache.logging.log4j.Level;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
-import moe.plushie.armourers_workshop.common.items.ItemDebugTool.IDebug;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
+import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -37,7 +35,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -54,7 +51,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 
-public class BlockSkinnable extends AbstractModBlockContainer implements IDebug {
+public class BlockSkinnable extends AbstractModBlockContainer {
 
     public static final PropertyDirection STATE_FACING = BlockHorizontal.FACING;
     
@@ -138,11 +135,10 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     public void registerModels() {
         ModelLoader.setCustomStateMapper(this, new StateMap.Builder().ignore(STATE_FACING).build());
     }
-    /*
+    
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        Skin skin = getSkin(world, x, y, z);
-        TileEntitySkinnable te = getTileEntity(world, x, y, z);
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        TileEntitySkinnable te = getTileEntity(worldIn, pos);
         if (te == null) {
             return false;
         }
@@ -151,34 +147,27 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             return false;
         }
         if (parentTe.hasLinkedBlock()) {
-            BlockLocation loc = parentTe.getLinkedBlock();
-            Block block = world.getBlock(loc.x, loc.y, loc.z);
-            if (!(block instanceof BlockSkinnable)) {
-                return block.onBlockActivated(world, loc.x, loc.y, loc.z, player, side, xHit, yHit, zHit);
+            BlockPos posLinked = parentTe.getLinkedBlock();
+            IBlockState stateLinked = worldIn.getBlockState(posLinked);
+            if (!(stateLinked.getBlock() instanceof BlockSkinnable)) {
+                stateLinked.getBlock().onBlockActivated(worldIn, posLinked, stateLinked, playerIn, hand, facing, hitX, hitY, hitZ);
             }
         }
-        
-        if (skin == null) {
-            return false;
-        }
-        
+        Skin skin = getSkin(worldIn, pos);
         if (SkinProperties.PROP_BLOCK_SEAT.getValue(skin.getProperties())) {
-            return sitOnSeat(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin);
+            //return sitOnSeat(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin);
         }
         if (SkinProperties.PROP_BLOCK_BED.getValue(skin.getProperties())) {
             //return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin, te.getRotation(), te);
         }
         if (SkinProperties.PROP_BLOCK_INVENTORY.getValue(skin.getProperties()) | SkinProperties.PROP_BLOCK_ENDER_INVENTORY.getValue(skin.getProperties())) {
-            if (!world.isRemote) {
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.SKINNABLE, world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord);
-            }
+            openGui(playerIn, LibGuiIds.SKINNABLE, worldIn, pos);
             return true;
         }
         return false;
     }
-    */
     /*
-    private boolean sitOnSeat(World world, int x, int y, int z, EntityPlayer player, Skin skin) {
+    private boolean sitOnSeat(World world, BlockPos pos, EntityPlayer player, Skin skin) {
         List<Seat> seats = world.getEntitiesWithinAABB(Seat.class, new AxisAlignedBB(x, y, z, x + 1, y + 1, z + 1));
         if (seats.size() == 0) {
             Point3D point = null;
@@ -193,178 +182,6 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             world.spawnEntity(seat);
             player.mountEntity(seat);                   
             return true;
-        }
-        return false;
-    }
-    */
-    /*
-    private boolean sleepInBed(World world, BlockPos pos, EntityPlayer player, Skin skin, EnumFacing direction, TileEntitySkinnable tileEntity) {
-        if (world.isRemote) {
-            return true;
-        }
-        
-        Point3D point = null;
-        if (skin.getParts().get(0).getMarkerCount() > 0) {
-            point = skin.getParts().get(0).getMarker(0);
-        } else {
-            point = new Point3D(0, 0, 16);
-        }
-        
-        int xBlockOffset = MathHelper.floor(((double)point.getX() + 8) / 16D);
-        int zBlockOffset = MathHelper.floor(((double)point.getZ() + 8) / 16D);
-        
-        int xOffset = (point.getX() + 8) - x * 16;
-        int zOffset = (point.getY() + 8) - y * 16;
-        
-        x -= xBlockOffset * direction.getZOffset() + zBlockOffset * direction.getXOffset();;
-        z -= zBlockOffset * direction.getZOffset() + xBlockOffset * direction.getXOffset();
-        
-        float scale = 1F / 16F;
-        
-        EntityPlayer.SleepResult enumstatus = player.trySleep(pos);
-
-        if (enumstatus == EntityPlayer.SleepResult.OK) {
-            tileEntity.setBedOccupied(true);
-            ModLogger.log("sleeping!");
-            
-            player.field_71079_bU = 0.0F;
-            player.field_71089_bV = 0.0F;
-            
-            player.setPosition(x + 10, y - 0.5F, z + 1);
-            
-            player.playerLocation = new ChunkCoordinates(x, y, z);
-            world.updateAllPlayersSleepingFlag();
-            
-            return true;
-        } else {
-            if (enumstatus == EntityPlayer.SleepResult.NOT_POSSIBLE_NOW) {
-                player.sendMessage(new TextComponentTranslation("tile.bed.noSleep", new Object[0]));
-            } else if (enumstatus == EntityPlayer.SleepResult.NOT_SAFE) {
-                player.sendMessage(new TextComponentTranslation("tile.bed.notSafe", new Object[0]));
-            }
-            return true;
-        }
-    }*/
-    /*
-    private EntityPlayer.EnumStatus putPlayerToSleep(EntityPlayer player, int x, int y, int z) {
-        PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(player, x, y, z);
-        MinecraftForge.EVENT_BUS.post(event);
-        if (event.result != null) {
-            return event.result;
-        }
-        
-        if (!player.getEntityWorld().isRemote) {
-            if (player.isPlayerSleeping() || !player.isEntityAlive()) {
-                return EntityPlayer.EnumStatus.OTHER_PROBLEM;
-            }
-            if (!player.getEntityWorld().provider.isSurfaceWorld()) {
-                return EntityPlayer.EnumStatus.NOT_POSSIBLE_HERE;
-            }
-            if (player.getEntityWorld().isDaytime()) {
-                return EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW;
-            }
-            if (Math.abs(player.posX - (double)x) > 3.0D || Math.abs(player.posY - (double)y) > 2.0D || Math.abs(player.posZ - (double)z) > 3.0D) {
-                return EntityPlayer.EnumStatus.TOO_FAR_AWAY;
-            }
-            double d0 = 8.0D;
-            double d1 = 5.0D;
-            List list = player.getEntityWorld().getEntitiesWithinAABB(EntityMob.class, AxisAlignedBB.getBoundingBox((double)x - d0, (double)y - d1, (double)z - d0, (double)x + d0, (double)y + d1, (double)z + d0));
-            if (!list.isEmpty()) {
-                return EntityPlayer.EnumStatus.NOT_SAFE;
-            }
-        }
-        
-        if (player.isRiding()) {
-            player.mountEntity((Entity)null);
-        }
-
-        player.width = 0.2F;
-        player.height = 0.2F;
-        player.yOffset = 0.2F;
-        
-        if (player.getEntityWorld().blockExists(x, y, z)) {
-            int l = player.getEntityWorld().getBlock(x, y, z).getBedDirection(player.getEntityWorld(), x, y, z);
-            float f1 = 0.5F;
-            float f = 0.5F;
-
-            switch (l) {
-                case 0:
-                    f = 0.9F;
-                    break;
-                case 1:
-                    f1 = 0.1F;
-                    break;
-                case 2:
-                    f = 0.1F;
-                    break;
-                case 3:
-                    f1 = 0.9F;
-            }
-
-            //player.func_71013_b(l);
-            player.setPosition((double)((float)x + f1), (double)((float)y + 0.9375F), (double)((float)z + f));
-        } else {
-            player.setPosition((double)((float)x + 0.5F), (double)((float)y + 0.9375F), (double)((float)z + 0.5F));
-        }
-
-        //player.sleeping = true;
-        //player.sleepTimer = 0;
-        player.playerLocation = new ChunkCoordinates(x, y, z);
-        player.motionX = player.motionZ = player.motionY = 0.0D;
-
-        if (!player.getEntityWorld().isRemote) {
-            player.getEntityWorld().updateAllPlayersSleepingFlag();
-        }
-
-        return EntityPlayer.EnumStatus.OK;
-    }
-    */
-    /*
-    @Override
-    public boolean isBed(IBlockAccess world, BlockPos pos, EntityLivingBase player) {
-        Skin skin = getSkin(world, pos);
-        if (skin != null) {
-            return SkinProperties.PROP_BLOCK_BED.getValue(skin.getProperties());
-        }
-        return false;
-    }
-    
-    @Override
-    public void setBedOccupied(IBlockAccess world, BlockPos pos, EntityPlayer player, boolean occupied) {
-        TileEntitySkinnable te = getTileEntity(world, pos);
-        if (te != null) {
-            te.setBedOccupied(occupied);
-        }
-    }
-    
-    @Override
-    public int getBedDirection(IBlockAccess world, BlockPos pos) {
-        TileEntitySkinnable te = getTileEntity(world, pos);
-        if (te != null) {
-            switch (te.getRotation()) {
-            case NORTH:
-                return 0;
-            case EAST:
-                return 1;
-            case SOUTH:
-                return 2;
-            case WEST:
-                return 3;
-            default:
-                break;
-            }
-        }
-        return 0;
-    }
-    
-    @Override
-    public boolean isBedFoot(IBlockAccess world, int x, int y, int z) {
-        Skin skin = getSkin(world, x, y, z);
-        if (skin != null) {
-            for (int i = 0; i <skin.getPartCount(); i++) {
-                SkinPart part = skin.getParts().get(i);
-                part.getMarkerCount();
-            }
         }
         return false;
     }
@@ -399,19 +216,17 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         super.addCollisionBoxesToList(world, x, y, z, mask, list, entity);
     }
     */
-    /*
+    
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-        Skin skin = getSkin(world, x, y, z);
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+        Skin skin = getSkin(worldIn, pos);
         if (skin != null) {
             if (SkinProperties.PROP_BLOCK_NO_COLLISION.getValue(skin.getProperties())) {
-                return null;
+                return NULL_AABB;
             }
         }
-        setBlockBoundsBasedOnState(world, x, y, z);
-        return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+        return super.getCollisionBoundingBox(blockState, worldIn, pos);
     }
-    */
     
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -432,12 +247,6 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
             }
         }
         return FULL_BLOCK_AABB;
-    }
-    
-    @Override
-    public boolean isFullCube(IBlockState state) {
-        // TODO Auto-generated method stub
-        return false;
     }
     
     @Override
@@ -545,44 +354,6 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         }
     }
     
-    public EnumFacing getFacingDirection(IBlockAccess world, BlockPos pos) {
-        return EnumFacing.NORTH;
-        //return getFacingDirection(world.getBlockMetadata(pos));
-    }
-    
-    public EnumFacing getFacingDirection(int metadata) {
-        return convertMetadataToDirection(metadata);
-    }
-    
-    public void setFacingDirection(World world, int x, int y, int z, EnumFacing direction) {
-        setFacingDirection(world, x, y, z, direction.ordinal());
-    }
-    
-    public void setFacingDirection(World world, int x, int y, int z, int metadata) {
-        //world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
-    }
-    
-    public int convertDirectionToMetadata(EnumFacing direction) {
-        int meta = direction.ordinal();
-        return meta == 2 ? 4 : (meta == 3 ? 2 : (meta == 4 ? 3 : (meta == 5 ? 5 : 2)));
-    }
-    
-    public EnumFacing convertMetadataToDirection(int metadata) {
-        if (metadata == 5) {
-            return EnumFacing.EAST;
-        }
-        if (metadata == 4) {
-            return EnumFacing.NORTH;
-        }
-        if (metadata == 3) {
-            return EnumFacing.WEST;
-        }
-        if (metadata == 2) {
-            return EnumFacing.SOUTH;
-        }
-        return EnumFacing.EAST;
-    }
-    
     @Override
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntitySkinnable();
@@ -604,37 +375,13 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
-    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
-        return super.canRenderInLayer(state, layer);
+    public boolean isFullCube(IBlockState state) {
+        return false;
     }
-    /*
+    
     @Override
-    public boolean rotateBlock(World world, int x, int y, int z, EnumFacing axis) {
-        if (world.isRemote) {
-            return false;
-        }
-        Skin skin = getSkin(world, x, y, z);
-        if (skin == null) {
-            return false;
-        }
-        
-        if (SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skin.getProperties())) {
-            return false;
-        }
-        
-        int rotation = world.getBlockMetadata(x, y, z);
-        rotation++;
-        if (rotation > 3) {
-            rotation = 0;
-        }
-        world.setBlockMetadataWithNotify(x, y, z, rotation, 2);
-        return true;
-    }
-    */
-
-    @Override
-    public void getDebugHoverText(World world, BlockPos pos, ArrayList<String> textLines) {
-        textLines.add("Direction: " + getFacingDirection(world, pos));
+    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
+        return false;
     }
     
     public static class Seat extends Entity implements IEntityAdditionalSpawnData {

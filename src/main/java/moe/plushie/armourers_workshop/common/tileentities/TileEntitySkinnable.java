@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable;
-import moe.plushie.armourers_workshop.common.data.BlockLocation;
 import moe.plushie.armourers_workshop.common.inventory.ModInventory;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
@@ -54,7 +53,7 @@ public class TileEntitySkinnable extends ModTileEntity {
     private boolean bedOccupied;
     private ModInventory inventory;
     private boolean blockInventory;
-    private BlockLocation linkedBlock = null;
+    private BlockPos linkedBlock = null;
     
     @SideOnly(Side.CLIENT)
     private AxisAlignedBB renderBounds;
@@ -88,7 +87,7 @@ public class TileEntitySkinnable extends ModTileEntity {
         dirtySync();
     }
     
-    public BlockLocation getLinkedBlock() {
+    public BlockPos getLinkedBlock() {
         return linkedBlock;
     }
     
@@ -96,7 +95,7 @@ public class TileEntitySkinnable extends ModTileEntity {
         return linkedBlock != null;
     }
     
-    public void setLinkedBlock(BlockLocation linkedBlock) {
+    public void setLinkedBlock(BlockPos linkedBlock) {
         this.linkedBlock = linkedBlock;
         dirtySync();
     }
@@ -290,17 +289,6 @@ public class TileEntitySkinnable extends ModTileEntity {
         readFromNBT(compound);
     }
     
-    public void setRotation(EnumFacing rotation) {
-        //worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, rotation.ordinal(), 2);
-    }
-    
-    public EnumFacing getRotation() {
-        if (getBlockType() instanceof BlockSkinnable) {
-            return ((BlockSkinnable)getBlockType()).getFacingDirection(getWorld(), getPos());
-        }
-        return null;
-    }
-    
     @Override
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound compound = new NBTTagCompound();
@@ -314,7 +302,7 @@ public class TileEntitySkinnable extends ModTileEntity {
         compound.setBoolean(TAG_HAS_SKIN, hasSkin());
         compound.setInteger(ModConstants.Tags.TAG_NBT_VERSION, NBT_VERSION);
         if (hasLinkedBlock()) {
-            compound.setIntArray(TAG_LINKED_BLOCK, new int[] {linkedBlock.x, linkedBlock.y, linkedBlock.z});
+            compound.setIntArray(TAG_LINKED_BLOCK, new int[] {linkedBlock.getX(), linkedBlock.getY(), linkedBlock.getZ()});
         }
         if (hasSkin()) {
             ((SkinDescriptor)descriptor).writeToCompound(compound);
@@ -351,7 +339,7 @@ public class TileEntitySkinnable extends ModTileEntity {
         }
         if (compound.hasKey(TAG_LINKED_BLOCK, Constants.NBT.TAG_INT_ARRAY)) {
             int[] loc = compound.getIntArray(TAG_LINKED_BLOCK);
-            linkedBlock = new BlockLocation(loc[0], loc[1], loc[2]);
+            linkedBlock = new BlockPos(loc[0], loc[1], loc[2]);
         } else {
             linkedBlock = null;
         }
@@ -395,7 +383,7 @@ public class TileEntitySkinnable extends ModTileEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        if (renderBounds == null) {
+        //if (renderBounds == null) {
             int xCoord = getPos().getX();
             int yCoord = getPos().getY();
             int zCoord = getPos().getZ();
@@ -403,19 +391,19 @@ public class TileEntitySkinnable extends ModTileEntity {
                 Skin skin = getSkin(getSkinPointer());
                 if (skin != null) {
                     if (SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skin.getProperties())) {
-                        renderBounds = new AxisAlignedBB(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
-                        EnumFacing dir = getRotation().getOpposite();
-                        renderBounds.offset(dir.getXOffset(), 0, dir.getZOffset());
+                        renderBounds = new AxisAlignedBB(-1, 0, -1, 2, 3, 2).offset(getPos());
+                        EnumFacing dir = world.getBlockState(getPos()).getValue(BlockSkinnable.STATE_FACING);
+                        renderBounds = renderBounds.offset(-dir.getXOffset(), 0, -dir.getZOffset());
                     } else {
-                        renderBounds = new AxisAlignedBB(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+                        return new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos());
                     }
                 } else {
-                    return new AxisAlignedBB(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+                    return new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos());
                 } 
             } else {
-                return new AxisAlignedBB(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+                return new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos());
             }
-        }
+        //}
         return renderBounds;
     }
     
@@ -430,18 +418,6 @@ public class TileEntitySkinnable extends ModTileEntity {
             for (BlockPos pos : relatedBlocks) {
                 ModLogger.log("Removing child: " + pos.toString());
                 world.setBlockToAir(pos);
-            }
-            for (int i = 0; i < relatedBlocks.size(); i++) {
-                BlockPos loc = relatedBlocks.get(i);
-                /*
-                if (!(xCoord == loc.x & yCoord == loc.y & zCoord == loc.z)) {
-                    ModLogger.log("Removing child: " + loc.toString());
-                    world.setBlockToAir(loc.x, loc.y, loc.z);
-                    world.removeTileEntity(loc.x, loc.y, loc.z);
-                } else {
-                    ModLogger.log("Skipping child: " + loc.toString());
-                }
-                */
             }
         }
     }
