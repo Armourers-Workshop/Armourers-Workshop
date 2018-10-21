@@ -34,6 +34,7 @@ import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -360,22 +361,32 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             int iconSize = Math.min(boxWidth, boxHeight);
             ScaledResolution scaledResolution = new ScaledResolution(mc);
             float scale = 10 - scaledResolution.getScaleFactor();
-            GL11.glPushMatrix();
-            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-            GL11.glTranslatef(boxX + boxWidth / 2, boxY + boxHeight / 2, 500.0F);
-            GL11.glScalef((float)(-scale), (float)scale, (float)scale);
-            GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.pushMatrix();
+            GlStateManager.pushAttrib();
+            GlStateManager.translate(boxX + boxWidth / 2, boxY + boxHeight / 2, 500.0F);
+            GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
+            GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(20.0F, 1.0F, 0.0F, 0.0F);
             float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
             GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
-            RenderHelper.enableStandardItemLighting();
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GL11.glEnable(GL11.GL_NORMALIZE);
-            GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+            
+            RenderHelper.enableGUIStandardItemLighting();
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.enableNormalize();
+            GlStateManager.enableColorMaterial();
             ModRenderHelper.enableAlphaBlend();
+            GlStateManager.enableDepth();
+            
             SkinItemRenderHelper.renderSkinAsItem(skin, new SkinDescriptor(skin), true, false, boxWidth, boxHeight);
-            GL11.glPopAttrib();
-            GL11.glPopMatrix();
+            
+            GlStateManager.disableDepth();
+            ModRenderHelper.disableAlphaBlend();
+            GlStateManager.disableNormalize();
+            GlStateManager.disableColorMaterial();
+            
+            GlStateManager.resetColor();
+            GlStateManager.popAttrib();
+            GlStateManager.popMatrix();
         }
     }
     
