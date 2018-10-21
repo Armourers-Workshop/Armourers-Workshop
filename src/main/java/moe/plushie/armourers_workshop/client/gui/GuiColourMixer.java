@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropD
 import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider.HSBSliderType;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider.IHSBSliderCallback;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
@@ -44,6 +45,8 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     private GuiColourSelector colourSelector;
     private GuiDropDownList colourFamilyList;
     private GuiDropDownList paintTypeDropDown;
+    private GuiIconButton buttonPaletteAdd;
+    private GuiIconButton buttonPaletteRemove;
     
     public GuiColourMixer(InventoryPlayer invPlayer, TileEntityColourMixer tileEntityColourMixer) {
         super(new ContainerColourMixer(invPlayer, tileEntityColourMixer));
@@ -55,21 +58,25 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     @Override
     public void initGui() {
         super.initGui();
+        
         colour = new Color(tileEntityColourMixer.getColour(0));
         float[] hsbvals = Color.RGBtoHSB(colour.getRed(), colour.getGreen(), colour.getBlue(), null);
         slidersHSB = new GuiHSBSlider[3];
-        slidersHSB[0] = new GuiHSBSlider(0, this.guiLeft + 5, this.guiTop + 30, 128, 10, this, HSBSliderType.HUE, hsbvals[0], hsbvals[0], hsbvals[2]);
-        slidersHSB[1] = new GuiHSBSlider(1, this.guiLeft + 5, this.guiTop + 50, 128, 10, this, HSBSliderType.SATURATION, hsbvals[1], hsbvals[0], hsbvals[2]);
-        slidersHSB[2] = new GuiHSBSlider(2, this.guiLeft + 5, this.guiTop + 70, 128, 10, this, HSBSliderType.BRIGHTNESS, hsbvals[2], hsbvals[0], hsbvals[2]);
+        slidersHSB[0] = new GuiHSBSlider(0, this.guiLeft + 5, this.guiTop + 30, 150, 10, this, HSBSliderType.HUE, hsbvals[0], hsbvals[0], hsbvals[2]);
+        slidersHSB[1] = new GuiHSBSlider(1, this.guiLeft + 5, this.guiTop + 55, 150, 10, this, HSBSliderType.SATURATION, hsbvals[1], hsbvals[0], hsbvals[2]);
+        slidersHSB[2] = new GuiHSBSlider(2, this.guiLeft + 5, this.guiTop + 80, 150, 10, this, HSBSliderType.BRIGHTNESS, hsbvals[2], hsbvals[0], hsbvals[2]);
         buttonList.add(slidersHSB[0]);
         buttonList.add(slidersHSB[1]);
         buttonList.add(slidersHSB[2]);
-        colourHex = new GuiTextField(-1, fontRenderer, this.guiLeft + 5, this.guiTop + 90, 50, 10);
+        
+        colourHex = new GuiTextField(-1, fontRenderer, this.guiLeft + 5, this.guiTop + 105, 50, 10);
         colourHex.setMaxStringLength(7);
         updateHexTextbox();
-        colourSelector = new GuiColourSelector(3, this.guiLeft + 5, this.guiTop + 110, 82, 22, 10, 10, 8, guiTexture);
+        
+        colourSelector = new GuiColourSelector(3, this.guiLeft + 166, this.guiTop + 80, 82, 42, 10, 10, 8, 4, guiTexture);
         buttonList.add(colourSelector);
-        colourFamilyList = new GuiDropDownList(4, this.guiLeft + 89, this.guiTop + 110, 82, "", this);
+        
+        colourFamilyList = new GuiDropDownList(4, this.guiLeft + 164, this.guiTop + 60, 86, "", this);
         for (int i = 0; i < ColourFamily.values().length; i++) {
             ColourFamily cf = ColourFamily.values()[i];
             colourFamilyList.addListItem(cf.getLocalizedName());
@@ -79,9 +86,15 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         colourSelector.setColourFamily(cf);
         buttonList.add(colourFamilyList);
         
-        paintTypeDropDown = new GuiDropDownList(5, this.guiLeft + 170, this.guiTop + 30, 78, "", this);
+        paintTypeDropDown = new GuiDropDownList(5, this.guiLeft + 164, this.guiTop + 30, 86, "", this);
         updatePaintTypeDropDown();
         buttonList.add(paintTypeDropDown);
+        
+        buttonPaletteAdd = new GuiIconButton(this, -1, this.guiLeft + 166, this.guiTop + 124, 20, 20, "Add Palette", guiTexture);
+        buttonList.add(buttonPaletteAdd);
+        
+        buttonPaletteRemove = new GuiIconButton(this, -1, this.guiLeft + 228, this.guiTop + 124, 20, 20, "Remove Palette", guiTexture);
+        buttonList.add(buttonPaletteRemove);
     }
     
     @Override
@@ -210,7 +223,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     }
     
     @Override
-    protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntityColourMixer.getName());
         this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 48, this.ySize - 96 + 2, 4210752);
         
@@ -222,11 +235,17 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         String labelPaintType = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.paintType");
         
         this.fontRenderer.drawString(labelHue + ":", 5, 21, 4210752);
-        this.fontRenderer.drawString(labelSaturation + ":", 5, 41, 4210752);
-        this.fontRenderer.drawString(labelBrightness + ":", 5, 61, 4210752);
-        this.fontRenderer.drawString(labelHex + ":", 5, 81, 4210752);
-        this.fontRenderer.drawString(labelPresets + ":", 5, 101, 4210752);
-        this.fontRenderer.drawString(labelPaintType + ":", 171, 21, 4210752);
+        this.fontRenderer.drawString(labelSaturation + ":", 5, 46, 4210752);
+        this.fontRenderer.drawString(labelBrightness + ":", 5, 71, 4210752);
+        this.fontRenderer.drawString(labelHex + ":", 5, 94, 4210752);
+        this.fontRenderer.drawString(labelPresets + ":", 165, 51, 4210752);
+        this.fontRenderer.drawString(labelPaintType + ":", 165, 21, 4210752);
+        
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(-guiLeft, -guiTop, 0);
+        buttonPaletteAdd.drawRollover(mc, mouseX, mouseY);
+        buttonPaletteRemove.drawRollover(mc, mouseX, mouseY);
+        GlStateManager.popMatrix();
     }
     
     @Override
@@ -241,7 +260,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         float blue = (float) colour.getBlue() / 255;
         GL11.glColor4f(red, green, blue, 1F);
         
-        drawTexturedModalRect(this.guiLeft + 146, this.guiTop + 52, 146, 52, 12, 13);
+        drawTexturedModalRect(this.guiLeft + 108, this.guiTop + 102, 108, 102, 13, 13);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         colourHex.drawTextBox();
     }

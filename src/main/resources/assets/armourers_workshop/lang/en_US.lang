@@ -212,9 +212,8 @@ paintType.armourers_workshop:misc.name=Miscellaneous
 
 
 # Colour Families
-colourFamily.armourers_workshop:wool.name=Wool
 colourFamily.armourers_workshop:minecraft.name=Minecraft
-colourFamily.armourers_workshop:pastel.name=Pastel
+colourFamily.armourers_workshop:shades.name=Shades
 
 
 # Skin Types

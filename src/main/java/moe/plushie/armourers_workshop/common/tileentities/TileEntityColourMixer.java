@@ -38,7 +38,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         colour = 16777215;
         paintType = PaintType.NORMAL;
         colourUpdate = false;
-        colourFamily = ColourFamily.MINECRAFT_WOOL;
+        colourFamily = ColourFamily.MINECRAFT;
     }
 
     public boolean isSpecial() {

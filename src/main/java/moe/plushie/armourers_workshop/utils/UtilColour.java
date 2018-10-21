@@ -68,8 +68,8 @@ public class UtilColour {
     
     public static enum ColourFamily {
         MINECRAFT("minecraft"),
-        MINECRAFT_WOOL("wool"),
-        PASTEL("pastel");
+        //MINECRAFT_WOOL("wool"),
+        SHADES("shades");
         
         public final String name;
         
@@ -89,150 +89,52 @@ public class UtilColour {
         }
     }
     
-    public static int[] minecraftChatColours = {
+    public static int[] PALETTE_MINECRAFT = {
         0xFFFFFF, 0xFFFF55, 0xFF55FF, 0xFF5555,
         0x55FFFF, 0x55FF55, 0x5555FF, 0x555555,
         0xAAAAAA, 0xFFAA00, 0xAA00AA, 0xAA0000,
-        0x00AAAA, 0x00AA00, 0x0000AA, 0x000000
-    };
-    
-    public static int[] minecraftWoolColours = {
+        0x00AAAA, 0x00AA00, 0x0000AA, 0x000000,
         0xDDDDDD, 0xDB7D3E, 0xB350BC, 0x6B8AC9,
         0xB1A627, 0x41AE38, 0xD08499, 0x404040,
         0x9AA1A1, 0x2E6E89, 0x7E3DB5, 0x2E388D,
         0x4F321F, 0x35461B, 0x963430, 0x191616
     };
     
+    public static int[] PALETTE_SHADES = {};
+    static {
+        PALETTE_SHADES = new int[32];
+        PALETTE_SHADES[0] = 0xFFFFFFFF;
+        for (int i = 1; i < PALETTE_SHADES.length + 1; i++) {
+            Color c = new Color((8 * i) - 1 , (8 * i) - 1, (8 * i) - 1);
+            PALETTE_SHADES[i - 1] = c.getRGB();
+        }
+    }
     
+    /* Old pastel colours
+    0xDDDDDD, 0xDB7D3E, 0xB350BC, 0x6B8AC9,
+    0xB1A627, 0x41AE38, 0xD08499, 0x404040,
+    0x9AA1A1, 0x2E6E89, 0x7E3DB5, 0x2E388D,
+    0x4F321F, 0x35461B, 0x963430, 0x191616
+    */
     
     public static int getMinecraftColor(int meta, ColourFamily colourFamily) {
         switch (colourFamily) {
         case MINECRAFT:
-            if (meta >= 0 && meta < minecraftChatColours.length) {
-                return minecraftChatColours[meta];
+            if (meta >= 0 && meta < PALETTE_MINECRAFT.length) {
+                return PALETTE_MINECRAFT[meta];
             }
             break;
-        case MINECRAFT_WOOL:
+        /*case MINECRAFT_WOOL:
             if (meta >= 0 && meta < minecraftWoolColours.length) {
                 return minecraftWoolColours[meta];
             }
-            break;
-        case PASTEL:
-            int[] pastelColours = {
-                    0xEEEEEE, 0xFFFFCC, 0xFFCCFF, 0xFFCCCC,
-                    0xDDFFFF, 0xDDFFDD, 0xDDDDFF, 0xDDDDDD,
-                    0xCCCCCC, 0xFFEECC, 0xFFEEFF, 0xFFEEEE,
-                    0xEEFFFF, 0xFFEEFF, 0xFFFFEE, 0x808080
-                    };
-            if (meta >= 0 && meta < pastelColours.length) {
-                return pastelColours[meta];
+            break;*/
+        case SHADES:
+            if (meta >= 0 && meta < PALETTE_SHADES.length) {
+                return PALETTE_SHADES[meta];
             }
             break;
         }
         return 0x000000;
-    }
-
-    public static String getMinecraftColorName(int meta) {
-        if (meta == 0) {
-            return "White";
-        }
-        if (meta == 1) {
-            return "Orange";
-        }
-        if (meta == 2) {
-            return "Magenta";
-        }
-        if (meta == 3) {
-            return "Light blue";
-        }
-        if (meta == 4) {
-            return "Yellow";
-        }
-        if (meta == 5) {
-            return "Lime";
-        }
-        if (meta == 6) {
-            return "Pink";
-        }
-        if (meta == 7) {
-            return "Gray";
-        }
-        if (meta == 8) {
-            return "Light gray";
-        }
-        if (meta == 9) {
-            return "Cyan";
-        }
-        if (meta == 10) {
-            return "Purple";
-        }
-        if (meta == 11) {
-            return "Blue";
-        }
-        if (meta == 12) {
-            return "Brown";
-        }
-        if (meta == 13) {
-            return "Green";
-        }
-        if (meta == 14) {
-            return "Red";
-        }
-        if (meta == 15) {
-            return "Black";
-        }
-        return "?";
-    }
-
-    public static String getMinecraftColorOreName(int meta) {
-        if (meta == 0) {
-            return "dyeWhite";
-        }
-        if (meta == 1) {
-            return "dyeOrange";
-        }
-        if (meta == 2) {
-            return "dyeMagenta";
-        }
-        if (meta == 3) {
-            return "dyeLightBlue";
-        }
-        if (meta == 4) {
-            return "dyeYellow";
-        }
-        if (meta == 5) {
-            return "dyeLime";
-        }
-        if (meta == 6) {
-            return "dyePink";
-        }
-        if (meta == 7) {
-            return "dyeGray";
-        }
-        if (meta == 8) {
-            return "dyeLightGray";
-        }
-        if (meta == 9) {
-            return "dyeCyan";
-        }
-        if (meta == 10) {
-            return "dyePurple";
-        }
-        if (meta == 11) {
-            return "dyeBlue";
-        }
-        if (meta == 12) {
-            return "dyeBrown";
-        }
-        if (meta == 13) {
-            return "dyeGreen";
-        }
-        if (meta == 14) {
-            return "dyeRed";
-        }
-        if (meta == 15) {
-            return "dyeBlack";
-        }
-        return "?";
     }
 }

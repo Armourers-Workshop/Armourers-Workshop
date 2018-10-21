@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.utils.UtilColour;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -19,15 +20,17 @@ public class GuiColourSelector extends GuiButtonExt {
     private Color selectedColour;
     private int colorWidth;
     private int colourHeight;
-    private int rowLength;
+    private int rowSize;
+    private int colSize;
     private ResourceLocation guiTexture;
     private ColourFamily colourFamily;
     
-    public GuiColourSelector(int id, int xPos, int yPos, int width, int height, int colorWidth, int colourHeight, int rowLength, ResourceLocation guiTexture) {
+    public GuiColourSelector(int id, int xPos, int yPos, int width, int height, int colorWidth, int colourHeight, int rowSize, int colSize, ResourceLocation guiTexture) {
         super(id, xPos, yPos, width, height, "");
         this.colorWidth = colorWidth;
         this.colourHeight = colourHeight;
-        this.rowLength = rowLength;
+        this.rowSize = rowSize;
+        this.colSize = colSize;
         this.guiTexture = guiTexture;
         this.colourFamily = ColourFamily.MINECRAFT;
     }
@@ -40,20 +43,30 @@ public class GuiColourSelector extends GuiButtonExt {
         int k = this.getHoverState(this.hovered);
         GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x, this.y, 0, 46, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
         mc.renderEngine.bindTexture(guiTexture);
-        for (int i = 0; i < 16; i++) {
-            int curRow = i / rowLength;
+        
+        int hoverX = -1;
+        int hoverY = -1;
+        for (int i = 0; i < (rowSize * colSize); i++) {
+            GlStateManager.resetColor();
+            GlStateManager.color(1, 1, 1, 1);
+            
+            int curRow = i / rowSize;
             Color c = new Color(UtilColour.getMinecraftColor(i, this.colourFamily));
-            float red = (float) c.getRed() / 255;
-            float green = (float) c.getGreen() / 255;
-            float blue = (float) c.getBlue() / 255;
-            GL11.glColor4f(red, green, blue, 1.0F);
-            int xPos = this.x + 1 + this.colorWidth * i - curRow * colourHeight * rowLength;
+            int xPos = this.x + 1 + this.colorWidth * i - curRow * colourHeight * rowSize;
             int yPos = this.y + 1 + curRow * 10;
-            drawTexturedModalRect(xPos, yPos, 146, 52, this.colorWidth, this.colourHeight);
+            drawRect(xPos, yPos, xPos + this.colorWidth, yPos + this.colourHeight, c.getRGB());
             if (mouseX >= xPos & mouseY >= yPos & mouseX <= xPos + this.colorWidth & mouseY <= yPos + this.colourHeight) {
+                hoverX = xPos;
+                hoverY = yPos;
                 this.selectedColour = new Color(UtilColour.getMinecraftColor(i, this.colourFamily));
             }
         }
+        GlStateManager.resetColor();
+        if (hoverX != -1) {
+            //mc.renderEngine.bindTexture(new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/colour-mixer.png"));
+            GuiUtils.drawContinuousTexturedBox(hoverX, hoverY, 0, 240, colorWidth, colourHeight, 16, 16, 2, zLevel);
+        }
+        //drawTexturedModalRect(mouseX, hoverY, 0, 240, hoverX, hoverY);
         
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mouseDragged(mc, mouseX, mouseY);
