@@ -40,7 +40,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
@@ -95,6 +97,12 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     }
     
     @Override
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+        EnumFacing enumfacing = placer.getHorizontalFacing().getOpposite();
+        return getDefaultState().withProperty(STATE_FACING, enumfacing);
+    }
+    
+    @Override
     public boolean canDropFromExplosion(Explosion explosion) {
         return false;
     }
@@ -116,6 +124,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntitySkinnable te = getTileEntity(worldIn, pos);
         if (te != null && te.getInventory() != null) {
+            te.killChildren(worldIn);
             BlockUtils.dropInventoryBlocks(worldIn, te.getInventory(), pos);
         }
         super.breakBlock(worldIn, pos, state);
@@ -403,6 +412,34 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         return super.getCollisionBoundingBoxFromPool(world, x, y, z);
     }
     */
+    
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        TileEntitySkinnable te = getTileEntity(source, pos);
+        if (te != null) {
+            EnumFacing dir = state.getValue(STATE_FACING);
+            if (dir == EnumFacing.NORTH) {
+                return te.getBoundsForBlock(this, 1, 0 ,0);
+            }
+            if (dir == EnumFacing.EAST) {
+                return te.getBoundsForBlock(this, 0, 0, 1);
+            }
+            if (dir == EnumFacing.SOUTH) {
+                return te.getBoundsForBlock(this, 1, 0, 2);
+            }
+            if (dir == EnumFacing.WEST) {
+                return te.getBoundsForBlock(this, 2, 0, 1);
+            }
+        }
+        return FULL_BLOCK_AABB;
+    }
+    
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    
     @Override
     public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid) {
         if (!ArmourersWorkshop.isDedicated()) {
@@ -432,32 +469,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         }
         return false;
     }
-    /*
-    @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
-        TileEntitySkinnable te = getTileEntity(world, pos);
-        if (te != null) {
-            EnumFacing dir = getFacingDirection(world, x, y, z);
-            if (dir == EnumFacing.NORTH) {
-                te.setBoundsOnBlock(this, 1, 0, 0);
-                return;
-            }
-            if (dir == EnumFacing.EAST) {
-                te.setBoundsOnBlock(this, 0, 0, 1);
-                return;
-            }
-            if (dir == EnumFacing.SOUTH) {
-                te.setBoundsOnBlock(this, 1, 0, 2);
-                return;
-            }
-            if (dir == EnumFacing.WEST) {
-                te.setBoundsOnBlock(this, 2, 0, 1);
-                return;
-            }
-        }
-        setBlockBounds(0, 0, 0, 1, 1, 1);
-    }
-    */
+    
     private TileEntitySkinnable getTileEntity(IBlockAccess world, BlockPos pos) {
         TileEntity te = world.getTileEntity(pos);
         if (te != null && te instanceof TileEntitySkinnable) {

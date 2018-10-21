@@ -107,19 +107,20 @@ public class TileEntitySkinnable extends ModTileEntity {
         haveBlockBounds = false;
     }
 
-    public void setBoundsOnBlock(Block block, BlockPos offset) {
+    public AxisAlignedBB getBoundsForBlock(Block block, int xOffset, int yOffset, int zOffset) {
         if (haveBlockBounds) {
             //TODO change before release!!!
             //block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
             //return;
         }
+        //offset = new BlockPos(-1, 0, 0);
         
         if (block != null && !(block instanceof BlockSkinnable)) {
-            ModLogger.log(Level.ERROR, String.format("Tile entity at X:%d Y:%d Z:%d has an invalid block.", offset.getX(), offset.getY(), offset.getZ()));
+            ModLogger.log(Level.ERROR, String.format("Tile entity at X:%d Y:%d Z:%d has an invalid block.", xOffset, yOffset, zOffset));
             if (getWorld() != null) {
-                getWorld().removeTileEntity(offset);
+                //getWorld().removeTileEntity(offset);
             }
-            return;
+            return new AxisAlignedBB(0, 0, 0, 1, 1, 1);
         }
         
         if (hasSkin()) {
@@ -127,8 +128,8 @@ public class TileEntitySkinnable extends ModTileEntity {
             Skin skin = null;
             skin = getSkin(descriptor);
             if (skin != null) {
-                EnumFacing dir = blockSkinnable.getFacingDirection(getBlockMetadata());
-                float[] bounds = getBlockBounds(skin, offset.getX(), offset.getY(), offset.getZ(), dir);
+                EnumFacing dir = world.getBlockState(getPos()).getValue(BlockSkinnable.STATE_FACING);
+                float[] bounds = getBlockBounds(skin, xOffset, yOffset, zOffset, dir);
                 if (bounds != null) {
                     minX = bounds[0];
                     minY = bounds[1];
@@ -138,13 +139,18 @@ public class TileEntitySkinnable extends ModTileEntity {
                     maxZ = bounds[5];
                     haveBlockBounds = true;
                     //block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
+                    //ModLogger.log("minX " + minX);
                 }
-                return;
+                
+                
+                return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
             }
         }
         if (haveBlockBounds) {
+            return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
             //block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
         } else {
+            return new AxisAlignedBB(0, 0, 0, 1, 1, 1);
             //block.setBlockBounds(0F, 0F, 0F, 1F, 1F, 1F);
         }
     }
@@ -159,6 +165,7 @@ public class TileEntitySkinnable extends ModTileEntity {
         gridZ = MathHelper.clamp(gridZ, 0, 2);
         
         Rectangle3D rec = skinPart.getBlockBounds(gridX, gridY, gridZ);
+        //ModLogger.log(rec);
         switch (dir) {
         case NORTH:
             //rec = skinPart.getBlockBounds(gridX, gridY, 2 - gridZ);
@@ -176,6 +183,8 @@ public class TileEntitySkinnable extends ModTileEntity {
             break;
         }
         
+        
+        
         if (rec != null) {
             int x = 8 + rec.getX();
             int y = 8 - rec.getHeight() - rec.getY();
@@ -192,7 +201,7 @@ public class TileEntitySkinnable extends ModTileEntity {
         }
         
         return bounds;
-    }
+}
     
     private static float[] rotateBlockBounds(float[] bounds, EnumFacing dir) {
         float[] rotatedBounds = new float[6];
@@ -418,6 +427,10 @@ public class TileEntitySkinnable extends ModTileEntity {
 
     public void killChildren(World world) {
         if (relatedBlocks != null) {
+            for (BlockPos pos : relatedBlocks) {
+                ModLogger.log("Removing child: " + pos.toString());
+                world.setBlockToAir(pos);
+            }
             for (int i = 0; i < relatedBlocks.size(); i++) {
                 BlockPos loc = relatedBlocks.get(i);
                 /*
