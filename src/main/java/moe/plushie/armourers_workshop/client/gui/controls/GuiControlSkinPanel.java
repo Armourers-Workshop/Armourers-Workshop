@@ -205,7 +205,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 GlStateManager.enableColorMaterial();
                 ModRenderHelper.enableAlphaBlend();
                 GlStateManager.enableDepth();
-                SkinItemRenderHelper.renderSkinAsItem(skin, new SkinDescriptor(skin), true, false, iconSize, iconSize);
+                SkinItemRenderHelper.renderSkinAsItem(skin, new SkinDescriptor(identifier), true, false, iconSize, iconSize);
                 GlStateManager.disableDepth();
                 
                 ModRenderHelper.disableAlphaBlend();
