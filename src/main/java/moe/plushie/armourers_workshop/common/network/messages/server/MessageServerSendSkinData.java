@@ -42,9 +42,8 @@ public class MessageServerSendSkinData implements IMessage, IMessageHandler<Mess
     
     @Override
     public void fromBytes(ByteBuf buf) {
-        Thread t = new Thread(new DownloadThread(buf), "Skin download thread.");
-        t.setPriority(Thread.MIN_PRIORITY);
-        t.start();
+        Thread t = new Thread(new SkinDownloadThread(buf), "Skin download thread.");
+        handleDownload(t);
     }
 
     @Override
@@ -52,11 +51,16 @@ public class MessageServerSendSkinData implements IMessage, IMessageHandler<Mess
         return null;
     }
     
-    public class DownloadThread implements Runnable {
+    @SideOnly(Side.CLIENT)
+    public void handleDownload(Thread downloadThread) {
+        ModelBakery.INSTANCE.handleModelDownload(downloadThread);
+    }
+    
+    public class SkinDownloadThread implements Runnable {
 
         private ByteBuf buf;
         
-        public DownloadThread(ByteBuf buf) {
+        public SkinDownloadThread(ByteBuf buf) {
             this.buf = buf.retain();
         }
         
@@ -69,6 +73,7 @@ public class MessageServerSendSkinData implements IMessage, IMessageHandler<Mess
                 skin = ByteBufHelper.readSkinFromByteBuf(buf);
             }
             sendSkinForBaking(skin, skinIdentifierRequested, skinIdentifierUpdated);
+            buf.release();
         }
         
         @SideOnly(Side.CLIENT)

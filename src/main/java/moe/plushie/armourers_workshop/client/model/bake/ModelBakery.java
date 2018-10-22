@@ -36,6 +36,7 @@ public final class ModelBakery {
     public static final ModelBakery INSTANCE = new ModelBakery();
     
     private final Executor skinBakeExecutor;
+    private final Executor skinDownloadExecutor;
     private final CompletionService<BakedSkin> skinCompletion;
     private final AtomicInteger bakingQueue = new AtomicInteger(0);
     
@@ -44,6 +45,7 @@ public final class ModelBakery {
     
     public ModelBakery() {
         skinBakeExecutor = Executors.newFixedThreadPool(ConfigHandlerClient.modelBakingThreadCount);
+        skinDownloadExecutor = Executors.newFixedThreadPool(2);
         skinCompletion = new ExecutorCompletionService<BakedSkin>(skinBakeExecutor);
         FMLCommonHandler.instance().bus().register(this);
     }
@@ -95,6 +97,11 @@ public final class ModelBakery {
     
     public int getBakingQueueSize() {
         return bakingQueue.get();
+    }
+    
+    public void handleModelDownload(Thread downloadThread) {
+        downloadThread.setPriority(Thread.MIN_PRIORITY);
+        skinDownloadExecutor.execute(downloadThread);
     }
     
     private class BakingOven implements Callable<BakedSkin> {
