@@ -17,7 +17,7 @@ public class ToolOptions {
     public static final ToolOptionCheck CHANGE_SATURATION = new ToolOptionCheck(TAG_CHANGE_SATURATION, true);
     public static final ToolOptionCheck CHANGE_BRIGHTNESS = new ToolOptionCheck(TAG_CHANGE_BRIGHTNESS, true);
     public static final ToolOptionCheck CHANGE_PAINT_TYPE = new ToolOptionCheck(TAG_CHANGE_PAINT_TYPE, true);
-    public static final ToolOptionIntensity INTENSITY = new ToolOptionIntensity(TAG_INTENSITY, 3);
+    public static final ToolOptionIntensity INTENSITY = new ToolOptionIntensity(TAG_INTENSITY, 16);
     public static final ToolOptionRadius RADIUS = new ToolOptionRadius(TAG_RADIUS, 3);
     public static final ToolOptionRadius RADIUS_SAMPLE = new ToolOptionRadius(TAG_RADIUS_SAMPLE, 2);
     public static final ToolOptionRadius RADIUS_EFFECT = new ToolOptionRadius(TAG_RADIUS_EFFECT, 1);
