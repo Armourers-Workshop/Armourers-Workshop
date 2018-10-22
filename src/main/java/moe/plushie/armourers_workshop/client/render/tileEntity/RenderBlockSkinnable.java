@@ -2,8 +2,6 @@ package moe.plushie.armourers_workshop.client.render.tileEntity;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
-
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.model.block.ModelBlockSkinnable;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
@@ -17,6 +15,9 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnableChi
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -73,35 +74,38 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySk
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
             if (skin != null) {
                 if (te.isParent()) {
-                    GL11.glPushMatrix();
-                    GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
+                    GlStateManager.pushMatrix();
+                    GlStateManager.translate(x + 0.5F, y + 0.5F, z + 0.5F);
+                    GlStateManager.enableBlend();
+                    GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
                     EnumFacing facing = state.getValue(BlockSkinnable.STATE_FACING);
                     //RenderItemEquipmentSkin.renderLoadingIcon(te.getSkinPointer());
                     if (facing == EnumFacing.EAST) {
-                        GL11.glRotatef(-90F, 0, 1, 0);
+                        GlStateManager.rotate(-90F, 0, 1, 0);
                     }
                     if (facing == EnumFacing.SOUTH) {
-                        GL11.glRotatef(180F, 0, 1, 0);
+                        GlStateManager.rotate(180F, 0, 1, 0);
                     }
                     if (facing == EnumFacing.WEST) {
-                        GL11.glRotatef(90F, 0, 1, 0);
+                        GlStateManager.rotate(90F, 0, 1, 0);
                     }
                     
                     //GL11.glRotatef((90F * ((-facing.getIndex() + 4))), 0, 1, 0);
-                    GL11.glScalef(-1, -1, 1);
+                    GlStateManager.scale(-1, -1, 1);
                     for (int i = 0; i < skin.getParts().size(); i++) {
                         SkinPart skinPart = skin.getParts().get(i);
                         SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, te.getSkinPointer().getSkinDye(), null, 0, true);
                     }
                     //renderSkin(tileEntity, x, y, z, skin);
-                    GL11.glPopMatrix();
+                    GlStateManager.disableBlend();
+                    GlStateManager.popMatrix();
                     return;
                 } else {
                     if (!((TileEntitySkinnableChild)te).isParentValid()) {
-                        GL11.glPushMatrix();
-                        GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
+                        GlStateManager.pushMatrix();
+                        GlStateManager.translate(x + 0.5F, y + 0.5F, z + 0.5F);
                         RenderItemEquipmentSkin.renderLoadingIcon(te.getSkinPointer());
-                        GL11.glPopMatrix();
+                        GlStateManager.popMatrix();
                     }
                     return;
                 }
@@ -109,10 +113,10 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySk
                 ClientSkinCache.INSTANCE.requestSkinFromServer(skinPointer);
             }
         }
-        GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5F, y + 0.5F, z + 0.5F);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5F, y + 0.5F, z + 0.5F);
         RenderItemEquipmentSkin.renderLoadingIcon(te.getSkinPointer());
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
     
     /*
