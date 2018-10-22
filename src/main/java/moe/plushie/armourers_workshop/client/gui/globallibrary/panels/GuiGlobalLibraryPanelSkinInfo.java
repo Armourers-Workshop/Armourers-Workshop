@@ -275,15 +275,15 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
         
         Skin skin = null;
+        SkinIdentifier identifier = new SkinIdentifier(0, null, skinJson.get("id").getAsInt(), null);
         if (skinJson != null && skinJson.has("id")) {
-            SkinIdentifier identifier = new SkinIdentifier(0, null, skinJson.get("id").getAsInt(), null);
             skin = ClientSkinCache.INSTANCE.getSkin(identifier);
         }
         
         super.draw(mouseX, mouseY, partialTickTime);
         drawUserbox(x + 5, y + 5, 185, 30, mouseX, mouseY, partialTickTime);
         drawSkinInfo(skin, x + 5, y + 20 + 20, 185, height - 70, mouseX, mouseY, partialTickTime);
-        drawPreviewBox(skin, x + 195, y + 5, width - 200, height - 35, mouseX, mouseY, partialTickTime);
+        drawPreviewBox(identifier, skin, x + 195, y + 5, width - 200, height - 35, mouseX, mouseY, partialTickTime);
     }
     
     public void drawUserbox(int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
@@ -355,7 +355,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         }
     }
     
-    public void drawPreviewBox(Skin skin, int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
+    public void drawPreviewBox(SkinIdentifier identifier, Skin skin, int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
         drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
         if (skin != null) {
             int iconSize = Math.min(boxWidth, boxHeight);
@@ -377,7 +377,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             ModRenderHelper.enableAlphaBlend();
             GlStateManager.enableDepth();
             
-            SkinItemRenderHelper.renderSkinAsItem(skin, new SkinDescriptor(skin), true, false, boxWidth, boxHeight);
+            SkinItemRenderHelper.renderSkinAsItem(skin, new SkinDescriptor(identifier), true, false, boxWidth, boxHeight);
             
             GlStateManager.disableDepth();
             ModRenderHelper.disableAlphaBlend();
