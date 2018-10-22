@@ -32,7 +32,11 @@ public class SkinDescriptor implements ISkinDescriptor {
     
     public SkinDescriptor(SkinIdentifier identifier, ISkinDye skinDye) {
         this.identifier = identifier;
-        this.skinDye = new SkinDye(skinDye);
+        if (skinDye != null) {
+            this.skinDye = new SkinDye(skinDye);
+        } else {
+            this.skinDye = new SkinDye();
+        }
     }
     
     @Override
