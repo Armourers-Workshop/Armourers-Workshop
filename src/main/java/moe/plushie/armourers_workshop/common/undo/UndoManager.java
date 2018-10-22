@@ -3,11 +3,10 @@ package moe.plushie.armourers_workshop.common.undo;
 import java.util.HashMap;
 
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 /**
@@ -62,14 +61,12 @@ public final class UndoManager {
     public static void undoPressed(EntityPlayer player) {
         String key = player.getName();
         if (!playerUndoData.containsKey(key)) {
-            String outOfUndosText = I18n.format("chat." + LibModInfo.ID.toLowerCase() + ":undo.outOfUndos");
-            player.sendMessage(new TextComponentString(outOfUndosText));
+            player.sendMessage(new TextComponentTranslation("chat." + LibModInfo.ID + ":undo.outOfUndos"));
             return;
         }
         PlayerUndoData playerData = playerUndoData.get(key);
         World world = player.getEntityWorld();
-        String undoText = I18n.format("chat." + LibModInfo.ID.toLowerCase() + ":undo.undoing");
-        player.sendMessage(new TextComponentString(undoText));
+        player.sendMessage(new TextComponentTranslation("chat." + LibModInfo.ID + ":undo.undoing"));
         playerData.playerPressedUndo(world);
         if (playerData.getAvalableUndos() < 1) {
             playerUndoData.remove(key);
