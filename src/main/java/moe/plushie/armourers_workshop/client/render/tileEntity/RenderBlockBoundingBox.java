@@ -26,7 +26,7 @@ public class RenderBlockBoundingBox extends TileEntitySpecialRenderer<TileEntity
     @Override
     public void render(TileEntityBoundingBox te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         Profiler pro = Minecraft.getMinecraft().profiler;
-        pro.startSection("boundingboxTESR");
+        
         if (!(te.getSkinPart() instanceof ISkinPartTypeTextured)) {
             return;
         }
@@ -34,7 +34,7 @@ public class RenderBlockBoundingBox extends TileEntitySpecialRenderer<TileEntity
         if (!(RenderBlockColourable.markerAlpha > 0)) {
             return;
         }
-        
+        pro.startSection("boundingboxTESR");
         //ModRenderHelper.disableLighting();
         GL11.glDisable(GL11.GL_LIGHTING);
         ModRenderHelper.enableAlphaBlend();
