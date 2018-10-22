@@ -32,6 +32,7 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand.SkinLibraryCommand;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.skin.SkinExtractor;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
@@ -91,6 +92,7 @@ public class CommonProxy implements ILibraryCallback {
         
         SkinExtractor.extractSkins();
         
+        PaintRegistry.init();
         SkinTypeRegistry.init();
         CubeRegistry.init();
         

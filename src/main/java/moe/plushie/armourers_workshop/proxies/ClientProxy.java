@@ -38,6 +38,7 @@ import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockManneq
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockSkinnable;
 import moe.plushie.armourers_workshop.client.settings.Keybindings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.client.texture.PlayerTextureDownloader;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
@@ -351,6 +352,7 @@ public class ClientProxy extends CommonProxy {
         case CLEAR_MODEL_CACHE:
             ClientSkinCache.INSTANCE.clearCache();
             CommonSkinCache.INSTANCE.clearAll();
+            ClientSkinPaintCache.INSTANCE.clear();
             break;
         }
     }

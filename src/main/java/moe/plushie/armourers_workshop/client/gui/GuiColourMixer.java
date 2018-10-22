@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiColourUpdate;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
@@ -119,8 +120,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     private void updatePaintTypeDropDown() {
         int paintCount = 0;
         paintTypeDropDown.clearList();
-        for (int i = 0; i < PaintType.values().length; i++) {
-            PaintType paintType = PaintType.values()[i];
+        for (PaintType paintType : PaintRegistry.getRegisteredTypes()) {
             paintTypeDropDown.addListItem(paintType.getLocalizedName());
             if (paintType == tileEntityColourMixer.getPaintType(0)) {
                 paintTypeDropDown.setListSelectedIndex(paintCount);
@@ -188,7 +188,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     
     private void updateColour() {
         Color colourOld = new Color(tileEntityColourMixer.getColour(0));
-        PaintType paintType = PaintType.values()[paintTypeDropDown.getListSelectedIndex()];
+        PaintType paintType = PaintRegistry.getRegisteredTypes().get((paintTypeDropDown.getListSelectedIndex()));
         if (this.colour.equals(colourOld)) {
             if (paintType == tileEntityColourMixer.getPaintType(0))
             return;

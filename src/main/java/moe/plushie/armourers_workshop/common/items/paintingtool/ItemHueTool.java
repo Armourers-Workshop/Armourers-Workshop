@@ -107,7 +107,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
 
         if (worldColourable.isRemoteOnly(world, pos, facing) & world.isRemote) {
             int oldColour = worldColourable.getColour(world, pos, facing);
-            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getKey();
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getId();
             float[] blockhsb;
             Color blockColour = new Color(oldColour);
             blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);
@@ -131,13 +131,13 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
             rgbt[2] = (byte) c.getBlue();
             rgbt[3] = oldPaintType;
             if (changePaintType) {
-                rgbt[3] = (byte) paintType.getKey();
+                rgbt[3] = (byte) paintType.getId();
             }
             MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(pos, facing, rgbt);
             PacketHandler.networkWrapper.sendToServer(message);
         } else if (!worldColourable.isRemoteOnly(world, pos, facing) & !world.isRemote) {
             int oldColour = worldColourable.getColour(world, pos, facing);
-            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getKey();
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getId();
             float[] blockhsb;
             Color blockColour = new Color(oldColour);
             blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);

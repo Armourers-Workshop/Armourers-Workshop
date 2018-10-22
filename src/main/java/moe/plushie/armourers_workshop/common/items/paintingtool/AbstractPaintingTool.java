@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.items.AbstractModItem;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
@@ -45,7 +46,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     @Override
     public boolean hasEffect(ItemStack stack) {
         PaintType paintType = PaintingHelper.getToolPaintType(stack);
-        if (paintType != PaintType.NORMAL) {
+        if (paintType != PaintRegistry.PAINT_TYPE_NORMAL) {
             return true;
         }
         return false;

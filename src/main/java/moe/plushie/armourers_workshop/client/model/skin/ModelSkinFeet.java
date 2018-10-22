@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.common.ApiRegistrar;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -48,7 +47,7 @@ public class ModelSkinFeet extends AbstractModelSkin {
         
         if (armourData.hasPaintData() & showSkinPaint) {
             if (extraColours == null) {
-                extraColours = PaintingHelper.getLocalPlayerExtraColours();
+                extraColours = ExtraColours.EMPTY_COLOUR;
             }
             SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(armourData, skinDye, extraColours);
             st.bindTexture();

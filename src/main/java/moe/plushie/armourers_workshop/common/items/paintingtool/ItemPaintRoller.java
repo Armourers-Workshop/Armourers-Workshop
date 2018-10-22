@@ -103,14 +103,14 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
                     for (int i = 0; i < 6; i++) {
                         EnumFacing face = EnumFacing.VALUES[i];
                         int oldColour = worldColourable.getColour(world, pos, face);
-                        byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, face).getKey();
+                        byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, face).getId();
                         UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, face);
                         ((IPantableBlock)block).setColour(world, pos, newColour, face);
                         ((IPantableBlock)block).setPaintType(world, pos, paintType, face);
                     }
                 } else {
                     int oldColour = worldColourable.getColour(world, pos, facing);
-                    byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getKey();
+                    byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getId();
                     UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, facing);
                     ((IPantableBlock)block).setColour(world, pos, newColour, facing);
                     ((IPantableBlock)block).setPaintType(world, pos, paintType, facing);

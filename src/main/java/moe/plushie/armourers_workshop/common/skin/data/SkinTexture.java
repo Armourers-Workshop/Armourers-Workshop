@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.IOUtils;
 
 import moe.plushie.armourers_workshop.common.SkinHelper;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.utils.BitwiseUtils;
 import net.minecraft.client.Minecraft;
@@ -115,8 +116,8 @@ public class SkinTexture {
         for (int ix = 0; ix < TEXTURE_WIDTH; ix++) {
             for (int iy = 0; iy < TEXTURE_HEIGHT; iy++) {
                 int paintColour = paintData[ix + (iy * TEXTURE_WIDTH)];
-                PaintType paintType = PaintType.getPaintTypeFromColour(paintColour);
-                if (paintType != PaintType.NONE) {
+                PaintType paintType = PaintRegistry.getPaintTypeFromColour(paintColour);
+                if (paintType != PaintRegistry.PAINT_TYPE_NONE) {
                     bufferedSkinImage.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
                 }
             }

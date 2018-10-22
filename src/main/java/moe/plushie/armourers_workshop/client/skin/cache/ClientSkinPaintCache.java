@@ -68,6 +68,11 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
         return textureMap.size();
     }
     
+
+    public void clear() {
+        // TODO Auto-generated method stub
+    }
+    
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == Phase.END) {

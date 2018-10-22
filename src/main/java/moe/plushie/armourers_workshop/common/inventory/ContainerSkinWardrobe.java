@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
 import moe.plushie.armourers_workshop.common.items.ItemDyeBottle;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
 import moe.plushie.armourers_workshop.common.items.ModItems;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
@@ -245,7 +245,7 @@ public class ContainerSkinWardrobe extends ModContainer {
                     byte[] rgbt = dye.getDyeColour(i);
                     ItemStack bottle = new ItemStack(ModItems.dyeBottle, 1, 1);
                     PaintingHelper.setToolPaintColour(bottle, rgbt);
-                    PaintingHelper.setToolPaint(bottle, PaintType.getPaintTypeFormSKey(rgbt[3]));
+                    PaintingHelper.setToolPaint(bottle, PaintRegistry.getPaintTypeFormByte(rgbt[3]));
                     if (dye.hasName(i)) {
                         bottle.setStackDisplayName(dye.getDyeName(i));
                     }

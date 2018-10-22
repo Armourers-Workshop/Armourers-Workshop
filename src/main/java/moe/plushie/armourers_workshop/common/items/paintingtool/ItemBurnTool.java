@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.common.lib.LibSounds;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientToolPaintBlock;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
@@ -96,15 +97,15 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool, 
             rgbt[0] = (byte)c.getRed();
             rgbt[1] = (byte)c.getGreen();
             rgbt[2] = (byte)c.getBlue();
-            rgbt[3] = (byte)oldPaintType.getKey();
-            if (block == ModBlocks.boundingBox && oldPaintType == PaintType.NONE) {
-                rgbt[3] = (byte)PaintType.NORMAL.getKey();
+            rgbt[3] = (byte)oldPaintType.getId();
+            if (block == ModBlocks.boundingBox && oldPaintType == PaintRegistry.PAINT_TYPE_NONE) {
+                rgbt[3] = (byte)PaintRegistry.PAINT_TYPE_NORMAL.getId();
             }
             MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(pos, facing, rgbt);
             PacketHandler.networkWrapper.sendToServer(message);
         } else if(!worldColourable.isRemoteOnly(world, pos, facing) & !world.isRemote) {
             int oldColour = worldColourable.getColour(world, pos, facing);
-            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getKey();
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getId();
             int newColour = UtilColour.makeColourDarker(new Color(oldColour), intensity).getRGB();
             UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, facing);
             ((IPantableBlock) block).setColour(world, pos, newColour, facing);

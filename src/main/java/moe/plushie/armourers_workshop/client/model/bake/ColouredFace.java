@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import net.minecraft.util.math.MathHelper;
 
@@ -42,75 +42,49 @@ public class ColouredFace {
         byte r = this.r;
         byte g = this.g;
         byte b = this.b;
-        int type = t & 0xFF;
-        if (type != PaintType.NONE.getKey()) {
-            // Dye
-            if (type >= 1 && type <= 8) {
-                // Is a dye paint
-                if (skinDye != null && skinDye.haveDyeInSlot(type - 1)) {
-                    byte[] dye = skinDye.getDyeColour(type - 1);
-                    if (dye.length == 4) {
-                        if ((dye[3] & 0xFF) == 0) {
-                            return;
-                        }
-                        int dyeType = dye[3] & 0xFF;
-                        int[] averageRGB = cspd.getAverageDyeColour(type - 1);
-                        byte[] dyedColour = null;
-                        if (dyeType == PaintType.SKIN.getKey() & extraColours != null) {
-                            dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(ExtraColourType.SKIN), averageRGB);
-                        } else if (dyeType == PaintType.HAIR.getKey() & extraColours != null) {
-                            dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(ExtraColourType.HAIR), averageRGB);
-                        } else if (dyeType == PaintType.EYE.getKey() & extraColours != null) {
-                            dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(ExtraColourType.EYE), averageRGB);
-                        } else if (dyeType == PaintType.MISC.getKey() & extraColours != null) {
-                            dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(ExtraColourType.MISC), averageRGB);
+        PaintType type = PaintRegistry.getPaintTypeFormByte(t);
+        if (type == PaintRegistry.PAINT_TYPE_NONE) {
+            return;
+        }
+        // Dye
+        if (type.getId() >= 1 && type.getId() <= 8) {
+            // Is a dye paint
+            if (skinDye != null && skinDye.haveDyeInSlot(type.getId() - 1)) {
+                byte[] dye = skinDye.getDyeColour(type.getId() - 1);
+                if (dye.length == 4) {
+                    PaintType dyeType = PaintRegistry.getPaintTypeFormByte(dye[3]);
+                    if (dyeType == PaintRegistry.PAINT_TYPE_NONE) {
+                        return;
+                    }
+                    int[] averageRGB = cspd.getAverageDyeColour(type.getChannelIndex());
+                    byte[] dyedColour = null;
+                    if (dyeType.getColourType() != null & extraColours != null) {
+                        byte[] extraColour = extraColours.getColourBytes(dyeType.getColourType());
+                        if (extraColour.length == 4 && (extraColour[3] & 0xFF) != 0) {
+                            dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(dyeType.getColourType()), averageRGB);
                         } else {
                             dyedColour = dyeColour(r, g, b, dye, averageRGB);
                         }
-                        r = dyedColour[0];
-                        g = dyedColour[1];
-                        b = dyedColour[2];
+                    } else {
+                        dyedColour = dyeColour(r, g, b, dye, averageRGB);
                     }
+                    r = dyedColour[0];
+                    g = dyedColour[1];
+                    b = dyedColour[2];
                 }
+                
             }
-            if (extraColours != null) {
-                // Skin
-                if (type == PaintType.SKIN.getKey()) {
-                    int[] averageRGB = cspd.getAverageDyeColour(8);
-                    byte[] dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(ExtraColourType.SKIN), averageRGB);
-                    r = dyedColour[0];
-                    g = dyedColour[1];
-                    b = dyedColour[2];
-                }
-                // Hair
-                if (type == PaintType.HAIR.getKey()) {
-                    int[] averageRGB = cspd.getAverageDyeColour(9);
-                    byte[] dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(ExtraColourType.HAIR), averageRGB);
-                    r = dyedColour[0];
-                    g = dyedColour[1];
-                    b = dyedColour[2];
-                }
-
-                // Eye
-                if (type == PaintType.EYE.getKey()) {
-                    int[] averageRGB = cspd.getAverageDyeColour(10);
-                    byte[] dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(ExtraColourType.EYE), averageRGB);
-                    r = dyedColour[0];
-                    g = dyedColour[1];
-                    b = dyedColour[2];
-                }
-                // Misc
-                if (type == PaintType.MISC.getKey()) {
-                    int[] averageRGB = cspd.getAverageDyeColour(11);
-                    byte[] dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(ExtraColourType.MISC), averageRGB);
-                    r = dyedColour[0];
-                    g = dyedColour[1];
-                    b = dyedColour[2];
-                }
+        } else  if (extraColours != null) {
+            if (type.getColourType() != null) {
+                int[] averageRGB = cspd.getAverageDyeColour(type.getChannelIndex());
+                byte[] dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(type.getColourType()), averageRGB);
+                r = dyedColour[0];
+                g = dyedColour[1];
+                b = dyedColour[2];
             }
-
-            FaceRenderer.renderFace(x, y, z, r, g, b, a, face, useTexture, lodLevel);
         }
+
+        FaceRenderer.renderFace(x, y, z, r, g, b, a, face, useTexture, lodLevel);
     }
 
     /**
@@ -126,7 +100,6 @@ public class ColouredFace {
                 return new byte[] { r, g, b };
             }
         }
-
         int average = ((r & 0xFF) + (g & 0xFF) + (b & 0xFF)) / 3;
         int modelAverage = (modelAverageColour[0] + modelAverageColour[1] + modelAverageColour[2]) / 3;
         int nR = (int) (average + (dyeColour[0] & 0xFF) - modelAverage);

@@ -91,7 +91,7 @@ public final class PaintingHelper {
      */
     public static void setToolPaint(ItemStack stack, PaintType paintType) {
         byte[] rgbt = getToolPaintData(stack);
-        rgbt[3] = (byte)paintType.getKey();
+        rgbt[3] = (byte)paintType.getId();
         setToolPaintData(stack, rgbt);
     }
     
@@ -102,7 +102,7 @@ public final class PaintingHelper {
      */
     public static PaintType getToolPaintType(ItemStack stack) {
         byte[] rgbt = getToolPaintData(stack);
-        return PaintType.getPaintTypeFormSKey(rgbt[3]);
+        return PaintRegistry.getPaintTypeFormByte(rgbt[3]);
     }
     
     public static byte[] getToolPaintData(ItemStack stack) {

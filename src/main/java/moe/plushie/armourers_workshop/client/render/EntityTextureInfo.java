@@ -11,8 +11,8 @@ import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
 import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
@@ -191,37 +191,25 @@ public class EntityTextureInfo {
                 for (int ix = 0; ix < TEXURE_REPLACMENT_WIDTH; ix++) {
                     for (int iy = 0; iy < TEXURE_REPLACMENT_HEIGHT; iy++) {
                         int paintColour = skin.getPaintData()[ix + (iy * textureWidth)];
-                        PaintType paintType = PaintType.getPaintTypeFromColour(paintColour);
+                        PaintType paintType = PaintRegistry.getPaintTypeFromColour(paintColour);
                         
-                        if (paintType == PaintType.NORMAL) {
+                        if (paintType == PaintRegistry.PAINT_TYPE_NORMAL) {
                             paintTexture(bufferedEntitySkinnedImage, ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
-                        }
-                        if (paintType == PaintType.SKIN) {
-                            int colour = dyeColour(lastEntityColours.getColourBytes(ExtraColourType.SKIN), paintColour, 8, skin);
-                            paintTexture(bufferedEntitySkinnedImage, ix, iy, colour);
-                        }
-                        if (paintType == PaintType.HAIR) {
-                            int colour = dyeColour(lastEntityColours.getColourBytes(ExtraColourType.HAIR), paintColour, 9, skin);
-                            paintTexture(bufferedEntitySkinnedImage, ix, iy, colour);
-                        }
-                        if (paintType == PaintType.EYE) {
-                            int colour = dyeColour(lastEntityColours.getColourBytes(ExtraColourType.EYE), paintColour, 10, skin);
-                            paintTexture(bufferedEntitySkinnedImage, ix, iy, colour);
-                        }
-                        if (paintType == PaintType.MISC) {
-                            int colour = dyeColour(lastEntityColours.getColourBytes(ExtraColourType.HAIR), paintColour, 11, skin);
-                            paintTexture(bufferedEntitySkinnedImage, ix, iy, colour);
-                        }
-                        if (paintType.getKey() >= 1 && paintType.getKey() <= 8) {
-                            int dyeNumber = paintType.getKey() - 1;
+                        } else if (paintType.getId() >= 1 && paintType.getId() <= 8) {
+                            int dyeNumber = paintType.getId() - 1;
                             if (dyes != null && dyes[i] != null && dyes[i].haveDyeInSlot(dyeNumber)) {
                                 byte[] dye = dyes[i].getDyeColour(dyeNumber);
-                                int colour = dyeColour(dye, paintColour, dyeNumber, skin);
+                                int colour = dyeColour(dye, paintColour, paintType.getChannelIndex(), skin);
                                 paintTexture(bufferedEntitySkinnedImage, ix, iy, colour);
                             } else {
                                 paintTexture(bufferedEntitySkinnedImage, ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
                             }
-                        } 
+                        } else if (paintType.getColourType() != null) {
+                            int colour = dyeColour(lastEntityColours.getColourBytes(paintType.getColourType()), paintColour, paintType.getChannelIndex(), skin);
+                            paintTexture(bufferedEntitySkinnedImage, ix, iy, colour);
+                        }
+
+                        
                     }
                 }
             }
@@ -286,18 +274,9 @@ public class EntityTextureInfo {
         byte b = (byte) (colour & 0xFF);
         
         if (dye.length > 3) {
-            byte t = dye[3];
-            if ((t & 0xFF) == PaintType.SKIN.getKey()) {
-                dye = lastEntityColours.getColourBytes(ExtraColourType.SKIN);
-            }
-            if ((t & 0xFF) == PaintType.HAIR.getKey()) {
-                dye = lastEntityColours.getColourBytes(ExtraColourType.HAIR);
-            }
-            if ((t & 0xFF) == PaintType.EYE.getKey()) {
-                dye = lastEntityColours.getColourBytes(ExtraColourType.EYE);
-            }
-            if ((t & 0xFF) == PaintType.MISC.getKey()) {
-                dye = lastEntityColours.getColourBytes(ExtraColourType.MISC);
+            PaintType t = PaintRegistry.getPaintTypeFormByte(dye[3]);
+            if (t.getColourType() != null) {
+                dye = lastEntityColours.getColourBytes(t.getColourType());
             }
         }
         

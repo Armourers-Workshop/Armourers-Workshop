@@ -16,7 +16,7 @@ import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCa
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
@@ -107,7 +107,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (button == 0 & selectingColourType != null) {
             byte[] newColour = PaintingHelper.intToBytes(selectingColour.getRGB());
-            newColour[3] = (byte) PaintType.NORMAL.getKey();
+            newColour[3] = (byte) PaintRegistry.PAINT_TYPE_NORMAL.getId();
             wardrobeCapability.getExtraColours().setColourBytes(selectingColourType, newColour);
             wardrobeCapability.sendUpdateToServer();
             selectingColourType = null;

@@ -15,8 +15,8 @@ import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
-import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
@@ -39,7 +39,7 @@ public final class ModelBakery {
     private final CompletionService<BakedSkin> skinCompletion;
     private final AtomicInteger bakingQueue = new AtomicInteger(0);
     
-    private final AtomicIntegerArray bakeTimes = new AtomicIntegerArray(100);
+    private final AtomicIntegerArray bakeTimes = new AtomicIntegerArray(1000);
     private final AtomicInteger bakeTimesIndex = new AtomicInteger(0);
     
     public ModelBakery() {
@@ -58,7 +58,7 @@ public final class ModelBakery {
     public int getAverageBakeTime() {
         int totalItems = 0;
         int totalTime = 0;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < bakeTimes.length(); i++) {
             int time = bakeTimes.get(i);
             if (time != 0) {
                 totalItems++;
@@ -115,7 +115,7 @@ public final class ModelBakery {
             long startTime = System.currentTimeMillis();
             skin.lightHash();
             
-            int extraDyes = 12;
+            int extraDyes = PaintRegistry.getExtraChannels();
             
             int[][] dyeColour;
             int[] dyeUseCount;
@@ -136,41 +136,16 @@ public final class ModelBakery {
                 for (int ix = 0; ix < SkinTexture.TEXTURE_WIDTH; ix++) {
                     for (int iy = 0; iy < SkinTexture.TEXTURE_HEIGHT; iy++) {
                         int paintColour = skin.getPaintData()[ix + (iy * SkinTexture.TEXTURE_WIDTH)];
-                        int paintType = PaintingHelper.intToBytes(paintColour)[3] & 0xFF;
-                        
-                        byte r = (byte) (paintColour >>> 16 & 0xFF);
-                        byte g = (byte) (paintColour >>> 8 & 0xFF);
-                        byte b = (byte) (paintColour & 0xFF);
-                        
-                        if (paintType >= 1 && paintType <= 8) {
-                            dyeUseCount[paintType - 1]++;
-                            dyeColour[0][paintType - 1] += r & 0xFF;
-                            dyeColour[1][paintType - 1] += g & 0xFF;
-                            dyeColour[2][paintType - 1] += b & 0xFF;
-                        }
-                        if (paintType == PaintType.SKIN.getKey()) {
-                            dyeUseCount[8]++;
-                            dyeColour[0][8] += r & 0xFF;
-                            dyeColour[1][8] += g & 0xFF;
-                            dyeColour[2][8] += b & 0xFF;
-                        }
-                        if (paintType == PaintType.HAIR.getKey()) {
-                            dyeUseCount[9]++;
-                            dyeColour[0][9] += r  & 0xFF;
-                            dyeColour[1][9] += g  & 0xFF;
-                            dyeColour[2][9] += b  & 0xFF;
-                        }
-                        if (paintType == PaintType.EYE.getKey()) {
-                            dyeUseCount[10]++;
-                            dyeColour[0][10] += r  & 0xFF;
-                            dyeColour[1][10] += g  & 0xFF;
-                            dyeColour[2][10] += b  & 0xFF;
-                        }
-                        if (paintType == PaintType.MISC.getKey()) {
-                            dyeUseCount[11]++;
-                            dyeColour[0][11] += r  & 0xFF;
-                            dyeColour[1][11] += g  & 0xFF;
-                            dyeColour[2][11] += b  & 0xFF;
+                        PaintType paintType = PaintRegistry.getPaintTypeFromColour(paintColour);
+                        if (paintType.hasAverageColourChannel()) {
+                            int index = paintType.getChannelIndex();
+                            byte r = (byte) (paintColour >>> 16 & 0xFF);
+                            byte g = (byte) (paintColour >>> 8 & 0xFF);
+                            byte b = (byte) (paintColour & 0xFF);
+                            dyeUseCount[index]++;
+                            dyeColour[0][index] += r & 0xFF;
+                            dyeColour[1][index] += g & 0xFF;
+                            dyeColour[2][index] += b & 0xFF;
                         }
                     }
                 }
@@ -197,7 +172,7 @@ public final class ModelBakery {
             }
             long totalTime = System.currentTimeMillis() - startTime;
             int index = bakeTimesIndex.getAndIncrement();
-            if (index > 99) {
+            if (index > bakeTimes.length() - 1) {
                 index = 0;
                 bakeTimesIndex.set(0);
             }

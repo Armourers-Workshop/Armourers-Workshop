@@ -16,6 +16,7 @@ import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.lib.LibSounds;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
@@ -55,7 +56,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     @Override
     public boolean hasEffect(ItemStack stack) {
         PaintType paintType = PaintingHelper.getToolPaintType(stack);
-        if (paintType != PaintType.NORMAL) {
+        if (paintType != PaintRegistry.PAINT_TYPE_NORMAL) {
             return true;
         }
         return false;
@@ -93,9 +94,9 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
                 paintData[1] = (byte) c.getGreen();
                 paintData[2] = (byte) c.getBlue();
                 if (changePaintType) {
-                    paintData[3] = (byte) targetPaintType.getKey();
+                    paintData[3] = (byte) targetPaintType.getId();
                 } else {
-                    paintData[3] = (byte) paintType.getKey();
+                    paintData[3] = (byte) paintType.getId();
                 }
                 
                 PaintingHelper.setPaintData(compound, paintData);

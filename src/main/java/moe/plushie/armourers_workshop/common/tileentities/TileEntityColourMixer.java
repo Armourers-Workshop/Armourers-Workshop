@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.items.paintingtool.ItemColourPicker;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibCommonTags;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
@@ -36,7 +37,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     public TileEntityColourMixer() {
         super(INVENTORY_SIZE);
         colour = 16777215;
-        paintType = PaintType.NORMAL;
+        paintType = PaintRegistry.PAINT_TYPE_NORMAL;
         colourUpdate = false;
         colourFamily = ColourFamily.MINECRAFT;
     }
@@ -112,9 +113,9 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
         colourFamily = ColourFamily.values()[compound.getInteger(TAG_COLOUR_FAMILY)];
         if (compound.hasKey(TAG_PAINT_TYPE)) {
-            paintType = PaintType.getPaintTypeFromUKey(compound.getInteger(TAG_PAINT_TYPE));
+            paintType = PaintRegistry.getPaintTypeFromIndex(compound.getInteger(TAG_PAINT_TYPE));
         } else {
-            paintType = PaintType.NORMAL;
+            paintType = PaintRegistry.PAINT_TYPE_NORMAL;
         }
     }
 
@@ -123,7 +124,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         super.writeToNBT(compound);
         compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
         compound.setInteger(TAG_COLOUR_FAMILY, colourFamily.ordinal());
-        compound.setInteger(TAG_PAINT_TYPE, paintType.getKey());
+        compound.setInteger(TAG_PAINT_TYPE, paintType.getId());
         return compound;
     }
 
@@ -132,7 +133,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
         compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
-        compound.setInteger(TAG_PAINT_TYPE, paintType.getKey());
+        compound.setInteger(TAG_PAINT_TYPE, paintType.getId());
         compound.setBoolean(TAG_ITEM_UPDATE, itemUpdate);
         return compound;
     }
@@ -150,7 +151,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         NBTTagCompound compound = packet.getNbtCompound();
         readBaseFromNBT(compound);
         colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
-        paintType = PaintType.getPaintTypeFromUKey(compound.getInteger(TAG_PAINT_TYPE));
+        paintType = PaintRegistry.getPaintTypeFromIndex(compound.getInteger(TAG_PAINT_TYPE));
         itemUpdate = compound.getBoolean(TAG_ITEM_UPDATE);
         syncWithClients();
         colourUpdate = true;

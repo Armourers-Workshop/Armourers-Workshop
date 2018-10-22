@@ -51,7 +51,7 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
         PaintType paintType = getToolPaintType(stack);
         IPantableBlock worldColourable = (IPantableBlock) block;
         int oldColour = worldColourable.getColour(world, pos, side);
-        byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, side).getKey();
+        byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, side).getId();
         UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, side);
         ((IPantableBlock)block).setColour(world, pos, colour, side);
         ((IPantableBlock)block).setPaintType(world, pos, paintType, side);

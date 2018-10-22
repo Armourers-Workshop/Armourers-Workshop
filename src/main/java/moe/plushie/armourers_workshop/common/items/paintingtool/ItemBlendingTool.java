@@ -189,7 +189,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
             if (stateTarget.getBlock() instanceof IPantableBlock) {
                 IPantableBlock pBlock = (IPantableBlock) stateTarget.getBlock();
                 int oldColour = pBlock.getColour(world, posEffect, facing);
-                byte oldPaintType = (byte) pBlock.getPaintType(world, posEffect, facing).getKey();
+                byte oldPaintType = (byte) pBlock.getPaintType(world, posEffect, facing).getId();
                 
                 Color oldC = new Color(oldColour);
                 int oldR = oldC.getRed();

@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -58,7 +59,7 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
     @Override
     public boolean hasEffect(ItemStack stack) {
         PaintType paintType = PaintingHelper.getToolPaintType(stack);
-        if (paintType != PaintType.NORMAL) {
+        if (paintType != PaintRegistry.PAINT_TYPE_NORMAL) {
             return true;
         }
         return super.hasEffect(stack);

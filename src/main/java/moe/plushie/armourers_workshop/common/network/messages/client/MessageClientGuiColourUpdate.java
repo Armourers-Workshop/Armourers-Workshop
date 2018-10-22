@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -29,14 +30,14 @@ public class MessageClientGuiColourUpdate implements IMessage, IMessageHandler<M
     public void fromBytes(ByteBuf buf) {
         this.colour = buf.readInt();
         this.item = buf.readBoolean();
-        this.paintType = PaintType.getPaintTypeFromUKey(buf.readInt());
+        this.paintType = PaintRegistry.getPaintTypeFromIndex(buf.readInt());
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.colour);
         buf.writeBoolean(item);
-        buf.writeInt(this.paintType.getKey());
+        buf.writeInt(this.paintType.getId());
     }
 
     @Override

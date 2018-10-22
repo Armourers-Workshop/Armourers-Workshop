@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import net.minecraft.nbt.NBTTagCompound;
@@ -89,13 +90,13 @@ public class TileEntityColourable extends ModTileEntity implements IPantable {
     
     @Override
     public void setPaintType(PaintType paintType, int side) {
-        colour.setPaintType((byte)paintType.getKey(), side);
+        colour.setPaintType((byte)paintType.getId(), side);
         dirtySync();
     }
     
     @Override
     public PaintType getPaintType(int side) {
-        return PaintType.getPaintTypeFormSKey(colour.getPaintType(side));
+        return PaintRegistry.getPaintTypeFormByte(colour.getPaintType(side));
     }
     
     @Override

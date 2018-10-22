@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
 import net.minecraft.client.Minecraft;
@@ -56,8 +57,8 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
             EnumFacing dir = EnumFacing.byIndex(i);
             int paintType = cubeColour.getPaintType(i) & 0xFF;
             if (paintType != 255) {
-                PaintType pt = PaintType.getPaintTypeFromUKey(paintType);
-                renderFaceWithMarker(renderer, x, y, z, dir, pt.getMarkerId());
+                PaintType pt = PaintRegistry.getPaintTypeFromIndex(paintType);
+                renderFaceWithMarker(renderer, x, y, z, dir, pt.getMarkerIndex());
             }
         }
         renderer.draw();

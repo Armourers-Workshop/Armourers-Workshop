@@ -5,6 +5,7 @@ import java.awt.Point;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.SkinTextureHelper;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -142,10 +143,10 @@ public class TileEntityBoundingBox extends ModTileEntity {
             
             Point texPoint = SkinTextureHelper.getTextureLocationFromWorldBlock(this, facing);
             int colour = getParent().getPaintData(texPoint.x, texPoint.y);
-            return PaintType.getPaintTypeFromColour(colour);
+            return PaintRegistry.getPaintTypeFromColour(colour);
         } else {
             //ModLogger.log("x" + parentX);
-            return PaintType.DYE_1;
+            return PaintRegistry.PAINT_TYPE_NORMAL;
         }
     }
     

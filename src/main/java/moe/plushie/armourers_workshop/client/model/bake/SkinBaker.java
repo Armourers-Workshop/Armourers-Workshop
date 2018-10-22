@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.client.model.bake;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.cubes.ICube;
@@ -15,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3i;
 
 public final class SkinBaker {
     
@@ -61,20 +64,19 @@ public final class SkinBaker {
             }
         }
 
-        ArrayList<CubeLocation> openList = new ArrayList<CubeLocation>();
-        HashSet<Integer> closedSet = new HashSet<Integer>();
-        CubeLocation startCube = new CubeLocation(-1, -1, -1);
+        ArrayDeque<Vec3i> openList = new ArrayDeque<Vec3i>();
+        HashSet<Vec3i> closedSet = new HashSet<Vec3i>();
+        Vec3i startCube = new Vec3i(-1, -1, -1);
         openList.add(startCube);
-        closedSet.add(startCube.hashCode());
+        closedSet.add(startCube);
         
         while (openList.size() > 0) {
-            CubeLocation cl = openList.get(openList.size() - 1);
-            openList.remove(openList.size() - 1);
-            ArrayList<CubeLocation> foundLocations = checkCubesAroundLocation(cubeData, cl, pb, cubeArray);
+            Vec3i cl = openList.poll();
+            ArrayList<Vec3i> foundLocations = checkCubesAroundLocation(cubeData, cl, pb, cubeArray);
             for (int i = 0; i < foundLocations.size(); i++) {
-                CubeLocation foundLocation = foundLocations.get(i);
-                if (!closedSet.contains(foundLocation.hashCode())) {
-                    closedSet.add(foundLocation.hashCode());
+                Vec3i foundLocation = foundLocations.get(i);
+                if (!closedSet.contains(foundLocation)) {
+                    closedSet.add(foundLocation);
                     if (isCubeInSearchArea(foundLocation, pb)) {
                         openList.add(foundLocation);
                     }
@@ -95,8 +97,8 @@ public final class SkinBaker {
         return cubeArray;
     }
     
-    private static ArrayList<CubeLocation> checkCubesAroundLocation(SkinCubeData cubeData, CubeLocation cubeLocation, Rectangle3D partBounds, int[][][] cubeArray) {
-        ArrayList<CubeLocation> openList = new ArrayList<SkinBaker.CubeLocation>();
+    private static ArrayList<Vec3i> checkCubesAroundLocation(SkinCubeData cubeData, Vec3i cubeLocation, Rectangle3D partBounds, int[][][] cubeArray) {
+        ArrayList<Vec3i> openList = new ArrayList<Vec3i>();
         EnumFacing[] dirs = {EnumFacing.DOWN, EnumFacing.UP,
                 EnumFacing.SOUTH, EnumFacing.NORTH,
                 EnumFacing.WEST, EnumFacing.EAST };
@@ -111,18 +113,18 @@ public final class SkinBaker {
         
         for (int i = 0; i < dirs.length; i++) {
             EnumFacing dir = dirs[i];
-            int x = cubeLocation.x + dir.getXOffset();
-            int y = cubeLocation.y + dir.getYOffset();
-            int z = cubeLocation.z + dir.getZOffset();
+            int x = cubeLocation.getX() + dir.getXOffset();
+            int y = cubeLocation.getY() + dir.getYOffset();
+            int z = cubeLocation.getZ() + dir.getZOffset();
             int tarIndex = getIndexForLocation(x, y, z, partBounds, cubeArray);
             
             
             //Add new cubes to the open list.
             if (tarIndex < 1) {
-                openList.add(new CubeLocation(x, y, z));
+                openList.add(new Vec3i(x, y, z));
             } else {
                 if (cubeData.getCube(tarIndex - 1).needsPostRender()) {
-                    openList.add(new CubeLocation(x, y, z));
+                    openList.add(new Vec3i(x, y, z));
                 }
             }
             
@@ -134,8 +136,8 @@ public final class SkinBaker {
         return openList;
     }
     
-    private static int getIndexForLocation(CubeLocation cubeLocation, Rectangle3D partBounds, int[][][] cubeArray) {
-        return getIndexForLocation(cubeLocation.x, cubeLocation.y, cubeLocation.z, partBounds, cubeArray);
+    private static int getIndexForLocation(Vec3i cubeLocation, Rectangle3D partBounds, int[][][] cubeArray) {
+        return getIndexForLocation(cubeLocation.getX(), cubeLocation.getY(), cubeLocation.getZ(), partBounds, cubeArray);
     }
     
     private static int getIndexForLocation(int x, int y, int z, Rectangle3D partBounds, int[][][] cubeArray) {
@@ -159,10 +161,10 @@ public final class SkinBaker {
         }
     }
     
-    private static boolean isCubeInSearchArea(CubeLocation cubeLocation, Rectangle3D partBounds) {
-        if (cubeLocation.x > -2 & cubeLocation.x < partBounds.getWidth() + 1) {
-            if (cubeLocation.y > -2 & cubeLocation.y < partBounds.getHeight() + 1) {
-                if (cubeLocation.z > -2 & cubeLocation.z < partBounds.getDepth() + 1) {
+    private static boolean isCubeInSearchArea(Vec3i cubeLocation, Rectangle3D partBounds) {
+        if (cubeLocation.getX() > -2 & cubeLocation.getX() < partBounds.getWidth() + 1) {
+            if (cubeLocation.getY() > -2 & cubeLocation.getY() < partBounds.getHeight() + 1) {
+                if (cubeLocation.getZ() > -2 & cubeLocation.getZ() < partBounds.getDepth() + 1) {
                     return true;
                 }   
             }
@@ -189,18 +191,18 @@ public final class SkinBaker {
          * 0 = normal
          * 1 = glowing
          */
-        
+
         renderLists = (ArrayList<ColouredFace>[]) new ArrayList[ClientProxy.getNumberOfRenderLayers() * (lodLevels + 1)];
-        
+
         for (int i = 0; i < renderLists.length; i++) {
             renderLists[i] = new ArrayList<ColouredFace>();
         }
-        
+
         float scale = 0.0625F;
-        
+
         SkinCubeData cubeData = partData.getCubeData();
         Rectangle3D pb = partData.getPartBounds();
-        
+
         for (int ix = 0; ix < pb.getWidth(); ix++) {
             for (int iy = 0; iy < pb.getHeight(); iy++) {
                 for (int iz = 0; iz < pb.getDepth(); iz++) {
@@ -209,51 +211,27 @@ public final class SkinBaker {
                         byte[] loc = cubeData.getCubeLocation(i);
                         byte[] paintType = cubeData.getCubePaintType(i);
                         ICube cube = partData.getCubeData().getCube(i);
-                        
-                        
+
                         byte a = (byte) 255;
                         if (cube.needsPostRender()) {
                             a = (byte) 127;
                         }
-                        
+
                         byte[] r = cubeData.getCubeColourR(i);
                         byte[] g = cubeData.getCubeColourG(i);
                         byte[] b = cubeData.getCubeColourB(i);
-                        
+
                         for (int j = 0; j < 6; j++) {
-                            int paint = paintType[j] & 0xFF;
-                            if (paint >= 1 && paint <= 8 && cubeData.getFaceFlags(i).get(j)) {
-                                dyeUseCount[paint - 1]++;
-                                dyeColour[0][paint - 1] += r[j]  & 0xFF;
-                                dyeColour[1][paint - 1] += g[j]  & 0xFF;
-                                dyeColour[2][paint - 1] += b[j]  & 0xFF;
-                            }
-                            if (paint == PaintType.SKIN.getKey()) {
-                                dyeUseCount[8]++;
-                                dyeColour[0][8] += r[j]  & 0xFF;
-                                dyeColour[1][8] += g[j]  & 0xFF;
-                                dyeColour[2][8] += b[j]  & 0xFF;
-                            }
-                            if (paint == PaintType.HAIR.getKey()) {
-                                dyeUseCount[9]++;
-                                dyeColour[0][9] += r[j]  & 0xFF;
-                                dyeColour[1][9] += g[j]  & 0xFF;
-                                dyeColour[2][9] += b[j]  & 0xFF;
-                            }
-                            if (paint == PaintType.EYE.getKey()) {
-                                dyeUseCount[10]++;
-                                dyeColour[0][10] += r[j]  & 0xFF;
-                                dyeColour[1][10] += g[j]  & 0xFF;
-                                dyeColour[2][10] += b[j]  & 0xFF;
-                            }
-                            if (paint == PaintType.MISC.getKey()) {
-                                dyeUseCount[11]++;
-                                dyeColour[0][11] += r[j]  & 0xFF;
-                                dyeColour[1][11] += g[j]  & 0xFF;
-                                dyeColour[2][11] += b[j]  & 0xFF;
+                            PaintType type = PaintRegistry.getPaintTypeFormByte(paintType[j]);
+                            if (type.hasAverageColourChannel()) {
+                                int index = type.getChannelIndex();
+                                dyeUseCount[index]++;
+                                dyeColour[0][index] += r[j] & 0xFF;
+                                dyeColour[1][index] += g[j] & 0xFF;
+                                dyeColour[2][index] += b[j] & 0xFF;
                             }
                         }
-                        
+
                         int listIndex = 0;
                         if (multipassSkinRendering) {
                             if (cube.isGlowing() && !cube.needsPostRender()) {
@@ -270,33 +248,28 @@ public final class SkinBaker {
                                 listIndex = 1;
                             }
                         }
-                        
+
                         for (int j = 0; j < 6; j++) {
                             if (cubeData.getFaceFlags(i).get(j)) {
-                                ColouredFace ver = new ColouredFace(
-                                        loc[0], loc[1], loc[2],
-                                        r[j], g[j], b[j],
-                                        a, paintType[j], (byte)j, (byte)(1));
+                                ColouredFace ver = new ColouredFace(loc[0], loc[1], loc[2], r[j], g[j], b[j], a, paintType[j], (byte) j, (byte) (1));
                                 renderLists[listIndex].add(ver);
                             }
                         }
-                        
 
-                        
                     }
-                    
-                    //Create model LODs
+
+                    // Create model LODs
                     for (int lod = 1; lod < lodLevels + 1; lod++) {
-                        byte lodLevel = (byte)Math.pow(2, lod);
+                        byte lodLevel = (byte) Math.pow(2, lod);
                         if ((ix) % lodLevel == 0 & (iy) % lodLevel == 0 & (iz) % lodLevel == 0) {
-                            
+
                             for (int j = 0; j < 6; j++) {
                                 boolean showFace = getAverageFaceFlags(ix, iy, iz, lodLevel, cubeArray, cubeData, pb, j);
                                 if (showFace) {
                                     byte[] avegC = getAverageRGBAT(ix, iy, iz, lodLevel, cubeArray, cubeData, pb, j);
-                                    
+
                                     ICube cube = CubeRegistry.INSTANCE.getCubeFormId(avegC[5]);
-                                    
+
                                     int listIndex = 0;
                                     if (multipassSkinRendering) {
                                         if (cube.isGlowing() && !cube.needsPostRender()) {
@@ -314,22 +287,19 @@ public final class SkinBaker {
                                         }
                                     }
                                     int lodIndex = ((lod) * ClientProxy.getNumberOfRenderLayers()) + listIndex;
-                                    
-                                    ColouredFace ver = new ColouredFace(
-                                            (byte)(ix + pb.getX()), (byte)(iy + pb.getY()), (byte)(iz + pb.getZ()),
-                                            avegC[0], avegC[1], avegC[2],
-                                            avegC[3], avegC[4], (byte)j, lodLevel);
+
+                                    ColouredFace ver = new ColouredFace((byte) (ix + pb.getX()), (byte) (iy + pb.getY()), (byte) (iz + pb.getZ()), avegC[0], avegC[1], avegC[2], avegC[3], avegC[4], (byte) j, lodLevel);
                                     renderLists[lodIndex].add(ver);
                                 }
                             }
                         }
                     }
                     
+
                 }
             }
         }
-        
-        
+
         partData.getClientSkinPartData().setVertexLists(renderLists);
     }
     
@@ -409,47 +379,5 @@ public final class SkinBaker {
             
         }
         return rgbat;
-    }
-    
-    private static class CubeLocation {
-        public final int x;
-        public final int y;
-        public final int z;
-        
-        public CubeLocation(int x, int y, int z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-
-
-
-        @Override
-        public int hashCode() {
-            return toString().hashCode();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            CubeLocation other = (CubeLocation) obj;
-            if (x != other.x)
-                return false;
-            if (y != other.y)
-                return false;
-            if (z != other.z)
-                return false;
-            return true;
-        }
-
-        @Override
-        public String toString() {
-            return "CubeLocation [x=" + x + ", y=" + y + ", z=" + z + "]";
-        }
     }
 }

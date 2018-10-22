@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.common.blocks;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
@@ -104,7 +105,7 @@ public class BlockSkinCube extends AbstractModBlockContainer implements IPantabl
         if (te != null & te instanceof IPantable) {
             return ((IPantable)te).getPaintType(facing.ordinal());
         }
-        return PaintType.NORMAL;
+        return PaintRegistry.PAINT_TYPE_NORMAL;
     }
     
     @Override
