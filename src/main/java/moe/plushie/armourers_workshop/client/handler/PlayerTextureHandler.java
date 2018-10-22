@@ -41,6 +41,7 @@ public class PlayerTextureHandler {
 
     public static PlayerTextureHandler INSTANCE;
     
+    // TODO Change this map to a cache.
     private HashMap<EntityPlayer, EntityTextureInfo> playerTextureMap = new HashMap<EntityPlayer, EntityTextureInfo>();
     private final Profiler profiler;
     private boolean useTexturePainting;

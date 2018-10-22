@@ -126,8 +126,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         int radius = ToolOptions.RADIUS.getValue(stack);
-        String radiusText = TranslateUtils.translate("item.armourersworkshop:rollover.radius", radius * 2 - 1, radius * 2 - 1, 1);
-        tooltip.add(radiusText);
+        tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.area", radius * 2 - 1, radius * 2 - 1, 1));
         addOpenSettingsInformation(stack, worldIn, tooltip, flagIn);
     }
     
