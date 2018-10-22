@@ -31,7 +31,7 @@ public class RecipeSkinArmour extends RecipeItemSkinning {
                         return ItemStack.EMPTY;
                     }
                     skinStack = stack;
-                } else if (isValidArmour(stack) & !SkinNBTHelper.isSkinLockedOnStack(stack)) {
+                } else if (isValidArmour(stack) & !SkinNBTHelper.stackHasSkinData(stack)) {
                     if (armourStack != ItemStack.EMPTY) {
                         return ItemStack.EMPTY;
                     }
@@ -49,7 +49,7 @@ public class RecipeSkinArmour extends RecipeItemSkinning {
             ItemStack returnStack = armourStack.copy();
             
             SkinDescriptor skinDescriptor = SkinNBTHelper.getSkinDescriptorFromStack(skinStack);
-            SkinNBTHelper.addSkinDataToStack(returnStack, skinDescriptor.getIdentifier(), skinDescriptor.getSkinDye(), true);
+            SkinNBTHelper.addSkinDataToStack(returnStack, skinDescriptor.getIdentifier(), skinDescriptor.getSkinDye());
             return returnStack;
         } else {
             return ItemStack.EMPTY;

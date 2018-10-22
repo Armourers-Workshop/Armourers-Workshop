@@ -87,10 +87,6 @@ public class ItemSkin extends AbstractModItem {
             SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(stack);
             SkinIdentifier identifier = skinData.getIdentifier();
             
-            if (!isEquipmentSkin & !skinData.lockSkin & !isEquipmentContainer) {
-                return;
-            }
-            
             if (!isEquipmentSkin) {
                 tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.hasSkin"));
             }

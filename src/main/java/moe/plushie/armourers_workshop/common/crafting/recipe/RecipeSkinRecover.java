@@ -54,7 +54,7 @@ public class RecipeSkinRecover extends RecipeItemSkinning {
         if (!skinStack.isEmpty() && !blackStack.isEmpty()) {
             ItemStack returnStack = new ItemStack(ModItems.skin, 1);
             SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(skinStack);
-            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.getIdentifier(), false, new SkinDye(skinData.getSkinDye()));
+            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.getIdentifier(), new SkinDye(skinData.getSkinDye()));
             return returnStack;
         }
         return ItemStack.EMPTY;

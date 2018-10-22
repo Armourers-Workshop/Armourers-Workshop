@@ -28,7 +28,7 @@ public class RecipeSkinClear extends RecipeItemSkinning {
                 Item item = stack.getItem();
                 
                 
-                if (item != ModItems.skin && SkinNBTHelper.stackHasSkinData(stack) && SkinNBTHelper.getSkinDescriptorFromStack(stack).lockSkin) {
+                if (item != ModItems.skin && SkinNBTHelper.stackHasSkinData(stack)) {
                     if (!skinItemStack.isEmpty()) {
                         return ItemStack.EMPTY;
                     }
@@ -46,7 +46,7 @@ public class RecipeSkinClear extends RecipeItemSkinning {
         
         if (!skinItemStack.isEmpty() && !soapStack.isEmpty()) {
             ItemStack returnStack = skinItemStack.copy();
-            SkinNBTHelper.removeSkinDataFromStack(returnStack, true);
+            SkinNBTHelper.removeSkinDataFromStack(returnStack);
             return returnStack;
         } else {
             return ItemStack.EMPTY;

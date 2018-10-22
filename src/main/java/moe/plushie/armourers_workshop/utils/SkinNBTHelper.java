@@ -41,18 +41,10 @@ public class SkinNBTHelper {
         return true;
     }
     
-    public static void removeSkinDataFromStack(ItemStack stack, boolean overrideLock) {
+    public static void removeSkinDataFromStack(ItemStack stack) {
         if (!stackHasSkinData(stack)) {
             return;
         }
-        
-        SkinDescriptor skinData = getSkinDescriptorFromStack(stack);
-        if (skinData.lockSkin) {
-            if (!overrideLock) {
-                return;
-            }
-        }
-        
         NBTTagCompound itemCompound = stack.getTagCompound();
         if (itemCompound.hasKey(SkinDescriptor.TAG_SKIN_DATA)) {
             itemCompound.removeTag(SkinDescriptor.TAG_SKIN_DATA);
@@ -92,29 +84,8 @@ public class SkinNBTHelper {
         return skinData.getIdentifier().getSkinLocalId();
     }
     
-    public static boolean isSkinLockedOnStack(ItemStack stack) {
-        if (!stackHasSkinData(stack)) {
-            return false;
-        }
-        
-        SkinDescriptor skinData = new SkinDescriptor();
-        skinData.readFromCompound(stack.getTagCompound());
-        
-        return skinData.lockSkin;
-    }
-    
-    public static void addSkinDataToStack(ItemStack stack, SkinIdentifier identifier, ISkinDye skinDye, boolean lockSkin) {
-        SkinDescriptor skinData = new SkinDescriptor(identifier, skinDye, lockSkin);
-        addSkinDataToStack(stack, skinData);
-    }
-    
-    public static void addSkinDataToStack(ItemStack stack, SkinIdentifier identifier, boolean lockSkin, ISkinDye skinDye) {
-        SkinDescriptor skinData;
-        if (skinDye != null) {
-            skinData = new SkinDescriptor(identifier, skinDye, lockSkin);
-        } else {
-            skinData = new SkinDescriptor(identifier, lockSkin);
-        }
+    public static void addSkinDataToStack(ItemStack stack, SkinIdentifier identifier, ISkinDye skinDye) {
+        SkinDescriptor skinData = new SkinDescriptor(identifier, skinDye);
         addSkinDataToStack(stack, skinData);
     }
     
@@ -128,52 +99,50 @@ public class SkinNBTHelper {
     public static ItemStack makeEquipmentSkinStack(Skin skin, ISkinDye skinDye) {
         ItemStack stack = new ItemStack(ModItems.skin, 1);
         stack.setTagCompound(new NBTTagCompound());
-        addSkinDataToStack(stack, new SkinIdentifier(skin), false, skinDye);
+        addSkinDataToStack(stack, new SkinIdentifier(skin), skinDye);
         return stack;
     }
     
     public static ItemStack makeEquipmentSkinStack(Skin skin, SkinIdentifier identifier) {
         ItemStack stack = new ItemStack(ModItems.skin, 1);
         stack.setTagCompound(new NBTTagCompound());
-        addSkinDataToStack(stack, identifier, false, null);
+        addSkinDataToStack(stack, identifier, null);
         return stack;
     }
     
     public static ItemStack makeEquipmentSkinStack(Skin skin) {
         ItemStack stack = new ItemStack(ModItems.skin, 1);
         stack.setTagCompound(new NBTTagCompound());
-        addSkinDataToStack(stack, new SkinIdentifier(skin), false, null);
+        addSkinDataToStack(stack, new SkinIdentifier(skin), null);
         return stack;
     }
     
     public static ItemStack makeEquipmentSkinStack(SkinDescriptor skinDescriptor) {
         ItemStack stack = new ItemStack(ModItems.skin, 1);
         stack.setTagCompound(new NBTTagCompound());
-        addSkinDataToStack(stack, skinDescriptor.getIdentifier(), false, new SkinDye(skinDescriptor.getSkinDye()));
+        addSkinDataToStack(stack, skinDescriptor.getIdentifier(), new SkinDye(skinDescriptor.getSkinDye()));
         return stack;
     }
     
     public static ItemStack makeArmouerContainerStack(Skin skin) {
         ItemStack stack = new ItemStack(ModItems.armourContainer[skin.getSkinType().getVanillaArmourSlotId()], 1);
         stack.setTagCompound(new NBTTagCompound());
-        addSkinDataToStack(stack, new SkinIdentifier(skin), false, null);
+        addSkinDataToStack(stack, new SkinIdentifier(skin), null);
         return stack;
     }
     
     public static ItemStack makeArmouerContainerStack(SkinDescriptor skinPointer) {
         ItemStack stack = new ItemStack(ModItems.armourContainer[skinPointer.getIdentifier().getSkinType().getVanillaArmourSlotId()], 1);
         stack.setTagCompound(new NBTTagCompound());
-        addSkinDataToStack(stack, skinPointer.getIdentifier(), false, new SkinDye(skinPointer.getSkinDye()));
+        addSkinDataToStack(stack, skinPointer.getIdentifier(), new SkinDye(skinPointer.getSkinDye()));
         return stack;
     }
     
     public static void addSkinPointerToStack(ItemStack stack, SkinDescriptor skinPointer) {
         if (stackHasSkinData(stack)) {
             SkinDescriptor skinData = getSkinDescriptorFromStack(stack);
-            if (!skinData.lockSkin) {
-                if (!skinData.getIdentifier().equals(skinPointer.getIdentifier()) | !skinData.skinDye.equals(skinPointer.getSkinDye())) {
-                    addSkinDataToStack(stack, skinPointer);
-                }
+            if (!skinData.getIdentifier().equals(skinPointer.getIdentifier()) | !skinData.skinDye.equals(skinPointer.getSkinDye())) {
+                addSkinDataToStack(stack, skinPointer);
             }
         } else {
             addSkinDataToStack(stack, skinPointer);
@@ -181,6 +150,6 @@ public class SkinNBTHelper {
     }
     
     public static void removeRenderIdFromStack(ItemStack stack) {
-        removeSkinDataFromStack(stack, false);
+        removeSkinDataFromStack(stack);
     }
 }

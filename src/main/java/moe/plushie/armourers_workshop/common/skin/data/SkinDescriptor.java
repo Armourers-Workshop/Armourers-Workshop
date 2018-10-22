@@ -8,11 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 public class SkinDescriptor implements ISkinDescriptor {
 
     public static final String TAG_SKIN_DATA = "armourersWorkshop";
-    private static final String TAG_SKIN_LOCK = "lock";
     
     private SkinIdentifier identifier;
-    
-    public boolean lockSkin;
     public SkinDye skinDye;
     
     public SkinDescriptor() {
@@ -25,32 +22,16 @@ public class SkinDescriptor implements ISkinDescriptor {
     }
     
     public SkinDescriptor(ISkinDescriptor skinPointer) {
-        this.identifier = new SkinIdentifier(skinPointer.getIdentifier());
-        this.lockSkin = false;
         this.skinDye = new SkinDye(skinPointer.getSkinDye());
     }
     
     public SkinDescriptor(SkinIdentifier identifier) {
         this.identifier = identifier;
-        this.lockSkin = false;
         this.skinDye = new SkinDye();
     }
     
-    public SkinDescriptor(SkinIdentifier identifier, SkinDye skinDye) {
+    public SkinDescriptor(SkinIdentifier identifier, ISkinDye skinDye) {
         this.identifier = identifier;
-        this.lockSkin = false;
-        this.skinDye = skinDye;
-    }
-    
-    public SkinDescriptor(SkinIdentifier identifier, boolean lockSkin) {
-        this.identifier = identifier;
-        this.lockSkin = lockSkin;
-        this.skinDye = new SkinDye();
-    }
-    
-    public SkinDescriptor(SkinIdentifier identifier, ISkinDye skinDye, boolean lockSkin) {
-        this.identifier = identifier;
-        this.lockSkin = lockSkin;
         this.skinDye = new SkinDye(skinDye);
     }
     
@@ -71,7 +52,6 @@ public class SkinDescriptor implements ISkinDescriptor {
     public void readFromCompound(NBTTagCompound compound, String tag) {
         NBTTagCompound skinDataCompound = compound.getCompoundTag(tag);
         this.identifier = SkinIdentifierSerializer.readFromCompound(skinDataCompound);
-        this.lockSkin = skinDataCompound.getBoolean(TAG_SKIN_LOCK);
         this.skinDye.readFromCompound(skinDataCompound);
     }
     
@@ -82,7 +62,6 @@ public class SkinDescriptor implements ISkinDescriptor {
     public void writeToCompound(NBTTagCompound compound, String tag) {
         NBTTagCompound skinDataCompound = new NBTTagCompound();
         SkinIdentifierSerializer.writeToCompound(identifier, skinDataCompound);
-        skinDataCompound.setBoolean(TAG_SKIN_LOCK, this.lockSkin);
         skinDye.writeToCompound(skinDataCompound);
         compound.setTag(tag, skinDataCompound);
     }

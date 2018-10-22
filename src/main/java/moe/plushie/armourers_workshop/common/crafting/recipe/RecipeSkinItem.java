@@ -41,7 +41,7 @@ public class RecipeSkinItem extends RecipeItemSkinning {
                     continue;
                 }
                 
-                if (ModAddonManager.isOverrideItem(overrideType, item) & !SkinNBTHelper.isSkinLockedOnStack(stack)) {
+                if (ModAddonManager.isOverrideItem(overrideType, item)) {
                     if (!itemStack.isEmpty()) {
                         return ItemStack.EMPTY;
                     }
@@ -57,7 +57,7 @@ public class RecipeSkinItem extends RecipeItemSkinning {
             ItemStack returnStack = itemStack.copy();
             
             SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(skinStack);
-            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.getIdentifier(), skinData.getSkinDye(), true);
+            SkinNBTHelper.addSkinDataToStack(returnStack, skinData.getIdentifier(), skinData.getSkinDye());
             
             return returnStack;
         } else {
