@@ -22,7 +22,6 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.UtilColour;
-import moe.plushie.armourers_workshop.utils.UtilItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -83,7 +82,7 @@ public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurable
     
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
-        int intensity = UtilItems.getIntensityFromStack(stack, 16);
+        int intensity = ToolOptions.INTENSITY.getValue(stack);
         IPantableBlock worldColourable = (IPantableBlock) block;
         if (worldColourable.isRemoteOnly(world, pos, facing) & world.isRemote) {
             byte[] rgbt = new byte[4];
@@ -123,7 +122,7 @@ public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurable
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        int intensity = UtilItems.getIntensityFromStack(stack, 16);
+        int intensity = ToolOptions.INTENSITY.getValue(stack);
         tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.intensity", intensity));
         tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.openSettings"));
     }

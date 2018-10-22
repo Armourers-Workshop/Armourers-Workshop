@@ -19,7 +19,6 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.utils.UtilItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
@@ -154,7 +153,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
     
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
-        int intensity = UtilItems.getIntensityFromStack(stack, 16);
+        int intensity = ToolOptions.INTENSITY.getValue(stack);
         int radiusSample = ToolOptions.RADIUS_SAMPLE.getValue(stack);
         int radiusEffect = ToolOptions.RADIUS_EFFECT.getValue(stack);
         
@@ -223,7 +222,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        int intensity = UtilItems.getIntensityFromStack(stack, 16);
+        int intensity = ToolOptions.INTENSITY.getValue(stack);
         int radiusSample = ToolOptions.RADIUS_SAMPLE.getValue(stack);
         int radiusEffect = ToolOptions.RADIUS_EFFECT.getValue(stack);
         tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.intensity", intensity));

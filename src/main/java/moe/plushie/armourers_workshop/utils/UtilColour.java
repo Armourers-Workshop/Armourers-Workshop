@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Random;
 
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import net.minecraft.util.math.MathHelper;
 
 public class UtilColour {
 
@@ -12,9 +13,9 @@ public class UtilColour {
         int g = c.getGreen() + amount;
         int b = c.getBlue() + amount;
         
-        if (r > 255) { r = 255; }
-        if (g > 255) { g = 255; }
-        if (b > 255) { b = 255; }
+        r = MathHelper.clamp(r, 0, 255);
+        g = MathHelper.clamp(g, 0, 255);
+        b = MathHelper.clamp(b, 0, 255);
         
         return new Color(r, g, b);
     }
@@ -24,25 +25,22 @@ public class UtilColour {
         int g = c.getGreen() - amount;
         int b = c.getBlue() - amount;
         
-        if (r < 0) { r = 0; }
-        if (g < 0) { g = 0; }
-        if (b < 0) { b = 0; }
+        r = MathHelper.clamp(r, 0, 255);
+        g = MathHelper.clamp(g, 0, 255);
+        b = MathHelper.clamp(b, 0, 255);
         
         return new Color(r, g, b);
     }
     
     public static Color addColourNoise(Color c, int amount) {
         Random rnd = new Random();
-        int r = c.getRed() - amount + rnd.nextInt((amount * 2) + 1);
-        int g = c.getGreen() - amount + rnd.nextInt((amount * 2) + 1);
-        int b = c.getBlue() - amount + rnd.nextInt((amount * 2) + 1);
+        int r = c.getRed() - amount + rnd.nextInt((amount * 2));
+        int g = c.getGreen() - amount + rnd.nextInt((amount * 2));
+        int b = c.getBlue() - amount + rnd.nextInt((amount * 2));
         
-        if (r < 0) { r = 0; }
-        if (g < 0) { g = 0; }
-        if (b < 0) { b = 0; }
-        if (r > 255) { r = 255; }
-        if (g > 255) { g = 255; }
-        if (b > 255) { b = 255; }
+        r = MathHelper.clamp(r, 0, 255);
+        g = MathHelper.clamp(g, 0, 255);
+        b = MathHelper.clamp(b, 0, 255);
         
         return new Color(r, g, b);
     }
@@ -56,12 +54,9 @@ public class UtilColour {
         int g = c.getGreen() - amount + shadeAmount;
         int b = c.getBlue() - amount + shadeAmount;
         
-        if (r < 0) { r = 0; }
-        if (g < 0) { g = 0; }
-        if (b < 0) { b = 0; }
-        if (r > 255) { r = 255; }
-        if (g > 255) { g = 255; }
-        if (b > 255) { b = 255; }
+        r = MathHelper.clamp(r, 0, 255);
+        g = MathHelper.clamp(g, 0, 255);
+        b = MathHelper.clamp(b, 0, 255);
         
         return new Color(r, g, b);
     }
