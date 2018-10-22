@@ -33,7 +33,7 @@ public final class SkinBaker {
         return true;
     }
     
-    public static int[][][] cullFacesOnEquipmentPart(SkinPart skinPart) {
+    public static int[][][] cullFacesOnEquipmentPart(SkinPart skinPart, int modelBakingUpdateRate) {
         SkinCubeData cubeData = skinPart.getCubeData();
         cubeData.setupFaceFlags();
         skinPart.getClientSkinPartData().totalCubesInPart = new int[CubeRegistry.INSTANCE.getTotalCubes()];
@@ -53,7 +53,7 @@ public final class SkinBaker {
             cubeArray[x][y][z] = i + 1;
             if (ConfigHandlerClient.slowModelBaking) {
                 updates++;
-                if (updates > 40) {
+                if (updates > modelBakingUpdateRate) {
                     try {
                         Thread.sleep(1);
                         updates = 0;
@@ -84,7 +84,7 @@ public final class SkinBaker {
             }
             if (ConfigHandlerClient.slowModelBaking) {
                 updates++;
-                if (updates > 40) {
+                if (updates > modelBakingUpdateRate) {
                     try {
                         Thread.sleep(1);
                         updates = 0;
@@ -172,7 +172,7 @@ public final class SkinBaker {
         return false;
     }
     
-    public static void buildPartDisplayListArray(SkinPart partData, int[][] dyeColour, int[] dyeUseCount, int[][][] cubeArray) {
+    public static void buildPartDisplayListArray(SkinPart partData, int[][] dyeColour, int[] dyeUseCount, int[][][] cubeArray, int modelBakingUpdateRate) {
         boolean multipassSkinRendering = ClientProxy.useMultipassSkinRendering();
         
         ArrayList<ColouredFace>[] renderLists;
