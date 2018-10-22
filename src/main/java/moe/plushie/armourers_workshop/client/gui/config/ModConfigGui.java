@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.client.gui;
+package moe.plushie.armourers_workshop.client.gui.config;
 
 import java.util.ArrayList;
 import java.util.List;

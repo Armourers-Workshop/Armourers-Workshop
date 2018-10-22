@@ -94,7 +94,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         buttonPaletteAdd = new GuiIconButton(this, -1, this.guiLeft + 166, this.guiTop + 124, 20, 20, "Add Palette", guiTexture).setIconLocation(223, 240, 16, 16);
         buttonList.add(buttonPaletteAdd);
         
-        buttonPaletteRemove = new GuiIconButton(this, -1, this.guiLeft + 228, this.guiTop + 124, 20, 20, "Remove Palette", guiTexture).setIconLocation(223, 224, 16, 16);
+        buttonPaletteRemove = new GuiIconButton(this, -1, this.guiLeft + 228, this.guiTop + 124, 20, 20, "Remove Palette", guiTexture).setIconLocation(189, 240, 16, 16);
         buttonList.add(buttonPaletteRemove);
     }
     
