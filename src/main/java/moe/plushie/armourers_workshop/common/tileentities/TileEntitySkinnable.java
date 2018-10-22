@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.utils.ModConstants;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
@@ -383,7 +384,7 @@ public class TileEntitySkinnable extends ModTileEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        //if (renderBounds == null) {
+        if (renderBounds == null) {
             int xCoord = getPos().getX();
             int yCoord = getPos().getY();
             int zCoord = getPos().getZ();
@@ -391,9 +392,12 @@ public class TileEntitySkinnable extends ModTileEntity {
                 Skin skin = getSkin(getSkinPointer());
                 if (skin != null) {
                     if (SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skin.getProperties())) {
-                        renderBounds = new AxisAlignedBB(-1, 0, -1, 2, 3, 2).offset(getPos());
-                        EnumFacing dir = world.getBlockState(getPos()).getValue(BlockSkinnable.STATE_FACING);
-                        renderBounds = renderBounds.offset(-dir.getXOffset(), 0, -dir.getZOffset());
+                        IBlockState state = world.getBlockState(getPos());
+                        if (state.getBlock() instanceof BlockSkinnable) {
+                            renderBounds = new AxisAlignedBB(-1, 0, -1, 2, 3, 2).offset(getPos());
+                            EnumFacing dir = world.getBlockState(getPos()).getValue(BlockSkinnable.STATE_FACING);
+                            renderBounds = renderBounds.offset(-dir.getXOffset(), 0, -dir.getZOffset());
+                        }
                     } else {
                         return new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos());
                     }
@@ -403,7 +407,7 @@ public class TileEntitySkinnable extends ModTileEntity {
             } else {
                 return new AxisAlignedBB(0, 0, 0, 1, 1, 1).offset(getPos());
             }
-        //}
+        }
         return renderBounds;
     }
     
