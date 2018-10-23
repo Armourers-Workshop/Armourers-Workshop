@@ -97,6 +97,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySk
                         SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, te.getSkinPointer().getSkinDye(), null, 0, true);
                     }
                     //renderSkin(tileEntity, x, y, z, skin);
+                    
                     GlStateManager.disableBlend();
                     GlStateManager.popMatrix();
                     return;

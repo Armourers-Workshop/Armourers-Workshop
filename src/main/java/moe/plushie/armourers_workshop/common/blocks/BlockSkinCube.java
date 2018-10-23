@@ -54,6 +54,14 @@ public class BlockSkinCube extends AbstractModBlockContainer implements IPantabl
     }
     
     @Override
+    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+        if (blockAccess.getBlockState(pos.offset(side)).getBlock() == this) {
+            return false;
+        }
+        return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+    }
+    
+    @Override
     public boolean setColour(IBlockAccess world, BlockPos pos, int colour, EnumFacing facing) {
         TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof IPantable) {
