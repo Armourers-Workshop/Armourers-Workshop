@@ -18,7 +18,7 @@ public class BookChapterCredits extends BookChapterBase {
     public void createPages() {
         addCategoryPage("programing", new String[] {"RiskyKen"});
         addCategoryPage("premade Skins", new String[] {"RiskyKen", "Choccie_Bunny", "VermillionX", "Dreamer", "Servantfly", "EXTZ", "Gray_Mooo", "Flummie2000"});
-        addCategoryPage("textures", new String[] {"RiskyKen", "LordPhrozen", "TheEpicJames", "Thundercat_", "skylandersking", "MikaPikaaa"});
+        addCategoryPage("textures", new String[] {"RiskyKen", "LordPhrozen", "TheEpicJames", "Thundercat_", "skylandersking", "MikaPikaaa", "LillyFae"});
         addCategoryPage("sound", new String[] {"RiskyKen", "Borro55"});
         addCategoryPage("localisations", new String[] {
                 "Ethan (zh_CN)",
