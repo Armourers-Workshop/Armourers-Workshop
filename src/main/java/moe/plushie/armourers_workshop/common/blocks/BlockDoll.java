@@ -198,6 +198,16 @@ public class BlockDoll extends AbstractModBlockContainer {
     
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+        return EnumBlockRenderType.INVISIBLE;
+    }
+    
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+    
+    @Override
+    public boolean isFullBlock(IBlockState state) {
+        return false;
     }
 }
