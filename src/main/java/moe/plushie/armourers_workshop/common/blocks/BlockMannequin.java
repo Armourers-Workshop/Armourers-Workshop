@@ -111,7 +111,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     @SideOnly(Side.CLIENT)
     @Override
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-        if (isTopOfMannequin(worldIn, pos)) {
+        //if (isTopOfMannequin(worldIn, pos)) {
             ParticleManager particleManager = Minecraft.getMinecraft().effectRenderer;
             if (isValentins) {
                 if (rand.nextFloat() * 100 > 75) {
@@ -127,10 +127,11 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
             if (te != null && te.PROP_RENDER_EXTRAS.get()) {
                 Contributor contributor = Contributors.INSTANCE.getContributor(te.PROP_OWNER.get());
                 if (contributor != null & te.PROP_VISIBLE.get()) {
-                    for (int i = 0; i < 4; i++) {
+                    for (int i = 0; i < 6; i++) {
+                        
                         Particle particle = particleManager.spawnEffectParticle(EnumParticleTypes.SPELL.getParticleID(),
                                 pos.getX() - 1 + rand.nextFloat() * 3F,
-                                pos.getY() - 1D,
+                                pos.getY(),
                                 pos.getZ() - 1 + rand.nextFloat() * 3F,
                                 0, 0, 0, null);
                         particle.setRBGColorF((float)(contributor.r & 0xFF) / 255F, (float)(contributor.g & 0xFF) / 255F, (float)(contributor.b & 0xFF) / 255F);
@@ -138,7 +139,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
                     }
                 }
             }
-        }
+        //}
     }
     /*
     public void convertToDoll(World world, int x, int y, int z) {
@@ -211,7 +212,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         }
         return true;
     }*/
-
+    
     @Override
     public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
         if (worldIn.isRemote) {
