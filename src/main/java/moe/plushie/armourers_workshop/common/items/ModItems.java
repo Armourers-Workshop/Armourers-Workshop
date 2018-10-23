@@ -2,9 +2,6 @@ package moe.plushie.armourers_workshop.common.items;
 
 import java.util.ArrayList;
 
-import org.apache.logging.log4j.Level;
-
-import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.items.paintingtool.ItemBlendingTool;
 import moe.plushie.armourers_workshop.common.items.paintingtool.ItemBurnTool;
 import moe.plushie.armourers_workshop.common.items.paintingtool.ItemColourNoiseTool;
@@ -16,7 +13,6 @@ import moe.plushie.armourers_workshop.common.items.paintingtool.ItemPaintbrush;
 import moe.plushie.armourers_workshop.common.items.paintingtool.ItemPalette;
 import moe.plushie.armourers_workshop.common.items.paintingtool.ItemShadeNoiseTool;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
@@ -63,7 +59,8 @@ public class ModItems {
     public ModItems() {
         MinecraftForge.EVENT_BUS.register(this);
         skinTemplate = new ItemSkinTemplate();
-        setEquipmentSkinType();
+        skin = new ItemSkin();
+        // TODO Fix buildcraft compat. setEquipmentSkinType();
         
         //Tools
         paintbrush = new ItemPaintbrush();
@@ -104,34 +101,6 @@ public class ModItems {
         IForgeRegistry<Item> reg = event.getRegistry();
         for (int i = 0; i < ITEM_LIST.size(); i++) {
             reg.register(ITEM_LIST.get(i));
-        }
-    }
-    
-    private void setEquipmentSkinType() {
-        boolean skinTypeSet = true;
-        
-        if (ModAddonManager.addonBuildCraft.isSkinCompatibleVersion()) {
-            try {
-                Class<?> c = Class.forName("riskyken.armourers_workshop.common.items.ItemSkinRobotOverlay");
-                Object classObject = c.newInstance();
-                
-                if (classObject instanceof ItemSkin) {
-                    skin = (ItemSkin)classObject;
-                } else {
-                    skinTypeSet = false;
-                }
-                
-            } catch (Exception e) {
-                ModLogger.log(Level.WARN, "Failed to load BuildCraft skinned item.");
-                e.printStackTrace();
-                skinTypeSet = false;
-            }
-        } else {
-            skinTypeSet = false;
-        }
-        
-        if (!skinTypeSet) {
-            skin = new ItemSkin();
         }
     }
 }
