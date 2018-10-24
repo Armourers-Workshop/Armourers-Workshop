@@ -575,17 +575,18 @@ death.attack.victorious=%1$s was stabbed to death by Vic's crown.
 
 
 # Commands
-commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable | setWardrobeOption>
+commands.armourers.usage=/armourers <adminPanel | clearModelCache | clearSkins | exportSkin | giveSkin | resyncWardrobe | setItemSkinnable | setSkin | setUnlockedWardrobeSlots | setWardrobeOption>
 commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
 commands.armourers.clearSkins.usage=/armourers clearSkins <player>
-commands.armourers.giveSkin.usage=/armourers giveSkin <player> "<skin name>" [R,G,B] | [0xRRGGBB]
+commands.armourers.exportSkin.usage=/armourers exportSkin <file format> "<file name>" [scale]
+commands.armourers.giveSkin.usage=/armourers giveSkin <player> "<skin name>" [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
 commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
-commands.armourers.setSkin.usage=/armourers setSkin <player> <skin name>
+commands.armourers.setItemSkinnable.usage=/armourers setItemSkinnable <skintype> <add|remove>
+commands.armourers.setSkin.usage=/armourers setSkin <player> <slot id> "<skin name> [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
 commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
 commands.armourers.setWardrobeOption.usage=/armourers setWardrobeOption <player> <showHeadArmour | showChestArmour | showLegArmour | showFootArmour | showHeadOverlay> <true | false>
 commands.armourers.fileNotFound=The file %1$s was not found.
 commands.armourers.invalidDyeFormat=%1$s is not a valid dye format.
-commands.armourers.exportSkin.usage=/armourers exportSkin <file format> "<file name>" [scale]
 
 
 # Creative tab
