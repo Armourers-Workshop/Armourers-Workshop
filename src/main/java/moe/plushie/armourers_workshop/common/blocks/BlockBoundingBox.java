@@ -194,21 +194,27 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                 if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
                     Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, facing);
                     int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
-                    int paintType = BitwiseUtils.getUByteFromInt(colour, 0);
-                    if (paintType != 0) {
+                    PaintType paintType = PaintRegistry.getPaintTypeFromColour(colour);
+                    if (paintType != PaintRegistry.PAINT_TYPE_NONE) {
                         return colour;
                     } else {
                         if (te.getWorld().isRemote) {
-                            PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(parent.getTexture());
-                            BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(playerTexture.getResourceLocation());
-                            if (playerSkin != null) {
-                                colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
-                                return colour;
-                            }
+                            return getColourRemote(world, pos, facing, parent, texturePoint, colour);
                         }
                     }
                 }
             }
+        }
+        return 0x00FFFFFF;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    private int getColourRemote(IBlockAccess world, BlockPos pos, EnumFacing facing, TileEntityArmourer parent, Point texturePoint, int colour) {
+        PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(parent.getTexture());
+        BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(playerTexture.getResourceLocation());
+        if (playerSkin != null) {
+            colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
+            return colour;
         }
         return 0x00FFFFFF;
     }
