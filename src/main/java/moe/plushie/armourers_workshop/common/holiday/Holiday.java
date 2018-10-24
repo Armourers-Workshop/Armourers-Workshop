@@ -33,7 +33,7 @@ public class Holiday {
         startDate.set(Calendar.MONTH, month);
         startDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         endDate = (Calendar) startDate.clone();
-        endDate.add(Calendar.DAY_OF_MONTH, lengthInDays);
+        endDate.add(Calendar.DAY_OF_YEAR, lengthInDays);
         endDate.add(Calendar.HOUR_OF_DAY, lengthInHours);
         ModHolidays.getHolidays().add(this);
     }

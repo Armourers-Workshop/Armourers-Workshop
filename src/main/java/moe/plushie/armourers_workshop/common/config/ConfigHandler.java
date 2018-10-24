@@ -57,7 +57,7 @@ public class ConfigHandler {
     public static boolean enableRecoveringSkins;
     
     // Holiday events
-    public static boolean disableAllHolidayEvents = true;
+    public static boolean disableAllHolidayEvents;
     
     // Entity skins
     public static int enitiySpawnWithSkinsChance = 75;
@@ -219,7 +219,7 @@ public class ConfigHandler {
     private static void loadCategoryHolidayEvents() {
         config.setCategoryComment(CATEGORY_HOLIDAY, "Enable/disable holiday events.");
         
-        disableAllHolidayEvents = config.getBoolean("disableAllHolidayEvents", CATEGORY_HOLIDAY, true,
+        disableAllHolidayEvents = config.getBoolean("disableAllHolidayEvents", CATEGORY_HOLIDAY, false,
                 "Setting to true will disable all holiday events. What's wrong with you!");
         
         SimpleDateFormat sdf = new SimpleDateFormat("MM:dd:HH", Locale.ENGLISH);
@@ -247,12 +247,14 @@ public class ConfigHandler {
             try {
                 Date date = sdf.parse(startDateStr);
                 startDate.setTime(date);
+                startDate.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
             try {
                 Date date = sdf.parse(endDateStr);
                 endDate.setTime(date);
+                endDate.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
