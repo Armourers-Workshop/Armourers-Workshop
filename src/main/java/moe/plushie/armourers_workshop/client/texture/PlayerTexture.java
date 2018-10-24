@@ -12,7 +12,6 @@ import com.mojang.authlib.properties.Property;
 
 import moe.plushie.armourers_workshop.common.data.TextureType;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
@@ -37,7 +36,7 @@ public class PlayerTexture {
     }
     
     private ResourceLocation getSteveResourceLocation() {
-        return DefaultPlayerSkin.getDefaultSkinLegacy();
+        return new ResourceLocation("textures/entity/steve.png");
     }
     
     public void textureDownloaded(boolean slimModel) {
