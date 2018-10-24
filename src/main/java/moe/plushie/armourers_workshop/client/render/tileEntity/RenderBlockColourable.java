@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -47,10 +48,11 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
         }
         
         ICubeColour cubeColour = tileEntity.getColour();
+        GlStateManager.pushAttrib();
         //ModRenderHelper.disableLighting();
         GL11.glDisable(GL11.GL_LIGHTING);
         ModRenderHelper.enableAlphaBlend();
-        GL11.glColor4f(1F, 1F, 1F, markerAlpha);
+        GlStateManager.color(1F, 1F, 1F, markerAlpha);
         bindTexture(MARKERS);
         renderer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX);
         for (int i = 0; i < 6; i++) {
@@ -62,10 +64,11 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
             }
         }
         renderer.draw();
-        GL11.glColor4f(1F, 1F, 1F, 1F);
+        GlStateManager.color(1F, 1F, 1F, 1F);
         ModRenderHelper.disableAlphaBlend();
         ModRenderHelper.enableLighting();
         RenderHelper.enableStandardItemLighting();
+        GlStateManager.popAttrib();
     }
     
     public static void updateAlpha(TileEntity tileEntity) {

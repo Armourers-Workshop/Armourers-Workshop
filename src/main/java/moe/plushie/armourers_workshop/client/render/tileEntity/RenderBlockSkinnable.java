@@ -75,6 +75,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySk
             if (skin != null) {
                 if (te.isParent()) {
                     GlStateManager.pushMatrix();
+                    GlStateManager.pushAttrib();
                     GlStateManager.translate(x + 0.5F, y + 0.5F, z + 0.5F);
                     GlStateManager.enableBlend();
                     GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -97,8 +98,8 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySk
                         SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, te.getSkinPointer().getSkinDye(), null, 0, true);
                     }
                     //renderSkin(tileEntity, x, y, z, skin);
-                    
                     GlStateManager.disableBlend();
+                    GlStateManager.popAttrib();
                     GlStateManager.popMatrix();
                     return;
                 } else {

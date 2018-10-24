@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -36,6 +37,7 @@ public class RenderBlockBoundingBox extends TileEntitySpecialRenderer<TileEntity
             return;
         }
         pro.startSection("boundingboxTESR");
+        GlStateManager.pushAttrib();
         //ModRenderHelper.disableLighting();
         GL11.glDisable(GL11.GL_LIGHTING);
         ModRenderHelper.enableAlphaBlend();
@@ -56,7 +58,7 @@ public class RenderBlockBoundingBox extends TileEntitySpecialRenderer<TileEntity
         ModRenderHelper.disableAlphaBlend();
         ModRenderHelper.enableLighting();
         RenderHelper.enableStandardItemLighting();
-        
+        GlStateManager.popAttrib();
         pro.endSection();
     }
 }
