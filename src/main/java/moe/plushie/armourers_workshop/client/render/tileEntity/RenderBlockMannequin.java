@@ -280,12 +280,20 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
             }*/
             if (isHalloweenSeason) {
                 GlStateManager.pushMatrix();
+                if (model.isChild) {
+                    ModelHelper.enableChildModelScale(true, SCALE);
+                }
+                
                 GlStateManager.rotate(180, 0, 0, 1);
                 GlStateManager.rotate((float) Math.toDegrees(model.bipedHead.rotateAngleZ), 0, 0, 1);
                 GlStateManager.rotate((float) Math.toDegrees(model.bipedHead.rotateAngleY), 0, -1, 0);
                 GlStateManager.rotate((float) Math.toDegrees(model.bipedHead.rotateAngleX), -1, 0, 0);
                 GlStateManager.translate(0, 4 * SCALE, 0);
                 mc.getRenderItem().renderItem(new ItemStack(Blocks.PUMPKIN), TransformType.FIXED);
+                if (model.isChild) {
+                    ModelHelper.disableChildModelScale();
+                }
+                
                 GlStateManager.popMatrix();
             }
         }
