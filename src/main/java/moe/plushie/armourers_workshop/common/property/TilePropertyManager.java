@@ -25,6 +25,7 @@ public final class TilePropertyManager {
         typeSerializers = new HashMap<String, ITypeSerializer<NBTTagCompound>>();
         typeSerializers.put(Boolean.class.getName(), new BooleanSerializer());
         typeSerializers.put(Integer.class.getName(), new IntegerSerializer());
+        typeSerializers.put(Float.class.getName(), new FloatSerializer());
         typeSerializers.put(String.class.getName(), new StringSerializer());
         typeSerializers.put(GameProfile.class.getName(), new GameProfileSerializer());
         typeSerializers.put(BipedRotations.class.getName(), new BipedRotationsSerializer());
@@ -82,6 +83,21 @@ public final class TilePropertyManager {
         @Override
         public void writeType(TileProperty<?> tileProperty, NBTTagCompound target) {
             target.setInteger(tileProperty.getKey(), (Integer) tileProperty.get());
+        }
+    }
+    
+    private static class FloatSerializer implements ITypeSerializer<NBTTagCompound> {
+
+        @Override
+        public void readType(TileProperty<?> tileProperty, NBTTagCompound source) {
+            if (source.hasKey(tileProperty.getKey(), NBT.TAG_FLOAT)) {
+                tileProperty.loadType(source.getFloat(tileProperty.getKey()));
+            }
+        }
+
+        @Override
+        public void writeType(TileProperty<?> tileProperty, NBTTagCompound target) {
+            target.setFloat(tileProperty.getKey(), (Float) tileProperty.get());
         }
     }
     

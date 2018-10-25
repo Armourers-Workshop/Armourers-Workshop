@@ -80,7 +80,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         GlStateManager.enableRescaleNormal();
 
         int rotaion = te.PROP_ROTATION.get();
-        GlStateManager.translate(x + 0.5F, y + 1F, z + 0.5F);
+        GlStateManager.translate(x + 0.5F + te.PROP_OFFSET_X.get(), y + 1F + te.PROP_OFFSET_Y.get(), z + 0.5F + te.PROP_OFFSET_Z.get());
         BipedRotations rots = te.PROP_BIPED_ROTATIONS.get();
         GlStateManager.rotate((float) Math.toDegrees(rots.chest.rotationX), 1F, 0F, 0F);
         GlStateManager.rotate((float) Math.toDegrees(rots.chest.rotationY), 0F, 1F, 0F);

@@ -87,7 +87,18 @@ public class GuiMannequinTabOffset extends GuiTabPanel<GuiMannequin> implements 
         if (!guiLoaded) {
             return;
         }
-        sendData();
+        if (slider == bipedOffsetXslider) {
+            tileEntity.PROP_OFFSET_X.set((float) slider.getValue());
+            parent.updateProperty(parent.tileEntity.PROP_OFFSET_X);
+        }
+        if (slider == bipedOffsetYslider) {
+            tileEntity.PROP_OFFSET_Y.set((float) slider.getValue());
+            parent.updateProperty(parent.tileEntity.PROP_OFFSET_Y);
+        }
+        if (slider == bipedOffsetZslider) {
+            tileEntity.PROP_OFFSET_Z.set((float) slider.getValue());
+            parent.updateProperty(parent.tileEntity.PROP_OFFSET_Z);
+        }
     }
     
     public void sendData() {

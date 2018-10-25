@@ -28,9 +28,9 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public final TileProperty<Integer> PROP_ROTATION = new TileProperty<Integer>(this, "rotation", Integer.class, 0);
     public final TileProperty<Boolean> PROP_DOLL = new TileProperty<Boolean>(this, "doll", Boolean.class, false);
     public final TileProperty<ExtraColours> PROP_EXTRA_COLOURS = new TileProperty<ExtraColours>(this, "extra_colours", ExtraColours.class, null);
-    public final TileProperty<Integer> PROP_OFFSET_X = new TileProperty<Integer>(this, "offset_x", Integer.class, 0);
-    public final TileProperty<Integer> PROP_OFFSET_Y = new TileProperty<Integer>(this, "offset_y", Integer.class, 0);
-    public final TileProperty<Integer> PROP_OFFSET_Z = new TileProperty<Integer>(this, "offset_z", Integer.class, 0);
+    public final TileProperty<Float> PROP_OFFSET_X = new TileProperty<Float>(this, "offset_x", Float.class, 0F);
+    public final TileProperty<Float> PROP_OFFSET_Y = new TileProperty<Float>(this, "offset_y", Float.class, 0F);
+    public final TileProperty<Float> PROP_OFFSET_Z = new TileProperty<Float>(this, "offset_z", Float.class, 0F);
     public final TileProperty<Boolean> PROP_RENDER_EXTRAS = new TileProperty<Boolean>(this, "render_extras", Boolean.class, true);
     public final TileProperty<Boolean> PROP_FLYING = new TileProperty<Boolean>(this, "flying", Boolean.class, false);
     public final TileProperty<Boolean> PROP_VISIBLE = new TileProperty<Boolean>(this, "visible", Boolean.class, true);
