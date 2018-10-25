@@ -77,8 +77,9 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     @Override
     public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
         if (world.isRemote) {
-            //return true;
+            return true;
         }
+        
         TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity != null && tileEntity instanceof TileEntityBoundingBox) {
             if (((TileEntityBoundingBox)tileEntity).isParentValid()) {
@@ -90,6 +91,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                 return true;
             }
         }
+        
         world.setBlockToAir(pos);
         return true;
     }
