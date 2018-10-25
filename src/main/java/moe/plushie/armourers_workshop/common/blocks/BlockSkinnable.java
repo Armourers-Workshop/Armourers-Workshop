@@ -150,7 +150,7 @@ public class BlockSkinnable extends AbstractModBlockContainer {
             BlockPos posLinked = parentTe.getLinkedBlock();
             IBlockState stateLinked = worldIn.getBlockState(posLinked);
             if (!(stateLinked.getBlock() instanceof BlockSkinnable)) {
-                stateLinked.getBlock().onBlockActivated(worldIn, posLinked, stateLinked, playerIn, hand, facing, hitX, hitY, hitZ);
+                return stateLinked.getBlock().onBlockActivated(worldIn, posLinked, stateLinked, playerIn, hand, facing, hitX, hitY, hitZ);
             }
         }
         Skin skin = getSkin(worldIn, pos);
