@@ -144,9 +144,14 @@ public class GuiMannequinTabRotations extends GuiTabPanel<GuiMannequin> implemen
             for (int i = 0; i < bipedParts.length; i++) {
                 BipedPart part = bipedRotations.getPartForIndex(i);
                 if (part != bipedRotations.chest) {
-                    part.rotationX = (float) Math.toRadians(rnd.nextFloat() * 180F - 90F);
-                    part.rotationY = (float) Math.toRadians(rnd.nextFloat() * 180F - 90F);
-                    part.rotationZ = (float) Math.toRadians(rnd.nextFloat() * 180F - 90F);
+                    part.rotationX = 0F;
+                    part.rotationY = 0F;
+                    part.rotationZ = 0F;
+                    for (int j = 0; j < 3; j++) {
+                        part.rotationX += (float) Math.toRadians(rnd.nextFloat() * 60F - 30F);
+                        part.rotationY += (float) Math.toRadians(rnd.nextFloat() * 60F - 30F);
+                        part.rotationZ += (float) Math.toRadians(rnd.nextFloat() * 60F - 30F);
+                    }
                     bipedPartChange(activeBipedPart);
                 }
             }
