@@ -71,8 +71,6 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         mc.profiler.startSection("holidayCheck");
         isHalloweenSeason = ModHolidays.HALLOWEEN_SEASON.isHolidayActive();
         isHalloween = ModHolidays.HALLOWEEN.isHolidayActive();
-        //isHalloweenSeason = true;
-        isHalloween = isHalloweenSeason;
         mannequinFakePlayer = null; // TODO make a new fake player
         mc.profiler.endStartSection("move");
         GlStateManager.pushMatrix();
