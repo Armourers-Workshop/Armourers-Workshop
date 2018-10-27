@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.client.helper.MannequinTextureHelper;
 import moe.plushie.armourers_workshop.client.model.ModelHelper;
 import moe.plushie.armourers_workshop.client.model.ModelMannequin;
 import moe.plushie.armourers_workshop.client.render.MannequinFakePlayer;
+import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.Contributors;
@@ -354,6 +355,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         GlStateManager.disableLighting();
         GlStateManager.disableCull();
         GlStateManager.translate(0F, 1.48F, 0F);
+        ModRenderHelper.disableLighting();
         float circleScale = 2.0F;
         GlStateManager.scale(circleScale, circleScale, circleScale);
         float rotation = (float)((double)(mc.world.getTotalWorldTime() + offset) / 0.8F % 360) + partialTickTime;
@@ -368,6 +370,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         tess.getBuffer().pos(1, 0, 1).tex(0, 1).color(r & 0xFF, g & 0xFF, b & 0xFF, 255).endVertex();
         tess.getBuffer().pos(-1, 0, 1).tex(1, 1).color(r & 0xFF, g & 0xFF, b & 0xFF, 255).endVertex();
         tess.draw();
+        ModRenderHelper.enableLighting();
         GlStateManager.disableBlend();
         GlStateManager.enableCull();
         GlStateManager.enableLighting();
