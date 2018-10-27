@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.client.gui;
 
 import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinPart;
-import moe.plushie.armourers_workshop.common.tileentities.TileAdvancedSkinPart;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinPart;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class GuiAdvancedSkinPart extends GuiContainer {
 
-    public GuiAdvancedSkinPart(EntityPlayer player, TileAdvancedSkinPart tileEntity) {
+    public GuiAdvancedSkinPart(EntityPlayer player, TileEntityAdvancedSkinPart tileEntity) {
         super(new ContainerAdvancedSkinPart(player.inventory, tileEntity));
     }
     

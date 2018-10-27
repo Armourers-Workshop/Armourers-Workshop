@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.common.blocks;
 
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
-import moe.plushie.armourers_workshop.common.tileentities.TileAdvancedSkinPart;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinPart;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -31,6 +31,6 @@ public class BlockAdvancedSkinPart extends AbstractModBlockContainer {
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileAdvancedSkinPart();
+        return new TileEntityAdvancedSkinPart();
     }
 }

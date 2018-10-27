@@ -1,0 +1,12 @@
+{
+    "forge_marker": 1,
+	"defaults": {
+	    "textures": {
+			"all": "armourers_workshop:blocks/advanced-skin-part/dev-temp"
+		},
+		"model": "cube_all"
+	},
+	"variants": {
+		"normal": [{}]
+	}
+}

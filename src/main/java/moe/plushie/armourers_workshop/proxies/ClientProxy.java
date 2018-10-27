@@ -37,6 +37,7 @@ import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockGlobal
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockHologramProjector;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockMannequin;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockSkinnable;
+import moe.plushie.armourers_workshop.client.render.tileEntity.RenderTileAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.client.settings.Keybindings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
@@ -54,7 +55,8 @@ import moe.plushie.armourers_workshop.common.network.messages.server.MessageServ
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.tileentities.TileAdvancedSkinPart;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinPart;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
@@ -170,8 +172,8 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBoundingBox.class, new RenderBlockBoundingBox());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGlobalSkinLibrary.class, new RenderBlockGlobalSkinLibrary());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHologramProjector.class, new RenderBlockHologramProjector());
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileAdvancedSkinBuilder.class, new RenderBlockAdvancedSkinBuilder());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileAdvancedSkinPart.class, new RenderBlockAdvancedSkinPart());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedSkinBuilder.class, new RenderTileAdvancedSkinBuilder());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedSkinPart.class, new RenderBlockAdvancedSkinPart());
         
         // Register coloured items and blocks.
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.paintbrush);

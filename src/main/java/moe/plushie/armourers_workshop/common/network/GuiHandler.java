@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.gui.GuiAdminPanel;
+import moe.plushie.armourers_workshop.client.gui.GuiAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.client.gui.GuiAdvancedSkinPart;
 import moe.plushie.armourers_workshop.client.gui.GuiColourMixer;
 import moe.plushie.armourers_workshop.client.gui.GuiDebugTool;
@@ -25,6 +26,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinPart;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
@@ -42,7 +44,8 @@ import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.tileentities.TileAdvancedSkinPart;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinPart;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityDyeTable;
@@ -161,9 +164,14 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerOutfit(player.inventory, player.getHeldItemMainhand());
                 }
                 break;
+            case LibGuiIds.ADVANCED_SKIN_BUILDER:
+                if (te instanceof TileEntityAdvancedSkinBuilder) {
+                    return new ContainerAdvancedSkinBuilder(player.inventory, (TileEntityAdvancedSkinBuilder) te);
+                }
+                break;
             case LibGuiIds.ADVANCED_SKIN_PART:
-                if (te instanceof TileAdvancedSkinPart) {
-                    return new ContainerAdvancedSkinPart(player.inventory, (TileAdvancedSkinPart) te);
+                if (te instanceof TileEntityAdvancedSkinPart) {
+                    return new ContainerAdvancedSkinPart(player.inventory, (TileEntityAdvancedSkinPart) te);
                 }
                 break;
         }
@@ -278,9 +286,14 @@ public class GuiHandler implements IGuiHandler {
                     return new GuiOutfit(player, player.getHeldItemMainhand());
                 }
                 break;
+            case LibGuiIds.ADVANCED_SKIN_BUILDER:
+                if (te instanceof TileEntityAdvancedSkinBuilder) {
+                    return new GuiAdvancedSkinBuilder(player, (TileEntityAdvancedSkinBuilder) te);
+                }
+                break;
             case LibGuiIds.ADVANCED_SKIN_PART:
-                if (te instanceof TileAdvancedSkinPart) {
-                    return new GuiAdvancedSkinPart(player, (TileAdvancedSkinPart) te);
+                if (te instanceof TileEntityAdvancedSkinPart) {
+                    return new GuiAdvancedSkinPart(player, (TileEntityAdvancedSkinPart) te);
                 }
                 break;
         }

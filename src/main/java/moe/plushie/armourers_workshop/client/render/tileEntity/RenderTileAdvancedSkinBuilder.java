@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.client.render.tileEntity;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinPart;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -11,10 +11,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderBlockAdvancedSkinPart extends TileEntitySpecialRenderer<TileEntityAdvancedSkinPart> {
+public class RenderTileAdvancedSkinBuilder extends TileEntitySpecialRenderer<TileEntityAdvancedSkinBuilder> {
 
     @Override
-    public void render(TileEntityAdvancedSkinPart te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void render(TileEntityAdvancedSkinBuilder te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         ItemStack itemStack = te.getStackInSlot(0);
         ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
         if (descriptor == null) {
@@ -43,7 +43,7 @@ public class RenderBlockAdvancedSkinPart extends TileEntitySpecialRenderer<TileE
     }
     
     @Override
-    public boolean isGlobalRenderer(TileEntityAdvancedSkinPart te) {
+    public boolean isGlobalRenderer(TileEntityAdvancedSkinBuilder te) {
         return true;
     }
 }

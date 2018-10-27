@@ -5,10 +5,10 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 
-public class TileAdvancedSkinPart extends AbstractTileEntityInventory {
+public class TileEntityAdvancedSkinBuilder extends AbstractTileEntityInventory {
 
-    public TileAdvancedSkinPart() {
-        super(1);
+    public TileEntityAdvancedSkinBuilder() {
+        super(10);
     }
     
     @Override
@@ -30,5 +30,9 @@ public class TileAdvancedSkinPart extends AbstractTileEntityInventory {
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         return INFINITE_EXTENT_AABB;
+    }
+    
+    public static class SkinPartSettings {
+        
     }
 }
