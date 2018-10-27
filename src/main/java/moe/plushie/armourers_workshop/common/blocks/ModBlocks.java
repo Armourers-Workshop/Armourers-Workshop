@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.common.tileentities.TileAdvancedSkinBuilder;
+import moe.plushie.armourers_workshop.common.tileentities.TileAdvancedSkinPart;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
@@ -49,6 +51,8 @@ public class ModBlocks {
     public static Block skinnableChildGlowing;
     public static Block dyeTable;
     public static Block hologramProjector;
+    public static Block advancedSkinBuilder;
+    public static Block advancedSkinPart ;
     
     public ModBlocks() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -71,6 +75,8 @@ public class ModBlocks {
         skinnableChildGlowing = new BlockSkinnableChildGlowing();
         dyeTable = new BlockDyeTable();
         hologramProjector = new BlockHologramProjector();
+        advancedSkinBuilder = new BlockAdvancedSkinBuilder();
+        advancedSkinPart = new BlockAdvancedSkinPart();
     }
     
 
@@ -106,6 +112,8 @@ public class ModBlocks {
         registerTileEntity(TileEntityDyeTable.class, LibBlockNames.DYE_TABLE);
         registerTileEntity(TileEntitySkinnableChild.class, LibBlockNames.SKINNABLE_CHILD);
         registerTileEntity(TileEntityHologramProjector.class, LibBlockNames.HOLOGRAM_PROJECTOR);
+        registerTileEntity(TileAdvancedSkinBuilder.class, LibBlockNames.ADVANCED_SKIN_BUILDER);
+        registerTileEntity(TileAdvancedSkinPart.class, LibBlockNames.ADVANCED_SKIN_PART);
     }
 
     private void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {

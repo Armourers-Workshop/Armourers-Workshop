@@ -18,5 +18,5 @@ public class LibGuiIds {
     public static final int ADMIN_PANEL = 14;
     public static final int SKINNABLE = 15;
     public static final int HOLOGRAM_PROJECTOR = 16;
-    
+    public static final int ADVANCED_SKIN_PART = 17;
 }

@@ -20,4 +20,6 @@ public class LibBlockNames {
     public static final String DYE_TABLE = "dye-table";
     public static final String GLOBAL_SKIN_LIBRARY = "global-skin-library";
     public static final String HOLOGRAM_PROJECTOR = "hologram-projector";
+    public static final String ADVANCED_SKIN_BUILDER = "advanced-skin-builder";
+    public static final String ADVANCED_SKIN_PART = "advanced-skin-part";
 }

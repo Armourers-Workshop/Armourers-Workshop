@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.gui.GuiAdminPanel;
+import moe.plushie.armourers_workshop.client.gui.GuiAdvancedSkinPart;
 import moe.plushie.armourers_workshop.client.gui.GuiColourMixer;
 import moe.plushie.armourers_workshop.client.gui.GuiDebugTool;
 import moe.plushie.armourers_workshop.client.gui.GuiDyeTable;
@@ -24,7 +25,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
-import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
+import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinPart;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
 import moe.plushie.armourers_workshop.common.inventory.ContainerDyeTable;
@@ -32,6 +33,7 @@ import moe.plushie.armourers_workshop.common.inventory.ContainerGlobalSkinLibrar
 import moe.plushie.armourers_workshop.common.inventory.ContainerHologramProjector;
 import moe.plushie.armourers_workshop.common.inventory.ContainerMannequin;
 import moe.plushie.armourers_workshop.common.inventory.ContainerOutfit;
+import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinnable;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinningTable;
@@ -40,6 +42,7 @@ import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.tileentities.TileAdvancedSkinPart;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityDyeTable;
@@ -158,6 +161,11 @@ public class GuiHandler implements IGuiHandler {
                     return new ContainerOutfit(player.inventory, player.getHeldItemMainhand());
                 }
                 break;
+            case LibGuiIds.ADVANCED_SKIN_PART:
+                if (te instanceof TileAdvancedSkinPart) {
+                    return new ContainerAdvancedSkinPart(player.inventory, (TileAdvancedSkinPart) te);
+                }
+                break;
         }
         return null;
     }
@@ -268,6 +276,11 @@ public class GuiHandler implements IGuiHandler {
             case LibGuiIds.OUTFIT:
                 if (player.getHeldItemMainhand().getItem() == ModItems.outfit) {
                     return new GuiOutfit(player, player.getHeldItemMainhand());
+                }
+                break;
+            case LibGuiIds.ADVANCED_SKIN_PART:
+                if (te instanceof TileAdvancedSkinPart) {
+                    return new GuiAdvancedSkinPart(player, (TileAdvancedSkinPart) te);
                 }
                 break;
         }

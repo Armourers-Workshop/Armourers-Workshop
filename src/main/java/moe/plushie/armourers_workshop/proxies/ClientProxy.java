@@ -29,6 +29,7 @@ import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandler;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemEquipmentSkin;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemMannequin;
+import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockAdvancedSkinPart;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockArmourer;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockBoundingBox;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockColourable;
@@ -53,6 +54,7 @@ import moe.plushie.armourers_workshop.common.network.messages.server.MessageServ
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.tileentities.TileAdvancedSkinPart;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
@@ -168,7 +170,8 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBoundingBox.class, new RenderBlockBoundingBox());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGlobalSkinLibrary.class, new RenderBlockGlobalSkinLibrary());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHologramProjector.class, new RenderBlockHologramProjector());
-        
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileAdvancedSkinBuilder.class, new RenderBlockAdvancedSkinBuilder());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileAdvancedSkinPart.class, new RenderBlockAdvancedSkinPart());
         
         // Register coloured items and blocks.
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.paintbrush);
