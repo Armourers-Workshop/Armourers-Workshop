@@ -25,7 +25,7 @@ public class Contributors {
         addContributor("3683eab5-5a23-4cdb-b1f5-38090f1ba4a8", "TheEpicJames", EnumSet.of(ContributionFlags.ARTIST), 255, 153, 0);
         addContributor("55b1659a-810f-4687-a514-b3201b09fd69", "V972", EnumSet.of(ContributionFlags.TRANSLATOR), 67, 232, 113);
         addContributor("a865907c-6b83-47b2-a088-35688169dc6a", "EzerArch", EnumSet.of(ContributionFlags.TRANSLATOR), 255, 255, 255);
-        addContributor("d7d977c8-b264-49a3-ac6e-2fae419c8191", "Thundercat_", EnumSet.of(ContributionFlags.ARTIST, ContributionFlags.MODELER), 74, 89, 169);
+        addContributor("d7d977c8-b264-49a3-ac6e-2fae419c8191", "Thundercat_", EnumSet.of(ContributionFlags.ARTIST, ContributionFlags.MODELER), 20, 232, 211);
         addContributor("41dfb793-40df-4f14-aecc-9c6d265f2813", "BredFace", EnumSet.of(ContributionFlags.TRANSLATOR), 40, 214, 63);
         addContributor("4dbf2d3c-884a-4db2-a050-ed0dfedcc1e3", "Equine0x", EnumSet.of(ContributionFlags.TRANSLATOR), 128, 0, 0);
         addContributor("7a84e9dd-6703-4eda-8208-bc5df8b51a61", "_Hoppang_", EnumSet.of(ContributionFlags.TRANSLATOR), 12, 67, 155);
