@@ -100,5 +100,14 @@
 				"stream": false
 			}
 		]
+	},
+	"boi": {
+		"category": "master",
+		"sounds": [
+			{
+				"name": "armourers_workshop:paint/boi",
+				"stream": false
+			}
+		]
 	}
 }

@@ -10,4 +10,5 @@ public final class LibSounds {
     public static final ResourceLocation DODGE = new ResourceLocation(LibModInfo.ID, "dodge");
     public static final ResourceLocation PICKER = new ResourceLocation(LibModInfo.ID, "picker");
     public static final ResourceLocation NOISE = new ResourceLocation(LibModInfo.ID, "noise");
+    public static final ResourceLocation BOI = new ResourceLocation(LibModInfo.ID, "boi");
 }
