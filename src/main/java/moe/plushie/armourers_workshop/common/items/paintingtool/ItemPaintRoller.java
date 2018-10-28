@@ -89,7 +89,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     
     @Override
     public void playToolSound(World world, BlockPos pos, ItemStack stack) {
-        world.playSound(null, pos, new SoundEvent(new ResourceLocation(LibSounds.PAINT)), SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+        world.playSound(null, pos, new SoundEvent(LibSounds.PAINT), SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
     }
     
     @Override

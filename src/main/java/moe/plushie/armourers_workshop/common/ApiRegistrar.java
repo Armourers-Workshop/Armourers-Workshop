@@ -4,8 +4,6 @@ import java.util.LinkedHashMap;
 
 import org.apache.logging.log4j.Level;
 
-import com.mojang.authlib.GameProfile;
-
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.client.IArmourersClientManager;
 import moe.plushie.armourers_workshop.api.common.IArmourersCommonManager;
@@ -17,7 +15,6 @@ import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
 
 public final class ApiRegistrar {
     
@@ -58,8 +55,5 @@ public final class ApiRegistrar {
     }
     
     public void onRenderEquipmentPart(Entity entity, ISkinPartType skinPart) {
-    }
-    
-    public void onRenderMannequin(TileEntity TileEntity, GameProfile gameProfile) {
     }
 }

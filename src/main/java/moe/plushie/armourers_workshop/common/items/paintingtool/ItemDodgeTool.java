@@ -33,7 +33,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -66,7 +65,7 @@ public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool,
             }
             if (!worldIn.isRemote) {
                 UndoManager.end(player);
-                worldIn.playSound(null, pos, new SoundEvent(new ResourceLocation(LibSounds.DODGE)), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+                worldIn.playSound(null, pos, new SoundEvent(LibSounds.DODGE), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
             }
             return EnumActionResult.SUCCESS;
         }
