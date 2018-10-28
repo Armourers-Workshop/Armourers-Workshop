@@ -4,7 +4,10 @@ import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinPart
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinPart;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiAdvancedSkinPart extends GuiContainer {
 
     public GuiAdvancedSkinPart(EntityPlayer player, TileEntityAdvancedSkinPart tileEntity) {

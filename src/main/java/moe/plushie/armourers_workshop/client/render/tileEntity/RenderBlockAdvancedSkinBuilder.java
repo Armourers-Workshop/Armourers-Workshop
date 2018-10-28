@@ -3,23 +3,23 @@ package moe.plushie.armourers_workshop.client.render.tileEntity;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder.SkinPartSettings;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderTileAdvancedSkinBuilder extends TileEntitySpecialRenderer<TileEntityAdvancedSkinBuilder> {
+public class RenderBlockAdvancedSkinBuilder extends TileEntitySpecialRenderer<TileEntityAdvancedSkinBuilder> {
 
     @Override
     public void render(TileEntityAdvancedSkinBuilder te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        ItemStack itemStack = te.getStackInSlot(0);
-        ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
-        if (descriptor == null) {
-            return;
-        }
+
+        float scale = 0.0625F;
+        
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
         
@@ -27,12 +27,31 @@ public class RenderTileAdvancedSkinBuilder extends TileEntitySpecialRenderer<Til
         GlStateManager.enableRescaleNormal();
         //GlStateManager.disableLighting();
         
-        GlStateManager.translate(x + 0.5F, y + 1.5F, z + 0.5F);
+        GlStateManager.translate(x + 0.5F, y + 0.5F, z + 0.5F);
         GlStateManager.scale(-1F, -1F, 1F);
         GlStateManager.scale(16F, 16F, 16F);
         
-        SkinItemRenderHelper.renderSkinWithoutHelper(descriptor, false);
-        
+        for (int i = 0; i < te.getSizeInventory(); i++) {
+            ItemStack itemStack = te.getStackInSlot(i);
+            ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
+            if (descriptor == null) {
+                continue;
+            }
+            SkinPartSettings ps = te.getPartSettings(i);
+            
+            GlStateManager.pushAttrib();
+            GlStateManager.resetColor();
+            GlStateManager.color(1, 1, 1, 1);
+            GlStateManager.enableBlend();
+            GlStateManager.disableTexture2D();
+            RenderGlobal.drawBoundingBox(
+                    -scale / 4F, scale / 1.5F, -scale / 4F,
+                    scale / 4F, scale, scale / 4F, 0.1F, 1F, 0.1F, 0.5F);
+            GlStateManager.enableTexture2D();
+            GlStateManager.popAttrib();
+            
+            SkinItemRenderHelper.renderSkinWithoutHelper(descriptor, false);
+        }
         
         //GlStateManager.enableLighting();
         GlStateManager.disableRescaleNormal();

@@ -37,7 +37,7 @@ import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockGlobal
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockHologramProjector;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockMannequin;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockSkinnable;
-import moe.plushie.armourers_workshop.client.render.tileEntity.RenderTileAdvancedSkinBuilder;
+import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.client.settings.Keybindings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
@@ -172,7 +172,7 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBoundingBox.class, new RenderBlockBoundingBox());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGlobalSkinLibrary.class, new RenderBlockGlobalSkinLibrary());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHologramProjector.class, new RenderBlockHologramProjector());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedSkinBuilder.class, new RenderTileAdvancedSkinBuilder());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedSkinBuilder.class, new RenderBlockAdvancedSkinBuilder());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedSkinPart.class, new RenderBlockAdvancedSkinPart());
         
         // Register coloured items and blocks.
