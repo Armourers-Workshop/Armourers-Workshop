@@ -8,6 +8,6 @@ public interface ISkinExporter {
     
     public String[] getFileExtensions();
     
-    public void exportSkin(Skin skin, File file, float scale);
+    public void exportSkin(Skin skin, File filePath, String filename, float scale);
     
 }

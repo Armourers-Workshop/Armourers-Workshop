@@ -36,17 +36,17 @@ public final class SkinExportManager {
         return null;
     }
     
-    public static void exportSkin(Skin skin, String fileExtension, File file, float scale) {
+    public static void exportSkin(Skin skin, String fileExtension, File filePath, String filename, float scale) {
         ISkinExporter skinExporter = getSkinExporter(fileExtension);
         if (skinExporter != null) {
-            exportSkin(skin, skinExporter, file, scale);
+            exportSkin(skin, skinExporter, filePath, filename, scale);
         } else {
             ModLogger.log(Level.ERROR, String.format("Could not export to %s format.", skinExporter));
         }
     }
     
-    public static void exportSkin(Skin skin, ISkinExporter skinExporter, File file, float scale) {
-        skinExporter.exportSkin(skin, file, scale);
+    public static void exportSkin(Skin skin, ISkinExporter skinExporter, File filePath, String filename, float scale) {
+        skinExporter.exportSkin(skin, filePath, filename, scale);
     }
     
     public static String[] getExporters() {
