@@ -132,6 +132,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         } else {
             tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.nopaint"));
         }
+        tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.openSettings"));
     }
     
     @Override
