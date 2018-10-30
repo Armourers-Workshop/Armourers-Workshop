@@ -6,5 +6,8 @@ import moe.plushie.armourers_workshop.common.skin.data.Skin;
 
 public interface ISkinExporter {
     
+    public String[] getFileExtensions();
+    
     public void exportSkin(Skin skin, File file, float scale);
+    
 }

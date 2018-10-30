@@ -19,6 +19,11 @@ import moe.plushie.armourers_workshop.utils.ModLogger;
 public class SkinExporterPolygon implements ISkinExporter {
 
     @Override
+    public String[] getFileExtensions() {
+        return new String[] {"ply"};
+    }
+    
+    @Override
     public void exportSkin(Skin skin, File file, float scale) {
         try {
             exportPart(skin.getParts().get(0), skin, file, scale);

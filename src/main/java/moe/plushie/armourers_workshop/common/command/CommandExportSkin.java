@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.common.command;
 
 import java.io.File;
+import java.util.List;
 
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -14,12 +15,21 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
 public class CommandExportSkin extends ModCommand {
 
     @Override
     public String getName() {
         return "exportSkin";
+    }
+    
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
+        if (args.length == 2) {
+            return getListOfStringsMatchingLastWord(args, SkinExportManager.getExporters());
+        }
+        return super.getTabCompletions(server, sender, args, targetPos);
     }
 
     @Override
