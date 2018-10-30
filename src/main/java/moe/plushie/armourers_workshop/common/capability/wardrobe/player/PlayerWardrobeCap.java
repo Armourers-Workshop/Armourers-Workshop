@@ -26,17 +26,14 @@ public class PlayerWardrobeCap extends WardrobeCap implements IPlayerWardrobeCap
     public static final Capability<IPlayerWardrobeCap> PLAYER_WARDROBE_CAP = null;
     
     /** Bit set of what armour is hidden on the player. */
-    public BitSet armourOverride;
-    
-    public final ISkinnableEntity skinnableEntity;
+    private BitSet armourOverride;
     
     /** Number of slots the player has unlocked in the wardrobe */
-    public HashMap<String, Integer> slotsUnlocked;
+    private HashMap<String, Integer> slotsUnlocked;
     
     public PlayerWardrobeCap(EntityPlayer entity, ISkinnableEntity skinnableEntity) {
         super(entity, skinnableEntity);
         armourOverride = new BitSet(4);
-        this.skinnableEntity = skinnableEntity;
         ArrayList<ISkinType> validSkinTypes = new ArrayList<ISkinType>();
         skinnableEntity.getValidSkinTypes(validSkinTypes);
         slotsUnlocked = new HashMap<String, Integer>();
@@ -77,7 +74,7 @@ public class PlayerWardrobeCap extends WardrobeCap implements IPlayerWardrobeCap
     
     @Override
     public int getMaxSlotsForSkinType(ISkinType skinType) {
-        return skinnableEntity.getSlotsForSkinType(skinType);
+        return getSkinnableEntity().getSlotsForSkinType(skinType);
     }
     
     public static IPlayerWardrobeCap get(EntityPlayer entity) {

@@ -6,6 +6,8 @@ import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinProvider;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinStorage;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.holiday.HolidayTrackCap;
+import moe.plushie.armourers_workshop.common.capability.holiday.IHolidayTrackCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeProvider;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeStorage;
@@ -29,6 +31,7 @@ public final class ModCapabilityManager {
     private static final ResourceLocation KEY_ENTITY_SKIN_PROVIDER = new ResourceLocation(LibModInfo.ID, "entity-skin-provider");
     private static final ResourceLocation KEY_WARDROBE_PROVIDER = new ResourceLocation(LibModInfo.ID, "wardrobe-provider");
     private static final ResourceLocation KEY_PLAYER_WARDROBE_PROVIDER = new ResourceLocation(LibModInfo.ID, "player-wardrobe-provider");
+    private static final ResourceLocation KEY_HOLIDAY_TRACKER = new ResourceLocation(LibModInfo.ID, "holiday-tracker");
     
     private ModCapabilityManager() {
     }
@@ -57,20 +60,26 @@ public final class ModCapabilityManager {
                 return null;
             }
         });
+        CapabilityManager.INSTANCE.register(IHolidayTrackCap.class, new HolidayTrackCap.Storage(), new HolidayTrackCap.Factory());
     }
 
     @SubscribeEvent
     public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof EntityLivingBase) {
-            ISkinnableEntity skinnableEntity = EntitySkinHandler.INSTANCE.getSkinnableEntity((EntityLivingBase) event.getObject());
-            if (skinnableEntity != null) {
-                event.addCapability(KEY_ENTITY_SKIN_PROVIDER, new EntitySkinProvider(event.getObject(), skinnableEntity));
-                if (event.getObject() instanceof EntityPlayer) {
-                    event.addCapability(KEY_PLAYER_WARDROBE_PROVIDER, new PlayerWardrobeProvider((EntityPlayer) event.getObject(), skinnableEntity));
-                } else {
-                    event.addCapability(KEY_WARDROBE_PROVIDER, new WardrobeProvider(event.getObject(), skinnableEntity));
-                }
-            }
+        if (!(event.getObject() instanceof EntityLivingBase)) {
+            return;
+        }
+        EntityLivingBase entityLivingBase = (EntityLivingBase) event.getObject();
+        ISkinnableEntity skinnableEntity = EntitySkinHandler.INSTANCE.getSkinnableEntity(entityLivingBase);
+        if (skinnableEntity == null) {
+            return;
+        }
+        event.addCapability(KEY_ENTITY_SKIN_PROVIDER, new EntitySkinProvider(entityLivingBase, skinnableEntity));
+        if (entityLivingBase instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entityLivingBase;
+            event.addCapability(KEY_PLAYER_WARDROBE_PROVIDER, new PlayerWardrobeProvider(player, skinnableEntity));
+            event.addCapability(KEY_HOLIDAY_TRACKER, new HolidayTrackCap.Provider());
+        } else {
+            event.addCapability(KEY_WARDROBE_PROVIDER, new WardrobeProvider(entityLivingBase, skinnableEntity));
         }
     }
 }

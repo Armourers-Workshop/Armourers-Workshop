@@ -22,9 +22,9 @@ public class WardrobeCap implements IWardrobeCap {
 
     private final ISkinnableEntity skinnableEntity;
 
-    public final ExtraColours extraColours;
+    private final ExtraColours extraColours;
     
-    public final SkinDye dye;
+    private final SkinDye dye;
 
     public WardrobeCap(Entity entity, ISkinnableEntity skinnableEntity) {
         this.entity = entity;
