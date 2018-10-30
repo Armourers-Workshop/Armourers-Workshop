@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.common.command;
 import java.io.File;
 import java.util.List;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
@@ -91,11 +92,11 @@ public class CommandExportSkin extends ModCommand {
         }
         
         // Creating the export directory.
-        File exportDir = new File(System.getProperty("user.dir"), "model-exports");
+        File exportDir = new File(ArmourersWorkshop.getProxy().getModDirectory(), "model-exports");
         if (!exportDir.exists()) {
             exportDir.mkdir();
         }
         
-        SkinExportManager.exportSkin(skin, skinExporter, new File(exportDir, String.format("%s.%s", exportName, fileExtension)), scale);
+        SkinExportManager.exportSkin(skin, skinExporter, exportDir, exportName, scale);
     }
 }
