@@ -4,6 +4,8 @@ import java.util.List;
 
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -37,9 +39,14 @@ public class CommandResyncWardrobe extends ModCommand {
             return;
         }
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
+        IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(player);
         if (skinCapability != null) {
             skinCapability.syncToPlayer(player);
             skinCapability.syncToAllTracking();
+        }
+        if (wardrobeCap != null) {
+            wardrobeCap.syncToPlayer(player);
+            wardrobeCap.syncToAllTracking();
         }
     }
 }
