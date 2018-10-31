@@ -41,7 +41,7 @@ public class MessageClientKeyPress implements IMessage, IMessageHandler<MessageC
             break;
         case OPEN_WARDROBE:
             if (ConfigHandler.canOpenWardrobe()) {
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.WARDROBE_PLAYER, player.getEntityWorld(), 0, 0, 0);
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), LibGuiIds.WARDROBE_PLAYER, player.getEntityWorld(), 0, 0, 0);
             }
             break;
         }

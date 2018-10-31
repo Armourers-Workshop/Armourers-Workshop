@@ -39,7 +39,7 @@ public class BlockColourMixer extends AbstractModBlockContainer {
             return false;
         }
         if (!worldIn.isRemote) {
-            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.COLOUR_MIXER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), LibGuiIds.COLOUR_MIXER, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;
     }

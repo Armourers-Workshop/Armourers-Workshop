@@ -72,7 +72,7 @@ public class BlockArmourer extends AbstractModBlockContainer {
             return false;
         }
         if (!worldIn.isRemote) {
-            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.instance, LibGuiIds.ARMOURER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), LibGuiIds.ARMOURER, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;
     }

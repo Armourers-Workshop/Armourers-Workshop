@@ -29,6 +29,7 @@ import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandler;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemEquipmentSkin;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemMannequin;
+import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockAdvancedSkinPart;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockArmourer;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockBoundingBox;
@@ -37,7 +38,6 @@ import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockGlobal
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockHologramProjector;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockMannequin;
 import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockSkinnable;
-import moe.plushie.armourers_workshop.client.render.tileEntity.RenderBlockAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.client.settings.Keybindings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
@@ -367,7 +367,7 @@ public class ClientProxy extends CommonProxy {
         switch (sendType) {
         case LIBRARY_SAVE:
             SkinIOUtils.saveSkinFromFileName(filePath, fileName + SkinIOUtils.SKIN_FILE_EXTENSION, skin);
-            ArmourersWorkshop.proxy.libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.LOCAL, null);
+            ArmourersWorkshop.getProxy().libraryManager.addFileToListType(new LibraryFile(fileName, filePath, skin.getSkinType()), LibraryFileType.LOCAL, null);
             break;
         case GLOBAL_UPLOAD:
             GuiScreen screen = Minecraft.getMinecraft().currentScreen;

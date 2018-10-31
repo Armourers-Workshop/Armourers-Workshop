@@ -29,7 +29,7 @@ public class MessageClientGuiAdminPanel implements IMessage, IMessageHandler<Mes
 
     @Override
     public IMessage onMessage(MessageClientGuiAdminPanel message, MessageContext ctx) {
-        ArmourersWorkshop.instance.proxy.receivedAdminPanelCommand(ctx.getServerHandler().player, message.command);
+        ArmourersWorkshop.getInstance().getProxy().receivedAdminPanelCommand(ctx.getServerHandler().player, message.command);
         return null;
     }
     

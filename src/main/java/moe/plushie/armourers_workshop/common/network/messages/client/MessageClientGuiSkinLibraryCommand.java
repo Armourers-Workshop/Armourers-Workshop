@@ -58,7 +58,7 @@ public class MessageClientGuiSkinLibraryCommand implements IMessage, IMessageHan
     
     @Override
     public IMessage onMessage(MessageClientGuiSkinLibraryCommand message, MessageContext ctx) {
-        ArmourersWorkshop.proxy.skinLibraryCommand(ctx.getServerHandler().player, message.command, message.file, message.publicList);
+        ArmourersWorkshop.getProxy().skinLibraryCommand(ctx.getServerHandler().player, message.command, message.file, message.publicList);
         return null;
     }
     

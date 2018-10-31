@@ -346,7 +346,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         
         if (button == reloadButton) {
             if (fileSwitchType == LibraryFileType.LOCAL) {
-                ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
+                ILibraryManager libraryManager = ArmourersWorkshop.getProxy().libraryManager;
                 libraryManager.reloadLibrary();
             } else {
                 //TODO reload server library
@@ -438,7 +438,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     }
     
     private LibraryFileList getFileList(LibraryFileType libraryFileType) {
-        ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
+        ILibraryManager libraryManager = ArmourersWorkshop.getProxy().libraryManager;
         switch (libraryFileType) {
         case LOCAL:
             return libraryManager.getClientPublicFileList();
@@ -451,7 +451,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     }
     
     private void reloadLocalLibrary() {
-        ArmourersWorkshop.proxy.libraryManager.reloadLibrary();
+        ArmourersWorkshop.getProxy().libraryManager.reloadLibrary();
     }
     
     @Override
@@ -607,7 +607,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         dropDownList.drawForeground(mc, mouseX, mouseY, partialTickTime);
         //GlStateManager.popAttrib();
         RenderHelper.disableStandardItemLighting();
-        ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
+        ILibraryManager libraryManager = ArmourersWorkshop.getProxy().libraryManager;
         ArrayList<LibraryFile> files = libraryManager.getServerPublicFileList().getFileList();
         
         loadSaveButton.enabled = true;

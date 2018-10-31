@@ -415,7 +415,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             Skin skin = SkinDownloader.downloadSkin(fileName, serverId);
             if (skin != null) {
                 if (SkinIOUtils.saveSkinToFile(target, skin)) {
-                    ILibraryManager libraryManager = ArmourersWorkshop.proxy.libraryManager;
+                    ILibraryManager libraryManager = ArmourersWorkshop.getProxy().libraryManager;
                     libraryManager.reloadLibrary();
                 }
             }

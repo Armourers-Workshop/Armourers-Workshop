@@ -1,14 +1,14 @@
 package moe.plushie.armourers_workshop.common.network.messages.server;
 
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.network.ByteBufHelper;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Send from the server to the client when a client saves a skin
@@ -66,7 +66,7 @@ public class MessageServerLibrarySendSkin implements IMessage, IMessageHandler<M
     
     @Override
     public IMessage onMessage(MessageServerLibrarySendSkin message, MessageContext ctx) {
-        ArmourersWorkshop.proxy.receivedSkinFromLibrary(message.fileName, message.filePath, message.skin, message.sendType);
+        ArmourersWorkshop.getProxy().receivedSkinFromLibrary(message.fileName, message.filePath, message.skin, message.sendType);
         return null;
     }
     

@@ -57,7 +57,7 @@ public class MessageServerLibraryFileList implements IMessage, IMessageHandler<M
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         Container container = player.openContainer;
         ModLogger.log("got file list type " + message.listType);
-        ArmourersWorkshop.proxy.libraryManager.setFileList(message.fileList, message.listType);
+        ArmourersWorkshop.getProxy().libraryManager.setFileList(message.fileList, message.listType);
         return null;
     }
 }

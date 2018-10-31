@@ -67,7 +67,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 public class GuiHandler implements IGuiHandler {
 
     public GuiHandler() {
-        NetworkRegistry.INSTANCE.registerGuiHandler(ArmourersWorkshop.instance, this);
+        NetworkRegistry.INSTANCE.registerGuiHandler(ArmourersWorkshop.getInstance(), this);
     }
     
     @Override

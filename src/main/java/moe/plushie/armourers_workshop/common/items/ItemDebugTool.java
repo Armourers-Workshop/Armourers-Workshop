@@ -24,7 +24,7 @@ public class ItemDebugTool extends AbstractModItem {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemStack = playerIn.getHeldItem(handIn);
         if (worldIn.isRemote) {
-            playerIn.openGui(ArmourersWorkshop.instance, LibGuiIds.DEBUG_TOOL, worldIn, 0, 0, 0);
+            playerIn.openGui(ArmourersWorkshop.getInstance(), LibGuiIds.DEBUG_TOOL, worldIn, 0, 0, 0);
         }
         return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStack);
     }

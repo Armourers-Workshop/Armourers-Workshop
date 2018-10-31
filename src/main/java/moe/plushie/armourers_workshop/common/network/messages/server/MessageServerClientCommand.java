@@ -29,7 +29,7 @@ public class MessageServerClientCommand implements IMessage, IMessageHandler<Mes
     
     @Override
     public IMessage onMessage(MessageServerClientCommand message, MessageContext ctx) {
-        ArmourersWorkshop.proxy.receivedCommandFromSever(message.command);
+        ArmourersWorkshop.getProxy().receivedCommandFromSever(message.command);
         return null;
     }
     

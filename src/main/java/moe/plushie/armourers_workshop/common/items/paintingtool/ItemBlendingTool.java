@@ -234,7 +234,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         if (worldIn.isRemote & playerIn.isSneaking()) {
-            playerIn.openGui(ArmourersWorkshop.instance, LibGuiIds.TOOL_OPTIONS, worldIn, 0, 0, 0);
+            playerIn.openGui(ArmourersWorkshop.getInstance(), LibGuiIds.TOOL_OPTIONS, worldIn, 0, 0, 0);
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }

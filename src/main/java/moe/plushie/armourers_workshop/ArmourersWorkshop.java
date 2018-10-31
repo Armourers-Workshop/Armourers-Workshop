@@ -35,10 +35,10 @@ public class ArmourersWorkshop {
      */
 
     @Instance(LibModInfo.ID)
-    public static ArmourersWorkshop instance;
+    private static ArmourersWorkshop instance;
 
     @SidedProxy(clientSide = LibModInfo.PROXY_CLIENT_CLASS, serverSide = LibModInfo.PROXY_COMMNON_CLASS)
-    public static CommonProxy proxy;
+    private static CommonProxy proxy;
 
     public static CreativeTabArmourersWorkshop tabArmorersWorkshop = new CreativeTabArmourersWorkshop(CreativeTabs.getNextID(), LibModInfo.ID.toLowerCase());
 

@@ -88,7 +88,7 @@ public class CommonProxy implements ILibraryCallback {
         
         ModLogger.log("user home: " + System.getProperty("user.home"));
         
-        EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "seat"), Seat.class, "seat", 1, ArmourersWorkshop.instance, 10, 20, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "seat"), Seat.class, "seat", 1, ArmourersWorkshop.getInstance(), 10, 20, false);
         
         SkinExtractor.extractSkins();
         
