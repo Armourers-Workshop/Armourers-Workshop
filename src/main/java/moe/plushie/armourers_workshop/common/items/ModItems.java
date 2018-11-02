@@ -20,12 +20,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModItems {
-    
+
     public static ArrayList<Item> ITEM_LIST = new ArrayList<Item>();
-    
+
     public static Item skinTemplate;
     public static Item skin;
-    
+
     public static Item paintbrush;
     public static Item paintRoller;
     public static Item colourPicker;
@@ -36,9 +36,9 @@ public class ModItems {
     public static Item hueTool;
     public static Item blendingTool;
     public static Item blockMarker;
-    //public static Item paintballGun;
-    //public static Item palette;
-    
+    // public static Item paintballGun;
+    // public static Item palette;
+
     public static Item mannequinTool;
     public static Item wandOfStyle;
     public static Item soap;
@@ -50,18 +50,17 @@ public class ModItems {
     public static Item linkingTool;
     public static Item giftSack;
     public static Item outfit;
-    
+
     public static Item armourContainerItem;
     public static Item[] armourContainer;
-    
-    
+
     public ModItems() {
         MinecraftForge.EVENT_BUS.register(this);
         skinTemplate = new ItemSkinTemplate();
         skin = new ItemSkin();
         // TODO Fix buildcraft compat. setEquipmentSkinType();
-        
-        //Tools
+
+        // Tools
         paintbrush = new ItemPaintbrush();
         paintRoller = new ItemPaintRoller();
         colourPicker = new ItemColourPicker();
@@ -72,9 +71,9 @@ public class ModItems {
         hueTool = new ItemHueTool();
         blockMarker = new ItemBlockMarker();
         blendingTool = new ItemBlendingTool();
-        //paintballGun = new ItemPaintballGun();
-        //palette = new ItemPalette();
-        
+        // paintballGun = new ItemPaintballGun();
+        // palette = new ItemPalette();
+
         mannequinTool = new ItemMannequinTool();
         wandOfStyle = new ItemWandOfStyle();
         soap = new ItemSoap();
@@ -86,7 +85,7 @@ public class ModItems {
         linkingTool = new ItemLinkingTool();
         giftSack = new ItemGiftSack();
         outfit = new ItemOutfit();
-        
+
         armourContainerItem = new ItemArmourContainerItem();
         armourContainer = new Item[4];
         armourContainer[0] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_HEAD, EntityEquipmentSlot.HEAD);
@@ -94,7 +93,7 @@ public class ModItems {
         armourContainer[2] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_LEGS, EntityEquipmentSlot.LEGS);
         armourContainer[3] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_FEET, EntityEquipmentSlot.FEET);
     }
-    
+
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> reg = event.getRegistry();
