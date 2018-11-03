@@ -62,8 +62,8 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     public static final PropertyInteger STATE_ROTATION = PropertyInteger.create("rotation", 0, 15);
 
     private static final AxisAlignedBB MANNEQUIN_AABB = new AxisAlignedBB(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
-    private static final DamageSource victoriousDamage = new DamageSource("victorious");
-    private static final GameProfile vicProfile = new GameProfile(UUID.fromString("b027a4f4-d480-426c-84a3-a9cb029f4b72"), "VicNightfall");
+    private static final DamageSource VIC_DAMAGE = new DamageSource("victorious");
+    private static final GameProfile VIC_PROFILE = new GameProfile(UUID.fromString("b027a4f4-d480-426c-84a3-a9cb029f4b72"), "VicNightfall");
 
     private static final String TAG_OWNER = "owner";
     private static final String TAG_IMAGE_URL = "imageUrl";
@@ -277,8 +277,8 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         if (te != null) {
             if (te.PROP_OWNER.get() != null) {
                 //ModLogger.log(te.PROP_OWNER.get());
-                if (te.PROP_OWNER.get().getId().equals(vicProfile.getId())) {
-                    entityLiving.attackEntityFrom(victoriousDamage, 2.0F);
+                if (te.PROP_OWNER.get().getId().equals(VIC_PROFILE.getId())) {
+                    entityLiving.attackEntityFrom(VIC_DAMAGE, 2.0F);
                 }
             }
         }
