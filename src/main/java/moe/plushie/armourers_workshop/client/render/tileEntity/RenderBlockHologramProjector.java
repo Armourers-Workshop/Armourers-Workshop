@@ -29,13 +29,13 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
             AxisAlignedBB aabb = new AxisAlignedBB(tileEntity.getPos());
             renderBox(aabb, 1.0F, 1.0F, 0.0F);
         }
-        if (tileEntity.getPowerMode() != PowerMode.IGNORED) {
-            if (tileEntity.getPowerMode() == PowerMode.HIGH) {
-                if (!tileEntity.isPowered()) {
+        if (tileEntity.getPowerMode().get() != PowerMode.IGNORED) {
+            if (tileEntity.getPowerMode().get() == PowerMode.HIGH) {
+                if (!tileEntity.getPowered().get()) {
                     return;
                 }
             } else {
-                if (tileEntity.isPowered()) {
+                if (tileEntity.getPowered().get()) {
                     return;
                 }
             }
@@ -77,13 +77,13 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         
         
         
-        GL11.glTranslated(tileEntity.getOffsetX() * scale, tileEntity.getOffsetY() * scale, tileEntity.getOffsetZ() * scale);
+        GL11.glTranslated(tileEntity.getOffsetX().get() * scale, tileEntity.getOffsetY().get() * scale, tileEntity.getOffsetZ().get() * scale);
         
         GL11.glScalef(-1, -1, 1);
         
-        int speedX = tileEntity.getRotationSpeedX();
-        int speedY = tileEntity.getRotationSpeedY();
-        int speedZ = tileEntity.getRotationSpeedZ();
+        int speedX = tileEntity.getRotationSpeedX().get();
+        int speedY = tileEntity.getRotationSpeedY().get();
+        int speedZ = tileEntity.getRotationSpeedZ().get();
         
         float angleX = 0;
         float angleY = 0;
@@ -101,15 +101,15 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
             angleZ = (System.currentTimeMillis() % speedZ);
             angleZ = angleZ / speedZ * 360F;
         }
-        if (!tileEntity.isGlowing()) {
+        if (!tileEntity.getGlowing().get()) {
             EnumFacing dir = EnumFacing.byIndex(tileEntity.getBlockMetadata());
             float xLight = tileEntity.getPos().getX();
             float yLight = tileEntity.getPos().getY();
             float zLight = tileEntity.getPos().getZ();
             
-            float offsetX = tileEntity.getOffsetX();
-            float offsetY = tileEntity.getOffsetY();
-            float offsetZ = tileEntity.getOffsetZ();
+            float offsetX = tileEntity.getOffsetX().get();
+            float offsetY = tileEntity.getOffsetY().get();
+            float offsetZ = tileEntity.getOffsetZ().get();
             
             switch (dir) {
             case UP:
@@ -149,18 +149,18 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         GL11.glPushMatrix();
         
         GL11.glTranslated(
-                (-tileEntity.getRotationOffsetX() + tileEntity.getRotationOffsetX()) * scale,
-                (-tileEntity.getRotationOffsetY() + tileEntity.getRotationOffsetY()) * scale,
-                (-tileEntity.getRotationOffsetZ() + tileEntity.getRotationOffsetZ()) * scale);
+                (-tileEntity.getRotationOffsetX().get() + tileEntity.getRotationOffsetX().get()) * scale,
+                (-tileEntity.getRotationOffsetY().get() + tileEntity.getRotationOffsetY().get()) * scale,
+                (-tileEntity.getRotationOffsetZ().get() + tileEntity.getRotationOffsetZ().get()) * scale);
         
-        if (tileEntity.getAngleX() != 0) {
-            GL11.glRotatef(tileEntity.getAngleX(), 1F, 0F, 0F);
+        if (tileEntity.getAngleX().get() != 0) {
+            GL11.glRotatef(tileEntity.getAngleX().get(), 1F, 0F, 0F);
         }
-        if (tileEntity.getAngleY() != 0) {
-            GL11.glRotatef(tileEntity.getAngleY(), 0F, 1F, 0F);
+        if (tileEntity.getAngleY().get() != 0) {
+            GL11.glRotatef(tileEntity.getAngleY().get(), 0F, 1F, 0F);
         }
-        if (tileEntity.getAngleZ() != 0) {
-            GL11.glRotatef(tileEntity.getAngleZ(), 0F, 0F, 1F);
+        if (tileEntity.getAngleZ().get() != 0) {
+            GL11.glRotatef(tileEntity.getAngleZ().get(), 0F, 0F, 1F);
         }
         
         if (angleX != 0) {
@@ -173,9 +173,9 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
             GL11.glRotatef((float)angleZ, 0, 0, 1);
         }
         
-        GL11.glTranslated(tileEntity.getRotationOffsetX() * scale, tileEntity.getRotationOffsetY() * scale, tileEntity.getRotationOffsetZ() * scale);
+        GL11.glTranslated(tileEntity.getRotationOffsetX().get() * scale, tileEntity.getRotationOffsetY().get() * scale, tileEntity.getRotationOffsetZ().get() * scale);
         
-        if (tileEntity.isGlowing()) {
+        if (tileEntity.getGlowing().get()) {
             ModRenderHelper.disableLighting();
         }
         ModRenderHelper.enableAlphaBlend();
@@ -190,7 +190,7 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         }
         
         ModRenderHelper.disableAlphaBlend();
-        if (tileEntity.isGlowing()) {
+        if (tileEntity.getGlowing().get()) {
             ModRenderHelper.enableLighting();
         }
         GL11.glDisable(GL11.GL_NORMALIZE);

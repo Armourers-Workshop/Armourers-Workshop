@@ -1,15 +1,13 @@
 package moe.plushie.armourers_workshop.client.gui.hologramprojector;
 
-import net.minecraftforge.fml.client.config.GuiSlider;
-import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
-import net.minecraftforge.fml.client.config.GuiUtils;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
-import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.client.config.GuiSlider;
+import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GuiHologramProjectorTabRotationSpeed extends GuiTabPanel implements ISlider {
     
@@ -32,9 +30,9 @@ public class GuiHologramProjectorTabRotationSpeed extends GuiTabPanel implements
         super.initGui(xPos, yPos, width, height);
         guiLoaded = false;
         
-        sliderOffsetX = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 30, 178, 10, "", "ms", -10000D, 10000D, tileEntity.getRotationSpeedX(), false, true, this);
-        sliderOffsetY = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 45, 178, 10, "", "ms", -10000D, 10000D, tileEntity.getRotationSpeedY(), false, true, this);
-        sliderOffsetZ = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 60, 178, 10, "", "ms", -10000D, 10000D, tileEntity.getRotationSpeedZ(), false, true, this);
+        sliderOffsetX = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 30, 178, 10, "", "ms", -10000D, 10000D, tileEntity.getRotationSpeedX().get(), false, true, this);
+        sliderOffsetY = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 45, 178, 10, "", "ms", -10000D, 10000D, tileEntity.getRotationSpeedY().get(), false, true, this);
+        sliderOffsetZ = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 60, 178, 10, "", "ms", -10000D, 10000D, tileEntity.getRotationSpeedZ().get(), false, true, this);
         
         sliderOffsetX.setFineTuneButtons(true);
         sliderOffsetY.setFineTuneButtons(true);
@@ -62,8 +60,9 @@ public class GuiHologramProjectorTabRotationSpeed extends GuiTabPanel implements
         int xOffset = sliderOffsetX.getValueInt();
         int yOffset = sliderOffsetY.getValueInt();
         int zOffset = sliderOffsetZ.getValueInt();
-        MessageClientGuiHologramProjector message = new MessageClientGuiHologramProjector();
-        message.setRotationSpeedX(xOffset, yOffset, zOffset);
-        PacketHandler.networkWrapper.sendToServer(message);
+        tileEntity.getRotationSpeedX().set(xOffset);
+        tileEntity.getRotationSpeedY().set(yOffset);
+        tileEntity.getRotationSpeedZ().set(zOffset);
+        tileEntity.updateProperty(tileEntity.getRotationSpeedX(), tileEntity.getRotationSpeedY(), tileEntity.getRotationSpeedZ());
     }
 }

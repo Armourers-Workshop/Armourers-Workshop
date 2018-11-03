@@ -6,14 +6,13 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiBipedRotations;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiColourUpdate;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiHologramProjector;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiLoadSaveArmour;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiUpdateTileProperties;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSetArmourerSkinProps;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSetArmourerSkinType;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSetSkin;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiUpdateTileProperties;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientKeyPress;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientLoadArmour;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientRequestGameProfile;
@@ -68,7 +67,6 @@ public final class PacketHandler {
         registerMessage(MessageClientGuiAdminPanel.class, MessageClientGuiAdminPanel.class, Side.SERVER);
         registerMessage(MessageClientGuiSkinLibraryCommand.class, MessageClientGuiSkinLibraryCommand.class, Side.SERVER);
         registerMessage(MessageClientGuiArmourerBlockUtil.class, MessageClientGuiArmourerBlockUtil.class, Side.SERVER);
-        registerMessage(MessageClientGuiHologramProjector.class, MessageClientGuiHologramProjector.class, Side.SERVER);
         
         //Server messages.
         registerMessage(MessageServerSyncSkinCap.class, MessageServerSyncSkinCap.class, Side.CLIENT);

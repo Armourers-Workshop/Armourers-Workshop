@@ -1,15 +1,13 @@
 package moe.plushie.armourers_workshop.client.gui.hologramprojector;
 
-import net.minecraftforge.fml.client.config.GuiSlider;
-import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
-import net.minecraftforge.fml.client.config.GuiUtils;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
-import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.client.config.GuiSlider;
+import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GuiHologramProjectorTabAngle extends GuiTabPanel implements ISlider {
     
@@ -34,9 +32,9 @@ public class GuiHologramProjectorTabAngle extends GuiTabPanel implements ISlider
         super.initGui(xPos, yPos, width, height);
         guiLoaded = false;
         
-        sliderOffsetX = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 30, 178, 10, "X: ", DEGREE, -180D, 180D, tileEntity.getAngleX(), false, true, this);
-        sliderOffsetY = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 45, 178, 10, "Y: ", DEGREE, -180D, 180D, tileEntity.getAngleY(), false, true, this);
-        sliderOffsetZ = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 60, 178, 10, "Z: ", DEGREE, -180D, 180D, tileEntity.getAngleZ(), false, true, this);
+        sliderOffsetX = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 30, 178, 10, "X: ", DEGREE, -180D, 180D, tileEntity.getAngleX().get(), false, true, this);
+        sliderOffsetY = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 45, 178, 10, "Y: ", DEGREE, -180D, 180D, tileEntity.getAngleY().get(), false, true, this);
+        sliderOffsetZ = new GuiCustomSlider(-1, (int)((width / 2F) - (200 / 2F)) + 10, 60, 178, 10, "Z: ", DEGREE, -180D, 180D, tileEntity.getAngleZ().get(), false, true, this);
         
         sliderOffsetX.setFineTuneButtons(true);
         sliderOffsetY.setFineTuneButtons(true);
@@ -64,8 +62,9 @@ public class GuiHologramProjectorTabAngle extends GuiTabPanel implements ISlider
         int xOffset = sliderOffsetX.getValueInt();
         int yOffset = sliderOffsetY.getValueInt();
         int zOffset = sliderOffsetZ.getValueInt();
-        MessageClientGuiHologramProjector message = new MessageClientGuiHologramProjector();
-        message.setAngle(xOffset, yOffset, zOffset);
-        PacketHandler.networkWrapper.sendToServer(message);
+        tileEntity.getAngleX().set(xOffset);
+        tileEntity.getAngleY().set(yOffset);
+        tileEntity.getAngleZ().set(zOffset);
+        tileEntity.updateProperty(tileEntity.getOffsetX(), tileEntity.getOffsetY(), tileEntity.getOffsetZ());
     }
 }

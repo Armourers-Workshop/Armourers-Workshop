@@ -3,6 +3,8 @@ package moe.plushie.armourers_workshop.common.tileentities;
 import java.util.ArrayList;
 import java.util.List;
 
+import moe.plushie.armourers_workshop.common.network.PacketHandler;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiUpdateTileProperties;
 import moe.plushie.armourers_workshop.common.property.IPropertyHolder;
 import moe.plushie.armourers_workshop.common.property.TileProperty;
 import moe.plushie.armourers_workshop.common.property.TilePropertyManager;
@@ -108,6 +110,11 @@ public abstract class ModTileEntity extends TileEntity implements IPropertyHolde
                 }
             }
         }
+    }
+    
+    public void updateProperty(TileProperty<?>... property) {
+        MessageClientGuiUpdateTileProperties message = new MessageClientGuiUpdateTileProperties(property);
+        PacketHandler.networkWrapper.sendToServer(message);
     }
 
     @Override

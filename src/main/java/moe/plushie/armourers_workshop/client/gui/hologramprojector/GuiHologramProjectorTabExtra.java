@@ -6,8 +6,6 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
-import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector.PowerMode;
 import net.minecraft.client.gui.GuiButton;
@@ -31,12 +29,12 @@ public class GuiHologramProjectorTabExtra extends GuiTabPanel implements IDropDo
     @Override
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
-        checkGlowing = new GuiCheckBox(-1, (int)((width / 2F) - (200 / 2F)) + 10, 30, GuiHelper.getLocalizedControlName(inventoryName, "glowing"), tileEntity.isGlowing());
+        checkGlowing = new GuiCheckBox(-1, (int)((width / 2F) - (200 / 2F)) + 10, 30, GuiHelper.getLocalizedControlName(inventoryName, "glowing"), tileEntity.getGlowing().get());
         dropDownPowerMode = new GuiDropDownList(0, (int)((width / 2F) - (200 / 2F)) + 10, 55, 80, "", this);
         for (int i = 0; i < PowerMode.values().length; i++) {
             PowerMode powerMode = PowerMode.values()[i];
             dropDownPowerMode.addListItem(GuiHelper.getLocalizedControlName(inventoryName, "powerMode." + powerMode.toString().toLowerCase()), powerMode.toString(), true);
-            if (powerMode == tileEntity.getPowerMode()) {
+            if (powerMode == tileEntity.getPowerMode().get()) {
                 dropDownPowerMode.setListSelectedIndex(i);
             }
         }
@@ -47,9 +45,8 @@ public class GuiHologramProjectorTabExtra extends GuiTabPanel implements IDropDo
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button == checkGlowing) {
-            MessageClientGuiHologramProjector message = new MessageClientGuiHologramProjector();
-            message.setGlowing(checkGlowing.isChecked());
-            PacketHandler.networkWrapper.sendToServer(message);
+            tileEntity.getGlowing().set(checkGlowing.isChecked());
+            tileEntity.updateProperty(tileEntity.getGlowing());
         }
     }
 
@@ -70,8 +67,7 @@ public class GuiHologramProjectorTabExtra extends GuiTabPanel implements IDropDo
 
     @Override
     public void onDropDownListChanged(GuiDropDownList dropDownList) {
-        MessageClientGuiHologramProjector message = new MessageClientGuiHologramProjector();
-        message.setPowerMode(PowerMode.valueOf(dropDownPowerMode.getListSelectedItem().tag));
-        PacketHandler.networkWrapper.sendToServer(message);
+        tileEntity.getPowerMode().set(PowerMode.valueOf(dropDownPowerMode.getListSelectedItem().tag));
+        tileEntity.updateProperty(tileEntity.getPowerMode());
     }
 }

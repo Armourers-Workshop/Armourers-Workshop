@@ -62,7 +62,7 @@ public class GuiMannequin extends GuiTabbed {
         tabChanged();
     }
     
-    public void updateProperty(TileProperty<?> property) {
+    public void updateProperty(TileProperty<?>... property) {
         MessageClientGuiUpdateTileProperties message = new MessageClientGuiUpdateTileProperties(property);
         PacketHandler.networkWrapper.sendToServer(message);
     }
