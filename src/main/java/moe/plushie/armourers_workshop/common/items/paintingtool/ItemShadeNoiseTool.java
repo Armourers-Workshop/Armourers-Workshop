@@ -72,9 +72,9 @@ public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurable
             if (!worldIn.isRemote) {
                 UndoManager.end(player);
                 if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
-                    worldIn.playSound(null, pos, new SoundEvent(LibSounds.NOISE), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 0.9F);
+                    worldIn.playSound(player, pos, new SoundEvent(LibSounds.NOISE), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 0.9F);
                 } else {
-                    worldIn.playSound(null, pos, new SoundEvent(LibSounds.NOISE), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 1.5F);
+                    worldIn.playSound(player, pos, new SoundEvent(LibSounds.NOISE), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 1.5F);
                 }
             }
             return EnumActionResult.SUCCESS;

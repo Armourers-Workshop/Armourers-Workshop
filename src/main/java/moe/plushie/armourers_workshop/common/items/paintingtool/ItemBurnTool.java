@@ -65,7 +65,7 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool, 
             }
             if (!worldIn.isRemote) {
                 UndoManager.end(player);
-                worldIn.playSound(null, pos, new SoundEvent(LibSounds.BURN), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+                worldIn.playSound(player, pos, new SoundEvent(LibSounds.BURN), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
             }
             return EnumActionResult.SUCCESS;
         }

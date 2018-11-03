@@ -81,7 +81,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
                     onPaint(stack, player, worldIn, pos, state.getBlock(), facing);
                 }
                 UndoManager.end(player);
-                playToolSound(worldIn, pos, stack);
+                playToolSound(player, worldIn, pos, stack);
             } else {
                 spawnPaintParticles(worldIn, pos, facing, newColour);
             }
@@ -130,7 +130,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
         usedOnBlockSide(stack, player, world, pos, block, side);
     }
     
-    public void playToolSound(World world, BlockPos pos, ItemStack stack) {
+    public void playToolSound(EntityPlayer player, World world, BlockPos pos, ItemStack stack) {
     }
     
     @SideOnly(Side.CLIENT)

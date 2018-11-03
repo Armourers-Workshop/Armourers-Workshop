@@ -111,7 +111,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
             }
             
             if (!worldIn.isRemote) {
-                worldIn.playSound(null, pos, new SoundEvent(LibSounds.PICKER), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+                worldIn.playSound(player, pos, new SoundEvent(LibSounds.PICKER), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
             }
             return EnumActionResult.SUCCESS;
         }
