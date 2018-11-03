@@ -1,59 +1,77 @@
 package moe.plushie.armourers_workshop.common.handler;
 
+import moe.plushie.armourers_workshop.common.blocks.BlockMannequin;
+import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.utils.ModLogger;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorldEventListener;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class DollCraftingHandler /*implements IWorldAccess*/ {
+public class DollCraftingHandler implements IWorldEventListener {
 
     public DollCraftingHandler() {
         MinecraftForge.EVENT_BUS.register(this);
     }
-    /*
+    
     @SubscribeEvent
     public void onLoadWorld(WorldEvent.Load event) {
-        ModLogger.log(String.format("Adding world access to world %s", event.world.toString()));
-        event.world.addWorldAccess(this);
+        ModLogger.log(String.format("Adding WorldEventListener to world %s", event.getWorld().toString()));
+        event.getWorld().addEventListener(this);
+    }
+    
+    @Override
+    public void notifyBlockUpdate(World worldIn, BlockPos pos, IBlockState oldState, IBlockState newState, int flags) {
     }
 
     @Override
-    public void markBlockForUpdate(int x, int y, int z) {
+    public void notifyLightSet(BlockPos pos) {
     }
 
     @Override
-    public void markBlockForRenderUpdate(int x, int y, int z) {
+    public void markBlockRangeForRenderUpdate(int x1, int y1, int z1, int x2, int y2, int z2) {
     }
 
     @Override
-    public void markBlockRangeForRenderUpdate(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    public void playSoundToAllNearExcept(EntityPlayer player, SoundEvent soundIn, SoundCategory category, double x, double y, double z, float volume, float pitch) {
     }
 
     @Override
-    public void playSound(String soundName, double x, double y, double z, float volume, float pitch) {
+    public void playRecord(SoundEvent soundIn, BlockPos pos) {
     }
 
     @Override
-    public void playSoundToNearExcept(EntityPlayer player, String soundName, double x, double y, double z, float volume, float pitch) {
+    public void spawnParticle(int particleID, boolean ignoreRange, double xCoord, double yCoord, double zCoord, double xSpeed, double ySpeed, double zSpeed, int... parameters) {
     }
 
     @Override
-    public void spawnParticle(String particleType, double x, double y, double z, double velX, double velY, double velZ) {
+    public void spawnParticle(int id, boolean ignoreRange, boolean minimiseParticleLevel, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int... parameters) {
     }
 
     @Override
-    public void onEntityCreate(Entity entity) {
+    public void onEntityAdded(Entity entityIn) {
     }
 
     @Override
-    public void onEntityDestroy(Entity entity) {
-        World world = entity.worldObj;
+    public void onEntityRemoved(Entity entityIn) {
+        World world = entityIn.getEntityWorld();
         if (!world.isRemote) {
-            if (entity instanceof EntityFallingBlock) {
-                if (((EntityFallingBlock)entity).func_145805_f() == Blocks.anvil) {
-                    int x = MathHelper.floor_double(entity.posX);
-                    int y = MathHelper.floor_double(entity.posY) - 1;
-                    int z = MathHelper.floor_double(entity.posZ);
-                    Block block = world.getBlock(x, y, z);
-                    if (block == ModBlocks.mannequin) {
-                        ((BlockMannequin)block).convertToDoll(world, x, y, z);
+            if (entityIn instanceof EntityFallingBlock) {
+                if (((EntityFallingBlock)entityIn).getBlock().getBlock() == Blocks.ANVIL) {
+                    BlockPos pos = entityIn.getPosition();
+                    IBlockState state = world.getBlockState(pos.offset(EnumFacing.DOWN));
+                    if (state.getBlock() == ModBlocks.mannequin) {
+                        ((BlockMannequin)state.getBlock()).convertToDoll(world, pos);
                     }
                 }
             }
@@ -61,22 +79,14 @@ public class DollCraftingHandler /*implements IWorldAccess*/ {
     }
 
     @Override
-    public void playRecord(String recordName, int x, int y, int z) {
+    public void broadcastSound(int soundID, BlockPos pos, int data) {
     }
 
     @Override
-    public void broadcastSound(int p_82746_1_, int p_82746_2_, int p_82746_3_, int p_82746_4_, int p_82746_5_) {
+    public void playEvent(EntityPlayer player, int type, BlockPos blockPosIn, int data) {
     }
 
     @Override
-    public void playAuxSFX(EntityPlayer p_72706_1_, int p_72706_2_, int p_72706_3_, int p_72706_4_, int p_72706_5_, int p_72706_6_) {
+    public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress) {
     }
-
-    @Override
-    public void destroyBlockPartially(int p_147587_1_, int p_147587_2_, int p_147587_3_, int p_147587_4_, int p_147587_5_) {
-    }
-
-    @Override
-    public void onStaticEntitiesChanged() {
-    }*/
 }
