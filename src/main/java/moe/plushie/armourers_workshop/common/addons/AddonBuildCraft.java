@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.addons;
 
 import org.apache.logging.log4j.Level;
 
+import moe.plushie.armourers_workshop.common.items.ItemArmourersHammer;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.item.Item;
@@ -79,6 +80,23 @@ public class AddonBuildCraft extends ModAddon {
             GL11.glRotatef(-90F, 0F, 1F, 0F);
             EquipmentRenderHandler.INSTANCE.renderSkinWithHelper(stack);
             GL11.glPopMatrix();
+        }
+        */
+    }
+    
+    /*@Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft|Core")*/
+    public class ItemArmourersHammerToolWrench extends ItemArmourersHammer /*implements IToolWrench*/ {
+        /*
+        @Optional.Method(modid = "BuildCraft|Core")
+        @Override
+        public boolean canWrench(EntityPlayer player, int x, int y, int z) {
+            return true;
+        }
+        
+        @Optional.Method(modid = "BuildCraft|Core")
+        @Override
+        public void wrenchUsed(EntityPlayer player, int x, int y, int z) {
+            player.swingItem();
         }
         */
     }
