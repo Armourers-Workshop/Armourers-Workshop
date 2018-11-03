@@ -381,6 +381,12 @@ public class BlockSkinnable extends AbstractModBlockContainer {
     
     @Override
     public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
+        Skin skin = getSkin(world, pos);
+        if (skin != null) {
+            if (!SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skin.getProperties())) {
+                return super.rotateBlock(world, pos, axis);
+            }
+        }
         return false;
     }
     
