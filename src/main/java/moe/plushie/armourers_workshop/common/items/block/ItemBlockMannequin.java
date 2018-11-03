@@ -1,6 +1,19 @@
 package moe.plushie.armourers_workshop.common.items.block;
 
+import java.util.List;
+
+import com.mojang.authlib.GameProfile;
+
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.block.Block;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBlockMannequin extends ModItemBlock {
     
@@ -11,6 +24,27 @@ public class ItemBlockMannequin extends ModItemBlock {
         super(block);
         setMaxStackSize(1);
     }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        if (stack.hasTagCompound()) {
+            NBTTagCompound compound = stack.getTagCompound();
+            GameProfile gameProfile = null;
+            if (compound.hasKey(TAG_OWNER, 10)) {
+                gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
+                String user = TranslateUtils.translate("item.armourers_workshop:rollover.user", gameProfile.getName());
+                tooltip.add(user);
+            }
+            if (compound.hasKey(TAG_IMAGE_URL, NBT.TAG_STRING)) {
+                String imageUrl = compound.getString(TAG_IMAGE_URL);
+                String urlLine = TranslateUtils.translate("item.armourers_workshop:rollover.url", imageUrl);
+                tooltip.add(urlLine);
+            }
+        }
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+    }
+    
     /*
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player,
@@ -24,26 +58,6 @@ public class ItemBlockMannequin extends ModItemBlock {
         }
         
         return false;
-    }
-    */
-    /*
-    @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
-        if (stack.hasTagCompound()) {
-            NBTTagCompound compound = stack.getTagCompound();
-            GameProfile gameProfile = null;
-            if (compound.hasKey(TAG_OWNER, 10)) {
-                gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
-                String user = TranslateUtils.translate("item.armourersworkshop:rollover.user", gameProfile.getName());
-                list.add(user);
-            }
-            if (compound.hasKey(TAG_IMAGE_URL, Constants.NBT.TAG_STRING)) {
-                String imageUrl = compound.getString(TAG_IMAGE_URL);
-                String urlLine = TranslateUtils.translate("item.armourersworkshop:rollover.url", imageUrl);
-                list.add(urlLine);
-            }
-        }
-        super.addInformation(stack, player, list, par4);
     }
     */
     /*
