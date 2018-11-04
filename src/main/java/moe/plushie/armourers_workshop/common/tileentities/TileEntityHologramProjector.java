@@ -8,7 +8,6 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -130,20 +129,6 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
         showRotationPoint = checked;
     }
 
-    private int readIntFromCompound(NBTTagCompound compound, String key, int defaultValue) {
-        if (compound.hasKey(key, NBT.TAG_INT)) {
-            return compound.getInteger(key);
-        }
-        return defaultValue;
-    }
-
-    private boolean readBoolFromCompound(NBTTagCompound compound, String key, Boolean defaultValue) {
-        if (compound.hasKey(key, NBT.TAG_BYTE)) {
-            return compound.getBoolean(key);
-        }
-        return defaultValue;
-    }
-
     public void updatePoweredState() {
         if (getWorld() != null && !world.isRemote) {
             setPoweredState(getWorld().getStrongPower(getPos()) > 0);
@@ -155,17 +140,6 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
             this.powered.set(powered);
             dirtySync();
         }
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
-        return compound;
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
     }
 
     @SideOnly(Side.CLIENT)

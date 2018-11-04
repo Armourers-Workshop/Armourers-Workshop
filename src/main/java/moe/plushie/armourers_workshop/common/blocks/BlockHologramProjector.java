@@ -75,7 +75,7 @@ public class BlockHologramProjector extends AbstractModBlockContainer {
     
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        openGui(playerIn, LibGuiIds.HOLOGRAM_PROJECTOR, worldIn, pos);
+        openGui(playerIn, LibGuiIds.HOLOGRAM_PROJECTOR, worldIn, pos, state, facing);
         return true;
     }
     

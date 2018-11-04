@@ -33,6 +33,7 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import moe.plushie.armourers_workshop.common.permission.PermissionManager;
 import moe.plushie.armourers_workshop.common.skin.SkinExtractor;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
@@ -121,6 +122,8 @@ public class CommonProxy implements ILibraryCallback {
         
         permissionSystem = new PermissionSystem();
         ModAddonManager.init();
+        
+        PermissionManager.registerPermissions();
     }
     
     public void postInit(FMLPostInitializationEvent event) {

@@ -161,7 +161,7 @@ public class BlockSkinnable extends AbstractModBlockContainer {
             //return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin, te.getRotation(), te);
         }
         if (SkinProperties.PROP_BLOCK_INVENTORY.getValue(skin.getProperties()) | SkinProperties.PROP_BLOCK_ENDER_INVENTORY.getValue(skin.getProperties())) {
-            openGui(playerIn, LibGuiIds.SKINNABLE, worldIn, pos);
+            openGui(playerIn, LibGuiIds.SKINNABLE, worldIn, pos, state, facing);
             return true;
         }
         return false;

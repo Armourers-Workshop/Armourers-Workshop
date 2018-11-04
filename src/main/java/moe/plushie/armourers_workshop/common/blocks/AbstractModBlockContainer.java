@@ -1,10 +1,14 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
+import java.util.ArrayList;
+
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
 import moe.plushie.armourers_workshop.common.items.block.ModItemBlock;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.common.permission.IPermissionHolder;
+import moe.plushie.armourers_workshop.common.permission.Permission;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -14,6 +18,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -22,8 +27,11 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.server.permission.DefaultPermissionLevel;
+import net.minecraftforge.server.permission.PermissionAPI;
+import net.minecraftforge.server.permission.context.BlockPosContext;
 
-public abstract class AbstractModBlockContainer extends BlockContainer implements ISortOrder, ICustomItemBlock, ICustomModel {
+public abstract class AbstractModBlockContainer extends BlockContainer implements ISortOrder, ICustomItemBlock, ICustomModel, IPermissionHolder {
 
     private int sortPriority = 100;
     
@@ -106,9 +114,16 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "normal"));
     }
     
-    protected void openGui(EntityPlayer playerIn, int guiId, World worldIn, BlockPos pos) {
+    protected void openGui(EntityPlayer playerIn, int guiId, World worldIn, BlockPos pos, IBlockState state, EnumFacing facing) {
         if (!worldIn.isRemote) {
-            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), guiId, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            if (PermissionAPI.hasPermission(playerIn.getGameProfile(), getTranslationKey() + ".open-gui", new BlockPosContext(playerIn, pos, state, facing))) {
+                FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), guiId, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            }
         }
+    }
+    
+    @Override
+    public void getPermissions(ArrayList<Permission> permissions) {
+        permissions.add(new Permission(getTranslationKey() + ".open-gui", DefaultPermissionLevel.ALL));
     }
 }

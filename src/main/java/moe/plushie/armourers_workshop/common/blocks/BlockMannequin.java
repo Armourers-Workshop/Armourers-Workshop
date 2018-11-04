@@ -324,7 +324,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         if (!playerIn.canPlayerEdit(pos, facing, playerIn.getHeldItem(hand))) {
             return false;
         }
-        openGui(playerIn, LibGuiIds.MANNEQUIN, worldIn, pos);
+        openGui(playerIn, LibGuiIds.MANNEQUIN, worldIn, pos, state, facing);
         return true;
     }
 

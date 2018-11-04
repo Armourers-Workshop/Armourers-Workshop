@@ -1,10 +1,14 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
+import java.util.ArrayList;
+
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
 import moe.plushie.armourers_workshop.common.items.block.ModItemBlock;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.common.permission.IPermissionHolder;
+import moe.plushie.armourers_workshop.common.permission.Permission;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -18,7 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 
-public abstract class AbstractModBlock extends Block implements ISortOrder, ICustomItemBlock, ICustomModel {
+public abstract class AbstractModBlock extends Block implements ISortOrder, ICustomItemBlock, ICustomModel, IPermissionHolder {
 
     private int sortPriority = 100;
 
@@ -99,5 +103,11 @@ public abstract class AbstractModBlock extends Block implements ISortOrder, ICus
     @Override
     public void registerModels() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "normal"));
+    }
+    
+    @Override
+    public void getPermissions(ArrayList<Permission> permissions) {
+        // TODO Auto-generated method stub
+        
     }
 }

@@ -25,7 +25,7 @@ public class BlockAdvancedSkinPart extends AbstractModBlockContainer {
     
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        openGui(playerIn, LibGuiIds.ADVANCED_SKIN_PART, worldIn, pos);
+        openGui(playerIn, LibGuiIds.ADVANCED_SKIN_PART, worldIn, pos, state, facing);
         return true;
     }
 
