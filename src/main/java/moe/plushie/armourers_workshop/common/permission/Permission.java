@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.common.permission;
 
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 
 public class Permission {
@@ -15,7 +16,7 @@ public class Permission {
     }
     
     public Permission(String node, DefaultPermissionLevel level) {
-        this(node, level, "");
+        this(LibModInfo.ID + "." + node, level, "");
     }
 
     @Override
