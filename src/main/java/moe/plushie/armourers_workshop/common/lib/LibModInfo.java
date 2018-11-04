@@ -13,5 +13,5 @@ public class LibModInfo {
 
     public static final String PROXY_CLIENT_CLASS = "moe.plushie.armourers_workshop.proxies.ClientProxy";
     public static final String PROXY_COMMNON_CLASS = "moe.plushie.armourers_workshop.proxies.CommonProxy";
-    public static final String GUI_FACTORY_CLASS = "moe.plushie.armourers_workshop.client.gui.ModGuiFactory";
+    public static final String GUI_FACTORY_CLASS = "moe.plushie.armourers_workshop.client.gui.config.ModGuiFactory";
 }
