@@ -24,6 +24,7 @@ public final class ModAddonManager {
     public static ModAddon addonColoredLights;
     public static AddonCustomNPCS addonCustomNPCS;
     //public static AddonGlassShards addonGlassShards;
+    //public static AddonIntegratedCircuits addonIntegratedCircuits;
     public static AddonJBRAClient addonJBRAClient;
     //public static AddonLittleMaidMob addonLittleMaidMob;
     //public static AddonMaplecrafted addonMaplecrafted;
@@ -37,6 +38,7 @@ public final class ModAddonManager {
     //public static AddonOreSpawn addonOreSpawn;
     public static AddonShaders addonShaders;
     public static ModAddon addonSmartMoving;
+    //public static AddonTails addonTails;
     //public static AddonThaumcraft addonThaumcraft;
     //public static AddonTinkersConstruct addonTinkersConstruct;
     //public static AddonTwilightForest addonTwilightForest;
@@ -63,6 +65,7 @@ public final class ModAddonManager {
         addonColoredLights = new ModAddon("easycoloredlights", "Colored Lights");
         addonCustomNPCS = new AddonCustomNPCS();
         //addonGlassShards = new AddonGlassShards();
+        //addonIntegratedCircuits = new AddonIntegratedCircuits();
         addonJBRAClient = new AddonJBRAClient();
         //addonLittleMaidMob = new AddonLittleMaidMob();
         //addonMaplecrafted = new AddonMaplecrafted();
@@ -76,6 +79,7 @@ public final class ModAddonManager {
         //addonOreSpawn = new AddonOreSpawn();
         addonShaders = new AddonShaders();
         addonSmartMoving = new ModAddon("SmartMoving", "Smart Moving");
+        //addonTails = new AddonTails();
         //addonThaumcraft = new AddonThaumcraft();
         //addonTinkersConstruct = new AddonTinkersConstruct();
         //addonTwilightForest = new AddonTwilightForest();

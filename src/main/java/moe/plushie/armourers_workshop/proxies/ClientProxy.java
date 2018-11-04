@@ -90,7 +90,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ICrashCallable;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -142,7 +141,6 @@ public class ClientProxy extends CommonProxy {
         ConfigHandlerClient.init(new File(getModConfigDirectory(), "client.cfg"));
         
         enableCrossModSupport();
-        spamSillyMessages();
         new RehostedJarHandler(event.getSourceFile(), "Armourers-Workshop-" + LibModInfo.MOD_VERSION + ".jar");
     }
     
@@ -329,18 +327,6 @@ public class ClientProxy extends CommonProxy {
             return 4;
         } else {
             return 2;
-        }
-    }
-    
-    private void spamSillyMessages() {
-        if (Loader.isModLoaded("Tails")) {
-            ModLogger.log("Tails detected! - Sand praising module active.");
-        }
-        if (Loader.isModLoaded("BuildCraft|Core")) {
-            ModLogger.log("Buildcraft detected! - Enabling knishes support.");
-        }
-        if (Loader.isModLoaded("integratedcircuits")) {
-            ModLogger.log("Integrated Circuits detected! - Applying cosplay to mannequins.");
         }
     }
 

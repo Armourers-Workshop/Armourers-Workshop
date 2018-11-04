@@ -15,6 +15,11 @@ public class AddonBuildCraft extends ModAddon {
         super("BuildCraft|Core", "BuildCraft");
     }
     
+    @Override
+    public void init() {
+        ModLogger.log("Buildcraft detected! - Enabling knishes support.");
+    }
+    
     public boolean isSkinCompatibleVersion() {
         if (isModLoaded()) {
             ModContainer mc = Loader.instance().getIndexedModList().get(getModId());
