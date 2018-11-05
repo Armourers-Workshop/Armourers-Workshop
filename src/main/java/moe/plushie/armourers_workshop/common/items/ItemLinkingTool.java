@@ -2,9 +2,13 @@ package moe.plushie.armourers_workshop.common.items;
 
 import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,9 +16,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class ItemLinkingTool extends AbstractModItem {
@@ -85,5 +91,20 @@ public class ItemLinkingTool extends AbstractModItem {
             return new BlockPos(loc[0], loc[1], loc[2]);
         }
         return new BlockPos(0, 0, 0);
+    }
+    
+    @Override
+    public void registerModels() {
+        ModelLoader.setCustomMeshDefinition(this, new ItemMeshDefinition() {
+            @Override
+            public ModelResourceLocation getModelLocation(ItemStack stack) {
+                if (!hasLinkLocation(stack)) {
+                    return new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "normal");
+                } else {
+                    return new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey() + "-link"), "normal");
+                }
+            }
+        });
+        ModelBakery.registerItemVariants(this, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "normal"), new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey() + "-link"), "normal"));
     }
 }

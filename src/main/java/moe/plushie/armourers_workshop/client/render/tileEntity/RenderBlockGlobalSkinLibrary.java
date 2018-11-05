@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.client.render.tileEntity;
 
-import org.lwjgl.opengl.GL11;
-
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.block.ModelBlockGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.common.blocks.BlockGlobalSkinLibrary;
@@ -19,9 +17,9 @@ public class RenderBlockGlobalSkinLibrary extends TileEntitySpecialRenderer<Tile
     
     @Override
     public void render(TileEntityGlobalSkinLibrary te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        GL11.glPushMatrix();
-        GL11.glTranslated(x + 0.5D, y + 1.5D, z + 0.5D);
-        GL11.glScalef(-1, -1, 1);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5D, y + 1.5D, z + 0.5D);
+        GlStateManager.scale(-1, -1, 1);
         float shrink = 0.4F;
         if (ConfigHandlerClient.useClassicBlockModels) {
             shrink = 1;
@@ -40,7 +38,7 @@ public class RenderBlockGlobalSkinLibrary extends TileEntitySpecialRenderer<Tile
         }
         GlStateManager.scale(shrink, shrink, shrink);
         GLOBE_MODEL.render(te, partialTicks, SCALE);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
         super.render(te, x, y, z, partialTicks, destroyStage, alpha);
     }
 }
