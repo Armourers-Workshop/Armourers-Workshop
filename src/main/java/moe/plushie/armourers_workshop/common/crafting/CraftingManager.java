@@ -3,10 +3,12 @@ package moe.plushie.armourers_workshop.common.crafting;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.common.handler.DollCraftingHandler;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -17,8 +19,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 @Mod.EventBusSubscriber(modid = LibModInfo.ID)
 public final class CraftingManager {
 
-    
-    
     public static void init() {
         /*
         GameRegistry.addRecipe(new RecipeSkinUpdate());
@@ -33,30 +33,33 @@ public final class CraftingManager {
         if (!ConfigHandler.disableSkinningRecipes) {
             ItemSkinningRecipes.init();
         }
-        /*
-        if (!ConfigHandler.disableRecipes) {
-            ModBlockRecipes.init();
-            ModItemRecipes.init();
-        }
-        if (!ConfigHandler.disableDollRecipe) {
-            new DollCraftingHandler();
-        }*/
+        new DollCraftingHandler();
     }
-    
+
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
-        ModBlockRecipes.init(event.getRegistry());
-        ModItemRecipes.init(event.getRegistry()); 
+        if (!ConfigHandler.disableRecipes) {
+            ModBlockRecipes.init(event.getRegistry());
+            ModItemRecipes.init(event.getRegistry());
+        }
+    }
+
+    public static void addShapelessRecipe(IForgeRegistry<IRecipe> iForgeRegistry, ItemStack result, Object[] recipe, ResourceLocation registryName) {
+        iForgeRegistry.register(new ShapelessOreRecipe(null, result, recipe).setRegistryName(registryName));
     }
 
     public static void addShapelessRecipe(IForgeRegistry<IRecipe> iForgeRegistry, ItemStack result, Object[] recipe) {
         iForgeRegistry.register(new ShapelessOreRecipe(null, result, recipe).setRegistryName(result.getItem().getRegistryName()));
     }
 
+    public static void addShapedRecipe(IForgeRegistry<IRecipe> iForgeRegistry, ItemStack result, Object[] recipe, ResourceLocation registryName) {
+        iForgeRegistry.register(new ShapedOreRecipe(null, result, recipe).setRegistryName(registryName));
+    }
+
     public static void addShapedRecipe(IForgeRegistry<IRecipe> iForgeRegistry, ItemStack result, Object[] recipe) {
         iForgeRegistry.register(new ShapedOreRecipe(null, result, recipe).setRegistryName(result.getItem().getRegistryName()));
     }
-    
+
     public static void hideItemsInNEI() {
         if (ConfigHandler.hideDollFromCreativeTabs) {
             hideItemInNEI(new ItemStack(ModBlocks.doll, 1));
@@ -72,6 +75,7 @@ public final class CraftingManager {
         hideItemInNEI(new ItemStack(ModBlocks.skinnableChild, 1));
         hideItemInNEI(new ItemStack(ModBlocks.skinnableChildGlowing, 1));
     }
+
     private static void hideItemInNEI(ItemStack stack) {
         ModAddonManager.addonNEI.hideItem(stack);
     }

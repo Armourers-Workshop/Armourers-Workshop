@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.handler;
 
 import moe.plushie.armourers_workshop.common.blocks.BlockMannequin;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -64,6 +65,9 @@ public class DollCraftingHandler implements IWorldEventListener {
 
     @Override
     public void onEntityRemoved(Entity entityIn) {
+        if (ConfigHandler.disableDollRecipe) {
+            return;
+        }
         World world = entityIn.getEntityWorld();
         if (!world.isRemote) {
             if (entityIn instanceof EntityFallingBlock) {
