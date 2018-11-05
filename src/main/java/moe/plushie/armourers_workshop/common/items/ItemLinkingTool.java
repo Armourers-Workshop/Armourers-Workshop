@@ -22,6 +22,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemLinkingTool extends AbstractModItem {
 
@@ -93,6 +95,7 @@ public class ItemLinkingTool extends AbstractModItem {
         return new BlockPos(0, 0, 0);
     }
     
+    @SideOnly(Side.CLIENT)
     @Override
     public void registerModels() {
         ModelLoader.setCustomMeshDefinition(this, new ItemMeshDefinition() {
