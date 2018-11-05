@@ -156,7 +156,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         // TODO Set master using trackFile
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
-        ModLogger.log("Loaded file form lib: " + libraryFile.toString());
+        ModLogger.log("Loaded file form lib: " + libraryFile.toString().replace("%", ""));
         
         ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(skin, identifier);
         
