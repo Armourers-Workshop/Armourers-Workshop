@@ -23,9 +23,13 @@ public class GuiAdvancedSkinBuilder extends GuiContainer implements ISlider {
 
     private final TileEntityAdvancedSkinBuilder tileEntity;
     
-    private GuiButtonExt indexIncrease;
     private GuiButtonExt indexDecrease;
+    private GuiButtonExt indexIncrease;
     private static int indexActive;
+    
+    private GuiButtonExt parentDecrease;
+    private GuiButtonExt parentIncrease;
+    private int parentIndex;
     
     private GuiCustomSlider posOffsetXSlider;
     private GuiCustomSlider posOffsetYSlider;
@@ -55,6 +59,9 @@ public class GuiAdvancedSkinBuilder extends GuiContainer implements ISlider {
         indexDecrease = new GuiButtonExt(0, guiLeft + buttonsPosX, guiTop + buttonsPosY, 20, 20, "-");
         indexIncrease = new GuiButtonExt(0, guiLeft + buttonsPosX + 25, guiTop + buttonsPosY, 20, 20, "+");
         
+        parentDecrease = new GuiButtonExt(0, guiLeft + buttonsPosX, guiTop + buttonsPosY + 120, 20, 20, "-");
+        parentIncrease = new GuiButtonExt(0, guiLeft + buttonsPosX + 25, guiTop + buttonsPosY + 120, 20, 20, "+");
+        
         posOffsetXSlider = new GuiCustomSlider(0, guiLeft + buttonsPosX, guiTop + buttonsPosY + 25, 80, 10, "X:", "pos", -64, 64, 0, false, true, this).setFineTuneButtons(true);
         posOffsetYSlider = new GuiCustomSlider(0, guiLeft + buttonsPosX, guiTop + buttonsPosY + 40, 80, 10, "Y:", "pos", -64, 64, 0, false, true, this).setFineTuneButtons(true);
         posOffsetZSlider = new GuiCustomSlider(0, guiLeft + buttonsPosX, guiTop + buttonsPosY + 55, 80, 10, "Z:", "pos", -64, 64, 0, false, true, this).setFineTuneButtons(true);
@@ -65,6 +72,9 @@ public class GuiAdvancedSkinBuilder extends GuiContainer implements ISlider {
         
         buttonList.add(indexDecrease);
         buttonList.add(indexIncrease);
+        
+        buttonList.add(parentDecrease);
+        buttonList.add(parentIncrease);
         
         buttonList.add(posOffsetXSlider);
         buttonList.add(posOffsetYSlider);
@@ -104,7 +114,7 @@ public class GuiAdvancedSkinBuilder extends GuiContainer implements ISlider {
     
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
+        //this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
     }

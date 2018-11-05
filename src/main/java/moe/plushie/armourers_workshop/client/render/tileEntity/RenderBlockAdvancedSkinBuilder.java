@@ -27,9 +27,9 @@ public class RenderBlockAdvancedSkinBuilder extends TileEntitySpecialRenderer<Ti
         GlStateManager.enableRescaleNormal();
         //GlStateManager.disableLighting();
         
-        GlStateManager.translate(x + 0.5F, y + 0.5F, z + 0.5F);
+        GlStateManager.translate(x + 0.5F, y + 2.5F, z + 0.5F);
         GlStateManager.scale(-1F, -1F, 1F);
-        GlStateManager.scale(16F, 16F, 16F);
+        //GlStateManager.scale(16F, 16F, 16F);
         
         for (int i = 0; i < te.getSizeInventory(); i++) {
             ItemStack itemStack = te.getStackInSlot(i);
@@ -39,18 +39,23 @@ public class RenderBlockAdvancedSkinBuilder extends TileEntitySpecialRenderer<Ti
             }
             SkinPartSettings ps = te.getPartSettings(i);
             
+            
             GlStateManager.pushAttrib();
             GlStateManager.resetColor();
             GlStateManager.color(1, 1, 1, 1);
             GlStateManager.enableBlend();
             GlStateManager.disableTexture2D();
+            GlStateManager.glLineWidth(1F);
             RenderGlobal.drawBoundingBox(
                     -scale / 4F, scale / 1.5F, -scale / 4F,
-                    scale / 4F, scale, scale / 4F, 0.1F, 1F, 0.1F, 0.5F);
+                    scale / 4F, scale / 1.5F + scale / 2F, scale / 4F, 0.1F, 1F, 0.1F, 0.5F);
             GlStateManager.enableTexture2D();
             GlStateManager.popAttrib();
             
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(ps.posOffset.x * scale, ps.posOffset.y * scale, ps.posOffset.z * scale);
             SkinItemRenderHelper.renderSkinWithoutHelper(descriptor, false);
+            GlStateManager.popMatrix();
         }
         
         //GlStateManager.enableLighting();
