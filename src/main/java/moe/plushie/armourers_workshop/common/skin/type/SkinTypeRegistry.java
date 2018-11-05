@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.common.skin.type.horse.SkinHorse;
 import moe.plushie.armourers_workshop.common.skin.type.item.SkinItem;
 import moe.plushie.armourers_workshop.common.skin.type.legs.SkinLegs;
 import moe.plushie.armourers_workshop.common.skin.type.legs.SkinSkirt;
+import moe.plushie.armourers_workshop.common.skin.type.unknown.SkinUnknown;
 import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.resources.I18n;
@@ -52,6 +53,8 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     
     public static ISkinType oldSkinSkirt;
     public static ISkinType oldSkinArrow;
+    
+    public static ISkinType skinUnknown;
     
     
     private LinkedHashMap<String, ISkinType> skinTypeMap;
@@ -91,6 +94,8 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         oldSkinSkirt = new SkinSkirt();
         oldSkinArrow = new SkinArrow();
         
+        skinUnknown = new SkinUnknown();
+        
         registerSkin(skinHead);
         registerSkin(skinChest);
         registerSkin(skinLegs);
@@ -110,6 +115,8 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         registerSkin(skinBlock);
         registerSkin(skinHorse);
         registerSkin(skinAdvanced);
+        
+        registerSkin(skinUnknown);
     }
     
     @Override
@@ -144,7 +151,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     @Override
     public ISkinType getSkinTypeFromRegistryName(String registryName) {
         if (registryName == null | registryName.trim().isEmpty()) {
-            return null;
+            return skinUnknown;
         }
         if(registryName.equals(oldSkinSkirt.getRegistryName())) {
             return skinLegs;
@@ -153,6 +160,9 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             return skinBow;
         }
         ISkinType skinType = skinTypeMap.get(registryName);
+        if (skinType == null) {
+            skinType = skinUnknown;
+        }
         return skinType;
     }
     
@@ -184,7 +194,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     @Override
     public ISkinPartType getSkinPartFromRegistryName(String registryName) {
         if (registryName == null | registryName.trim().isEmpty()) {
-            return null;
+            return ((SkinUnknown)skinUnknown).skinUnknownPart;
         }
         return skinPartMap.get(registryName);
     }
