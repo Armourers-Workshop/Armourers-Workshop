@@ -65,6 +65,8 @@ public interface IEntitySkinCapability {
      */
     public ItemStack setSkinStack(ISkinType skinType, int slotIndex, ItemStack skinStack);
     
+    public boolean setStackInNextFreeSlot(ItemStack stack);
+    
     //TODO Change this to use CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
     public SkinInventoryContainer getSkinInventoryContainer();
     

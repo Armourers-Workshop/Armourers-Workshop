@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.inventory.ModInventory;
 import moe.plushie.armourers_workshop.common.inventory.ModInventory.IInventoryCallback;
 import moe.plushie.armourers_workshop.common.inventory.SkinInventoryContainer;
@@ -14,6 +16,7 @@ import moe.plushie.armourers_workshop.common.network.messages.server.MessageServ
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -124,6 +127,35 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventoryCa
             return oldItemStack;
         }
         return ItemStack.EMPTY;
+    }
+    
+    @Override
+    public boolean setStackInNextFreeSlot(ItemStack stack) {
+        ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(stack);
+        if (descriptor == null) {
+            return false;
+        }
+
+        ISkinType skinType = descriptor.getIdentifier().getSkinType();
+        WardrobeInventory wardrobeInventory = skinInventoryContainer.getSkinTypeInv(skinType);
+        if (wardrobeInventory == null) {
+            return false;
+        }
+
+        int maxSlot = wardrobeInventory.getSizeInventory();
+        if (entity instanceof EntityPlayer) {
+            IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get((EntityPlayer) entity);
+            if (wardrobeCap != null) {
+                maxSlot = wardrobeCap.getUnlockedSlotsForSkinType(skinType);
+            }
+        }
+        for (int i = 0; i < maxSlot; i++) {
+            if (wardrobeInventory.getStackInSlot(i).isEmpty()) {
+                wardrobeInventory.setInventorySlotContents(i, stack);
+                return true;
+            }
+        }
+        return false;
     }
     
     @Override

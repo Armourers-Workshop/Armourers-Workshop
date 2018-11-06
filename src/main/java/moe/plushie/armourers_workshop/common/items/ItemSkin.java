@@ -40,6 +40,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -48,6 +49,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -330,27 +332,26 @@ public class ItemSkin extends AbstractModItem {
             if (!SkinNBTHelper.stackHasSkinData(itemStack)) {
                 return super.dispenseStack(blockSource, itemStack);
             }
-            /*
-            IBlockState state = blockSource.getBlockState();
-            EnumFacing enumfacing = BlockDispenser.func_149937_b(blockSource.getBlockState());
-            double x = blockSource.getX() + enumfacing.getXOffset();
-            double y = blockSource.getY() + enumfacing.getYOffset();
-            double z = blockSource.getZ() + enumfacing.getZOffset();
-            AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox((double)x, (double)y, (double)z, (double)(x + 1), (double)(y + 1), (double)(z + 1));
-            List list = blockSource.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
             
+            IBlockState state = blockSource.getBlockState();
+            EnumFacing facing = state.getValue(BlockDispenser.FACING);
+            BlockPos target = blockSource.getBlockPos().offset(facing);
+            AxisAlignedBB axisalignedbb = new AxisAlignedBB(target);
+            List list = blockSource.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
             for (int i = 0; i < list.size(); i++) {
                 EntityLivingBase entitylivingbase = (EntityLivingBase)list.get(i);
                 if (entitylivingbase instanceof EntityPlayer) {
                     EntityPlayer player = (EntityPlayer) entitylivingbase;
-                    ExPropsPlayerSkinData equipmentData = ExPropsPlayerSkinData.get(player);
-                    if (equipmentData.setStackInNextFreeSlot(itemStack.copy())) {
-                        --itemStack.stackSize;
+                    IEntitySkinCapability skinCap = EntitySkinCapability.get(player);
+                    if (skinCap.setStackInNextFreeSlot(itemStack.copy())) {
+                        itemStack.shrink(1);
+                        skinCap.syncToAllTracking();
+                        skinCap.syncToPlayer((EntityPlayerMP) player);
                         return itemStack;
                     }
                 }
             }
-            */
+            
             return super.dispenseStack(blockSource, itemStack);
         }
     };
