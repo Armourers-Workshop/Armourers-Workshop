@@ -1,10 +1,29 @@
 package moe.plushie.armourers_workshop.common.items;
 
+import java.util.List;
+
+import moe.plushie.armourers_workshop.common.blocks.BlockMannequin;
+import moe.plushie.armourers_workshop.common.blocks.BlockMannequin.EnumPartType;
+import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.data.BipedRotations;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.NBTHelper;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemMannequinTool extends AbstractModItem {
     
@@ -14,35 +33,35 @@ public class ItemMannequinTool extends AbstractModItem {
         super(LibItemNames.MANNEQUIN_TOOL);
         setSortPriority(10);
     }
-    /*
+    
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z,
-            int side, float hitX, float hitY, float hitZ) {
-        
-        Block block = world.getBlock(x, y, z);
-        if (block != null && (block == ModBlocks.mannequin | block == ModBlocks.doll)) {
-            TileEntity te;
-            int meta = world.getBlockMetadata(x, y, z);
-            if (meta == 0) {
-                te = world.getTileEntity(x, y, z);
-            } else {
-                te = world.getTileEntity(x, y - 1, z);
+    public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        IBlockState state = world.getBlockState(pos);
+        if (state.getBlock() == ModBlocks.mannequin | state.getBlock() == ModBlocks.doll) {
+            if (state.getBlock() == ModBlocks.mannequin) {
+                if (state.getValue(BlockMannequin.STATE_PART) == EnumPartType.TOP) {
+                    pos = pos.offset(EnumFacing.DOWN);
+                }
             }
+            TileEntity te = world.getTileEntity(pos);
             if (te != null && te instanceof TileEntityMannequin) {
                 TileEntityMannequin teMan = (TileEntityMannequin) te;
                 if (player.isSneaking()) {
-                    setRotationDataOnStack(stack, teMan.getBipedRotations());
+                    setRotationDataOnStack(stack, teMan.PROP_BIPED_ROTATIONS.get());
+                    return EnumActionResult.SUCCESS;
                 } else {
                     BipedRotations bipedRotations = getRotationDataFromStack(stack);
                     if (bipedRotations != null) {
-                        teMan.setBipedRotations(bipedRotations);
+                        teMan.PROP_BIPED_ROTATIONS.set(bipedRotations);
+                        return EnumActionResult.SUCCESS;
                     }
                 }
-                return true;
+                
             }
         }
-        return false;
-    }*/
+        return EnumActionResult.FAIL;
+    }
     
     private BipedRotations getRotationDataFromStack(ItemStack stack) {
         if (!stack.hasTagCompound()) {
@@ -65,17 +84,15 @@ public class ItemMannequinTool extends AbstractModItem {
         compound.setTag(TAG_ROTATION_DATA, rotationCompound);
         stack.setTagCompound(compound);
     }
-    /*
-    @Override
+    
     @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean p_77624_4_) {
-        super.addInformation(stack, player, list, p_77624_4_);
-        if (stack.hasTagCompound()) {
-            String settingsSaved = TranslateUtils.translate("item.armourersworkshop:rollover.settingsSaved");
-            list.add(settingsSaved);
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(TAG_ROTATION_DATA, NBT.TAG_COMPOUND)) {
+            tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.settingsSaved"));
         } else {
-            String noSettingsSaved = TranslateUtils.translate("item.armourersworkshop:rollover.noSettingsSaved");
-            list.add(noSettingsSaved);
+            tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.noSettingsSaved"));
         }
-    }*/
+    }
 }
