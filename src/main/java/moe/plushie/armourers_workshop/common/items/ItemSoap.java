@@ -1,34 +1,42 @@
 package moe.plushie.armourers_workshop.common.items;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
+import moe.plushie.armourers_workshop.common.blocks.BlockBoundingBox;
+import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
+import moe.plushie.armourers_workshop.common.lib.LibSounds;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class ItemSoap extends AbstractModItem {
 
     public ItemSoap() {
         super(LibItemNames.SOAP);
     }
-    /*
+
     @Override
-    public int getColorFromItemStack(ItemStack itemStack, int pass) {
-        return 0xFFFF7FD2;
-    }
-    
-    @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        Block block = world.getBlock(x, y, z);
-        if (block instanceof IPantableBlock) {
-            IPantableBlock paintableBlock = (IPantableBlock) block;
-            //DOTO This may make block sides transparent.
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        IBlockState state = worldIn.getBlockState(pos);
+        if (state.getBlock() instanceof IPantableBlock) {
+            IPantableBlock paintableBlock = (IPantableBlock) state.getBlock();
+            // TODO This may make block sides transparent.
         }
-        if (block == ModBlocks.boundingBox) {
-            BlockBoundingBox bb = (BlockBoundingBox) block;
-            if (!world.isRemote) {
-                bb.setColour(world, x, y, z, 0x00FFFFFF, side);
-                bb.setPaintType(world, x, y, z, PaintType.NONE, side);
-                world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, LibSounds.PAINT, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+        if (state.getBlock() == ModBlocks.boundingBox) {
+            BlockBoundingBox bb = (BlockBoundingBox) state.getBlock();
+            if (!worldIn.isRemote) {
+                bb.setColour(worldIn, pos, 0x00FFFFFF, facing);
+                bb.setPaintType(worldIn, pos, PaintRegistry.PAINT_TYPE_NONE, facing);
+                worldIn.playSound(null, pos, LibSounds.PAINT, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 0.9F);
             }
-            return true;
+            return EnumActionResult.SUCCESS;
         }
-        return false;
-    }*/
+        return EnumActionResult.PASS;
+    }
 }
