@@ -242,27 +242,15 @@ public class ItemSkin extends AbstractModItem {
         
         IBlockState state = targetBlock.getDefaultState().withProperty(BlockSkinnable.STATE_FACING, dir);
         
-        
-        
-        //world.setBlockState(pos, state, 2);
-        
         TileEntitySkinnable te = new TileEntitySkinnable();
         te.setSkinPointer(skin, descriptor);
         te.setRelatedBlocks(relatedBlocks);
-        //world.setTileEntity(pos, te);
         SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(state, pos, world).setTileEntity(te).setDelay(1));
-
         
-
-        //targetBlock.onBlockPlacedBy(world, pos, state, player, stack);
-        //targetBlock.onPostBlockPlaced(world, pos, meta);
-
-        //targetBlock.setFacingDirection(world, x, y, z, dir);
         stack.shrink(1);
         
         SoundType soundType = state.getBlock().getSoundType(state, world, pos, player);
-        
-        world.playSound(player, pos, soundType.getPlaceSound(), SoundCategory.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
+        world.playSound(null, pos, soundType.getPlaceSound(), SoundCategory.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
         return true;
     }
     
