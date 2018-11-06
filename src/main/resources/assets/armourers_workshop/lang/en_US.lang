@@ -75,7 +75,7 @@ tile.armourers_workshop:skinning-table.flavour=Apply and remove skins from items
 # Item names
 # Skins
 item.armourers_workshop:skin-template.name=Skin Template
-item.armourers_workshop:Skin.name=Skin
+item.armourers_workshop:skin.name=Skin
 
 # Painting tools
 item.armourers_workshop:paintbrush.name=Paintbrush
