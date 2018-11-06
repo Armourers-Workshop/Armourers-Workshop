@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.common.items.block.ModItemBlock;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.permission.IPermissionHolder;
 import moe.plushie.armourers_workshop.common.permission.Permission;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -117,7 +116,6 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
     
     protected void openGui(EntityPlayer playerIn, int guiId, World worldIn, BlockPos pos, IBlockState state, EnumFacing facing) {
         if (!worldIn.isRemote) {
-            ModLogger.log(getTranslationKey() + ".open-gui");
             if (PermissionAPI.hasPermission(playerIn.getGameProfile(), LibModInfo.ID + "." + getTranslationKey() + ".open-gui", new BlockPosContext(playerIn, pos, state, facing))) {
                 FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), guiId, worldIn, pos.getX(), pos.getY(), pos.getZ());
             }
