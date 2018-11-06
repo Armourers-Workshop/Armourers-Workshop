@@ -27,7 +27,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -89,7 +88,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     
     @Override
     public void playToolSound(EntityPlayer player, World world, BlockPos pos, ItemStack stack) {
-        world.playSound(player, pos, new SoundEvent(LibSounds.PAINT), SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+        world.playSound(null, pos, LibSounds.PAINT, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
     }
     
     @Override

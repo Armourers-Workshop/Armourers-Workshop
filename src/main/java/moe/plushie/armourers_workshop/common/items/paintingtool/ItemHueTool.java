@@ -27,7 +27,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -72,7 +71,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
             }
             if (!worldIn.isRemote) {
                 UndoManager.end(player);
-                worldIn.playSound(player, pos, new SoundEvent(LibSounds.BURN), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+                worldIn.playSound(null, pos, LibSounds.PAINT, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
             }
 
             return EnumActionResult.SUCCESS;

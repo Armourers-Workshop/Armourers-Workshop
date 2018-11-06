@@ -39,14 +39,14 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
     
     @Override
     public void playToolSound(EntityPlayer player, World world, BlockPos pos, ItemStack stack) {
-        ResourceLocation soundLocation = LibSounds.PAINT;
+        SoundEvent soundEvent = LibSounds.PAINT;
         if (ModHolidays.APRIL_FOOLS.isHolidayActive()) {
-            soundLocation = LibSounds.BOI;
+            soundEvent = LibSounds.BOI;
         }
         if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
-            world.playSound(player, pos, new SoundEvent(soundLocation), SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 0.9F);
+            world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 0.9F);
         } else {
-            world.playSound(player, pos, new SoundEvent(soundLocation), SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 1.5F);
+            world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 1.5F);
         }
     }
     

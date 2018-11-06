@@ -39,7 +39,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -72,9 +71,9 @@ public class ItemColourNoiseTool extends AbstractModItem implements IConfigurabl
             if (!worldIn.isRemote) {
                 UndoManager.end(player);
                 if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
-                    worldIn.playSound(player, pos, new SoundEvent(LibSounds.NOISE), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 0.9F);
+                    worldIn.playSound(null, pos, LibSounds.NOISE, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 0.9F);
                 } else {
-                    worldIn.playSound(player, pos, new SoundEvent(LibSounds.NOISE), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 1.5F);
+                    worldIn.playSound(null, pos, LibSounds.NOISE, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 1.5F);
                 }
             }
             return EnumActionResult.SUCCESS;

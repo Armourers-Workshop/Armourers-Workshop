@@ -38,7 +38,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -111,7 +110,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
             }
             
             if (!worldIn.isRemote) {
-                worldIn.playSound(player, pos, new SoundEvent(LibSounds.PICKER), SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+                worldIn.playSound(null, pos, LibSounds.PICKER, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
             }
             return EnumActionResult.SUCCESS;
         }
