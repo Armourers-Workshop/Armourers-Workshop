@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.network.messages.server;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
+import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.network.ByteBufHelper;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
@@ -37,7 +38,9 @@ public class MessageServerSendSkinData implements IMessage, IMessageHandler<Mess
         SkinIdentifierSerializer.writeToByteBuf(skinIdentifierRequested, buf);
         SkinIdentifierSerializer.writeToByteBuf(skinIdentifierUpdated, buf);
         buf.writeBoolean(skin != null);
-        ByteBufHelper.writeSkinToByteBuf(buf, this.skin);
+        if (skin != null) {
+            ByteBufHelper.writeSkinToByteBuf(buf, this.skin);
+        }
     }
     
     @Override
@@ -78,7 +81,7 @@ public class MessageServerSendSkinData implements IMessage, IMessageHandler<Mess
         
         @SideOnly(Side.CLIENT)
         private void sendSkinForBaking(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated) {
-            ModelBakery.INSTANCE.receivedUnbakedModel(skin, skinIdentifierRequested, skinIdentifierUpdated);
+            ModelBakery.INSTANCE.receivedUnbakedModel(skin, skinIdentifierRequested, skinIdentifierUpdated, ClientSkinCache.INSTANCE);
         }
     }
 }

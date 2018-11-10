@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.BakedSkin;
+import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.IBakedSkinReceiver;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientRequestSkinData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -33,9 +34,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin> {
+public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, IBakedSkinReceiver {
     
     public static ClientSkinCache INSTANCE;
+    
+    public static Skin errorSkin = null;
     
     /** Cache of skins that are in memory. */
     private final Cache<ISkinIdentifier, Skin> skinCache;
@@ -114,7 +117,11 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin> {
         skinCache.invalidate(identifier);
     }
     
-    public void receivedModelFromBakery(BakedSkin bakedSkin) {
+    @Override
+    public void onBakedSkin(BakedSkin bakedSkin) {
+        if (bakedSkin.getSkin() == null) {
+            bakedSkin = new BakedSkin(errorSkin, bakedSkin.getSkinIdentifierRequested(), bakedSkin.getSkinIdentifierUpdated(), null);
+        }
         SkinIdentifier identifierRequested = bakedSkin.getSkinIdentifierRequested();
         synchronized (requestedSkinIDs) {
             if (skinCache.asMap().containsKey(identifierRequested)) {

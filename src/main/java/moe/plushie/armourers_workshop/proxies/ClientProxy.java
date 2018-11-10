@@ -1,9 +1,11 @@
 package moe.plushie.armourers_workshop.proxies;
 
 import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
 import com.mojang.authlib.GameProfile;
@@ -24,6 +26,8 @@ import moe.plushie.armourers_workshop.client.library.ClientLibraryManager;
 import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.client.model.ModelMannequin;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
+import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.BakedSkin;
+import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.IBakedSkinReceiver;
 import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandler;
@@ -53,8 +57,10 @@ import moe.plushie.armourers_workshop.common.library.LibraryFileType;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
+import moe.plushie.armourers_workshop.common.skin.SkinExtractor;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinPart;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
@@ -101,7 +107,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber(modid = LibModInfo.ID, value = { Side.CLIENT })
 @SideOnly(Side.CLIENT)
-public class ClientProxy extends CommonProxy {
+public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
     
     public static ClientWardrobeHandler wardrobeHandler;
     public static PlayerTextureHandler playerTextureHandler;
@@ -208,7 +214,7 @@ public class ClientProxy extends CommonProxy {
         if (ModHolidays.VALENTINES.isHolidayActive()) {
             enableValentinesClouds();
         }
-        
+        loadErrorSkin();
         FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable()
         {
             public String call() throws Exception
@@ -389,6 +395,27 @@ public class ClientProxy extends CommonProxy {
     @Override
     public GameProfile getLocalGameProfile() {
         return Minecraft.getMinecraft().player.getGameProfile();
+    }
+    
+    private void loadErrorSkin() {
+        ModLogger.log("Loading error model.");
+        InputStream inputStream = null;
+        try {
+            inputStream = SkinExtractor.class.getClassLoader().getResourceAsStream("assets/armourers_workshop/skins/error.armour");
+            Skin skin = SkinIOUtils.loadSkinFromStream(inputStream);
+            SkinIdentifier identifier = new SkinIdentifier(skin);
+            ModelBakery.INSTANCE.receivedUnbakedModel(skin, identifier, identifier, this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+    }
+    
+    @Override
+    public void onBakedSkin(BakedSkin bakedSkin) {
+        ClientSkinCache.errorSkin = bakedSkin.getSkin();
+        ModLogger.log("Error skin loaded.");
     }
     
     public static enum SkinRenderType {

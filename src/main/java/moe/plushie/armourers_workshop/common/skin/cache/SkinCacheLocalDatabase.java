@@ -51,7 +51,8 @@ public class SkinCacheLocalDatabase implements RemovalListener<Integer, Skin> {
                 Skin skin = null;
                 try {
                     skin = skinCache.get(requestMessage.getSkinIdentifier().getSkinLocalId());
-                } catch (ExecutionException e) {
+                } catch (Exception e) {
+                    CommonSkinCache.INSTANCE.onSkinLoaded(null, requestMessage);
                     e.printStackTrace();
                 }
                 if (skin != null) {

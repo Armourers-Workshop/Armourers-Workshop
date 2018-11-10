@@ -14,7 +14,6 @@ import org.apache.logging.log4j.Level;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
-import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -70,9 +69,9 @@ public final class ModelBakery {
         return (int) ((double)totalTime / (double)totalItems);
     }
     
-    public void receivedUnbakedModel(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated) {
+    public void receivedUnbakedModel(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated, IBakedSkinReceiver skinReceiver) {
         bakingQueue.incrementAndGet();
-        skinCompletion.submit(new BakingOven(skin, skinIdentifierRequested, skinIdentifierUpdated));
+        skinCompletion.submit(new BakingOven(skin, skinIdentifierRequested, skinIdentifierUpdated, skinReceiver));
     }
     
     private void checkBakery() {
@@ -82,11 +81,10 @@ public final class ModelBakery {
                 BakedSkin bakedSkin = futureSkin.get();
                 if (bakedSkin != null) {
                     bakingQueue.decrementAndGet();
-                    if (bakedSkin.skin != null) {
-                        ClientSkinCache.INSTANCE.receivedModelFromBakery(bakedSkin);
-                    } else {
+                    if (bakedSkin.skin == null) {
                         ModLogger.log(Level.ERROR, "A skin failed to bake.");
                     }
+                    bakedSkin.getSkinReceiver().onBakedSkin(bakedSkin);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -104,21 +102,31 @@ public final class ModelBakery {
         skinDownloadExecutor.execute(downloadThread);
     }
     
+    public static interface IBakedSkinReceiver {
+        public void onBakedSkin(BakedSkin bakedSkin);
+    }
+    
     private class BakingOven implements Callable<BakedSkin> {
 
         private final Skin skin;
         private final SkinIdentifier skinIdentifierRequested;
         private final SkinIdentifier skinIdentifierUpdated;
+        private final IBakedSkinReceiver skinReceiver;
         
-        public BakingOven(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated) {
+        public BakingOven(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated, IBakedSkinReceiver skinReceiver) {
             this.skin = skin;
             this.skinIdentifierRequested = skinIdentifierRequested;
             this.skinIdentifierUpdated = skinIdentifierUpdated;
+            this.skinReceiver = skinReceiver;
         }
 
         @Override
         public BakedSkin call() throws Exception {
             Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+            if (skin == null) {
+                return new BakedSkin(skin, skinIdentifierRequested, skinIdentifierUpdated, skinReceiver);
+            }
+            
             long startTime = System.currentTimeMillis();
             skin.lightHash();
             
@@ -184,7 +192,7 @@ public final class ModelBakery {
                 bakeTimesIndex.set(0);
             }
             bakeTimes.set(index, (int)totalTime);
-            return new BakedSkin(skin, skinIdentifierRequested, skinIdentifierUpdated);
+            return new BakedSkin(skin, skinIdentifierRequested, skinIdentifierUpdated, skinReceiver);
         }
     }
     
@@ -193,11 +201,13 @@ public final class ModelBakery {
         private final Skin skin;
         private final SkinIdentifier skinIdentifierRequested;
         private final SkinIdentifier skinIdentifierUpdated;
+        private final IBakedSkinReceiver skinReceiver;
         
-        public BakedSkin(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated) {
+        public BakedSkin(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated, IBakedSkinReceiver skinReceiver) {
             this.skin = skin;
             this.skinIdentifierRequested = skinIdentifierRequested;
             this.skinIdentifierUpdated = skinIdentifierUpdated;
+            this.skinReceiver = skinReceiver;
         }
 
         public Skin getSkin() {
@@ -210,6 +220,10 @@ public final class ModelBakery {
 
         public SkinIdentifier getSkinIdentifierUpdated() {
             return skinIdentifierUpdated;
+        }
+        
+        public IBakedSkinReceiver getSkinReceiver() {
+            return skinReceiver;
         }
     }
 }

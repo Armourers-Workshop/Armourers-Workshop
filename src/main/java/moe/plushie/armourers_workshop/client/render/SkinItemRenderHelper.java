@@ -191,6 +191,7 @@ public final class SkinItemRenderHelper {
         if (skinType == null) {
             skinType = skin.getSkinType();
         }
+        skinType = skin.getSkinType();
         
         IEquipmentModel targetModel = SkinModelRenderer.INSTANCE.getModelForEquipmentType(skinType);
         

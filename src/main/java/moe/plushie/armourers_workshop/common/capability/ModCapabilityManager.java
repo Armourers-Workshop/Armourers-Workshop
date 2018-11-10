@@ -169,7 +169,6 @@ public final class ModCapabilityManager {
     private static GameRules getGameRules(MinecraftServer server) {
         return server.getWorld(0).getGameRules();
     }
-    
 
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {

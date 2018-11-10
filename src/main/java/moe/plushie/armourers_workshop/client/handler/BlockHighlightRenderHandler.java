@@ -65,7 +65,10 @@ public class BlockHighlightRenderHandler {
         if (skin == null) {
             return;
         }
-        
+        if (skin.getSkinType() != SkinTypeRegistry.skinBlock) {
+            return;
+        }
+         
         //blockGrid = skin.getParts().get(0).getBlockGrid();
         
         double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;

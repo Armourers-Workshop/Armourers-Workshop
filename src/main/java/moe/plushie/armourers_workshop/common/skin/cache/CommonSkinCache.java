@@ -199,8 +199,12 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
     
     private void sendSkinToClient(Skin skin, SkinRequestMessage requestMessage) {
         SkinIdentifier requestIdentifier = (SkinIdentifier) requestMessage.getSkinIdentifier();
-        skin.requestId = requestIdentifier;
-        PacketHandler.networkWrapper.sendTo(new MessageServerSendSkinData(requestIdentifier, getFullIdentifier(skin, requestIdentifier), skin), requestMessage.getPlayer());
+        if (skin != null) {
+            skin.requestId = requestIdentifier;
+            PacketHandler.networkWrapper.sendTo(new MessageServerSendSkinData(requestIdentifier, getFullIdentifier(skin, requestIdentifier), skin), requestMessage.getPlayer());
+        } else {
+            PacketHandler.networkWrapper.sendTo(new MessageServerSendSkinData(requestIdentifier, requestIdentifier, null), requestMessage.getPlayer());
+        }
     }
     
     public SkinIdentifier getFullIdentifier(Skin skin, ISkinIdentifier skinIdentifier) {
