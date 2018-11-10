@@ -103,7 +103,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
     
-    public static ClientWardrobeHandler equipmentWardrobeHandler;
+    public static ClientWardrobeHandler wardrobeHandler;
     public static PlayerTextureHandler playerTextureHandler;
     public static PlayerTextureDownloader playerTextureDownloader;
     
@@ -192,7 +192,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
-        equipmentWardrobeHandler = new ClientWardrobeHandler();
+        wardrobeHandler = new ClientWardrobeHandler();
         playerTextureHandler = new PlayerTextureHandler();
         playerTextureDownloader = new PlayerTextureDownloader();
         ClientSkinCache.init();
