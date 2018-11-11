@@ -101,9 +101,9 @@ public class LibraryFile implements Comparable<LibraryFile>, ILibraryFile {
     @Override
     public int compareTo(LibraryFile o) {
         if (isDirectory() & !o.isDirectory()) {
-            return getFullName().compareToIgnoreCase(o.getFullName()) - 1000;
+            return getFullName().compareToIgnoreCase(o.getFullName()) - 1000000;
         } else if (!isDirectory() & o.isDirectory()) {
-            return getFullName().compareToIgnoreCase(o.getFullName()) + 1000;
+            return getFullName().compareToIgnoreCase(o.getFullName()) + 1000000;
         }
         return getFullName().compareToIgnoreCase(o.getFullName());
     }
