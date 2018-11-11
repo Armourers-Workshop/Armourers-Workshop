@@ -68,6 +68,11 @@ public class SkinIdentifier implements ISkinIdentifier {
     }
     
     @Override
+    public boolean isValid() {
+        return hasLocalId() | hasLibraryFile() | hasGlobalId();
+    }
+    
+    @Override
     public int getSkinLocalId() {
         return localId;
     }

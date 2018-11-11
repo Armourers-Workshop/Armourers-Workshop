@@ -11,6 +11,8 @@ public interface ISkinIdentifier {
     
     public boolean hasGlobalId();
     
+    public boolean isValid();
+    
     public int getSkinLocalId();
     
     public ILibraryFile getSkinLibraryFile();

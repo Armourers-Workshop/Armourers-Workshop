@@ -97,6 +97,9 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
     }
     
     private void requestSkinFromServer(ISkinIdentifier identifier) {
+        if (!identifier.isValid()) {
+            return;
+        }
         synchronized (requestedSkinIDs) {
             if (!requestedSkinIDs.contains(identifier)) {
                 skinRequestExecutor.execute(new SkinRequestThread(identifier));
