@@ -95,6 +95,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     private GuiIconButton deleteButton;
     private GuiIconButton reloadButton;
     private GuiIconButton newFolderButton;
+    private GuiIconButton backButton;
     
     private GuiScrollbar scrollbar;
     private GuiLabeledTextField filenameTextbox;
@@ -171,10 +172,15 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         deleteButton = new GuiIconButton(this, -1, PADDING * 3 + 40, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.deleteSkin"), texture);
         deleteButton.setIconLocation(0, 118, 24, 24);
         buttonList.add(deleteButton);
+        deleteButton.enabled = false;
         
         newFolderButton = new GuiIconButton(this, -1, PADDING * 4 + 60, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.newFolder"), texture);
         newFolderButton.setIconLocation(75, 118, 24, 24);
         buttonList.add(newFolderButton);
+        
+        backButton = new  GuiIconButton(this, -1, INVENTORY_WIDTH + PADDING - 24, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.back"), texture);
+        backButton.setIconLocation(150, 93, 24, 24);
+        buttonList.add(backButton);
         
         int listWidth = this.width - INVENTORY_WIDTH - PADDING * 5;
         int listHeight = this.height - TITLE_HEIGHT - 14 - PADDING * 3;
@@ -366,6 +372,10 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         
         if (button == newFolderButton) {
             openDialog(new GuiDialogNewFolder(this, armourLibrary.getName() + ".dialog.newFolder", this, 190, 120));
+        }
+        
+        if (button == backButton) {
+            goBackFolder();
         }
         
         if (button == checkBoxTrack) {
@@ -842,6 +852,9 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         String currentFolder = "";
         for (int i = 0; i < folderSplit.length - 1; i++) {
             currentFolder += folderSplit[i] + "/";
+        }
+        if (currentFolder.equals("")) {
+            currentFolder = "/";
         }
         setCurrentFolder(currentFolder);
     }

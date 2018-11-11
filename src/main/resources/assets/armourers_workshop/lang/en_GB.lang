@@ -292,7 +292,7 @@ inventory.armourers_workshop:hologram-projector.name=Hologram Projector
 
 
 # Inventory Controls
-# Armour Library
+# Skin Library
 inventory.armourers_workshop:skin-library.label.search=Search:
 inventory.armourers_workshop:skin-library.label.filename=File Name:
 inventory.armourers_workshop:skin-library.label.files=Files:
@@ -311,6 +311,7 @@ inventory.armourers_workshop:skin-library.rollover.deleteSkin=Delete item.
 inventory.armourers_workshop:skin-library.rollover.deleteSkinSelect=Select item to delete.
 inventory.armourers_workshop:skin-library.rollover.refresh=Refresh library files.
 inventory.armourers_workshop:skin-library.rollover.newFolder=Create new folder.
+inventory.armourers_workshop:skin-library.rollover.back=Back
 inventory.armourers_workshop:skin-library.label.enterFileName=Enter file name.
 inventory.armourers_workshop:skin-library.label.typeToSearch=Type to search...
 inventory.armourers_workshop:skin-library.dialog.newFolder.title=New Folder
