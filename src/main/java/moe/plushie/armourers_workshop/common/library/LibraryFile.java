@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.common.library;
 
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.common.library.ILibraryFile;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class LibraryFile implements Comparable<LibraryFile>, ILibraryFile {
     
@@ -101,11 +101,11 @@ public class LibraryFile implements Comparable<LibraryFile>, ILibraryFile {
     @Override
     public int compareTo(LibraryFile o) {
         if (isDirectory() & !o.isDirectory()) {
-            return getFullName().compareTo(o.getFullName()) - 1000;
+            return getFullName().compareToIgnoreCase(o.getFullName()) - 1000;
         } else if (!isDirectory() & o.isDirectory()) {
-            return getFullName().compareTo(o.getFullName()) + 1000;
+            return getFullName().compareToIgnoreCase(o.getFullName()) + 1000;
         }
-        return getFullName().compareTo(o.getFullName());
+        return getFullName().compareToIgnoreCase(o.getFullName());
     }
 
     @Override
