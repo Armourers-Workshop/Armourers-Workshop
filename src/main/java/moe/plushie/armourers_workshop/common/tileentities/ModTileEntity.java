@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.common.tileentities;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiUpdateTileProperties;
@@ -9,12 +8,13 @@ import moe.plushie.armourers_workshop.common.property.IPropertyHolder;
 import moe.plushie.armourers_workshop.common.property.TileProperty;
 import moe.plushie.armourers_workshop.common.property.TilePropertyManager;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 public abstract class ModTileEntity extends TileEntity implements IPropertyHolder {
 
@@ -96,19 +96,18 @@ public abstract class ModTileEntity extends TileEntity implements IPropertyHolde
         syncWithClients();
     }
 
-    public static void syncWithNearbyPlayers(TileEntity tileEntity) {
+    public void syncWithNearbyPlayers(TileEntity tileEntity) {
         if (tileEntity.getWorld() == null) {
             return;
         }
-        World world = tileEntity.getWorld();
-        List<EntityPlayer> players = world.playerEntities;
-        for (EntityPlayer player : players) {
-            if (player instanceof EntityPlayerMP) {
-                EntityPlayerMP mp = (EntityPlayerMP) player;
-                if (tileEntity.getDistanceSq(mp.posX, mp.posY, mp.posZ) < 64) {
-                    mp.connection.sendPacket(tileEntity.getUpdatePacket());
-                }
-            }
+        if (!(tileEntity.getWorld() instanceof WorldServer)) {
+            return;
+        }
+        WorldServer worldServer = (WorldServer) tileEntity.getWorld();
+        PlayerChunkMapEntry chunk = worldServer.getPlayerChunkMap().getEntry(tileEntity.getPos().getX() >> 4, tileEntity.getPos().getZ() >> 4);
+        SPacketUpdateTileEntity packet = tileEntity.getUpdatePacket();
+        if (chunk != null & packet != null) {
+            chunk.sendPacket(packet);
         }
     }
     

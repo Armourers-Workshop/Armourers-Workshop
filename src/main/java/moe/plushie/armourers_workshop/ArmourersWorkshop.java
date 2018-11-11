@@ -54,14 +54,13 @@ public class ArmourersWorkshop {
         proxy.init(event);
         proxy.registerKeyBindings();
         proxy.initRenderers();
-
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
     }
-    
+
     @NetworkCheckHandler
     public boolean checkRemoteVersions(Map<String, String> versions, Side side) {
         if (versions.containsKey(LibModInfo.ID)) {
@@ -84,8 +83,9 @@ public class ArmourersWorkshop {
     @EventHandler
     public void processIMC(FMLInterModComms.IMCEvent event) {
         for (IMCMessage imcMessage : event.getMessages()) {
-            if (!imcMessage.isStringMessage())
+            if (!imcMessage.isStringMessage()) {
                 continue;
+            }
             if (imcMessage.key.equalsIgnoreCase("register")) {
                 ModLogger.log(String.format("Receiving registration request from %s for class %s", imcMessage.getSender(), imcMessage.getStringValue()));
                 ApiRegistrar.INSTANCE.addApiRequest(imcMessage.getSender(), imcMessage.getStringValue());
