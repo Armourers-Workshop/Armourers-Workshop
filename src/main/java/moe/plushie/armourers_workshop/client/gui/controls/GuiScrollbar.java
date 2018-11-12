@@ -17,10 +17,12 @@ public class GuiScrollbar  extends GuiButton {
 	private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/controls/scrollbar.png");
 	
     /** The value of this slider control. */
-    public int sliderValue = 0;
+	private int sliderValue = 0;
     
     /** The max value of this slider control. */
-    public final int sliderMaxValue;
+    private int sliderMaxValue;
+    
+    private int amount = 2;
 
     /** Is this slider control being dragged. */
     private boolean dragging;
@@ -79,19 +81,19 @@ public class GuiScrollbar  extends GuiButton {
 		
 		//arrows
 		this.drawHover(this.x, this.y, sourceX, sourceY, 10, 10, x, y);
-		this.drawHover(this.x + (this.width - 10) * xOffset, this.y + (this.height - 10) * yOffset, sourceX + 10, sourceY, 10, 10, x, y);
+		this.drawHover(this.x, this.y + this.height - 10, sourceX + 10, sourceY, 10, 10, x, y);
 		
 		
 		//gutter sides
-		this.drawTexturedModalRect(this.x + (10 * xOffset), this.y + (10 * yOffset), sourceX, 20, 10, 10);
-		this.drawTexturedModalRect(this.x + (this.width - 20) * xOffset, this.y + (this.height - 20) * yOffset, sourceX + 10, 20, 10, 10);
+		this.drawTexturedModalRect(this.x, this.y + 10, sourceX, 20, 10, 10);
+		this.drawTexturedModalRect(this.x, this.y + this.height - 20, sourceX + 10, 20, 10, 10);
 		
 		//gutter fill
-		int gutterSize = sliderMaxValue - 30 + 10;
-		this.drawTexturedModalRect(this.x + (20 * xOffset), this.y + (20 * yOffset), 246 * yOffset, 246 * xOffset, 10 + gutterSize * xOffset, 10 + gutterSize * yOffset);
+		this.drawTexturedModalRect(this.x, this.y + 20, 246 * yOffset, 246 * xOffset, width, height - 40);
 		
 		//grip
-		this.drawHover(this.x + ((sliderValue + 10) * xOffset), this.y + ((sliderValue + 10) * yOffset), 40, sourceY, 10, 10, x, y);
+		float gripPos = (height - 30) / 100F * (float)getPercentageValue();
+		this.drawHover(this.x, (int) (this.y + gripPos + 10), 40, sourceY, 10, 10, x, y);
 	}
 	
 	private void drawHover(int x, int y, int sourceX, int sourceY, int width, int height, int mouseX, int mouseY) {
@@ -113,9 +115,9 @@ public class GuiScrollbar  extends GuiButton {
         if (Mouse.isCreated()) {
             int dWheel = Mouse.getDWheel();
             if (dWheel < 0) {
-                setValue(sliderValue + 2);
+                setValue(sliderValue + amount);
             } else if (dWheel > 0) {
-                setValue(sliderValue - 2);
+                setValue(sliderValue - amount);
             }
         }
     }
@@ -126,6 +128,15 @@ public class GuiScrollbar  extends GuiButton {
 		if (sliderValue > sliderMaxValue) { sliderValue = sliderMaxValue; }
 	}
 	
+	public void setSliderMaxValue(int sliderMaxValue) {
+        this.sliderMaxValue = sliderMaxValue;
+        sliderValue = Math.min(sliderValue, sliderMaxValue);
+    }
+	
+	public void setAmount(int amount) {
+        this.amount = amount;
+    }
+	
 	@Override
 	public boolean mousePressed(Minecraft par1Minecraft, int x, int y) {
 		if (super.mousePressed(par1Minecraft, x, y)) {
@@ -135,12 +146,10 @@ public class GuiScrollbar  extends GuiButton {
 					this.dragging = true;
 				}
 				else {
-					setValue(sliderValue + 4);
-					//sliderValue += 10;
+					setValue(sliderValue + amount);
 				}
 			} else {
-				setValue(sliderValue - 4);
-				//sliderValue -= 10;
+				setValue(sliderValue - amount);
 			}
 			return true;
 		}
@@ -153,11 +162,11 @@ public class GuiScrollbar  extends GuiButton {
 	protected void mouseDragged(Minecraft par1Minecraft, int x, int y) {
 		if (this.dragging) {
 			if (horizontal) {
-				setValue(x - this.x - 15);
-				//sliderValue = (x - this.xPosition - 15);
+			    float per = (float)(x - this.x - 12) / ((float)width - 30F) * (float)sliderMaxValue;
+				setValue((int) per);
 			} else {
-				setValue(y - this.y - 15);
-				//sliderValue = (y - this.yPosition - 15);
+			    float per = (float)(y - this.y - 12) / ((float)height - 30F) * (float)sliderMaxValue;
+				setValue((int) per);
 			}
 		}
 	}
@@ -170,7 +179,7 @@ public class GuiScrollbar  extends GuiButton {
 	    if (sliderValue == 0) {
 	        return 0;
 	    }
-	    return (int) ((sliderValue / (float)sliderMaxValue) * 100);
+	    return (int) (((float)sliderValue / (float)sliderMaxValue) * 100);
 	}
 
 }

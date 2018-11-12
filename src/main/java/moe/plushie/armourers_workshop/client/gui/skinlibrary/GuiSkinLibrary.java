@@ -218,7 +218,9 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         
         scrollbar = new GuiScrollbar(2, INVENTORY_WIDTH + 10 + listWidth, TITLE_HEIGHT + 14 + PADDING * 2, 10, listHeight, "", false);
         scrollbar.setValue(scrollAmount);
+        scrollbar.setAmount(fileList.getSlotHeight());
         buttonList.add(scrollbar);
+        
         
         dropDownList = new GuiDropDownList(5, INVENTORY_WIDTH + PADDING * 5 + listWidth - typeSwitchWidth - PADDING, TITLE_HEIGHT + PADDING, typeSwitchWidth, "", null);
         ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
@@ -702,8 +704,13 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             }
         }
         
+        int scrollNeeded = fileList.getTotalListHeight();
+        scrollNeeded -= fileList.getVisibleHeight();
+        scrollNeeded = Math.max(0, scrollNeeded);
+        scrollbar.setSliderMaxValue(scrollNeeded);
+        
         scrollAmount = scrollbar.getValue();
-        fileList.setScrollPercentage(scrollbar.getPercentageValue());
+        fileList.setScrollAmount(scrollbar.getValue());
         
         for (int i = 0; i < buttonList.size(); i++) {
             GuiButton button = (GuiButton) buttonList.get(i);
@@ -845,6 +852,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         this.currentFolder = currentFolder;
         fileList.setSelectedIndex(-1);
         scrollAmount = 0;
+        scrollbar.setValue(scrollAmount);
     }
     
     private void goBackFolder() {
