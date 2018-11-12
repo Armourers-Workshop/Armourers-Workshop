@@ -170,20 +170,25 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
         int g = 0;
         int b = 0;
         
+        int validSamples = 0;
+        
         for (BlockPos posSample : blockSamples) {
             IBlockState stateTarget = world.getBlockState(posSample);
             if (stateTarget.getBlock() instanceof IPantableBlock) {
                 IPantableBlock pBlock = (IPantableBlock) stateTarget.getBlock();
                 ICubeColour c = pBlock.getColour(world, posSample);
-                r += c.getRed(facing.ordinal()) & 0xFF;
-                g += c.getGreen(facing.ordinal()) & 0xFF;
-                b += c.getBlue(facing.ordinal()) & 0xFF;
+                if (c != null) {
+                    r += c.getRed(facing.ordinal()) & 0xFF;
+                    g += c.getGreen(facing.ordinal()) & 0xFF;
+                    b += c.getBlue(facing.ordinal()) & 0xFF;
+                    validSamples++;
+                }
             }
         }
         
-        r = r / blockSamples.size();
-        g = g / blockSamples.size();
-        b = b / blockSamples.size();
+        r = r / validSamples;
+        g = g / validSamples;
+        b = b / validSamples;
         
         for (BlockPos posEffect : blockEffects) {
             IBlockState stateTarget = world.getBlockState(posEffect);
