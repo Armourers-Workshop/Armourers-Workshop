@@ -40,7 +40,7 @@ public class SkinLegsPartRightLeg extends AbstractSkinPartTypeBase implements IS
     }
     
     @Override
-    public Point getTextureLocation() {
+    public Point getTextureSkinPos() {
         return new Point(0, 16);
     }
 
@@ -48,7 +48,17 @@ public class SkinLegsPartRightLeg extends AbstractSkinPartTypeBase implements IS
     public boolean isTextureMirrored() {
         return false;
     }
-
+    
+    @Override
+    public Point getTextureBasePos() {
+        return new Point(0, 16);
+    }
+    
+    @Override
+    public Point getTextureOverlayPos() {
+        return new Point(0, 32);
+    }
+    
     @Override
     public IPoint3D getTextureModelSize() {
         return new Point3D(4, 12, 4);

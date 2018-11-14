@@ -40,13 +40,23 @@ public class SkinHeadPartBase extends AbstractSkinPartTypeBase implements ISkinP
     }
 
     @Override
-    public Point getTextureLocation() {
+    public Point getTextureSkinPos() {
         return new Point(0, 0);
     }
 
     @Override
     public boolean isTextureMirrored() {
         return false;
+    }
+    
+    @Override
+    public Point getTextureBasePos() {
+        return new Point(0, 0);
+    }
+    
+    @Override
+    public Point getTextureOverlayPos() {
+        return new Point(32, 0);
     }
     
     @Override

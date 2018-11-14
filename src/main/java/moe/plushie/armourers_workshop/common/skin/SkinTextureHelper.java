@@ -18,7 +18,7 @@ public class SkinTextureHelper {
     
     public static Point getTextureLocationFromWorldBlock(TileEntityBoundingBox te, EnumFacing side) {
         ISkinPartTypeTextured skinPart = (ISkinPartTypeTextured) te.getSkinPart();
-        Point textureLocation = skinPart.getTextureLocation();
+        Point textureLocation = skinPart.getTextureSkinPos();
         IPoint3D textureModelSize = skinPart.getTextureModelSize();
         EnumFacing blockFace = side;
         

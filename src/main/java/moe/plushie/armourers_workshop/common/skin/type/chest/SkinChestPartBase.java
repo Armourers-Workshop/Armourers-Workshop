@@ -40,7 +40,7 @@ public class SkinChestPartBase extends AbstractSkinPartTypeBase implements ISkin
     }
 
     @Override
-    public Point getTextureLocation() {
+    public Point getTextureSkinPos() {
         return new Point(16, 16);
     }
 
@@ -48,7 +48,17 @@ public class SkinChestPartBase extends AbstractSkinPartTypeBase implements ISkin
     public boolean isTextureMirrored() {
         return false;
     }
-
+    
+    @Override
+    public Point getTextureBasePos() {
+        return new Point(16, 16);
+    }
+    
+    @Override
+    public Point getTextureOverlayPos() {
+        return new Point(16, 32);
+    }
+    
     @Override
     public IPoint3D getTextureModelSize() {
         return new Point3D(8, 12, 4);
