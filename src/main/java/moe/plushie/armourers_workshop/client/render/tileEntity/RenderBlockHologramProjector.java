@@ -42,21 +42,26 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         }
 
         ItemStack itemStack = tileEntity.getStackInSlot(0);
-        
+
         SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
         if (skinPointer == null) {
             return;
         }
-        
+
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
+        if (skin == null) {
+            return;
+        }
+
         int rot = tileEntity.getBlockMetadata();
-        
+
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_NORMALIZE);
 
         GL11.glTranslated(x + 0.5F, y + 0.5D, z + 0.5F);
-        
+
         GL11.glRotatef(180, 0, 0, 1);
-        
+
         if (rot == 1) {
             GL11.glRotatef(180, 0, 0, 1);
         }
@@ -72,23 +77,21 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         if (rot == 5) {
             GL11.glRotatef(90, 0, 0, 1);
         }
-        
+
         float scale = 0.0625F;
-        
-        
-        
+
         GL11.glTranslated(tileEntity.getOffsetX().get() * scale, tileEntity.getOffsetY().get() * scale, tileEntity.getOffsetZ().get() * scale);
-        
+
         GL11.glScalef(-1, -1, 1);
-        
+
         int speedX = tileEntity.getRotationSpeedX().get();
         int speedY = tileEntity.getRotationSpeedY().get();
         int speedZ = tileEntity.getRotationSpeedZ().get();
-        
+
         float angleX = 0;
         float angleY = 0;
         float angleZ = 0;
-        
+
         if (speedX != 0) {
             angleX = (System.currentTimeMillis() % speedX);
             angleX = angleX / speedX * 360F;
@@ -106,11 +109,11 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
             float xLight = tileEntity.getPos().getX();
             float yLight = tileEntity.getPos().getY();
             float zLight = tileEntity.getPos().getZ();
-            
+
             float offsetX = tileEntity.getOffsetX().get();
             float offsetY = tileEntity.getOffsetY().get();
             float offsetZ = tileEntity.getOffsetZ().get();
-            
+
             switch (dir) {
             case UP:
                 xLight += offsetX * scale;
@@ -147,12 +150,10 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         }
 
         GL11.glPushMatrix();
-        
-        GL11.glTranslated(
-                (-tileEntity.getRotationOffsetX().get() + tileEntity.getRotationOffsetX().get()) * scale,
-                (-tileEntity.getRotationOffsetY().get() + tileEntity.getRotationOffsetY().get()) * scale,
+
+        GL11.glTranslated((-tileEntity.getRotationOffsetX().get() + tileEntity.getRotationOffsetX().get()) * scale, (-tileEntity.getRotationOffsetY().get() + tileEntity.getRotationOffsetY().get()) * scale,
                 (-tileEntity.getRotationOffsetZ().get() + tileEntity.getRotationOffsetZ().get()) * scale);
-        
+
         if (tileEntity.getAngleX().get() != 0) {
             GL11.glRotatef(tileEntity.getAngleX().get(), 1F, 0F, 0F);
         }
@@ -162,33 +163,32 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         if (tileEntity.getAngleZ().get() != 0) {
             GL11.glRotatef(tileEntity.getAngleZ().get(), 0F, 0F, 1F);
         }
-        
+
         if (angleX != 0) {
-            GL11.glRotatef((float)angleX, 1, 0, 0);
+            GL11.glRotatef((float) angleX, 1, 0, 0);
         }
         if (angleY != 0) {
-            GL11.glRotatef((float)angleY, 0, 1, 0);
+            GL11.glRotatef((float) angleY, 0, 1, 0);
         }
         if (angleZ != 0) {
-            GL11.glRotatef((float)angleZ, 0, 0, 1);
+            GL11.glRotatef((float) angleZ, 0, 0, 1);
         }
-        
+
         GL11.glTranslated(tileEntity.getRotationOffsetX().get() * scale, tileEntity.getRotationOffsetY().get() * scale, tileEntity.getRotationOffsetZ().get() * scale);
-        
+
         if (tileEntity.getGlowing().get()) {
             ModRenderHelper.disableLighting();
         }
         ModRenderHelper.enableAlphaBlend();
-        
-        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
+
         SkinItemRenderHelper.renderSkinWithHelper(skin, skinPointer, true, false);
-        
+
         GL11.glPopMatrix();
         if (tileEntity.isShowRotationPoint()) {
             AxisAlignedBB aabb = new AxisAlignedBB(0, 0, 0, scale, scale, scale);
             renderBox(aabb, 1F, 0F, 1F);
         }
-        
+
         ModRenderHelper.disableAlphaBlend();
         if (tileEntity.getGlowing().get()) {
             ModRenderHelper.enableLighting();
@@ -196,7 +196,7 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         GL11.glDisable(GL11.GL_NORMALIZE);
         GL11.glPopMatrix();
     }
-    
+
     private void renderBox(AxisAlignedBB aabb, float r, float g, float b) {
         float f1 = 0.002F;
         ModRenderHelper.disableLighting();
