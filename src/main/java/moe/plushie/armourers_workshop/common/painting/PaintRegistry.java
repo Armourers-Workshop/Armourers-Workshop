@@ -35,7 +35,7 @@ public final class PaintRegistry {
         for (int i = 0; i < PAINT_TYPES.length; i++) {
             PAINT_TYPES[i] = PAINT_TYPE_NORMAL;
         }
-        registerPaintType(PAINT_TYPE_NONE);
+        registerPaintType(PAINT_TYPE_NORMAL);
         
         registerPaintType(PAINT_TYPE_DYE_1);
         registerPaintType(PAINT_TYPE_DYE_2);
@@ -51,7 +51,7 @@ public final class PaintRegistry {
         registerPaintType(PAINT_TYPE_EYES);
         registerPaintType(PAINT_TYPE_MISC);
         
-        registerPaintType(PAINT_TYPE_NORMAL);
+        registerPaintType(PAINT_TYPE_NONE);
     }
     
     private static void registerPaintType(PaintType paintType) {

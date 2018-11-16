@@ -1,9 +1,10 @@
 package moe.plushie.armourers_workshop.client.particles;
 
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -11,113 +12,56 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ParticlePaintSplash extends Particle {
 
-    private static final ResourceLocation paintSplashTextures = new ResourceLocation(LibModInfo.ID, "textures/particles/paintSplash.png");
-    //private static final ResourceLocation particleTextures = ReflectionHelper.getPrivateValue(EffectRenderer.class, null, "particleTextures", "field_110737_b", "b");
+    private final EnumFacing facing;
     
-    protected ParticlePaintSplash(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn) {
-        super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
-    }
-    /*
-    public EntityFXPaintSplash(World world, double x, double y, double z, int colour, ForgeDirection dir) {
-        super(world, x + dir.offsetX * 0.5D, y + dir.offsetY * 0.5D, z + dir.offsetZ * 0.5D);
-        this.particleScale = 0.2F + world.rand.nextFloat() * 0.4F;
-        particleMaxAge = 10;
+    public ParticlePaintSplash(World worldIn, BlockPos pos, byte r, byte g, byte b, EnumFacing facing) {
+        super(worldIn, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F);
         
-        Color c = new Color(colour);
-        this.particleRed = (float)c.getRed() / 255;
-        this.particleGreen = (float)c.getGreen() / 255;
-        this.particleBlue = (float)c.getBlue() / 255;
+        particleTextureIndexX = (int) (rand.nextFloat() * 4F);
         
-        float xPos = world.rand.nextFloat() - 0.5F;
-        float yPos = world.rand.nextFloat() - 0.5F;
+        posX += 0.5F * facing.getXOffset();
+        posY += 0.5F * facing.getYOffset();
+        posZ += 0.5F * facing.getZOffset();
         
-        switch (dir) {
-        case UP:
-            this.setPosition(this.posX + xPos, this.posY, this.posZ + yPos);
-            break;
-        case DOWN:
-            this.setPosition(this.posX + xPos, this.posY, this.posZ + yPos);
-            break;
-        case NORTH:
-            this.setPosition(this.posX + xPos, this.posY + yPos, this.posZ);
-            break;
-        case SOUTH:
-            this.setPosition(this.posX + xPos, this.posY + yPos, this.posZ);
-            break;
-        case EAST:
-            this.setPosition(this.posX, this.posY + yPos, this.posZ + xPos);
-            break;
-        case WEST:
-            this.setPosition(this.posX, this.posY + yPos, this.posZ + xPos);
-            break;
-        default:
-            break;
-        }
+        posX += (rand.nextFloat() - 0.5F) * facing.getZOffset() + (rand.nextFloat() - 0.5F) * facing.getYOffset();
+        posY += (rand.nextFloat() - 0.5F) * facing.getXOffset() + (rand.nextFloat() - 0.5F) * facing.getZOffset();
+        posZ += (rand.nextFloat() - 0.5F) * facing.getXOffset() + (rand.nextFloat() - 0.5F) * facing.getYOffset();
         
-        this.motionX = dir.offsetX * 0.08;
-        this.motionY = dir.offsetY * 0.08;
-        this.motionZ = dir.offsetZ * 0.08;
+        setPosition(posX, posY, posZ);
         
-        this.motionX += (world.rand.nextFloat() - 0.5F) * 0.06;
-        this.motionY += (world.rand.nextFloat() - 0.5F) * 0.06;
-        this.motionZ += (world.rand.nextFloat() - 0.5F) * 0.06;
+        prevPosX = posX;
+        prevPosY = posY;
+        prevPosZ = posZ;
         
-        this.particleTextureIndexX = (Math.round(world.rand.nextFloat())) * 8;
-        this.particleTextureIndexY = (Math.round(world.rand.nextFloat())) * 8;
+        motionX = 0.06 * facing.getXOffset();
+        motionY = 0.06 * facing.getYOffset();
+        motionZ = 0.06 * facing.getZOffset();
         
-        this.noClip = false;
+        motionX += ((rand.nextFloat() - 0.5F) * 0.04);
+        motionY += ((rand.nextFloat() - 0.5F) * 0.04);
+        motionZ += ((rand.nextFloat() - 0.5F) * 0.04);
+        
+        particleScale = 1;
+        
+        particleGravity = 0.05F;
+        
+        this.particleRed = (float)r / 255F;
+        this.particleGreen = (float)g / 255F;
+        this.particleBlue = (float)b / 255F;
+        
+        this.facing = facing;
+        this.particleMaxAge = 200;
+        this.canCollide = true;
     }
     
     @Override
-    public void onUpdate() {
-        super.onUpdate();
-        this.motionY -= 0.02D;
-        this.particleAlpha = 1 + -((float)this.particleAge / this.particleMaxAge);
-    }
-    
-    @Override
-    public void renderParticle(Tessellator tessellator, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_) {
-        IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
-        renderBuffer.draw();
-        
-        UtilRender.bindTexture(paintSplashTextures);
-        
-        renderBuffer.startDrawingQuads();
-        renderBuffer.setBrightness(getBrightnessForRender(0));
-        
-        float f6 = (particleTextureIndexX) / 8 * 0.5F;
-        float f7 = f6 + 0.5F;
-        float f8 = (particleTextureIndexY) / 8 * 0.5F;
-        float f9 = f8 + 0.5F;;
-        
-        float f10 = 0.1F * this.particleScale;
-        
-        if (this.particleIcon != null) {
-            f6 = this.particleIcon.getMinU();
-            f7 = this.particleIcon.getMaxU();
-            f8 = this.particleIcon.getMinV();
-            f9 = this.particleIcon.getMaxV();
+    public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
+        int fadeTime = 50;
+        int lifeLeft = particleMaxAge - particleAge;
+        if (lifeLeft <= fadeTime) {
+            this.particleAlpha = ((float)lifeLeft / (float)fadeTime);
         }
         
-        float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)p_70539_2_ - interpPosX);
-        float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)p_70539_2_ - interpPosY);
-        float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)p_70539_2_ - interpPosZ);
-        renderBuffer.setColourRGBA_F(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha);
-        renderBuffer.addVertexWithUV((double)(f11 - p_70539_3_ * f10 - p_70539_6_ * f10), (double)(f12 - p_70539_4_ * f10), (double)(f13 - p_70539_5_ * f10 - p_70539_7_ * f10), (double)f7, (double)f9);
-        renderBuffer.addVertexWithUV((double)(f11 - p_70539_3_ * f10 + p_70539_6_ * f10), (double)(f12 + p_70539_4_ * f10), (double)(f13 - p_70539_5_ * f10 + p_70539_7_ * f10), (double)f7, (double)f8);
-        renderBuffer.addVertexWithUV((double)(f11 + p_70539_3_ * f10 + p_70539_6_ * f10), (double)(f12 + p_70539_4_ * f10), (double)(f13 + p_70539_5_ * f10 + p_70539_7_ * f10), (double)f6, (double)f8);
-        renderBuffer.addVertexWithUV((double)(f11 + p_70539_3_ * f10 - p_70539_6_ * f10), (double)(f12 - p_70539_4_ * f10), (double)(f13 + p_70539_5_ * f10 - p_70539_7_ * f10), (double)f6, (double)f9);
-        
-        renderBuffer.draw();
-        UtilRender.bindTexture(particleTextures);
-        renderBuffer.startDrawingQuads();
-    }*/
-    
-    @SideOnly(Side.CLIENT)
-    public static class Factory implements IParticleFactory {
-        @Override
-        public Particle createParticle(int particleID, World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, int... p_178902_15_) {
-            return new ParticlePaintSplash(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
-        }
+        super.renderParticle(buffer, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
     }
 }

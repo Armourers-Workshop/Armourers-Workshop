@@ -8,6 +8,8 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.painting.IPaintingTool;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
+import moe.plushie.armourers_workshop.client.particles.ModParticleManager;
+import moe.plushie.armourers_workshop.client.particles.ParticlePaintSplash;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.items.AbstractModItem;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
@@ -134,14 +136,13 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     }
     
     @SideOnly(Side.CLIENT)
-    protected void spawnPaintParticles (World world, BlockPos pos, EnumFacing side, int colour) {
-        /*
+    protected void spawnPaintParticles (World world, BlockPos pos, EnumFacing facing, int colour) {
+        byte[] rtbt = PaintingHelper.intToBytes(colour);
         for (int i = 0; i < 3; i++) {
-            EntityFXPaintSplash particle = new EntityFXPaintSplash(world, x + 0.5D, y + 0.5D, z + 0.5D,
-                    colour, EnumFacing.byIndex(side));
-            ParticleManager.INSTANCE.spawnParticle(world, particle);
+            ParticlePaintSplash particle = new ParticlePaintSplash(world, pos, rtbt[0], rtbt[1], rtbt[2], facing);
+            ModParticleManager.spawnParticle(particle);
         }
-        */
+        
     }
     
     @SideOnly(Side.CLIENT)
