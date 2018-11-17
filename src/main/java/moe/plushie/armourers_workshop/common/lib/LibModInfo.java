@@ -10,6 +10,7 @@ public class LibModInfo {
     public static final String DEPENDENCIES = "required-after:forge@[14.23.3.2694,);after:galacticraftcore;";
     public static final boolean DEVELOPMENT_VERSION = true;
     public static final String DOWNLOAD_URL = "https://minecraft.curseforge.com/projects/armourers-workshop/files";
+    public static final String UPDATE_URL = "http://plushie.moe/app_update/minecraft_mods/armourers_workshop/update.json";
 
     public static final String PROXY_CLIENT_CLASS = "moe.plushie.armourers_workshop.proxies.ClientProxy";
     public static final String PROXY_COMMNON_CLASS = "moe.plushie.armourers_workshop.proxies.CommonProxy";
