@@ -57,7 +57,7 @@ public class SlotDyeBottle extends SlotHidable {
     @Override
     public boolean canTakeStack(EntityPlayer player) {
         if (container != null) {
-            if (!ConfigHandler.lockDyesOnSkins) {
+            if (!ConfigHandler.lockDyesOnSkins | player.capabilities.isCreativeMode) {
                 return true;
             }
             return !locked;
