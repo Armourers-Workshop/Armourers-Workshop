@@ -40,9 +40,11 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
                     List<LayerRenderer<?>> layerRenderers = (List<LayerRenderer<?>>) object;
                     layerRenderers.add(0, new ModelResetLayer(playerRender));
                     ModLogger.log("Adding reset layer to " + playerRender);
+                    // Looking for held item layer.
                     for (int i = 0; i < layerRenderers.size(); i++) {
                         LayerRenderer<?> layerRenderer = layerRenderers.get(i);
                         if (layerRenderer.getClass().getName().contains("LayerHeldItem")) {
+                            // Replacing held item layer.
                             ModLogger.log("Removing held item layer from " + playerRender);
                             layerRenderers.remove(i);
                             ModLogger.log("Adding skinned held item layer to " + playerRender);

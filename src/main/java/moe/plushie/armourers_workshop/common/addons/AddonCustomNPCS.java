@@ -2,12 +2,16 @@ package moe.plushie.armourers_workshop.common.addons;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererHeldItem;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
@@ -142,12 +146,37 @@ public class AddonCustomNPCS extends ModAddon {
         public void addRenderLayer(RenderManager renderManager) {
             Render<Entity> renderer = renderManager.getEntityClassRenderObject(getEntityClass());
             if (renderer != null && renderer instanceof RenderLivingBase) {
-                LayerRenderer<? extends EntityLivingBase> layerRenderer = new SkinLayerRendererCustomNPC((RenderLivingBase) renderer);
-                if (layerRenderer != null) {
-                    ((RenderLivingBase<?>) renderer).addLayer(layerRenderer);
+                LayerRenderer<? extends EntityLivingBase> layerRendererNPC = new SkinLayerRendererCustomNPC((RenderLivingBase) renderer);
+                if (layerRendererNPC != null) {
+                    ((RenderLivingBase<?>) renderer).addLayer(layerRendererNPC);
                 }
+                
+                
+                try {
+                    Object object = ReflectionHelper.getPrivateValue(RenderLivingBase.class, (RenderLivingBase)renderer, "field_177097_h", "layerRenderers");
+                    if (object != null) {
+                        List<LayerRenderer<?>> layerRenderers = (List<LayerRenderer<?>>) object;
+                        // Looking for held item layer.
+                        for (int i = 0; i < layerRenderers.size(); i++) {
+                            LayerRenderer<?> layerRenderer = layerRenderers.get(i);
+                            if (layerRenderer.getClass().getName().contains("LayerHeldItem")) {
+                                // Replacing held item layer.
+                                ModLogger.log("Removing held item layer from " + renderer);
+                                layerRenderers.remove(i);
+                                ModLogger.log("Adding skinned held item layer to " + renderer);
+                                layerRenderers.add(new SkinLayerRendererHeldItem((RenderLivingBase)renderer, layerRenderer));
+                                break;
+                            }
+                        }
+                    } else {
+                        ModLogger.log(Level.WARN, "Failed to get 'layerRenderers' on " + renderer);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                
+                
             }
-            ModLogger.log(renderer);
         }
         
         @Override
