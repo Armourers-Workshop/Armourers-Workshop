@@ -30,7 +30,6 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
-import moe.plushie.armourers_workshop.common.items.ItemSkinTemplate;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.ILibraryManager;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
@@ -41,6 +40,7 @@ import moe.plushie.armourers_workshop.common.network.SkinUploadHelper;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiLoadSaveArmour;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiLoadSaveArmour.LibraryPacketType;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand;
+import moe.plushie.armourers_workshop.common.skin.ISkinHolder;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
@@ -264,12 +264,12 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             if (stack.isEmpty()) {
                 return true;
             }
-            if (stack.getItem() instanceof ItemSkinTemplate) {
+            if (stack.getItem() instanceof ISkinHolder) {
                 return true;
             }
             return false;
         } else {
-            if (stack.getItem() instanceof ItemSkinTemplate) {
+            if (stack.getItem() instanceof ISkinHolder) {
                 return true;
             }
             return false;

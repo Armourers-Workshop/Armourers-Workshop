@@ -86,7 +86,7 @@ public final class SkinUploadHelper {
             
             if (container != null && container instanceof ContainerSkinLibrary) {
                 TileEntitySkinLibrary te = ((ContainerSkinLibrary) container).getTileEntity();
-                te.loadArmour(skin, player);
+                te.loadClientSkin(skin, player);
             }
         }
     }

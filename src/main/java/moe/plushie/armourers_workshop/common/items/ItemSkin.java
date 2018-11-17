@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.settings.Keybindings;
@@ -21,7 +22,6 @@ import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
@@ -87,7 +87,7 @@ public class ItemSkin extends AbstractModItem {
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(stack);
-            SkinIdentifier identifier = skinData.getIdentifier();
+            ISkinIdentifier identifier = skinData.getIdentifier();
             
             if (!isEquipmentSkin) {
                 tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.hasSkin"));

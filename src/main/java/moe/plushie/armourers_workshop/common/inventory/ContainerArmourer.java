@@ -17,7 +17,6 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinProperty;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.world.ArmourerWorldHelper;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -83,24 +82,22 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
         ItemStack stackInput = tileEntity.getStackInSlot(0);
         ItemStack stackOutput = tileEntity.getStackInSlot(1);
 
-        if (!player.capabilities.isCreativeMode) {
+        if (player.capabilities.isCreativeMode) {
             if (stackInput.isEmpty()) {
-                return;
+                stackInput = new ItemStack(ModItems.skinTemplate);
             }
         }
-
+        
+        if (stackInput.isEmpty()) {
+            return;
+        }
+        
         if (!stackOutput.isEmpty()) {
             return;
         }
-
-        ISkinHolder inputItem = null;
-        if (!player.capabilities.isCreativeMode) {
-            if (!(stackInput.getItem() instanceof ISkinHolder)) {
-                return;
-            }
-            inputItem = (ISkinHolder) stackInput.getItem();
-        } else {
-            inputItem = (ISkinHolder) ModItems.skinTemplate;
+        
+        if (!(stackInput.getItem() instanceof ISkinHolder)) {
+            return;
         }
 
         Skin skin = null;
@@ -138,21 +135,22 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
                 break;
             }
         }
-        ModLogger.log("save");
+        
         if (skin == null) {
             return;
         }
         
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile)null);
         
-        stackOutput = inputItem.makeStackForEquipment(skin);
-        if (stackOutput.isEmpty()) {
+        ItemStack stackArmour = ((ISkinHolder)stackInput.getItem()).makeSkinStack(skin);
+        
+        if (stackArmour.isEmpty()) {
             return;
         }
         if (!player.capabilities.isCreativeMode) {
             tileEntity.decrStackSize(0, 1);
         }
-        tileEntity.setInventorySlotContents(1, stackOutput);
+        tileEntity.setInventorySlotContents(1, stackArmour);
     }
 
     /**

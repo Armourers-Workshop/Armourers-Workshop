@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.skin.data;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinIdentifierSerializer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -9,7 +10,7 @@ public class SkinDescriptor implements ISkinDescriptor {
 
     public static final String TAG_SKIN_DATA = "armourersWorkshop";
     
-    private SkinIdentifier identifier;
+    private ISkinIdentifier identifier;
     public SkinDye skinDye;
     
     public SkinDescriptor() {
@@ -25,12 +26,12 @@ public class SkinDescriptor implements ISkinDescriptor {
         this.skinDye = new SkinDye(skinPointer.getSkinDye());
     }
     
-    public SkinDescriptor(SkinIdentifier identifier) {
+    public SkinDescriptor(ISkinIdentifier identifier) {
         this.identifier = identifier;
         this.skinDye = new SkinDye();
     }
     
-    public SkinDescriptor(SkinIdentifier identifier, ISkinDye skinDye) {
+    public SkinDescriptor(ISkinIdentifier identifier, ISkinDye skinDye) {
         this.identifier = identifier;
         if (skinDye != null) {
             this.skinDye = new SkinDye(skinDye);
@@ -40,7 +41,7 @@ public class SkinDescriptor implements ISkinDescriptor {
     }
     
     @Override
-    public SkinIdentifier getIdentifier() {
+    public ISkinIdentifier getIdentifier() {
         return identifier;
     }
     

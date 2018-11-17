@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
 import moe.plushie.armourers_workshop.common.items.ItemSkinTemplate;
+import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.library.ILibraryManager;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
@@ -56,7 +57,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
      * @param player The player that pressed the save button.
      * @param publicFiles If true save to the public file list or false for the players private files.
      */
-    public void saveArmour(String fileName, String filePath, EntityPlayerMP player, boolean publicFiles) {
+    public void saveSkin(String fileName, String filePath, EntityPlayerMP player, boolean publicFiles) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
@@ -122,22 +123,26 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
      * @param filename The name of the file to load.
      * @param player The player that pressed the load button.
      */
-    public void loadArmour(String fileName, String filePath, EntityPlayerMP player, boolean trackFile) {
+    public void loadSkin(String fileName, String filePath, EntityPlayerMP player, boolean trackFile) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
-        if (!isCreativeLibrary()) {
+        if (isCreativeLibrary()) {
             if (stackInput.isEmpty()) {
-                return;
+                stackInput = new ItemStack(ModItems.skinTemplate);
             }
         }
+        
+        if (stackInput.isEmpty()) {
+            return;
+        }
+        
         if (!stackOutput.isEmpty()) {
             return;
         }
-        if (!isCreativeLibrary()) {
-            if (!(stackInput.getItem() instanceof ISkinHolder)) {
-                return;
-            }
+        
+        if (!(stackInput.getItem() instanceof ISkinHolder)) {
+            return;
         }
         
         String fullFileName = fileName;
@@ -158,7 +163,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, libraryFile);
         ModLogger.log("Loaded file form lib: " + libraryFile.toString().replace("%", ""));
         
-        ItemStack stackArmour = SkinNBTHelper.makeEquipmentSkinStack(skin, identifier);
+        ItemStack stackArmour = ((ISkinHolder)stackInput.getItem()).makeSkinStack(identifier);
         
         if (stackArmour.isEmpty()) {
             return;
@@ -171,7 +176,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         this.setInventorySlotContents(1, stackArmour);
     }
     
-    public void sendArmourToClient(String filename, String filePath, EntityPlayerMP player) {
+    public void sendSkinToClient(String filename, String filePath, EntityPlayerMP player) {
         if (!ConfigHandler.allowDownloadingSkins) {
             return;
         }
@@ -215,35 +220,41 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         this.setInventorySlotContents(1, stackInput);
     }
     
-    public void loadArmour(Skin skin, EntityPlayerMP player) {
+    public void loadClientSkin(Skin skin, EntityPlayerMP player) {
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
         
-        if (!isCreativeLibrary()) {
+        if (isCreativeLibrary()) {
             if (stackInput.isEmpty()) {
-                return;
+                stackInput = new ItemStack(ModItems.skinTemplate);
             }
+        }
+        
+        if (stackInput.isEmpty()) {
+            return;
         }
         
         if (!stackOutput.isEmpty()) {
             return;
         }
         
-        if (!isCreativeLibrary()) {
-            if (!(stackInput.getItem() instanceof ISkinHolder)) {
-                return;
-            }
-        }
-        
-        ItemStack inputItem = SkinNBTHelper.makeEquipmentSkinStack(skin);
-        if (inputItem.isEmpty()) {
+        if (!(stackInput.getItem() instanceof ISkinHolder)) {
             return;
         }
         
         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile)null);
         
-        this.decrStackSize(0, 1);
-        this.setInventorySlotContents(1, inputItem);
+        ItemStack stackArmour = ((ISkinHolder)stackInput.getItem()).makeSkinStack(skin);
+        
+        if (stackArmour.isEmpty()) {
+            return;
+        }
+        
+        if (!isCreativeLibrary()) {
+            this.decrStackSize(0, 1);
+        }
+        
+        this.setInventorySlotContents(1, stackArmour);
     }
 
     @Override

@@ -85,13 +85,13 @@ public class MessageClientGuiLoadSaveArmour implements IMessage, IMessageHandler
             TileEntitySkinLibrary te = ((ContainerSkinLibrary) container).getTileEntity();
             switch (message.packetType) {
             case CLIENT_SAVE:
-                te.sendArmourToClient(message.filename, message.filePath, player);
+                te.sendSkinToClient(message.filename, message.filePath, player);
                 break;
             case SERVER_LOAD:
-                te.loadArmour(message.filename, message.filePath, player, message.trackFile);
+                te.loadSkin(message.filename, message.filePath, player, message.trackFile);
                 break;
             case SERVER_SAVE:
-                te.saveArmour(message.filename, message.filePath, player, message.publicList);
+                te.saveSkin(message.filename, message.filePath, player, message.publicList);
                 break;
             default:
                 break;
