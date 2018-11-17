@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.common.holiday.Holiday;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.utils.ModLogger;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.config.Configuration;
 
 public class ConfigHandler {
@@ -94,9 +95,12 @@ public class ConfigHandler {
         }
     }
     
-    public static boolean canOpenWardrobe() {
+    public static boolean canOpenWardrobe(EntityPlayer player) {
         if (!wardrobeAllowOpening) {
             return false;
+        }
+        if (player.capabilities.isCreativeMode) {
+            return true;
         }
         if (!wardrobeTabSkins & !wardrobeTabOutfits &!wardrobeTabDisplaySettings & !wardrobeTabColourSettings & !wardrobeTabDyes) {
             // No wardrobe tabs are active.

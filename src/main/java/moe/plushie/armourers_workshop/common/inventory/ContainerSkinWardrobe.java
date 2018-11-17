@@ -45,8 +45,10 @@ public class ContainerSkinWardrobe extends ModContainer {
         this.wardrobeCapability = wardrobeCapability;
         this.dyeInventory = new DyeInventory(wardrobeCapability, invPlayer.player.getEntityWorld().isRemote);
         boolean isPlayer = wardrobeCapability instanceof IPlayerWardrobeCap;
+        boolean isCreative = invPlayer.player.capabilities.isCreativeMode;
+        
         if (isPlayer) {
-            if (ConfigHandler.wardrobeTabSkins) {
+            if (ConfigHandler.wardrobeTabSkins | isCreative) {
                 IPlayerWardrobeCap playerWardrobe = (IPlayerWardrobeCap) wardrobeCapability;
                 SkinInventoryContainer skinInv = skinCapability.getSkinInventoryContainer();
 
@@ -114,7 +116,7 @@ public class ContainerSkinWardrobe extends ModContainer {
         
         indexDyeStart = indexSkinsEnd;
         indexDyeEnd = indexSkinsEnd;
-        if (!isPlayer | (isPlayer & ConfigHandler.wardrobeTabDyes)) {
+        if (!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabDyes | isCreative))) {
             for (int i = 0; i < 8; i++) {
                 addSlotToContainer(new SlotDyeBottle(dyeInventory, i, 70 + 20 * i, 27));
                 indexDyeEnd += 1;
@@ -123,7 +125,7 @@ public class ContainerSkinWardrobe extends ModContainer {
         
         indexOutfitStart = indexDyeEnd;
         indexOutfitEnd = indexDyeEnd;
-        if (!isPlayer | (isPlayer & ConfigHandler.wardrobeTabOutfits)) {
+        if (!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabOutfits | isCreative))) {
             IInventory invOutfit = skinCapability.getInventoryOutfits();
             for (int i = 0; i < invOutfit.getSizeInventory(); i++) {
                 addSlotToContainer(new SlotOutfit(invOutfit, i, 70 + 20 * i, 27));

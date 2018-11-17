@@ -40,7 +40,7 @@ public class MessageClientKeyPress implements IMessage, IMessageHandler<MessageC
             UndoManager.undoPressed(player);
             break;
         case OPEN_WARDROBE:
-            if (ConfigHandler.canOpenWardrobe()) {
+            if (ConfigHandler.canOpenWardrobe(player)) {
                 FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), LibGuiIds.WARDROBE_PLAYER, player.getEntityWorld(), 0, 0, 0);
             }
             break;

@@ -74,6 +74,7 @@ public class GuiWardrobe extends GuiTabbed {
         this.player = inventory.player;
         this.skinCapability = skinCapability;
         isPlayer = wardrobeCapability instanceof IPlayerWardrobeCap;
+        boolean isCreative = player.capabilities.isCreativeMode;
         
         tabSkins = new GuiTabWardrobeSkins(tabList.size(), this);
         tabList.add(tabSkins);
@@ -81,7 +82,7 @@ public class GuiWardrobe extends GuiTabbed {
                 .setIconLocation(52, 0)
                 .setTabTextureSize(26, 30)
                 .setPadding(0, 4, 3, 3)
-                .setVisable(!isPlayer | (isPlayer & ConfigHandler.wardrobeTabSkins)));
+                .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabSkins | isCreative))));
         
         
         tabOutfits = new GuiTabWardrobeOutfits(tabList.size(), this, player, skinCapability, wardrobeCapability);
@@ -90,7 +91,7 @@ public class GuiWardrobe extends GuiTabbed {
                 .setIconLocation(52 + 16 * 4, 0)
                 .setTabTextureSize(26, 30)
                 .setPadding(0, 4, 3, 3)
-                .setVisable(!isPlayer | (isPlayer & ConfigHandler.wardrobeTabOutfits)));
+                .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabOutfits | isCreative))));
         
         
         if (isPlayer) {
@@ -100,7 +101,7 @@ public class GuiWardrobe extends GuiTabbed {
                     .setIconLocation(52 + 16, 0)
                     .setTabTextureSize(26, 30)
                     .setPadding(0, 4, 3, 3)
-                    .setVisable(!isPlayer | (isPlayer & ConfigHandler.wardrobeTabDisplaySettings)));
+                    .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabDisplaySettings | isCreative))));
         } else {
             tabDisplaySetting = null;
         }
@@ -112,7 +113,7 @@ public class GuiWardrobe extends GuiTabbed {
                 .setIconLocation(52 + 16 * 2, 0)
                 .setTabTextureSize(26, 30)
                 .setPadding(0, 4, 3, 3)
-                .setVisable(!isPlayer | (isPlayer & ConfigHandler.wardrobeTabColourSettings)));
+                .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabColourSettings | isCreative))));
         
         
         tabDyes = new GuiTabWardrobeDyes(tabList.size(), this, player, skinCapability, wardrobeCapability);
@@ -121,7 +122,7 @@ public class GuiWardrobe extends GuiTabbed {
                 .setIconLocation(52 + 16 * 3, 0)
                 .setTabTextureSize(26, 30)
                 .setPadding(0, 4, 3, 3)
-                .setVisable(!isPlayer | (isPlayer & ConfigHandler.wardrobeTabDyes)));
+                .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabDyes | isCreative))));
         
         tabController.setActiveTabIndex(getActiveTab());
         
