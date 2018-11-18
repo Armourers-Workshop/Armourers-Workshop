@@ -17,6 +17,9 @@ public class AddonBuildCraft extends ModAddon {
     
     @Override
     public void init() {
+        if (!isModLoaded()) {
+            return;
+        }
         ModLogger.log("Buildcraft detected! - Enabling knishes support.");
     }
     
