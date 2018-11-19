@@ -1,21 +1,21 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"pattern": [
-		"www",
-		"wiw",
-		"www"
-	],
-	"key": {
-		"w": {
-			"item": "#WOOL"
-		},
-		"i": {
-			"type": "forge:ore_dict",
-			"ore": "ingotIron"
-		}
-	},
-	"result": {
-		"item": "armourers_workshop:tile.skin-cube",
-		"count": 16
-	}
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "www",
+        "wiw",
+        "www"
+    ],
+    "key": {
+        "w": {
+            "item": "#WOOL"
+        },
+        "i": {
+            "type": "forge:ore_dict",
+            "ore": "ingotIron"
+        }
+    },
+    "result": {
+        "item": "armourers_workshop:tile.skin-cube",
+        "count": 16
+    }
 }

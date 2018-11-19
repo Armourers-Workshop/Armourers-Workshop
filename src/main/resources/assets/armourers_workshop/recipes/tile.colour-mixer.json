@@ -1,32 +1,32 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"pattern": [
-		"rgb",
-		"scs",
-		"sss"
-	],
-	"key": {
-		"r": {
-			"type": "forge:ore_dict",
-			"ore": "dyeRed"
-		},
-		"g": {
-			"type": "forge:ore_dict",
-			"ore": "dyeGreen"
-		},
-		"b": {
-			"type": "forge:ore_dict",
-			"ore": "dyeBlue"
-		},
-		"s": {
-			"type": "forge:ore_dict",
-			"ore": "stone"
-		},
-		"c": {
-			"item": "armourers_workshop:tile.skin-cube"
-		}
-	},
-	"result": {
-		"item": "armourers_workshop:tile.colour-mixer"
-	}
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "rgb",
+        "scs",
+        "sss"
+    ],
+    "key": {
+        "r": {
+            "type": "forge:ore_dict",
+            "ore": "dyeRed"
+        },
+        "g": {
+            "type": "forge:ore_dict",
+            "ore": "dyeGreen"
+        },
+        "b": {
+            "type": "forge:ore_dict",
+            "ore": "dyeBlue"
+        },
+        "s": {
+            "type": "forge:ore_dict",
+            "ore": "stone"
+        },
+        "c": {
+            "item": "armourers_workshop:tile.skin-cube"
+        }
+    },
+    "result": {
+        "item": "armourers_workshop:tile.colour-mixer"
+    }
 }

@@ -1,24 +1,24 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"pattern": [
-		"igi",
-		"ici",
-		"iii"
-	],
-	"key": {
-		"i": {
-			"type": "forge:ore_dict",
-			"ore": "ingotIron"
-		},
-		"g": {
-			"type": "forge:ore_dict",
-			"ore": "blockGlassLightBlue"
-		},
-		"c": {
-			"item": "armourers_workshop:tile.skin-cube"
-		}
-	},
-	"result": {
-		"item": "armourers_workshop:tile.hologram-projector"
-	}
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "igi",
+        "ici",
+        "iii"
+    ],
+    "key": {
+        "i": {
+            "type": "forge:ore_dict",
+            "ore": "ingotIron"
+        },
+        "g": {
+            "type": "forge:ore_dict",
+            "ore": "blockGlassLightBlue"
+        },
+        "c": {
+            "item": "armourers_workshop:tile.skin-cube"
+        }
+    },
+    "result": {
+        "item": "armourers_workshop:tile.hologram-projector"
+    }
 }

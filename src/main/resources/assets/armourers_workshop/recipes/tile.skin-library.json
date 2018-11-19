@@ -1,29 +1,28 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"pattern": [
-		"srs",
-		"bcb",
-		"sss"
-	],
-	"key": {
-		"r": {
-			"item": "minecraft:wool",
-			"data": 14
-		},
-		"s": {
-			"type": "forge:ore_dict",
-			"ore": "stone"
-		},
-		"c": {
-			"item": "armourers_workshop:tile.skin-cube"
-		},
-		"b": {
-			"item": "minecraft:bookshelf"
-		}
-	},
-	"result": {
-		"item": "armourers_workshop:tile.skin-library",
-		"data": 0,
-		"count": 1
-	}
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "srs",
+        "bcb",
+        "sss"
+    ],
+    "key": {
+        "r": {
+            "item": "minecraft:wool",
+            "data": 14
+        },
+        "s": {
+            "type": "forge:ore_dict",
+            "ore": "stone"
+        },
+        "c": {
+            "item": "armourers_workshop:tile.skin-cube"
+        },
+        "b": {
+            "item": "minecraft:bookshelf"
+        }
+    },
+    "result": {
+        "item": "armourers_workshop:tile.skin-library",
+        "data": 0
+    }
 }
