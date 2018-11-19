@@ -23,7 +23,16 @@ public final class PermissionManager {
                 ((IPermissionHolder) item).getPermissions(permissions);
             }
         }
-        return permissions;
+        
+        // Remove duplicates
+        ArrayList<Permission> permissionsDedup = new ArrayList<Permission>();
+        for (Permission permission : permissions) {
+            if (!permissionsDedup.contains(permission)) {
+                permissionsDedup.add(permission);
+            }
+        }
+        
+        return permissionsDedup;
     }
 
     public static void registerPermissions() {

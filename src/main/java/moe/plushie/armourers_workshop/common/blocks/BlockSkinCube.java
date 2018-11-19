@@ -1,10 +1,13 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
+import java.util.ArrayList;
+
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.permission.Permission;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
 import net.minecraft.block.properties.IProperty;
@@ -119,5 +122,14 @@ public class BlockSkinCube extends AbstractModBlockContainer implements IPantabl
     @Override
     public boolean isRemoteOnly(IBlockAccess world, BlockPos pos, EnumFacing facing) {
         return false;
+    }
+    
+    @Override
+    public void getPermissions(ArrayList<Permission> permissions) {
+    }
+    
+    @Override
+    public String getPermissionName() {
+        return "tile.skin-cube";
     }
 }

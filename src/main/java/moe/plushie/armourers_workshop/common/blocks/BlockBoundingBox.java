@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.common.blocks;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
@@ -14,6 +15,7 @@ import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.permission.Permission;
 import moe.plushie.armourers_workshop.common.skin.SkinTextureHelper;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
@@ -284,5 +286,9 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     @Override
     public ICubeColour getColour(IBlockAccess world, BlockPos pos) {
         return null;
+    }
+    
+    @Override
+    public void getPermissions(ArrayList<Permission> permissions) {
     }
 }

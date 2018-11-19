@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.Level;
 
 import io.netty.buffer.ByteBuf;
@@ -9,6 +11,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
+import moe.plushie.armourers_workshop.common.permission.Permission;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -50,6 +53,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.server.permission.DefaultPermissionLevel;
 
 public class BlockSkinnable extends AbstractModBlockContainer {
 
@@ -388,6 +392,13 @@ public class BlockSkinnable extends AbstractModBlockContainer {
             }
         }
         return false;
+    }
+    
+    @Override
+    public void getPermissions(ArrayList<Permission> permissions) {
+        super.getPermissions(permissions);
+        permissions.add(new Permission(getPermissionName() + ".sit", DefaultPermissionLevel.ALL));
+        permissions.add(new Permission(getPermissionName() + ".sleep", DefaultPermissionLevel.ALL));
     }
     
     public static class Seat extends Entity implements IEntityAdditionalSpawnData {

@@ -116,7 +116,7 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
     
     protected void openGui(EntityPlayer playerIn, int guiId, World worldIn, BlockPos pos, IBlockState state, EnumFacing facing) {
         if (!worldIn.isRemote) {
-            if (PermissionAPI.hasPermission(playerIn.getGameProfile(), LibModInfo.ID + "." + getTranslationKey() + ".open-gui", new BlockPosContext(playerIn, pos, state, facing))) {
+            if (PermissionAPI.hasPermission(playerIn.getGameProfile(), LibModInfo.ID + "." + getPermissionName() + ".open-gui", new BlockPosContext(playerIn, pos, state, facing))) {
                 FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), guiId, worldIn, pos.getX(), pos.getY(), pos.getZ());
             }
         }
@@ -124,6 +124,11 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
     
     @Override
     public void getPermissions(ArrayList<Permission> permissions) {
-        permissions.add(new Permission(getTranslationKey() + ".open-gui", DefaultPermissionLevel.ALL));
+        permissions.add(new Permission(getPermissionName() + ".open-gui", DefaultPermissionLevel.ALL));
+    }
+    
+    @Override
+    public String getPermissionName() {
+        return getTranslationKey();
     }
 }

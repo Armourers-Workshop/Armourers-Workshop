@@ -107,7 +107,10 @@ public abstract class AbstractModBlock extends Block implements ISortOrder, ICus
     
     @Override
     public void getPermissions(ArrayList<Permission> permissions) {
-        // TODO Auto-generated method stub
-        
+    }
+    
+    @Override
+    public String getPermissionName() {
+        return getTranslationKey();
     }
 }
