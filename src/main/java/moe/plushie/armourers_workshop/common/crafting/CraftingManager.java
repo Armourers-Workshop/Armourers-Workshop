@@ -39,7 +39,7 @@ public final class CraftingManager {
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
         if (!ConfigHandler.disableRecipes) {
-            ModBlockRecipes.init(event.getRegistry());
+            //ModBlockRecipes.init(event.getRegistry());
             ModItemRecipes.init(event.getRegistry());
         }
     }

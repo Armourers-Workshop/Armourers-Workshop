@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" p ",
+		"wcw",
+		" w "
+	],
+	"key": {
+		"p": {
+			"item": "minecraft:pumpkin"
+		},
+		"w": {
+			"type": "forge:ore_dict",
+			"ore": "plankWood"
+		},
+		"c": {
+			"item": "armourers_workshop:tile.skin-cube"
+		}
+	},
+	"result": {
+		"item": "armourers_workshop:tile.mannequin"
+	}
+}

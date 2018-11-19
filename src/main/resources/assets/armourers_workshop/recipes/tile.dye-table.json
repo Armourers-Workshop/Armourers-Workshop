@@ -1,0 +1,27 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"sws",
+		"dcd",
+		"sss"
+	],
+	"key": {
+		"s": {
+			"type": "forge:ore_dict",
+			"ore": "stone"
+		},
+		"w": {
+			"type": "forge:ore_dict",
+			"ore": "plankWood"
+		},
+		"d": {
+			"item": "armourers_workshop:item.dye-bottle"
+		},
+		"c": {
+			"item": "armourers_workshop:tile.skin-cube"
+		}
+	},
+	"result": {
+		"item": "armourers_workshop:tile.dye-table"
+	}
+}

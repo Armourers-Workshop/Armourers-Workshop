@@ -1,0 +1,27 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ses",
+		"bcb",
+		"sss"
+	],
+	"key": {
+		"e": {
+			"type": "forge:ore_dict",
+			"ore": "enderpearl"
+		},
+		"s": {
+			"type": "forge:ore_dict",
+			"ore": "stone"
+		},
+		"c": {
+			"item": "armourers_workshop:tile.skin-cube"
+		},
+		"b": {
+			"item": "minecraft:bookshelf"
+		}
+	},
+	"result": {
+		"item": "armourers_workshop:tile.global-skin-library"
+	}
+}

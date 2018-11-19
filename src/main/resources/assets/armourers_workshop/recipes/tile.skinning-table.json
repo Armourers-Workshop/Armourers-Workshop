@@ -1,0 +1,27 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"srs",
+		"tct",
+		"sss"
+	],
+	"key": {
+		"s": {
+			"type": "forge:ore_dict",
+			"ore": "stone"
+		},
+		"r": {
+			"item": "minecraft:wool",
+			"data": 14
+		},
+		"t": {
+			"item": "armourers_workshop:item.skin-template"
+		},
+		"c": {
+			"item": "armourers_workshop:tile.skin-cube"
+		}
+	},
+	"result": {
+		"item": "armourers_workshop:tile.skinning-table"
+	}
+}
