@@ -31,7 +31,8 @@ public class BookChapterCredits extends BookChapterBase {
                 "V972 (ru_RU)",
                 "BredFace (pt_BR)",
                 "Equine0x (fr_FR)",
-                "_Hoppang_ (ko_KR)"});
+                "_Hoppang_ (ko_KR)",
+                "BlackGear27 (es_ES)"});
     }
     
     private void addCategoryPage(String pageName, String[] people) {
