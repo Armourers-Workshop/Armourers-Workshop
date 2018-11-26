@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "armourers_workshop:tile.skin-cube-glowing"
+        },
+        {
+            "type": "forge:ore_dict",
+            "ore": "blockGlass"
+        }
+    ],
+    "result": {
+        "item": "armourers_workshop:tile.skin-cube-glass-glowing"
+    }
+}
