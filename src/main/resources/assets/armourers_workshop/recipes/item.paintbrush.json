@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "  c",
+        " i ",
+        "s  "
+    ],
+    "key": {
+        "c": {
+            "item": "armourers_workshop:tile.skin-cube"
+        },
+        "i": {
+            "type": "forge:ore_dict",
+            "ore": "ingotIron"
+        },
+        "s": {
+            "type": "forge:ore_dict",
+            "ore": "stickWood"
+        }
+    },
+    "result": {
+        "item": "armourers_workshop:item.paintbrush"
+    }
+}

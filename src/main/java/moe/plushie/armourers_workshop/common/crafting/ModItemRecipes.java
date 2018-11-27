@@ -11,22 +11,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 public final class ModItemRecipes {
 
     public static void init(IForgeRegistry<IRecipe> iForgeRegistry) {
-
-        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.paintbrush, 1, 0), new Object[] {
-            "  w",
-            " i ",
-            "s  ",
-            'w', ModBlocks.skinCube,
-            'i', "ingotIron",
-            's', "stickWood"});
-        
-        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.paintRoller, 1, 0), new Object[] {
-            " w ",
-            " iw",
-            "s  ",
-            'w', ModBlocks.skinCube,
-            'i', "ingotIron",
-            's', "stickWood"});
         
         CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.colourPicker, 1, 0), new Object[] {
             " lg",
