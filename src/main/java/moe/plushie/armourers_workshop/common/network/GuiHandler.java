@@ -72,13 +72,19 @@ public class GuiHandler implements IGuiHandler {
     
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity te = null;
+        final TileEntity[] tes = new TileEntity[1];
         
         if (ID != LibGuiIds.WARDROBE_ENTITY | ID != LibGuiIds.WARDROBE_PLAYER) {
             BlockPos pos = new BlockPos(x, y, z);
-            te = world.getTileEntity(pos);
+            player.getEntityWorld().getMinecraftServer().addScheduledTask(new Runnable() {
+                  @Override
+                  public void run() {
+                      tes[0]=world.getTileEntity(pos);
+                  }
+              }
+            );
         }
-        
+        TileEntity te= tes[0];
         switch (ID)
         {
             case LibGuiIds.COLOUR_MIXER:
