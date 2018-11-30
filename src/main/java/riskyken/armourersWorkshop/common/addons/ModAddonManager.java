@@ -1,6 +1,7 @@
 package riskyken.armourersWorkshop.common.addons;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 
 import org.apache.logging.log4j.Level;
@@ -23,7 +24,7 @@ public final class ModAddonManager {
     
     private static ArrayList<ModAddon> loadedAddons = new ArrayList<ModAddon>(); 
     
-    public static ArrayList<String> itemOverrides = new ArrayList<String>();
+    public static HashSet<String> itemOverrides = new HashSet<String>();
     
     public static AddonAquaTweaks addonAquaTweaks;
     public static AddonBalkonsWeaponMod addonBalkonsWeaponMod;
@@ -144,54 +145,30 @@ public final class ModAddonManager {
     }
     
     public static void initRenderers() {
-        checkForDuplicateItemOverrides();
         overrideItemRenders();
     }
     
     private static void overrideItemRenders() {
-        for (int i = 0; i < itemOverrides.size(); i++) {
-            String arrayItem = itemOverrides.get(i);
-            int splitterCount = arrayItem.length() - arrayItem.replace(":", "").length();
+        for (String itemOverride : itemOverrides) {
+            int splitterCount = itemOverride.length() - itemOverride.replace(":", "").length();
             if (splitterCount > 1) {
-                String type = arrayItem.substring(0, arrayItem.indexOf(":"));
-                arrayItem = arrayItem.substring(arrayItem.indexOf(":") + 1);
-                String modId = arrayItem.substring(0, arrayItem.indexOf(":"));
-                String itemId = arrayItem.substring(arrayItem.indexOf(":") + 1);
-                if (Loader.isModLoaded(modId) | modId.equalsIgnoreCase("minecraft")) {
-                    if (type.equalsIgnoreCase("bow")) {
+                String type = itemOverride.substring(0, itemOverride.indexOf(":"));
+                String item = itemOverride.substring(itemOverride.indexOf(":") + 1);
+                String modId = item.substring(0, item.indexOf(":"));
+                String itemId = item.substring(item.indexOf(":") + 1);
+                if (Loader.isModLoaded(modId) | modId.equals("minecraft")) {
+                    if (type.equals("bow")) {
                         overrideItemRenderer(modId, itemId, RenderType.BOW);
                     } else {
                         overrideItemRenderer(modId, itemId, RenderType.SWORD);
                     }
                 }
             } else {
-                if (!arrayItem.isEmpty()) {
-                    ModLogger.log(Level.ERROR, String.format("Invalid item override in config file: %s", arrayItem));
+                if (!itemOverride.isEmpty()) {
+                    ModLogger.log(Level.ERROR, String.format("Invalid item override in config file: %s", itemOverride));
                 }
             }
         }
-    }
-    
-    private static void checkForDuplicateItemOverrides() {
-        for (int i = 0; i < itemOverrides.size(); i++) {
-            if (!itemOverrides.get(i).isEmpty()) {
-                if (countNumberOfAppearancesInArray(itemOverrides, itemOverrides.get(i)) > 1) {
-                    ModLogger.log("Removing duplicate item override: " + itemOverrides.get(i));
-                    itemOverrides.remove(i);
-                }
-            }
-        }
-    }
-    
-    private static int countNumberOfAppearancesInArray(ArrayList<String> list, String item) {
-        int count = 0;
-        item = item.trim();
-        for (int i = 0; i < list.size(); i++) {
-            if (item.equalsIgnoreCase(list.get(i).trim())) {
-                count++;
-            }
-        }
-        return count;
     }
     
     private static void overrideItemRenderer(String modId, String itemName, RenderType renderType) {
@@ -200,7 +177,7 @@ public final class ModAddonManager {
             ItemStack stack = new ItemStack(item);
             IItemRenderer renderer = getItemRenderer(stack);
             
-            if (renderer != null && renderer instanceof RenderItemEquipmentSkin) {
+            if (renderer instanceof RenderItemEquipmentSkin) {
                 ModLogger.log(Level.WARN, String.format("Tried to override the render on %s:%s but it has already been overridden.", modId, itemName));
                 return;
             }

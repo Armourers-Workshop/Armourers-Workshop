@@ -38,7 +38,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     public MessageServerSyncConfig() {
         this.allowClientsToDownloadSkins = ConfigHandler.allowClientsToDownloadSkins;
         this.allowClientsToUploadSkins = ConfigHandler.allowClientsToUploadSkins;
-        this.itemOverrides = ModAddonManager.itemOverrides.toArray(new String[ModAddonManager.itemOverrides.size()]);
+        this.itemOverrides = ModAddonManager.itemOverrides.toArray(new String[0]);
         this.libraryShowsModelPreviews = ConfigHandler.libraryShowsModelPreviews;
         this.lockDyesOnSkins = ConfigHandler.lockDyesOnSkins;
         this.instancedDyeTable = ConfigHandler.instancedDyeTable;
