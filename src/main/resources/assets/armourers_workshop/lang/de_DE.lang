@@ -1,157 +1,157 @@
 # Block names
-tile.armourersworkshop:armourerBrain.name=Rüstungsbauer
-tile.armourersworkshop:miniArmourer.name=kleiner Rüstungsbauer - (WIP)
-tile.armourersworkshop:armourLibrary0.name=Ausrüstungs Bibliothek
-tile.armourersworkshop:armourLibrary1.name=Ausrüstungs Bibliothek - (Kreativ)
-tile.armourersworkshop:globalSkinLibrary.name=globale Ausrüstungs Bibliothek - (WIP)
-tile.armourersworkshop:colourable.name=anstreichbarer Würfel
-tile.armourersworkshop:colourableGlowing.name=anstreichbarer Würfel (leuchtend)
-tile.armourersworkshop:colourableGlass.name=anstreichbarer Glas Würfel
-tile.armourersworkshop:colourableGlassGlowing.name=anstreichbarer Glas Würfel (leuchtend)
-tile.armourersworkshop:colourMixer.name=Farb Mixer
-tile.armourersworkshop:mannequin.name=Schaufensterpuppe
-tile.armourersworkshop:doll.name=Puppe
-tile.armourersworkshop:skinningTable.name=Ausrüstungs Verarbeiter
-tile.armourersworkshop:dyeTable.name=Färbtisch
-tile.armourersworkshop:skinnable.name=verarbeitbarer Würfel
+tile.armourers_workshop:armourerBrain.name=Rüstungsbauer
+tile.armourers_workshop:miniArmourer.name=kleiner Rüstungsbauer - (WIP)
+tile.armourers_workshop:armourLibrary0.name=Ausrüstungs Bibliothek
+tile.armourers_workshop:armourLibrary1.name=Ausrüstungs Bibliothek - (Kreativ)
+tile.armourers_workshop:globalSkinLibrary.name=globale Ausrüstungs Bibliothek - (WIP)
+tile.armourers_workshop:colourable.name=anstreichbarer Würfel
+tile.armourers_workshop:colourableGlowing.name=anstreichbarer Würfel (leuchtend)
+tile.armourers_workshop:colourableGlass.name=anstreichbarer Glas Würfel
+tile.armourers_workshop:colourableGlassGlowing.name=anstreichbarer Glas Würfel (leuchtend)
+tile.armourers_workshop:colourMixer.name=Farb Mixer
+tile.armourers_workshop:mannequin.name=Schaufensterpuppe
+tile.armourers_workshop:doll.name=Puppe
+tile.armourers_workshop:skinningTable.name=Ausrüstungs Verarbeiter
+tile.armourers_workshop:dyeTable.name=Färbtisch
+tile.armourers_workshop:skinnable.name=verarbeitbarer Würfel
 
 
 # Block flavour text
-tile.armourersworkshop:armourerBrain.flavour=Hiermit kannst du dir deine eigenen Rüstungen bauen!
-tile.armourersworkshop:miniArmourer.flavour=Unfertig.
-tile.armourersworkshop:armourLibrary0.flavour=Speichere und lade Rüstungen mit Ausrüstungsvorlagen.
-tile.armourersworkshop:armourLibrary1.flavour=Speichere und lade Rüstungen. Nur im Kreativmodus!
-tile.armourersworkshop:colourable.flavour=Hauptbaustein für selbsterstellte Ausrüstung.%n(färbbar)
-tile.armourersworkshop:colourableGlowing.flavour=Im dunkeln leuchtende anstreichbare Würfel!%n(färbbar)
-tile.armourersworkshop:colourableGlass.flavour=Durchsichtiger anstreichbarer Würfel.%n(färbbar)
-tile.armourersworkshop:colourableGlassGlowing.flavour=Durchsichtiger und leuchtender anstreichbarer Würfel!%n(färbbar)
-tile.armourersworkshop:colourMixer.flavour=Mische Farben für deine Ausrüstung!%nSchleichen und Rechtsklick bearbeitet alle anstreichbaren Würfel.
-tile.armourersworkshop:mannequin.flavour=Schau dir an wie das was du gemacht hast aussieht!!%nUm der Schaufensterpuppe einen Spieleskin zu geben mach Rechtsklick mit einem Namenschild darauf!
-tile.armourersworkshop:doll.flavour=Süß!
-tile.armourersworkshop:skinningTable.flavour=Verarbeite Ausrüstungsvorlagen in Rüstungsteile und Waffen!
+tile.armourers_workshop:armourerBrain.flavour=Hiermit kannst du dir deine eigenen Rüstungen bauen!
+tile.armourers_workshop:miniArmourer.flavour=Unfertig.
+tile.armourers_workshop:armourLibrary0.flavour=Speichere und lade Rüstungen mit Ausrüstungsvorlagen.
+tile.armourers_workshop:armourLibrary1.flavour=Speichere und lade Rüstungen. Nur im Kreativmodus!
+tile.armourers_workshop:colourable.flavour=Hauptbaustein für selbsterstellte Ausrüstung.%n(färbbar)
+tile.armourers_workshop:colourableGlowing.flavour=Im dunkeln leuchtende anstreichbare Würfel!%n(färbbar)
+tile.armourers_workshop:colourableGlass.flavour=Durchsichtiger anstreichbarer Würfel.%n(färbbar)
+tile.armourers_workshop:colourableGlassGlowing.flavour=Durchsichtiger und leuchtender anstreichbarer Würfel!%n(färbbar)
+tile.armourers_workshop:colourMixer.flavour=Mische Farben für deine Ausrüstung!%nSchleichen und Rechtsklick bearbeitet alle anstreichbaren Würfel.
+tile.armourers_workshop:mannequin.flavour=Schau dir an wie das was du gemacht hast aussieht!!%nUm der Schaufensterpuppe einen Spieleskin zu geben mach Rechtsklick mit einem Namenschild darauf!
+tile.armourers_workshop:doll.flavour=Süß!
+tile.armourers_workshop:skinningTable.flavour=Verarbeite Ausrüstungsvorlagen in Rüstungsteile und Waffen!
 
 
 # Item names
-item.armourersworkshop:equipmentSkinTemplate.0.name=Ausrüstungsvorlage
-item.armourersworkshop:equipmentSkinTemplate.1000.name=Geschenkbeutel
-item.armourersworkshop:equipmentSkin.name=Ausrüstung
-item.armourersworkshop:paintbrush.name=Pinsel
-item.armourersworkshop:paintRoller.name=Farbroller
-item.armourersworkshop:colourPicker.name=Pipette
-item.armourersworkshop:burnTool.name=Brenn Werkzeug
-item.armourersworkshop:dodgeTool.name=Aufhell Werkzeug
-item.armourersworkshop:colourNoiseTool.name=Farbrauschen Werkzeug
-item.armourersworkshop:shadeNoiseTool.name=Schattierungs Werkzeug
-item.armourersworkshop:mannequinTool.name=Schaufensterpuppen Werkzeug
-item.armourersworkshop:guideBook.name=Toutorial Buch
-item.armourersworkshop:armourContainer.name=Ausrüstungs Behälter
-item.armourersworkshop:armourContainerHead.name=Kopf Ausrüstungs Behälter
-item.armourersworkshop:armourContainerChest.name=Brust Ausrütungs Behälter
-item.armourersworkshop:armourContainerLegs.name=Bein Ausrüstungs Behälter
-item.armourersworkshop:armourContainerFeet.name=Fuß Ausrüstungs Behälter
-item.armourersworkshop:wandOfStyle.name=NPC Ausrüster (WIP)
-item.armourersworkshop:soap.name=Seife
-item.armourersworkshop:hueTool.name=Farbton Werkzeug
-item.armourersworkshop:blockMarker.name=Markier Werkzeug
-item.armourersworkshop:dyeBottle.name=Farbglas
-item.armourersworkshop:blendingTool.name=Verwisch Werkzeug - (WIP)
-item.armourersworkshop:armourersHammer.name=Rüstungsbauer Hammer
-item.armourersworkshop:debugTool.name=Debug Werkzeug
-item.armourersworkshop:skinUnlock.0.name=Kopf Ausrüstungs Behälter (anlegbar)
-item.armourersworkshop:skinUnlock.1.name=Brust Ausrüstungs Behälter (anlegbar)
-item.armourersworkshop:skinUnlock.2.name=Bein Ausrüstungs Behälter (anlegbar)
-item.armourersworkshop:skinUnlock.3.name=Fuß Ausrüstungs Behälter (anlegbar)
+item.armourers_workshop:equipmentSkinTemplate.0.name=Ausrüstungsvorlage
+item.armourers_workshop:equipmentSkinTemplate.1000.name=Geschenkbeutel
+item.armourers_workshop:equipmentSkin.name=Ausrüstung
+item.armourers_workshop:paintbrush.name=Pinsel
+item.armourers_workshop:paintRoller.name=Farbroller
+item.armourers_workshop:colourPicker.name=Pipette
+item.armourers_workshop:burnTool.name=Brenn Werkzeug
+item.armourers_workshop:dodgeTool.name=Aufhell Werkzeug
+item.armourers_workshop:colourNoiseTool.name=Farbrauschen Werkzeug
+item.armourers_workshop:shadeNoiseTool.name=Schattierungs Werkzeug
+item.armourers_workshop:mannequinTool.name=Schaufensterpuppen Werkzeug
+item.armourers_workshop:guideBook.name=Toutorial Buch
+item.armourers_workshop:armourContainer.name=Ausrüstungs Behälter
+item.armourers_workshop:armourContainerHead.name=Kopf Ausrüstungs Behälter
+item.armourers_workshop:armourContainerChest.name=Brust Ausrütungs Behälter
+item.armourers_workshop:armourContainerLegs.name=Bein Ausrüstungs Behälter
+item.armourers_workshop:armourContainerFeet.name=Fuß Ausrüstungs Behälter
+item.armourers_workshop:wandOfStyle.name=NPC Ausrüster (WIP)
+item.armourers_workshop:soap.name=Seife
+item.armourers_workshop:hueTool.name=Farbton Werkzeug
+item.armourers_workshop:blockMarker.name=Markier Werkzeug
+item.armourers_workshop:dyeBottle.name=Farbglas
+item.armourers_workshop:blendingTool.name=Verwisch Werkzeug - (WIP)
+item.armourers_workshop:armourersHammer.name=Rüstungsbauer Hammer
+item.armourers_workshop:debugTool.name=Debug Werkzeug
+item.armourers_workshop:skinUnlock.0.name=Kopf Ausrüstungs Behälter (anlegbar)
+item.armourers_workshop:skinUnlock.1.name=Brust Ausrüstungs Behälter (anlegbar)
+item.armourers_workshop:skinUnlock.2.name=Bein Ausrüstungs Behälter (anlegbar)
+item.armourers_workshop:skinUnlock.3.name=Fuß Ausrüstungs Behälter (anlegbar)
 
 
 # Item flavour text
-item.armourersworkshop:equipmentSkinTemplate.1000.flavour=Ein Geschenk von RiskyKen!
-item.armourersworkshop:paintbrush.flavour=Streicht einen einzelnen Würfel an.
-item.armourersworkshop:paintRoller.flavour=Streicht mehrere Würfel an.
-item.armourersworkshop:colourPicker.flavour=Kann eine Farbe aufnehmen.
-item.armourersworkshop:burnTool.flavour=Macht Würfel dunkler.
-item.armourersworkshop:dodgeTool.flavour=Macht Würfel heller.
-item.armourersworkshop:colourNoiseTool.flavour=Verändert die Farbe des Würfels leicht.
-item.armourersworkshop:shadeNoiseTool.flavour=Verändert die Schattierung des Würfels leicht.
-item.armourersworkshop:mannequinTool.flavour=Lade und Speichere die Position von Puppern.%nRechts Klick zum anwenden gespeicherter Einstellungen.%nBeim Schleichen Rechts Klick um die Einstellungen einer Puppe zu speichern.
-item.armourersworkshop:guideBook.flavour=Eine Hilfe für Armourer's Workshop!
-item.armourersworkshop:armourContainer.flavour=Kreativ Modus Item für Mapersteller.%nHiermit kannst du CNPCs NPCs Armourer's Workshop Ausrüstung anziehen.%nBenutze den Ausrüstungs Verarbeiter um eine Ausrüstung zuzuteilen.
-item.armourersworkshop:soap.flavour=zum Reinigen von anstreichbaren Würfeln und entfernen von Ausrüstungsvorlagen von Items verwendet.
-item.armourersworkshop:hueTool.flavour=Verändert die Farbe eines Würfels%nohne die Schattierung zu ändern.
-item.armourersworkshop:blockMarker.flavour=Macht eine Markierung auf Ausrüstungs Würfeln.%nNur für Bögen, Betten und Stühle!
-item.armourersworkshop:dyeBottle.flavour=Kann mit Farben vom Farbmixer gefüllt werden und dann im Färbtisch mit Ausrüstung kombiniert werden.
-item.armourersworkshop:armourersHammer.flavour=Zum drehen von Würfeln verwendet.
-item.armourersworkshop:skinUnlock.0.flavour=Gibt eine weitere Möglichkeit zum Anlegen von Kopf Ausrüstung.
-item.armourersworkshop:skinUnlock.1.flavour=Gibt eine weitere Möglichkeit zum Anlegen von Brust Ausrüstung.
-item.armourersworkshop:skinUnlock.2.flavour=Gibt eine weitere Möglichkeit zum Anlegen von Bein Ausrüstung.
-item.armourersworkshop:skinUnlock.3.flavour=Gibt eine weitere Möglichkeit zum Anlegen von Fuß Ausrüstung.
+item.armourers_workshop:equipmentSkinTemplate.1000.flavour=Ein Geschenk von RiskyKen!
+item.armourers_workshop:paintbrush.flavour=Streicht einen einzelnen Würfel an.
+item.armourers_workshop:paintRoller.flavour=Streicht mehrere Würfel an.
+item.armourers_workshop:colourPicker.flavour=Kann eine Farbe aufnehmen.
+item.armourers_workshop:burnTool.flavour=Macht Würfel dunkler.
+item.armourers_workshop:dodgeTool.flavour=Macht Würfel heller.
+item.armourers_workshop:colourNoiseTool.flavour=Verändert die Farbe des Würfels leicht.
+item.armourers_workshop:shadeNoiseTool.flavour=Verändert die Schattierung des Würfels leicht.
+item.armourers_workshop:mannequinTool.flavour=Lade und Speichere die Position von Puppern.%nRechts Klick zum anwenden gespeicherter Einstellungen.%nBeim Schleichen Rechts Klick um die Einstellungen einer Puppe zu speichern.
+item.armourers_workshop:guideBook.flavour=Eine Hilfe für Armourer's Workshop!
+item.armourers_workshop:armourContainer.flavour=Kreativ Modus Item für Mapersteller.%nHiermit kannst du CNPCs NPCs Armourer's Workshop Ausrüstung anziehen.%nBenutze den Ausrüstungs Verarbeiter um eine Ausrüstung zuzuteilen.
+item.armourers_workshop:soap.flavour=zum Reinigen von anstreichbaren Würfeln und entfernen von Ausrüstungsvorlagen von Items verwendet.
+item.armourers_workshop:hueTool.flavour=Verändert die Farbe eines Würfels%nohne die Schattierung zu ändern.
+item.armourers_workshop:blockMarker.flavour=Macht eine Markierung auf Ausrüstungs Würfeln.%nNur für Bögen, Betten und Stühle!
+item.armourers_workshop:dyeBottle.flavour=Kann mit Farben vom Farbmixer gefüllt werden und dann im Färbtisch mit Ausrüstung kombiniert werden.
+item.armourers_workshop:armourersHammer.flavour=Zum drehen von Würfeln verwendet.
+item.armourers_workshop:skinUnlock.0.flavour=Gibt eine weitere Möglichkeit zum Anlegen von Kopf Ausrüstung.
+item.armourers_workshop:skinUnlock.1.flavour=Gibt eine weitere Möglichkeit zum Anlegen von Brust Ausrüstung.
+item.armourers_workshop:skinUnlock.2.flavour=Gibt eine weitere Möglichkeit zum Anlegen von Bein Ausrüstung.
+item.armourers_workshop:skinUnlock.3.flavour=Gibt eine weitere Möglichkeit zum Anlegen von Fuß Ausrüstung.
 
 
 # Rollover Text
-item.armourersworkshop:rollover.intensity=&6Intensität:&7 %s
-item.armourersworkshop:rollover.colour=&6Farbe:&7 %s
-item.armourersworkshop:rollover.hex=&6Hex:&7 %s
-item.armourersworkshop:rollover.paintType=&6Farb Typ:&7 %s
-item.armourersworkshop:rollover.radius=&6Radius:&7 %d*%d*%d
-item.armourersworkshop:rollover.nopaint=&6Keine Farbe.
-item.armourersworkshop:rollover.settingsSaved=&6Einstellungen gespeichert.
-item.armourersworkshop:rollover.noSettingsSaved=&cKeine Einstellungen gespeichert.
-item.armourersworkshop:rollover.user=&6Benutzer:&7 %s
-item.armourersworkshop:rollover.url=&6URL:&7 %s
-item.armourersworkshop:rollover.empty=&6Leer.
-item.armourersworkshop:rollover.openSettings=Beim Schleichen rechtsklicken zum Speichern der Einstellungen.
-item.armourersworkshop:rollover.hasSkin=&6Hat Armouerer's Workshop Ausrüstung
-item.armourersworkshop:rollover.skinName=&6Name:&7 %s
-item.armourersworkshop:rollover.skinAuthor=&6Autor:&7 %s
-item.armourersworkshop:rollover.skinType=&6Typ:&7 %s
-item.armourersworkshop:rollover.skinHoldShiftForInfo=Drücke &ashift&7 für mehr Informationen.
-item.armourersworkshop:rollover.skinId=&eAusrüstung Id:&7 %s
-item.armourersworkshop:rollover.skinTotalCubes=&eInsgesamte Würfelanzahl:&7 %s
-item.armourersworkshop:rollover.skinNumCubes=&eWürfel:&7 %s
-item.armourersworkshop:rollover.skinNumCubesGlowing=&eleuchtende Würfel:&7 %s
-item.armourersworkshop:rollover.skinNumCubesGlass=&eGlas Würfel:&7 %s
-item.armourersworkshop:rollover.skinNumCubesGlassGlowing=&eleuchtende Glas Würfel:&7 %s
-item.armourersworkshop:rollover.skinPaintData=&eHat Farb Daten:&7 %s
-item.armourersworkshop:rollover.skinMarkerCount=&eAnzahl der Markierungen:&7 %d
-item.armourersworkshop:rollover.skinDyeCount=&eFarben Anzahl:&7 %d/8
-item.armourersworkshop:rollover.skindownloading=Ausrüstungs ID zum Herunterladen: %d
-item.armourersworkshop:rollover.skinOpenWardrobe=Drücke &a%s&7 um den &aAusrüstungskleiderschrank zu öffnen.
-item.armourersworkshop:rollover.skinOldType=&cAlter Ausrüstungs Typ! Zum erneuern in eine Werkbank legen!
-item.armourersworkshop:rollover.skinInvalidItem=&cError: Inkorrekter Ausrüstungsgegenstand, bitte löschen!
-item.armourersworkshop:rollover.skinIdError1=&cWarnung: Diese Ausrüstung verwendet ein älteres Ausrüstungs Format!
-item.armourersworkshop:rollover.skinIdError2=&cBitte speichere und lade diese Ausrüstung in deiner Biliothek um dashier zu reparieren!
-item.armourersworkshop:rollover.skinIdError3=&cDEBUG - Alte ID: %s Neue ID: %s
-item.armourersworkshop:rollover.skinProperties=&eAusrüstungs Eigenschaften:
+item.armourers_workshop:rollover.intensity=&6Intensität:&7 %s
+item.armourers_workshop:rollover.colour=&6Farbe:&7 %s
+item.armourers_workshop:rollover.hex=&6Hex:&7 %s
+item.armourers_workshop:rollover.paintType=&6Farb Typ:&7 %s
+item.armourers_workshop:rollover.radius=&6Radius:&7 %d*%d*%d
+item.armourers_workshop:rollover.nopaint=&6Keine Farbe.
+item.armourers_workshop:rollover.settingsSaved=&6Einstellungen gespeichert.
+item.armourers_workshop:rollover.noSettingsSaved=&cKeine Einstellungen gespeichert.
+item.armourers_workshop:rollover.user=&6Benutzer:&7 %s
+item.armourers_workshop:rollover.url=&6URL:&7 %s
+item.armourers_workshop:rollover.empty=&6Leer.
+item.armourers_workshop:rollover.openSettings=Beim Schleichen rechtsklicken zum Speichern der Einstellungen.
+item.armourers_workshop:rollover.hasSkin=&6Hat Armouerer's Workshop Ausrüstung
+item.armourers_workshop:rollover.skinName=&6Name:&7 %s
+item.armourers_workshop:rollover.skinAuthor=&6Autor:&7 %s
+item.armourers_workshop:rollover.skinType=&6Typ:&7 %s
+item.armourers_workshop:rollover.skinHoldShiftForInfo=Drücke &ashift&7 für mehr Informationen.
+item.armourers_workshop:rollover.skinId=&eAusrüstung Id:&7 %s
+item.armourers_workshop:rollover.skinTotalCubes=&eInsgesamte Würfelanzahl:&7 %s
+item.armourers_workshop:rollover.skinNumCubes=&eWürfel:&7 %s
+item.armourers_workshop:rollover.skinNumCubesGlowing=&eleuchtende Würfel:&7 %s
+item.armourers_workshop:rollover.skinNumCubesGlass=&eGlas Würfel:&7 %s
+item.armourers_workshop:rollover.skinNumCubesGlassGlowing=&eleuchtende Glas Würfel:&7 %s
+item.armourers_workshop:rollover.skinPaintData=&eHat Farb Daten:&7 %s
+item.armourers_workshop:rollover.skinMarkerCount=&eAnzahl der Markierungen:&7 %d
+item.armourers_workshop:rollover.skinDyeCount=&eFarben Anzahl:&7 %d/8
+item.armourers_workshop:rollover.skindownloading=Ausrüstungs ID zum Herunterladen: %d
+item.armourers_workshop:rollover.skinOpenWardrobe=Drücke &a%s&7 um den &aAusrüstungskleiderschrank zu öffnen.
+item.armourers_workshop:rollover.skinOldType=&cAlter Ausrüstungs Typ! Zum erneuern in eine Werkbank legen!
+item.armourers_workshop:rollover.skinInvalidItem=&cError: Inkorrekter Ausrüstungsgegenstand, bitte löschen!
+item.armourers_workshop:rollover.skinIdError1=&cWarnung: Diese Ausrüstung verwendet ein älteres Ausrüstungs Format!
+item.armourers_workshop:rollover.skinIdError2=&cBitte speichere und lade diese Ausrüstung in deiner Biliothek um dashier zu reparieren!
+item.armourers_workshop:rollover.skinIdError3=&cDEBUG - Alte ID: %s Neue ID: %s
+item.armourers_workshop:rollover.skinProperties=&eAusrüstungs Eigenschaften:
 
 
 # Tool Options
-tooloption.armourersworkshop:fullBlockMode=ganze Würfel anstreichen
-tooloption.armourersworkshop:changeHue=Farbton ändern
-tooloption.armourersworkshop:changeSaturation=Sättigung ändern
-tooloption.armourersworkshop:changeBrightness=Helligkeit ändern
-tooloption.armourersworkshop:changePaintType=Farbtyp ändern
-tooloption.armourersworkshop:intensity=Intensität
-tooloption.armourersworkshop:radius=Radius
-tooloption.armourersworkshop:radius.sample=Proben Radius
-tooloption.armourersworkshop:radius.effect=Effekt Radius
+tooloption.armourers_workshop:fullBlockMode=ganze Würfel anstreichen
+tooloption.armourers_workshop:changeHue=Farbton ändern
+tooloption.armourers_workshop:changeSaturation=Sättigung ändern
+tooloption.armourers_workshop:changeBrightness=Helligkeit ändern
+tooloption.armourers_workshop:changePaintType=Farbtyp ändern
+tooloption.armourers_workshop:intensity=Intensität
+tooloption.armourers_workshop:radius=Radius
+tooloption.armourers_workshop:radius.sample=Proben Radius
+tooloption.armourers_workshop:radius.effect=Effekt Radius
 
 # Paint Types
-paintType.armourersworkshop:normal.name=Normal
-paintType.armourersworkshop:dye_1.name=Farbe 1
-paintType.armourersworkshop:dye_2.name=Farbe 2
-paintType.armourersworkshop:dye_3.name=Farbe 3
-paintType.armourersworkshop:dye_4.name=Farbe 4
-paintType.armourersworkshop:dye_5.name=Farbe 5
-paintType.armourersworkshop:dye_6.name=Farbe 6
-paintType.armourersworkshop:dye_7.name=Farbe 7
-paintType.armourersworkshop:dye_8.name=Farbe 8
-paintType.armourersworkshop:none.name=Keine
-paintType.armourersworkshop:skin.name=Haut
-paintType.armourersworkshop:hair.name=Haare
+paintType.armourers_workshop:normal.name=Normal
+paintType.armourers_workshop:dye_1.name=Farbe 1
+paintType.armourers_workshop:dye_2.name=Farbe 2
+paintType.armourers_workshop:dye_3.name=Farbe 3
+paintType.armourers_workshop:dye_4.name=Farbe 4
+paintType.armourers_workshop:dye_5.name=Farbe 5
+paintType.armourers_workshop:dye_6.name=Farbe 6
+paintType.armourers_workshop:dye_7.name=Farbe 7
+paintType.armourers_workshop:dye_8.name=Farbe 8
+paintType.armourers_workshop:none.name=Keine
+paintType.armourers_workshop:skin.name=Haut
+paintType.armourers_workshop:hair.name=Haare
 
 # Colour Families
-colourFamily.armourersworkshop:wool.name=Wolle
-colourFamily.armourersworkshop:minecraft.name=Minecraft
-colourFamily.armourersworkshop:pastel.name=Pastell
+colourFamily.armourers_workshop:wool.name=Wolle
+colourFamily.armourers_workshop:minecraft.name=Minecraft
+colourFamily.armourers_workshop:pastel.name=Pastell
 
 
 # Skin Types
@@ -188,124 +188,124 @@ skinPartType.armourers:wings.leftWing.name=Linker Flügel
 skinPartType.armourers:wings.rightWing.name=Rechter Flügel
 
 # Inventory names
-inventory.armourersworkshop:colourMixer.name=Farb Mixer
-inventory.armourersworkshop:armourerBrain.name=Rüstungsbauer
-inventory.armourersworkshop:armourLibrary0.name=Ausrüstungs Bibliothek
-inventory.armourersworkshop:armourLibrary1.name=Ausrüstungs Bibliothek - (Kreativ)
-inventory.armourersworkshop:equipmentWardrobe.name=Kleiderschrank
-inventory.armourersworkshop:mannequin.name=Schaufensterpuppe
-inventory.armourersworkshop:doll.name=Puppe
-inventory.armourersworkshop:miniArmourer.name=kleiner Rüstungsbauer - (WIP)
-inventory.armourersworkshop:entityEquipment.name=Wesen Ausrüstung
-inventory.armourersworkshop:skinningTable.name=Ausrüstungs Verarbeiter
-inventory.armourersworkshop:dyeTable.name=Färbtisch
+inventory.armourers_workshop:colourMixer.name=Farb Mixer
+inventory.armourers_workshop:armourerBrain.name=Rüstungsbauer
+inventory.armourers_workshop:armourLibrary0.name=Ausrüstungs Bibliothek
+inventory.armourers_workshop:armourLibrary1.name=Ausrüstungs Bibliothek - (Kreativ)
+inventory.armourers_workshop:equipmentWardrobe.name=Kleiderschrank
+inventory.armourers_workshop:mannequin.name=Schaufensterpuppe
+inventory.armourers_workshop:doll.name=Puppe
+inventory.armourers_workshop:miniArmourer.name=kleiner Rüstungsbauer - (WIP)
+inventory.armourers_workshop:entityEquipment.name=Wesen Ausrüstung
+inventory.armourers_workshop:skinningTable.name=Ausrüstungs Verarbeiter
+inventory.armourers_workshop:dyeTable.name=Färbtisch
 
 # Inventory controls
-inventory.armourersworkshop:armourLibrary.label.search=Suchen:
-inventory.armourersworkshop:armourLibrary.label.filename=Datei Name:
-inventory.armourersworkshop:armourLibrary.label.files=Dateien:
-inventory.armourersworkshop:armourLibrary.error.noFileName=&7Du musst einen Dateinamen angeben um eine Ausüstung zu speichern!
-inventory.armourersworkshop:armourLibrary.error.noFileSelected=&7Du musst zuerst eine Ausrüstungs Gegenstand zum laden auswählen!
-inventory.armourersworkshop:armourLibrary.save=Speichern
-inventory.armourersworkshop:armourLibrary.load=Laden
-inventory.armourersworkshop:armourLibrary.openFolder=Ordner öffnen...
-inventory.armourersworkshop:armourLibrary.rollover.localFiles=Dateien auf diesem Computer anzeigen.
-inventory.armourersworkshop:armourLibrary.rollover.remotePublicFiles=Öffentliche Dateien von diesem Server anzeigen.
-inventory.armourersworkshop:armourLibrary.rollover.remotePrivateFiles=Private Dateien auf diesem Server anzeigen.
-inventory.armourersworkshop:armourLibrary.rollover.notOnServer=Du musst auf einem Server sein um dieses feature zu nutzen!
-inventory.armourersworkshop:armourLibrary.rollover.openLibraryFolder=Bibliotheks Ordner auf deinem Computer öffnen.
-inventory.armourersworkshop:armourLibrary.rollover.deleteSkin=Ausrüstung löschen.
-inventory.armourersworkshop:armourLibrary.rollover.refresh=Bibliotheks Dateien refreshen.
-inventory.armourersworkshop:armourLibrary.label.enterFileName=Dateinamen eingeben.
-inventory.armourersworkshop:armourLibrary.label.typeToSearch=Zum suchen hier tippen...
+inventory.armourers_workshop:armourLibrary.label.search=Suchen:
+inventory.armourers_workshop:armourLibrary.label.filename=Datei Name:
+inventory.armourers_workshop:armourLibrary.label.files=Dateien:
+inventory.armourers_workshop:armourLibrary.error.noFileName=&7Du musst einen Dateinamen angeben um eine Ausüstung zu speichern!
+inventory.armourers_workshop:armourLibrary.error.noFileSelected=&7Du musst zuerst eine Ausrüstungs Gegenstand zum laden auswählen!
+inventory.armourers_workshop:armourLibrary.save=Speichern
+inventory.armourers_workshop:armourLibrary.load=Laden
+inventory.armourers_workshop:armourLibrary.openFolder=Ordner öffnen...
+inventory.armourers_workshop:armourLibrary.rollover.localFiles=Dateien auf diesem Computer anzeigen.
+inventory.armourers_workshop:armourLibrary.rollover.remotePublicFiles=Öffentliche Dateien von diesem Server anzeigen.
+inventory.armourers_workshop:armourLibrary.rollover.remotePrivateFiles=Private Dateien auf diesem Server anzeigen.
+inventory.armourers_workshop:armourLibrary.rollover.notOnServer=Du musst auf einem Server sein um dieses feature zu nutzen!
+inventory.armourers_workshop:armourLibrary.rollover.openLibraryFolder=Bibliotheks Ordner auf deinem Computer öffnen.
+inventory.armourers_workshop:armourLibrary.rollover.deleteSkin=Ausrüstung löschen.
+inventory.armourers_workshop:armourLibrary.rollover.refresh=Bibliotheks Dateien refreshen.
+inventory.armourers_workshop:armourLibrary.label.enterFileName=Dateinamen eingeben.
+inventory.armourers_workshop:armourLibrary.label.typeToSearch=Zum suchen hier tippen...
 
 
-inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
-inventory.armourersworkshop:armourerBrain.label.username=Benutzername:
-inventory.armourersworkshop:armourerBrain.label.idleSpeed=Schlag Geschwindigkeit:
-inventory.armourersworkshop:armourerBrain.label.flyingSpeed=Flug Geschwindigkeit:
-inventory.armourersworkshop:armourerBrain.label.minAngle=Minimaler Winkel:
-inventory.armourersworkshop:armourerBrain.label.maxAngle=Maximaler Winkel:
-inventory.armourersworkshop:armourerBrain.label.clone=klonen:
-inventory.armourersworkshop:armourerBrain.showGuide=Form anzeigen?
-inventory.armourersworkshop:armourerBrain.showOverlay=Kopfschmuck anzeigen?
-inventory.armourersworkshop:armourerBrain.showHelper=Hilfsmodell anzeigen?
-inventory.armourersworkshop:armourerBrain.save=Speichern
-inventory.armourersworkshop:armourerBrain.load=Laden
-inventory.armourersworkshop:armourerBrain.set=Bestätigen
-inventory.armourersworkshop:armourerBrain.clear=Löschen
-inventory.armourersworkshop:armourerBrain.westToEast=West nach Ost
-inventory.armourersworkshop:armourerBrain.eastToWest=Ost nach West
-inventory.armourersworkshop:armourerBrain.glowing=Leuchtend?
-inventory.armourersworkshop:armourerBrain.ladder=Leiter?
-inventory.armourersworkshop:armourerBrain.noCollision=Keine Kollision?
-inventory.armourersworkshop:armourerBrain.seat=Stuhl?
-inventory.armourersworkshop:armourerBrain.multiblock=Großer Block?
-inventory.armourersworkshop:armourerBrain.bed=Bett?
-inventory.armourersworkshop:armourerBrain.overrideBodyPart=Überschreiben?
+inventory.armourers_workshop:armourerBrain.label.itemName=Item Name:
+inventory.armourers_workshop:armourerBrain.label.username=Benutzername:
+inventory.armourers_workshop:armourerBrain.label.idleSpeed=Schlag Geschwindigkeit:
+inventory.armourers_workshop:armourerBrain.label.flyingSpeed=Flug Geschwindigkeit:
+inventory.armourers_workshop:armourerBrain.label.minAngle=Minimaler Winkel:
+inventory.armourers_workshop:armourerBrain.label.maxAngle=Maximaler Winkel:
+inventory.armourers_workshop:armourerBrain.label.clone=klonen:
+inventory.armourers_workshop:armourerBrain.showGuide=Form anzeigen?
+inventory.armourers_workshop:armourerBrain.showOverlay=Kopfschmuck anzeigen?
+inventory.armourers_workshop:armourerBrain.showHelper=Hilfsmodell anzeigen?
+inventory.armourers_workshop:armourerBrain.save=Speichern
+inventory.armourers_workshop:armourerBrain.load=Laden
+inventory.armourers_workshop:armourerBrain.set=Bestätigen
+inventory.armourers_workshop:armourerBrain.clear=Löschen
+inventory.armourers_workshop:armourerBrain.westToEast=West nach Ost
+inventory.armourers_workshop:armourerBrain.eastToWest=Ost nach West
+inventory.armourers_workshop:armourerBrain.glowing=Leuchtend?
+inventory.armourers_workshop:armourerBrain.ladder=Leiter?
+inventory.armourers_workshop:armourerBrain.noCollision=Keine Kollision?
+inventory.armourers_workshop:armourerBrain.seat=Stuhl?
+inventory.armourers_workshop:armourerBrain.multiblock=Großer Block?
+inventory.armourers_workshop:armourerBrain.bed=Bett?
+inventory.armourers_workshop:armourerBrain.overrideBodyPart=Überschreiben?
 
-inventory.armourersworkshop:colourMixer.label.hue=Farbton
-inventory.armourersworkshop:colourMixer.label.saturation=Sättigung
-inventory.armourersworkshop:colourMixer.label.brightness=Helligkeit
-inventory.armourersworkshop:colourMixer.label.hex=Hex
-inventory.armourersworkshop:colourMixer.label.presets=Vorlagen
-inventory.armourersworkshop:colourMixer.label.paintType=Farb Typ
+inventory.armourers_workshop:colourMixer.label.hue=Farbton
+inventory.armourers_workshop:colourMixer.label.saturation=Sättigung
+inventory.armourers_workshop:colourMixer.label.brightness=Helligkeit
+inventory.armourers_workshop:colourMixer.label.hex=Hex
+inventory.armourers_workshop:colourMixer.label.presets=Vorlagen
+inventory.armourers_workshop:colourMixer.label.paintType=Farb Typ
 
-inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Hautfarbe
-inventory.armourersworkshop:equipmentWardrobe.label.hairColour=Haarfarbe
-inventory.armourersworkshop:equipmentWardrobe.selectSkin=Hautfarbe auswählen
-inventory.armourersworkshop:equipmentWardrobe.autoSkin=Auto
-inventory.armourersworkshop:equipmentWardrobe.selectHair=Haarfarbe auswählen
-inventory.armourersworkshop:equipmentWardrobe.autoHair=Auto
-inventory.armourersworkshop:equipmentWardrobe.label.skinOverride=Skin Überschreiben
-inventory.armourersworkshop:equipmentWardrobe.renderHeadArmour=Kopf Rüstung rendern?
-inventory.armourersworkshop:equipmentWardrobe.renderChestArmour=Brust Rüstung rendern?
-inventory.armourersworkshop:equipmentWardrobe.renderLegArmour=Bein Rüstung rendern?
-inventory.armourersworkshop:equipmentWardrobe.renderFootArmour=Fuß Rüstung rendern?
-inventory.armourersworkshop:equipmentWardrobe.renderHeadOverlay=Kopfschmuck rendern?
-inventory.armourersworkshop:equipmentWardrobe.limitLimbMovement=Bewegung anpassen?
+inventory.armourers_workshop:equipmentWardrobe.label.skinColour=Hautfarbe
+inventory.armourers_workshop:equipmentWardrobe.label.hairColour=Haarfarbe
+inventory.armourers_workshop:equipmentWardrobe.selectSkin=Hautfarbe auswählen
+inventory.armourers_workshop:equipmentWardrobe.autoSkin=Auto
+inventory.armourers_workshop:equipmentWardrobe.selectHair=Haarfarbe auswählen
+inventory.armourers_workshop:equipmentWardrobe.autoHair=Auto
+inventory.armourers_workshop:equipmentWardrobe.label.skinOverride=Skin Überschreiben
+inventory.armourers_workshop:equipmentWardrobe.renderHeadArmour=Kopf Rüstung rendern?
+inventory.armourers_workshop:equipmentWardrobe.renderChestArmour=Brust Rüstung rendern?
+inventory.armourers_workshop:equipmentWardrobe.renderLegArmour=Bein Rüstung rendern?
+inventory.armourers_workshop:equipmentWardrobe.renderFootArmour=Fuß Rüstung rendern?
+inventory.armourers_workshop:equipmentWardrobe.renderHeadOverlay=Kopfschmuck rendern?
+inventory.armourers_workshop:equipmentWardrobe.limitLimbMovement=Bewegung anpassen?
 
-inventory.armourersworkshop:mannequin.label.headRotation=Kopf Drehung
-inventory.armourersworkshop:mannequin.label.leftArmRotation=linker Arm Drehung
-inventory.armourersworkshop:mannequin.label.rightArmRotation=rechter Arm Drehung
-inventory.armourersworkshop:mannequin.label.leftLegRotation=linkes Bein Drehung
-inventory.armourersworkshop:mannequin.label.rightLegRotation=rechtes Bein Drehung
-inventory.armourersworkshop:mannequin.label.isChild=Kind?
-inventory.armourersworkshop:mannequin.label.isExtraRenders=Besonderes?
-inventory.armourersworkshop:mannequin.label.isFlying=Fliegend?
-inventory.armourersworkshop:mannequin.label.isVisible=Sichtbar?
-inventory.armourersworkshop:mannequin.random=zufällig
-inventory.armourersworkshop:mannequin.reset=zurücksetzen
-inventory.armourersworkshop:mannequin.dropdown.user=Benutzer
-inventory.armourersworkshop:mannequin.dropdown.url=URL
-inventory.armourersworkshop:mannequin.set=Bestätigen
-inventory.armourersworkshop:mannequin.selectSkin=Haut auswählen
-inventory.armourersworkshop:mannequin.selectHair=Haar auswählen
-inventory.armourersworkshop:mannequin.autoSkin=Auto Haut
-inventory.armourersworkshop:mannequin.autoHair=Auto Haar
-inventory.armourersworkshop:mannequin.tab.inventory=Inventar
-inventory.armourersworkshop:mannequin.tab.rotations=Rotationen
-inventory.armourersworkshop:mannequin.tab.offset=Verschiebung
-inventory.armourersworkshop:mannequin.tab.skinAndHair=Haut- & Haarfarbe
-inventory.armourersworkshop:mannequin.tab.name=Name
-inventory.armourersworkshop:mannequin.tab.extraRenders=Besonderes
+inventory.armourers_workshop:mannequin.label.headRotation=Kopf Drehung
+inventory.armourers_workshop:mannequin.label.leftArmRotation=linker Arm Drehung
+inventory.armourers_workshop:mannequin.label.rightArmRotation=rechter Arm Drehung
+inventory.armourers_workshop:mannequin.label.leftLegRotation=linkes Bein Drehung
+inventory.armourers_workshop:mannequin.label.rightLegRotation=rechtes Bein Drehung
+inventory.armourers_workshop:mannequin.label.isChild=Kind?
+inventory.armourers_workshop:mannequin.label.isExtraRenders=Besonderes?
+inventory.armourers_workshop:mannequin.label.isFlying=Fliegend?
+inventory.armourers_workshop:mannequin.label.isVisible=Sichtbar?
+inventory.armourers_workshop:mannequin.random=zufällig
+inventory.armourers_workshop:mannequin.reset=zurücksetzen
+inventory.armourers_workshop:mannequin.dropdown.user=Benutzer
+inventory.armourers_workshop:mannequin.dropdown.url=URL
+inventory.armourers_workshop:mannequin.set=Bestätigen
+inventory.armourers_workshop:mannequin.selectSkin=Haut auswählen
+inventory.armourers_workshop:mannequin.selectHair=Haar auswählen
+inventory.armourers_workshop:mannequin.autoSkin=Auto Haut
+inventory.armourers_workshop:mannequin.autoHair=Auto Haar
+inventory.armourers_workshop:mannequin.tab.inventory=Inventar
+inventory.armourers_workshop:mannequin.tab.rotations=Rotationen
+inventory.armourers_workshop:mannequin.tab.offset=Verschiebung
+inventory.armourers_workshop:mannequin.tab.skinAndHair=Haut- & Haarfarbe
+inventory.armourers_workshop:mannequin.tab.name=Name
+inventory.armourers_workshop:mannequin.tab.extraRenders=Besonderes
 
-inventory.armourersworkshop:miniArmourer.save=Speichern
-inventory.armourersworkshop:miniArmourer.load=Laden
-inventory.armourersworkshop:miniArmourer.label.buildingAccess=Beim Schleichen auf den kleinen Rüstungsbauer rechtsklicken öffnet das Bau-Interface.
+inventory.armourers_workshop:miniArmourer.save=Speichern
+inventory.armourers_workshop:miniArmourer.load=Laden
+inventory.armourers_workshop:miniArmourer.label.buildingAccess=Beim Schleichen auf den kleinen Rüstungsbauer rechtsklicken öffnet das Bau-Interface.
 
 
 # Chat Messages
-chat.armourersworkshop:undo.outOfUndos=Du kannst nicht mehr rückgängig machen!
-chat.armourersworkshop:undo.undoing=Zurücksetzen
-chat.armourersworkshop:inventoryFull=Dein Inventar ist foll!
-chat.armourersworkshop:inventoryGiftFail=Jemand hat versucht dir etwas zu schenken aber du hattest keine Platz!
-chat.armourersworkshop:updateAvailable=Das Armourer's Workshop update %s ist raus!
-chat.armourersworkshop:updateDownload=[Download]
-chat.armourersworkshop:updateDownloadRollover=Klicke auf diesen Link um die neue Version herunterzuladen!
-chat.armourersworkshop:devWarning=Warnung! Du verwendest eine Entwicklungsversion von Armourer's Workshop. Entwicklungsversionen sind nur zum testen und nicht zum öffentlichen Gebrauch gedacht.
-chat.armourersworkshop:slotUnlocked=%s Ausrüstungsbehälter freigeschaltet. Du hast jetzt %s Behälter.
-chat.armourersworkshop:slotUnlockedFailed=%s ist das Maximum an Ausrüstungsbehältern die du haben kannst!
+chat.armourers_workshop:undo.outOfUndos=Du kannst nicht mehr rückgängig machen!
+chat.armourers_workshop:undo.undoing=Zurücksetzen
+chat.armourers_workshop:inventoryFull=Dein Inventar ist foll!
+chat.armourers_workshop:inventoryGiftFail=Jemand hat versucht dir etwas zu schenken aber du hattest keine Platz!
+chat.armourers_workshop:updateAvailable=Das Armourer's Workshop update %s ist raus!
+chat.armourers_workshop:updateDownload=[Download]
+chat.armourers_workshop:updateDownloadRollover=Klicke auf diesen Link um die neue Version herunterzuladen!
+chat.armourers_workshop:devWarning=Warnung! Du verwendest eine Entwicklungsversion von Armourer's Workshop. Entwicklungsversionen sind nur zum testen und nicht zum öffentlichen Gebrauch gedacht.
+chat.armourers_workshop:slotUnlocked=%s Ausrüstungsbehälter freigeschaltet. Du hast jetzt %s Behälter.
+chat.armourers_workshop:slotUnlockedFailed=%s ist das Maximum an Ausrüstungsbehältern die du haben kannst!
 
 # Death Messages
 death.attack.victorious=%1$s wurde von Vic's Krone zu Tode gestochen.
@@ -317,58 +317,58 @@ commands.armourers.fileNotFound=Die Datei %1$s konnte nicht gefunden werden.
 
 
 # Creative tab
-itemGroup.armourersworkshop=Armourer's Workshop
+itemGroup.armourers_workshop=Armourer's Workshop
 
 
 # Keybindings
-keys.armourersworkshop:category=Armourer's Workshop
-keys.armourersworkshop.equipmentWardrobe=Kleiderschrank
-keys.armourersworkshop.undo=rückgängig machen
+keys.armourers_workshop:category=Armourer's Workshop
+keys.armourers_workshop.equipmentWardrobe=Kleiderschrank
+keys.armourers_workshop.undo=rückgängig machen
 
 # Guide Book
 # Chapter 1
-book.armourersworkshop:guideBook.contents.name=Inhalt
+book.armourers_workshop:guideBook.contents.name=Inhalt
 
 
 # Chapter 2
-book.armourersworkshop:guideBook.introduction.name=Einleitung
-book.armourersworkshop:guideBook.introduction.paragraph1=Notiz: Diese Buch ist nochimmer WIP.&pWillkommen zum Armourer's Workshop Hilfe Buch.&pDieses buch wird dir helfen mit Armourer's Workshop loszulegen.
-book.armourersworkshop:guideBook.introduction.paragraph2=Armourer's Workshop erlaubt dir deine eigenen Rüstungen, Waffen und Blöcke Pixel genau zu erstellen!
+book.armourers_workshop:guideBook.introduction.name=Einleitung
+book.armourers_workshop:guideBook.introduction.paragraph1=Notiz: Diese Buch ist nochimmer WIP.&pWillkommen zum Armourer's Workshop Hilfe Buch.&pDieses buch wird dir helfen mit Armourer's Workshop loszulegen.
+book.armourers_workshop:guideBook.introduction.paragraph2=Armourer's Workshop erlaubt dir deine eigenen Rüstungen, Waffen und Blöcke Pixel genau zu erstellen!
 
 
 # Chapter 3
-book.armourersworkshop:guideBook.armourer.name=Rüstungsbauer
-book.armourersworkshop:guideBook.armourer.paragraph1=Das erste was du brauchen wirst um deine eigenen Rüstungen zu erstellen ist der Rüstungsbauer.&pNachdem du ihn hingestellt hast, mache rechtsklick auf ihn um das GUI zu öffnen. Auf der linken Seite wirst du einige Sachen auswählen die du bauen kannst.
-book.armourersworkshop:guideBook.armourer.paragraph2=Such dir aus was du bauen möchtest und platziere anstreichbare Würfel in den markierten Bereich&pWenn du fertig bist nimm eine Ausrüstungsvorlage, lege sie in das linke Feld und klicke auf speichern.
+book.armourers_workshop:guideBook.armourer.name=Rüstungsbauer
+book.armourers_workshop:guideBook.armourer.paragraph1=Das erste was du brauchen wirst um deine eigenen Rüstungen zu erstellen ist der Rüstungsbauer.&pNachdem du ihn hingestellt hast, mache rechtsklick auf ihn um das GUI zu öffnen. Auf der linken Seite wirst du einige Sachen auswählen die du bauen kannst.
+book.armourers_workshop:guideBook.armourer.paragraph2=Such dir aus was du bauen möchtest und platziere anstreichbare Würfel in den markierten Bereich&pWenn du fertig bist nimm eine Ausrüstungsvorlage, lege sie in das linke Feld und klicke auf speichern.
 
 
 # Chapter 4
-book.armourersworkshop:guideBook.equipmentTemplates.name=Ausrüstungsvorlagen
-book.armourersworkshop:guideBook.equipmentTemplates.paragraph1=aus Ausrüstungsvorlagen werden deine Ausrüstungen gefertigt. Lege deine Ausrüstungen in deinen Kleiderschrank um sie anzuziehen.
+book.armourers_workshop:guideBook.equipmentTemplates.name=Ausrüstungsvorlagen
+book.armourers_workshop:guideBook.equipmentTemplates.paragraph1=aus Ausrüstungsvorlagen werden deine Ausrüstungen gefertigt. Lege deine Ausrüstungen in deinen Kleiderschrank um sie anzuziehen.
 
 
 # Chapter 5
-book.armourersworkshop:guideBook.paintingTools.name=Malwerkzeuge
-book.armourersworkshop:guideBook.paintingTools.paragraph1=Es wurden dir einige Werkzeuge zur Verfügung gestellt um dir bei der Auslebung deiner Kreativität behilflich zu sein!&pFarbmischer&nKann jede Farbe erzeugen die du dir vorstellen kannst.&pPinsel&nFärbt einen einzelnen Rüstungswürfel.
-book.armourersworkshop:guideBook.paintingTools.paragraph2=Pipette&nLässt dich eine Farbe von einem Würfel auswählen und in einen Farbmischer zu importieren.&pPaint Roller&nFärbt einen 3*3*1-Bereich von Würfeln.
-book.armourersworkshop:guideBook.paintingTools.paragraph3=Brenn-Werkzeug&nFärbt einen Würfel dunkler.&pAufhell-Tool&nFärbt einen Würfel dunkler.&pFarbrauschen-Tool&nFügt einem Würfel zufälliges Farbrauschen hinzu.
-book.armourersworkshop:guideBook.paintingTools.paragraph4=Schattierungs-Werkzeug&nFügt einem Würfel zufällige Schattierung hinzu.&pManche Werkzeuge können konfiguriert werden indem man schleichend einen Rechtsklick ausführt.
+book.armourers_workshop:guideBook.paintingTools.name=Malwerkzeuge
+book.armourers_workshop:guideBook.paintingTools.paragraph1=Es wurden dir einige Werkzeuge zur Verfügung gestellt um dir bei der Auslebung deiner Kreativität behilflich zu sein!&pFarbmischer&nKann jede Farbe erzeugen die du dir vorstellen kannst.&pPinsel&nFärbt einen einzelnen Rüstungswürfel.
+book.armourers_workshop:guideBook.paintingTools.paragraph2=Pipette&nLässt dich eine Farbe von einem Würfel auswählen und in einen Farbmischer zu importieren.&pPaint Roller&nFärbt einen 3*3*1-Bereich von Würfeln.
+book.armourers_workshop:guideBook.paintingTools.paragraph3=Brenn-Werkzeug&nFärbt einen Würfel dunkler.&pAufhell-Tool&nFärbt einen Würfel dunkler.&pFarbrauschen-Tool&nFügt einem Würfel zufälliges Farbrauschen hinzu.
+book.armourers_workshop:guideBook.paintingTools.paragraph4=Schattierungs-Werkzeug&nFügt einem Würfel zufällige Schattierung hinzu.&pManche Werkzeuge können konfiguriert werden indem man schleichend einen Rechtsklick ausführt.
 
 
 # Chapter 6
-book.armourersworkshop:guideBook.equipmentWardrobe.name=Kleiderschrank
-book.armourersworkshop:guideBook.equipmentWardrobe.paragraph1=WIP
-book.armourersworkshop:guideBook.equipmentWardrobe.paragraph2=WIP
+book.armourers_workshop:guideBook.equipmentWardrobe.name=Kleiderschrank
+book.armourers_workshop:guideBook.equipmentWardrobe.paragraph1=WIP
+book.armourers_workshop:guideBook.equipmentWardrobe.paragraph2=WIP
 
 
 # Chapter 7
-book.armourersworkshop:guideBook.recipes.name=Rezepte
+book.armourers_workshop:guideBook.recipes.name=Rezepte
 
 
 # Chapter 8
-book.armourersworkshop:guideBook.credits.name=Credits
-book.armourersworkshop:guideBook.credits.programing=Programmieren
-book.armourersworkshop:guideBook.credits.premade Skins=Vorgefertigte Skins
-book.armourersworkshop:guideBook.credits.textures=Texturen
-book.armourersworkshop:guideBook.credits.sound=Musik
-book.armourersworkshop:guideBook.credits.localisations=Sprachen
+book.armourers_workshop:guideBook.credits.name=Credits
+book.armourers_workshop:guideBook.credits.programing=Programmieren
+book.armourers_workshop:guideBook.credits.premade Skins=Vorgefertigte Skins
+book.armourers_workshop:guideBook.credits.textures=Texturen
+book.armourers_workshop:guideBook.credits.sound=Musik
+book.armourers_workshop:guideBook.credits.localisations=Sprachen
