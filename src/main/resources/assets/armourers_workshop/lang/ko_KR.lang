@@ -47,12 +47,12 @@ tile.armourers_workshop:colourable.name=커스텀장비,블럭 큐브
 tile.armourers_workshop:colourableGlowing.name=커스텀장비,블럭 큐브 (야광)
 tile.armourers_workshop:colourableGlass.name=유리 커스텀장비,블럭 큐브
 tile.armourers_workshop:colourableGlassGlowing.name=유리 커스텀장비,블럭 큐브 (야광)
-tile.armourers_workshop:colourMixer.name=색상 스포이드
+tile.armourers_workshop:colourMixer.name=혼합기
 tile.armourers_workshop:mannequin.name=마네킹
 tile.armourers_workshop:doll.name=인형
-tile.armourers_workshop:skinningTable.name=스킨 테이블
-tile.armourers_workshop:dyeTable.name=색상 작업대
-tile.armourers_workshop:skinnable.name=스케치 가능한 블록
+tile.armourers_workshop:skinningTable.name=스킨을 입힐수 있는 테이블
+tile.armourers_workshop:dyeTable.name=염색 작업대
+tile.armourers_workshop:skinnable.name=스킨을 입힐수 있는 블록
 tile.armourers_workshop:hologramProjector.name=홀로그램 영사기
 
 # 블럭 설명 텍스트
@@ -60,14 +60,14 @@ tile.armourers_workshop:armourerBrain.flavour=커스텀장비,블럭 스킨을 �
 tile.armourers_workshop:miniArmourer.flavour=미완성.
 tile.armourers_workshop:armourLibrary0.flavour=디스크에서 커스텀장비,블럭 을 저장하고 로드합니다.
 tile.armourers_workshop:armourLibrary1.flavour=디스크에서 커스텀장비,블럭 을 저장하고 로드합니다.%n게임모드.
-tile.armourers_workshop:colourable.flavour=커스텀장비,블럭의 메인 건축 블록.%n(색칠가능)
-tile.armourers_workshop:colourableGlowing.flavour=야광 커스텀장비,블럭의 건축 블럭!%n(색칠 가능)
-tile.armourers_workshop:colourableGlass.flavour=투명한 커스텀장비,블럭의 건축 블럭.%n(색칠 가능)
-tile.armourers_workshop:colourableGlassGlowing.flavour=투명한 커스텀장비,블럭의 건축 블럭!%n(색칠 가능)
-tile.armourers_workshop:colourMixer.flavour=커스텀장비,블럭 에 칠 할 색을 선택할 수 있다.%n붓과 롤러같은 장비를 들고 shift + 우클릭하면 색이 복사됩니다..
-tile.armourers_workshop:mannequin.flavour=커스텀장비 를 마네킹에 착용하여 보여줄 수 있다!%n이름표에 플레이어 이름을 적어 마네킹의 모습을 바꿀 수 있습니다..
+tile.armourers_workshop:colourable.flavour=커스텀장비,블럭의 메인 건축 블록입니다.%n(색칠가능)
+tile.armourers_workshop:colourableGlowing.flavour=야광 커스텀장비,건축 블럭입니다!%n(색칠 가능)
+tile.armourers_workshop:colourableGlass.flavour=투명한 커스텀장비,건축 블럭입니다.%n(색칠 가능)
+tile.armourers_workshop:colourableGlassGlowing.flavour=투명한 커스텀장비,건축 블럭입니다!%n(색칠 가능)
+tile.armourers_workshop:colourMixer.flavour=커스텀장비,블럭 에 칠 할 색을 선택할 수 있습니다.%n붓과 롤러같은 장비를 들고 shift + 우클릭하면 색이 복사됩니다..
+tile.armourers_workshop:mannequin.flavour=커스텀장비 를 마네킹에 착용하여 보여줄 수 있습니다!%n이름표에 플레이어 이름을 적어 마네킹의 모습을 바꿀 수 있습니다..
 tile.armourers_workshop:doll.flavour=미니 마네킹!
-tile.armourers_workshop:skinningTable.flavour=아이템에서 스킨을 적용 및 제거할 수 있습니다.
+tile.armourers_workshop:skinningTable.flavour=아이템에 스킨을 적용 및 제거할 수 있습니다.
 
 # 아이템 이름
 item.armourers_workshop:equipmentSkinTemplate.0.name=커스텀장비,블럭 틀
@@ -93,7 +93,7 @@ item.armourers_workshop:hueTool.name=Hue 도구
 item.armourers_workshop:blockMarker.name=블럭 마커
 item.armourers_workshop:dyeBottle.name=염료 병
 item.armourers_workshop:blendingTool.name=혼합 도구 - (WIP)
-item.armourers_workshop:armourersHammer.name=장비 장인의 망치
+item.armourers_workshop:armourersHammer.name=장인의 망치
 item.armourers_workshop:debugTool.name=디버그 도구
 item.armourers_workshop:skinUnlock.0.name=머리 스킨 슬롯 잠금 해제
 item.armourers_workshop:skinUnlock.1.name=상의 스킨 슬롯 잠금 해제
@@ -104,27 +104,27 @@ item.armourers_workshop:linkingTool.name=연결 도구
 
 # 아이템 설명 텍스트
 item.armourers_workshop:equipmentSkinTemplate.1000.flavour=RiskyKen 의 선물 
-item.armourers_workshop:paintbrush.flavour=블록 한 칸을 색칠한다.
-item.armourers_workshop:paintRoller.flavour=넓은 면적을 색칠한다
-item.armourers_workshop:colourPicker.flavour=블록의 색을 복사한다
-item.armourers_workshop:burnTool.flavour=블록 색을 좀 더 어둡게 만든다.
+item.armourers_workshop:paintbrush.flavour=블록 한 칸을 색칠합니다.
+item.armourers_workshop:paintRoller.flavour=넓은 면적을 색칠합니다
+item.armourers_workshop:colourPicker.flavour=블록의 색을 복사합니다
+item.armourers_workshop:burnTool.flavour=블록 색을 더 어둡게 만듭니다.
 item.armourers_workshop:dodgeTool.flavour=블록을 더 밝게 만듭니다.
 item.armourers_workshop:colourNoiseTool.flavour=블록에 임의의 색상 노이즈를 적용합니다.
 item.armourers_workshop:shadeNoiseTool.flavour=블록에 임의의 음영을 적용합니다.
-item.armourers_workshop:mannequinTool.flavour=마네킹 포즈 설정을 저장하고로드하십시오. %n 클릭하여 설정을 적용하십시오. %n 설정을 저장하려면 마우스 오른쪽 버튼을 클릭하십시오.
+item.armourers_workshop:mannequinTool.flavour=마네킹 포즈 설정을 저장하고 로드하십시오. %n 클릭하여 설정을 적용하십시오. %n 설정을 저장하려면 마우스 오른쪽 버튼을 클릭하십시오.
 item.armourers_workshop:guideBook.flavour=Armourer's Workshop(아머러스 워크샵)에 대한 가이드
 item.armourers_workshop:armourContainer.flavour=개발자를 위한 게임모드 전용 아이템.%nNPC에 제작한 장비를 입힐 수 있다(Custom NPCs 모드와 함께 사용).%n스킨 조합대에서 제작한 장비와 합성. 
-item.armourers_workshop:wandOfStyle.flavour=스킨을 NPC에 배치 할 수 있습니다.
+item.armourers_workshop:wandOfStyle.flavour=스킨을 NPC에 입힐 수 있습니다.
 item.armourers_workshop:soap.flavour=Skinner Table(스키너 표)에서 항목 스킨을 지우십시오.
 item.armourers_workshop:hueTool.flavour=음영에 영향을 미치지 않는 블록 %n의 색상을 변경합니다.
 item.armourers_workshop:blockMarker.flavour=커스텀장비,블럭 스킨 큐브에 마커를 만듭니다. %n 마커 블록이 필요한 스킨에만 사용하십시오.
-item.armourers_workshop:dyeBottle.flavour=염색 작업대에 사용. 부분 염색이되는 커스텀장비,블럭 스킨에 염색할 수 있습니다.
+item.armourers_workshop:dyeBottle.flavour=염색 작업대에 사용됩니다. 부분 염색이되는 커스텀장비,블럭 스킨에 염색할 수 있습니다.
 item.armourers_workshop:armourersHammer.flavour=블럭을 회전하는데 쓰인다 (마네킹의 회전).
-item.armourers_workshop:skinUnlock.0.flavour=옷장에 머리 스킨 슬롯 1 개를 풉니 다.
-item.armourers_workshop:skinUnlock.1.flavour=옷장에 상의 스킨 슬롯 1 개를 풉니 다.
-item.armourers_workshop:skinUnlock.2.flavour=옷장에 하의 스킨 슬롯 1 개를 풉니 다.
-item.armourers_workshop:skinUnlock.3.flavour=옷장에 신발 스킨 슬롯 1 개를 풉니 다.
-item.armourers_workshop:skinUnlock.4.flavour=옷장에 날개 스킨 슬롯 1 개를 풉니 다.
+item.armourers_workshop:skinUnlock.0.flavour=옷장에 머리 스킨 슬롯 1 개를 늘립니다.
+item.armourers_workshop:skinUnlock.1.flavour=옷장에 상의 스킨 슬롯 1 개를 늘립니다.
+item.armourers_workshop:skinUnlock.2.flavour=옷장에 하의 스킨 슬롯 1 개를 늘립니다.
+item.armourers_workshop:skinUnlock.3.flavour=옷장에 신발 스킨 슬롯 1 개를 늘립니다.
+item.armourers_workshop:skinUnlock.4.flavour=옷장에 날개 스킨 슬롯 1 개를 늘립니다.
 item.armourers_workshop:linkingTool.flavour=사용 가능한 블록을 %n 마우스 오른쪽 버튼으로 클릭하고 블록 스킨을 %n클릭하여 링크합니다.
 
 # 롤오버 텍스트
@@ -152,7 +152,7 @@ item.armourers_workshop:rollover.skinLibraryFile=라이브러리 파일: %s
 item.armourers_workshop:rollover.skinGlobalId=글로벌 ID: %s
 item.armourers_workshop:rollover.skinTotalCubes=&e총 큐브:&7 %s
 item.armourers_workshop:rollover.skinNumCubes=&e큐브:&7 %s
-item.armourers_workshop:rollover.skinNumCubesGlowing=&e야광 규브:&7 %s
+item.armourers_workshop:rollover.skinNumCubesGlowing=&e야광 큐브:&7 %s
 item.armourers_workshop:rollover.skinNumCubesGlass=&e유리 큐브:&7 %s
 item.armourers_workshop:rollover.skinNumCubesGlassGlowing=&e야광 유리 큐브:&7 %s
 item.armourers_workshop:rollover.skinPaintData=&e페인트 데이터 있음:&7 %s
@@ -161,7 +161,7 @@ item.armourers_workshop:rollover.skinDyeCount=&e염색 사용 횟수:&7 %d/8
 item.armourers_workshop:rollover.skindownloading=다운로드중 (스킨 ID): %d
 item.armourers_workshop:rollover.skinOpenWardrobe=&a%s&7 키를 눌러 &a장비 옷장&7 열기
 item.armourers_workshop:rollover.skinOldType=&c구 스킨 타입, crafting grid 에 넣어 업데이트해 주세요.
-item.armourers_workshop:rollover.skinInvalidItem=&주의: 잘못된 장비 스킨, 삭제해주세요.
+item.armourers_workshop:rollover.skinInvalidItem=&주의: 잘못된 장비 스킨입니다. 삭제해주세요.
 item.armourers_workshop:rollover.skinIdError1=&c주의: 이 스킨은 구 파일 형식을 사용합니다.
 item.armourers_workshop:rollover.skinIdError2=&c이 문제 해결을 위해 장비 도감에서 저장 후 불러오기를 다시 해주세요.
 item.armourers_workshop:rollover.skinIdError3=&c디버그 - 구 ID: %s 신 ID: %s
@@ -172,11 +172,11 @@ tooloption.armourers_workshop:fullBlockMode=전체 블럭 채색 모드
 tooloption.armourers_workshop:changeHue=색조 변경
 tooloption.armourers_workshop:changeSaturation=채도 변경
 tooloption.armourers_workshop:changeBrightness=밝기 변경
-tooloption.armourers_workshop:changePaintType=페인트 유형 변경
+tooloption.armourers_workshop:changePaintType=채색 유형 변경
 tooloption.armourers_workshop:intensity=강도
 tooloption.armourers_workshop:radius=넓이
-tooloption.armourers_workshop:radius.sample=넓이 반경
-tooloption.armourers_workshop:radius.effect=효과 넓이
+tooloption.armourers_workshop:radius.sample=샘플 반경
+tooloption.armourers_workshop:radius.effect=효과 반경
 
 
 # 페인트 유형
@@ -192,6 +192,8 @@ paintType.armourers_workshop:dye_8.name=염색파트 8
 paintType.armourers_workshop:none.name=투명화
 paintType.armourers_workshop:skin.name=피부
 paintType.armourers_workshop:hair.name=머리
+paintType.armourers_workshop:eye.name=눈
+paintType.armourers_workshop:misc.name=다양한 
 
 # 색상 계열
 colourFamily.armourers_workshop:wool.name=양털 계열
@@ -210,6 +212,14 @@ skinType.armourers:arrow.name=화살
 skinType.armourers:block.name=블럭
 skinType.armourers:multiblock.name=멀티 블럭
 skinType.armourers:wings.name=날개
+skinType.armourers:shield.name=방패
+skinType.armourers:pickaxe.name=곡괭이
+skinType.armourers:axe.name=도끼
+skinType.armourers:shovel.name=삽
+skinType.armourers:hoe.name=괭이
+skinType.armourers:item.name=아이템
+skinType.armourers:horse.name=말
+skinType.armourers:advanced.name=진보한
 
 # 스킨 부위 유형
 skinPartType.armourers:head.base.name=기본틀
@@ -237,7 +247,7 @@ movmentType.armourers_workshop:ease=편안함(조심조심,천천히)
 movmentType.armourers_workshop:linear=직선
 
 # 인벤토리 이름
-inventory.armourers_workshop:colourMixer.name=색상 선택기
+inventory.armourers_workshop:colourMixer.name=색상 혼합기
 inventory.armourers_workshop:armourerBrain.name=무구 제조기
 inventory.armourers_workshop:armourLibrary0.name=장비 도서관
 inventory.armourers_workshop:armourLibrary1.name=장비 도서관 - (게임모드)
@@ -249,7 +259,7 @@ inventory.armourers_workshop:entityEquipment.name=엔티티의 장비
 inventory.armourers_workshop:skinningTable.name=스킨 조합대
 inventory.armourers_workshop:dyeTable.name=염색 작업대
 inventory.armourers_workshop:skinnable.name=스킨 가능 블록
-inventory.armourers_workshop:hologramProjector.name=홀로그램 영사기
+inventory.armourers_workshop:hologramProjector.name=홀로그램 프로젝터
 
 # 인벤토리 관리
 inventory.armourers_workshop:armourLibrary.label.search=검색:
@@ -275,7 +285,7 @@ inventory.armourers_workshop:armourLibrary.label.typeToSearch=검색 ...
 inventory.armourers_workshop:armourLibrary.dialog.newFolder.title=새 폴더
 inventory.armourers_workshop:armourLibrary.dialog.newFolder.enterFolderName=폴더 이름을 입력하십시오 ...
 inventory.armourers_workshop:armourLibrary.dialog.newFolder.close=닫기
-inventory.armourers_workshop:armourLibrary.dialog.newFolder.create=창작하다
+inventory.armourers_workshop:armourLibrary.dialog.newFolder.create=만들기
 inventory.armourers_workshop:armourLibrary.dialog.newFolder.invalidFolderName=폴더 이름에 잘못된 문자가 있습니다
 inventory.armourers_workshop:armourLibrary.dialog.delete.title=삭제
 inventory.armourers_workshop:armourLibrary.dialog.delete.close=닫기
@@ -285,14 +295,14 @@ inventory.armourers_workshop:armourLibrary.dialog.delete.deleteFile=파일 삭�
 inventory.armourers_workshop:armourLibrary.dialog.overwrite.title=파일 덮어 쓰기
 inventory.armourers_workshop:armourLibrary.dialog.overwrite.close=닫기
 inventory.armourers_workshop:armourLibrary.dialog.overwrite.ok=확인
-inventory.armourers_workshop:armourLibrary.dialog.overwrite.overwriteFile=파일 덮어 쓰기 하시겠습니까 "%s"?
+inventory.armourers_workshop:armourLibrary.dialog.overwrite.overwriteFile=파일을 덮어 쓰기 하시겠습니까 "%s"?
 
 inventory.armourers_workshop:armourerBrain.label.itemName=아이템 이름:
 inventory.armourers_workshop:armourerBrain.label.skinType=스킨 이름:
 inventory.armourers_workshop:armourerBrain.label.username=사용자 이름:
 inventory.armourers_workshop:armourerBrain.label.url=링크:
-inventory.armourers_workshop:armourerBrain.label.idleSpeed=느린 속도:
-inventory.armourers_workshop:armourerBrain.label.flyingSpeed=빠른 속도 :
+inventory.armourers_workshop:armourerBrain.label.idleSpeed=최소 속도:
+inventory.armourers_workshop:armourerBrain.label.flyingSpeed=최대 속도 :
 inventory.armourers_workshop:armourerBrain.label.minAngle=최소 각도 :
 inventory.armourers_workshop:armourerBrain.label.maxAngle=최대 각도 :
 inventory.armourers_workshop:armourerBrain.label.clone=클론:
@@ -309,14 +319,14 @@ inventory.armourers_workshop:armourerBrain.set=적용
 inventory.armourers_workshop:armourerBrain.clear=확실한
 inventory.armourers_workshop:armourerBrain.copy=복사
 inventory.armourers_workshop:armourerBrain.glowing=빛나는?
-inventory.armourers_workshop:armourerBrain.ladder=사닥다리?
+inventory.armourers_workshop:armourerBrain.ladder=사다리?
 inventory.armourers_workshop:armourerBrain.noCollision=충돌이 없습니까?
 inventory.armourers_workshop:armourerBrain.seat=좌석?
 inventory.armourers_workshop:armourerBrain.multiblock=멀티 블록?
 inventory.armourers_workshop:armourerBrain.bed=침대?
-inventory.armourers_workshop:armourerBrain.inventory=목록?
-inventory.armourers_workshop:armourerBrain.enderInventory=인벤토리 재고?
-inventory.armourers_workshop:armourerBrain.overrideBodyPart=보수?
+inventory.armourers_workshop:armourerBrain.inventory=상자?
+inventory.armourers_workshop:armourerBrain.enderInventory=엔더상자?
+inventory.armourers_workshop:armourerBrain.overrideBodyPart=오버라이드?
 inventory.armourers_workshop:armourerBrain.hideOverlay=헤드 오버레이 숨기기?
 inventory.armourers_workshop:armourerBrain.tab.main=메인
 inventory.armourers_workshop:armourerBrain.tab.displaySettings=화면 설정
@@ -326,12 +336,12 @@ inventory.armourers_workshop:armourerBrain.dialog.clear.title=확실한
 inventory.armourers_workshop:armourerBrain.dialog.clear.close=닫기
 inventory.armourers_workshop:armourerBrain.dialog.clear.clear=확실한
 inventory.armourers_workshop:armourerBrain.dialog.clear.clearBlocks=장비 큐브를 지우시겠습니까?
-inventory.armourers_workshop:armourerBrain.dialog.clear.clearPaint=확실한 스킨 페인트?
-inventory.armourers_workshop:armourerBrain.dialog.clear.clearMarkers=확실한 아이콘?
+inventory.armourers_workshop:armourerBrain.dialog.clear.clearPaint=스킨 페인트를 지우시겠습니까?
+inventory.armourers_workshop:armourerBrain.dialog.clear.clearMarkers=마커를 지우시겠습니까?
 inventory.armourers_workshop:armourerBrain.dialog.copy.title=복사
 inventory.armourers_workshop:armourerBrain.dialog.copy.close=닫기
 inventory.armourers_workshop:armourerBrain.dialog.copy.copy=복사
-inventory.armourers_workshop:armourerBrain.dialog.copy.srcPart=소스 파트 :
+inventory.armourers_workshop:armourerBrain.dialog.copy.srcPart=시작 부분 :
 inventory.armourers_workshop:armourerBrain.dialog.copy.desPart=도착 부분 :
 inventory.armourers_workshop:armourerBrain.dialog.copy.mirror=거울?
 
@@ -368,7 +378,7 @@ inventory.armourers_workshop:mannequin.label.rightLegRotation=오른쪽 다리 �
 inventory.armourers_workshop:mannequin.label.isChild=어린이 모델 
 inventory.armourers_workshop:mannequin.label.isExtraRenders=추가 렌더링?
 inventory.armourers_workshop:mannequin.label.isFlying=빠르게?
-inventory.armourers_workshop:mannequin.label.isVisible=확실한?
+inventory.armourers_workshop:mannequin.label.isVisible=볼 수 있게?
 inventory.armourers_workshop:mannequin.random=랜덤
 inventory.armourers_workshop:mannequin.reset=초기화
 inventory.armourers_workshop:mannequin.dropdown.user=사용자
@@ -388,7 +398,7 @@ inventory.armourers_workshop:mannequin.tab.extraRenders=추가 랜더링
 # 미니 커스텀장비,블럭
 inventory.armourers_workshop : miniArmourer.save =저장
 inventory.armourers_workshop : miniArmourer.load =로드
-inventory.armourers_workshop : miniArmourer.label.buildingAccess =미니 커스텀장비,블럭을 건물 인터페이스에 액세스 하려면 오른쪽 마우스 단추를 클릭하십시오.
+inventory.armourers_workshop : miniArmourer.label.buildingAccess =미니 커스텀장비,블럭을 건물 인터페이스에 액세스 하려면 오른쪽 마우스를 클릭하십시오.
 
 # 글로벌 스킨 라이브러리
 inventory.armourers_workshop : globalSkinLibrary.invalidJava = [Java %d 업데이트 %d]이 (가) 너무 오래되었습니다. [Java 8 Update 101] 또는 그 이상으로 업데이트하십시오.
@@ -407,15 +417,15 @@ inventory.armourers_workshop: globalSkinLibrary.searchBox.search =검색
 
 # 글로벌 스킨 라이브러리 (집)
 inventory.armourers_workshop:globalSkinLibrary.home.showAllSkins =모든 스킨 표시
-inventory.armourers_workshop:globalSkinLibrary.home.recentlyUploaded =최근에 업로드 됨
+inventory.armourers_workshop:globalSkinLibrary.home.recentlyUploaded =최근에 업로드 된
 inventory.armourers_workshop:globalSkinLibrary.home.mostDownloaded =가장 많이 다운로드 된
-inventory.armourers_workshop:globalSkinLibrary.home.mostLikes =가장 좋아하는 
+inventory.armourers_workshop:globalSkinLibrary.home.mostLikes =가장 많이 좋아하는 
 
 # 글로벌 스킨 라이브러리 (검색 결과)
 inventory.armourers_workshop:globalSkinLibrary.searchResults.results =검색 결과 : 페이지 %d 중 %d - 총 %d 개의 결과.
 inventory.armourers_workshop:globalSkinLibrary.searchResults.small =작음
 inventory.armourers_workshop:globalSkinLibrary.searchResults.medium =중간
-inventory.armourers_workshop:globalSkinLibrary.searchResults.large =큰
+inventory.armourers_workshop:globalSkinLibrary.searchResults.large =큼
 inventory.armourers_workshop:globalSkinLibrary.searchResults.label.searching =검색 중 ...
 
 # 글로벌 스킨 라이브러리 (스킨 정보)
@@ -429,7 +439,7 @@ inventory.armourers_workshop:globalSkinLibrary.skinInfo.title=스킨 정보
 inventory.armourers_workshop:globalSkinLibrary.skinInfo.name=이름:
 inventory.armourers_workshop:globalSkinLibrary.skinInfo.downloads=다운로드 : %d
 inventory.armourers_workshop:globalSkinLibrary.skinInfo.likes=좋아요: %d
-inventory.armourers_workshop:globalSkinLibrary.skinInfo.author=작가.:
+inventory.armourers_workshop:globalSkinLibrary.skinInfo.author=제작자.:
 inventory.armourers_workshop:globalSkinLibrary.skinInfo.description=설명:
 
 # 글로벌 스킨 라이브러리 (업로드)
@@ -478,11 +488,11 @@ inventory.armourers_workshop:hologramProjector.tab.offset=오프셋
 inventory.armourers_workshop:hologramProjector.tab.angle=각도
 inventory.armourers_workshop:hologramProjector.tab.rotationOffset=회전 오프셋
 inventory.armourers_workshop:hologramProjector.tab.rotationSpeed=회전 속도
-inventory.armourers_workshop:hologramProjector.tab.extra=특별한
+inventory.armourers_workshop:hologramProjector.tab.extra=기타
 inventory.armourers_workshop:hologramProjector.showRotationPoint=회전 지점을 표시 하시겠습니까?
 inventory.armourers_workshop:hologramProjector.glowing=빛나는?
 inventory.armourers_workshop:hologramProjector.label.powerMode=레드 스톤 전원 모드 :
-inventory.armourers_workshop:hologramProjector.powerMode.ignored=무시하다
+inventory.armourers_workshop:hologramProjector.powerMode.ignored=무시
 inventory.armourers_workshop:hologramProjector.powerMode.high=높은
 inventory.armourers_workshop:hologramProjector.powerMode.low=낮은
 
@@ -501,7 +511,7 @@ chat.armourers_workshop:invalidJarStopModReposts=[here]
 chat.armourers_workshop:invalidJarStopModRepostsTooltip=모드 보고서 중지 페이지를 열려면 클릭하십시오.
 chat.armourers_workshop:devWarning=Armourer's Workshop(아머러스 워크샵) 의 개발 버전을 사용 중임을 경고합니다. 개발 버전은 테스트 용이며 공용으로 사용하지 않는 것이 좋습니다.
 chat.armourers_workshop:slotUnlocked=잠금 해제 된 %s 스킨 슬롯. 이제 %s 슬롯이 생겼습니다.
-chat.armourers_workshop:slotUnlockedFailed=%s 스킨 슬롯이 최대입니다.
+chat.armourers_workshop:slotUnlockedFailed=%s 스킨 슬롯이 최대치입니다.
 chat.armourers_workshop:linkingTool.start=연결을 시작했습니다.
 chat.armourers_workshop:linkingTool.finish=연결 되었습니다.
 chat.armourers_workshop:linkingTool.fail=연결하지 못 했습니다.
@@ -575,4 +585,4 @@ book.armourers_workshop:guideBook.credits.textures=텍스트
 book.armourers_workshop:guideBook.credits.sound=사운드
 book.armourers_workshop:guideBook.credits.localisations=변역
 
-# Translate by 1st translation : IS_Jump(acarus22@gmail.com) & 2st translation : _Hoppang_ (gasa6158@gmail.com)
+# Translate by 1st translation : IS_Jump(acarus22@gmail.com) & 2st translation : _Hoppang_ (gasa6158@gmail.com) & 3rd translation : JasonJeong(jasonjeong@gmail.com)
