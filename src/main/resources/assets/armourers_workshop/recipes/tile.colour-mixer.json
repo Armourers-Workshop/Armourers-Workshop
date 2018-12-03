@@ -23,7 +23,7 @@
             "ore": "stone"
         },
         "c": {
-            "item": "armourers_workshop:tile.skin-cube"
+            "item": "#SKINCUBE"
         }
     },
     "result": {

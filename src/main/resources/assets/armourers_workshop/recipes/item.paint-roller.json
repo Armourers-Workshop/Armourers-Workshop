@@ -7,7 +7,7 @@
     ],
     "key": {
         "c": {
-            "item": "armourers_workshop:tile.skin-cube"
+            "item": "#SKINCUBE"
         },
         "i": {
             "type": "forge:ore_dict",

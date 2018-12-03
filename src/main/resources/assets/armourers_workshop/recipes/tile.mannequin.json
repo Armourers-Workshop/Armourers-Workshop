@@ -14,7 +14,7 @@
             "ore": "plankWood"
         },
         "c": {
-            "item": "armourers_workshop:tile.skin-cube"
+            "item": "#SKINCUBE"
         }
     },
     "result": {

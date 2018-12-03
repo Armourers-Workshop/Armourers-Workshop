@@ -18,7 +18,7 @@
             "item": "armourers_workshop:item.skin-template"
         },
         "c": {
-            "item": "armourers_workshop:tile.skin-cube"
+            "item": "#SKINCUBE"
         }
     },
     "result": {
