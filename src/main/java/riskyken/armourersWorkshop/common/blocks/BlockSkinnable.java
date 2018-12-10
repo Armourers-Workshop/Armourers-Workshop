@@ -77,6 +77,10 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         if (!world.isRemote) {
             TileEntitySkinnable te = getTileEntity(world, x, y, z);
             if (te != null && te.getInventory() != null) {
+                for (EntityPlayer p : te.getViewers()) {
+                    p.closeScreen();
+                }
+                te.getViewers().clear();
                 BlockUtils.dropInventoryBlocks(world, te.getInventory(), x, y, z);
             }
             dropSkin(world, x, y, z, false);
@@ -89,6 +93,10 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
     public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
         TileEntitySkinnable te = getTileEntity(world, x, y, z);
         if (te != null && te.getInventory() != null) {
+            for (EntityPlayer p : te.getViewers()) {
+                p.closeScreen();
+            }
+            te.getViewers().clear();
             BlockUtils.dropInventoryBlocks(world, te.getInventory(), x, y, z);
         }
         super.breakBlock(world, x, y, z, block, meta);
@@ -125,6 +133,7 @@ public class BlockSkinnable extends AbstractModBlockContainer implements IDebug 
         }
         if (SkinProperties.PROP_BLOCK_INVENTORY.getValue(skin.getProperties()) | SkinProperties.PROP_BLOCK_ENDER_INVENTORY.getValue(skin.getProperties())) {
             if (!world.isRemote) {
+                te.getViewers().add(player);
                 FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.SKINNABLE, world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord);
             }
             return true;

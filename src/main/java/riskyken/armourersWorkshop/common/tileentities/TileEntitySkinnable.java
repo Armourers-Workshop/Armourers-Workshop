@@ -1,7 +1,9 @@
 package riskyken.armourersWorkshop.common.tileentities;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
 import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.relauncher.Side;
@@ -56,6 +58,7 @@ public class TileEntitySkinnable extends TileEntity {
     private ModInventory inventory;
     private boolean blockInventory;
     private BlockLocation linkedBlock = null;
+    private List<EntityPlayer> viewers = new ArrayList<EntityPlayer>();
     
     @SideOnly(Side.CLIENT)
     private AxisAlignedBB renderBounds;
@@ -242,6 +245,10 @@ public class TileEntitySkinnable extends TileEntity {
         } else {
             return getSkinServer(skinPointer);
         }
+    }
+
+    public List<EntityPlayer> getViewers() {
+        return viewers;
     }
 
     @SideOnly(Side.CLIENT)

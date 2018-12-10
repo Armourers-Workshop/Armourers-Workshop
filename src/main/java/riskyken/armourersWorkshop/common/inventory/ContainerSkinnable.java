@@ -90,4 +90,10 @@ public class ContainerSkinnable extends Container {
         }
         return null;
     }
+
+    @Override
+    public void onContainerClosed(EntityPlayer p_75134_1_) {
+        super.onContainerClosed(p_75134_1_);
+        tileEntity.getViewers().remove(p_75134_1_);
+    }
 }
