@@ -158,6 +158,9 @@ public class BlockSkinnable extends AbstractModBlockContainer {
             }
         }
         Skin skin = getSkin(worldIn, pos);
+        if (skin == null) {
+            return false;
+        }
         if (SkinProperties.PROP_BLOCK_SEAT.getValue(skin.getProperties())) {
             //return sitOnSeat(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin);
         }
