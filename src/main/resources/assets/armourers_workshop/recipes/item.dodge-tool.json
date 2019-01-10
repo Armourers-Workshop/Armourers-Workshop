@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " cd",
+        " ic",
+        "s  "
+    ],
+    "key": {
+        "c": {
+            "item": "#SKINCUBE"
+        },
+        "d": {
+            "type": "forge:ore_dict",
+            "ore": "dyeWhite"
+        },
+        "i": {
+            "type": "forge:ore_dict",
+            "ore": "ingotIron"
+        },
+        "s": {
+            "type": "forge:ore_dict",
+            "ore": "stickWood"
+        }
+    },
+    "result": {
+        "item": "armourers_workshop:item.dodge-tool"
+    }
+}

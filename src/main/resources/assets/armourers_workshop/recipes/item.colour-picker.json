@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " lg",
+        "lcl",
+        "ll "
+    ],
+    "key": {
+        "c": {
+            "item": "#SKINCUBE"
+        },
+        "g": {
+            "type": "forge:ore_dict",
+            "ore": "blockGlass"
+        },
+        "l": {
+            "item": "minecraft:leather"
+        }
+    },
+    "result": {
+        "item": "armourers_workshop:item.colour-picker"
+    }
+}

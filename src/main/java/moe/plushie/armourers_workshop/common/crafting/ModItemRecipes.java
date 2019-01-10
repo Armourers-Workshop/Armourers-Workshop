@@ -12,32 +12,6 @@ public final class ModItemRecipes {
 
     public static void init(IForgeRegistry<IRecipe> iForgeRegistry) {
         
-        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.colourPicker, 1, 0), new Object[] {
-            " lg",
-            "lwl",
-            "ll ",
-            'w', ModBlocks.skinCube,
-            'g', "blockGlass",
-            'l', Items.LEATHER});
-        
-        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.burnTool, 1, 0), new Object[] {
-            " wd",
-            " iw",
-            "s  ",
-            'w', ModBlocks.skinCube,
-            'i', "ingotIron",
-            'd', "dyeBlack",
-            's', "stickWood"});
-        
-        CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.dodgeTool, 1, 0), new Object[] {
-            " wd",
-            " iw",
-            "s  ",
-            'w', ModBlocks.skinCube,
-            'i', "ingotIron",
-            'd', "dyeWhite",
-            's', "stickWood"});
-        
         CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.blendingTool, 1, 0), new Object[] {
             " wc",
             " ib",
@@ -64,7 +38,6 @@ public final class ModItemRecipes {
             "b  ",
             'c', ModBlocks.skinCube,
             'b', "dyeBlack"});
-        
         
         CraftingManager.addShapedRecipe(iForgeRegistry, new ItemStack(ModItems.shadeNoiseTool, 1, 0), new Object[] {
             " wd",
