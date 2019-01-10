@@ -37,7 +37,7 @@ public class ContainerSkinnable extends ModTileContainer<TileEntitySkinnable> {
             for (int x = 0; x < width; x++) {
                 addSlotToContainer(new Slot(inventory, x + y * width, (guiWidth / 2 - (width * 18) / 2) + 1 + 18 * x, 21 + y * 18));
             }
-}
+        }
     }
     
     @Override
