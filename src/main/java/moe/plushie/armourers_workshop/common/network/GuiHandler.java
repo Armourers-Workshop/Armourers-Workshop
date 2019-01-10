@@ -76,7 +76,9 @@ public class GuiHandler implements IGuiHandler {
         
         if (ID != LibGuiIds.WARDROBE_ENTITY | ID != LibGuiIds.WARDROBE_PLAYER) {
             BlockPos pos = new BlockPos(x, y, z);
-            te = world.getTileEntity(pos);
+            if (world.isBlockLoaded(pos)) {
+                te = world.getTileEntity(pos);
+            }
         }
         
         switch (ID)
@@ -184,7 +186,9 @@ public class GuiHandler implements IGuiHandler {
         
         if (ID != LibGuiIds.WARDROBE_ENTITY | ID != LibGuiIds.WARDROBE_PLAYER) {
             BlockPos pos = new BlockPos(x, y, z);
-            te = world.getTileEntity(pos);
+            if (world.isBlockLoaded(pos)) {
+                te = world.getTileEntity(pos);
+            }
         }
         
         switch (ID)
