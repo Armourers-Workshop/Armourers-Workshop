@@ -105,7 +105,7 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     public String getName() {
         return LibBlockNames.HOLOGRAM_PROJECTOR;
     }
-    
+
     @Override
     public NBTTagCompound getUpdateTag() {
         return writeToNBT(new NBTTagCompound());
@@ -124,7 +124,7 @@ public class TileEntityHologramProjector extends AbstractTileEntityInventory {
     public boolean isShowRotationPoint() {
         return showRotationPoint;
     }
-    
+
     public void setShowRotationPoint(boolean checked) {
         showRotationPoint = checked;
     }

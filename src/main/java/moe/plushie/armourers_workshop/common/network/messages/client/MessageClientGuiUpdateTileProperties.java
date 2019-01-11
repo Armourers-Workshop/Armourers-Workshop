@@ -3,13 +3,14 @@ package moe.plushie.armourers_workshop.common.network.messages.client;
 import java.util.ArrayList;
 
 import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.common.inventory.ContainerMannequin;
+import moe.plushie.armourers_workshop.common.inventory.ModTileContainer;
 import moe.plushie.armourers_workshop.common.property.TileProperty;
 import moe.plushie.armourers_workshop.common.property.TilePropertyManager;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
+import moe.plushie.armourers_workshop.common.tileentities.ModTileEntity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -55,12 +56,15 @@ public class MessageClientGuiUpdateTileProperties implements IMessage, IMessageH
             return null;
         }
         Container container = player.openContainer;
-        if (container != null && container instanceof ContainerMannequin) {
-            TileEntityMannequin tileEntity = ((ContainerMannequin)container).getTileEntity();
-            tileEntity.disableSync();
-            tileEntity.readPropsFromCompound(message.compound);
-            tileEntity.enableSync();
-            tileEntity.dirtySync();
+        if (container != null && container instanceof ModTileContainer) {
+            TileEntity tileEntity = ((ModTileContainer)container).getTileEntity();
+            if (tileEntity instanceof ModTileEntity) {
+                ModTileEntity modTile = (ModTileEntity) tileEntity;
+                modTile.disableSync();
+                modTile.readPropsFromCompound(message.compound);
+                modTile.enableSync();
+                modTile.dirtySync();
+            }
         }
         return null;
     }

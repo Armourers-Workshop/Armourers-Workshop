@@ -65,6 +65,6 @@ public class GuiHologramProjectorTabAngle extends GuiTabPanel implements ISlider
         tileEntity.getAngleX().set(xOffset);
         tileEntity.getAngleY().set(yOffset);
         tileEntity.getAngleZ().set(zOffset);
-        tileEntity.updateProperty(tileEntity.getOffsetX(), tileEntity.getOffsetY(), tileEntity.getOffsetZ());
+        tileEntity.updateProperty(tileEntity.getAngleX(), tileEntity.getAngleY(), tileEntity.getAngleZ());
     }
 }
