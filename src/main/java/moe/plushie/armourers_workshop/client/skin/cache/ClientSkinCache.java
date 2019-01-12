@@ -103,7 +103,7 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
             return;
         }
         synchronized (requestedSkins) {
-            if (!requestedSkins.asMap().containsKey(identifier)) {
+            if (!requestedSkins.asMap().containsKey(identifier) & requestedSkins.asMap().size() < ConfigHandlerClient.maxSkinRequests) {
                 skinRequestExecutor.execute(new SkinRequestThread(identifier));
                 requestedSkins.put(identifier, true);
             }

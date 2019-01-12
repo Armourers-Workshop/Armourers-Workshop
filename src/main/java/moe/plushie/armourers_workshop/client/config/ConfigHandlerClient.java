@@ -39,6 +39,7 @@ public class ConfigHandlerClient {
     public static int modelPartCacheMaxSize;
     public static int textureCacheExpireTime;
     public static int textureCacheMaxSize;
+    public static int maxSkinRequests;
     
     // Skin preview
     public static boolean skinPreEnabled = false;
@@ -167,6 +168,9 @@ public class ConfigHandlerClient {
         textureCacheMaxSize = config.getInt("textureCacheMaxSize", CATEGORY_CACHE, 1000, 0, 5000,
                 "Max size the texture cache can reach before textures are removed. Setting to 0 turns off this option.");
         config.getCategory(CATEGORY_CACHE).get("textureCacheMaxSize").setRequiresMcRestart(true);
+        
+        maxSkinRequests = config.getInt("maxSkinRequests", CATEGORY_CACHE, 10, 1, 50,
+                "Maximum number of skin the client can request at one time.");
     }
     
     private static void loadCategorySkinPreview() {
