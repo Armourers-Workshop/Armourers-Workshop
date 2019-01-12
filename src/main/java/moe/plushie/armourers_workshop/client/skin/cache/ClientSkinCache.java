@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.client.skin.cache;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -47,7 +46,7 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
     private final ArrayList<Skin> cleanupList;
     
     /** Skin IDs that have been requested from the server. */
-    private final HashSet<ISkinIdentifier> requestedSkinIDs;
+    private final Cache<ISkinIdentifier, Boolean> requestedSkins;
     
     private final Executor skinRequestExecutor;
     
@@ -56,7 +55,8 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
     }
     
     protected ClientSkinCache() {
-        CacheBuilder builder = CacheBuilder.newBuilder();
+        CacheBuilder builder = null;
+        builder = CacheBuilder.newBuilder();
         builder.removalListener(this);
         builder.expireAfterAccess(ConfigHandlerClient.skinCacheExpireTime, TimeUnit.SECONDS);
         if (ConfigHandlerClient.skinCacheMaxSize > 1) {
@@ -64,7 +64,9 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
         }
         skinCache = builder.build();
         cleanupList = new ArrayList<Skin>();
-        requestedSkinIDs = new HashSet<ISkinIdentifier>();
+        builder = CacheBuilder.newBuilder();
+        builder.expireAfterWrite(20, TimeUnit.SECONDS);
+        requestedSkins = builder.build();
         skinRequestExecutor = Executors.newFixedThreadPool(1);
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -100,10 +102,10 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
         if (!identifier.isValid()) {
             return;
         }
-        synchronized (requestedSkinIDs) {
-            if (!requestedSkinIDs.contains(identifier)) {
+        synchronized (requestedSkins) {
+            if (!requestedSkins.asMap().containsKey(identifier)) {
                 skinRequestExecutor.execute(new SkinRequestThread(identifier));
-                requestedSkinIDs.add(identifier);
+                requestedSkins.put(identifier, true);
             }
         }
     }
@@ -126,7 +128,7 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
             bakedSkin = new BakedSkin(errorSkin, bakedSkin.getSkinIdentifierRequested(), bakedSkin.getSkinIdentifierUpdated(), null);
         }
         SkinIdentifier identifierRequested = bakedSkin.getSkinIdentifierRequested();
-        synchronized (requestedSkinIDs) {
+        synchronized (requestedSkins) {
             if (skinCache.asMap().containsKey(identifierRequested)) {
                 // We already have this skin, remove the old one before adding the new one.
                 Skin oldSkin = skinCache.getIfPresent(identifierRequested);
@@ -134,9 +136,9 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
                 oldSkin.cleanUpDisplayLists();
                 ModLogger.log("removing skin");
             }
-            if (requestedSkinIDs.contains(identifierRequested)) {
+            if (requestedSkins.asMap().containsKey(identifierRequested)) {
                 skinCache.put(identifierRequested, bakedSkin.getSkin());
-                requestedSkinIDs.remove(identifierRequested);
+                requestedSkins.invalidate(identifierRequested);
             } else {
                 // We did not request this skin.
                 skinCache.put(bakedSkin.getSkinIdentifierUpdated(), bakedSkin.getSkin());
@@ -150,8 +152,8 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
     }
     
     public int getRequestQueueSize() {
-        synchronized (requestedSkinIDs) {
-            return requestedSkinIDs.size();
+        synchronized (requestedSkins) {
+            return requestedSkins.asMap().size();
         }
     }
     
@@ -185,8 +187,8 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
     
     public void clearCache() {
         skinCache.invalidateAll();
-        synchronized (requestedSkinIDs) {
-            requestedSkinIDs.clear();
+        synchronized (requestedSkins) {
+            requestedSkins.asMap().size();
         }
     }
     
