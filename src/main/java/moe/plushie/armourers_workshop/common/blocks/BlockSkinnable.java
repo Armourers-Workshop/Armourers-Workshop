@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.Level;
 
@@ -162,7 +163,7 @@ public class BlockSkinnable extends AbstractModBlockContainer {
             return false;
         }
         if (SkinProperties.PROP_BLOCK_SEAT.getValue(skin.getProperties())) {
-            //return sitOnSeat(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin);
+            return sitOnSeat(worldIn, parentTe.getPos(), playerIn, skin);
         }
         if (SkinProperties.PROP_BLOCK_BED.getValue(skin.getProperties())) {
             //return sleepInBed(world, parentTe.xCoord, parentTe.yCoord, parentTe.zCoord, player, skin, te.getRotation(), te);
@@ -173,9 +174,9 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         }
         return false;
     }
-    /*
+
     private boolean sitOnSeat(World world, BlockPos pos, EntityPlayer player, Skin skin) {
-        List<Seat> seats = world.getEntitiesWithinAABB(Seat.class, new AxisAlignedBB(x, y, z, x + 1, y + 1, z + 1));
+        List<Seat> seats = world.<Seat>getEntitiesWithinAABB(Seat.class, new AxisAlignedBB(pos));
         if (seats.size() == 0) {
             Point3D point = null;
             if (skin.getParts().get(0).getMarkerCount() > 0) {
@@ -183,16 +184,19 @@ public class BlockSkinnable extends AbstractModBlockContainer {
             } else {
                 point = new Point3D(0, 0, 0);
             }
-            int rotation = world.getBlockMetadata(x, y, z);
-            skin.getParts().get(0).getMarker(0);
-            Seat seat = new Seat(world, x, y, z, point, rotation);
-            world.spawnEntity(seat);
-            player.mountEntity(seat);                   
-            return true;
+            IBlockState blockState = world.getBlockState(pos);
+            if (blockState.getBlock() instanceof BlockSkinnable) {
+                EnumFacing rotation = blockState.getValue(STATE_FACING);
+                //skin.getParts().get(0).getMarker(0);
+                Seat seat = new Seat(world, pos, point, rotation);
+                world.spawnEntity(seat);
+                player.startRiding(seat, true);
+                return true;
+            }
         }
         return false;
     }
-    */
+    
     /*
     @Override
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list, Entity entity) {
@@ -408,14 +412,14 @@ public class BlockSkinnable extends AbstractModBlockContainer {
 
         private int noRiderTime = 0;
         private Point3D offset;
-        private int rotation;
+        private EnumFacing rotation;
         
-        public Seat(World world, int x, int y, int z, Point3D offset, int rotation) {
+        public Seat(World world, BlockPos pos, Point3D offset, EnumFacing rotation) {
             super(world);
-            setPosition(x, y, z);
+            setPosition(pos.getX(), pos.getY(), pos.getZ());
             setSize(0F, 0F);
             this.offset = offset;
-            this.rotation = rotation;
+            this.rotation = rotation.getOpposite();
         }
         
         public Seat(World world) {
@@ -427,47 +431,45 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         @Override
         protected void entityInit() {
         }
-        /*
+        
         @Override
-        public void updateRiderPosition() {
-            if (this.riddenByEntity != null) {
-                EnumFacing[] rotMatrix =  {EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.EAST};
+        public void updatePassenger(Entity passenger) {
+            if (this.isPassenger(passenger)) {
                 float scale = 0.0625F;
                 
-                EnumFacing dir = rotMatrix[rotation & 3];
-                
-                float offsetX = (offset.getX() * scale) * dir.offsetZ + (-offset.getZ() * scale) * dir.offsetX;
+                float offsetX = (offset.getX() * scale) * rotation.getZOffset() + (-offset.getZ() * scale) * rotation.getXOffset();
                 float offsetY = offset.getY() * scale;
-                float offsetZ = (-offset.getZ() * scale) * dir.offsetZ + (-offset.getX() * scale) * dir.offsetX;
+                float offsetZ = (-offset.getZ() * scale) * rotation.getZOffset() + (-offset.getX() * scale) * rotation.getXOffset();
                 
-                this.riddenByEntity.setPosition(
+                passenger.setPosition(
                         this.posX + 0.5 - offsetX,
-                        this.posY + this.riddenByEntity.getYOffset() + 0.5F - offsetY,
+                        this.posY + passenger.getYOffset() + 0.5F - offsetY,
                         this.posZ + 0.5F - offsetZ);
+                
+                if (passenger.isSneaking()) {
+                    passenger.setPosition(posX + 0.5F, posY + 2, posZ + 0.5F);
+                    setDead();
+                }
             }
         }
         
         @Override
         public void onUpdate() {
             super.onUpdate();
-            
-            if (!(worldObj.getBlock((int)posX, (int)posY, (int)posZ) instanceof BlockSkinnable)) {
+            IBlockState state = world.getBlockState(getPosition());
+            if (!(state.getBlock() instanceof BlockSkinnable)) {
                 setDead();
                 return;
             }
-            if (riddenByEntity == null) {
+            
+            if (getPassengers().size() == 0) {
                 noRiderTime++;
                 if (noRiderTime > 1) {
                     setDead();
                 }
-            } else {
-                if (riddenByEntity.isSneaking()) {
-                    riddenByEntity.setPosition(posX + 0.5F, posY + 2, posZ + 0.5F);
-                    setDead();
-                }
             }
         }
-        */
+        
         @Override
         public void onCollideWithPlayer(EntityPlayer player) {
             if (player.getRidingEntity() != this) {
@@ -493,13 +495,13 @@ public class BlockSkinnable extends AbstractModBlockContainer {
             buf.writeInt(offset.getX());
             buf.writeInt(offset.getY());
             buf.writeInt(offset.getZ());
-            buf.writeInt(rotation);
+            buf.writeInt(rotation.ordinal());
         }
 
         @Override
         public void readSpawnData(ByteBuf buf) {
             offset = new Point3D(buf.readInt(), buf.readInt(), buf.readInt());
-            rotation = buf.readInt();
+            rotation = EnumFacing.values()[buf.readInt()];
         }
     }
 }
