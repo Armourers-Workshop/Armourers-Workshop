@@ -177,7 +177,7 @@ public final class ModAddonManager {
             ItemStack stack = new ItemStack(item);
             IItemRenderer renderer = getItemRenderer(stack);
             
-            if (renderer instanceof RenderItemEquipmentSkin) {
+            if (renderer != null && renderer instanceof RenderItemEquipmentSkin) {
                 ModLogger.log(Level.WARN, String.format("Tried to override the render on %s:%s but it has already been overridden.", modId, itemName));
                 return;
             }
