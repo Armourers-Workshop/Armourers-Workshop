@@ -102,17 +102,17 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
     }
     
     @Override
-    public void render(Entity entity, Skin armourData, float limb1, float limb2, float limb3, float headY, float headX) {
+    public void render(Entity entity, Skin skin, float limb1, float limb2, float limb3, float headY, float headX) {
         setRotationAngles(limb1, limb2, limb3, headY, headX, SCALE, entity);
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glEnable(GL11.GL_CULL_FACE);
         ModRenderHelper.enableAlphaBlend();
-        render(entity, armourData, false, null, null, false, 0, true);
+        render(entity, skin, false, null, null, false, 0, true);
         ModRenderHelper.disableAlphaBlend();
         GL11.glPopAttrib();
     }
     
-    public abstract void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading);
+    public abstract void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading);
     
     protected void setRotationFromModelBiped(ModelBiped modelBiped) {
         this.isRiding = false;

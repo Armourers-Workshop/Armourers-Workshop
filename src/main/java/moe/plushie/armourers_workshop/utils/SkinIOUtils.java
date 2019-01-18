@@ -31,30 +31,48 @@ import net.minecraftforge.common.DimensionManager;
 public final class SkinIOUtils {
     
     public static final String SKIN_FILE_EXTENSION = ".armour";
+    public static final String OUTFIT_FILE_EXTENSION = ".outfit";
+    
+    public static boolean saveOutfit(String filePath, String fileName, Skin[] skins) {
+        filePath = makeFilePathValid(filePath);
+        fileName = makeFileNameValid(fileName);
+        File file = new File(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), filePath + fileName);
+        return saveOutfit(file, skins);
+    }
+    
+    public static boolean saveOutfit(File file, Skin[] skins) {
+        File dir = file.getParentFile();
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        DataOutputStream stream = null;
+        
+        try {
+            stream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+            for (int i = 0; i < skins.length; i++) {
+                SkinSerializer.writeToStream(skins[i], stream);
+            }
+            stream.flush();
+        } catch (FileNotFoundException e) {
+            ModLogger.log(Level.WARN, "Skin file not found.");
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            ModLogger.log(Level.ERROR, "Skin file save failed.");
+            e.printStackTrace();
+            return false;
+        } finally {
+            IOUtils.closeQuietly(stream);
+        }
+        
+        return true;
+    }
     
     public static boolean saveSkinFromFileName(String filePath, String fileName, Skin skin) {
         filePath = makeFilePathValid(filePath);
         fileName = makeFileNameValid(fileName);
         File file = new File(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), filePath + fileName);
         return saveSkinToFile(file, skin);
-    }
-    
-    public static String makeFileNameValid(String fileName) {
-        fileName = fileName.replace("\\", "/");
-        fileName = fileName.replace("/", "_");
-        fileName = fileName.replace(":", "_");
-        return fileName; //fileName.fileName.replaceAll("[^a-zA-Z0-9_()'`+& \\-\\.]", "_");
-    }
-    
-    public static String makeFilePathValid(String filePath) {
-        filePath = filePath.replace("\\", "/");
-        filePath = filePath.replace("../", "_");
-        filePath = filePath.replace(":", "_");
-        return filePath; //filePath.replaceAll("[^a-zA-Z0-9_()'`+&/ \\-\\.]", "_");
-    }
-    
-    public static boolean isInLibraryDir(File file) {
-        return isInSubDirectory(file, ArmourersWorkshop.getProxy().getSkinLibraryDirectory());
     }
     
     public static boolean saveSkinToFile(File file, Skin skin) {
@@ -373,5 +391,24 @@ public final class SkinIOUtils {
             return true;
         }
         return isInSubDirectory(dir, file.getParentFile());
+    }
+    
+    
+    public static String makeFileNameValid(String fileName) {
+        fileName = fileName.replace("\\", "/");
+        fileName = fileName.replace("/", "_");
+        fileName = fileName.replace(":", "_");
+        return fileName; //fileName.fileName.replaceAll("[^a-zA-Z0-9_()'`+& \\-\\.]", "_");
+    }
+    
+    public static String makeFilePathValid(String filePath) {
+        filePath = filePath.replace("\\", "/");
+        filePath = filePath.replace("../", "_");
+        filePath = filePath.replace(":", "_");
+        return filePath; //filePath.replaceAll("[^a-zA-Z0-9_()'`+&/ \\-\\.]", "_");
+    }
+    
+    public static boolean isInLibraryDir(File file) {
+        return isInSubDirectory(file, ArmourersWorkshop.getProxy().getSkinLibraryDirectory());
     }
 }

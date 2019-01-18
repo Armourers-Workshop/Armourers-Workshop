@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.client.model.skin.ModelSkinChest;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinFeet;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinHead;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinLegs;
+import moe.plushie.armourers_workshop.client.model.skin.ModelSkinOutfit;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinSword;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinWings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
@@ -77,6 +78,7 @@ public final class SkinModelRenderer {
     public final ModelSkinSword customSword = new ModelSkinSword();
     public final ModelSkinBow customBow = new ModelSkinBow();
     public final ModelSkinWings customWings = new ModelSkinWings();
+    public final ModelSkinOutfit modelOutfit = new ModelSkinOutfit();
     
     public EntityPlayer targetPlayer = null;
     
@@ -291,6 +293,8 @@ public final class SkinModelRenderer {
             return customBow;
         } else if (skinType == SkinTypeRegistry.skinWings) {
             return customWings;
+        } else if (skinType == SkinTypeRegistry.skinOutfit) {
+            return modelOutfit;
         }
         return null;
     }

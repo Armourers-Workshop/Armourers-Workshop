@@ -28,7 +28,7 @@ public class Skin implements ISkin {
     public static final String KEY_FILE_NAME = "fileName";
     
     private SkinProperties properties;
-    private ISkinType equipmentSkinType;
+    private ISkinType skinType;
     private int[] paintData;
     private ArrayList<SkinPart> parts;
     private int lightHash = 0;
@@ -119,9 +119,9 @@ public class Skin implements ISkin {
         return properties;
     }
     
-    public Skin(SkinProperties properties, ISkinType equipmentSkinType, int[] paintData, ArrayList<SkinPart> equipmentSkinParts) {
+    public Skin(SkinProperties properties, ISkinType skinType, int[] paintData, ArrayList<SkinPart> skinParts) {
         this.properties = properties;
-        this.equipmentSkinType = equipmentSkinType;
+        this.skinType = skinType;
         this.paintData = null;
         //Check if the paint data has any paint on it.
         if (paintData != null) {
@@ -137,7 +137,7 @@ public class Skin implements ISkin {
             }
         }
         
-        this.parts = equipmentSkinParts;
+        this.parts = skinParts;
     }
 
     @SideOnly(Side.CLIENT)
@@ -179,7 +179,7 @@ public class Skin implements ISkin {
     
     @Override
     public ISkinType getSkinType() {
-        return equipmentSkinType;
+        return skinType;
     }
     
     public boolean hasPaintData() {
@@ -284,7 +284,7 @@ public class Skin implements ISkin {
 
     @Override
     public String toString() {
-        String returnString = "Skin [properties=" + properties + ", type=" + equipmentSkinType.getName().toUpperCase();
+        String returnString = "Skin [properties=" + properties + ", type=" + skinType.getName().toUpperCase();
         if (this.paintData != null) {
             returnString += ", paintData=" + Arrays.hashCode(paintData);
         }
