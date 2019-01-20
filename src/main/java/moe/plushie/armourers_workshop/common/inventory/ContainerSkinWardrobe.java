@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotDyeBottle;
-import moe.plushie.armourers_workshop.common.inventory.slot.SlotOutfit;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
 import moe.plushie.armourers_workshop.common.items.ItemDyeBottle;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
@@ -19,9 +18,9 @@ import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 
 public class ContainerSkinWardrobe extends ModContainer {
 
@@ -44,14 +43,14 @@ public class ContainerSkinWardrobe extends ModContainer {
         this.skinCapability = skinCapability;
         this.wardrobeCapability = wardrobeCapability;
         this.dyeInventory = new DyeInventory(wardrobeCapability, invPlayer.player.getEntityWorld().isRemote);
+        SkinInventoryContainer skinInv = skinCapability.getSkinInventoryContainer();
         boolean isPlayer = wardrobeCapability instanceof IPlayerWardrobeCap;
         boolean isCreative = invPlayer.player.capabilities.isCreativeMode;
         
         if (isPlayer) {
             if (ConfigHandler.wardrobeTabSkins | isCreative) {
                 IPlayerWardrobeCap playerWardrobe = (IPlayerWardrobeCap) wardrobeCapability;
-                SkinInventoryContainer skinInv = skinCapability.getSkinInventoryContainer();
-
+                
                 WardrobeInventory headInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinHead);
                 WardrobeInventory chestInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinChest);
                 WardrobeInventory legsInv = skinInv.getSkinTypeInv(SkinTypeRegistry.skinLegs);
@@ -126,9 +125,13 @@ public class ContainerSkinWardrobe extends ModContainer {
         indexOutfitStart = indexDyeEnd;
         indexOutfitEnd = indexDyeEnd;
         if (!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabOutfits | isCreative))) {
-            IInventory invOutfit = skinCapability.getInventoryOutfits();
+            WardrobeInventory invOutfit = skinInv.getSkinTypeInv(SkinTypeRegistry.skinOutfit);
             for (int i = 0; i < invOutfit.getSizeInventory(); i++) {
-                addSlotToContainer(new SlotOutfit(invOutfit, i, 70 + 20 * i, 27));
+                
+                int y = 20 * (MathHelper.floor((float)i / 8F));
+                int x = 20 * i - (y * 8);
+                
+                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinOutfit, invOutfit, i, 70 + x, 27 + y));
                 indexOutfitEnd += 1;
             }
         }

@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
-import moe.plushie.armourers_workshop.common.inventory.ModInventory;
 import moe.plushie.armourers_workshop.common.inventory.ModInventory.IInventoryCallback;
 import moe.plushie.armourers_workshop.common.inventory.SkinInventoryContainer;
 import moe.plushie.armourers_workshop.common.inventory.WardrobeInventory;
@@ -35,7 +34,6 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventoryCa
     private ISkinnableEntity skinnableEntity;
     private final ISkinType[] validSkinTypes;
     private final SkinInventoryContainer skinInventoryContainer;
-    private final ModInventory inventoryOutfits;
     
     public boolean hideHead, hideChest, hideLegs;
     
@@ -46,7 +44,6 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventoryCa
         skinnableEntity.getValidSkinTypes(skinTypes);
         validSkinTypes = skinTypes.toArray(new ISkinType[skinTypes.size()]);
         skinInventoryContainer = new SkinInventoryContainer(this, validSkinTypes, skinnableEntity);
-        inventoryOutfits = new ModInventory("outfits", 4, this);
     }
     
     public Entity getEntity() {
@@ -56,11 +53,6 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventoryCa
     @Override
     public SkinInventoryContainer getSkinInventoryContainer() {
         return skinInventoryContainer;
-    }
-    
-    @Override
-    public IInventory getInventoryOutfits() {
-        return inventoryOutfits;
     }
     
     @Override

@@ -11,8 +11,6 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
-import moe.plushie.armourers_workshop.common.inventory.SkinInventoryContainer;
-import moe.plushie.armourers_workshop.common.inventory.WardrobeInventory;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -25,7 +23,6 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -75,7 +72,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
             if (skinDescriptorArmour != null) {
                 renderSkin(entitylivingbaseIn, skinDescriptorArmour, skinCap, wardrobe, extraColours, 0, entitylivingbaseIn != Minecraft.getMinecraft().player);
             } else {
-                if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {
+                if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings | skinType == SkinTypeRegistry.skinOutfit) {
                     for (int skinIndex = 0; skinIndex < skinCap.getSlotCountForSkinType(skinType); skinIndex++) {
                         ISkinDescriptor skinDescriptor = skinCap.getSkinDescriptor(skinType, skinIndex);
                         if (skinDescriptor != null) {
@@ -86,10 +83,10 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
             }
         }
         
-        renderOutfits(entitylivingbaseIn, skinCap, wardrobe, extraColours);
+        //renderOutfits(entitylivingbaseIn, skinCap, wardrobe, extraColours);
         
     }
-
+/*
     private void renderOutfits(EntityPlayer entitylivingbaseIn, EntitySkinCapability skinCap, IPlayerWardrobeCap wardrobeCap, ExtraColours extraColours) {
         IInventory inventoryOutfits = skinCap.getInventoryOutfits();
         ISkinType[] skinTypes = new ISkinType[] {
@@ -125,7 +122,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
             }
         }
     }
-
+*/
     private void renderSkin(EntityPlayer entityPlayer, ISkinDescriptor skinDescriptor, EntitySkinCapability skinCap, IWardrobeCap wardrobe, ExtraColours extraColours, double distance, boolean doLodLoading) {
         // Fix to stop head skins rendering when using the Real First-Person Render mod.
         if (entityPlayer.equals(Minecraft.getMinecraft().player) & skinDescriptor.getIdentifier().getSkinType() == SkinTypeRegistry.skinHead) {
@@ -150,6 +147,11 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
                     skinCap.hideChest = true;
                 }
                 if (skin.getSkinType() == SkinTypeRegistry.skinLegs | skin.getSkinType() == SkinTypeRegistry.skinFeet) {
+                    skinCap.hideLegs = true;
+                }
+                if (skin.getSkinType() == SkinTypeRegistry.skinOutfit) {
+                    skinCap.hideHead = true;
+                    skinCap.hideChest = true;
                     skinCap.hideLegs = true;
                 }
             }

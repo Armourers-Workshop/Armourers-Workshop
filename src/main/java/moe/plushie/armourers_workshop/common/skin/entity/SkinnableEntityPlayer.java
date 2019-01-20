@@ -80,6 +80,8 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
         skinTypes.add(SkinTypeRegistry.skinAxe);
         skinTypes.add(SkinTypeRegistry.skinShovel);
         skinTypes.add(SkinTypeRegistry.skinHoe);
+        
+        skinTypes.add(SkinTypeRegistry.skinOutfit);
     }
     
     @Override
@@ -89,6 +91,9 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
         }
         if (skinType == SkinTypeRegistry.skinWings) {
             return 8;
+        }
+        if (skinType == SkinTypeRegistry.skinOutfit) {
+            return 48;
         }
         return 1;
     }
