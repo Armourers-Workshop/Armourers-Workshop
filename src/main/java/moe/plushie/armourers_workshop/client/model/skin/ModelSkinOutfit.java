@@ -53,7 +53,7 @@ public class ModelSkinOutfit extends AbstractModelSkin {
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glEnable(GL11.GL_ALPHA_TEST);
-            if (itemRender) {
+            if (!itemRender) {
                 GL11.glTranslated(0, -12 * SCALE, 0);
             }
             bipedLeftLeg.render(SCALE);
@@ -126,6 +126,9 @@ public class ModelSkinOutfit extends AbstractModelSkin {
     private void renderHead(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
+        GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleZ), 0, 0, 1);
+        GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleY), 0, 1, 0);
+        GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleX), 1, 0, 0);
         renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
         GL11.glPopMatrix();
     }
