@@ -55,7 +55,7 @@ public class ModelSkinLegs extends AbstractModelSkin {
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glEnable(GL11.GL_ALPHA_TEST);
-            if (itemRender) {
+            if (!itemRender) {
                 GL11.glTranslated(0, -12 * SCALE, 0);
             }
             bipedLeftLeg.render(SCALE);

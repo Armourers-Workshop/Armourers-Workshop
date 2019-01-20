@@ -74,7 +74,7 @@ public class SkinLegsPartRightLeg extends AbstractSkinPartTypeBase implements IS
     @SideOnly(Side.CLIENT)
     @Override
     public IRectangle3D getItemRenderTextureBounds() {
-        return new Rectangle3D(-4, 0, -2, 4, 12, 4);
+        return new Rectangle3D(-4, 12, -2, 4, 12, 4);
     }
     
     @Override
