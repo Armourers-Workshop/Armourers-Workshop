@@ -102,6 +102,9 @@ public class ContainerSkinWardrobe extends ModContainer {
         } else {
             ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
             for (int i = 0; i < skinTypes.length; i++) {
+                if (skinTypes[i] == SkinTypeRegistry.skinOutfit) {
+                    continue;
+                }
                 for (int j = 0; j < skinCapability.getSlotCountForSkinType(skinTypes[i]); j++) {
                     if (skinTypes[i].getVanillaArmourSlotId() != -1 | skinTypes[i] == SkinTypeRegistry.skinWings) {
                         addSlotToContainer(new SlotSkin(skinTypes[i], skinCapability.getSkinInventoryContainer().getSkinTypeInv(skinTypes[i]), j, 70 + j * 20, 27 + i * 19));

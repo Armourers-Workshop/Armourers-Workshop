@@ -196,6 +196,7 @@ public class AddonCustomNPCS extends ModAddon {
             skinTypes.add(SkinTypeRegistry.skinLegs);
             skinTypes.add(SkinTypeRegistry.skinFeet);
             skinTypes.add(SkinTypeRegistry.skinWings);
+            skinTypes.add(SkinTypeRegistry.skinOutfit);
             
             skinTypes.add(SkinTypeRegistry.skinSword);
             skinTypes.add(SkinTypeRegistry.skinShield);
@@ -205,6 +206,9 @@ public class AddonCustomNPCS extends ModAddon {
         @Override
         public int getSlotsForSkinType(ISkinType skinType) {
             if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {
+                return 4;
+            }
+            if (skinType == SkinTypeRegistry.skinOutfit) {
                 return 4;
             }
             return 1;
@@ -254,7 +258,7 @@ public class AddonCustomNPCS extends ModAddon {
             GlStateManager.enableRescaleNormal();
             for (int i = 0; i < skinTypes.length; i++) {
                 ISkinType skinType = skinTypes[i];
-                if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {
+                if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings | skinType == SkinTypeRegistry.skinOutfit) {
                     for (int skinIndex = 0; skinIndex < skinCapability.getSlotCountForSkinType(skinType); skinIndex++) {
                         ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, skinIndex);
                         if (skinDescriptor != null) {
