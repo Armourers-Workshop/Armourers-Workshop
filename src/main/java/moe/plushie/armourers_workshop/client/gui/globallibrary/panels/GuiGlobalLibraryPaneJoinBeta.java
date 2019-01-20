@@ -186,7 +186,7 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
         
         int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
         if (!GlobalSkinLibraryUtils.isValidJavaVersion(javaVersion)) {
-            fontRenderer.drawSplitString(TranslateUtils.translate("inventory.armourersworkshop:globalSkinLibrary.invalidJava", javaVersion[0], javaVersion[1]), x + 5, y + 160, 230, 0xFF8888);
+            fontRenderer.drawSplitString(TranslateUtils.translate("inventory.armourers_workshop:globalSkinLibrary.invalidJava", javaVersion[0], javaVersion[1]), x + 5, y + 160, 230, 0xFF8888);
         }
     }
 }
