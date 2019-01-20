@@ -56,6 +56,10 @@ public class ModelSkinOutfit extends AbstractModelSkin {
             if (!itemRender) {
                 GL11.glTranslated(0, -12 * SCALE, 0);
             }
+            bipedHead.render(SCALE);
+            bipedBody.render(SCALE);
+            bipedLeftArm.render(SCALE);
+            bipedRightArm.render(SCALE);
             bipedLeftLeg.render(SCALE);
             bipedRightLeg.render(SCALE);
             GL11.glPopAttrib();

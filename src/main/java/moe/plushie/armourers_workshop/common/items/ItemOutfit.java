@@ -54,6 +54,7 @@ public class ItemOutfit extends AbstractModItem {
                     sic.readFromNBT(itemStack.getTagCompound());
                     ArrayList<SkinPart> skinParts = new ArrayList<SkinPart>();
                     SkinProperties skinProperties = new SkinProperties();
+                    int[] paintData = null;
                     for (int skinIndex = 0; skinIndex < skinTypes.length; skinIndex++) {
                         WardrobeInventory wi = sic.getSkinTypeInv(skinTypes[skinIndex]);
                         for (int i = 0; i < wi.getSizeInventory(); i++) {
@@ -67,12 +68,15 @@ public class ItemOutfit extends AbstractModItem {
                                         SkinProperty p = (SkinProperty) prop;
                                         p.setValue(skinProperties, p.getValue(skin.getProperties()));
                                     }
+                                    if (skin.hasPaintData()) {
+                                        paintData = skin.getPaintData();
+                                    }
                                 }
                             }
                         }
                     }
                     if (!skinParts.isEmpty()) {
-                        Skin skin = new Skin(skinProperties, SkinTypeRegistry.skinOutfit, null, skinParts);
+                        Skin skin = new Skin(skinProperties, SkinTypeRegistry.skinOutfit, paintData, skinParts);
                         CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile)null);
                         ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinDescriptor(skin));
                         UtilItems.spawnItemAtEntity(playerIn, skinStack, true);
