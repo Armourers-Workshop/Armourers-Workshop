@@ -43,6 +43,6 @@ public class SkinLegsPartSkirt extends AbstractSkinPartTypeBase {
     @SideOnly(Side.CLIENT)
     @Override
     public IPoint3D getItemRenderOffset() {
-        return new Point3D(0, 0, 0);
+        return new Point3D(0, 12, 0);
     }
 }

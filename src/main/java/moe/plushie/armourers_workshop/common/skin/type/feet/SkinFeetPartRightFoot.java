@@ -68,7 +68,7 @@ public class SkinFeetPartRightFoot extends AbstractSkinPartTypeBase implements I
     @SideOnly(Side.CLIENT)
     @Override
     public IPoint3D getItemRenderOffset() {
-        return new Point3D(-2, 0, 0);
+        return new Point3D(-2, 12, 0);
     }
     
     @SideOnly(Side.CLIENT)

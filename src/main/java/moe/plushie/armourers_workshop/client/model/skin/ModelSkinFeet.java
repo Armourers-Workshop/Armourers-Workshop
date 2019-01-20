@@ -95,9 +95,9 @@ public class ModelSkinFeet extends AbstractModelSkin {
     private void renderLeftFoot(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
-        if (!itemRender) {
+        //if (!itemRender) {
             GL11.glTranslated(0, 12 * scale, 0);
-        }
+        //}
         GL11.glTranslated(2 * scale, 0, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleY), 0, 1, 0);
@@ -111,9 +111,9 @@ public class ModelSkinFeet extends AbstractModelSkin {
     private void renderRightFoot(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
-        if (!itemRender) {
+        //if (!itemRender) {
             GL11.glTranslated(0, 12 * scale, 0);
-        }
+        //}
         GL11.glTranslated(-2 * scale, 0, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
