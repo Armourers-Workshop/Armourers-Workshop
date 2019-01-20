@@ -133,11 +133,11 @@ public final class SkinSerializer {
             }
         }
         
-        ISkinType equipmentSkinType = null;
+        ISkinType skinType = null;
 
         if (fileVersion < 5) {
             if (loadedProps) {
-                equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
+                skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(stream.readByte() - 1);
             } else {
                 throw e;
             }
@@ -147,7 +147,7 @@ public final class SkinSerializer {
                 if (regName.equals(SkinTypeRegistry.oldSkinSkirt.getRegistryName())) {
                     regName = SkinTypeRegistry.skinLegs.getRegistryName();
                 }
-                equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
+                skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
             } else {
                 StringBuilder sb = new StringBuilder();
                 while (true) {
@@ -163,8 +163,8 @@ public final class SkinSerializer {
                     sb.append(new String(new byte[] {stream.readByte()}, "UTF-8"));
                 }
                 ModLogger.log(sb.toString());
-                equipmentSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(sb.toString());
-                ModLogger.log("got failed type " + equipmentSkinType);
+                skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(sb.toString());
+                ModLogger.log("got failed type " + skinType);
             }
         }
         
@@ -175,7 +175,7 @@ public final class SkinSerializer {
             }
         }
         
-        if (equipmentSkinType == null) {
+        if (skinType == null) {
             throw new InvalidCubeTypeException();
         }
         
@@ -228,7 +228,35 @@ public final class SkinSerializer {
             }
         }
         
-        return new Skin(properties, equipmentSkinType, paintData, parts);
+        // Update skin properties.
+        if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(properties)) {
+            if (skinType == SkinTypeRegistry.skinHead) {
+                SkinProperties.PROP_OVERRIDE_MODEL_HEAD.setValue(properties, true);
+            }
+            if (skinType == SkinTypeRegistry.skinChest) {
+                SkinProperties.PROP_OVERRIDE_MODEL_CHEST.setValue(properties, true);
+                SkinProperties.PROP_OVERRIDE_MODEL_ARM_LEFT.setValue(properties, true);
+                SkinProperties.PROP_OVERRIDE_MODEL_ARM_RIGHT.setValue(properties, true);
+            }
+            if (skinType == SkinTypeRegistry.skinLegs) {
+                SkinProperties.PROP_OVERRIDE_MODEL_LEG_LEFT.setValue(properties, true);
+                SkinProperties.PROP_OVERRIDE_MODEL_LEG_RIGHT.setValue(properties, true);
+            }
+            if (skinType == SkinTypeRegistry.skinFeet) {
+                SkinProperties.PROP_OVERRIDE_MODEL_LEG_LEFT.setValue(properties, true);
+                SkinProperties.PROP_OVERRIDE_MODEL_LEG_RIGHT.setValue(properties, true);
+            }
+            if (skinType == SkinTypeRegistry.skinOutfit) {
+                SkinProperties.PROP_OVERRIDE_MODEL_HEAD.setValue(properties, true);
+                SkinProperties.PROP_OVERRIDE_MODEL_CHEST.setValue(properties, true);
+                SkinProperties.PROP_OVERRIDE_MODEL_ARM_LEFT.setValue(properties, true);
+                SkinProperties.PROP_OVERRIDE_MODEL_ARM_RIGHT.setValue(properties, true);
+                SkinProperties.PROP_OVERRIDE_MODEL_LEG_LEFT.setValue(properties, true);
+                SkinProperties.PROP_OVERRIDE_MODEL_LEG_RIGHT.setValue(properties, true);
+            }
+        }
+        
+        return new Skin(properties, skinType, paintData, parts);
     }
     
     public static ISkinType readSkinTypeNameFromStream(DataInputStream stream) throws IOException, NewerFileVersionException {

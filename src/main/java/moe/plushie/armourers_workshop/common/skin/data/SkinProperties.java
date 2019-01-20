@@ -21,7 +21,15 @@ public class SkinProperties {
     public static final SkinProperty<String> PROP_ALL_AUTHOR_NAME = new SkinProperty<String>("authorName", "");
     public static final SkinProperty<String> PROP_ALL_AUTHOR_UUID = new SkinProperty<String>("authorUUID", "");
     
+    @Deprecated
     public static final SkinProperty<Boolean> PROP_ARMOUR_OVERRIDE = new SkinProperty<Boolean>("armourOverride", false);
+    public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_HEAD = new SkinProperty<Boolean>("overrideModelHead", false);
+    public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_CHEST = new SkinProperty<Boolean>("overrideModelChest", false);
+    public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_ARM_LEFT = new SkinProperty<Boolean>("overrideModelArmLeft", false);
+    public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_ARM_RIGHT = new SkinProperty<Boolean>("overrideModelArmRight", false);
+    public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_LEG_LEFT = new SkinProperty<Boolean>("overrideModelLegLeft", false);
+    public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_LEG_RIGHT = new SkinProperty<Boolean>("overrideModelLegRight", false);
+    
     public static final SkinProperty<Boolean> PROP_ARMOUR_HIDE_OVERLAY = new SkinProperty<Boolean>("armourHideOverlay", false);
     public static final SkinProperty<Boolean> PROP_ARMOUR_LIMIT_LIMBS = new SkinProperty<Boolean>("limitLimbs", false);
     

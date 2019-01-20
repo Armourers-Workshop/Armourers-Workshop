@@ -145,7 +145,7 @@ public final class SkinModelRenderer {
             if (skinDescriptor != null) {
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
                 if (skin!= null) {
-                    if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
+                    if (SkinProperties.PROP_OVERRIDE_MODEL_HEAD.getValue(skin.getProperties())) {
                         return true;
                     }
                     if (SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skin.getProperties())) {

@@ -35,7 +35,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventoryCa
     private final ISkinType[] validSkinTypes;
     private final SkinInventoryContainer skinInventoryContainer;
     
-    public boolean hideHead, hideChest, hideLegs;
+    public boolean hideHead, hideChest, hideArmRight, hideArmLeft, hideLegLeft, hideLegRight;
     
     public EntitySkinCapability(Entity entity, ISkinnableEntity skinnableEntity) {
         this.entity = entity;

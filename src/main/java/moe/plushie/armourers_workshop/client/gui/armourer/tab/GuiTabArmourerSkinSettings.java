@@ -50,7 +50,13 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
     private GuiCustomSlider sliderWingMinAngle;
     private GuiCustomSlider sliderWingMaxAngle;
     
-    private GuiCheckBox checkArmourOverrideBodyPart;
+    private GuiCheckBox checkModelOverrideHead;
+    private GuiCheckBox checkModelOverrideChest;
+    private GuiCheckBox checkModelOverrideArmLeft;
+    private GuiCheckBox checkModelOverrideArmRight;
+    private GuiCheckBox checkModelOverrideLegLeft;
+    private GuiCheckBox checkModelOverrideLegRight;
+    
     private GuiCheckBox checkArmourHideOverlay;
     private GuiCheckBox checkLimitLimbMovement;
     private GuiDropDownList dropDownList;
@@ -111,9 +117,15 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         sliderWingMinAngle.setFineTuneButtons(true);
         sliderWingMaxAngle.setFineTuneButtons(true);
         
-        checkArmourOverrideBodyPart = new GuiCheckBox(15, 10, 20, GuiHelper.getLocalizedControlName(guiName, "overrideBodyPart"), SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skinProps));
-        checkArmourHideOverlay = new GuiCheckBox(15, 10, 35, GuiHelper.getLocalizedControlName(guiName, "hideOverlay"), SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skinProps));
-        checkLimitLimbMovement = new GuiCheckBox(15, 10, 50, GuiHelper.getLocalizedControlName(guiName, "limitLimbs"), SkinProperties.PROP_ARMOUR_LIMIT_LIMBS.getValue(skinProps));
+        checkModelOverrideHead = new GuiCheckBox(15, 10, 35, GuiHelper.getLocalizedControlName(guiName, "modelOverrideHead"), SkinProperties.PROP_OVERRIDE_MODEL_HEAD.getValue(skinProps));
+        checkModelOverrideChest = new GuiCheckBox(15, 10, 35, GuiHelper.getLocalizedControlName(guiName, "modelOverrideChest"), SkinProperties.PROP_OVERRIDE_MODEL_CHEST.getValue(skinProps));
+        checkModelOverrideArmLeft = new GuiCheckBox(15, 10, 50, GuiHelper.getLocalizedControlName(guiName, "modelOverrideArmLeft"), SkinProperties.PROP_OVERRIDE_MODEL_ARM_LEFT.getValue(skinProps));
+        checkModelOverrideArmRight = new GuiCheckBox(15, 10, 65, GuiHelper.getLocalizedControlName(guiName, "modelOverrideArmRight"), SkinProperties.PROP_OVERRIDE_MODEL_ARM_RIGHT.getValue(skinProps));
+        checkModelOverrideLegLeft = new GuiCheckBox(15, 10, 35, GuiHelper.getLocalizedControlName(guiName, "modelOverrideLegLeft"), SkinProperties.PROP_OVERRIDE_MODEL_LEG_LEFT.getValue(skinProps));
+        checkModelOverrideLegRight = new GuiCheckBox(15, 10, 50, GuiHelper.getLocalizedControlName(guiName, "modelOverrideLegRight"), SkinProperties.PROP_OVERRIDE_MODEL_LEG_RIGHT.getValue(skinProps));
+        
+        checkArmourHideOverlay = new GuiCheckBox(15, 10, 20, GuiHelper.getLocalizedControlName(guiName, "hideOverlay"), SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skinProps));
+        checkLimitLimbMovement = new GuiCheckBox(15, 10, 65, GuiHelper.getLocalizedControlName(guiName, "limitLimbs"), SkinProperties.PROP_ARMOUR_LIMIT_LIMBS.getValue(skinProps));
         
         MovementType skinMovmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skinProps));
         dropDownList = new GuiDropDownList(0, 10, 125, 50, "", this);
@@ -142,7 +154,13 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         buttonList.add(sliderWingMinAngle);
         buttonList.add(sliderWingMaxAngle);
         
-        buttonList.add(checkArmourOverrideBodyPart);
+        buttonList.add(checkModelOverrideHead);
+        buttonList.add(checkModelOverrideChest);
+        buttonList.add(checkModelOverrideArmLeft);
+        buttonList.add(checkModelOverrideArmRight);
+        buttonList.add(checkModelOverrideLegLeft);
+        buttonList.add(checkModelOverrideLegRight);
+        
         buttonList.add(checkArmourHideOverlay);
         buttonList.add(checkLimitLimbMovement);
         buttonList.add(dropDownList);
@@ -189,8 +207,15 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
         
-        if (button == checkArmourOverrideBodyPart | button == checkArmourHideOverlay | button == checkLimitLimbMovement) {
-            SkinProperties.PROP_ARMOUR_OVERRIDE.setValue(skinProps, checkArmourOverrideBodyPart.isChecked());
+        if (button == checkModelOverrideHead | button == checkModelOverrideChest | button == checkModelOverrideArmLeft | button == checkModelOverrideArmRight |
+                button == checkModelOverrideLegLeft | button == checkModelOverrideLegRight | button == checkArmourHideOverlay | button == checkLimitLimbMovement) {
+            SkinProperties.PROP_OVERRIDE_MODEL_HEAD.setValue(skinProps, checkModelOverrideHead.isChecked());
+            SkinProperties.PROP_OVERRIDE_MODEL_CHEST.setValue(skinProps, checkModelOverrideChest.isChecked());
+            SkinProperties.PROP_OVERRIDE_MODEL_ARM_LEFT.setValue(skinProps, checkModelOverrideArmLeft.isChecked());
+            SkinProperties.PROP_OVERRIDE_MODEL_ARM_RIGHT.setValue(skinProps, checkModelOverrideArmRight.isChecked());
+            SkinProperties.PROP_OVERRIDE_MODEL_LEG_LEFT.setValue(skinProps, checkModelOverrideLegLeft.isChecked());
+            SkinProperties.PROP_OVERRIDE_MODEL_LEG_RIGHT.setValue(skinProps, checkModelOverrideLegRight.isChecked());
+            
             SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.setValue(skinProps, checkArmourHideOverlay.isChecked());
             SkinProperties.PROP_ARMOUR_LIMIT_LIMBS.setValue(skinProps, checkLimitLimbMovement.isChecked());
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
@@ -221,7 +246,13 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         sliderWingFlyingSpeed.setValue(SkinProperties.PROP_WINGS_FLYING_SPEED.getValue(skinProperties));
         sliderWingFlyingSpeed.updateSlider();
         
-        checkArmourOverrideBodyPart.setIsChecked(SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skinProperties));
+        checkModelOverrideHead.setIsChecked(SkinProperties.PROP_OVERRIDE_MODEL_HEAD.getValue(skinProperties));
+        checkModelOverrideChest.setIsChecked(SkinProperties.PROP_OVERRIDE_MODEL_CHEST.getValue(skinProperties));
+        checkModelOverrideArmLeft.setIsChecked(SkinProperties.PROP_OVERRIDE_MODEL_ARM_LEFT.getValue(skinProperties));
+        checkModelOverrideArmRight.setIsChecked(SkinProperties.PROP_OVERRIDE_MODEL_ARM_RIGHT.getValue(skinProperties));
+        checkModelOverrideLegLeft.setIsChecked(SkinProperties.PROP_OVERRIDE_MODEL_LEG_LEFT.getValue(skinProperties));
+        checkModelOverrideLegRight.setIsChecked(SkinProperties.PROP_OVERRIDE_MODEL_LEG_RIGHT.getValue(skinProperties));
+        
         checkArmourHideOverlay.setIsChecked(SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skinProperties));
         checkLimitLimbMovement.setIsChecked(SkinProperties.PROP_ARMOUR_LIMIT_LIMBS.getValue(skinProperties));
         
@@ -257,7 +288,13 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         sliderWingMaxAngle.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinWings;
         dropDownList.visible = tileEntity.getSkinType() == SkinTypeRegistry.skinWings;
         
-        checkArmourOverrideBodyPart.visible = tileEntity.getSkinType().getProperties().contains(SkinProperties.PROP_ARMOUR_OVERRIDE);
+        checkModelOverrideHead.visible = tileEntity.getSkinType().getProperties().contains(SkinProperties.PROP_OVERRIDE_MODEL_HEAD);
+        checkModelOverrideChest.visible = tileEntity.getSkinType().getProperties().contains(SkinProperties.PROP_OVERRIDE_MODEL_CHEST);
+        checkModelOverrideArmLeft.visible = tileEntity.getSkinType().getProperties().contains(SkinProperties.PROP_OVERRIDE_MODEL_ARM_LEFT);
+        checkModelOverrideArmRight.visible = tileEntity.getSkinType().getProperties().contains(SkinProperties.PROP_OVERRIDE_MODEL_ARM_RIGHT);
+        checkModelOverrideLegLeft.visible = tileEntity.getSkinType().getProperties().contains(SkinProperties.PROP_OVERRIDE_MODEL_LEG_LEFT);
+        checkModelOverrideLegRight.visible = tileEntity.getSkinType().getProperties().contains(SkinProperties.PROP_OVERRIDE_MODEL_LEG_RIGHT);
+        
         checkArmourHideOverlay.visible = tileEntity.getSkinType().getProperties().contains(SkinProperties.PROP_ARMOUR_HIDE_OVERLAY);
         checkLimitLimbMovement.visible = tileEntity.getSkinType().getProperties().contains(SkinProperties.PROP_ARMOUR_LIMIT_LIMBS);
     }

@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.common.IRectangle3D;
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -64,5 +65,10 @@ public abstract class AbstractSkinPartTypeBase implements ISkinPartType {
     @Override
     public IRectangle3D getItemRenderTextureBounds() {
         return null;
+    }
+    
+    @Override
+    public boolean isOverridden(SkinProperties skinProps) {
+        return false;
     }
 }

@@ -172,10 +172,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     
     protected void createBoundingBoxes() {
         if (skinType != null) {
-            boolean hadBounds = !SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(this.skinProps);
-            if (hadBounds) {
-                ArmourerWorldHelper.createBoundingBoxes(getWorld(), getPos().offset(EnumFacing.UP, HEIGHT_OFFSET), getPos(), skinType);
-            }
+            ArmourerWorldHelper.createBoundingBoxes(getWorld(), getPos().offset(EnumFacing.UP, HEIGHT_OFFSET), getPos(), skinType, skinProps);
         }
     }
     

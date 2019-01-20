@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.type.block.SkinBlock;
 import net.minecraft.client.Minecraft;
@@ -27,17 +28,21 @@ public final class SkinRenderHelper {
     
     private static final ResourceLocation guideImage = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/blocks/guide.png");
     
-    public static void renderBuildingGuide(ISkinType skinType, float scale, boolean showSkinOverlay, boolean showHelper) {
+    public static void renderBuildingGuide(ISkinType skinType, float scale, SkinProperties skinProps, boolean showSkinOverlay, boolean showHelper) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
+            if (skinPart.isOverridden(skinProps)) {
+                continue;
+            }
             IPoint3D partOffset = skinPart.getOffset();
             GlStateManager.translate(partOffset.getX() * scale, partOffset.getY() * scale, partOffset.getZ() * scale);
             skinPart.renderBuildingGuide(scale, showSkinOverlay, showHelper);
             GlStateManager.translate(-partOffset.getX() * scale, -partOffset.getY() * scale, -partOffset.getZ() * scale);
+            
         }
     }
     
-    public static void renderBuildingGrid(ISkinType skinType, float scale, boolean showGuides, boolean hidden, boolean multiblock) {
+    public static void renderBuildingGrid(ISkinType skinType, float scale, boolean showGuides, SkinProperties skinProps, boolean multiblock) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPartType = skinType.getSkinParts().get(i);
             IPoint3D partOffset = skinPartType.getOffset();
@@ -45,31 +50,31 @@ public final class SkinRenderHelper {
             if (skinType == SkinTypeRegistry.skinBlock) {
                 if (skinPartType.getPartName().equals("multiblock") & multiblock) {
                     //GL11.glColor4f(1F, 1F, 0.0F, 0.2F);
-                    renderBuildingGrid(((SkinBlock)SkinTypeRegistry.skinBlock).partBase, scale, showGuides, hidden, 1F, 1F, 0.0F, 0.2F);
+                    renderBuildingGrid(((SkinBlock)SkinTypeRegistry.skinBlock).partBase, scale, showGuides, skinProps, 1F, 1F, 0.0F, 0.2F);
                     GL11.glPolygonOffset(6F, 6F);
                     //GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
-                    renderBuildingGrid(skinPartType, scale, showGuides, hidden, 0.5F, 0.5F, 0.5F, 0.25F);
+                    renderBuildingGrid(skinPartType, scale, showGuides, skinProps, 0.5F, 0.5F, 0.5F, 0.25F);
                 } else if (skinPartType.getPartName().equals("base") & !multiblock) {
                     //GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
-                    renderBuildingGrid(skinPartType, scale, showGuides, hidden, 0.5F, 0.5F, 0.5F, 0.25F);
+                    renderBuildingGrid(skinPartType, scale, showGuides, skinProps, 0.5F, 0.5F, 0.5F, 0.25F);
                 }
             } else {
                 //GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
-                renderBuildingGrid(skinPartType, scale, showGuides, hidden, 0.5F, 0.5F, 0.5F, 0.25F);
+                renderBuildingGrid(skinPartType, scale, showGuides, skinProps, 0.5F, 0.5F, 0.5F, 0.25F);
             }
             GlStateManager.translate(-partOffset.getX() * scale, -partOffset.getY() * scale, -partOffset.getZ() * scale);
         }  
     }
     
-    public static void renderBuildingGrid(ISkinPartType skinPartType, float scale, boolean showGuides, boolean hidden, float r, float g, float b, float a) {
+    public static void renderBuildingGrid(ISkinPartType skinPartType, float scale, boolean showGuides, SkinProperties skinProps, float r, float g, float b, float a) {
         GlStateManager.translate(0, skinPartType.getBuildingSpace().getY() * scale, 0);
         GlStateManager.scale(-1, -1, 1);
-        SkinRenderHelper.renderGuidePart(skinPartType, scale, showGuides, hidden, r, g, b, a);
+        SkinRenderHelper.renderGuidePart(skinPartType, scale, showGuides, skinProps, r, g, b, a);
         GlStateManager.scale(-1, -1, 1);
         GlStateManager.translate(0, -skinPartType.getBuildingSpace().getY() * scale, 0);
     }
     
-    private static void renderGuidePart(ISkinPartType part, float scale, boolean showGuides, boolean hidden, float r, float g, float b, float a) {
+    private static void renderGuidePart(ISkinPartType part, float scale, boolean showGuides, SkinProperties skinProps, float r, float g, float b, float a) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(guideImage);
         
         IRectangle3D buildRec = part.getBuildingSpace();
@@ -96,7 +101,7 @@ public final class SkinRenderHelper {
                     guideRec.getWidth(), guideRec.getHeight(), guideRec.getDepth(), scale, 1F, 0F, 0F, 0.25F);
         }
 
-        if (hidden) {
+        if (part.isOverridden(skinProps)) {
             //GL11.glColor4f(0F, 0F, 1F, 0.25F);
             renderGuideBox(guideRec.getX(), guideRec.getY(), guideRec.getZ(),
                     guideRec.getWidth(), guideRec.getHeight(), guideRec.getDepth(), scale, 0F, 0F, 1F, 0.25F);

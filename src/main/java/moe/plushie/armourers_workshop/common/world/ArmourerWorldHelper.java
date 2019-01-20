@@ -292,14 +292,17 @@ public final class ArmourerWorldHelper {
         //world.setBlockState(target, targetState, 2);
     }
     
-    public static void createBoundingBoxes(World world, BlockPos pos, BlockPos parentPos, ISkinType skinType) {
+    public static void createBoundingBoxes(World world, BlockPos pos, BlockPos parentPos, ISkinType skinType, SkinProperties skinProps) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
-            createBoundingBoxesForSkinPart(world, pos, parentPos, skinPart);
+            createBoundingBoxesForSkinPart(world, pos, parentPos, skinPart, skinProps);
         }
     }
     
-    private static void createBoundingBoxesForSkinPart(World world, BlockPos pos, BlockPos parentPos, ISkinPartType skinPart) {
+    private static void createBoundingBoxesForSkinPart(World world, BlockPos pos, BlockPos parentPos, ISkinPartType skinPart, SkinProperties skinProps) {
+        if (skinPart.isOverridden(skinProps)) {
+            return;
+        }
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IRectangle3D guideSpace = skinPart.getGuideSpace();
         IPoint3D offset = skinPart.getOffset();

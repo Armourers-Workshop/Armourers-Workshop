@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.model.armourer.ModelChest;
+import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.AbstractSkinPartTypeBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -74,5 +75,10 @@ public class SkinChestPartLeftArm extends AbstractSkinPartTypeBase implements IS
     @Override
     public IRectangle3D getItemRenderTextureBounds() {
         return new Rectangle3D(-8, 0, -2, 4, 12, 4);
+    }
+    
+    @Override
+    public boolean isOverridden(SkinProperties skinProps) {
+        return SkinProperties.PROP_OVERRIDE_MODEL_ARM_LEFT.getValue(skinProps);
     }
 }

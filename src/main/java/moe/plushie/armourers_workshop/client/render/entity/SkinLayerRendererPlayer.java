@@ -54,9 +54,13 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         if (skinCap == null) {
             return;
         }
+        
         skinCap.hideHead = false;
         skinCap.hideChest = false;
-        skinCap.hideLegs = false;
+        skinCap.hideArmLeft = false;
+        skinCap.hideArmRight = false;
+        skinCap.hideLegLeft = false;
+        skinCap.hideLegRight = false;
         
         ISkinType[] skinTypes = skinCap.getValidSkinTypes();
         SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
@@ -139,21 +143,23 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
         if (skin != null) {
-            if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
-                if (skin.getSkinType() == SkinTypeRegistry.skinHead) {
-                    skinCap.hideHead = true;
-                }
-                if (skin.getSkinType() == SkinTypeRegistry.skinChest) {
-                    skinCap.hideChest = true;
-                }
-                if (skin.getSkinType() == SkinTypeRegistry.skinLegs | skin.getSkinType() == SkinTypeRegistry.skinFeet) {
-                    skinCap.hideLegs = true;
-                }
-                if (skin.getSkinType() == SkinTypeRegistry.skinOutfit) {
-                    skinCap.hideHead = true;
-                    skinCap.hideChest = true;
-                    skinCap.hideLegs = true;
-                }
+            if (SkinProperties.PROP_OVERRIDE_MODEL_HEAD.getValue(skin.getProperties())) {
+                skinCap.hideHead = true;
+            }
+            if (SkinProperties.PROP_OVERRIDE_MODEL_CHEST.getValue(skin.getProperties())) {
+                skinCap.hideChest = true;
+            }
+            if (SkinProperties.PROP_OVERRIDE_MODEL_ARM_LEFT.getValue(skin.getProperties())) {
+                skinCap.hideArmLeft = true;
+            }
+            if (SkinProperties.PROP_OVERRIDE_MODEL_ARM_RIGHT.getValue(skin.getProperties())) {
+                skinCap.hideArmRight = true;
+            }
+            if (SkinProperties.PROP_OVERRIDE_MODEL_LEG_LEFT.getValue(skin.getProperties())) {
+                skinCap.hideLegLeft = true;
+            }
+            if (SkinProperties.PROP_OVERRIDE_MODEL_LEG_RIGHT.getValue(skin.getProperties())) {
+                skinCap.hideLegRight = true;
             }
             SkinDye dye = new SkinDye(wardrobe.getDye());
             for (int i = 0; i < 8; i++) {

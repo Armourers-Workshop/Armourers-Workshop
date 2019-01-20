@@ -40,7 +40,8 @@ public class SkinFeet extends AbstractSkinTypeBase {
     @Override
     public ArrayList<ISkinProperty<?>> getProperties() {
         ArrayList<ISkinProperty<?>> properties = super.getProperties();
-        properties.add(SkinProperties.PROP_ARMOUR_OVERRIDE);
+        properties.add(SkinProperties.PROP_OVERRIDE_MODEL_LEG_LEFT);
+        properties.add(SkinProperties.PROP_OVERRIDE_MODEL_LEG_RIGHT);
         properties.add(SkinProperties.PROP_ARMOUR_HIDE_OVERLAY);
         return properties;
     }

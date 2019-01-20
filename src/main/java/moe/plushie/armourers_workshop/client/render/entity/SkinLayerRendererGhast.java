@@ -55,7 +55,7 @@ public class SkinLayerRendererGhast extends SkinLayerRenderer<EntityGhast, Rende
                 if (skin == null) {
                     continue;
                 }
-                if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
+                if (SkinProperties.PROP_OVERRIDE_MODEL_HEAD.getValue(skin.getProperties())) {
                     body.isHidden = true;
                     for (ModelRenderer tentacle : tentacles) {
                         tentacle.isHidden = true;

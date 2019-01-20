@@ -62,7 +62,7 @@ public class ModelSkinOutfit extends AbstractModelSkin {
             GL11.glPopMatrix();
         }
         
-        boolean override = SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties());
+        boolean overrideChest = SkinProperties.PROP_OVERRIDE_MODEL_CHEST.getValue(skin.getProperties());
         MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
         double angle = 45D;
         
@@ -89,9 +89,9 @@ public class ModelSkinOutfit extends AbstractModelSkin {
             if (part.getPartType().getRegistryName().equals("armourers:chest.base")) {
                 renderChest(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);
             } else if (part.getPartType().getRegistryName().equals("armourers:chest.leftArm")) {
-                renderLeftArm(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading, override);
+                renderLeftArm(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading, overrideChest);
             } else if (part.getPartType().getRegistryName().equals("armourers:chest.rightArm")) {
-                renderRightArm(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading, override);
+                renderRightArm(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading, overrideChest);
             }
             
             if (part.getPartType().getRegistryName().equals("armourers:legs.leftLeg")) {

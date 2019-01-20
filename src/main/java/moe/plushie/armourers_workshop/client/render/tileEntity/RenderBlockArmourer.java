@@ -74,40 +74,32 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer<TileEntityArm
         
         if (skinType != null) {
             mc.profiler.startSection("modelRender");
-            boolean hidden = false;
-            if (skinType.getVanillaArmourSlotId() != -1) {
-                if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(te.getSkinProps())) {
-                    hidden = true;
-                }
-            }
             GlStateManager.enablePolygonOffset();
             GlStateManager.doPolygonOffset(3F, 3F);
-            if (!hidden) {
-                long time = System.currentTimeMillis();
-                int fadeTime = 1000;
-                int fade = (int) (time - playerTexture.getDownloadTime());
-                if (playerTexture.isDownloaded() & fade < fadeTime) {
-                    PlayerTexture oldTexture = te.getTextureOld();
-                    oldTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(oldTexture);
-                    bindTexture(oldTexture.getResourceLocation());
-                    SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), te.isShowHelper());
-                    te.skinTexture.bindTexture();
-                    ModRenderHelper.enableAlphaBlend();
-                    GlStateManager.color(1, 1, 1, fade / 1000F);
-                    GlStateManager.doPolygonOffset(-6F, -6F);
-                    SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), te.isShowHelper());
-                    GlStateManager.doPolygonOffset(3F, 3F);
-                    ModRenderHelper.disableAlphaBlend();
-                    GlStateManager.color(1, 1, 1, 1);
-                } else {
-                    te.skinTexture.bindTexture();
-                    SkinRenderHelper.renderBuildingGuide(skinType, scale, te.isShowOverlay(), te.isShowHelper());
-                }
+            long time = System.currentTimeMillis();
+            int fadeTime = 1000;
+            int fade = (int) (time - playerTexture.getDownloadTime());
+            if (playerTexture.isDownloaded() & fade < fadeTime) {
+                PlayerTexture oldTexture = te.getTextureOld();
+                oldTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(oldTexture);
+                bindTexture(oldTexture.getResourceLocation());
+                SkinRenderHelper.renderBuildingGuide(skinType, scale, te.getSkinProps(), te.isShowOverlay(), te.isShowHelper());
+                te.skinTexture.bindTexture();
+                ModRenderHelper.enableAlphaBlend();
+                GlStateManager.color(1, 1, 1, fade / 1000F);
+                GlStateManager.doPolygonOffset(-6F, -6F);
+                SkinRenderHelper.renderBuildingGuide(skinType, scale, te.getSkinProps(), te.isShowOverlay(), te.isShowHelper());
+                GlStateManager.doPolygonOffset(3F, 3F);
+                ModRenderHelper.disableAlphaBlend();
+                GlStateManager.color(1, 1, 1, 1);
+            } else {
+                te.skinTexture.bindTexture();
+                SkinRenderHelper.renderBuildingGuide(skinType, scale, te.getSkinProps(), te.isShowOverlay(), te.isShowHelper());
             }
             GlStateManager.doPolygonOffset(-3F, -3F);
             mc.profiler.endSection();
             mc.profiler.startSection("renderGuideGrid");
-            SkinRenderHelper.renderBuildingGrid(skinType, scale, te.isShowGuides(), hidden, SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(te.getSkinProps()));
+            SkinRenderHelper.renderBuildingGrid(skinType, scale, te.isShowGuides(), te.getSkinProps(), SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(te.getSkinProps()));
             mc.profiler.endSection();
             GlStateManager.doPolygonOffset(0F, 0F);
             GlStateManager.disablePolygonOffset();

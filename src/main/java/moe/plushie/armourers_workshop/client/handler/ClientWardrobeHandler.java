@@ -280,18 +280,24 @@ public final class ClientWardrobeHandler {
                 // Chest
                 modelPlayer.bipedBody.isHidden = true;
                 modelPlayer.bipedBodyWear.isHidden = true;
-                
+            }
+            if (skinCapability.hideArmLeft) {
+                // Left arm
                 modelPlayer.bipedLeftArm.isHidden = true;
                 modelPlayer.bipedLeftArmwear.isHidden = true;
-                
+            }
+            if (skinCapability.hideArmRight) {
+                // Right arm
                 modelPlayer.bipedRightArm.isHidden = true;
                 modelPlayer.bipedRightArmwear.isHidden = true;
             }
-            if (skinCapability.hideLegs) {
-                // Legs
+            if (skinCapability.hideLegLeft) {
+                // Left leg
                 modelPlayer.bipedLeftLeg.isHidden = true;
                 modelPlayer.bipedLeftLegwear.isHidden = true;
-                
+            }
+            if (skinCapability.hideLegRight) {
+                // Right leg
                 modelPlayer.bipedRightLeg.isHidden = true;
                 modelPlayer.bipedRightLegwear.isHidden = true;
             }
