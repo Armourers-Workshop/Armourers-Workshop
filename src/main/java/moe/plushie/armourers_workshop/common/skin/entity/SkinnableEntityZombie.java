@@ -33,6 +33,7 @@ public class SkinnableEntityZombie extends SkinnableEntity {
         skinTypes.add(SkinTypeRegistry.skinLegs);
         skinTypes.add(SkinTypeRegistry.skinFeet);
         skinTypes.add(SkinTypeRegistry.skinWings);
+        skinTypes.add(SkinTypeRegistry.skinOutfit);
     }
     
     @Override
