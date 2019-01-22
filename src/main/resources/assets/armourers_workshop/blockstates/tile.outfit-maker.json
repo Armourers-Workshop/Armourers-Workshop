@@ -1,0 +1,10 @@
+{
+    "forge_marker": 1,
+    "variants": {
+        "normal": { "model": "armourers_workshop:outfit-maker", "y": 180},
+        "facing=north": {"model": "armourers_workshop:outfit-maker", "y": 180},
+        "facing=east": {"model": "armourers_workshop:outfit-maker", "y": 270},
+        "facing=south": {"model": "armourers_workshop:outfit-maker"},
+        "facing=west": {"model": "armourers_workshop:outfit-maker", "y": 90}
+    }
+}
