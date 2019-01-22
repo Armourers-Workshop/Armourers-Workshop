@@ -37,6 +37,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
     public final TileProperty<TextureType> PROP_TEXTURE_TYPE = new TileProperty<TextureType>(this, "texture_type", TextureType.class, TextureType.USER);
     public final TileProperty<String> PROP_IMAGE_URL = new TileProperty<String>(this, "image_url", String.class, null);
     public final TileProperty<BipedRotations> PROP_BIPED_ROTATIONS = new TileProperty<BipedRotations>(this, "image_url", BipedRotations.class, null);
+    public final TileProperty<Boolean> PROP_NOCLIP = new TileProperty<Boolean>(this, "noclip", Boolean.class, false);
     
     public TileEntityMannequin(boolean isDoll) {
         super(CONS_INVENTORY_SIZE);

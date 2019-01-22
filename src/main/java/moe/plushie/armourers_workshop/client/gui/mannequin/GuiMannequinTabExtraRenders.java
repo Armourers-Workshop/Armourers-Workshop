@@ -21,6 +21,7 @@ public class GuiMannequinTabExtraRenders extends GuiTabPanel<GuiMannequin> {
     public GuiCheckBox isExtraRenders;
     public GuiCheckBox isFlying;
     public GuiCheckBox isVisible;
+    public GuiCheckBox noclip;
     
     public GuiMannequinTabExtraRenders(int tabId, GuiMannequin parent, String inventoryName, TileEntityMannequin tileEntity) {
         super(tabId, parent, true);
@@ -38,10 +39,12 @@ public class GuiMannequinTabExtraRenders extends GuiTabPanel<GuiMannequin> {
         if (((GuiMannequin)parent).tabRotations.getBipedRotations() != null) {
             isChildCheck.setIsChecked(((GuiMannequin)parent).tabRotations.getBipedRotations().isChild);
         }
+        noclip = new GuiCheckBox(0, this.width / 2 - 78, 85, GuiHelper.getLocalizedControlName(inventoryName, "label.noclip"), tileEntity.PROP_NOCLIP.get());
         buttonList.add(isChildCheck);
         buttonList.add(isExtraRenders);
         buttonList.add(isFlying);
         buttonList.add(isVisible);
+        buttonList.add(noclip);
     }
     
     @Override
@@ -61,11 +64,16 @@ public class GuiMannequinTabExtraRenders extends GuiTabPanel<GuiMannequin> {
             MessageClientGuiUpdateTileProperties message = new MessageClientGuiUpdateTileProperties(tileEntity.PROP_VISIBLE);
             PacketHandler.networkWrapper.sendToServer(message);
         }
+        if (button == noclip) {
+            tileEntity.PROP_NOCLIP.set(noclip.isChecked());
+            MessageClientGuiUpdateTileProperties message = new MessageClientGuiUpdateTileProperties(tileEntity.PROP_NOCLIP);
+            PacketHandler.networkWrapper.sendToServer(message);
+        }
     }
 
     @Override
     public void drawBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
-        Rectangle_I_2D rec = new Rectangle_I_2D(0, 0, 176, 88);
+        Rectangle_I_2D rec = new Rectangle_I_2D(0, 0, 176, 104);
         rec.x = width / 2 - rec.width / 2;
         GuiUtils.drawContinuousTexturedBox(rec.x, rec.y, 0, 200, rec.width, rec.height, 38, 38, 4, zLevel);
     }

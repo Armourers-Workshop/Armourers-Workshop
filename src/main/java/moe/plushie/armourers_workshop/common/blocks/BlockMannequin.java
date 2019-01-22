@@ -24,6 +24,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -70,7 +71,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     private final boolean isValentins;
 
     public BlockMannequin() {
-        super(LibBlockNames.MANNEQUIN, Material.ROCK, SoundType.METAL, true);
+        super(LibBlockNames.MANNEQUIN, Material.CIRCUITS, SoundType.METAL, true);
         setLightOpacity(0);
         isValentins = ModHolidays.VALENTINES.isHolidayActive();
         setSortPriority(199);
@@ -215,6 +216,17 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
             }
         }
     }
+    
+    @Override
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+        TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
+        if (te != null && te instanceof TileEntityMannequin) {
+            if (te.PROP_NOCLIP.get()) {
+                return NULL_AABB;
+            }
+        }
+        return blockState.getBoundingBox(worldIn, pos);
+    }
 
     public TileEntityMannequin getMannequinTileEntity(IBlockAccess blockAccess, BlockPos pos) {
         if (isTopOfMannequin(blockAccess, pos)) {
@@ -229,6 +241,9 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
 
     public boolean isTopOfMannequin(IBlockAccess blockAccess, BlockPos pos) {
         IBlockState state = blockAccess.getBlockState(pos);
+        if ((state.getBlock() != this)) {
+            return false;
+        }
         return state.getValue(STATE_PART) == EnumPartType.TOP;
     }
 
@@ -379,6 +394,12 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     public boolean isFullBlock(IBlockState state) {
         return false;
     }
+    
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+        return BlockFaceShape.UNDEFINED;
+    }
+    
 
     @Override
     public void registerItemBlock(IForgeRegistry<Item> registry) {

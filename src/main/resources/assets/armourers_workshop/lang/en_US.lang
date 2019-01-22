@@ -433,6 +433,7 @@ inventory.armourers_workshop:mannequin.label.isChild=Child Model?
 inventory.armourers_workshop:mannequin.label.isExtraRenders=Extra Renders?
 inventory.armourers_workshop:mannequin.label.isFlying=Flying?
 inventory.armourers_workshop:mannequin.label.isVisible=Visible?
+inventory.armourers_workshop:mannequin.label.noclip=Noclip?
 inventory.armourers_workshop:mannequin.random=Random
 inventory.armourers_workshop:mannequin.reset=Reset
 inventory.armourers_workshop:mannequin.dropdown.user=User
