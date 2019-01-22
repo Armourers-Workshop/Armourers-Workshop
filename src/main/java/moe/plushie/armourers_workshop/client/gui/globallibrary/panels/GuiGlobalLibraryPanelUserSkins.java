@@ -1,15 +1,20 @@
 package moe.plushie.armourers_workshop.client.gui.globallibrary.panels;
 
+import java.util.ArrayList;
+
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel.SkinIcon;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonMultipartForm;
 import moe.plushie.armourers_workshop.common.library.global.GlobalSkinLibraryUtils;
+import moe.plushie.armourers_workshop.common.library.global.MultipartForm;
 import moe.plushie.armourers_workshop.common.library.global.PlushieUser;
-import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonObjectCallable;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -46,12 +51,24 @@ public class GuiGlobalLibraryPanelUserSkins extends GuiGlobalLibraryPanelSearchR
             return;
         }
         
+        ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
+        String searchTypes = "";
+        for (int i = 0; i < skinTypes.size(); i++) {
+            searchTypes += (skinTypes.get(i).getRegistryName());
+            if (i < skinTypes.size() - 1) {
+                searchTypes += ";";
+            }
+        }
+        
         String searchUrl = USER_URL;
         searchUrl += "?userId=" + String.valueOf(userId);
         searchUrl += "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION);
         searchUrl += "&pageIndex=" + String.valueOf(pageIndex);
         searchUrl += "&pageSize=" + String.valueOf(skinPanelResults.getIconCount());
-        pageCompletion.submit(new DownloadJsonObjectCallable(searchUrl));
+        
+        MultipartForm multipartFormSearch = new MultipartForm(searchUrl);
+        multipartFormSearch.addText("searchTypes", searchTypes);
+        pageCompletion.submit(new DownloadJsonMultipartForm(multipartFormSearch));
     }
 
     @Override
