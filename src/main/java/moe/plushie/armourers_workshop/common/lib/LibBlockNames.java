@@ -27,4 +27,5 @@ public class LibBlockNames {
     public static final String HOLOGRAM_PROJECTOR = "hologram-projector";
     public static final String ADVANCED_SKIN_BUILDER = "advanced-skin-builder";
     public static final String ADVANCED_SKIN_PART = "advanced-skin-part";
+    public static final String OUTFIT_MAKER = "outfit-maker";
 }

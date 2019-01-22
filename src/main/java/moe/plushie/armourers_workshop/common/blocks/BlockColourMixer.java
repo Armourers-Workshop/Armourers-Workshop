@@ -29,7 +29,6 @@ public class BlockColourMixer extends AbstractModBlockContainer {
     
     @Override
     public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
-        // TODO Auto-generated method stub
         return layer == BlockRenderLayer.CUTOUT;
     }
     

@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntityDyeTable;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
+import moe.plushie.armourers_workshop.common.tileentities.TileEntityOutfitMaker;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinLibrary;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnableChild;
@@ -51,6 +52,7 @@ public class ModBlocks {
     public static Block skinnableChildGlowing;
     public static Block dyeTable;
     public static Block hologramProjector;
+    public static Block outfitMaker;
     public static Block advancedSkinBuilder;
     public static Block advancedSkinPart ;
     
@@ -75,6 +77,7 @@ public class ModBlocks {
         skinnableChildGlowing = new BlockSkinnableChildGlowing();
         dyeTable = new BlockDyeTable();
         hologramProjector = new BlockHologramProjector();
+        outfitMaker = new BlockOutfitMaker();
         advancedSkinBuilder = new BlockAdvancedSkinBuilder();
         advancedSkinPart = new BlockAdvancedSkinPart();
     }
@@ -112,6 +115,7 @@ public class ModBlocks {
         registerTileEntity(TileEntityDyeTable.class, LibBlockNames.DYE_TABLE);
         registerTileEntity(TileEntitySkinnableChild.class, LibBlockNames.SKINNABLE_CHILD);
         registerTileEntity(TileEntityHologramProjector.class, LibBlockNames.HOLOGRAM_PROJECTOR);
+        registerTileEntity(TileEntityOutfitMaker.class, LibBlockNames.OUTFIT_MAKER);
         registerTileEntity(TileEntityAdvancedSkinBuilder.class, LibBlockNames.ADVANCED_SKIN_BUILDER);
         registerTileEntity(TileEntityAdvancedSkinPart.class, LibBlockNames.ADVANCED_SKIN_PART);
     }
