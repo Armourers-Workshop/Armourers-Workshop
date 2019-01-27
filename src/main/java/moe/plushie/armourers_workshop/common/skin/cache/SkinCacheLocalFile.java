@@ -37,7 +37,13 @@ public class SkinCacheLocalFile {
             synchronized (skinLoadQueueLock) {
                 if (!skinLoadQueue.isEmpty()) {
                     SkinRequestMessage requestMessage = skinLoadQueue.remove();
-                    Skin skin = load(requestMessage.getSkinIdentifier());
+                    Skin skin = null;
+                    try {
+                        skin = load(requestMessage.getSkinIdentifier());
+                    } catch (Exception e) {
+                        CommonSkinCache.INSTANCE.onSkinLoaded(null, requestMessage);
+                        e.printStackTrace();
+                    }
                     if (skin != null) {
                         CommonSkinCache.INSTANCE.onSkinLoaded(skin, requestMessage);
                     }
