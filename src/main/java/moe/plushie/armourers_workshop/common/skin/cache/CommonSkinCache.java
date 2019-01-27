@@ -77,13 +77,14 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
         ModLogger.log("Starting server skin thread.");
         while (serverSkinThread == thisThread) {
             try {
+                cacheLocalDatabase.doSkinLoading();
+                cacheLocalFile.doSkinLoading();
+                cacheGlobal.doSkinLoading();
+                processMessageQueue();
                 thisThread.sleep(10);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            cacheLocalDatabase.doSkinLoading();
-            cacheLocalFile.doSkinLoading();
-            cacheGlobal.doSkinLoading();
-            processMessageQueue();
         }
         ModLogger.log("Stopped server skin thread.");
     }
