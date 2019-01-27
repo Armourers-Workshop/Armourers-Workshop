@@ -5,6 +5,9 @@ import java.awt.Color;
 import moe.plushie.armourers_workshop.api.common.painting.IPaintingTool;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
+import moe.plushie.armourers_workshop.client.gui.GuiColourMixer;
+import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
+import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.items.paintingtool.ItemColourPicker;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
@@ -13,14 +16,19 @@ import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityColourMixer extends AbstractTileEntityInventory implements IPantable {
+public class TileEntityColourMixer extends AbstractTileEntityInventory implements IPantable, IGuiFactory {
 
     private static final String TAG_ITEM_UPDATE = "itemUpdate";
     private static final String TAG_COLOUR_FAMILY = "colourFamily";
@@ -208,5 +216,16 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     @Override
     public PaintType getPaintType(int side) {
         return paintType;
+    }
+
+    @Override
+    public Container getServerGuiElement(EntityPlayer player, World world, BlockPos pos) {
+        return new ContainerColourMixer(player.inventory, this);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public GuiScreen getClientGuiElement(EntityPlayer player, World world, BlockPos pos) {
+        return new GuiColourMixer(player.inventory, this);
     }
 }

@@ -15,7 +15,7 @@ import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.items.ItemDebugTool.IDebug;
 import moe.plushie.armourers_workshop.common.items.block.ItemBlockMannequin;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import net.minecraft.block.Block;
@@ -339,7 +339,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         if (!playerIn.canPlayerEdit(pos, facing, playerIn.getHeldItem(hand))) {
             return false;
         }
-        openGui(playerIn, LibGuiIds.MANNEQUIN, worldIn, pos, state, facing);
+        openGui(playerIn, EnumGuiId.MANNEQUIN, worldIn, pos, state, facing);
         return true;
     }
 

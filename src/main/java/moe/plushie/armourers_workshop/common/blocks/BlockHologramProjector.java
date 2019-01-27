@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.common.blocks;
 import java.util.Random;
 
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import net.minecraft.block.properties.IProperty;
@@ -75,7 +75,7 @@ public class BlockHologramProjector extends AbstractModBlockContainer {
     
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        openGui(playerIn, LibGuiIds.HOLOGRAM_PROJECTOR, worldIn, pos, state, facing);
+        openGui(playerIn, EnumGuiId.HOLOGRAM_PROJECTOR, worldIn, pos, state, facing);
         return true;
     }
     

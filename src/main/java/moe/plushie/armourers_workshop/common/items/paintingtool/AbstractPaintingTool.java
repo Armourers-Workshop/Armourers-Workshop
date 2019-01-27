@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.client.particles.ModParticleManager;
 import moe.plushie.armourers_workshop.client.particles.ParticlePaintSplash;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.items.AbstractModItem;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
@@ -170,7 +170,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
         if (this instanceof IConfigurableTool) {
             if (playerIn.isSneaking()) {
                 if (worldIn.isRemote) {
-                    playerIn.openGui(ArmourersWorkshop.getInstance(), LibGuiIds.TOOL_OPTIONS, worldIn, 0, 0, 0);
+                    playerIn.openGui(ArmourersWorkshop.getInstance(), EnumGuiId.TOOL_OPTIONS.ordinal(), worldIn, 0, 0, 0);
                 }
                 return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
             }

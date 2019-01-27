@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.common.items;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -26,7 +26,7 @@ public class ItemWandOfStyle extends AbstractModItem {
                 if (entity.getEntityWorld().isRemote) {
                     return true;
                 }
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), LibGuiIds.WARDROBE_ENTITY, entity.getEntityWorld(), entity.getEntityId(), 0, 0);
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), entity.getEntityWorld(), entity.getEntityId(), 0, 0);
                 return true;
             } else {
                 if (entity.getEntityWorld().isRemote) {
@@ -44,7 +44,7 @@ public class ItemWandOfStyle extends AbstractModItem {
             if (target.getEntityWorld().isRemote) {
                 return true;
             }
-            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), LibGuiIds.WARDROBE_ENTITY, target.getEntityWorld(), target.getEntityId(), 0, 0);
+            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), target.getEntityWorld(), target.getEntityId(), 0, 0);
             return true;
         } else {
             if (target.getEntityWorld().isRemote) {

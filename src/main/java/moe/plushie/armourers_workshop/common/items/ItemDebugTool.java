@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.common.items;
 import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -24,7 +24,7 @@ public class ItemDebugTool extends AbstractModItem {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemStack = playerIn.getHeldItem(handIn);
         if (worldIn.isRemote) {
-            playerIn.openGui(ArmourersWorkshop.getInstance(), LibGuiIds.DEBUG_TOOL, worldIn, 0, 0, 0);
+            playerIn.openGui(ArmourersWorkshop.getInstance(), EnumGuiId.DEBUG_TOOL.ordinal(), worldIn, 0, 0, 0);
         }
         return new ActionResult<ItemStack>(EnumActionResult.PASS, itemStack);
     }

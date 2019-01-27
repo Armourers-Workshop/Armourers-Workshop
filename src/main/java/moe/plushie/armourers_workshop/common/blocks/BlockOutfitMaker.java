@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityOutfitMaker;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.IProperty;
@@ -65,7 +65,7 @@ public class BlockOutfitMaker extends AbstractModBlockContainer {
         if (!playerIn.canPlayerEdit(pos, facing, playerIn.getHeldItem(hand))) {
             return false;
         }
-        openGui(playerIn, LibGuiIds.OUTFIT_MAKER, worldIn, pos, state, facing);
+        openGui(playerIn, EnumGuiId.OUTFIT_MAKER, worldIn, pos, state, facing);
         return true;
     }
 

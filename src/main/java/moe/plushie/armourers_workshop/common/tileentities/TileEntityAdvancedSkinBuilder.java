@@ -1,15 +1,23 @@
 package moe.plushie.armourers_workshop.common.tileentities;
 
+import moe.plushie.armourers_workshop.client.gui.GuiAdvancedSkinBuilder;
+import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinBuilder;
+import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityAdvancedSkinBuilder extends AbstractTileEntityInventory {
+public class TileEntityAdvancedSkinBuilder extends AbstractTileEntityInventory implements IGuiFactory {
 
     private static final int CONS_PARTS_MAX = 10;
 
@@ -59,5 +67,16 @@ public class TileEntityAdvancedSkinBuilder extends AbstractTileEntityInventory {
         public float moveAngleMax = 0F;
         public int moveSpeed = 0;
         public MovementType moveType = MovementType.LINEAR;
+    }
+
+    @Override
+    public Container getServerGuiElement(EntityPlayer player, World world, BlockPos pos) {
+        return new ContainerAdvancedSkinBuilder(player.inventory, this);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public GuiScreen getClientGuiElement(EntityPlayer player, World world, BlockPos pos) {
+        return new GuiAdvancedSkinBuilder(player, this);
     }
 }

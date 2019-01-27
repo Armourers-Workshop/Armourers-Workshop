@@ -2,22 +2,32 @@ package moe.plushie.armourers_workshop.common.tileentities;
 
 import com.mojang.authlib.GameProfile;
 
+import moe.plushie.armourers_workshop.client.gui.mannequin.GuiMannequin;
 import moe.plushie.armourers_workshop.common.GameProfileCache;
 import moe.plushie.armourers_workshop.common.GameProfileCache.IGameProfileCallback;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.data.BipedRotations;
 import moe.plushie.armourers_workshop.common.data.TextureType;
+import moe.plushie.armourers_workshop.common.inventory.ContainerMannequin;
+import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.property.TileProperty;
 import moe.plushie.armourers_workshop.common.world.AsyncWorldUpdateGameProfileDownload;
 import moe.plushie.armourers_workshop.utils.ModLogger;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback {
+public class TileEntityMannequin extends AbstractTileEntityInventory implements IGameProfileCallback, IGuiFactory {
     
     public static final int CONS_OFFSET_MAX = 3;
     public static final int CONS_INVENTORY_ROW_SIZE = 7;
@@ -103,5 +113,16 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
         ModLogger.log("got profile " + gameProfile);
         PROP_OWNER.loadType(gameProfile);
         dirtySync();
+    }
+
+    @Override
+    public Container getServerGuiElement(EntityPlayer player, World world, BlockPos pos) {
+        return new ContainerMannequin(player.inventory, this);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public GuiScreen getClientGuiElement(EntityPlayer player, World world, BlockPos pos) {
+        return new GuiMannequin(player.inventory, this);
     }
 }

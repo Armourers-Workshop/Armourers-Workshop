@@ -1,10 +1,9 @@
 package moe.plushie.armourers_workshop.common.blocks;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.data.TextureType;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import net.minecraft.block.state.IBlockState;
@@ -17,7 +16,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 
 public class BlockArmourer extends AbstractModBlockContainer {
 
@@ -71,9 +69,7 @@ public class BlockArmourer extends AbstractModBlockContainer {
         if (!playerIn.canPlayerEdit(pos, facing, playerIn.getHeldItem(hand))) {
             return false;
         }
-        if (!worldIn.isRemote) {
-            FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), LibGuiIds.ARMOURER, worldIn, pos.getX(), pos.getY(), pos.getZ());
-        }
+        openGui(playerIn, EnumGuiId.ARMOURER, worldIn, pos, state, facing);
         return true;
     }
     

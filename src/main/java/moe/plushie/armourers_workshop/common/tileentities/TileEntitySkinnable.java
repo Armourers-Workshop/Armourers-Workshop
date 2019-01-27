@@ -7,8 +7,11 @@ import org.apache.logging.log4j.Level;
 import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
+import moe.plushie.armourers_workshop.client.gui.GuiSkinnable;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable;
+import moe.plushie.armourers_workshop.common.inventory.ContainerSkinnable;
+import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.inventory.ModInventory;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
@@ -20,6 +23,9 @@ import moe.plushie.armourers_workshop.utils.ModConstants;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
@@ -35,7 +41,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntitySkinnable extends ModTileEntity {
+public class TileEntitySkinnable extends ModTileEntity implements IGuiFactory {
 
     private static final String TAG_HAS_SKIN = "hasSkin";
     private static final String TAG_RELATED_BLOCKS = "relatedBlocks";
@@ -444,5 +450,24 @@ public class TileEntitySkinnable extends ModTileEntity {
             }
         }
         return "";
+    }
+
+    @Override
+    public Container getServerGuiElement(EntityPlayer player, World world, BlockPos pos) {
+        Skin skin = getSkin(getSkinPointer());
+        if (skin != null) {
+            return new ContainerSkinnable(player.inventory, this, skin);
+        }
+        return null;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public GuiScreen getClientGuiElement(EntityPlayer player, World world, BlockPos pos) {
+        Skin skin = getSkin(getSkinPointer());
+        if (skin != null) {
+            return new GuiSkinnable(player.inventory, this, skin);
+        }
+        return null;
     } 
 }

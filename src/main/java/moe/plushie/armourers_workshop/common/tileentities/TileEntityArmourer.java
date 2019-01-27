@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.client.gui.armourer.GuiArmourer;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.data.TextureType;
 import moe.plushie.armourers_workshop.common.exception.SkinSaveException;
+import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
+import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -17,8 +20,10 @@ import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import moe.plushie.armourers_workshop.common.world.ArmourerWorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -33,7 +38,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityArmourer extends AbstractTileEntityInventory {
+public class TileEntityArmourer extends AbstractTileEntityInventory implements IGuiFactory {
     
     private static final String TAG_DIRECTION = "direction";
     private static final String TAG_TYPE = "skinType";
@@ -360,5 +365,16 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         texture.writeToNBT(textureCompound);
         compound.setTag(TAG_TEXTURE, textureCompound);
         compound.setIntArray(TAG_PAINT_DATA, this.paintData);
+    }
+
+    @Override
+    public Container getServerGuiElement(EntityPlayer player, World world, BlockPos pos) {
+        return new ContainerArmourer(player.inventory, this);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public GuiScreen getClientGuiElement(EntityPlayer player, World world, BlockPos pos) {
+        return new GuiArmourer(player.inventory, this);
     }
 }

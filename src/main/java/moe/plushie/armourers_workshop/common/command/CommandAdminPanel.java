@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.common.command;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,6 +21,6 @@ public class CommandAdminPanel extends ModCommand {
         if (player == null) {
             return;
         }
-        FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), LibGuiIds.ADMIN_PANEL, player.getEntityWorld(), 0, 0, 0);
+        FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.ADMIN_PANEL.ordinal(), player.getEntityWorld(), 0, 0, 0);
     }
 }

@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
 import moe.plushie.armourers_workshop.common.items.block.ModItemBlock;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.permission.IPermissionHolder;
 import moe.plushie.armourers_workshop.common.permission.Permission;
@@ -112,6 +113,10 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
     @Override
     public void registerModels() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "normal"));
+    }
+    
+    protected void openGui(EntityPlayer playerIn, EnumGuiId guiId, World worldIn, BlockPos pos, IBlockState state, EnumFacing facing) {
+        openGui(playerIn, guiId.ordinal(), worldIn, pos, state, facing);
     }
     
     protected void openGui(EntityPlayer playerIn, int guiId, World worldIn, BlockPos pos, IBlockState state, EnumFacing facing) {

@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperty;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.inventory.SkinInventoryContainer;
 import moe.plushie.armourers_workshop.common.inventory.WardrobeInventory;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
@@ -46,7 +46,7 @@ public class ItemOutfit extends AbstractModItem {
         ItemStack itemStack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote) {
             if (playerIn.isSneaking()) {
-                FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), LibGuiIds.OUTFIT, worldIn, 0, 0, 0);
+                FMLNetworkHandler.openGui(playerIn, ArmourersWorkshop.getInstance(), EnumGuiId.OUTFIT.ordinal(), worldIn, 0, 0, 0);
                 return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
             } else {
                 if (itemStack.hasTagCompound()) {

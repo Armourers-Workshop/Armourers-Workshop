@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.common.items;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,7 +18,7 @@ public class ItemGuideBook extends AbstractModItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         if (worldIn.isRemote) {
-            playerIn.openGui(ArmourersWorkshop.getInstance(), LibGuiIds.GUIDE_BOOK, worldIn, 0, 0, 0);
+            playerIn.openGui(ArmourersWorkshop.getInstance(), EnumGuiId.GUIDE_BOOK.ordinal(), worldIn, 0, 0, 0);
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }

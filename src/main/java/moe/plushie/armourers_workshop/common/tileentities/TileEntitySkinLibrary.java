@@ -1,10 +1,13 @@
 package moe.plushie.armourers_workshop.common.tileentities;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.client.gui.skinlibrary.GuiSkinLibrary;
 import moe.plushie.armourers_workshop.common.blocks.BlockSkinLibrary;
 import moe.plushie.armourers_workshop.common.blocks.BlockSkinLibrary.EnumLibraryType;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
+import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
 import moe.plushie.armourers_workshop.common.items.ItemSkinTemplate;
 import moe.plushie.armourers_workshop.common.items.ModItems;
@@ -24,12 +27,19 @@ import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntitySkinLibrary extends AbstractTileEntityInventory implements ISidedInventory {
+public class TileEntitySkinLibrary extends AbstractTileEntityInventory implements ISidedInventory, IGuiFactory {
     
     private static final int INVENTORY_SIZE = 2;
     
@@ -282,5 +292,16 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
     @Override
     public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
         return true;
+    }
+
+    @Override
+    public Container getServerGuiElement(EntityPlayer player, World world, BlockPos pos) {
+        return new ContainerSkinLibrary(player.inventory, this);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public GuiScreen getClientGuiElement(EntityPlayer player, World world, BlockPos pos) {
+        return new GuiSkinLibrary(player.inventory, this);
     }
 }

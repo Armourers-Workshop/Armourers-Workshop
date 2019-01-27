@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.common.network.messages.client;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
@@ -41,7 +41,7 @@ public class MessageClientKeyPress implements IMessage, IMessageHandler<MessageC
             break;
         case OPEN_WARDROBE:
             if (ConfigHandler.canOpenWardrobe(player)) {
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), LibGuiIds.WARDROBE_PLAYER, player.getEntityWorld(), 0, 0, 0);
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_PLAYER.ordinal(), player.getEntityWorld(), 0, 0, 0);
             }
             break;
         }

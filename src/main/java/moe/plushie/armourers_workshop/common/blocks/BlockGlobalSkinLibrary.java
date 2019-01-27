@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.common.blocks;
 
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
-import moe.plushie.armourers_workshop.common.lib.LibGuiIds;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import net.minecraft.block.BlockHorizontal;
@@ -82,7 +82,7 @@ public class BlockGlobalSkinLibrary extends AbstractModBlockContainer {
     
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        openGui(playerIn, LibGuiIds.GLOBAL_SKIN_LIBRARY, worldIn, pos, state, facing);
+        openGui(playerIn, EnumGuiId.GLOBAL_SKIN_LIBRARY, worldIn, pos, state, facing);
         return true;
     }
 
