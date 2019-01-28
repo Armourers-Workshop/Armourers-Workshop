@@ -29,7 +29,8 @@ public class ItemSkinUnlock extends AbstractModItem {
             SkinTypeRegistry.skinChest,
             SkinTypeRegistry.skinLegs,
             SkinTypeRegistry.skinFeet,
-            SkinTypeRegistry.skinWings
+            SkinTypeRegistry.skinWings,
+            SkinTypeRegistry.skinOutfit
             };
     
     public ItemSkinUnlock() {

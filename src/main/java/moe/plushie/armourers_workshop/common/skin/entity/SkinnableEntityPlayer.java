@@ -93,7 +93,7 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
             return 8;
         }
         if (skinType == SkinTypeRegistry.skinOutfit) {
-            return 48;
+            return 8;
         }
         return 1;
     }

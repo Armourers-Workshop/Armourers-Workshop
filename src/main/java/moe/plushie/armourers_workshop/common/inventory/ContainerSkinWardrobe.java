@@ -129,7 +129,12 @@ public class ContainerSkinWardrobe extends ModContainer {
         indexOutfitEnd = indexDyeEnd;
         if (!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabOutfits | isCreative))) {
             WardrobeInventory invOutfit = skinInv.getSkinTypeInv(SkinTypeRegistry.skinOutfit);
-            for (int i = 0; i < invOutfit.getSizeInventory(); i++) {
+            int outfitSlots = invOutfit.getSizeInventory();
+            if (isPlayer) {
+                IPlayerWardrobeCap playerWardrobe = (IPlayerWardrobeCap) wardrobeCapability;
+                outfitSlots = playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinOutfit);
+            }
+            for (int i = 0; i < outfitSlots; i++) {
                 
                 int y = 20 * (MathHelper.floor((float)i / 8F));
                 int x = 20 * i - (y * 8);
