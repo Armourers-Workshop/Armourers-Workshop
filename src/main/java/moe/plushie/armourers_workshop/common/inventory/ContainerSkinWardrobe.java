@@ -213,7 +213,7 @@ public class ContainerSkinWardrobe extends ModContainer {
             }
             
             // TODO Add check for valid outfit.
-            if (stack.getItem() == ModItems.outfit) {
+            if (stack.getItem() instanceof ItemSkin & SkinNBTHelper.stackHasSkinData(stack)) {
                 for (int i = indexOutfitStart; i < indexOutfitEnd; i++) {
                     Slot targetSlot = getSlot(i);
                     if (targetSlot.isItemValid(stack)) {
