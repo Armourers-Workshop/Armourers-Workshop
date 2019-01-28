@@ -300,6 +300,11 @@ public class ModelSkinOutfit extends AbstractModelSkin {
 
     private void renderLeftWing(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
         GL11.glPushMatrix();
+        if (isSneak) {
+            GlStateManager.translate(0.0F, 0.2F, 0.0F);
+            GlStateManager.rotate((float) Math.toDegrees(bipedBody.rotateAngleX), 1F, 0, 0);
+        }
+        GL11.glTranslated(0, 0, SCALE * 2);
 
         Point3D point = new Point3D(0, 0, 0);
         EnumFacing axis = EnumFacing.DOWN;
@@ -314,7 +319,7 @@ public class ModelSkinOutfit extends AbstractModelSkin {
 
         GL11.glTranslated(SCALE * 0.5F, SCALE * 0.5F, SCALE * 0.5F);
         GL11.glTranslated(SCALE * point.getX(), SCALE * point.getY(), SCALE * point.getZ());
-
+        
         switch (axis) {
         case UP:
             GL11.glRotated(angle, 0, 1, 0);
@@ -345,6 +350,11 @@ public class ModelSkinOutfit extends AbstractModelSkin {
 
     private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
         GL11.glPushMatrix();
+        if (isSneak) {
+            GlStateManager.translate(0.0F, 0.2F, 0.0F);
+            GlStateManager.rotate((float) Math.toDegrees(bipedBody.rotateAngleX), 1F, 0, 0);
+        }
+        GL11.glTranslated(0, 0, SCALE * 2);
         Point3D point = new Point3D(0, 0, 0);
         EnumFacing axis = EnumFacing.DOWN;
 

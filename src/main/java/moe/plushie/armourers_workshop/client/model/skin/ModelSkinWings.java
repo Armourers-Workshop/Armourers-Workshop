@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
@@ -48,6 +49,10 @@ public class ModelSkinWings extends AbstractModelSkin  {
             SkinPart part = parts.get(i);
             
             GL11.glPushMatrix();
+            if (isSneak) {
+                GlStateManager.translate(0.0F, 0.2F, 0.0F);
+                GlStateManager.rotate((float) Math.toDegrees(bipedBody.rotateAngleX), 1F, 0, 0);
+            }
             GL11.glTranslated(0, 0, SCALE * 2);
             if (isChild) {
                 float f6 = 2.0F;
@@ -61,11 +66,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
             MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
             
             angle = SkinUtils.getFlapAngleForWings(entity, skin);
-            
-            if (isSneak) {
-                GL11.glRotated(28F, 1F, 0, 0);
-            }
-            
+
             if (part.getPartType().getPartName().equals("leftWing")) {
                 renderLeftWing(part, SCALE, skinDye, extraColours, distance, angle, doLodLoading, movmentType);
             }
@@ -92,6 +93,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         //GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         
+
         GL11.glTranslated(SCALE * 0.5F, SCALE * 0.5F, SCALE * 0.5F);
         GL11.glTranslated(SCALE * point.getX(), SCALE * point.getY(), SCALE * point.getZ());
         
