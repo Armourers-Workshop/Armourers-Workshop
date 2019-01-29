@@ -206,10 +206,10 @@ public class AddonCustomNPCS extends ModAddon {
         @Override
         public int getSlotsForSkinType(ISkinType skinType) {
             if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings) {
-                return 4;
+                return 8;
             }
             if (skinType == SkinTypeRegistry.skinOutfit) {
-                return 4;
+                return 8;
             }
             return 1;
         }
