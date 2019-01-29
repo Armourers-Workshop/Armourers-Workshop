@@ -135,10 +135,8 @@ public class ContainerSkinWardrobe extends ModContainer {
                 outfitSlots = playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinOutfit);
             }
             for (int i = 0; i < outfitSlots; i++) {
-                
                 int y = 20 * (MathHelper.floor((float)i / 8F));
                 int x = 20 * i - (y * 8);
-                
                 addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinOutfit, invOutfit, i, 70 + x, 27 + y));
                 indexOutfitEnd += 1;
             }
