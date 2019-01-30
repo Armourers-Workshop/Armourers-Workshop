@@ -288,6 +288,7 @@ inventory.armourers_workshop:skinning-table.name=Skinning Table
 inventory.armourers_workshop:dye-table.name=Dye Table
 inventory.armourers_workshop:skinnable.name=Skinnable Block
 inventory.armourers_workshop:hologram-projector.name=Hologram Projector
+inventory.armourers_workshop:outfit-maker.name=Outfit Maker
 
 
 # Inventory Controls
@@ -327,6 +328,8 @@ inventory.armourers_workshop:skin-library.dialog.overwrite.title=Overwrite File
 inventory.armourers_workshop:skin-library.dialog.overwrite.close=Close
 inventory.armourers_workshop:skin-library.dialog.overwrite.ok=OK
 inventory.armourers_workshop:skin-library.dialog.overwrite.overwriteFile=Overwrite file "%s"?
+inventory.armourers_workshop:outfit-maker.save=Save Outfit
+inventory.armourers_workshop:outfit-maker.load=Load Outfit
 
 
 # Armourer
