@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.gui.GuiAdminPanel;
 import moe.plushie.armourers_workshop.client.gui.GuiDebugTool;
 import moe.plushie.armourers_workshop.client.gui.GuiGuideBook;
-import moe.plushie.armourers_workshop.client.gui.GuiOutfit;
 import moe.plushie.armourers_workshop.client.gui.GuiToolOptions;
 import moe.plushie.armourers_workshop.client.gui.miniarmourer.GuiMiniArmourer;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
@@ -15,7 +14,6 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
-import moe.plushie.armourers_workshop.common.inventory.ContainerOutfit;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.inventory.ModContainer;
@@ -85,11 +83,6 @@ public class GuiHandler implements IGuiHandler {
             break;
         case ADMIN_PANEL:
             return new ModContainer(player.inventory);
-        case OUTFIT:
-            if (player.getHeldItemMainhand().getItem() == ModItems.outfit) {
-                return new ContainerOutfit(player.inventory, player.getHeldItemMainhand());
-            }
-            break;
         default:
             break;
         }
@@ -156,11 +149,6 @@ public class GuiHandler implements IGuiHandler {
             return new GuiDebugTool();
         case ADMIN_PANEL:
             return new GuiAdminPanel(player);
-        case OUTFIT:
-            if (player.getHeldItemMainhand().getItem() == ModItems.outfit) {
-                return new GuiOutfit(player, player.getHeldItemMainhand());
-            }
-            break;
         case MINI_ARMOURER:
             return new GuiMiniArmourer(player);
         default:

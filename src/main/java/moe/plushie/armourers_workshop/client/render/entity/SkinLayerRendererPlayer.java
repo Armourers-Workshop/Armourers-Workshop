@@ -86,47 +86,8 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
                 }
             }
         }
-        
-        //renderOutfits(entitylivingbaseIn, skinCap, wardrobe, extraColours);
-        
     }
-/*
-    private void renderOutfits(EntityPlayer entitylivingbaseIn, EntitySkinCapability skinCap, IPlayerWardrobeCap wardrobeCap, ExtraColours extraColours) {
-        IInventory inventoryOutfits = skinCap.getInventoryOutfits();
-        ISkinType[] skinTypes = new ISkinType[] {
-                SkinTypeRegistry.skinHead,
-                SkinTypeRegistry.skinChest,
-                SkinTypeRegistry.skinLegs,
-                SkinTypeRegistry.skinFeet,
-                SkinTypeRegistry.skinWings};
-        
-        for (int outfitSlot = 0; outfitSlot < inventoryOutfits.getSizeInventory(); outfitSlot++) {
-            ItemStack stackOutfit = inventoryOutfits.getStackInSlot(outfitSlot);
-            if (stackOutfit.isEmpty()) {
-                continue;
-            }
-            if (!stackOutfit.hasTagCompound()) {
-                continue;
-            }
-            SkinInventoryContainer sic = new SkinInventoryContainer(null, skinTypes, 2);
-            sic.readFromNBT(stackOutfit.getTagCompound());
-            for (int skinIndex = 0; skinIndex < skinTypes.length; skinIndex++) {
-                ISkinType skinType = skinTypes[skinIndex];
-                WardrobeInventory wi = sic.getSkinTypeInv(skinType);
-                
-                for (int i = 0; i < wi.getSizeInventory(); i++) {
-                    ItemStack stackSkin = wi.getStackInSlot(i);
-                    ISkinDescriptor skinDescriptor = SkinNBTHelper.getSkinDescriptorFromStack(stackSkin);
-                    if (skinDescriptor != null) {
-                        renderSkin(entitylivingbaseIn, skinDescriptor, skinCap, wardrobeCap, extraColours, 0, entitylivingbaseIn != Minecraft.getMinecraft().player);
-                    }
-                }
-
-                
-            }
-        }
-    }
-*/
+    
     private void renderSkin(EntityPlayer entityPlayer, ISkinDescriptor skinDescriptor, EntitySkinCapability skinCap, IWardrobeCap wardrobe, ExtraColours extraColours, double distance, boolean doLodLoading) {
         // Fix to stop head skins rendering when using the Real First-Person Render mod.
         if (entityPlayer.equals(Minecraft.getMinecraft().player) & skinDescriptor.getIdentifier().getSkinType() == SkinTypeRegistry.skinHead) {

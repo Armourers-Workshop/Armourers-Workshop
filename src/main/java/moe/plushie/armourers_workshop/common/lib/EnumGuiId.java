@@ -10,7 +10,6 @@ public enum EnumGuiId {
     WARDROBE_PLAYER(false),
     MANNEQUIN,
     MINI_ARMOURER(false),
-    OUTFIT(false),
     WARDROBE_ENTITY(false),
     SKNNING_TABLE,
     DYE_TABLE,
