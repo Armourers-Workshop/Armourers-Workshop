@@ -270,10 +270,10 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             }
         }
         this.skinProps = skinProps;
-        if (updateBounds) {
+        //if (updateBounds) {
             removeBoundingBoxes();
             createBoundingBoxes();
-        }
+        //}
         dirtySync();
     }
     
