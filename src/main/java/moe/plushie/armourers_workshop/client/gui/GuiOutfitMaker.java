@@ -35,8 +35,8 @@ public class GuiOutfitMaker extends GuiContainer {
     public void initGui() {
         super.initGui();
         buttonList.clear();
-        iconButtonLoad = new GuiIconButton(this, 0, getGuiLeft() + 8, getGuiTop() + 96, 20, 20, GuiHelper.getLocalizedControlName(tileEntity.getName(), "load"), TEXTURE);
-        iconButtonSave = new GuiIconButton(this, 1, getGuiLeft() + getXSize() - 20 - 8, getGuiTop() + 96, 20, 20, GuiHelper.getLocalizedControlName(tileEntity.getName(), "save"), TEXTURE);
+        iconButtonLoad = new GuiIconButton(this, 0, getGuiLeft() + 8, getGuiTop() + 96, 20, 20, GuiHelper.getLocalizedControlName(tileEntity.getName(), "load"), TEXTURE).setIconLocation(0, 240, 16, 16);
+        iconButtonSave = new GuiIconButton(this, 1, getGuiLeft() + getXSize() - 20 - 8, getGuiTop() + 96, 20, 20, GuiHelper.getLocalizedControlName(tileEntity.getName(), "save"), TEXTURE).setIconLocation(0, 224, 16, 16);
         buttonList.add(iconButtonLoad);
         buttonList.add(iconButtonSave);
     }
