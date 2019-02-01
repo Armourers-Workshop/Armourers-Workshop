@@ -80,7 +80,6 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
                     }
 
                     if (skin.hasPaintData()) {
-                        ModLogger.log(skin.getPaintData().length);
                         if (paintData == null) {
                             paintData = new int[64 * 32];
                         }

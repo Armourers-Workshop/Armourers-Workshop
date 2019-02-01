@@ -247,12 +247,12 @@ public final class SkinSerializer {
                 SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT.setValue(properties, true);
             }
             if (skinType == SkinTypeRegistry.skinOutfit) {
-                SkinProperties.PROP_MODEL_OVERRIDE_HEAD.setValue(properties, true);
-                SkinProperties.PROP_MODEL_OVERRIDE_CHEST.setValue(properties, true);
-                SkinProperties.PROP_MODEL_OVERRIDE_ARM_LEFT.setValue(properties, true);
-                SkinProperties.PROP_MODEL_OVERRIDE_ARM_RIGHT.setValue(properties, true);
-                SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.setValue(properties, true);
-                SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT.setValue(properties, true);
+                //SkinProperties.PROP_MODEL_OVERRIDE_HEAD.setValue(properties, true);
+                //SkinProperties.PROP_MODEL_OVERRIDE_CHEST.setValue(properties, true);
+                //SkinProperties.PROP_MODEL_OVERRIDE_ARM_LEFT.setValue(properties, true);
+                //SkinProperties.PROP_MODEL_OVERRIDE_ARM_RIGHT.setValue(properties, true);
+                //SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.setValue(properties, true);
+                //SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT.setValue(properties, true);
             }
             SkinProperties.PROP_MODEL_OVERRIDE.clearValue(properties);
         }
@@ -274,12 +274,12 @@ public final class SkinSerializer {
                 SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_RIGHT.setValue(properties, true);
             }
             if (skinType == SkinTypeRegistry.skinOutfit) {
-                SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD.setValue(properties, true);
-                SkinProperties.PROP_MODEL_HIDE_OVERLAY_CHEST.setValue(properties, true);
-                SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_LEFT.setValue(properties, true);
-                SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_RIGHT.setValue(properties, true);
-                SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_LEFT.setValue(properties, true);
-                SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_RIGHT.setValue(properties, true);
+                //SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD.setValue(properties, true);
+                //SkinProperties.PROP_MODEL_HIDE_OVERLAY_CHEST.setValue(properties, true);
+                //SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_LEFT.setValue(properties, true);
+                //SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_RIGHT.setValue(properties, true);
+                //SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_LEFT.setValue(properties, true);
+                //SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_RIGHT.setValue(properties, true);
             }
             SkinProperties.PROP_MODEL_HIDE_OVERLAY.clearValue(properties);
         }
