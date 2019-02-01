@@ -471,7 +471,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         if (skinPointer != null) {
             Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
             if (skin != null) {
-                return SkinProperties.PROP_OVERRIDE_MODEL_HEAD.getValue(skin.getProperties());
+                return SkinProperties.PROP_MODEL_OVERRIDE_HEAD.getValue(skin.getProperties());
             }
         }
         return false;

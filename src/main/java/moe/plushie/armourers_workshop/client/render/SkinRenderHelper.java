@@ -28,7 +28,7 @@ public final class SkinRenderHelper {
     
     private static final ResourceLocation guideImage = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/blocks/guide.png");
     
-    public static void renderBuildingGuide(ISkinType skinType, float scale, SkinProperties skinProps, boolean showSkinOverlay, boolean showHelper) {
+    public static void renderBuildingGuide(ISkinType skinType, float scale, SkinProperties skinProps, boolean showHelper) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
             if (skinPart.isOverridden(skinProps)) {
@@ -36,7 +36,7 @@ public final class SkinRenderHelper {
             }
             IPoint3D partOffset = skinPart.getOffset();
             GlStateManager.translate(partOffset.getX() * scale, partOffset.getY() * scale, partOffset.getZ() * scale);
-            skinPart.renderBuildingGuide(scale, showSkinOverlay, showHelper);
+            skinPart.renderBuildingGuide(scale, skinProps, showHelper);
             GlStateManager.translate(-partOffset.getX() * scale, -partOffset.getY() * scale, -partOffset.getZ() * scale);
             
         }

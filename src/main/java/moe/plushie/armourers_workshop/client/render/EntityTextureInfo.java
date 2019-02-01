@@ -183,7 +183,7 @@ public class EntityTextureInfo {
         // Set the players texture to blank.
         for (int i = 0; i < skins.length; i++) {
             Skin skin = skins[i];
-            if (skin != null && SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
+            if (skin != null && SkinProperties.PROP_MODEL_OVERRIDE.getValue(skin.getProperties())) {
                 for (int j = 0; j < skin.getPartCount(); j++) {
                     SkinPart skinPart = skin.getParts().get(j);
                     if (skinPart.getPartType() instanceof ISkinPartTypeTextured) {

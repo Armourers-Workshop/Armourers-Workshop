@@ -32,7 +32,6 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
     private GuiDropDownList textureTypeList;
     private GuiTextField textUserSkin;
     private GuiCheckBox checkShowGuides;
-    private GuiCheckBox checkShowOverlay;
     private GuiCheckBox checkShowHelper;
     
     public GuiTabArmourerDisplaySettings(int tabId, GuiScreen parent) {
@@ -48,7 +47,6 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
         buttonList.clear();
         
         checkShowGuides = new GuiCheckBox(7, 10, 95, GuiHelper.getLocalizedControlName(guiName, "showGuide"), tileEntity.isShowGuides());
-        checkShowOverlay = new GuiCheckBox(9, 10, 110, GuiHelper.getLocalizedControlName(guiName, "showOverlay"), tileEntity.isShowOverlay());
         checkShowHelper = new GuiCheckBox(6, 10, 110, GuiHelper.getLocalizedControlName(guiName, "showHelper"), tileEntity.isShowHelper());
         
         buttonList.add(new GuiButtonExt(8, width - 36 - 5, 70, 30, 16, GuiHelper.getLocalizedControlName(guiName, "set")));
@@ -62,7 +60,6 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
         textureTypeList.setListSelectedIndex(tileEntity.getTexture().getTextureType().ordinal());
         
         buttonList.add(checkShowGuides);
-        buttonList.add(checkShowOverlay);
         buttonList.add(checkShowHelper);
         buttonList.add(textureTypeList);
     }
@@ -102,22 +99,9 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
         textUserSkin.drawTextBox();
         
         checkShowGuides.setIsChecked(tileEntity.isShowGuides());
-        checkShowOverlay.setIsChecked(tileEntity.isShowOverlay());
-        
-        int checkY = 110;
-        if (tileEntity.getSkinType() != null) {
-            checkShowOverlay.visible = tileEntity.getSkinType().showSkinOverlayCheckbox();
-            checkShowOverlay.y = checkY;
-            if (checkShowOverlay.visible) {
-                checkY += 16;
-            }
-        } else {
-            checkShowOverlay.visible = false;
-        }
         
         if (tileEntity.getSkinType() != null) {
             checkShowHelper.visible = tileEntity.getSkinType().showHelperCheckbox();
-            checkShowHelper.y = checkY;
         } else {
             checkShowHelper.visible = false;
         }

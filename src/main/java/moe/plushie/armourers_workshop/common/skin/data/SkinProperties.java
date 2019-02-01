@@ -22,18 +22,26 @@ public class SkinProperties {
     public static final SkinProperty<String> PROP_ALL_AUTHOR_UUID = new SkinProperty<String>("authorUUID", "");
     
     @Deprecated
-    public static final SkinProperty<Boolean> PROP_ARMOUR_OVERRIDE = new SkinProperty<Boolean>("armourOverride", false);
-    public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_HEAD = new SkinProperty<Boolean>("overrideModelHead", false);
-    public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_CHEST = new SkinProperty<Boolean>("overrideModelChest", false);
-    public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_ARM_LEFT = new SkinProperty<Boolean>("overrideModelArmLeft", false);
-    public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_ARM_RIGHT = new SkinProperty<Boolean>("overrideModelArmRight", false);
-    public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_LEG_LEFT = new SkinProperty<Boolean>("overrideModelLegLeft", false);
-    public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_LEG_RIGHT = new SkinProperty<Boolean>("overrideModelLegRight", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE = new SkinProperty<Boolean>("armourOverride", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_HEAD = new SkinProperty<Boolean>("overrideModelHead", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_CHEST = new SkinProperty<Boolean>("overrideModelChest", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_ARM_LEFT = new SkinProperty<Boolean>("overrideModelArmLeft", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_ARM_RIGHT = new SkinProperty<Boolean>("overrideModelArmRight", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_LEG_LEFT = new SkinProperty<Boolean>("overrideModelLegLeft", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_LEG_RIGHT = new SkinProperty<Boolean>("overrideModelLegRight", false);
+    
+    @Deprecated
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY = new SkinProperty<Boolean>("armourHideOverlay", true);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_HEAD = new SkinProperty<Boolean>("hideOverlayHead", true);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_CHEST = new SkinProperty<Boolean>("hideOverlayChest", true);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_ARM_LEFT = new SkinProperty<Boolean>("hideOverlayArmLeft", true);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_ARM_RIGHT = new SkinProperty<Boolean>("hideOverlayArmRight", true);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_LEG_LEFT = new SkinProperty<Boolean>("hideOverlayLegLeft", true);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_LEG_RIGHT = new SkinProperty<Boolean>("hideOverlayLegRight", true);
+    
+    public static final SkinProperty<Boolean> PROP_MODEL_LEGS_LIMIT_LIMBS = new SkinProperty<Boolean>("limitLimbs", false);
     
     public static final SkinProperty<String> PROP_OUTFIT_PART_INDEXS = new SkinProperty<String>("partIndexs", "");
-    
-    public static final SkinProperty<Boolean> PROP_ARMOUR_HIDE_OVERLAY = new SkinProperty<Boolean>("armourHideOverlay", true);
-    public static final SkinProperty<Boolean> PROP_ARMOUR_LIMIT_LIMBS = new SkinProperty<Boolean>("limitLimbs", false);
     
     public static final SkinProperty<Boolean> PROP_BLOCK_GLOWING = new SkinProperty<Boolean>("blockGlowing", false);
     public static final SkinProperty<Boolean> PROP_BLOCK_LADDER = new SkinProperty<Boolean>("blockLadder", false);
@@ -137,6 +145,10 @@ public class SkinProperties {
             }
             properties.put(key, value);
         }
+    }
+    
+    public void removeProperty(String key) {
+        properties.remove(key);
     }
     
     public void setProperty(String key, Object value) {

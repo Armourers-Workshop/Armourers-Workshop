@@ -23,4 +23,8 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     public void setValue(SkinProperties properties, T value) {
         properties.setProperty(key, value);
     }
+    
+    public void clearValue(SkinProperties properties) {
+        properties.removeProperty(key);
+    }
 }

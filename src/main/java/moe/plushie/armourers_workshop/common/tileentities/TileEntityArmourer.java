@@ -43,7 +43,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     private static final String TAG_DIRECTION = "direction";
     private static final String TAG_TYPE = "skinType";
     private static final String TAG_SHOW_GUIDES = "showGuides";
-    private static final String TAG_SHOW_OVERLAY = "showOverlay";
     private static final String TAG_SHOW_HELPER = "showHelper";
     private static final String TAG_PAINT_DATA = "paintData";
     private static final String TAG_TEXTURE = "texture";
@@ -55,7 +54,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     private EnumFacing direction;
     private ISkinType skinType;
     private boolean showGuides;
-    private boolean showOverlay;
     private boolean showHelper;
     private SkinProperties skinProps;
     private int[] paintData;
@@ -71,7 +69,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         super(INVENTORY_SIZE);
         this.direction = EnumFacing.NORTH;
         this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName("armourers:head");
-        this.showOverlay = true;
         this.showGuides = true;
         this.showHelper = true;
         this.skinProps = new SkinProperties();
@@ -204,10 +201,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         return showGuides;
     }
     
-    public boolean isShowOverlay() {
-        return showOverlay;
-    }
-    
     public boolean isShowHelper() {
         return showHelper;
     }
@@ -246,11 +239,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         dirtySync();
     }
     
-    public void toggleOverlay() {
-        this.showOverlay = !this.showOverlay;
-        dirtySync();;
-    }
-    
     public void toggleHelper() {
         this.showHelper = !this.showHelper;
         dirtySync();
@@ -263,8 +251,8 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public void setSkinProps(SkinProperties skinProps) {
         boolean updateBounds = false;
         if (skinType != null && skinType.getVanillaArmourSlotId() != -1) {
-            boolean hadBounds = !SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(this.skinProps);
-            boolean haveBounds = !SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skinProps);
+            boolean hadBounds = !SkinProperties.PROP_MODEL_OVERRIDE.getValue(this.skinProps);
+            boolean haveBounds = !SkinProperties.PROP_MODEL_OVERRIDE.getValue(skinProps);
             if (hadBounds != haveBounds) {
                 updateBounds = true;
             }
@@ -336,7 +324,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
         skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(compound.getString(TAG_TYPE));
         
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
-        showOverlay = compound.getBoolean(TAG_SHOW_OVERLAY);
         if (compound.hasKey(TAG_SHOW_HELPER)) {
             showHelper = compound.getBoolean(TAG_SHOW_HELPER);
         }
@@ -358,7 +345,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
             compound.setString(TAG_TYPE, skinType.getRegistryName());
         }
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
-        compound.setBoolean(TAG_SHOW_OVERLAY, showOverlay);
         compound.setBoolean(TAG_SHOW_HELPER, showHelper);
         skinProps.writeToNBT(compound);
         NBTTagCompound textureCompound = new NBTTagCompound();

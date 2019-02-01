@@ -48,9 +48,6 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
             if (message.buttonId == 7) {
                 armourerBrain.toggleGuides();
             }
-            if (message.buttonId == 9) {
-                armourerBrain.toggleOverlay();
-            }
             if (message.buttonId == 6) {
                 armourerBrain.toggleHelper();
             }

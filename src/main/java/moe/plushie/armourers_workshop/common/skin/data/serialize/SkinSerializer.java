@@ -229,32 +229,61 @@ public final class SkinSerializer {
         }
         
         // Update skin properties.
-        if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(properties)) {
+        if (SkinProperties.PROP_MODEL_OVERRIDE.getValue(properties)) {
             if (skinType == SkinTypeRegistry.skinHead) {
-                SkinProperties.PROP_OVERRIDE_MODEL_HEAD.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_HEAD.setValue(properties, true);
             }
             if (skinType == SkinTypeRegistry.skinChest) {
-                SkinProperties.PROP_OVERRIDE_MODEL_CHEST.setValue(properties, true);
-                SkinProperties.PROP_OVERRIDE_MODEL_ARM_LEFT.setValue(properties, true);
-                SkinProperties.PROP_OVERRIDE_MODEL_ARM_RIGHT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_CHEST.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_ARM_LEFT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_ARM_RIGHT.setValue(properties, true);
             }
             if (skinType == SkinTypeRegistry.skinLegs) {
-                SkinProperties.PROP_OVERRIDE_MODEL_LEG_LEFT.setValue(properties, true);
-                SkinProperties.PROP_OVERRIDE_MODEL_LEG_RIGHT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT.setValue(properties, true);
             }
             if (skinType == SkinTypeRegistry.skinFeet) {
-                SkinProperties.PROP_OVERRIDE_MODEL_LEG_LEFT.setValue(properties, true);
-                SkinProperties.PROP_OVERRIDE_MODEL_LEG_RIGHT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT.setValue(properties, true);
             }
             if (skinType == SkinTypeRegistry.skinOutfit) {
-                SkinProperties.PROP_OVERRIDE_MODEL_HEAD.setValue(properties, true);
-                SkinProperties.PROP_OVERRIDE_MODEL_CHEST.setValue(properties, true);
-                SkinProperties.PROP_OVERRIDE_MODEL_ARM_LEFT.setValue(properties, true);
-                SkinProperties.PROP_OVERRIDE_MODEL_ARM_RIGHT.setValue(properties, true);
-                SkinProperties.PROP_OVERRIDE_MODEL_LEG_LEFT.setValue(properties, true);
-                SkinProperties.PROP_OVERRIDE_MODEL_LEG_RIGHT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_HEAD.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_CHEST.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_ARM_LEFT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_ARM_RIGHT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT.setValue(properties, true);
             }
+            SkinProperties.PROP_MODEL_OVERRIDE.clearValue(properties);
         }
+        if (SkinProperties.PROP_MODEL_HIDE_OVERLAY.getValue(properties)) {
+            if (skinType == SkinTypeRegistry.skinHead) {
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD.setValue(properties, true);
+            }
+            if (skinType == SkinTypeRegistry.skinChest) {
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_CHEST.setValue(properties, true);
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_LEFT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_RIGHT.setValue(properties, true);
+            }
+            if (skinType == SkinTypeRegistry.skinLegs) {
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_LEFT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_RIGHT.setValue(properties, true);
+            }
+            if (skinType == SkinTypeRegistry.skinFeet) {
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_LEFT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_RIGHT.setValue(properties, true);
+            }
+            if (skinType == SkinTypeRegistry.skinOutfit) {
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD.setValue(properties, true);
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_CHEST.setValue(properties, true);
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_LEFT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_RIGHT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_LEFT.setValue(properties, true);
+                SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_RIGHT.setValue(properties, true);
+            }
+            SkinProperties.PROP_MODEL_HIDE_OVERLAY.clearValue(properties);
+        }
+        
         
         return new Skin(properties, skinType, paintData, parts);
     }

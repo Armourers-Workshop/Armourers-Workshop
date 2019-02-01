@@ -66,7 +66,7 @@ public class ModelSkinOutfit extends AbstractModelSkin {
             GL11.glPopMatrix();
         }
         
-        boolean overrideChest = SkinProperties.PROP_OVERRIDE_MODEL_CHEST.getValue(skin.getProperties());
+        boolean overrideChest = SkinProperties.PROP_MODEL_OVERRIDE_CHEST.getValue(skin.getProperties());
         MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
         double angle = 45D;
         

@@ -22,8 +22,8 @@ public class GuiInventorySize extends GuiButtonExt {
     private int srcX = 0;
     private int srcY = 0;
     
-    public GuiInventorySize(int xPos, int yPos, int maxWidth, int maxHeight) {
-        super(-1, xPos, yPos, maxWidth * BUTTON_WIDTH, maxHeight * BUTTON_HEIGHT, "");
+    public GuiInventorySize(int id, int xPos, int yPos, int maxWidth, int maxHeight) {
+        super(id, xPos, yPos, maxWidth * BUTTON_WIDTH, maxHeight * BUTTON_HEIGHT, "");
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
     }

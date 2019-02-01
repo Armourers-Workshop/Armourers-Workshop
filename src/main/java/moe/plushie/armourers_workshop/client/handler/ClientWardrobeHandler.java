@@ -245,12 +245,6 @@ public final class ClientWardrobeHandler {
                 }
             }
         }
-
-        // Hide the head overlay if the player has turned it off.
-        RenderPlayer renderer = event.getRenderer();
-        if (SkinModelRenderer.INSTANCE.playerHasCustomHead(player)) {
-            renderer.getMainModel().bipedHeadwear.isHidden = true;
-        }
     }
     
     @SubscribeEvent

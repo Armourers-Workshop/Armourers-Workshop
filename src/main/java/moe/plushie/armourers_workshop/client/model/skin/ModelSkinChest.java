@@ -61,7 +61,7 @@ public class ModelSkinChest extends AbstractModelSkin {
             GL11.glPopAttrib();
         }
         
-        boolean override = SkinProperties.PROP_OVERRIDE_MODEL_CHEST.getValue(armourData.getProperties());
+        boolean override = SkinProperties.PROP_MODEL_OVERRIDE_CHEST.getValue(armourData.getProperties());
         
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);

@@ -128,29 +128,7 @@ public final class SkinModelRenderer {
             if (skinDescriptor != null) {
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
                 if (skin != null) {
-                    return SkinProperties.PROP_ARMOUR_LIMIT_LIMBS.getValue(skin.getProperties());
-                }
-            }
-        }
-        return false;
-    }
-    
-    public boolean playerHasCustomHead(EntityPlayer player) {
-        IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
-        if (skinCapability == null) {
-            return false;
-        }
-        for (int i = 0; i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinHead); i++) {
-            ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(SkinTypeRegistry.skinHead, i);
-            if (skinDescriptor != null) {
-                Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
-                if (skin!= null) {
-                    if (SkinProperties.PROP_OVERRIDE_MODEL_HEAD.getValue(skin.getProperties())) {
-                        return true;
-                    }
-                    if (SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skin.getProperties())) {
-                        return true;
-                    }
+                    return SkinProperties.PROP_MODEL_LEGS_LIMIT_LIMBS.getValue(skin.getProperties());
                 }
             }
         }

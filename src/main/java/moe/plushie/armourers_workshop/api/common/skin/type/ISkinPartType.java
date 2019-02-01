@@ -52,7 +52,7 @@ public interface ISkinPartType {
      * @param showHelper
      */
     @SideOnly(Side.CLIENT)
-    public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper);
+    public void renderBuildingGuide(float scale, SkinProperties skinProps, boolean showHelper);
     
     /**
      * Get the minimum number of markers needed for this skin part.

@@ -32,10 +32,10 @@ public class SkinHeadPartBase extends AbstractSkinPartTypeBase implements ISkinP
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper) {
+    public void renderBuildingGuide(float scale, SkinProperties skinProps, boolean showHelper) {
         GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
-        ModelHead.MODEL.render(scale, showSkinOverlay);
+        ModelHead.MODEL.render(scale, !SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD.getValue(skinProps));
         GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
     }
@@ -79,6 +79,6 @@ public class SkinHeadPartBase extends AbstractSkinPartTypeBase implements ISkinP
     
     @Override
     public boolean isOverridden(SkinProperties skinProps) {
-        return SkinProperties.PROP_OVERRIDE_MODEL_HEAD.getValue(skinProps);
+        return SkinProperties.PROP_MODEL_OVERRIDE_HEAD.getValue(skinProps);
     }
 }

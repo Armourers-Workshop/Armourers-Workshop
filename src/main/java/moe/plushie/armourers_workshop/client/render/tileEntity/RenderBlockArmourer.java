@@ -83,18 +83,18 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer<TileEntityArm
                 PlayerTexture oldTexture = te.getTextureOld();
                 oldTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(oldTexture);
                 bindTexture(oldTexture.getResourceLocation());
-                SkinRenderHelper.renderBuildingGuide(skinType, scale, te.getSkinProps(), te.isShowOverlay(), te.isShowHelper());
+                SkinRenderHelper.renderBuildingGuide(skinType, scale, te.getSkinProps(), te.isShowHelper());
                 te.skinTexture.bindTexture();
                 ModRenderHelper.enableAlphaBlend();
                 GlStateManager.color(1, 1, 1, fade / 1000F);
                 GlStateManager.doPolygonOffset(-6F, -6F);
-                SkinRenderHelper.renderBuildingGuide(skinType, scale, te.getSkinProps(), te.isShowOverlay(), te.isShowHelper());
+                SkinRenderHelper.renderBuildingGuide(skinType, scale, te.getSkinProps(), te.isShowHelper());
                 GlStateManager.doPolygonOffset(3F, 3F);
                 ModRenderHelper.disableAlphaBlend();
                 GlStateManager.color(1, 1, 1, 1);
             } else {
                 te.skinTexture.bindTexture();
-                SkinRenderHelper.renderBuildingGuide(skinType, scale, te.getSkinProps(), te.isShowOverlay(), te.isShowHelper());
+                SkinRenderHelper.renderBuildingGuide(skinType, scale, te.getSkinProps(), te.isShowHelper());
             }
             GlStateManager.doPolygonOffset(-3F, -3F);
             mc.profiler.endSection();

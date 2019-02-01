@@ -138,7 +138,7 @@ public class ItemSkin extends AbstractModItem {
                     if (identifier.getSkinLocalId() != data.lightHash()) {
                         tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinIdError1"));
                         tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinIdError2"));
-                        tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinIdError3", data.requestId, data.lightHash()));
+                        //tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinIdError3", data.requestId, data.lightHash()));
                     }
                 }
                 String flavour = SkinProperties.PROP_ALL_FLAVOUR_TEXT.getValue(data.getProperties()).trim();

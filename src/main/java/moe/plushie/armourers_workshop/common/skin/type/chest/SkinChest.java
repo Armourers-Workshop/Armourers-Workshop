@@ -41,10 +41,12 @@ public class SkinChest extends AbstractSkinTypeBase {
     @Override
     public ArrayList<ISkinProperty<?>> getProperties() {
         ArrayList<ISkinProperty<?>> properties = super.getProperties();
-        properties.add(SkinProperties.PROP_OVERRIDE_MODEL_CHEST);
-        properties.add(SkinProperties.PROP_OVERRIDE_MODEL_ARM_LEFT);
-        properties.add(SkinProperties.PROP_OVERRIDE_MODEL_ARM_RIGHT);
-        properties.add(SkinProperties.PROP_ARMOUR_HIDE_OVERLAY);
+        properties.add(SkinProperties.PROP_MODEL_OVERRIDE_CHEST);
+        properties.add(SkinProperties.PROP_MODEL_OVERRIDE_ARM_LEFT);
+        properties.add(SkinProperties.PROP_MODEL_OVERRIDE_ARM_RIGHT);
+        properties.add(SkinProperties.PROP_MODEL_HIDE_OVERLAY_CHEST);
+        properties.add(SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_LEFT);
+        properties.add(SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_RIGHT);
         return properties;
     }
 }
