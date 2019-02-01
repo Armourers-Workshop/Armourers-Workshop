@@ -99,6 +99,7 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
                     } else {
                         partIndexs += ":" + String.valueOf(skinParts.size());
                     }
+                    
                     for (ISkinProperty prop : skin.getSkinType().getProperties()) {
                         SkinProperty p = (SkinProperty) prop;
                         p.setValue(skinProperties, p.getValue(skin.getProperties()));
@@ -123,8 +124,6 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
         int width = (texType.getTextureModelSize().getX() * 2) + (texType.getTextureModelSize().getZ() * 2);
         int height = texType.getTextureModelSize().getY() + texType.getTextureModelSize().getZ();
         
-        ModLogger.log("x:" + pos.x + " y:" + pos.y + " w:" + width + " height:" + height);
-        
         for (int ix = 0; ix < width; ix++) {
             for (int iy = 0; iy < height; iy++) {
                 int x = pos.x + ix;
@@ -135,15 +134,8 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
                 }
             }
         }
+        
         return desPaint;
-        /*for (int rgb = 0; rgb < paintData.length; rgb++) {
-            byte[] trgb = PaintingHelper.intToBytes(skin.getPaintData()[rgb]);
-            int type = (trgb[3] & 0xFF);
-            //ModLogger.log(type);
-            if (type != 0) {
-                paintData[rgb] = skin.getPaintData()[rgb];
-            }
-        }*/
     }
 
     @Override
