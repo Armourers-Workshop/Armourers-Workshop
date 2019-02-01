@@ -28,12 +28,12 @@ public class SkinnableEntityZombie extends SkinnableEntity {
     
     @Override
     public void getValidSkinTypes(ArrayList<ISkinType> skinTypes) {
+        skinTypes.add(SkinTypeRegistry.skinOutfit);
         skinTypes.add(SkinTypeRegistry.skinHead);
         skinTypes.add(SkinTypeRegistry.skinChest);
         skinTypes.add(SkinTypeRegistry.skinLegs);
         skinTypes.add(SkinTypeRegistry.skinFeet);
         skinTypes.add(SkinTypeRegistry.skinWings);
-        skinTypes.add(SkinTypeRegistry.skinOutfit);
     }
     
     @Override
