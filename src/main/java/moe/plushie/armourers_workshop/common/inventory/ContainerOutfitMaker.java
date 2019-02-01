@@ -13,6 +13,8 @@ import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
 import moe.plushie.armourers_workshop.common.items.ItemSkin;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton.IButtonPress;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
@@ -75,27 +77,12 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
                     for (int partIndex = 0; partIndex < skin.getPartCount(); partIndex++) {
                         SkinPart part = skin.getParts().get(partIndex);
                         skinParts.add(part);
-                        /*if (skin.hasPaintData()) {
-                            if (paintData == null) {
-                                paintData = skin.getPaintData().clone();
-                            } else {
-                                ModLogger.log(part.getPartType().getRegistryName());
-                                if (part.getPartType() instanceof ISkinPartTypeTextured) {
-                                    ISkinPartTypeTextured texType = ((ISkinPartTypeTextured)part.getPartType());
-                                    paintPart(texType, paintData, skin.getPaintData());
-                                }
-                            }
-                        }*/
                     }
 
                     if (skin.hasPaintData()) {
                         ModLogger.log(skin.getPaintData().length);
                         if (paintData == null) {
                             paintData = new int[64 * 32];
-                        }
-                        
-                        for (int j = 0 ; j < paintData.length; j++) {
-                            
                         }
                         for (int partIndex = 0; partIndex < skin.getSkinType().getSkinParts().size(); partIndex++) {
                             ISkinPartType part = skin.getSkinType().getSkinParts().get(partIndex);
@@ -142,7 +129,10 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
             for (int iy = 0; iy < height; iy++) {
                 int x = pos.x + ix;
                 int y = pos.y + iy;
-                desPaint[x + (y * textureWidth)] = srcPaint[x + (y * textureWidth)];
+                byte[] rgbt = PaintingHelper.intToBytes(srcPaint[x + (y * textureWidth)]);
+                if ((rgbt[3] & 0xFF) != PaintRegistry.PAINT_TYPE_NONE.getId()) {
+                    desPaint[x + (y * textureWidth)] = srcPaint[x + (y * textureWidth)];
+                }
             }
         }
         return desPaint;
