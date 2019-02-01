@@ -120,6 +120,7 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
             }
         }
         if (!skinParts.isEmpty()) {
+            SkinProperties.PROP_OUTFIT_PART_INDEXS.setValue(skinProperties, partIndexs);
             Skin skin = new Skin(skinProperties, SkinTypeRegistry.skinOutfit, paintData, skinParts);
             CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile)null);
             ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinDescriptor(skin));
