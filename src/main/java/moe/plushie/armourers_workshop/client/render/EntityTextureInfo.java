@@ -69,8 +69,8 @@ public class EntityTextureInfo {
         textureWidth = width;
         textureHeight = height;
         lastEntityTextureHash = -1;
-        lastSkinHashs = new int[4 * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
-        lastDyeHashs = new int[4 * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
+        lastSkinHashs = new int[5 * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
+        lastDyeHashs = new int[5 * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
         normalTexture = null;
         replacementTexture = null;
         for (int i = 0; i < lastSkinHashs.length; i++) {

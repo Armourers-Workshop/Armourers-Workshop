@@ -80,14 +80,15 @@ public class PlayerTextureHandler {
             
             textureInfo.updateExtraColours(wardrobeCap.getExtraColours());
             
-            Skin[] skins = new Skin[4 * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
-            ISkinDye[] dyes = new ISkinDye[4 * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
+            ISkinType[] skinTypes = new ISkinType[] {SkinTypeRegistry.skinHead, SkinTypeRegistry.skinChest,
+                    SkinTypeRegistry.skinLegs, SkinTypeRegistry.skinFeet, SkinTypeRegistry.skinOutfit};
             
-            ISkinType[] skinTypes = new ISkinType[] {SkinTypeRegistry.skinHead, SkinTypeRegistry.skinChest, SkinTypeRegistry.skinLegs, SkinTypeRegistry.skinFeet};
+            Skin[] skins = new Skin[skinTypes.length * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
+            ISkinDye[] dyes = new ISkinDye[skinTypes.length * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
             
             for (int skinIndex = 0; skinIndex < EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
-                Skin[] skin = new Skin[4];
-                ISkinDye[] dye = new ISkinDye[4];
+                Skin[] skin = new Skin[skinTypes.length];
+                ISkinDye[] dye = new ISkinDye[skinTypes.length];
                 
                 for (int i = 0; i < skinTypes.length; i++) {
                     ISkinDescriptor descriptor = skinCapability.getSkinDescriptor(skinTypes[i], skinIndex);
@@ -97,15 +98,17 @@ public class PlayerTextureHandler {
                     }
                 }
                 
-                skins[0 + skinIndex * 4] = skin[0];
-                skins[1 + skinIndex * 4] = skin[1];
-                skins[2 + skinIndex * 4] = skin[2];
-                skins[3 + skinIndex * 4] = skin[3];
+                skins[0 + skinIndex * skinTypes.length] = skin[0];
+                skins[1 + skinIndex * skinTypes.length] = skin[1];
+                skins[2 + skinIndex * skinTypes.length] = skin[2];
+                skins[3 + skinIndex * skinTypes.length] = skin[3];
+                skins[4 + skinIndex * skinTypes.length] = skin[4];
                 
-                dyes[0 + skinIndex * 4] = dye[0];
-                dyes[1 + skinIndex * 4] = dye[1];
-                dyes[2 + skinIndex * 4] = dye[2];
-                dyes[3 + skinIndex * 4] = dye[3];
+                dyes[0 + skinIndex * skinTypes.length] = dye[0];
+                dyes[1 + skinIndex * skinTypes.length] = dye[1];
+                dyes[2 + skinIndex * skinTypes.length] = dye[2];
+                dyes[3 + skinIndex * skinTypes.length] = dye[3];
+                dyes[4 + skinIndex * skinTypes.length] = dye[4];
             }
             
             textureInfo.updateSkins(skins);
