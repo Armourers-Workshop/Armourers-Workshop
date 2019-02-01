@@ -66,6 +66,8 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
 
     @Override
     public void getValidSkinTypes(ArrayList<ISkinType> skinTypes) {
+        skinTypes.add(SkinTypeRegistry.skinOutfit);
+        
         skinTypes.add(SkinTypeRegistry.skinHead);
         skinTypes.add(SkinTypeRegistry.skinChest);
         skinTypes.add(SkinTypeRegistry.skinLegs);
@@ -80,8 +82,6 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
         skinTypes.add(SkinTypeRegistry.skinAxe);
         skinTypes.add(SkinTypeRegistry.skinShovel);
         skinTypes.add(SkinTypeRegistry.skinHoe);
-        
-        skinTypes.add(SkinTypeRegistry.skinOutfit);
     }
     
     @Override
