@@ -30,6 +30,8 @@ public class SkinProperties {
     public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_LEG_LEFT = new SkinProperty<Boolean>("overrideModelLegLeft", false);
     public static final SkinProperty<Boolean> PROP_OVERRIDE_MODEL_LEG_RIGHT = new SkinProperty<Boolean>("overrideModelLegRight", false);
     
+    public static final SkinProperty<String> PROP_OUTFIT_PART_INDEXS = new SkinProperty<String>("partIndexs", "");
+    
     public static final SkinProperty<Boolean> PROP_ARMOUR_HIDE_OVERLAY = new SkinProperty<Boolean>("armourHideOverlay", false);
     public static final SkinProperty<Boolean> PROP_ARMOUR_LIMIT_LIMBS = new SkinProperty<Boolean>("limitLimbs", false);
     
@@ -43,7 +45,6 @@ public class SkinProperties {
     public static final SkinProperty<Boolean> PROP_BLOCK_ENDER_INVENTORY = new SkinProperty<Boolean>("blockEnderInventory", false);
     public static final SkinProperty<Integer> PROP_BLOCK_INVENTORY_WIDTH = new SkinProperty<Integer>("blockInventoryWidth", 9);
     public static final SkinProperty<Integer> PROP_BLOCK_INVENTORY_HEIGHT = new SkinProperty<Integer>("blockInventoryHeight", 4);
-    
     
     public static final SkinProperty<Double> PROP_WINGS_MAX_ANGLE = new SkinProperty<Double>("wingsMaxAngle", 75D);
     public static final SkinProperty<Double> PROP_WINGS_MIN_ANGLE = new SkinProperty<Double>("wingsMinAngle", 0D);

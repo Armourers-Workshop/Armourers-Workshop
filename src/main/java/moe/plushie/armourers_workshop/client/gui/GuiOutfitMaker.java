@@ -59,7 +59,6 @@ public class GuiOutfitMaker extends GuiContainer {
         GlStateManager.color(1F, 1F, 1F, 1F);
         mc.renderEngine.bindTexture(TEXTURE);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
     }
 
     @Override
