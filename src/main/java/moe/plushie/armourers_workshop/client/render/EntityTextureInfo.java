@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import moe.plushie.armourers_workshop.api.common.IPoint3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
 import moe.plushie.armourers_workshop.common.SkinHelper;
@@ -15,9 +15,7 @@ import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
-import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.BitwiseUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -183,38 +181,32 @@ public class EntityTextureInfo {
         // Set the players texture to blank.
         for (int i = 0; i < skins.length; i++) {
             Skin skin = skins[i];
-            
-            if (skin != null && SkinProperties.PROP_MODEL_OVERRIDE.getValue(skin.getProperties())) {
-                for (int j = 0; j < skin.getPartCount(); j++) {
-                    SkinPart skinPart = skin.getParts().get(j);
-                    if (skinPart.getPartType() instanceof ISkinPartTypeTextured) {
-                        ISkinPartTypeTextured typeTextured = (ISkinPartTypeTextured) skinPart.getPartType();
-                        Point texLoc = typeTextured.getTextureSkinPos();
-                        IPoint3D texSize = typeTextured.getTextureModelSize();
-
-                        for (int ix = 0; ix < texSize.getZ() * 2 + texSize.getX() * 2; ix++) {
-                            for (int iy = 0; iy < texSize.getZ() + texSize.getY(); iy++) {
-                                if (skin.getSkinType() == SkinTypeRegistry.skinLegs) {
-                                    if (iy >= 12) {
-                                        continue;
-                                    }
-                                    if (iy < 4 & ix > 7 & ix < 12) {
-                                        continue;
-                                    }
-                                }
-                                if (skin.getSkinType() == SkinTypeRegistry.skinFeet) {
-                                    if (iy < 12) {
-                                        if (!(iy < 4 & ix > 7 & ix < 12)) {
-                                            continue;
-                                        }
-                                    }
-                                }
-                                // Make the players texture blank.
-                                paintTexture(bufferedEntitySkinnedImage, (int) texLoc.getX() + ix, (int) texLoc.getY() + iy, 0x00FFFFFF);
-                            }
-                        }
-
+            if (skin != null) {
+                for (int partIndex = 0; partIndex < skin.getSkinType().getSkinParts().size(); partIndex++) {
+                    ISkinPartType part = skin.getSkinType().getSkinParts().get(partIndex);
+                    if (part instanceof ISkinPartTypeTextured) {
+                        ISkinPartTypeTextured skinPartTex = ((ISkinPartTypeTextured) part);
+                        makePartBlank(skinPartTex, bufferedEntitySkinnedImage, skin.getProperties());
                     }
+                }
+            }
+        }
+    }
+    
+    public void makePartBlank(ISkinPartTypeTextured skinPartTex, BufferedImage texture, SkinProperties skinProps) {
+        Point posBase = skinPartTex.getTextureBasePos();
+        Point posOverlay = skinPartTex.getTextureOverlayPos();
+        
+        int width = (skinPartTex.getTextureModelSize().getX() * 2) + (skinPartTex.getTextureModelSize().getZ() * 2);
+        int height = skinPartTex.getTextureModelSize().getY() + skinPartTex.getTextureModelSize().getZ();
+        
+        for (int ix = 0; ix < width; ix++) {
+            for (int iy = 0; iy < height; iy++) {
+                if (skinPartTex.isModelOverridden(skinProps)) {
+                    texture.setRGB(posBase.x + ix, posBase.y + iy, 0x00FFFFFF);
+                }
+                if (skinPartTex.isOverlayOverridden(skinProps)) {
+                    texture.setRGB(posOverlay.x + ix, posOverlay.y + iy, 0x00FFFFFF);
                 }
             }
         }
