@@ -78,7 +78,12 @@ public class SkinLegsPartLeftLeg extends AbstractSkinPartTypeBase implements ISk
     }
     
     @Override
-    public boolean isOverridden(SkinProperties skinProps) {
+    public boolean isModelOverridden(SkinProperties skinProps) {
         return SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.getValue(skinProps);
+    }
+    
+    @Override
+    public boolean isOverlayOverridden(SkinProperties skinProps) {
+        return SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_LEFT.getValue(skinProps);
     }
 }

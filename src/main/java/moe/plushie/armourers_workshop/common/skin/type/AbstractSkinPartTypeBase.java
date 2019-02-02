@@ -68,7 +68,12 @@ public abstract class AbstractSkinPartTypeBase implements ISkinPartType {
     }
     
     @Override
-    public boolean isOverridden(SkinProperties skinProps) {
+    public boolean isModelOverridden(SkinProperties skinProps) {
+        return false;
+    }
+    
+    @Override
+    public boolean isOverlayOverridden(SkinProperties skinProps) {
         return false;
     }
 }

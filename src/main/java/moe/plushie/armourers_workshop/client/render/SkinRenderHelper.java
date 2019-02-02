@@ -31,7 +31,7 @@ public final class SkinRenderHelper {
     public static void renderBuildingGuide(ISkinType skinType, float scale, SkinProperties skinProps, boolean showHelper) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
-            if (skinPart.isOverridden(skinProps)) {
+            if (skinPart.isModelOverridden(skinProps)) {
                 continue;
             }
             IPoint3D partOffset = skinPart.getOffset();
@@ -101,7 +101,7 @@ public final class SkinRenderHelper {
                     guideRec.getWidth(), guideRec.getHeight(), guideRec.getDepth(), scale, 1F, 0F, 0F, 0.25F);
         }
 
-        if (part.isOverridden(skinProps)) {
+        if (part.isModelOverridden(skinProps)) {
             //GL11.glColor4f(0F, 0F, 1F, 0.25F);
             renderGuideBox(guideRec.getX(), guideRec.getY(), guideRec.getZ(),
                     guideRec.getWidth(), guideRec.getHeight(), guideRec.getDepth(), scale, 0F, 0F, 1F, 0.25F);

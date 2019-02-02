@@ -78,7 +78,12 @@ public class SkinChestPartLeftArm extends AbstractSkinPartTypeBase implements IS
     }
     
     @Override
-    public boolean isOverridden(SkinProperties skinProps) {
+    public boolean isModelOverridden(SkinProperties skinProps) {
         return SkinProperties.PROP_MODEL_OVERRIDE_ARM_LEFT.getValue(skinProps);
+    }
+    
+    @Override
+    public boolean isOverlayOverridden(SkinProperties skinProps) {
+        return SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_LEFT.getValue(skinProps);
     }
 }

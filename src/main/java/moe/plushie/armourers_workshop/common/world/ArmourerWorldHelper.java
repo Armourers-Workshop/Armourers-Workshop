@@ -300,7 +300,7 @@ public final class ArmourerWorldHelper {
     }
     
     private static void createBoundingBoxesForSkinPart(World world, BlockPos pos, BlockPos parentPos, ISkinPartType skinPart, SkinProperties skinProps) {
-        if (skinPart.isOverridden(skinProps)) {
+        if (skinPart.isModelOverridden(skinProps)) {
             return;
         }
         IRectangle3D buildSpace = skinPart.getBuildingSpace();

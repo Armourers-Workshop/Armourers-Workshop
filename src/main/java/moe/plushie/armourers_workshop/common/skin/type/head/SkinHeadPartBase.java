@@ -78,7 +78,12 @@ public class SkinHeadPartBase extends AbstractSkinPartTypeBase implements ISkinP
     }
     
     @Override
-    public boolean isOverridden(SkinProperties skinProps) {
+    public boolean isModelOverridden(SkinProperties skinProps) {
         return SkinProperties.PROP_MODEL_OVERRIDE_HEAD.getValue(skinProps);
+    }
+    
+    @Override
+    public boolean isOverlayOverridden(SkinProperties skinProps) {
+        return SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD.getValue(skinProps);
     }
 }

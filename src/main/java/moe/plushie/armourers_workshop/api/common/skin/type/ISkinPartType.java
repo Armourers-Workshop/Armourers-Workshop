@@ -78,5 +78,7 @@ public interface ISkinPartType {
     @SideOnly(Side.CLIENT)
     public IRectangle3D getItemRenderTextureBounds();
     
-    public boolean isOverridden(SkinProperties skinProps);
+    public boolean isModelOverridden(SkinProperties skinProps);
+    
+    public boolean isOverlayOverridden(SkinProperties skinProps);
 }
