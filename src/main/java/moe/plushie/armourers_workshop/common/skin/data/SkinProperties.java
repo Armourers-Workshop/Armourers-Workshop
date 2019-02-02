@@ -31,7 +31,7 @@ public class SkinProperties {
     public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_LEG_RIGHT = new SkinProperty<Boolean>("overrideModelLegRight", false);
     
     @Deprecated
-    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY = new SkinProperty<Boolean>("armourHideOverlay", true);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY = new SkinProperty<Boolean>("armourHideOverlay", false);
     public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_HEAD = new SkinProperty<Boolean>("hideOverlayHead", true);
     public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_CHEST = new SkinProperty<Boolean>("hideOverlayChest", true);
     public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_ARM_LEFT = new SkinProperty<Boolean>("hideOverlayArmLeft", true);
