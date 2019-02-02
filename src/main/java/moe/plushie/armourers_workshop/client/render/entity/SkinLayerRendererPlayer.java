@@ -108,6 +108,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
                 }
             }
         }
+
         SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
         if (skin != null) {
@@ -117,7 +118,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
             skinCap.hideArmRight = SkinProperties.PROP_MODEL_OVERRIDE_ARM_RIGHT.getValue(skin.getProperties());
             skinCap.hideLegLeft = SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.getValue(skin.getProperties());
             skinCap.hideLegRight = SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT.getValue(skin.getProperties());
-            
+
             skinCap.hideHeadOverlay = SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD.getValue(skin.getProperties());
             skinCap.hideChestOverlay = SkinProperties.PROP_MODEL_HIDE_OVERLAY_CHEST.getValue(skin.getProperties());
             skinCap.hideArmLeftOverlay = SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_LEFT.getValue(skin.getProperties());

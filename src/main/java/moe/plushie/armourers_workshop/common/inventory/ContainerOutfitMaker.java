@@ -23,7 +23,6 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperty;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityOutfitMaker;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -86,7 +85,6 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
                         for (int partIndex = 0; partIndex < skin.getSkinType().getSkinParts().size(); partIndex++) {
                             ISkinPartType part = skin.getSkinType().getSkinParts().get(partIndex);
                             if (part instanceof ISkinPartTypeTextured) {
-                                ModLogger.log(part.getRegistryName());
                                 ISkinPartTypeTextured texType = ((ISkinPartTypeTextured) part);
                                 paintData = paintPart(texType, paintData, skin.getPaintData());
                             }
