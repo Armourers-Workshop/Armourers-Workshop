@@ -22,9 +22,6 @@ public class Skin implements ISkin {
     
     public static final int FILE_VERSION = 13;
     
-    public static final String KEY_AUTHOR_NAME = "authorName";
-    public static final String KEY_AUTHOR_UUID = "authorUUID";
-    public static final String KEY_CUSTOM_NAME = "customName";
     public static final String KEY_FILE_NAME = "fileName";
     
     private SkinProperties properties;
@@ -231,11 +228,11 @@ public class Skin implements ISkin {
     }
     
     public String getCustomName() {
-        return properties.getPropertyString(KEY_CUSTOM_NAME, "");
+        return SkinProperties.PROP_ALL_CUSTOM_NAME.getValue(properties);
     }
     
     public String getAuthorName() {
-        return properties.getPropertyString(KEY_AUTHOR_NAME, "");
+        return SkinProperties.PROP_ALL_AUTHOR_NAME.getValue(properties);
     }
     
     public int getTotalCubes() {

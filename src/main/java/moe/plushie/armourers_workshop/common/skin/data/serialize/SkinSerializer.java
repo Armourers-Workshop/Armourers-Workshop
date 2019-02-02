@@ -106,8 +106,8 @@ public final class SkinSerializer {
             } else {
                 tags = "";
             }
-            properties.setProperty(Skin.KEY_AUTHOR_NAME, authorName);
-            properties.setProperty(Skin.KEY_CUSTOM_NAME, customName);
+            SkinProperties.PROP_ALL_AUTHOR_NAME.setValue(properties, authorName);
+            SkinProperties.PROP_ALL_CUSTOM_NAME.setValue(properties, customName);
             if (tags != null && !tags.equalsIgnoreCase("")) {
                 properties.setProperty(KEY_TAGS, tags);
             }
@@ -317,8 +317,8 @@ public final class SkinSerializer {
             } else {
                 tags = "";
             }
-            properties.setProperty(Skin.KEY_AUTHOR_NAME, authorName);
-            properties.setProperty(Skin.KEY_CUSTOM_NAME, customName);
+            SkinProperties.PROP_ALL_AUTHOR_NAME.setValue(properties, authorName);
+            SkinProperties.PROP_ALL_CUSTOM_NAME.setValue(properties, customName);
             if (tags != null && !tags.equalsIgnoreCase("")) {
                 properties.setProperty(KEY_TAGS, tags);
             }

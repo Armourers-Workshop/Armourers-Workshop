@@ -18,7 +18,6 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSetArmourerSkinProps;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSetArmourerSkinType;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientLoadArmour;
-import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
@@ -82,7 +81,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         
         textItemName = new GuiTextField(-1, fontRenderer, x + 8, y + 58, 158, 16);
         textItemName.setMaxStringLength(40);
-        textItemName.setText(tileEntity.getSkinProps().getPropertyString(Skin.KEY_CUSTOM_NAME, ""));
+        textItemName.setText(SkinProperties.PROP_ALL_CUSTOM_NAME.getValue(tileEntity.getSkinProps()));
         
         textFlavour = new GuiTextField(-1, fontRenderer, x + 8, y + 90, 158, 16);
         textFlavour.setMaxStringLength(40);
@@ -167,14 +166,14 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
             }
             
             boolean textChanged = false;
-            if (!sendTextName.equals(skinProps.getPropertyString(Skin.KEY_CUSTOM_NAME, ""))) {
+            if (!sendTextName.equals(SkinProperties.PROP_ALL_CUSTOM_NAME.getValue(skinProps))) {
                 textChanged = true;
             }
             if (!sendTextFlavour.equals(SkinProperties.PROP_ALL_FLAVOUR_TEXT.getValue(skinProps))) {
                 textChanged = true;
             }
             if (textChanged) {
-                skinProps.setProperty(Skin.KEY_CUSTOM_NAME, sendTextName);
+                SkinProperties.PROP_ALL_CUSTOM_NAME.setValue(skinProps, sendTextName);
                 SkinProperties.PROP_ALL_FLAVOUR_TEXT.setValue(skinProps, sendTextFlavour);
                 PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
             }
@@ -215,7 +214,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     
     public void resetValues(SkinProperties skinProperties) {
         resetting = true;
-        String newNameText = skinProperties.getPropertyString(Skin.KEY_CUSTOM_NAME, "");
+        String newNameText = SkinProperties.PROP_ALL_CUSTOM_NAME.getValue(skinProperties);
         if (!newNameText.equals("")) {
             int cur = textItemName.getCursorPosition();
             textItemName.setText(newNameText);

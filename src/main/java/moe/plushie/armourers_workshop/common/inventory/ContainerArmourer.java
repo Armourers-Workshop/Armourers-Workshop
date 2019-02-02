@@ -102,11 +102,11 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
 
         Skin skin = null;
         SkinProperties skinProps = new SkinProperties();
-        skinProps.setProperty(Skin.KEY_AUTHOR_NAME, player.getName());
+        SkinProperties.PROP_ALL_AUTHOR_NAME.setValue(skinProps, player.getName());
         if (player.getGameProfile() != null && player.getGameProfile().getId() != null) {
-            skinProps.setProperty(Skin.KEY_AUTHOR_UUID, player.getGameProfile().getId().toString());
+            SkinProperties.PROP_ALL_AUTHOR_UUID.setValue(skinProps, player.getGameProfile().getId().toString());
         }
-        skinProps.setProperty(Skin.KEY_CUSTOM_NAME, customName);
+        SkinProperties.PROP_ALL_CUSTOM_NAME.setValue(skinProps, customName);
 
         for (int i = 0; i < tileEntity.getSkinType().getProperties().size(); i++) {
             SkinProperty skinProp = (SkinProperty) tileEntity.getSkinType().getProperties().get(i);

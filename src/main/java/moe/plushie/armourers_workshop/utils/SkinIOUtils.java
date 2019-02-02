@@ -22,6 +22,7 @@ import moe.plushie.armourers_workshop.common.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.common.exception.NewerFileVersionException;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StringUtils;
@@ -293,7 +294,7 @@ public final class SkinIOUtils {
                 Skin skin = loadSkinFromFile(skinFile);
                 if (skin != null) {
                     String fileName = skin.getProperties().getPropertyString(Skin.KEY_FILE_NAME, null);
-                    String customName = skin.getProperties().getPropertyString(Skin.KEY_CUSTOM_NAME, null);
+                    String customName = SkinProperties.PROP_ALL_CUSTOM_NAME.getValue(skin.getProperties());
                     if (!StringUtils.isNullOrEmpty(fileName)) {
                         fileName = makeFileNameValid(fileName);
                         File newSkinFile = new File(recoverDir, fileName + SKIN_FILE_EXTENSION);
