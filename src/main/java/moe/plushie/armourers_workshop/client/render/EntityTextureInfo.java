@@ -207,7 +207,6 @@ public class EntityTextureInfo {
                                         if (!(iy < 4 & ix > 7 & ix < 12)) {
                                             continue;
                                         }
-
                                     }
                                 }
                                 // Make the players texture blank.

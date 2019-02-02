@@ -265,34 +265,52 @@ public final class ClientWardrobeHandler {
         // Hide parts of the player model.
         for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
             ModelPlayer modelPlayer = playerRender.getMainModel();
+            // Head
             if (skinCapability.hideHead) {
-                // Head
                 modelPlayer.bipedHead.isHidden = true;
+            }
+            if (skinCapability.hideHead | skinCapability.hideHeadOverlay) {
                 modelPlayer.bipedHeadwear.isHidden = true;
             }
+
+            // Chest
             if (skinCapability.hideChest) {
-                // Chest
                 modelPlayer.bipedBody.isHidden = true;
+
+            }
+            if (skinCapability.hideChest | skinCapability.hideChestOverlay) {
                 modelPlayer.bipedBodyWear.isHidden = true;
             }
+
+            // Left arm
             if (skinCapability.hideArmLeft) {
-                // Left arm
                 modelPlayer.bipedLeftArm.isHidden = true;
+            }
+            if (skinCapability.hideArmLeft | skinCapability.hideArmLeftOverlay) {
                 modelPlayer.bipedLeftArmwear.isHidden = true;
             }
+
+            // Right arm
             if (skinCapability.hideArmRight) {
-                // Right arm
                 modelPlayer.bipedRightArm.isHidden = true;
+            }
+            if (skinCapability.hideArmRight | skinCapability.hideArmRightOverlay) {
                 modelPlayer.bipedRightArmwear.isHidden = true;
             }
+
+            // Left leg
             if (skinCapability.hideLegLeft) {
-                // Left leg
                 modelPlayer.bipedLeftLeg.isHidden = true;
+            }
+            if (skinCapability.hideLegLeft | skinCapability.hideLegLeftOverlay) {
                 modelPlayer.bipedLeftLegwear.isHidden = true;
             }
+
+            // Right leg
             if (skinCapability.hideLegRight) {
-                // Right leg
                 modelPlayer.bipedRightLeg.isHidden = true;
+            }
+            if (skinCapability.hideLegRight | skinCapability.hideLegRightOverlay) {
                 modelPlayer.bipedRightLegwear.isHidden = true;
             }
         }
