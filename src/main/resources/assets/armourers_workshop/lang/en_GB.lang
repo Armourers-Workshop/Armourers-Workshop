@@ -104,6 +104,7 @@ item.armourers_workshop:skin-unlock.1.name=Chest Skin Slot Unlock
 item.armourers_workshop:skin-unlock.2.name=Legs Skin Slot Unlock
 item.armourers_workshop:skin-unlock.3.name=Feet Skin Slot Unlock
 item.armourers_workshop:skin-unlock.4.name=Wings Skin Slot Unlock
+item.armourers_workshop:skin-unlock.5.name=Outfit Skin Slot Unlock
 item.armourers_workshop:linking-tool.name=Linking Tool
 item.armourers_workshop:gift-sack.name=Gift Sack
 item.armourers_workshop:armour-container.name=Armour Container
@@ -136,6 +137,7 @@ item.armourers_workshop:skin-unlock.1.flavour=Unlocks 1 additional chest skin sl
 item.armourers_workshop:skin-unlock.2.flavour=Unlocks 1 additional leg skin slot in the wardrobe.
 item.armourers_workshop:skin-unlock.3.flavour=Unlocks 1 additional feet skin slot in the wardrobe.
 item.armourers_workshop:skin-unlock.4.flavour=Unlocks 1 additional wings skin slot in the wardrobe.
+item.armourers_workshop:skin-unlock.5.flavour=Unlocks 1 additional outfit skin slot in the wardrobe.
 item.armourers_workshop:linking-tool.flavour=Use to link usable blocks to block skins.%nFirst right click on a usable block then%nright click on a block skin to link them.
 
 
