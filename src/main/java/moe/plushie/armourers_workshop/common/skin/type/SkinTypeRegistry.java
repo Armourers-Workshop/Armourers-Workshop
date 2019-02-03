@@ -16,7 +16,6 @@ import moe.plushie.armourers_workshop.common.skin.type.bow.SkinBow;
 import moe.plushie.armourers_workshop.common.skin.type.chest.SkinChest;
 import moe.plushie.armourers_workshop.common.skin.type.feet.SkinFeet;
 import moe.plushie.armourers_workshop.common.skin.type.head.SkinHead;
-import moe.plushie.armourers_workshop.common.skin.type.horse.SkinHorse;
 import moe.plushie.armourers_workshop.common.skin.type.item.SkinItem;
 import moe.plushie.armourers_workshop.common.skin.type.legs.SkinLegs;
 import moe.plushie.armourers_workshop.common.skin.type.legs.SkinSkirt;
@@ -49,7 +48,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     public static ISkinType skinItem;
     
     public static ISkinType skinBlock;
-    public static ISkinType skinHorse;
+    //public static ISkinType skinHorse;
     public static ISkinType skinAdvanced;
     public static ISkinType skinOutfit;
     
@@ -90,7 +89,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         skinItem = new SkinItem("Item");
         
         skinBlock = new SkinBlock();
-        skinHorse = new SkinHorse();
+        //skinHorse = new SkinHorse();
         skinAdvanced = new SkinAdvanced();
         skinOutfit = new SkinOutfit(skinHead, skinChest, skinLegs, skinFeet, skinWings);
         
@@ -116,7 +115,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         registerSkin(skinItem);
         
         registerSkin(skinBlock);
-        registerSkin(skinHorse);
+        //registerSkin(skinHorse);
         registerSkin(skinAdvanced);
         registerSkin(skinOutfit);
         
