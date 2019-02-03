@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.client.gui.mannequin;
 
+import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
@@ -103,11 +104,13 @@ public class GuiMannequinTabInventory extends GuiTabPanel<GuiMannequin> {
                 INV_MAN_TEX_WIDTH, INV_MAN_TEX_HEIGHT,
                 4, zLevel);
         for (int i = 0; i < 5; i++) {
-            drawTexturedModalRect(
+            /*drawTexturedModalRect(
                     center - INV_PLAYER_TEX_WIDTH / 2 + INV_MAN_LEFT_PAD - 1, INV_MAN_TOP_PAD - 1 + i * INV_SLOT_SIZE,
                     25, 113,
-                    128, INV_SLOT_SIZE);
+                    128, INV_SLOT_SIZE);*/
         }
+        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(tileEntity.getName(), "unfinished"), center - INV_PLAYER_TEX_WIDTH / 2 + 5, 20, INV_PLAYER_TEX_WIDTH - 10, 0xFF3333);
+        
     }
     
     @Override

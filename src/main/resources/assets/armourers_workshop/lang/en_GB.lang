@@ -679,3 +679,6 @@ book.armourers_workshop:guideBook.credits.premade Skins=Premade Skins
 book.armourers_workshop:guideBook.credits.textures=Textures
 book.armourers_workshop:guideBook.credits.sound=Sound
 book.armourers_workshop:guideBook.credits.localisations=Localisations
+
+# Temp
+inventory.armourers_workshop:mannequin.unfinished=Mannequin equipment has not been implemented in 1.12.2 yet, please check back later.
