@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinPart;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
@@ -53,8 +51,8 @@ public class ModBlocks {
     public static Block dyeTable;
     public static Block hologramProjector;
     public static Block outfitMaker;
-    public static Block advancedSkinBuilder;
-    public static Block advancedSkinPart ;
+    //public static Block advancedSkinBuilder;
+    //public static Block advancedSkinPart ;
     
     public ModBlocks() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -78,8 +76,8 @@ public class ModBlocks {
         dyeTable = new BlockDyeTable();
         hologramProjector = new BlockHologramProjector();
         outfitMaker = new BlockOutfitMaker();
-        advancedSkinBuilder = new BlockAdvancedSkinBuilder();
-        advancedSkinPart = new BlockAdvancedSkinPart();
+        //advancedSkinBuilder = new BlockAdvancedSkinBuilder();
+        //advancedSkinPart = new BlockAdvancedSkinPart();
     }
     
 
@@ -116,8 +114,8 @@ public class ModBlocks {
         registerTileEntity(TileEntitySkinnableChild.class, LibBlockNames.SKINNABLE_CHILD);
         registerTileEntity(TileEntityHologramProjector.class, LibBlockNames.HOLOGRAM_PROJECTOR);
         registerTileEntity(TileEntityOutfitMaker.class, LibBlockNames.OUTFIT_MAKER);
-        registerTileEntity(TileEntityAdvancedSkinBuilder.class, LibBlockNames.ADVANCED_SKIN_BUILDER);
-        registerTileEntity(TileEntityAdvancedSkinPart.class, LibBlockNames.ADVANCED_SKIN_PART);
+        //registerTileEntity(TileEntityAdvancedSkinBuilder.class, LibBlockNames.ADVANCED_SKIN_BUILDER);
+        //registerTileEntity(TileEntityAdvancedSkinPart.class, LibBlockNames.ADVANCED_SKIN_PART);
     }
 
     private void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {
