@@ -331,9 +331,12 @@ inventory.armourers_workshop:skin-library.dialog.overwrite.title=Overwrite File
 inventory.armourers_workshop:skin-library.dialog.overwrite.close=Close
 inventory.armourers_workshop:skin-library.dialog.overwrite.ok=OK
 inventory.armourers_workshop:skin-library.dialog.overwrite.overwriteFile=Overwrite file "%s"?
+
+# Outfit Maker
 inventory.armourers_workshop:outfit-maker.save=Save Outfit
 inventory.armourers_workshop:outfit-maker.load=Load Outfit
-
+inventory.armourers_workshop:outfit-maker.skinName=Skin Name
+inventory.armourers_workshop:outfit-maker.skinFlavour=Flavour Text
 
 # Armourer
 inventory.armourers_workshop:armourer.label.itemName=Item Name:

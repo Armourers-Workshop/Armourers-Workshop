@@ -44,12 +44,12 @@ public class GuiOutfitMaker extends GuiContainer {
         textItemName = new GuiLabeledTextField(fontRenderer, getGuiLeft() + 8, getGuiTop() + 18, 158, 16);
         textItemName.setMaxStringLength(40);
         textItemName.setText(tileEntity.PROP_OUTFIT_NAME.get());
-        textItemName.setEmptyLabel("Skin name");
+        textItemName.setEmptyLabel(GuiHelper.getLocalizedControlName(tileEntity.getName(), "skinName"));
         
         textFlavour = new GuiLabeledTextField(fontRenderer, getGuiLeft() + 8, getGuiTop() + 38, 158, 16);
         textFlavour.setMaxStringLength(40);
         textFlavour.setText(tileEntity.PROP_OUTFIT_FLAVOUR.get());
-        textFlavour.setEmptyLabel("Flavour text");
+        textFlavour.setEmptyLabel(GuiHelper.getLocalizedControlName(tileEntity.getName(), "skinFlavour"));
         
         iconButtonLoad = new GuiIconButton(this, 0, getGuiLeft() + 6, getGuiTop() + 120, 20, 20, GuiHelper.getLocalizedControlName(tileEntity.getName(), "load"), TEXTURE).setIconLocation(176, 240, 16, 16);
         iconButtonSave = new GuiIconButton(this, 1, getGuiLeft() + getXSize() - 20 - 6, getGuiTop() + 120, 20, 20, GuiHelper.getLocalizedControlName(tileEntity.getName(), "save"), TEXTURE).setIconLocation(176, 224, 16, 16);
