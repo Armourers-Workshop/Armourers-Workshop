@@ -63,7 +63,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         int skinCount = 0;
         for (int i = 0; i < skinList.size(); i++) {
             ISkinType skinType = skinList.get(i);
-            if (!skinType.isHidden()) {
+            if (!skinType.isHidden() & skinType != SkinTypeRegistry.skinOutfit) {
                 String skinLocalizedName = str.getLocalizedSkinTypeName(skinType);
                 String skinRegistryName = skinType.getRegistryName();
                 DropDownItemSkin item = new DropDownItemSkin(skinLocalizedName, skinRegistryName, skinType.enabled(), skinType);
