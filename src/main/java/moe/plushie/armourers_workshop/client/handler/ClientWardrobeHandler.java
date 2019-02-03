@@ -80,19 +80,28 @@ public final class ClientWardrobeHandler {
         };
         
         ItemOverrideType overrideType = null;
+        ISkinType skinType = null;
+        
+        for (int i = 0; i < ItemOverrideType.values().length; i++) {
+            if (ModAddonManager.isOverrideItem(ItemOverrideType.values()[i], itemStack.getItem())) {
+                overrideType = ItemOverrideType.values()[i];
+                skinType = skinTypes[i];
+            }
+        }
+        
+        if (overrideType == null | skinType == null) {
+            return;
+        }
+        
         ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
+        
         if (descriptor == null) {
             IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
             if (skinCapability != null) {
-                for (int i = 0; i < ItemOverrideType.values().length; i++) {
-                    overrideType = ItemOverrideType.values()[i];
-                    if (ModAddonManager.isOverrideItem(overrideType, itemStack.getItem())) {
-                        
-                        ISkinDescriptor descriptorItem = skinCapability.getSkinDescriptor(skinTypes[i], 0);
-                        if (descriptorItem != null) {
-                            descriptor = descriptorItem;
-                            break;
-                        }
+                if (ModAddonManager.isOverrideItem(overrideType, itemStack.getItem())) {
+                    ISkinDescriptor descriptorItem = skinCapability.getSkinDescriptor(skinType, 0);
+                    if (descriptorItem != null) {
+                        descriptor = descriptorItem;
                     }
                 }
             }
