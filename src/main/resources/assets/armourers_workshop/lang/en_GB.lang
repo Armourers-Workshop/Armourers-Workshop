@@ -239,6 +239,7 @@ skinType.armourers:block.name=Block
 skinType.armourers:multiblock.name=Multiblock
 skinType.armourers:horse.name=Horse
 skinType.armourers:advanced.name=Advanced
+skinType.armourers:outfit.name=Outfit
 
 
 # Skin Part Types
