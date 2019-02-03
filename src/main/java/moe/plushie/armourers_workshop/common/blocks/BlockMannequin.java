@@ -14,8 +14,8 @@ import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.items.ItemDebugTool.IDebug;
 import moe.plushie.armourers_workshop.common.items.block.ItemBlockMannequin;
-import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
+import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import net.minecraft.block.Block;
@@ -116,7 +116,6 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         if (!worldIn.isRemote) {
             BlockUtils.dropInventoryBlocks(worldIn, pos);
-            //TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
         }
         super.breakBlock(worldIn, pos, state);
     }

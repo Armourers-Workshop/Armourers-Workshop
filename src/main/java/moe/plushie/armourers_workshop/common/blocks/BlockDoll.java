@@ -2,37 +2,53 @@ package moe.plushie.armourers_workshop.common.blocks;
 
 import java.util.Random;
 
+import com.mojang.authlib.GameProfile;
+
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.common.Contributors;
+import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
+import moe.plushie.armourers_workshop.utils.BlockUtils;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockDoll extends AbstractModBlockContainer {
 
     private static final String TAG_OWNER = "owner";
+    private static final String TAG_IMAGE_URL = "imageUrl";
+    
     private final boolean isValentins;
     private static final AxisAlignedBB AABB = new AxisAlignedBB(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
     
     public BlockDoll() {
-        super(LibBlockNames.DOLL, Material.ROCK, SoundType.METAL, !ConfigHandler.hideDollFromCreativeTabs);
+        super(LibBlockNames.DOLL, Material.CIRCUITS, SoundType.METAL, !ConfigHandler.hideDollFromCreativeTabs);
         setLightOpacity(0);
         //setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
         isValentins = ModHolidays.VALENTINES.isHolidayActive();
@@ -51,81 +67,79 @@ public class BlockDoll extends AbstractModBlockContainer {
         return result;
     }
     
-    /*
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int metadata) {
-        if (!world.isRemote) {
-            TileEntity te = world.getTileEntity(x, y, z);
-            if (te != null && te instanceof TileEntityMannequin) {
-                ItemStack dropStack = ((TileEntityMannequin)te).getDropStack();
-                UtilItems.spawnItemInWorld(world, x, y, z, dropStack);
-            }
-            BlockUtils.dropInventoryBlocks(world, x, y, z);
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        if (!worldIn.isRemote) {
+            BlockUtils.dropInventoryBlocks(worldIn, pos);
         }
-        super.breakBlock(world, x, y, z, block, metadata);
+        super.breakBlock(worldIn, pos, state);
     }
     
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-        TileEntity te = world.getTileEntity(x, y, z);
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        TileEntity te = worldIn.getTileEntity(pos);
         if (te != null && te instanceof TileEntityMannequin) {
-            int l = MathHelper.floor_double((double)(player.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
-            ((TileEntityMannequin)te).setRotation(l);
-            
-            if (stack.hasTagCompound()) {
-                NBTTagCompound compound = stack.getTagCompound();
-                GameProfile gameProfile = null;
-                if (compound.hasKey(TAG_OWNER, 10)) {
-                    gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER));
-                    ((TileEntityMannequin)te).setGameProfile(gameProfile);
+            int l = MathHelper.floor((double) (placer.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
+            ((TileEntityMannequin) te).PROP_ROTATION.set(l);
+            if (!worldIn.isRemote) {
+                if (stack.hasTagCompound()) {
+                    NBTTagCompound compound = stack.getTagCompound();
+                    GameProfile gameProfile = null;
+                    if (compound.hasKey(TAG_OWNER, 10)) {
+                        gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
+                        ((TileEntityMannequin) te).PROP_OWNER.set(gameProfile);
+                    }
+                    if (compound.hasKey(TAG_IMAGE_URL, Constants.NBT.TAG_STRING)) {
+                        ((TileEntityMannequin) te).PROP_IMAGE_URL.set(compound.getString(TAG_IMAGE_URL));
+                    }
                 }
             }
-            
         }
     }
-    */
-    /*
+    
     @SideOnly(Side.CLIENT)
     @Override
-    public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+        ParticleManager particleManager = Minecraft.getMinecraft().effectRenderer;
         if (isValentins) {
-            if (random.nextFloat() * 100 > 80) {
-                world.spawnParticle("heart", x + 0.2D + random.nextFloat() * 0.6F, y + 1D, z + 0.2D + random.nextFloat() * 0.6F, 0, 0, 0);
+            if (rand.nextFloat() * 100 > 75) {
+                Particle particle = particleManager.spawnEffectParticle(EnumParticleTypes.HEART.getParticleID(), pos.getX() - 0.2F + rand.nextFloat() * 0.6F, pos.getY(), pos.getZ() - 0.2F + rand.nextFloat() * 0.6F, 0, 0, 0, null);
+                Minecraft.getMinecraft().effectRenderer.addEffect(particle);
             }
         }
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity != null && tileEntity instanceof TileEntityMannequin) {
             TileEntityMannequin te = (TileEntityMannequin) tileEntity;
-            if (te.isRenderExtras() & te.isVisible()) {
-                Contributor contributor = Contributors.INSTANCE.getContributor(te.getGameProfile());
-                if (contributor != null) {
-                    Particle entityfx = new ParticleSpell(world,  x + random.nextFloat() * 1F, y, z + random.nextFloat() * 1F, 0, 0, 0);
-                    ((ParticleSpell)entityfx).setBaseSpellTextureIndex(144);
-                    entityfx.setRBGColorF((float)(contributor.r & 0xFF) / 255F, (float)(contributor.g & 0xFF) / 255F, (float)(contributor.b & 0xFF) / 255F);
-                    Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
+            if (te != null && te.PROP_RENDER_EXTRAS.get()) {
+                Contributor contributor = Contributors.INSTANCE.getContributor(te.PROP_OWNER.get());
+                if (contributor != null & te.PROP_VISIBLE.get()) {
+                    for (int i = 0; i < 6; i++) {
+                        Particle particle = particleManager.spawnEffectParticle(EnumParticleTypes.SPELL.getParticleID(), pos.getX() + rand.nextFloat() * 1F, pos.getY(), pos.getZ() + rand.nextFloat() * 1F, 0, 0, 0, null);
+                        particle.setRBGColorF((float) (contributor.r & 0xFF) / 255F, (float) (contributor.g & 0xFF) / 255F, (float) (contributor.b & 0xFF) / 255F);
+                        Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+                    }
                 }
             }
         }
     }
-    */
-    /*
+    
     @Override
-    public boolean rotateBlock(World world, int x, int y, int z, EnumFacing axis) {
+    public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
         if (world.isRemote) {
             return false;
         }
-        
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null && te instanceof TileEntityMannequin) {
-            int rotation = ((TileEntityMannequin)te).getRotation();
+        TileEntity te = world.getTileEntity(pos);
+        if (te != null  && te instanceof TileEntityMannequin) {
+            int rotation = ((TileEntityMannequin)te).PROP_ROTATION.get();
             rotation++;
             if (rotation > 15) {
                 rotation = 0;
             }
-            ((TileEntityMannequin)te).setRotation(rotation);
+            ((TileEntityMannequin)te).PROP_ROTATION.set(rotation);
         }
         return true;
     }
-    */
+    
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         ItemStack stack = new ItemStack(ModBlocks.doll, 1);
@@ -158,34 +172,16 @@ public class BlockDoll extends AbstractModBlockContainer {
     public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
         return true;
     }
-    /*
+    
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xHit, float yHit, float zHit) {
-        if (!player.canPlayerEdit(x, y, z, side, player.getCurrentEquippedItem())) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (!playerIn.canPlayerEdit(pos, facing, playerIn.getHeldItem(hand))) {
             return false;
         }
-        if (!world.isRemote) {
-            ItemStack stack = player.getCurrentEquippedItem();
-            if (stack != null && stack.getItem() == ModItems.mannequinTool) {
-                return false;
-            }
-            if (stack != null && stack.getItem() == Items.NAME_TAG) {
-                TileEntity te = world.getTileEntity(x, y, z);;
-                if (te != null && te instanceof TileEntityMannequin) {
-                    if (stack.getItem() == Items.NAME_TAG) {
-                        ((TileEntityMannequin)te).setOwner(player.getCurrentEquippedItem());
-                    }
-                }
-            } else {
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.instance, LibGuiIds.MANNEQUIN, world, x, y, z);
-            }
-        }
-        if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == ModItems.mannequinTool) {
-            return false;
-        }
+        openGui(playerIn, EnumGuiId.MANNEQUIN, worldIn, pos, state, facing);
         return true;
     }
-    */
+    
     @Override
     public int quantityDropped(IBlockState state, int fortune, Random random) {
         return 0;
