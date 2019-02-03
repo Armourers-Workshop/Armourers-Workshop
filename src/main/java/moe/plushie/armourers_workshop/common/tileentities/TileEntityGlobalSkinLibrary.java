@@ -20,7 +20,7 @@ public class TileEntityGlobalSkinLibrary extends TileEntity implements IButtonPr
     }
 
     @Override
-    public void buttonPressed(byte buttonId) {
+    public void buttonPressed(EntityPlayer player, byte buttonId) {
         if (buttonId == 0) {
             
         }

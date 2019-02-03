@@ -44,15 +44,15 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
                 SkinTypeRegistry.skinFeet,
                 SkinTypeRegistry.skinWings};
         
-        addPlayerSlots(8, 132);
+        addPlayerSlots(8, 158);
         
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinOutfit, tileEntity, 0, 8, 52));
-        addSlotToContainer(new SlotOutput(tileEntity, 1, 148, 52));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinOutfit, tileEntity, 0, 8, 88));
+        addSlotToContainer(new SlotOutput(tileEntity, 1, 148, 88));
         indexSkinsStart = getPlayerInvEndIndex() + 2;
         indexSkinsEnd = indexSkinsStart;
         for (int skinIndex = 0; skinIndex < skinTypes.length; skinIndex++) {
             for (int i = 0; i < TileEntityOutfitMaker.OUTFIT_ROWS; i++) {
-                addSlotToContainer(new SlotSkin(skinTypes[skinIndex], tileEntity, skinIndex + (i * TileEntityOutfitMaker.OUTFIT_SKINS) + 2, 36 + skinIndex * 20, 22 + i * 20));
+                addSlotToContainer(new SlotSkin(skinTypes[skinIndex], tileEntity, skinIndex + (i * TileEntityOutfitMaker.OUTFIT_SKINS) + 2, 36 + skinIndex * 20, 58 + i * 20));
                 indexSkinsEnd++;
             }
         }
@@ -62,7 +62,7 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
         
     }
     
-    private void saveOutfit() {
+    private void saveOutfit(EntityPlayer player) {
         ArrayList<SkinPart> skinParts = new ArrayList<SkinPart>();
         SkinProperties skinProperties = new SkinProperties();
         String partIndexs = "";
@@ -106,6 +106,12 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
         }
         if (!skinParts.isEmpty()) {
             SkinProperties.PROP_OUTFIT_PART_INDEXS.setValue(skinProperties, partIndexs);
+            SkinProperties.PROP_ALL_AUTHOR_NAME.setValue(skinProperties, player.getName());
+            if (player.getGameProfile() != null && player.getGameProfile().getId() != null) {
+                SkinProperties.PROP_ALL_AUTHOR_UUID.setValue(skinProperties, player.getGameProfile().getId().toString());
+            }
+            SkinProperties.PROP_ALL_CUSTOM_NAME.setValue(skinProperties, tileEntity.PROP_OUTFIT_NAME.get());
+            SkinProperties.PROP_ALL_FLAVOUR_TEXT.setValue(skinProperties, tileEntity.PROP_OUTFIT_FLAVOUR.get());
             Skin skin = new Skin(skinProperties, SkinTypeRegistry.skinOutfit, paintData, skinParts);
             CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile)null);
             ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinDescriptor(skin));
@@ -189,12 +195,12 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
     }
 
     @Override
-    public void buttonPressed(byte buttonId) {
+    public void buttonPressed(EntityPlayer player, byte buttonId) {
         if (buttonId == 0) {
             loadOutfit();
         }
         if (buttonId == 1) {
-            saveOutfit();
+            saveOutfit(player);
         }
     }
 }

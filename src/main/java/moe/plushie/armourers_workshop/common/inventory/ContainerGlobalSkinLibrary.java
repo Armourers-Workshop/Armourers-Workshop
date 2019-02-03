@@ -90,7 +90,7 @@ public class ContainerGlobalSkinLibrary extends ModTileContainer<TileEntityGloba
     }
 
     @Override
-    public void buttonPressed(byte buttonId) {
+    public void buttonPressed(EntityPlayer player, byte buttonId) {
         if (buttonId == 0) {
             if (!tileEntity.getWorld().isRemote) {
                 if (!getSlot(37).getHasStack()) {

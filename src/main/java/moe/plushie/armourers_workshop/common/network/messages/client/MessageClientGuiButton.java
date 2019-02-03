@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -65,13 +66,13 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
         }
         
         if (container instanceof IButtonPress) {
-            ((IButtonPress)container).buttonPressed(message.buttonId);
+            ((IButtonPress)container).buttonPressed(ctx.getServerHandler().player, message.buttonId);
         }
         
         return null;
     }
     
     public static interface IButtonPress {
-        public void buttonPressed(byte buttonId);
+        public void buttonPressed(EntityPlayer player, byte buttonId);
     }
 }
