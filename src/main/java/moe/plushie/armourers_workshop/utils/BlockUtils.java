@@ -86,7 +86,7 @@ public final class BlockUtils {
     
     public static void dropInventoryBlocks(World world, IInventory inventory, BlockPos pos) {
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            ItemStack stack = inventory.getStackInSlot(i);
+            ItemStack stack = inventory.removeStackFromSlot(i);
             if (stack != null) {
                 UtilItems.spawnItemInWorld(world, pos, stack);
             }
