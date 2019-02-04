@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandlerOverrides;
 import moe.plushie.armourers_workshop.common.config.ConfigSynchronizeHandler;
 import moe.plushie.armourers_workshop.common.crafting.CraftingManager;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
+import moe.plushie.armourers_workshop.common.inventory.ModContainer;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.CommonLibraryManager;
@@ -145,6 +146,10 @@ public class CommonProxy implements ILibraryCallback {
     }
     
     public void receivedAdminPanelCommand(EntityPlayer player, AdminPanelCommand command) {
+        if (!(player.openContainer instanceof ModContainer)) {
+            ModLogger.log(Level.WARN, String.format("Player '%s' tried to run the admin command '%s' but don't have the admin panel open.", player.getName(), command.toString()));
+            return;
+        }
         switch (command) {
         case RECOVER_SKINS:
             SkinIOUtils.recoverSkins(player);
@@ -167,7 +172,7 @@ public class CommonProxy implements ILibraryCallback {
 
     public void skinLibraryCommand(EntityPlayerMP player, SkinLibraryCommand command, LibraryFile file, boolean publicList) {
         if (!(player.openContainer instanceof ContainerSkinLibrary)) {
-            ModLogger.log(Level.WARN, String.format("Player '%s' tried to run the library command '%s' but don't have the library open.", player.getGameProfile().toString(), command.toString()));
+            ModLogger.log(Level.WARN, String.format("Player '%s' tried to run the library command '%s' but don't have the library open.", player.getName(), command.toString()));
             return;
         }
         switch (command) {
