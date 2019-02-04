@@ -7,12 +7,9 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
-import moe.plushie.armourers_workshop.common.ApiRegistrar;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
-import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
@@ -38,11 +35,6 @@ public class ModelSkinLegs extends AbstractModelSkin {
             }*/
         }
         
-        if (ClientProxy.isJrbaClientLoaded()) {
-            this.isChild = false;
-        }
-        
-        ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinLegs);
         RenderHelper.enableGUIStandardItemLighting();
         
         if (armourData.hasPaintData() & showSkinPaint) {
@@ -77,8 +69,6 @@ public class ModelSkinLegs extends AbstractModelSkin {
                 GlStateManager.translate(0.0F, 0.2F, 0.0F);
                 GL11.glTranslated(0, -3 * SCALE, 4 * SCALE);
             }
-            
-            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             if (part.getPartType().getPartName().equals("leftLeg")) {
                 renderLeftLeg(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);

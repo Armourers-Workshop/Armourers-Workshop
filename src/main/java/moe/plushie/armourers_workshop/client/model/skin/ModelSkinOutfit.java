@@ -8,13 +8,11 @@ import moe.plushie.armourers_workshop.api.common.skin.Point3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
-import moe.plushie.armourers_workshop.common.ApiRegistrar;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
-import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -35,10 +33,6 @@ public class ModelSkinOutfit extends AbstractModelSkin {
             EntityPlayer player = (EntityPlayer) entity;
             this.isSneak = player.isSneaking();
             this.isRiding = player.isRiding();
-        }
-
-        if (ClientProxy.isJrbaClientLoaded()) {
-            this.isChild = false;
         }
 
         RenderHelper.enableGUIStandardItemLighting();
@@ -79,9 +73,6 @@ public class ModelSkinOutfit extends AbstractModelSkin {
                 GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
                 GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
             }
-
-
-            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
 
             if (part.getPartType().getRegistryName().equals("armourers:head.base")) {
                 renderHead(part, SCALE, skinDye, extraColours, distance, doLodLoading);

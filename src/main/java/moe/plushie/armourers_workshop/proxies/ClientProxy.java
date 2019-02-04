@@ -115,10 +115,6 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
     
     public static int renderPass;
     
-    public static boolean isJrbaClientLoaded() {
-        return ModAddonManager.addonJBRAClient.isModLoaded();
-    }
-    
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
         for (int i = 0; i < ModBlocks.BLOCK_LIST.size(); i++) {

@@ -7,14 +7,11 @@ import org.apache.logging.log4j.Level;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.client.IArmourersClientManager;
 import moe.plushie.armourers_workshop.api.common.IArmourersCommonManager;
-import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
-import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.handler.EquipmentRenderHandler;
 import moe.plushie.armourers_workshop.common.handler.SkinDataHandler;
 import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
-import net.minecraft.entity.Entity;
 
 public final class ApiRegistrar {
     
@@ -49,11 +46,5 @@ public final class ApiRegistrar {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
-    
-    public void onRenderEquipment(Entity entity, ISkinType skinType) {
-    }
-    
-    public void onRenderEquipmentPart(Entity entity, ISkinPartType skinPart) {
     }
 }

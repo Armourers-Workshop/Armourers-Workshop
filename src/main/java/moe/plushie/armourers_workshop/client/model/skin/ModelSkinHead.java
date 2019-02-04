@@ -5,11 +5,9 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
-import moe.plushie.armourers_workshop.common.ApiRegistrar;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
-import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
@@ -36,7 +34,6 @@ public class ModelSkinHead extends AbstractModelSkin {
             }*/
         }
         
-        ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinHead);
         RenderHelper.enableGUIStandardItemLighting();
         
         if (skin.hasPaintData() & showSkinPaint) {
@@ -53,7 +50,6 @@ public class ModelSkinHead extends AbstractModelSkin {
         }
         
         if (skin.getParts().size() > 0) {
-            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, skin.getParts().get(0).getPartType());
             GL11.glPushMatrix();
             if (isChild) {
                 float f6 = 2.0F;

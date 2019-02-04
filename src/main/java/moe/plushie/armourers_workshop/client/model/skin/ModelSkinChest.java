@@ -7,13 +7,10 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
-import moe.plushie.armourers_workshop.common.ApiRegistrar;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
-import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
@@ -39,11 +36,6 @@ public class ModelSkinChest extends AbstractModelSkin {
             }*/
         }
         
-        if (ClientProxy.isJrbaClientLoaded()) {
-            this.isChild = false;
-        }
-        
-        ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinChest);
         RenderHelper.enableGUIStandardItemLighting();
         
         if (armourData.hasPaintData() & showSkinPaint) {
@@ -72,8 +64,6 @@ public class ModelSkinChest extends AbstractModelSkin {
                 GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
                 GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
             }
-
-            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             if (isSneak) {
                 GlStateManager.translate(0.0F, 0.2F, 0.0F);

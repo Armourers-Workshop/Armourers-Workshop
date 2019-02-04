@@ -6,14 +6,11 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
-import moe.plushie.armourers_workshop.common.ApiRegistrar;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
-import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
-import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -40,11 +37,6 @@ public class ModelSkinWings extends AbstractModelSkin  {
             }*/
         }
         
-        if (ClientProxy.isJrbaClientLoaded()) {
-            this.isChild = false;
-        }
-        
-        ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinSword);
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
             
@@ -59,7 +51,6 @@ public class ModelSkinWings extends AbstractModelSkin  {
                 GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
                 GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
             }
-            ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             double angle = 45D;
             

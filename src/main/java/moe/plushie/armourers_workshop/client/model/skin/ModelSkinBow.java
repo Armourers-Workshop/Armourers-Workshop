@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
-import moe.plushie.armourers_workshop.common.ApiRegistrar;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
-import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,12 +38,6 @@ public class ModelSkinBow extends AbstractModelSkin {
             */
         }
         
-        if (ClientProxy.isJrbaClientLoaded()) {
-            this.isChild = false;
-        }
-        
-        ApiRegistrar.INSTANCE.onRenderEquipment(entity, SkinTypeRegistry.skinBow);
-        
         if (frame > parts.size() - 1) {
             frame = parts.size() - 1;
         }
@@ -65,7 +56,6 @@ public class ModelSkinBow extends AbstractModelSkin {
             GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
         }
 
-        ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
         renderRightArm(part, SCALE, skinDye, extraColours, distance, doLodLoading);
         
         GL11.glPopMatrix();
