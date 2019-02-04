@@ -18,6 +18,7 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerOverrides;
 import moe.plushie.armourers_workshop.common.config.ConfigSynchronizeHandler;
 import moe.plushie.armourers_workshop.common.crafting.CraftingManager;
+import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
 import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.CommonLibraryManager;
@@ -165,6 +166,10 @@ public class CommonProxy implements ILibraryCallback {
     }
 
     public void skinLibraryCommand(EntityPlayerMP player, SkinLibraryCommand command, LibraryFile file, boolean publicList) {
+        if (!(player.openContainer instanceof ContainerSkinLibrary)) {
+            ModLogger.log(Level.WARN, String.format("Player '%s' tried to run the library command '%s' but don't have the library open.", player.getGameProfile().toString(), command.toString()));
+            return;
+        }
         switch (command) {
         case DELETE:
             if (!publicList) {
