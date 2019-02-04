@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop;
 
-import java.util.Map;
-
 import moe.plushie.armourers_workshop.common.ApiRegistrar;
 import moe.plushie.armourers_workshop.common.command.CommandArmourers;
 import moe.plushie.armourers_workshop.common.creativetab.CreativeTabArmourersWorkshop;
@@ -21,8 +19,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
-import net.minecraftforge.fml.common.network.NetworkCheckHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = LibModInfo.ID, name = LibModInfo.NAME, version = LibModInfo.MOD_VERSION, guiFactory = LibModInfo.GUI_FACTORY_CLASS, dependencies = LibModInfo.DEPENDENCIES, acceptedMinecraftVersions = LibModInfo.MC_VERSION, updateJSON = LibModInfo.UPDATE_URL)
 public class ArmourersWorkshop {
@@ -59,14 +55,6 @@ public class ArmourersWorkshop {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
-    }
-
-    @NetworkCheckHandler
-    public boolean checkRemoteVersions(Map<String, String> versions, Side side) {
-        if (versions.containsKey(LibModInfo.ID)) {
-            return true;
-        }
-        return false;
     }
 
     @EventHandler

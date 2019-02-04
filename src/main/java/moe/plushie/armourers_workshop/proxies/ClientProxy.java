@@ -113,8 +113,6 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
     public static PlayerTextureHandler playerTextureHandler;
     public static PlayerTextureDownloader playerTextureDownloader;
     
-    public static int renderPass;
-    
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
         for (int i = 0; i < ModBlocks.BLOCK_LIST.size(); i++) {
