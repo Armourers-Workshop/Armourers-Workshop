@@ -3,12 +3,14 @@ package moe.plushie.armourers_workshop.client.model.skin;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.client.model.ModelMannequin;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
+import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -146,5 +148,20 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
     
     protected void renderPart(SkinPart armourPart, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
         SkinPartRenderer.INSTANCE.renderPart(armourPart, scale, skinDye, extraColours, distance, doLodLoading);
+    }
+    
+    protected boolean skinHasHead(Skin skin) {
+        if (skin.getSkinType() == SkinTypeRegistry.skinHead) {
+            return true;
+        }
+        if (skin.getSkinType() == SkinTypeRegistry.skinOutfit) {
+            ISkinPartType headPart = SkinTypeRegistry.skinHead.getSkinParts().get(0);
+            for (int i = 0; i < skin.getPartCount(); i++) {
+                if (skin.getSubParts().get(i).getPartType() == headPart) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

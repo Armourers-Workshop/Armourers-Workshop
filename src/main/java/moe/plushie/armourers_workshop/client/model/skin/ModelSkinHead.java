@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
@@ -22,6 +23,19 @@ public class ModelSkinHead extends AbstractModelSkin {
     public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         if (skin == null) {
             return;
+        }
+        
+        // Fix to stop head skins rendering when using the Real First-Person Render mod.
+        if (entity != null && entity.equals(Minecraft.getMinecraft().player) & skinHasHead(skin)) {
+            if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+                StackTraceElement[] traceElements = Thread.currentThread().getStackTrace();
+                for (int i = 0; i < traceElements.length; i++) {
+                    StackTraceElement  traceElement = traceElements[i];
+                    if (traceElement.toString().contains("realrender") | traceElement.toString().contains("rfpf")) {
+                        return;
+                    }
+                }
+            }
         }
         
         if (entity != null && entity instanceof EntityPlayer) {

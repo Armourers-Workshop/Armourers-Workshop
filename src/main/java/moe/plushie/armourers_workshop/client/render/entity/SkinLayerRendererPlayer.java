@@ -96,21 +96,9 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
     }
     
     private void renderSkin(EntityPlayer entityPlayer, ISkinDescriptor skinDescriptor, EntitySkinCapability skinCap, IWardrobeCap wardrobe, ExtraColours extraColours, double distance, boolean doLodLoading) {
-        // Fix to stop head skins rendering when using the Real First-Person Render mod.
-        if (entityPlayer.equals(Minecraft.getMinecraft().player) & skinDescriptor.getIdentifier().getSkinType() == SkinTypeRegistry.skinHead) {
-            if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
-                StackTraceElement[] traceElements = Thread.currentThread().getStackTrace();
-                for (int i = 0; i < traceElements.length; i++) {
-                    StackTraceElement  traceElement = traceElements[i];
-                    if (traceElement.toString().contains("realrender")) {
-                        return;
-                    }
-                }
-            }
-        }
-
         SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
+        
         if (skin != null) {
             if (SkinProperties.PROP_MODEL_OVERRIDE_HEAD.getValue(skin.getProperties())) {
                 skinCap.hideHead = true;

@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
@@ -75,7 +76,23 @@ public class ModelSkinOutfit extends AbstractModelSkin {
             }
 
             if (part.getPartType().getRegistryName().equals("armourers:head.base")) {
-                renderHead(part, SCALE, skinDye, extraColours, distance, doLodLoading);
+                boolean doHead = true;
+                // Fix to stop head skins rendering when using the Real First-Person Render mod.
+                if (entity != null && entity.equals(Minecraft.getMinecraft().player)) {
+                    if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+                        StackTraceElement[] traceElements = Thread.currentThread().getStackTrace();
+                        for (int j = 0; j < traceElements.length; j++) {
+                            StackTraceElement  traceElement = traceElements[j];
+                            if (traceElement.toString().contains("realrender") | traceElement.toString().contains("rfpf")) {
+                                doHead = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (doHead) {
+                    renderHead(part, SCALE, skinDye, extraColours, distance, doLodLoading);
+                }
             }
             
             if (part.getPartType().getRegistryName().equals("armourers:chest.base")) {
