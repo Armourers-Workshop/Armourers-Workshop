@@ -17,7 +17,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiOutfitMaker extends GuiContainer {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.OUTFIT_MAKER);

@@ -9,6 +9,9 @@ public class ExtraColours {
     
     public static final Color COLOUR_SKIN_DEFAULT = Color.decode("#F9DFD2");
     public static final Color COLOUR_HAIR_DEFAULT = Color.decode("#804020");
+    public static final Color COLOUR_EYE_DEFAULT = Color.decode("#808080");
+    public static final Color COLOUR_MISC_DEFAULT = Color.decode("#808080");
+    
     public static final ExtraColours EMPTY_COLOUR;
     static {
         EMPTY_COLOUR = new ExtraColours();
@@ -30,8 +33,8 @@ public class ExtraColours {
         extraColoursArray = new int[ExtraColourType.values().length];
         setColour(ExtraColourType.SKIN, COLOUR_SKIN_DEFAULT.getRGB());
         setColour(ExtraColourType.HAIR, COLOUR_HAIR_DEFAULT.getRGB());
-        setColour(ExtraColourType.EYE, 0xFFFFFFFF);
-        setColour(ExtraColourType.MISC, 0xFFFFFFFF);
+        setColour(ExtraColourType.EYE, COLOUR_EYE_DEFAULT.getRGB());
+        setColour(ExtraColourType.MISC, COLOUR_MISC_DEFAULT.getRGB());
     }
 
     public int getColour(ExtraColourType type) {

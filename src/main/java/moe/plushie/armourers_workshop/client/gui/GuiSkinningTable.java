@@ -11,7 +11,10 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiSkinningTable extends GuiContainer {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibModInfo.ID, "textures/gui/skinning-table.png");
