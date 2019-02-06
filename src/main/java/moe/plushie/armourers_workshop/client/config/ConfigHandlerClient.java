@@ -50,7 +50,6 @@ public class ConfigHandlerClient {
     public static boolean skinPreLocFollowMouse = false;
     
     // Debug
-    public static boolean skinTextureRenderOverride;
     public static int skinRenderType;
     public static boolean showF3DebugInfo;
     public static boolean showSkinTooltipDebugInfo;
@@ -207,12 +206,6 @@ public class ConfigHandlerClient {
                 "1 = render event\n" +
                 "2 = model attachment\n" +
                 "3 = render layer");
-        
-        skinTextureRenderOverride = config
-                .get(CATEGORY_DEBUG, "skinTextureRenderOverride", false,
-                "Only enable this if you are having rendering issues with skins. (normally fixes lighting issues)\n"
-                + "This option is force on if Shaders Mod or Colored Lights mod is installed.")
-                .getBoolean(false);
         
         showF3DebugInfo = config
                 .get(CATEGORY_DEBUG, "showF3DebugInfo", true,

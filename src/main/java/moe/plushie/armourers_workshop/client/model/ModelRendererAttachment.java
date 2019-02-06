@@ -192,12 +192,12 @@ public class ModelRendererAttachment extends ModelRenderer {
             }
         }
         
-        if (ClientProxy.useSafeTextureRender()) {
+        //if (ClientProxy.useSafeTextureRender()) {
             if (player instanceof AbstractClientPlayer) {
                 AbstractClientPlayer clientPlayer = (AbstractClientPlayer) player;
                 Minecraft.getMinecraft().renderEngine.bindTexture(clientPlayer.getLocationSkin());
             }
-        }
+        //}
         mc.profiler.endSection();
     }
 }

@@ -38,7 +38,7 @@ public class ColouredFace {
         this.lodLevel = lodLevel;
     }
 
-    public void renderVertex(IRenderBuffer renderBuffer, ISkinDye skinDye, ExtraColours extraColours, ClientSkinPartData cspd, boolean useTexture) {
+    public void renderVertex(IRenderBuffer renderBuffer, ISkinDye skinDye, ExtraColours extraColours, ClientSkinPartData cspd) {
         byte r = this.r;
         byte g = this.g;
         byte b = this.b;
@@ -84,7 +84,7 @@ public class ColouredFace {
             }
         }
 
-        FaceRenderer.renderFace(x, y, z, r, g, b, a, face, useTexture, lodLevel);
+        FaceRenderer.renderFace(x, y, z, r, g, b, a, face, lodLevel);
     }
 
     /**

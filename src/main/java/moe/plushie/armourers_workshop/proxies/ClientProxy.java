@@ -216,7 +216,6 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
                 int bakeQueue = ModelBakery.INSTANCE.getBakingQueueSize();
                 String error = "\n";
                 error += "\t\tRender Type: " + getSkinRenderType().toString() + "\n";
-                error += "\t\tTexture Render: " + useSafeTextureRender() + "\n";
                 error += "\t\tBaking Queue: " + bakeQueue + "\n";
                 error += "\t\tRequest Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue) + "\n";
                 error += "\t\tTexture Painting: " + useTexturePainting() + "\n";
@@ -290,19 +289,6 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             */
             return SkinRenderType.RENDER_LAYER;
         }
-    }
-    
-    public static boolean useSafeTextureRender() {
-        if (ModAddonManager.addonShaders.isModLoaded()) {
-            return true;
-        }
-        if (ConfigHandlerClient.skinTextureRenderOverride) {
-            return true;
-        }
-        if (ModAddonManager.addonColoredLights.isModLoaded()) {
-            return true;
-        }
-        return true;
     }
     
     public static boolean useTexturePainting() {

@@ -53,7 +53,6 @@ public class DebugTextHandler {
                 event.getLeft().add("Request Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue));
                 event.getLeft().add("Texture Count: " + ClientSkinPaintCache.INSTANCE.size());
                 event.getLeft().add("Skin Render Type: " + ClientProxy.getSkinRenderType().toString().toLowerCase());
-                event.getLeft().add("Texture Render: " + ClientProxy.useSafeTextureRender());
                 event.getLeft().add("Display Lists: " + DisplayList.getListCount());
                 event.getLeft().add("Average Bake Time: " + ModelBakery.INSTANCE.getAverageBakeTime() + "ms");
                 /*

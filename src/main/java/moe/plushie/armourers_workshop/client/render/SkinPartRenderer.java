@@ -63,11 +63,7 @@ public class SkinPartRenderer extends ModelBase {
             }
         }
         
-        if (ClientProxy.useSafeTextureRender()) {
-            mc.renderEngine.bindTexture(texture);
-        } else {
-            GlStateManager.disableTexture2D();
-        }
+        mc.renderEngine.bindTexture(texture);
         
         int startIndex = 0;
         int endIndex = 0;
@@ -128,10 +124,6 @@ public class SkinPartRenderer extends ModelBase {
             }
         }
         
-        if (!ClientProxy.useSafeTextureRender()) {
-            GlStateManager.enableTexture2D();
-        }
-        
         GlStateManager.resetColor();
         GlStateManager.color(1F, 1F, 1F, 1F);
         //mc.profiler.endSection();
@@ -142,7 +134,7 @@ public class SkinPartRenderer extends ModelBase {
         renderBuffer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         for (int i = 0; i < vertexList.size(); i++) {
             ColouredFace cVert = vertexList.get(i);
-            cVert.renderVertex(renderBuffer, skinDye, extraColours, cspd, ClientProxy.useSafeTextureRender());
+            cVert.renderVertex(renderBuffer, skinDye, extraColours, cspd);
         }
         renderBuffer.draw();
     }

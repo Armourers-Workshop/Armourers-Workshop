@@ -23,166 +23,156 @@ public class FaceRenderer {
     //West face     (1.0, 0.0, 0.0)
     //East face     (-1.0, 0.0, 0.0)
     
-    public static void renderFace(double x, double y, double z, byte r, byte g, byte b, byte a, byte face, boolean textured, byte lodLevel) {
+    public static void renderFace(double x, double y, double z, byte r, byte g, byte b, byte a, byte face, byte lodLevel) {
         if (face == 0) {
-            renderNegYFace(x, y, z, r, g, b, a, textured, SCALE * lodLevel);
+            renderNegYFace(x, y, z, r, g, b, a, SCALE * lodLevel);
         }
         if (face == 1) {
-            renderPosYFace(x, y, z, r, g, b, a, textured, SCALE * lodLevel);
+            renderPosYFace(x, y, z, r, g, b, a, SCALE * lodLevel);
         }
         if (face == 2) {
-            renderNegZFace(x, y, z, r, g, b, a, textured, SCALE * lodLevel);
+            renderNegZFace(x, y, z, r, g, b, a, SCALE * lodLevel);
         }
         if (face == 3) {
-            renderPosZFace(x, y, z, r, g, b, a, textured, SCALE * lodLevel);
+            renderPosZFace(x, y, z, r, g, b, a, SCALE * lodLevel);
         }
         if (face == 4) {
-            renderNegXFace(x, y, z, r, g, b, a, textured, SCALE * lodLevel);
+            renderNegXFace(x, y, z, r, g, b, a, SCALE * lodLevel);
         }
         if (face == 5) {
-            renderPosXFace(x, y, z, r, g, b, a, textured, SCALE * lodLevel);
+            renderPosXFace(x, y, z, r, g, b, a, SCALE * lodLevel);
         }
     }
     
-    public static void renderPosXFace(double x, double y, double z, byte r, byte g, byte b, byte a, boolean textured, float scale) {
-        addVertex(x * SCALE, y * SCALE, z * SCALE + scale, 0, 0, textured);
+    public static void renderPosXFace(double x, double y, double z, byte r, byte g, byte b, byte a, float scale) {
+        BUF.addVertexWithUV(x * SCALE, y * SCALE, z * SCALE + scale, 0, 0);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(-1F, 0F, 0F);
         BUF.endVertex();
         
-        addVertex(x * SCALE, y * SCALE + scale, z * SCALE + scale, 0, 1, textured);
+        BUF.addVertexWithUV(x * SCALE, y * SCALE + scale, z * SCALE + scale, 0, 1);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(-1F, 0F, 0F);
         BUF.endVertex();
         
-        addVertex(x * SCALE, y * SCALE + scale, z * SCALE, 1, 1, textured);
+        BUF.addVertexWithUV(x * SCALE, y * SCALE + scale, z * SCALE, 1, 1);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(-1F, 0F, 0F);
         BUF.endVertex();
         
-        addVertex(x * SCALE, y * SCALE, z * SCALE, 1, 0, textured);
+        BUF.addVertexWithUV(x * SCALE, y * SCALE, z * SCALE, 1, 0);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(-1F, 0F, 0F);
         BUF.endVertex();
     }
     
-    public static void renderNegXFace(double x, double y, double z, byte r, byte g, byte b, byte a, boolean textured, float scale) {
-        addVertex(x * SCALE + scale, y * SCALE, z * SCALE, 0, 0, textured);
+    public static void renderNegXFace(double x, double y, double z, byte r, byte g, byte b, byte a, float scale) {
+        BUF.addVertexWithUV(x * SCALE + scale, y * SCALE, z * SCALE, 0, 0);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(1F, 0F, 0F);
         BUF.endVertex();
         
-        addVertex(x * SCALE + scale, y * SCALE + scale, z * SCALE, 0, 1, textured);
+        BUF.addVertexWithUV(x * SCALE + scale, y * SCALE + scale, z * SCALE, 0, 1);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(1F, 0F, 0F);
         BUF.endVertex();
         
-        addVertex(x * SCALE + scale, y * SCALE + scale, z * SCALE + scale, 1, 1, textured);
+        BUF.addVertexWithUV(x * SCALE + scale, y * SCALE + scale, z * SCALE + scale, 1, 1);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(1F, 0F, 0F);
         BUF.endVertex();
         
-        addVertex(x * SCALE + scale, y * SCALE, z * SCALE + scale, 1, 0, textured);
+        BUF.addVertexWithUV(x * SCALE + scale, y * SCALE, z * SCALE + scale, 1, 0);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(1F, 0F, 0F);
         BUF.endVertex();
     }
     
-    public static void renderPosYFace(double x, double y, double z, byte r, byte g, byte b, byte a, boolean textured, float scale) {
-        addVertex(x * SCALE, y * SCALE, z * SCALE + scale , 0 ,0, textured);
+    public static void renderPosYFace(double x, double y, double z, byte r, byte g, byte b, byte a, float scale) {
+        BUF.addVertexWithUV(x * SCALE, y * SCALE, z * SCALE + scale , 0 ,0);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, -1F, 0F);
         BUF.endVertex();
         
-        addVertex(x * SCALE, y * SCALE, z * SCALE , 0, 1, textured);
+        BUF.addVertexWithUV(x * SCALE, y * SCALE, z * SCALE , 0, 1);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, -1F, 0F);
         BUF.endVertex();
         
-        addVertex(x * SCALE + scale, y * SCALE, z * SCALE, 1, 1, textured);
+        BUF.addVertexWithUV(x * SCALE + scale, y * SCALE, z * SCALE, 1, 1);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, -1F, 0F);
         BUF.endVertex();
         
-        addVertex(x * SCALE + scale, y * SCALE, z * SCALE + scale, 1, 0, textured);
+        BUF.addVertexWithUV(x * SCALE + scale, y * SCALE, z * SCALE + scale, 1, 0);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, -1F, 0F);
         BUF.endVertex();
     }
     
-    public static void renderNegYFace(double x, double y, double z, byte r, byte g, byte b, byte a, boolean textured, float scale) {
-        addVertex(x * SCALE + scale, y * SCALE + scale, z * SCALE + scale, 1, 1, textured);
+    public static void renderNegYFace(double x, double y, double z, byte r, byte g, byte b, byte a, float scale) {
+        BUF.addVertexWithUV(x * SCALE + scale, y * SCALE + scale, z * SCALE + scale, 1, 1);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, 1F, 0F);
         BUF.endVertex();
         
-        addVertex(x * SCALE + scale, y * SCALE + scale, z * SCALE, 1, 0, textured);
+        BUF.addVertexWithUV(x * SCALE + scale, y * SCALE + scale, z * SCALE, 1, 0);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, 1F, 0F);
         BUF.endVertex();
         
-        addVertex(x * SCALE, y * SCALE + scale, z * SCALE , 0, 0, textured);
+        BUF.addVertexWithUV(x * SCALE, y * SCALE + scale, z * SCALE , 0, 0);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, 1F, 0F);
         BUF.endVertex();
         
-        addVertex(x * SCALE, y * SCALE + scale, z * SCALE + scale , 0 ,1, textured);
+        BUF.addVertexWithUV(x * SCALE, y * SCALE + scale, z * SCALE + scale , 0 ,1);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, 1F, 0F);
         BUF.endVertex();
     }
     
-    public static void renderPosZFace(double x, double y, double z, byte r, byte g, byte b, byte a, boolean textured, float scale) {
-        addVertex(x * SCALE + scale, y * SCALE, z * SCALE + scale, 0, 0, textured);
+    public static void renderPosZFace(double x, double y, double z, byte r, byte g, byte b, byte a, float scale) {
+        BUF.addVertexWithUV(x * SCALE + scale, y * SCALE, z * SCALE + scale, 0, 0);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, 0F, 1F);
         BUF.endVertex();
         
-        addVertex(x * SCALE + scale, y * SCALE + scale, z * SCALE + scale, 0, 1, textured);
+        BUF.addVertexWithUV(x * SCALE + scale, y * SCALE + scale, z * SCALE + scale, 0, 1);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, 0F, 1F);
         BUF.endVertex();
         
-        addVertex(x * SCALE, y * SCALE + scale, z * SCALE + scale, 1, 1, textured);
+        BUF.addVertexWithUV(x * SCALE, y * SCALE + scale, z * SCALE + scale, 1, 1);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, 0F, 1F);
         BUF.endVertex();
         
-        addVertex(x * SCALE, y * SCALE, z * SCALE + scale, 1, 0, textured);
+        BUF.addVertexWithUV(x * SCALE, y * SCALE, z * SCALE + scale, 1, 0);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, 0F, 1F);
         BUF.endVertex();
     }
     
-    public static void renderNegZFace(double x, double y, double z, byte r, byte g, byte b, byte a, boolean textured, float scale) {
-        addVertex(x * SCALE, y * SCALE, z * SCALE, 0, 0, textured);
+    public static void renderNegZFace(double x, double y, double z, byte r, byte g, byte b, byte a, float scale) {
+        BUF.addVertexWithUV(x * SCALE, y * SCALE, z * SCALE, 0, 0);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, 0F, -1F);
         BUF.endVertex();
         
-        addVertex(x * SCALE, y * SCALE + scale, z * SCALE, 0, 1, textured);
+        BUF.addVertexWithUV(x * SCALE, y * SCALE + scale, z * SCALE, 0, 1);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, 0F, -1F);
         BUF.endVertex();
         
-        addVertex(x * SCALE + scale, y * SCALE + scale, z * SCALE, 1, 1, textured);
+        BUF.addVertexWithUV(x * SCALE + scale, y * SCALE + scale, z * SCALE, 1, 1);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, 0F, -1F);
         BUF.endVertex();
         
-        addVertex(x * SCALE + scale, y * SCALE, z * SCALE, 1, 0, textured);
+        BUF.addVertexWithUV(x * SCALE + scale, y * SCALE, z * SCALE, 1, 0);
         BUF.setColourRGBA_B(r, g, b, a);
         BUF.setNormal(0F, 0F, -1F);
         BUF.endVertex();
-    }
-    
-    private static void addVertex(double x, double y, double z, double u, double v, boolean textured) {
-        if (textured) {
-            BUF.addVertexWithUV(x, y, z, u, v);
-        } else {
-            BUF.addVertexWithUV(x, y, z, u, v);
-            //BUF.addVertex(x, y, z);
-            //BUF.setTextureUV(0, 0);
-        }
     }
 }
