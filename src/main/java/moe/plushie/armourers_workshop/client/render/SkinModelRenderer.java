@@ -136,6 +136,21 @@ public final class SkinModelRenderer {
                 }
             }
         }
+        if (!limitLimbs) {
+            for (int i = 0; i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinOutfit); i++) {
+                ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(SkinTypeRegistry.skinOutfit, i);
+                if (skinDescriptor != null) {
+                    Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
+                    if (skin != null) {
+                        if(SkinProperties.PROP_MODEL_LEGS_LIMIT_LIMBS.getValue(skin.getProperties())) {
+                        	limitLimbs = true;
+                        	break;
+                        }
+                    }
+                }
+            }
+        }
+        
         return limitLimbs;
     }
     
