@@ -87,13 +87,13 @@ public class SkinnableEntityPlayer extends SkinnableEntity {
     @Override
     public int getSlotsForSkinType(ISkinType skinType) {
         if (skinType.getVanillaArmourSlotId() != -1) {
-            return 8;
+            return 10;
         }
         if (skinType == SkinTypeRegistry.skinWings) {
-            return 8;
+            return 10;
         }
         if (skinType == SkinTypeRegistry.skinOutfit) {
-            return 8;
+            return 10;
         }
         return 1;
     }

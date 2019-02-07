@@ -4,19 +4,17 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
-import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiTabWardrobeSkins extends GuiTabPanel {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE);
+    //private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE);
     
     public GuiTabWardrobeSkins(int tabId, GuiScreen parent) {
         super(tabId, parent, false);
@@ -27,10 +25,10 @@ public class GuiTabWardrobeSkins extends GuiTabPanel {
         GL11.glColor4f(1, 1, 1, 1);
         
         //Top half of GUI. (active tab)
-        this.drawTexturedModalRect(this.x, this.y, 0, 0, 236, 151);
+        //this.drawTexturedModalRect(this.x, this.y, 0, 0, 236, 151);
         
         //Bottom half of GUI. (player inventory)
-        this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
+        //this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
 
         
         int sloImageSize = 18;

@@ -28,7 +28,7 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventoryCa
     @CapabilityInject(IEntitySkinCapability.class)
     public static final Capability<IEntitySkinCapability> ENTITY_SKIN_CAP = null;
 
-    public static final int MAX_SLOTS_PER_SKIN_TYPE = 8;
+    public static final int MAX_SLOTS_PER_SKIN_TYPE = 10;
     
     private final Entity entity;
     private ISkinnableEntity skinnableEntity;

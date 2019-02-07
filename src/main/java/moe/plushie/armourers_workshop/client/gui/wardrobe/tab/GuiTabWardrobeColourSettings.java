@@ -30,8 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE);
-    private static final ResourceLocation TEXTURE_PALETTE = new ResourceLocation(LibGuiResources.WARDROBE_PALETTE);
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE_2);
     
     private EntityPlayer entityPlayer;
     private IEntitySkinCapability skinCapability;
@@ -71,17 +70,17 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
         
-        buttonSkinSelect = new GuiIconButton(parent, 0, 70 + 18, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectSkin"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
-        buttonSkinAuto = new GuiIconButton(parent, 0, 70 + 40, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoSkin"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
+        buttonSkinSelect = new GuiIconButton(parent, 0, 83 + 18, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectSkin"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
+        buttonSkinAuto = new GuiIconButton(parent, 0, 83 + 40, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoSkin"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
         
-        buttonHairSelect = new GuiIconButton(parent, 0, 146 + 18, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectHair"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
-        buttonHairAuto = new GuiIconButton(parent, 0, 146 + 40, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoHair"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
+        buttonHairSelect = new GuiIconButton(parent, 0, 159 + 18, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectHair"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
+        buttonHairAuto = new GuiIconButton(parent, 0, 159 + 40, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoHair"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
         
         
-        buttonEyeSelect = new GuiIconButton(parent, 0, 70 + 18, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectEye"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
-        buttonEyeAuto = new GuiIconButton(parent, 0, 70 + 40, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoEye"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
+        buttonEyeSelect = new GuiIconButton(parent, 0, 83 + 18, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectEye"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
+        buttonEyeAuto = new GuiIconButton(parent, 0, 83 + 40, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoEye"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
         
-        buttonMiscSelect = new GuiIconButton(parent, 0, 146 + 18, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectAcc"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
+        buttonMiscSelect = new GuiIconButton(parent, 0, 159 + 18, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectAcc"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
         
         buttonList.add(buttonSkinSelect);
         buttonList.add(buttonSkinAuto);
@@ -162,26 +161,26 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         GlStateManager.color(1F, 1F, 1F, 1F);
         
         //Top half of GUI. (active tab)
-        this.drawTexturedModalRect(this.x, this.y, 0, 0, 236, 151);
+        //this.drawTexturedModalRect(this.x, this.y, 0, 0, 236, 151);
         
         //Bottom half of GUI. (player inventory)
-        this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
+        //this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
         
         // Skin colour display
-        drawColourDisplay(70, 38, colourSkin);
+        drawColourDisplay(83, 38, colourSkin);
         
         // Hair colour display
-        drawColourDisplay(146, 38, colourHair);
+        drawColourDisplay(159, 38, colourHair);
         
         // Eye colour display
-        drawColourDisplay(70, 70, colourEye);
+        drawColourDisplay(83, 70, colourEye);
         
         // Acc colour display
-        drawColourDisplay(146, 70, colourMisc);
+        drawColourDisplay(159, 70, colourMisc);
         
         // Palette
-        mc.renderEngine.bindTexture(TEXTURE_PALETTE);
-        this.drawTexturedModalRect(this.x + 70, this.y + 89, 0, 0, 128, 54);
+        mc.renderEngine.bindTexture(TEXTURE);
+        this.drawTexturedModalRect(this.x + 83, this.y + 88, 22, 0, 128, 56);
     }
     
     private void drawColourDisplay(int x, int y, Color colour) {
@@ -205,11 +204,11 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         //String labelSkinOverride = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.skinOverride");
         //this.fontRendererObj.drawString(labelSkinOverride + ":", 165, 18, 4210752); 
         
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.skinColour") + ":", 70, 26, 4210752); 
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.hairColour") + ":", 146, 26, 4210752); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.skinColour") + ":", 83, 26, 4210752); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.hairColour") + ":", 159, 26, 4210752); 
         
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 70, 58, 4210752); 
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.miscColour") + ":", 146, 58, 4210752); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 83, 58, 4210752); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.miscColour") + ":", 159, 58, 4210752); 
         
         getColours();
         

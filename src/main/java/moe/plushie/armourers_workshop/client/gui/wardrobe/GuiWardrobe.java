@@ -42,7 +42,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiWardrobe extends GuiTabbed {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE);
+    private static final ResourceLocation TEXTURE_1 = new ResourceLocation(LibGuiResources.WARDROBE_1);
+    private static final ResourceLocation TEXTURE_2 = new ResourceLocation(LibGuiResources.WARDROBE_2);
     private static final ResourceLocation TEXTURE_TAB = new ResourceLocation(LibGuiResources.WARDROBE_TABS);
     private static final String GUI_NAME = "wardrobe";
     
@@ -68,7 +69,7 @@ public class GuiWardrobe extends GuiTabbed {
         super(new ContainerSkinWardrobe(inventory, skinCapability, wardrobeCapability), false, TEXTURE_TAB);
         
         // Tab size 21
-        this.xSize = 236;
+        this.xSize = 278;
         this.ySize = 240;
         
         this.player = inventory.player;
@@ -181,27 +182,13 @@ public class GuiWardrobe extends GuiTabbed {
     }
     
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        // Title label.
-        GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, GUI_NAME);
-        for (int i = 0; i < tabList.size(); i++) {
-            GuiTabPanel tab = tabList.get(i);
-            if (tab.getTabId() == getActiveTab()) {
-                tab.drawForegroundLayer(mouseX, mouseY, 0);
-            }
-        }
-        // Player inventory label.
-        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 36, this.ySize - 96 + 2, 4210752);
-        GL11.glPushMatrix();
-        GL11.glTranslatef(-guiLeft, -guiTop, 0F);
-        tabController.drawHoverText(mc, mouseX, mouseY);
-        GL11.glPopMatrix();
-    }
-
-    @Override
     protected void drawGuiContainerBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(TEXTURE);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        mc.renderEngine.bindTexture(TEXTURE_1);
+        this.drawTexturedModalRect(getGuiLeft(), getGuiTop(), 0, 0, 256, 240);
+        mc.renderEngine.bindTexture(TEXTURE_2);
+        this.drawTexturedModalRect(getGuiLeft() + 256, getGuiTop(), 0, 0, 22, 151);
+        
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == getActiveTab()) {
@@ -219,6 +206,25 @@ public class GuiWardrobe extends GuiTabbed {
         }
         lastMouseX = mouseX;
         lastMouseY = mouseY;
+    }
+    
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+        // Title label.
+        GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, GUI_NAME);
+        for (int i = 0; i < tabList.size(); i++) {
+            GuiTabPanel tab = tabList.get(i);
+            if (tab.getTabId() == getActiveTab()) {
+                tab.drawForegroundLayer(mouseX, mouseY, 0);
+            }
+        }
+        // Player inventory label.
+        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 58, this.ySize - 96 + 2, 4210752);
+        GL11.glPushMatrix();
+        GL11.glTranslatef(-guiLeft, -guiTop, 0F);
+        tabController.drawHoverText(mc, mouseX, mouseY);
+        GL11.glPopMatrix();
     }
     
     @Override
@@ -245,8 +251,8 @@ public class GuiWardrobe extends GuiTabbed {
     public Color drawPlayerPreview(int x, int y, int mouseX, int mouseY, boolean selectingColour) {
         Color colour = new Color(255, 255, 255);
         // 3D player preview
-        float boxX = x + 36.5F;
-        float boxY = y + 100F;
+        float boxX = x + 42.5F;
+        float boxY = y + 125F;
         float lookX = boxX - mouseX;
         float lookY = boxY - 50 - mouseY;
         
@@ -254,20 +260,20 @@ public class GuiWardrobe extends GuiTabbed {
         /*
         drawGradientRect(
                 x + 8,
-                y + 18,
-                x + 8 + 57,
-                y + 18 + 92,
-                0xFFFFFFFF, 0xFFFFFFFF);
+                y + 27,
+                x + 8 + 71,
+                y + 27 + 111,
+                0x88FFFFFF, 0x88FFFFDD);
         */
         boolean overPlayerBox = false;
-        if (mouseX >= x + 8 & mouseX < x + 8 + 57) {
-            if (mouseY >= y + 27 & mouseY < y + 27 + 92) {
+        if (mouseX >= x + 8 & mouseX < x + 8 + 71) {
+            if (mouseY >= y + 27 & mouseY < y + 27 + 111) {
                 overPlayerBox = true;
             }
         }
         
         if (!overPlayerBox) {
-            ModRenderHelper.enableScissorScaled(x + 8, y + 27, 57, 92);
+            ModRenderHelper.enableScissorScaled(x + 8, y + 27, 71, 111);
         }
         
         
@@ -282,10 +288,10 @@ public class GuiWardrobe extends GuiTabbed {
         GL11.glRotatef(playerRotation, 0, 1, 0);
         GL11.glTranslatef(0, 0, -50);
         if (selectingColour) {
-            renderEntityWithoutLighting(0, 0, 35, 0, 0, (EntityLivingBase) skinCapability.getEntity());
+            renderEntityWithoutLighting(0, 0, 45, 0, 0, (EntityLivingBase) skinCapability.getEntity());
             colour = getColourAtPos(Mouse.getX(), Mouse.getY());
         }
-        GuiInventory.drawEntityOnScreen(0, 0, 35, 0, 0, (EntityLivingBase) skinCapability.getEntity());
+        GuiInventory.drawEntityOnScreen(0, 0, 45, 0, 0, (EntityLivingBase) skinCapability.getEntity());
         
         GlStateManager.popAttrib();
         GlStateManager.popMatrix();
