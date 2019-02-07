@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Level;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.client.IArmourersClientManager;
 import moe.plushie.armourers_workshop.api.common.IArmourersCommonManager;
-import moe.plushie.armourers_workshop.client.handler.EquipmentRenderHandler;
 import moe.plushie.armourers_workshop.common.handler.SkinDataHandler;
 import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -37,7 +36,7 @@ public final class ApiRegistrar {
                 }
                 ModLogger.log(String.format("Loading %s API addon for %s", "render manager", modName));
                 equipmentRenderManagers.put(modName, ((IArmourersClientManager)classObject)) ;
-                ((IArmourersClientManager)classObject).onLoad(EquipmentRenderHandler.INSTANCE);
+                //((IArmourersClientManager)classObject).onLoad(EquipmentRenderHandler.INSTANCE);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
