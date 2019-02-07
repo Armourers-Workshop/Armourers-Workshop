@@ -15,8 +15,6 @@ public class ItemTooltipHandler {
         MinecraftForge.EVENT_BUS.register(this);
     }
     
-    
-    
     @SubscribeEvent
     public void onItemTooltipEvent (ItemTooltipEvent event) {
         if (event.getItemStack() == ItemStack.EMPTY) {
@@ -24,5 +22,4 @@ public class ItemTooltipHandler {
         }
         ItemSkin.addTooltipToSkinItem(event.getItemStack(), event.getEntityPlayer(), event.getToolTip(), event.getFlags());
     }
-    
 }
