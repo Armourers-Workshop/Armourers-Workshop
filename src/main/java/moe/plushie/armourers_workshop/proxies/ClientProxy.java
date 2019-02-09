@@ -13,6 +13,7 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
+import moe.plushie.armourers_workshop.client.gui.GuiResourceManager;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.handler.BlockHighlightRenderHandler;
 import moe.plushie.armourers_workshop.client.handler.ClientWardrobeHandler;
@@ -82,6 +83,8 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -142,6 +145,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         
         enableCrossModSupport();
         new RehostedJarHandler(event.getSourceFile(), "Armourers-Workshop-" + LibModInfo.MOD_VERSION + ".jar");
+        new GuiResourceManager();
     }
     
     @Override
