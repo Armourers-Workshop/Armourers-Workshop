@@ -34,29 +34,19 @@ public class SkinPartRenderer extends ModelBase {
         mc = Minecraft.getMinecraft();
     }
     
-    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean doLodLoading) {
-        renderPart(skinPart, scale, skinDye, extraColours, 0, doLodLoading);
-    }
-    
-    public void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
-        int lod = MathHelper.floor(distance / ConfigHandlerClient.lodDistance);
-        lod = MathHelper.clamp(lod, 0, ConfigHandlerClient.maxLodLevels);
-        renderPart(skinPart, scale, skinDye, extraColours, lod, doLodLoading);
-    }
-    
-    private void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, ExtraColours extraColours, int lod, boolean doLodLoading) {
+    public void renderPart(SkinRenderData renderData) {
         //mc.profiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
         
-        ClientSkinPartData cspd = skinPart.getClientSkinPartData();
-        SkinModel skinModel = cspd.getModelForDye(skinDye, extraColours);
+        ClientSkinPartData cspd = renderData.getSkinPart().getClientSkinPartData();
+        SkinModel skinModel = cspd.getModelForDye(renderData);
         boolean multipassSkinRendering = ClientProxy.useMultipassSkinRendering();
         
         for (int i = 0; i < skinModel.displayList.length; i++) {
             if (skinModel.haveList[i]) {
                 if (!skinModel.displayList[i].isCompiled()) {
                     skinModel.displayList[i].begin();
-                    renderVertexList(cspd.vertexLists[i], scale, skinDye, extraColours, cspd);
+                    renderVertexList(cspd.vertexLists[i], renderData, cspd);
                     skinModel.displayList[i].end();
                     skinModel.setLoaded();
                 }
@@ -69,7 +59,9 @@ public class SkinPartRenderer extends ModelBase {
         int endIndex = 0;
         
         int loadingLod = skinModel.getLoadingLod();
-        if (!doLodLoading) {
+        int lod = renderData.getLod();
+        
+        if (!renderData.isDoLodLoading()) {
             loadingLod = 0;
         }
         if (loadingLod > lod) {
@@ -129,12 +121,12 @@ public class SkinPartRenderer extends ModelBase {
         //mc.profiler.endSection();
     }
     
-    private void renderVertexList(ArrayList<ColouredFace> vertexList, float scale, ISkinDye skinDye, ExtraColours extraColours, ClientSkinPartData cspd) {
+    private void renderVertexList(ArrayList<ColouredFace> vertexList, SkinRenderData renderData, ClientSkinPartData cspd) {
         IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
         renderBuffer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         for (int i = 0; i < vertexList.size(); i++) {
             ColouredFace cVert = vertexList.get(i);
-            cVert.renderVertex(renderBuffer, skinDye, extraColours, cspd);
+            cVert.renderVertex(renderBuffer, renderData, cspd);
         }
         renderBuffer.draw();
     }

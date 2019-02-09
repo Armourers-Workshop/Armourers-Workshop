@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
+import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
@@ -73,7 +74,7 @@ public class RenderSkinnedArrow extends RenderArrow {
         }
         GL11.glRotatef(-90, 0, 1, 0);
         GL11.glScalef(-1, -1, 1);
-        SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinDye, null, true);
+        SkinPartRenderer.INSTANCE.renderPart(new SkinRenderData(skinPart, scale, skinDye, null, 0, true, null));
         GL11.glPopMatrix();
     }
 

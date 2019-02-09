@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.client.model.ModelMannequin;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
+import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
@@ -146,8 +147,8 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
         }
     }
     
-    protected void renderPart(SkinPart armourPart, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
-        SkinPartRenderer.INSTANCE.renderPart(armourPart, scale, skinDye, extraColours, distance, doLodLoading);
+    protected void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
+        SkinPartRenderer.INSTANCE.renderPart(new SkinRenderData(skinPart, scale, skinDye, extraColours, distance, doLodLoading, null));
     }
     
     protected boolean skinHasHead(Skin skin) {

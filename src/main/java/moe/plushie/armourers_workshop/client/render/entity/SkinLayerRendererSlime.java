@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.handler.ModClientFMLEventHandler;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
+import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -65,7 +66,7 @@ public class SkinLayerRendererSlime implements ISkinnableEntityRenderer<EntitySl
             GL11.glEnable(GL11.GL_NORMALIZE);
             float scale = 1F / 16F;
             for (int i = 0; i < skin.getParts().size(); i++) {
-                SkinPartRenderer.INSTANCE.renderPart(skin.getParts().get(i), scale, skinPointer.getSkinDye(), null, false);
+                SkinPartRenderer.INSTANCE.renderPart(new SkinRenderData(skin.getParts().get(i), scale, skinPointer.getSkinDye(), null, 0, false, null));
             }
             GL11.glDisable(GL11.GL_NORMALIZE);
         }

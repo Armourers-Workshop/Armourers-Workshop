@@ -13,9 +13,11 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.SkinModel;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
+import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData.ModelKey;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -42,11 +44,8 @@ public class ClientSkinPartData implements RemovalListener<ModelKey, SkinModel> 
         modelCache = builder.build(new ModelLoader());
     }
     
-    public SkinModel getModelForDye(ISkinDye skinDye, ExtraColours extraColours) {
-        if (skinDye == null) {
-            skinDye = BLANK_DYE;
-        }
-        ModelKey modelKey = new ModelKey(skinDye, extraColours);
+    public SkinModel getModelForDye(SkinRenderData renderData) {
+        ModelKey modelKey = new ModelKey(renderData.getSkinDye(), renderData.getExtraColours(), renderData.getEntityTexture());
         return modelCache.getUnchecked(modelKey);
     }
     
@@ -89,41 +88,51 @@ public class ClientSkinPartData implements RemovalListener<ModelKey, SkinModel> 
         
         private ISkinDye skinDye;
         private ExtraColours extraColours;
+        private ResourceLocation entityTexture;
         
-        public ModelKey(ISkinDye skinDye, ExtraColours extraColours) {
+        public ModelKey(ISkinDye skinDye, ExtraColours extraColours, ResourceLocation entityTexture) {
             this.skinDye = skinDye;
             this.extraColours = extraColours;
+            this.entityTexture = entityTexture;
         }
 
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((extraColours == null) ? 0 : extraColours.hashCode());
-            result = prime * result + ((skinDye == null) ? 0 : skinDye.hashCode());
-            return result;
-        }
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((entityTexture == null) ? 0 : entityTexture.hashCode());
+			result = prime * result + ((extraColours == null) ? 0 : extraColours.hashCode());
+			result = prime * result + ((skinDye == null) ? 0 : skinDye.hashCode());
+			return result;
+		}
 
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            ModelKey other = (ModelKey) obj;
-            if (extraColours == null) {
-                if (other.extraColours != null)
-                    return false;
-            } else if (!extraColours.equals(other.extraColours))
-                return false;
-            if (skinDye == null) {
-                if (other.skinDye != null)
-                    return false;
-            } else if (!skinDye.equals(other.skinDye))
-                return false;
-            return true;
-        }
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			ModelKey other = (ModelKey) obj;
+			if (entityTexture == null) {
+				if (other.entityTexture != null)
+					return false;
+			} else if (!entityTexture.equals(other.entityTexture))
+				return false;
+			if (extraColours == null) {
+				if (other.extraColours != null)
+					return false;
+			} else if (!extraColours.equals(other.extraColours))
+				return false;
+			if (skinDye == null) {
+				if (other.skinDye != null)
+					return false;
+			} else if (!skinDye.equals(other.skinDye))
+				return false;
+			return true;
+		}
+
+        
     }
 }
