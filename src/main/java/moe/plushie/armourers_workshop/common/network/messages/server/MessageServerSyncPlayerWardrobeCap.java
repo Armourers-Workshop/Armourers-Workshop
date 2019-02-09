@@ -60,7 +60,7 @@ public class MessageServerSyncPlayerWardrobeCap implements IMessage, IMessageHan
     public void onDelayedMessage() {
         if (Minecraft.getMinecraft().world != null) {
             Entity entity = Minecraft.getMinecraft().world.getEntityByID(entityId);
-            if (entity != null) {
+            if (entity != null && entity instanceof EntityPlayer) {
                 IPlayerWardrobeCap wardrobeCapability = PlayerWardrobeCap.get((EntityPlayer) entity);
                 if (wardrobeCapability != null) {
                     PlayerWardrobeCap.PLAYER_WARDROBE_CAP.getStorage().readNBT(PlayerWardrobeCap.PLAYER_WARDROBE_CAP, wardrobeCapability, null, compound);
