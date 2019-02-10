@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.client.render;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -12,8 +13,9 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.handler.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.client.model.ModelRendererAttachment;
-import moe.plushie.armourers_workshop.client.model.skin.AbstractModelSkin;
+import moe.plushie.armourers_workshop.client.model.skin.ModelTypeHelper;
 import moe.plushie.armourers_workshop.client.model.skin.IEquipmentModel;
+import moe.plushie.armourers_workshop.client.model.skin.ModelDummy;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinBow;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinChest;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinFeet;
@@ -70,22 +72,45 @@ public final class SkinModelRenderHelper {
         INSTANCE = new SkinModelRenderHelper();
     }
     
+    private final HashMap<String, ModelTypeHelper> helperModelsMap;
     private final Set<ModelBiped> attachedBipedSet;
     
     public final ModelSkinChest customChest = new ModelSkinChest();
     public final ModelSkinHead customHead = new ModelSkinHead();
     public final ModelSkinLegs customLegs = new ModelSkinLegs();
     public final ModelSkinFeet customFeet = new ModelSkinFeet();
-    public final ModelSkinSword customSword = new ModelSkinSword();
-    public final ModelSkinBow customBow = new ModelSkinBow();
     public final ModelSkinWings customWings = new ModelSkinWings();
     public final ModelSkinOutfit modelOutfit = new ModelSkinOutfit();
+    
+    public final ModelSkinSword customSword = new ModelSkinSword();
+    public final ModelSkinBow customBow = new ModelSkinBow();
+    
+    public final ModelDummy modelHelperDummy = new ModelDummy();
     
     public EntityPlayer targetPlayer = null;
     
     private SkinModelRenderHelper() {
         MinecraftForge.EVENT_BUS.register(this);
+        helperModelsMap = new HashMap<String, ModelTypeHelper>();
         attachedBipedSet = Collections.newSetFromMap(new WeakHashMap<ModelBiped, Boolean>());
+        
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinHead, customHead);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinChest, customChest);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinLegs, customLegs);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinFeet, customFeet);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinWings, customWings);
+        
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinSword, customSword);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinShield, customSword);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinBow, customBow);
+        
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinPickaxe, customFeet);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinAxe, customFeet);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinShovel, customFeet);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinHoe, customFeet);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinItem, customFeet);
+        
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinOutfit, modelOutfit);
     }
     
     private boolean isPlayerWearingSkirt(EntityPlayer player) {
@@ -168,35 +193,27 @@ public final class SkinModelRenderHelper {
     	targetPlayer = null;
     }
     
-    public AbstractModelSkin getSkinTypeHelperForModel(ISkinType skinType) {
-        if (skinType == SkinTypeRegistry.skinHead) {
-            return customHead;
-        } else if (skinType == SkinTypeRegistry.skinChest) {
-            return customChest;
-        } else if (skinType == SkinTypeRegistry.skinLegs) {
-            return customLegs;
-        } else if (skinType == SkinTypeRegistry.skinFeet) {
-            return customFeet;
-        } else if (skinType == SkinTypeRegistry.skinSword) {
-            return customSword;
-        } else if (skinType == SkinTypeRegistry.skinBow) {
-            return customBow;
-        } else if (skinType == SkinTypeRegistry.skinWings) {
-            return customWings;
-        } else if (skinType == SkinTypeRegistry.skinOutfit) {
-            return modelOutfit;
-        }
-        return null;
+    public ModelTypeHelper getTypeHelperForModel(ModelType modelType, ISkinType skinType) {
+    	ModelTypeHelper typeHelper = helperModelsMap.get(skinType.getRegistryName() + ":" + modelType.name());
+    	if (typeHelper == null) {
+    		return modelHelperDummy;
+    	}
+        return typeHelper;
+    }
+    
+    public void registerSkinTypeHelperForModel(ModelType modelType, ISkinType skinType, ModelTypeHelper typeHelper) {
+    	helperModelsMap.put(skinType.getRegistryName() + ":" + modelType.name(), typeHelper);
+    }
+    
+    public ModelTypeHelper agetTypeHelperForModel(ModelType modelType, ISkinType skinType) {
+    	return helperModelsMap.get(skinType.getRegistryName() + ":" + modelType.name());
     }
     
     public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
         if (data == null) {
             return false;
         }
-        IEquipmentModel model = getSkinTypeHelperForModel(data.getSkinType());
-        if (model == null) {
-            return false;
-        }
+        IEquipmentModel model = getTypeHelperForModel(ModelType.MODEL_BIPED, data.getSkinType());
         GlStateManager.pushAttrib();
         GlStateManager.enableCull();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);

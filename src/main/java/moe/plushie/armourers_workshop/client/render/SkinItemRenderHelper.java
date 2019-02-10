@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.model.skin.IEquipmentModel;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper.ModelType;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
@@ -194,32 +195,7 @@ public final class SkinItemRenderHelper {
         }
         skinType = skin.getSkinType();
         
-        IEquipmentModel targetModel = SkinModelRenderHelper.INSTANCE.getSkinTypeHelperForModel(skinType);
-        
-        
-        
-        if (targetModel == null) {
-            renderSkinWithoutHelper(skinPointer, doLodLoading);
-            return;
-        }
-        
+        IEquipmentModel targetModel = SkinModelRenderHelper.INSTANCE.getTypeHelperForModel(ModelType.MODEL_BIPED, skinType);
         targetModel.render(null, null, skin, showSkinPaint, skinPointer.getSkinDye(), null, true, 0, doLodLoading);
-    }
-    
-    public static void renderSkinWithoutHelper(ISkinDescriptor skinPointer, boolean doLodLoading) {
-        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-        if (skin == null) {
-            return;
-        }
-        float scale = 1F / 16F;
-        for (int i = 0; i < skin.getParts().size(); i++) {
-            GL11.glPushMatrix();
-            SkinPart skinPart = skin.getParts().get(i);
-            IPoint3D offset = skinPart.getPartType().getOffset();
-            GL11.glTranslated(offset.getX() * scale, (offset.getY() + 1) * scale, offset.getZ() * scale);
-            SkinPartRenderer.INSTANCE.renderPart(new SkinRenderData(skinPart, 0.0625F, skinPointer.getSkinDye(), null, 0, doLodLoading, null));
-            GL11.glPopMatrix();
-        }
-        
     }
 }

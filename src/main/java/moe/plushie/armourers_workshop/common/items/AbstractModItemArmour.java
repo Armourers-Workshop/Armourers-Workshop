@@ -5,8 +5,9 @@ import java.util.List;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.ICustomModel;
-import moe.plushie.armourers_workshop.client.model.skin.AbstractModelSkin;
+import moe.plushie.armourers_workshop.client.model.skin.ModelTypeHelper;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper.ModelType;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
@@ -97,19 +98,14 @@ public class AbstractModItemArmour extends ItemArmor implements ISortOrder, ICus
         
         SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
         
-        AbstractModelSkin targetModel = null;
+        ModelTypeHelper targetModel = null;
         SkinModelRenderHelper emr = SkinModelRenderHelper.INSTANCE;
         Skin data = ClientSkinCache.INSTANCE.getSkin(skinData);
         if (data == null) {
             return null;
         }
         
-        targetModel = emr.getSkinTypeHelperForModel(data.getSkinType());
-        
-        if (targetModel == null) {
-            return null;
-        }
-        
+        targetModel = emr.getTypeHelperForModel(ModelType.MODEL_BIPED, data.getSkinType());
         targetModel.npcSkinData = data;
         targetModel.npcDyeData = skinData.getSkinDye();
         return targetModel;

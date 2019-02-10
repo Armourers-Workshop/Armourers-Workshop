@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModelSkinBow extends AbstractModelSkin {
+public class ModelSkinBow extends ModelTypeHelper {
     
     public int frame = 0;
     

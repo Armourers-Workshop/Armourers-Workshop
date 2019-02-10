@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public abstract class AbstractModelSkin extends ModelBiped implements IEquipmentModel {
+public abstract class ModelTypeHelper extends ModelBiped implements IEquipmentModel {
 
     public Skin npcSkinData = null;
     public ISkinDye npcDyeData = null;
