@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.helper.MannequinTextureHelper;
 import moe.plushie.armourers_workshop.client.model.ModelHelper;
 import moe.plushie.armourers_workshop.client.model.ModelMannequin;
-import moe.plushie.armourers_workshop.client.render.MannequinFakePlayer;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
@@ -55,7 +54,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
     private static long lastTextureBuild = 0;
     private final ModelMannequin modelSteve;
     private final ModelMannequin modelAlex;
-    private MannequinFakePlayer mannequinFakePlayer;
+    //private MannequinFakePlayer mannequinFakePlayer;
     //private final RenderPlayer renderPlayer;
     private final Minecraft mc;
     
@@ -72,7 +71,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         mc.profiler.startSection("holidayCheck");
         isHalloweenSeason = ModHolidays.HALLOWEEN_SEASON.isHolidayActive();
         isHalloween = ModHolidays.HALLOWEEN.isHolidayActive();
-        mannequinFakePlayer = null; // TODO make a new fake player
+        //mannequinFakePlayer = null; // TODO make a new fake player
         mc.profiler.endStartSection("move");
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
@@ -420,8 +419,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         return new Color(r,g,b);
     }
     
-    private void renderEquippedItems(TileEntityMannequin te, MannequinFakePlayer fakePlayer, ModelMannequin targetBiped, double distance) {
-        /*
+    /*private void renderEquippedItems(TileEntityMannequin te, MannequinFakePlayer fakePlayer, ModelMannequin targetBiped, double distance) {
         RenderItem ri = (RenderItem) RenderManager.instance.entityRenderMap.get(EntityItem.class);
         MannequinFakePlayer renderEntity = fakePlayer;
         if (renderEntity == null) {
@@ -450,8 +448,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
                     }
                 }
             }
-        }*/
-    }
+        }
+    }*/
     
     public ItemStack getStackInMannequinSlot(IInventory inventory, MannequinSlotType slot) {
         return inventory.getStackInSlot(slot.ordinal());
@@ -477,8 +475,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         return false;
     }
     
-    private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelMannequin targetBiped, int slot, byte[] extraColours, double distance, BipedRotations rots) {
-        /*Item targetItem = stack.getItem();
+    
+    /*private void renderEquippedItem(MannequinFakePlayer fakePlayer, ItemStack stack, ModelMannequin targetBiped, int slot, byte[] extraColours, double distance, BipedRotations rots) {
+        Item targetItem = stack.getItem();
         RenderManager rm = RenderManager.instance;
         slot = slot % 7;
         String[] slotName = {"head", "chest", "legs", "unused", "feet", "rightArm", "leftArm"};
@@ -539,8 +538,8 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
             ModelHelper.disableChildModelScale();
         }
         GL11.glPopMatrix();
-        mc.profiler.endSection();*/
-    }
+        mc.profiler.endSection();
+    }*/
     
     private ISkinDescriptor[] getSkinPointers(TileEntityMannequin te) {
         ISkinDescriptor[] skinPointers = new ISkinDescriptor[4 * TileEntityMannequin.CONS_INVENTORY_ROWS_COUNT];
