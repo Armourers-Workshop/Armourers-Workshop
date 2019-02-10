@@ -61,12 +61,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  */
 @SideOnly(Side.CLIENT)
-public final class SkinModelRenderer {
+public final class SkinModelRenderHelper {
     
-    public static SkinModelRenderer INSTANCE;
+    public static SkinModelRenderHelper INSTANCE;
     
     public static void init() {
-        INSTANCE = new SkinModelRenderer();
+        INSTANCE = new SkinModelRenderHelper();
     }
     
     private final Set<ModelBiped> attachedBipedSet;
@@ -82,7 +82,7 @@ public final class SkinModelRenderer {
     
     public EntityPlayer targetPlayer = null;
     
-    private SkinModelRenderer() {
+    private SkinModelRenderHelper() {
         MinecraftForge.EVENT_BUS.register(this);
         attachedBipedSet = Collections.newSetFromMap(new WeakHashMap<ModelBiped, Boolean>());
     }

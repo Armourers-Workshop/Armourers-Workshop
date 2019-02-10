@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
@@ -47,7 +47,7 @@ public class SkinLayerRendererBibed extends SkinLayerRenderer<EntityLivingBase, 
                 }
             }
 
-            SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
+            SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
             GL11.glEnable(GL11.GL_NORMALIZE);
             modelRenderer.renderEquipmentPart(entity, (ModelBiped) renderer.getMainModel(), skin, dye, extraColours, 0, true);
             GL11.glDisable(GL11.GL_NORMALIZE);

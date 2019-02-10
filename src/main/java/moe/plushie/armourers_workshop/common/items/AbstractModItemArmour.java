@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.client.model.skin.AbstractModelSkin;
-import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.common.creativetab.ISortOrder;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -97,7 +97,7 @@ public class AbstractModItemArmour extends ItemArmor implements ISortOrder, ICus
         SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
         
         AbstractModelSkin targetModel = null;
-        SkinModelRenderer emr = SkinModelRenderer.INSTANCE;
+        SkinModelRenderHelper emr = SkinModelRenderHelper.INSTANCE;
         Skin data = emr.getCustomArmourItemData(skinData);
         if (data == null) {
             return null;

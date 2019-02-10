@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.handler.ClientWardrobeHandler;
-import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
@@ -70,7 +70,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         skinCap.hideLegRightOverlay = false;
         
         ISkinType[] skinTypes = skinCap.getValidSkinTypes();
-        SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
+        SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
         ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
         IPlayerWardrobeCap wardrobe = PlayerWardrobeCap.get(entitylivingbaseIn);
         if (wardrobe != null) {
@@ -96,7 +96,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
     }
     
     private void renderSkin(EntityPlayer entityPlayer, ISkinDescriptor skinDescriptor, EntitySkinCapability skinCap, IWardrobeCap wardrobe, ExtraColours extraColours, double distance, boolean doLodLoading) {
-        SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
+        SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
         
         if (skin != null) {

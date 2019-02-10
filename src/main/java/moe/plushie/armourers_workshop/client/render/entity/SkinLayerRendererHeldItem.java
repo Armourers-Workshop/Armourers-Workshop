@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinBow;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
-import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
@@ -105,7 +105,7 @@ public class SkinLayerRendererHeldItem extends LayerHeldItem {
                             Skin skin = ClientSkinCache.INSTANCE.getSkin(descriptor);
                             if (skin != null) {
                                 int useCount = entityLivingBase.getItemInUseCount();
-                                ModelSkinBow model = SkinModelRenderer.INSTANCE.customBow;
+                                ModelSkinBow model = SkinModelRenderHelper.INSTANCE.customBow;
                                 model.frame = getAnimationFrame(entityLivingBase.getItemInUseMaxCount());
                                 //ModLogger.log("useCount:" + useCount + " maxUse:" + entityLivingBase.getItemInUseMaxCount());
                                 

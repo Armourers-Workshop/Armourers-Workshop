@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
-import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
@@ -64,7 +64,7 @@ public class ModelRendererAttachment extends ModelRenderer {
             return;
         }
         mc.profiler.startSection("armourers player render");
-        SkinModelRenderer modelRenderer = SkinModelRenderer.INSTANCE;
+        SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
         EntityPlayer player = modelRenderer.targetPlayer;
         if (player == null) {
             mc.profiler.endSection();

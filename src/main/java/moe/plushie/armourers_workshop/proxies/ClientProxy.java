@@ -30,7 +30,7 @@ import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.BakedSkin;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.IBakedSkinReceiver;
 import moe.plushie.armourers_workshop.client.render.RenderBridge;
-import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandler;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemEquipmentSkin;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemMannequin;
@@ -155,7 +155,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
 
     @Override
     public void initRenderers() {
-        SkinModelRenderer.init();
+        SkinModelRenderHelper.init();
         EntitySkinRenderHandler.init();
         new BlockHighlightRenderHandler();
         new ItemTooltipHandler();

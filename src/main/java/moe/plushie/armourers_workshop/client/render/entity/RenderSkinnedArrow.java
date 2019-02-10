@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
-import moe.plushie.armourers_workshop.client.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
@@ -26,11 +26,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderSkinnedArrow extends RenderArrow {
     
-    private final SkinModelRenderer equipmentModelRenderer;
+    private final SkinModelRenderHelper equipmentModelRenderer;
     
     public RenderSkinnedArrow(RenderManager renderManager) {
         super(renderManager);
-        this.equipmentModelRenderer = SkinModelRenderer.INSTANCE;
+        this.equipmentModelRenderer = SkinModelRenderHelper.INSTANCE;
     }
     
     @Override
