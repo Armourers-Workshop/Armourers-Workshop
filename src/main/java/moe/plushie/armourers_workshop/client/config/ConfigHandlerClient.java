@@ -203,8 +203,8 @@ public class ConfigHandlerClient {
                 "(normally fixes skins not rotating on players)\n" +
                 "\n" +
                 "0 = auto\n" +
-                "1 = render event\n" +
-                "2 = model attachment\n" +
+                "1 = render event (1.7.10 only do not use)\n" +
+                "2 = model attachment (1.7.10 only do not use)\n" +
                 "3 = render layer");
         
         showF3DebugInfo = config
