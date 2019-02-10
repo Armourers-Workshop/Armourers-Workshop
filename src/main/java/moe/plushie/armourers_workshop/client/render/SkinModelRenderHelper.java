@@ -38,6 +38,7 @@ import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -85,37 +86,6 @@ public final class SkinModelRenderHelper {
     private SkinModelRenderHelper() {
         MinecraftForge.EVENT_BUS.register(this);
         attachedBipedSet = Collections.newSetFromMap(new WeakHashMap<ModelBiped, Boolean>());
-    }
-    
-    public Skin getPlayerCustomArmour(Entity entity, ISkinType skinType, int slotIndex) {
-        if (!(entity instanceof AbstractClientPlayer)) { return null; }
-        AbstractClientPlayer player = (AbstractClientPlayer) entity;
-        
-        // Look for skinned armourer.
-        if (skinType.getVanillaArmourSlotId() >= 0 && skinType.getVanillaArmourSlotId() < 4 && slotIndex == 0) {
-            int slot = 3 - skinType.getVanillaArmourSlotId();
-            ItemStack armourStack = ClientWardrobeHandler.getArmourInSlot(slot);
-            if (SkinNBTHelper.stackHasSkinData(armourStack)) {
-                SkinDescriptor sd = SkinNBTHelper.getSkinDescriptorFromStack(armourStack);
-                return getCustomArmourItemData(sd);
-            }
-        }
-        
-        // No skinned armour found checking the wardrobe.
-        /*
-        IEntitySkinCapability skinCapability = entity.getCapability(EntitySkinCapability.ENTITY_SKIN_CAP, null);
-        if (skinCapability != null) {
-            ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, slotIndex);
-            if (skinDescriptor != null) {
-                return getCustomArmourItemData(skinDescriptor);
-            }
-        }
-        */
-        return null;
-    }
-    
-    public Skin getCustomArmourItemData(ISkinDescriptor skinPointer) {
-        return ClientSkinCache.INSTANCE.getSkin(skinPointer);
     }
     
     private boolean isPlayerWearingSkirt(EntityPlayer player) {
@@ -198,84 +168,7 @@ public final class SkinModelRenderHelper {
     	targetPlayer = null;
     }
     
-    @SubscribeEvent
-    public void onRenderSpecialsPost(RenderPlayerEvent.Post event) {
-        if (ClientProxy.getSkinRenderType() != SkinRenderType.RENDER_EVENT) {
-            return;
-        }
-        EntityPlayer player = event.getEntityPlayer();
-        RenderPlayer render = event.getRenderer();
-        
-        IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(player);
-        if (wardrobeCap == null) {
-            return;
-        }
-        
-        double distance = Minecraft.getMinecraft().player.getDistance(
-                player.posX,
-                player.posY,
-                player.posZ);
-        
-        if (distance > ConfigHandlerClient.renderDistanceSkin) {
-            return;
-        }
-        
-        ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
-        if (wardrobeCap != null) {
-            extraColours = wardrobeCap.getExtraColours();
-        }
-        GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glEnable(GL11.GL_BLEND);
-        /*
-        for (int slot = 0; slot < 4; slot++) {
-            
-            for (int skinIndex = 0; skinIndex < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
-                if (slot == SkinTypeRegistry.skinHead.getVanillaArmourSlotId()) {
-                    Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
-                    ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
-                    if (data != null) {
-                        customHead.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
-                    }
-                }
-                if (slot == SkinTypeRegistry.skinChest.getVanillaArmourSlotId()) {
-                    Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
-                    ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
-                    if (data != null) {
-                        customChest.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
-                    }
-                }
-                if (slot == SkinTypeRegistry.skinLegs.getVanillaArmourSlotId()) {
-                    Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
-                    ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
-                    if (data != null) {
-                        customLegs.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
-                    }
-                }
-                if (slot == SkinTypeRegistry.skinFeet.getVanillaArmourSlotId()) {
-                    Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
-                    ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
-                    if (data != null) {
-                        customFeet.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
-                    }
-                }
-                if (slot == 0) {
-                    Skin data = getPlayerCustomArmour(player, SkinTypeRegistry.skinWings, skinIndex);
-                    ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, skinIndex);
-                    if (data != null) {
-                        customWings.render(player, render.getMainModel(), data, false, dye, extraColours, false, distance, true);
-                    }
-                }
-            }
-        }
-        */
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_CULL_FACE);
-        GL11.glPopMatrix();
-    }
-    
-    public AbstractModelSkin getModelForEquipmentType(ISkinType skinType) {
+    public AbstractModelSkin getSkinTypeHelperForModel(ISkinType skinType) {
         if (skinType == SkinTypeRegistry.skinHead) {
             return customHead;
         } else if (skinType == SkinTypeRegistry.skinChest) {
@@ -296,34 +189,11 @@ public final class SkinModelRenderHelper {
         return null;
     }
     
-    public boolean renderEquipmentPartFromStack(Entity entity, ItemStack stack, ModelBiped modelBiped, ExtraColours extraColours, double distance, boolean doLodLoading) {
-        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
-        if (skinPointer == null) {
-            return false;
-        }
-        Skin data = getCustomArmourItemData(skinPointer);
-        return renderEquipmentPart(entity, modelBiped, data, skinPointer.getSkinDye(), extraColours, distance, doLodLoading);
-    }
-    
-    public boolean renderEquipmentPartFromStack(ItemStack stack, ModelBiped modelBiped, ExtraColours extraColours, double distance, boolean doLodLoading) {
-        SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
-        if (skinPointer == null) {
-            return false;
-        }
-        Skin data = getCustomArmourItemData(skinPointer);
-        return renderEquipmentPart(null, modelBiped, data, skinPointer.getSkinDye(), extraColours, distance, doLodLoading);
-    }
-    
-    public boolean renderEquipmentPartFromSkinPointer(ISkinDescriptor skinPointer, float limb1, float limb2, float limb3, float headY, float headX) {
-        Skin data = getCustomArmourItemData(skinPointer);
-        return renderEquipmentPartRotated(null, data, limb1, limb2, limb3, headY, headX);
-    }
-    
     public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
         if (data == null) {
             return false;
         }
-        IEquipmentModel model = getModelForEquipmentType(data.getSkinType());
+        IEquipmentModel model = getSkinTypeHelperForModel(data.getSkinType());
         if (model == null) {
             return false;
         }
@@ -340,15 +210,7 @@ public final class SkinModelRenderHelper {
         return true;
     }
     
-    private boolean renderEquipmentPartRotated(Entity entity, Skin data, float limb1, float limb2, float limb3, float headY, float headX) {
-        if (data == null) {
-            return false;
-        }
-        IEquipmentModel model = getModelForEquipmentType(data.getSkinType());
-        if (model == null) {
-            return false;
-        }
-        model.render(entity, data, limb1, limb2, limb3, headY, headX);
-        return true;
+    public static enum ModelType {
+    	MODEL_BIPED,
     }
 }

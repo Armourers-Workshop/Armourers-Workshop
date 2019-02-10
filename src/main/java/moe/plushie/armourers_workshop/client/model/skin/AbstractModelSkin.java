@@ -147,6 +147,10 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
         }
     }
     
+    protected void renderPart(SkinRenderData renderData) {
+        SkinPartRenderer.INSTANCE.renderPart(renderData);
+    }
+    
     protected void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
         SkinPartRenderer.INSTANCE.renderPart(new SkinRenderData(skinPart, scale, skinDye, extraColours, distance, doLodLoading, null));
     }

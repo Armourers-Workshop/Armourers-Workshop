@@ -3,16 +3,19 @@ package moe.plushie.armourers_workshop.client.model.skin;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,10 +41,15 @@ public class ModelSkinHead extends AbstractModelSkin {
             }
         }
         
+        ResourceLocation entityTexture = null;
+        
         if (entity != null && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
             this.isSneak = player.isSneaking();
             this.isRiding = player.isRiding();
+            /*if (player instanceof AbstractClientPlayer) {
+            	entityTexture = ((AbstractClientPlayer)player).getLocationSkin();
+            }*/
             /*this.heldItemRight = 0;
             if (player.getHeldItem() != null) {
                 this.heldItemRight = 1;
@@ -81,7 +89,7 @@ public class ModelSkinHead extends AbstractModelSkin {
             GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleY), 0, 1, 0);
             GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleX), 1, 0, 0);
 
-            renderHead(skin.getParts().get(0), SCALE, skinDye, extraColours, distance, doLodLoading);
+            renderHead(new SkinRenderData(skin.getParts().get(0), SCALE, skinDye, extraColours, distance, doLodLoading, entityTexture));
             
             GL11.glPopMatrix();
         }
@@ -89,10 +97,10 @@ public class ModelSkinHead extends AbstractModelSkin {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderHead(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
+    private void renderHead(SkinRenderData renderData) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(renderData);
         GL11.glPopMatrix();
     }
 }
