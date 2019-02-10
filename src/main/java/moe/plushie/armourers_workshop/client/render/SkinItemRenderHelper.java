@@ -198,4 +198,12 @@ public final class SkinItemRenderHelper {
         IEquipmentModel targetModel = SkinModelRenderHelper.INSTANCE.getTypeHelperForModel(ModelType.MODEL_BIPED, skinType);
         targetModel.render(null, null, skin, showSkinPaint, skinPointer.getSkinDye(), null, true, 0, doLodLoading);
     }
+    
+    public static void renderSkinWithoutHelper(ISkinDescriptor skinPointer, boolean doLodLoading) {
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
+        if (skin == null) {
+            return;
+        }
+        SkinModelRenderHelper.INSTANCE.modelHelperDummy.render(null, null, skin, true, skinPointer.getSkinDye(), null, true, 0, doLodLoading);
+    }
 }

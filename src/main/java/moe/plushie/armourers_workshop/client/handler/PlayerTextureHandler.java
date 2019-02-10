@@ -47,7 +47,7 @@ public class PlayerTextureHandler {
     private boolean useTexturePainting;
     
     public PlayerTextureHandler() {
-        MinecraftForge.EVENT_BUS.register(this);
+        //MinecraftForge.EVENT_BUS.register(this);
         profiler = Minecraft.getMinecraft().profiler;
     }
     

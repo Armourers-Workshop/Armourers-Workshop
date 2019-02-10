@@ -33,7 +33,6 @@ public class RenderBlockAdvancedSkinPart extends TileEntitySpecialRenderer<TileE
         
         SkinItemRenderHelper.renderSkinWithoutHelper(descriptor, false);
         
-        
         //GlStateManager.enableLighting();
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableBlend();
