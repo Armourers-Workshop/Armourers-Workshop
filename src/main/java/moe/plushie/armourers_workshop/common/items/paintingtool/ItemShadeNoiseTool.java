@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.common.items.AbstractModItem;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.lib.LibSounds;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientToolPaintBlock;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
@@ -22,6 +21,7 @@ import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
+import moe.plushie.armourers_workshop.utils.ModSounds;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.UtilColour;
 import net.minecraft.block.Block;
@@ -71,9 +71,9 @@ public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurable
             if (!worldIn.isRemote) {
                 UndoManager.end(player);
                 if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
-                    worldIn.playSound(null, pos, LibSounds.NOISE, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 0.9F);
+                    worldIn.playSound(null, pos, ModSounds.NOISE, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 0.9F);
                 } else {
-                    worldIn.playSound(null, pos, LibSounds.NOISE, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 1.5F);
+                    worldIn.playSound(null, pos, ModSounds.NOISE, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 1.5F);
                 }
             }
             return EnumActionResult.SUCCESS;

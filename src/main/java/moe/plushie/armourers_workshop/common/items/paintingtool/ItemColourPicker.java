@@ -13,7 +13,6 @@ import moe.plushie.armourers_workshop.common.items.AbstractModItem;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.lib.LibSounds;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
@@ -22,6 +21,7 @@ import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
+import moe.plushie.armourers_workshop.utils.ModSounds;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -110,7 +110,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
             }
             
             if (!worldIn.isRemote) {
-                worldIn.playSound(null, pos, LibSounds.PICKER, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+                worldIn.playSound(null, pos, ModSounds.PICKER, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
             }
             return EnumActionResult.SUCCESS;
         }

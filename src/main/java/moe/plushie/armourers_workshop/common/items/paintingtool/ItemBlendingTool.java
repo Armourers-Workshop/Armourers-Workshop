@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.items.AbstractModItem;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
-import moe.plushie.armourers_workshop.common.lib.LibSounds;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
@@ -19,6 +18,7 @@ import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
+import moe.plushie.armourers_workshop.utils.ModSounds;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -136,7 +136,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
                 UndoManager.begin(player);
                 usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), facing);
                 UndoManager.end(player);
-                worldIn.playSound(null, pos, LibSounds.PAINT, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 0.9F);
+                worldIn.playSound(null, pos, ModSounds.PAINT, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 0.9F);
             }
             return EnumActionResult.SUCCESS;
         }

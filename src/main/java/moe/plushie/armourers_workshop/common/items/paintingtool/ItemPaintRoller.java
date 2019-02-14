@@ -7,12 +7,12 @@ import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.lib.LibSounds;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
+import moe.plushie.armourers_workshop.utils.ModSounds;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -88,7 +88,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     
     @Override
     public void playToolSound(EntityPlayer player, World world, BlockPos pos, ItemStack stack) {
-        world.playSound(null, pos, LibSounds.PAINT, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
+        world.playSound(null, pos, ModSounds.PAINT, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
     }
     
     @Override

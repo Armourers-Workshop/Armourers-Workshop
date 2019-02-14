@@ -43,6 +43,7 @@ import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
+import moe.plushie.armourers_workshop.utils.ModSounds;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -67,6 +68,7 @@ public class CommonProxy implements ILibraryCallback {
     private static MinecraftServer server;
     private static ModItems modItems;
     private static ModBlocks modBlocks;
+    private static ModSounds modSounds;
     public ILibraryManager libraryManager;
     private PermissionSystem permissionSystem;
     
@@ -101,6 +103,7 @@ public class CommonProxy implements ILibraryCallback {
         
         modItems = new ModItems();
         modBlocks = new ModBlocks();
+        modSounds = new ModSounds();
         
         EntitySkinHandler.init();
         

@@ -7,12 +7,12 @@ import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.lib.LibSounds;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
+import moe.plushie.armourers_workshop.utils.ModSounds;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -39,14 +39,14 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
     
     @Override
     public void playToolSound(EntityPlayer player, World world, BlockPos pos, ItemStack stack) {
-        SoundEvent soundEvent = LibSounds.PAINT;
+        SoundEvent soundEvent = ModSounds.PAINT;
         if (ModHolidays.APRIL_FOOLS.isHolidayActive()) {
-            soundEvent = LibSounds.BOI;
+            soundEvent = ModSounds.BOI;
         }
         if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
             world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 0.9F);
         } else {
-            world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 1.5F);
+            world.playSound(player, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 1.5F);
         }
     }
     
