@@ -46,7 +46,7 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
         if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
             world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 0.9F);
         } else {
-            world.playSound(player, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 1.5F);
+            world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 1.5F);
         }
     }
     
