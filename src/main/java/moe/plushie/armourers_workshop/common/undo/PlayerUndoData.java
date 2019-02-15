@@ -18,12 +18,10 @@ import net.minecraft.world.World;
 public class PlayerUndoData {
     
     private ArrayList<UndoStep> undoSteps;
-    private EntityPlayer player;
     private boolean isPainting;
     private UndoStep currentStep = null;
     
     public PlayerUndoData(EntityPlayer player) {
-        this.player = player;
         undoSteps = new ArrayList<UndoStep>();
     }
     
