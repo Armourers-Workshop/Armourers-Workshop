@@ -1,6 +1,14 @@
 package moe.plushie.armourers_workshop.common.undo;
 
+import java.awt.Color;
+
+import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class UndoData {
 
@@ -20,5 +28,23 @@ public class UndoData {
         this.rgb = rgb;
         this.paintType = paintType;
         this.facing = facing;
+    }
+    
+    public void undo(World world) {
+        if (world.provider.getDimension() != dimensionId) {
+            return;
+        }
+        
+        IBlockState state = world.getBlockState(new BlockPos(blockX, blockY, blockZ));
+        Block block = state.getBlock();
+        if (block instanceof IPantableBlock) {
+            Color c = new Color(rgb[0] & 0xFF, rgb[1] & 0xFF, rgb[2] & 0xFF);
+            int rgb = c.getRGB();
+            
+            IPantableBlock worldColourable = (IPantableBlock) block;
+            BlockPos pos = new BlockPos(blockX, blockY, blockZ);
+            worldColourable.setColour(world, pos, rgb, facing);
+            worldColourable.setPaintType(world, pos, PaintRegistry.getPaintTypeFormByte(paintType), facing);
+        }
     }
 }

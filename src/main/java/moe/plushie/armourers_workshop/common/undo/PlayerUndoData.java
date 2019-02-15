@@ -17,16 +17,14 @@ import net.minecraft.world.World;
 
 public class PlayerUndoData {
     
-    private ArrayList<UndoData> undos;
-    private ArrayList<Integer> markers;
+    private ArrayList<UndoStep> undoSteps;
     private EntityPlayer player;
     private boolean isPainting;
-    private int markerCount = 0;
+    private UndoStep currentStep = null;
     
     public PlayerUndoData(EntityPlayer player) {
         this.player = player;
-        undos = new ArrayList<UndoData>();
-        markers = new ArrayList<Integer>();
+        undoSteps = new ArrayList<UndoStep>();
     }
     
     public void begin() {
@@ -34,7 +32,7 @@ public class PlayerUndoData {
             ModLogger.log(Level.ERROR, "Last tool undo did not end correctly.");
         }
         isPainting = true;
-        markerCount = 0;
+        currentStep = new UndoStep();
     }
 
     public void end() {
@@ -46,8 +44,11 @@ public class PlayerUndoData {
             }
         }
         isPainting = false;
-        if (markerCount != 0) {
-            markers.add(markerCount);
+        if (currentStep != null) {
+        	undoSteps.add(currentStep);
+        	if (undoSteps.size() > ConfigHandler.maxUndos) {
+        		undoSteps.remove(0);
+        	}
         }
     }
 
@@ -55,58 +56,23 @@ public class PlayerUndoData {
         if (!isPainting) {
             ModLogger.log(Level.ERROR, "Tool painting with out marking the start.");
         }
-        markerCount++;
-        undos.add(undoData);
-        if (markers.size() > ConfigHandler.maxUndos) {
-            if (markers.size() < 1) {
-                int undoMarker = markers.get(0);
-                markers.remove(0);
-                for (int i = 0; i < undoMarker; i++) {
-                    undos.remove(i);
-                }
-            } else {
-                ModLogger.log(Level.ERROR, "No undo markers. Something is wrong!");
-            }
+        if (currentStep != null) {
+        	currentStep.addUndo(undoData);
+        } else {
+        	ModLogger.log(Level.ERROR, "No undo step. Something is wrong!");
         }
     }
 
     public void playerPressedUndo(World world) {
-        if (markers.size() < 1) {
-            ModLogger.log(Level.ERROR, "No undo markers. Something is wrong!");
-            undoLast(world);
-        } else {
-            int undoMarker = markers.get(markers.size() - 1);
-            for (int i = 0; i < undoMarker; i++) {
-                undoLast(world);
-            }
-            markers.remove(markers.size() - 1);
-        }
-    }
-    
-    private void undoLast(World world) {
-        if (undos.size() < 1) {
-            return;
-        }
-        UndoData undoData = undos.get(undos.size() - 1);
-        if (world.provider.getDimension() != undoData.dimensionId) {
-            return;
-        }
-        
-        IBlockState state = world.getBlockState(new BlockPos(undoData.blockX, undoData.blockY, undoData.blockZ));
-        Block block = state.getBlock();
-        if (block instanceof IPantableBlock) {
-            Color c = new Color(undoData.rgb[0] & 0xFF, undoData.rgb[1] & 0xFF, undoData.rgb[2] & 0xFF);
-            int rgb = c.getRGB();
-            
-            IPantableBlock worldColourable = (IPantableBlock) block;
-            BlockPos pos = new BlockPos(undoData.blockX, undoData.blockY, undoData.blockZ);
-            worldColourable.setColour(world, pos, rgb, undoData.facing);
-            worldColourable.setPaintType(world, pos, PaintRegistry.getPaintTypeFormByte(undoData.paintType), undoData.facing);
-        }
-        undos.remove(undos.size() - 1);
+    	if (undoSteps.isEmpty()) {
+    		return;
+    	}
+    	UndoStep undoStep = undoSteps.get(undoSteps.size() - 1);
+    	undoStep.undo(world);
+    	undoSteps.remove(undoSteps.size() - 1);
     }
     
     public int getAvalableUndos() {
-        return undos.size();
+        return undoSteps.size();
     }
 }
