@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop;
 
+import org.apache.logging.log4j.Logger;
+
 import moe.plushie.armourers_workshop.common.ApiRegistrar;
 import moe.plushie.armourers_workshop.common.command.CommandArmourers;
 import moe.plushie.armourers_workshop.common.creativetab.CreativeTabArmourersWorkshop;
@@ -32,6 +34,8 @@ public class ArmourersWorkshop {
 
     @Instance(LibModInfo.ID)
     private static ArmourersWorkshop instance;
+    
+    private static Logger logger;
 
     @SidedProxy(clientSide = LibModInfo.PROXY_CLIENT_CLASS, serverSide = LibModInfo.PROXY_COMMNON_CLASS)
     private static CommonProxy proxy;
@@ -40,6 +44,7 @@ public class ArmourersWorkshop {
 
     @EventHandler
     public void perInit(FMLPreInitializationEvent event) {
+    	logger = event.getModLog();
         ModLogger.log(String.format("Loading %s version %s.", LibModInfo.NAME, LibModInfo.MOD_VERSION));
         proxy.preInit(event);
         proxy.initLibraryManager();
@@ -92,4 +97,8 @@ public class ArmourersWorkshop {
     public static ArmourersWorkshop getInstance() {
         return instance;
     }
+    
+    public static Logger getLogger() {
+		return logger;
+	}
 }
