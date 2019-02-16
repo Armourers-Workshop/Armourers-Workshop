@@ -49,6 +49,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -65,7 +66,6 @@ public class CommonProxy implements ILibraryCallback {
     private File modDirectory;
     private File skinLibraryDirectory;
     
-    private static MinecraftServer server;
     private static ModItems modItems;
     private static ModBlocks modBlocks;
     private static ModSounds modSounds;
@@ -282,12 +282,7 @@ public class CommonProxy implements ILibraryCallback {
     }
     
     @SubscribeEvent
-    public void serverStart(FMLServerStartingEvent event) {
-        server = event.getServer();
-    }
-    
-    @SubscribeEvent
     public MinecraftServer getServer() {
-        return server;
+        return FMLCommonHandler.instance().getMinecraftServerInstance();
     }
 }
