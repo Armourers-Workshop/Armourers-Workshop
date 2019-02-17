@@ -11,10 +11,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.resource.IResourceType;
 import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.client.resource.VanillaResourceType;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiResourceManager implements ISelectiveResourceReloadListener {
 
-	private static final HashMap<ResourceLocation, IJsonGui> GUI_RESOURCE_MAP = new HashMap<ResourceLocation, IJsonGui>();
+	//private static final HashMap<ResourceLocation, IJsonGui> GUI_RESOURCE_MAP = new HashMap<ResourceLocation, IJsonGui>();
 	
 	public GuiResourceManager() {
         IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
@@ -28,7 +31,7 @@ public class GuiResourceManager implements ISelectiveResourceReloadListener {
 		ModLogger.log("Loading GUI resources.");
 	}
 	
-	public static interface IJsonGui {
+	/*public static interface IJsonGui {
 		
-	}
+	}*/
 }
