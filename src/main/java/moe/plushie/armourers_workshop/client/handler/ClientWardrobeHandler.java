@@ -249,7 +249,9 @@ public final class ClientWardrobeHandler {
             for (int i = 0; i < armour.length; i++) {
                 EntityEquipmentSlot slot = EntityEquipmentSlot.values()[i + 2];
                 armour[i] = player.inventory.armorInventory.get(i);
-                if (wardrobeCapability.getArmourOverride(slot)) {
+                if (SkinNBTHelper.stackHasSkinData(armour[i])) {
+                	player.inventory.armorInventory.set(i, ItemStack.EMPTY);
+                } else if (wardrobeCapability.getArmourOverride(slot)) {
                     player.inventory.armorInventory.set(i, ItemStack.EMPTY);
                 }
             }
