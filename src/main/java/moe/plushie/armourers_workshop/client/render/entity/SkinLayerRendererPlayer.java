@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.proxies.ClientProxy.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.Entity;
@@ -144,7 +145,9 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
                     dye.addDye(i, skinDescriptor.getSkinDye().getDyeColour(i));
                 }
             }
+            GlStateManager.pushMatrix();
             modelRenderer.renderEquipmentPart(entityPlayer, renderPlayer.getMainModel(), skin, dye, extraColours, distance, doLodLoading);
+            GlStateManager.popMatrix();
         }
     }
 

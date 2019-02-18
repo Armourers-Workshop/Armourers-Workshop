@@ -9,6 +9,9 @@ import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,6 +24,11 @@ public class ModelDummy extends ModelTypeHelper {
 		if (skin == null) {
 			return;
 		}
+        GlStateManager.pushAttrib();
+        GlStateManager.enableCull();
+        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.enableBlend();
+        GlStateManager.enableRescaleNormal();
         for (int i = 0; i < skin.getParts().size(); i++) {
             GL11.glPushMatrix();
             SkinPart skinPart = skin.getParts().get(i);
@@ -29,5 +37,9 @@ public class ModelDummy extends ModelTypeHelper {
             SkinPartRenderer.INSTANCE.renderPart(new SkinRenderData(skinPart, 0.0625F, skinDye, null, 0, doLodLoading, null));
             GL11.glPopMatrix();
         }
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableBlend();
+        GlStateManager.disableCull();
+        GlStateManager.popAttrib();
 	}
 }
