@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.client.render.tileEntity;
+package moe.plushie.armourers_workshop.client.render.tileentities;
 
 import java.awt.Color;
 import java.nio.FloatBuffer;

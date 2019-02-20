@@ -74,13 +74,13 @@
             {
                 "item": "armourers_workshop:tile.skin-cube"
             },
-			{
+            {
                 "item": "armourers_workshop:tile.skin-cube-glass"
             },
-			{
+            {
                 "item": "armourers_workshop:tile.skin-cube-glowing"
             },
-			{
+            {
                 "item": "armourers_workshop:tile.skin-cube-glass-glowing"
             }
         ]

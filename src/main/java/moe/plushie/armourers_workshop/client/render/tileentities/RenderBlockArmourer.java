@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.client.render.tileEntity;
+package moe.plushie.armourers_workshop.client.render.tileentities;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
