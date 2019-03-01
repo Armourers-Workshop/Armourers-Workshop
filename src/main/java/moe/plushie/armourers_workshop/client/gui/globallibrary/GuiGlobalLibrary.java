@@ -24,7 +24,6 @@ import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -283,7 +282,6 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
         if (!isDialogOpen()) {
             for (GuiPanel panel : panelList) {
                 if (panel.mouseClicked(mouseX, mouseY, button)) {
-                    ModLogger.log(panel);
                     return;
                 }
             }

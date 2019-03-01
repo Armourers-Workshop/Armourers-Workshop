@@ -3,6 +3,8 @@ package moe.plushie.armourers_workshop.client.gui.globallibrary.panels;
 import java.util.ArrayList;
 import java.util.concurrent.FutureTask;
 
+import org.apache.logging.log4j.Level;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -17,6 +19,7 @@ import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.Downlo
 import moe.plushie.armourers_workshop.common.library.global.MultipartForm;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -114,6 +117,8 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
                         JsonObject skinJson = jsonArray.get(i).getAsJsonObject();
                         skinPanelRecentlyUploaded.addIcon(skinJson);
                     }
+                } else {
+                	ModLogger.log(Level.WARN, "Failed to download.");
                 }
                 taskDownloadJsonRecentlyUploaded = null;
             } catch (Exception e) {
@@ -130,6 +135,8 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
                         JsonObject skinJson = jsonArray.get(i).getAsJsonObject();
                         skinPanelMostDownloaded.addIcon(skinJson);
                     }
+                } else {
+                	ModLogger.log(Level.WARN, "Failed to download.");
                 }
                 taskDownloadJsonMostDownloaded = null;
             } catch (Exception e) {
@@ -146,6 +153,8 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
                         JsonObject skinJson = jsonArray.get(i).getAsJsonObject();
                         skinPanelMostLiked.addIcon(skinJson);
                     }
+                } else {
+                	ModLogger.log(Level.WARN, "Failed to download.");
                 }
                 taskDownloadJsonMostLiked = null;
             } catch (Exception e) {

@@ -81,7 +81,7 @@ public class MultipartForm {
     }
     
     public String upload() throws IOException{
-        ModLogger.log("Upload Test Started");
+        ModLogger.log("Accessing: " + uploadUrl);
         
         String boundary = Long.toHexString(System.currentTimeMillis());
         
@@ -128,6 +128,7 @@ public class MultipartForm {
             IOUtils.closeQuietly(writer);
             IOUtils.closeQuietly(output);
         }
+
         return result;
     }
 }

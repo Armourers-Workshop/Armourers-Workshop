@@ -14,7 +14,6 @@ import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -52,7 +51,6 @@ public class GuiControlSkinPanel extends GuiButtonExt {
     }
     
     public void init(int x, int y, int width, int height) {
-        ModLogger.log("init " + y);
         this.x = x;
         this.y = y;
         this.width = width;
