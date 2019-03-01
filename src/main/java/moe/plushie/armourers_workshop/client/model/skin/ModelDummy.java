@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -25,6 +26,7 @@ public class ModelDummy extends ModelTypeHelper {
 			return;
 		}
         GlStateManager.pushAttrib();
+        RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.enableCull();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.enableBlend();
@@ -38,7 +40,7 @@ public class ModelDummy extends ModelTypeHelper {
             GL11.glPopMatrix();
         }
         GlStateManager.disableRescaleNormal();
-        GlStateManager.disableBlend();
+        //GlStateManager.disableBlend();
         GlStateManager.disableCull();
         GlStateManager.popAttrib();
 	}
