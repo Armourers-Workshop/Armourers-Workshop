@@ -5,15 +5,10 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import org.lwjgl.opengl.GL11;
-
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
-import moe.plushie.armourers_workshop.client.handler.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.client.model.ModelRendererAttachment;
-import moe.plushie.armourers_workshop.client.model.skin.ModelTypeHelper;
 import moe.plushie.armourers_workshop.client.model.skin.IEquipmentModel;
 import moe.plushie.armourers_workshop.client.model.skin.ModelDummy;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinBow;
@@ -24,23 +19,17 @@ import moe.plushie.armourers_workshop.client.model.skin.ModelSkinLegs;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinOutfit;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinSword;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinWings;
+import moe.plushie.armourers_workshop.client.model.skin.ModelTypeHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.proxies.ClientProxy.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.ModLogger;
-import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -48,7 +37,6 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -104,11 +92,11 @@ public final class SkinModelRenderHelper {
         registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinShield, customSword);
         registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinBow, customBow);
         
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinPickaxe, customFeet);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinAxe, customFeet);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinShovel, customFeet);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinHoe, customFeet);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinItem, customFeet);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinPickaxe, customSword);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinAxe, customSword);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinShovel, customSword);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinHoe, customSword);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinItem, customSword);
         
         registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinOutfit, modelOutfit);
     }
