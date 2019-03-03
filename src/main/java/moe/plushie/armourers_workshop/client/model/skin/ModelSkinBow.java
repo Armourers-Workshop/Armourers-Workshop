@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
+import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
@@ -20,10 +22,17 @@ public class ModelSkinBow extends ModelTypeHelper {
     public int frame = 0;
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
-        if (armourData == null) { return; }
+    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+        render(entity, skin, new SkinRenderData(SCALE, skinDye, extraColours, distance, doLodLoading, showSkinPaint, itemRender, null));
+    }
+    
+    @Override
+    public void render(Entity entity, Skin skin, SkinRenderData renderData) {
+        if (skin == null) {
+            return;
+        }
         
-        ArrayList<SkinPart> parts = armourData.getParts();
+        ArrayList<SkinPart> parts = skin.getParts();
         
         if (entity != null && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
@@ -56,7 +65,7 @@ public class ModelSkinBow extends ModelTypeHelper {
             GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
         }
 
-        renderRightArm(part, SCALE, skinDye, extraColours, distance, doLodLoading);
+        renderRightArm(new SkinPartRenderData(part, renderData));
         
         GL11.glPopMatrix();
         
@@ -65,21 +74,16 @@ public class ModelSkinBow extends ModelTypeHelper {
         frame = 0;
     }
     
-    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
+    private void renderRightArm(SkinPartRenderData partRenderData) {
         GL11.glPushMatrix();
-        
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
-        //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
-        
-        //GL11.glTranslatef(-5.0F * scale, 0F, 0F);
-        //GL11.glTranslatef(0F, 2.0F * scale, 0F);
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
         
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
 }

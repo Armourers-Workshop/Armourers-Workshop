@@ -4,70 +4,79 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 public class SkinRenderData {
-	
-	public static final SkinDye BLANK_DYE = new SkinDye();
-	
-	private final SkinPart skinPart;
-	private final float scale;
-	private final ISkinDye skinDye;
-	private final ExtraColours extraColours;
-	private final int lod;
-	private final boolean doLodLoading;
-	private final ResourceLocation entityTexture;
-	
-	public SkinRenderData(SkinPart skinPart, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading, ResourceLocation entityTexture) {
-        this(skinPart, scale, skinDye, extraColours, getLOD(distance), doLodLoading, entityTexture);
-	}
-	
-	public SkinRenderData(SkinPart skinPart, float scale, ISkinDye skinDye, ExtraColours extraColours, int lod, boolean doLodLoading, ResourceLocation entityTexture) {
-		this.skinPart = skinPart;
-		this.scale = scale;
-		if (skinDye == null) {
-			this.skinDye = BLANK_DYE;
-		} else {
-			this.skinDye = skinDye;
-		}
-		this.extraColours = extraColours;
-		this.lod = lod;
-		this.doLodLoading = doLodLoading;
-		this.entityTexture = entityTexture;
-	}
-	
-	public SkinPart getSkinPart() {
-		return skinPart;
-	}
 
-	public float getScale() {
-		return scale;
-	}
+    public static final SkinDye BLANK_DYE = new SkinDye();
 
-	public ISkinDye getSkinDye() {
-		return skinDye;
-	}
+    private final float scale;
+    private final ISkinDye skinDye;
+    private final ExtraColours extraColours;
+    private final int lod;
+    private final boolean doLodLoading;
+    private final boolean showSkinPaint;
+    private final boolean itemRender;
+    private final ResourceLocation entityTexture;
 
-	public ExtraColours getExtraColours() {
-		return extraColours;
-	}
+    public SkinRenderData(float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading, boolean showSkinPaint, boolean itemRender, ResourceLocation entityTexture) {
+        this(scale, skinDye, extraColours, getLOD(distance), doLodLoading, showSkinPaint, itemRender, entityTexture);
+    }
 
-	public int getLod() {
-		return lod;
-	}
+    public SkinRenderData(float scale, ISkinDye skinDye, ExtraColours extraColours, int lod, boolean doLodLoading, boolean showSkinPaint, boolean itemRender, ResourceLocation entityTexture) {
+        this.scale = scale;
+        if (skinDye == null) {
+            this.skinDye = BLANK_DYE;
+        } else {
+            this.skinDye = skinDye;
+        }
+        if (extraColours == null) {
+            this.extraColours = ExtraColours.EMPTY_COLOUR;
+        } else {
+            this.extraColours = extraColours;
+        }
+        this.lod = lod;
+        this.doLodLoading = doLodLoading;
+        this.showSkinPaint = showSkinPaint;
+        this.itemRender = itemRender;
+        this.entityTexture = entityTexture;
+    }
 
-	public boolean isDoLodLoading() {
-		return doLodLoading;
-	}
+    public float getScale() {
+        return scale;
+    }
 
-	public ResourceLocation getEntityTexture() {
-		return entityTexture;
-	}
+    public ISkinDye getSkinDye() {
+        return skinDye;
+    }
 
-	private static int getLOD(double distance) {
-		int lod = MathHelper.floor(distance / ConfigHandlerClient.lodDistance);
+    public ExtraColours getExtraColours() {
+        return extraColours;
+    }
+
+    public int getLod() {
+        return lod;
+    }
+
+    public boolean isDoLodLoading() {
+        return doLodLoading;
+    }
+    
+    public boolean isShowSkinPaint() {
+        return showSkinPaint;
+    }
+    
+    public boolean isItemRender() {
+        return itemRender;
+    }
+
+    public ResourceLocation getEntityTexture() {
+        return entityTexture;
+    }
+
+    protected static int getLOD(double distance) {
+        int lod = MathHelper.floor(distance / ConfigHandlerClient.lodDistance);
         return MathHelper.clamp(lod, 0, ConfigHandlerClient.maxLodLevels);
-	}
+    }
 }

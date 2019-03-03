@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.client.model.block.ModelBlockSkinnable;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
-import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemEquipmentSkin;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable;
@@ -97,7 +97,7 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySk
                     GlStateManager.scale(-1, -1, 1);
                     for (int i = 0; i < skin.getParts().size(); i++) {
                         SkinPart skinPart = skin.getParts().get(i);
-                        SkinPartRenderer.INSTANCE.renderPart(new SkinRenderData(skinPart, SCALE, te.getSkinPointer().getSkinDye(), null, 0, true, null));
+                        SkinPartRenderer.INSTANCE.renderPart(new SkinPartRenderData(skinPart, SCALE, te.getSkinPointer().getSkinDye(), null, 0, true, true, true, null));
                     }
                     //renderSkin(tileEntity, x, y, z, skin);
                     GlStateManager.disableBlend();

@@ -34,7 +34,7 @@ public class SkinPartRenderer extends ModelBase {
         mc = Minecraft.getMinecraft();
     }
     
-    public void renderPart(SkinRenderData renderData) {
+    public void renderPart(SkinPartRenderData renderData) {
         //mc.profiler.startSection(skinPart.getPartType().getPartName());
         ModClientFMLEventHandler.skinRendersThisTick++;
         
@@ -121,7 +121,7 @@ public class SkinPartRenderer extends ModelBase {
         //mc.profiler.endSection();
     }
     
-    private void renderVertexList(ArrayList<ColouredFace> vertexList, SkinRenderData renderData, ClientSkinPartData cspd) {
+    private void renderVertexList(ArrayList<ColouredFace> vertexList, SkinPartRenderData renderData, ClientSkinPartData cspd) {
         IRenderBuffer renderBuffer = RenderBridge.INSTANCE;
         renderBuffer.startDrawingQuads(DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
         for (int i = 0; i < vertexList.size(); i++) {

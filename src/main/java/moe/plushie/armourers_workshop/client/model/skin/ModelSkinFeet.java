@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
+import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
@@ -21,9 +23,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelSkinFeet extends ModelTypeHelper {
     
     @Override
-    public void render(Entity entity, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
-        if (armourData == null) { return; }
-        ArrayList<SkinPart> parts = armourData.getParts();
+    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+        render(entity, skin, new SkinRenderData(SCALE, skinDye, extraColours, distance, doLodLoading, showSkinPaint, itemRender, null));
+    }
+    
+    @Override
+    public void render(Entity entity, Skin skin, SkinRenderData renderData) {
+        if (skin == null) {
+            return;
+        }
+        ArrayList<SkinPart> parts = skin.getParts();
         
         if (entity != null && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
@@ -37,17 +46,14 @@ public class ModelSkinFeet extends ModelTypeHelper {
         
         RenderHelper.enableGUIStandardItemLighting();
         
-        if (armourData.hasPaintData() & showSkinPaint) {
-            if (extraColours == null) {
-                extraColours = ExtraColours.EMPTY_COLOUR;
-            }
-            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(armourData, skinDye, extraColours);
+        if (skin.hasPaintData() & renderData.isShowSkinPaint()) {
+            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(skin, renderData.getSkinDye(), renderData.getExtraColours());
             st.bindTexture();
             GL11.glPushMatrix();
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glEnable(GL11.GL_ALPHA_TEST);
-            if (!itemRender) {
+            if (!renderData.isItemRender()) {
                 GL11.glTranslated(0, -12 * SCALE, 0);
             }
             bipedLeftLeg.render(SCALE);
@@ -71,9 +77,9 @@ public class ModelSkinFeet extends ModelTypeHelper {
             }
             
             if (part.getPartType().getPartName().equals("leftFoot")) {
-                renderLeftFoot(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);
+                renderLeftFoot(new SkinPartRenderData(part, renderData));
             } else if (part.getPartType().getPartName().equals("rightFoot")) {
-                renderRightFoot(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);
+                renderRightFoot(new SkinPartRenderData(part, renderData));
             }
             
             GL11.glPopMatrix();
@@ -82,34 +88,34 @@ public class ModelSkinFeet extends ModelTypeHelper {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderLeftFoot(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+    private void renderLeftFoot(SkinPartRenderData partRenderData) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         //if (!itemRender) {
-            GL11.glTranslated(0, 12 * scale, 0);
+            GL11.glTranslated(0, 12 * partRenderData.getScale(), 0);
         //}
-        GL11.glTranslated(2 * scale, 0, 0);
+        GL11.glTranslated(2 * partRenderData.getScale(), 0, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
         
         
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
     
-    private void renderRightFoot(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+    private void renderRightFoot(SkinPartRenderData partRenderData) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         //if (!itemRender) {
-            GL11.glTranslated(0, 12 * scale, 0);
+            GL11.glTranslated(0, 12 * partRenderData.getScale(), 0);
         //}
-        GL11.glTranslated(-2 * scale, 0, 0);
+        GL11.glTranslated(-2 * partRenderData.getScale(), 0, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
         
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
 }

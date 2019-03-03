@@ -6,11 +6,11 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.client.model.ModelMannequin;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
@@ -99,9 +99,15 @@ public abstract class ModelTypeHelper extends ModelBiped implements IEquipmentMo
     }
     
     @Override
-    public void render(Entity entity, ModelBiped modelBiped, Skin armourData, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+    public void render(Entity entity, Skin skin, ModelBiped modelBiped, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         setRotationFromModelBiped(modelBiped);
-        render(entity, armourData, showSkinPaint, skinDye, extraColours, itemRender, distance, doLodLoading);
+        render(entity, skin, showSkinPaint, skinDye, extraColours, itemRender, distance, doLodLoading);
+    }
+    
+    @Override
+    public void render(Entity entity, Skin skin, ModelBiped modelBiped, SkinRenderData renderData) {
+        setRotationFromModelBiped(modelBiped);
+        render(entity, skin, renderData);
     }
     
     @Override
@@ -116,6 +122,8 @@ public abstract class ModelTypeHelper extends ModelBiped implements IEquipmentMo
     }
     
     public abstract void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading);
+    
+    public abstract void render(Entity entity, Skin skin, SkinRenderData renderData);
     
     protected void setRotationFromModelBiped(ModelBiped modelBiped) {
         this.isRiding = false;
@@ -147,12 +155,8 @@ public abstract class ModelTypeHelper extends ModelBiped implements IEquipmentMo
         }
     }
     
-    protected void renderPart(SkinRenderData renderData) {
-        SkinPartRenderer.INSTANCE.renderPart(renderData);
-    }
-    
-    protected void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
-        SkinPartRenderer.INSTANCE.renderPart(new SkinRenderData(skinPart, scale, skinDye, extraColours, distance, doLodLoading, null));
+    protected void renderPart(SkinPartRenderData partRenderData) {
+        SkinPartRenderer.INSTANCE.renderPart(partRenderData);
     }
     
     protected boolean skinHasHead(Skin skin) {

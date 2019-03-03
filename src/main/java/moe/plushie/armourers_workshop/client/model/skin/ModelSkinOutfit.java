@@ -6,6 +6,8 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
+import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
@@ -25,6 +27,11 @@ public class ModelSkinOutfit extends ModelTypeHelper {
 
     @Override
     public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+        render(entity, skin, new SkinRenderData(SCALE, skinDye, extraColours, distance, doLodLoading, showSkinPaint, itemRender, null));
+    }
+    
+    @Override
+    public void render(Entity entity, Skin skin, SkinRenderData renderData) {
         if (skin == null) {
             return;
         }
@@ -38,17 +45,14 @@ public class ModelSkinOutfit extends ModelTypeHelper {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        if (skin.hasPaintData() & showSkinPaint) {
-            if (extraColours == null) {
-                extraColours = ExtraColours.EMPTY_COLOUR;
-            }
-            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(skin, skinDye, extraColours);
+        if (skin.hasPaintData() & renderData.isShowSkinPaint()) {
+            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(skin, renderData.getSkinDye(), renderData.getExtraColours());
             st.bindTexture();
             GL11.glPushMatrix();
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glEnable(GL11.GL_ALPHA_TEST);
-            if (!itemRender) {
+            if (!renderData.isItemRender()) {
                 GL11.glTranslated(0, -12 * SCALE, 0);
             }
             bipedHead.render(SCALE);
@@ -60,11 +64,11 @@ public class ModelSkinOutfit extends ModelTypeHelper {
             GL11.glPopAttrib();
             GL11.glPopMatrix();
         }
-        
+
         boolean overrideChest = SkinProperties.PROP_MODEL_OVERRIDE_CHEST.getValue(skin.getProperties());
         MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
         double angle = 45D;
-        
+
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
 
@@ -82,7 +86,7 @@ public class ModelSkinOutfit extends ModelTypeHelper {
                     if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
                         StackTraceElement[] traceElements = Thread.currentThread().getStackTrace();
                         for (int j = 0; j < traceElements.length; j++) {
-                            StackTraceElement  traceElement = traceElements[j];
+                            StackTraceElement traceElement = traceElements[j];
                             if (traceElement.toString().contains("realrender") | traceElement.toString().contains("rfpf")) {
                                 doHead = false;
                                 break;
@@ -91,39 +95,39 @@ public class ModelSkinOutfit extends ModelTypeHelper {
                     }
                 }
                 if (doHead) {
-                    renderHead(part, SCALE, skinDye, extraColours, distance, doLodLoading);
+                    renderHead(new SkinPartRenderData(part, renderData));
                 }
             }
-            
+
             if (part.getPartType().getRegistryName().equals("armourers:chest.base")) {
-                renderChest(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);
+                renderChest(new SkinPartRenderData(part, renderData));
             } else if (part.getPartType().getRegistryName().equals("armourers:chest.leftArm")) {
-                renderLeftArm(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading, overrideChest);
+                renderLeftArm(new SkinPartRenderData(part, renderData), overrideChest);
             } else if (part.getPartType().getRegistryName().equals("armourers:chest.rightArm")) {
-                renderRightArm(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading, overrideChest);
+                renderRightArm(new SkinPartRenderData(part, renderData), overrideChest);
             }
-            
+
             if (part.getPartType().getRegistryName().equals("armourers:legs.leftLeg")) {
-                renderLeftLeg(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);
+                renderLeftLeg(new SkinPartRenderData(part, renderData));
             } else if (part.getPartType().getRegistryName().equals("armourers:legs.rightLeg")) {
-                renderRightLeg(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);
+                renderRightLeg(new SkinPartRenderData(part, renderData));
             } else if (part.getPartType().getRegistryName().equals("armourers:legs.skirt")) {
-                renderSkirt(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);
+                renderSkirt(new SkinPartRenderData(part, renderData));
             }
-            
+
             if (part.getPartType().getRegistryName().equals("armourers:feet.leftFoot")) {
-                renderLeftFoot(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);
+                renderLeftFoot(new SkinPartRenderData(part, renderData));
             } else if (part.getPartType().getRegistryName().equals("armourers:feet.rightFoot")) {
-                renderRightFoot(part, SCALE, skinDye, extraColours, itemRender, distance, doLodLoading);
+                renderRightFoot(new SkinPartRenderData(part, renderData));
             }
-            
+
             if (part.getPartType().getRegistryName().equals("armourers:wings.leftWing")) {
                 angle = SkinUtils.getFlapAngleForWings(entity, skin);
-                renderLeftWing(part, SCALE, skinDye, extraColours, distance, angle, doLodLoading, movmentType);
+                renderLeftWing(new SkinPartRenderData(part, renderData), angle, movmentType);
             }
             if (part.getPartType().getRegistryName().equals("armourers:wings.rightWing")) {
                 angle = SkinUtils.getFlapAngleForWings(entity, skin);
-                renderRightWing(part, SCALE, skinDye, extraColours, distance, -angle, doLodLoading, movmentType);
+                renderRightWing(new SkinPartRenderData(part, renderData), -angle, movmentType);
             }
 
             GL11.glPopMatrix();
@@ -132,250 +136,191 @@ public class ModelSkinOutfit extends ModelTypeHelper {
         GL11.glColor3f(1F, 1F, 1F);
     }
 
-    private void renderHead(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
+    private void renderHead(SkinPartRenderData partRenderData) {
         GL11.glPushMatrix();
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
-            GlStateManager.translate(0.0F, 1 * SCALE, 0.0F);
+            GlStateManager.translate(0.0F, 1 * partRenderData.getScale(), 0.0F);
         }
         GL11.glColor3f(1F, 1F, 1F);
         GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleZ), 0, 0, 1);
         GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleY), 0, 1, 0);
         GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleX), 1, 0, 0);
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
 
-    private void renderChest(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+    private void renderChest(SkinPartRenderData partRenderData) {
         GL11.glPushMatrix();
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
             GlStateManager.rotate((float) Math.toDegrees(bipedBody.rotateAngleX), 1F, 0, 0);
         }
         GL11.glColor3f(1F, 1F, 1F);
-        // GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
-        // GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
-        // GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
 
-    private void renderLeftArm(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading, boolean override) {
+    private void renderLeftArm(SkinPartRenderData partRenderData, boolean override) {
         GL11.glPushMatrix();
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
         }
-        // GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
-        // GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
-        // GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
-        GL11.glTranslatef(5.0F * scale, 0F, 0F);
-        GL11.glTranslatef(0F, 2.0F * scale, 0F);
+        GL11.glTranslatef(5.0F * partRenderData.getScale(), 0F, 0F);
+        GL11.glTranslatef(0F, 2.0F * partRenderData.getScale(), 0F);
 
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftArm.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftArm.rotateAngleX), 1, 0, 0);
 
         if (slim & !override) {
-            GL11.glTranslatef(-0.25F * scale, 0F, 0F);
-            GL11.glTranslatef(0F, 0.5F * scale, 0F);
+            GL11.glTranslatef(-0.25F * partRenderData.getScale(), 0F, 0F);
+            GL11.glTranslatef(0F, 0.5F * partRenderData.getScale(), 0F);
 
             GL11.glScalef(0.75F, 1F, 1F);
         }
 
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
 
         GL11.glPopMatrix();
     }
 
-    private void renderRightArm(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading, boolean override) {
+    private void renderRightArm(SkinPartRenderData partRenderData, boolean override) {
         GL11.glPushMatrix();
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
         }
-        // GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
-        // GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
-        // GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
-        GL11.glTranslatef(-5.0F * scale, 0F, 0F);
-        GL11.glTranslatef(0F, 2.0F * scale, 0F);
+        GL11.glTranslatef(-5.0F * partRenderData.getScale(), 0F, 0F);
+        GL11.glTranslatef(0F, 2.0F * partRenderData.getScale(), 0F);
 
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
 
         if (slim & !override) {
-            GL11.glTranslatef(0.25F * scale, 0F, 0F);
-            GL11.glTranslatef(0F, 0.5F * scale, 0F);
+            GL11.glTranslatef(0.25F * partRenderData.getScale(), 0F, 0F);
+            GL11.glTranslatef(0F, 0.5F * partRenderData.getScale(), 0F);
 
             GL11.glScalef(0.75F, 1F, 1F);
         }
 
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
 
-    private void renderLeftLeg(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+    private void renderLeftLeg(SkinPartRenderData partRenderData) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
-            GlStateManager.translate(0, -3 * SCALE, 4 * SCALE);
+            GlStateManager.translate(0, -3 * partRenderData.getScale(), 4 * partRenderData.getScale());
         }
-        //if (!itemRender) {
-            GL11.glTranslated(0, 12 * scale, 0);
-        //}
-        GL11.glTranslated(2 * scale, 0, 0);
+        // if (!itemRender) {
+        GL11.glTranslated(0, 12 * partRenderData.getScale(), 0);
+        // }
+        GL11.glTranslated(2 * partRenderData.getScale(), 0, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
 
-    private void renderRightLeg(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+    private void renderRightLeg(SkinPartRenderData partRenderData) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
-            GlStateManager.translate(0, -3 * SCALE, 4 * SCALE);
+            GlStateManager.translate(0, -3 * partRenderData.getScale(), 4 * partRenderData.getScale());
         }
-        //if (!itemRender) {
-            GL11.glTranslated(0, 12 * scale, 0);
-        //}
-        GL11.glTranslated(-2 * scale, 0, 0);
+        // if (!itemRender) {
+        GL11.glTranslated(0, 12 * partRenderData.getScale(), 0);
+        // }
+        GL11.glTranslated(-2 * partRenderData.getScale(), 0, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
-    
-    private void renderLeftFoot(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+
+    private void renderLeftFoot(SkinPartRenderData partRenderData) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
-            GlStateManager.translate(0, -3 * SCALE, 4 * SCALE);
+            GlStateManager.translate(0, -3 * partRenderData.getScale(), 4 * partRenderData.getScale());
         }
-        //if (!itemRender) {
-            GL11.glTranslated(0, 12 * scale, 0);
-        //}
-        GL11.glTranslated(2 * scale, 0, 0);
+        // if (!itemRender) {
+        GL11.glTranslated(0, 12 * partRenderData.getScale(), 0);
+        // }
+        GL11.glTranslated(2 * partRenderData.getScale(), 0, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleY), 0, 1, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleX), 1, 0, 0);
-        
-        
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
-        GL11.glPopMatrix();
-    }
-    
-    private void renderRightFoot(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
-        GL11.glPushMatrix();
-        GL11.glColor3f(1F, 1F, 1F);
-        if (isSneak) {
-            GlStateManager.translate(0.0F, 0.2F, 0.0F);
-            GlStateManager.translate(0, -3 * SCALE, 4 * SCALE);
-        }
-        //if (!itemRender) {
-            GL11.glTranslated(0, 12 * scale, 0);
-        //}
-        GL11.glTranslated(-2 * scale, 0, 0);
-        GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
-        GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
-        GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
-        
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
 
-    private void renderSkirt(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+    private void renderRightFoot(SkinPartRenderData partRenderData) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
-            GlStateManager.translate(0, -3 * SCALE, 4 * SCALE);
+            GlStateManager.translate(0, -3 * partRenderData.getScale(), 4 * partRenderData.getScale());
         }
-        //if (!itemRender) {
-            GL11.glTranslated(0, 12 * scale, 0);
-        //}
+        // if (!itemRender) {
+        GL11.glTranslated(0, 12 * partRenderData.getScale(), 0);
+        // }
+        GL11.glTranslated(-2 * partRenderData.getScale(), 0, 0);
+        GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
+        GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
+        GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleX), 1, 0, 0);
+
+        renderPart(partRenderData);
+        GL11.glPopMatrix();
+    }
+
+    private void renderSkirt(SkinPartRenderData partRenderData) {
+        GL11.glPushMatrix();
+        GL11.glColor3f(1F, 1F, 1F);
+        if (isSneak) {
+            GlStateManager.translate(0.0F, 0.2F, 0.0F);
+            GlStateManager.translate(0, -3 * partRenderData.getScale(), 4 * partRenderData.getScale());
+        }
+        // if (!itemRender) {
+        GL11.glTranslated(0, 12 * partRenderData.getScale(), 0);
+        // }
         if (isRiding) {
             GL11.glRotated(-70, 1F, 0F, 0F);
         }
 
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
 
-    private void renderLeftWing(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
+    private void renderLeftWing(SkinPartRenderData partRenderData, double angle, MovementType movmentType) {
         GL11.glPushMatrix();
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
             GlStateManager.rotate((float) Math.toDegrees(bipedBody.rotateAngleX), 1F, 0, 0);
         }
-        GL11.glTranslated(0, 0, SCALE * 2);
+        GL11.glTranslated(0, 0, partRenderData.getScale() * 2);
 
         Point3D point = new Point3D(0, 0, 0);
         EnumFacing axis = EnumFacing.DOWN;
 
-        if (part.getMarkerCount() > 0) {
-            point = part.getMarker(0);
-            axis = part.getMarkerSide(0);
+        if (partRenderData.getSkinPart().getMarkerCount() > 0) {
+            point = partRenderData.getSkinPart().getMarker(0);
+            axis = partRenderData.getSkinPart().getMarkerSide(0);
         }
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         // GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
 
-        GL11.glTranslated(SCALE * 0.5F, SCALE * 0.5F, SCALE * 0.5F);
-        GL11.glTranslated(SCALE * point.getX(), SCALE * point.getY(), SCALE * point.getZ());
-        
-        switch (axis) {
-        case UP:
-            GL11.glRotated(angle, 0, 1, 0);
-            break;
-        case DOWN:
-            GL11.glRotated(angle, 0, -1, 0);
-            break;
-        case SOUTH:
-            GL11.glRotated(angle, 0, 0, -1);
-            break;
-        case NORTH:
-            GL11.glRotated(angle, 0, 0, 1);
-            break;
-        case EAST:
-            GL11.glRotated(angle, 1, 0, 0);
-            break;
-        case WEST:
-            GL11.glRotated(angle, -1, 0, 0);
-            break;
-        }
-
-        GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
-        GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
-
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
-        GL11.glPopMatrix();
-    }
-
-    private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
-        GL11.glPushMatrix();
-        if (isSneak) {
-            GlStateManager.translate(0.0F, 0.2F, 0.0F);
-            GlStateManager.rotate((float) Math.toDegrees(bipedBody.rotateAngleX), 1F, 0, 0);
-        }
-        GL11.glTranslated(0, 0, SCALE * 2);
-        Point3D point = new Point3D(0, 0, 0);
-        EnumFacing axis = EnumFacing.DOWN;
-
-        if (part.getMarkerCount() > 0) {
-            point = part.getMarker(0);
-            axis = part.getMarkerSide(0);
-        }
-        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
-        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
-        // GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
-
-        GL11.glTranslated(SCALE * 0.5F, SCALE * 0.5F, SCALE * 0.5F);
-        GL11.glTranslated(SCALE * point.getX(), SCALE * point.getY(), SCALE * point.getZ());
+        GL11.glTranslated(partRenderData.getScale() * 0.5F, partRenderData.getScale() * 0.5F, partRenderData.getScale() * 0.5F);
+        GL11.glTranslated(partRenderData.getScale() * point.getX(), partRenderData.getScale() * point.getY(), partRenderData.getScale() * point.getZ());
 
         switch (axis) {
         case UP:
@@ -398,10 +343,59 @@ public class ModelSkinOutfit extends ModelTypeHelper {
             break;
         }
 
-        GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
-        GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
+        GL11.glTranslated(partRenderData.getScale() * -point.getX(), partRenderData.getScale() * -point.getY(), partRenderData.getScale() * -point.getZ());
+        GL11.glTranslated(partRenderData.getScale() * -0.5F, partRenderData.getScale() * -0.5F, partRenderData.getScale() * -0.5F);
 
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
+        GL11.glPopMatrix();
+    }
+
+    private void renderRightWing(SkinPartRenderData partRenderData, double angle, MovementType movmentType) {
+        GL11.glPushMatrix();
+        if (isSneak) {
+            GlStateManager.translate(0.0F, 0.2F, 0.0F);
+            GlStateManager.rotate((float) Math.toDegrees(bipedBody.rotateAngleX), 1F, 0, 0);
+        }
+        GL11.glTranslated(0, 0, partRenderData.getScale() * 2);
+        Point3D point = new Point3D(0, 0, 0);
+        EnumFacing axis = EnumFacing.DOWN;
+
+        if (partRenderData.getSkinPart().getMarkerCount() > 0) {
+            point = partRenderData.getSkinPart().getMarker(0);
+            axis = partRenderData.getSkinPart().getMarkerSide(0);
+        }
+        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
+        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
+        // GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
+
+        GL11.glTranslated(partRenderData.getScale() * 0.5F, partRenderData.getScale() * 0.5F, partRenderData.getScale() * 0.5F);
+        GL11.glTranslated(partRenderData.getScale() * point.getX(), partRenderData.getScale() * point.getY(), partRenderData.getScale() * point.getZ());
+
+        switch (axis) {
+        case UP:
+            GL11.glRotated(angle, 0, 1, 0);
+            break;
+        case DOWN:
+            GL11.glRotated(angle, 0, -1, 0);
+            break;
+        case SOUTH:
+            GL11.glRotated(angle, 0, 0, -1);
+            break;
+        case NORTH:
+            GL11.glRotated(angle, 0, 0, 1);
+            break;
+        case EAST:
+            GL11.glRotated(angle, 1, 0, 0);
+            break;
+        case WEST:
+            GL11.glRotated(angle, -1, 0, 0);
+            break;
+        }
+
+        GL11.glTranslated(partRenderData.getScale() * -point.getX(), partRenderData.getScale() * -point.getY(), partRenderData.getScale() * -point.getZ());
+        GL11.glTranslated(partRenderData.getScale() * -0.5F, partRenderData.getScale() * -0.5F, partRenderData.getScale() * -0.5F);
+
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
 }

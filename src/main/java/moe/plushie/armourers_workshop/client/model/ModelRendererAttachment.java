@@ -8,8 +8,8 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
-import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
@@ -182,7 +182,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                     GL11.glEnable(GL11.GL_CULL_FACE);
                     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     GL11.glEnable(GL11.GL_BLEND);
-                    SkinPartRenderer.INSTANCE.renderPart(new SkinRenderData(partData, scale, dye, extraColours, distance, true, null));
+                    SkinPartRenderer.INSTANCE.renderPart(new SkinPartRenderData(partData, scale, dye, extraColours, distance, true, false, false, null));
                     GlStateManager.resetColor();
                     GlStateManager.color(1, 1, 1, 1);
                     GL11.glDisable(GL11.GL_CULL_FACE);

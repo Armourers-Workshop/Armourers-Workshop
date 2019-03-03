@@ -136,7 +136,7 @@ public final class ClientWardrobeHandler {
             Skin skin = ClientSkinCache.INSTANCE.getSkin(descriptor);
             if (skin != null) {
                 int useCount = player.getItemInUseMaxCount();
-                ModelSkinBow model = SkinModelRenderHelper.INSTANCE.customBow;
+                ModelSkinBow model = SkinModelRenderHelper.INSTANCE.modelBow;
                 model.frame = getAnimationFrame(useCount);
                 model.render(player, skin, false, descriptor.getSkinDye(), null, false, 0, false);
             }

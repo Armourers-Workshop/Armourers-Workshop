@@ -3,14 +3,13 @@ package moe.plushie.armourers_workshop.client.model.skin;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
@@ -24,6 +23,11 @@ public class ModelSkinHead extends ModelTypeHelper {
     
     @Override
     public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+        render(entity, skin, new SkinRenderData(SCALE, skinDye, extraColours, distance, doLodLoading, showSkinPaint, itemRender, null));
+    }
+    
+    @Override
+    public void render(Entity entity, Skin skin, SkinRenderData renderData) {
         if (skin == null) {
             return;
         }
@@ -48,7 +52,7 @@ public class ModelSkinHead extends ModelTypeHelper {
             this.isSneak = player.isSneaking();
             this.isRiding = player.isRiding();
             /*if (player instanceof AbstractClientPlayer) {
-            	entityTexture = ((AbstractClientPlayer)player).getLocationSkin();
+                entityTexture = ((AbstractClientPlayer)player).getLocationSkin();
             }*/
             /*this.heldItemRight = 0;
             if (player.getHeldItem() != null) {
@@ -58,11 +62,8 @@ public class ModelSkinHead extends ModelTypeHelper {
         
         RenderHelper.enableGUIStandardItemLighting();
         
-        if (skin.hasPaintData() & showSkinPaint) {
-            if (extraColours == null) {
-                extraColours = ExtraColours.EMPTY_COLOUR;
-            }
-            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(skin, skinDye, extraColours);
+        if (skin.hasPaintData() & renderData.isShowSkinPaint()) {
+            SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(skin, renderData.getSkinDye(), renderData.getExtraColours());
             st.bindTexture();
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glDisable(GL11.GL_CULL_FACE);
@@ -89,7 +90,7 @@ public class ModelSkinHead extends ModelTypeHelper {
             GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleY), 0, 1, 0);
             GL11.glRotated(Math.toDegrees(bipedHead.rotateAngleX), 1, 0, 0);
 
-            renderHead(new SkinRenderData(skin.getParts().get(0), SCALE, skinDye, extraColours, distance, doLodLoading, entityTexture));
+            renderHead(new SkinPartRenderData(skin.getParts().get(0), renderData));
             
             GL11.glPopMatrix();
         }
@@ -97,7 +98,7 @@ public class ModelSkinHead extends ModelTypeHelper {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderHead(SkinRenderData renderData) {
+    private void renderHead(SkinPartRenderData renderData) {
         GL11.glPushMatrix();
         GL11.glColor3f(1F, 1F, 1F);
         renderPart(renderData);

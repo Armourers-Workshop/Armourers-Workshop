@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.IPoint3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
@@ -20,11 +21,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelDummy extends ModelTypeHelper {
 
-	@Override
-	public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
-		if (skin == null) {
-			return;
-		}
+    @Override
+    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+        render(entity, skin, new SkinRenderData(SCALE, skinDye, extraColours, distance, doLodLoading, showSkinPaint, itemRender, null));
+    }
+
+    @Override
+    public void render(Entity entity, Skin skin, SkinRenderData renderData) {
+        if (skin == null) {
+            return;
+        }
         GlStateManager.pushAttrib();
         RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.enableCull();
@@ -36,12 +42,12 @@ public class ModelDummy extends ModelTypeHelper {
             SkinPart skinPart = skin.getParts().get(i);
             IPoint3D offset = skinPart.getPartType().getOffset();
             GL11.glTranslated(offset.getX() * SCALE, (offset.getY() + 1) * SCALE, offset.getZ() * SCALE);
-            SkinPartRenderer.INSTANCE.renderPart(new SkinRenderData(skinPart, 0.0625F, skinDye, null, 0, doLodLoading, null));
+            SkinPartRenderer.INSTANCE.renderPart(new SkinPartRenderData(skinPart, renderData));
             GL11.glPopMatrix();
         }
         GlStateManager.disableRescaleNormal();
-        //GlStateManager.disableBlend();
+        // GlStateManager.disableBlend();
         GlStateManager.disableCull();
         GlStateManager.popAttrib();
-	}
+    }
 }

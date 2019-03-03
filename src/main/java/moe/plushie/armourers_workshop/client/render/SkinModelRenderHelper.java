@@ -15,9 +15,9 @@ import moe.plushie.armourers_workshop.client.model.skin.ModelSkinBow;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinChest;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinFeet;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinHead;
+import moe.plushie.armourers_workshop.client.model.skin.ModelSkinItem;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinLegs;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinOutfit;
-import moe.plushie.armourers_workshop.client.model.skin.ModelSkinSword;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinWings;
 import moe.plushie.armourers_workshop.client.model.skin.ModelTypeHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
@@ -44,7 +44,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Helps render custom equipment on the player and other entities.
+ * Helps render skins on the player and other entities.
  *
  * TODO Clean up this class it's a mess >:|
  *
@@ -53,54 +53,54 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public final class SkinModelRenderHelper {
-    
+
     public static SkinModelRenderHelper INSTANCE;
-    
+
     public static void init() {
         INSTANCE = new SkinModelRenderHelper();
     }
-    
+
     private final HashMap<String, ModelTypeHelper> helperModelsMap;
     private final Set<ModelBiped> attachedBipedSet;
-    
-    public final ModelSkinChest customChest = new ModelSkinChest();
-    public final ModelSkinHead customHead = new ModelSkinHead();
-    public final ModelSkinLegs customLegs = new ModelSkinLegs();
-    public final ModelSkinFeet customFeet = new ModelSkinFeet();
-    public final ModelSkinWings customWings = new ModelSkinWings();
+
+    public final ModelSkinHead modelHead = new ModelSkinHead();
+    public final ModelSkinChest modelChest = new ModelSkinChest();
+    public final ModelSkinLegs modelLegs = new ModelSkinLegs();
+    public final ModelSkinFeet modelFeet = new ModelSkinFeet();
+    public final ModelSkinWings modelWings = new ModelSkinWings();
     public final ModelSkinOutfit modelOutfit = new ModelSkinOutfit();
-    
-    public final ModelSkinSword customSword = new ModelSkinSword();
-    public final ModelSkinBow customBow = new ModelSkinBow();
-    
+
+    public final ModelSkinItem modelItem = new ModelSkinItem();
+    public final ModelSkinBow modelBow = new ModelSkinBow();
+
     public final ModelDummy modelHelperDummy = new ModelDummy();
-    
+
     public EntityPlayer targetPlayer = null;
-    
+
     private SkinModelRenderHelper() {
         MinecraftForge.EVENT_BUS.register(this);
         helperModelsMap = new HashMap<String, ModelTypeHelper>();
         attachedBipedSet = Collections.newSetFromMap(new WeakHashMap<ModelBiped, Boolean>());
-        
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinHead, customHead);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinChest, customChest);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinLegs, customLegs);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinFeet, customFeet);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinWings, customWings);
-        
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinSword, customSword);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinShield, customSword);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinBow, customBow);
-        
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinPickaxe, customSword);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinAxe, customSword);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinShovel, customSword);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinHoe, customSword);
-        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinItem, customSword);
-        
+
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinHead, modelHead);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinChest, modelChest);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinLegs, modelLegs);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinFeet, modelFeet);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinWings, modelWings);
+
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinSword, modelItem);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinShield, modelItem);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinBow, modelBow);
+
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinPickaxe, modelItem);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinAxe, modelItem);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinShovel, modelItem);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinHoe, modelItem);
+        registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinItem, modelItem);
+
         registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinOutfit, modelOutfit);
     }
-    
+
     private boolean isPlayerWearingSkirt(EntityPlayer player) {
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
         if (skinCapability == null) {
@@ -112,9 +112,9 @@ public final class SkinModelRenderHelper {
             if (skinDescriptor != null) {
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
                 if (skin != null) {
-                    if(SkinProperties.PROP_MODEL_LEGS_LIMIT_LIMBS.getValue(skin.getProperties())) {
-                    	limitLimbs = true;
-                    	break;
+                    if (SkinProperties.PROP_MODEL_LEGS_LIMIT_LIMBS.getValue(skin.getProperties())) {
+                        limitLimbs = true;
+                        break;
                     }
                 }
             }
@@ -125,37 +125,37 @@ public final class SkinModelRenderHelper {
                 if (skinDescriptor != null) {
                     Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor, false);
                     if (skin != null) {
-                        if(SkinProperties.PROP_MODEL_LEGS_LIMIT_LIMBS.getValue(skin.getProperties())) {
-                        	limitLimbs = true;
-                        	break;
+                        if (SkinProperties.PROP_MODEL_LEGS_LIMIT_LIMBS.getValue(skin.getProperties())) {
+                            limitLimbs = true;
+                            break;
                         }
                     }
                 }
             }
         }
-        
+
         return limitLimbs;
     }
-    
+
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.getEntityPlayer();
         targetPlayer = player;
-        
+
         if (ClientProxy.getSkinRenderType() == SkinRenderType.MODEL_ATTACHMENT) {
             attachModelsToBiped(event.getRenderer().getMainModel(), event.getRenderer());
         }
-        
-        //Limit the players limbs if they have a skirt equipped.
-        //A proper lady should not swing her legs around!
+
+        // Limit the players limbs if they have a skirt equipped.
+        // A proper lady should not swing her legs around!
         if (isPlayerWearingSkirt(player)) {
             if (player.limbSwingAmount > 0.25F) {
                 player.limbSwingAmount = 0.25F;
                 player.prevLimbSwingAmount = 0.25F;
-            } 
+            }
         }
     }
-    
+
     private void attachModelsToBiped(ModelBiped modelBiped, RenderPlayer renderPlayer) {
         if (attachedBipedSet.contains(modelBiped)) {
             return;
@@ -169,45 +169,45 @@ public final class SkinModelRenderHelper {
         modelBiped.bipedRightLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.rightLeg")));
         modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.skirt")));
         modelBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.leftFoot")));
-        modelBiped.bipedRightLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.rightFoot")));  
+        modelBiped.bipedRightLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.rightFoot")));
         modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinWings, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:wings.leftWing")));
         modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinWings, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:wings.rightWing")));
         ModLogger.log(String.format("Added model render attachment to %s", modelBiped.toString()));
         ModLogger.log(String.format("Using player renderer %s", renderPlayer.toString()));
     }
-    
+
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Post event) {
-    	targetPlayer = null;
+        targetPlayer = null;
     }
-    
+
     public ModelTypeHelper getTypeHelperForModel(ModelType modelType, ISkinType skinType) {
-    	ModelTypeHelper typeHelper = helperModelsMap.get(skinType.getRegistryName() + ":" + modelType.name());
-    	if (typeHelper == null) {
-    		return modelHelperDummy;
-    	}
+        ModelTypeHelper typeHelper = helperModelsMap.get(skinType.getRegistryName() + ":" + modelType.name());
+        if (typeHelper == null) {
+            return modelHelperDummy;
+        }
         return typeHelper;
     }
-    
+
     public void registerSkinTypeHelperForModel(ModelType modelType, ISkinType skinType, ModelTypeHelper typeHelper) {
-    	helperModelsMap.put(skinType.getRegistryName() + ":" + modelType.name(), typeHelper);
+        helperModelsMap.put(skinType.getRegistryName() + ":" + modelType.name(), typeHelper);
     }
-    
+
     public ModelTypeHelper agetTypeHelperForModel(ModelType modelType, ISkinType skinType) {
-    	return helperModelsMap.get(skinType.getRegistryName() + ":" + modelType.name());
+        return helperModelsMap.get(skinType.getRegistryName() + ":" + modelType.name());
     }
     
-    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin data, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
-        if (data == null) {
+    public boolean renderEquipmentPart(Skin skin, SkinRenderData renderData, Entity entity, ModelBiped modelBiped) {
+        if (skin == null) {
             return false;
         }
-        IEquipmentModel model = getTypeHelperForModel(ModelType.MODEL_BIPED, data.getSkinType());
+        IEquipmentModel model = getTypeHelperForModel(ModelType.MODEL_BIPED, skin.getSkinType());
         GlStateManager.pushAttrib();
         GlStateManager.enableCull();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.enableBlend();
         GlStateManager.enableRescaleNormal();
-        model.render(entity, modelBiped, data, false, skinDye, extraColours, false, distance, doLodLoading);
+        model.render(entity, skin, modelBiped, renderData);
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableBlend();
         GlStateManager.disableCull();
@@ -215,7 +215,25 @@ public final class SkinModelRenderHelper {
         return true;
     }
     
+    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin skin, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
+        if (skin == null) {
+            return false;
+        }
+        IEquipmentModel model = getTypeHelperForModel(ModelType.MODEL_BIPED, skin.getSkinType());
+        GlStateManager.pushAttrib();
+        GlStateManager.enableCull();
+        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.enableBlend();
+        GlStateManager.enableRescaleNormal();
+        model.render(entity, skin, modelBiped, false, skinDye, extraColours, false, distance, doLodLoading);
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableBlend();
+        GlStateManager.disableCull();
+        GlStateManager.popAttrib();
+        return true;
+    }
+
     public static enum ModelType {
-    	MODEL_BIPED,
+        MODEL_BIPED,
     }
 }

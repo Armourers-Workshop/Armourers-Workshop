@@ -6,8 +6,8 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
-import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
@@ -84,7 +84,7 @@ public abstract class SkinLayerRenderer<E extends EntityLivingBase, R extends Re
             
             GL11.glEnable(GL11.GL_NORMALIZE);
             for (int partIndex = 0; partIndex < skin.getParts().size(); partIndex++) {
-                SkinPartRenderer.INSTANCE.renderPart(new SkinRenderData(skin.getParts().get(partIndex), SCALE, dye, extraColours, 0, false, null));
+                SkinPartRenderer.INSTANCE.renderPart(new SkinPartRenderData(skin.getParts().get(partIndex), SCALE, dye, extraColours, 0, false, false, false, null));
             }
             GL11.glDisable(GL11.GL_NORMALIZE);
         }

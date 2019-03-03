@@ -6,6 +6,8 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
+import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
@@ -21,6 +23,11 @@ public class ModelSkinWings extends ModelTypeHelper  {
 
     @Override
     public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+        render(entity, skin, new SkinRenderData(SCALE, skinDye, extraColours, distance, doLodLoading, showSkinPaint, itemRender, null));
+    }
+    
+    @Override
+    public void render(Entity entity, Skin skin, SkinRenderData renderData) {
         if (skin == null) {
             return;
         }
@@ -59,10 +66,10 @@ public class ModelSkinWings extends ModelTypeHelper  {
             angle = SkinUtils.getFlapAngleForWings(entity, skin);
 
             if (part.getPartType().getPartName().equals("leftWing")) {
-                renderLeftWing(part, SCALE, skinDye, extraColours, distance, angle, doLodLoading, movmentType);
+                renderLeftWing(new SkinPartRenderData(part, renderData), angle, movmentType);
             }
             if (part.getPartType().getPartName().equals("rightWing")) {
-                renderRightWing(part, SCALE, skinDye, extraColours, distance, -angle, doLodLoading, movmentType);
+                renderRightWing(new SkinPartRenderData(part, renderData), -angle, movmentType);
             }
             GL11.glPopMatrix();
         }
@@ -70,15 +77,15 @@ public class ModelSkinWings extends ModelTypeHelper  {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderLeftWing(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
+    private void renderLeftWing(SkinPartRenderData partRenderData, double angle, MovementType movmentType) {
         GL11.glPushMatrix();
         
         Point3D point = new Point3D(0, 0, 0);
         EnumFacing axis = EnumFacing.DOWN;
         
-        if (part.getMarkerCount() > 0) {
-            point = part.getMarker(0);
-            axis = part.getMarkerSide(0);
+        if (partRenderData.getSkinPart().getMarkerCount() > 0) {
+            point = partRenderData.getSkinPart().getMarker(0);
+            axis = partRenderData.getSkinPart().getMarkerSide(0);
         }
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
@@ -112,18 +119,18 @@ public class ModelSkinWings extends ModelTypeHelper  {
         GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
         GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
         
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
     
-    private void renderRightWing(SkinPart part, float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, double angle, boolean doLodLoading, MovementType movmentType) {
+    private void renderRightWing(SkinPartRenderData partRenderData, double angle, MovementType movmentType) {
         GL11.glPushMatrix();
         Point3D point = new Point3D(0, 0, 0);
         EnumFacing axis = EnumFacing.DOWN;
         
-        if (part.getMarkerCount() > 0) {
-            point = part.getMarker(0);
-            axis = part.getMarkerSide(0);
+        if (partRenderData.getSkinPart().getMarkerCount() > 0) {
+            point = partRenderData.getSkinPart().getMarker(0);
+            axis = partRenderData.getSkinPart().getMarkerSide(0);
         }
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
@@ -156,7 +163,7 @@ public class ModelSkinWings extends ModelTypeHelper  {
         GL11.glTranslated(SCALE * -point.getX(), SCALE * -point.getY(), SCALE * -point.getZ());
         GL11.glTranslated(SCALE * -0.5F, SCALE * -0.5F, SCALE * -0.5F);
         
-        renderPart(part, scale, skinDye, extraColours, distance, doLodLoading);
+        renderPart(partRenderData);
         GL11.glPopMatrix();
     }
 }

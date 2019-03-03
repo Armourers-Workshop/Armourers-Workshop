@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.client.model.bake;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
-import moe.plushie.armourers_workshop.client.render.SkinRenderData;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
@@ -40,7 +40,7 @@ public class ColouredFace {
         this.lodLevel = lodLevel;
     }
 
-    public void renderVertex(IRenderBuffer renderBuffer, SkinRenderData renderData, ClientSkinPartData cspd) {
+    public void renderVertex(IRenderBuffer renderBuffer, SkinPartRenderData renderData, ClientSkinPartData cspd) {
         byte r = this.r;
         byte g = this.g;
         byte b = this.b;

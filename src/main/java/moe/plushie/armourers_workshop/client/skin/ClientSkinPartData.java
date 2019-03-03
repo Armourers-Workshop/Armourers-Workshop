@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.SkinModel;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
-import moe.plushie.armourers_workshop.client.render.SkinRenderData;
+import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData.ModelKey;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
@@ -44,7 +44,7 @@ public class ClientSkinPartData implements RemovalListener<ModelKey, SkinModel> 
         modelCache = builder.build(new ModelLoader());
     }
     
-    public SkinModel getModelForDye(SkinRenderData renderData) {
+    public SkinModel getModelForDye(SkinPartRenderData renderData) {
         ModelKey modelKey = new ModelKey(renderData.getSkinDye(), renderData.getExtraColours(), renderData.getEntityTexture());
         return modelCache.getUnchecked(modelKey);
     }

@@ -105,7 +105,7 @@ public class SkinLayerRendererHeldItem extends LayerHeldItem {
                             Skin skin = ClientSkinCache.INSTANCE.getSkin(descriptor);
                             if (skin != null) {
                                 int useCount = entityLivingBase.getItemInUseCount();
-                                ModelSkinBow model = SkinModelRenderHelper.INSTANCE.customBow;
+                                ModelSkinBow model = SkinModelRenderHelper.INSTANCE.modelBow;
                                 model.frame = getAnimationFrame(entityLivingBase.getItemInUseMaxCount());
                                 //ModLogger.log("useCount:" + useCount + " maxUse:" + entityLivingBase.getItemInUseMaxCount());
                                 
