@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -81,6 +82,14 @@ public final class PaintingHelper {
      */
     public static Color getToolPaintColour(ItemStack stack) {
         byte[] rgbt = getToolPaintData(stack);
+        PaintType paintType = PaintRegistry.getPaintTypeFormByte(rgbt[3]);
+        if (paintType == PaintRegistry.PAINT_TYPE_RAINBOW) {
+            return getRainbowColour();
+        } else if (paintType == PaintRegistry.PAINT_TYPE_PULSE_1) {
+            return getPulse1Colour(rgbt);
+        } else if (paintType == PaintRegistry.PAINT_TYPE_PULSE_2) {
+            return getPulse2Colour(rgbt);
+        }
         return new Color(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, 255);
     }
     
@@ -107,7 +116,7 @@ public final class PaintingHelper {
     
     public static byte[] getToolPaintData(ItemStack stack) {
         NBTTagCompound compound = stack.getTagCompound();
-        if (compound != null && compound.hasKey(TAG_TOOL_PAINT, 7)) {
+        if (compound != null && compound.hasKey(TAG_TOOL_PAINT, NBT.TAG_BYTE_ARRAY)) {
             return compound.getByteArray(TAG_TOOL_PAINT);
         }
         return getBlankPaintData();
@@ -145,6 +154,31 @@ public final class PaintingHelper {
 
     public static int bytesToInt(byte[] rgbt) {
         return ((rgbt[3] & 0xFF) << 24) | ((rgbt[0] & 0xFF) << 16) | ((rgbt[1] & 0xFF) << 8) | (rgbt[2] & 0xFF);
+    }
+    
+    private static Color getRainbowColour() {
+        float f = (float)(Minecraft.getSystemTime() % (256L * 25)) / 25F;
+        return new Color(Color.HSBtoRGB(f / 255F, 1F, 1F));
+    }
+    
+    private static Color getPulse1Colour(byte[] rgbt) {
+        float f = (float)(Minecraft.getSystemTime() % (256L * 25)) / 25F;
+        f = f * 2F;
+        if (f > 255) {
+            f =  255F - (f - 255);
+        }
+        float[] hsb = Color.RGBtoHSB(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, null);
+        return new Color(Color.HSBtoRGB(hsb[0], hsb[1], f / 255F));
+    }
+    
+    private static Color getPulse2Colour(byte[] rgbt) {
+        float f = (float)(Minecraft.getSystemTime() % (256L * 12.5F)) / 12.5F;
+        f = f * 2F;
+        if (f > 255) {
+            f =  255F - (f - 255);
+        }
+        float[] hsb = Color.RGBtoHSB(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, null);
+        return new Color(Color.HSBtoRGB(hsb[0], hsb[1], f / 255F));
     }
     
     @SideOnly(Side.CLIENT)
