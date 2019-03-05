@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.skin.data.serialize;
+package moe.plushie.armourers_workshop.common.skin.data.serialize.v13;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -17,9 +17,9 @@ import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 
-public final class SkinPartSerializer {
+public final class SkinPartSerializerV13 {
     
-    private SkinPartSerializer() {}
+    private SkinPartSerializerV13() {}
     
     public static SkinPart loadSkinPart(DataInputStream stream, int version) throws IOException, InvalidCubeTypeException {
         ISkinPartType skinPart = null;
