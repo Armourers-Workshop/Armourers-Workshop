@@ -75,15 +75,15 @@ public class ColouredFace {
                     g = dyedColour[1];
                     b = dyedColour[2];
                 }
-                
+
             }
         } else if (type == PaintRegistry.PAINT_TYPE_RAINBOW) {
             int[] averageRGB = cspd.getAverageDyeColour(type.getChannelIndex());
-            byte[] dyedColour = dyeColour(r, g, b, new byte[] {(byte)127, (byte)127, (byte)127}, averageRGB);
+            byte[] dyedColour = dyeColour(r, g, b, new byte[] { (byte) 127, (byte) 127, (byte) 127 }, averageRGB);
             r = dyedColour[0];
             g = dyedColour[1];
             b = dyedColour[2];
-        } else  if (extraColours != null) {
+        } else if (extraColours != null) {
             if (type.getColourType() != null) {
                 int[] averageRGB = cspd.getAverageDyeColour(type.getChannelIndex());
                 byte[] dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(type.getColourType()), averageRGB);
@@ -92,15 +92,9 @@ public class ColouredFace {
                 b = dyedColour[2];
             }
         }
-        
-        double paintScale = 1D / 256D;
 
-        if (type == PaintRegistry.PAINT_TYPE_RAINBOW) {
-            FaceRenderer.renderFace(x, y, z, r, g, b, a, face, lodLevel, paintScale, 0, paintScale + paintScale, paintScale);
-            //FaceRenderer.renderFace(x, y, z, r, g, b, a, face, lodLevel, 0D, 0D, paintScale, paintScale);
-        } else {
-            FaceRenderer.renderFace(x, y, z, r, g, b, a, face, lodLevel, 0D, 0D, paintScale, paintScale);
-        }
+        double paintScale = 1D / 256D;
+        FaceRenderer.renderFace(x, y, z, r, g, b, a, face, lodLevel, type.getU() * paintScale, type.getV() * paintScale, (type.getU() * paintScale) + paintScale, (type.getV() * paintScale) + paintScale);
     }
 
     /**

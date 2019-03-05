@@ -12,8 +12,8 @@ public class PaintType {
     private boolean hasColourChannel;
     private int channelIndex;
     private ExtraColourType colourType;
-    private int textureU;
-    private int textureV;
+    private float textureU;
+    private float textureV;
 
     public PaintType(int id, int markerIndex, boolean hasColourChannel, String name) {
         this.id = id;
@@ -36,8 +36,16 @@ public class PaintType {
         this.colourType = colourType;
         return this;
     }
+    
+    public float getU() {
+        return textureU;
+    }
+    
+    public float getV() {
+        return textureV;
+    }
 
-    public PaintType setTextureUV(int u, int v) {
+    public PaintType setTextureUV(float u, float v) {
         this.textureU = u;
         this.textureV = v;
         return this;
