@@ -156,6 +156,11 @@ public final class PaintingHelper {
         return ((rgbt[3] & 0xFF) << 24) | ((rgbt[0] & 0xFF) << 16) | ((rgbt[1] & 0xFF) << 8) | (rgbt[2] & 0xFF);
     }
     
+    public static double getPaintTextureOffset() {
+        double f = (double)(Minecraft.getSystemTime() % (256L * 25)) / 25D;
+        return Math.round(f);
+    }
+    
     private static Color getRainbowColour() {
         float f = (float)(Minecraft.getSystemTime() % (256L * 25)) / 25F;
         return new Color(Color.HSBtoRGB(f / 255F, 1F, 1F));

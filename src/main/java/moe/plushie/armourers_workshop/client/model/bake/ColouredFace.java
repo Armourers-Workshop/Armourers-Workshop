@@ -1,12 +1,20 @@
 package moe.plushie.armourers_workshop.client.model.bake;
 
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
+import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
+import moe.plushie.armourers_workshop.common.skin.SkinTextureHelper;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 
 public class ColouredFace {
@@ -83,6 +91,20 @@ public class ColouredFace {
             r = dyedColour[0];
             g = dyedColour[1];
             b = dyedColour[2];
+        } else if (type == PaintRegistry.PAINT_TYPE_TEXTURE & renderData.getEntityTexture() != null) {
+            if (renderData.getSkinPart().getPartType() instanceof ISkinPartTypeTextured) {
+                BufferedImage image = SkinHelper.getBufferedImageSkin(renderData.getEntityTexture());
+                if (image != null) {
+                    Point p = SkinTextureHelper.getTextureLocationFromBlock(x, y, z, (ISkinPartTypeTextured) renderData.getSkinPart().getPartType(), EnumFacing.VALUES[face]);
+                    if (p.x >= 0 & p.y >= 0 & p.x < image.getWidth() & p.y < image.getHeight()) {
+                        int rgb = image.getRGB(p.x, p.y);
+                        byte[] dyedColour = PaintingHelper.intToBytes(rgb);
+                        r = dyedColour[0];
+                        g = dyedColour[1];
+                        b = dyedColour[2];
+                    }
+                }
+            }
         } else if (extraColours != null) {
             if (type.getColourType() != null) {
                 int[] averageRGB = cspd.getAverageDyeColour(type.getChannelIndex());

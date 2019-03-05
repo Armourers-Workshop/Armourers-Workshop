@@ -207,6 +207,7 @@ paintType.armourers_workshop:dye_5.name=Dye 5
 paintType.armourers_workshop:dye_6.name=Dye 6
 paintType.armourers_workshop:dye_7.name=Dye 7
 paintType.armourers_workshop:dye_8.name=Dye 8
+paintType.armourers_workshop:texture.name=Texture
 paintType.armourers_workshop:rainbow.name=Rainbow
 paintType.armourers_workshop:pulse_1.name=Pulse 1
 paintType.armourers_workshop:pulse_2.name=Pulse 2

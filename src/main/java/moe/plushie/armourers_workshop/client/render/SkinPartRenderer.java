@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.client.model.SkinModel;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -80,8 +81,7 @@ public class SkinPartRenderer extends ModelBase {
         
         GlStateManager.matrixMode(GL11.GL_TEXTURE);
         GlStateManager.pushMatrix();
-        double f = (double)(Minecraft.getSystemTime() % (256L * 25)) / 25D;
-        f = Math.round(f);
+        double f = PaintingHelper.getPaintTextureOffset();
         GlStateManager.translate(0, f / 256D, 0);
         
         int listCount = skinModel.displayList.length;

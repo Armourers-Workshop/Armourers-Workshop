@@ -17,14 +17,13 @@ import net.minecraft.util.EnumFacing;
 public class SkinTextureHelper {
     
     public static Point getTextureLocationFromWorldBlock(TileEntityBoundingBox te, EnumFacing side) {
-        ISkinPartTypeTextured skinPart = (ISkinPartTypeTextured) te.getSkinPart();
+        return getTextureLocationFromBlock(te.getGuideX(), te.getGuideY(), te.getGuideZ(), (ISkinPartTypeTextured) te.getSkinPart(), side);
+    }
+    
+    public static Point getTextureLocationFromBlock(byte blockX, byte blockY, byte blockZ, ISkinPartTypeTextured skinPart, EnumFacing side) {
         Point textureLocation = skinPart.getTextureSkinPos();
         IPoint3D textureModelSize = skinPart.getTextureModelSize();
         EnumFacing blockFace = side;
-        
-        byte blockX = te.getGuideX();
-        byte blockY = te.getGuideY();
-        byte blockZ = te.getGuideZ();
         
         int textureX = textureLocation.x;
         int textureY = textureLocation.y;

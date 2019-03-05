@@ -17,6 +17,8 @@ public final class PaintRegistry {
     public static final PaintType PAINT_TYPE_DYE_6 = new PaintType(6, 6, true, "dye_6");
     public static final PaintType PAINT_TYPE_DYE_7 = new PaintType(7, 7, true, "dye_7");
     public static final PaintType PAINT_TYPE_DYE_8 = new PaintType(8, 8, true, "dye_8");
+    
+    public static final PaintType PAINT_TYPE_TEXTURE = new PaintType(107, 17, "texture");
 
     public static final PaintType PAINT_TYPE_RAINBOW = new PaintType(104, 14, true, "rainbow").setTextureUV(1F, 0F);
     public static final PaintType PAINT_TYPE_PULSE_1 = new PaintType(105, 15, "pulse_1").setTextureUV(2F, 0F);
@@ -48,6 +50,8 @@ public final class PaintRegistry {
         registerPaintType(PAINT_TYPE_DYE_6);
         registerPaintType(PAINT_TYPE_DYE_7);
         registerPaintType(PAINT_TYPE_DYE_8);
+        
+        registerPaintType(PAINT_TYPE_TEXTURE);
 
         registerPaintType(PAINT_TYPE_RAINBOW);
         registerPaintType(PAINT_TYPE_PULSE_1);
