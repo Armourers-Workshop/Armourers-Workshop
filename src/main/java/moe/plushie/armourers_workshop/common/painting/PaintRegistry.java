@@ -20,7 +20,7 @@ public final class PaintRegistry {
 
     public static final PaintType PAINT_TYPE_RAINBOW = new PaintType(104, 14, true, "rainbow").setTextureUV(1F, 0F);
     public static final PaintType PAINT_TYPE_PULSE_1 = new PaintType(105, 15, "pulse_1").setTextureUV(2F, 0F);
-    public static final PaintType PAINT_TYPE_PULSE_2 = new PaintType(106, 15, "pulse_2").setTextureUV(3F, 0F);
+    public static final PaintType PAINT_TYPE_PULSE_2 = new PaintType(106, 16, "pulse_2").setTextureUV(3F, 0F);
     // WATER(100), LAVA(101), SKY(102), STAR_FIELD(103), RAINBOW(104),
 
     public static final PaintType PAINT_TYPE_SKIN = new PaintType(253, 10, true, "skin").setExtraColourType(ExtraColourType.SKIN);

@@ -90,9 +90,9 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
     
     public static void renderFaceWithMarker(IRenderBuffer renderer, double x, double y, double z, EnumFacing face, int marker) {
         Tessellator tess = Tessellator.getInstance();
-        float tileScale = 0.25F;
-        float ySrc = (float) Math.floor((double)marker / 4F);
-        float xSrc = marker - (ySrc * 4);
+        float tileScale = 0.125F;
+        float ySrc = (float) Math.floor((double)marker / 8F);
+        float xSrc = marker - (ySrc * 8);
         float xStart = tileScale * xSrc;
         float yStart = tileScale * ySrc;
         float xEnd = xStart + tileScale * 1;
