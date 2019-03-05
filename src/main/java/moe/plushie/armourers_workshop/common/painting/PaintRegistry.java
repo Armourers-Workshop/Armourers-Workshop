@@ -18,6 +18,7 @@ public final class PaintRegistry {
     public static final PaintType PAINT_TYPE_DYE_7 = new PaintType(7, 7, true, "dye_7");
     public static final PaintType PAINT_TYPE_DYE_8 = new PaintType(8, 8, true, "dye_8");
     
+    public static final PaintType PAINT_TYPE_RAINBOW = new PaintType(104, 14, true, "rainbow");
     //WATER(100), LAVA(101), SKY(102), STAR_FIELD(103), RAINBOW(104),
     
     public static final PaintType PAINT_TYPE_SKIN = new PaintType(253, 10, true, "skin").setExtraColourType(ExtraColourType.SKIN);
@@ -45,6 +46,8 @@ public final class PaintRegistry {
         registerPaintType(PAINT_TYPE_DYE_6);
         registerPaintType(PAINT_TYPE_DYE_7);
         registerPaintType(PAINT_TYPE_DYE_8);
+        
+        registerPaintType(PAINT_TYPE_RAINBOW);
         
         registerPaintType(PAINT_TYPE_SKIN);
         registerPaintType(PAINT_TYPE_HAIR);

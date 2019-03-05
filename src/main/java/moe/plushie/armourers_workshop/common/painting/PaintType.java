@@ -5,58 +5,68 @@ import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 
 public class PaintType {
-    
+
     private final int id;
     private final int markerIndex;
     private final String name;
     private boolean hasColourChannel;
     private int channelIndex;
     private ExtraColourType colourType;
-    
+    private int textureU;
+    private int textureV;
+
     public PaintType(int id, int markerIndex, boolean hasColourChannel, String name) {
         this.id = id;
         this.markerIndex = markerIndex;
         this.hasColourChannel = hasColourChannel;
         this.name = name;
+        this.textureU = 0;
+        this.textureV = 0;
     }
-    
+
     public PaintType(int id, int markerIndex, String name) {
         this(id, markerIndex, false, name);
     }
-    
+
     public ExtraColourType getColourType() {
         return colourType;
     }
-    
+
     public PaintType setExtraColourType(ExtraColourType colourType) {
         this.colourType = colourType;
         return this;
     }
-    
+
+    public PaintType setTextureUV(int u, int v) {
+        this.textureU = u;
+        this.textureV = v;
+        return this;
+    }
+
     public int getId() {
         return id;
     }
-    
+
     public int getMarkerIndex() {
         return markerIndex;
     }
-    
+
     public boolean hasAverageColourChannel() {
         return hasColourChannel;
     }
-    
+
     public int getChannelIndex() {
         return channelIndex;
     }
-    
+
     public void setColourChannelIndex(int channelIndex) {
         this.channelIndex = channelIndex;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public String getLocalizedName() {
         String unlocalizedText = "paintType." + LibModInfo.ID.toLowerCase() + ":";
         unlocalizedText += name.toLowerCase() + ".name";
@@ -84,4 +94,4 @@ public class PaintType {
             return false;
         return true;
     }
- }
+}
