@@ -18,11 +18,16 @@ public final class PaintRegistry {
     public static final PaintType PAINT_TYPE_DYE_7 = new PaintType(7, 7, true, "dye_7");
     public static final PaintType PAINT_TYPE_DYE_8 = new PaintType(8, 8, true, "dye_8");
     
-    public static final PaintType PAINT_TYPE_TEXTURE = new PaintType(107, 17, "texture");
+    
 
     public static final PaintType PAINT_TYPE_RAINBOW = new PaintType(104, 14, true, "rainbow").setTextureUV(1F, 0F);
     public static final PaintType PAINT_TYPE_PULSE_1 = new PaintType(105, 15, "pulse_1").setTextureUV(2F, 0F);
     public static final PaintType PAINT_TYPE_PULSE_2 = new PaintType(106, 16, "pulse_2").setTextureUV(3F, 0F);
+    
+    public static final PaintType PAINT_TYPE_TEXTURE = new PaintType(107, 17, "texture");
+    
+    public static final PaintType PAINT_TYPE_FLICKER_1 = new PaintType(108, 18, "flicker_1").setTextureUV(4F, 0F);
+    public static final PaintType PAINT_TYPE_FLICKER_2 = new PaintType(109, 19, "flicker_2").setTextureUV(5F, 0F);
     // WATER(100), LAVA(101), SKY(102), STAR_FIELD(103), RAINBOW(104),
 
     public static final PaintType PAINT_TYPE_SKIN = new PaintType(253, 10, true, "skin").setExtraColourType(ExtraColourType.SKIN);
@@ -54,8 +59,11 @@ public final class PaintRegistry {
         registerPaintType(PAINT_TYPE_TEXTURE);
 
         registerPaintType(PAINT_TYPE_RAINBOW);
+        
         registerPaintType(PAINT_TYPE_PULSE_1);
         registerPaintType(PAINT_TYPE_PULSE_2);
+        registerPaintType(PAINT_TYPE_FLICKER_1);
+        registerPaintType(PAINT_TYPE_FLICKER_2);
         
         registerPaintType(PAINT_TYPE_SKIN);
         registerPaintType(PAINT_TYPE_HAIR);
