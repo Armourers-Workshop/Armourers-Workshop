@@ -54,4 +54,9 @@ public final class AsyncWorldUpdateBlock extends AsyncWorldUpdate {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "AsyncWorldUpdateBlock [state=" + state + ", onlyReplaceable=" + onlyReplaceable + ", tileEntity=" + tileEntity + ", pos=" + pos + ", dimensionId=" + dimensionId + ", delay=" + delay + "]";
+    }
 }

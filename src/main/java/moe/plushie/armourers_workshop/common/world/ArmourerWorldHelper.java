@@ -325,23 +325,8 @@ public final class ArmourerWorldHelper {
                     byte guideY = (byte) iy;
                     byte guideZ = (byte) iz;
                     
-                    if (world.isAirBlock(target)) {
-                        TileEntity te = new TileEntityBoundingBox(parentPos, guideX, guideY, guideZ, guidePart);
-                        SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(ModBlocks.boundingBox.getDefaultState(), target, world).setTileEntity(te));
-                        //world.setBlockState(target, ModBlocks.boundingBox.getDefaultState());
-                        
-                        
-                        /*TileEntity te = null;
-                        te = world.getTileEntity(target);
-                        if (te != null && te instanceof TileEntityBoundingBox) {
-                            ((TileEntityBoundingBox)te).setParent(parentPos, guideX, guideY, guideZ, guidePart);
-                        } else {
-                            te = new TileEntityBoundingBox(parentPos, guideX, guideY, guideZ, guidePart);
-                            world.setTileEntity(target, te);
-                        }*/
-                        
-                    }
-                    
+                    TileEntity te = new TileEntityBoundingBox(parentPos, guideX, guideY, guideZ, guidePart);
+                    SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(ModBlocks.boundingBox.getDefaultState(), target, world).setTileEntity(te).setOnlyReplaceable(true));
                 }
             }
         }

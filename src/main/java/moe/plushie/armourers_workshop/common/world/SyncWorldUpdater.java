@@ -11,35 +11,35 @@ import net.minecraftforge.fml.relauncher.Side;
 
 @Mod.EventBusSubscriber(modid = LibModInfo.ID)
 public class SyncWorldUpdater {
-    
-    private static final ArrayList<AsyncWorldUpdate> worldUpdates = new ArrayList<AsyncWorldUpdate>();
+
+    private static final ArrayList<AsyncWorldUpdate> WORLD_UPDATES = new ArrayList<AsyncWorldUpdate>();
 
     private SyncWorldUpdater() {
     }
-    
+
     @SubscribeEvent
     public static void onWorldTick(TickEvent.WorldTickEvent event) {
         if (event.side == Side.CLIENT) {
             return;
         }
         World world = event.world;
-        synchronized (worldUpdates) {
-            for (int i = 0; i < worldUpdates.size(); i++) {
-                AsyncWorldUpdate worldUpdate = worldUpdates.get(i);
+        synchronized (WORLD_UPDATES) {
+            for (int i = 0; i < WORLD_UPDATES.size(); i++) {
+                AsyncWorldUpdate worldUpdate = WORLD_UPDATES.get(i);
                 if (worldUpdate.ready()) {
                     if (worldUpdate.getDimensionId() == world.provider.getDimension()) {
                         worldUpdate.doUpdate(world);
-                        worldUpdates.remove(i);
+                        WORLD_UPDATES.remove(i);
                         i--;
                     }
                 }
             }
         }
     }
-    
+
     public static void addWorldUpdate(AsyncWorldUpdate worldUpdate) {
-        synchronized (worldUpdates) {
-            worldUpdates.add(worldUpdate);
+        synchronized (WORLD_UPDATES) {
+            WORLD_UPDATES.add(worldUpdate);
         }
     }
 }
