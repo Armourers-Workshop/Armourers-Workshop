@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 
 import org.apache.commons.io.IOUtils;
 
+import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.nbt.NBTTagCompound;
@@ -238,7 +239,7 @@ public class SkinProperties {
         ByteArrayInputStream bais = new ByteArrayInputStream(data);
         DataInputStream dataInputStream = new DataInputStream(bais);
         try {
-            readFromStream(dataInputStream, Skin.FILE_VERSION);
+            readFromStream(dataInputStream, SkinSerializer.MAX_FILE_VERSION);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

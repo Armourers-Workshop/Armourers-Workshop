@@ -17,7 +17,7 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonArrayMultipartForm;
 import moe.plushie.armourers_workshop.common.library.global.MultipartForm;
-import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.gui.GuiButton;
@@ -90,9 +90,9 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
                 searchTypes += ";";
             }
         }
-        MultipartForm multipartFormRecently = new MultipartForm(RECENTLY_UPLOADED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION));
-        MultipartForm multipartFormMostDownloaded = new MultipartForm(MOST_DOWNLOADED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION));
-        MultipartForm multipartFormMostLiked = new MultipartForm(MOST_LIKED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION));
+        MultipartForm multipartFormRecently = new MultipartForm(RECENTLY_UPLOADED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(SkinSerializer.MAX_FILE_VERSION));
+        MultipartForm multipartFormMostDownloaded = new MultipartForm(MOST_DOWNLOADED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(SkinSerializer.MAX_FILE_VERSION));
+        MultipartForm multipartFormMostLiked = new MultipartForm(MOST_LIKED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(SkinSerializer.MAX_FILE_VERSION));
         multipartFormRecently.addText("searchTypes", searchTypes);
         multipartFormMostDownloaded.addText("searchTypes", searchTypes);
         multipartFormMostLiked.addText("searchTypes", searchTypes);

@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import org.apache.commons.io.Charsets;
 import org.apache.logging.log4j.Level;
 
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.common.exception.NewerFileVersionException;
+import moe.plushie.armourers_workshop.common.skin.cubes.CubeMarkerData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinCubeData;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
@@ -45,7 +48,7 @@ public final class SkinSerializerV13 {
     
     public static void writeToStream(Skin skin, DataOutputStream stream) throws IOException {
         // Write the skin file version.
-        stream.writeInt(Skin.FILE_VERSION);
+        stream.writeInt(FILE_VERSION);
         // Write skin header.
         StreamUtils.writeString(stream, Charsets.US_ASCII, TAG_SKIN_HEADER);
         // Write skin props.
@@ -81,7 +84,7 @@ public final class SkinSerializerV13 {
     
     public static Skin readSkinFromStream(DataInputStream stream) throws IOException, NewerFileVersionException, InvalidCubeTypeException {
         int fileVersion = stream.readInt();
-        if (fileVersion > Skin.FILE_VERSION) {
+        if (fileVersion > FILE_VERSION) {
             throw new NewerFileVersionException();
         }
         if (fileVersion > 12) {
@@ -292,7 +295,7 @@ public final class SkinSerializerV13 {
     
     public static ISkinType readSkinTypeNameFromStream(DataInputStream stream) throws IOException, NewerFileVersionException {
         int fileVersion = stream.readInt();
-        if (fileVersion > Skin.FILE_VERSION) {
+        if (fileVersion > FILE_VERSION) {
             throw new NewerFileVersionException();
         }
         if (fileVersion > 12) {

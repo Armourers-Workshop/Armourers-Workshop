@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.Downlo
 import moe.plushie.armourers_workshop.common.library.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.common.library.global.MultipartForm;
 import moe.plushie.armourers_workshop.common.library.global.PlushieUser;
-import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.gui.GuiButton;
@@ -62,7 +62,7 @@ public class GuiGlobalLibraryPanelUserSkins extends GuiGlobalLibraryPanelSearchR
         
         String searchUrl = USER_URL;
         searchUrl += "?userId=" + String.valueOf(userId);
-        searchUrl += "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION);
+        searchUrl += "&maxFileVersion=" + String.valueOf(SkinSerializer.MAX_FILE_VERSION);
         searchUrl += "&pageIndex=" + String.valueOf(pageIndex);
         searchUrl += "&pageSize=" + String.valueOf(skinPanelResults.getIconCount());
         

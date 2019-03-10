@@ -23,7 +23,7 @@ import com.google.gson.JsonParser;
 
 import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonCallable;
 import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonObjectCallable;
-import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 
 public final class GlobalSkinLibraryUtils {
@@ -43,7 +43,7 @@ public final class GlobalSkinLibraryUtils {
     public static FutureTask<JsonArray> getUserSkinsList(Executor executor, int userId) {
         Validate.notNull(executor);
         Validate.notNull(userId);
-        String searchUrl = USER_SKINS_URL + "?userId=" + String.valueOf(userId) + "&maxFileVersion=" + String.valueOf(Skin.FILE_VERSION);
+        String searchUrl = USER_SKINS_URL + "?userId=" + String.valueOf(userId) + "&maxFileVersion=" + String.valueOf(SkinSerializer.MAX_FILE_VERSION);
         FutureTask<JsonArray> futureTask = new FutureTask<JsonArray>(new DownloadJsonCallable(searchUrl));
         executor.execute(futureTask);
         return futureTask;

@@ -12,6 +12,8 @@ import moe.plushie.armourers_workshop.common.skin.data.serialize.v13.SkinSeriali
 
 public class SkinSerializer {
     
+    public static final int MAX_FILE_VERSION = 13;
+    
     public static void writeToStream(Skin skin, DataOutputStream stream) throws IOException {
         SkinSerializerV13.writeToStream(skin, stream);
     }

@@ -20,8 +20,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Skin implements ISkin {
     
-    public static final int FILE_VERSION = 13;
-    
     public static final String KEY_FILE_NAME = "fileName";
     
     private SkinProperties properties;
