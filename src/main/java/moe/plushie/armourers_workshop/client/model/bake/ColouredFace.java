@@ -56,6 +56,7 @@ public class ColouredFace {
         if (type == PaintRegistry.PAINT_TYPE_NONE) {
             return;
         }
+        int channelIndex = type.getChannelIndex();
         // Dye
         if (type.getId() >= 1 && type.getId() <= 8) {
             // Is a dye paint
@@ -66,26 +67,32 @@ public class ColouredFace {
                     if (dyeType == PaintRegistry.PAINT_TYPE_NONE) {
                         return;
                     }
-                    int[] averageRGB = cspd.getAverageDyeColour(type.getChannelIndex());
-                    byte[] dyedColour = null;
-                    if (dyeType.getColourType() != null & extraColours != null) {
-                        byte[] extraColour = extraColours.getColourBytes(dyeType.getColourType());
-                        if (extraColour.length == 4 && (extraColour[3] & 0xFF) != 0) {
-                            dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(dyeType.getColourType()), averageRGB);
+                    
+                    if (dyeType == PaintRegistry.PAINT_TYPE_NORMAL) {
+                        //index = dyeType.getChannelIndex();
+                        int[] averageRGB = cspd.getAverageDyeColour(channelIndex);
+                        byte[] dyedColour = null;
+                        if (dyeType.getColourType() != null & extraColours != null) {
+                            byte[] extraColour = extraColours.getColourBytes(dyeType.getColourType());
+                            if (extraColour.length == 4 && (extraColour[3] & 0xFF) != 0) {
+                                dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(dyeType.getColourType()), averageRGB);
+                            } else {
+                                dyedColour = dyeColour(r, g, b, dye, averageRGB);
+                            }
                         } else {
                             dyedColour = dyeColour(r, g, b, dye, averageRGB);
                         }
-                    } else {
-                        dyedColour = dyeColour(r, g, b, dye, averageRGB);
+                        r = dyedColour[0];
+                        g = dyedColour[1];
+                        b = dyedColour[2];
                     }
-                    r = dyedColour[0];
-                    g = dyedColour[1];
-                    b = dyedColour[2];
+                    type = dyeType;
                 }
-
             }
-        } else if (type == PaintRegistry.PAINT_TYPE_RAINBOW) {
-            int[] averageRGB = cspd.getAverageDyeColour(type.getChannelIndex());
+        }
+        
+        if (type == PaintRegistry.PAINT_TYPE_RAINBOW) {
+            int[] averageRGB = cspd.getAverageDyeColour(channelIndex);
             byte[] dyedColour = dyeColour(r, g, b, new byte[] { (byte) 127, (byte) 127, (byte) 127 }, averageRGB);
             r = dyedColour[0];
             g = dyedColour[1];
@@ -102,7 +109,7 @@ public class ColouredFace {
             }
         } else if (extraColours != null) {
             if (type.getColourType() != null) {
-                int[] averageRGB = cspd.getAverageDyeColour(type.getChannelIndex());
+                int[] averageRGB = cspd.getAverageDyeColour(channelIndex);
                 byte[] dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(type.getColourType()), averageRGB);
                 r = dyedColour[0];
                 g = dyedColour[1];
