@@ -1,12 +1,19 @@
 package moe.plushie.armourers_workshop.client.model.bake;
 
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
+import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 
 public class ColouredFace {
@@ -84,19 +91,15 @@ public class ColouredFace {
             g = dyedColour[1];
             b = dyedColour[2];
         } else if (type == PaintRegistry.PAINT_TYPE_TEXTURE & renderData.getEntityTexture() != null) {
-            /*if (renderData.getSkinPart().getPartType() instanceof ISkinPartTypeTextured) {
+            if (renderData.getSkinPart().getPartType() instanceof ISkinPartTypeTextured) {
                 BufferedImage image = SkinHelper.getBufferedImageSkin(renderData.getEntityTexture());
                 if (image != null) {
-                    Point p = SkinTextureHelper.getTextureLocationFromBlock(x, y, z, (ISkinPartTypeTextured) renderData.getSkinPart().getPartType(), EnumFacing.VALUES[face]);
-                    if (p.x >= 0 & p.y >= 0 & p.x < image.getWidth() & p.y < image.getHeight()) {
-                        int rgb = image.getRGB(p.x, p.y);
-                        byte[] dyedColour = PaintingHelper.intToBytes(rgb);
-                        r = dyedColour[0];
-                        g = dyedColour[1];
-                        b = dyedColour[2];
-                    }
+                    byte[] dyedColour = getColourFromTexture(x, y, z, r, g, b, face, renderData, image, (ISkinPartTypeTextured) renderData.getSkinPart().getPartType());
+                    r = dyedColour[0];
+                    g = dyedColour[1];
+                    b = dyedColour[2];
                 }
-            }*/
+            }
         } else if (extraColours != null) {
             if (type.getColourType() != null) {
                 int[] averageRGB = cspd.getAverageDyeColour(type.getChannelIndex());
@@ -107,8 +110,71 @@ public class ColouredFace {
             }
         }
 
-        double paintScale = 1D / 256D;
+        // Paint scale 1 / 256.
+        double paintScale = 0.00390625D;
         FaceRenderer.renderFace(x, y, z, r, g, b, a, face, lodLevel, type.getU() * paintScale, type.getV() * paintScale, (type.getU() * paintScale) + paintScale, (type.getV() * paintScale) + paintScale);
+    }
+    
+    private static byte[] getColourFromTexture(byte x, byte y, byte z, byte r, byte g, byte b, byte face, SkinPartRenderData renderData, BufferedImage image, ISkinPartTypeTextured skinPartTex) {
+        EnumFacing facing = EnumFacing.VALUES[face];
+        
+        Point posBase = skinPartTex.getTextureBasePos();
+        int width = (skinPartTex.getTextureModelSize().getX() * 2) + (skinPartTex.getTextureModelSize().getZ() * 2);
+        int height = skinPartTex.getTextureModelSize().getY() + skinPartTex.getTextureModelSize().getZ();
+        
+        
+        int posX = posBase.x;
+        int posY = posBase.y;
+        
+        
+        switch (facing) {
+        case NORTH:
+            posY += skinPartTex.getGuideSpace().getY() + skinPartTex.getGuideSpace().getHeight() + y;
+            posX += skinPartTex.getGuideSpace().getX() + skinPartTex.getGuideSpace().getWidth() + x;
+            posY += skinPartTex.getTextureModelSize().getZ();
+            posX += skinPartTex.getTextureModelSize().getZ();
+            break;
+
+        case EAST:
+            posY += skinPartTex.getGuideSpace().getY() + skinPartTex.getGuideSpace().getHeight() + y;
+            posX += skinPartTex.getGuideSpace().getZ() + skinPartTex.getGuideSpace().getDepth() + z;
+            posY += skinPartTex.getTextureModelSize().getZ();
+            //posX += skinPartTex.getTextureModelSize().getZ() + skinPartTex.getTextureModelSize().getX();
+            break;
+        case SOUTH:
+            posY += skinPartTex.getGuideSpace().getY() + skinPartTex.getGuideSpace().getHeight() + y;
+            posX += skinPartTex.getGuideSpace().getX() + skinPartTex.getGuideSpace().getWidth() + x;
+            posY += skinPartTex.getTextureModelSize().getZ();
+            posX += skinPartTex.getTextureModelSize().getZ() * 2 + skinPartTex.getTextureModelSize().getX();
+            break;
+        case WEST:
+            posY += skinPartTex.getGuideSpace().getY() + skinPartTex.getGuideSpace().getHeight() + y;
+            posX += skinPartTex.getGuideSpace().getZ() + skinPartTex.getGuideSpace().getDepth() + z;
+            posY += skinPartTex.getTextureModelSize().getZ();
+            posX += skinPartTex.getTextureModelSize().getZ() + skinPartTex.getTextureModelSize().getX();
+            break;
+        case UP:
+            posY += skinPartTex.getGuideSpace().getZ() + skinPartTex.getGuideSpace().getDepth() + z;
+            posX += skinPartTex.getGuideSpace().getX() + skinPartTex.getGuideSpace().getWidth() + x;
+            posX += skinPartTex.getTextureModelSize().getZ();
+            break;
+        case DOWN:
+            posY += skinPartTex.getGuideSpace().getZ() + skinPartTex.getGuideSpace().getDepth() + z;
+            posX += skinPartTex.getGuideSpace().getX() + skinPartTex.getGuideSpace().getWidth() + x;
+            posX += skinPartTex.getTextureModelSize().getZ() + skinPartTex.getTextureModelSize().getX();
+            break;
+        }
+        
+        //int yOffset = skinPartTex.getGuideSpace().getY() + skinPartTex.getGuideSpace().getHeight();
+        //int xOffset = skinPartTex.getGuideSpace().getX() + skinPartTex.getGuideSpace().getWidth();
+
+        Point p = new Point(posX, posY);
+        //ModLogger.log(skinPartTex.getPartName() + " - " + p);
+        if (p.x >= 0 & p.y >= 0 & p.x < image.getWidth() & p.y < image.getHeight()) {
+            int rgb = image.getRGB(p.x, p.y);
+            return PaintingHelper.intToBytes(rgb);
+        }
+        return new byte[] { r, g, b };
     }
 
     /**
