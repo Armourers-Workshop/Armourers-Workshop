@@ -50,16 +50,17 @@ public class ModParticleManager {
         Particle.interpPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)partialTicks;
         Particle.cameraViewDir = entity.getLook(partialTicks);
         
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        GlStateManager.alphaFunc(516, 0.003921569F);
-        
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder builder = tess.getBuffer();
         
         if (PARTICLES.isEmpty()) {
             return;
         }
+        
+        GlStateManager.pushAttrib();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.alphaFunc(516, 0.003921569F);
         
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
@@ -75,6 +76,7 @@ public class ModParticleManager {
         GlStateManager.depthMask(true);
         GlStateManager.disableBlend();
         GlStateManager.alphaFunc(516, 0.1F);
+        GlStateManager.popAttrib();
     }
     
     @SubscribeEvent
