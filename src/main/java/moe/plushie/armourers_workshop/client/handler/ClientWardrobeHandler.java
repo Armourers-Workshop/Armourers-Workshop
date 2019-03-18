@@ -21,6 +21,8 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.CullFace;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -116,6 +118,7 @@ public final class ClientWardrobeHandler {
         boolean flag = event.getHand() == EnumHand.OFF_HAND;
         
         GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
         renderItemInFirstPerson((AbstractClientPlayer) player, event.getPartialTicks(), event.getInterpolatedPitch(), event.getHand(), event.getSwingProgress(), itemStack, event.getEquipProgress());
         
         
@@ -124,6 +127,8 @@ public final class ClientWardrobeHandler {
         
         
         GlStateManager.enableCull();
+        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.enableBlend();
         GlStateManager.scale(-1, -1, 1);
         GlStateManager.translate(0, 0.0625F * 1, 0.0625F * 1);
         if (flag) {
@@ -145,7 +150,9 @@ public final class ClientWardrobeHandler {
             GlStateManager.cullFace(CullFace.BACK);
         }
         GlStateManager.disableCull();
+        GlStateManager.disableBlend();
         
+        GlStateManager.popAttrib();
         GlStateManager.popMatrix();
     }
     
