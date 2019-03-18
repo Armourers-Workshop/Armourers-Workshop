@@ -122,13 +122,14 @@ public final class ClientWardrobeHandler {
         renderItemInFirstPerson((AbstractClientPlayer) player, event.getPartialTicks(), event.getInterpolatedPitch(), event.getHand(), event.getSwingProgress(), itemStack, event.getEquipProgress());
         
         
-        int i = event.getHand() == EnumHand.MAIN_HAND ? 1 : -1;
-        GlStateManager.translate((float)i * 0.56F, -0.52F + event.getEquipProgress() * -0.6F, -0.72F);
+        //int i = event.getHand() == EnumHand.MAIN_HAND ? 1 : -1;
+        //GlStateManager.translate((float)i * 0.56F, -0.52F + event.getEquipProgress() * -0.6F, -0.72F);
         
         
         GlStateManager.enableCull();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.enableBlend();
+        
         GlStateManager.scale(-1, -1, 1);
         GlStateManager.translate(0, 0.0625F * 1, 0.0625F * 1);
         if (flag) {
