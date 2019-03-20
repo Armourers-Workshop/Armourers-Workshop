@@ -48,4 +48,9 @@ public class SkinHead extends AbstractSkinTypeBase {
         properties.add(SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD);
         return properties;
     }
+    
+    @Override
+    public boolean haveBoundsChanged(SkinProperties skinPropsOld, SkinProperties skinPropsNew) {
+        return SkinProperties.PROP_MODEL_OVERRIDE_HEAD.getValue(skinPropsOld) != SkinProperties.PROP_MODEL_OVERRIDE_HEAD.getValue(skinPropsNew);
+    }
 }

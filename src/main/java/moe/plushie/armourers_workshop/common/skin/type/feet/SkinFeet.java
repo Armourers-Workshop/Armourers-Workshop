@@ -46,4 +46,15 @@ public class SkinFeet extends AbstractSkinTypeBase {
         properties.add(SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_RIGHT);
         return properties;
     }
+    
+    @Override
+    public boolean haveBoundsChanged(SkinProperties skinPropsOld, SkinProperties skinPropsNew) {
+        if (SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.getValue(skinPropsOld) != SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.getValue(skinPropsNew)) {
+            return true;
+        }
+        if (SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT.getValue(skinPropsOld) != SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT.getValue(skinPropsNew)) {
+            return true;
+        }
+        return false;
+    }
 }

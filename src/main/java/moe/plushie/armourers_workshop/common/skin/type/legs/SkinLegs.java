@@ -48,4 +48,15 @@ public class SkinLegs extends AbstractSkinTypeBase {
         properties.add(SkinProperties.PROP_MODEL_LEGS_LIMIT_LIMBS);
         return properties;
     }
+    
+    @Override
+    public boolean haveBoundsChanged(SkinProperties skinPropsOld, SkinProperties skinPropsNew) {
+        if (SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.getValue(skinPropsOld) != SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.getValue(skinPropsNew)) {
+            return true;
+        }
+        if (SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT.getValue(skinPropsOld) != SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT.getValue(skinPropsNew)) {
+            return true;
+        }
+        return false;
+    }
 }

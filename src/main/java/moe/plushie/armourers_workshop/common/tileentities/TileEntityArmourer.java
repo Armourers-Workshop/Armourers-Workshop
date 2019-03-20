@@ -251,17 +251,13 @@ public class TileEntityArmourer extends AbstractTileEntityInventory implements I
     public void setSkinProps(SkinProperties skinProps) {
         boolean updateBounds = false;
         if (skinType != null && skinType.getVanillaArmourSlotId() != -1) {
-            boolean hadBounds = !SkinProperties.PROP_MODEL_OVERRIDE.getValue(this.skinProps);
-            boolean haveBounds = !SkinProperties.PROP_MODEL_OVERRIDE.getValue(skinProps);
-            if (hadBounds != haveBounds) {
-                updateBounds = true;
-            }
+            updateBounds = skinType.haveBoundsChanged(this.skinProps, skinProps);
         }
         this.skinProps = skinProps;
-        //if (updateBounds) {
+        if (updateBounds) {
             removeBoundingBoxes();
             createBoundingBoxes();
-        //}
+        }
         dirtySync();
     }
     

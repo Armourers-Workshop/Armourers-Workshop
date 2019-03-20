@@ -55,4 +55,9 @@ public abstract class AbstractSkinTypeBase implements ISkinType {
         properties.add(SkinProperties.PROP_ALL_FLAVOUR_TEXT);
         return properties;
     }
+    
+    @Override
+    public boolean haveBoundsChanged(SkinProperties skinPropsOld, SkinProperties skinPropsNew) {
+        return true;
+    }
 }

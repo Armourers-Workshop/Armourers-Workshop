@@ -49,4 +49,18 @@ public class SkinChest extends AbstractSkinTypeBase {
         properties.add(SkinProperties.PROP_MODEL_HIDE_OVERLAY_ARM_RIGHT);
         return properties;
     }
+    
+    @Override
+    public boolean haveBoundsChanged(SkinProperties skinPropsOld, SkinProperties skinPropsNew) {
+        if (SkinProperties.PROP_MODEL_OVERRIDE_CHEST.getValue(skinPropsOld) != SkinProperties.PROP_MODEL_OVERRIDE_CHEST.getValue(skinPropsNew)) {
+            return true;
+        }
+        if (SkinProperties.PROP_MODEL_OVERRIDE_ARM_LEFT.getValue(skinPropsOld) != SkinProperties.PROP_MODEL_OVERRIDE_ARM_LEFT.getValue(skinPropsNew)) {
+            return true;
+        }
+        if (SkinProperties.PROP_MODEL_OVERRIDE_ARM_RIGHT.getValue(skinPropsOld) != SkinProperties.PROP_MODEL_OVERRIDE_ARM_RIGHT.getValue(skinPropsNew)) {
+            return true;
+        }
+        return false;
+    }
 }
