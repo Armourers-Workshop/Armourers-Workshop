@@ -101,6 +101,14 @@ public class GuiCustomSlider extends GuiSlider {
     }
     
     @Override
+    public void mouseReleased(int par1, int par2) {
+        super.mouseReleased(par1, par2);
+        if (parent != null) {
+            parent.onChangeSliderValue(this);
+        }
+    }
+    
+    @Override
     public void drawButton(Minecraft minecraft, int mouseX, int mouseY, float partial) {
         if (!visible) {
             return;

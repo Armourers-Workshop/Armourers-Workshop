@@ -246,6 +246,7 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
 
     public void resetValues(SkinProperties skinProperties) {
         resetting = true;
+        //ModLogger.log("Reset: " + skinProperties);
         checkBlockGlowing.setIsChecked(SkinProperties.PROP_BLOCK_GLOWING.getValue(skinProperties));
         checkBlockLadder.setIsChecked(SkinProperties.PROP_BLOCK_LADDER.getValue(skinProperties));
         checkBlockNoCollision.setIsChecked(SkinProperties.PROP_BLOCK_NO_COLLISION.getValue(skinProperties));
@@ -365,10 +366,16 @@ public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, 
         if (!resetting) {
             SkinProperties skinProps = tileEntity.getSkinProps();
 
-            SkinProperties.PROP_WINGS_IDLE_SPEED.setValue(skinProps, (double) Math.round(sliderWingIdleSpeed.getValue()));
-            SkinProperties.PROP_WINGS_FLYING_SPEED.setValue(skinProps, (double) Math.round(sliderWingFlyingSpeed.getValue()));
-            SkinProperties.PROP_WINGS_MIN_ANGLE.setValue(skinProps, (double) Math.round(sliderWingMinAngle.getValue()));
-            SkinProperties.PROP_WINGS_MAX_ANGLE.setValue(skinProps, (double) Math.round(sliderWingMaxAngle.getValue()));
+            if (!sliderWingIdleSpeed.dragging & !sliderWingFlyingSpeed.dragging & !sliderWingMinAngle.dragging & !sliderWingMaxAngle.dragging) {
+                //ModLogger.log("Sending slider update packet. " + skinProps);
+                //ModLogger.log("Old: " + skinProps);
+                SkinProperties.PROP_WINGS_IDLE_SPEED.setValue(skinProps, (double) Math.round(sliderWingIdleSpeed.getValue()));
+                SkinProperties.PROP_WINGS_FLYING_SPEED.setValue(skinProps, (double) Math.round(sliderWingFlyingSpeed.getValue()));
+                SkinProperties.PROP_WINGS_MIN_ANGLE.setValue(skinProps, (double) Math.round(sliderWingMinAngle.getValue()));
+                SkinProperties.PROP_WINGS_MAX_ANGLE.setValue(skinProps, (double) Math.round(sliderWingMaxAngle.getValue()));
+                //ModLogger.log("New: " + skinProps);
+            }
+
 
             PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinProps(skinProps));
         }
