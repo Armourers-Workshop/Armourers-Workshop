@@ -157,17 +157,17 @@ public final class PaintingHelper {
     }
     
     public static double getPaintTextureOffset() {
-        double f = (double)(Minecraft.getSystemTime() % (256L * 25)) / 25D;
+        double f = (double)(System.currentTimeMillis() % (256L * 25)) / 25D;
         return Math.round(f);
     }
     
     private static Color getRainbowColour() {
-        float f = (float)(Minecraft.getSystemTime() % (256L * 25)) / 25F;
+        float f = (float)(System.currentTimeMillis() % (256L * 25)) / 25F;
         return new Color(Color.HSBtoRGB(f / 255F, 1F, 1F));
     }
     
     private static Color getPulse1Colour(byte[] rgbt) {
-        float f = (float)(Minecraft.getSystemTime() % (256L * 25)) / 25F;
+        float f = (float)(System.currentTimeMillis() % (256L * 25)) / 25F;
         f = f * 2F;
         if (f > 255) {
             f =  255F - (f - 255);
@@ -177,7 +177,7 @@ public final class PaintingHelper {
     }
     
     private static Color getPulse2Colour(byte[] rgbt) {
-        float f = (float)(Minecraft.getSystemTime() % (256L * 12.5F)) / 12.5F;
+        float f = (float)(System.currentTimeMillis() % (256L * 12.5F)) / 12.5F;
         f = f * 2F;
         if (f > 255) {
             f =  255F - (f - 255);
