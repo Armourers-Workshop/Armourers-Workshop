@@ -149,7 +149,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        Color c = new Color(getToolColour(stack));
+        Color c = new Color(PaintingHelper.getToolDisplayColourRGB(stack));
         PaintType paintType = getToolPaintType(stack);
         String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
         String colourText = TranslateUtils.translate("item.armourers_workshop:rollover.colour", c.getRGB());

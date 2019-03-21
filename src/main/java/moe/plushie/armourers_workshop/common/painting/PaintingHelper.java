@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -81,6 +82,15 @@ public final class PaintingHelper {
      * @return A java.awt.color.
      */
     public static Color getToolPaintColour(ItemStack stack) {
+        byte[] rgbt = getToolPaintData(stack);
+        return new Color(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, 255);
+    }
+    
+    public static int getToolDisplayColourRGB(ItemStack stack) {
+        return getToolDisplayColour(stack).getRGB();
+    }
+    
+    public static Color getToolDisplayColour(ItemStack stack) {
         byte[] rgbt = getToolPaintData(stack);
         PaintType paintType = PaintRegistry.getPaintTypeFormByte(rgbt[3]);
         if (paintType == PaintRegistry.PAINT_TYPE_RAINBOW) {
@@ -157,31 +167,33 @@ public final class PaintingHelper {
     }
     
     public static double getPaintTextureOffset() {
-        double f = (double)(System.currentTimeMillis() % (256L * 25)) / 25D;
+        double f = (double)(System.currentTimeMillis() % (255L * 25)) / 25D;
         return Math.round(f);
     }
     
     private static Color getRainbowColour() {
-        float f = (float)(System.currentTimeMillis() % (256L * 25)) / 25F;
+        float f = (float)(System.currentTimeMillis() % (255L * 25)) / 25F;
         return new Color(Color.HSBtoRGB(f / 255F, 1F, 1F));
     }
     
     private static Color getPulse1Colour(byte[] rgbt) {
-        float f = (float)(System.currentTimeMillis() % (256L * 25)) / 25F;
+        float f = (float)(System.currentTimeMillis() % (255L * 25D)) / 25F;
         f = f * 2F;
         if (f > 255) {
             f =  255F - (f - 255);
         }
+        f = MathHelper.clamp(f, 0, 255);
         float[] hsb = Color.RGBtoHSB(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, null);
         return new Color(Color.HSBtoRGB(hsb[0], hsb[1], f / 255F));
     }
     
     private static Color getPulse2Colour(byte[] rgbt) {
-        float f = (float)(System.currentTimeMillis() % (256L * 12.5F)) / 12.5F;
+        float f = (float)(System.currentTimeMillis() % (255L * 12.5D)) / 12.5F;
         f = f * 2F;
         if (f > 255) {
             f =  255F - (f - 255);
         }
+        f = MathHelper.clamp(f, 0, 255);
         float[] hsb = Color.RGBtoHSB(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, null);
         return new Color(Color.HSBtoRGB(hsb[0], hsb[1], f / 255F));
     }

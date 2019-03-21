@@ -83,8 +83,6 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -429,18 +427,18 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             }
             if (stack.getItem() == ModItems.dyeBottle) {
                 if (tintIndex == 0) {
-                    return PaintingHelper.getToolPaintColourRGB(stack);
+                    return PaintingHelper.getToolDisplayColourRGB(stack);
                 }
                 return 0xFFFFFFFF;
             }
             if (stack.getItem() == ModItems.colourPicker) {
                 if (tintIndex == 0) {
-                    return PaintingHelper.getToolPaintColourRGB(stack);
+                    return PaintingHelper.getToolDisplayColourRGB(stack);
                 }
                 return 0xFFFFFFFF;
             }
             if (tintIndex == 1) {
-                return PaintingHelper.getToolPaintColourRGB(stack);
+                return PaintingHelper.getToolDisplayColourRGB(stack);
             }
             return 0xFFFFFFFF;
         }
