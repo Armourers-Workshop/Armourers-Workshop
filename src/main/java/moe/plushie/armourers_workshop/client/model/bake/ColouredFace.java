@@ -126,56 +126,90 @@ public class ColouredFace {
         EnumFacing facing = EnumFacing.VALUES[face];
         
         Point posBase = skinPartTex.getTextureBasePos();
-        int width = (skinPartTex.getTextureModelSize().getX() * 2) + (skinPartTex.getTextureModelSize().getZ() * 2);
-        int height = skinPartTex.getTextureModelSize().getY() + skinPartTex.getTextureModelSize().getZ();
-        
-        
+
         int posX = posBase.x;
         int posY = posBase.y;
+
+        int faceX = 0;
+        int faceY = 0;
         
+        int faceWidth = 0;
+        int faceHeight = 0;
+        
+        int faceOffsetX = 0;
+        int faceOffsetY = 0;
         
         switch (facing) {
         case NORTH:
-            posY += skinPartTex.getGuideSpace().getY() + skinPartTex.getGuideSpace().getHeight() + y;
-            posX += skinPartTex.getGuideSpace().getX() + skinPartTex.getGuideSpace().getWidth() + x;
-            posY += skinPartTex.getTextureModelSize().getZ();
-            posX += skinPartTex.getTextureModelSize().getZ();
+            faceX = skinPartTex.getGuideSpace().getDepth();
+            faceY = skinPartTex.getGuideSpace().getDepth();
+            
+            faceWidth = skinPartTex.getGuideSpace().getWidth();
+            faceHeight = skinPartTex.getGuideSpace().getHeight();
+            
+            faceOffsetX = skinPartTex.getGuideSpace().getX() + faceWidth + x;
+            faceOffsetY =  skinPartTex.getGuideSpace().getY() + faceHeight + y;
             break;
 
         case EAST:
-            posY += skinPartTex.getGuideSpace().getY() + skinPartTex.getGuideSpace().getHeight() + y;
-            posX += skinPartTex.getGuideSpace().getZ() + skinPartTex.getGuideSpace().getDepth() + z;
-            posY += skinPartTex.getTextureModelSize().getZ();
-            //posX += skinPartTex.getTextureModelSize().getZ() + skinPartTex.getTextureModelSize().getX();
+            faceX = 0;
+            faceY = skinPartTex.getGuideSpace().getDepth();
+            
+            faceWidth = skinPartTex.getGuideSpace().getDepth();
+            faceHeight = skinPartTex.getGuideSpace().getHeight();
+            
+            faceOffsetX = skinPartTex.getGuideSpace().getZ() + faceWidth + z;
+            faceOffsetX  = faceWidth - faceOffsetX - 1;
+            faceOffsetY =  skinPartTex.getGuideSpace().getY() + faceHeight + y;
             break;
         case SOUTH:
-            posY += skinPartTex.getGuideSpace().getY() + skinPartTex.getGuideSpace().getHeight() + y;
-            posX += skinPartTex.getGuideSpace().getX() + skinPartTex.getGuideSpace().getWidth() + x;
-            posY += skinPartTex.getTextureModelSize().getZ();
-            posX += skinPartTex.getTextureModelSize().getZ() * 2 + skinPartTex.getTextureModelSize().getX();
+            faceX = skinPartTex.getGuideSpace().getDepth() * 2 + skinPartTex.getGuideSpace().getWidth();
+            faceY = skinPartTex.getGuideSpace().getDepth();
+            
+            faceWidth = skinPartTex.getGuideSpace().getWidth();
+            faceHeight = skinPartTex.getGuideSpace().getHeight();
+            
+            faceOffsetX = faceWidth + skinPartTex.getGuideSpace().getX() + x;
+            faceOffsetX  = faceWidth - faceOffsetX - 1;
+            faceOffsetY =  skinPartTex.getGuideSpace().getY() + faceHeight + y;
             break;
         case WEST:
-            posY += skinPartTex.getGuideSpace().getY() + skinPartTex.getGuideSpace().getHeight() + y;
-            posX += skinPartTex.getGuideSpace().getZ() + skinPartTex.getGuideSpace().getDepth() + z;
-            posY += skinPartTex.getTextureModelSize().getZ();
-            posX += skinPartTex.getTextureModelSize().getZ() + skinPartTex.getTextureModelSize().getX();
+            faceX = skinPartTex.getGuideSpace().getDepth() + skinPartTex.getGuideSpace().getWidth();
+            faceY = skinPartTex.getGuideSpace().getDepth();
+            
+            faceWidth = skinPartTex.getGuideSpace().getDepth();
+            faceHeight = skinPartTex.getGuideSpace().getHeight();
+            
+            faceOffsetX = skinPartTex.getGuideSpace().getZ() + faceWidth + z;
+            faceOffsetY =  skinPartTex.getGuideSpace().getY() + faceHeight + y;
             break;
         case UP:
-            posY += skinPartTex.getGuideSpace().getZ() + skinPartTex.getGuideSpace().getDepth() + z;
-            posX += skinPartTex.getGuideSpace().getX() + skinPartTex.getGuideSpace().getWidth() + x;
-            posX += skinPartTex.getTextureModelSize().getZ();
+            faceX = skinPartTex.getGuideSpace().getDepth();
+            faceY = 0;
+            
+            faceWidth = skinPartTex.getGuideSpace().getWidth();
+            faceHeight = skinPartTex.getGuideSpace().getDepth();
+            
+            faceOffsetX = skinPartTex.getGuideSpace().getX() + faceWidth + x;
+            faceOffsetY =  skinPartTex.getGuideSpace().getZ() + faceHeight + z;
             break;
         case DOWN:
-            posY += skinPartTex.getGuideSpace().getZ() + skinPartTex.getGuideSpace().getDepth() + z;
-            posX += skinPartTex.getGuideSpace().getX() + skinPartTex.getGuideSpace().getWidth() + x;
-            posX += skinPartTex.getTextureModelSize().getZ() + skinPartTex.getTextureModelSize().getX();
+            faceX = skinPartTex.getGuideSpace().getDepth() + skinPartTex.getGuideSpace().getWidth();
+            faceY = 0;
+            
+            faceWidth = skinPartTex.getGuideSpace().getWidth();
+            faceHeight = skinPartTex.getGuideSpace().getDepth();
+            
+            faceOffsetX = skinPartTex.getGuideSpace().getX() + faceWidth + x;
+            faceOffsetY =  skinPartTex.getGuideSpace().getZ() + faceHeight + z;
+            faceOffsetY  = faceHeight - faceOffsetY - 1;
             break;
         }
         
-        //int yOffset = skinPartTex.getGuideSpace().getY() + skinPartTex.getGuideSpace().getHeight();
-        //int xOffset = skinPartTex.getGuideSpace().getX() + skinPartTex.getGuideSpace().getWidth();
+        int srcX = MathHelper.clamp(posX + faceX + faceOffsetX, posX + faceX, posX + faceX + faceWidth);
+        int srcY = MathHelper.clamp(posY + faceY + faceOffsetY, posY + faceY, posY + faceY + faceHeight);
 
-        Point p = new Point(posX, posY);
+        Point p = new Point(srcX, srcY);
         //ModLogger.log(skinPartTex.getPartName() + " - " + p);
         if (p.x >= 0 & p.y >= 0 & p.x < image.getWidth() & p.y < image.getHeight()) {
             int rgb = image.getRGB(p.x, p.y);
