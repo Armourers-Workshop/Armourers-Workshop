@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.client.gui.armourer.GuiArmourer;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.DropDownListItem;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiHelp;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
@@ -86,6 +87,8 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         textFlavour = new GuiTextField(-1, fontRenderer, x + 8, y + 90, 158, 16);
         textFlavour.setMaxStringLength(40);
         textFlavour.setText(SkinProperties.PROP_ALL_FLAVOUR_TEXT.getValue(tileEntity.getSkinProps()));
+        
+        buttonList.add(new GuiHelp(parent, 0, 2, 22, "Select the skin type you wish to make."));
     }
     
     public static class DropDownItemSkin extends DropDownListItem {
@@ -249,6 +252,15 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         this.fontRenderer.drawString(versionLabel, this.width - versionWidth - 7, this.height - 96 + 2, 4210752);
         GlStateManager.color(1, 1, 1, 1);
         dropDownSkinType.drawForeground(mc, mouseX - x, mouseY - y, partialTickTime);
+        
+
+        for (int i = 0; i < buttonList.size(); i++) {
+            GuiButton button = (GuiButton) buttonList.get(i);
+            if (button instanceof GuiHelp) {
+                ((GuiHelp)button).drawRollover(mc, mouseX - x, mouseY - y);
+            }
+        }
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
     
     @Override
