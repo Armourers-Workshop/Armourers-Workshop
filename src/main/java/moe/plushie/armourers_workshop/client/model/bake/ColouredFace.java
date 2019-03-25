@@ -13,6 +13,8 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
+import moe.plushie.armourers_workshop.proxies.ClientProxy;
+import moe.plushie.armourers_workshop.proxies.ClientProxy.TexturePaintType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 
@@ -57,6 +59,7 @@ public class ColouredFace {
             return;
         }
         int channelIndex = type.getChannelIndex();
+        // TODO Fix SkinModelTexture to work this way.
         // Dye
         if (type.getId() >= 1 && type.getId() <= 8) {
             // Is a dye paint
@@ -97,7 +100,7 @@ public class ColouredFace {
             r = dyedColour[0];
             g = dyedColour[1];
             b = dyedColour[2];
-        } else if (type == PaintRegistry.PAINT_TYPE_TEXTURE & renderData.getEntityTexture() != null) {
+        } else if (type == PaintRegistry.PAINT_TYPE_TEXTURE & renderData.getEntityTexture() != null & ClientProxy.getTexturePaintType() != TexturePaintType.TEXTURE_REPLACE) {
             if (renderData.getSkinPart().getPartType() instanceof ISkinPartTypeTextured) {
                 BufferedImage image = SkinHelper.getBufferedImageSkin(renderData.getEntityTexture());
                 if (image != null) {
