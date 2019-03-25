@@ -17,6 +17,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWa
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
+import moe.plushie.armourers_workshop.proxies.ClientProxy.TexturePaintType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -53,8 +54,7 @@ public class PlayerTextureHandler {
     
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRender(RenderPlayerEvent.Pre event) {
-        useTexturePainting = ClientProxy.useTexturePainting();
-        if(!useTexturePainting) {
+        if (ClientProxy.getTexturePaintType() != TexturePaintType.TEXTURE_REPLACE) {
             return;
         }
         if (!(event.getEntityPlayer() instanceof AbstractClientPlayer)) {
@@ -129,7 +129,7 @@ public class PlayerTextureHandler {
     
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRender(RenderPlayerEvent.Post event) {
-        if(!useTexturePainting) {
+        if (ClientProxy.getTexturePaintType() != TexturePaintType.TEXTURE_REPLACE) {
             return;
         }
         if (!(event.getEntityPlayer() instanceof AbstractClientPlayer)) {

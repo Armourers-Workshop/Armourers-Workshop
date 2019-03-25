@@ -50,9 +50,9 @@ public class ConfigHandlerClient {
     public static boolean skinPreLocFollowMouse = false;
     
     // Debug
+    public static int texturePainting;
     public static boolean showF3DebugInfo;
     public static boolean showSkinTooltipDebugInfo;
-    public static int texturePainting;
     
     // Debug tool
     public static boolean showArmourerDebugRender;
@@ -207,13 +207,15 @@ public class ConfigHandlerClient {
                 .getBoolean(false);
         
         texturePainting = config
-                .getInt("texturePainting", CATEGORY_DEBUG, 0, 0, 2,
+                .getInt("texturePainting", CATEGORY_DEBUG, 0, -1, 2,
                 "Texture painting replacing the players texture with a painted version.\n" + 
                 "Turning this off may fix issues with the players texture rendering\n" + 
                 "incorrectly or showing the steve skin.\n" +
                 "\n" +
+                "-1 = disabled\n" +
                 "0 = auto\n" +
-                "1 = on\n" +
-                "2 = off\n");
+                "1 = texture_replace (replaces the players texture - LEGACY)\n" +
+                "2 = model_replace_mc (render using a mc model - slower, more compatible)\n" +
+                "3 = model_replace_aw (render using a aw model - faster, less compatible)");
     }
 }

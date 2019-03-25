@@ -219,7 +219,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
                 String error = "\n";
                 error += "\t\tBaking Queue: " + bakeQueue + "\n";
                 error += "\t\tRequest Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue) + "\n";
-                error += "\t\tTexture Painting: " + useTexturePainting() + "\n";
+                error += "\t\tTexture Paint Type: " + getTexturePaintType().toString() + "\n";
                 error += "\t\tMultipass Skin Rendering: " + useMultipassSkinRendering() + "\n";
                 error += "\tRender Layers:";
                 for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
@@ -263,17 +263,14 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         }
     }
     
-    public static boolean useTexturePainting() {
-        if (ConfigHandlerClient.texturePainting == 1) {
-            return true;
+    public static TexturePaintType getTexturePaintType() {
+        if (ConfigHandlerClient.texturePainting < 0) {
+            return TexturePaintType.DISABLED;
         }
-        if (ConfigHandlerClient.texturePainting == 2) {
-            return false;
+        if (ConfigHandlerClient.texturePainting == 0) {
+            return TexturePaintType.TEXTURE_REPLACE;
         }
-        if (ModAddonManager.addonJBRAClient.isModLoaded()) {
-            return false;
-        }
-        return true;
+        return TexturePaintType.values()[ConfigHandlerClient.texturePainting];
     }
     
     public static boolean useMultipassSkinRendering() {
@@ -370,10 +367,11 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         ModLogger.log("Error skin loaded.");
     }
     
-    public static enum SkinRenderType {
-        RENDER_EVENT,
-        MODEL_ATTACHMENT,
-        RENDER_LAYER
+    public static enum TexturePaintType {
+        DISABLED,
+        TEXTURE_REPLACE,
+        MODEL_REPLACE_MC,
+        MODEL_REPLACE_AW
     }
     
     private static class BlockColour implements IBlockColor {
