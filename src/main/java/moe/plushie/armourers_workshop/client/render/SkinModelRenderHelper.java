@@ -1,14 +1,10 @@
 package moe.plushie.armourers_workshop.client.render;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Set;
-import java.util.WeakHashMap;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.client.model.ModelRendererAttachment;
 import moe.plushie.armourers_workshop.client.model.skin.IEquipmentModel;
 import moe.plushie.armourers_workshop.client.model.skin.ModelDummy;
 import moe.plushie.armourers_workshop.client.model.skin.ModelSkinBow;
@@ -27,14 +23,10 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import moe.plushie.armourers_workshop.proxies.ClientProxy;
-import moe.plushie.armourers_workshop.proxies.ClientProxy.SkinRenderType;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -61,7 +53,6 @@ public final class SkinModelRenderHelper {
     }
 
     private final HashMap<String, ModelTypeHelper> helperModelsMap;
-    private final Set<ModelBiped> attachedBipedSet;
 
     public final ModelSkinHead modelHead = new ModelSkinHead();
     public final ModelSkinChest modelChest = new ModelSkinChest();
@@ -80,7 +71,6 @@ public final class SkinModelRenderHelper {
     private SkinModelRenderHelper() {
         MinecraftForge.EVENT_BUS.register(this);
         helperModelsMap = new HashMap<String, ModelTypeHelper>();
-        attachedBipedSet = Collections.newSetFromMap(new WeakHashMap<ModelBiped, Boolean>());
 
         registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinHead, modelHead);
         registerSkinTypeHelperForModel(ModelType.MODEL_BIPED, SkinTypeRegistry.skinChest, modelChest);
@@ -140,12 +130,6 @@ public final class SkinModelRenderHelper {
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Pre event) {
         EntityPlayer player = event.getEntityPlayer();
-        targetPlayer = player;
-
-        if (ClientProxy.getSkinRenderType() == SkinRenderType.MODEL_ATTACHMENT) {
-            attachModelsToBiped(event.getRenderer().getMainModel(), event.getRenderer());
-        }
-
         // Limit the players limbs if they have a skirt equipped.
         // A proper lady should not swing her legs around!
         if (isPlayerWearingSkirt(player)) {
@@ -154,31 +138,6 @@ public final class SkinModelRenderHelper {
                 player.prevLimbSwingAmount = 0.25F;
             }
         }
-    }
-
-    private void attachModelsToBiped(ModelBiped modelBiped, RenderPlayer renderPlayer) {
-        if (attachedBipedSet.contains(modelBiped)) {
-            return;
-        }
-        attachedBipedSet.add(modelBiped);
-        modelBiped.bipedHead.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinHead, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:head.base")));
-        modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.base")));
-        modelBiped.bipedLeftArm.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.leftArm")));
-        modelBiped.bipedRightArm.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinChest, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.rightArm")));
-        modelBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.leftLeg")));
-        modelBiped.bipedRightLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.rightLeg")));
-        modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinLegs, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:legs.skirt")));
-        modelBiped.bipedLeftLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.leftFoot")));
-        modelBiped.bipedRightLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.rightFoot")));
-        modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinWings, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:wings.leftWing")));
-        modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinWings, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:wings.rightWing")));
-        ModLogger.log(String.format("Added model render attachment to %s", modelBiped.toString()));
-        ModLogger.log(String.format("Using player renderer %s", renderPlayer.toString()));
-    }
-
-    @SubscribeEvent
-    public void onRender(RenderPlayerEvent.Post event) {
-        targetPlayer = null;
     }
 
     public ModelTypeHelper getTypeHelperForModel(ModelType modelType, ISkinType skinType) {

@@ -217,7 +217,6 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             {
                 int bakeQueue = ModelBakery.INSTANCE.getBakingQueueSize();
                 String error = "\n";
-                error += "\t\tRender Type: " + getSkinRenderType().toString() + "\n";
                 error += "\t\tBaking Queue: " + bakeQueue + "\n";
                 error += "\t\tRequest Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue) + "\n";
                 error += "\t\tTexture Painting: " + useTexturePainting() + "\n";
@@ -261,35 +260,6 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         }
         if (ModAddonManager.addonColoredLights.isModLoaded() & ModAddonManager.addonSmartMoving.isModLoaded()) {
             ModLogger.log(Level.WARN, "Colored Lights and Smart Moving are both installed. Armourer's Workshop can not support this.");
-        }
-        
-        ModLogger.log("Skin render type set to: " + getSkinRenderType().toString().toLowerCase());
-    }
-    
-    public static SkinRenderType getSkinRenderType() {
-        switch (ConfigHandlerClient.skinRenderType) {
-        case 1: //Force render event
-            return SkinRenderType.RENDER_EVENT;
-        case 2: //Force model attachment
-            return SkinRenderType.MODEL_ATTACHMENT;
-        case 3: //Force render layer
-            return SkinRenderType.RENDER_LAYER;
-        default: //Auto
-            /*
-            if (ModAddonManager.addonMorePlayerModels.isModLoaded()) {
-                return SkinRenderType.RENDER_EVENT;
-            }
-            if (ModAddonManager.addonShaders.isModLoaded() & !ModAddonManager.addonSmartMoving.isModLoaded()) {
-                return SkinRenderType.RENDER_EVENT;
-            }
-            if (ModAddonManager.addonColoredLights.isModLoaded() & !ModAddonManager.addonSmartMoving.isModLoaded()) {
-                return SkinRenderType.RENDER_EVENT;
-            }
-            if (ModAddonManager.addonJBRAClient.isModLoaded()) {
-                return SkinRenderType.RENDER_EVENT;
-            }
-            */
-            return SkinRenderType.RENDER_LAYER;
         }
     }
     

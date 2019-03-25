@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
-import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
@@ -52,7 +51,6 @@ public class DebugTextHandler {
                 event.getLeft().add("Baking Queue: " + bakeQueue);
                 event.getLeft().add("Request Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue));
                 event.getLeft().add("Texture Count: " + ClientSkinPaintCache.INSTANCE.size());
-                event.getLeft().add("Skin Render Type: " + ClientProxy.getSkinRenderType().toString().toLowerCase());
                 event.getLeft().add("Display Lists: " + DisplayList.getListCount());
                 event.getLeft().add("Average Bake Time: " + ModelBakery.INSTANCE.getAverageBakeTime() + "ms");
                 /*

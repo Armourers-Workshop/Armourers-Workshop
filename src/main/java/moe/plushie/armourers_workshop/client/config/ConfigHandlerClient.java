@@ -50,7 +50,6 @@ public class ConfigHandlerClient {
     public static boolean skinPreLocFollowMouse = false;
     
     // Debug
-    public static int skinRenderType;
     public static boolean showF3DebugInfo;
     public static boolean showSkinTooltipDebugInfo;
     public static int texturePainting;
@@ -196,16 +195,6 @@ public class ConfigHandlerClient {
     
     private static void loadCategoryDebug() {
         config.setCategoryComment(CATEGORY_DEBUG, "Debug settings.");
-        
-        skinRenderType = config
-                .getInt("skinRenderType", CATEGORY_DEBUG, 0, 0, 3,
-                "Only change this if you are having rendering issues with skins on players." +
-                "(normally fixes skins not rotating on players)\n" +
-                "\n" +
-                "0 = auto\n" +
-                "1 = render event (1.7.10 only do not use)\n" +
-                "2 = model attachment (1.7.10 only do not use)\n" +
-                "3 = render layer");
         
         showF3DebugInfo = config
                 .get(CATEGORY_DEBUG, "showF3DebugInfo", true,

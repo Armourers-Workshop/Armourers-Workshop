@@ -16,8 +16,6 @@ import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import moe.plushie.armourers_workshop.proxies.ClientProxy;
-import moe.plushie.armourers_workshop.proxies.ClientProxy.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -41,9 +39,6 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
 
     @Override
     public void doRenderLayer(EntityPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        if (ClientProxy.getSkinRenderType() != SkinRenderType.RENDER_LAYER) {
-            return;
-        }
         double distance = Minecraft.getMinecraft().player.getDistance(
                 entitylivingbaseIn.posX,
                 entitylivingbaseIn.posY,
