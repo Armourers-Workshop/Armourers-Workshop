@@ -50,7 +50,7 @@ public class ConfigHandlerClient {
     public static boolean skinPreLocFollowMouse = false;
     
     // Debug
-    public static int texturePainting;
+    public static int texturePaintingType;
     public static boolean showF3DebugInfo;
     public static boolean showSkinTooltipDebugInfo;
     
@@ -206,8 +206,8 @@ public class ConfigHandlerClient {
                 "Shows extra debug info on skin tooltips.")
                 .getBoolean(false);
         
-        texturePainting = config
-                .getInt("texturePainting", CATEGORY_DEBUG, 0, -1, 2,
+        texturePaintingType = config
+                .getInt("texturePaintingType", CATEGORY_DEBUG, 0, -1, 2,
                 "Texture painting replacing the players texture with a painted version.\n" + 
                 "Turning this off may fix issues with the players texture rendering\n" + 
                 "incorrectly or showing the steve skin.\n" +
@@ -215,7 +215,7 @@ public class ConfigHandlerClient {
                 "-1 = disabled\n" +
                 "0 = auto\n" +
                 "1 = texture_replace (replaces the players texture - LEGACY)\n" +
-                "2 = model_replace_mc (render using a mc model - slower, more compatible)\n" +
-                "3 = model_replace_aw (render using a aw model - faster, less compatible)");
+                "2 = model_replace_mc (render using a mc model - slower, more compatible - NOT IMPLEMENTED)\n" +
+                "3 = model_replace_aw (render using a aw model - faster, less compatible)\n");
     }
 }

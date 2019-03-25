@@ -264,13 +264,13 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
     }
     
     public static TexturePaintType getTexturePaintType() {
-        if (ConfigHandlerClient.texturePainting < 0) {
+        if (ConfigHandlerClient.texturePaintingType < 0) {
             return TexturePaintType.DISABLED;
         }
-        if (ConfigHandlerClient.texturePainting == 0) {
+        if (ConfigHandlerClient.texturePaintingType == 0) {
             return TexturePaintType.TEXTURE_REPLACE;
         }
-        return TexturePaintType.values()[ConfigHandlerClient.texturePainting];
+        return TexturePaintType.values()[ConfigHandlerClient.texturePaintingType];
     }
     
     public static boolean useMultipassSkinRendering() {
