@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -140,6 +141,10 @@ public abstract class ModelTypeHelper extends ModelBiped implements IEquipmentMo
             setRotation(bipedRightLeg, 0F, 0F, 0F);
             isChild = false;
         } else {
+            if (modelBiped instanceof ModelPlayer) {
+                ModelPlayer modelPlayer = (ModelPlayer) modelBiped;
+                this.slim = modelPlayer.bipedLeftArm.rotationPointY == 2.5F;
+            }
             setRotation(bipedHead, modelBiped.bipedHead);
             setRotation(bipedBody, modelBiped.bipedBody);
             setRotation(bipedLeftArm, modelBiped.bipedLeftArm);
@@ -149,8 +154,6 @@ public abstract class ModelTypeHelper extends ModelBiped implements IEquipmentMo
             isChild = modelBiped.isChild;
             if (modelBiped instanceof ModelMannequin) {
                 this.slim = ((ModelMannequin)modelBiped).isSlim();
-            } else {
-                this.slim = false;
             }
         }
     }
