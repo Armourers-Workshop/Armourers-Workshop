@@ -57,10 +57,10 @@ public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool,
             }
             if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
                 for (int i = 0; i < 6; i++) {
-                    usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), EnumFacing.values()[i]);
+                    usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), EnumFacing.values()[i], facing == EnumFacing.values()[i]);
                 }
             } else {
-                usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), facing);
+                usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), facing, true);
             }
             if (!worldIn.isRemote) {
                 UndoManager.end(player);
@@ -83,13 +83,13 @@ public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool,
     }
     
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing face, boolean spawnParticles) {
         int intensity = ToolOptions.INTENSITY.getValue(stack);
         IPantableBlock worldColourable = (IPantableBlock) block;
-        if (worldColourable.isRemoteOnly(world, pos, facing) & world.isRemote) {
+        if (worldColourable.isRemoteOnly(world, pos, face) & world.isRemote) {
             byte[] rgbt = new byte[4];
-            int oldColour = worldColourable.getColour(world, pos, facing);
-            PaintType oldPaintType = worldColourable.getPaintType(world, pos, facing);
+            int oldColour = worldColourable.getColour(world, pos, face);
+            PaintType oldPaintType = worldColourable.getPaintType(world, pos, face);
             Color c = UtilColour.makeColourBighter(new Color(oldColour), intensity);
             rgbt[0] = (byte)c.getRed();
             rgbt[1] = (byte)c.getGreen();
@@ -98,14 +98,14 @@ public class ItemDodgeTool extends AbstractModItem implements IConfigurableTool,
             if (block == ModBlocks.boundingBox && oldPaintType == PaintRegistry.PAINT_TYPE_NONE) {
                 rgbt[3] = (byte)PaintRegistry.PAINT_TYPE_NORMAL.getId();
             }
-            MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(pos, facing, rgbt);
+            MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(pos, face, rgbt);
             PacketHandler.networkWrapper.sendToServer(message);
-        } else if(!worldColourable.isRemoteOnly(world, pos, facing) & !world.isRemote) {
-            int oldColour = worldColourable.getColour(world, pos, facing);
-            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getId();
+        } else if(!worldColourable.isRemoteOnly(world, pos, face) & !world.isRemote) {
+            int oldColour = worldColourable.getColour(world, pos, face);
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, face).getId();
             int newColour = UtilColour.makeColourBighter(new Color(oldColour), intensity).getRGB();
-            UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, facing);
-            ((IPantableBlock) block).setColour(world, pos, newColour, facing);
+            UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, face);
+            ((IPantableBlock) block).setColour(world, pos, newColour, face);
         }
     }
     

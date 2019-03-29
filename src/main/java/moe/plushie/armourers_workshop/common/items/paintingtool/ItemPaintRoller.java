@@ -47,17 +47,17 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
     }
     @Override
-    public void onPaint(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing side) {
-        paintArea(world, player, block, stack, pos, side);
+    public void onPaint(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing usedFace, EnumFacing effectFace) {
+        paintArea(world, player, block, stack, pos, effectFace, usedFace == effectFace);
     }
     
-    private void paintArea(World world, EntityPlayer player, Block targetBlock, ItemStack stack, BlockPos pos, EnumFacing facing) {
+    private void paintArea(World world, EntityPlayer player, Block targetBlock, ItemStack stack, BlockPos pos, EnumFacing face, boolean spawnParticles) {
         
         int radius = ToolOptions.RADIUS.getValue(stack);
         for (int i = -radius + 1; i < radius; i++ ) {
             for (int j = -radius + 1; j < radius; j++ ) {
                 BlockPos target = pos;
-                switch (facing) {
+                switch (face) {
                 case DOWN:
                     target = pos.add(j, 0, i);
                     break;
@@ -80,7 +80,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
                 Block block = world.getBlockState(target).getBlock();
                 if ((targetBlock != ModBlocks.boundingBox & block != ModBlocks.boundingBox) |
                         (targetBlock == ModBlocks.boundingBox & block == ModBlocks.boundingBox)) {
-                    usedOnBlockSide(stack, player, world, target, block, facing);
+                    usedOnBlockSide(stack, player, world, target, block, face, spawnParticles);
                 }
             }
         }
@@ -92,7 +92,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     }
     
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing, boolean spawnParticles) {
         if (block instanceof IPantableBlock) {
             int newColour = getToolColour(stack);
             PaintType paintType = getToolPaintType(stack);
@@ -115,7 +115,9 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
                     ((IPantableBlock)block).setPaintType(world, pos, paintType, facing);
                 }
             } else {
-                spawnPaintParticles(world, pos, facing, newColour);
+                if (spawnParticles) {
+                    spawnPaintParticles(world, pos, facing, newColour);
+                }
             }
         }
     }

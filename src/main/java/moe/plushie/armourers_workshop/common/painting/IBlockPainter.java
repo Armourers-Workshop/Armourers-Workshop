@@ -9,5 +9,5 @@ import net.minecraft.world.World;
 
 public interface IBlockPainter {
     
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing side);
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing face, boolean spawnParticles);
 }

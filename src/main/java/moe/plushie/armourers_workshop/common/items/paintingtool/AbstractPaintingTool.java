@@ -65,28 +65,31 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
         
         if (state.getBlock() instanceof IPantableBlock) {
             int newColour = getToolColour(stack);
+            
             if (!worldIn.isRemote) {
                 UndoManager.begin(player);
-                boolean fullBlock = false;
-                if (this instanceof IConfigurableTool) {
-                    ArrayList<ToolOption<?>> toolOptionList = new ArrayList<ToolOption<?>>();
-                    ((IConfigurableTool)this).getToolOptions(toolOptionList);
-                    if (toolOptionList.contains(ToolOptions.FULL_BLOCK_MODE)) {
-                        fullBlock = ToolOptions.FULL_BLOCK_MODE.getValue(stack);
-                    }
+            }
+            
+            boolean fullBlock = false;
+            if (this instanceof IConfigurableTool) {
+                ArrayList<ToolOption<?>> toolOptionList = new ArrayList<ToolOption<?>>();
+                ((IConfigurableTool)this).getToolOptions(toolOptionList);
+                if (toolOptionList.contains(ToolOptions.FULL_BLOCK_MODE)) {
+                    fullBlock = ToolOptions.FULL_BLOCK_MODE.getValue(stack);
                 }
-                if (fullBlock) {
-                    for (int i = 0; i < 6; i++) {
-                        onPaint(stack, player, worldIn, pos, state.getBlock(), EnumFacing.VALUES[i]);
-                    }
-                } else {
-                    onPaint(stack, player, worldIn, pos, state.getBlock(), facing);
+            }
+            if (fullBlock) {
+                for (int i = 0; i < 6; i++) {
+                    onPaint(stack, player, worldIn, pos, state.getBlock(), facing, EnumFacing.VALUES[i]);
                 }
+            } else {
+                onPaint(stack, player, worldIn, pos, state.getBlock(), facing, facing);
+            }
+            if (!worldIn.isRemote) {
                 UndoManager.end(player);
                 playToolSound(player, worldIn, pos, stack);
-            } else {
-                spawnPaintParticles(worldIn, pos, facing, newColour);
             }
+            
             return EnumActionResult.SUCCESS;
         }
         
@@ -128,8 +131,8 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
         return false;
     }
     
-    public void onPaint(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing side) {
-        usedOnBlockSide(stack, player, world, pos, block, side);
+    public void onPaint(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing usedFace, EnumFacing effectFace) {
+        usedOnBlockSide(stack, player, world, pos, block, effectFace, usedFace == effectFace);
     }
     
     public void playToolSound(EntityPlayer player, World world, BlockPos pos, ItemStack stack) {

@@ -138,6 +138,10 @@ public final class ModelBakery {
             dyeColour = new int[3][extraDyes];
             dyeUseCount = new int[extraDyes];
             
+            if (skin.hasPaintData()) {
+                // TODO add new block for paint data.
+            }
+            
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart partData = skin.getParts().get(i);
                 partData.setClientSkinPartData(new ClientSkinPartData());

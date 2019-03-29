@@ -11,6 +11,7 @@ public class ToolOptions {
     private static final String TAG_RADIUS = "radius";
     private static final String TAG_RADIUS_SAMPLE = TAG_RADIUS + ".sample";
     private static final String TAG_RADIUS_EFFECT = TAG_RADIUS + ".effect";
+    private static final String TAG_PLANE_RESTRICT = "planeRestrict";
     
     public static final ToolOptionCheck FULL_BLOCK_MODE = new ToolOptionCheck(TAG_FULL_BLOCK_MODE, true);
     public static final ToolOptionCheck CHANGE_HUE = new ToolOptionCheck(TAG_CHANGE_HUE, false);
@@ -21,4 +22,5 @@ public class ToolOptions {
     public static final ToolOptionRadius RADIUS = new ToolOptionRadius(TAG_RADIUS, 3);
     public static final ToolOptionRadius RADIUS_SAMPLE = new ToolOptionRadius(TAG_RADIUS_SAMPLE, 2);
     public static final ToolOptionRadius RADIUS_EFFECT = new ToolOptionRadius(TAG_RADIUS_EFFECT, 1);
+    public static final ToolOptionCheck PLANE_RESTRICT = new ToolOptionCheck(TAG_PLANE_RESTRICT, true);
 }

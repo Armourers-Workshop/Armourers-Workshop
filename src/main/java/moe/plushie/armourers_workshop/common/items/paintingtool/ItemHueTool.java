@@ -64,10 +64,10 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
 
             if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
                 for (int i = 0; i < 6; i++) {
-                    usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), EnumFacing.VALUES[i]);
+                    usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), EnumFacing.VALUES[i], facing == EnumFacing.VALUES[i]);
                 }
             } else {
-                usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), facing);
+                usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), facing, true);
             }
             if (!worldIn.isRemote) {
                 UndoManager.end(player);
@@ -91,7 +91,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
     }
 
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing face, boolean spawnParticles) {
         boolean changeHue = ToolOptions.CHANGE_HUE.getValue(stack);
         boolean changeSaturation = ToolOptions.CHANGE_SATURATION.getValue(stack);
         boolean changeBrightness = ToolOptions.CHANGE_BRIGHTNESS.getValue(stack);
@@ -103,9 +103,9 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         toolhsb = Color.RGBtoHSB(toolColour.getRed(), toolColour.getGreen(), toolColour.getBlue(), null);
         IPantableBlock worldColourable = (IPantableBlock) block;
 
-        if (worldColourable.isRemoteOnly(world, pos, facing) & world.isRemote) {
-            int oldColour = worldColourable.getColour(world, pos, facing);
-            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getId();
+        if (worldColourable.isRemoteOnly(world, pos, face) & world.isRemote) {
+            int oldColour = worldColourable.getColour(world, pos, face);
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, face).getId();
             float[] blockhsb;
             Color blockColour = new Color(oldColour);
             blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);
@@ -131,11 +131,11 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
             if (changePaintType) {
                 rgbt[3] = (byte) paintType.getId();
             }
-            MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(pos, facing, rgbt);
+            MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(pos, face, rgbt);
             PacketHandler.networkWrapper.sendToServer(message);
-        } else if (!worldColourable.isRemoteOnly(world, pos, facing) & !world.isRemote) {
-            int oldColour = worldColourable.getColour(world, pos, facing);
-            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getId();
+        } else if (!worldColourable.isRemoteOnly(world, pos, face) & !world.isRemote) {
+            int oldColour = worldColourable.getColour(world, pos, face);
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, face).getId();
             float[] blockhsb;
             Color blockColour = new Color(oldColour);
             blockhsb = Color.RGBtoHSB(blockColour.getRed(), blockColour.getGreen(), blockColour.getBlue(), null);
@@ -153,11 +153,11 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
 
             int newColour = Color.HSBtoRGB(recolour[0], recolour[1], recolour[2]);
 
-            UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, facing);
+            UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, face);
 
-            ((IPantableBlock) block).setColour(world, pos, newColour, facing);
+            ((IPantableBlock) block).setColour(world, pos, newColour, face);
             if (changePaintType) {
-                ((IPantableBlock) block).setPaintType(world, pos, paintType, facing);
+                ((IPantableBlock) block).setPaintType(world, pos, paintType, face);
             }
         }
     }

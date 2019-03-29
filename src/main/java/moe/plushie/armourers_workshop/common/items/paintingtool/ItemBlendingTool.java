@@ -134,7 +134,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
         if (state.getBlock() instanceof IPantableBlock) {
             if (!worldIn.isRemote) {
                 UndoManager.begin(player);
-                usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), facing);
+                usedOnBlockSide(stack, player, worldIn, pos, state.getBlock(), facing, false);
                 UndoManager.end(player);
                 worldIn.playSound(null, pos, ModSounds.PAINT, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 0.9F);
             }
@@ -154,13 +154,13 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
     }
     
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing) {
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing face, boolean spawnParticles) {
         int intensity = ToolOptions.INTENSITY.getValue(stack);
         int radiusSample = ToolOptions.RADIUS_SAMPLE.getValue(stack);
         int radiusEffect = ToolOptions.RADIUS_EFFECT.getValue(stack);
         
-        ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(world, pos, facing, radiusSample);
-        ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(world, pos, facing, radiusEffect);
+        ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(world, pos, face, radiusSample);
+        ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(world, pos, face, radiusEffect);
         
         if (blockSamples.size() == 0 | blockEffects.size() == 0) {
             return;
@@ -178,9 +178,9 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
                 IPantableBlock pBlock = (IPantableBlock) stateTarget.getBlock();
                 ICubeColour c = pBlock.getColour(world, posSample);
                 if (c != null) {
-                    r += c.getRed(facing.ordinal()) & 0xFF;
-                    g += c.getGreen(facing.ordinal()) & 0xFF;
-                    b += c.getBlue(facing.ordinal()) & 0xFF;
+                    r += c.getRed(face.ordinal()) & 0xFF;
+                    g += c.getGreen(face.ordinal()) & 0xFF;
+                    b += c.getBlue(face.ordinal()) & 0xFF;
                     validSamples++;
                 }
             }
@@ -194,8 +194,8 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
             IBlockState stateTarget = world.getBlockState(posEffect);
             if (stateTarget.getBlock() instanceof IPantableBlock) {
                 IPantableBlock pBlock = (IPantableBlock) stateTarget.getBlock();
-                int oldColour = pBlock.getColour(world, posEffect, facing);
-                byte oldPaintType = (byte) pBlock.getPaintType(world, posEffect, facing).getId();
+                int oldColour = pBlock.getColour(world, posEffect, face);
+                byte oldPaintType = (byte) pBlock.getPaintType(world, posEffect, face).getId();
                 
                 Color oldC = new Color(oldColour);
                 int oldR = oldC.getRed();
@@ -219,8 +219,8 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
                         (int)newG,
                         (int)newB);
                 
-                UndoManager.blockPainted(player, world, posEffect, oldColour, oldPaintType, facing);
-                ((IPantableBlock)block).setColour(world, posEffect, newC.getRGB(), facing);
+                UndoManager.blockPainted(player, world, posEffect, oldColour, oldPaintType, face);
+                ((IPantableBlock)block).setColour(world, posEffect, newC.getRGB(), face);
             }
         }
     }

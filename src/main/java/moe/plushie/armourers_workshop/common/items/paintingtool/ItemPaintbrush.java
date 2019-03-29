@@ -51,15 +51,21 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
     }
     
     @Override
-    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing side) {
+    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing face, boolean spawnParticles) {
         int colour = getToolColour(stack);
         PaintType paintType = getToolPaintType(stack);
-        IPantableBlock worldColourable = (IPantableBlock) block;
-        int oldColour = worldColourable.getColour(world, pos, side);
-        byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, side).getId();
-        UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, side);
-        ((IPantableBlock)block).setColour(world, pos, colour, side);
-        ((IPantableBlock)block).setPaintType(world, pos, paintType, side);
+        if (!world.isRemote) {
+            IPantableBlock worldColourable = (IPantableBlock) block;
+            int oldColour = worldColourable.getColour(world, pos, face);
+            byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, face).getId();
+            UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, face);
+            ((IPantableBlock)block).setColour(world, pos, colour, face);
+            ((IPantableBlock)block).setPaintType(world, pos, paintType, face);
+        } else {
+            if (spawnParticles) {
+                spawnPaintParticles(world, pos, face, colour);
+            }
+        }
     }
     
     @Override
