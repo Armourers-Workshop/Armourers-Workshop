@@ -93,21 +93,36 @@ public final class BlockUtils {
         }
     }
     
-    public static ArrayList<BlockPos> findTouchingBlockFaces(World world, BlockPos pos, EnumFacing facing, int radius) {
+    public static ArrayList<BlockPos> findTouchingBlockFaces(World world, BlockPos pos, EnumFacing facing, int radius, boolean restrictPlane) {
         ArrayList<BlockPos> blockFaces = new ArrayList<BlockPos>();
         ArrayList<BlockPos> openList = new ArrayList<BlockPos>();
         ArrayList<BlockPos> closedList = new ArrayList<BlockPos>();
         
+        BlockPos startPos = pos.offset(facing);
+        
         openList.add(pos.offset(facing));
         EnumFacing[] sides = EnumFacing.VALUES;
+        
+        boolean first = true;
         
         while (!openList.isEmpty()) {
             BlockPos loc = openList.get(0);
             openList.remove(0);
             IBlockState state = world.getBlockState(loc);
             if (state.getBlock() instanceof IPantableBlock) {
-                blockFaces.add(loc);
+                if (restrictPlane) {
+                    if (loc.getX() * facing.getXOffset() == pos.getX() * facing.getXOffset()) {
+                        if (loc.getY() * facing.getYOffset() == pos.getY() * facing.getYOffset()) {
+                            if (loc.getZ() * facing.getZOffset() == pos.getZ() * facing.getZOffset()) {
+                                blockFaces.add(loc);
+                            }
+                        }
+                    }
+                } else {
+                    blockFaces.add(loc);
+                }
             }
+            
             if (world.isAirBlock(loc)) {
                 for (int i = 0; i < sides.length; i++) {
                     BlockPos sideLoc = loc.offset(EnumFacing.values()[i]);
@@ -115,16 +130,19 @@ public final class BlockUtils {
                     if (!closedList.contains(sideLoc)) {
                         closedList.add(sideLoc);
                         boolean validCube = false;
+
                         for (int ix = 0; ix < 3; ix++) {
                             for (int iy = 0; iy < 3; iy++) {
                                 for (int iz = 0; iz < 3; iz++) {
                                     IBlockState stateValid = world.getBlockState(sideLoc.add(ix - 1, iy - 1, iz - 1));
                                     if (stateValid.getBlock() instanceof IPantableBlock) {
                                         validCube = true;
+
                                     }
                                 }
                             }
                         }
+                        
                         if (sideLoc.getDistance(pos.getX(), pos.getY(), pos.getZ()) < radius & validCube) {
                             openList.add(sideLoc);
                             //blocks.add(sideLoc);

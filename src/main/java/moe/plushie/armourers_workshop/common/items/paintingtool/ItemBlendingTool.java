@@ -81,9 +81,10 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
         
         int radiusSample = ToolOptions.RADIUS_SAMPLE.getValue(stack);
         int radiusEffect = ToolOptions.RADIUS_EFFECT.getValue(stack);
+        boolean restrictPlane = ToolOptions.PLANE_RESTRICT.getValue(stack);
         
-        ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(world, pos, facing, radiusSample);
-        ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(world, pos, facing, radiusEffect);
+        ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(world, pos, facing, radiusSample, restrictPlane);
+        ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(world, pos, facing, radiusEffect, restrictPlane);
         
         double xOff = player.lastTickPosX + (player.posX - player.lastTickPosX) * event.getPartialTicks();
         double yOff = player.lastTickPosY + (player.posY - player.lastTickPosY) * event.getPartialTicks();
@@ -158,9 +159,10 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
         int intensity = ToolOptions.INTENSITY.getValue(stack);
         int radiusSample = ToolOptions.RADIUS_SAMPLE.getValue(stack);
         int radiusEffect = ToolOptions.RADIUS_EFFECT.getValue(stack);
+        boolean restrictPlane = ToolOptions.PLANE_RESTRICT.getValue(stack);
         
-        ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(world, pos, face, radiusSample);
-        ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(world, pos, face, radiusEffect);
+        ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(world, pos, face, radiusSample, restrictPlane);
+        ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(world, pos, face, radiusEffect, restrictPlane);
         
         if (blockSamples.size() == 0 | blockEffects.size() == 0) {
             return;
@@ -184,6 +186,10 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
                     validSamples++;
                 }
             }
+        }
+        
+        if (validSamples == 0) {
+            return;
         }
         
         r = r / validSamples;
@@ -251,5 +257,11 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
         toolOptionList.add(ToolOptions.INTENSITY);
         toolOptionList.add(ToolOptions.RADIUS_SAMPLE);
         toolOptionList.add(ToolOptions.RADIUS_EFFECT);
+        //toolOptionList.add(ToolOptions.CHANGE_HUE);
+        //toolOptionList.add(ToolOptions.CHANGE_SATURATION);
+        //toolOptionList.add(ToolOptions.CHANGE_BRIGHTNESS);
+        toolOptionList.add(ToolOptions.PLANE_RESTRICT);
+        //toolOptionList.add(ToolOptions.FULL_BLOCK_MODE);
+        
     }
 }

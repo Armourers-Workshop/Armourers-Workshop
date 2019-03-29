@@ -195,6 +195,7 @@ tooloption.armourers_workshop:intensity=Intensity
 tooloption.armourers_workshop:radius=Radius
 tooloption.armourers_workshop:radius.sample=Sample Radius
 tooloption.armourers_workshop:radius.effect=Effect Radius
+tooloption.armourers_workshop:planeRestrict=Restrict Plane
 
 
 # Paint Types
