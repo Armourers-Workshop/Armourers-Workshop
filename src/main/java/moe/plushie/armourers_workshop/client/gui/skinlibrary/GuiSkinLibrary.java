@@ -561,7 +561,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     
     private void openEquipmentFolder() {
         File armourDir = new File(System.getProperty("user.dir"));
-        File file = new File(armourDir, LibModInfo.ID);
+        File file = ArmourersWorkshop.getProxy().getSkinLibraryDirectory();
         String filePath = file.getAbsolutePath();
 
         if (Util.getOSType() == Util.EnumOS.OSX) {
