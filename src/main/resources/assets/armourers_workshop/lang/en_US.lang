@@ -411,6 +411,12 @@ inventory.armourers_workshop:armourer.dialog.copy.srcPart=Source Part:
 inventory.armourers_workshop:armourer.dialog.copy.desPart=Destination Part:
 inventory.armourers_workshop:armourer.dialog.copy.mirror=Mirror?
 
+inventory.armourers_workshop:armourer.main.help.skinType=Select the skin type you wish to make.
+inventory.armourers_workshop:armourer.main.help.save=Save the blocks in the world into a skin item.
+inventory.armourers_workshop:armourer.main.help.load=Loads a skin item into the world as blocks.
+inventory.armourers_workshop:armourer.main.help.itemName=Enter a name for your item.
+inventory.armourers_workshop:armourer.main.help.itemFlavour=Text that is displayed in the items tool-tip.
+
 
 # Color Mixer
 inventory.armourers_workshop:colour-mixer.label.hue=Hue

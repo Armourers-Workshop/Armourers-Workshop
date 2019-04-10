@@ -62,6 +62,7 @@ public abstract class ModGuiControl<CONTROL_TYPE, PARENT_TYPE extends GuiScreen>
         if (!this.visible) {
             return;
         }
+        String CRLF = "\r\n";
         this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
         int hoverState = this.getHoverState(this.hovered);
         if (hoverState == 0 & this.hovered) {
@@ -74,7 +75,10 @@ public abstract class ModGuiControl<CONTROL_TYPE, PARENT_TYPE extends GuiScreen>
         if (hoverState == 2) {
             if (!StringUtils.isNullOrEmpty(hoverText)) {
                 ArrayList<String> textList = new ArrayList<String>();
-                textList.add(hoverText);
+                String[] split = hoverText.split(CRLF);
+                for (String line : split) {
+                    textList.add(line);
+                }
                 GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, parent.width, parent.height, zLevel);
             }
         }

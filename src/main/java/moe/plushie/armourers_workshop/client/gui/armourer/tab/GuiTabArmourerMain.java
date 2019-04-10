@@ -59,7 +59,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         buttonList.clear();
         
         SkinTypeRegistry str = SkinTypeRegistry.INSTANCE;
-        dropDownSkinType = new GuiDropDownList(0, 10, 20, 50, "", this);
+        dropDownSkinType = new GuiDropDownList(0, 7, 21, 50, "", this);
         ArrayList<ISkinType> skinList = str.getRegisteredSkinTypes();
         int skinCount = 0;
         for (int i = 0; i < skinList.size(); i++) {
@@ -77,8 +77,8 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         }
         buttonList.add(dropDownSkinType);
         
-        buttonList.add(new GuiButtonExt(13, 86, 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
-        buttonList.add(new GuiButtonExt(14, 86, 16 + 13, 50, 12, GuiHelper.getLocalizedControlName(guiName, "load")));
+        buttonList.add(new GuiButtonExt(13, 88, 16, 50, 12, GuiHelper.getLocalizedControlName(guiName, "save")));
+        buttonList.add(new GuiButtonExt(14, 88, 16 + 13, 50, 12, GuiHelper.getLocalizedControlName(guiName, "load")));
         
         textItemName = new GuiTextField(-1, fontRenderer, x + 8, y + 58, 158, 16);
         textItemName.setMaxStringLength(40);
@@ -88,7 +88,11 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         textFlavour.setMaxStringLength(40);
         textFlavour.setText(SkinProperties.PROP_ALL_FLAVOUR_TEXT.getValue(tileEntity.getSkinProps()));
         
-        buttonList.add(new GuiHelp(parent, 0, 2, 22, "Select the skin type you wish to make."));
+        buttonList.add(new GuiHelp(parent, 0, 6, 12, GuiHelper.getLocalizedControlName(guiName, "main.help.skinType")));
+        buttonList.add(new GuiHelp(parent, 0, 81, 18, GuiHelper.getLocalizedControlName(guiName, "main.help.save")));
+        buttonList.add(new GuiHelp(parent, 0, 81, 30, GuiHelper.getLocalizedControlName(guiName, "main.help.load")));
+        buttonList.add(new GuiHelp(parent, 0, 6, 48, GuiHelper.getLocalizedControlName(guiName, "main.help.itemName")));
+        buttonList.add(new GuiHelp(parent, 0, 6, 80, GuiHelper.getLocalizedControlName(guiName, "main.help.itemFlavour")));
     }
     
     public static class DropDownItemSkin extends DropDownListItem {
@@ -245,8 +249,8 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         String labelFlavour = GuiHelper.getLocalizedControlName(tileEntity.getName(), "label.flavour");
         String versionLabel = LibModInfo.RELEASE_TYPE.toString() + ": " + LibModInfo.MOD_VERSION;
         
-        this.fontRenderer.drawString(itemNameLabel, 8, 48, 4210752);
-        this.fontRenderer.drawString(labelFlavour, 8, 80, 4210752);
+        this.fontRenderer.drawString(itemNameLabel, 14, 48, 4210752);
+        this.fontRenderer.drawString(labelFlavour, 14, 80, 4210752);
         
         int versionWidth = fontRenderer.getStringWidth(versionLabel);
         this.fontRenderer.drawString(versionLabel, this.width - versionWidth - 7, this.height - 96 + 2, 4210752);

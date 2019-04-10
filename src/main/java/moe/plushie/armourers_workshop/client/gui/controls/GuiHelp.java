@@ -15,7 +15,7 @@ public class GuiHelp extends ModGuiControl {
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibModInfo.ID, "textures/gui/controls/help.png");
     
     public GuiHelp(GuiScreen parent, int id, int xPos, int yPos, String hoverText) {
-        super(parent, id, xPos, yPos, 8, 8);
+        super(parent, id, xPos, yPos, 7, 8);
         setHoverText(hoverText);
     }
     
@@ -32,7 +32,7 @@ public class GuiHelp extends ModGuiControl {
         int offsetPos = 0;
         //hovering
         if (hoverState == 2) {
-            offsetPos = width + 1;
+            offsetPos = width;
         }
         mc.renderEngine.bindTexture(TEXTURE);
         drawTexturedModalRect(x, y , offsetPos, 0, width, height);
