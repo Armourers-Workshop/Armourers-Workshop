@@ -195,6 +195,7 @@ tooloption.armourers_workshop:intensity=Интенсивность
 tooloption.armourers_workshop:radius=Радиус
 tooloption.armourers_workshop:radius.sample=Радиус Захвата цвета
 tooloption.armourers_workshop:radius.effect=Радиус Применения эффекта
+tooloption.armourers_workshop:planeRestrict=Ограничить плоскость
 
 
 # Paint Types
@@ -409,6 +410,12 @@ inventory.armourers_workshop:armourer.dialog.copy.copy=Копировать
 inventory.armourers_workshop:armourer.dialog.copy.srcPart=Откуда:
 inventory.armourers_workshop:armourer.dialog.copy.desPart=Куда:
 inventory.armourers_workshop:armourer.dialog.copy.mirror=Отзеркалить
+
+inventory.armourers_workshop:armourer.main.help.skinType=Выбрать тип скина.
+inventory.armourers_workshop:armourer.main.help.save=Сохраняет построенный скин в вещь.
+inventory.armourers_workshop:armourer.main.help.load=Загружает скин из вещи в мир в виде блоков.
+inventory.armourers_workshop:armourer.main.help.itemName=Назовите свой скин.
+inventory.armourers_workshop:armourer.main.help.itemFlavour=Описание скина, отображается под именем.
 
 
 # Color Mixer
