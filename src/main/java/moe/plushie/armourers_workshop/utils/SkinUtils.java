@@ -87,7 +87,7 @@ public final class SkinUtils {
                 return i;
             }
         }
-        return 0;
+        return -1;
     }
     
     public static double getFlapAngleForWings(Entity entity, Skin skin, int partIndex) {
@@ -102,11 +102,13 @@ public final class SkinUtils {
             String partIndexProp = SkinProperties.PROP_OUTFIT_PART_INDEXS.getValue(skin.getProperties());
             if (!partIndexProp.equals("")) {
                 int index = getSkinIndex(partIndexProp, skin, partIndex);
-                maxAngle = SkinProperties.PROP_WINGS_MAX_ANGLE.getValue(skin.getProperties(), index);
-                minAngle = SkinProperties.PROP_WINGS_MIN_ANGLE.getValue(skin.getProperties(), index);
-                idleSpeed = SkinProperties.PROP_WINGS_IDLE_SPEED.getValue(skin.getProperties(), index);
-                flyingSpeed = SkinProperties.PROP_WINGS_FLYING_SPEED.getValue(skin.getProperties(), index);
-                movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties(), index));
+                if (index != -1) {
+                    maxAngle = SkinProperties.PROP_WINGS_MAX_ANGLE.getValue(skin.getProperties(), index);
+                    minAngle = SkinProperties.PROP_WINGS_MIN_ANGLE.getValue(skin.getProperties(), index);
+                    idleSpeed = SkinProperties.PROP_WINGS_IDLE_SPEED.getValue(skin.getProperties(), index);
+                    flyingSpeed = SkinProperties.PROP_WINGS_FLYING_SPEED.getValue(skin.getProperties(), index);
+                    movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties(), index));
+                }
             }
         }
         
