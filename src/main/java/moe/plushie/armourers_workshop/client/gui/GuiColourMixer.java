@@ -92,10 +92,10 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         buttonList.add(paintTypeDropDown);
         
         buttonPaletteAdd = new GuiIconButton(this, -1, this.guiLeft + 166, this.guiTop + 124, 20, 20, "Add Palette", guiTexture).setIconLocation(223, 240, 16, 16);
-        buttonList.add(buttonPaletteAdd);
+        //buttonList.add(buttonPaletteAdd);
         
         buttonPaletteRemove = new GuiIconButton(this, -1, this.guiLeft + 228, this.guiTop + 124, 20, 20, "Remove Palette", guiTexture).setIconLocation(189, 240, 16, 16);
-        buttonList.add(buttonPaletteRemove);
+        //buttonList.add(buttonPaletteRemove);
     }
     
     @Override
@@ -247,8 +247,8 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         
         GlStateManager.pushMatrix();
         GlStateManager.translate(-guiLeft, -guiTop, 0);
-        buttonPaletteAdd.drawRollover(mc, mouseX, mouseY);
-        buttonPaletteRemove.drawRollover(mc, mouseX, mouseY);
+        //buttonPaletteAdd.drawRollover(mc, mouseX, mouseY);
+        //buttonPaletteRemove.drawRollover(mc, mouseX, mouseY);
         GlStateManager.popMatrix();
     }
     
