@@ -14,7 +14,6 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
-import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -66,12 +65,12 @@ public class ModelSkinOutfit extends ModelTypeHelper {
         }
 
         boolean overrideChest = SkinProperties.PROP_MODEL_OVERRIDE_CHEST.getValue(skin.getProperties());
-        MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
+        
         double angle = 45D;
 
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
-
+            
             GL11.glPushMatrix();
             if (isChild) {
                 float f6 = 2.0F;
@@ -122,12 +121,12 @@ public class ModelSkinOutfit extends ModelTypeHelper {
             }
 
             if (part.getPartType().getRegistryName().equals("armourers:wings.leftWing")) {
-                angle = SkinUtils.getFlapAngleForWings(entity, skin);
-                renderLeftWing(new SkinPartRenderData(part, renderData), angle, movmentType);
+                angle = SkinUtils.getFlapAngleForWings(entity, skin, i);
+                renderLeftWing(new SkinPartRenderData(part, renderData), angle);
             }
             if (part.getPartType().getRegistryName().equals("armourers:wings.rightWing")) {
-                angle = SkinUtils.getFlapAngleForWings(entity, skin);
-                renderRightWing(new SkinPartRenderData(part, renderData), -angle, movmentType);
+                angle = SkinUtils.getFlapAngleForWings(entity, skin, i);
+                renderRightWing(new SkinPartRenderData(part, renderData), -angle);
             }
 
             GL11.glPopMatrix();
@@ -300,7 +299,7 @@ public class ModelSkinOutfit extends ModelTypeHelper {
         GL11.glPopMatrix();
     }
 
-    private void renderLeftWing(SkinPartRenderData partRenderData, double angle, MovementType movmentType) {
+    private void renderLeftWing(SkinPartRenderData partRenderData, double angle) {
         GL11.glPushMatrix();
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
@@ -350,7 +349,7 @@ public class ModelSkinOutfit extends ModelTypeHelper {
         GL11.glPopMatrix();
     }
 
-    private void renderRightWing(SkinPartRenderData partRenderData, double angle, MovementType movmentType) {
+    private void renderRightWing(SkinPartRenderData partRenderData, double angle) {
         GL11.glPushMatrix();
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);

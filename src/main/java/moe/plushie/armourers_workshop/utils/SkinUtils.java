@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
+import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -78,13 +79,36 @@ public final class SkinUtils {
         return skinCopy;
     }
     
-    public static double getFlapAngleForWings(Entity entity, Skin skin) {
+    private static int getSkinIndex(String partIndexProp, Skin skin, int partIndex) {
+        String[] split = partIndexProp.split(":");
+        for (int i = 0 ; i < split.length; i++) {
+            int count = Integer.parseInt(split[i]);
+            if (partIndex < count) {
+                return i;
+            }
+        }
+        return 0;
+    }
+    
+    public static double getFlapAngleForWings(Entity entity, Skin skin, int partIndex) {
         
         double maxAngle = SkinProperties.PROP_WINGS_MAX_ANGLE.getValue(skin.getProperties());
         double minAngle = SkinProperties.PROP_WINGS_MIN_ANGLE.getValue(skin.getProperties());
         double idleSpeed = SkinProperties.PROP_WINGS_IDLE_SPEED.getValue(skin.getProperties());
         double flyingSpeed = SkinProperties.PROP_WINGS_FLYING_SPEED.getValue(skin.getProperties());
         MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
+        
+        if (skin.getSkinType() == SkinTypeRegistry.skinOutfit) {
+            String partIndexProp = SkinProperties.PROP_OUTFIT_PART_INDEXS.getValue(skin.getProperties());
+            if (!partIndexProp.equals("")) {
+                int index = getSkinIndex(partIndexProp, skin, partIndex);
+                maxAngle = SkinProperties.PROP_WINGS_MAX_ANGLE.getValue(skin.getProperties(), index);
+                minAngle = SkinProperties.PROP_WINGS_MIN_ANGLE.getValue(skin.getProperties(), index);
+                idleSpeed = SkinProperties.PROP_WINGS_IDLE_SPEED.getValue(skin.getProperties(), index);
+                flyingSpeed = SkinProperties.PROP_WINGS_FLYING_SPEED.getValue(skin.getProperties(), index);
+                movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties(), index));
+            }
+        }
         
         double angle = 0;
         double flapTime = idleSpeed;

@@ -11,8 +11,6 @@ import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
-import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
-import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -61,15 +59,13 @@ public class ModelSkinWings extends ModelTypeHelper  {
             
             double angle = 45D;
             
-            MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
-            
-            angle = SkinUtils.getFlapAngleForWings(entity, skin);
+            angle = SkinUtils.getFlapAngleForWings(entity, skin, i);
 
             if (part.getPartType().getPartName().equals("leftWing")) {
-                renderLeftWing(new SkinPartRenderData(part, renderData), angle, movmentType);
+                renderLeftWing(new SkinPartRenderData(part, renderData), angle);
             }
             if (part.getPartType().getPartName().equals("rightWing")) {
-                renderRightWing(new SkinPartRenderData(part, renderData), -angle, movmentType);
+                renderRightWing(new SkinPartRenderData(part, renderData), -angle);
             }
             GL11.glPopMatrix();
         }
@@ -77,7 +73,7 @@ public class ModelSkinWings extends ModelTypeHelper  {
         GL11.glColor3f(1F, 1F, 1F);
     }
     
-    private void renderLeftWing(SkinPartRenderData partRenderData, double angle, MovementType movmentType) {
+    private void renderLeftWing(SkinPartRenderData partRenderData, double angle) {
         GL11.glPushMatrix();
         
         Point3D point = new Point3D(0, 0, 0);
@@ -123,7 +119,7 @@ public class ModelSkinWings extends ModelTypeHelper  {
         GL11.glPopMatrix();
     }
     
-    private void renderRightWing(SkinPartRenderData partRenderData, double angle, MovementType movmentType) {
+    private void renderRightWing(SkinPartRenderData partRenderData, double angle) {
         GL11.glPushMatrix();
         Point3D point = new Point3D(0, 0, 0);
         EnumFacing axis = EnumFacing.DOWN;

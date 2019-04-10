@@ -67,6 +67,7 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
         SkinProperties skinProperties = new SkinProperties();
         String partIndexs = "";
         int[] paintData = null;
+        int skinIndex = 0;
         for (int i = 2; i < tileEntity.getSizeInventory(); i++) {
             ItemStack stack = tileEntity.getStackInSlot(i);
             ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(stack);
@@ -99,8 +100,13 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
                     
                     for (ISkinProperty prop : skin.getSkinType().getProperties()) {
                         SkinProperty p = (SkinProperty) prop;
-                        p.setValue(skinProperties, p.getValue(skin.getProperties()));
+                        if (p.getKey().startsWith("wings")) {
+                            p.setValue(skinProperties, p.getValue(skin.getProperties()), skinIndex);
+                        } else {
+                            p.setValue(skinProperties, p.getValue(skin.getProperties()));
+                        }
                     }
+                    skinIndex++;
                 }
             }
         }

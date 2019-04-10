@@ -16,6 +16,10 @@ public class SkinProperty<T> implements ISkinProperty<T> {
         return defaultValue;
     }
     
+    public String getKey() {
+        return key;
+    }
+    
     public T getValue(SkinProperties properties) {
         return (T) properties.getProperty(key, defaultValue);
     }
@@ -26,5 +30,17 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     
     public void clearValue(SkinProperties properties) {
         properties.removeProperty(key);
+    }
+    
+    public T getValue(SkinProperties properties, int index) {
+        return (T) properties.getProperty(key + String.valueOf(index), defaultValue);
+    }
+    
+    public void setValue(SkinProperties properties, T value, int index) {
+        properties.setProperty(key + String.valueOf(index), value);
+    }
+    
+    public void clearValue(SkinProperties properties, int index) {
+        properties.removeProperty(key + String.valueOf(index));
     }
 }
