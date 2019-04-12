@@ -520,7 +520,7 @@ inventory.armourers_workshop:admin-panel.clear_cache=Cache löschen
 
 
 # Chat Messages
-chat.armourers_workshop:undo.outOfUndos=Das kannstu nicht mehr rückgängig machen
+chat.armourers_workshop:undo.outOfUndos=Das kannst du nicht mehr rückgängig machen
 chat.armourers_workshop:undo.undoing=Zurücksetzen
 chat.armourers_workshop:inventoryFull=Dein Inventar ist voll!
 chat.armourers_workshop:inventoryGiftFail=Jemand hat versucht dir etwas zu schenken, aber du hattest keinen Platz im Inventar!
