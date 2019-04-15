@@ -1,13 +1,7 @@
 package moe.plushie.armourers_workshop.common.undo;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
-import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class UndoStep {

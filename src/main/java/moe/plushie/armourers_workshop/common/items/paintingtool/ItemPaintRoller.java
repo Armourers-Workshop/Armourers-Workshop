@@ -46,13 +46,12 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         ItemStack stack = player.getHeldItem(hand);
         return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
     }
-    @Override
-    public void onPaint(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing usedFace, EnumFacing effectFace) {
-        paintArea(world, player, block, stack, pos, effectFace, usedFace == effectFace);
+    
+    public void onPaint(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing usedFace) {
+        paintArea(world, player, block, stack, pos, usedFace);
     }
     
-    private void paintArea(World world, EntityPlayer player, Block targetBlock, ItemStack stack, BlockPos pos, EnumFacing face, boolean spawnParticles) {
-        
+    private void paintArea(World world, EntityPlayer player, Block targetBlock, ItemStack stack, BlockPos pos, EnumFacing face) {
         int radius = ToolOptions.RADIUS.getValue(stack);
         for (int i = -radius + 1; i < radius; i++ ) {
             for (int j = -radius + 1; j < radius; j++ ) {
@@ -80,7 +79,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
                 Block block = world.getBlockState(target).getBlock();
                 if ((targetBlock != ModBlocks.boundingBox & block != ModBlocks.boundingBox) |
                         (targetBlock == ModBlocks.boundingBox & block == ModBlocks.boundingBox)) {
-                    usedOnBlockSide(stack, player, world, target, block, face, spawnParticles);
+                    usedOnBlockSide(stack, player, world, target, block, face, true);
                 }
             }
         }
@@ -93,16 +92,35 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
     
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing facing, boolean spawnParticles) {
+        boolean fullBlock = false;
+        if (this instanceof IConfigurableTool) {
+            ArrayList<ToolOption<?>> toolOptionList = new ArrayList<ToolOption<?>>();
+            ((IConfigurableTool)this).getToolOptions(toolOptionList);
+            if (toolOptionList.contains(ToolOptions.FULL_BLOCK_MODE)) {
+                fullBlock = ToolOptions.FULL_BLOCK_MODE.getValue(stack);
+            }
+        }
+        
         if (block instanceof IPantableBlock) {
             int newColour = getToolColour(stack);
             PaintType paintType = getToolPaintType(stack);
             if (!world.isRemote) {
                 IPantableBlock worldColourable = (IPantableBlock) block;
-                int oldColour = worldColourable.getColour(world, pos, facing);
-                byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getId();
-                UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, facing);
-                ((IPantableBlock)block).setColour(world, pos, newColour, facing);
-                ((IPantableBlock)block).setPaintType(world, pos, paintType, facing);
+                if (fullBlock) {
+                    for (int i = 0; i < 6; i++) {
+                        int oldColour = worldColourable.getColour(world, pos, EnumFacing.VALUES[i]);
+                        byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, EnumFacing.VALUES[i]).getId();
+                        UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, EnumFacing.VALUES[i]);
+                        ((IPantableBlock)block).setColour(world, pos, newColour, EnumFacing.VALUES[i]);
+                        ((IPantableBlock)block).setPaintType(world, pos, paintType, EnumFacing.VALUES[i]);
+                    }
+                } else {
+                    int oldColour = worldColourable.getColour(world, pos, facing);
+                    byte oldPaintType = (byte) worldColourable.getPaintType(world, pos, facing).getId();
+                    UndoManager.blockPainted(player, world, pos, oldColour, oldPaintType, facing);
+                    ((IPantableBlock)block).setColour(world, pos, newColour, facing);
+                    ((IPantableBlock)block).setPaintType(world, pos, paintType, facing);
+                }
             } else {
                 if (spawnParticles) {
                     spawnPaintParticles(world, pos, facing, newColour);

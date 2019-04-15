@@ -70,21 +70,8 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
                 UndoManager.begin(player);
             }
             
-            boolean fullBlock = false;
-            if (this instanceof IConfigurableTool) {
-                ArrayList<ToolOption<?>> toolOptionList = new ArrayList<ToolOption<?>>();
-                ((IConfigurableTool)this).getToolOptions(toolOptionList);
-                if (toolOptionList.contains(ToolOptions.FULL_BLOCK_MODE)) {
-                    fullBlock = ToolOptions.FULL_BLOCK_MODE.getValue(stack);
-                }
-            }
-            if (fullBlock) {
-                for (int i = 0; i < 6; i++) {
-                    onPaint(stack, player, worldIn, pos, state.getBlock(), facing, EnumFacing.VALUES[i]);
-                }
-            } else {
-                onPaint(stack, player, worldIn, pos, state.getBlock(), facing, facing);
-            }
+            onPaint(stack, player, worldIn, pos, state.getBlock(), facing);
+            
             if (!worldIn.isRemote) {
                 UndoManager.end(player);
                 playToolSound(player, worldIn, pos, stack);
@@ -131,8 +118,23 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
         return false;
     }
     
-    public void onPaint(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing usedFace, EnumFacing effectFace) {
-        usedOnBlockSide(stack, player, world, pos, block, effectFace, usedFace == effectFace);
+    public void onPaint(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing usedFace) {
+        boolean fullBlock = false;
+        if (this instanceof IConfigurableTool) {
+            ArrayList<ToolOption<?>> toolOptionList = new ArrayList<ToolOption<?>>();
+            ((IConfigurableTool)this).getToolOptions(toolOptionList);
+            if (toolOptionList.contains(ToolOptions.FULL_BLOCK_MODE)) {
+                fullBlock = ToolOptions.FULL_BLOCK_MODE.getValue(stack);
+            }
+        }
+        
+        if (fullBlock) {
+            for (int i = 0; i < 6; i++) {
+                usedOnBlockSide(stack, player, world, pos, block, EnumFacing.VALUES[i], usedFace == EnumFacing.VALUES[i]);
+            }
+        } else {
+            usedOnBlockSide(stack, player, world, pos, block, usedFace, true);
+        }
     }
     
     public void playToolSound(EntityPlayer player, World world, BlockPos pos, ItemStack stack) {
