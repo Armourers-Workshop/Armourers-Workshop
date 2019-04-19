@@ -77,19 +77,19 @@ public final class RehostedJarHandler {
         lastMessagePost = System.currentTimeMillis();
         EntityPlayer player = Minecraft.getMinecraft().player;
         
-        TextComponentTranslation downloadLink = new TextComponentTranslation("chat.armourersworkshop:invalidJarDownload", (Object)null);
+        TextComponentTranslation downloadLink = new TextComponentTranslation("chat.armourers_workshop:invalidJarDownload", (Object)null);
         downloadLink.getStyle().setUnderlined(true);
         downloadLink.getStyle().setColor(TextFormatting.BLUE);
-        downloadLink.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("chat.armourersworkshop:invalidJarDownloadTooltip", (Object)null)));
+        downloadLink.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("chat.armourers_workshop:invalidJarDownloadTooltip", (Object)null)));
         downloadLink.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, LibModInfo.DOWNLOAD_URL));
         
-        TextComponentTranslation stopModRepostsLink = new TextComponentTranslation("chat.armourersworkshop:invalidJarStopModReposts", (Object)null);
+        TextComponentTranslation stopModRepostsLink = new TextComponentTranslation("chat.armourers_workshop:invalidJarStopModReposts", (Object)null);
         stopModRepostsLink.getStyle().setUnderlined(true);
         stopModRepostsLink.getStyle().setColor(TextFormatting.BLUE);
-        stopModRepostsLink.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("chat.armourersworkshop:invalidJarStopModRepostsTooltip", (Object)null)));
+        stopModRepostsLink.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentTranslation("chat.armourers_workshop:invalidJarStopModRepostsTooltip", (Object)null)));
         stopModRepostsLink.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, STOP_MOD_REPOSTS_URL));
         
-        TextComponentTranslation updateMessage = new TextComponentTranslation("chat.armourersworkshop:invalidJar", downloadLink, stopModRepostsLink);
+        TextComponentTranslation updateMessage = new TextComponentTranslation("chat.armourers_workshop:invalidJar", downloadLink, stopModRepostsLink);
         updateMessage.getStyle().setColor(TextFormatting.RED);
         player.sendMessage(updateMessage);
     }
