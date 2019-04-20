@@ -79,6 +79,8 @@ public class SkinPartRenderer extends ModelBase {
             endIndex = startIndex + 2;
         }
         
+        GlStateManager.pushAttrib();
+        GL11.glEnable(GL11.GL_CULL_FACE);
         GlStateManager.matrixMode(GL11.GL_TEXTURE);
         GlStateManager.pushMatrix();
         double f = PaintingHelper.getPaintTextureOffset();
@@ -123,6 +125,7 @@ public class SkinPartRenderer extends ModelBase {
 
         GlStateManager.resetColor();
         GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.popAttrib();
         // mc.profiler.endSection();
     }
 
