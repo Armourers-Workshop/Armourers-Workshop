@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLi
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ModelBlockGlobalSkinLibrary extends ModelBase {
@@ -26,6 +27,7 @@ public class ModelBlockGlobalSkinLibrary extends ModelBase {
     
     public void render(TileEntityGlobalSkinLibrary tileEntity, float partialTickTime, float scale) {
         Minecraft.getMinecraft().renderEngine.bindTexture(MODEL_TEXTURE);
+        GlStateManager.pushAttrib();
         ModRenderHelper.disableLighting();
         ModRenderHelper.enableAlphaBlend();
         GL11.glColor4f(1F, 1F, 1F, 0.5F);
@@ -43,6 +45,7 @@ public class ModelBlockGlobalSkinLibrary extends ModelBase {
         GL11.glColor4f(1F, 1F, 1F, 1F);
         ModRenderHelper.disableAlphaBlend();
         ModRenderHelper.enableLighting();
+        GlStateManager.popAttrib();
     }
     
     public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
