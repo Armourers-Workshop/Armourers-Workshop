@@ -36,6 +36,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
@@ -201,5 +202,14 @@ public final class ModCapabilityManager {
             skinCap.syncToAllTracking();
             skinCap.syncToPlayer((EntityPlayerMP) event.player);
         }
+    }
+    
+    @SubscribeEvent
+    public static void onChangedDimension(PlayerChangedDimensionEvent event) {
+        IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(event.player);
+        wardrobeCap.syncToPlayer((EntityPlayerMP) event.player);
+        
+        IEntitySkinCapability skinCap = EntitySkinCapability.get(event.player);
+        skinCap.syncToPlayer((EntityPlayerMP) event.player);
     }
 }
