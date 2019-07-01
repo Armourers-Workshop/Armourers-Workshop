@@ -6,6 +6,8 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.undo.UndoManager;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -34,17 +36,23 @@ public class MessageClientKeyPress implements IMessage, IMessageHandler<MessageC
     
     @Override
     public IMessage onMessage(MessageClientKeyPress message, MessageContext ctx) {
+        MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         EntityPlayerMP player = ctx.getServerHandler().player;
-        switch (message.button) {
-        case UNDO:
-            UndoManager.undoPressed(player);
-            break;
-        case OPEN_WARDROBE:
-            if (ConfigHandler.canOpenWardrobe(player)) {
-                FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_PLAYER.ordinal(), player.getEntityWorld(), 0, 0, 0);
+        server.addScheduledTask(new Runnable() {
+            @Override
+            public void run() {
+                switch (message.button) {
+                case UNDO:
+                    UndoManager.undoPressed(player);
+                    break;
+                case OPEN_WARDROBE:
+                    if (ConfigHandler.canOpenWardrobe(player)) {
+                        FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_PLAYER.ordinal(), player.getEntityWorld(), 0, 0, 0);
+                    }
+                    break;
+                }
             }
-            break;
-        }
+        });
         return null;
     }
     
