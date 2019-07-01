@@ -173,7 +173,7 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
     
     public int getPartCount() {
         int count = 0;
-     // Used collection view so access time is not reset.
+        // Used collection view so access time is not reset.
         Collection<Skin> skins = skinCache.asMap().values();
         Iterator<Skin> iterator = skins.iterator();
         while (iterator.hasNext()) {

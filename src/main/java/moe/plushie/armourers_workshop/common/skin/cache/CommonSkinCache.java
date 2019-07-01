@@ -262,6 +262,19 @@ public final class CommonSkinCache implements Runnable, IExpiringMapCallback<Ski
         }
     }
     
+    public Skin getSkin(ISkinIdentifier identifier, boolean softLoad) {
+        if (identifier.hasLocalId()) {
+            return cacheLocalDatabase.get(identifier, softLoad);
+        } else if (identifier.hasLibraryFile()) {
+            return cacheLocalFile.get(identifier, softLoad);
+        } else if (identifier.hasGlobalId()) {
+             return cacheGlobal.get(identifier, softLoad);
+        } else {
+            ModLogger.log(Level.ERROR, "Server requested a skin with no vaid ID:" + identifier.toString());
+            return null;
+        }
+    }
+    
     /** Returns a skin if it is in the cache. If not the skin will be loaded by another thread. */
     public Skin softGetSkin(ISkinIdentifier identifier) {
         if (identifier.hasLocalId()) {
