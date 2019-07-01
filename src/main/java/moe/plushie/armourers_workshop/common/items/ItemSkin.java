@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lwjgl.input.Keyboard;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
@@ -158,7 +157,7 @@ public class ItemSkin extends AbstractModItem {
                     tooltip.add("  " + TranslateUtils.translate("item.armourers_workshop:rollover.skinGlobalId", identifier.getSkinGlobalId()));
                 }
             }
-            String keyName = Keyboard.getKeyName(Keybindings.OPEN_WARDROBE.getKeyCode());
+            String keyName = Keybindings.OPEN_WARDROBE.getDisplayName();
             if (isEquipmentSkin) {
                 tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinOpenWardrobe", keyName));
             }
