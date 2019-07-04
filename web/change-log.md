@@ -1,420 +1,420 @@
 Build 1.12.2-0.49.1-development (coming in next build)
-Changed:
-    Updated de_DE lang file. (Victorious3)
-    Updated zh_CH lang file. (Chataro)
-Fixed:
-    Fixed armour container items having the wrong unlocalized name.
-    Fixed undo not working with paint roller in full block mode.
-    Fixed paint roller area logic.
-    Fixed wrong unlocalized names in the rehosted jar checker.
-    Fixed global library sometime leaving the rendering in the wrong state.
-    Make sure cull face is on when rendering skins.
-    Fixed client key presses not being run on the main thread.
-    Fixed crash if the wardrobe key was bound to an none ASCII key.
-    Fixed wardrobe getting de-synced on dimension change.
-    Fixed wardrobeTabDyes config option not being synced to clients.
+* Changed
+  * Updated de_DE lang file. (Victorious3)
+  * Updated zh_CH lang file. (Chataro)
+* Fixed
+  * Fixed armour container items having the wrong unlocalized name.
+  * Fixed undo not working with paint roller in full block mode.
+  * Fixed paint roller area logic.
+  * Fixed wrong unlocalized names in the rehosted jar checker.
+  * Fixed global library sometime leaving the rendering in the wrong state.
+  * Make sure cull face is on when rendering skins.
+  * Fixed client key presses not being run on the main thread.
+  * Fixed crash if the wardrobe key was bound to an none ASCII key.
+  * Fixed wardrobe getting de-synced on dimension change.
+  * Fixed wardrobeTabDyes config option not being synced to clients.
 
 
 Build 1.12.2-0.49.0
-Big rewrite to most of the mod, too much to list!
+* Big rewrite to most of the mod, too much to list!
 
 
 Build 1.7.10-0.48.3
-Added:
-    Added config option to recover skins from items in the skinning table.
-    Added recipe for linking tool.
-Changed:
-    Changed skin uploader to use the multipart forum data class.
-    Removed rehosted jar messages in dev versions.
-    Change the way skin dyes are saved on NBT.
-    Increased the size of the chest bounds.
-    Allowed mannequin to be offset by 3 blocks, up from 1.
-    Started working on a polygon file format exporter.
-    Limited dolls to 1 per stack.
-    Security fix.
-    Players in creative mode no longer need to use a template to save items in the armourer.
-    Removed armourer recipe.
-    Added Equine0x to the guide book credits.
-    Added sort priority to the linking tool.
-Fixed:
-    Fixed crash when auto getting the players hair/skin colour if the texture was not found.
-    Fixed multi-blocks not being destroyed correctly when a child block is hit with an explosion.
-    Fixed the skinning table sometimes using a full stack of input items.
-    Fixed crash if shaders mod is intalled on a server.
-    Fixed skin serializer trying to parse the skin before it was fully downloaded.
-    Fixed parsing error in the set skin command.
+* Added
+  * Added config option to recover skins from items in the skinning table.
+  * Added recipe for linking tool.
+* Changed
+  * Changed skin uploader to use the multipart forum data class.
+  * Removed rehosted jar messages in dev versions.
+  * Change the way skin dyes are saved on NBT.
+  * Increased the size of the chest bounds.
+  * Allowed mannequin to be offset by 3 blocks, up from 1.
+  * Started working on a polygon file format exporter.
+  * Limited dolls to 1 per stack.
+  * Security fix.
+  * Players in creative mode no longer need to use a template to save items in the armourer.
+  * Removed armourer recipe.
+  * Added Equine0x to the guide book credits.
+  * Added sort priority to the linking tool.
+* Fixed
+  * Fixed crash when auto getting the players hair/skin colour if the texture was not found.
+  * Fixed multi-blocks not being destroyed correctly when a child block is hit with an explosion.
+  * Fixed the skinning table sometimes using a full stack of input items.
+  * Fixed crash if shaders mod is intalled on a server.
+  * Fixed skin serializer trying to parse the skin before it was fully downloaded.
+  * Fixed parsing error in the set skin command.
 
 
 Build 1.7.10-0.48.1
-Changed:
-    Updated pt_BR lang file. (BreadFace)
-    Updated zh_CN lang file. (Ethan)
-    Updated ru_RU lang file. ([\\//972])
+* Changed
+  * Updated pt_BR lang file. (BreadFace)
+  * Updated zh_CN lang file. (Ethan)
+  * Updated ru_RU lang file. ([\\//972])
 
 
 Build 1.7.10-0.48.0
-Added:
-    Added code to check for a rehosted jar.
-Changed:
-    Change colourable TESR render distance.
-    Stopped the player preview clipping out of the wardrobe preview box.
-Fixed:
-    Fixed global library render bounding box.
-    Fixed armourer version text location being offset.
-    Fixed equipment cubes sort order in the creative tab.
-    Fixed skin preview box being under some GUI elements.
-    Fixed wings sometimes not using the marker axes in linear mode.
-    Fixed potential NPE crash when rendering a skin preview.
+* Added
+  * Added code to check for a rehosted jar.
+* Changed
+  * Change colourable TESR render distance.
+  * Stopped the player preview clipping out of the wardrobe preview box.
+* Fixed
+  * Fixed global library render bounding box.
+  * Fixed armourer version text location being offset.
+  * Fixed equipment cubes sort order in the creative tab.
+  * Fixed skin preview box being under some GUI elements.
+  * Fixed wings sometimes not using the marker axes in linear mode.
+  * Fixed potential NPE crash when rendering a skin preview.
 
 
 Build 1.7.10-0.47.1
-Fixed:
+* Fixed
 	Fixed the invalid Java version error not showing if an older version of java 8 is installed.
-Changed:
-	Update zh_CN lang file. (Ethan)
+* Changed
+  * Update zh_CN lang file. (Ethan)
 
 
 Build 1.7.10-0.47.0
-Added:
-	Added beta access for global library skin uploading.
-		Likes system.
-		Skin edit and delete options.
-		Most liked skins to the home screen.
-		Allowed setting the skins description.
-	Added skin update option to the admin panel.
-Fixed:
-	Fixed crash when CNPCS tries to access a blocks camera collision.
-	Fixed overflow if skin panel is too small to show any skins.
-	Global library panels sometimes not updating when the window is resized.
-	Fixed text overflow in the skin upload GUI.
-	Fixed skin recovery not adding file extensions.
-	Added missing localisations to the skin info panel.
-	Fixed text layout in the skin info box.
-	Fixed some characters not being allowed in file names.
-Changed:
-	Show the skin uploaders Minecraft face in the global library skin info panel.
-	Allowed players upload skins to be listed in the global library.
-	Show message if the users java version is too old for the global library.
-	Removed meta data from skinning table textures.
-	Global library skin info panel layout.
-	Updated skin file version.
-	Improved skin loading code to help load corrupted skins.
-	Made global library skin results paged.
-	Update global library home screen when returning to it.
-	Update ru_RU lang file. ([\\//972])
+* Added
+  * Added beta access for global library skin uploading.
+    * Likes system.
+    * Skin edit and delete options.
+    * Most liked skins to the home screen.
+    * Allowed setting the skins description.
+  * Added skin update option to the admin panel.
+* Fixed
+  * Fixed crash when CNPCS tries to access a blocks camera collision.
+  * Fixed overflow if skin panel is too small to show any skins.
+  * Global library panels sometimes not updating when the window is resized.
+  * Fixed text overflow in the skin upload GUI.
+  * Fixed skin recovery not adding file extensions.
+  * Added missing localisations to the skin info panel.
+  * Fixed text layout in the skin info box.
+  * Fixed some characters not being allowed in file names.
+* Changed
+  * Show the skin uploaders Minecraft face in the global library skin info panel.
+  * Allowed players upload skins to be listed in the global library.
+  * Show message if the users java version is too old for the global library.
+  * Removed meta data from skinning table textures.
+  * Global library skin info panel layout.
+  * Updated skin file version.
+  * Improved skin loading code to help load corrupted skins.
+  * Made global library skin results paged.
+  * Update global library home screen when returning to it.
+  * Update ru_RU lang file. ([\\//972])
 Art:
-	Updated global library GUI icons. (Ethan)
-	Updated skinning table textures. (Thundercat_)
-	Updated global library like icons. (Ethan)
+  * Updated global library GUI icons. (Ethan)
+  * Updated skinning table textures. (Thundercat_)
+  * Updated global library like icons. (Ethan)
 
 
 Build 1.7.10-0.46.0
-Added:
-	New tabbed Armourer GUI.
-		Armourer copy option.
-		Armourer mirror option.
-		New Armourer clear options for each skin part.
-	Hologram Projector block.
-	Added icon zoom buttons the the global library.
-	Instanced dye table config option.
-	Allowed the armourer texture to be set from a URL.
-	Allowed block skins inventory to be resized.
-	Allowed mannequins to show the Alex model.
-	Added option to show rotation point in the hologram projector.
-	Texture fade animation when mannequins download a texture.
-	Allowed skins to be equipped with a dispenser.
-	Allowed right clicking skins to equip them.
-	Added wand of style support for Minecraft Comes Alive humans.
-	Added flavour text to the wand of style.
-Changed:
-	Removed "rebuilding texture" debug text.
-	Fade armourer texture in after they are loaded.
-	Improved skin lookup speed.
-	Turned off skin tooltip debug info by default.
-	Stopped camera colliding with skin blocks when the player is mounted.
-	Automatically change library GUI layout when NEI visibility is toggled.
-	Automatically change global library GUI layout when NEI visibility is toggled
-	Removed metadata from image files.
-	Clear search results in Global library before starting a new search.
-	Show text in Global library saying results are being downloaded.
-	Added wand of style render to the Minecraft profiler.
-	Added contributor ring for Thundercat_ and added them to the credits.
-	Added contributor ring for EzerArch.
-	Updated ru_RU lang file. ([\\//972])
-	Updated zh_CN lang file. (Ethan)
-	Update pt_PT and pt_BR lang files. (EzerArch)
-Fixed:
-	Fixed rare NPE crash in the mannequin GUI when selecting hair or skin colour.
-	Fixed block skins inventory GUI not opening on the first click.
-	NEI rendering on top of the global library GUI.
-	Some localisation size issues on the mannequin offset tab.
-	Mini armourer item rendering up side down.
-	Current page in global library going out of bounds when the window is resized.
-	Allowed hair and skin dye bottles to work with skins that have texture paint.
+* Added
+  * New tabbed Armourer GUI.
+    * Armourer copy option.
+    * Armourer mirror option.
+    * New Armourer clear options for each skin part.
+  * Hologram Projector block.
+  * Added icon zoom buttons the the global library.
+  * Instanced dye table config option.
+  * Allowed the armourer texture to be set from a URL.
+  * Allowed block skins inventory to be resized.
+  * Allowed mannequins to show the Alex model.
+  * Added option to show rotation point in the hologram projector.
+  * Texture fade animation when mannequins download a texture.
+  * Allowed skins to be equipped with a dispenser.
+  * Allowed right clicking skins to equip them.
+  * Added wand of style support for Minecraft Comes Alive humans.
+  * Added flavour text to the wand of style.
+* Changed
+  * Removed "rebuilding texture" debug text.
+  * Fade armourer texture in after they are loaded.
+  * Improved skin lookup speed.
+  * Turned off skin tooltip debug info by default.
+  * Stopped camera colliding with skin blocks when the player is mounted.
+  * Automatically change library GUI layout when NEI visibility is toggled.
+  * Automatically change global library GUI layout when NEI visibility is toggled
+  * Removed metadata from image files.
+  * Clear search results in Global library before starting a new search.
+  * Show text in Global library saying results are being downloaded.
+  * Added wand of style render to the Minecraft profiler.
+  * Added contributor ring for Thundercat_ and added them to the credits.
+  * Added contributor ring for EzerArch.
+  * Updated ru_RU lang file. ([\\//972])
+  * Updated zh_CN lang file. (Ethan)
+  * Update pt_PT and pt_BR lang files. (EzerArch)
+* Fixed
+  * Fixed rare NPE crash in the mannequin GUI when selecting hair or skin colour.
+  * Fixed block skins inventory GUI not opening on the first click.
+  * NEI rendering on top of the global library GUI.
+  * Some localisation size issues on the mannequin offset tab.
+  * Mini armourer item rendering up side down.
+  * Current page in global library going out of bounds when the window is resized.
+  * Allowed hair and skin dye bottles to work with skins that have texture paint.
 Art:
-	Hologram projector GUI tab textures. (Ethan)
-	Updated hologram projector GUI tab icons to have animations. (Thundercat_)
-	Updated mannequin GUI tab icons to have animations. (Thundercat_)
-	Updated armourer GUI tab icons to have animations. (Thundercat_)
-	Updated mini armourer texture. (Thundercat_)
-	Updated global library texture. (Thundercat_)
+  * Hologram projector GUI tab textures. (Ethan)
+  * Updated hologram projector GUI tab icons to have animations. (Thundercat_)
+  * Updated mannequin GUI tab icons to have animations. (Thundercat_)
+  * Updated armourer GUI tab icons to have animations. (Thundercat_)
+  * Updated mini armourer texture. (Thundercat_)
+  * Updated global library texture. (Thundercat_)
 Refactor:
-	Global library home screen.
-	Global library search results screen.
-	Created NEI addon and moved most NEI code into it.
-	Mannequin skin & hair GUI tab code cleanup.
+  * Global library home screen.
+  * Global library search results screen.
+  * Created NEI addon and moved most NEI code into it.
+  * Mannequin skin & hair GUI tab code cleanup.
 
 
 Build 1.7.10-0.45.1
-Changed:
-	Preserved dyes names when using them in the dye table.
-	Incressed the size of the head skin bounds.
-	Allowed & symbol in skin file names.
-	Small change to lighting on skins. (should be more subtle at some angles)
-	Made mannequin slot icons only show when they are empty.
-	Updated zh_CN lang file. (Ethan)
-	Updated ru_RU lang file. ([\\//972])
-Fixed:
-	Library not remembering the current folder when the GUI is closed.
-	Crash if a AW block was removed incorrectly my another mod.
-	Shift-clicking not working on all mannequin slots.
-	Dupe bugs in the dye table.
-	Crash if a item was added to the item override config more than once.
-	Items with multiple colours and layers will now render in mannequins hands.
+* Changed
+  * Preserved dyes names when using them in the dye table.
+  * Incressed the size of the head skin bounds.
+  * Allowed & symbol in skin file names.
+  * Small change to lighting on skins. (should be more subtle at some angles)
+  * Made mannequin slot icons only show when they are empty.
+  * Updated zh_CN lang file. (Ethan)
+  * Updated ru_RU lang file. ([\\//972])
+* Fixed
+  * Library not remembering the current folder when the GUI is closed.
+  * Crash if a AW block was removed incorrectly my another mod.
+  * Shift-clicking not working on all mannequin slots.
+  * Dupe bugs in the dye table.
+  * Crash if a item was added to the item override config more than once.
+  * Items with multiple colours and layers will now render in mannequins hands.
 API:
-	Added new player equipment set, get and clear methods with indexes.
+  * Added new player equipment set, get and clear methods with indexes.
 
 
 Build 1.7.10-0.45.0
-Added:
-	block skin inventory option
-	added most downloaded skins to the global library
-	added missing localizations for the global library
-Changed:
-	updated zh_CN lang file (Ethan)
-	changed wing slot icon (Ethan)
-	show download count in the global library
-	increased global library download speed
-Fixed:
-	stop wand of style from hurting entities when left clicking
-	fixed players inventory becoming de-synced after using the global library
-	fixed some skin name going outside of the preview box in the global library
-	fixed "secret" doll recipe working with any block
-	fixed not being able to load skins if the filename was too long
+* Added
+  * block skin inventory option
+  * added most downloaded skins to the global library
+  * added missing localizations for the global library
+* Changed
+  * updated zh_CN lang file (Ethan)
+  * changed wing slot icon (Ethan)
+  * show download count in the global library
+  * increased global library download speed
+* Fixed
+  * stop wand of style from hurting entities when left clicking
+  * fixed players inventory becoming de-synced after using the global library
+  * fixed some skin name going outside of the preview box in the global library
+  * fixed "secret" doll recipe working with any block
+  * fixed not being able to load skins if the filename was too long
 
 
 Build 1.7.10-0.44.1
-Added:
-	added ghasts to the wand of style
-	added creepers to the wand of style
-Changed:
-	allowed saving skins with the creative library
-	allowed library files and folders to have ' ` + in their name
-	library skin download location so downloads counts can be tracked
-	library layout to make skin preview bigger
-Fixed:
-	library sync issue if a skin was saved with an invalid name
-	library dialogs sometimes not having the correct lighting
-	added missing localisations to the skin library
+* Added
+  * added ghasts to the wand of style
+  * added creepers to the wand of style
+* Changed
+  * allowed saving skins with the creative library
+  * allowed library files and folders to have ' ` + in their name
+  * library skin download location so downloads counts can be tracked
+  * library layout to make skin preview bigger
+* Fixed
+  * library sync issue if a skin was saved with an invalid name
+  * library dialogs sometimes not having the correct lighting
+  * added missing localisations to the skin library
 
 
 Build 1.7.10-0.44.0
-Added:
-	multi-blocks
-	folders to the library
-	blending tool
-	skin slot unlock item
-	enabled wand of style for chickens, zombies, skeletons and custom npcs (!!UNFINISHED!!)
-	new folder, overwrite file and delete dialogs in the library
-	lock dyes config option to the skinning table
-	resyncWardrobe command
-	setItemAsSkinnable command (/armourers setItemAsSkinnable will effect currently held item)
-	clear skin dye recipe (soap + skin in crafting grid)
-	debug render to show block render bounds
-	average model bake time to the debug text
-Fixed:
-	crash rendering block skin on the same tick it is removed
-	being able to place empty dye bottles in the dye table
-	transparent skins not showing correctly in the dye table
-	configs not getting updated when changed in game
-	missing in game config options
-	library private folder syncing issues on offline mode servers
-	update check chat link point to the wrong location.
-	syncing issues library when overwriting a file
-Changed:
-	updated guild book credits
-	allowed setting different values for each wardrobe slot limit
-	allowed for up to 8 slots in the wardrobe
-	show debug tool in creative tab
-	added face mode image to paint roller
-	dye table recipe to match new texture
-	block marker recipe to match new texture
-	incressed the size of the library model preview
-	library model preview is hidden if the window is to small
-	local file view in the library will no longer try to load files from the server
-	mannequin to not render extra renders if mannequin is not visible
-	setSkinColumnCount command to setUnlockedWardrobeSlots (usage /armourers @p setUnlockedWardrobeSlots [value:1-8] [skintype])
-	skins can now be downloaded from the global library (will be saved into downloads folder in the library)
-	texture painting config option to have auto, on and off settings
-	turned off texture painting if JBRA client is installed
-	added show all button to the global library
-	changed command system to use sub commands
-	change admin panel command to a sub command
-	sorted sub commands tab completion alphabetically
-	updated de_DE lang file (Flummie2000)
-	updated zh_CH lang file (Ethan)
+* Added
+  * multi-blocks
+  * folders to the library
+  * blending tool
+  * skin slot unlock item
+  * enabled wand of style for chickens, zombies, skeletons and custom npcs (!!UNFINISHED!!)
+  * new folder, overwrite file and delete dialogs in the library
+  * lock dyes config option to the skinning table
+  * resyncWardrobe command
+  * setItemAsSkinnable command (/armourers setItemAsSkinnable will effect currently held item)
+  * clear skin dye recipe (soap + skin in crafting grid)
+  * debug render to show block render bounds
+  * average model bake time to the debug text
+* Fixed
+  * crash rendering block skin on the same tick it is removed
+  * being able to place empty dye bottles in the dye table
+  * transparent skins not showing correctly in the dye table
+  * configs not getting updated when changed in game
+  * missing in game config options
+  * library private folder syncing issues on offline mode servers
+  * update check chat link point to the wrong location.
+  * syncing issues library when overwriting a file
+* Changed
+  * updated guild book credits
+  * allowed setting different values for each wardrobe slot limit
+  * allowed for up to 8 slots in the wardrobe
+  * show debug tool in creative tab
+  * added face mode image to paint roller
+  * dye table recipe to match new texture
+  * block marker recipe to match new texture
+  * incressed the size of the library model preview
+  * library model preview is hidden if the window is to small
+  * local file view in the library will no longer try to load files from the server
+  * mannequin to not render extra renders if mannequin is not visible
+  * setSkinColumnCount command to setUnlockedWardrobeSlots (usage /armourers @p setUnlockedWardrobeSlots [value:1-8] [skintype])
+  * skins can now be downloaded from the global library (will be saved into downloads folder in the library)
+  * texture painting config option to have auto, on and off settings
+  * turned off texture painting if JBRA client is installed
+  * added show all button to the global library
+  * changed command system to use sub commands
+  * change admin panel command to a sub command
+  * sorted sub commands tab completion alphabetically
+  * updated de_DE lang file (Flummie2000)
+  * updated zh_CH lang file (Ethan)
 Art:
-	added new item textures by TheEpicJames for;
-		armourers hammer
-		blend tool
-		block marker
-		burn tool
-		dodge tool
-		colour picker
-		noise tool
-		colour noise tool
-		debug tool
-		dye bottle
-		gift sack
-		hue tool
-		mannequin tool
-		paint roller
-		paintbrush
-		soap
-	added new dye table textures by LordPhrozen
-	added skin unlock texture by LordPhrozen
-	added new armourer textures by TheEpicJames
-	added new global library textures by TheEpicJames
-	added new skin library textures by TheEpicJames
-	added new icons for the armour container
+  * added new item textures by TheEpicJames for;
+    * armourers hammer
+    * blend tool
+    * block marker
+    * burn tool
+    * dodge tool
+    * colour picker
+    * noise tool
+    * colour noise tool
+    * debug tool
+    * dye bottle
+    * gift sack
+    * hue tool
+    * mannequin tool
+    * paint roller
+    * paintbrush
+    * soap
+  * added new dye table textures by LordPhrozen
+  * added skin unlock texture by LordPhrozen
+  * added new armourer textures by TheEpicJames
+  * added new global library textures by TheEpicJames
+  * added new skin library textures by TheEpicJames
+  * added new icons for the armour container
 
 
 Build 1.7.10-0.43.1
-Fixed:
-	Crafting table dyed skins causes disconnect.
-	Skin dyes not showing on entities using the armour container.
+* Fixed
+  * Crafting table dyed skins causes disconnect.
+  * Skin dyes not showing on entities using the armour container.
 
 
 Build 1.7.10-0.43.0
-Added:
-	Invisible option to mannequins.
-	Allowed setting a mannequins texture using a URL.
-	Ability to use colour picker tool without selecting paint type.
-	Added admin panel.
-	Added skin recovery system.
-Fixed:
-	Armour container's not saving skin dyes.
-	Skins not rendering when Dragon Block C is installed.
-Changed:
-	Update pt_PT and pt_BR lang files. (EzerArch) 
+* Added
+  * Invisible option to mannequins.
+  * Allowed setting a mannequins texture using a URL.
+  * Ability to use colour picker tool without selecting paint type.
+  * Added admin panel.
+  * Added skin recovery system.
+* Fixed
+  * Armour container's not saving skin dyes.
+  * Skins not rendering when Dragon Block C is installed.
+* Changed
+  * Update pt_PT and pt_BR lang files. (EzerArch) 
 
 
 Build 1.7.10-0.42.5
-Fixed:
-	Client crash when a doll is placed.
+* Fixed
+  * Client crash when a doll is placed.
 
 
 Build 1.7.10-0.42.4
-Fixed:
-	Dedicated server crash when mannequin is loaded.
+* Fixed
+  * Dedicated server crash when mannequin is loaded.
 
 
 Build 1.7.10-0.42.3
-Added:
-	File name skin property. (allow skins to update when the library file is changed - planned not implemented yet)
-Fixed:
-	Client NPE crash when a skinnable block is rotated.
-	Wings not getting cleared with the armourers clear command.
-	Wings and chest skins not rotation when the player is sneaking.
-	Frame drops when a client requests a large number of skins.
-	Frame drops when mannequins are first seen by the client.
-Changed:
-	Changed the way item overrides are formatted in the config file. (note: item, pickaxe, axe, shovel and hoe are not implemented)
+* Added
+  * File name skin property. (allow skins to update when the library file is changed - planned not implemented yet)
+* Fixed
+  * Client NPE crash when a skinnable block is rotated.
+  * Wings not getting cleared with the armourers clear command.
+  * Wings and chest skins not rotation when the player is sneaking.
+  * Frame drops when a client requests a large number of skins.
+  * Frame drops when mannequins are first seen by the client.
+* Changed
+  * Changed the way item overrides are formatted in the config file. (note: item, pickaxe, axe, shovel and hoe are not implemented)
 
 
 Build 1.7.10-0.42.0
-Added:
-	Added sword skin support for MapleCrafted
-	Added sword skin support for OreSpawn.
-	Add pt_PT and pt_BR lang files. (EzerArch)
-	Added global skin database directory. (for map makers, works like the old equipment-database directory)
-	Added slowModelBaking config option.
-	Allowed replacing body parts with skins.
-Fixed:
-	Stopped console spam when a player is sitting on a block skin.
-	Fixed chest skin on mannequins not using some rotation axes.
-	Fixed rare crash when trying to get a skin from the cache as it's being removed
-	Fixed global library spamming errors if it was unable to download the skins JSON list.
-	Fixed mannequin textures getting rebuilt every frame if they had not been downloaded.
-	Fixed z fighting on armourer building guide grid and model. (finally)
-	Fixed skirts on mannequin not rotation around their y axes.
-	Fixed mannequin game profiles not updating correctly when changed.
-Changed:
-	Updated Halloween event!
-	Added more build space below the chest
-	Improved client model baking speed.
-	Removed showArmourerDebugRender config option. (now on the debug tool)
+* Added
+  * Added sword skin support for MapleCrafted
+  * Added sword skin support for OreSpawn.
+  * Add pt_PT and pt_BR lang files. (EzerArch)
+  * Added global skin database directory. (for map makers, works like the old equipment-database directory)
+  * Added slowModelBaking config option.
+  * Allowed replacing body parts with skins.
+* Fixed
+  * Stopped console spam when a player is sitting on a block skin.
+  * Fixed chest skin on mannequins not using some rotation axes.
+  * Fixed rare crash when trying to get a skin from the cache as it's being removed
+  * Fixed global library spamming errors if it was unable to download the skins JSON list.
+  * Fixed mannequin textures getting rebuilt every frame if they had not been downloaded.
+  * Fixed z fighting on armourer building guide grid and model. (finally)
+  * Fixed skirts on mannequin not rotation around their y axes.
+  * Fixed mannequin game profiles not updating correctly when changed.
+* Changed
+  * Updated Halloween event!
+  * Added more build space below the chest
+  * Improved client model baking speed.
+  * Removed showArmourerDebugRender config option. (now on the debug tool)
 
 
 Build 1.7.10-0.41.0
-Added:
-	Added no collision option for block skins.
-	Added seat option for block skins.
-	Added compession for skins being sent from the server to the client. (skins are now around 10% the size)
-	Added serverCompressesSkins config option.
-	Added display list count to the F3 debug text.
-	Added credits chapter to the guide book.
-Fixed:
-	Fixed a bug that was causing skin textures to get rebuild when it was not required.
-	Fixed mannequins rotations sometimes getting changed by rendering armour.
-Changed:
-	Moved client configs into their own files and moved configs into their own directory.
-	Stopped model loading LODs showing in GUIs.
-	Removed disabledSkins config option.
-	Updated zh_CN. (Ethan)
+* Added
+  * Added no collision option for block skins.
+  * Added seat option for block skins.
+  * Added compession for skins being sent from the server to the client. (skins are now around 10% the size)
+  * Added serverCompressesSkins config option.
+  * Added display list count to the F3 debug text.
+  * Added credits chapter to the guide book.
+* Fixed
+  * Fixed a bug that was causing skin textures to get rebuild when it was not required.
+  * Fixed mannequins rotations sometimes getting changed by rendering armour.
+* Changed
+  * Moved client configs into their own files and moved configs into their own directory.
+  * Stopped model loading LODs showing in GUIs.
+  * Removed disabledSkins config option.
+  * Updated zh_CN. (Ethan)
 
 
 Build 1.7.10-0.40.1
-Added:
-	Added refresh button to the library.
-	Added unfinished global library.
-Fixed:
-	Fixed wings rendering multiple times.
-Changed:
-	Improved performance when shaders mod is loaded.
-	Library skin list load is now threaded. (massive increase in launch speed)
+* Added
+  * Added refresh button to the library.
+  * Added unfinished global library.
+* Fixed
+  * Fixed wings rendering multiple times.
+* Changed
+  * Improved performance when shaders mod is loaded.
+  * Library skin list load is now threaded. (massive increase in launch speed)
 
 
 Build 1.7.10-0.40.0
-Added:
-	Added wing skins.
-	Added flying option to mannequins.
-	Added skin properties system.
-	Block skins can be set as glowing.
-	Block skins can be ladders.
-	Added Angel Wings, Bat Wings, Butterfly Wings and Evil Wings skins. (Ethan)
-Fixed:
-	Fixed not being able to override renders on items with more than one colon in their name.
-Changed:
-	Updated ru-RU land file. (Shtopm)
-	Increased allowed depth of bow skins to 64 blocks.
-	Players UUID is saved skins they create.
-	Updated zh_CN land file. (Ethan)
+* Added
+  * Added wing skins.
+  * Added flying option to mannequins.
+  * Added skin properties system.
+  * Block skins can be set as glowing.
+  * Block skins can be ladders.
+  * Added Angel Wings, Bat Wings, Butterfly Wings and Evil Wings skins. (Ethan)
+* Fixed
+  * Fixed not being able to override renders on items with more than one colon in their name.
+* Changed
+  * Updated ru-RU land file. (Shtopm)
+  * Increased allowed depth of bow skins to 64 blocks.
+  * Players UUID is saved skins they create.
+  * Updated zh_CN land file. (Ethan)
 
 
 Build 1.7.10-0.39.6
-Added:
-	ko_KR lang file (ISJump).
-	Loading LOD models.
-	Config option to disable skin painting.
-	LODs to entity skin renders.
+* Added
+  * ko_KR lang file (ISJump).
+  * Loading LOD models.
+  * Config option to disable skin painting.
+  * LODs to entity skin renders.
 Fixed
-	Memory leak in armourer arrow render.
-	Glowing cubes not showing in model LODs.
-	Armour container's not checking riding, sneaking or child options on entities.
-	Painting armourer blocks sometimes reverting to the steve skin.
+  * Memory leak in armourer arrow render.
+  * Glowing cubes not showing in model LODs.
+  * Armour container's not checking riding, sneaking or child options on entities.
+  * Painting armourer blocks sometimes reverting to the steve skin.
 Change:
-	Updated zh_CN lang file.
+  * Updated zh_CN lang file.
 
 
 Build 1.7.10-0.39.5
@@ -507,11 +507,11 @@ Fixed:Z Ordering of block skins being in the wrong order. (sort of)
 
 Build 1.7.10-0.38.0
 Added: Dye system.
-	Added dye paints. (use to set what parts can be dyed)
-		Normal - Works like normal paint.
-		Dye 1-8 - Used to set what parts dyes will effect.
-		None - Stops a face from being rendered. 
-	Added dye table. (use to dye skins with dye bottles)
+  * Added dye paints. (use to set what parts can be dyed)
+    * Normal - Works like normal paint.
+    * Dye 1-8 - Used to set what parts dyes will effect.
+    * None - Stops a face from being rendered. 
+  * Added dye table. (use to dye skins with dye bottles)
 Added: New options to the hue tool.
 Added: Glow effect around glowing blocks when in the players inventory.
 Added: Icon for when the paint brush is not in full block mode. (uguu)
