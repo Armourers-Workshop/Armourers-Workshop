@@ -1,4 +1,6 @@
-Build 1.12.2-0.49.1-development (coming in next build)
+# Armourer's Workshop Change Log
+
+## Build 1.12.2-0.49.1-development (coming in next build)
 * Changed
   * Updated de_DE lang file. (Victorious3)
   * Updated zh_CH lang file. (Chataro)
@@ -15,11 +17,11 @@ Build 1.12.2-0.49.1-development (coming in next build)
   * Fixed wardrobeTabDyes config option not being synced to clients.
 
 
-Build 1.12.2-0.49.0
+## Build 1.12.2-0.49.0
 * Big rewrite to most of the mod, too much to list!
 
 
-Build 1.7.10-0.48.3
+## Build 1.7.10-0.48.3
 * Added
   * Added config option to recover skins from items in the skinning table.
   * Added recipe for linking tool.
@@ -45,14 +47,14 @@ Build 1.7.10-0.48.3
   * Fixed parsing error in the set skin command.
 
 
-Build 1.7.10-0.48.1
+## Build 1.7.10-0.48.1
 * Changed
   * Updated pt_BR lang file. (BreadFace)
   * Updated zh_CN lang file. (Ethan)
   * Updated ru_RU lang file. ([\\//972])
 
 
-Build 1.7.10-0.48.0
+## Build 1.7.10-0.48.0
 * Added
   * Added code to check for a rehosted jar.
 * Changed
@@ -67,14 +69,14 @@ Build 1.7.10-0.48.0
   * Fixed potential NPE crash when rendering a skin preview.
 
 
-Build 1.7.10-0.47.1
+## Build 1.7.10-0.47.1
 * Fixed
 	Fixed the invalid Java version error not showing if an older version of java 8 is installed.
 * Changed
   * Update zh_CN lang file. (Ethan)
 
 
-Build 1.7.10-0.47.0
+## Build 1.7.10-0.47.0
 * Added
   * Added beta access for global library skin uploading.
     * Likes system.
@@ -108,7 +110,7 @@ Art:
   * Updated global library like icons. (Ethan)
 
 
-Build 1.7.10-0.46.0
+## Build 1.7.10-0.46.0
 * Added
   * New tabbed Armourer GUI.
     * Armourer copy option.
@@ -165,7 +167,7 @@ Refactor:
   * Mannequin skin & hair GUI tab code cleanup.
 
 
-Build 1.7.10-0.45.1
+## Build 1.7.10-0.45.1
 * Changed
   * Preserved dyes names when using them in the dye table.
   * Incressed the size of the head skin bounds.
@@ -185,7 +187,7 @@ API:
   * Added new player equipment set, get and clear methods with indexes.
 
 
-Build 1.7.10-0.45.0
+## Build 1.7.10-0.45.0
 * Added
   * block skin inventory option
   * added most downloaded skins to the global library
@@ -203,7 +205,7 @@ Build 1.7.10-0.45.0
   * fixed not being able to load skins if the filename was too long
 
 
-Build 1.7.10-0.44.1
+## Build 1.7.10-0.44.1
 * Added
   * added ghasts to the wand of style
   * added creepers to the wand of style
@@ -218,7 +220,7 @@ Build 1.7.10-0.44.1
   * added missing localisations to the skin library
 
 
-Build 1.7.10-0.44.0
+## Build 1.7.10-0.44.0
 * Added
   * multi-blocks
   * folders to the library
@@ -289,13 +291,13 @@ Art:
   * added new icons for the armour container
 
 
-Build 1.7.10-0.43.1
+## Build 1.7.10-0.43.1
 * Fixed
   * Crafting table dyed skins causes disconnect.
   * Skin dyes not showing on entities using the armour container.
 
 
-Build 1.7.10-0.43.0
+## Build 1.7.10-0.43.0
 * Added
   * Invisible option to mannequins.
   * Allowed setting a mannequins texture using a URL.
@@ -309,17 +311,17 @@ Build 1.7.10-0.43.0
   * Update pt_PT and pt_BR lang files. (EzerArch) 
 
 
-Build 1.7.10-0.42.5
+## Build 1.7.10-0.42.5
 * Fixed
   * Client crash when a doll is placed.
 
 
-Build 1.7.10-0.42.4
+## Build 1.7.10-0.42.4
 * Fixed
   * Dedicated server crash when mannequin is loaded.
 
 
-Build 1.7.10-0.42.3
+## Build 1.7.10-0.42.3
 * Added
   * File name skin property. (allow skins to update when the library file is changed - planned not implemented yet)
 * Fixed
@@ -332,7 +334,7 @@ Build 1.7.10-0.42.3
   * Changed the way item overrides are formatted in the config file. (note: item, pickaxe, axe, shovel and hoe are not implemented)
 
 
-Build 1.7.10-0.42.0
+## Build 1.7.10-0.42.0
 * Added
   * Added sword skin support for MapleCrafted
   * Added sword skin support for OreSpawn.
@@ -356,7 +358,7 @@ Build 1.7.10-0.42.0
   * Removed showArmourerDebugRender config option. (now on the debug tool)
 
 
-Build 1.7.10-0.41.0
+## Build 1.7.10-0.41.0
 * Added
   * Added no collision option for block skins.
   * Added seat option for block skins.
@@ -374,7 +376,7 @@ Build 1.7.10-0.41.0
   * Updated zh_CN. (Ethan)
 
 
-Build 1.7.10-0.40.1
+## Build 1.7.10-0.40.1
 * Added
   * Added refresh button to the library.
   * Added unfinished global library.
@@ -385,7 +387,7 @@ Build 1.7.10-0.40.1
   * Library skin list load is now threaded. (massive increase in launch speed)
 
 
-Build 1.7.10-0.40.0
+## Build 1.7.10-0.40.0
 * Added
   * Added wing skins.
   * Added flying option to mannequins.
@@ -402,7 +404,7 @@ Build 1.7.10-0.40.0
   * Updated zh_CN land file. (Ethan)
 
 
-Build 1.7.10-0.39.6
+## Build 1.7.10-0.39.6
 * Added
   * ko_KR lang file (ISJump).
   * Loading LOD models.
@@ -417,7 +419,7 @@ Change:
   * Updated zh_CN lang file.
 
 
-Build 1.7.10-0.39.5
+## Build 1.7.10-0.39.5
 Added: ru_RU lang file. (Shtopm)
 Added: Missing localization to the lang file.
 Fixed: Lighting issues on mannequins.
@@ -425,7 +427,7 @@ Fixed: Guide book text hanging off the page.
 Fixed: small block texture stopping mipmaps being enabled.
 
 
-Build 1.7.10-0.39.4
+## Build 1.7.10-0.39.4
 Added: Missing localization text from the lang file.
 Added: Missing item recipes to the guide book.
 Fixed: Severe bug that allowed mutable skins to reference the same paint data.
@@ -441,19 +443,19 @@ Change: Allowed dye bottles to be shift clicked onto the colour mixer.
 Change: Paint roller painting armourer models will no longer effect equipment cubes.
 
 
-Build 1.7.10-0.39.3
+## Build 1.7.10-0.39.3
 Change: Cleaned up F3 debug text.
 Fixed: Not being able to shade skin and hair paint.
 Fixed: Clear paint data when switching armourer skin type
 Fixed: Skinned armour items rendering 5 times.
 
 
-Build 1.7.10-0.39.2
+## Build 1.7.10-0.39.2
 Fixed: NPE crash when placing a mannequin.
 Fixed: mini armourers building cubes not rendering.
 
 
-Build 1.7.10-0.39.1
+## Build 1.7.10-0.39.1
 Added: LOD to block skins.
 Change: The way skin faces are renderer. (should be faster)
 Change: The way skin faces are stored in memory. (around 1/4 memory use)
@@ -461,7 +463,7 @@ Fixed: Dedicated server crash when updating mannequin slots.
 Fixed: Mannequins rendering strangely when holding a mobspawner.
 
 
-Build 1.7.10-0.39.0
+## Build 1.7.10-0.39.0
 Added: Allowed for the players texture to be painted.
 Added: Allowed for multiple skins to be equipped at the same time.
 Added: Skin previews in the library GUI.
@@ -493,7 +495,7 @@ Fixed: Weapon dyes not getting updated when swapping skins in the wardrobe.
 Fixed: Some weapons not being skinnable, even after being added to the config file.
 
 
-Build 1.7.10-0.38.1
+## Build 1.7.10-0.38.1
 Added: Paint type label to the colour mixer.
 Change: Use model average colour when calculating dye colour.
 Change: Updated Viking Helmet (Blood) skin to support dyes.
@@ -505,7 +507,7 @@ Fixed: Mannequin head wobble overflowing on older worlds.
 Fixed:Z Ordering of block skins being in the wrong order. (sort of)
 
 
-Build 1.7.10-0.38.0
+## Build 1.7.10-0.38.0
 Added: Dye system.
   * Added dye paints. (use to set what parts can be dyed)
     * Normal - Works like normal paint.
@@ -536,7 +538,7 @@ Removed: Special colour mixer.
 Removed: skinSafeModelRenderOverride config option.
 
 
-Build 1.7.10-0.37.0
+## Build 1.7.10-0.37.0
 Added a private library folder for player on a server.
 Added dye bottles. (not usable yet)
 Added back-end support for skin painting and dye systems.
@@ -562,7 +564,7 @@ Fixed block skins not playing a sound when placed.
 Fixed bounding box blocks being drop from explosions.
 Fixed old legacy skirts being 1 block too low.
 
-Build 1.7.10-0.36.0
+## Build 1.7.10-0.36.0
 Added block skins.
 Added new premade block skins.
 Added multipass rendering for skins. (should fix most transparency issues)
@@ -586,11 +588,11 @@ Fixed major bug that was allowing skins and tile entities to have the same cube 
 Fixed the undo system so that it can undo more than one block face at a time.
 
 
-Build 1.7.10-0.35.1
+## Build 1.7.10-0.35.1
 Fixed start-up crash when extracting skins.
 
 
-Build 1.7.10-0.35.0
+## Build 1.7.10-0.35.0
 Added bow skins.
 Added arrow skin.
 Added block marked tool. (used by bow skins)
@@ -611,21 +613,21 @@ Changed renamed most of the items in the config.
 Changed the way old skirts work, they will now show up as leg skins.
 
 
-Build 1.7.10-0.34.2
+## Build 1.7.10-0.34.2
 Fixed crash from missing Apache library.
 Fixed crash when loading corrupted skin.
 Fixed crash when using painting tools on the weapon hand model.
 Changed equipment wardrobe slot id's. (thing will be muddled up.)
 
 
-Build 1.7.10-0.34.1
+## Build 1.7.10-0.34.1
 Fixed NPE crash when using tools with no NBT data.
 Fixed some typos in the config file.
 Fixed skins not getting downloaded because the directory was missing.
 Removed skin override system.
 
 
-Build 1.7.10-0.34.0
+## Build 1.7.10-0.34.0
 Added a creative library block.
 Added more info to the Minecraft profiler.
 Added ability for armour to be skinned in the skinning table.
@@ -649,7 +651,7 @@ Fixed rendering issues with Colored Lights mod.
 Fixed skin drop down list not working when TMI is installed.
 
 
-Build 1.7.10-0.33.0
+## Build 1.7.10-0.33.0
 Added recipes in the guide book.
 Added hue tool.
 Added colour family selector to the colour mixer.
@@ -660,7 +662,7 @@ Changed leg skins to also hold skirts.
 Updated Chinese localization.
 
 
-Build 1.7.10-0.32.0
+## Build 1.7.10-0.32.0
 Added weapon overrides to the configuration file. (weapons that can be skinned can now be added/removed here)
 Added the skinning table. (replaces putting a sword and skin in a crafting table)
 Added soap. (use in a skinning table to remove a skin from a weapon)
@@ -684,17 +686,17 @@ Removed some console spam.
 Removed weapon skin locking recipes. (moved to the skinning table)
 
 
-Build 1.7.10-0.31.2
+## Build 1.7.10-0.31.2
 Re-added is valid equipment skin to the API.
 
 
-Build 1.7.10-0.31.1
+## Build 1.7.10-0.31.1
 Added config option to stop mods registering with the API.
 Fixed glass equipment cubes sometimes rendering dark.
 Renamed some things in the API to make it clear what they do.
 
 
-Build 1.7.10-0.31.0
+## Build 1.7.10-0.31.0
 WARNING - This update makes massive changes to how skins work in code.
 I recommend that you save any skins your care about into the library BEFORE updating.
 After updating skins should show as an error item, simply put them in a crafting grid to restore them.
@@ -727,12 +729,12 @@ Fixed Integrated Circuits extra items not rendering on mannequins.
 Fixed old player skin info staying in memory.
 
 
-Build 1.7.10-0.29.2
+## Build 1.7.10-0.29.2
 Added missing localizations for the armourers command.
 Fixed dedicated server crash when Battlegear 2 is installed.
 
 
-Build 1.7.10-0.29.1
+## Build 1.7.10-0.29.1
 Added dropSkinsOnDeath config option.
 Added armourers giveSkin, clearSkins and setSkin commands.
 Added tabs to the equipment wardrobe.
@@ -743,7 +745,7 @@ Fixed mannequins accepting any item in any slot.
 Fixed blocks being rotated around the wrong point on mannequin heads.
 
 
-Build 1.7.10-0.28.0
+## Build 1.7.10-0.28.0
 Added Chinese localizations.
 Added basic support for More Player Models.
 Added a recipe for the mannequin tool. (it sucks)
@@ -761,15 +763,15 @@ Skin name is now shown in the mannequins GUI.
 Somewhat fixed Battlegear 2 rendering. (left hand render is still buggy)
 
 
-Build 1.7.10-0.27.2
+## Build 1.7.10-0.27.2
 Fixed server side crash.
 
 
-Build 1.7.10-0.27.1
+## Build 1.7.10-0.27.1
 Fixed shaders mod not being detected.
 
 
-Build 1.7.10-0.27.0
+## Build 1.7.10-0.27.0
 Added a button to the library to open the equipment folder.
 Added compatibility for Zelda Sword Skills mod.
 Added armour container items for use with Custom NPC's mod.
@@ -781,7 +783,7 @@ Painting tools now have a default colour.
 Increased the length of weapon skins by 8 blocks.
 
 
-Build 1.7.10-0.26.3
+## Build 1.7.10-0.26.3
 Added a random button to mannequins.
 Fixed FPS drop when a client first renders a skin.
 Fixed colour mixers sometimes not getting rendered.
@@ -795,15 +797,15 @@ Stopped player collisions with the armourer bounding boxes.
 Changed the armourers guide box to be enabled by default.
 
 
-Build 1.7.10-0.26.2
+## Build 1.7.10-0.26.2
 Changed download location for skins.
 
 
-Build 1.7.10-0.26.1
+## Build 1.7.10-0.26.1
 Dramatically improved performance of skin rendering.
 
 
-Build 1.7.10-0.26.0
+## Build 1.7.10-0.26.0
 Added a tool to save and load mannequin rotations.
 Added a configuration option to change the max number of undo's a player has.
 Added equipment skin render info to the Minecraft profiler.
@@ -814,7 +816,7 @@ Reduced memory usage of equipment skins client side.
 Improved rendering performance of equipment skins.
 
 
-Build 1.7.10-0.25.2
+## Build 1.7.10-0.25.2
 Fixed crash with More Player Models mod.
 Fixed paint splash particles sometimes rendering dark.
 Fixed the players head z rotation not being reset after rendering a mannequin.
@@ -822,7 +824,7 @@ Added a configuration option to change the max render distance of skins.
 Allowed the equipment library to be scrolled with the scroll wheel.
 
 
-Build 1.7.10-0.25.1
+## Build 1.7.10-0.25.1
 Added Tinkers' Construct support.
 Added configuration options to turn off weapon render overrides for each add-on.
 Added an option to limit limb movement while wearing a skirt.
@@ -833,7 +835,7 @@ Removed the equipment skins from the creative tab and NEI.
 Tried to fix equipment sometimes not rendering on players.
 
 
-Build 1.7.10-0.24.4
+## Build 1.7.10-0.24.4
 Added colourable glass equipment cubes.
 Added a system that auto downloads equipment skins. (Can be turned off in the config file)
 Added backend support for tags on equipment skins.
@@ -845,20 +847,20 @@ Fixed NPE crash when game profiles got updated client side.
 Fixed naked skin sometimes using old skin data.
 
 
-Build 1.7.10-0.23.1
+## Build 1.7.10-0.23.1
 Fixed equipment skins getting re downloaded from the server every 5 minutes.
 Changed mannequins to render more like real players.
 Hid the bounding box block from NEI.
 
 
-Build 1.7.10-0.23.0
+## Build 1.7.10-0.23.0
 Fixed DollCraftinghandler crash if mine cart has no AxisAlignedBB.
 Removed item models. Items now use the same model as player equipment.
 Added Smart Moving support.
 Massive changed to internals workings!
 
 
-Build 1.7.10-0.22.2
+## Build 1.7.10-0.22.2
 Added a child model option to mannequins.
 Added player skins rendered on mannequins in item from.
 Added holiday gift item!
@@ -871,7 +873,7 @@ Vic mannequin now deals more damage.
 Updated ticksExisted on the mannequins fake player.
 
 
-Build 1.7.10-0.22.0
+## Build 1.7.10-0.22.0
 Added de_DE localizations .
 Fixed guild book chapters being messed up.
 Fixed the default Steve skin sometimes getting replaced with a players naked skin.
@@ -881,7 +883,7 @@ Changed GUI's for the new equipment type.
 Changed mannequin rotation limits.
 
 
-Build 1.7.10-0.21.4
+## Build 1.7.10-0.21.4
 Fixed guide book sometimes being the wrong colour.
 Fixed mannequins spamming packets when the rotation angles changed.
 Fixed getEquipmentTypeFromStack not detecting weapon skins.
@@ -892,32 +894,32 @@ Added a reset button to the mannequin GUI.
 Updated the guide book a little.
 
 
-Build 1.7.10-0.21.3
+## Build 1.7.10-0.21.3
 Fixed mannequins texture sometimes not getting set.
 Fixed client crash when setting mannequin equipment in multiplayer.
 
 
-Build 1.7.10-0.21.2
+## Build 1.7.10-0.21.2
 Fixed weapon rendering on players and mannequins.
 Fixed crash if another mod called the player render with slot id greater than 3.
 
 
-Build 1.7.10-0.21.1
+## Build 1.7.10-0.21.1
 Fixed weapon skins rendering at the wrong scale on mannequins.
 
 
-Build 1.7.10-0.21.0
+## Build 1.7.10-0.21.0
 Added a rotation system to mannequins.
 Fixed weapons not render on mannequins.
 Fixed rotations on foot and leg armour.
 Changed how equipment is put on mannequins.
 
 
-Build 1.7.10-0.20.4
+## Build 1.7.10-0.20.4
 Fixed the mannequin and armourer rendering strange if the skin download failed.
 
 
-Build 1.7.10-0.20.3
+## Build 1.7.10-0.20.3
 Fixed armour on mannequin sometimes rendering like it was holding an item.
 Fixed items in the libraries output slot being replaced.
 Fixed the colour picker giving the wrong colour when used on body parts.
@@ -925,16 +927,16 @@ Changed the size of the skirt and weapon armour.
 Changed the mannequin and armourer to use the players normal skin, even if the naked one is active.
 
 
-Build 1.7.10-0.20.2
+## Build 1.7.10-0.20.2
 Fixed some API stuff.
 
 
-Build 1.7.10-0.20.1
+## Build 1.7.10-0.20.1
 Removed some debug text
 Updated the API
 
 
-Build 1.7.10-0.20.0
+## Build 1.7.10-0.20.0
 WARNING - When updating from 0.19.2 or below anything that is not saved in the library will be lost. Save your creations before updating!
 
 Removed the multi-block
@@ -945,25 +947,25 @@ Added rollover text to the check boxes in the equipment wardrobe GUI.
 Fixed rare NPE crash when a player with naked skin walks into tracking range.
 
 
-Build 1.7.10-0.19.2
+## Build 1.7.10-0.19.2
 Fixed weapon skins rendering in the wrong location.
 
 
-Build 1.7.10-0.19.1
+## Build 1.7.10-0.19.1
 Fixed crash when rendering weapon skin.
 
 
-Build 1.7.10-0.19.0
+## Build 1.7.10-0.19.0
 Allowed mannequins skins to be set with a name tag.
 Fixed key bindings not getting saved.
 Allowed the library to load files from the client.
 
 
-Build 1.7.10-0.18.1
+## Build 1.7.10-0.18.1
 Fixed getEquipmentTypeFromStack being offset by one slot.
 
 
-Build 1.7.10-0.18.0
+## Build 1.7.10-0.18.0
 Faces that are against the players body no longer render.
 Fixed crash when an offline client opens the equipment wardrobe.
 Fixed skin data getting reset on death/dimension change.
@@ -973,16 +975,16 @@ Added getEquipmentTypeFromStack to the API.
 Fixed colour not being reset after rendering some models.
 
 
-Build 1.7.10-0.17.3
+## Build 1.7.10-0.17.3
 Fixed lighting on armour.
 
 
-Build 1.7.10-0.17.2
+## Build 1.7.10-0.17.2
 Stopped weapon skins rendering in the inventory.
 Fixed setCustomEquipmentOnEntity not setting the players item stacks.
 
 
-Build 1.7.10-0.17.1
+## Build 1.7.10-0.17.1
 Fixed equipment skin item localizations.
 Removed unused weapon skin item.
 Fixed west to east button not working.
@@ -994,20 +996,20 @@ Tried to fix lighting not being rendered on armour sometimes.
 Fixed getCustomEquipmentForEntity not working client side.
 
 
-Build 1.7.10-0.17.0
+## Build 1.7.10-0.17.0
 Added weapon skins.
 
 
-Build 1.7.10-0.16.2
+## Build 1.7.10-0.16.2
 Added some missing methods to the API.
 
 
-Build 1.7.10-0.16.1
+## Build 1.7.10-0.16.1
 Small change to how armour is rendered.
 Fixed some API stuff.
 
 
-Build 1.7.10-0.16.0
+## Build 1.7.10-0.16.0
 Added mannequins.
 Added panting particles.
 Added a basic API.
