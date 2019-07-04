@@ -104,7 +104,7 @@
   * Made global library skin results paged.
   * Update global library home screen when returning to it.
   * Update ru_RU lang file. ([\\//972])
-Art:
+* Art
   * Updated global library GUI icons. (Ethan)
   * Updated skinning table textures. (Thundercat_)
   * Updated global library like icons. (Ethan)
@@ -153,14 +153,14 @@ Art:
   * Mini armourer item rendering up side down.
   * Current page in global library going out of bounds when the window is resized.
   * Allowed hair and skin dye bottles to work with skins that have texture paint.
-Art:
+* Art
   * Hologram projector GUI tab textures. (Ethan)
   * Updated hologram projector GUI tab icons to have animations. (Thundercat_)
   * Updated mannequin GUI tab icons to have animations. (Thundercat_)
   * Updated armourer GUI tab icons to have animations. (Thundercat_)
   * Updated mini armourer texture. (Thundercat_)
   * Updated global library texture. (Thundercat_)
-Refactor:
+* Refactor:
   * Global library home screen.
   * Global library search results screen.
   * Created NEI addon and moved most NEI code into it.
@@ -183,7 +183,7 @@ Refactor:
   * Dupe bugs in the dye table.
   * Crash if a item was added to the item override config more than once.
   * Items with multiple colours and layers will now render in mannequins hands.
-API:
+* API
   * Added new player equipment set, get and clear methods with indexes.
 
 
@@ -265,7 +265,7 @@ API:
   * sorted sub commands tab completion alphabetically
   * updated de_DE lang file (Flummie2000)
   * updated zh_CH lang file (Ethan)
-Art:
+* Art
   * added new item textures by TheEpicJames for;
     * armourers hammer
     * blend tool
