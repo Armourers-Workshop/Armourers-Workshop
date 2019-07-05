@@ -15,6 +15,7 @@
   * Fixed crash if the wardrobe key was bound to an none ASCII key.
   * Fixed wardrobe getting de-synced on dimension change.
   * Fixed wardrobeTabDyes config option not being synced to clients.
+  * Fixed missing texture in global library upload screen.
 
 
 ## Build 1.12.2-0.49.0
@@ -71,7 +72,7 @@
 
 ## Build 1.7.10-0.47.1
 * Fixed
-	Fixed the invalid Java version error not showing if an older version of java 8 is installed.
+  * Fixed the invalid Java version error not showing if an older version of java 8 is installed.
 * Changed
   * Update zh_CN lang file. (Ethan)
 
