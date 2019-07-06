@@ -17,6 +17,9 @@ Download Armourer's Workshop from CurseForge [http://minecraft.curseforge.com/pr
 [![Jenkins 1.7.10](https://img.shields.io/jenkins/s/http/plushie.moe:8080/job/Armourers-Workshop-1.7.10.svg)](http://plushie.moe:8080/job/Armourers-Workshop-1.7.10/)
 [http://plushie.moe:8080/job/Armourers-Workshop-1.7.10/](http://plushie.moe:8080/job/Armourers-Workshop-1.7.10/)
 
+## Donate
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/K3K3WVTZ)
+
 ## License
 ![](https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png)  
 Armourer's Workshop by RiskyKen is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](https://creativecommons.org/licenses/by-nc-sa/3.0/)
