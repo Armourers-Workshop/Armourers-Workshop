@@ -16,6 +16,7 @@ Fixed:
     Fixed wardrobe getting de-synced on dimension change.
     Fixed wardrobeTabDyes config option not being synced to clients.
     Fixed missing texture in global library upload screen.
+    Fixed crash when Chameleon Creepers is intalled.
 
 
 Build 1.12.2-0.49.0
