@@ -3,8 +3,9 @@ package moe.plushie.armourers_workshop.common.library.global.auth;
 import com.google.gson.JsonObject;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.Action;
+import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PermissionGroup;
+import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 
 public class PlushieSession {
@@ -21,7 +22,7 @@ public class PlushieSession {
     private int permission_group_id;
     
     public PlushieSession() {
-        this.permissionGroup = ArmourersWorkshop.getProxy().getPermissionSystem().groupNoLogin;
+        updatePermissionGroup();
         server_id = 0;
     }
     
@@ -32,30 +33,39 @@ public class PlushieSession {
                     server_id = jsonObject.get("server_id").getAsInt();
                     mc_id = jsonObject.get("mc_id").getAsString();
                     mc_name = jsonObject.get("mc_name").getAsString();
-                    accessToken = jsonObject.get("accessToken").getAsString();
-                    accessTokenReceivedTime = System.currentTimeMillis();
-                    accessTokenExpiryTime = jsonObject.get("expiryTime").getAsInt();
-                    permission_group_id = jsonObject.get("permission_group_id").getAsInt();
-                    isAuth = true;
+                    setPermission_group_id(jsonObject.get("permission_group_id").getAsInt());
+                    updateToken(jsonObject);
                     return true;
                 }
             }
         }
-        isAuth = false;
         return false;
+    }
+    
+    public void updateToken(JsonObject json) {
+        if (json != null && json.has("valid")) {
+            if (json.has("valid")) {
+                if (json.has("accessToken") & json.has("expiryTime")) {
+                    setAccessToken(json.get("accessToken").getAsString(), json.get("expiryTime").getAsInt());
+                    isAuth = true;
+                    return;
+                }
+            }
+        }
+        isAuth = false;
     }
     
     public int getServerId() {
         return server_id;
     }
     
-    public void setPermission_group_id(int permission_group_id) {
-        ModLogger.log("permission_group_id: " + permission_group_id);
-        this.permission_group_id = permission_group_id;
+    public boolean isOwner(int userId) {
+        return this.server_id == userId;
     }
     
-    public int getPermission_group_id() {
-        return permission_group_id;
+    public void setPermission_group_id(int permission_group_id) {
+        this.permission_group_id = permission_group_id;
+        updatePermissionGroup();
     }
     
     public void setServerId(int serverId) {
@@ -79,16 +89,43 @@ public class PlushieSession {
         return false;
     }
     
-    public void setAccessToken(String accessToken) {
+    public int getTokenExpiryTime() {
+        return (accessTokenExpiryTime * 1000) - getTimeSinceTokenUpdate();
+    }
+    
+    public int getTimeSinceTokenUpdate() {
+        return (int) (System.currentTimeMillis() - accessTokenReceivedTime);
+    }
+    
+    public void setAccessToken(String accessToken, int expiryTime) {
         this.accessToken = accessToken;
+        this.accessTokenExpiryTime = expiryTime;
         accessTokenReceivedTime = System.currentTimeMillis();
     }
     
-    public void setPermissionGroup(PermissionGroup permissionGroup) {
-        this.permissionGroup = permissionGroup;
+    private void updatePermissionGroup() {
+        PermissionSystem ps = ArmourersWorkshop.getProxy().getPermissionSystem();
+        if (!isAuthenticated()) {
+            this.permissionGroup = ps.groupNoLogin;
+        }
+        switch (permission_group_id) {
+        case 0:
+            this.permissionGroup = ps.groupUser;
+            break;
+        case 1:
+            this.permissionGroup = ps.groupMod;
+            break;
+        case 255:
+            this.permissionGroup = ps.groupAdmin;
+            break;
+        default:
+            this.permissionGroup = ps.groupNoLogin;
+            break;
+        }
+        ModLogger.log("Permission group set to " + this.permissionGroup.getName());
     }
     
-    public boolean hasPermission(Action action) {
+    public boolean hasPermission(PlushieAction action) {
         return permissionGroup.havePermission(action);
     }
 }

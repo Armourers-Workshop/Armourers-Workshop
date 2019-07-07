@@ -196,7 +196,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         GameProfile gameProfile = mc.player.getGameProfile();
         PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
         if (!plushieSession.isAuthenticated()) {
-            JsonObject jsonObject = PlushieAuth.updateAccessToken(gameProfile.getName(), gameProfile.getId().toString());
+            JsonObject jsonObject = PlushieAuth.authenticateUser(gameProfile.getName(), gameProfile.getId().toString());
             plushieSession.authenticate(jsonObject);
         }
         

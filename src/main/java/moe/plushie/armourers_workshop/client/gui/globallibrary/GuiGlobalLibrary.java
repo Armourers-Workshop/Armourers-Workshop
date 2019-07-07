@@ -264,6 +264,8 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     public void updateScreen() {
         super.updateScreen();
         PlushieAuth.taskCheck();
+        PlushieAuth.updateAccessToken();
+        //ModLogger.log(PlushieAuth.PLUSHIE_SESSION.getTimeSinceTokenUpdate() / 1000 + " - " + PlushieAuth.PLUSHIE_SESSION.getTokenExpiryTime() / 1000);
         for (GuiPanel panel : panelList) {
             panel.update();
         }

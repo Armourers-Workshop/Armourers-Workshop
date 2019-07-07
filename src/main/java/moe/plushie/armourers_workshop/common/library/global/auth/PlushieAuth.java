@@ -27,10 +27,14 @@ public class PlushieAuth {
     private static final String BETA_CHECK_URL = BASE_URL + "beta-check.php";
     private static final String BETA_JOIN_URL = BASE_URL + "beta-join.php";
     private static final String BETA_CODE_CHECK_URL = BASE_URL + "beta-code-check.php";
+    private static final String USER_TOKEN_UPDATE = BASE_URL + "user-token-update.php?userId=%d&accessToken=%s";
     
     private static boolean doneRemoteUserCheck = false;
     private static boolean startedRemoteUserCheck = false;
     private static boolean isRemoteUser = false;
+    
+    private static final int TOKEN_UPDATE_TIME = 30 * 1000;
+    private static volatile boolean updatingToken = false;
     
     private static FutureTask<JsonObject> taskBetaCheck;
     
@@ -157,7 +161,7 @@ public class PlushieAuth {
         }
     }
     
-    public static JsonObject updateAccessToken(String username, String uuid) {
+    public static JsonObject authenticateUser(String username, String uuid) {
         String serverId = String.valueOf(BASE_URL.hashCode());
         
         if (!MinecraftAuth.checkAndRefeshAuth(Minecraft.getMinecraft().getSession(), serverId)) {
@@ -192,5 +196,44 @@ public class PlushieAuth {
             return null;
         }
         return json;
+    }
+    
+    public static void updateAccessToken() {
+        //ModLogger.log(PLUSHIE_SESSION.isAuthenticated());
+        if (PLUSHIE_SESSION.isAuthenticated() & !updatingToken & PLUSHIE_SESSION.getTokenExpiryTime() < TOKEN_UPDATE_TIME) {
+            updatingToken = true;
+            try {
+                ModLogger.log("Getting new token. Time left: " + (PLUSHIE_SESSION.getTokenExpiryTime() / 1000));
+                String url = String.format(USER_TOKEN_UPDATE, PLUSHIE_SESSION.getServerId(), PLUSHIE_SESSION.getAccessToken());
+                new Thread(new TokenUpdate(url)).start();;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            updatingToken = false;
+        }
+    }
+    
+    private static class TokenUpdate implements Runnable {
+
+        private final String url;
+        
+        public TokenUpdate(String url) {
+            this.url = url;
+        }
+        
+        @Override
+        public void run() {
+            try {
+                JsonObject json = DownloadUtils.downloadJsonObject(url);
+                ModLogger.log("update token: " + json);
+                PLUSHIE_SESSION.updateToken(json);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            updatingToken = false;
+        }
+        
     }
 }

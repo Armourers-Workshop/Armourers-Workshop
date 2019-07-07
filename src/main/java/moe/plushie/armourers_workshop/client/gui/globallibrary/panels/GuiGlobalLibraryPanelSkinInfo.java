@@ -26,6 +26,7 @@ import moe.plushie.armourers_workshop.common.library.global.PlushieUser;
 import moe.plushie.armourers_workshop.common.library.global.SkinDownloader;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
+import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
@@ -100,14 +101,15 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     @Override
     public void update() {
         buttonEditSkin.visible = false;
-        if (PlushieAuth.isRemoteUser()) {
-            if (skinJson != null && skinJson.has("user_id")) {
-                buttonEditSkin.visible = skinJson.get("user_id").getAsInt() == PlushieAuth.PLUSHIE_SESSION.getServerId();
-                if (PlushieAuth.PLUSHIE_SESSION.getServerId() == 1) {
-                    buttonEditSkin.visible = true;
-                }
+        if (skinJson != null && skinJson.has("user_id")) {
+            boolean owner = PlushieAuth.PLUSHIE_SESSION.isOwner(skinJson.get("user_id").getAsInt());
+            if (owner) {
+                buttonEditSkin.visible = PlushieAuth.PLUSHIE_SESSION.hasPermission(PlushieAction.SKIN_OWNER_EDIT);
+            } else {
+                buttonEditSkin.visible = PlushieAuth.PLUSHIE_SESSION.hasPermission(PlushieAction.SKIN_MOD_EDIT);
             }
         }
+        buttonDownload.visible = PlushieAuth.PLUSHIE_SESSION.hasPermission(PlushieAction.SKIN_DOWNLOAD);
         if (taskCheckIfLiked != null && taskCheckIfLiked.isDone()) {
             try {
                 JsonObject json = taskCheckIfLiked.get();
@@ -249,7 +251,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         GameProfile gameProfile = mc.player.getGameProfile();
         PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
         if (!plushieSession.isAuthenticated()) {
-            JsonObject jsonObject = PlushieAuth.updateAccessToken(gameProfile.getName(), gameProfile.getId().toString());
+            JsonObject jsonObject = PlushieAuth.authenticateUser(gameProfile.getName(), gameProfile.getId().toString());
             plushieSession.authenticate(jsonObject);
         }
         
