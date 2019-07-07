@@ -25,6 +25,8 @@ public final class PermissionSystem {
         actions.add(PlushieAction.SKIN_COMMENT_OWNER_EDIT);
         groupUser = new PermissionGroup("user", actions.clone());
 
+        actions.add(PlushieAction.SKIN_MOD_EDIT);
+        actions.add(PlushieAction.SKIN_MOD_DELETE);
         actions.add(PlushieAction.SKIN_COMMENT_MOD_DELETE);
         actions.add(PlushieAction.SKIN_COMMENT_MOD_EDIT);
         actions.add(PlushieAction.FLAG_GET_LIST);
