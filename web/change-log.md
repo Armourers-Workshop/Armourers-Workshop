@@ -4,6 +4,8 @@
 * Changed
   * Updated de_DE lang file. (Victorious3)
   * Updated zh_CH lang file. (Chataro)
+  * Change how global library premission flags are set to allow moderators.
+  * Allowed turning of expire time on caches.
 * Fixed
   * Fixed armour container items having the wrong unlocalized name.
   * Fixed undo not working with paint roller in full block mode.
