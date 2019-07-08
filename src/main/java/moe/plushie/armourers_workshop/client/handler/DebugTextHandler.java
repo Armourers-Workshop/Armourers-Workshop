@@ -37,16 +37,16 @@ public class DebugTextHandler {
             event.getLeft().add("");
             event.getLeft().add(TextFormatting.GOLD + "[" + LibModInfo.NAME + "]");
             event.getLeft().add("Skins Rendered: " + ModClientFMLEventHandler.skinRenderLastTick);
-            event.getLeft().add("Model Count: " + ClientSkinCache.INSTANCE.getModelCount());
+            event.getLeft().add("GPU Model Count: " + ClientSkinCache.INSTANCE.getModelCount());
             if (GuiScreen.isCtrlKeyDown() != LibModInfo.DEVELOPMENT_VERSION) {
                 int size = ClientSkinCache.INSTANCE.getCacheSize();
-                CacheStats stats = ClientSkinCache.INSTANCE.getStats();
-                event.getLeft().add(String.format("Client Skin Cache: %d", size));
-                
+                CacheStats skinStats = ClientSkinCache.INSTANCE.getStats();
+                event.getLeft().add(String.format("Client Skin Cache: %d - HR: %.2f%%", size, skinStats.hitRate()));
+                event.getLeft().add("Skin Parts Count: " + ClientSkinCache.INSTANCE.getPartCount());
                 if (Minecraft.getMinecraft().isIntegratedServerRunning()) {
                     event.getLeft().add("Common Skin Cache: S[" + CommonSkinCache.INSTANCE.size() + "] F[" + CommonSkinCache.INSTANCE.fileLinkSize() + "] G[" + CommonSkinCache.INSTANCE.globalLinkSize() + "]");
                 }
-                event.getLeft().add("Part Count: " + ClientSkinCache.INSTANCE.getPartCount());
+                
                 int bakeQueue = ModelBakery.INSTANCE.getBakingQueueSize();
                 event.getLeft().add("Baking Queue: " + bakeQueue);
                 event.getLeft().add("Request Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue));

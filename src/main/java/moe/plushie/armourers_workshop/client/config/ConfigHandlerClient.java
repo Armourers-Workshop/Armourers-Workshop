@@ -138,33 +138,39 @@ public class ConfigHandlerClient {
         config.setCategoryComment(CATEGORY_CACHE, "Change (memory use/IO access) ratio by category setting in this category.");
         
         // Skin cache
-        skinCacheExpireTime = config.getInt("skinCacheExpireTime", CATEGORY_CACHE, 600, 1, 3600,
+        skinCacheExpireTime = config.getInt("skinCacheExpireTime", CATEGORY_CACHE, 600, 0, 3600,
                 "How long in seconds the client will keep skins in it's cache.\n"
-                + "Default 600 seconds is 10 minutes.");
+                + "Default 600 seconds is 10 minutes.\n"
+                + "Setting to 0 turns off this option.");
         config.getCategory(CATEGORY_CACHE).get("skinCacheExpireTime").setRequiresMcRestart(true);
         
         skinCacheMaxSize = config.getInt("skinCacheMaxSize", CATEGORY_CACHE, 2000, 0, 10000,
-                "Max size the skin cache can reach before skins are removed. Setting to 0 turns off this option.");
+                "Max size the skin cache can reach before skins are removed.\n"
+                + "Setting to 0 turns off this option.");
         config.getCategory(CATEGORY_CACHE).get("skinCacheMaxSize").setRequiresMcRestart(true);
         
         // Model cache
-        modelPartCacheExpireTime = config.getInt("modelPartCacheExpireTime", CATEGORY_CACHE, 600, 1, 3600,
-                "How long in seconds the client will keep skins in it's cache.\n"
-                + "Default 600 seconds is 10 minutes.");
+        modelPartCacheExpireTime = config.getInt("modelPartCacheExpireTime", CATEGORY_CACHE, 600, 0, 3600,
+                "How long in seconds the client will keep model parts in it's cache.\n"
+                + "Default 600 seconds is 10 minutes.\n"
+                + "Setting to 0 turns off this option.");
         config.getCategory(CATEGORY_CACHE).get("modelPartCacheExpireTime").setRequiresMcRestart(true);
         
         modelPartCacheMaxSize = config.getInt("modelPartCacheMaxSize", CATEGORY_CACHE, 2000, 0, 10000,
-                "Max size the skin cache can reach before skins are removed. Setting to 0 turns off this option.");
+                "Max size the cache can reach before model parts are removed.\n"
+                + "Setting to 0 turns off this option.");
         config.getCategory(CATEGORY_CACHE).get("modelPartCacheMaxSize").setRequiresMcRestart(true);
         
         // Texture cache
-        textureCacheExpireTime = config.getInt("textureCacheExpireTime", CATEGORY_CACHE, 600, 1, 3600,
+        textureCacheExpireTime = config.getInt("textureCacheExpireTime", CATEGORY_CACHE, 600, 0, 3600,
                 "How long in seconds the client will keep textures in it's cache.\n" + 
-                "Default 600 seconds is 10 minutes.");
+                "Default 600 seconds is 10 minutes.\n"
+                + "Setting to 0 turns off this option.");
         config.getCategory(CATEGORY_CACHE).get("textureCacheExpireTime").setRequiresMcRestart(true);
         
         textureCacheMaxSize = config.getInt("textureCacheMaxSize", CATEGORY_CACHE, 1000, 0, 5000,
-                "Max size the texture cache can reach before textures are removed. Setting to 0 turns off this option.");
+                "Max size the texture cache can reach before textures are removed.\n"
+                + "Setting to 0 turns off this option.");
         config.getCategory(CATEGORY_CACHE).get("textureCacheMaxSize").setRequiresMcRestart(true);
         
         maxSkinRequests = config.getInt("maxSkinRequests", CATEGORY_CACHE, 10, 1, 50,

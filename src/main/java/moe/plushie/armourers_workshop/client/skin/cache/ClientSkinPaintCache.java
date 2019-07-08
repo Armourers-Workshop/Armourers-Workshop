@@ -2,42 +2,52 @@ package moe.plushie.armourers_workshop.client.skin.cache;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.SkinTextureKey;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.data.ExpiringHashMap;
-import moe.plushie.armourers_workshop.common.data.ExpiringHashMap.IExpiringMapCallback;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
-    
+public class ClientSkinPaintCache implements RemovalListener<SkinTextureKey, SkinModelTexture>, Runnable {
+
     public static ClientSkinPaintCache INSTANCE = new ClientSkinPaintCache();
-    
-    private final ExpiringHashMap<SkinTextureKey, SkinModelTexture> textureMap;
+
+    private final Cache<SkinTextureKey, SkinModelTexture> textureCache;
     private final HashSet<TextureGenInfo> requestSet;
     private final ArrayList<TextureGenInfo> requestList;
     private volatile Thread textureGenThread;
-    
+
     public ClientSkinPaintCache() {
-        textureMap = new ExpiringHashMap<SkinTextureKey, SkinModelTexture>(1000 * ConfigHandlerClient.textureCacheExpireTime, this);
+        CacheBuilder builder = CacheBuilder.newBuilder();
+        builder.removalListener(this);
+        if (ConfigHandlerClient.textureCacheExpireTime > 0) {
+            builder.expireAfterAccess(ConfigHandlerClient.textureCacheExpireTime, TimeUnit.SECONDS);
+        }
+        if (ConfigHandlerClient.textureCacheMaxSize > 0) {
+            builder.maximumSize(ConfigHandlerClient.textureCacheMaxSize);
+        }
+        textureCache = builder.build();
         requestSet = new HashSet<TextureGenInfo>();
         requestList = new ArrayList<TextureGenInfo>();
         textureGenThread = new Thread(this, "Texture Gen Thread");
+        textureGenThread.setPriority(Thread.MIN_PRIORITY);
         textureGenThread.start();
         FMLCommonHandler.instance().bus().register(this);
     }
-    
+
     public SkinModelTexture getTextureForSkin(Skin skin, ISkinDye skinDye, ExtraColours extraColours) {
         if (extraColours == null) {
             extraColours = ExtraColours.EMPTY_COLOUR;
@@ -45,9 +55,9 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
         SkinTextureKey cmk = new SkinTextureKey(skin.lightHash(), skinDye, extraColours);
         return getTextureForSkin(skin, cmk);
     }
-    
+
     public SkinModelTexture getTextureForSkin(Skin skin, SkinTextureKey cmk) {
-        SkinModelTexture st = textureMap.get(cmk);
+        SkinModelTexture st = textureCache.getIfPresent(cmk);
         if (st != null) {
             return st;
         } else {
@@ -56,43 +66,45 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
                 if (!requestSet.contains(tgi)) {
                     requestSet.add(tgi);
                     synchronized (requestList) {
-                        requestList.add(tgi); 
+                        requestList.add(tgi);
                     }
                 }
             }
             return skin.skinModelTexture;
         }
     }
-    
+
     public int size() {
-        return textureMap.size();
+        textureCache.cleanUp();
+        return (int) textureCache.size();
     }
-    
 
     public void clear() {
-        // TODO Auto-generated method stub
-    }
-    
-    @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == Phase.END) {
-            textureMap.cleanupCheck();
-        }
+        textureCache.invalidateAll();
     }
 
     @Override
-    public void itemExpired(Object mapItem) {
-        if (mapItem != null && mapItem instanceof SkinTexture) {
-            ((SkinModelTexture)mapItem).deleteGlTexture();
+    public void onRemoval(RemovalNotification<SkinTextureKey, SkinModelTexture> notification) {
+        Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+            @Override
+            public void run() {
+                cleanupTexture(notification.getValue());
+            }
+        });
+    }
+
+    private void cleanupTexture(SkinModelTexture modelTexture) {
+        if (modelTexture != null) {
+            modelTexture.deleteGlTexture();
         }
     }
-    
+
     @Override
     protected void finalize() throws Throwable {
         textureGenThread = null;
         super.finalize();
     }
-    
+
     @Override
     public void run() {
         Thread thisThread = Thread.currentThread();
@@ -105,7 +117,7 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
             }
         }
     }
-    
+
     private void genTextures() {
         SkinModelTexture smt = null;
         TextureGenInfo tgi = null;
@@ -118,19 +130,17 @@ public class ClientSkinPaintCache implements IExpiringMapCallback, Runnable {
             }
         }
         if (smt != null && tgi != null) {
-            synchronized (textureMap) {
-                textureMap.put(tgi.cmk, smt);
-            }
+            textureCache.put(tgi.cmk, smt);
             synchronized (requestSet) {
                 requestSet.remove(tgi);
             }
         }
     }
-    
+
     protected class TextureGenInfo {
         public Skin skin;
         public SkinTextureKey cmk;
-        
+
         public TextureGenInfo(Skin skin, SkinTextureKey cmk) {
             this.skin = skin;
             this.cmk = cmk;
