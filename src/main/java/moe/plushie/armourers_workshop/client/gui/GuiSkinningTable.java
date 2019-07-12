@@ -18,27 +18,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiSkinningTable extends GuiContainer {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibModInfo.ID, "textures/gui/skinning-table.png");
-    
+
     private final TileEntitySkinningTable tileEntity;
-    
+
     public GuiSkinningTable(InventoryPlayer invPlayer, TileEntitySkinningTable tileEntity) {
         super(new ContainerSkinningTable(invPlayer, tileEntity));
         this.tileEntity = tileEntity;
         this.xSize = 176;
         this.ySize = 176;
     }
-    
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
-    }
-    
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, LibBlockNames.SKINNING_TABLE, 0x282216);
-        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 0x282216);
     }
 
     @Override
@@ -46,5 +40,11 @@ public class GuiSkinningTable extends GuiContainer {
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, LibBlockNames.SKINNING_TABLE, 0x282216);
+        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 0x282216);
     }
 }

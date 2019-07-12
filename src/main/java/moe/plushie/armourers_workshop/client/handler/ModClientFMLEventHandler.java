@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.client.handler;
 
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.settings.Keybindings;
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
@@ -24,6 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class ModClientFMLEventHandler {
     
     private boolean showmDevWarning;
+    private boolean shownMoBendsWarning;
     public static float renderTickTime;
     public static int skinRendersThisTick = 0;
     public static int skinRenderLastTick = 0;
@@ -43,6 +45,12 @@ public class ModClientFMLEventHandler {
             devWarning.getStyle().setColor(TextFormatting.RED);
             player.sendMessage(devWarning);
             showmDevWarning = true;
+        }
+        if (!shownMoBendsWarning & ModAddonManager.addonMobends.isModLoaded()) {
+            TextComponentString moBendsWarning = new TextComponentString(TranslateUtils.translate("chat.armourers_workshop:mobends.warn"));
+            moBendsWarning.getStyle().setColor(TextFormatting.RED);
+            player.sendMessage(moBendsWarning);
+            shownMoBendsWarning = true;
         }
     }
     

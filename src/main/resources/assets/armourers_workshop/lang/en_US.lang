@@ -304,6 +304,14 @@ inventory.armourers_workshop:outfit-maker.name=Outfit Maker
 
 
 # Inventory Controls
+# Common
+inventory.armourers_workshop:common.button.ok=OK
+inventory.armourers_workshop:common.button.canel=Cancel
+inventory.armourers_workshop:common.button.close=Close
+inventory.armourers_workshop:common.button.clear=Clear
+inventory.armourers_workshop:common.button.save=Save
+inventory.armourers_workshop:common.button.load=Load
+
 # Skin Library
 inventory.armourers_workshop:skin-library.label.search=Search:
 inventory.armourers_workshop:skin-library.label.filename=File Name:
@@ -616,6 +624,7 @@ chat.armourers_workshop:linkingTool.start=Started linking.
 chat.armourers_workshop:linkingTool.finish=Link created.
 chat.armourers_workshop:linkingTool.fail=Linking failed.
 chat.armourers_workshop:linkingTool.linkedToSkinnable=Can not link two skin blocks together.
+chat.armourers_workshop:mobends.warn=Incompatible mods Mo' Bends and Armourer's Workshop are installed, please remove one or the other. THIS BUG CAN NOT BE FIXED DO NOT REPORT IT.
 
 
 # Death Messages
