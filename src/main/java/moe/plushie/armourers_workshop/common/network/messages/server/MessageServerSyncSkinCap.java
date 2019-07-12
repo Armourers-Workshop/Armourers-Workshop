@@ -16,10 +16,13 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Send from the server to a client when a player walks into range
- * or they edit their skins.
+ * Send from the server to a client when a player walks into range or they edit
+ * their skins.
+ * 
  * @author RiskyKen
  *
  */
@@ -27,26 +30,27 @@ public class MessageServerSyncSkinCap implements IMessage, IMessageHandler<Messa
 
     private int entityId;
     private NBTTagCompound compound;
-    
+
     public MessageServerSyncSkinCap(int entityId, NBTTagCompound compound) {
         this.entityId = entityId;
         this.compound = compound;
     }
-    
-    public MessageServerSyncSkinCap() {}
-    
+
+    public MessageServerSyncSkinCap() {
+    }
+
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(entityId);
         ByteBufUtils.writeTag(buf, compound);
     }
-    
+
     @Override
     public void fromBytes(ByteBuf buf) {
         entityId = buf.readInt();
         compound = ByteBufUtils.readTag(buf);
     }
-    
+
     @Override
     public IMessage onMessage(MessageServerSyncSkinCap message, MessageContext ctx) {
         DelayedMessageHandler.addDelayedMessage(message);
@@ -55,6 +59,11 @@ public class MessageServerSyncSkinCap implements IMessage, IMessageHandler<Messa
 
     @Override
     public boolean isReady() {
+        return clientReady();
+    }
+
+    @SideOnly(Side.CLIENT)
+    private boolean clientReady() {
         if (Minecraft.getMinecraft().world != null) {
             return Minecraft.getMinecraft().world.getEntityByID(entityId) != null;
         }
