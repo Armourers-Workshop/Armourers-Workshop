@@ -11,8 +11,6 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.settings.Keybindings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
-import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable;
-import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
@@ -23,16 +21,11 @@ import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnableChild;
-import moe.plushie.armourers_workshop.common.world.AsyncWorldUpdateBlock;
-import moe.plushie.armourers_workshop.common.world.SyncWorldUpdater;
+import moe.plushie.armourers_workshop.common.world.BlockSkinPlacementHelper;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.utils.UtilPlayer;
 import net.minecraft.block.BlockDispenser;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -47,7 +40,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
@@ -180,7 +172,7 @@ public class ItemSkin extends AbstractModItem {
             if (skin != null) {
                 IBlockState replaceBlock = worldIn.getBlockState(pos.offset(facing));
                 if (replaceBlock.getBlock().isReplaceable(worldIn, pos.offset(facing))) {
-                    placeSkinAtLocation(worldIn, player, facing, stack, pos.offset(facing), skin, descriptor);
+                    BlockSkinPlacementHelper.placeSkinAtLocation(worldIn, player, facing, stack, pos.offset(facing), skin, descriptor);
                     return EnumActionResult.SUCCESS;
                 }
             }
@@ -216,112 +208,6 @@ public class ItemSkin extends AbstractModItem {
         }
         
         return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStack);
-    }
-    
-    private boolean placeSkinAtLocation(World world, EntityPlayer player, EnumFacing facing, ItemStack stack, BlockPos pos, Skin skin, ISkinDescriptor descriptor) {
-        if (!canPlaceSkinAtLocation(world, player, facing, stack, pos, descriptor)) {
-            return false;
-        }
-        if (world.isRemote) {
-            return true;
-        }
-        EnumFacing dir = UtilPlayer.getDirectionSide(player).getOpposite();
-        
-        BlockSkinnable targetBlock = (BlockSkinnable) ModBlocks.skinnable;
-        if (SkinProperties.PROP_BLOCK_GLOWING.getValue(skin.getProperties())) {
-            targetBlock = (BlockSkinnable) ModBlocks.skinnableGlowing;
-        }
-        
-        boolean multiblock = SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skin.getProperties());
-        ArrayList<BlockPos> relatedBlocks = new ArrayList<BlockPos>();
-        if (multiblock) {
-            if (!canPlaceChildren(world, player, facing, stack, pos, skin, descriptor, relatedBlocks)) {
-                return false;
-            }
-            placeChildren(world, player, facing, pos, skin, descriptor, relatedBlocks);
-        }
-        
-        IBlockState state = targetBlock.getDefaultState().withProperty(BlockSkinnable.STATE_FACING, dir);
-        
-        TileEntitySkinnable te = new TileEntitySkinnable();
-        te.setSkinPointer(skin, descriptor);
-        te.setRelatedBlocks(relatedBlocks);
-        SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(state, pos, world).setTileEntity(te).setDelay(1));
-        
-        stack.shrink(1);
-        
-        SoundType soundType = state.getBlock().getSoundType(state, world, pos, player);
-        world.playSound(null, pos, soundType.getPlaceSound(), SoundCategory.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
-        return true;
-    }
-    
-    private boolean canPlaceSkinAtLocation(World world, EntityPlayer player, EnumFacing facing, ItemStack stack, BlockPos pos, ISkinDescriptor descriptor) {
-        if (!player.canPlayerEdit(pos, facing, stack)) {
-            return false;
-        }
-        if (stack.getCount() == 0) {
-            return false;
-        }
-        if (!world.isValid(pos)) {
-            return false;
-        }
-        if (!world.mayPlace(world.getBlockState(pos).getBlock(), pos, true, facing, player)) {
-            return false;
-        }
-        return true;
-    }
-    
-    private boolean canPlaceChildren(World world, EntityPlayer player, EnumFacing facing, ItemStack stack, BlockPos pos, Skin skin, ISkinDescriptor descriptor, ArrayList<BlockPos> relatedBlocks) {
-        EnumFacing dir = UtilPlayer.getDirectionSide(player).getOpposite();
-        for (int ix = 0; ix < 3; ix++) {
-            for (int iy = 0; iy < 3; iy++) {
-                for (int iz = 0; iz < 3; iz++) {
-                    float[] bounds = TileEntitySkinnable.getBlockBounds(skin, -ix + 2, iy, iz, dir);
-                    if (bounds != null) {
-                        BlockPos childPos = pos.add(ix - 1 - dir.getXOffset() * 1, iy, iz - 1 - dir.getZOffset() * 1);
-                        relatedBlocks.add(childPos);
-                        
-                        IBlockState replaceState = world.getBlockState(childPos);
-                        if (!replaceState.getBlock().isReplaceable(world, childPos)) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-        return true;
-    }
-    
-    private void placeChildren(World world, EntityPlayer player, EnumFacing facing, BlockPos pos, Skin skin, ISkinDescriptor descriptor, ArrayList<BlockPos> relatedBlocks) {
-        for (int ix = 0; ix < 3; ix++) {
-            for (int iy = 0; iy < 3; iy++) {
-                for (int iz = 0; iz < 3; iz++) {
-                    placeChild(world, player, facing, pos, ix, iy, iz, skin, descriptor, relatedBlocks);
-                }
-            }
-        }
-    }
-    
-    private void placeChild(World world, EntityPlayer player, EnumFacing facing, BlockPos pos, int ix, int iy, int iz, Skin skin, ISkinDescriptor descriptor, ArrayList<BlockPos> relatedBlocks) {
-        EnumFacing dir = UtilPlayer.getDirectionSide(player).getOpposite();
-        
-        BlockSkinnable targetBlock = (BlockSkinnable) ModBlocks.skinnableChild;
-        
-        IBlockState state = targetBlock.getDefaultState().withProperty(BlockSkinnable.STATE_FACING, dir);
-        if (SkinProperties.PROP_BLOCK_GLOWING.getValue(skin.getProperties())) {
-            targetBlock = (BlockSkinnable) ModBlocks.skinnableChildGlowing;
-        }
-        
-        float[] bounds = TileEntitySkinnable.getBlockBounds(skin, -ix + 2, iy, iz, dir);
-        if (bounds != null) {
-            BlockPos childPos = pos.add(ix - 1 - dir.getXOffset() * 1, iy, iz - 1 - dir.getZOffset() * 1);
-            world.setBlockState(childPos, state, 2);
-            TileEntitySkinnableChild te = new TileEntitySkinnableChild();
-            te.setSkinPointer(skin, descriptor);
-            te.setParentLocation(pos);
-            te.setRelatedBlocks(relatedBlocks);
-            world.setTileEntity(childPos, te);
-        }
     }
     
     private static final IBehaviorDispenseItem dispenserBehavior = new BehaviorDefaultDispenseItem() {
