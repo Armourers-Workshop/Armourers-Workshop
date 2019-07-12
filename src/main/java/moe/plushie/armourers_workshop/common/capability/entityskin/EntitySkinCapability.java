@@ -155,6 +155,14 @@ public class EntitySkinCapability implements IEntitySkinCapability, IInventoryCa
     public void clear() {
         skinInventoryContainer.clear();
     }
+    
+    @Override
+    public void clearSkin(ISkinType skinType, int slotIndex) {
+        WardrobeInventory wardrobeInventory = skinInventoryContainer.getSkinTypeInv(skinType);
+        if (wardrobeInventory != null) {
+            wardrobeInventory.removeStackFromSlot(slotIndex);
+        }
+    }
 
     @Override
     public void setInventorySlotContents(IInventory inventory, int slotId, ItemStack stack) {

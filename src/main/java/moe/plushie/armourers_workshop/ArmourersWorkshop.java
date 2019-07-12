@@ -28,13 +28,14 @@ public class ArmourersWorkshop {
     /*
      * Hello and welcome to the Armourer's Workshop source code.
      * 
-     * Note: Any time the texture that is used on the player model is referred to, (normal called the players skin) it will be called the
-     * player texture or entity texture to prevent confusion with AW skins.
+     * Note: Any time the texture that is used on the player model is referred to,
+     * (normal called the players skin) it will be called the player texture or
+     * entity texture to prevent confusion with AW skins.
      */
 
     @Instance(LibModInfo.ID)
     private static ArmourersWorkshop instance;
-    
+
     private static Logger logger;
 
     @SidedProxy(clientSide = LibModInfo.PROXY_CLIENT_CLASS, serverSide = LibModInfo.PROXY_COMMNON_CLASS)
@@ -44,14 +45,14 @@ public class ArmourersWorkshop {
 
     @EventHandler
     public void perInit(FMLPreInitializationEvent event) {
-    	logger = event.getModLog();
+        logger = event.getModLog();
         ModLogger.log(String.format("Loading %s version %s.", LibModInfo.NAME, LibModInfo.MOD_VERSION));
         proxy.preInit(event);
         proxy.initLibraryManager();
     }
 
     @EventHandler
-    public void load(FMLInitializationEvent event) {
+    public void init(FMLInitializationEvent event) {
         proxy.init(event);
         proxy.registerKeyBindings();
         proxy.initRenderers();
@@ -97,8 +98,8 @@ public class ArmourersWorkshop {
     public static ArmourersWorkshop getInstance() {
         return instance;
     }
-    
+
     public static Logger getLogger() {
-		return logger;
-	}
+        return logger;
+    }
 }

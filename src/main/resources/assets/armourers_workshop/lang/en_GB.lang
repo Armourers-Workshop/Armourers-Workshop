@@ -632,8 +632,9 @@ death.attack.victorious=%1$s was stabbed to death by Vic's crown.
 
 
 # Commands
-commands.armourers.usage=/armourers <adminPanel | clearModelCache | clearSkins | exportSkin | giveSkin | resyncWardrobe | setItemSkinnable | setSkin | setUnlockedWardrobeSlots | setWardrobeOption>
+commands.armourers.usage=/armourers <adminPanel | clearModelCache | clearSkin | clearSkins | exportSkin | giveSkin | resyncWardrobe | setItemSkinnable | setSkin | setUnlockedWardrobeSlots | setWardrobeOption>
 commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
+commands.armourers.clearSkin.usage=/armourers clearSkin <player> <skintype> <slot id>
 commands.armourers.clearSkins.usage=/armourers clearSkins <player>
 commands.armourers.exportSkin.usage=/armourers exportSkin <file format> "<file name>" [scale]
 commands.armourers.giveSkin.usage=/armourers giveSkin <player> "<skin name>" [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
