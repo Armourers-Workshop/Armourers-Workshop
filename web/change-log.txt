@@ -1,11 +1,15 @@
 Armourer's Workshop Change Log
 
 Build 1.12.2-0.49.1-development (coming in next build)
+Added:
+    Added armourers clearSkin command. (usage /armourers clearSkin <player> <skintype> <slot id>)
+    Added warning message if Mo' bends is intalled.
 Changed:
     Updated de_DE lang file. (Victorious3)
     Updated zh_CH lang file. (Chataro)
     Change how global library premission flags are set to allow moderators.
     Allowed turning of expire time on caches.
+    Fixed some old outfits not loading wing data correctly.
 Fixed:
     Fixed armour container items having the wrong unlocalized name.
     Fixed undo not working with paint roller in full block mode.
@@ -19,6 +23,9 @@ Fixed:
     Fixed wardrobeTabDyes config option not being synced to clients.
     Fixed missing texture in global library upload screen.
     Fixed crash when Chameleon Creepers is installed.
+    Maybe fixed a crash when syncing entity skin capabilities.
+Refactor:
+    Move block skin placement code into a helper class.
 
 
 Build 1.12.2-0.49.0
