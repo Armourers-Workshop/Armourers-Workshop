@@ -1,8 +1,11 @@
 # Armourer's Workshop Change Log
 
+## Development (coming in next build)
+
+
 ## Build 1.12.2-0.49.1
 * Added
-  * Added armourers clearSkin command. (usage /armourers clearSkin <player> <skintype> <slot id>)
+  * Added armourers clearSkin command. (usage `/armourers clearSkin <player> <skintype> <slot id>`)
   * Added warning message if Mo' bends is intalled.
 * Changed
   * Updated de_DE lang file. (Victorious3)
