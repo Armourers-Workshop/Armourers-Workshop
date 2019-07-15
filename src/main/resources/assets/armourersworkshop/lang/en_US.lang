@@ -100,6 +100,7 @@ item.armourersworkshop:skinUnlock.1.name=Chest Skin Slot Unlock
 item.armourersworkshop:skinUnlock.2.name=Legs Skin Slot Unlock
 item.armourersworkshop:skinUnlock.3.name=Feet Skin Slot Unlock
 item.armourersworkshop:skinUnlock.4.name=Wings Skin Slot Unlock
+item.armourersworkshop:skinUnlock.5.name=Outfit Skin Slot Unlock
 item.armourersworkshop:linkingTool.name=Linking Tool
 
 # Item flavour text
@@ -125,6 +126,7 @@ item.armourersworkshop:skinUnlock.1.flavour=Unlocks 1 additional chest skin slot
 item.armourersworkshop:skinUnlock.2.flavour=Unlocks 1 additional leg skin slot in the wardrobe.
 item.armourersworkshop:skinUnlock.3.flavour=Unlocks 1 additional feet skin slot in the wardrobe.
 item.armourersworkshop:skinUnlock.4.flavour=Unlocks 1 additional wings skin slot in the wardrobe.
+item.armourersworkshop:skinUnlock.5.flavour=Unlocks 1 additional outfit skin slot in the wardrobe.
 item.armourersworkshop:linkingTool.flavour=Use to link usable blocks to block skins.%nFirst right click on a usable block then%nright click on a block skin to link them.
 
 # Rollover Text
@@ -209,6 +211,7 @@ skinType.armourers:arrow.name=Arrow
 skinType.armourers:block.name=Block
 skinType.armourers:multiblock.name=Multiblock
 skinType.armourers:wings.name=Wings
+skinType.armourers:outfit.name=Outfit
 
 # Skin Part Types
 skinPartType.armourers:head.base.name=Base
