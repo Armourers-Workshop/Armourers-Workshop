@@ -8,8 +8,6 @@ import java.util.WeakHashMap;
 
 import org.lwjgl.opengl.GL11;
 
-import com.sun.media.sound.ModelSource;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -380,6 +378,11 @@ public final class SkinModelRenderer {
                     ISkinDye dye = getPlayerDyeData(player, SkinTypeRegistry.skinWings, skinIndex);
                     if (data != null) {
                         customWings.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
+                    }
+                    data = getPlayerCustomArmour(player, SkinTypeRegistry.skinOutfit, skinIndex);
+                    dye = getPlayerDyeData(player, SkinTypeRegistry.skinOutfit, skinIndex);
+                    if (data != null) {
+                        customOutfit.render(player, render.modelBipedMain, data, false, dye, extraColours, false, distance, true);
                     }
                 }
             }
