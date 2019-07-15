@@ -345,6 +345,7 @@ inventory.armourersworkshop:colourMixer.label.presets=Presets
 inventory.armourersworkshop:colourMixer.label.paintType=Paint Type
 
 inventory.armourersworkshop:equipmentWardrobe.tab.skins=Skins
+inventory.armourersworkshop:equipmentWardrobe.tab.outfits=Outfits
 inventory.armourersworkshop:equipmentWardrobe.tab.displaySettings=Display Settings
 inventory.armourersworkshop:equipmentWardrobe.tab.colourSettings=Colour Settings
 inventory.armourersworkshop:equipmentWardrobe.label.skinColour=Skin Colour
