@@ -13,8 +13,8 @@ import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.serialize.SkinIdentifierSerializer;
 
 /**
- * Sent from server to client. Contains skin model information.
- * Clients will bake the model when they receive it. 
+ * Sent from server to client. Contains skin model information. Clients will bake the model when they receive it.
+ * 
  * @author RiskyKen
  *
  */
@@ -23,15 +23,16 @@ public class MessageServerSendSkinData implements IMessage, IMessageHandler<Mess
     private SkinIdentifier skinIdentifierRequested;
     private SkinIdentifier skinIdentifierUpdated;
     private Skin skin;
-    
-    public MessageServerSendSkinData() {}
-    
+
+    public MessageServerSendSkinData() {
+    }
+
     public MessageServerSendSkinData(SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated, Skin skin) {
         this.skinIdentifierRequested = skinIdentifierRequested;
         this.skinIdentifierUpdated = skinIdentifierUpdated;
         this.skin = skin;
     }
-    
+
     @Override
     public void toBytes(ByteBuf buf) {
         SkinIdentifierSerializer.writeToByteBuf(skinIdentifierRequested, buf);
@@ -39,27 +40,31 @@ public class MessageServerSendSkinData implements IMessage, IMessageHandler<Mess
         buf.writeBoolean(skin != null);
         ByteBufHelper.writeSkinToByteBuf(buf, this.skin);
     }
-    
+
     @Override
     public void fromBytes(ByteBuf buf) {
         Thread t = new Thread(new DownloadThread(buf), "Skin download thread.");
-        t.setPriority(Thread.MIN_PRIORITY);
-        t.start();
+        handleDownload(t);
     }
 
     @Override
     public IMessage onMessage(MessageServerSendSkinData message, MessageContext ctx) {
         return null;
     }
-    
+
+    @SideOnly(Side.CLIENT)
+    public void handleDownload(Thread downloadThread) {
+        ModelBakery.INSTANCE.handleModelDownload(downloadThread);
+    }
+
     public class DownloadThread implements Runnable {
 
         private ByteBuf buf;
-        
+
         public DownloadThread(ByteBuf buf) {
-            this.buf = buf;
+            this.buf = buf.retain();
         }
-        
+
         @Override
         public void run() {
             SkinIdentifier skinIdentifierRequested = SkinIdentifierSerializer.readFromByteBuf(buf);
@@ -69,8 +74,9 @@ public class MessageServerSendSkinData implements IMessage, IMessageHandler<Mess
                 skin = ByteBufHelper.readSkinFromByteBuf(buf);
             }
             sendSkinForBaking(skin, skinIdentifierRequested, skinIdentifierUpdated);
+            buf.release();
         }
-        
+
         @SideOnly(Side.CLIENT)
         private void sendSkinForBaking(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated) {
             ModelBakery.INSTANCE.receivedUnbakedModel(skin, skinIdentifierRequested, skinIdentifierUpdated);

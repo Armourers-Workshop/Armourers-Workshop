@@ -33,27 +33,29 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 public final class ModelBakery {
 
     public static final ModelBakery INSTANCE = new ModelBakery();
-    
+
     private final Executor skinBakeExecutor;
+    private final Executor skinDownloadExecutor;
     private final CompletionService<BakedSkin> skinCompletion;
     private final AtomicInteger bakingQueue = new AtomicInteger(0);
-    
+
     private final AtomicIntegerArray bakeTimes = new AtomicIntegerArray(100);
     private final AtomicInteger bakeTimesIndex = new AtomicInteger(0);
-    
+
     public ModelBakery() {
         skinBakeExecutor = Executors.newFixedThreadPool(ConfigHandlerClient.maxModelBakingThreads);
+        skinDownloadExecutor = Executors.newFixedThreadPool(2);
         skinCompletion = new ExecutorCompletionService<BakedSkin>(skinBakeExecutor);
         FMLCommonHandler.instance().bus().register(this);
     }
-    
+
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {
             checkBakery();
         }
     }
-    
+
     public int getAverageBakeTime() {
         int totalItems = 0;
         int totalTime = 0;
@@ -64,14 +66,14 @@ public final class ModelBakery {
                 totalTime += time;
             }
         }
-        return (int) ((double)totalTime / (double)totalItems);
+        return (int) ((double) totalTime / (double) totalItems);
     }
-    
+
     public void receivedUnbakedModel(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated) {
         bakingQueue.incrementAndGet();
         skinCompletion.submit(new BakingOven(skin, skinIdentifierRequested, skinIdentifierUpdated));
     }
-    
+
     private void checkBakery() {
         Future<BakedSkin> futureSkin = skinCompletion.poll();
         while (futureSkin != null) {
@@ -91,17 +93,22 @@ public final class ModelBakery {
             futureSkin = skinCompletion.poll();
         }
     }
-    
+
     public int getBakingQueueSize() {
         return bakingQueue.get();
     }
-    
+
+    public void handleModelDownload(Thread downloadThread) {
+        downloadThread.setPriority(Thread.MIN_PRIORITY);
+        skinDownloadExecutor.execute(downloadThread);
+    }
+
     private class BakingOven implements Callable<BakedSkin> {
 
         private final Skin skin;
         private final SkinIdentifier skinIdentifierRequested;
         private final SkinIdentifier skinIdentifierUpdated;
-        
+
         public BakingOven(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated) {
             this.skin = skin;
             this.skinIdentifierRequested = skinIdentifierRequested;
@@ -113,13 +120,13 @@ public final class ModelBakery {
             Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
             long startTime = System.currentTimeMillis();
             skin.lightHash();
-            
+
             int[][] dyeColour;
             int[] dyeUseCount;
-            
+
             dyeColour = new int[3][10];
             dyeUseCount = new int[10];
-            
+
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart partData = skin.getParts().get(i);
                 partData.setClientSkinPartData(new ClientSkinPartData());
@@ -127,18 +134,18 @@ public final class ModelBakery {
                 SkinBaker.buildPartDisplayListArray(partData, dyeColour, dyeUseCount, cubeArray);
                 partData.clearCubeData();
             }
-            
+
             if (skin.hasPaintData()) {
                 skin.skinModelTexture = new SkinModelTexture();
                 for (int ix = 0; ix < SkinTexture.TEXTURE_WIDTH; ix++) {
                     for (int iy = 0; iy < SkinTexture.TEXTURE_HEIGHT; iy++) {
                         int paintColour = skin.getPaintData()[ix + (iy * SkinTexture.TEXTURE_WIDTH)];
                         int paintType = BitwiseUtils.getUByteFromInt(paintColour, 0);
-                        
+
                         byte r = (byte) (paintColour >>> 16 & 0xFF);
                         byte g = (byte) (paintColour >>> 8 & 0xFF);
                         byte b = (byte) (paintColour & 0xFF);
-                        
+
                         if (paintType >= 1 && paintType <= 8) {
                             dyeUseCount[paintType - 1]++;
                             dyeColour[0][paintType - 1] += r & 0xFF;
@@ -153,29 +160,29 @@ public final class ModelBakery {
                         }
                         if (paintType == 254) {
                             dyeUseCount[9]++;
-                            dyeColour[0][9] += r  & 0xFF;
-                            dyeColour[1][9] += g  & 0xFF;
-                            dyeColour[2][9] += b  & 0xFF;
+                            dyeColour[0][9] += r & 0xFF;
+                            dyeColour[1][9] += g & 0xFF;
+                            dyeColour[2][9] += b & 0xFF;
                         }
                     }
                 }
             }
-            
+
             int[] averageR = new int[10];
             int[] averageG = new int[10];
             int[] averageB = new int[10];
-            
+
             for (int i = 0; i < 10; i++) {
-                averageR[i] = (int) ((double)dyeColour[0][i] / (double)dyeUseCount[i]);
-                averageG[i] = (int) ((double)dyeColour[1][i] / (double)dyeUseCount[i]);
-                averageB[i] = (int) ((double)dyeColour[2][i] / (double)dyeUseCount[i]);
+                averageR[i] = (int) ((double) dyeColour[0][i] / (double) dyeUseCount[i]);
+                averageG[i] = (int) ((double) dyeColour[1][i] / (double) dyeUseCount[i]);
+                averageB[i] = (int) ((double) dyeColour[2][i] / (double) dyeUseCount[i]);
             }
-            
+
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart partData = skin.getParts().get(i);
                 partData.getClientSkinPartData().setAverageDyeValues(averageR, averageG, averageB);
             }
-            
+
             skin.setAverageDyeValues(averageR, averageG, averageB);
             if (skin.hasPaintData()) {
                 skin.skinModelTexture.createTextureForColours(skin, null);
@@ -186,17 +193,17 @@ public final class ModelBakery {
                 index = 0;
                 bakeTimesIndex.set(0);
             }
-            bakeTimes.set(index, (int)totalTime);
+            bakeTimes.set(index, (int) totalTime);
             return new BakedSkin(skin, skinIdentifierRequested, skinIdentifierUpdated);
         }
     }
-    
+
     public static class BakedSkin {
-        
+
         private final Skin skin;
         private final SkinIdentifier skinIdentifierRequested;
         private final SkinIdentifier skinIdentifierUpdated;
-        
+
         public BakedSkin(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated) {
             this.skin = skin;
             this.skinIdentifierRequested = skinIdentifierRequested;
