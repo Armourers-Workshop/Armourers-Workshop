@@ -58,8 +58,11 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
         CacheBuilder builder = null;
         builder = CacheBuilder.newBuilder();
         builder.removalListener(this);
-        builder.expireAfterAccess(ConfigHandlerClient.skinCacheExpireTime, TimeUnit.SECONDS);
-        if (ConfigHandlerClient.skinCacheMaxSize > 1) {
+        builder.recordStats();
+        if (ConfigHandlerClient.skinCacheExpireTime > 0) {
+            builder.expireAfterAccess(ConfigHandlerClient.skinCacheExpireTime, TimeUnit.SECONDS);
+        }
+        if (ConfigHandlerClient.skinCacheMaxSize > 0) {
             builder.maximumSize(ConfigHandlerClient.skinCacheMaxSize);
         }
         skinCache = builder.build();
@@ -148,7 +151,7 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
     }
     
     public int getCacheSize() {
-        return (int) skinCache.asMap().size();
+        return skinCache.asMap().size();
     }
     
     public int getRequestQueueSize() {
@@ -173,7 +176,7 @@ public class ClientSkinCache implements RemovalListener<ISkinIdentifier, Skin>, 
     
     public int getPartCount() {
         int count = 0;
-     // Used collection view so access time is not reset.
+        // Used collection view so access time is not reset.
         Collection<Skin> skins = skinCache.asMap().values();
         Iterator<Skin> iterator = skins.iterator();
         while (iterator.hasNext()) {

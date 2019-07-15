@@ -41,7 +41,7 @@ public final class SkinExportManager {
         if (skinExporter != null) {
             exportSkin(skin, skinExporter, filePath, filename, scale);
         } else {
-            ModLogger.log(Level.ERROR, String.format("Could not export to %s format.", skinExporter));
+            ModLogger.log(Level.ERROR, String.format("Could not export to %s format.", fileExtension));
         }
     }
     

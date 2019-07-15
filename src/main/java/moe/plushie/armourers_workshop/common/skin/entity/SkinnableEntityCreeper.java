@@ -23,7 +23,10 @@ public class SkinnableEntityCreeper extends SkinnableEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public LayerRenderer<? extends EntityLivingBase> getLayerRenderer(RenderLivingBase renderLivingBase) {
-        return new SkinLayerRendererCreeper((RenderCreeper) renderLivingBase);
+        if (renderLivingBase instanceof RenderCreeper) {
+            return new SkinLayerRendererCreeper((RenderCreeper) renderLivingBase);
+        }
+        return null;
     }
 
     @Override

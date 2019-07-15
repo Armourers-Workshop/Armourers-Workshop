@@ -196,6 +196,10 @@ public class SkinProperties {
         return defaultValue;
     }
     
+    public boolean haveProperty(String key) {
+        return properties.containsKey(key);
+    }
+    
     @Override
     public int hashCode() {
         return toString().hashCode();

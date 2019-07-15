@@ -304,6 +304,14 @@ inventory.armourers_workshop:outfit-maker.name=Outfit Maker
 
 
 # Inventory Controls
+# Common
+inventory.armourers_workshop:common.button.ok=OK
+inventory.armourers_workshop:common.button.canel=Cancel
+inventory.armourers_workshop:common.button.close=Close
+inventory.armourers_workshop:common.button.clear=Clear
+inventory.armourers_workshop:common.button.save=Save
+inventory.armourers_workshop:common.button.load=Load
+
 # Skin Library
 inventory.armourers_workshop:skin-library.label.search=Search:
 inventory.armourers_workshop:skin-library.label.filename=File Name:
@@ -616,6 +624,7 @@ chat.armourers_workshop:linkingTool.start=Started linking.
 chat.armourers_workshop:linkingTool.finish=Link created.
 chat.armourers_workshop:linkingTool.fail=Linking failed.
 chat.armourers_workshop:linkingTool.linkedToSkinnable=Can not link two skin blocks together.
+chat.armourers_workshop:mobends.warn=Incompatible mods Mo' Bends and Armourer's Workshop are installed, please remove one or the other. THIS BUG CAN NOT BE FIXED DO NOT REPORT IT.
 
 
 # Death Messages
@@ -623,8 +632,9 @@ death.attack.victorious=%1$s was stabbed to death by Vic's crown.
 
 
 # Commands
-commands.armourers.usage=/armourers <adminPanel | clearModelCache | clearSkins | exportSkin | giveSkin | resyncWardrobe | setItemSkinnable | setSkin | setUnlockedWardrobeSlots | setWardrobeOption>
+commands.armourers.usage=/armourers <adminPanel | clearModelCache | clearSkin | clearSkins | exportSkin | giveSkin | resyncWardrobe | setItemSkinnable | setSkin | setUnlockedWardrobeSlots | setWardrobeOption>
 commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
+commands.armourers.clearSkin.usage=/armourers clearSkin <player> <skintype> <slot id>
 commands.armourers.clearSkins.usage=/armourers clearSkins <player>
 commands.armourers.exportSkin.usage=/armourers exportSkin <file format> "<file name>" [scale]
 commands.armourers.giveSkin.usage=/armourers giveSkin <player> "<skin name>" [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]

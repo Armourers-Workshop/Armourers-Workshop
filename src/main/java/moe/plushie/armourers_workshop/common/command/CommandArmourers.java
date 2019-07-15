@@ -18,6 +18,7 @@ public class CommandArmourers extends CommandBase {
     public CommandArmourers() {
         subCommands = new ArrayList<ModCommand>();
         subCommands.add(new CommandClearModelCache());
+        subCommands.add(new CommandClearSkin());
         subCommands.add(new CommandClearSkins());
         subCommands.add(new CommandGiveSkin());
         subCommands.add(new CommandResyncWardrobe());

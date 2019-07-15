@@ -39,7 +39,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelUpload extends GuiPanel {
 
-    private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/globalLibrary.png");
+    private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/global-library.png");
     
     private final String guiName;
     private GuiLabeledTextField textName;
@@ -184,7 +184,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
             GameProfile gameProfile = mc.player.getGameProfile();
             PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
             if (!plushieSession.isAuthenticated()) {
-                JsonObject jsonObject = PlushieAuth.updateAccessToken(gameProfile.getName(), gameProfile.getId().toString());
+                JsonObject jsonObject = PlushieAuth.authenticateUser(gameProfile.getName(), gameProfile.getId().toString());
                 plushieSession.authenticate(jsonObject);
             }
             

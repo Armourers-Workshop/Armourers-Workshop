@@ -116,7 +116,6 @@ public class GuiWardrobe extends GuiTabbed {
                 .setPadding(0, 4, 3, 3)
                 .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabColourSettings | isCreative))));
         
-        
         tabDyes = new GuiTabWardrobeDyes(tabList.size(), this, player, skinCapability, wardrobeCapability);
         tabList.add(tabDyes);
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.dyes"))

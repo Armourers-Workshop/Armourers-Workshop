@@ -35,7 +35,9 @@ public class SkinCacheLocalDatabase implements RemovalListener<Integer, Skin> {
         this.callback = callback;
         CacheBuilder builder = CacheBuilder.newBuilder();
         builder.removalListener(this);
-        builder.expireAfterAccess(ConfigHandler.skinCacheExpireTime, TimeUnit.SECONDS);
+        if (ConfigHandler.skinCacheExpireTime > 1) {
+            builder.expireAfterAccess(ConfigHandler.skinCacheExpireTime, TimeUnit.SECONDS);
+        }
         if (ConfigHandler.skinCacheMaxSize > 1) {
             builder.maximumSize(ConfigHandler.skinCacheMaxSize);
         }

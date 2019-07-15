@@ -26,6 +26,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
     private boolean wardrobeTabOutfits;
     private boolean wardrobeTabDisplaySettings;
     private boolean wardrobeTabColourSettings;
+    private boolean wardrobeTabDyes;
     
     private boolean allowDownloadingSkins;
     private boolean allowUploadingSkins;
@@ -49,6 +50,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         wardrobeTabOutfits = ConfigHandler.wardrobeTabOutfits;
         wardrobeTabDisplaySettings = ConfigHandler.wardrobeTabDisplaySettings;
         wardrobeTabColourSettings = ConfigHandler.wardrobeTabColourSettings;
+        wardrobeTabDyes = ConfigHandler.wardrobeTabDyes;
         
         allowDownloadingSkins = ConfigHandler.allowDownloadingSkins;
         allowUploadingSkins = ConfigHandler.allowUploadingSkins;
@@ -68,6 +70,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         buf.writeBoolean(wardrobeTabOutfits);
         buf.writeBoolean(wardrobeTabDisplaySettings);
         buf.writeBoolean(wardrobeTabColourSettings);
+        buf.writeBoolean(wardrobeTabDyes);
         
         buf.writeBoolean(allowDownloadingSkins);
         buf.writeBoolean(allowUploadingSkins);
@@ -94,6 +97,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         wardrobeTabOutfits = buf.readBoolean();
         wardrobeTabDisplaySettings = buf.readBoolean();
         wardrobeTabColourSettings = buf.readBoolean();
+        wardrobeTabDyes = buf.readBoolean();
         
         allowDownloadingSkins = buf.readBoolean();
         allowUploadingSkins = buf.readBoolean();
@@ -122,6 +126,7 @@ public class MessageServerSyncConfig implements IMessage, IMessageHandler<Messag
         ConfigHandler.wardrobeTabOutfits = message.wardrobeTabOutfits;
         ConfigHandler.wardrobeTabDisplaySettings = message.wardrobeTabDisplaySettings;
         ConfigHandler.wardrobeTabColourSettings = message.wardrobeTabColourSettings;
+        ConfigHandler.wardrobeTabDyes = message.wardrobeTabDyes;
         
         ConfigHandler.allowDownloadingSkins = message.allowDownloadingSkins;
         ConfigHandler.allowUploadingSkins = message.allowUploadingSkins;

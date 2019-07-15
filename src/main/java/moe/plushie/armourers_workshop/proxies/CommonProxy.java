@@ -54,24 +54,23 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 @Mod.EventBusSubscriber(modid = LibModInfo.ID)
 public class CommonProxy implements ILibraryCallback {
-    
+
     private File modConfigDirectory;
     private File instanceDirectory;
     private File modDirectory;
     private File skinLibraryDirectory;
-    
+
     private static ModItems modItems;
     private static ModBlocks modBlocks;
     private static ModSounds modSounds;
     public ILibraryManager libraryManager;
     private PermissionSystem permissionSystem;
-    
+
     public void preInit(FMLPreInitializationEvent event) {
         modConfigDirectory = new File(event.getSuggestedConfigurationFile().getParentFile(), LibModInfo.ID);
         if (!modConfigDirectory.exists()) {
@@ -80,7 +79,7 @@ public class CommonProxy implements ILibraryCallback {
         ModAddonManager.preInit();
         ConfigHandler.init(new File(modConfigDirectory, "common.cfg"));
         ConfigHandlerOverrides.init(new File(modConfigDirectory, "overrides.cfg"));
-        
+
         instanceDirectory = event.getSuggestedConfigurationFile().getParentFile().getParentFile();
         modDirectory = new File(instanceDirectory, LibModInfo.ID);
         if (!modDirectory.exists()) {
@@ -90,64 +89,64 @@ public class CommonProxy implements ILibraryCallback {
         if (!skinLibraryDirectory.exists()) {
             skinLibraryDirectory.mkdir();
         }
-        
+
         ModLogger.log("user home: " + System.getProperty("user.home"));
-        
+
         EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "seat"), Seat.class, "seat", 1, ArmourersWorkshop.getInstance(), 10, 20, false);
-        
+
         SkinExtractor.extractSkins();
-        
+
         PaintRegistry.init();
         SkinTypeRegistry.init();
         CubeRegistry.init();
-        
+
         modItems = new ModItems();
         modBlocks = new ModBlocks();
         modSounds = new ModSounds();
-        
+
         EntitySkinHandler.init();
-        
+
         ModCapabilityManager.register();
     }
-    
-    
+
     public void initLibraryManager() {
         libraryManager = new CommonLibraryManager();
     }
-    
-    public void initRenderers() {}
-    
+
+    public void initRenderers() {
+    }
+
     public void init(FMLInitializationEvent event) {
         modBlocks.registerTileEntities();
         CraftingManager.init();
         new GuiHandler();
         new ConfigSynchronizeHandler();
-        
+
         PacketHandler.init();
-        
+
         permissionSystem = new PermissionSystem();
         ModAddonManager.init();
-        
+
         PermissionManager.registerPermissions();
     }
-    
+
     public void postInit(FMLPostInitializationEvent event) {
         ModAddonManager.postInit();
         libraryManager.reloadLibrary();
     }
-    
+
     public PermissionSystem getPermissionSystem() {
         return permissionSystem;
     }
-    
+
     public void registerKeyBindings() {
-        
+
     }
-    
+
     public void receivedCommandFromSever(CommandType command) {
-        
+
     }
-    
+
     public void receivedAdminPanelCommand(EntityPlayer player, AdminPanelCommand command) {
         if (!(player.openContainer instanceof ModContainer)) {
             ModLogger.log(Level.WARN, String.format("Player '%s' tried to run the admin command '%s' but don't have the admin panel open.", player.getName(), command.toString()));
@@ -168,9 +167,9 @@ public class CommonProxy implements ILibraryCallback {
             break;
         }
     }
-    
+
     public void receivedSkinFromLibrary(String fileName, String filePath, Skin skin, SendType sendType) {
-        
+
     }
 
     public void skinLibraryCommand(EntityPlayerMP player, SkinLibraryCommand command, LibraryFile file, boolean publicList) {
@@ -210,7 +209,7 @@ public class CommonProxy implements ILibraryCallback {
                     }
                 }
             } else {
-                
+
                 ModLogger.log("public delete");
             }
             break;
@@ -225,7 +224,7 @@ public class CommonProxy implements ILibraryCallback {
                 if (!dir.exists()) {
                     dir.mkdir();
                 }
-                //TODO don't reload the library just add the folder
+                // TODO don't reload the library just add the folder
                 libraryManager.reloadLibrary();
                 ModLogger.log(String.format("making folder call %s in %s", file.fileName, file.filePath));
                 ModLogger.log("full path: " + dir.getAbsolutePath());
@@ -235,7 +234,7 @@ public class CommonProxy implements ILibraryCallback {
             break;
         }
     }
-    
+
     private ArrayList<LibraryFile> clearFiles = new ArrayList<LibraryFile>();
 
     @Override
@@ -244,43 +243,43 @@ public class CommonProxy implements ILibraryCallback {
             CommonSkinCache.INSTANCE.clearFileNameIdLink(clearFiles.get(i));
         }
     }
-    
+
     public boolean isLocalPlayer(String username) {
         return false;
     }
-    
+
     public boolean haveFullLocalProfile() {
         return false;
     }
-    
+
     public GameProfile getLocalGameProfile() {
         return null;
     }
-    
+
     public ILibraryManager getLibraryManager() {
         return libraryManager;
     }
-    
+
     public File getModConfigDirectory() {
         return modConfigDirectory;
     }
-    
+
     public File getInstanceDirectory() {
         return instanceDirectory;
     }
-    
+
     public File getModDirectory() {
         return modDirectory;
     }
-    
+
     public File getSkinLibraryDirectory() {
         return skinLibraryDirectory;
     }
-    
+
     public File getGlobalSkinDatabaseDirectory() {
         return new File(modDirectory, "global-skin-database");
     }
-    
+
     @SubscribeEvent
     public MinecraftServer getServer() {
         return FMLCommonHandler.instance().getMinecraftServerInstance();

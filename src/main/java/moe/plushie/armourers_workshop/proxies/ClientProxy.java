@@ -109,23 +109,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @Mod.EventBusSubscriber(modid = LibModInfo.ID, value = { Side.CLIENT })
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
-    
+
     public static ClientWardrobeHandler wardrobeHandler;
     public static PlayerTextureHandler playerTextureHandler;
     public static PlayerTextureDownloader playerTextureDownloader;
-    
+
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
         for (int i = 0; i < ModBlocks.BLOCK_LIST.size(); i++) {
             Block block = ModBlocks.BLOCK_LIST.get(i);
             if (block instanceof ICustomModel) {
-                ((ICustomModel)block).registerModels();
+                ((ICustomModel) block).registerModels();
             }
         }
         for (int i = 0; i < ModItems.ITEM_LIST.size(); i++) {
             Item item = ModItems.ITEM_LIST.get(i);
             if (item instanceof ICustomModel) {
-                ((ICustomModel)item).registerModels();
+                ((ICustomModel) item).registerModels();
             }
         }
         ModItems.skin.setTileEntityItemStackRenderer(new RenderItemEquipmentSkin());
@@ -135,17 +135,17 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         Item.getItemFromBlock(ModBlocks.mannequin).setTileEntityItemStackRenderer(renderItemMannequin);
         Item.getItemFromBlock(ModBlocks.doll).setTileEntityItemStackRenderer(renderItemMannequin);
     }
-    
+
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
         ConfigHandlerClient.init(new File(getModConfigDirectory(), "client.cfg"));
-        
+
         enableCrossModSupport();
         new RehostedJarHandler(event.getSourceFile(), "Armourers-Workshop-" + LibModInfo.MOD_VERSION + ".jar");
         new GuiResourceManager();
     }
-    
+
     @Override
     public void initLibraryManager() {
         libraryManager = new ClientLibraryManager();
@@ -160,10 +160,10 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         new SkinPreviewHandler();
         RenderBridge.init();
         /*
-        Render arrowRender = new RenderSkinnedArrow();
-        arrowRender.setRenderManager(RenderManager.instance);
-        RenderManager.instance.entityRenderMap.put(EntityArrow.class, arrowRender);
-        */
+         * Render arrowRender = new RenderSkinnedArrow();
+         * arrowRender.setRenderManager(RenderManager.instance);
+         * RenderManager.instance.entityRenderMap.put(EntityArrow.class, arrowRender);
+         */
         // Register tile entity renderers.
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArmourer.class, new RenderBlockArmourer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMannequin.class, new RenderBlockMannequin());
@@ -174,7 +174,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHologramProjector.class, new RenderBlockHologramProjector());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedSkinBuilder.class, new RenderBlockAdvancedSkinBuilder());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedSkinPart.class, new RenderBlockAdvancedSkinPart());
-        
+
         // Register coloured items and blocks.
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.paintbrush);
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.paintRoller);
@@ -183,14 +183,14 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.hueTool);
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.soap);
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.giftSack);
-        
+
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.skinCube);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.skinCubeGlass);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.skinCubeGlowing);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.skinCubeGlassGlowing);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourMixer);
     }
-    
+
     @Override
     public void init(FMLInitializationEvent event) {
         super.init(event);
@@ -201,7 +201,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new DebugTextHandler());
     }
-    
+
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
@@ -211,10 +211,8 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             enableValentinesClouds();
         }
         loadErrorSkin();
-        FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable()
-        {
-            public String call() throws Exception
-            {
+        FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable() {
+            public String call() throws Exception {
                 int bakeQueue = ModelBakery.INSTANCE.getBakingQueueSize();
                 String error = "\n";
                 error += "\t\tBaking Queue: " + bakeQueue + "\n";
@@ -235,13 +233,12 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
                 return error;
             }
 
-            public String getLabel()
-            {
+            public String getLabel() {
                 return "Armourer's Workshop";
             }
         });
     }
-    
+
     private void enableValentinesClouds() {
         ModLogger.log("Love is in the air!");
         try {
@@ -253,7 +250,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             e.printStackTrace();
         }
     }
-    
+
     private void enableCrossModSupport() {
         if (ModAddonManager.addonMorePlayerModels.isModLoaded() & ModAddonManager.addonSmartMoving.isModLoaded()) {
             ModLogger.log(Level.WARN, "Smart Moving and More Player Models are both installed. Armourer's Workshop can not support this.");
@@ -262,7 +259,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             ModLogger.log(Level.WARN, "Colored Lights and Smart Moving are both installed. Armourer's Workshop can not support this.");
         }
     }
-    
+
     public static TexturePaintType getTexturePaintType() {
         if (ConfigHandlerClient.texturePaintingType < 0) {
             return TexturePaintType.DISABLED;
@@ -272,11 +269,11 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         }
         return TexturePaintType.values()[ConfigHandlerClient.texturePaintingType];
     }
-    
+
     public static boolean useMultipassSkinRendering() {
         return ConfigHandlerClient.multipassSkinRendering;
     }
-    
+
     public static int getNumberOfRenderLayers() {
         if (useMultipassSkinRendering()) {
             return 4;
@@ -290,7 +287,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         ClientRegistry.registerKeyBinding(Keybindings.KEY_UNDO);
         ClientRegistry.registerKeyBinding(Keybindings.OPEN_WARDROBE);
     }
-    
+
     @Override
     public void receivedCommandFromSever(CommandType command) {
         EntityPlayer player = Minecraft.getMinecraft().player;
@@ -302,7 +299,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             break;
         }
     }
-    
+
     @Override
     public void receivedSkinFromLibrary(String fileName, String filePath, Skin skin, SendType sendType) {
         switch (sendType) {
@@ -313,12 +310,12 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         case GLOBAL_UPLOAD:
             GuiScreen screen = Minecraft.getMinecraft().currentScreen;
             if (screen instanceof GuiGlobalLibrary) {
-                ((GuiGlobalLibrary)screen).gotSkinFromServer(skin);
+                ((GuiGlobalLibrary) screen).gotSkinFromServer(skin);
             }
             break;
         }
     }
-    
+
     @Override
     public boolean isLocalPlayer(String username) {
         GameProfile gameProfile = getLocalGameProfile();
@@ -329,7 +326,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         }
         return false;
     }
-    
+
     @Override
     public boolean haveFullLocalProfile() {
         GameProfile gameProfile = getLocalGameProfile();
@@ -340,12 +337,12 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         }
         return false;
     }
-    
+
     @Override
     public GameProfile getLocalGameProfile() {
         return Minecraft.getMinecraft().player.getGameProfile();
     }
-    
+
     private void loadErrorSkin() {
         ModLogger.log("Loading error model.");
         InputStream inputStream = null;
@@ -360,38 +357,35 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             IOUtils.closeQuietly(inputStream);
         }
     }
-    
+
     @Override
     public void onBakedSkin(BakedSkin bakedSkin) {
         ClientSkinCache.errorSkin = bakedSkin.getSkin();
         ModLogger.log("Error skin loaded.");
     }
-    
+
     public static enum TexturePaintType {
-        DISABLED,
-        TEXTURE_REPLACE,
-        MODEL_REPLACE_MC,
-        MODEL_REPLACE_AW
+        DISABLED, TEXTURE_REPLACE, MODEL_REPLACE_MC, MODEL_REPLACE_AW
     }
-    
+
     private static class BlockColour implements IBlockColor {
 
         @Override
         public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex) {
             TileEntity tileEntity = worldIn.getTileEntity(pos);
             if (tileEntity != null && tileEntity instanceof IPantable) {
-                return ((IPantable)tileEntity).getColour(tintIndex);
+                return ((IPantable) tileEntity).getColour(tintIndex);
             }
             return 0xFFFFFFFF;
         }
     }
-    
+
     private static class ItemColour implements IItemColor {
 
         @Override
         public int colorMultiplier(ItemStack stack, int tintIndex) {
             if (stack.getItem() == ModItems.giftSack) {
-                return ((ItemGiftSack)stack.getItem()).colorMultiplier(stack, tintIndex);
+                return ((ItemGiftSack) stack.getItem()).colorMultiplier(stack, tintIndex);
             }
             if (stack.getItem() == ModItems.dyeBottle) {
                 if (tintIndex == 0) {
@@ -411,7 +405,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             return 0xFFFFFFFF;
         }
     }
-    
+
     @Override
     public MinecraftServer getServer() {
         return Minecraft.getMinecraft().getIntegratedServer();

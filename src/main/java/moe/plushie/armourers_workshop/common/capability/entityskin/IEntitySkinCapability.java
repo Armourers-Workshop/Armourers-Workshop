@@ -71,6 +71,8 @@ public interface IEntitySkinCapability {
     
     public void clear();
     
+    public void clearSkin(ISkinType skinType, int slotIndex);
+    
     /**
      * Syncs capability data to a player.
      * 

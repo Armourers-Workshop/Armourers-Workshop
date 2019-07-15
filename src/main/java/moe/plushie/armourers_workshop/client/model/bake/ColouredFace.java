@@ -29,7 +29,7 @@ public class ColouredFace {
     public final byte b;
     private final byte a;
 
-    private final byte t;
+    public final byte t;
     public final byte face;
     private final byte lodLevel;
 

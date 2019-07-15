@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
+import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -69,10 +70,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         if (session.hasServerId()) {
             iconButtonMyFiles.visible = inBeta;
             iconButtonUploadSkin.visible = inBeta;
-            iconButtonUploadSkin.enabled = true;
-            if (session.getPermission_group_id() == 255) {
-                iconButtonUploadSkin.enabled = false;
-            }
+            iconButtonUploadSkin.enabled = session.hasPermission(PlushieAction.SKIN_UPLOAD);
         } else {
             iconButtonMyFiles.visible = false;
             iconButtonUploadSkin.visible = false;

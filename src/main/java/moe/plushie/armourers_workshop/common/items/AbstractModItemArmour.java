@@ -70,6 +70,11 @@ public class AbstractModItemArmour extends ItemArmor implements ISortOrder, ICus
             tooltip.add("sortPriority" + String.valueOf(sortPriority));
         }
     }
+    
+    @Override
+    public String getTranslationKey(ItemStack stack) {
+        return getModdedUnlocalizedName(super.getTranslationKey(stack), stack);
+    }
 
     protected String getModdedUnlocalizedName(String unlocalizedName) {
         String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);

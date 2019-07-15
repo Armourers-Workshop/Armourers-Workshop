@@ -32,6 +32,7 @@ public final class ModAddonManager {
     //public static AddonMetallurgy addonMetallurgy;
     public static AddonMinecraft addonMinecraft;
     //public static AddonMinecraftComesAlive addonMinecraftComesAlive;
+    public static ModAddon addonMobends;
     public static ModAddon addonMorePlayerModels;
     //public static AddonMoreSwordsMod addonMoreSwordsMod;
     public static AddonNEI addonNEI;
@@ -73,6 +74,7 @@ public final class ModAddonManager {
         //addonMetallurgy = new AddonMetallurgy();
         addonMinecraft = new AddonMinecraft();
         //addonMinecraftComesAlive = new AddonMinecraftComesAlive();
+        addonMobends = new ModAddon("mobends", "Mo' Bends");
         addonMorePlayerModels = new ModAddon("moreplayermodels", "More Player Models");
         //addonMoreSwordsMod = new AddonMoreSwordsMod();
         addonNEI = new AddonNEI();

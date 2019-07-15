@@ -9,6 +9,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -57,6 +58,22 @@ public final class DownloadUtils {
         JsonObject json = null;
         try {
             json = (JsonObject) new JsonParser().parse(data);
+        } catch (Exception e) {
+            ModLogger.log(data);
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+    
+    public static JsonElement downloadJson(String url) {
+        String data = downloadString(url);
+        if (data == null) {
+            return null;
+        }
+        JsonElement json = null;
+        try {
+            json = new JsonParser().parse(data);
         } catch (Exception e) {
             ModLogger.log(data);
             e.printStackTrace();

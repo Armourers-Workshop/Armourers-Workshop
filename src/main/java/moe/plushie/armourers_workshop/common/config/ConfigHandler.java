@@ -289,12 +289,14 @@ public class ConfigHandler {
     private static void loadCategoryCache() {
         config.setCategoryComment(CATEGORY_CACHE, "Change (memory use/IO access) ratio by category setting in this category.");
         
-        skinCacheExpireTime = config.getInt("skinCacheExpireTime", CATEGORY_CACHE, 6000, 1, 3600,
+        skinCacheExpireTime = config.getInt("skinCacheExpireTime", CATEGORY_CACHE, 6000, 0, 3600,
                 "How long in seconds the server will keep skins in it's cache.\n"
-                + "Default 600 seconds is 10 minutes.");
+                + "Default 600 seconds is 10 minutes.\n"
+                + "Setting to 0 turns off this option.");
         
         skinCacheMaxSize = config.getInt("skinCacheMaxSize", CATEGORY_CACHE, 2000, 0, 10000,
-                "Max size the skin cache can reach before skins are removed. Setting to 0 turns off this option.");
+                "Max size the skin cache can reach before skins are removed.\n"
+                + "Setting to 0 turns off this option.");
         
     }
 
