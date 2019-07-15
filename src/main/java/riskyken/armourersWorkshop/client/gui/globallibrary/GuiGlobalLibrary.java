@@ -33,19 +33,19 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrar
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
-    
+
     public final TileEntityGlobalSkinLibrary tileEntity;
     public final EntityPlayer player;
     public ArrayList<GuiPanel> panelList;
     private int oldMouseX;
     private int oldMouseY;
-    
+
     public Executor jsonDownloadExecutor = Executors.newFixedThreadPool(2);
     public Executor uploadExecutor = Executors.newFixedThreadPool(1);
-    
+
     private static final int PADDING = 5;
     private boolean isNEIVisible;
-    
+
     public GuiGlobalLibraryPanelHeader panelHeader;
     public GuiGlobalLibraryPanelSearchBox panelSearchBox;
     public GuiGlobalLibraryPanelHome panelHome;
@@ -56,7 +56,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     public GuiGlobalLibraryPanelUserSkins panelUserSkins;
     public GuiGlobalLibraryPanelSkinEdit panelSkinEdit;
     private Screen screen;
-    
+
     public static enum Screen {
         HOME,
         SEARCH,
@@ -67,48 +67,48 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
         JOIN_BETA,
         SKIN_EDIT
     }
-    
+
     public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity, InventoryPlayer inventoryPlayer) {
         super(new ContainerGlobalSkinLibrary(inventoryPlayer, tileEntity));
         this.tileEntity = tileEntity;
         this.player = Minecraft.getMinecraft().thePlayer;
         this.panelList = new ArrayList<GuiPanel>();
-        
+
         panelHeader = new GuiGlobalLibraryPanelHeader(this, 2, 2, width - 4, 26);
         panelList.add(panelHeader);
-        
+
         panelSearchBox = new GuiGlobalLibraryPanelSearchBox(this, 2, 31, width - 4, 23);
         panelList.add(panelSearchBox);
-        
+
         panelHome = new GuiGlobalLibraryPanelHome(this, 2, 136, width / 2 - 5, height - 141);
         panelList.add(panelHome);
-        
+
         panelSearchResults = new GuiGlobalLibraryPanelSearchResults(this, 5, 5, 100, 100);
         panelList.add(panelSearchResults);
-        
+
         panelSkinInfo = new GuiGlobalLibraryPanelSkinInfo(this, 5, 5, 100, 100);
         panelList.add(panelSkinInfo);
-        
+
         panelUpload = new GuiGlobalLibraryPanelUpload(this, 5, 5, 100, 100);
         panelList.add(panelUpload);
-        
+
         panelJoinBeta = new GuiGlobalLibraryPaneJoinBeta(this, 5, 5, 100, 100);
         panelList.add(panelJoinBeta);
-        
+
         panelUserSkins = new GuiGlobalLibraryPanelUserSkins(this, 5, 5, 100, 100);
         panelList.add(panelUserSkins);
-        
+
         panelSkinEdit = new GuiGlobalLibraryPanelSkinEdit(this, 5, 5, 100, 100);
         panelList.add(panelSkinEdit);
-        
+
         screen = Screen.HOME;
         isNEIVisible = ModAddonManager.addonNEI.isVisible();
-        
+
         if (!PlushieAuth.startedRemoteUserCheck()) {
             PlushieAuth.doRemoteUserCheck();
         }
     }
-    
+
     @Override
     public void initGui() {
         ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
@@ -121,79 +121,79 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
             panelList.get(i).initGui();
         }
         if (screen == Screen.HOME) {
-            ((GuiGlobalLibraryPanelHome)panelHome).updateSkinPanels();
+            ((GuiGlobalLibraryPanelHome) panelHome).updateSkinPanels();
         }
     }
-    
+
     public void setSlotVisibility(boolean visible) {
         for (int x = 0; x < 9; x++) {
             Slot slot = (Slot) inventorySlots.inventorySlots.get(x);
             if (slot instanceof SlotHidable) {
-                ((SlotHidable)slot).setVisible(visible);
+                ((SlotHidable) slot).setVisible(visible);
             }
         }
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
                 Slot slot = (Slot) inventorySlots.inventorySlots.get(x + y * 9 + 9);
                 if (slot instanceof SlotHidable) {
-                    ((SlotHidable)slot).setVisible(visible);
+                    ((SlotHidable) slot).setVisible(visible);
                 }
             }
         }
-        
+
         Slot slot = getInputSlot();
         if (slot instanceof SlotHidable) {
-            ((SlotHidable)slot).setVisible(visible);
+            ((SlotHidable) slot).setVisible(visible);
         }
         slot = getOutputSlot();
         if (slot instanceof SlotHidable) {
-            ((SlotHidable)slot).setVisible(visible);
+            ((SlotHidable) slot).setVisible(visible);
         }
     }
-    
+
     public void setPlayerSlotLocation(int xPos, int yPos) {
         for (int x = 0; x < 9; x++) {
             Slot slot = (Slot) inventorySlots.inventorySlots.get(x);
             if (slot instanceof SlotHidable) {
-                ((SlotHidable)slot).setDisplayPosition(xPos + x * 18, yPos + 58);
+                ((SlotHidable) slot).setDisplayPosition(xPos + x * 18, yPos + 58);
             }
         }
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
                 Slot slot = (Slot) inventorySlots.inventorySlots.get(x + y * 9 + 9);
                 if (slot instanceof SlotHidable) {
-                    ((SlotHidable)slot).setDisplayPosition(xPos + x * 18, yPos + y * 18);
+                    ((SlotHidable) slot).setDisplayPosition(xPos + x * 18, yPos + y * 18);
                 }
             }
         }
     }
-    
+
     public void setInputSlotLocation(int xPos, int yPos) {
         Slot slot = getInputSlot();
         if (slot instanceof SlotHidable) {
-            ((SlotHidable)slot).setDisplayPosition(xPos, yPos);
+            ((SlotHidable) slot).setDisplayPosition(xPos, yPos);
         }
     }
-    
+
     public void setOutputSlotLocation(int xPos, int yPos) {
         Slot slot = getOutputSlot();
         if (slot instanceof SlotHidable) {
-            ((SlotHidable)slot).setDisplayPosition(xPos, yPos);
+            ((SlotHidable) slot).setDisplayPosition(xPos, yPos);
         }
     }
-    
+
     public SlotHidable getInputSlot() {
         return (SlotHidable) inventorySlots.inventorySlots.get(36);
     }
-    
+
     public SlotHidable getOutputSlot() {
         return (SlotHidable) inventorySlots.inventorySlots.get(37);
     }
-    
+
     public ContainerGlobalSkinLibrary getContainer() {
         return (ContainerGlobalSkinLibrary) inventorySlots;
     }
-    
+
     private void setupPanels() {
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).setVisible(false);
@@ -207,7 +207,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
         if (isNEIVisible) {
             neiBump = 18;
         }
-        
+
         switch (screen) {
         case HOME:
             panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
@@ -257,7 +257,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
             break;
         }
     }
-    
+
     @Override
     public void updateScreen() {
         super.updateScreen();
@@ -266,7 +266,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
             panelList.get(i).update();
         }
     }
-    
+
     public void switchScreen(Screen screen) {
         this.screen = screen;
         setupPanels();
@@ -274,7 +274,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
             panelList.get(i).initGui();
         }
     }
-    
+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) {
         if (!isDialogOpen()) {
@@ -284,7 +284,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
         }
         super.mouseClicked(mouseX, mouseY, button);
     }
-    
+
     @Override
     protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
         if (!isDialogOpen()) {
@@ -294,7 +294,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
         }
         super.mouseMovedOrUp(mouseX, mouseY, button);
     }
-    
+
     @Override
     protected void keyTyped(char c, int keycode) {
         boolean keyTyped = false;
@@ -310,19 +310,19 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
         }
         checkNEIVisibility();
     }
-    
+
     private void checkNEIVisibility() {
         if (isNEIVisible != ModAddonManager.addonNEI.isVisible()) {
             isNEIVisible = !isNEIVisible;
             initGui();
         }
     }
-    
+
     @Override
     public boolean doesGuiPauseGame() {
         return false;
     }
-    
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
         oldMouseX = mouseX;
@@ -339,7 +339,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
             panelList.get(i).draw(mouseX, mouseY, partialTickTime);
         }
     }
-    
+
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         if (isDialogOpen()) {
@@ -348,7 +348,7 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
             GL11.glTranslatef(guiLeft, guiTop, 0);
         }
     }
-    
+
     public String getGuiName() {
         return "globalSkinLibrary";
     }
