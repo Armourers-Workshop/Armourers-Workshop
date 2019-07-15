@@ -217,7 +217,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             return;
         }
         if (skinType != skinPointerInput.getIdentifier().getSkinType()) {
-            if (!(skinType == SkinTypeRegistry.skinLegs && skinPointerInput.getIdentifier().getSkinType() == SkinTypeRegistry.skinSkirt)) {
+            if (!(skinType == SkinTypeRegistry.skinLegs && skinPointerInput.getIdentifier().getSkinType() == SkinTypeRegistry.oldSkinSkirt)) {
                 return;
             }
         }

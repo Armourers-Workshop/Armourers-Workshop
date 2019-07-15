@@ -56,7 +56,7 @@ public class WardrobeInventoryContainer {
                 getInventoryForSkinType(SkinTypeRegistry.skinFeet).setInventorySlotContents(0, legacyItems[3]);
                 getInventoryForSkinType(SkinTypeRegistry.skinSword).setInventorySlotContents(0, legacyItems[4]);
                 getInventoryForSkinType(SkinTypeRegistry.skinBow).setInventorySlotContents(0, legacyItems[5]);
-                getInventoryForSkinType(SkinTypeRegistry.skinArrow).setInventorySlotContents(0, legacyItems[6]);
+                getInventoryForSkinType(SkinTypeRegistry.oldSkinArrow).setInventorySlotContents(0, legacyItems[6]);
             }
         }
     }

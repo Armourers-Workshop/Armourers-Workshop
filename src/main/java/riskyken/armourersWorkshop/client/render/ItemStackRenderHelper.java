@@ -5,8 +5,12 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
+import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -132,5 +136,27 @@ public final class ItemStackRenderHelper {
             GL11.glPopMatrix();
         }
         
+    }
+    
+    public static void drawBounds(IRectangle3D rec, int r, int g, int b) {
+        float scale = 1F / 16F;
+        AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(
+                rec.getX() * scale, rec.getY() * scale, rec.getZ() * scale,
+                (rec.getX() + rec.getWidth()) * scale, (rec.getY() + rec.getHeight()) * scale, (rec.getZ() + rec.getDepth()) * scale);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        //GL11.glColor4f((float)r / 255F, (float)g / 255F, (float)b / 255F, 1F);
+        GL11.glLineWidth(1.0F);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        //GL11.glDepthMask(false);
+        GL11.glColor4f((float)r / 255F, (float)g / 255F, (float)b / 255F, 1);
+        RenderGlobal.drawOutlinedBoundingBox(aabb, 0);
+        GL11.glColor4f(1, 1, 1, 1);
+        //GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glColor4f(1, 1, 1, 1);
     }
 }

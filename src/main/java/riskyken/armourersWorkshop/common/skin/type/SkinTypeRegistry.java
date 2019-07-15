@@ -24,62 +24,76 @@ import riskyken.armourersWorkshop.common.skin.type.head.SkinHead;
 import riskyken.armourersWorkshop.common.skin.type.item.SkinItem;
 import riskyken.armourersWorkshop.common.skin.type.legs.SkinLegs;
 import riskyken.armourersWorkshop.common.skin.type.legs.SkinSkirt;
+import riskyken.armourersWorkshop.common.skin.type.outfit.SkinOutfit;
 import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public final class SkinTypeRegistry implements ISkinTypeRegistry {
-    
+
     public static SkinTypeRegistry INSTANCE;
-    
+
     public static ISkinType skinHead;
     public static ISkinType skinChest;
     public static ISkinType skinLegs;
-    public static ISkinType skinSkirt;
     public static ISkinType skinFeet;
+    public static ISkinType skinWings;
+
     public static ISkinType skinSword;
     public static ISkinType skinBow;
-    public static ISkinType skinArrow;
+
     public static ISkinType skinBlock;
-    public static ISkinType skinWings;
+    public static ISkinType skinOutfit;
     
+    public static ISkinType oldSkinSkirt;
+    public static ISkinType oldSkinArrow;
+
+    
+
     private LinkedHashMap<String, ISkinType> skinTypeMap;
     private HashMap<String, ISkinPartType> skinPartMap;
-    
+
     public static void init() {
         INSTANCE = new SkinTypeRegistry();
     }
-    
+
     public SkinTypeRegistry() {
         MinecraftForge.EVENT_BUS.register(this);
         skinTypeMap = new LinkedHashMap<String, ISkinType>();
         skinPartMap = new HashMap<String, ISkinPartType>();
         registerSkins();
     }
-    
+
     private void registerSkins() {
         skinHead = new SkinHead();
         skinChest = new SkinChest();
         skinLegs = new SkinLegs();
-        skinSkirt = new SkinSkirt();
         skinFeet = new SkinFeet();
+        skinWings = new SkinWings();
+
         skinSword = new SkinItem();
         skinBow = new SkinBow();
-        skinArrow = new SkinArrow();
+
         skinBlock = new SkinBlock();
-        skinWings = new SkinWings();
+        skinOutfit = new SkinOutfit(skinHead, skinChest, skinLegs, skinFeet, skinWings);
         
+        oldSkinSkirt = new SkinSkirt();
+        oldSkinArrow = new SkinArrow();
+
         registerSkin(skinHead);
         registerSkin(skinChest);
         registerSkin(skinLegs);
-        //registerSkin(skinSkirt);
         registerSkin(skinFeet);
+        registerSkin(skinWings);
+
         registerSkin(skinSword);
         registerSkin(skinBow);
-        //registerSkin(skinArrow);
+
         registerSkin(skinBlock);
-        registerSkin(skinWings);
+        registerSkin(skinOutfit);
+        // registerSkin(skinSkirt);
+        // registerSkin(skinArrow);
     }
-    
+
     @Override
     public boolean registerSkin(ISkinType skinType) {
         if (skinType == null) {
@@ -98,7 +112,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             ModLogger.log(Level.WARN, "A mod tried to register a skin type no skin type parts.");
             return false;
         }
-        
+
         ModLogger.log(String.format("Registering skin: %s", skinType.getRegistryName()));
         skinTypeMap.put(skinType.getRegistryName(), skinType);
         ArrayList<ISkinPartType> skinParts = skinType.getSkinParts();
@@ -108,22 +122,22 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         }
         return true;
     }
-    
+
     @Override
     public ISkinType getSkinTypeFromRegistryName(String registryName) {
         if (registryName == null | registryName.trim().isEmpty()) {
             return null;
         }
-        if(registryName.equals(skinSkirt.getRegistryName())) {
+        if (registryName.equals(oldSkinSkirt.getRegistryName())) {
             return skinLegs;
         }
-        if(registryName.equals(skinArrow.getRegistryName())) {
+        if (registryName.equals(oldSkinArrow.getRegistryName())) {
             return skinBow;
         }
         ISkinType skinType = skinTypeMap.get(registryName);
         return skinType;
     }
-    
+
     public ISkinType getSkinTypeFromLegacyId(int legacyId) {
         switch (legacyId) {
         case 0:
@@ -134,7 +148,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             return getSkinTypeFromRegistryName("armourers:legs");
         case 3:
             return getSkinTypeFromRegistryName("armourers:legs");
-            //return getSkinTypeFromRegistryName("armourers:skirt");
+        // return getSkinTypeFromRegistryName("armourers:skirt");
         case 4:
             return getSkinTypeFromRegistryName("armourers:feet");
         case 5:
@@ -143,12 +157,12 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             return getSkinTypeFromRegistryName("armourers:bow");
         case 7:
             return getSkinTypeFromRegistryName("armourers:bow");
-            //return getSkinTypeFromRegistryName("armourers:arrow");
+        // return getSkinTypeFromRegistryName("armourers:arrow");
         default:
             return null;
         }
     }
-    
+
     @Override
     public ISkinPartType getSkinPartFromRegistryName(String registryName) {
         if (registryName == null | registryName.trim().isEmpty()) {
@@ -156,7 +170,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         }
         return skinPartMap.get(registryName);
     }
-    
+
     public ISkinPartType getSkinPartFromLegacyId(int legacyId) {
         switch (legacyId) {
         case 0:
@@ -172,7 +186,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         case 5:
             return getSkinPartFromRegistryName("armourers:legs.rightLeg");
         case 6:
-            //return getSkinPartFromRegistryName("armourers:skirt.base");
+            // return getSkinPartFromRegistryName("armourers:skirt.base");
             return getSkinPartFromRegistryName("armourers:legs.skirt");
         case 7:
             return getSkinPartFromRegistryName("armourers:feet.leftFoot");
@@ -186,7 +200,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
             return null;
         }
     }
-    
+
     @Override
     public ArrayList<ISkinType> getRegisteredSkinTypes() {
         ArrayList<ISkinType> skinTypes = new ArrayList<ISkinType>();
@@ -199,22 +213,22 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         }
         return skinTypes;
     }
-    
+
     public int getNumberOfSkinRegistered() {
         return skinTypeMap.size();
     }
-    
+
     public String getLocalizedSkinTypeName(ISkinType skinType) {
         String localizedName = "skinType." + skinType.getRegistryName() + ".name";
         return StatCollector.translateToLocal(localizedName);
     }
-    
+
     @SideOnly(Side.CLIENT)
     public String getLocalizedSkinPartTypeName(ISkinPartType skinPartType) {
         String localizedName = "skinPartType." + skinPartType.getRegistryName() + ".name";
         return StatCollector.translateToLocal(localizedName);
     }
-    
+
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onTextureStitchEvent(TextureStitchEvent.Pre event) {
@@ -246,7 +260,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
 
     @Override
     public ISkinType getSkinTypeSkirt() {
-        return skinSkirt;
+        return oldSkinSkirt;
     }
 
     @Override

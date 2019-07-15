@@ -19,7 +19,7 @@ public final class SkinTypeHelper {
         case 5:
             return SkinTypeRegistry.skinBow;
         case 6:
-            return SkinTypeRegistry.skinArrow;
+            return SkinTypeRegistry.oldSkinArrow;
         default:
             return null;
         }
@@ -38,7 +38,7 @@ public final class SkinTypeHelper {
             return 4;
         } else if (skinType == SkinTypeRegistry.skinBow) {
             return 5;
-        } else if (skinType == SkinTypeRegistry.skinArrow) {
+        } else if (skinType == SkinTypeRegistry.oldSkinArrow) {
             return 6;
         }
         return -1;

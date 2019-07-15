@@ -34,6 +34,7 @@ public final class LibItemResources {
     public static final String TEMPLATE_ARROW = PREFIX_RESOURCE + "templateArrow";
     public static final String TEMPLATE_WINGS = PREFIX_RESOURCE + "templateWings";
     public static final String TEMPLATE_LOADING = PREFIX_RESOURCE + "templateLoading";
+    public static final String TEMPLATE_OUTFIT = PREFIX_RESOURCE + "templateOutfit";
     
     public static final String TEMPLATE_BLANK = PREFIX_RESOURCE + "templateBlank";
     public static final String GIFT_SACK = PREFIX_RESOURCE + "giftSack";
@@ -78,4 +79,5 @@ public final class LibItemResources {
     public static final String SLOT_SKIN_AXE = PREFIX_RESOURCE + "slot/skinAxe";
     public static final String SLOT_SKIN_HOE = PREFIX_RESOURCE + "slot/skinHoe";
     public static final String SLOT_SKIN_SHOVEL = PREFIX_RESOURCE + "slot/skinShovel";
+    public static final String SLOT_SKIN_OUTFIT = PREFIX_RESOURCE + "slot/skin-outfit";
 }

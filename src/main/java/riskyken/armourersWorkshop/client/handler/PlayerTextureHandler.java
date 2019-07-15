@@ -71,20 +71,22 @@ public class PlayerTextureHandler {
             textureInfo.updateTexture(player.getLocationSkin());
             textureInfo.updateHairColour(ewd.hairColour);
             textureInfo.updateSkinColour(ewd.skinColour);
-            Skin[] skins = new Skin[4 * ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE];
+            Skin[] skins = new Skin[5 * ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE];
             
             for (int skinIndex = 0; skinIndex < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
-                skins[0 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
-                skins[1 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
-                skins[2 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
-                skins[3 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
+                skins[0 + skinIndex * 5] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinHead, skinIndex);
+                skins[1 + skinIndex * 5] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinChest, skinIndex);
+                skins[2 + skinIndex * 5] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinLegs, skinIndex);
+                skins[3 + skinIndex * 5] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinFeet, skinIndex);
+                skins[4 + skinIndex * 5] = SkinModelRenderer.INSTANCE.getPlayerCustomArmour(player, SkinTypeRegistry.skinOutfit, skinIndex);
             }
-            ISkinDye[] dyes = new ISkinDye[4 * ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE];
+            ISkinDye[] dyes = new ISkinDye[5 * ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE];
             for (int skinIndex = 0; skinIndex < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
-                dyes[0 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
-                dyes[1 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
-                dyes[2 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
-                dyes[3 + skinIndex * 4] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
+                dyes[0 + skinIndex * 5] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinHead, skinIndex);
+                dyes[1 + skinIndex * 5] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinChest, skinIndex);
+                dyes[2 + skinIndex * 5] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinLegs, skinIndex);
+                dyes[3 + skinIndex * 5] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinFeet, skinIndex);
+                dyes[4 + skinIndex * 5] = SkinModelRenderer.INSTANCE.getPlayerDyeData(player, SkinTypeRegistry.skinOutfit, skinIndex);
             }
             
             textureInfo.updateSkins(skins);

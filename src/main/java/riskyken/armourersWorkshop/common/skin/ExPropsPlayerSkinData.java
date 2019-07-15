@@ -22,6 +22,7 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSk
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ExPropsPlayerSkinData implements IExtendedEntityProperties, IInventorySlotUpdate {
@@ -36,8 +37,9 @@ public class ExPropsPlayerSkinData implements IExtendedEntityProperties, IInvent
             SkinTypeRegistry.skinFeet,
             SkinTypeRegistry.skinSword,
             SkinTypeRegistry.skinBow,
-            SkinTypeRegistry.skinArrow,
-            SkinTypeRegistry.skinWings
+            SkinTypeRegistry.oldSkinArrow,
+            SkinTypeRegistry.skinWings,
+            SkinTypeRegistry.skinOutfit
             };
     
     private final WardrobeInventoryContainer wardrobeInventoryContainer;
@@ -85,6 +87,7 @@ public class ExPropsPlayerSkinData implements IExtendedEntityProperties, IInvent
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         if (skinPointer.getIdentifier().getSkinType() != null) {
             WardrobeInventory wi = wardrobeInventoryContainer.getInventoryForSkinType(skinPointer.getIdentifier().getSkinType());
+            
             if (wi != null) {
                 wi.setInventorySlotContents(index, stack);
             }

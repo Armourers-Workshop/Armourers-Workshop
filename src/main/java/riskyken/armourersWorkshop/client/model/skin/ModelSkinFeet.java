@@ -93,7 +93,7 @@ public class ModelSkinFeet extends AbstractModelSkin {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         GL11.glColor3f(1F, 1F, 1F);
-        if (!itemRender) {
+        if (itemRender) {
             GL11.glTranslated(0, 12 * scale, 0);
         }
         GL11.glTranslated(2 * scale, 0, 0);
@@ -112,7 +112,7 @@ public class ModelSkinFeet extends AbstractModelSkin {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         GL11.glColor3f(1F, 1F, 1F);
-        if (!itemRender) {
+        if (itemRender) {
             GL11.glTranslated(0, 12 * scale, 0);
         }
         GL11.glTranslated(-2 * scale, 0, 0);

@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
@@ -37,5 +38,11 @@ public class SkinLegsPartSkirt extends AbstractSkinPartTypeBase {
         GL11.glTranslated(2 * scale, 0, 0);
         GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IPoint3D getItemRenderOffset() {
+        return new Point3D(0, 12, 0);
     }
 }

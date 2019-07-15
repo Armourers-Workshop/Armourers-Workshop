@@ -104,7 +104,7 @@ public class ModelRendererAttachment extends ModelRenderer {
                 SkinPart partData = data.getParts().get(i);
                 if (partData.getPartType() == skinPart) {
                     GL11.glPushMatrix();
-                    if (skinType == SkinTypeRegistry.skinLegs && skinPart.getRegistryName().equals("armourers:legs.skirt")) {
+                    if (skinPart.getRegistryName().equals("armourers:legs.skirt")) {
                         GL11.glTranslatef(0, 12 * scale, 0);
                         if (player.isSneaking()) {
                             GL11.glRotatef(-30, 1, 0, 0);
