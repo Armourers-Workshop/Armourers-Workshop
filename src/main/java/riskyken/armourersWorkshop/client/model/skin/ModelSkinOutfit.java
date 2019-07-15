@@ -108,25 +108,25 @@ public class ModelSkinOutfit extends AbstractModelSkin {
                 GL11.glPopMatrix();
             }
 
-            if (part.getPartType().getPartName().equals("base")) {
+            if (part.getPartType().getRegistryName().equals("armourers:chest.base")) {
                 renderChest(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
-            } else if (part.getPartType().getPartName().equals("leftArm")) {
+            } else if (part.getPartType().getRegistryName().equals("armourers:chest.leftArm")) {
                 renderLeftArm(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading, overrideChest);
-            } else if (part.getPartType().getPartName().equals("rightArm")) {
+            } else if (part.getPartType().getRegistryName().equals("armourers:chest.rightArm")) {
                 renderRightArm(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading, overrideChest);
             }
 
-            if (part.getPartType().getPartName().equals("leftLeg")) {
+            if (part.getPartType().getRegistryName().equals("armourers:legs.leftLeg")) {
                 renderLeftLeg(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
-            } else if (part.getPartType().getPartName().equals("rightLeg")) {
+            } else if (part.getPartType().getRegistryName().equals("armourers:legs.rightLeg")) {
                 renderRightLeg(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
-            } else if (part.getPartType().getPartName().equals("skirt")) {
+            } else if (part.getPartType().getRegistryName().equals("armourers:legs.skirt")) {
                 renderSkirt(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
             }
 
-            if (part.getPartType().getPartName().equals("leftFoot")) {
+            if (part.getPartType().getRegistryName().equals("armourers:feet.leftFoot")) {
                 renderLeftFoot(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
-            } else if (part.getPartType().getPartName().equals("rightFoot")) {
+            } else if (part.getPartType().getRegistryName().equals("armourers:feet.rightFoot")) {
                 renderRightFoot(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
             }
 
@@ -134,10 +134,10 @@ public class ModelSkinOutfit extends AbstractModelSkin {
                 GL11.glRotated(28F, 1F, 0, 0);
             }
             
-            if (part.getPartType().getPartName().equals("leftWing")) {
+            if (part.getPartType().getRegistryName().equals("armourers:wings.leftWing")) {
                 renderLeftWing(part, SCALE, skinDye, extraColour, distance, angle, doLodLoading, movmentType);
             }
-            if (part.getPartType().getPartName().equals("rightWing")) {
+            if (part.getPartType().getRegistryName().equals("armourers:wings.rightWing")) {
                 renderRightWing(part, SCALE, skinDye, extraColour, distance, -angle, doLodLoading, movmentType);
             }
 
