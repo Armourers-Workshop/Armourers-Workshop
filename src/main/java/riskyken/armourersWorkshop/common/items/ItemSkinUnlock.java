@@ -25,7 +25,8 @@ public class ItemSkinUnlock extends AbstractModItem {
             SkinTypeRegistry.skinChest,
             SkinTypeRegistry.skinLegs,
             SkinTypeRegistry.skinFeet,
-            SkinTypeRegistry.skinWings
+            SkinTypeRegistry.skinWings,
+            SkinTypeRegistry.skinOutfit
             };
     
     public ItemSkinUnlock() {
@@ -49,6 +50,8 @@ public class ItemSkinUnlock extends AbstractModItem {
     IIcon iconFeet;
     @SideOnly(Side.CLIENT)
     IIcon iconWings;
+    @SideOnly(Side.CLIENT)
+    IIcon iconOutfit;
     
     @Override
     @SideOnly(Side.CLIENT)
@@ -58,6 +61,7 @@ public class ItemSkinUnlock extends AbstractModItem {
         iconLegs = register.registerIcon(LibItemResources.SKIN_UNLOCK_LEGS);
         iconFeet = register.registerIcon(LibItemResources.SKIN_UNLOCK_FEET);
         iconWings = register.registerIcon(LibItemResources.SKIN_UNLOCK_WINGS);
+        iconOutfit = register.registerIcon(LibItemResources.SKIN_UNLOCK_OUTFIT);
     }
     
     @Override
@@ -73,6 +77,8 @@ public class ItemSkinUnlock extends AbstractModItem {
             return iconFeet;
         case 4:
             return iconWings;
+        case 5:
+            return iconOutfit;
         default:
             return itemIcon;
         }

@@ -26,6 +26,7 @@ import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabbed;
 import riskyken.armourersWorkshop.client.gui.wardrobe.tab.GuiTabWardrobeColourSettings;
 import riskyken.armourersWorkshop.client.gui.wardrobe.tab.GuiTabWardrobeDisplaySettings;
+import riskyken.armourersWorkshop.client.gui.wardrobe.tab.GuiTabWardrobeOutfits;
 import riskyken.armourersWorkshop.client.gui.wardrobe.tab.GuiTabWardrobeSkins;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
@@ -44,6 +45,7 @@ public class GuiWardrobe extends GuiTabbed {
     private static final ResourceLocation TEXTURE_TAB = new ResourceLocation(LibGuiResources.WARDROBE_TABS);
     
     private final GuiTabWardrobeSkins tabSkins;
+    private final GuiTabWardrobeOutfits tabOutfits;
     private final GuiTabWardrobeDisplaySettings tabDisplaySettings;
     private final GuiTabWardrobeColourSettings tabColourSettings;
 
@@ -77,14 +79,17 @@ public class GuiWardrobe extends GuiTabbed {
         }
         
         tabSkins = new GuiTabWardrobeSkins(0, this);
-        tabDisplaySettings = new GuiTabWardrobeDisplaySettings(1, this, player, customEquipmentData, equipmentWardrobeData);
-        tabColourSettings = new GuiTabWardrobeColourSettings(2, this, player, customEquipmentData, equipmentWardrobeData);
+        tabOutfits = new GuiTabWardrobeOutfits(1, this);
+        tabDisplaySettings = new GuiTabWardrobeDisplaySettings(2, this, player, customEquipmentData, equipmentWardrobeData);
+        tabColourSettings = new GuiTabWardrobeColourSettings(3, this, player, customEquipmentData, equipmentWardrobeData);
         
         tabList.add(tabSkins);
+        tabList.add(tabOutfits);
         tabList.add(tabDisplaySettings);
         tabList.add(tabColourSettings);
         
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.skins")).setIconLocation(52, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
+        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.outfits")).setIconLocation(52 + 16 * 4, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.displaySettings")).setIconLocation(52 + 16, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.colourSettings")).setIconLocation(52 + 32, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
         
@@ -93,8 +98,20 @@ public class GuiWardrobe extends GuiTabbed {
         tabChanged();
     }
     
-    private void setSlotVisibility(boolean visible) {
-        for (int i = 0; i < ((ContainerSkinWardrobe)inventorySlots).getSkinSlots(); i++) {
+    public ContainerSkinWardrobe getContainer() {
+        return (ContainerSkinWardrobe) inventorySlots;
+}
+    
+    private void setSlotVisibilitySkins(boolean visible) {
+        setSlotVisibility(getContainer().getIndexSkinsStart(), getContainer().getIndexSkinsEnd(), visible);
+    }
+    
+    private void setSlotVisibilityOutfits(boolean visible) {
+        setSlotVisibility(getContainer().getIndexOutfitStart(), getContainer().getIndexOutfitEnd(), visible);
+    }
+    
+    private void setSlotVisibility(int start, int end, boolean visible) {
+        for (int i = start; i < end; i++) {
             Object slot = inventorySlots.inventorySlots.get(i);
             if (slot != null && slot instanceof SlotHidable) {
                 ((SlotHidable)slot).setVisible(visible);
@@ -105,7 +122,8 @@ public class GuiWardrobe extends GuiTabbed {
     @Override
     protected void tabChanged() {
         super.tabChanged();
-        setSlotVisibility(activeTab == 0);
+        setSlotVisibilitySkins(activeTab == tabSkins.getTabId());
+        setSlotVisibilityOutfits(activeTab == tabOutfits.getTabId());
     }
     
     @Override

@@ -7,18 +7,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
-import net.minecraft.util.ResourceLocation;
 import riskyken.armourersWorkshop.client.gui.controls.GuiTabPanel;
 import riskyken.armourersWorkshop.client.gui.wardrobe.GuiWardrobe;
-import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.common.inventory.ContainerSkinWardrobe;
 
 @SideOnly(Side.CLIENT)
-public class GuiTabWardrobeSkins extends GuiTabPanel {
+public class GuiTabWardrobeOutfits extends GuiTabPanel {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE);
-    
-    public GuiTabWardrobeSkins(int tabId, GuiScreen parent) {
+    // private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE);
+
+    public GuiTabWardrobeOutfits(int tabId, GuiScreen parent) {
         super(tabId, parent, false);
     }
 
@@ -32,12 +30,10 @@ public class GuiTabWardrobeSkins extends GuiTabPanel {
         //Bottom half of GUI. (player inventory)
         this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
 
-        
         int sloImageSize = 18;
         GuiContainer guiContainer = (GuiContainer) parent;
         ContainerSkinWardrobe skinWardrobe = (ContainerSkinWardrobe) guiContainer.inventorySlots;
-        
-        for (int i = skinWardrobe.getIndexSkinsStart(); i <  skinWardrobe.getIndexSkinsEnd(); i++) {
+        for (int i = skinWardrobe.getIndexOutfitStart(); i <  skinWardrobe.getIndexOutfitEnd(); i++) {
             Slot slot = (Slot) skinWardrobe.inventorySlots.get(i);
             this.drawTexturedModalRect(this.x + slot.xDisplayPosition - 1,
                     this.y + slot.yDisplayPosition - 1,

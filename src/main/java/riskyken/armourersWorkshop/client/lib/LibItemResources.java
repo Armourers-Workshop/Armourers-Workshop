@@ -23,6 +23,7 @@ public final class LibItemResources {
     public static final String SKIN_UNLOCK_LEGS = PREFIX_RESOURCE + "scrollPants";
     public static final String SKIN_UNLOCK_FEET = PREFIX_RESOURCE + "scrollFeet";
     public static final String SKIN_UNLOCK_WINGS = PREFIX_RESOURCE + "scrollWings";
+    public static final String SKIN_UNLOCK_OUTFIT = PREFIX_RESOURCE + "scrollOutfit";
     
     public static final String TEMPLATE_HEAD = PREFIX_RESOURCE + "templateHead";
     public static final String TEMPLATE_CHEST = PREFIX_RESOURCE + "templateChest";
@@ -79,5 +80,5 @@ public final class LibItemResources {
     public static final String SLOT_SKIN_AXE = PREFIX_RESOURCE + "slot/skinAxe";
     public static final String SLOT_SKIN_HOE = PREFIX_RESOURCE + "slot/skinHoe";
     public static final String SLOT_SKIN_SHOVEL = PREFIX_RESOURCE + "slot/skinShovel";
-    public static final String SLOT_SKIN_OUTFIT = PREFIX_RESOURCE + "slot/skin-outfit";
+    public static final String SLOT_SKIN_OUTFIT = PREFIX_RESOURCE + "slot/skinOutfit";
 }
