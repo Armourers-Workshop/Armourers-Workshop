@@ -252,8 +252,10 @@ inventory.armourersworkshop:skinningTable.name=Skinning Table
 inventory.armourersworkshop:dyeTable.name=Dye Table
 inventory.armourersworkshop:skinnable.name=Skinnable Block
 inventory.armourersworkshop:hologramProjector.name=Hologram Projector
+inventory.armourersworkshop:outfit_maker.name=Outfit Maker
 
 # Inventory controls
+# Skin Library
 inventory.armourersworkshop:armourLibrary.label.search=Search:
 inventory.armourersworkshop:armourLibrary.label.filename=File Name:
 inventory.armourersworkshop:armourLibrary.label.files=Files:
@@ -289,6 +291,13 @@ inventory.armourersworkshop:armourLibrary.dialog.overwrite.close=Close
 inventory.armourersworkshop:armourLibrary.dialog.overwrite.ok=OK
 inventory.armourersworkshop:armourLibrary.dialog.overwrite.overwriteFile=Overwrite file "%s"?
 
+# Outfit Maker
+inventory.armourersworkshop:outfit_maker.save=Save Outfit
+inventory.armourersworkshop:outfit_maker.load=Load Outfit
+inventory.armourersworkshop:outfit_maker.skinName=Skin Name
+inventory.armourersworkshop:outfit_maker.skinFlavour=Flavor Text
+
+# Armourer
 inventory.armourersworkshop:armourerBrain.label.itemName=Item Name:
 inventory.armourersworkshop:armourerBrain.label.skinType=Skin Type:
 inventory.armourersworkshop:armourerBrain.label.username=Username:
