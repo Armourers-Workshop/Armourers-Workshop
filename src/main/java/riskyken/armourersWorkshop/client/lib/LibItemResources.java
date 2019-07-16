@@ -25,19 +25,19 @@ public final class LibItemResources {
     public static final String SKIN_UNLOCK_WINGS = PREFIX_RESOURCE + "scrollWings";
     public static final String SKIN_UNLOCK_OUTFIT = PREFIX_RESOURCE + "scrollOutfit";
     
-    public static final String TEMPLATE_HEAD = PREFIX_RESOURCE + "templateHead";
-    public static final String TEMPLATE_CHEST = PREFIX_RESOURCE + "templateChest";
-    public static final String TEMPLATE_LEGS = PREFIX_RESOURCE + "templateLegs";
-    public static final String TEMPLATE_SKIRT = PREFIX_RESOURCE + "templateSkirt";
-    public static final String TEMPLATE_FEET = PREFIX_RESOURCE + "templateFeet";
-    public static final String TEMPLATE_WEAPON = PREFIX_RESOURCE + "templateWeapon";
-    public static final String TEMPLATE_BOW = PREFIX_RESOURCE + "templateBow";
-    public static final String TEMPLATE_ARROW = PREFIX_RESOURCE + "templateArrow";
-    public static final String TEMPLATE_WINGS = PREFIX_RESOURCE + "templateWings";
-    public static final String TEMPLATE_LOADING = PREFIX_RESOURCE + "templateLoading";
-    public static final String TEMPLATE_OUTFIT = PREFIX_RESOURCE + "templateOutfit";
+    public static final String TEMPLATE_HEAD = PREFIX_RESOURCE + "skin/template-head";
+    public static final String TEMPLATE_CHEST = PREFIX_RESOURCE + "skin/template-chest";
+    public static final String TEMPLATE_LEGS = PREFIX_RESOURCE + "skin/template-legs";
+    public static final String TEMPLATE_SKIRT = PREFIX_RESOURCE + "skin/template-skirt";
+    public static final String TEMPLATE_FEET = PREFIX_RESOURCE + "skin/template-feet";
+    public static final String TEMPLATE_ITEM = PREFIX_RESOURCE + "skin/template-";
+    public static final String TEMPLATE_BOW = PREFIX_RESOURCE + "skin/template-bow";
+    public static final String TEMPLATE_ARROW = PREFIX_RESOURCE + "skin/template-arrow";
+    public static final String TEMPLATE_WINGS = PREFIX_RESOURCE + "skin/template-wings";
+    public static final String TEMPLATE_LOADING = PREFIX_RESOURCE + "skin/template-loading";
+    public static final String TEMPLATE_OUTFIT = PREFIX_RESOURCE + "skin/template-outfit";
     
-    public static final String TEMPLATE_BLANK = PREFIX_RESOURCE + "templateBlank";
+    public static final String TEMPLATE_BLANK = PREFIX_RESOURCE + "template-blank";
     public static final String GIFT_SACK = PREFIX_RESOURCE + "giftSack";
     public static final String LINKING_TOOL = PREFIX_RESOURCE + "linkingTool";
     public static final String LINKING_TOOL_LINK = PREFIX_RESOURCE + "linkingToolLink";
@@ -66,19 +66,19 @@ public final class LibItemResources {
     public static final String PAINTBALL_GUN_TIP = PREFIX_RESOURCE + "paintball-gun-tip";
     
     //Slots
-    public static final String SLOT_SKIN_HEAD = PREFIX_RESOURCE + "slot/skinHead";
-    public static final String SLOT_SKIN_CHEST = PREFIX_RESOURCE + "slot/skinChest";
-    public static final String SLOT_SKIN_LEGS = PREFIX_RESOURCE + "slot/skinLegs";
-    public static final String SLOT_SKIN_SKIRT = PREFIX_RESOURCE + "slot/skinSkirt";
-    public static final String SLOT_SKIN_FEET = PREFIX_RESOURCE + "slot/skinFeet";
-    public static final String SLOT_SKIN_SWORD = PREFIX_RESOURCE + "slot/skinSword";
-    public static final String SLOT_SKIN_BOW = PREFIX_RESOURCE + "slot/skinBow";
-    public static final String SLOT_SKIN_ARROW = PREFIX_RESOURCE + "slot/skinArrow";
-    public static final String SLOT_SKIN_WINGS = PREFIX_RESOURCE + "slot/skinWings";
-    public static final String SLOT_DYE_BOTTLE = PREFIX_RESOURCE + "slot/dyeBottle";
-    public static final String SLOT_SKIN_PICKAXE = PREFIX_RESOURCE + "slot/skinPickaxe";
-    public static final String SLOT_SKIN_AXE = PREFIX_RESOURCE + "slot/skinAxe";
-    public static final String SLOT_SKIN_HOE = PREFIX_RESOURCE + "slot/skinHoe";
-    public static final String SLOT_SKIN_SHOVEL = PREFIX_RESOURCE + "slot/skinShovel";
-    public static final String SLOT_SKIN_OUTFIT = PREFIX_RESOURCE + "slot/skinOutfit";
+    public static final String SLOT_SKIN_HEAD = PREFIX_RESOURCE + "slot/skin-head";
+    public static final String SLOT_SKIN_CHEST = PREFIX_RESOURCE + "slot/skin-chest";
+    public static final String SLOT_SKIN_LEGS = PREFIX_RESOURCE + "slot/skin-legs";
+    public static final String SLOT_SKIN_SKIRT = PREFIX_RESOURCE + "slot/skin-skirt";
+    public static final String SLOT_SKIN_FEET = PREFIX_RESOURCE + "slot/skin-feet";
+    public static final String SLOT_SKIN_ITEM = PREFIX_RESOURCE + "slot/skin-";
+    public static final String SLOT_SKIN_BOW = PREFIX_RESOURCE + "slot/skin-bow";
+    public static final String SLOT_SKIN_ARROW = PREFIX_RESOURCE + "slot/skin-arrow";
+    public static final String SLOT_SKIN_WINGS = PREFIX_RESOURCE + "slot/skin-wings";
+    public static final String SLOT_DYE_BOTTLE = PREFIX_RESOURCE + "slot/dye-bottle";
+    public static final String SLOT_SKIN_PICKAXE = PREFIX_RESOURCE + "slot/skin-pickaxe";
+    public static final String SLOT_SKIN_AXE = PREFIX_RESOURCE + "slot/skin-axe";
+    public static final String SLOT_SKIN_HOE = PREFIX_RESOURCE + "slot/skin-hoe";
+    public static final String SLOT_SKIN_SHOVEL = PREFIX_RESOURCE + "slot/skin-shovel";
+    public static final String SLOT_SKIN_OUTFIT = PREFIX_RESOURCE + "slot/skin-outfit";
 }

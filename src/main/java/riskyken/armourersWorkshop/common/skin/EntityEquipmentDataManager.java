@@ -84,29 +84,29 @@ public final class EntityEquipmentDataManager {
                 }
             }
             if (isRenderItem(ItemOverrideType.PICKAXE, stack.getItem())) {
-                if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 1)) {
-                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 1));
+                if (equipmentData.haveEquipment(SkinTypeRegistry.skinPickaxe, 1)) {
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinPickaxe, 1));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isRenderItem(ItemOverrideType.AXE, stack.getItem())) {
-                if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 2)) {
-                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 2));
+                if (equipmentData.haveEquipment(SkinTypeRegistry.skinAxe, 2)) {
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinAxe, 2));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isRenderItem(ItemOverrideType.SHOVEL, stack.getItem())) {
-                if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 3)) {
-                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 3));
+                if (equipmentData.haveEquipment(SkinTypeRegistry.skinShovel, 3)) {
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinShovel, 3));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }
             }
             if (isRenderItem(ItemOverrideType.HOE, stack.getItem())) {
-                if (equipmentData.haveEquipment(SkinTypeRegistry.skinSword, 4)) {
-                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinSword, 4));
+                if (equipmentData.haveEquipment(SkinTypeRegistry.skinHoe, 4)) {
+                    SkinNBTHelper.addSkinPointerToStack(stack, (SkinPointer) equipmentData.getSkinPointer(SkinTypeRegistry.skinHoe, 4));
                 } else {
                     SkinNBTHelper.removeRenderIdFromStack(stack);
                 }

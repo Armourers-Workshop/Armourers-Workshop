@@ -104,10 +104,6 @@ public class ClientProxy extends CommonProxy {
     public static int renderPass;
     
     public static IIcon dyeBottleSlotIcon;
-    public static IIcon iconSkinPickaxe;
-    public static IIcon iconSkinAxe;
-    public static IIcon iconSkinHoe;
-    public static IIcon iconSkinShovel;
     
     public static boolean isJrbaClientLoaded() {
         return ModAddonManager.addonJBRAClient.isModLoaded();
@@ -209,10 +205,6 @@ public class ClientProxy extends CommonProxy {
     public void onTextureStitchEvent(TextureStitchEvent.Pre event) {
         if (event.map.getTextureType() == 1) {
             dyeBottleSlotIcon = event.map.registerIcon(LibItemResources.SLOT_DYE_BOTTLE);
-            iconSkinPickaxe = event.map.registerIcon(LibItemResources.SLOT_SKIN_PICKAXE);
-            iconSkinAxe = event.map.registerIcon(LibItemResources.SLOT_SKIN_AXE);
-            iconSkinHoe = event.map.registerIcon(LibItemResources.SLOT_SKIN_HOE);
-            iconSkinShovel = event.map.registerIcon(LibItemResources.SLOT_SKIN_SHOVEL);
         }
     }
     

@@ -11,32 +11,34 @@ import riskyken.armourersWorkshop.common.skin.type.AbstractSkinTypeBase;
 
 public class SkinItem extends AbstractSkinTypeBase {
 
+    private final String name;
     private ArrayList<ISkinPartType> skinParts;
-    
-    public SkinItem() {
+
+    public SkinItem(String name) {
+        this.name = name;
         this.skinParts = new ArrayList<ISkinPartType>();
         skinParts.add(new SkinItemPartBase(this));
     }
-    
+
     @Override
     public ArrayList<ISkinPartType> getSkinParts() {
         return this.skinParts;
     }
-    
+
     @Override
     public String getRegistryName() {
-        return "armourers:sword";
+        return "armourers:" + name.toLowerCase();
     }
-    
+
     @Override
     public String getName() {
-        return "Sword";
+        return name;
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcon(IIconRegister register) {
-        this.icon = register.registerIcon(LibItemResources.TEMPLATE_WEAPON);
-        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_SWORD);
+        this.icon = register.registerIcon(LibItemResources.TEMPLATE_ITEM + name);
+        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_ITEM + name);
     }
 }

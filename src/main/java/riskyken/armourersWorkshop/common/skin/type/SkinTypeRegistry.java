@@ -39,15 +39,20 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
     public static ISkinType skinWings;
 
     public static ISkinType skinSword;
+    public static ISkinType skinShield;
     public static ISkinType skinBow;
+
+    public static ISkinType skinPickaxe;
+    public static ISkinType skinAxe;
+    public static ISkinType skinShovel;
+    public static ISkinType skinHoe;
+    public static ISkinType skinItem;
 
     public static ISkinType skinBlock;
     public static ISkinType skinOutfit;
-    
+
     public static ISkinType oldSkinSkirt;
     public static ISkinType oldSkinArrow;
-
-    
 
     private LinkedHashMap<String, ISkinType> skinTypeMap;
     private HashMap<String, ISkinPartType> skinPartMap;
@@ -70,12 +75,19 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         skinFeet = new SkinFeet();
         skinWings = new SkinWings();
 
-        skinSword = new SkinItem();
+        skinSword = new SkinItem("Sword");
+        skinShield = new SkinItem("Shield");
         skinBow = new SkinBow();
+
+        skinPickaxe = new SkinItem("Pickaxe");
+        skinAxe = new SkinItem("Axe");
+        skinShovel = new SkinItem("Shovel");
+        skinHoe = new SkinItem("Hoe");
+        skinItem = new SkinItem("Item");
 
         skinBlock = new SkinBlock();
         skinOutfit = new SkinOutfit(skinHead, skinChest, skinLegs, skinFeet, skinWings);
-        
+
         oldSkinSkirt = new SkinSkirt();
         oldSkinArrow = new SkinArrow();
 
@@ -86,7 +98,14 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
         registerSkin(skinWings);
 
         registerSkin(skinSword);
+        registerSkin(skinShield);
         registerSkin(skinBow);
+
+        registerSkin(skinPickaxe);
+        registerSkin(skinAxe);
+        registerSkin(skinShovel);
+        registerSkin(skinHoe);
+        registerSkin(skinItem);
 
         registerSkin(skinBlock);
         registerSkin(skinOutfit);

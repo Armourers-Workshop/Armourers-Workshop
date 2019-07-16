@@ -8,8 +8,6 @@ import net.minecraft.util.IIcon;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
-import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class SlotSkin extends SlotHidable {
@@ -36,17 +34,6 @@ public class SlotSkin extends SlotHidable {
     @SideOnly(Side.CLIENT)
     @Override
     public IIcon getBackgroundIconIndex() {
-        if (skinType == SkinTypeRegistry.skinSword & getSlotIndex() > 0) {
-            if (getSlotIndex() == 1) {
-                return ClientProxy.iconSkinPickaxe;
-            } else if (getSlotIndex() == 2) {
-                return ClientProxy.iconSkinAxe;
-            } else if (getSlotIndex() == 3) {
-                return ClientProxy.iconSkinShovel;
-            } else if (getSlotIndex() == 4) {
-                return ClientProxy.iconSkinHoe;
-            }
-        }
         if (this.skinType != null) {
             return this.skinType.getEmptySlotIcon();
         }

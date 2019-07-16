@@ -36,9 +36,17 @@ public class ContainerSkinWardrobe extends Container {
         WardrobeInventory chestInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinChest);
         WardrobeInventory legsInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinLegs);
         WardrobeInventory feetInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinFeet);
-        WardrobeInventory swordInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinSword);
-        WardrobeInventory bowInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinBow);
         WardrobeInventory wingInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinWings);
+        
+        WardrobeInventory swordInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinSword);
+        WardrobeInventory shieldInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinShield);
+        WardrobeInventory bowInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinBow);
+
+        WardrobeInventory pickaxeInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinPickaxe);
+        WardrobeInventory axeInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinAxe);
+        WardrobeInventory shovelInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinShovel);
+        WardrobeInventory hoeInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinHoe);
+
         WardrobeInventory outfitInv = wardrobeInvContainer.getInventoryForSkinType(SkinTypeRegistry.skinOutfit);
 
         for (int i = 0; i < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; i++) {
@@ -68,10 +76,10 @@ public class ContainerSkinWardrobe extends Container {
         // addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShield, shieldInv, 0, 8, 113));
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinBow, bowInv, 0, 28, 113));
 
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 1, 48, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 2, 68, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 3, 88, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinSword, swordInv, 4, 108, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinPickaxe, swordInv, 1, 48, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinAxe, swordInv, 2, 68, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShovel, swordInv, 3, 88, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHoe, swordInv, 4, 108, 113));
         indexSkinsEnd += 6;
 
         indexOutfitStart = indexSkinsEnd;
