@@ -38,7 +38,7 @@ public class SkinItem extends AbstractSkinTypeBase {
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcon(IIconRegister register) {
-        this.icon = register.registerIcon(LibItemResources.TEMPLATE_ITEM + name);
-        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_ITEM + name);
+        this.icon = register.registerIcon(LibItemResources.TEMPLATE_ITEM + name.toLowerCase());
+        this.emptySlotIcon = register.registerIcon(LibItemResources.SLOT_SKIN_ITEM + name.toLowerCase());
     }
 }
