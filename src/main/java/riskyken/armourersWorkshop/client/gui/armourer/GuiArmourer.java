@@ -141,6 +141,7 @@ public class GuiArmourer extends GuiTabbed implements IDialogCallback {
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
         GuiHelper.renderLocalizedGuiName(fontRendererObj, this.xSize, tileEntity.getInventoryName());
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);

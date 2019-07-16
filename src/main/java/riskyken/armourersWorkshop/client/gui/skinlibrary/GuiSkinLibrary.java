@@ -899,6 +899,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         String filesLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.files");
         String filenameLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.filename");
         String searchLabel = GuiHelper.getLocalizedControlName(armourLibrary.getInventoryName(), "label.search");
+        dropDownList.drawForeground(mc, mouseX, mouseY, 0);
         /*
         this.fontRendererObj.drawString(filesLabel, 7, 55, 4210752);
         this.fontRendererObj.drawString(filenameLabel, 152, 27, 4210752);

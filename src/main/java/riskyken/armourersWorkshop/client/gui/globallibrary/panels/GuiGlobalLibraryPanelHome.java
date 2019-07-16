@@ -159,7 +159,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
         if (button == buttonShowAll) {
             ((GuiGlobalLibrary) parent).panelSearchResults.clearResults();
             ((GuiGlobalLibrary) parent).switchScreen(Screen.SEARCH);
-            ((GuiGlobalLibrary) parent).panelSearchResults.doSearch("");
+            ((GuiGlobalLibrary) parent).panelSearchResults.doSearch("", null);
         }
         if (button == skinPanelRecentlyUploaded | button == skinPanelMostDownloaded | button == skinPanelMostLiked) {
             SkinIcon skinIcon = ((GuiControlSkinPanel) button).getLastPressedSkinIcon();

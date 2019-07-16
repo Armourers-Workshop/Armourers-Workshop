@@ -66,9 +66,10 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         downloadedPageList = new HashSet<Integer>();
     }
 
-    public void doSearch(String search) {
+    public void doSearch(String search, ISkinType skinType) {
         clearResults();
         this.search = search;
+        this.skinType = skinType;
         if (this.search == null) {
             return;
         }
@@ -88,9 +89,10 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
 
     protected void resize() {
         String thisSearch = search;
+        ISkinType thisSkinType = skinType;
         int thisPage = currentPageIndex;
         clearResults();
-        doSearch(thisSearch);
+        doSearch(thisSearch, thisSkinType);
     }
 
     protected void fetchPage(int pageIndex) {

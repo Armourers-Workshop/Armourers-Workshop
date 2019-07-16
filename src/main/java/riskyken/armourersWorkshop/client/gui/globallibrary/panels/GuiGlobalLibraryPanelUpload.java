@@ -111,9 +111,9 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     }
     
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (!visible | !enabled) {
-            return;
+            return false;
         }
         super.mouseClicked(mouseX, mouseY, button);
         textName.mouseClicked(mouseX, mouseY, button);
@@ -130,6 +130,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
                 textDescription.setText("");
             }
         }
+        return false;
     }
     
     @Override

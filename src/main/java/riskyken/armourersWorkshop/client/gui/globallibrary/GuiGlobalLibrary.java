@@ -279,7 +279,9 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     protected void mouseClicked(int mouseX, int mouseY, int button) {
         if (!isDialogOpen()) {
             for (int i = 0; i < panelList.size(); i++) {
-                panelList.get(i).mouseClicked(mouseX, mouseY, button);
+                if (panelList.get(i).mouseClicked(mouseX, mouseY, button)) {
+                    break;
+                }
             }
         }
         super.mouseClicked(mouseX, mouseY, button);
@@ -337,6 +339,10 @@ public class GuiGlobalLibrary extends AbstractGuiDialogContainer {
     protected void drawGuiContainerBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
         for (int i = 0; i < panelList.size(); i++) {
             panelList.get(i).draw(mouseX, mouseY, partialTickTime);
+        }
+        
+        for (int i = 0; i < panelList.size(); i++) {
+            panelList.get(i).drawForeground(mouseX, mouseY, partialTickTime);
         }
     }
 

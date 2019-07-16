@@ -132,9 +132,9 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
     }
     
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
+    public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (!visible | !enabled) {
-            return;
+            return false;
         }
         super.mouseClicked(mouseX, mouseY, button);
         textBetaCode.mouseClicked(mouseX, mouseY, button);
@@ -143,6 +143,7 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
                 textBetaCode.setText("");
             }
         }
+        return false;
     }
     
     @Override
