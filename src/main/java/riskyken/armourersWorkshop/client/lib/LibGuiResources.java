@@ -19,4 +19,5 @@ public class LibGuiResources {
     public static final String HOLOGRAM_PROJECTOR_TABS = PREFIX_RESOURCE + "hologramProjectorTabs.png";
     public static final String SKINNABLE = PREFIX_RESOURCE + "skinnable.png";
     public static final String SKIN_PREVIEW = PREFIX_RESOURCE + "skinPreview.png";
+    public static final String OUTFIT_MAKER = PREFIX_RESOURCE + "outfit-maker.png";;
 }

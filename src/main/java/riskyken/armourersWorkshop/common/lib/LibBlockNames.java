@@ -21,4 +21,5 @@ public class LibBlockNames {
     public static final String DYE_TABLE = "dyeTable";
     public static final String GLOBAL_SKIN_LIBRARY = "globalSkinLibrary";
     public static final String HOLOGRAM_PROJECTOR = "hologramProjector";
+    public static final String OUTFIT_MAKER = "outfit_maker";
 }

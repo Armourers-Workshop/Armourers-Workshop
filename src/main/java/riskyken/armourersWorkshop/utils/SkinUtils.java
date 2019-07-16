@@ -16,18 +16,19 @@ import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
+import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings.MovementType;
 
 public final class SkinUtils {
-    
+
     private SkinUtils() {
     }
-    
+
     public static Skin getSkinDetectSide(ItemStack stack, boolean serverSoftLoad, boolean clientRequestSkin) {
         SkinPointer skinPointer = SkinNBTHelper.getSkinPointerFromStack(stack);
         return getSkinDetectSide(skinPointer, serverSoftLoad, clientRequestSkin);
     }
-    
+
     public static Skin getSkinDetectSide(SkinPointer skinPointer, boolean serverSoftLoad, boolean clientRequestSkin) {
         if (skinPointer != null) {
             SkinIdentifier skinIdentifier = skinPointer.getIdentifier();
@@ -35,7 +36,7 @@ public final class SkinUtils {
         }
         return null;
     }
-    
+
     public static Skin getSkinDetectSide(SkinIdentifier skinIdentifier, boolean serverSoftLoad, boolean clientRequestSkin) {
         if (skinIdentifier != null) {
             if (ArmourersWorkshop.isDedicated()) {
@@ -47,7 +48,7 @@ public final class SkinUtils {
         }
         return null;
     }
-    
+
     public static Skin getSkinForSide(SkinIdentifier skinIdentifier, Side side, boolean softLoad, boolean requestSkin) {
         if (side == Side.CLIENT) {
             return getSkinOnClient(skinIdentifier, requestSkin);
@@ -55,7 +56,7 @@ public final class SkinUtils {
             return getSkinOnServer(skinIdentifier, softLoad);
         }
     }
-    
+
     private static Skin getSkinOnServer(SkinIdentifier skinIdentifier, boolean softLoad) {
         if (softLoad) {
             return CommonSkinCache.INSTANCE.softGetSkin(skinIdentifier);
@@ -63,12 +64,12 @@ public final class SkinUtils {
             return CommonSkinCache.INSTANCE.getSkin(skinIdentifier);
         }
     }
-    
+
     @SideOnly(Side.CLIENT)
     private static Skin getSkinOnClient(SkinIdentifier skinIdentifier, boolean requestSkin) {
         return ClientSkinCache.INSTANCE.getSkin(skinIdentifier, requestSkin);
     }
-    
+
     public static Skin copySkin(Skin skin) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         SkinIOUtils.saveSkinToStream(outputStream, skin);
@@ -76,30 +77,55 @@ public final class SkinUtils {
         Skin skinCopy = SkinIOUtils.loadSkinFromStream(new ByteArrayInputStream(skinData));
         return skinCopy;
     }
-    
-    public static double getFlapAngleForWings(Entity entity, Skin skin) {
-        
+
+    private static int getSkinIndex(String partIndexProp, Skin skin, int partIndex) {
+        String[] split = partIndexProp.split(":");
+        for (int i = 0; i < split.length; i++) {
+            int count = Integer.parseInt(split[i]);
+            if (partIndex < count) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static double getFlapAngleForWings(Entity entity, Skin skin, int partIndex) {
+
         double maxAngle = SkinProperties.PROP_WINGS_MAX_ANGLE.getValue(skin.getProperties());
         double minAngle = SkinProperties.PROP_WINGS_MIN_ANGLE.getValue(skin.getProperties());
         double idleSpeed = SkinProperties.PROP_WINGS_IDLE_SPEED.getValue(skin.getProperties());
         double flyingSpeed = SkinProperties.PROP_WINGS_FLYING_SPEED.getValue(skin.getProperties());
         MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
-        
+
+        if (skin.getSkinType() == SkinTypeRegistry.skinOutfit) {
+            String partIndexProp = SkinProperties.PROP_OUTFIT_PART_INDEXS.getValue(skin.getProperties());
+            if (!partIndexProp.equals("")) {
+                int index = getSkinIndex(partIndexProp, skin, partIndex);
+                if (index != -1) {
+                    maxAngle = SkinProperties.PROP_WINGS_MAX_ANGLE.getValue(skin.getProperties(), index);
+                    minAngle = SkinProperties.PROP_WINGS_MIN_ANGLE.getValue(skin.getProperties(), index);
+                    idleSpeed = SkinProperties.PROP_WINGS_IDLE_SPEED.getValue(skin.getProperties(), index);
+                    flyingSpeed = SkinProperties.PROP_WINGS_FLYING_SPEED.getValue(skin.getProperties(), index);
+                    movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties(), index));
+                }
+            }
+        }
+
         double angle = 0;
         double flapTime = idleSpeed;
-        
+
         if (entity != null) {
             if (entity.isAirBorne) {
                 if (entity instanceof EntityPlayer) {
-                    if (((EntityPlayer)entity).capabilities.isFlying) {
+                    if (((EntityPlayer) entity).capabilities.isFlying) {
                         flapTime = flyingSpeed;
                     }
                 } else {
                     flapTime = flyingSpeed;
                 }
             }
-            
-            angle = (((double)System.currentTimeMillis() + entity.getEntityId()) % flapTime);
+
+            angle = (((double) System.currentTimeMillis() + entity.getEntityId()) % flapTime);
             if (movmentType == MovementType.EASE) {
                 angle = Math.sin(angle / flapTime * Math.PI * 2);
             }
@@ -107,14 +133,12 @@ public final class SkinUtils {
                 angle = angle / flapTime;
             }
         }
-        
 
-        
         double fullAngle = maxAngle - minAngle;
         if (movmentType == MovementType.LINEAR) {
             return fullAngle * angle;
         }
-        
+
         return -minAngle - fullAngle * ((angle + 1D) / 2);
     }
 }

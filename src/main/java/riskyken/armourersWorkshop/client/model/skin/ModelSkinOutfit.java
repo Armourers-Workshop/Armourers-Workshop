@@ -73,8 +73,6 @@ public class ModelSkinOutfit extends AbstractModelSkin {
         boolean overrideChest = SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties());
         double angle = 45D;
         MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
-        angle = SkinUtils.getFlapAngleForWings(entity, skin);
-
 
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
@@ -135,9 +133,11 @@ public class ModelSkinOutfit extends AbstractModelSkin {
             }
             
             if (part.getPartType().getRegistryName().equals("armourers:wings.leftWing")) {
+                angle = SkinUtils.getFlapAngleForWings(entity, skin, i);
                 renderLeftWing(part, SCALE, skinDye, extraColour, distance, angle, doLodLoading, movmentType);
             }
             if (part.getPartType().getRegistryName().equals("armourers:wings.rightWing")) {
+                angle = SkinUtils.getFlapAngleForWings(entity, skin, i);
                 renderRightWing(part, SCALE, skinDye, extraColour, distance, -angle, doLodLoading, movmentType);
             }
 

@@ -12,6 +12,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityHologramProjector;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMannequin;
+import riskyken.armourersWorkshop.common.tileentities.TileEntityOutfitMaker;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnableChild;
@@ -20,7 +21,7 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
 public class ModBlocks {
 
     public static Block armourerBrain;
-    //public static Block miniArmourer;
+    // public static Block miniArmourer;
     public static Block armourLibrary;
     public static Block globalSkinLibrary;
     public static Block boundingBox;
@@ -38,10 +39,11 @@ public class ModBlocks {
     public static Block skinnableChildGlowing;
     public static Block dyeTable;
     public static Block hologramProjector;
-    
+    public static Block outfitMaker;
+
     public ModBlocks() {
         armourerBrain = new BlockArmourer();
-        //miniArmourer = new BlockMiniArmourer();
+        // miniArmourer = new BlockMiniArmourer();
         armourLibrary = new BlockSkinLibrary();
         globalSkinLibrary = new BlockGlobalSkinLibrary();
         boundingBox = new BlockBoundingBox();
@@ -59,11 +61,12 @@ public class ModBlocks {
         skinnableChildGlowing = new BlockSkinnableChildGlowing();
         dyeTable = new BlockDyeTable();
         hologramProjector = new BlockHologramProjector();
+        outfitMaker = new BlockOutfitMaker();
     }
 
     public void registerTileEntities() {
         registerTileEntity(TileEntityArmourer.class, LibBlockNames.ARMOURER_BRAIN);
-        //registerTileEntity(TileEntityMiniArmourer.class, LibBlockNames.MINI_ARMOURER);
+        // registerTileEntity(TileEntityMiniArmourer.class, LibBlockNames.MINI_ARMOURER);
         registerTileEntity(TileEntitySkinLibrary.class, LibBlockNames.ARMOUR_LIBRARY);
         registerTileEntity(TileEntityGlobalSkinLibrary.class, LibBlockNames.GLOBAL_SKIN_LIBRARY);
         registerTileEntity(TileEntityColourable.class, LibBlockNames.COLOURABLE);
@@ -75,6 +78,7 @@ public class ModBlocks {
         registerTileEntity(TileEntityDyeTable.class, LibBlockNames.DYE_TABLE);
         registerTileEntity(TileEntitySkinnableChild.class, LibBlockNames.SKINNABLE_CHILD);
         registerTileEntity(TileEntityHologramProjector.class, LibBlockNames.HOLOGRAM_PROJECTOR);
+        registerTileEntity(TileEntityOutfitMaker.class, LibBlockNames.OUTFIT_MAKER);
     }
 
     private void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {

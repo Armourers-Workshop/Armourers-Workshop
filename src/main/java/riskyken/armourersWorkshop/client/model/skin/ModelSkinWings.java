@@ -59,7 +59,7 @@ public class ModelSkinWings extends AbstractModelSkin  {
             
             MovementType movmentType = MovementType.valueOf(SkinProperties.PROP_WINGS_MOVMENT_TYPE.getValue(skin.getProperties()));
             
-            angle = SkinUtils.getFlapAngleForWings(entity, skin);
+            angle = SkinUtils.getFlapAngleForWings(entity, skin, i);
             
             if (isSneak) {
                 GL11.glRotated(28F, 1F, 0, 0);

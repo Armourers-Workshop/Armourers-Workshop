@@ -45,4 +45,13 @@ public final class LibBlockResources {
     
     public static final String SKINNABLE = PREFIX_RESOURCE + "skinnable";
     public static final String CUBE = PREFIX_RESOURCE + "cube";
+
+    
+    
+    public static final String OUTFIT_MAKER_TOP = PREFIX_RESOURCE + "outfit-maker/outfit-maker-top";
+    public static final String OUTFIT_MAKER_BOTTOM = PREFIX_RESOURCE + "outfit-maker/outfit-maker-bottom";
+    public static final String OUTFIT_MAKER_SIDE_1 = PREFIX_RESOURCE + "outfit-maker/outfit-maker-front";
+    public static final String OUTFIT_MAKER_SIDE_2 = PREFIX_RESOURCE + "outfit-maker/outfit-maker-right";
+    public static final String OUTFIT_MAKER_SIDE_3 = PREFIX_RESOURCE + "outfit-maker/outfit-maker-back";
+    public static final String OUTFIT_MAKER_SIDE_4 = PREFIX_RESOURCE + "outfit-maker/outfit-maker-left";
 }
