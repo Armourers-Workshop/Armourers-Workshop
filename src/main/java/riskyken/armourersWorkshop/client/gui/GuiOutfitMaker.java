@@ -15,6 +15,7 @@ import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.common.inventory.ContainerOutfitMaker;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiButton;
+import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiOutfitMakerUpdate;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityOutfitMaker;
 
 @SideOnly(Side.CLIENT)
@@ -110,8 +111,7 @@ public class GuiOutfitMaker extends GuiContainer {
     }
 
     public void updateProperty(String sendTextName, String sendTextFlavour) {
-        // MessageClientGuiUpdateTileProperties message = new MessageClientGuiUpdateTileProperties(property);
-        // PacketHandler.networkWrapper.sendToServer(message);
+        PacketHandler.networkWrapper.sendToServer(new MessageClientGuiOutfitMakerUpdate(sendTextName, sendTextFlavour));
     }
 
     @Override
