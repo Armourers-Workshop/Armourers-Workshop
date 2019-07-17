@@ -54,8 +54,9 @@ public class ModelSkinFeet extends AbstractModelSkin {
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glEnable(GL11.GL_ALPHA_TEST);
-            if (itemRender) {
-                GL11.glTranslated(0, -12 * SCALE, 0);
+            
+            if (!itemRender) {
+                //GL11.glTranslated(0, -12 * SCALE, 0);
             }
             bipedLeftLeg.render(SCALE);
             bipedRightLeg.render(SCALE);
@@ -72,7 +73,7 @@ public class ModelSkinFeet extends AbstractModelSkin {
                 GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
                 GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F); 
             }
-
+            
             ApiRegistrar.INSTANCE.onRenderEquipmentPart(entity, part.getPartType());
             
             if (part.getPartType().getPartName().equals("leftFoot")) {
@@ -93,9 +94,7 @@ public class ModelSkinFeet extends AbstractModelSkin {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         GL11.glColor3f(1F, 1F, 1F);
-        if (itemRender) {
-            GL11.glTranslated(0, 12 * scale, 0);
-        }
+        GL11.glTranslated(0, 12 * scale, 0);
         GL11.glTranslated(2 * scale, 0, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftLeg.rotateAngleY), 0, 1, 0);
@@ -112,9 +111,7 @@ public class ModelSkinFeet extends AbstractModelSkin {
             GL11.glTranslated(0, -3 * scale, 4 * scale);
         }
         GL11.glColor3f(1F, 1F, 1F);
-        if (itemRender) {
-            GL11.glTranslated(0, 12 * scale, 0);
-        }
+        GL11.glTranslated(0, 12 * scale, 0);
         GL11.glTranslated(-2 * scale, 0, 0);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightLeg.rotateAngleY), 0, 1, 0);
