@@ -212,6 +212,17 @@ public final class SkinModelRenderer {
                         }
                     }
                 }
+                skinPointer = equipmentData.getSkinPointer(SkinTypeRegistry.skinOutfit, i);
+                if (skinPointer != null) {
+                    Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
+                    if (skin != null) {
+                        for (int j = 0; j < skin.getPartCount(); j++) {
+                            if (skin.getParts().get(j).getPartType().getPartName().equals("skirt")) {
+                                return true;
+                            }
+                        }
+                    }
+                }
             }
         }
         return false;
