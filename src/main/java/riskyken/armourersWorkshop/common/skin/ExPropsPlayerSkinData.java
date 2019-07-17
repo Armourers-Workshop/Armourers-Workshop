@@ -22,7 +22,6 @@ import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSk
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
-import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ExPropsPlayerSkinData implements IExtendedEntityProperties, IInventorySlotUpdate {
@@ -39,7 +38,11 @@ public class ExPropsPlayerSkinData implements IExtendedEntityProperties, IInvent
             SkinTypeRegistry.skinBow,
             SkinTypeRegistry.oldSkinArrow,
             SkinTypeRegistry.skinWings,
-            SkinTypeRegistry.skinOutfit
+            SkinTypeRegistry.skinOutfit,
+            SkinTypeRegistry.skinPickaxe,
+            SkinTypeRegistry.skinAxe,
+            SkinTypeRegistry.skinShovel,
+            SkinTypeRegistry.skinHoe
             };
     
     private final WardrobeInventoryContainer wardrobeInventoryContainer;

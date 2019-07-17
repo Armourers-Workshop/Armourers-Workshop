@@ -76,10 +76,10 @@ public class ContainerSkinWardrobe extends Container {
         // addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShield, shieldInv, 0, 8, 113));
         addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinBow, bowInv, 0, 28, 113));
 
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinPickaxe, swordInv, 1, 48, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinAxe, swordInv, 2, 68, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShovel, swordInv, 3, 88, 113));
-        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHoe, swordInv, 4, 108, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinPickaxe, pickaxeInv, 0, 48, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinAxe, axeInv, 0, 68, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinShovel, shovelInv, 0, 88, 113));
+        addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinHoe, hoeInv, 0, 108, 113));
         indexSkinsEnd += 6;
 
         indexOutfitStart = indexSkinsEnd;
