@@ -54,6 +54,7 @@ tile.armourersworkshop:skinningTable.name=Skinning Table
 tile.armourersworkshop:dyeTable.name=Dye Table
 tile.armourersworkshop:skinnable.name=Skinnable Block
 tile.armourersworkshop:hologramProjector.name=Hologram Projector
+tile.armourersworkshop:outfit_maker.name=Outfit Maker
 
 # Block flavour text
 tile.armourersworkshop:armourerBrain.flavour=Lets you build equipment skins.
@@ -68,6 +69,7 @@ tile.armourersworkshop:colourMixer.flavour=Mix up colours to paint your equipmen
 tile.armourersworkshop:mannequin.flavour=Show your equipment off with a creepy mannequin!%nRight click with a name tag to set a skin.
 tile.armourersworkshop:doll.flavour=Mini mannequin!
 tile.armourersworkshop:skinningTable.flavour=Apply and remove skins from items.
+tile.armourersworkshop:outfit_maker.flavour=Use to combine multiple skins into one.
 
 # Item names
 item.armourersworkshop:equipmentSkinTemplate.0.name=Equipment Skin Template
