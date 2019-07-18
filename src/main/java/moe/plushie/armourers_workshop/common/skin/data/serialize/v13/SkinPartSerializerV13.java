@@ -25,44 +25,28 @@ public final class SkinPartSerializerV13 {
         ISkinPartType skinPart = null;
         SkinCubeData cubeData = null;
         ArrayList<CubeMarkerData> markerBlocks = null;
-        if (version < 6) {
-            skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromLegacyId(stream.readByte());
-            if (skinPart == null) {
-                ModLogger.log(Level.ERROR, "Skin part was null");
-                throw new IOException("Skin part was null");
-            }
-        } else {
-            String regName = null;
-            if (version > 12) {
-                regName = StreamUtils.readString(stream, Charsets.US_ASCII);
-            } else {
-                regName = stream.readUTF();
-            }
-            if (regName.equals("armourers:skirt.base")) {
-                regName = "armourers:legs.skirt";
-            }
-            if (regName.equals("armourers:bow.base")) {
-                regName = "armourers:bow.frame1";
-            }
-            if (regName.equals("armourers:arrow.base")) {
-                regName = "armourers:bow.arrow";
-            }
-            skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(regName);
-            
-            if (skinPart == null) {
-                ModLogger.log(Level.ERROR, "Skin part was null - reg name: " + regName + " version: " + version);
-                throw new IOException("Skin part was null - reg name: " + regName + " version: " + version);
-            }
+        String regName = StreamUtils.readString(stream, Charsets.US_ASCII);
+        if (regName.equals("armourers:skirt.base")) {
+            regName = "armourers:legs.skirt";
+        }
+        if (regName.equals("armourers:bow.base")) {
+            regName = "armourers:bow.frame1";
+        }
+        if (regName.equals("armourers:arrow.base")) {
+            regName = "armourers:bow.arrow";
+        }
+        skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(regName);
+        if (skinPart == null) {
+            ModLogger.log(Level.ERROR, "Skin part was null - reg name: " + regName + " version: " + version);
+            throw new IOException("Skin part was null - reg name: " + regName + " version: " + version);
         }
         
         cubeData = new SkinCubeData();
         cubeData.readFromStream(stream, version, skinPart);
         markerBlocks = new ArrayList<CubeMarkerData>();
-        if (version > 8) {
-            int markerCount = stream.readInt();
-            for (int i = 0; i < markerCount; i++) {
-                markerBlocks.add(new CubeMarkerData(stream, version));
-            }
+        int markerCount = stream.readInt();
+        for (int i = 0; i < markerCount; i++) {
+            markerBlocks.add(new CubeMarkerData(stream, version));
         }
         return new SkinPart(cubeData, skinPart, markerBlocks);
     }
