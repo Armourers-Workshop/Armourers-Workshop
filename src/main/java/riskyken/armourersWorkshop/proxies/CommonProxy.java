@@ -41,15 +41,15 @@ import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGu
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand.SkinLibraryCommand;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
-import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
-import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.skin.SkinExtractor;
 import riskyken.armourersWorkshop.common.skin.cache.CommonSkinCache;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeRegistry;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.update.UpdateCheck;
+import riskyken.armourersWorkshop.common.wardrobe.EntityEquipmentData;
+import riskyken.armourersWorkshop.common.wardrobe.EntityEquipmentDataManager;
+import riskyken.armourersWorkshop.common.wardrobe.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 

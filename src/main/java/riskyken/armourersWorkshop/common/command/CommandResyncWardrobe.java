@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
+import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
 
 public class CommandResyncWardrobe extends ModCommand {
 

@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.entity;
+package riskyken.armourersWorkshop.common.wardrobe.entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,9 +26,9 @@ import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.library.ILibraryManager;
 import riskyken.armourersWorkshop.common.library.LibraryFile;
 import riskyken.armourersWorkshop.common.library.LibraryFileList;
-import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.wardrobe.EntityEquipmentData;
 import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 import riskyken.armourersWorkshop.utils.UtilItems;

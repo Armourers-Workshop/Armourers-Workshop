@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
+import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.utils.NBTHelper;
 
 public class WardrobeInventory implements IInventory {

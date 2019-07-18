@@ -4,9 +4,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.addons.ModAddon.ItemOverrideType;
-import riskyken.armourersWorkshop.common.skin.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.wardrobe.EntityEquipmentDataManager;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class RecipeSkinSword extends RecipeItemSkinning {

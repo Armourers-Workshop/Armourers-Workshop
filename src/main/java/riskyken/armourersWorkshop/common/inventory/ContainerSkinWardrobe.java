@@ -9,9 +9,9 @@ import net.minecraft.item.ItemStack;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotHidable;
 import riskyken.armourersWorkshop.common.inventory.slot.SlotSkin;
 import riskyken.armourersWorkshop.common.items.ItemSkin;
-import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.wardrobe.EquipmentWardrobeData;
+import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ContainerSkinWardrobe extends Container {

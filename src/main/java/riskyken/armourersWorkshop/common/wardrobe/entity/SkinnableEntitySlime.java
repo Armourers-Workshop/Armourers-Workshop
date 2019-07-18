@@ -1,28 +1,28 @@
-package riskyken.armourersWorkshop.common.skin.entity;
+package riskyken.armourersWorkshop.common.wardrobe.entity;
 
 import java.util.ArrayList;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityGhast;
+import net.minecraft.entity.monster.EntitySlime;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
 import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
-import riskyken.armourersWorkshop.client.render.entity.SkinnableEntityGhastRenderer;
+import riskyken.armourersWorkshop.client.render.entity.SkinnableEntitySlimeRenderer;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 
-public class SkinnableEntityGhast implements ISkinnableEntity {
+public class SkinnableEntitySlime implements ISkinnableEntity {
 
     @Override
     public Class<? extends EntityLivingBase> getEntityClass() {
-        return EntityGhast.class;
+        return EntitySlime.class;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public Class<? extends ISkinnableEntityRenderer> getRendererClass() {
-        return SkinnableEntityGhastRenderer.class;
+        return SkinnableEntitySlimeRenderer.class;
     }
 
     @Override

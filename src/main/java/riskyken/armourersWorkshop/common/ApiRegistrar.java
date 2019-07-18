@@ -15,8 +15,8 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.handler.EquipmentRenderHandler;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.handler.SkinDataHandler;
-import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.wardrobe.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 import com.mojang.authlib.GameProfile;

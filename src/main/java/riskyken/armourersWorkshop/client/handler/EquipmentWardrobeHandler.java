@@ -16,8 +16,8 @@ import net.minecraftforge.common.util.FakePlayer;
 import riskyken.armourersWorkshop.client.render.MannequinFakePlayer;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
-import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
+import riskyken.armourersWorkshop.common.wardrobe.EquipmentWardrobeData;
+import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 @SideOnly(Side.CLIENT)

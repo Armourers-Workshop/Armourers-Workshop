@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.entity;
+package riskyken.armourersWorkshop.common.wardrobe.entity;
 
 import java.util.ArrayList;
 
@@ -16,8 +16,8 @@ import riskyken.armourersWorkshop.common.inventory.IInventorySlotUpdate;
 import riskyken.armourersWorkshop.common.inventory.InventoryEntitySkin;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.server.MessageServerEntitySkinData;
-import riskyken.armourersWorkshop.common.skin.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.wardrobe.EntityEquipmentData;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ExPropsEntityEquipmentData implements IExtendedEntityProperties, IInventorySlotUpdate {

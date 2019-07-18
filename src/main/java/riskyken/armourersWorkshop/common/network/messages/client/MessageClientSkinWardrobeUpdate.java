@@ -4,8 +4,8 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
+import riskyken.armourersWorkshop.common.wardrobe.EquipmentWardrobeData;
+import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
 
 /**
  * Sent from the client to the server when a player

@@ -17,8 +17,8 @@ import riskyken.armourersWorkshop.client.gui.wardrobe.GuiWardrobe;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
-import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
+import riskyken.armourersWorkshop.common.wardrobe.EquipmentWardrobeData;
+import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
 
 @SideOnly(Side.CLIENT)
 public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {

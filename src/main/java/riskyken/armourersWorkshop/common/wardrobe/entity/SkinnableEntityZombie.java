@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin.entity;
+package riskyken.armourersWorkshop.common.wardrobe.entity;
 
 import java.util.ArrayList;
 

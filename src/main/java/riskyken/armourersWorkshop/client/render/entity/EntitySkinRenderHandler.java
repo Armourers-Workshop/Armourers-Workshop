@@ -14,8 +14,8 @@ import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.api.client.render.entity.ISkinnableEntityRenderer;
 import riskyken.armourersWorkshop.api.common.skin.entity.ISkinnableEntity;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
-import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
-import riskyken.armourersWorkshop.common.skin.entity.ExPropsEntityEquipmentData;
+import riskyken.armourersWorkshop.common.wardrobe.entity.EntitySkinHandler;
+import riskyken.armourersWorkshop.common.wardrobe.entity.ExPropsEntityEquipmentData;
 
 @SideOnly(Side.CLIENT)
 public final class EntitySkinRenderHandler {

@@ -20,8 +20,8 @@ import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
-import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
+import riskyken.armourersWorkshop.common.wardrobe.EquipmentWardrobeData;
+import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 @SideOnly(Side.CLIENT)

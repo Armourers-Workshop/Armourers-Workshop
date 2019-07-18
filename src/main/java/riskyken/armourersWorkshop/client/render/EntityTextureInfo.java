@@ -18,11 +18,11 @@ import riskyken.armourersWorkshop.client.model.bake.ColouredFace;
 import riskyken.armourersWorkshop.common.SkinHelper;
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.painting.PaintType;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.utils.BitwiseUtils;
 
 public class EntityTextureInfo {

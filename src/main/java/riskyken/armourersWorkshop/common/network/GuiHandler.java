@@ -44,9 +44,7 @@ import riskyken.armourersWorkshop.common.inventory.ContainerSkinningTable;
 import riskyken.armourersWorkshop.common.items.ModItems;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.painting.tool.IConfigurableTool;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.entity.ExPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityArmourer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityColourMixer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityDyeTable;
@@ -58,6 +56,8 @@ import riskyken.armourersWorkshop.common.tileentities.TileEntityOutfitMaker;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinLibrary;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinningTable;
+import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
+import riskyken.armourersWorkshop.common.wardrobe.entity.ExPropsEntityEquipmentData;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class GuiHandler implements IGuiHandler {

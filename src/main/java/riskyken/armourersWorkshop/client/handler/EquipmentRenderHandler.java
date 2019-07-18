@@ -16,10 +16,10 @@ import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
-import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
+import riskyken.armourersWorkshop.common.wardrobe.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 

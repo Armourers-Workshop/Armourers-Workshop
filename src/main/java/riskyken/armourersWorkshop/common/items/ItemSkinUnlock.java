@@ -15,8 +15,8 @@ import net.minecraft.world.World;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
 
 public class ItemSkinUnlock extends AbstractModItem {
 

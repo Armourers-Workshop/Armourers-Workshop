@@ -9,7 +9,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import riskyken.armourersWorkshop.common.config.ConfigHandler;
 import riskyken.armourersWorkshop.common.items.ModItems;
-import riskyken.armourersWorkshop.common.skin.ExPropsPlayerSkinData;
+import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
 
 public final class HolidayHelper {
     

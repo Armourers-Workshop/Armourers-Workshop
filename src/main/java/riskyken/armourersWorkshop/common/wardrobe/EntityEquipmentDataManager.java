@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin;
+package riskyken.armourersWorkshop.common.wardrobe;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

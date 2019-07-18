@@ -1,4 +1,4 @@
-package riskyken.armourersWorkshop.common.skin;
+package riskyken.armourersWorkshop.common.wardrobe;
 
 import java.util.ArrayList;
 import java.util.BitSet;

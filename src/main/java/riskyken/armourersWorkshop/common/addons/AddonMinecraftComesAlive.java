@@ -21,8 +21,8 @@ import riskyken.armourersWorkshop.client.model.skin.AbstractModelSkin;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
+import riskyken.armourersWorkshop.common.wardrobe.entity.EntitySkinHandler;
 
 public class AddonMinecraftComesAlive extends ModAddon {
 

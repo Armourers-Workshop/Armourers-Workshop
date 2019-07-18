@@ -12,7 +12,7 @@ import riskyken.armourersWorkshop.ArmourersWorkshop;
 import riskyken.armourersWorkshop.client.lib.LibItemResources;
 import riskyken.armourersWorkshop.common.lib.LibGuiIds;
 import riskyken.armourersWorkshop.common.lib.LibItemNames;
-import riskyken.armourersWorkshop.common.skin.entity.EntitySkinHandler;
+import riskyken.armourersWorkshop.common.wardrobe.entity.EntitySkinHandler;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class ItemWandOfStyle extends AbstractModItem {

@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
-import riskyken.armourersWorkshop.common.skin.EquipmentWardrobeData;
+import riskyken.armourersWorkshop.common.wardrobe.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public final class PaintingHelper {
