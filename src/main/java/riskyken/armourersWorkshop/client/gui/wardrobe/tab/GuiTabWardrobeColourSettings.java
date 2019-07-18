@@ -43,8 +43,8 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
 
     private Color colourSkin;
     private Color colourHair;
-    private Color colourEye;
-    private Color colourMisc;
+    // private Color colourEye;
+    // private Color colourMisc;
 
     private GuiButtonExt selectSkinButton;
     private GuiButtonExt autoSkinButton;
@@ -57,10 +57,10 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     private GuiIconButton buttonHairSelect;
     private GuiIconButton buttonHairAuto;
 
-    private GuiIconButton buttonEyeSelect;
-    private GuiIconButton buttonEyeAuto;
+    // private GuiIconButton buttonEyeSelect;
+    // private GuiIconButton buttonEyeAuto;
 
-    private GuiIconButton buttonMiscSelect;
+    // private GuiIconButton buttonMiscSelect;
 
     String guiName = "equipmentWardrobe";
 
@@ -81,10 +81,10 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         buttonHairSelect = new GuiIconButton(parent, 0, 159 + 18, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectHair"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
         buttonHairAuto = new GuiIconButton(parent, 0, 159 + 40, 38 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoHair"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
 
-        buttonEyeSelect = new GuiIconButton(parent, 0, 83 + 18, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectEye"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
-        buttonEyeAuto = new GuiIconButton(parent, 0, 83 + 40, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoEye"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
+        // buttonEyeSelect = new GuiIconButton(parent, 0, 83 + 18, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectEye"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
+        // buttonEyeAuto = new GuiIconButton(parent, 0, 83 + 40, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "autoEye"), TEXTURE).setIconLocation(238, 76, 18, 18).setHorizontal(false);
 
-        buttonMiscSelect = new GuiIconButton(parent, 0, 159 + 18, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectAcc"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
+        // buttonMiscSelect = new GuiIconButton(parent, 0, 159 + 18, 70 - 2, 18, 18, GuiHelper.getLocalizedControlName(guiName, "selectAcc"), TEXTURE).setIconLocation(238, 0, 18, 18).setHorizontal(false);
 
         buttonList.add(buttonSkinSelect);
         buttonList.add(buttonSkinAuto);
@@ -92,18 +92,18 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         buttonList.add(buttonHairSelect);
         buttonList.add(buttonHairAuto);
 
-        buttonList.add(buttonEyeSelect);
-        buttonList.add(buttonEyeAuto);
+        // buttonList.add(buttonEyeSelect);
+        // buttonList.add(buttonEyeAuto);
 
-        buttonList.add(buttonMiscSelect);
+        // buttonList.add(buttonMiscSelect);
     }
 
     private void getColours() {
         ExtraColours extraColours = propsPlayerSkinData.getEquipmentWardrobeData().getExtraColours();
         this.colourSkin = new Color(extraColours.getColour(ExtraColourType.SKIN));
         this.colourHair = new Color(extraColours.getColour(ExtraColourType.HAIR));
-        this.colourEye = new Color(extraColours.getColour(ExtraColourType.EYE));
-        this.colourMisc = new Color(extraColours.getColour(ExtraColourType.MISC));
+        // this.colourEye = new Color(extraColours.getColour(ExtraColourType.EYE));
+        // this.colourMisc = new Color(extraColours.getColour(ExtraColourType.MISC));
     }
 
     @Override
@@ -117,8 +117,8 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
             selectingColourType = null;
             buttonSkinSelect.setPressed(false);
             buttonHairSelect.setPressed(false);
-            buttonEyeSelect.setPressed(false);
-            buttonMiscSelect.setPressed(false);
+            // buttonEyeSelect.setPressed(false);
+            // buttonMiscSelect.setPressed(false);
         }
         super.mouseClicked(mouseX, mouseY, button);
     }
@@ -133,14 +133,14 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
             selectingColourType = ExtraColourType.HAIR;
             buttonHairSelect.setPressed(true);
         }
-        if (button == buttonEyeSelect) {
-            selectingColourType = ExtraColourType.EYE;
-            buttonEyeSelect.setPressed(true);
-        }
-        if (button == buttonMiscSelect) {
-            selectingColourType = ExtraColourType.MISC;
-            buttonMiscSelect.setPressed(true);
-        }
+        // if (button == buttonEyeSelect) {
+        // selectingColourType = ExtraColourType.EYE;
+        // buttonEyeSelect.setPressed(true);
+        // }
+        // if (button == buttonMiscSelect) {
+        // selectingColourType = ExtraColourType.MISC;
+        // buttonMiscSelect.setPressed(true);
+        // }
 
         if (button == buttonSkinAuto) {
             EquipmentWardrobeData ewd = new EquipmentWardrobeData(this.equipmentWardrobeData);
@@ -156,12 +156,12 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
             PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(ewd));
         }
 
-        if (button == buttonEyeAuto) {
-            EquipmentWardrobeData ewd = new EquipmentWardrobeData(this.equipmentWardrobeData);
-            int newEyeColour = autoColour((AbstractClientPlayer) this.entityPlayer, ExtraColourType.EYE);
-            ewd.getExtraColours().setColour(ExtraColourType.EYE, newEyeColour);
-            PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(ewd));
-        }
+        // if (button == buttonEyeAuto) {
+        // EquipmentWardrobeData ewd = new EquipmentWardrobeData(this.equipmentWardrobeData);
+        // int newEyeColour = autoColour((AbstractClientPlayer) this.entityPlayer, ExtraColourType.EYE);
+        // ewd.getExtraColours().setColour(ExtraColourType.EYE, newEyeColour);
+        // PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(ewd));
+        // }
     }
 
     @Override
@@ -180,10 +180,10 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         drawColourDisplay(159, 38, colourHair);
 
         // Eye colour display
-        drawColourDisplay(83, 70, colourEye);
+        // drawColourDisplay(83, 70, colourEye);
 
         // Acc colour display
-        drawColourDisplay(159, 70, colourMisc);
+        // drawColourDisplay(159, 70, colourMisc);
 
         // Palette
         mc.renderEngine.bindTexture(TEXTURE);
@@ -214,8 +214,8 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.skinColour") + ":", 83, 26, 4210752);
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.hairColour") + ":", 159, 26, 4210752);
 
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 83, 58, 4210752);
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.miscColour") + ":", 159, 58, 4210752);
+        //fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 83, 58, 4210752);
+        //fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.miscColour") + ":", 159, 58, 4210752);
 
         getColours();
 
@@ -225,12 +225,12 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         if (selectingColourType == ExtraColourType.HAIR & selectingColour != null) {
             colourHair = selectingColour;
         }
-        if (selectingColourType == ExtraColourType.EYE & selectingColour != null) {
-            colourEye = selectingColour;
-        }
-        if (selectingColourType == ExtraColourType.MISC & selectingColour != null) {
-            colourMisc = selectingColour;
-        }
+        // if (selectingColourType == ExtraColourType.EYE & selectingColour != null) {
+        // colourEye = selectingColour;
+        // }
+        // if (selectingColourType == ExtraColourType.MISC & selectingColour != null) {
+        // colourMisc = selectingColour;
+        // }
 
         GL11.glPushMatrix();
         GL11.glTranslated(-x, -y, 0);
