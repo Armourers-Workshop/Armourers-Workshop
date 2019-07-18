@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.wardrobe.EquipmentWardrobeData;
+import riskyken.armourersWorkshop.common.wardrobe.ExtraColours.ExtraColourType;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 public final class PaintingHelper {
@@ -147,7 +148,7 @@ public final class PaintingHelper {
         PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().thePlayer);
         EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         if (ewd != null) {
-            return ewd.skinColour;
+            return ewd.getExtraColours().getColour(ExtraColourType.SKIN);
         }
         return Color.decode("#F9DFD2").getRGB();
     }
@@ -157,7 +158,7 @@ public final class PaintingHelper {
         PlayerPointer playerPointer = new PlayerPointer(Minecraft.getMinecraft().thePlayer);
         EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
         if (ewd != null) {
-            return ewd.hairColour;
+            return ewd.getExtraColours().getColour(ExtraColourType.HAIR);
         }
         return Color.decode("#804020").getRGB();
     }

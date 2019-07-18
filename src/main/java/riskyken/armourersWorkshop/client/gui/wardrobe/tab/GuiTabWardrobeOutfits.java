@@ -23,31 +23,29 @@ public class GuiTabWardrobeOutfits extends GuiTabPanel {
     @Override
     public void drawBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
         GL11.glColor4f(1, 1, 1, 1);
-        
-        //Top half of GUI. (active tab)
-        this.drawTexturedModalRect(this.x, this.y, 0, 0, 236, 151);
-        
-        //Bottom half of GUI. (player inventory)
-        this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
+
+        // Top half of GUI. (active tab)
+        // this.drawTexturedModalRect(this.x, this.y, 0, 0, 236, 151);
+
+        // Bottom half of GUI. (player inventory)
+        // this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
 
         int sloImageSize = 18;
         GuiContainer guiContainer = (GuiContainer) parent;
         ContainerSkinWardrobe skinWardrobe = (ContainerSkinWardrobe) guiContainer.inventorySlots;
-        for (int i = skinWardrobe.getIndexOutfitStart(); i <  skinWardrobe.getIndexOutfitEnd(); i++) {
+        for (int i = skinWardrobe.getIndexOutfitStart(); i < skinWardrobe.getIndexOutfitEnd(); i++) {
             Slot slot = (Slot) skinWardrobe.inventorySlots.get(i);
-            this.drawTexturedModalRect(this.x + slot.xDisplayPosition - 1,
-                    this.y + slot.yDisplayPosition - 1,
-                    238, 194, sloImageSize, sloImageSize);
+            this.drawTexturedModalRect(this.x + slot.xDisplayPosition - 1, this.y + slot.yDisplayPosition - 1, 238, 194, sloImageSize, sloImageSize);
         }
     }
-    
+
     @Override
     public void drawForegroundLayer(int mouseX, int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
         // Draw player preview.
         GL11.glPushMatrix();
         GL11.glTranslated(-x, -y, 0);
-        ((GuiWardrobe)parent).drawPlayerPreview(x, y, mouseX, mouseY);
+        ((GuiWardrobe) parent).drawPlayerPreview(x, y, mouseX, mouseY);
         GL11.glPopMatrix();
     }
 }

@@ -46,6 +46,7 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.wardrobe.EntityEquipmentData;
 import riskyken.armourersWorkshop.common.wardrobe.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
+import riskyken.armourersWorkshop.common.wardrobe.ExtraColours.ExtraColourType;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.proxies.ClientProxy.SkinRenderType;
 import riskyken.armourersWorkshop.utils.ModLogger;
@@ -76,12 +77,12 @@ public final class SkinModelRenderer {
     public final ModelSkinLegs customLegs = new ModelSkinLegs();
     public final ModelSkinFeet customFeet = new ModelSkinFeet();
     public final ModelSkinWings customWings = new ModelSkinWings();
-    
+
     public final ModelSkinSkirt customSkirt = new ModelSkinSkirt();
 
     public final ModelSkinSword customSword = new ModelSkinSword();
     public final ModelSkinBow customBow = new ModelSkinBow();
-    
+
     public final ModelSkinOutfit customOutfit = new ModelSkinOutfit();
 
     public EntityPlayer targetPlayer = null;
@@ -292,7 +293,7 @@ public final class SkinModelRenderer {
         modelBiped.bipedRightLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinFeet, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.rightFoot")));
         modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinWings, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:wings.leftWing")));
         modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinWings, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:wings.rightWing")));
-        
+
         modelBiped.bipedHead.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinOutfit, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:head.base")));
         modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinOutfit, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.base")));
         modelBiped.bipedLeftArm.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinOutfit, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:chest.leftArm")));
@@ -304,7 +305,7 @@ public final class SkinModelRenderer {
         modelBiped.bipedRightLeg.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinOutfit, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:feet.rightFoot")));
         modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinOutfit, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:wings.leftWing")));
         modelBiped.bipedBody.addChild(new ModelRendererAttachment(modelBiped, SkinTypeRegistry.skinOutfit, SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:wings.rightWing")));
-        
+
         ModLogger.log(String.format("Added model render attachment to %s", modelBiped.toString()));
         ModLogger.log(String.format("Using player renderer %s", renderPlayer.toString()));
     }
@@ -338,8 +339,8 @@ public final class SkinModelRenderer {
         EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(new PlayerPointer(player));
         byte[] extraColours = null;
         if (ewd != null) {
-            Color skinColour = new Color(ewd.skinColour);
-            Color hairColour = new Color(ewd.hairColour);
+            Color skinColour = new Color(ewd.getExtraColours().getColour(ExtraColourType.SKIN));
+            Color hairColour = new Color(ewd.getExtraColours().getColour(ExtraColourType.HAIR));
             extraColours = new byte[] { (byte) skinColour.getRed(), (byte) skinColour.getGreen(), (byte) skinColour.getBlue(), (byte) hairColour.getRed(), (byte) hairColour.getGreen(), (byte) hairColour.getBlue() };
         }
         GL11.glPushMatrix();

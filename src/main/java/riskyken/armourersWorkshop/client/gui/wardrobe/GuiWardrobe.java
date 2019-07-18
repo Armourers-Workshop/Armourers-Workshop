@@ -41,9 +41,10 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 @SideOnly(Side.CLIENT)
 public class GuiWardrobe extends GuiTabbed {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE);
+    private static final ResourceLocation TEXTURE_1 = new ResourceLocation(LibGuiResources.WARDROBE_1);
+    private static final ResourceLocation TEXTURE_2 = new ResourceLocation(LibGuiResources.WARDROBE_2);
     private static final ResourceLocation TEXTURE_TAB = new ResourceLocation(LibGuiResources.WARDROBE_TABS);
-    
+
     private final GuiTabWardrobeSkins tabSkins;
     private final GuiTabWardrobeOutfits tabOutfits;
     private final GuiTabWardrobeDisplaySettings tabDisplaySettings;
@@ -52,80 +53,80 @@ public class GuiWardrobe extends GuiTabbed {
     ExPropsPlayerSkinData customEquipmentData;
     EquipmentWardrobeData equipmentWardrobeData;
     EntityPlayer player;
-    
+
     private boolean rotatingPlayer = false;
     private float playerRotation = 45F;
 
     private int lastMouseX;
     private int lastMouseY;
-    
+
     String guiName = "equipmentWardrobe";
-    
+
     public GuiWardrobe(InventoryPlayer inventory, ExPropsPlayerSkinData customEquipmentData) {
         super(new ContainerSkinWardrobe(inventory, customEquipmentData), false, TEXTURE_TAB);
-        
+
         // Tab size 21
-        this.xSize = 236;
+        this.xSize = 278;
         this.ySize = 240;
-        
+
         this.player = inventory.player;
         this.customEquipmentData = customEquipmentData;
         PlayerPointer playerPointer = new PlayerPointer(player);
         equipmentWardrobeData = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(playerPointer);
-        
+
         if (equipmentWardrobeData == null) {
             equipmentWardrobeData = new EquipmentWardrobeData();
-            ModLogger.log(Level.ERROR,"Unable to get skin info for player: " + this.player.getDisplayName());
+            ModLogger.log(Level.ERROR, "Unable to get skin info for player: " + this.player.getDisplayName());
         }
-        
+
         tabSkins = new GuiTabWardrobeSkins(0, this);
         tabOutfits = new GuiTabWardrobeOutfits(1, this);
         tabDisplaySettings = new GuiTabWardrobeDisplaySettings(2, this, player, customEquipmentData, equipmentWardrobeData);
         tabColourSettings = new GuiTabWardrobeColourSettings(3, this, player, customEquipmentData, equipmentWardrobeData);
-        
+
         tabList.add(tabSkins);
         tabList.add(tabOutfits);
         tabList.add(tabDisplaySettings);
         tabList.add(tabColourSettings);
-        
+
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.skins")).setIconLocation(52, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.outfits")).setIconLocation(52 + 16 * 4, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.displaySettings")).setIconLocation(52 + 16, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
         tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(guiName, "tab.colourSettings")).setIconLocation(52 + 32, 0).setTabTextureSize(26, 30).setPadding(0, 4, 3, 3));
-        
+
         tabController.setActiveTabIndex(activeTab);
-        
+
         tabChanged();
     }
-    
+
     public ContainerSkinWardrobe getContainer() {
         return (ContainerSkinWardrobe) inventorySlots;
-}
-    
+    }
+
     private void setSlotVisibilitySkins(boolean visible) {
         setSlotVisibility(getContainer().getIndexSkinsStart(), getContainer().getIndexSkinsEnd(), visible);
     }
-    
+
     private void setSlotVisibilityOutfits(boolean visible) {
         setSlotVisibility(getContainer().getIndexOutfitStart(), getContainer().getIndexOutfitEnd(), visible);
     }
-    
+
     private void setSlotVisibility(int start, int end, boolean visible) {
         for (int i = start; i < end; i++) {
             Object slot = inventorySlots.inventorySlots.get(i);
             if (slot != null && slot instanceof SlotHidable) {
-                ((SlotHidable)slot).setVisible(visible);
+                ((SlotHidable) slot).setVisible(visible);
             }
         }
     }
-    
+
     @Override
     protected void tabChanged() {
         super.tabChanged();
         setSlotVisibilitySkins(activeTab == tabSkins.getTabId());
         setSlotVisibilityOutfits(activeTab == tabOutfits.getTabId());
     }
-    
+
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         // Title label.
@@ -137,7 +138,7 @@ public class GuiWardrobe extends GuiTabbed {
             }
         }
         // Player inventory label.
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 36, this.ySize - 96 + 2, 4210752);
+        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 58, this.ySize - 96 + 2, 4210752);
         GL11.glPushMatrix();
         GL11.glTranslatef(-guiLeft, -guiTop, 0F);
         tabController.drawHoverText(mc, mouseX, mouseY);
@@ -146,7 +147,12 @@ public class GuiWardrobe extends GuiTabbed {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(TEXTURE);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        mc.renderEngine.bindTexture(TEXTURE_1);
+        this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, 256, 240);
+        mc.renderEngine.bindTexture(TEXTURE_2);
+        this.drawTexturedModalRect(guiLeft + 256, guiTop, 0, 0, 22, 151);
+
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == activeTab) {
@@ -165,7 +171,7 @@ public class GuiWardrobe extends GuiTabbed {
         lastMouseX = mouseX;
         lastMouseY = mouseY;
     }
-    
+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) {
         if (button == 1) {
@@ -173,7 +179,7 @@ public class GuiWardrobe extends GuiTabbed {
         }
         super.mouseClicked(mouseX, mouseY, button);
     }
-    
+
     @Override
     protected void mouseMovedOrUp(int mouseX, int mouseY, int button) {
         super.mouseMovedOrUp(mouseX, mouseY, button);
@@ -181,39 +187,31 @@ public class GuiWardrobe extends GuiTabbed {
             rotatingPlayer = false;
         }
     }
-    
+
     public void drawPlayerPreview(int x, int y, int mouseX, int mouseY) {
         drawPlayerPreview(x, y, mouseX, mouseY, false);
     }
-    
+
     public Color drawPlayerPreview(int x, int y, int mouseX, int mouseY, boolean selectingColour) {
         Color colour = new Color(255, 255, 255);
         // 3D player preview
-        float boxX = x + 36.5F;
-        float boxY = y + 100F;
-        float lookX = boxX - mouseX;
-        float lookY = boxY - 50 - mouseY;
-        
-        
+        float boxX = x + 42.5F;
+        float boxY = y + 125F;
+
         /*
-        drawGradientRect(
-                x + 8,
-                y + 18,
-                x + 8 + 57,
-                y + 18 + 92,
-                0xFFFFFFFF, 0xFFFFFFFF);
-        */
+         * drawGradientRect( x + 8, y + 18, x + 8 + 57, y + 18 + 92, 0xFFFFFFFF, 0xFFFFFFFF);
+         */
         boolean overPlayerBox = false;
-        if (mouseX >= x + 8 & mouseX < x + 8 + 57) {
-            if (mouseY >= y + 18 & mouseY < y + 18 + 92) {
+        if (mouseX >= x + 8 & mouseX < x + 8 + 71) {
+            if (mouseY >= y + 27 & mouseY < y + 27 + 111) {
                 overPlayerBox = true;
             }
         }
-        
+
         if (!overPlayerBox) {
-            ModRenderHelper.enableScissorScaled(x + 8, y + 18, 57, 92);
+            ModRenderHelper.enableScissorScaled(x + 8, y + 27, 71, 111);
         }
-        
+
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         GL11.glTranslatef(boxX, boxY, 50);
@@ -221,21 +219,20 @@ public class GuiWardrobe extends GuiTabbed {
         GL11.glRotatef(playerRotation, 0, 1, 0);
         GL11.glTranslatef(0, 0, -50);
         if (selectingColour) {
-            renderEntityWithoutLighting(0, 0, 35, 0, 0, this.mc.thePlayer);
+            renderEntityWithoutLighting(0, 0, 45, 0, 0, this.mc.thePlayer);
             colour = getColourAtPos(Mouse.getX(), Mouse.getY());
         }
-        GuiInventory.func_147046_a(0, 0, 35, 0, 0, this.mc.thePlayer);
+        GuiInventory.func_147046_a(0, 0, 45, 0, 0, this.mc.thePlayer);
         GL11.glPopAttrib();
         GL11.glPopMatrix();
-        
+
         if (!overPlayerBox) {
             ModRenderHelper.disableScissor();
         }
-        
-        
+
         return colour;
     }
-    
+
     private void renderEntityWithoutLighting(int xPos, int yPos, int scale, float yaw, float pitch, EntityLivingBase entity) {
         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
         GL11.glPushMatrix();
@@ -272,7 +269,7 @@ public class GuiWardrobe extends GuiTabbed {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
-    
+
     private Color getColourAtPos(int x, int y) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(3);
         GL11.glReadPixels(x, y, 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, buffer);

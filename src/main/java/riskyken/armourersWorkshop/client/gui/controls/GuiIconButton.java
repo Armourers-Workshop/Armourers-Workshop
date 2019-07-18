@@ -25,7 +25,8 @@ public class GuiIconButton extends GuiButtonExt {
     private int iconWidth;
     private int iconHeight;
     private boolean isPressed;
-    
+    private boolean horizontal = true;
+
     public GuiIconButton(GuiScreen parent, int id, int xPos, int yPos, int width, int height, String hoverText, ResourceLocation iconTexture) {
         super(id, xPos, yPos, width, height, "");
         this.parent = parent;
@@ -33,7 +34,7 @@ public class GuiIconButton extends GuiButtonExt {
         this.iconTexture = iconTexture;
         this.disableText = "";
     }
-    
+
     public GuiIconButton setIconLocation(int x, int y, int width, int height) {
         this.iconPosX = x;
         this.iconPosY = y;
@@ -41,19 +42,24 @@ public class GuiIconButton extends GuiButtonExt {
         this.iconHeight = height;
         return this;
     }
-    
+
+    public GuiIconButton setHorizontal(boolean value) {
+        this.horizontal = value;
+        return this;
+    }
+
     public void setPressed(boolean isPressed) {
         this.isPressed = isPressed;
     }
-    
+
     public boolean isPressed() {
         return isPressed;
     }
-    
+
     public void setDisableText(String disableText) {
         this.disableText = disableText;
     }
-    
+
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         super.drawButton(mc, mouseX, mouseY);
@@ -63,23 +69,38 @@ public class GuiIconButton extends GuiButtonExt {
         this.field_146123_n = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
         int hoverState = this.getHoverState(this.field_146123_n);
         GL11.glColor4f(1F, 1F, 1F, 1F);
-        int xPos = iconPosX;
+        int offsetPos = 0;
         //disabled
         if (hoverState == 0) {
-            xPos += (iconWidth + 1) * 2;
+            offsetPos += (iconWidth + 1) * 2;
         }
         //hovering
         if (hoverState == 2) {
-            xPos += iconWidth + 1;
+            offsetPos += iconWidth + 1;
         }
         if (isPressed) {
-            GL11.glColor4f(1F, 1F, 0.6F, 1F);
-            //xPos += (iconWidth + 1) * 2;
+            offsetPos += (iconWidth + 1) * 2;
         }
         mc.renderEngine.bindTexture(iconTexture);
-        drawTexturedModalRect(xPosition + width / 2 - iconWidth / 2, yPosition + height / 2 - iconHeight / 2, xPos, iconPosY, iconWidth, iconHeight);
+        if (horizontal) {
+            //drawTexturedModalRect(xPosition + width / 2 - iconWidth / 2, yPosition + height / 2 - iconHeight / 2, iconPosX + offsetPos, iconPosY, iconWidth, iconHeight);
+            
+            drawTexturedModalRect(xPosition + width / 2 - iconWidth / 2,
+                    yPosition + height / 2 - iconHeight / 2,
+                    iconPosX  + offsetPos, iconPosY,
+                    iconWidth, iconHeight);
+        } else {
+            //drawTexturedModalRect(xPosition + width / 2 - iconWidth / 2, yPosition + height / 2 - iconHeight / 2, iconPosX, iconPosY + offsetPos, iconWidth, iconHeight);
+            
+            drawTexturedModalRect(xPosition + width / 2 - iconWidth / 2,
+                    yPosition + height / 2 - iconHeight / 2,
+                    iconPosX, iconPosY + offsetPos,
+                    iconWidth,
+                    iconHeight);
+        }
+        //drawTexturedModalRect(xPosition + width / 2 - iconWidth / 2, yPosition + height / 2 - iconHeight / 2, offsetPos, iconPosY, iconWidth, iconHeight);
     }
-    
+
     public void drawRollover(Minecraft mc, int mouseX, int mouseY) {
         if (!this.visible) {
             return;

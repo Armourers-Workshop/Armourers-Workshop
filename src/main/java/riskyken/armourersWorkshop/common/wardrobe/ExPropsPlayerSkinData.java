@@ -26,7 +26,7 @@ import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class ExPropsPlayerSkinData implements IExtendedEntityProperties, IInventorySlotUpdate {
 
-    public static final int MAX_SLOTS_PER_SKIN_TYPE = 8;
+    public static final int MAX_SLOTS_PER_SKIN_TYPE = 10;
     public static final String TAG_EXT_PROP_NAME = "playerCustomEquipmentData";
     private static final String TAG_LAST_XMAS_YEAR = "lastXmasYear";
     public static final ISkinType[] validSkins = {

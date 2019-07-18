@@ -21,7 +21,9 @@ public enum PaintType {
     //STAR_FIELD(251),
     //RAINBOW(252),
     SKIN(253),
-    HAIR(254);
+    HAIR(254),
+    EYES(251),
+    MISC(252);
     
     private final int key;
     

@@ -27,6 +27,7 @@ import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings.MovementType;
 import riskyken.armourersWorkshop.common.wardrobe.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
+import riskyken.armourersWorkshop.common.wardrobe.ExtraColours.ExtraColourType;
 import riskyken.armourersWorkshop.proxies.ClientProxy;
 import riskyken.armourersWorkshop.proxies.ClientProxy.SkinRenderType;
 import riskyken.armourersWorkshop.utils.SkinUtils;
@@ -79,8 +80,8 @@ public class ModelRendererAttachment extends ModelRenderer {
         EquipmentWardrobeData ewd = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(new PlayerPointer(player));
         byte[] extraColours = null;
         if (ewd != null) {
-            Color skinColour = new Color(ewd.skinColour);
-            Color hairColour = new Color(ewd.hairColour);
+            Color skinColour = new Color(ewd.getExtraColours().getColour(ExtraColourType.SKIN));
+            Color hairColour = new Color(ewd.getExtraColours().getColour(ExtraColourType.HAIR));
             extraColours = new byte[] { (byte) skinColour.getRed(), (byte) skinColour.getGreen(), (byte) skinColour.getBlue(), (byte) hairColour.getRed(), (byte) hairColour.getGreen(), (byte) hairColour.getBlue() };
         }
 
