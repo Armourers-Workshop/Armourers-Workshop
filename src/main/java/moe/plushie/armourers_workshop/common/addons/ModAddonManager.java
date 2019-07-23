@@ -22,6 +22,7 @@ public final class ModAddonManager {
     //public static AddonBotania addonBotania;
     public static AddonBuildCraft addonBuildCraft;
     public static ModAddon addonColoredLights;
+    public static AddonCustomEntities addonCustomEntities;
     public static AddonCustomNPCS addonCustomNPCS;
     //public static AddonGlassShards addonGlassShards;
     //public static AddonIntegratedCircuits addonIntegratedCircuits;
@@ -64,6 +65,7 @@ public final class ModAddonManager {
         //addonBotania = new AddonBotania();
         addonBuildCraft = new AddonBuildCraft();
         addonColoredLights = new ModAddon("easycoloredlights", "Colored Lights");
+        addonCustomEntities = new  AddonCustomEntities();
         addonCustomNPCS = new AddonCustomNPCS();
         //addonGlassShards = new AddonGlassShards();
         //addonIntegratedCircuits = new AddonIntegratedCircuits();
