@@ -97,6 +97,10 @@ public class AddonCustomEntities extends ModAddon {
             skinTypes.add(SkinTypeRegistry.skinLegs);
             skinTypes.add(SkinTypeRegistry.skinFeet);
             skinTypes.add(SkinTypeRegistry.skinWings);
+            
+            skinTypes.add(SkinTypeRegistry.skinSword);
+            skinTypes.add(SkinTypeRegistry.skinShield);
+            skinTypes.add(SkinTypeRegistry.skinBow);
         }
 
         @Override
