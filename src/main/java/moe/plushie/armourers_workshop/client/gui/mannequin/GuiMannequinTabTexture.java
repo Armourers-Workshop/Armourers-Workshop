@@ -103,6 +103,7 @@ public class GuiMannequinTabTexture extends GuiTabPanel<GuiMannequin> implements
     public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
         super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
         nameTextbox.drawTextBox();
+        textureTypeList.drawForeground(mc, mouseX, mouseY, partialTickTime);
     }
 
     @Override
