@@ -25,6 +25,7 @@ public final class ModAddonManager {
     public static AddonCustomEntities addonCustomEntities;
     public static AddonCustomNPCS addonCustomNPCS;
     //public static AddonGlassShards addonGlassShards;
+    public static AddonHauntedAstolfoBeanPlushie addonHauntedAstolfoBeanPlushie;
     //public static AddonIntegratedCircuits addonIntegratedCircuits;
     public static AddonJBRAClient addonJBRAClient;
     //public static AddonLittleMaidMob addonLittleMaidMob;
@@ -68,6 +69,7 @@ public final class ModAddonManager {
         addonCustomEntities = new  AddonCustomEntities();
         addonCustomNPCS = new AddonCustomNPCS();
         //addonGlassShards = new AddonGlassShards();
+        addonHauntedAstolfoBeanPlushie = new AddonHauntedAstolfoBeanPlushie();
         //addonIntegratedCircuits = new AddonIntegratedCircuits();
         addonJBRAClient = new AddonJBRAClient();
         //addonLittleMaidMob = new AddonLittleMaidMob();
