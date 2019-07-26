@@ -25,6 +25,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerW
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
+import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
@@ -85,15 +86,15 @@ public class GuiWardrobe extends GuiTabbed {
                 .setPadding(0, 4, 3, 3)
                 .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabSkins | isCreative))));
         
-        
         tabOutfits = new GuiTabWardrobeOutfits(tabList.size(), this, player, skinCapability, wardrobeCapability);
-        tabList.add(tabOutfits);
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.outfits"))
-                .setIconLocation(52 + 16 * 4, 0)
-                .setTabTextureSize(26, 30)
-                .setPadding(0, 4, 3, 3)
-                .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabOutfits | isCreative))));
-        
+        if (skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinOutfit)  > 0) {
+            tabList.add(tabOutfits);
+            tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(GUI_NAME, "tab.outfits"))
+                    .setIconLocation(52 + 16 * 4, 0)
+                    .setTabTextureSize(26, 30)
+                    .setPadding(0, 4, 3, 3)
+                    .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabOutfits | isCreative))));
+        }
         
         if (isPlayer) {
             tabDisplaySetting = new GuiTabWardrobeDisplaySettings(tabList.size(), this, player, skinCapability, (IPlayerWardrobeCap) wardrobeCapability);

@@ -101,19 +101,21 @@ public class ContainerSkinWardrobe extends ModContainer {
             }
         } else {
             ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
+            int yindex = 0;
             for (int i = 0; i < skinTypes.length; i++) {
                 if (skinTypes[i] == SkinTypeRegistry.skinOutfit) {
                     continue;
                 }
-                int yindex = 0;
+                
                 for (int j = 0; j < skinCapability.getSlotCountForSkinType(skinTypes[i]); j++) {
                     if (skinTypes[i].getVanillaArmourSlotId() != -1 | skinTypes[i] == SkinTypeRegistry.skinWings) {
-                        addSlotToContainer(new SlotSkin(skinTypes[i], skinCapability.getSkinInventoryContainer().getSkinTypeInv(skinTypes[i]), j, 83 + j * 19, 27 + (i - 1) * 19));
+                        addSlotToContainer(new SlotSkin(skinTypes[i], skinCapability.getSkinInventoryContainer().getSkinTypeInv(skinTypes[i]), j, 83 + j * 19, 27 + (yindex) * 19));
                     } else {
-                        addSlotToContainer(new SlotSkin(skinTypes[i], skinCapability.getSkinInventoryContainer().getSkinTypeInv(skinTypes[i]), j, 83 + (i - 5) * 19, 122 + j * 19));
+                        addSlotToContainer(new SlotSkin(skinTypes[i], skinCapability.getSkinInventoryContainer().getSkinTypeInv(skinTypes[i]), j, 83 + (yindex - 5) * 19, 122 + j * 19));
                     }
                     indexSkinsEnd++;
                 }
+                yindex++;
             }
         }
         
@@ -129,18 +131,21 @@ public class ContainerSkinWardrobe extends ModContainer {
         indexOutfitStart = indexDyeEnd;
         indexOutfitEnd = indexDyeEnd;
         if (!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabOutfits | isCreative))) {
-            WardrobeInventory invOutfit = skinInv.getSkinTypeInv(SkinTypeRegistry.skinOutfit);
-            int outfitSlots = invOutfit.getSizeInventory();
-            if (isPlayer) {
-                IPlayerWardrobeCap playerWardrobe = (IPlayerWardrobeCap) wardrobeCapability;
-                outfitSlots = playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinOutfit);
+            if (skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinOutfit) > 0) {
+                WardrobeInventory invOutfit = skinInv.getSkinTypeInv(SkinTypeRegistry.skinOutfit);
+                int outfitSlots = invOutfit.getSizeInventory();
+                if (isPlayer) {
+                    IPlayerWardrobeCap playerWardrobe = (IPlayerWardrobeCap) wardrobeCapability;
+                    outfitSlots = playerWardrobe.getUnlockedSlotsForSkinType(SkinTypeRegistry.skinOutfit);
+                }
+                for (int i = 0; i < outfitSlots; i++) {
+                    int y = 19 * (MathHelper.floor((float)i / 10F));
+                    int x = 19 * i - (y * 8);
+                    addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinOutfit, invOutfit, i, 83 + x, 27 + y));
+                    indexOutfitEnd += 1;
+                }
             }
-            for (int i = 0; i < outfitSlots; i++) {
-                int y = 19 * (MathHelper.floor((float)i / 10F));
-                int x = 19 * i - (y * 8);
-                addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinOutfit, invOutfit, i, 83 + x, 27 + y));
-                indexOutfitEnd += 1;
-            }
+
         }
 
         addPlayerSlots(59, 158);
