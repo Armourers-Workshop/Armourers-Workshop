@@ -14,13 +14,12 @@ import net.minecraft.util.math.BlockPos;
 
 public class CommandSetWardrobeOption extends ModCommand {
 
-    private static final String[] SUB_OPTIONS = new String[] {"showFootArmour", "showLegArmour", "showChestArmour", "showHeadArmour"};
-    
-    @Override
-    public String getName() {
-        return "setWardrobeOption";
+    private static final String[] SUB_OPTIONS = new String[] { "showFootArmour", "showLegArmour", "showChestArmour", "showHeadArmour" };
+
+    public CommandSetWardrobeOption(ModCommand parent) {
+        super(parent, "setWardrobeOption");
     }
-    
+
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
         if (args.length == 2) {
@@ -30,7 +29,7 @@ public class CommandSetWardrobeOption extends ModCommand {
             return getListOfStringsMatchingLastWord(args, SUB_OPTIONS);
         }
         if (args.length == 4) {
-            return getListOfStringsMatchingLastWord(args, new String[] {"true", "false"});
+            return getListOfStringsMatchingLastWord(args, new String[] { "true", "false" });
         }
         return null;
     }
@@ -38,13 +37,13 @@ public class CommandSetWardrobeOption extends ModCommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length != 4) {
-            throw new WrongUsageException(getUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object) args);
         }
         EntityPlayerMP player = getPlayer(server, sender, args[1]);
         if (player == null) {
             return;
         }
-        
+
         String subOption = args[2];
         boolean value = parseBoolean(args[3]);
         int subOptionIndex = -1;
@@ -55,9 +54,9 @@ public class CommandSetWardrobeOption extends ModCommand {
             }
         }
         if (subOptionIndex == -1) {
-            throw new WrongUsageException(getUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object) args);
         }
-        
+
         IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(player);
         if (wardrobeCap != null) {
             if (subOptionIndex < 4) {

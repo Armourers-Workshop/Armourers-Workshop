@@ -14,9 +14,8 @@ import net.minecraft.util.math.BlockPos;
 
 public class CommandClearModelCache extends ModCommand {
 
-    @Override
-    public String getName() {
-        return "clearModelCache";
+    public CommandClearModelCache(ModCommand parent) {
+        super(parent, "clearModelCache");
     }
     
     @Override

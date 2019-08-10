@@ -16,11 +16,10 @@ import net.minecraft.util.math.BlockPos;
 
 public class CommandClearSkin extends ModCommand {
 
-    @Override
-    public String getName() {
-        return "clearSkin";
+    public CommandClearSkin(ModCommand parent) {
+        super(parent, "clearSkin");
     }
-    
+
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
         if (args.length == 2) {
@@ -34,30 +33,30 @@ public class CommandClearSkin extends ModCommand {
             }
             return getListOfStringsMatchingLastWord(args, typeNames);
         }
-        
+
         return null;
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length != 4) {
-            throw new WrongUsageException(getUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object) args);
         }
-        
+
         String playerName = args[1];
         String skinTypeId = args[2];
         int slotId = parseInt(args[3], 1, 8);
-        
+
         EntityPlayerMP player = getPlayer(server, sender, playerName);
         if (player == null) {
-            throw new WrongUsageException(getUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object) args);
         }
-        
+
         ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(skinTypeId);
         if (skinType == null) {
-            throw new WrongUsageException(getUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object) args);
         }
-        
+
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);
         if (skinCapability != null) {
             skinCapability.clearSkin(skinType, slotId - 1);

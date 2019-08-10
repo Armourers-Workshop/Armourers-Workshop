@@ -10,9 +10,8 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 
 public class CommandAdminPanel extends ModCommand {
 
-    @Override
-    public String getName() {
-        return "adminPanel";
+    public CommandAdminPanel(ModCommand parent) {
+        super(parent, "adminPanel");
     }
     
     @Override

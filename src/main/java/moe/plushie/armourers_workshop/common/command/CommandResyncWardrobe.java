@@ -15,11 +15,10 @@ import net.minecraft.util.math.BlockPos;
 
 public class CommandResyncWardrobe extends ModCommand {
 
-    @Override
-    public String getName() {
-        return "resyncWardrobe";
+    public CommandResyncWardrobe(ModCommand parent) {
+        super(parent, "resyncWardrobe");
     }
-    
+
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
         if (args.length == 2) {
@@ -31,7 +30,7 @@ public class CommandResyncWardrobe extends ModCommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length != 2) {
-            throw new WrongUsageException(getUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object) args);
         }
         String playerName = args[1];
         EntityPlayerMP player = getPlayer(server, sender, playerName);

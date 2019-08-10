@@ -18,11 +18,10 @@ import net.minecraft.util.math.BlockPos;
 
 public class CommandSetUnlockedWardrobeSlots extends ModCommand {
 
-    @Override
-    public String getName() {
-        return "setUnlockedWardrobeSlots";
+    public CommandSetUnlockedWardrobeSlots(ModCommand parent) {
+        super(parent, "setUnlockedWardrobeSlots");
     }
-    
+
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
         if (args.length == 2) {
@@ -42,27 +41,27 @@ public class CommandSetUnlockedWardrobeSlots extends ModCommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length != 4) {
-            throw new WrongUsageException(getUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object) args);
         }
         String playerName = args[1];
         EntityPlayerMP player = getPlayer(server, sender, playerName);
         if (player == null) {
             return;
         }
-        
+
         String skinTypeName = args[2];
         if (StringUtils.isNullOrEmpty(skinTypeName)) {
-            throw new WrongUsageException(getUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object) args);
         }
-        
+
         int count = 3;
         count = parseInt(args[3], 0, 8);
 
         ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(skinTypeName);
         if (skinType == null) {
-            throw new WrongUsageException(getUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object) args);
         }
-        
+
         IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(player);
         if (wardrobeCap != null) {
             ModLogger.log("setting count " + count + " on " + skinType.getRegistryName());

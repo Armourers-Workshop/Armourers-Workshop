@@ -13,11 +13,10 @@ import net.minecraft.util.math.BlockPos;
 
 public class CommandClearSkins extends ModCommand {
 
-    @Override
-    public String getName() {
-        return "clearSkins";
+    public CommandClearSkins(ModCommand parent) {
+        super(parent, "clearSkins");
     }
-    
+
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
         if (args.length == 2) {
@@ -29,7 +28,7 @@ public class CommandClearSkins extends ModCommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length != 2) {
-            throw new WrongUsageException(getUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object) args);
         }
         String playerName = args[1];
         EntityPlayerMP player = getPlayer(server, sender, playerName);

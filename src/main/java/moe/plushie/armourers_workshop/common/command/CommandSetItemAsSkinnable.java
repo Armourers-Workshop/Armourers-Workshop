@@ -16,11 +16,10 @@ import net.minecraft.util.math.BlockPos;
 
 public class CommandSetItemAsSkinnable extends ModCommand {
 
-    @Override
-    public String getName() {
-        return "setItemSkinnable";
+    public CommandSetItemAsSkinnable(ModCommand parent) {
+        super(parent, "setItemSkinnable");
     }
-    
+
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
         if (args.length == 2) {
@@ -31,7 +30,7 @@ public class CommandSetItemAsSkinnable extends ModCommand {
             return getListOfStringsMatchingLastWord(args, values);
         }
         if (args.length == 3) {
-            String[] values = new String[] {"add", "remove"};
+            String[] values = new String[] { "add", "remove" };
             return getListOfStringsMatchingLastWord(args, values);
         }
         return null;
@@ -40,7 +39,7 @@ public class CommandSetItemAsSkinnable extends ModCommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length != 3) {
-            throw new WrongUsageException(getUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object) args);
         }
         EntityPlayerMP player = getCommandSenderAsPlayer(sender);
         if (player == null) {
@@ -51,7 +50,7 @@ public class CommandSetItemAsSkinnable extends ModCommand {
         try {
             type = ItemOverrideType.valueOf(args[1].toUpperCase());
         } catch (Exception e) {
-            throw new WrongUsageException(getUsage(sender), (Object)args);
+            throw new WrongUsageException(getUsage(sender), (Object) args);
         }
         ItemStack stack = player.getHeldItemMainhand();
         if (!stack.isEmpty()) {
@@ -60,7 +59,7 @@ public class CommandSetItemAsSkinnable extends ModCommand {
             } else if (args[2].equals("remove")) {
                 ConfigHandlerOverrides.removeOverride(type, stack.getItem());
             } else {
-                throw new WrongUsageException(getUsage(sender), (Object)args);
+                throw new WrongUsageException(getUsage(sender), (Object) args);
             }
         }
     }
