@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCa
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.proxies.ClientProxy.TexturePaintType;
@@ -104,11 +105,11 @@ public class PlayerTextureHandler {
                 skins[3 + skinIndex * skinTypes.length] = skin[3];
                 skins[4 + skinIndex * skinTypes.length] = skin[4];
                 
-                dyes[0 + skinIndex * skinTypes.length] = dye[0];
-                dyes[1 + skinIndex * skinTypes.length] = dye[1];
-                dyes[2 + skinIndex * skinTypes.length] = dye[2];
-                dyes[3 + skinIndex * skinTypes.length] = dye[3];
-                dyes[4 + skinIndex * skinTypes.length] = dye[4];
+                dyes[0 + skinIndex * skinTypes.length] = mixDye(wardrobeCap.getDye(), dye[0]);
+                dyes[1 + skinIndex * skinTypes.length] = mixDye(wardrobeCap.getDye(), dye[1]);
+                dyes[2 + skinIndex * skinTypes.length] = mixDye(wardrobeCap.getDye(), dye[2]);
+                dyes[3 + skinIndex * skinTypes.length] = mixDye(wardrobeCap.getDye(), dye[3]);
+                dyes[4 + skinIndex * skinTypes.length] = mixDye(wardrobeCap.getDye(), dye[4]);
             }
             
             textureInfo.updateSkins(skins);
@@ -125,6 +126,18 @@ public class PlayerTextureHandler {
             }
         }
         profiler.endSection();
+    }
+    
+    private ISkinDye mixDye(ISkinDye wardrobeDye, ISkinDye itemDye) {
+        SkinDye dye = new SkinDye(wardrobeDye);
+        if (itemDye != null) {
+            for (int i = 0; i < 8; i++) {
+                if (itemDye.haveDyeInSlot(i)) {
+                    dye.addDye(i,dye.getDyeColour(i));
+                }
+            }
+        }
+        return dye;
     }
     
     @SubscribeEvent(priority = EventPriority.HIGH)
