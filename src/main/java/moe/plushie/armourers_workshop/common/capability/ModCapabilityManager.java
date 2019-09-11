@@ -174,34 +174,30 @@ public final class ModCapabilityManager {
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
         World world = event.getEntityPlayer().getEntityWorld();
-        if (event.isWasDeath()) {
-            NBTBase nbt = null;
-            IPlayerWardrobeCap wardrobeCapOld = PlayerWardrobeCap.get(event.getOriginal());
-            IPlayerWardrobeCap wardrobeCapNew = PlayerWardrobeCap.get(event.getEntityPlayer());
-            IStorage<IPlayerWardrobeCap> storageWardrobe = PlayerWardrobeCap.PLAYER_WARDROBE_CAP.getStorage();
-            nbt = storageWardrobe.writeNBT(PlayerWardrobeCap.PLAYER_WARDROBE_CAP, wardrobeCapOld, null);
-            storageWardrobe.readNBT(PlayerWardrobeCap.PLAYER_WARDROBE_CAP, wardrobeCapNew, null, nbt);
-            
-            IEntitySkinCapability skinCapOld = EntitySkinCapability.get(event.getOriginal());
-            IEntitySkinCapability skinCapNew = EntitySkinCapability.get(event.getEntityPlayer());
-            IStorage<IEntitySkinCapability> storageEntitySkin = EntitySkinCapability.ENTITY_SKIN_CAP.getStorage();
-            nbt = storageEntitySkin.writeNBT(EntitySkinCapability.ENTITY_SKIN_CAP, skinCapOld, null);
-            storageEntitySkin.readNBT(EntitySkinCapability.ENTITY_SKIN_CAP, skinCapNew, null, nbt);
-        }
+        NBTBase nbt = null;
+        IPlayerWardrobeCap wardrobeCapOld = PlayerWardrobeCap.get(event.getOriginal());
+        IPlayerWardrobeCap wardrobeCapNew = PlayerWardrobeCap.get(event.getEntityPlayer());
+        IStorage<IPlayerWardrobeCap> storageWardrobe = PlayerWardrobeCap.PLAYER_WARDROBE_CAP.getStorage();
+        nbt = storageWardrobe.writeNBT(PlayerWardrobeCap.PLAYER_WARDROBE_CAP, wardrobeCapOld, null);
+        storageWardrobe.readNBT(PlayerWardrobeCap.PLAYER_WARDROBE_CAP, wardrobeCapNew, null, nbt);
+        
+        IEntitySkinCapability skinCapOld = EntitySkinCapability.get(event.getOriginal());
+        IEntitySkinCapability skinCapNew = EntitySkinCapability.get(event.getEntityPlayer());
+        IStorage<IEntitySkinCapability> storageEntitySkin = EntitySkinCapability.ENTITY_SKIN_CAP.getStorage();
+        nbt = storageEntitySkin.writeNBT(EntitySkinCapability.ENTITY_SKIN_CAP, skinCapOld, null);
+        storageEntitySkin.readNBT(EntitySkinCapability.ENTITY_SKIN_CAP, skinCapNew, null, nbt);
     }
     
     @SubscribeEvent
     public static void onRespawn(PlayerRespawnEvent event) {
         // Called after onPlayerClone. Used to sync after death.
-        if (!event.isEndConquered()) {
-            IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(event.player);
-            wardrobeCap.syncToAllTracking();
-            wardrobeCap.syncToPlayer((EntityPlayerMP) event.player);
-            
-            IEntitySkinCapability skinCap = EntitySkinCapability.get(event.player);
-            skinCap.syncToAllTracking();
-            skinCap.syncToPlayer((EntityPlayerMP) event.player);
-        }
+        IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(event.player);
+        wardrobeCap.syncToAllTracking();
+        wardrobeCap.syncToPlayer((EntityPlayerMP) event.player);
+        
+        IEntitySkinCapability skinCap = EntitySkinCapability.get(event.player);
+        skinCap.syncToAllTracking();
+        skinCap.syncToPlayer((EntityPlayerMP) event.player);
     }
     
     @SubscribeEvent
