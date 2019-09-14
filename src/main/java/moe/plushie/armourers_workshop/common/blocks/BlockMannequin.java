@@ -289,7 +289,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         }
         TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
         if (te != null) {
-            if (te.PROP_OWNER.get() != null) {
+            if (te.PROP_OWNER.get() != null && te.PROP_OWNER.get().getId() != null) {
                 //ModLogger.log(te.PROP_OWNER.get());
                 if (te.PROP_OWNER.get().getId().equals(VIC_PROFILE.getId())) {
                     entityLiving.attackEntityFrom(VIC_DAMAGE, 2.0F);
