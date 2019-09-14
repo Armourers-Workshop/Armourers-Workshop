@@ -1,5 +1,5 @@
 {
-    "parent": "item/generated",
+    "parent": "item/handheld",
     "textures": {
         "layer0": "armourers_workshop:items/colour-picker-tip",
         "layer1": "armourers_workshop:items/colour-picker"
