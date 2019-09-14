@@ -32,23 +32,23 @@ public class ItemSkinUnlock extends AbstractModItem {
             SkinTypeRegistry.skinWings,
             SkinTypeRegistry.skinOutfit
             };
-    
+
     public ItemSkinUnlock() {
         super(LibItemNames.SKIN_UNLOCK);
         setHasSubtypes(true);
         setSortPriority(7);
         setMaxStackSize(8);
     }
-    
+
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
         if (this.isInCreativeTab(tab)) {
             for (int i = 0; i < VALID_SKINS.length; i++) {
                 items.add(new ItemStack(this, 1, i));
-            } 
+            }
         }
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public void registerModels() {
@@ -56,13 +56,12 @@ public class ItemSkinUnlock extends AbstractModItem {
             ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()) + "-" + VALID_SKINS[i].getName().toLowerCase(), "inventory"));
         }
     }
-    
+
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemStack = playerIn.getHeldItem(handIn);
         ISkinType skinType = getSkinTypeFormStack(playerIn.getHeldItem(handIn));
-        String localizedSkinName = SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType);
-        
+        TextComponentTranslation unlocalizedSkinName = new TextComponentTranslation("skinType." + skinType.getRegistryName() + ".name", new Object[0]);
         IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(playerIn);
         if (wardrobeCap == null) {
             return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStack);
@@ -74,17 +73,17 @@ public class ItemSkinUnlock extends AbstractModItem {
                 wardrobeCap.syncToPlayer((EntityPlayerMP) playerIn);
                 wardrobeCap.syncToAllTracking();
                 itemStack.shrink(1);
-                playerIn.sendMessage(new TextComponentTranslation("chat.armourers_workshop:slotUnlocked", localizedSkinName.toLowerCase(), Integer.toString(count)));
+                playerIn.sendMessage(new TextComponentTranslation("chat.armourers_workshop:slotUnlocked", unlocalizedSkinName, Integer.toString(count)));
             }
             return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStack);
         } else {
             if (!worldIn.isRemote) {
-                playerIn.sendMessage(new TextComponentTranslation("chat.armourers_workshop:slotUnlockedFailed", localizedSkinName));
+                playerIn.sendMessage(new TextComponentTranslation("chat.armourers_workshop:slotUnlockedFailed", unlocalizedSkinName));
             }
             return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStack);
         }
     }
-    
+
     private ISkinType getSkinTypeFormStack(ItemStack itemStack) {
         int damage = itemStack.getItemDamage();
         if (damage >= 0 & damage < VALID_SKINS.length) {
