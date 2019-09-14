@@ -10,8 +10,8 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.common.items.ModItems;
-import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
+import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.permission.Permission;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
@@ -344,7 +344,9 @@ public class BlockSkinnable extends AbstractModBlockContainer {
     
     @Override
     public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-        dropSkin(world, pos, player.capabilities.isCreativeMode);
+        if (!world.isRemote) {
+            dropSkin(world, pos, player.capabilities.isCreativeMode);
+        }
         return super.removedByPlayer(state, world, pos, player, willHarvest);
     }
     
