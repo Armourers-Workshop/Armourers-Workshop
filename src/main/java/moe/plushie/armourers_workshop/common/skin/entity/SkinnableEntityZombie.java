@@ -19,13 +19,16 @@ public class SkinnableEntityZombie extends SkinnableEntity {
     public Class<? extends EntityLivingBase> getEntityClass() {
         return EntityZombie.class;
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public LayerRenderer<? extends EntityLivingBase> getLayerRenderer(RenderLivingBase renderLivingBase) {
-        return new SkinLayerRendererZombie((RenderZombie) renderLivingBase);
+        if (renderLivingBase instanceof RenderZombie) {
+            return new SkinLayerRendererZombie((RenderZombie) renderLivingBase);
+        }
+        return null;
     }
-    
+
     @Override
     public void getValidSkinTypes(ArrayList<ISkinType> skinTypes) {
         skinTypes.add(SkinTypeRegistry.skinOutfit);
@@ -35,7 +38,7 @@ public class SkinnableEntityZombie extends SkinnableEntity {
         skinTypes.add(SkinTypeRegistry.skinFeet);
         skinTypes.add(SkinTypeRegistry.skinWings);
     }
-    
+
     @Override
     public int getSlotsForSkinType(ISkinType skinType) {
         return 2;

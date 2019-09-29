@@ -19,18 +19,21 @@ public class SkinnableEntityChicken extends SkinnableEntity {
     public Class<? extends EntityLivingBase> getEntityClass() {
         return EntityChicken.class;
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public LayerRenderer<? extends EntityLivingBase> getLayerRenderer(RenderLivingBase renderLivingBase) {
-        return new SkinLayerRendererChicken((RenderChicken) renderLivingBase);
+        if (renderLivingBase instanceof RenderChicken) {
+            return new SkinLayerRendererChicken((RenderChicken) renderLivingBase);
+        }
+        return null;
     }
 
     @Override
     public void getValidSkinTypes(ArrayList<ISkinType> skinTypes) {
         skinTypes.add(SkinTypeRegistry.skinHead);
     }
-    
+
     @Override
     public int getSlotsForSkinType(ISkinType skinType) {
         return 2;

@@ -23,14 +23,17 @@ public class SkinnableEntityGhast extends SkinnableEntity {
     @SideOnly(Side.CLIENT)
     @Override
     public LayerRenderer<? extends EntityLivingBase> getLayerRenderer(RenderLivingBase renderLivingBase) {
-        return new SkinLayerRendererGhast((RenderGhast) renderLivingBase);
+        if (renderLivingBase instanceof RenderGhast) {
+            return new SkinLayerRendererGhast((RenderGhast) renderLivingBase);
+        }
+        return null;
     }
-    
+
     @Override
     public void getValidSkinTypes(ArrayList<ISkinType> skinTypes) {
         skinTypes.add(SkinTypeRegistry.skinHead);
     }
-    
+
     @Override
     public int getSlotsForSkinType(ISkinType skinType) {
         return 1;
