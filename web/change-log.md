@@ -1,6 +1,23 @@
 # Armourer's Workshop Change Log
 
 ## Development (coming in next build)
+* Added
+  * Added skin support for Haunted Astolfo Bean Plushie mod.
+  * Added andrew0030 to the contributors list.
+  * Added RPG mod command system and added setColour command. `/armourers wardrobe setColour <player> <colour type> <colour>`
+* Changed
+  * Updated ko_KR.lang file. (M_H_Berre)
+* Fixed
+  * Mod compatibility add-ons always being loaded.
+  * Fixed strange wardrobe layout if entity did not have outfit slots.
+  * Fixed mannequin texture type dropdown not working.
+  * Fixed texture paint not having wardrobe dyes applied.
+  * Fixed wardrobe desync when returning from end.
+  * Fixed server accessing client text localizer class when unlocking skin slots.
+  * Fixed most items have the wrong rotations when held.
+  * Fixed ghost blocks being drop by skin blocks in survival mode.
+  * Fixed crash when touching a mannequin with an invalid game profile.
+  * Fixed crash when trying to cast some modded mob renderers to vanilla ones.
 
 
 ## Build 1.12.2-0.49.1
