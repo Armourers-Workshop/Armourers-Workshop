@@ -55,7 +55,7 @@ public class CommandSetUnlockedWardrobeSlots extends ModCommand {
         }
 
         int count = 3;
-        count = parseInt(args[3], 0, 8);
+        count = parseInt(args[3], 0, 10);
 
         ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(skinTypeName);
         if (skinType == null) {
