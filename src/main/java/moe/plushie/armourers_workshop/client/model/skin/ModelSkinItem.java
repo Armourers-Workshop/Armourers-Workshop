@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -51,9 +52,15 @@ public class ModelSkinItem extends ModelTypeHelper {
                 GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
             }
             
+            GlStateManager.enablePolygonOffset();
+            GlStateManager.doPolygonOffset(-3F * SCALE, -3F * SCALE);
+            
             if (part.getPartType().getPartName().equals("base")) {
                 renderRightArm(new SkinPartRenderData(part, renderData));
             }
+            
+            GlStateManager.doPolygonOffset(0F, 0F);
+            GlStateManager.disablePolygonOffset();
             
             GL11.glPopMatrix();
             
@@ -68,14 +75,16 @@ public class ModelSkinItem extends ModelTypeHelper {
         
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
+        
+        
         //GL11.glRotatef((float) RadiansToDegrees(this.bipedBody.rotateAngleX), 1, 0, 0);
         
         //GL11.glTranslatef(-5.0F * scale, 0F, 0F);
         //GL11.glTranslatef(0F, 2.0F * scale, 0F);
         
-        GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleZ), 0, 0, 1);
-        GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
-        GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
+        //GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleZ), 0, 0, 1);
+        //GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
+        //GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleX), 1, 0, 0);
         
         renderPart(partRenderData);
         GL11.glPopMatrix();
