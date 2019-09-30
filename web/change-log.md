@@ -7,6 +7,7 @@
   * Added RPG mod command system and added setColour command. `/armourers wardrobe setColour <player> <colour type> <colour>`
 * Changed
   * Updated ko_KR.lang file. (M_H_Berre)
+  * Slim weapons for slim arms! (will maybe change this back)
 * Fixed
   * Mod compatibility add-ons always being loaded.
   * Fixed strange wardrobe layout if entity did not have outfit slots.
@@ -18,6 +19,8 @@
   * Fixed ghost blocks being drop by skin blocks in survival mode.
   * Fixed crash when touching a mannequin with an invalid game profile.
   * Fixed crash when trying to cast some modded mob renderers to vanilla ones.
+  * Fixed setUnlockedWardrobeSlots command limited being 8 and not 10 slots.
+  * Fixed z fighting on held item rendering.
 
 
 ## Build 1.12.2-0.49.1
