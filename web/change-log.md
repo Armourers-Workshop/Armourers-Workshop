@@ -52,7 +52,27 @@
 
 
 ## Build 1.12.2-0.49.0
-* Big rewrite to most of the mod, too much to list!
+
+#### Big rewrite to most of the mod, too much to list!
+
+* Added
+  * Added outfit system
+  * Added new misc and eye colour types.
+  * Added more slots to the wardrobe
+  * Added skin types for axe, hoe, pickaxe, shield and shovel.
+  * Added new paint types pulse, flicker and rainbow.
+  * Added contributor ring for IS_Jump and skylandersking.
+* Changed
+  * Better loading of skins in the background.
+  * Updated slot icons to match vanilla. (LordPhrozen)
+  * Updated zh_CN lang file. (Ethan)
+  * Updated ko_KR lang file, (_Hoppang_)
+* Art & Models
+  * Added block models by Thundercat
+  * Added offhand slot icon. (LordPhrozen)
+  * Added new outfit tab texture. (LordPhrozen)
+  * Added block skin template art. (MikaPikaaa)
+  * Added template icons for axe, hoe, pickaxe, shield and shovel. (skylandersking)
 
 
 ## Build 1.7.10-0.48.3
