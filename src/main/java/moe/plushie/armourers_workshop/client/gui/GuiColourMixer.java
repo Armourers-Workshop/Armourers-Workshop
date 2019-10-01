@@ -122,7 +122,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         paintTypeDropDown.clearList();
         for (PaintType paintType : PaintRegistry.getRegisteredTypes()) {
             if (paintType == PaintRegistry.PAINT_TYPE_TEXTURE) {
-                paintTypeDropDown.addListItem(paintType.getLocalizedName(), "", false);
+                paintTypeDropDown.addListItem(paintType.getLocalizedName(), "", true);
             } else {
                 paintTypeDropDown.addListItem(paintType.getLocalizedName());
             }
