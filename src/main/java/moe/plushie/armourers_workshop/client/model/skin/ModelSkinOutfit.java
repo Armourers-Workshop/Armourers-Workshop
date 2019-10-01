@@ -14,6 +14,8 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
+import moe.plushie.armourers_workshop.proxies.ClientProxy;
+import moe.plushie.armourers_workshop.proxies.ClientProxy.TexturePaintType;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -44,7 +46,7 @@ public class ModelSkinOutfit extends ModelTypeHelper {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        if (skin.hasPaintData() & renderData.isShowSkinPaint()) {
+        if (skin.hasPaintData() & renderData.isShowSkinPaint() & ClientProxy.getTexturePaintType() == TexturePaintType.TEXTURE_REPLACE) {
             SkinModelTexture st = ClientSkinPaintCache.INSTANCE.getTextureForSkin(skin, renderData.getSkinDye(), renderData.getExtraColours());
             st.bindTexture();
             GL11.glPushMatrix();

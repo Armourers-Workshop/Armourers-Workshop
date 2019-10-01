@@ -20,6 +20,8 @@ import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
+import moe.plushie.armourers_workshop.proxies.ClientProxy;
+import moe.plushie.armourers_workshop.proxies.ClientProxy.TexturePaintType;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -138,8 +140,8 @@ public final class ModelBakery {
             dyeColour = new int[3][extraDyes];
             dyeUseCount = new int[extraDyes];
             
-            if (skin.hasPaintData()) {
-                // TODO add new block for paint data.
+            if (skin.hasPaintData() & ClientProxy.getTexturePaintType() == TexturePaintType.MODEL_REPLACE_AW) {
+                skin.addPaintDataParts();
             }
             
             for (int i = 0; i < skin.getParts().size(); i++) {

@@ -104,7 +104,7 @@ public class ColouredFace {
             if (renderData.getSkinPart().getPartType() instanceof ISkinPartTypeTextured) {
                 BufferedImage image = SkinHelper.getBufferedImageSkin(renderData.getEntityTexture());
                 if (image != null) {
-                    byte[] dyedColour = getColourFromTexture(x, y, z, r, g, b, face, renderData, image, (ISkinPartTypeTextured) renderData.getSkinPart().getPartType());
+                    byte[] dyedColour = getColourFromTexture(x, y, z, r, g, b, face, image, (ISkinPartTypeTextured) renderData.getSkinPart().getPartType(), false);
                     r = dyedColour[0];
                     g = dyedColour[1];
                     b = dyedColour[2];
@@ -125,10 +125,13 @@ public class ColouredFace {
         FaceRenderer.renderFace(x, y, z, r, g, b, a, face, lodLevel, type.getU() * paintScale, type.getV() * paintScale, (type.getU() * paintScale) + paintScale, (type.getV() * paintScale) + paintScale);
     }
     
-    private static byte[] getColourFromTexture(byte x, byte y, byte z, byte r, byte g, byte b, byte face, SkinPartRenderData renderData, BufferedImage image, ISkinPartTypeTextured skinPartTex) {
+    public static byte[] getColourFromTexture(byte x, byte y, byte z, byte r, byte g, byte b, byte face, BufferedImage image, ISkinPartTypeTextured skinPartTex, boolean oldImage) {
         EnumFacing facing = EnumFacing.VALUES[face];
         
         Point posBase = skinPartTex.getTextureBasePos();
+        if (oldImage) {
+            posBase = skinPartTex.getTextureSkinPos();
+        }
 
         int posX = posBase.x;
         int posY = posBase.y;
@@ -218,7 +221,7 @@ public class ColouredFace {
             int rgb = image.getRGB(p.x, p.y);
             return PaintingHelper.intToBytes(rgb);
         }
-        return new byte[] { r, g, b };
+        return new byte[] { r, g, b, 0 };
     }
 
     /**

@@ -16,6 +16,8 @@ import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import moe.plushie.armourers_workshop.proxies.ClientProxy;
+import moe.plushie.armourers_workshop.proxies.ClientProxy.TexturePaintType;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -39,10 +41,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
 
     @Override
     public void doRenderLayer(EntityPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        double distance = Minecraft.getMinecraft().player.getDistance(
-                entitylivingbaseIn.posX,
-                entitylivingbaseIn.posY,
-                entitylivingbaseIn.posZ);
+        double distance = Minecraft.getMinecraft().player.getDistance(entitylivingbaseIn.posX, entitylivingbaseIn.posY, entitylivingbaseIn.posZ);
         if (distance > ConfigHandlerClient.renderDistanceSkin) {
             return;
         }
@@ -52,21 +51,21 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         if (skinCap == null) {
             return;
         }
-        
+
         skinCap.hideHead = false;
         skinCap.hideChest = false;
         skinCap.hideArmLeft = false;
         skinCap.hideArmRight = false;
         skinCap.hideLegLeft = false;
         skinCap.hideLegRight = false;
-        
+
         skinCap.hideHeadOverlay = false;
         skinCap.hideChestOverlay = false;
         skinCap.hideArmLeftOverlay = false;
         skinCap.hideArmRightOverlay = false;
         skinCap.hideLegLeftOverlay = false;
         skinCap.hideLegRightOverlay = false;
-        
+
         ISkinType[] skinTypes = skinCap.getValidSkinTypes();
         SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
         ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
@@ -74,7 +73,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         if (wardrobe != null) {
             extraColours = wardrobe.getExtraColours();
         }
-        
+
         for (int i = 0; i < skinTypes.length; i++) {
             ISkinType skinType = skinTypes[i];
             ISkinDescriptor skinDescriptorArmour = getSkinDescriptorFromArmourer(entitylivingbaseIn, skinType);
@@ -92,11 +91,11 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
             }
         }
     }
-    
+
     private void renderSkin(EntityPlayer entityPlayer, ISkinDescriptor skinDescriptor, EntitySkinCapability skinCap, IWardrobeCap wardrobe, ExtraColours extraColours, double distance, boolean doLodLoading) {
         SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
-        
+
         if (skin != null) {
             if (SkinProperties.PROP_MODEL_OVERRIDE_HEAD.getValue(skin.getProperties())) {
                 skinCap.hideHead = true;
@@ -116,7 +115,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
             if (SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT.getValue(skin.getProperties())) {
                 skinCap.hideLegRight = true;
             }
-            
+
             if (SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD.getValue(skin.getProperties())) {
                 skinCap.hideHeadOverlay = true;
             }
@@ -136,6 +135,25 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
                 skinCap.hideLegRightOverlay = true;
             }
             
+            if (skin.hasPaintData() & ClientProxy.getTexturePaintType() == TexturePaintType.MODEL_REPLACE_AW) {
+                if (skin.getSkinType() == SkinTypeRegistry.skinHead) {
+                    skinCap.hideHead = true;
+                }
+                if (skin.getSkinType() == SkinTypeRegistry.skinChest) {
+                    skinCap.hideChest = true;
+                    skinCap.hideArmLeft = true;
+                    skinCap.hideArmRight = true;
+                }
+                if (skin.getSkinType() == SkinTypeRegistry.skinLegs) {
+                    skinCap.hideLegLeft = true;
+                    skinCap.hideLegRight = true;
+                }
+                if (skin.getSkinType() == SkinTypeRegistry.skinFeet) {
+                    skinCap.hideLegLeft = true;
+                    skinCap.hideLegRight = true;
+                }
+            }
+
             SkinDye dye = new SkinDye(wardrobe.getDye());
             for (int i = 0; i < 8; i++) {
                 if (skinDescriptor.getSkinDye().haveDyeInSlot(i)) {
@@ -143,8 +161,9 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
                 }
             }
             GlStateManager.pushMatrix();
-            modelRenderer.renderEquipmentPart(skin, new SkinRenderData(0.0625F, dye, extraColours, distance, doLodLoading, false, false, ((AbstractClientPlayer)entityPlayer).getLocationSkin()), entityPlayer, renderPlayer.getMainModel());
-            //modelRenderer.renderEquipmentPart(entityPlayer, renderPlayer.getMainModel(), skin, dye, extraColours, distance, doLodLoading);
+            modelRenderer.renderEquipmentPart(skin, new SkinRenderData(0.0625F, dye, extraColours, distance, doLodLoading, false, false, ((AbstractClientPlayer) entityPlayer).getLocationSkin()), entityPlayer, renderPlayer.getMainModel());
+            // modelRenderer.renderEquipmentPart(entityPlayer, renderPlayer.getMainModel(),
+            // skin, dye, extraColours, distance, doLodLoading);
             GlStateManager.popMatrix();
         }
     }
