@@ -295,10 +295,14 @@ public class Skin implements ISkin {
     }
 
     public void addPaintDataParts() {
-        for (ISkinPartType skinPartType : getSkinType().getSkinParts()) {
-            SkinPart dummyPart = skinPartType.makeDummyPaintPart(paintData);
-            if (dummyPart != null) {
-                parts.add(0, dummyPart);
+        if (hasPaintData()) {
+            for (ISkinPartType skinPartType : getSkinType().getSkinParts()) {
+                if (!skinPartType.isModelOverridden(getProperties())) {
+                    SkinPart dummyPart = skinPartType.makeDummyPaintPart(paintData);
+                    if (dummyPart != null) {
+                        parts.add(0, dummyPart);
+                    }
+                }
             }
         }
     }

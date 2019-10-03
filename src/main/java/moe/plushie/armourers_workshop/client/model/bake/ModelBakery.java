@@ -140,7 +140,7 @@ public final class ModelBakery {
             dyeColour = new int[3][extraDyes];
             dyeUseCount = new int[extraDyes];
             
-            if (skin.hasPaintData() & ClientProxy.getTexturePaintType() == TexturePaintType.MODEL_REPLACE_AW) {
+            if (ClientProxy.getTexturePaintType() == TexturePaintType.MODEL_REPLACE_AW) {
                 skin.addPaintDataParts();
             }
             
