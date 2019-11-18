@@ -17,7 +17,7 @@ public final class SkinExportManager {
     
     static {
         SKIN_EXPORTERS = new ArrayList<ISkinExporter>();
-        //SKIN_EXPORTERS.add(new SkinExporterWavefrontObj());
+        SKIN_EXPORTERS.add(new SkinExporterWavefrontObj());
         SKIN_EXPORTERS.add(new SkinExporterPolygon());
     }
     

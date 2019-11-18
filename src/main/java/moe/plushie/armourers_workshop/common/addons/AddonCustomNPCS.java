@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
+import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererHeldItem;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
@@ -31,11 +32,14 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,42 +49,42 @@ public class AddonCustomNPCS extends ModAddon {
 
     private static final String CLASS_NAME_ENTITY_CNPC = "noppes.npcs.entity.EntityCustomNpc";
     private static final String CLASS_NAME_NPC_API = "noppes.npcs.api.NpcAPI";
-    
+
     private static Object npcAPI = null;
-    
+
     public AddonCustomNPCS() {
         super("customnpcs", "CustomNPC");
     }
-    
+
     @Override
     public void init() {
         if (isModLoaded()) {
             EntitySkinHandler.INSTANCE.registerEntity(new SkinnableEntityCustomNPC());
         }
     }
-    
+
     @Override
     public void postInit() {
         if (setIsModLoaded()) {
             npcAPI = getApi();
         }
     }
-    
+
     private static Object getApi() {
         try {
             Class c = Class.forName(CLASS_NAME_NPC_API);
             Method m = ReflectionHelper.findMethod(c, "Instance", null, new Class[] {});
-            return m.invoke(null, new Object[] {});  
+            return m.invoke(null, new Object[] {});
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-    
+
     public static Object getiEntity(Entity entity) {
         if (npcAPI != null) {
             try {
-                Method m = ReflectionHelper.findMethod(npcAPI.getClass(), "getIEntity", null, new Class[] {Entity.class});
+                Method m = ReflectionHelper.findMethod(npcAPI.getClass(), "getIEntity", null, new Class[] { Entity.class });
                 return m.invoke(npcAPI, entity);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -88,7 +92,7 @@ public class AddonCustomNPCS extends ModAddon {
         }
         return null;
     }
-    
+
     public static Object getDisplay(Object iEntity) {
         if (npcAPI != null) {
             try {
@@ -100,18 +104,18 @@ public class AddonCustomNPCS extends ModAddon {
         }
         return null;
     }
-    
+
     /**
      * 
      * @param iDisplay
-     * @param part 0:Head, 1:Body, 2:ArmLeft, 3:ArmRight, 4:LegLeft, 5:LegRight
+     * @param part     0:Head, 1:Body, 2:ArmLeft, 3:ArmRight, 4:LegLeft, 5:LegRight
      * @return
      */
     public static float[] getModelScale(Object iDisplay, int part) {
         if (npcAPI != null) {
             try {
-                Method m = ReflectionHelper.findMethod(iDisplay.getClass(), "getModelScale", null, new Class[] {int.class});
-                return (float[]) m.invoke(iDisplay, new Object[] {part});
+                Method m = ReflectionHelper.findMethod(iDisplay.getClass(), "getModelScale", null, new Class[] { int.class });
+                return (float[]) m.invoke(iDisplay, new Object[] { part });
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -119,16 +123,25 @@ public class AddonCustomNPCS extends ModAddon {
         return null;
     }
     
+    private static Class<? extends EntityLivingBase>  getCNPCEntityClass() {
+        try {
+            return (Class<? extends EntityLivingBase>) Class.forName(CLASS_NAME_ENTITY_CNPC);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static class SkinnableEntityCustomNPC extends SkinnableEntity {
-        
+
         private boolean addedRender = false;
-        
+
         public SkinnableEntityCustomNPC() {
             if (!ArmourersWorkshop.isDedicated()) {
                 MinecraftForge.EVENT_BUS.register(this);
             }
         }
-        
+
         @SideOnly(Side.CLIENT)
         @SubscribeEvent
         public void onRenderLiving(RenderLivingEvent.Pre event) {
@@ -140,7 +153,7 @@ public class AddonCustomNPCS extends ModAddon {
 
             }
         }
-        
+
         @SideOnly(Side.CLIENT)
         @Override
         public void addRenderLayer(RenderManager renderManager) {
@@ -150,10 +163,9 @@ public class AddonCustomNPCS extends ModAddon {
                 if (layerRendererNPC != null) {
                     ((RenderLivingBase<?>) renderer).addLayer(layerRendererNPC);
                 }
-                
-                
+
                 try {
-                    Object object = ReflectionHelper.getPrivateValue(RenderLivingBase.class, (RenderLivingBase)renderer, "field_177097_h", "layerRenderers");
+                    Object object = ReflectionHelper.getPrivateValue(RenderLivingBase.class, (RenderLivingBase) renderer, "field_177097_h", "layerRenderers");
                     if (object != null) {
                         List<LayerRenderer<?>> layerRenderers = (List<LayerRenderer<?>>) object;
                         // Looking for held item layer.
@@ -164,7 +176,7 @@ public class AddonCustomNPCS extends ModAddon {
                                 ModLogger.log("Removing held item layer from " + renderer);
                                 layerRenderers.remove(i);
                                 ModLogger.log("Adding skinned held item layer to " + renderer);
-                                layerRenderers.add(new SkinLayerRendererHeldItem((RenderLivingBase)renderer, layerRenderer));
+                                layerRenderers.add(new SkinLayerRendererHeldItem((RenderLivingBase) renderer, layerRenderer));
                                 break;
                             }
                         }
@@ -174,19 +186,13 @@ public class AddonCustomNPCS extends ModAddon {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                
-                
+
             }
         }
-        
+
         @Override
         public Class<? extends EntityLivingBase> getEntityClass() {
-            try {
-                return (Class<? extends EntityLivingBase>) Class.forName(CLASS_NAME_ENTITY_CNPC);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            return null;
+            return getCNPCEntityClass();
         }
 
         @Override
@@ -197,7 +203,7 @@ public class AddonCustomNPCS extends ModAddon {
             skinTypes.add(SkinTypeRegistry.skinLegs);
             skinTypes.add(SkinTypeRegistry.skinFeet);
             skinTypes.add(SkinTypeRegistry.skinWings);
-            
+
             skinTypes.add(SkinTypeRegistry.skinSword);
             skinTypes.add(SkinTypeRegistry.skinShield);
             skinTypes.add(SkinTypeRegistry.skinBow);
@@ -213,41 +219,37 @@ public class AddonCustomNPCS extends ModAddon {
             }
             return 1;
         }
-        
+
         @Override
         public boolean canUseWandOfStyle(EntityPlayer user) {
             return true;
         }
-        
     }
-    
-    
+
     @SideOnly(Side.CLIENT)
     public static class SkinLayerRendererCustomNPC implements LayerRenderer {
 
         private final RenderLivingBase renderLivingBase;
-        
+
         public SkinLayerRendererCustomNPC(RenderLivingBase renderLivingBase) {
             this.renderLivingBase = renderLivingBase;
+            MinecraftForge.EVENT_BUS.register(this);
         }
-        
+
         @Override
         public void doRenderLayer(EntityLivingBase entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
             IEntitySkinCapability skinCapability = EntitySkinCapability.get(entitylivingbaseIn);
             if (skinCapability == null) {
                 return;
             }
-            double distance = Minecraft.getMinecraft().player.getDistance(
-                    entitylivingbaseIn.posX,
-                    entitylivingbaseIn.posY,
-                    entitylivingbaseIn.posZ);
+            double distance = Minecraft.getMinecraft().player.getDistance(entitylivingbaseIn.posX, entitylivingbaseIn.posY, entitylivingbaseIn.posZ);
             if (distance > ConfigHandlerClient.renderDistanceSkin) {
                 return;
             }
-            //Object iEntity = AddonCustomNPCS.getiEntity(entitylivingbaseIn);
-            //Object display = AddonCustomNPCS.getDisplay(entitylivingbaseIn);
-            //ModLogger.log(display);
-            
+            // Object iEntity = AddonCustomNPCS.getiEntity(entitylivingbaseIn);
+            // Object display = AddonCustomNPCS.getDisplay(entitylivingbaseIn);
+            // ModLogger.log(display);
+
             ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
             SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
             ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
@@ -262,7 +264,7 @@ public class AddonCustomNPCS extends ModAddon {
                     for (int skinIndex = 0; skinIndex < skinCapability.getSlotCountForSkinType(skinType); skinIndex++) {
                         ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, skinIndex);
                         if (skinDescriptor != null) {
-                            Skin skin = ClientSkinCache .INSTANCE.getSkin(skinDescriptor);
+                            Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
                             if (skin == null) {
                                 continue;
                             }
@@ -272,17 +274,32 @@ public class AddonCustomNPCS extends ModAddon {
                                     dye.addDye(dyeIndex, skinDescriptor.getSkinDye().getDyeColour(dyeIndex));
                                 }
                             }
-                            modelRenderer.renderEquipmentPart(entitylivingbaseIn, (ModelBiped) renderLivingBase.getMainModel(), skin, dye, extraColours, 0, true);
+                            ResourceLocation texture = DefaultPlayerSkin.getDefaultSkinLegacy();
+                            modelRenderer.renderEquipmentPart(skin, new SkinRenderData(0.0625F, dye, extraColours, distance, true, true, false, texture), entitylivingbaseIn, (ModelBiped) renderLivingBase.getMainModel());
                         }
                     }
                 }
             }
             GlStateManager.disableRescaleNormal();
         }
-        
+
         @Override
         public boolean shouldCombineTextures() {
             return false;
+        }
+        
+        @SubscribeEvent(priority = EventPriority.LOW)
+        public void onRenderLivingPre(RenderLivingEvent.Pre<EntityLivingBase> event) {
+            if (event.getEntity().getClass() != getCNPCEntityClass()) {
+                return;
+            }
+        }
+
+        @SubscribeEvent(priority = EventPriority.HIGH)
+        public void onRenderLivingPost(RenderLivingEvent.Post<EntityLivingBase> event) {
+            if (event.getEntity().getClass() != getCNPCEntityClass()) {
+                return;
+            }
         }
     }
 }
