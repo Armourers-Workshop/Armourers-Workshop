@@ -43,6 +43,7 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool, 
 
     public ItemBurnTool() {
         super(LibItemNames.BURN_TOOL);
+        setCreativeTab(ArmourersWorkshop.TAB_PAINTING_TOOLS);
         setSortPriority(18);
     }
     

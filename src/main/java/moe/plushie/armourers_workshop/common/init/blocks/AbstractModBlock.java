@@ -28,7 +28,7 @@ public abstract class AbstractModBlock extends Block implements ISortOrder, ICus
 
     public AbstractModBlock(String name) {
         super(Material.IRON);
-        setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
+        setCreativeTab(ArmourersWorkshop.TAB_MAIN);
         setHardness(3.0F);
         setSoundType(SoundType.METAL);
         setTranslationKey(name);
@@ -38,7 +38,7 @@ public abstract class AbstractModBlock extends Block implements ISortOrder, ICus
     public AbstractModBlock(String name, Material material, SoundType soundType, boolean addCreativeTab) {
         super(material);
         if (addCreativeTab) {
-            setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
+            setCreativeTab(ArmourersWorkshop.TAB_MAIN);
         }
         setHardness(3.0F);
         setSoundType(soundType);

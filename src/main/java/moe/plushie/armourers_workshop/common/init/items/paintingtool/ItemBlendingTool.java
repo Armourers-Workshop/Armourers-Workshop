@@ -50,6 +50,7 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
 
     public ItemBlendingTool() {
         super(LibItemNames.BLENDING_TOOL);
+        setCreativeTab(ArmourersWorkshop.TAB_PAINTING_TOOLS);
         MinecraftForge.EVENT_BUS.register(this);
         setSortPriority(14);
     }

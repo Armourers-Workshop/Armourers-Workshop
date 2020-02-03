@@ -145,6 +145,12 @@ public class ColouredFace {
         int faceOffsetX = 0;
         int faceOffsetY = 0;
         
+        if (skinPartTex.isTextureMirrored()) {
+            // TODO Fix mirror.
+            //x = (byte) (-x - 1);
+            //z = (byte) (-z - 1);
+        }
+        
         switch (facing) {
         case NORTH:
             faceX = skinPartTex.getGuideSpace().getDepth();
@@ -214,7 +220,7 @@ public class ColouredFace {
         
         int srcX = MathHelper.clamp(posX + faceX + faceOffsetX, posX + faceX, posX + faceX + faceWidth);
         int srcY = MathHelper.clamp(posY + faceY + faceOffsetY, posY + faceY, posY + faceY + faceHeight);
-
+        
         Point p = new Point(srcX, srcY);
         //ModLogger.log(skinPartTex.getPartName() + " - " + p);
         if (p.x >= 0 & p.y >= 0 & p.x < image.getWidth() & p.y < image.getHeight()) {

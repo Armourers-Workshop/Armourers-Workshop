@@ -28,7 +28,7 @@ public abstract class AbstractModItem extends Item implements ISortOrder, ICusto
     
     public AbstractModItem(String name, boolean addCreativeTab) {
         if (addCreativeTab) {
-            setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
+            setCreativeTab(ArmourersWorkshop.TAB_MAIN);
         }
         setTranslationKey(name);
         setHasSubtypes(false);

@@ -49,6 +49,7 @@ public class ItemColourNoiseTool extends AbstractModItem implements IConfigurabl
 
     public ItemColourNoiseTool() {
         super(LibItemNames.COLOUR_NOISE_TOOL);
+        setCreativeTab(ArmourersWorkshop.TAB_PAINTING_TOOLS);
         setSortPriority(15);
     }
 

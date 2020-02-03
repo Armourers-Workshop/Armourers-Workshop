@@ -4,12 +4,12 @@ import org.apache.logging.log4j.Logger;
 
 import moe.plushie.armourers_workshop.common.ApiRegistrar;
 import moe.plushie.armourers_workshop.common.command.CommandArmourers;
-import moe.plushie.armourers_workshop.common.creativetab.CreativeTabArmourersWorkshop;
+import moe.plushie.armourers_workshop.common.creativetab.CreativeTabMain;
+import moe.plushie.armourers_workshop.common.creativetab.CreativeTabPaintingTools;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.proxies.CommonProxy;
 import moe.plushie.armourers_workshop.utils.ModLogger;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -41,7 +41,8 @@ public class ArmourersWorkshop {
     @SidedProxy(clientSide = LibModInfo.PROXY_CLIENT_CLASS, serverSide = LibModInfo.PROXY_COMMNON_CLASS)
     private static CommonProxy proxy;
 
-    public static CreativeTabArmourersWorkshop tabArmorersWorkshop = new CreativeTabArmourersWorkshop(CreativeTabs.getNextID(), LibModInfo.ID.toLowerCase());
+    public static final CreativeTabMain TAB_MAIN = new CreativeTabMain();
+    public static final CreativeTabPaintingTools TAB_PAINTING_TOOLS = new CreativeTabPaintingTools();
 
     @EventHandler
     public void perInit(FMLPreInitializationEvent event) {

@@ -648,7 +648,8 @@ commands.armourers.invalidDyeFormat=%1$s is not a valid dye format.
 
 
 # Creative tab
-itemGroup.armourers_workshop=Armourer's Workshop
+itemGroup.armourers_workshop_main=Armourer's Workshop - Main
+itemGroup.armourers_workshop_painting_tools=Armourer's Workshop - Building
 
 
 # Keybindings

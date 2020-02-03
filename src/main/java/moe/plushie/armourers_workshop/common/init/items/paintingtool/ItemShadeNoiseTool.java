@@ -49,6 +49,7 @@ public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurable
 
     public ItemShadeNoiseTool() {
         super(LibItemNames.SHADE_NOISE_TOOL);
+        setCreativeTab(ArmourersWorkshop.TAB_PAINTING_TOOLS);
         setSortPriority(16);
     }
     

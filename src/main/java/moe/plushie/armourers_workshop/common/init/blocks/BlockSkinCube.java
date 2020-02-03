@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.init.blocks;
 
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
@@ -26,6 +27,7 @@ public class BlockSkinCube extends AbstractModBlockContainer implements IPantabl
     
     public BlockSkinCube(String name, boolean glowing) {
         super(name);
+        setCreativeTab(ArmourersWorkshop.TAB_PAINTING_TOOLS);
         if (glowing) {
             setLightLevel(1.0F);
         }

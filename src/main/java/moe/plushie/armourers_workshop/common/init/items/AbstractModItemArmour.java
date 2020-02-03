@@ -36,7 +36,7 @@ public class AbstractModItemArmour extends ItemArmor implements ISortOrder, ICus
     public AbstractModItemArmour(String name, ArmorMaterial armorMaterial, EntityEquipmentSlot armorType, boolean addCreativeTab) {
         super(armorMaterial, 2, armorType);
         if (addCreativeTab) {
-            setCreativeTab(ArmourersWorkshop.tabArmorersWorkshop);
+            setCreativeTab(ArmourersWorkshop.TAB_MAIN);
         }
         setTranslationKey(name);
         setHasSubtypes(false);

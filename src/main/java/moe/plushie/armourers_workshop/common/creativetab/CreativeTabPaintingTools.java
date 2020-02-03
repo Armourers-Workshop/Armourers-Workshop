@@ -3,23 +3,28 @@ package moe.plushie.armourers_workshop.common.creativetab;
 import java.util.Collections;
 import java.util.Comparator;
 
-import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.init.items.ModItems;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class CreativeTabArmourersWorkshop extends CreativeTabs {
-
-    public CreativeTabArmourersWorkshop(int id, String label) {
-        super(id, label);
+public class CreativeTabPaintingTools extends CreativeTabs {
+    
+    public CreativeTabPaintingTools() {
+        super(CreativeTabs.getNextID(), LibModInfo.ID + "_painting_tools");
     }
     
     @SideOnly(Side.CLIENT)
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(ModBlocks.armourer);
+        ItemStack itemStack = new ItemStack(ModItems.paintbrush);
+        PaintingHelper.setToolPaint(itemStack, PaintRegistry.PAINT_TYPE_RAINBOW);
+        return itemStack;
     }
     
     @SideOnly(Side.CLIENT)
@@ -32,7 +37,6 @@ public class CreativeTabArmourersWorkshop extends CreativeTabs {
     }
     
     private static class ItemComparator implements Comparator<ItemStack> {
-        
         @Override
         public int compare(ItemStack stack1, ItemStack stack2) {
             if (stack1.getItem() instanceof ISortOrder && stack2.getItem() instanceof ISortOrder) {

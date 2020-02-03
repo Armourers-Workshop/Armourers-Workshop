@@ -42,6 +42,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
 
     public AbstractPaintingTool(String name) {
         super(name);
+        setCreativeTab(ArmourersWorkshop.TAB_PAINTING_TOOLS);
     }
     
     @SideOnly(Side.CLIENT)

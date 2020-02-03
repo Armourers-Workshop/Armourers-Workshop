@@ -48,6 +48,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     
     public ItemColourPicker() {
         super(LibItemNames.COLOUR_PICKER);
+        setCreativeTab(ArmourersWorkshop.TAB_PAINTING_TOOLS);
         setSortPriority(12);
     }
     

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.common.init.items;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import net.minecraft.block.state.IBlockState;
@@ -14,6 +15,7 @@ public class ItemBlockMarker extends AbstractModItem {
 
     public ItemBlockMarker() {
         super(LibItemNames.BLOCK_MARKER);
+        setCreativeTab(ArmourersWorkshop.TAB_PAINTING_TOOLS);
         setSortPriority(12);
     }
     
