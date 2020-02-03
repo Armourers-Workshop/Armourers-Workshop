@@ -65,6 +65,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     private static final AxisAlignedBB MANNEQUIN_AABB = new AxisAlignedBB(0.1F, 0, 0.1F, 0.9F, 0.9F, 0.9F);
     private static final DamageSource VIC_DAMAGE = new DamageSource("victorious");
     private static final GameProfile VIC_PROFILE = new GameProfile(UUID.fromString("b027a4f4-d480-426c-84a3-a9cb029f4b72"), "VicNightfall");
+    private static final GameProfile GAROAM_PROFILE = new GameProfile(UUID.fromString("31873a23-125e-4752-8607-0f1c3cb22c84"), "Garoam");
 
     private static final String TAG_OWNER = "owner";
     private static final String TAG_IMAGE_URL = "imageUrl";
@@ -176,11 +177,17 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
             if (te != null && te.PROP_RENDER_EXTRAS.get()) {
                 Contributor contributor = Contributors.INSTANCE.getContributor(te.PROP_OWNER.get());
                 if (contributor != null & te.PROP_VISIBLE.get()) {
-                    for (int i = 0; i < 6; i++) {
-
-                        Particle particle = particleManager.spawnEffectParticle(EnumParticleTypes.SPELL.getParticleID(), pos.getX() - 1 + rand.nextFloat() * 3F, pos.getY(), pos.getZ() - 1 + rand.nextFloat() * 3F, 0, 0, 0, null);
-                        particle.setRBGColorF((float) (contributor.r & 0xFF) / 255F, (float) (contributor.g & 0xFF) / 255F, (float) (contributor.b & 0xFF) / 255F);
-                        Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+                    if (contributor.uuid.equals(GAROAM_PROFILE.getId())) {
+                        for (int i = 0; i < 10; i++) {
+                            Particle particle = particleManager.spawnEffectParticle(EnumParticleTypes.HEART.getParticleID(), pos.getX() - 1 + rand.nextFloat() * 3F, pos.getY(), pos.getZ() - 1 + rand.nextFloat() * 3F, 0, 0, 0, null);
+                            Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+                        }
+                    } else {
+                        for (int i = 0; i < 6; i++) {
+                            Particle particle = particleManager.spawnEffectParticle(EnumParticleTypes.SPELL.getParticleID(), pos.getX() - 1 + rand.nextFloat() * 3F, pos.getY(), pos.getZ() - 1 + rand.nextFloat() * 3F, 0, 0, 0, null);
+                            particle.setRBGColorF((float) (contributor.r & 0xFF) / 255F, (float) (contributor.g & 0xFF) / 255F, (float) (contributor.b & 0xFF) / 255F);
+                            Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+                        }
                     }
                 }
             }
