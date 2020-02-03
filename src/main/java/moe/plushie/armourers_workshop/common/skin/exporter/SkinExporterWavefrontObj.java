@@ -23,7 +23,7 @@ import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 
 public class SkinExporterWavefrontObj implements ISkinExporter {
-    
+
     @Override
     public String[] getFileExtensions() {
         return new String[] { "obj" };
@@ -39,7 +39,6 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private void exportPart(SkinPart skinPart, Skin skin, File filePath, String filename, float scale) throws IOException {
@@ -63,7 +62,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         }
 
         BufferedImage texture = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
-        
+
         FileOutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream(new File(filePath, finalName + ".obj"), false);
@@ -131,34 +130,31 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
                 break;
             }
         }
-        
+
         int ix = 0;
         int iy = 0;
         float pixelSize = 0.0078125F;
-        
+
         for (int i = 0; i < faces.size(); i++) {
             ColouredFace cf = faces.get(i);
             if (PaintRegistry.getPaintTypeFormByte(cf.t) == PaintRegistry.PAINT_TYPE_NONE) {
                 continue;
             }
-            int colour = PaintingHelper.bytesToInt(new byte[] { cf.r, cf.g, cf.b, (byte) 255});
+            int colour = PaintingHelper.bytesToInt(new byte[] { cf.r, cf.g, cf.b, (byte) 255 });
             texture.setRGB(ix, 255 - iy, colour);
             texture.setRGB(ix + 1, 255 - iy, colour);
-            
+
             texture.setRGB(ix, 255 - iy - 1, colour);
-            
+
             texture.setRGB(ix + 1, 255 - iy - 1, colour);
-            
+
             float shift = 0.002F;
-            
-            os.write(String.format("vt %f %f", (float)ix / 2F * pixelSize + pixelSize - shift, (float)iy / 2F * pixelSize + shift) + CRLF);
-            os.write(String.format("vt %f %f", (float)ix / 2F * pixelSize + pixelSize  - shift, (float)iy / 2F * pixelSize + pixelSize  - shift) + CRLF);
-            os.write(String.format("vt %f %f", (float)ix / 2F * pixelSize + shift, (float)iy / 2F * pixelSize + pixelSize - shift) + CRLF);
-            os.write(String.format("vt %f %f", (float)ix / 2F * pixelSize + shift, (float)iy / 2F * pixelSize + shift) + CRLF);
-            
-            
-            
-            
+
+            os.write(String.format("vt %f %f", (float) ix / 2F * pixelSize + pixelSize - shift, (float) iy / 2F * pixelSize + shift) + CRLF);
+            os.write(String.format("vt %f %f", (float) ix / 2F * pixelSize + pixelSize - shift, (float) iy / 2F * pixelSize + pixelSize - shift) + CRLF);
+            os.write(String.format("vt %f %f", (float) ix / 2F * pixelSize + shift, (float) iy / 2F * pixelSize + pixelSize - shift) + CRLF);
+            os.write(String.format("vt %f %f", (float) ix / 2F * pixelSize + shift, (float) iy / 2F * pixelSize + shift) + CRLF);
+
             ix++;
             ix++;
             if (ix > 255) {
@@ -168,7 +164,6 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
             }
         }
 
-        
         for (int i = 0; i < faces.size(); i++) {
             ColouredFace cf = faces.get(i);
             if (PaintRegistry.getPaintTypeFormByte(faces.get(i).t) == PaintRegistry.PAINT_TYPE_NONE) {
@@ -218,7 +213,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         os.flush();
         outputStream.flush();
         outputStream.close();
-        
+
         ImageIO.write(texture, "png", new File(filePath, finalName + ".png"));
     }
 
