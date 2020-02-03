@@ -87,7 +87,7 @@ public abstract class AbstractSkinPartTypeBase implements ISkinPartType {
     public boolean isOverlayOverridden(SkinProperties skinProps) {
         return false;
     }
-    
+
     @Override
     public SkinPart makeDummyPaintPart(int[] paintData) {
         if (!(this instanceof ISkinPartTypeTextured)) {
@@ -107,7 +107,7 @@ public abstract class AbstractSkinPartTypeBase implements ISkinPartType {
         for (int ix = 0; ix < guideSpace.getWidth(); ix++) {
             for (int iy = 0; iy < guideSpace.getHeight(); iy++) {
                 for (int iz = 0; iz < guideSpace.getDepth(); iz++) {
-                    
+
                     byte x = (byte) (ix - guideSpace.getWidth() - guideSpace.getX());
                     byte y = (byte) (iy - guideSpace.getHeight() - guideSpace.getY());
                     byte z = (byte) (iz - guideSpace.getDepth() - guideSpace.getZ());
@@ -118,7 +118,7 @@ public abstract class AbstractSkinPartTypeBase implements ISkinPartType {
                         cubeData.setCubeColour(i, side, rgbt[0], rgbt[1], rgbt[2]);
                         PaintType paintType = PaintRegistry.getPaintTypeFormByte(rgbt[3]);
                         if (paintType == PaintRegistry.PAINT_TYPE_NONE) {
-                            paintType = PaintRegistry.PAINT_TYPE_TEXTURE;
+                            paintType = PaintRegistry.PAINT_TYPE_NONE;
                         }
                         cubeData.setCubePaintType(i, side, (byte) paintType.getId());
                     }
