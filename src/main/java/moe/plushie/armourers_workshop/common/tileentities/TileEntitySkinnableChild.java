@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.common.tileentities;
 
 import org.apache.logging.log4j.Level;
 
-import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable;
-import moe.plushie.armourers_workshop.common.blocks.BlockSkinnableChild;
+import moe.plushie.armourers_workshop.common.init.blocks.BlockSkinnable;
+import moe.plushie.armourers_workshop.common.init.blocks.BlockSkinnableChild;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;

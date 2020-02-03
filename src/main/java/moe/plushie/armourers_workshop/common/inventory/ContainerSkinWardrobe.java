@@ -7,11 +7,11 @@ import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCap
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.common.init.items.ItemDyeBottle;
+import moe.plushie.armourers_workshop.common.init.items.ItemSkin;
+import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotDyeBottle;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
-import moe.plushie.armourers_workshop.common.items.ItemDyeBottle;
-import moe.plushie.armourers_workshop.common.items.ItemSkin;
-import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;

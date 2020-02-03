@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.common.crafting.recipe;
 
-import moe.plushie.armourers_workshop.common.items.ModItems;
+import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;

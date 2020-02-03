@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.common.world;
 import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
-import moe.plushie.armourers_workshop.common.blocks.BlockSkinnable;
-import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.init.blocks.BlockSkinnable;
+import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;

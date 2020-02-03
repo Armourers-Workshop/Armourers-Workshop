@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.common.handler;
 
-import moe.plushie.armourers_workshop.common.blocks.BlockMannequin;
-import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.common.init.blocks.BlockMannequin;
+import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;

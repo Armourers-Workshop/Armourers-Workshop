@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.common.permission;
 
 import java.util.ArrayList;
 
-import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
-import moe.plushie.armourers_workshop.common.items.ModItems;
+import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;

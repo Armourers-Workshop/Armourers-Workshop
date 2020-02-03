@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.client.handler;
 
-import moe.plushie.armourers_workshop.common.items.ItemSkin;
+import moe.plushie.armourers_workshop.common.init.items.ItemSkin;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;

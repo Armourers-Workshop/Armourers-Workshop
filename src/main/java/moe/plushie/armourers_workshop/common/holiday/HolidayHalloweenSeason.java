@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.common.holiday;
 
-import moe.plushie.armourers_workshop.common.items.ItemGiftSack;
+import moe.plushie.armourers_workshop.common.init.items.ItemGiftSack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;

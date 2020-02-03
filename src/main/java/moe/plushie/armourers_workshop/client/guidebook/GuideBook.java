@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.client.guidebook;
 
-import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
-import moe.plushie.armourers_workshop.common.items.ModItems;
+import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

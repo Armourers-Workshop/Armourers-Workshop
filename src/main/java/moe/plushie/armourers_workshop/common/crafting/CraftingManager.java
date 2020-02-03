@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.common.crafting;
 
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
-import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.handler.DollCraftingHandler;
-import moe.plushie.armourers_workshop.common.items.ModItems;
+import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;

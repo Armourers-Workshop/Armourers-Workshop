@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.common.creativetab;
 import java.util.Collections;
 import java.util.Comparator;
 
-import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;

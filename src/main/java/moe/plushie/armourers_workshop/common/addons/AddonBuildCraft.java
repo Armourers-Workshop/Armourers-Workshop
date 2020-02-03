@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.common.addons;
 
 import org.apache.logging.log4j.Level;
 
-import moe.plushie.armourers_workshop.common.items.ItemArmourersHammer;
-import moe.plushie.armourers_workshop.common.items.ItemSkin;
+import moe.plushie.armourers_workshop.common.init.items.ItemArmourersHammer;
+import moe.plushie.armourers_workshop.common.init.items.ItemSkin;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.Loader;

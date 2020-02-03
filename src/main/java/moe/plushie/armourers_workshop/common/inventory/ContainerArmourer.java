@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.common.inventory;
 
 import moe.plushie.armourers_workshop.common.exception.SkinSaveException;
+import moe.plushie.armourers_workshop.common.init.items.ItemArmourContainerItem;
+import moe.plushie.armourers_workshop.common.init.items.ItemSkin;
+import moe.plushie.armourers_workshop.common.init.items.ItemSkinTemplate;
+import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotOutput;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkinTemplate;
-import moe.plushie.armourers_workshop.common.items.ItemArmourContainerItem;
-import moe.plushie.armourers_workshop.common.items.ItemSkin;
-import moe.plushie.armourers_workshop.common.items.ItemSkinTemplate;
-import moe.plushie.armourers_workshop.common.items.ModItems;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.skin.ISkinHolder;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;

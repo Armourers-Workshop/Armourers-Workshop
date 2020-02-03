@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.common.inventory.slot;
 
-import moe.plushie.armourers_workshop.common.items.ItemArmourContainerItem;
-import moe.plushie.armourers_workshop.common.items.ItemSkin;
-import moe.plushie.armourers_workshop.common.items.ItemSkinTemplate;
+import moe.plushie.armourers_workshop.common.init.items.ItemArmourContainerItem;
+import moe.plushie.armourers_workshop.common.init.items.ItemSkin;
+import moe.plushie.armourers_workshop.common.init.items.ItemSkinTemplate;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.common.crafting;
 
-import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
-import moe.plushie.armourers_workshop.common.items.ModItems;
+import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;

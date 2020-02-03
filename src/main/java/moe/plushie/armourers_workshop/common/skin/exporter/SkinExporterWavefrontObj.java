@@ -23,7 +23,7 @@ import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 
 public class SkinExporterWavefrontObj implements ISkinExporter {
-
+    
     @Override
     public String[] getFileExtensions() {
         return new String[] { "obj" };

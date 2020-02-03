@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.client.render.tileentities;
 
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.block.ModelBlockGlobalSkinLibrary;
-import moe.plushie.armourers_workshop.common.blocks.BlockGlobalSkinLibrary;
-import moe.plushie.armourers_workshop.common.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.init.blocks.BlockGlobalSkinLibrary;
+import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityGlobalSkinLibrary;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
