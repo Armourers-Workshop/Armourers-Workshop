@@ -11,7 +11,7 @@ public class ContainerAdvancedSkinBuilder extends ModTileContainer<TileEntityAdv
         super(invPlayer, tileEntity);
         addPlayerSlots(8, 40);
         for (int i = 0; i < tileEntity.getSizeInventory(); i++) {
-            addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinAdvanced, tileEntity, i, 8 + 20 * i, 20));
+            addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinPart, tileEntity, i, 8 + 20 * i, 20));
         }
     }
 }

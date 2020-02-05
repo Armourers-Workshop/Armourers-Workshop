@@ -16,12 +16,14 @@ import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class SkinProperties {
-    
+
+    // Properties for all skins.
     public static final SkinProperty<String> PROP_ALL_CUSTOM_NAME = new SkinProperty<String>("customName", "");
     public static final SkinProperty<String> PROP_ALL_FLAVOUR_TEXT = new SkinProperty<String>("flavour", "");
     public static final SkinProperty<String> PROP_ALL_AUTHOR_NAME = new SkinProperty<String>("authorName", "");
     public static final SkinProperty<String> PROP_ALL_AUTHOR_UUID = new SkinProperty<String>("authorUUID", "");
-    
+
+    // Properties.
     @Deprecated
     public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE = new SkinProperty<Boolean>("armourOverride", false);
     public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_HEAD = new SkinProperty<Boolean>("overrideModelHead", false);
@@ -30,7 +32,7 @@ public class SkinProperties {
     public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_ARM_RIGHT = new SkinProperty<Boolean>("overrideModelArmRight", false);
     public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_LEG_LEFT = new SkinProperty<Boolean>("overrideModelLegLeft", false);
     public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_LEG_RIGHT = new SkinProperty<Boolean>("overrideModelLegRight", false);
-    
+
     @Deprecated
     public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY = new SkinProperty<Boolean>("armourHideOverlay", false);
     public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_HEAD = new SkinProperty<Boolean>("hideOverlayHead", false);
@@ -39,11 +41,11 @@ public class SkinProperties {
     public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_ARM_RIGHT = new SkinProperty<Boolean>("hideOverlayArmRight", false);
     public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_LEG_LEFT = new SkinProperty<Boolean>("hideOverlayLegLeft", false);
     public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_LEG_RIGHT = new SkinProperty<Boolean>("hideOverlayLegRight", false);
-    
+
     public static final SkinProperty<Boolean> PROP_MODEL_LEGS_LIMIT_LIMBS = new SkinProperty<Boolean>("limitLimbs", false);
-    
+
     public static final SkinProperty<String> PROP_OUTFIT_PART_INDEXS = new SkinProperty<String>("partIndexs", "");
-    
+
     public static final SkinProperty<Boolean> PROP_BLOCK_GLOWING = new SkinProperty<Boolean>("blockGlowing", false);
     public static final SkinProperty<Boolean> PROP_BLOCK_LADDER = new SkinProperty<Boolean>("blockLadder", false);
     public static final SkinProperty<Boolean> PROP_BLOCK_NO_COLLISION = new SkinProperty<Boolean>("blockNoCollision", false);
@@ -54,25 +56,34 @@ public class SkinProperties {
     public static final SkinProperty<Boolean> PROP_BLOCK_ENDER_INVENTORY = new SkinProperty<Boolean>("blockEnderInventory", false);
     public static final SkinProperty<Integer> PROP_BLOCK_INVENTORY_WIDTH = new SkinProperty<Integer>("blockInventoryWidth", 9);
     public static final SkinProperty<Integer> PROP_BLOCK_INVENTORY_HEIGHT = new SkinProperty<Integer>("blockInventoryHeight", 4);
-    
+
     public static final SkinProperty<Double> PROP_WINGS_MAX_ANGLE = new SkinProperty<Double>("wingsMaxAngle", 75D);
     public static final SkinProperty<Double> PROP_WINGS_MIN_ANGLE = new SkinProperty<Double>("wingsMinAngle", 0D);
     public static final SkinProperty<Double> PROP_WINGS_IDLE_SPEED = new SkinProperty<Double>("wingsIdleSpeed", 6000D);
     public static final SkinProperty<Double> PROP_WINGS_FLYING_SPEED = new SkinProperty<Double>("wingsFlyingSpeed", 350D);
     public static final SkinProperty<String> PROP_WINGS_MOVMENT_TYPE = new SkinProperty<String>("wingsMovmentType", MovementType.EASE.toString());
-    
+
     private static final String TAG_SKIN_PROPS = "skinProps";
 
-    private final LinkedHashMap<String, Object> properties;
+    // Properties for skin parts.
+    public static final SkinProperty<String> PROP_PART_TARGET = new SkinProperty<String>("target", "");
+    public static final SkinProperty<Boolean> PROP_PART_OVERRIDE = new SkinProperty<Boolean>("partOverride", false);
+    public static final SkinProperty<Boolean> PROP_PART_HIDE_OVERLAY = new SkinProperty<Boolean>("partHideOverlay", false);
+    public static final SkinProperty<Boolean> PROP_PART_LEGS_LIMIT_LIMB = new SkinProperty<Boolean>("limitLimb", false);
     
+    // Legacy
+    
+
+    private final LinkedHashMap<String, Object> properties;
+
     public SkinProperties() {
         properties = new LinkedHashMap<String, Object>();
     }
-    
+
     public SkinProperties(SkinProperties skinProps) {
         properties = (LinkedHashMap<String, Object>) skinProps.properties.clone();
     }
-    
+
     public ArrayList<String> getPropertiesList() {
         ArrayList<String> list = new ArrayList<String>();
         for (int i = 0; i < properties.size(); i++) {
@@ -106,11 +117,11 @@ public class SkinProperties {
             }
         }
     }
-    
+
     public void readFromStream(DataInputStream stream, int fileVersion) throws IOException {
         int count = stream.readInt();
         for (int i = 0; i < count; i++) {
-            
+
             String key = null;
             if (fileVersion > 12) {
                 key = StreamUtils.readStringUtf8(stream);
@@ -124,7 +135,7 @@ public class SkinProperties {
             } else {
                 throw new IOException("Error loading skin properties " + byteType);
             }
-            
+
             Object value = null;
             switch (type) {
             case STRING:
@@ -147,15 +158,15 @@ public class SkinProperties {
             properties.put(key, value);
         }
     }
-    
+
     public void removeProperty(String key) {
         properties.remove(key);
     }
-    
+
     public void setProperty(String key, Object value) {
         properties.put(key, value);
     }
-    
+
     public String getPropertyString(String key, String defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof String) {
@@ -163,7 +174,7 @@ public class SkinProperties {
         }
         return defaultValue;
     }
-    
+
     public int getPropertyInt(String key, int defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof Integer) {
@@ -171,7 +182,7 @@ public class SkinProperties {
         }
         return defaultValue;
     }
-    
+
     public double getPropertyDouble(String key, double defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof Double) {
@@ -179,7 +190,7 @@ public class SkinProperties {
         }
         return defaultValue;
     }
-    
+
     public Boolean getPropertyBoolean(String key, Boolean defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof Boolean) {
@@ -187,7 +198,7 @@ public class SkinProperties {
         }
         return defaultValue;
     }
-    
+
     public Object getProperty(String key, Object defaultValue) {
         Object value = properties.get(key);
         if (value != null) {
@@ -195,11 +206,11 @@ public class SkinProperties {
         }
         return defaultValue;
     }
-    
+
     public boolean haveProperty(String key) {
         return properties.containsKey(key);
     }
-    
+
     @Override
     public int hashCode() {
         return toString().hashCode();
@@ -226,12 +237,9 @@ public class SkinProperties {
     public String toString() {
         return "SkinProperties [properties=" + properties + "]";
     }
-    
+
     private enum DataTypes {
-        STRING,
-        INT,
-        DOUBLE,
-        BOOLEAN
+        STRING, INT, DOUBLE, BOOLEAN
     }
 
     public void readFromNBT(NBTTagCompound compound) {
@@ -239,7 +247,7 @@ public class SkinProperties {
             return;
         }
         byte[] data = compound.getByteArray(TAG_SKIN_PROPS);
-        
+
         ByteArrayInputStream bais = new ByteArrayInputStream(data);
         DataInputStream dataInputStream = new DataInputStream(bais);
         try {

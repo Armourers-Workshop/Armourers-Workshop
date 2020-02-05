@@ -8,9 +8,9 @@ import moe.plushie.armourers_workshop.common.skin.type.AbstractSkinPartTypeBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SkinAdvancedPartBase extends AbstractSkinPartTypeBase {
+public class SkinPartBase extends AbstractSkinPartTypeBase {
 
-    public SkinAdvancedPartBase(ISkinType baseType) {
+    public SkinPartBase(ISkinType baseType) {
         super(baseType);
         this.buildingSpace = new Rectangle3D(-32, -32, -32, 64, 64, 64);
         this.guideSpace = new Rectangle3D(0, 0, 0, 0, 0, 0);
@@ -19,7 +19,7 @@ public class SkinAdvancedPartBase extends AbstractSkinPartTypeBase {
 
     @Override
     public String getPartName() {
-        return "base";
+        return "part";
     }
 
     @SideOnly(Side.CLIENT)
@@ -34,6 +34,6 @@ public class SkinAdvancedPartBase extends AbstractSkinPartTypeBase {
     
     @Override
     public int getMaximumMarkersNeeded() {
-        return 20;
+        return 0;
     }
 }

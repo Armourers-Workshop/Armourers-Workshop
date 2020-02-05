@@ -53,7 +53,7 @@ public class RenderBlockAdvancedSkinBuilder extends TileEntitySpecialRenderer<Ti
             GlStateManager.popAttrib();
             
             GlStateManager.pushMatrix();
-            GlStateManager.translate(ps.posOffset.x * scale, ps.posOffset.y * scale, ps.posOffset.z * scale);
+            GlStateManager.translate(ps.posOffset.x * scale, -ps.posOffset.y * scale, ps.posOffset.z * scale);
             SkinItemRenderHelper.renderSkinWithoutHelper(descriptor, false);
             GlStateManager.popMatrix();
         }

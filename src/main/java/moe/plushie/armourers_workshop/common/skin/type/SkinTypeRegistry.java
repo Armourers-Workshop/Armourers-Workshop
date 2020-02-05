@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Level;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinTypeRegistry;
-import moe.plushie.armourers_workshop.common.skin.type.advanced.SkinAdvanced;
+import moe.plushie.armourers_workshop.common.skin.type.advanced.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.type.arrow.SkinArrow;
 import moe.plushie.armourers_workshop.common.skin.type.block.SkinBlock;
 import moe.plushie.armourers_workshop.common.skin.type.bow.SkinBow;
@@ -49,7 +49,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
 
     public static ISkinType skinBlock;
     // public static ISkinType skinHorse;
-    public static ISkinType skinAdvanced;
+    public static ISkinType skinPart;
     public static ISkinType skinOutfit;
 
     public static ISkinType oldSkinSkirt;
@@ -89,7 +89,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
 
         skinBlock = new SkinBlock();
         // skinHorse = new SkinHorse();
-        skinAdvanced = new SkinAdvanced();
+        skinPart = new SkinPart();
         skinOutfit = new SkinOutfit(skinHead, skinChest, skinLegs, skinFeet, skinWings);
 
         oldSkinSkirt = new SkinSkirt();
@@ -115,7 +115,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
 
         registerSkin(skinBlock);
         // registerSkin(skinHorse);
-        registerSkin(skinAdvanced);
+        registerSkin(skinPart);
         registerSkin(skinOutfit);
 
         registerSkin(skinUnknown);
