@@ -5,21 +5,26 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
+import moe.plushie.armourers_workshop.client.gui.style.GuiResourceManager;
+import moe.plushie.armourers_workshop.client.gui.style.GuiStyle;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
 
-    //private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE);
+    private static final ResourceLocation GUI_JSON = new ResourceLocation(LibModInfo.ID, "gui/wardrobe.json");
     
+    private final GuiStyle guiStyle;
     private EntityPlayer entityPlayer;
     private IEntitySkinCapability skinCapability;
     private IPlayerWardrobeCap wardrobeCapability;
@@ -32,6 +37,7 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
     
     public GuiTabWardrobeDisplaySettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IPlayerWardrobeCap wardrobeCapability) {
         super(tabId, parent, false);
+        this.guiStyle = GuiResourceManager.getGuiJsonInfo(GUI_JSON);
         this.entityPlayer = entityPlayer;
         this.skinCapability = skinCapability;
         this.wardrobeCapability = wardrobeCapability;
@@ -51,10 +57,10 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
         armourOverrideCheck[2] = new GuiCheckBox(4, 83, 67, GuiHelper.getLocalizedControlName(guiName, "renderLegArmour"), !armourOverride[1]);
         armourOverrideCheck[3] = new GuiCheckBox(5, 83, 87, GuiHelper.getLocalizedControlName(guiName, "renderFootArmour"), !armourOverride[0]);
         
-        buttonList.add(armourOverrideCheck[0]);
-        buttonList.add(armourOverrideCheck[1]);
-        buttonList.add(armourOverrideCheck[2]);
-        buttonList.add(armourOverrideCheck[3]);
+        for (int i = 0; i < armourOverrideCheck.length; i++) {
+            armourOverrideCheck[i].setTextColour(guiStyle.getColour("text"));
+            buttonList.add(armourOverrideCheck[i]);
+        }
     }
     
     @Override

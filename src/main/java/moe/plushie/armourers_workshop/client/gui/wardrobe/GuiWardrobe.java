@@ -12,6 +12,8 @@ import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTab;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabbed;
+import moe.plushie.armourers_workshop.client.gui.style.GuiResourceManager;
+import moe.plushie.armourers_workshop.client.gui.style.GuiStyle;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeColourSettings;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeDisplaySettings;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeDyes;
@@ -25,6 +27,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerW
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -46,7 +49,10 @@ public class GuiWardrobe extends GuiTabbed {
     private static final ResourceLocation TEXTURE_1 = new ResourceLocation(LibGuiResources.WARDROBE_1);
     private static final ResourceLocation TEXTURE_2 = new ResourceLocation(LibGuiResources.WARDROBE_2);
     private static final ResourceLocation TEXTURE_TAB = new ResourceLocation(LibGuiResources.WARDROBE_TABS);
+    private static final ResourceLocation GUI_JSON = new ResourceLocation(LibModInfo.ID, "gui/wardrobe.json");
+    
     private static final String GUI_NAME = "wardrobe";
+    private final GuiStyle guiStyle;
     
     private static int playerActiveTab;
     
@@ -68,6 +74,8 @@ public class GuiWardrobe extends GuiTabbed {
     
     public GuiWardrobe(InventoryPlayer inventory, EntitySkinCapability skinCapability, IWardrobeCap wardrobeCapability) {
         super(new ContainerSkinWardrobe(inventory, skinCapability, wardrobeCapability), false, TEXTURE_TAB);
+        
+        this.guiStyle = GuiResourceManager.getGuiJsonInfo(GUI_JSON);
         
         // Tab size 21
         this.xSize = 278;
@@ -184,6 +192,7 @@ public class GuiWardrobe extends GuiTabbed {
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTickTime, int mouseX, int mouseY) {
         GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.enableBlend();
         mc.renderEngine.bindTexture(TEXTURE_1);
         this.drawTexturedModalRect(getGuiLeft(), getGuiTop(), 0, 0, 256, 240);
         mc.renderEngine.bindTexture(TEXTURE_2);
@@ -212,7 +221,7 @@ public class GuiWardrobe extends GuiTabbed {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         // Title label.
-        GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, GUI_NAME);
+        GuiHelper.renderLocalizedGuiName(fontRenderer, this.xSize, GUI_NAME, guiStyle.getColour("text"));
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == getActiveTab()) {
@@ -220,7 +229,7 @@ public class GuiWardrobe extends GuiTabbed {
             }
         }
         // Player inventory label.
-        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 58, this.ySize - 96 + 2, 4210752);
+        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 58, this.ySize - 96 + 2, guiStyle.getColour("text"));
         GL11.glPushMatrix();
         GL11.glTranslatef(-guiLeft, -guiTop, 0F);
         tabController.drawHoverText(mc, mouseX, mouseY);

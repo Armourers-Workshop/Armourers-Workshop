@@ -8,6 +8,8 @@ import org.lwjgl.opengl.GL11;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
+import moe.plushie.armourers_workshop.client.gui.style.GuiResourceManager;
+import moe.plushie.armourers_workshop.client.gui.style.GuiStyle;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
@@ -16,6 +18,7 @@ import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCa
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -31,7 +34,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE_2);
+    private static final ResourceLocation GUI_JSON = new ResourceLocation(LibModInfo.ID, "gui/wardrobe.json");
     
+    private final GuiStyle guiStyle;
     private EntityPlayer entityPlayer;
     private IEntitySkinCapability skinCapability;
     private IWardrobeCap wardrobeCapability;
@@ -60,6 +65,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     
     public GuiTabWardrobeColourSettings(int tabId, GuiScreen parent, EntityPlayer entityPlayer, IEntitySkinCapability skinCapability, IWardrobeCap wardrobeCapability) {
         super(tabId, parent, false);
+        this.guiStyle = GuiResourceManager.getGuiJsonInfo(GUI_JSON);
         this.entityPlayer = entityPlayer;
         this.skinCapability = skinCapability;
         this.wardrobeCapability = wardrobeCapability;
@@ -204,11 +210,11 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         //String labelSkinOverride = GuiHelper.getLocalizedControlName("equipmentWardrobe", "label.skinOverride");
         //this.fontRendererObj.drawString(labelSkinOverride + ":", 165, 18, 4210752); 
         
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.skinColour") + ":", 83, 26, 4210752); 
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.hairColour") + ":", 159, 26, 4210752); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.skinColour") + ":", 83, 26, guiStyle.getColour("text")); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.hairColour") + ":", 159, 26, guiStyle.getColour("text")); 
         
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 83, 58, 4210752); 
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.miscColour") + ":", 159, 58, 4210752); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 83, 58, guiStyle.getColour("text")); 
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.miscColour") + ":", 159, 58, guiStyle.getColour("text")); 
         
         getColours();
         

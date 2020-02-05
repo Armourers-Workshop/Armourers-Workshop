@@ -19,5 +19,7 @@ public enum AdvancedSkinTrigger {
     RANDOM_TICK,
     LIGHT_LEVEL,
     FLYING,
-    SWIMING
+    SWIMING,
+    IN_RAIN,
+    MOVEMENT_SPEED
 }

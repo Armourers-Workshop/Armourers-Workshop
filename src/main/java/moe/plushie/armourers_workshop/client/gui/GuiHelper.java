@@ -51,7 +51,7 @@ public final class GuiHelper {
     }
     
     public static void renderLocalizedGuiName(FontRenderer fontRenderer, int xSize, String name) {
-        renderLocalizedGuiName(fontRenderer, xSize, name, null, 4210752);
+        renderLocalizedGuiName(fontRenderer, xSize, name, null, 0x404040);
     }
     
     public static void renderLocalizedGuiName(FontRenderer fontRenderer, int xSize, String name, int colour) {
