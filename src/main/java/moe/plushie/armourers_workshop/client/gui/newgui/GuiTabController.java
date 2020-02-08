@@ -15,10 +15,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiTabController extends GuiButtonExt {
-    
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.TABS);
-    private static final ResourceLocation ICONS = new ResourceLocation(LibGuiResources.ICONS);
-    
+
+    private static final ResourceLocation TEXTURE_TABS = new ResourceLocation(LibGuiResources.TABS);
+    private final ResourceLocation textureIcons;
+
     private GuiScreen parent;
     private boolean fullscreen;
     private int activeTab = -1;
@@ -26,24 +26,25 @@ public class GuiTabController extends GuiButtonExt {
     private int tabSpacing = 27;
     private boolean editMode = false;
     private int tabsPerSide = 5;
-    
-    public GuiTabController(GuiScreen parent, boolean fullscreen, int xPos, int yPos, int width, int height) {
+
+    public GuiTabController(GuiScreen parent, boolean fullscreen, int xPos, int yPos, int width, int height, ResourceLocation tabIcons) {
         super(0, xPos, yPos, width, height, "");
         this.parent = parent;
         this.fullscreen = fullscreen;
+        this.textureIcons = tabIcons;
         if (!fullscreen) {
             tabSpacing = 25;
         }
     }
-    
-    public GuiTabController(GuiScreen parent, boolean fullscreen) {
-        this(parent, fullscreen, 0, 0, 0, 0);
+
+    public GuiTabController(GuiScreen parent, boolean fullscreen, ResourceLocation tabIcons) {
+        this(parent, fullscreen, 0, 0, 0, 0, tabIcons);
     }
-    
+
     public void setTabSpacing(int tabSpacing) {
         this.tabSpacing = tabSpacing;
     }
-    
+
     public void initGui(int xPos, int yPos, int width, int height) {
         if (fullscreen) {
             this.x = 0;
@@ -58,6 +59,10 @@ public class GuiTabController extends GuiButtonExt {
         }
     }
     
+    public boolean isFullscreen() {
+        return fullscreen;
+    }
+
     public void setActiveTabIndex(int index) {
         if (index < getTabCount() - 1) {
             activeTab = index;
@@ -68,23 +73,23 @@ public class GuiTabController extends GuiButtonExt {
             activeTab = -1;
         }
     }
-    
+
     public void addTab(GuiTab tab) {
         tabs.add(tab);
     }
-    
+
     public void clearTabs() {
         tabs.clear();
     }
-    
+
     public int getTabCount() {
         return tabs.size();
     }
-    
+
     public int getActiveTabIndex() {
         return activeTab;
     }
-    
+
     public String getActiveTabName() {
         GuiTab tab = getActiveTab();
         if (tab != null) {
@@ -92,22 +97,22 @@ public class GuiTabController extends GuiButtonExt {
         }
         return "";
     }
-    
+
     public GuiTab getTab(int index) {
         if (index >= 0 & index < tabs.size()) {
             return tabs.get(index);
         }
         return null;
     }
-    
+
     private int getYOffSet() {
         if (!fullscreen) {
             return 5;
         } else {
-            return (int) ((float)height / 2F - ((float)tabs.size() * tabSpacing) / 2F);
+            return (int) (height / 2F - ((float) tabs.size() * tabSpacing) / 2F);
         }
     }
-    
+
     public Point getTabPos(int index) {
         int yOffset = getYOffSet();
         int xOffset = -4;
@@ -124,12 +129,15 @@ public class GuiTabController extends GuiButtonExt {
             if (count >= getTabsPerSide() & !movedRight) {
                 count = 0;
                 xOffset += width - tabSpacing;
+                if (isFullscreen()) {
+                    xOffset += 10;
+                }
                 movedRight = true;
             }
         }
         return null;
     }
-    
+
     public boolean isTabLeft(int index) {
         int count = 0;
         for (int i = 0; i < tabs.size(); i++) {
@@ -142,22 +150,22 @@ public class GuiTabController extends GuiButtonExt {
         }
         return true;
     }
-    
+
     public int getTabsPerSide() {
-        return tabsPerSide ;
+        return tabsPerSide;
     }
-    
+
     public void setTabsPerSide(int count) {
         tabsPerSide = count;
     }
-    
+
     public GuiTab getActiveTab() {
         if (activeTab >= 0 & activeTab < tabs.size()) {
             return tabs.get(activeTab);
         }
         return null;
     }
-    
+
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
         for (int i = 0; i < tabs.size(); i++) {
@@ -171,30 +179,30 @@ public class GuiTabController extends GuiButtonExt {
                 }
             }
         }
-        
+
         return false;
     }
-    
+
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partial) {
         GlStateManager.color(1F, 1F, 1F, 1F);
         for (int i = 0; i < tabs.size(); i++) {
             Point point = getTabPos(i);
             if (point != null) {
-                mc.renderEngine.bindTexture(TEXTURE);
-                tabs.get(i).render(i, point.x, point.y, mouseX, mouseY, activeTab == i, ICONS, isTabLeft(i));
+                mc.renderEngine.bindTexture(TEXTURE_TABS);
+                tabs.get(i).render(i, point.x, point.y, mouseX, mouseY, activeTab == i, textureIcons, isTabLeft(i));
             }
         }
     }
-    
+
     public boolean isEditMode() {
         return editMode;
     }
-    
+
     public void setEditMode(boolean editMode) {
         this.editMode = editMode;
     }
-    
+
     public void drawHoverText(Minecraft mc, int mouseX, int mouseY) {
         GuiTab hoverTab = null;
         GlStateManager.color(1F, 1F, 1F, 1F);
@@ -206,7 +214,7 @@ public class GuiTabController extends GuiButtonExt {
                 }
             }
         }
-        
+
         if (hoverTab != null) {
             ArrayList<String> textList = new ArrayList<String>();
             textList.add(hoverTab.getName());

@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.client.gui.mannequin;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTab;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabbed;
+import moe.plushie.armourers_workshop.client.gui.newgui.GuiTab;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ContainerMannequin;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
@@ -52,12 +52,12 @@ public class GuiMannequin extends GuiTabbed {
         tabList.add(tabTexture);
         tabList.add(tabExtraRenders);
         
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.inventory")).setIconLocation(78, 0).setAnimation(8, 150));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotations")).setIconLocation(94, 0).setAnimation(8, 150));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.offset")).setIconLocation(110, 0).setAnimation(8, 150));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.skinAndHair")).setIconLocation(126, 0).setAnimation(8, 150));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.name")).setIconLocation(142, 0).setAnimation(8, 150));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.extraRenders")).setIconLocation(158, 0).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.inventory")).setIconLocation(78, 0).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.rotations")).setIconLocation(94, 0).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.offset")).setIconLocation(110, 0).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.skinAndHair")).setIconLocation(126, 0).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.name")).setIconLocation(142, 0).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.extraRenders")).setIconLocation(158, 0).setAnimation(8, 150));
         tabController.setActiveTabIndex(getActiveTab());
         tabChanged();
     }

@@ -43,16 +43,21 @@ public class GuiTab extends Gui {
     public void render(int index, int x, int y, int mouseX, int mouseY, boolean activeTab, ResourceLocation tabIcons, boolean left) {
         int textureOffsetX = 0;
         int textureOffsetY = tabTextureHeight;
+
         if (isMouseOver(x, y, mouseX, mouseY)) {
             textureOffsetX += tabTextureWidth;
         }
         if (!enabled) {
             textureOffsetX = tabTextureWidth * 2;
         }
+        
         if (activeTab) {
             textureOffsetY = 0;
         }
-        if (!left) {
+        if (parent.isFullscreen()) {
+            textureOffsetY += tabTextureHeight * 2;
+        }
+        if (!left & !parent.isFullscreen()) {
             textureOffsetX += tabTextureWidth * 2;
         }
         drawTexturedModalRect(x, y, textureOffsetX, textureOffsetY, tabTextureWidth, tabTextureHeight);
@@ -158,9 +163,9 @@ public class GuiTab extends Gui {
     private void renderIcon(int x, int y, int mouseX, int mouseY) {
         int animationOffset = 0;
         if (isMouseOver(x, y, mouseX, mouseY) & animationFrames > 0) {
-            int frame = (int) ((System.currentTimeMillis() / (long) animationSpeed) % animationFrames);
+            int frame = (int) ((System.currentTimeMillis() / animationSpeed) % animationFrames);
             animationOffset += iconTextureHeight * frame;
         }
-        drawTexturedModalRect(x + (int) ((float) tabTextureWidth / 2F - (float) iconTextureWidth / 2F), y + (int) ((float) tabTextureHeight / 2F - (float) iconTextureHeight / 2F), iconTextureX, iconTextureY + animationOffset, iconTextureWidth, iconTextureHeight);
+        drawTexturedModalRect(x + (int) (tabTextureWidth / 2F - iconTextureWidth / 2F), y + (int) (tabTextureHeight / 2F - iconTextureHeight / 2F), iconTextureX, iconTextureY + animationOffset, iconTextureWidth, iconTextureHeight);
     }
 }

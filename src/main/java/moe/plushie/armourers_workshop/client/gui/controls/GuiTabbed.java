@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.client.gui.controls;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.client.gui.newgui.GuiTabController;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;

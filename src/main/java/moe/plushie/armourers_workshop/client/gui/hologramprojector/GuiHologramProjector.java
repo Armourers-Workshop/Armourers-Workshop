@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.client.gui.hologramprojector;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTab;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabbed;
+import moe.plushie.armourers_workshop.client.gui.newgui.GuiTab;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ContainerHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
@@ -53,12 +53,12 @@ public class GuiHologramProjector extends GuiTabbed {
         tabList.add(tabRotationSpeed);
         tabList.add(tabExtra);
         
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.inventory")).setIconLocation(52, 0).setAnimation(8, 150));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.offset")).setIconLocation(84, 0).setAnimation(8, 150));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.angle")).setIconLocation(116, 0).setAnimation(8, 150));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationOffset")).setIconLocation(68, 0).setAnimation(8, 150));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationSpeed")).setIconLocation(100, 0).setAnimation(4, 150));
-        tabController.addTab(new GuiTab(GuiHelper.getLocalizedControlName(inventoryName, "tab.extra")).setIconLocation(132, 0).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.inventory")).setIconLocation(52, 0).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.offset")).setIconLocation(84, 0).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.angle")).setIconLocation(116, 0).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationOffset")).setIconLocation(68, 0).setAnimation(8, 150));
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.rotationSpeed")).setIconLocation(100, 0).setAnimation(4, 150));
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.extra")).setIconLocation(132, 0).setAnimation(8, 150));
         tabController.setActiveTabIndex(getActiveTab());
         
         tabChanged();

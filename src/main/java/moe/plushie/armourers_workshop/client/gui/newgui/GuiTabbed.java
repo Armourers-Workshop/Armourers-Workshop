@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.inventory.ModContainer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -15,9 +16,9 @@ public abstract class GuiTabbed<CONTAINER_TYPE extends ModContainer> extends Mod
     protected GuiTabController tabController;
     protected ArrayList<GuiTabPanel> tabList;
 
-    public GuiTabbed(CONTAINER_TYPE container, boolean fullscreen) {
+    public GuiTabbed(CONTAINER_TYPE container, boolean fullscreen, ResourceLocation tabIcons) {
         super(container);
-        tabController = new GuiTabController(this, fullscreen);
+        tabController = new GuiTabController(this, fullscreen, tabIcons);
         tabList = new ArrayList<GuiTabPanel>();
     }
 
