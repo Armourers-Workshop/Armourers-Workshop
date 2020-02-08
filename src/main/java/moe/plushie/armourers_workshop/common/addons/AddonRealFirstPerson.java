@@ -7,6 +7,9 @@ public class AddonRealFirstPerson extends ModAddon {
     }
 
     public boolean isRealFirstPersonRender() {
+        if (!isModLoaded()) {
+            return false;
+        }
         StackTraceElement[] traceElements = Thread.currentThread().getStackTrace();
         for (int i = 0; i < traceElements.length; i++) {
             StackTraceElement traceElement = traceElements[i];
