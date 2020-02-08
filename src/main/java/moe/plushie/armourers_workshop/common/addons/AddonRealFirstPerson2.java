@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.common.addons;
 
-public class AddonRealFirstPerson extends ModAddon {
+public class AddonRealFirstPerson2 extends ModAddon {
 
-    public AddonRealFirstPerson() {
-        super("rfpr", "Real First-Person Render");
+    public AddonRealFirstPerson2() {
+        super("rfp2", "Real First Person 2");
     }
 
     public boolean isModRender() {
@@ -13,7 +13,7 @@ public class AddonRealFirstPerson extends ModAddon {
         StackTraceElement[] traceElements = Thread.currentThread().getStackTrace();
         for (int i = 0; i < traceElements.length; i++) {
             StackTraceElement traceElement = traceElements[i];
-            if (traceElement.toString().contains("realrender") | traceElement.toString().contains("rfpf")) {
+            if (traceElement.toString().contains("rfp2")) {
                 return true;
             }
         }

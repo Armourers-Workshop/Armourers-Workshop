@@ -38,7 +38,10 @@ public class ModelSkinHead extends ModelTypeHelper {
         // Fix to stop head skins rendering when using the Real First-Person Render mod.
         if (entity != null && entity.equals(Minecraft.getMinecraft().player) & skinHasHead(skin)) {
             if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
-                if (ModAddonManager.addonRealFirstPerson.isRealFirstPersonRender()) {
+                if (ModAddonManager.addonRealFirstPerson.isModRender()) {
+                    return;
+                }
+                if (ModAddonManager.addonRealFirstPerson2.isModRender()) {
                     return;
                 }
             }
