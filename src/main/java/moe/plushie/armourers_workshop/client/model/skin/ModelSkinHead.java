@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
@@ -37,12 +38,8 @@ public class ModelSkinHead extends ModelTypeHelper {
         // Fix to stop head skins rendering when using the Real First-Person Render mod.
         if (entity != null && entity.equals(Minecraft.getMinecraft().player) & skinHasHead(skin)) {
             if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
-                StackTraceElement[] traceElements = Thread.currentThread().getStackTrace();
-                for (int i = 0; i < traceElements.length; i++) {
-                    StackTraceElement traceElement = traceElements[i];
-                    if (traceElement.toString().contains("realrender") | traceElement.toString().contains("rfpf")) {
-                        return;
-                    }
+                if (ModAddonManager.addonRealFirstPerson.isRealFirstPersonRender()) {
+                    return;
                 }
             }
         }

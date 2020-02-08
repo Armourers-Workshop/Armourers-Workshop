@@ -39,6 +39,7 @@ public final class ModAddonManager {
     //public static AddonMoreSwordsMod addonMoreSwordsMod;
     public static AddonNEI addonNEI;
     //public static AddonOreSpawn addonOreSpawn;
+    public static AddonRealFirstPerson addonRealFirstPerson;
     public static AddonShaders addonShaders;
     public static ModAddon addonSmartMoving;
     //public static AddonTails addonTails;
@@ -83,6 +84,7 @@ public final class ModAddonManager {
         //addonMoreSwordsMod = new AddonMoreSwordsMod();
         addonNEI = new AddonNEI();
         //addonOreSpawn = new AddonOreSpawn();
+        addonRealFirstPerson = new AddonRealFirstPerson();
         addonShaders = new AddonShaders();
         addonSmartMoving = new ModAddon("SmartMoving", "Smart Moving");
         //addonTails = new AddonTails();
