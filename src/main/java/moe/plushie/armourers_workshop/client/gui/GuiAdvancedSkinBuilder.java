@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.client.gui;
 import java.io.IOException;
 
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomSlider;
+import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder.SkinPartSettings;
@@ -10,6 +11,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -20,7 +22,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiAdvancedSkinBuilder extends GuiContainer implements ISlider {
-
+    
+    private static final int PADDING = 5;
+    private static final int INVENTORY_HEIGHT = 76;
+    private static final int INVENTORY_WIDTH = 162;
+    
     private final TileEntityAdvancedSkinBuilder tileEntity;
     
     private GuiButtonExt indexDecrease;
@@ -83,6 +89,27 @@ public class GuiAdvancedSkinBuilder extends GuiContainer implements ISlider {
         buttonList.add(rotOffsetXSlider);
         buttonList.add(rotOffsetYSlider);
         buttonList.add(rotOffsetZSlider);
+        
+        int slotSize = 18;
+        
+        int neiBump = 18;
+        if (ModAddonManager.addonNEI.isVisible()) {
+            neiBump = 18;
+        } else {
+            neiBump = 0;
+        }
+        
+        //Move player inventory slots.
+        for (int x = 0; x < 9; x++) {
+            Slot slot = (Slot) inventorySlots.inventorySlots.get(x);
+            slot.yPos = this.height + 1 - PADDING - slotSize - neiBump;
+        }
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 9; x++) {
+                Slot slot = (Slot) inventorySlots.inventorySlots.get(x + y * 9 + 9);
+                slot.yPos = this.height + 1 - INVENTORY_HEIGHT - PADDING + y * slotSize - neiBump;
+            }
+        }
         
         setSlidersForIndex(indexActive);
     }
