@@ -8,6 +8,7 @@ public enum AdvancedSkinTrigger {
     HEALTH,
     TOOK_DAMAGE,
     ENTER_COMBAT,
+    IN_COMBAT,
     LEAVE_COMBAT,
     LEVEL_UP,
     PART_ENABLED,
@@ -21,5 +22,6 @@ public enum AdvancedSkinTrigger {
     FLYING,
     SWIMING,
     IN_RAIN,
-    MOVEMENT_SPEED
+    MOVEMENT_SPEED,
+    TIME
 }

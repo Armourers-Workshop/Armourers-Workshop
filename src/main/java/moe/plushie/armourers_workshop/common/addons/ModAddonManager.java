@@ -39,6 +39,7 @@ public final class ModAddonManager {
     //public static AddonMoreSwordsMod addonMoreSwordsMod;
     public static AddonNEI addonNEI;
     //public static AddonOreSpawn addonOreSpawn;
+    public static AddonOverlord addonOverlord;
     public static AddonRealFirstPerson addonRealFirstPerson;
     public static AddonRealFirstPerson2 addonRealFirstPerson2;
     public static AddonShaders addonShaders;
@@ -85,6 +86,7 @@ public final class ModAddonManager {
         //addonMoreSwordsMod = new AddonMoreSwordsMod();
         addonNEI = new AddonNEI();
         //addonOreSpawn = new AddonOreSpawn();
+        addonOverlord = new AddonOverlord();
         addonRealFirstPerson = new AddonRealFirstPerson();
         addonRealFirstPerson2 = new AddonRealFirstPerson2();
         addonShaders = new AddonShaders();
