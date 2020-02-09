@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
-import moe.plushie.armourers_workshop.common.undo.UndoManager;
+import moe.plushie.armourers_workshop.common.world.undo.UndoManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;

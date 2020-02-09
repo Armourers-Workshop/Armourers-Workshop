@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiUpdateTileProperties;
-import moe.plushie.armourers_workshop.common.property.IPropertyHolder;
-import moe.plushie.armourers_workshop.common.property.TileProperty;
-import moe.plushie.armourers_workshop.common.property.TilePropertyManager;
+import moe.plushie.armourers_workshop.common.tileentities.property.IPropertyHolder;
+import moe.plushie.armourers_workshop.common.tileentities.property.TileProperty;
+import moe.plushie.armourers_workshop.common.tileentities.property.TilePropertyManager;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;

@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.undo;
+package moe.plushie.armourers_workshop.common.world.undo;
 
 import java.awt.Color;
 

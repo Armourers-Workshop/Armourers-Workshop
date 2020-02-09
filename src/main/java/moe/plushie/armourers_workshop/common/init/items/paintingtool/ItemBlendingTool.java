@@ -17,7 +17,7 @@ import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
-import moe.plushie.armourers_workshop.common.undo.UndoManager;
+import moe.plushie.armourers_workshop.common.world.undo.UndoManager;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.block.Block;

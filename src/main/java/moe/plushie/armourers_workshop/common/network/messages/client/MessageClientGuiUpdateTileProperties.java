@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.common.inventory.ModTileContainer;
-import moe.plushie.armourers_workshop.common.property.TileProperty;
-import moe.plushie.armourers_workshop.common.property.TilePropertyManager;
 import moe.plushie.armourers_workshop.common.tileentities.ModTileEntity;
+import moe.plushie.armourers_workshop.common.tileentities.property.TileProperty;
+import moe.plushie.armourers_workshop.common.tileentities.property.TilePropertyManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;

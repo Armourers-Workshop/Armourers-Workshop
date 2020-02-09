@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.client.gui.hologramprojector.GuiHologramPr
 import moe.plushie.armourers_workshop.common.inventory.ContainerHologramProjector;
 import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
-import moe.plushie.armourers_workshop.common.property.TileProperty;
+import moe.plushie.armourers_workshop.common.tileentities.property.TileProperty;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

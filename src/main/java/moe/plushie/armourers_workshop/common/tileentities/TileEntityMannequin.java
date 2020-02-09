@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.common.data.TextureType;
 import moe.plushie.armourers_workshop.common.inventory.ContainerMannequin;
 import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
-import moe.plushie.armourers_workshop.common.property.TileProperty;
+import moe.plushie.armourers_workshop.common.tileentities.property.TileProperty;
 import moe.plushie.armourers_workshop.common.world.AsyncWorldUpdateGameProfileDownload;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.gui.GuiScreen;

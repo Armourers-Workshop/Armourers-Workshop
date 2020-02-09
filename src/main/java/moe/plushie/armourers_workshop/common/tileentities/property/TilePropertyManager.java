@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.property;
+package moe.plushie.armourers_workshop.common.tileentities.property;
 
 import java.util.HashMap;
 
