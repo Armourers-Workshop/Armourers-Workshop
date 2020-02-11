@@ -1,6 +1,6 @@
-package moe.plushie.armourers_workshop.common.skin.advanced;
+package moe.plushie.armourers_workshop.common.skin.advanced.property;
 
-public enum AdvancedProperty {
+public enum AdvancedSkinProperty {
     NAME,
     ENABLED,
     POSITION,

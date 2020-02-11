@@ -16,8 +16,8 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerOverrides;
 import moe.plushie.armourers_workshop.common.config.ConfigSynchronizeHandler;
 import moe.plushie.armourers_workshop.common.crafting.CraftingManager;
-import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockSkinnable.Seat;
+import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.init.sounds.ModSounds;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
@@ -38,6 +38,7 @@ import moe.plushie.armourers_workshop.common.network.messages.server.MessageServ
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.permission.PermissionManager;
 import moe.plushie.armourers_workshop.common.skin.SkinExtractor;
+import moe.plushie.armourers_workshop.common.skin.advanced.value.SkinValueRegistry;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -99,6 +100,7 @@ public class CommonProxy implements ILibraryCallback {
         PaintRegistry.init();
         SkinTypeRegistry.init();
         CubeRegistry.init();
+        SkinValueRegistry.init();
 
         modItems = new ModItems();
         modBlocks = new ModBlocks();

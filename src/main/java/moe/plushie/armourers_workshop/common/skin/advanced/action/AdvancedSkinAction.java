@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.skin.advanced;
+package moe.plushie.armourers_workshop.common.skin.advanced.action;
 
 public enum AdvancedSkinAction {
     NONE,
