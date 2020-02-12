@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.client.gui.wardrobe.tab;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.client.gui.oldgui.GuiTabPanel;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.style.GuiResourceManager;
 import moe.plushie.armourers_workshop.client.gui.style.GuiStyle;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;

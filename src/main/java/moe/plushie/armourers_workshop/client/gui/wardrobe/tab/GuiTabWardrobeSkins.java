@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.client.gui.wardrobe.tab;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.client.gui.oldgui.GuiTabPanel;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import net.minecraft.client.gui.GuiScreen;

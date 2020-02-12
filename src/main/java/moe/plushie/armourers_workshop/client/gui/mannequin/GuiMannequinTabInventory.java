@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.client.gui.mannequin;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
-import moe.plushie.armourers_workshop.client.gui.oldgui.GuiTabPanel;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import net.minecraft.client.gui.inventory.GuiContainer;
