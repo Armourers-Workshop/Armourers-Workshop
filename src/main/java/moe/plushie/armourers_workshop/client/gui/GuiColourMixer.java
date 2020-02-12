@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider.HSBSliderType;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider.IHSBSliderCallback;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
+import moe.plushie.armourers_workshop.client.gui.newgui.ModGuiContainer;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
@@ -26,7 +27,6 @@ import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -35,7 +35,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, IDropDownListCallback {
+public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implements IHSBSliderCallback, IDropDownListCallback {
 
     private TileEntityColourMixer tileEntityColourMixer;
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(LibGuiResources.GUI_COLOUR_MIXER);
@@ -294,5 +294,10 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         if (dropDownList == paintTypeDropDown) {
             updateColour();
         }
+    }
+
+    @Override
+    public String getName() {
+        return tileEntityColourMixer.getName();
     }
 }
