@@ -1,14 +1,13 @@
 package moe.plushie.armourers_workshop.client.gui.armourer.tab;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
-import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog;
-import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.DialogResult;
-import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.IDialogCallback;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.armourer.GuiArmourer;
 import moe.plushie.armourers_workshop.client.gui.armourer.dialog.GuiDialogClear;
 import moe.plushie.armourers_workshop.client.gui.armourer.dialog.GuiDialogCopy;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
+import moe.plushie.armourers_workshop.client.gui.newgui.AbstractGuiDialog;
+import moe.plushie.armourers_workshop.client.gui.newgui.IDialogCallback;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiArmourerBlockUtil;

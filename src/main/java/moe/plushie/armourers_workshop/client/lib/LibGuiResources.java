@@ -28,7 +28,6 @@ public class LibGuiResources {
     // GUIs
     public static final String GUI_ADVANCED_SKIN_BUILDER = PREFIX_TEXTURE + "advanced_skin_builder/advanced-skin-builder.png";
     public static final String GUI_ARMOURER = PREFIX_TEXTURE + "armourer/armourer.png";
-    public static final String GUI_ARMOURER_TABS = PREFIX_TEXTURE + "armourer/armourer-tabs.png";
     public static final String GUI_COLOUR_MIXER = PREFIX_TEXTURE + "colour_mixer/colour-mixer.png";
     public static final String GUI_DYE_TABLE = PREFIX_TEXTURE + "dye_table/dye-table.png";
     public static final String GUI_GLOBAL_LIBRARY = PREFIX_TEXTURE + "global_library/global-library.png";
