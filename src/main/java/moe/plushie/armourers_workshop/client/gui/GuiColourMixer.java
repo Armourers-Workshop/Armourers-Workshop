@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider.HSBSliderType;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider.IHSBSliderCallback;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
-import moe.plushie.armourers_workshop.client.gui.newgui.ModGuiContainer;
+import moe.plushie.armourers_workshop.client.gui.controls.ModGuiContainer;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;

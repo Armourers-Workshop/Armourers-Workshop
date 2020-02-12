@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.client.gui;
 import java.io.IOException;
 
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomSlider;
-import moe.plushie.armourers_workshop.client.gui.newgui.ModGuiContainer;
+import moe.plushie.armourers_workshop.client.gui.controls.ModGuiContainer;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;

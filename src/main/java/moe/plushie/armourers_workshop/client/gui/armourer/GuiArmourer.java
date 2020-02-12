@@ -8,11 +8,11 @@ import moe.plushie.armourers_workshop.client.gui.armourer.tab.GuiTabArmourerBloc
 import moe.plushie.armourers_workshop.client.gui.armourer.tab.GuiTabArmourerDisplaySettings;
 import moe.plushie.armourers_workshop.client.gui.armourer.tab.GuiTabArmourerMain;
 import moe.plushie.armourers_workshop.client.gui.armourer.tab.GuiTabArmourerSkinSettings;
+import moe.plushie.armourers_workshop.client.gui.controls.AbstractGuiDialog;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTab;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
-import moe.plushie.armourers_workshop.client.gui.newgui.AbstractGuiDialog;
-import moe.plushie.armourers_workshop.client.gui.newgui.GuiTab;
-import moe.plushie.armourers_workshop.client.gui.newgui.GuiTabbed;
-import moe.plushie.armourers_workshop.client.gui.newgui.IDialogCallback;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTabbed;
+import moe.plushie.armourers_workshop.client.gui.controls.IDialogCallback;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;

@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.client.gui.skinlibrary;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
+import moe.plushie.armourers_workshop.client.gui.controls.AbstractGuiDialog;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiLabeledTextField;
-import moe.plushie.armourers_workshop.client.gui.newgui.AbstractGuiDialog;
-import moe.plushie.armourers_workshop.client.gui.newgui.IDialogCallback;
+import moe.plushie.armourers_workshop.client.gui.controls.IDialogCallback;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;

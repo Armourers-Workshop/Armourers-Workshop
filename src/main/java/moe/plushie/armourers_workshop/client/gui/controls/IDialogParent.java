@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.client.gui.newgui;
+package moe.plushie.armourers_workshop.client.gui.controls;
 
 public interface IDialogParent {
     
