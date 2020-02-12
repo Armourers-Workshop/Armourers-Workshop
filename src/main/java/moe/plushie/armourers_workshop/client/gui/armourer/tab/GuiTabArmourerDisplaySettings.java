@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropDownListCallback {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.ARMOURER);
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.GUI_ARMOURER);
     
     private final TileEntityArmourer tileEntity;
     

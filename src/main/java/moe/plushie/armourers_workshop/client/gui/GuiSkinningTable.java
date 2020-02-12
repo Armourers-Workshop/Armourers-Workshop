@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.client.gui;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinningTable;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinningTable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiSkinningTable extends GuiContainer {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibModInfo.ID, "textures/gui/skinning-table.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.GUI_SKINNING_TABLE);
 
     private final TileEntitySkinningTable tileEntity;
 

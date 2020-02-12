@@ -27,7 +27,6 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerW
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -46,10 +45,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiWardrobe extends GuiTabbed {
 
-    private static final ResourceLocation TEXTURE_1 = new ResourceLocation(LibGuiResources.WARDROBE_1);
-    private static final ResourceLocation TEXTURE_2 = new ResourceLocation(LibGuiResources.WARDROBE_2);
-    private static final ResourceLocation TEXTURE_TAB = new ResourceLocation(LibGuiResources.WARDROBE_TABS);
-    private static final ResourceLocation GUI_JSON = new ResourceLocation(LibModInfo.ID, "gui/wardrobe.json");
+    private static final ResourceLocation TEXTURE_1 = new ResourceLocation(LibGuiResources.GUI_WARDROBE_1);
+    private static final ResourceLocation TEXTURE_2 = new ResourceLocation(LibGuiResources.GUI_WARDROBE_2);
+    private static final ResourceLocation TEXTURE_TAB = new ResourceLocation(LibGuiResources.GUI_WARDROBE_TABS);
+    private static final ResourceLocation GUI_JSON = new ResourceLocation(LibGuiResources.JSON_WARDROBE);
     
     private static final String GUI_NAME = "wardrobe";
     private final GuiStyle guiStyle;

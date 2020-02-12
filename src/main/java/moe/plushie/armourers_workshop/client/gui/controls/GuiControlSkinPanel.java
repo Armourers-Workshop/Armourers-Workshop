@@ -7,10 +7,10 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
 
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
@@ -28,7 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiControlSkinPanel extends GuiButtonExt {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/controls/skin-panel.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.CONTROL_SKIN_PANEL);
     
     private final ArrayList<SkinIcon> iconList;
     private int panelPadding;
@@ -97,7 +97,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
             
             for (int i = 0; i < iconList.size(); i++) {
                 int x = i % rowCount;
-                int y = (int) (i / rowCount);
+                int y = i / rowCount;
                 int iconX = this.x + x * (iconSize + iconPadding) + panelPadding;
                 int iconY = this.y + y * (iconSize + iconPadding) + panelPadding;
                 
@@ -113,7 +113,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
         for (int i = 0; i < iconList.size(); i++) {
             int x = i % rowCount;
-            int y = (int) (i / rowCount);
+            int y = i / rowCount;
             int iconX = this.x + x * (iconSize + iconPadding) + panelPadding;
             int iconY = this.y + y * (iconSize + iconPadding) + panelPadding;
             
@@ -179,7 +179,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 
                 Minecraft.getMinecraft().renderEngine.bindTexture(skin.getSkinType().getIcon());
                 GlStateManager.color(1F, 1F, 1F, 1F);
-                Gui.drawScaledCustomSizeModalRect(x, y, 0, 0, 16, 16, (int) ((float)iconSize / 4F), (int) ((float)iconSize / 4F), 16, 16);
+                Gui.drawScaledCustomSizeModalRect(x, y, 0, 0, 16, 16, (int) (iconSize / 4F), (int) (iconSize / 4F), 16, 16);
                 
                 float scale = iconSize / 2;
                 GlStateManager.pushMatrix();
@@ -189,7 +189,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 } else {
                     GlStateManager.translate(x + iconSize / 2, y + iconSize / 2, 200.0F);
                 }
-                GlStateManager.scale((float)(-10), (float)10, (float)10);
+                GlStateManager.scale((-10), 10, 10);
                 if (mouseOver(x, y, mouseX, mouseY, iconSize)) {
                     GlStateManager.scale(1.5F, 1.5F, 1.5F);
                 }
@@ -219,7 +219,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 int speed = 60;
                 int frames = 18;
                 
-                int frame = (int) ((System.currentTimeMillis() / (long)speed) % frames);
+                int frame = (int) ((System.currentTimeMillis() / speed) % frames);
                 int u = MathHelper.floor(frame / 9);
                 int v = frame - u * 9;
                 

@@ -18,7 +18,6 @@ import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCa
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -33,8 +32,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.WARDROBE_2);
-    private static final ResourceLocation GUI_JSON = new ResourceLocation(LibModInfo.ID, "gui/wardrobe.json");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.GUI_WARDROBE_2);
+    private static final ResourceLocation GUI_JSON = new ResourceLocation(LibGuiResources.JSON_WARDROBE);
     
     private final GuiStyle guiStyle;
     private EntityPlayer entityPlayer;
@@ -190,9 +189,9 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     }
     
     private void drawColourDisplay(int x, int y, Color colour) {
-        float r = (float) colour.getRed() / 255F;
-        float g = (float) colour.getGreen() / 255F;
-        float b = (float) colour.getBlue() / 255F;
+        float r = colour.getRed() / 255F;
+        float g = colour.getGreen() / 255F;
+        float b = colour.getBlue() / 255F;
         drawColourDisplay(x, y, r, g, b);
     }
     

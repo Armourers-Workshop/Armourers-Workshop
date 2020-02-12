@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class AbstractGuiDialog extends Gui {
     
-    protected static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/dialog.png");
+    protected static final ResourceLocation texture = new ResourceLocation(LibGuiResources.COMMON);
     
     protected final GuiScreen parent;
     protected final String name;
@@ -127,8 +127,8 @@ public abstract class AbstractGuiDialog extends Gui {
     
     public void drawBackground(int mouseX, int mouseY, float partialTickTime) {
         drawParentCoverBackground();
-        int textureWidth = 176;
-        int textureHeight = 62;
+        int textureWidth = 128;
+        int textureHeight = 128;
         int borderSize = 4;
         mc.renderEngine.bindTexture(texture);
         GuiUtils.drawContinuousTexturedBox(x, y, 0, 0, width, height, textureWidth, textureHeight, borderSize, zLevel);

@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiTabArmourerSkinSettings extends GuiTabPanel implements ISlider, IDropDownListCallback {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.ARMOURER);
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.GUI_ARMOURER);
     private static final String DEGREE = "\u00b0";
     private static final int SYNC_ID_BLOCK = 15;
     private static final int SYNC_ID_MODEL = 16;

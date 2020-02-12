@@ -31,8 +31,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiArmourer extends GuiTabbed implements IDialogCallback {
 
-    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.ARMOURER);
-    private static final ResourceLocation textureTabs = new ResourceLocation(LibGuiResources.ARMOURER_TABS);
+    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.GUI_ARMOURER);
+    private static final ResourceLocation textureTabs = new ResourceLocation(LibGuiResources.GUI_ARMOURER_TABS);
     
     public final TileEntityArmourer tileEntity;
     private final String inventoryName;

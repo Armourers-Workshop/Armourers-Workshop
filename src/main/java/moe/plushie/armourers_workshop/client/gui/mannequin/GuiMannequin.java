@@ -20,8 +20,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiMannequin extends GuiTabbed {
     
-    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.MANNEQUIN);
-    private static final ResourceLocation textureTabs = new ResourceLocation(LibGuiResources.MANNEQUIN_TABS);
+    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.GUI_MANNEQUIN);
+    private static final ResourceLocation textureTabs = new ResourceLocation(LibGuiResources.GUI_MANNEQUIN_TABS);
     
     public final TileEntityMannequin tileEntity;
     private final String inventoryName;

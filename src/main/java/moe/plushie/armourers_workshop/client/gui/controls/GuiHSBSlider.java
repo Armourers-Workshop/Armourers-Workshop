@@ -5,7 +5,7 @@ import java.awt.Color;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiHSBSlider extends GuiSlider {
 
-    private static final ResourceLocation sliderTexture = new ResourceLocation(LibModInfo.ID, "textures/gui/controls/slider-hue.png");
+    private static final ResourceLocation sliderTexture = new ResourceLocation(LibGuiResources.CONTROL_SLIDER_HUE);
     
     private HSBSliderType type;
     private IHSBSliderCallback callback = null;
@@ -102,14 +102,14 @@ public class GuiHSBSlider extends GuiSlider {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             
             ScaledResolution screenRes = new ScaledResolution(mc);
-            double scaleWidth = (double)mc.displayWidth / screenRes.getScaledWidth_double();
-            double scaleHeight = (double)mc.displayHeight / screenRes.getScaledHeight_double();
+            double scaleWidth = mc.displayWidth / screenRes.getScaledWidth_double();
+            double scaleHeight = mc.displayHeight / screenRes.getScaledHeight_double();
             
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
             GL11.glScissor((int) ((this.x + 1) * scaleWidth),  (mc.displayHeight) - (int)((this.y + height - 1) * scaleHeight), (int) ((width - 2) * scaleWidth), (int) ((height - 2) * scaleHeight));
             
-            this.drawTexturedModalRect(this.x + (int)(this.sliderValue * (float)(this.width - 3) - 2), this.y, 0, 0, 7, 4);
-            this.drawTexturedModalRect(this.x + (int)(this.sliderValue * (float)(this.width - 3) - 2), this.y + this.height - 4, 7, 0, 7, 4);
+            this.drawTexturedModalRect(this.x + (int)(this.sliderValue * (this.width - 3) - 2), this.y, 0, 0, 7, 4);
+            this.drawTexturedModalRect(this.x + (int)(this.sliderValue * (this.width - 3) - 2), this.y + this.height - 4, 7, 0, 7, 4);
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
         }
     }

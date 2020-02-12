@@ -16,7 +16,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GuiSkinnable extends GuiContainer {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.SKINNABLE);
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.COMMON);
     
     private final TileEntitySkinnable tileEntity;
     private final boolean ender;
@@ -58,7 +58,7 @@ public class GuiSkinnable extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(TEXTURE);
-        GuiUtils.drawContinuousTexturedBox(guiLeft, guiTop, 0, 0, xSize, ySize, 176, 74, 4, zLevel);
+        GuiUtils.drawContinuousTexturedBox(guiLeft, guiTop, 0, 0, xSize, ySize, 128, 128, 4, zLevel);
         drawTexturedModalRect(guiLeft + 7, guiTop + ySize - 85, 0, 180, 162, 76);
         for (int ix = 0; ix < invWidth; ix ++) {
             for (int iy = 0; iy < invHeight; iy ++) {

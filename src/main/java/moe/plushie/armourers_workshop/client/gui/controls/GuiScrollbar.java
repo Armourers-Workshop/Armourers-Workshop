@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.client.gui.controls;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiScrollbar  extends GuiButton {
 
-	private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/controls/scrollbar.png");
+	private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.CONTROL_SCROLLBAR);
 	
     /** The value of this slider control. */
 	private int sliderValue = 0;
@@ -92,7 +92,7 @@ public class GuiScrollbar  extends GuiButton {
 		this.drawTexturedModalRect(this.x, this.y + 20, 246 * yOffset, 246 * xOffset, width, height - 40);
 		
 		//grip
-		float gripPos = (height - 30) / 100F * (float)getPercentageValue();
+		float gripPos = (height - 30) / 100F * getPercentageValue();
 		this.drawHover(this.x, (int) (this.y + gripPos + 10), 40, sourceY, 10, 10, x, y);
 	}
 	
@@ -162,10 +162,10 @@ public class GuiScrollbar  extends GuiButton {
 	protected void mouseDragged(Minecraft par1Minecraft, int x, int y) {
 		if (this.dragging) {
 			if (horizontal) {
-			    float per = (float)(x - this.x - 12) / ((float)width - 30F) * (float)sliderMaxValue;
+			    float per = (x - this.x - 12) / (width - 30F) * sliderMaxValue;
 				setValue((int) per);
 			} else {
-			    float per = (float)(y - this.y - 12) / ((float)height - 30F) * (float)sliderMaxValue;
+			    float per = (y - this.y - 12) / (height - 30F) * sliderMaxValue;
 				setValue((int) per);
 			}
 		}

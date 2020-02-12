@@ -7,21 +7,44 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class LibGuiResources {
 
-    private static final String PREFIX_RESOURCE = LibModInfo.ID + ":textures/gui/";
+    private static final String PREFIX_TEXTURE = LibModInfo.ID + ":textures/gui/";
+    private static final String PREFIX_JSON = LibModInfo.ID + ":gui/";
 
-    public static final String MANNEQUIN = PREFIX_RESOURCE + "mannequin.png";
-    public static final String MANNEQUIN_TABS = PREFIX_RESOURCE + "mannequin-tabs.png";
-    public static final String ARMOURER = PREFIX_RESOURCE + "armourer.png";
-    public static final String ARMOURER_TABS = PREFIX_RESOURCE + "armourer-tabs.png";
-    public static final String WARDROBE_1 = PREFIX_RESOURCE + "wardrobe-1.png";
-    public static final String WARDROBE_2 = PREFIX_RESOURCE + "wardrobe-2.png";
-    public static final String WARDROBE_TABS = PREFIX_RESOURCE + "wardrobe-tabs.png";
-    public static final String HOLOGRAM_PROJECTOR = PREFIX_RESOURCE + "hologram-projector.png";
-    public static final String HOLOGRAM_PROJECTOR_TABS = PREFIX_RESOURCE + "hologram-projector-tabs.png";
-    public static final String SKINNABLE = PREFIX_RESOURCE + "skinnable.png";
-    public static final String SKIN_PREVIEW = PREFIX_RESOURCE + "skin-preview.png";
-    public static final String OUTFIT_MAKER = PREFIX_RESOURCE + "outfit-maker.png";
+    // Common
+    public static final String COMMON = PREFIX_TEXTURE + "common.png";
+    public static final String PLAYER_INVENTORY = PREFIX_TEXTURE + "player_inventory.png";
+    public static final String SKIN_PREVIEW = PREFIX_TEXTURE + "skin-preview.png";
 
-    public static final String TABS = PREFIX_RESOURCE + "controls/tabs.png";
-    public static final String ICONS = null;
+    // Controls
+    public static final String CONTROL_BUTTONS = PREFIX_TEXTURE + "_controls/buttons.png";
+    public static final String CONTROL_HELP = PREFIX_TEXTURE + "_controls/help.png";
+    public static final String CONTROL_LIST = PREFIX_TEXTURE + "_controls/list.png";
+    public static final String CONTROL_SCROLLBAR = PREFIX_TEXTURE + "_controls/scrollbar.png";
+    public static final String CONTROL_SKIN_PANEL = PREFIX_TEXTURE + "_controls/skin-panel.png";
+    public static final String CONTROL_SLIDER_HUE = PREFIX_TEXTURE + "_controls/slider-hue.png";
+    public static final String CONTROL_TABS = PREFIX_TEXTURE + "_controls/tabs.png";
+    public static final String CONTROL_TAB_ICONS = PREFIX_TEXTURE + "_controls/tab_icons.png";
+
+    // GUIs
+    public static final String GUI_ADVANCED_SKIN_BUILDER = PREFIX_TEXTURE + "advanced_skin_builder/advanced-skin-builder.png";
+    public static final String GUI_ARMOURER = PREFIX_TEXTURE + "armourer/armourer.png";
+    public static final String GUI_ARMOURER_TABS = PREFIX_TEXTURE + "armourer/armourer-tabs.png";
+    public static final String GUI_COLOUR_MIXER = PREFIX_TEXTURE + "colour_mixer/colour-mixer.png";
+    public static final String GUI_DYE_TABLE = PREFIX_TEXTURE + "dye_table/dye-table.png";
+    public static final String GUI_GLOBAL_LIBRARY = PREFIX_TEXTURE + "global_library/global-library.png";
+    public static final String GUI_GUIDE_BOOK = PREFIX_TEXTURE + "guide_book/guide-book.png";
+    public static final String GUI_GUIDE_BOOK_PAGES = PREFIX_TEXTURE + "guide_book/guide-book-page.png";
+    public static final String GUI_HOLOGRAM_PROJECTOR = PREFIX_TEXTURE + "hologram_projector/hologram-projector.png";
+    public static final String GUI_HOLOGRAM_PROJECTOR_TABS = PREFIX_TEXTURE + "hologram_projector/hologram-projector-tabs.png";
+    public static final String GUI_MANNEQUIN = PREFIX_TEXTURE + "mannequin/mannequin.png";
+    public static final String GUI_MANNEQUIN_TABS = PREFIX_TEXTURE + "mannequin/mannequin-tabs.png";
+    public static final String GUI_OUTFIT_MAKER = PREFIX_TEXTURE + "outfit_maker/outfit-maker.png";
+    public static final String GUI_SKIN_LIBRARY = PREFIX_TEXTURE + "skin_library/armour-library.png";
+    public static final String GUI_SKINNING_TABLE = PREFIX_TEXTURE + "skinning_table/skinning-table.png";
+    public static final String GUI_WARDROBE_1 = PREFIX_TEXTURE + "wardrobe/wardrobe-1.png";
+    public static final String GUI_WARDROBE_2 = PREFIX_TEXTURE + "wardrobe/wardrobe-2.png";
+    public static final String GUI_WARDROBE_TABS = PREFIX_TEXTURE + "wardrobe/wardrobe-tabs.png";
+
+    // JSONs
+    public static final String JSON_WARDROBE = PREFIX_JSON + "wardrobe.json";
 }

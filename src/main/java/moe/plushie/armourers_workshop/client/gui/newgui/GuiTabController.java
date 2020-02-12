@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiTabController extends GuiButtonExt {
 
-    private static final ResourceLocation TEXTURE_TABS = new ResourceLocation(LibGuiResources.TABS);
+    private static final ResourceLocation TEXTURE_TABS = new ResourceLocation(LibGuiResources.CONTROL_TABS);
     private final ResourceLocation textureIcons;
 
     private GuiScreen parent;

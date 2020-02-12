@@ -17,8 +17,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiHologramProjector extends GuiTabbed {
 
-    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.HOLOGRAM_PROJECTOR);
-    private static final ResourceLocation textureTabs = new ResourceLocation(LibGuiResources.HOLOGRAM_PROJECTOR_TABS);
+    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.GUI_HOLOGRAM_PROJECTOR);
+    private static final ResourceLocation textureTabs = new ResourceLocation(LibGuiResources.GUI_HOLOGRAM_PROJECTOR_TABS);
     
     private static final String DEGREE  = "\u00b0";
     

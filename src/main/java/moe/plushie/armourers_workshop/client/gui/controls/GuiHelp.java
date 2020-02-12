@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.client.gui.controls;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiHelp extends ModGuiControl {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibModInfo.ID, "textures/gui/controls/help.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.CONTROL_HELP);
     
     public GuiHelp(GuiScreen parent, int id, int xPos, int yPos, String hoverText) {
         super(parent, id, xPos, yPos, 7, 8);

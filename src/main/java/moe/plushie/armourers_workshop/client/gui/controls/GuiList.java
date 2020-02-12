@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.FontRenderer;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiList extends Gui {
     
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/controls/list.png");
+    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.CONTROL_LIST);
     
     /** Local copy of Minecraft */
     protected final Minecraft mc;
@@ -69,8 +69,8 @@ public class GuiList extends Gui {
         
         ScaledResolution reso = new ScaledResolution(mc);
         
-        double scaleWidth = (double)mc.displayWidth / reso.getScaledWidth_double();
-        double scaleHeight = (double)mc.displayHeight / reso.getScaledHeight_double();
+        double scaleWidth = mc.displayWidth / reso.getScaledWidth_double();
+        double scaleHeight = mc.displayHeight / reso.getScaledHeight_double();
         
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor((int) ((x + 1) * scaleWidth),  (mc.displayHeight) - (int)((y + height - 1) * scaleHeight), (int) ((width - 2) * scaleWidth), (int) ((height - 2) * scaleHeight));

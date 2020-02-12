@@ -24,13 +24,13 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiLabeledTextField;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiList;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiScrollbar;
 import moe.plushie.armourers_workshop.client.gui.controls.IGuiListItem;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.ILibraryManager;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.library.LibraryFileList;
@@ -68,7 +68,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiSkinLibrary extends AbstractGuiDialogContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/armour-library.png");
+    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.GUI_SKIN_LIBRARY);
     private static final int BUTTON_ID_LOAD_SAVE = 0;
     
     private static final int TITLE_HEIGHT = 15;
@@ -134,21 +134,21 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         
         //Move player inventory slots.
         for (int x = 0; x < 9; x++) {
-            Slot slot = (Slot) inventorySlots.inventorySlots.get(x);
+            Slot slot = inventorySlots.inventorySlots.get(x);
             slot.yPos = this.height + 1 - PADDING - slotSize - neiBump;
         }
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                Slot slot = (Slot) inventorySlots.inventorySlots.get(x + y * 9 + 9);
+                Slot slot = inventorySlots.inventorySlots.get(x + y * 9 + 9);
                 slot.yPos = this.height + 1 - INVENTORY_HEIGHT - PADDING + y * slotSize - neiBump;
             }
         }
         
         //Move library inventory slots.
-        Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
+        Slot slot = inventorySlots.inventorySlots.get(36);
         slot.yPos = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
         slot.xPos = PADDING + 1;
-        slot = (Slot) inventorySlots.inventorySlots.get(37);
+        slot = inventorySlots.inventorySlots.get(37);
         slot.yPos = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
         slot.xPos = PADDING + INVENTORY_WIDTH - slotSize - 3;
         
@@ -255,7 +255,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
      * @return true = loading, false = saving
      */
     private boolean isLoading() {
-        Slot slot = (Slot) inventorySlots.inventorySlots.get(36);
+        Slot slot = inventorySlots.inventorySlots.get(36);
         ItemStack stack = slot.getStack();
         if (armourLibrary.isCreativeLibrary()) {
             if (stack == null) {
@@ -635,7 +635,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         } else {
             loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "save");
         }
-        if (!((Slot) inventorySlots.inventorySlots.get(36)).getHasStack() & !armourLibrary.isCreativeLibrary()) {
+        if (!inventorySlots.inventorySlots.get(36).getHasStack() & !armourLibrary.isCreativeLibrary()) {
             loadSaveButton.displayString = "";
             loadSaveButton.enabled = false;
         }
@@ -713,7 +713,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         fileList.setScrollAmount(scrollbar.getValue());
         
         for (int i = 0; i < buttonList.size(); i++) {
-            GuiButton button = (GuiButton) buttonList.get(i);
+            GuiButton button = buttonList.get(i);
             if (button instanceof GuiIconButton) {
                 ((GuiIconButton)button).drawRollover(mc, mouseX, mouseY);
             }
@@ -754,7 +754,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                     
                     if (scale > 8) {
                         GlStateManager.pushMatrix();
-                        GL11.glTranslatef((float)x, (float)y, 500.0F);
+                        GL11.glTranslatef(x, y, 500.0F);
                         GL11.glScalef(10, 10, -10);
                         GL11.glRotatef(30, 1, 0, 0);
                         GL11.glRotatef(45, 0, 1, 0);

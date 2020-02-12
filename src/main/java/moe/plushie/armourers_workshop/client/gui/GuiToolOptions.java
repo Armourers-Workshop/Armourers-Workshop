@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
@@ -24,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiToolOptions extends GuiScreen {
     
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/tool-options.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibModInfo.ID, LibGuiResources.COMMON);
     private static final int MARGIN_TOP = 22;
     private static final int MARGIN_LEFT = 6;
     private static final int CONTROL_PADDING = 6;
@@ -73,9 +74,9 @@ public class GuiToolOptions extends GuiScreen {
     @Override
     public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
         GL11.glColor4f(1, 1, 1, 1);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-        int textureWidth = 176;
-        int textureHeight = 62;
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
+        int textureWidth = 128;
+        int textureHeight = 128;
         int borderSize = 4;
         GuiUtils.drawContinuousTexturedBox(guiLeft, guiTop, 0, 0, guiWidth, guiHeight, textureWidth, textureHeight, borderSize, zLevel);
         super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
@@ -116,7 +117,7 @@ public class GuiToolOptions extends GuiScreen {
     
     public void writeToCompound(NBTTagCompound compound) {
         for (int i = 0; i < toolOptionsList.size(); i++) {
-            toolOptionsList.get(i).writeGuiControlToNBT((GuiButton) buttonList.get(i), compound);
+            toolOptionsList.get(i).writeGuiControlToNBT(buttonList.get(i), compound);
         }
     }
 }

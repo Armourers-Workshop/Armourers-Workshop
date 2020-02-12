@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.client.gui.armourer.tab;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog;
-import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.DialogResult;
 import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.IDialogCallback;
+import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.armourer.GuiArmourer;
 import moe.plushie.armourers_workshop.client.gui.armourer.dialog.GuiDialogClear;
 import moe.plushie.armourers_workshop.client.gui.armourer.dialog.GuiDialogCopy;
@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiTabArmourerBlockUtils extends GuiTabPanel implements IDialogCallback {
     
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.ARMOURER);
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.GUI_ARMOURER);
     
     private final TileEntityArmourer tileEntity;
     

@@ -14,8 +14,8 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider.HSBSliderType;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider.IHSBSliderCallback;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiColourUpdate;
@@ -38,7 +38,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, IDropDownListCallback {
 
     private TileEntityColourMixer tileEntityColourMixer;
-    private static final ResourceLocation guiTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/colour-mixer.png");
+    private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(LibGuiResources.GUI_COLOUR_MIXER);
     
     private Color colour;
     private GuiHSBSlider[] slidersHSB;
@@ -74,7 +74,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         colourHex.setMaxStringLength(7);
         updateHexTextbox();
         
-        colourSelector = new GuiColourSelector(3, this.guiLeft + 166, this.guiTop + 80, 82, 42, 10, 10, 8, 4, guiTexture);
+        colourSelector = new GuiColourSelector(3, this.guiLeft + 166, this.guiTop + 80, 82, 42, 10, 10, 8, 4, GUI_TEXTURE);
         buttonList.add(colourSelector);
         
         colourFamilyList = new GuiDropDownList(4, this.guiLeft + 164, this.guiTop + 60, 86, "", this);
@@ -91,10 +91,10 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         updatePaintTypeDropDown();
         buttonList.add(paintTypeDropDown);
         
-        buttonPaletteAdd = new GuiIconButton(this, -1, this.guiLeft + 166, this.guiTop + 124, 20, 20, "Add Palette", guiTexture).setIconLocation(223, 240, 16, 16);
+        buttonPaletteAdd = new GuiIconButton(this, -1, this.guiLeft + 166, this.guiTop + 124, 20, 20, "Add Palette", GUI_TEXTURE).setIconLocation(223, 240, 16, 16);
         //buttonList.add(buttonPaletteAdd);
         
-        buttonPaletteRemove = new GuiIconButton(this, -1, this.guiLeft + 228, this.guiTop + 124, 20, 20, "Remove Palette", guiTexture).setIconLocation(189, 240, 16, 16);
+        buttonPaletteRemove = new GuiIconButton(this, -1, this.guiLeft + 228, this.guiTop + 124, 20, 20, "Remove Palette", GUI_TEXTURE).setIconLocation(189, 240, 16, 16);
         //buttonList.add(buttonPaletteRemove);
     }
     
@@ -256,7 +256,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         checkForColourUpdates();
         GL11.glColor4f(1, 1, 1, 1);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(guiTexture);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(GUI_TEXTURE);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         
         float red = (float) colour.getRed() / 255;

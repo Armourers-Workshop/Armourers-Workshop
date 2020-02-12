@@ -17,7 +17,7 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.dialog.GuiGlobalLibraryDialogDelete;
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.library.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
@@ -31,7 +31,7 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCallback {
 
-    private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/globalLibrary.png");
+    private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibGuiResources.GUI_GLOBAL_LIBRARY);
     
     private final String guiName;
     private GuiLabeledTextField textName;
@@ -181,7 +181,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
             }
         }
         if (button == buttonDelete) {
-            ((GuiGlobalLibrary)parent).openDialog(new GuiGlobalLibraryDialogDelete((GuiGlobalLibrary)parent, guiName + ".dialog.delete", this, 190, 100));
+            ((GuiGlobalLibrary)parent).openDialog(new GuiGlobalLibraryDialogDelete(parent, guiName + ".dialog.delete", this, 190, 100));
         }
     }
     

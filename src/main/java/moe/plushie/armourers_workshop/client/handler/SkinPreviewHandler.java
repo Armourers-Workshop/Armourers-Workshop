@@ -61,9 +61,9 @@ public final class SkinPreviewHandler {
 
             int[] toolTipSize = getTooltipSize(list, mc.currentScreen.width, mc.currentScreen.height, event.getMouseX() + 8, event.getMouseY(), mc.fontRenderer);
             int x = (int) (toolTipSize[0] - skinPreSize - 28);
-            int y = (int) (toolTipSize[1] - 4);
+            int y = toolTipSize[1] - 4;
             if (tooltipOnLeft(list, mc.currentScreen.width, mc.currentScreen.height, event.getMouseX() + 8, event.getMouseY(), mc.fontRenderer)) {
-                x = (int) (toolTipSize[0] + toolTipSize[2] + 15);
+                x = toolTipSize[0] + toolTipSize[2] + 15;
             }
             if (y < 0) {
                 y = 0;

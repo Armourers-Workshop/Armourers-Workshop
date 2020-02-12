@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
@@ -46,7 +47,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     
-    private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/global-library.png");
+    private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibGuiResources.GUI_GLOBAL_LIBRARY);
     private static final String BASE_URL = "https://plushie.moe/armourers_workshop/";
     private static final String SKIN_ACTION_URL = BASE_URL + "user-skin-action.php";
     
@@ -366,7 +367,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             GlStateManager.pushMatrix();
             GlStateManager.pushAttrib();
             GlStateManager.translate(boxX + boxWidth / 2, boxY + boxHeight / 2, 500.0F);
-            GlStateManager.scale((float)(-scale), (float)scale, (float)scale);
+            GlStateManager.scale((-scale), scale, scale);
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
             GlStateManager.rotate(20.0F, 1.0F, 0.0F, 0.0F);
             float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);

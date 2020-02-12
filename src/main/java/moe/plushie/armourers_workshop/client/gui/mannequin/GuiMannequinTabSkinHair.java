@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiMannequinTabSkinHair extends GuiTabPanel<GuiMannequin> {
 
-    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.MANNEQUIN);
+    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.GUI_MANNEQUIN);
     
     private static final int TAB_WIDTH = 200;
     private static final int TAB_HEIGHT = 62;
@@ -108,14 +108,14 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel<GuiMannequin> {
             if (hoverColour != null) {
                 skinColour = hoverColour.getRGB();
             }
-            ((GuiMannequin)parent).tabOffset.sendData();
+            parent.tabOffset.sendData();
         }
         if (selectingHairColour) {
             selectingHairColour = false;
             if (hoverColour != null) {
                 hairColour = hoverColour.getRGB();
             }
-            ((GuiMannequin)parent).tabOffset.sendData();
+            parent.tabOffset.sendData();
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
@@ -128,7 +128,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel<GuiMannequin> {
         if (button == autoSkinButton) {
             PlayerTexture playerTexture = MannequinTextureHelper.getMannequinTexture(tileEntity);
             skinColour = autoColourSkin(playerTexture.getResourceLocation());
-            ((GuiMannequin)parent).tabOffset.sendData();
+            parent.tabOffset.sendData();
         }
         if (button == selectHairButton) {
             selectingHairColour = true;
@@ -136,7 +136,7 @@ public class GuiMannequinTabSkinHair extends GuiTabPanel<GuiMannequin> {
         if (button == autoHairButton) {
             PlayerTexture playerTexture = MannequinTextureHelper.getMannequinTexture(tileEntity);
             hairColour = autoColourHair(playerTexture.getResourceLocation());
-            ((GuiMannequin)parent).tabOffset.sendData();
+            parent.tabOffset.sendData();
         }
     }
     

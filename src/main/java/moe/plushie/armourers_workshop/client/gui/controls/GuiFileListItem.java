@@ -3,14 +3,14 @@ package moe.plushie.armourers_workshop.client.gui.controls;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.gui.skinlibrary.GuiSkinLibrary;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.utils.UtilColour;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.Minecraft;
@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiFileListItem extends Gui implements IGuiListItem {
 
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/controls/list.png");
+    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.CONTROL_LIST);
     
     private final LibraryFile file;
     
@@ -66,7 +66,7 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
                         float scale = 10F;
                         GlStateManager.pushMatrix();
                         GL11.glTranslatef((float)x + 5, (float)y + 6, 50.0F);
-                        GL11.glScalef((float)(-scale), (float)scale, (float)scale);
+                        GL11.glScalef((-scale), scale, scale);
                         GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
                         GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
                         float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);

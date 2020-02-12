@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.client.guidebook;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.utils.UtilColour;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.gui.FontRenderer;
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class BookPageBase implements IBookPage {
     
-    protected static final ResourceLocation bookPageTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/guide-book-page.png");
+    protected static final ResourceLocation bookPageTexture = new ResourceLocation(LibGuiResources.GUI_GUIDE_BOOK_PAGES);
     
     protected static final int TEXT_COLOUR = 0xFF000000;
     

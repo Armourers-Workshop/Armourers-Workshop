@@ -10,8 +10,8 @@ import moe.plushie.armourers_workshop.client.guidebook.BookPage;
 import moe.plushie.armourers_workshop.client.guidebook.BookPageBase;
 import moe.plushie.armourers_workshop.client.guidebook.IBook;
 import moe.plushie.armourers_workshop.client.guidebook.IBookPage;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class GuiBookBase extends GuiScreen {
     
-    protected static final ResourceLocation bookTexture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/guide-book.png");
+    protected static final ResourceLocation bookTexture = new ResourceLocation(LibGuiResources.GUI_GUIDE_BOOK);
     
     protected final int guiWidth;
     protected final int guiHeight;
@@ -179,8 +179,8 @@ public abstract class GuiBookBase extends GuiScreen {
         
         ScaledResolution reso = new ScaledResolution(mc);
         
-        double scaleWidth = (double)mc.displayWidth / reso.getScaledWidth_double();
-        double scaleHeight = (double)mc.displayHeight / reso.getScaledHeight_double();
+        double scaleWidth = mc.displayWidth / reso.getScaledWidth_double();
+        double scaleHeight = mc.displayHeight / reso.getScaledHeight_double();
         
         int fboScaledWidth = MathHelper.ceil(256 * scaleWidth);
         int fboScaledHeight = MathHelper.ceil(256 * scaleHeight);

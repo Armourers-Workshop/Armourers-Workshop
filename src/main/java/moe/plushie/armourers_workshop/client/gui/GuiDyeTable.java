@@ -5,12 +5,12 @@ import java.awt.Color;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.inventory.ContainerDyeTable;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotDyeBottle;
-import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityDyeTable;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiDyeTable extends GuiContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/gui/dye-table.png");
+    private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.GUI_DYE_TABLE);
 
     private final TileEntityDyeTable tileEntity;
     private SkinDye[] rolloverDyes;
@@ -93,7 +93,7 @@ public class GuiDyeTable extends GuiContainer {
             float boxY = 102;
             float scale = 11F;
 
-            GL11.glTranslatef((float) boxX, (float) boxY, 500.0F);
+            GL11.glTranslatef(boxX, boxY, 500.0F);
             GL11.glScalef(-scale, scale, scale);
             float rotation = (float) ((double) System.currentTimeMillis() / 10 % 360);
             float fade = (float) ((double) System.currentTimeMillis() / 400 % Math.PI * 2);
@@ -118,7 +118,7 @@ public class GuiDyeTable extends GuiContainer {
                 // ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
                 GL11.glPopMatrix();
                 GL11.glPopMatrix();
-                Color c = new Color(198, 198, 198, (int) (240));
+                Color c = new Color(198, 198, 198, (240));
                 RenderHelper.disableStandardItemLighting();
 
                 GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -127,7 +127,7 @@ public class GuiDyeTable extends GuiContainer {
                 GL11.glEnable(GL11.GL_DEPTH_TEST);
                 RenderHelper.enableStandardItemLighting();
                 GL11.glPushMatrix();
-                GL11.glTranslatef((float) boxX, (float) boxY, 200.0F);
+                GL11.glTranslatef(boxX, boxY, 200.0F);
                 GL11.glScalef(-scale, scale, scale);
                 GL11.glRotatef(-20, 1, 0, 0);
                 GL11.glRotatef(rotation, 0, 1, 0);

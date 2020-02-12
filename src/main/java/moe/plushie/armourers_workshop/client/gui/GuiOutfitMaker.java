@@ -23,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiOutfitMaker extends GuiContainer {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.OUTFIT_MAKER);
+    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.GUI_OUTFIT_MAKER);
     
     private final TileEntityOutfitMaker tileEntity;
     

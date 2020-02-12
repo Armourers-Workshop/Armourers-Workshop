@@ -247,7 +247,7 @@ skinType.armourers:item.name=Item
 skinType.armourers:block.name=Block
 skinType.armourers:multiblock.name=Multiblock
 skinType.armourers:horse.name=Horse
-skinType.armourers:advanced.name=Advanced
+skinType.armourers:part.name=Part
 skinType.armourers:outfit.name=Outfit
 
 
