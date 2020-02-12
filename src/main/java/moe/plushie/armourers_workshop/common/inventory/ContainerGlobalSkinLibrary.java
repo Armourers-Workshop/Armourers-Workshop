@@ -47,11 +47,11 @@ public class ContainerGlobalSkinLibrary extends ModTileContainer<TileEntityGloba
             }
         }
     }
-    
+
     public Slot getInputSlot() {
         return getSlot(36);
     }
-    
+
     public Slot getOutputSlot() {
         return getSlot(37);
     }

@@ -1,16 +1,17 @@
 package moe.plushie.armourers_workshop.client.gui.globallibrary.dialog;
 
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
-import moe.plushie.armourers_workshop.client.gui.oldgui.AbstractGuiDialog;
+import moe.plushie.armourers_workshop.client.gui.newgui.AbstractGuiDialog;
+import moe.plushie.armourers_workshop.client.gui.newgui.IDialogCallback;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 public class GuiGlobalLibraryDialogDelete extends AbstractGuiDialog {
 
     private GuiButtonExt buttonOk;
     private GuiButtonExt buttonCancel;
-    
+
     public GuiGlobalLibraryDialogDelete(GuiScreen parent, String name, IDialogCallback callback, int width, int height) {
         super(parent, name, callback, width, height);
     }
@@ -24,7 +25,7 @@ public class GuiGlobalLibraryDialogDelete extends AbstractGuiDialog {
         buttonList.add(buttonOk);
         buttonList.add(buttonCancel);
     }
-    
+
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button == buttonCancel) {
@@ -34,7 +35,7 @@ public class GuiGlobalLibraryDialogDelete extends AbstractGuiDialog {
             returnDialogResult(DialogResult.OK);
         }
     }
-    
+
     @Override
     public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
         super.drawForeground(mouseX, mouseY, partialTickTime);

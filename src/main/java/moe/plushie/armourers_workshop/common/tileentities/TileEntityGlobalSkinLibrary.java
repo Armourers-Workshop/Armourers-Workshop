@@ -14,18 +14,18 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityGlobalSkinLibrary extends TileEntity implements IButtonPress, IGuiFactory  {
-    
+public class TileEntityGlobalSkinLibrary extends TileEntity implements IButtonPress, IGuiFactory {
+
     public TileEntityGlobalSkinLibrary() {
     }
 
     @Override
     public void buttonPressed(EntityPlayer player, byte buttonId) {
         if (buttonId == 0) {
-            
+
         }
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
@@ -36,7 +36,7 @@ public class TileEntityGlobalSkinLibrary extends TileEntity implements IButtonPr
     public Container getServerGuiElement(EntityPlayer player, World world, BlockPos pos) {
         return new ContainerGlobalSkinLibrary(player.inventory, this);
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getClientGuiElement(EntityPlayer player, World world, BlockPos pos) {
