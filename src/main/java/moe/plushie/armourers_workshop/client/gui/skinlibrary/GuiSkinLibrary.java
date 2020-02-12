@@ -21,9 +21,9 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiLabeledTextField;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiList;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiScrollbar;
 import moe.plushie.armourers_workshop.client.gui.controls.IGuiListItem;
-import moe.plushie.armourers_workshop.client.gui.oldgui.AbstractGuiDialog;
-import moe.plushie.armourers_workshop.client.gui.oldgui.AbstractGuiDialogContainer;
-import moe.plushie.armourers_workshop.client.gui.oldgui.AbstractGuiDialog.DialogResult;
+import moe.plushie.armourers_workshop.client.gui.newgui.AbstractGuiDialog;
+import moe.plushie.armourers_workshop.client.gui.newgui.IDialogCallback;
+import moe.plushie.armourers_workshop.client.gui.newgui.ModGuiContainer;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
@@ -66,22 +66,22 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiSkinLibrary extends AbstractGuiDialogContainer {
+public class GuiSkinLibrary extends ModGuiContainer<ContainerSkinLibrary> implements IDialogCallback {
 
     private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.GUI_SKIN_LIBRARY);
     private static final int BUTTON_ID_LOAD_SAVE = 0;
-    
+
     private static final int TITLE_HEIGHT = 15;
     private static final int PADDING = 5;
     private static final int INVENTORY_HEIGHT = 76;
     private static final int INVENTORY_WIDTH = 162;
-    
+
     private static int scrollAmount = 0;
     private static ISkinType lastSkinType;
     private static String lastSearchText = "";
     private static String currentFolder = "/";
     private static boolean trackFile = false;
-    
+
     private TileEntitySkinLibrary armourLibrary;
     private final EntityPlayer player;
     private GuiIconButton fileSwitchlocal;
@@ -90,49 +90,48 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
     public static LibraryFileType fileSwitchType;
     private GuiList fileList;
     private GuiButtonExt loadSaveButton;
-    
+
     private GuiIconButton openFolderButton;
     private GuiIconButton deleteButton;
     private GuiIconButton reloadButton;
     private GuiIconButton newFolderButton;
     private GuiIconButton backButton;
-    
+
     private GuiScrollbar scrollbar;
     private GuiLabeledTextField filenameTextbox;
     private GuiLabeledTextField searchTextbox;
     private GuiDropDownList dropDownList;
     private GuiCheckBox checkBoxTrack;
-    
+
     private boolean isNEIVisible;
-    
+
     private int neiBump = 18;
-    
+
     public GuiSkinLibrary(InventoryPlayer invPlayer, TileEntitySkinLibrary armourLibrary) {
         super(new ContainerSkinLibrary(invPlayer, armourLibrary));
         player = invPlayer.player;
         this.armourLibrary = armourLibrary;
         isNEIVisible = ModAddonManager.addonNEI.isVisible();
     }
-    
+
     @Override
     public void initGui() {
         ScaledResolution reso = new ScaledResolution(mc);
         this.xSize = reso.getScaledWidth();
         this.ySize = reso.getScaledHeight();
         super.initGui();
-        
+
         String guiName = armourLibrary.getName();
-        
+
         int slotSize = 18;
-        
-        
+
         if (ModAddonManager.addonNEI.isVisible()) {
             neiBump = 18;
         } else {
             neiBump = 0;
         }
-        
-        //Move player inventory slots.
+
+        // Move player inventory slots.
         for (int x = 0; x < 9; x++) {
             Slot slot = inventorySlots.inventorySlots.get(x);
             slot.yPos = this.height + 1 - PADDING - slotSize - neiBump;
@@ -143,53 +142,53 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                 slot.yPos = this.height + 1 - INVENTORY_HEIGHT - PADDING + y * slotSize - neiBump;
             }
         }
-        
-        //Move library inventory slots.
+
+        // Move library inventory slots.
         Slot slot = inventorySlots.inventorySlots.get(36);
         slot.yPos = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
         slot.xPos = PADDING + 1;
         slot = inventorySlots.inventorySlots.get(37);
         slot.yPos = this.height + 2 - INVENTORY_HEIGHT - PADDING * 3 - slotSize - neiBump;
         slot.xPos = PADDING + INVENTORY_WIDTH - slotSize - 3;
-        
+
         buttonList.clear();
-        
+
         fileSwitchlocal = new GuiIconButton(this, -1, PADDING, TITLE_HEIGHT + PADDING, 50, 30, GuiHelper.getLocalizedControlName(guiName, "rollover.localFiles"), texture);
         fileSwitchRemotePublic = new GuiIconButton(this, -1, PADDING + 51 + PADDING, TITLE_HEIGHT + PADDING, 50, 30, GuiHelper.getLocalizedControlName(guiName, "rollover.remotePublicFiles"), texture);
         fileSwitchRemotePrivate = new GuiIconButton(this, -1, PADDING + 102 + PADDING * 2, TITLE_HEIGHT + PADDING, 50, 30, GuiHelper.getLocalizedControlName(guiName, "rollover.remotePrivateFiles"), texture);
         fileSwitchlocal.setIconLocation(0, 0, 50, 30);
         fileSwitchRemotePublic.setIconLocation(0, 31, 50, 30);
         fileSwitchRemotePrivate.setIconLocation(0, 62, 50, 30);
-        
+
         openFolderButton = new GuiIconButton(this, 4, PADDING, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.openLibraryFolder"), texture);
         openFolderButton.setIconLocation(0, 93, 24, 24);
         buttonList.add(openFolderButton);
-        
+
         reloadButton = new GuiIconButton(this, -1, PADDING * 2 + 20, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.refresh"), texture);
         reloadButton.setIconLocation(75, 93, 24, 24);
         buttonList.add(reloadButton);
-        
+
         deleteButton = new GuiIconButton(this, -1, PADDING * 3 + 40, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.deleteSkin"), texture);
         deleteButton.setIconLocation(0, 118, 24, 24);
         buttonList.add(deleteButton);
         deleteButton.enabled = false;
-        
+
         newFolderButton = new GuiIconButton(this, -1, PADDING * 4 + 60, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.newFolder"), texture);
         newFolderButton.setIconLocation(75, 118, 24, 24);
         buttonList.add(newFolderButton);
-        
-        backButton = new  GuiIconButton(this, -1, INVENTORY_WIDTH + PADDING - 24, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.back"), texture);
+
+        backButton = new GuiIconButton(this, -1, INVENTORY_WIDTH + PADDING - 24, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.back"), texture);
         backButton.setIconLocation(150, 93, 24, 24);
         buttonList.add(backButton);
-        
+
         int listWidth = this.width - INVENTORY_WIDTH - PADDING * 5;
         int listHeight = this.height - TITLE_HEIGHT - 14 - PADDING * 3;
         int typeSwitchWidth = 80;
-        
+
         listWidth = MathHelper.clamp(listWidth, 0, 200);
-        
+
         fileList = new GuiList(INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 14 + PADDING * 2, listWidth, listHeight, 14);
-        
+
         if (mc.isSingleplayer()) {
             fileSwitchRemotePublic.enabled = false;
             fileSwitchRemotePrivate.enabled = false;
@@ -199,29 +198,28 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         } else {
             setFileSwitchType(LibraryFileType.SERVER_PUBLIC);
         }
-        
+
         buttonList.add(fileSwitchlocal);
         buttonList.add(fileSwitchRemotePublic);
         buttonList.add(fileSwitchRemotePrivate);
-        
+
         loadSaveButton = new GuiButtonExt(BUTTON_ID_LOAD_SAVE, PADDING * 2 + 18, this.height - INVENTORY_HEIGHT - PADDING * 2 - 2 - 20 - neiBump, 108, 20, "----LS--->");
         buttonList.add(loadSaveButton);
-        
+
         filenameTextbox = new GuiLabeledTextField(fontRenderer, PADDING, TITLE_HEIGHT + 30 + PADDING * 2, INVENTORY_WIDTH, 12);
         filenameTextbox.setMaxStringLength(100);
         filenameTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.enterFileName"));
-        
+
         searchTextbox = new GuiLabeledTextField(fontRenderer, INVENTORY_WIDTH + PADDING * 2, TITLE_HEIGHT + 1 + PADDING, listWidth - typeSwitchWidth - PADDING + 10, 12);
         searchTextbox.setMaxStringLength(100);
         searchTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "label.typeToSearch"));
         searchTextbox.setText(lastSearchText);
-        
+
         scrollbar = new GuiScrollbar(2, INVENTORY_WIDTH + 10 + listWidth, TITLE_HEIGHT + 14 + PADDING * 2, 10, listHeight, "", false);
         scrollbar.setValue(scrollAmount);
         scrollbar.setAmount(fileList.getSlotHeight());
         buttonList.add(scrollbar);
-        
-        
+
         dropDownList = new GuiDropDownList(5, INVENTORY_WIDTH + PADDING * 5 + listWidth - typeSwitchWidth - PADDING, TITLE_HEIGHT + PADDING, typeSwitchWidth, "", null);
         ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
         dropDownList.addListItem("*");
@@ -230,8 +228,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         for (int i = 0; i < skinTypes.size(); i++) {
             ISkinType skinType = skinTypes.get(i);
             if (!skinType.isHidden()) {
-                dropDownList.addListItem(SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType),
-                        skinType.getRegistryName(), true);
+                dropDownList.addListItem(SkinTypeRegistry.INSTANCE.getLocalizedSkinTypeName(skinType), skinType.getRegistryName(), true);
                 addCount++;
                 if (skinType == lastSkinType) {
                     dropDownList.setListSelectedIndex(addCount);
@@ -239,19 +236,20 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             }
         }
         buttonList.add(dropDownList);
-        
+
         checkBoxTrack = new GuiCheckBox(-1, PADDING, this.height - INVENTORY_HEIGHT - PADDING * 5 - 2 - 20 - neiBump, GuiHelper.getLocalizedControlName(guiName, "trackFile"), trackFile);
         checkBoxTrack.setTextColour(0xCCCCCC);
         buttonList.add(checkBoxTrack);
     }
-    
+
     public TileEntitySkinLibrary getArmourLibrary() {
         return armourLibrary;
     }
-    
+
     /**
-     * Returns true if the player is trying to load and item
-     * or false if they are trying to save.
+     * Returns true if the player is trying to load and item or false if they are
+     * trying to save.
+     * 
      * @return true = loading, false = saving
      */
     private boolean isLoading() {
@@ -275,7 +273,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             return false;
         }
     }
-    
+
     private void setFileSwitchType(LibraryFileType type) {
         if (fileSwitchType == type) {
             return;
@@ -302,11 +300,11 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             break;
         }
     }
-    
+
     private void setupLibraryEditButtons() {
         IGuiListItem listItem = fileList.getSelectedListEntry();
         reloadButton.enabled = newFolderButton.enabled = openFolderButton.enabled = deleteButton.enabled = false;
-        
+
         if (fileSwitchType == LibraryFileType.LOCAL) {
             reloadButton.enabled = openFolderButton.enabled = newFolderButton.enabled = true;
             reloadButton.enabled = true;
@@ -316,14 +314,14 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                 deleteButton.setDisableText(GuiHelper.getLocalizedControlName(armourLibrary.getName(), "rollover.deleteSkinSelect"));
             }
         }
-        
+
         if (fileSwitchType == LibraryFileType.SERVER_PUBLIC) {
             openFolderButton.setDisableText("");
             reloadButton.setDisableText("");
             deleteButton.setDisableText("");
             newFolderButton.setDisableText("");
         }
-        
+
         if (fileSwitchType == LibraryFileType.SERVER_PRIVATE) {
             openFolderButton.setDisableText("");
             reloadButton.setDisableText("");
@@ -335,11 +333,11 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             }
         }
     }
-    
+
     @Override
     protected void actionPerformed(GuiButton button) {
         String filename = filenameTextbox.getText().trim();
-        
+
         if (button == fileSwitchlocal | button == fileSwitchRemotePublic | button == fileSwitchRemotePrivate) {
             if (button == fileSwitchlocal) {
                 setFileSwitchType(LibraryFileType.LOCAL);
@@ -351,54 +349,54 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                 setFileSwitchType(LibraryFileType.SERVER_PRIVATE);
             }
         }
-        
+
         if (button == reloadButton) {
             if (fileSwitchType == LibraryFileType.LOCAL) {
                 ILibraryManager libraryManager = ArmourersWorkshop.getProxy().libraryManager;
                 libraryManager.reloadLibrary();
             } else {
-                //TODO reload server library
+                // TODO reload server library
             }
         }
-        
+
         if (button == openFolderButton) {
             openEquipmentFolder();
         }
-        
+
         if (button == deleteButton) {
             if (fileList.getSelectedListEntry() != null) {
                 GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
                 openDialog(new GuiDialogDelete(this, armourLibrary.getName() + ".dialog.delete", this, 190, 100, item.getFile().isDirectory(), item.getDisplayName()));
             }
         }
-        
+
         if (button == newFolderButton) {
             openDialog(new GuiDialogNewFolder(this, armourLibrary.getName() + ".dialog.newFolder", this, 190, 120));
         }
-        
+
         if (button == backButton) {
             goBackFolder();
         }
-        
+
         if (button == checkBoxTrack) {
             trackFile = checkBoxTrack.isChecked();
         }
-        
+
         GuiFileListItem fileItem = (GuiFileListItem) fileList.getSelectedListEntry();
-        
+
         boolean clientLoad = false;
         boolean publicList = true;
         MessageClientGuiLoadSaveArmour message;
-        
+
         if (fileSwitchType == LibraryFileType.LOCAL && !mc.isIntegratedServerRunning()) {
-            //Is playing on a server.
+            // Is playing on a server.
             clientLoad = true;
         }
-        
+
         if (fileSwitchType == LibraryFileType.SERVER_PRIVATE) {
             publicList = false;
         }
-        
+
         if (button == loadSaveButton) {
             if (fileItem != null && !fileItem.getFile().isDirectory()) {
                 LibraryFile file = fileItem.getFile();
@@ -413,7 +411,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                         PacketHandler.networkWrapper.sendToServer(message);
                     }
                     filenameTextbox.setText("");
-                } 
+                }
             }
             if (!filename.isEmpty()) {
                 if (!isLoading()) {
@@ -428,15 +426,15 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                         message = new MessageClientGuiLoadSaveArmour(filename, currentFolder, LibraryPacketType.SERVER_SAVE, publicList, trackFile);
                         PacketHandler.networkWrapper.sendToServer(message);
                     }
-                    
-                    //filenameTextbox.setText("");
+
+                    // filenameTextbox.setText("");
                 }
             }
         }
-        
+
         setupLibraryEditButtons();
     }
-    
+
     private boolean fileExists(String path, String name) {
         LibraryFileList fileList = getFileList(fileSwitchType);
         ArrayList<LibraryFile> files = fileList.getFileList();
@@ -448,7 +446,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         }
         return false;
     }
-    
+
     private LibraryFileList getFileList(LibraryFileType libraryFileType) {
         ILibraryManager libraryManager = ArmourersWorkshop.getProxy().libraryManager;
         switch (libraryFileType) {
@@ -461,17 +459,17 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         }
         return null;
     }
-    
+
     private void reloadLocalLibrary() {
         ArmourersWorkshop.getProxy().libraryManager.reloadLibrary();
     }
-    
+
     @Override
     public void dialogResult(AbstractGuiDialog dialog, DialogResult result) {
         if (result == DialogResult.OK) {
             if (dialog instanceof GuiDialogNewFolder) {
                 GuiDialogNewFolder newFolderDialog = (GuiDialogNewFolder) dialog;
-                
+
                 if (fileSwitchType == LibraryFileType.LOCAL) {
                     File dir = new File(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), currentFolder);
                     dir = new File(dir, newFolderDialog.getFolderName());
@@ -487,21 +485,21 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                     PacketHandler.networkWrapper.sendToServer(message);
                 }
             }
-            
+
             if (dialog instanceof GuiDialogDelete) {
                 GuiDialogDelete deleteDialog = (GuiDialogDelete) dialog;
                 boolean isFolder = deleteDialog.isFolder();
                 String name = deleteDialog.getFileName();
-                
+
                 if (fileSwitchType == LibraryFileType.LOCAL) {
                     File dir = new File(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), currentFolder);
-                    
+
                     if (deleteDialog.isFolder()) {
                         dir = new File(dir, name + "/");
                     } else {
                         dir = new File(dir, name + SkinIOUtils.SKIN_FILE_EXTENSION);
                     }
-                    
+
                     if (dir.isDirectory() == isFolder) {
                         if (dir.exists()) {
                             if (isFolder) {
@@ -523,17 +521,18 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                     MessageClientGuiSkinLibraryCommand message = new MessageClientGuiSkinLibraryCommand();
                     message.delete(new LibraryFile(deleteDialog.getFileName(), currentFolder, null, isFolder), fileSwitchType == LibraryFileType.SERVER_PUBLIC);
                     PacketHandler.networkWrapper.sendToServer(message);
-                    //ClientSkinCache.INSTANCE.clearIdForFileName(currentFolder + deleteDialog.getName());
+                    // ClientSkinCache.INSTANCE.clearIdForFileName(currentFolder +
+                    // deleteDialog.getName());
                 }
             }
-            
+
             if (dialog instanceof GuiDialogOverwrite) {
                 GuiDialogOverwrite overwriteDialog = (GuiDialogOverwrite) dialog;
                 MessageClientGuiLoadSaveArmour message;
                 boolean clientLoad = false;
                 boolean publicList = true;
                 if (fileSwitchType == LibraryFileType.LOCAL && !mc.isIntegratedServerRunning()) {
-                    //Is playing on a server.
+                    // Is playing on a server.
                     clientLoad = true;
                 }
                 if (fileSwitchType == LibraryFileType.SERVER_PRIVATE) {
@@ -552,13 +551,13 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                 // TODO clear name lookup list on clients or just removed this one name
             }
         }
-        super.dialogResult(dialog, result);
+        closeDialog();
     }
-    
+
     public void setFileName(String text) {
         filenameTextbox.setText(text);
     }
-    
+
     private void openEquipmentFolder() {
         File armourDir = new File(System.getProperty("user.dir"));
         File file = ArmourersWorkshop.getProxy().getSkinLibraryDirectory();
@@ -566,13 +565,13 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
 
         if (Util.getOSType() == Util.EnumOS.OSX) {
             try {
-                Runtime.getRuntime().exec(new String[] {"/usr/bin/open", filePath});
+                Runtime.getRuntime().exec(new String[] { "/usr/bin/open", filePath });
                 return;
             } catch (IOException ioexception1) {
                 ModLogger.log(Level.ERROR, "Couldn\'t open file: " + ioexception1);
             }
         } else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
-            String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] {filePath});
+            String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] { filePath });
             try {
                 Runtime.getRuntime().exec(s1);
                 return;
@@ -585,8 +584,8 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
 
         try {
             Class oclass = Class.forName("java.awt.Desktop");
-            Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
-            oclass.getMethod("browse", new Class[] {URI.class}).invoke(object, new Object[] {file.toURI()});
+            Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object) null, new Object[0]);
+            oclass.getMethod("browse", new Class[] { URI.class }).invoke(object, new Object[] { file.toURI() });
         } catch (Throwable throwable) {
             ModLogger.log(Level.ERROR, "Couldn\'t open link: " + throwable);
             openedFailed = true;
@@ -597,38 +596,29 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             Sys.openURL("file://" + filePath);
         }
     }
-    
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTickTime) {
-        int oldMouseX = mouseX;
-        int oldMouseY = mouseY;
-        if (isDialogOpen()) {
-            mouseX = mouseY = 0;
-        }
-        //GlStateManager.pushAttrib();
+        // GlStateManager.pushAttrib();
         GlStateManager.disableLighting();
-        if (dropDownList.getIsDroppedDown()) {
-            super.drawScreen(0, 0, partialTickTime);
-        } else {
-            super.drawScreen(mouseX, mouseY, partialTickTime);
-        }
+
         GlStateManager.resetColor();
         GlStateManager.color(1, 1, 1, 1);
         GlStateManager.disableLighting();
-        
+
         dropDownList.drawForeground(mc, mouseX, mouseY, partialTickTime);
-        //GlStateManager.popAttrib();
+        // GlStateManager.popAttrib();
         RenderHelper.disableStandardItemLighting();
         ILibraryManager libraryManager = ArmourersWorkshop.getProxy().libraryManager;
         ArrayList<LibraryFile> files = libraryManager.getServerPublicFileList().getFileList();
-        
+
         loadSaveButton.enabled = true;
-        
-        //ModLogger.log(isLoading());
-        
+
+        // ModLogger.log(isLoading());
+
         if (isLoading()) {
             loadSaveButton.displayString = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "load");
-            if (fileList.getSelectedListEntry() == null || ((GuiFileListItem)fileList.getSelectedListEntry()).getFile().directory) {
+            if (fileList.getSelectedListEntry() == null || ((GuiFileListItem) fileList.getSelectedListEntry()).getFile().directory) {
                 loadSaveButton.displayString = "";
                 loadSaveButton.enabled = false;
             }
@@ -639,7 +629,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             loadSaveButton.displayString = "";
             loadSaveButton.enabled = false;
         }
-        
+
         if (fileSwitchType == LibraryFileType.LOCAL) {
             files = libraryManager.getClientPublicFileList().getFileList();
             if (!mc.isIntegratedServerRunning()) {
@@ -653,35 +643,35 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         } else {
             loadSaveButton.enabled = true;
         }
-        
+
         if (fileSwitchType == LibraryFileType.SERVER_PRIVATE) {
             files = libraryManager.getServerPrivateFileList(mc.player).getFileList();
         }
-        
+
         String typeFilter = dropDownList.getListSelectedItem().tag;
         ISkinType skinTypeFilter = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(typeFilter);
         lastSkinType = skinTypeFilter;
         lastSearchText = searchTextbox.getText();
-        IGuiListItem selectedItem =  fileList.getSelectedListEntry();
-        
+        IGuiListItem selectedItem = fileList.getSelectedListEntry();
+
         if (selectedItem != null) {
-            //deleteButton.enabled = !((GuiFileListItem)selectedItem).getFile().readOnly;
+            // deleteButton.enabled = !((GuiFileListItem)selectedItem).getFile().readOnly;
         } else {
-            //deleteButton.enabled = false;
+            // deleteButton.enabled = false;
         }
-        
+
         fileList.setSelectedIndex(-1);
-        
+
         fileList.clearList();
-        
+
         if (!(currentFolder.equals("/") | currentFolder.equals(getPrivateRoot(player)))) {
             fileList.addListItem(new GuiFileListItem(new LibraryFile("../", "", null, true)));
-            if (selectedItem != null && ((GuiFileListItem)selectedItem).getFile().fileName.equals("../")) {
+            if (selectedItem != null && ((GuiFileListItem) selectedItem).getFile().fileName.equals("../")) {
                 fileList.setSelectedIndex(0);
             }
         }
-        
-        if (files!= null) {
+
+        if (files != null) {
             for (int i = 0; i < files.size(); i++) {
                 LibraryFile file = files.get(i);
                 if (file.isDirectory() | (skinTypeFilter == SkinTypeRegistry.skinUnknown | skinTypeFilter == file.skinType)) {
@@ -689,13 +679,13 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                         if (!searchTextbox.getText().equals("")) {
                             if (file.fileName.toLowerCase().contains(searchTextbox.getText().toLowerCase())) {
                                 fileList.addListItem(new GuiFileListItem(file));
-                                if (selectedItem != null && ((GuiFileListItem)selectedItem).getFile() == file) {
+                                if (selectedItem != null && ((GuiFileListItem) selectedItem).getFile() == file) {
                                     fileList.setSelectedIndex(fileList.getSize() - 1);
                                 }
                             }
                         } else {
                             fileList.addListItem(new GuiFileListItem(file));
-                            if (selectedItem != null && ((GuiFileListItem)selectedItem).getFile() == file) {
+                            if (selectedItem != null && ((GuiFileListItem) selectedItem).getFile() == file) {
                                 fileList.setSelectedIndex(fileList.getSize() - 1);
                             }
                         }
@@ -703,22 +693,17 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                 }
             }
         }
-        
+
         int scrollNeeded = fileList.getTotalListHeight();
         scrollNeeded -= fileList.getVisibleHeight();
         scrollNeeded = Math.max(0, scrollNeeded);
         scrollbar.setSliderMaxValue(scrollNeeded);
-        
+
         scrollAmount = scrollbar.getValue();
         fileList.setScrollAmount(scrollbar.getValue());
-        
-        for (int i = 0; i < buttonList.size(); i++) {
-            GuiButton button = buttonList.get(i);
-            if (button instanceof GuiIconButton) {
-                ((GuiIconButton)button).drawRollover(mc, mouseX, mouseY);
-            }
-        }
-        
+
+
+
         if (showModelPreviews()) {
             GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
             if (item != null && !item.getFile().isDirectory()) {
@@ -726,41 +711,41 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(identifier, true);
                 if (skin != null) {
                     SkinDescriptor skinPointer = new SkinDescriptor(identifier);
-                    
+
                     int listRight = this.width - INVENTORY_WIDTH - PADDING * 5;
                     listRight = MathHelper.clamp(listRight, 0, 200);
                     listRight += INVENTORY_WIDTH + PADDING * 2 + 10;
-                    
+
                     int listTop = TITLE_HEIGHT + 14 + PADDING * 2;
-                    
+
                     int xSize = (this.width - listRight - PADDING) / 2;
                     int ySize = (this.height - listTop - PADDING) / 2;
-                    
+
                     float x = listRight + xSize;
                     float y = listTop + ySize;
-                    
+
                     float scale = 1F;
                     scale = 1 * Math.min(xSize, ySize);
-                    
+
                     ScaledResolution scaledResolution = new ScaledResolution(mc);
-                    
+
                     int startX = listRight + PADDING;
                     int startY = listTop + PADDING;
-                    
+
                     int tarW = (int) (x + xSize);
                     int tarH = (int) (y + ySize);
-                    
+
                     drawRect(startX, startY, tarW, tarH, 0x77777777);
-                    
+
                     if (scale > 8) {
                         GlStateManager.pushMatrix();
                         GL11.glTranslatef(x, y, 500.0F);
                         GL11.glScalef(10, 10, -10);
                         GL11.glRotatef(30, 1, 0, 0);
                         GL11.glRotatef(45, 0, 1, 0);
-                        float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
+                        float rotation = (float) ((double) System.currentTimeMillis() / 10 % 360);
                         GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
-                        
+
                         GlStateManager.pushAttrib();
                         RenderHelper.enableGUIStandardItemLighting();
                         GlStateManager.color(1F, 1F, 1F, 1F);
@@ -782,11 +767,21 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         }
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.resetColor();
-        if (isDialogOpen()) {
-            this.dialog.draw(oldMouseX, oldMouseY, partialTickTime);
+        if (dropDownList.getIsDroppedDown()) {
+            super.drawScreen(0, 0, partialTickTime);
+        } else {
+            super.drawScreen(mouseX, mouseY, partialTickTime);
+        }
+        if (!isDialogOpen()) {
+            for (int i = 0; i < buttonList.size(); i++) {
+                GuiButton button = buttonList.get(i);
+                if (button instanceof GuiIconButton) {
+                    ((GuiIconButton) button).drawRollover(mc, mouseX, mouseY);
+                }
+            }
         }
     }
-    
+
     private String getPrivateRoot(EntityPlayer player) {
         String privateRoot = "/private/";
         if (ConfigHandler.remotePlayerId != null) {
@@ -796,7 +791,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         }
         return privateRoot;
     }
-    
+
     public static boolean showModelPreviews() {
         Minecraft mc = Minecraft.getMinecraft();
         if (!ConfigHandler.libraryShowsModelPreviews) {
@@ -808,13 +803,13 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             return fileSwitchType != LibraryFileType.LOCAL;
         }
     }
-    
+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         if (!isDialogOpen()) {
             searchTextbox.mouseClicked(mouseX, mouseY, button);
             filenameTextbox.mouseClicked(mouseX, mouseY, button);
-            
+
             if (button == 1) {
                 if (searchTextbox.isFocused()) {
                     searchTextbox.setText("");
@@ -824,9 +819,9 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
                 }
             }
             if (!dropDownList.getIsDroppedDown()) {
-                
+
                 GuiFileListItem oldItem = (GuiFileListItem) fileList.getSelectedListEntry();
-                
+
                 if (fileList.mouseClicked(mouseX, mouseY, button)) {
                     GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
                     if (!item.getFile().isDirectory()) {
@@ -842,19 +837,19 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             }
             scrollbar.setValue(scrollAmount);
             scrollbar.mousePressed(mc, mouseX, mouseY);
-            
+
             setupLibraryEditButtons();
         }
         super.mouseClicked(mouseX, mouseY, button);
     }
-    
+
     private void setCurrentFolder(String currentFolder) {
         this.currentFolder = currentFolder;
         fileList.setSelectedIndex(-1);
         scrollAmount = 0;
         scrollbar.setValue(scrollAmount);
     }
-    
+
     private void goBackFolder() {
         String[] folderSplit = currentFolder.split("/");
         String currentFolder = "";
@@ -866,7 +861,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         }
         setCurrentFolder(currentFolder);
     }
-    
+
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
         super.mouseReleased(mouseX, mouseY, state);
@@ -877,7 +872,7 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
             scrollbar.mouseReleased(mouseX, mouseY);
         }
     }
-    
+
     @Override
     protected void keyTyped(char key, int keyCode) throws IOException {
         if (keyCode == mc.gameSettings.keyBindScreenshot.getKeyCode()) {
@@ -886,11 +881,11 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         if (!isDialogOpen()) {
             if (!(searchTextbox.textboxKeyTyped(key, keyCode) | filenameTextbox.textboxKeyTyped(key, keyCode))) {
                 if (keyCode == 200) {
-                    //Up
+                    // Up
                     fileList.setSelectedIndex(fileList.getSelectedIndex() - 1);
                 }
                 if (keyCode == 208) {
-                    //Down
+                    // Down
                     fileList.setSelectedIndex(fileList.getSelectedIndex() + 1);
                 }
                 super.keyTyped(key, keyCode);
@@ -900,38 +895,33 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         }
         checkNEIVisibility();
     }
-    
+
     private void checkNEIVisibility() {
         if (isNEIVisible != ModAddonManager.addonNEI.isVisible()) {
             isNEIVisible = !isNEIVisible;
             initGui();
         }
     }
-    
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float someFloat,int mouseX, int mouseY) {
-        if (isDialogOpen()) {
-            mouseX = mouseY = 0;
-        }
-        
+    protected void drawGuiContainerBackgroundLayer(float someFloat, int mouseX, int mouseY) {
         GL11.glColor4f(1, 1, 1, 1);
         mc.renderEngine.bindTexture(texture);
-        
+
         ModRenderHelper.enableAlphaBlend();
         drawTexturedModalRect(PADDING, this.height - INVENTORY_HEIGHT - PADDING - neiBump, 0, 180, INVENTORY_WIDTH, INVENTORY_HEIGHT);
-        //Input slot
+        // Input slot
         drawTexturedModalRect(PADDING, this.height - INVENTORY_HEIGHT - 18 - PADDING * 2 - 4 - neiBump, 0, 162, 18, 18);
-        //Output slot
+        // Output slot
         drawTexturedModalRect(PADDING + INVENTORY_WIDTH - 26, this.height - INVENTORY_HEIGHT - 26 - PADDING * 2 - neiBump, 18, 154, 26, 26);
-        
+
         ModRenderHelper.disableAlphaBlend();
-        
+
         searchTextbox.drawTextBox();
         filenameTextbox.drawTextBox();
         fileList.drawList(mouseX, mouseY, 0);
     }
-    
+
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         if (armourLibrary.isCreativeLibrary()) {
@@ -939,15 +929,21 @@ public class GuiSkinLibrary extends AbstractGuiDialogContainer {
         } else {
             GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, armourLibrary.getName() + "0", 0xCCCCCC);
         }
-        
+
         String filesLabel = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "label.files");
         String filenameLabel = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "label.filename");
         String searchLabel = GuiHelper.getLocalizedControlName(armourLibrary.getName(), "label.search");
         /*
-        this.fontRendererObj.drawString(filesLabel, 7, 55, 4210752);
-        this.fontRendererObj.drawString(filenameLabel, 152, 27, 4210752);
-        this.fontRendererObj.drawString(searchLabel, 7, 27, 4210752);
-        this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 48, this.ySize - 96 + 2, 4210752);
-        */
+         * this.fontRendererObj.drawString(filesLabel, 7, 55, 4210752);
+         * this.fontRendererObj.drawString(filenameLabel, 152, 27, 4210752);
+         * this.fontRendererObj.drawString(searchLabel, 7, 27, 4210752);
+         * this.fontRendererObj.drawString(I18n.format("container.inventory", new
+         * Object[0]), 48, this.ySize - 96 + 2, 4210752);
+         */
+    }
+
+    @Override
+    public String getName() {
+        return armourLibrary.getName();
     }
 }
