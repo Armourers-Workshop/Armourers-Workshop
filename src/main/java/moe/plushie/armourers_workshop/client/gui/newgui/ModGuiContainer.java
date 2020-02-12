@@ -2,17 +2,19 @@ package moe.plushie.armourers_workshop.client.gui.newgui;
 
 import java.io.IOException;
 
+import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ModContainer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public abstract class ModGuiContainer<CONTAINER_TYPE extends ModContainer> extends GuiContainer implements IDialogParent {
 
-    //protected static final ResourceLocation TEXTURE_BACKGROUND = new ResourceLocation(LibGuiResources.BACKGROUND);
-    //protected static final ResourceLocation TEXTURE_BUTTONS = new ResourceLocation(LibGuiResources.BUTTONS);
-    //protected static final ResourceLocation TEXTURE_ICONS = new ResourceLocation(LibGuiResources.ICONS);
+    protected static final ResourceLocation TEXTURE_COMMON = new ResourceLocation(LibGuiResources.COMMON);
+    protected static final ResourceLocation TEXTURE_CONTROL_BUTTONS = new ResourceLocation(LibGuiResources.CONTROL_BUTTONS);
+    protected static final ResourceLocation TEXTURE_TAB_ICONS = new ResourceLocation(LibGuiResources.CONTROL_TAB_ICONS);
 
     protected AbstractGuiDialog dialog;
     int oldMouseX;

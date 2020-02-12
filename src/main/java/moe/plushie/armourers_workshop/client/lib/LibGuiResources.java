@@ -43,7 +43,6 @@ public class LibGuiResources {
     public static final String GUI_SKINNING_TABLE = PREFIX_TEXTURE + "skinning_table/skinning-table.png";
     public static final String GUI_WARDROBE_1 = PREFIX_TEXTURE + "wardrobe/wardrobe-1.png";
     public static final String GUI_WARDROBE_2 = PREFIX_TEXTURE + "wardrobe/wardrobe-2.png";
-    public static final String GUI_WARDROBE_TABS = PREFIX_TEXTURE + "wardrobe/wardrobe-tabs.png";
 
     // JSONs
     public static final String JSON_WARDROBE = PREFIX_JSON + "wardrobe.json";

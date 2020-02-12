@@ -34,12 +34,12 @@ public abstract class GuiTabbed<CONTAINER_TYPE extends ModContainer> extends Mod
         super.initGui();
         buttonList.clear();
 
-        tabController.initGui(getGuiLeft() + 4, guiTop, xSize, ySize);
+        tabController.initGui(getGuiLeft() - 17, guiTop, xSize, ySize);
 
         tabController.setActiveTabIndex(getActiveTab());
 
         for (int i = 0; i < tabList.size(); i++) {
-            tabList.get(i).initGui(getGuiLeft() + 21, getGuiTop(), xSize - 42, ySize);
+            tabList.get(i).initGui(getGuiLeft(), getGuiTop(), xSize, ySize);
         }
         buttonList.add(tabController);
 
