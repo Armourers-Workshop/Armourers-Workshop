@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
+import moe.plushie.armourers_workshop.client.gui.oldgui.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.helper.MannequinTextureHelper;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;

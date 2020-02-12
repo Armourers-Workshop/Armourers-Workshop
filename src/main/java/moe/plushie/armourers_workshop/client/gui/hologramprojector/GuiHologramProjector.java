@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.client.gui.hologramprojector;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTabbed;
 import moe.plushie.armourers_workshop.client.gui.newgui.GuiTab;
+import moe.plushie.armourers_workshop.client.gui.oldgui.GuiTabPanel;
+import moe.plushie.armourers_workshop.client.gui.oldgui.GuiTabbed;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ContainerHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;

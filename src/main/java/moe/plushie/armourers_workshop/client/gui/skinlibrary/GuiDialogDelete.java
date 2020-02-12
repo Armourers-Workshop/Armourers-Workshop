@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.client.gui.skinlibrary;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
+import moe.plushie.armourers_workshop.client.gui.oldgui.AbstractGuiDialog;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 

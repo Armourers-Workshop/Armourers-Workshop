@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
+import moe.plushie.armourers_workshop.client.gui.oldgui.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector.PowerMode;

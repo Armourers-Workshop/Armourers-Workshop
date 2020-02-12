@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomSlider;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
+import moe.plushie.armourers_workshop.client.gui.oldgui.GuiTabPanel;
 import moe.plushie.armourers_workshop.common.data.BipedRotations;
 import moe.plushie.armourers_workshop.common.data.BipedRotations.BipedPart;
 import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;

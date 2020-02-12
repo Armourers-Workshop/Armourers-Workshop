@@ -1,10 +1,11 @@
-package moe.plushie.armourers_workshop.client.gui;
+package moe.plushie.armourers_workshop.client.gui.oldgui;
 
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import net.minecraft.client.Minecraft;

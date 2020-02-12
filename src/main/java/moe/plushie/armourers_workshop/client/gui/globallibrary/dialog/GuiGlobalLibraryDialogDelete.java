@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.client.gui.globallibrary.dialog;
 
 import net.minecraftforge.fml.client.config.GuiButtonExt;
-import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
+import moe.plushie.armourers_workshop.client.gui.oldgui.AbstractGuiDialog;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 

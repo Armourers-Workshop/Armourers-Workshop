@@ -1,9 +1,9 @@
-package moe.plushie.armourers_workshop.client.gui;
+package moe.plushie.armourers_workshop.client.gui.oldgui;
 
 import java.io.IOException;
 
-import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.DialogResult;
-import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.IDialogCallback;
+import moe.plushie.armourers_workshop.client.gui.oldgui.AbstractGuiDialog.DialogResult;
+import moe.plushie.armourers_workshop.client.gui.oldgui.AbstractGuiDialog.IDialogCallback;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.relauncher.Side;

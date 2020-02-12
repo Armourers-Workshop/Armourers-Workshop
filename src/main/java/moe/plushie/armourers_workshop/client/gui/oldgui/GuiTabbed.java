@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.client.gui.controls;
+package moe.plushie.armourers_workshop.client.gui.oldgui;
 
 import java.io.IOException;
 import java.util.ArrayList;

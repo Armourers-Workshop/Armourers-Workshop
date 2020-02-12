@@ -8,15 +8,15 @@ import org.apache.logging.log4j.Level;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
-import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog;
-import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.DialogResult;
-import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialog.IDialogCallback;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiLabeledTextField;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.dialog.GuiGlobalLibraryDialogDelete;
+import moe.plushie.armourers_workshop.client.gui.oldgui.AbstractGuiDialog;
+import moe.plushie.armourers_workshop.client.gui.oldgui.AbstractGuiDialog.DialogResult;
+import moe.plushie.armourers_workshop.client.gui.oldgui.AbstractGuiDialog.IDialogCallback;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.library.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;

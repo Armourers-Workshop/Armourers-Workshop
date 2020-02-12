@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.client.gui.AbstractGuiDialogContainer;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPaneJoinBeta;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
@@ -18,6 +17,7 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalL
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinInfo;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelUpload;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelUserSkins;
+import moe.plushie.armourers_workshop.client.gui.oldgui.AbstractGuiDialogContainer;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.inventory.ContainerGlobalSkinLibrary;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;

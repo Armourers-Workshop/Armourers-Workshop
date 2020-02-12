@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.client.gui.armourer.GuiArmourer;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
+import moe.plushie.armourers_workshop.client.gui.oldgui.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.data.TextureType;
