@@ -35,9 +35,10 @@ public class Contributors {
         addContributor("996505b2-3ecd-4bce-aebd-82c713148b7e", "LillyFae", EnumSet.of(ContributionFlags.ARTIST), 136, 206, 201);
         addContributor("58c28704-b377-4080-b3cf-e53bc53eda0a", "BlackGear27", EnumSet.of(ContributionFlags.TRANSLATOR), 35, 23, 23);
         addContributor("260d5854-d2f9-4674-bcda-f311426b91de", "JasonJeong", EnumSet.of(ContributionFlags.TRANSLATOR), 43, 43, 43);
-        addContributor("0b37421b-e74e-4852-bf57-23907d295ea1", "andrew0030", EnumSet.of(ContributionFlags.OTHER), 46, 253, 14);
+        addContributor("0b37421b-e74e-4852-bf57-23907d295ea1", "andrew0030", EnumSet.of(ContributionFlags.ARTIST), 46, 253, 14);
         addContributor("40aada04-7e7b-4f5f-a513-a92e581c1097", "M_H_Berre", EnumSet.of(ContributionFlags.TRANSLATOR), 255, 255, 64);
         addContributor("31873a23-125e-4752-8607-0f1c3cb22c84", "Garoam", EnumSet.of(ContributionFlags.OTHER), 96, 25, 149);
+        addContributor("c1a62d17-65bc-4256-9f54-af38270f9559", "DoomRater", EnumSet.of(ContributionFlags.WIKI_EDITOR), 158, 25, 2);
     }
     
     private void addContributor(String uuid, String username, EnumSet<ContributionFlags> contributions, int r, int g, int b) {
@@ -86,6 +87,7 @@ public class Contributors {
         ARTIST,
         SKIN_MAKER,
         MODELER,
+        WIKI_EDITOR,
         OTHER;
         
         public static final EnumSet<ContributionFlags> ALL_OPTS = EnumSet.allOf(ContributionFlags.class);
