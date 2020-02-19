@@ -134,6 +134,7 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
             this.fontRenderer.drawString(urlLabel, 10, 60, 4210752);
         }
         super.drawForegroundLayer(mouseX, mouseY);
+        textureTypeList.drawForeground(mc, mouseX - x, mouseY - y, 0);
     }
 
     @Override

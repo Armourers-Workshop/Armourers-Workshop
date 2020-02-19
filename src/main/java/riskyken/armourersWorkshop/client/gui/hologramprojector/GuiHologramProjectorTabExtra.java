@@ -65,6 +65,7 @@ public class GuiHologramProjectorTabExtra extends GuiTabPanel implements IDropDo
         super.drawForegroundLayer(mouseX, mouseY);
         String labelPowerMode = GuiHelper.getLocalizedControlName(inventoryName, "label.powerMode");
         fontRenderer.drawString(labelPowerMode, (int)((width / 2F) - (200 / 2F)) + 10, 45, 4210752);
+        dropDownPowerMode.drawForeground(mc, mouseX, mouseY, 0);
     }
 
     @Override

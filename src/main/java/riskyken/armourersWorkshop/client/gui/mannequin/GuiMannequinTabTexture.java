@@ -91,6 +91,7 @@ public class GuiMannequinTabTexture extends GuiTabPanel implements IDropDownList
     public void drawForegroundLayer(int mouseX, int mouseY) {
         super.drawForegroundLayer(mouseX, mouseY);
         nameTextbox.drawTextBox();
+        textureTypeList.drawForeground(mc, mouseX, mouseY, 0);
     }
 
     @Override

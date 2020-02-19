@@ -183,7 +183,7 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
     }
     
     @Override
-    protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         GuiHelper.renderLocalizedGuiName(this.fontRendererObj, this.xSize, tileEntityColourMixer.getInventoryName());
         this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 48, this.ySize - 96 + 2, 4210752);
         
@@ -200,6 +200,12 @@ public class GuiColourMixer extends GuiContainer implements IHSBSliderCallback, 
         this.fontRendererObj.drawString(labelHex + ":", 5, 81, 4210752);
         this.fontRendererObj.drawString(labelPresets + ":", 5, 101, 4210752);
         this.fontRendererObj.drawString(labelPaintType + ":", 171, 21, 4210752);
+        
+        GL11.glPushMatrix();
+        GL11.glTranslated(-guiLeft, -guiTop, 0);
+        paintTypeDropDown.drawForeground(mc, mouseX, mouseY, 0);
+        colourFamilyList.drawForeground(mc, mouseX, mouseY, 0);
+        GL11.glPopMatrix();
     }
     
     @Override

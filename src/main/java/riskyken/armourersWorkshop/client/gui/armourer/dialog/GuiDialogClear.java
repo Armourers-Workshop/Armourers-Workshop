@@ -108,5 +108,6 @@ public class GuiDialogClear extends AbstractGuiDialog {
     public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
         super.drawForeground(mouseX, mouseY, partialTickTime);
         drawTitle();
+        dropDownParts.drawForeground(mc, mouseX, mouseY, partialTickTime);
     }
 }

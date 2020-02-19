@@ -94,6 +94,8 @@ public class GuiDialogCopy extends AbstractGuiDialog {
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(name, "srcPart"), x + 10, y + 25, 4210752);
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(name, "desPart"), x + 100, y + 25, 4210752);
         drawTitle();
+        dropDownSrcPart.drawForeground(mc, mouseX, mouseY, partialTickTime);
+        dropDownDesPart.drawForeground(mc, mouseX, mouseY, partialTickTime);
     }
     
     public ISkinPartType getSrcPart() {
