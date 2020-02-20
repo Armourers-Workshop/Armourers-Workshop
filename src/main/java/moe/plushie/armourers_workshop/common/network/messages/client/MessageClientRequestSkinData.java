@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
+import moe.plushie.armourers_workshop.common.data.serialize.SkinIdentifierSerializer;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
-import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinIdentifierSerializer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;

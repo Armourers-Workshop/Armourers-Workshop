@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.common.skin.data;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
-import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinIdentifierSerializer;
+import moe.plushie.armourers_workshop.common.data.serialize.SkinIdentifierSerializer;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class SkinDescriptor implements ISkinDescriptor {

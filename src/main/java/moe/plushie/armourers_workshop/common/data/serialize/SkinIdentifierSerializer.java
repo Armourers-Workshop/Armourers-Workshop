@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.skin.data.serialize;
+package moe.plushie.armourers_workshop.common.data.serialize;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

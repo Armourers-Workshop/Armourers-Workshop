@@ -15,8 +15,8 @@ import org.apache.logging.log4j.Level;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.common.data.serialize.SkinIdentifierSerializer;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinIdentifierSerializer;
 import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 
