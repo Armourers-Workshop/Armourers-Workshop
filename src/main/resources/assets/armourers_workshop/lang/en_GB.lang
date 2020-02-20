@@ -447,13 +447,20 @@ inventory.armourers_workshop:wardrobe.label.hairColour=Hair Colour
 inventory.armourers_workshop:wardrobe.label.eyeColour=Eye Colour
 inventory.armourers_workshop:wardrobe.label.miscColour=Misc. Colour
 
-inventory.armourers_workshop:wardrobe.selectSkin=Pick Skin Colour
-inventory.armourers_workshop:wardrobe.autoSkin=Auto Skin Colour
-inventory.armourers_workshop:wardrobe.selectHair=Pick Hair Colour
-inventory.armourers_workshop:wardrobe.autoHair=Auto Hair Colour
-inventory.armourers_workshop:wardrobe.selectEye=Pick Eye Colour
-inventory.armourers_workshop:wardrobe.autoEye=Auto Eye Colour
-inventory.armourers_workshop:wardrobe.selectAcc=Pick Accessory Colour
+inventory.armourers_workshop:wardrobe.skinSelect=Pick Skin Colour
+inventory.armourers_workshop:wardrobe.skinAuto=Auto Skin Colour
+inventory.armourers_workshop:wardrobe.skinClear=Clear Skin Colour
+
+inventory.armourers_workshop:wardrobe.hairSelect=Pick Hair Colour
+inventory.armourers_workshop:wardrobe.hairAuto=Auto Hair Colour
+inventory.armourers_workshop:wardrobe.hairClear=Clear Hair Colour
+
+inventory.armourers_workshop:wardrobe.eyeSelect=Pick Eye Colour
+inventory.armourers_workshop:wardrobe.eyeAuto=Auto Eye Colour
+inventory.armourers_workshop:wardrobe.eyeClear=Clear Eye Colour
+
+inventory.armourers_workshop:wardrobe.miscSelect=Pick Misc Colour
+inventory.armourers_workshop:wardrobe.miscClear=Clear Misc Colour
 
 inventory.armourers_workshop:wardrobe.label.skinOverride=Skin Override
 inventory.armourers_workshop:wardrobe.renderHeadArmour=Render head armour?

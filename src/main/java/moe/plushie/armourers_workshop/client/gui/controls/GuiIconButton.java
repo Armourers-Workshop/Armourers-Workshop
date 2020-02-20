@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
@@ -17,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiIconButton extends GuiButtonExt {
 
     private final GuiScreen parent;
-    private final String hoverText;
+    private String hoverText;
     private final ResourceLocation iconTexture;
     private String disableText;
     private int iconPosX;
@@ -26,15 +27,24 @@ public class GuiIconButton extends GuiButtonExt {
     private int iconHeight;
     private boolean isPressed;
     private boolean horizontal = true;
-    
+    private boolean drawButtonBackground = true;
+    private boolean playSound = true;
+
     public GuiIconButton(GuiScreen parent, int id, int xPos, int yPos, int width, int height, String hoverText, ResourceLocation iconTexture) {
         super(id, xPos, yPos, width, height, "");
         this.parent = parent;
+        this.iconTexture = iconTexture;
+        this.disableText = "";
         this.hoverText = hoverText;
+    }
+    
+    public GuiIconButton(GuiScreen parent, int id, int xPos, int yPos, int width, int height, ResourceLocation iconTexture) {
+        super(id, xPos, yPos, width, height, "");
+        this.parent = parent;
         this.iconTexture = iconTexture;
         this.disableText = "";
     }
-    
+
     public GuiIconButton setIconLocation(int x, int y, int width, int height) {
         this.iconPosX = x;
         this.iconPosY = y;
@@ -42,27 +52,44 @@ public class GuiIconButton extends GuiButtonExt {
         this.iconHeight = height;
         return this;
     }
-    
+
+    public GuiIconButton setHoverText(String hoverText) {
+        this.hoverText = hoverText;
+        return this;
+    }
+
     public GuiIconButton setHorizontal(boolean value) {
         this.horizontal = value;
         return this;
     }
-    
+
+    public GuiIconButton setPlayPressSound(boolean value) {
+        this.playSound = value;
+        return this;
+    }
+
     public void setPressed(boolean isPressed) {
         this.isPressed = isPressed;
     }
-    
+
     public boolean isPressed() {
         return isPressed;
     }
-    
+
     public void setDisableText(String disableText) {
         this.disableText = disableText;
     }
-    
+
+    public GuiIconButton setDrawButtonBackground(boolean drawButtonBackground) {
+        this.drawButtonBackground = drawButtonBackground;
+        return this;
+    }
+
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partial) {
-        super.drawButton(mc, mouseX, mouseY, partial);
+        if (drawButtonBackground) {
+            super.drawButton(mc, mouseX, mouseY, partial);
+        }
         if (!this.visible) {
             return;
         }
@@ -70,16 +97,16 @@ public class GuiIconButton extends GuiButtonExt {
         int hoverState = this.getHoverState(this.hovered);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         int offsetPos = 0;
-        //disabled
+        // disabled
         if (hoverState == 0) {
-            offsetPos += (iconWidth + 1) * 2;
+            offsetPos += (iconWidth) * 2;
         }
-        //hovering
+        // hovering
         if (hoverState == 2) {
-            offsetPos += iconWidth + 1;
+            offsetPos += iconWidth;
         }
         if (isPressed) {
-            offsetPos += (iconWidth + 1) * 2;
+            offsetPos += (iconWidth) * 2;
         }
         mc.renderEngine.bindTexture(iconTexture);
         if (horizontal) {
@@ -88,7 +115,7 @@ public class GuiIconButton extends GuiButtonExt {
             drawTexturedModalRect(x + width / 2 - iconWidth / 2, y + height / 2 - iconHeight / 2, iconPosX, iconPosY + offsetPos, iconWidth, iconHeight);
         }
     }
-    
+
     public void drawRollover(Minecraft mc, int mouseX, int mouseY) {
         if (!this.visible) {
             return;
@@ -108,6 +135,13 @@ public class GuiIconButton extends GuiButtonExt {
                 textList.add(hoverText);
                 GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, parent.width, parent.height, zLevel);
             }
+        }
+    }
+
+    @Override
+    public void playPressSound(SoundHandler soundHandlerIn) {
+        if (playSound) {
+            super.playPressSound(soundHandlerIn);
         }
     }
 }
