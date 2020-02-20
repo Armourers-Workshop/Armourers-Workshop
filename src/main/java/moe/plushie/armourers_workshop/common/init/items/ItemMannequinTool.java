@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.common.init.items;
 
 import java.util.List;
 
-import moe.plushie.armourers_workshop.common.data.BipedRotations;
+import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockMannequin;
 import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockMannequin.EnumPartType;

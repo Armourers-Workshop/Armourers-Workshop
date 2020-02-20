@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
-import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
+import moe.plushie.armourers_workshop.common.data.type.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.DefaultPlayerSkin;

@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
-import moe.plushie.armourers_workshop.common.data.TextureType;
+import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSetSkin;

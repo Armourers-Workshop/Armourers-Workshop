@@ -10,7 +10,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.GameProfileCache;
 import moe.plushie.armourers_workshop.common.GameProfileCache.IGameProfileCallback;
-import moe.plushie.armourers_workshop.common.data.TextureType;
+import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.proxies.CommonProxy;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;

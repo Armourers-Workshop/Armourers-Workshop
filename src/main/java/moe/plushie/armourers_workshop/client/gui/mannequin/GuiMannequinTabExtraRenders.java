@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.client.gui.mannequin;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
-import moe.plushie.armourers_workshop.common.data.Rectangle_I_2D;
+import moe.plushie.armourers_workshop.common.data.type.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiUpdateTileProperties;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;

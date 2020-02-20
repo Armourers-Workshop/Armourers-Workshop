@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.client.model;
 
 import org.lwjgl.opengl.GL11;
 
-import moe.plushie.armourers_workshop.common.data.BipedRotations;
+import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;

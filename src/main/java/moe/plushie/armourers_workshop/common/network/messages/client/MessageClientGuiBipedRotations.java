@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.common.data.BipedRotations;
+import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.inventory.ContainerMannequin;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import net.minecraft.entity.player.EntityPlayerMP;

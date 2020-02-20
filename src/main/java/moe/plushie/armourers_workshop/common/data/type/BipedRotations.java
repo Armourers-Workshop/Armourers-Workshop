@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.data;
+package moe.plushie.armourers_workshop.common.data.type;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.model.ModelBiped;

@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.client.helper;
 import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
-import moe.plushie.armourers_workshop.common.data.TextureType;
+import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import net.minecraft.item.ItemStack;

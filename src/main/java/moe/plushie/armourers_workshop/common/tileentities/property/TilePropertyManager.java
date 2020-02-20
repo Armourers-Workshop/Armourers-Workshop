@@ -8,8 +8,8 @@ import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
-import moe.plushie.armourers_workshop.common.data.BipedRotations;
-import moe.plushie.armourers_workshop.common.data.TextureType;
+import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
+import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector.PowerMode;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.nbt.NBTTagCompound;

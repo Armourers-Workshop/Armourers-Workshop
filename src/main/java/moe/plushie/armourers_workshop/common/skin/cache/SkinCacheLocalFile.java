@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.api.common.library.ILibraryFile;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
-import moe.plushie.armourers_workshop.common.data.BidirectionalHashMap;
+import moe.plushie.armourers_workshop.common.data.type.BidirectionalHashMap;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;

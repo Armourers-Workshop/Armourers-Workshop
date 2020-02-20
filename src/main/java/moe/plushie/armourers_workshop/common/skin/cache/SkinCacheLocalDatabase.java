@@ -15,7 +15,7 @@ import com.google.common.cache.RemovalNotification;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
-import moe.plushie.armourers_workshop.common.data.ExpiringHashMap.IExpiringMapCallback;
+import moe.plushie.armourers_workshop.common.data.type.ExpiringHashMap.IExpiringMapCallback;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraftforge.fml.common.FMLCommonHandler;

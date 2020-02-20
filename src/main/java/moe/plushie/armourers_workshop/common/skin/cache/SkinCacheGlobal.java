@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
-import moe.plushie.armourers_workshop.common.data.BidirectionalHashMap;
+import moe.plushie.armourers_workshop.common.data.type.BidirectionalHashMap;
 import moe.plushie.armourers_workshop.common.library.global.SkinDownloader.DownloadSkinCallable;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
