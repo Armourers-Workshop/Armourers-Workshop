@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.common.library.global;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.concurrent.Callable;
 
 import org.apache.commons.io.IOUtils;
 
@@ -46,20 +45,5 @@ public final class DownloadUtils {
             return null;
         }
         return json;
-    }
-    
-    public static class DownloadJsonObjectCallable implements Callable<JsonObject> {
-
-        private final String url;
-        
-        public DownloadJsonObjectCallable(String url) {
-            this.url = url;
-        }
-        
-        @Override
-        public JsonObject call() throws Exception {
-            JsonObject array = downloadJsonObject(url);
-            return array;
-        }
     }
 }

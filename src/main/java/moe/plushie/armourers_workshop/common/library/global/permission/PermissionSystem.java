@@ -20,6 +20,7 @@ public final class PermissionSystem {
         actions.add(PlushieAction.SKIN_SEARCH);
         actions.add(PlushieAction.SKIN_LIST_USER);
         actions.add(PlushieAction.BETA_JOIN);
+        actions.add(PlushieAction.BETA_CHECK);
         groupNoLogin = new PermissionGroup("no login", actions.clone());
 
         actions.add(PlushieAction.SKIN_UPLOAD);
@@ -54,16 +55,19 @@ public final class PermissionSystem {
 
         /** Get most downloaded skin list. */
         GET_MOST_DOWNLOADED,
-        
+
         /** Tried to join the beta using a code. */
         BETA_JOIN,
 
+        /** Checks if a player is in the beta. */
+        BETA_CHECK,
+
         /** Search for skins. */
         SKIN_SEARCH,
-        
+
         /** Get a list of a users skins. */
         SKIN_LIST_USER,
-        
+
         /** Download skins. */
         SKIN_DOWNLOAD,
 
@@ -72,7 +76,7 @@ public final class PermissionSystem {
 
         /** Leave a skin rating. */
         SKIN_RATE,
-        
+
         /** Gets the rating a user left on a skin. */
         SKIN_GET_RATED,
 
@@ -119,7 +123,7 @@ public final class PermissionSystem {
         USER_BAN_PERM,
         /** Change users permission group. */
         USER_GROUP_CHANGE,
-        
+
         /** View server status. */
         SERVER_VIEW_STATS
     }
@@ -157,8 +161,8 @@ public final class PermissionSystem {
             return plushieAction;
         }
     }
-    
+
     public static class AuthenticationException extends Exception {
-        
+
     }
 }

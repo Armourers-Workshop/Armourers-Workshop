@@ -31,10 +31,6 @@ public class PlushieUser {
         return null;
     }
 
-    public PlushieUser() {
-        // TODO Auto-generated constructor stub
-    }
-
     private PlushieUser(int id, UUID uuid, String username, int permissionGroupId) {
         this.id = id;
         this.uuid = uuid;
