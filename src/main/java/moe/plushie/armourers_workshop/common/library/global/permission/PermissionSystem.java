@@ -18,6 +18,7 @@ public final class PermissionSystem {
         actions.add(PlushieAction.GET_MOST_LIKED);
         actions.add(PlushieAction.USER_INFO);
         actions.add(PlushieAction.SKIN_SEARCH);
+        actions.add(PlushieAction.SKIN_LIST_USER);
         groupNoLogin = new PermissionGroup("no login", actions.clone());
 
         actions.add(PlushieAction.SKIN_UPLOAD);
@@ -53,9 +54,12 @@ public final class PermissionSystem {
         /** Get most downloaded skin list. */
         GET_MOST_DOWNLOADED,
 
-        /** Get most downloaded skin list. */
+        /** Search for skins. */
         SKIN_SEARCH,
-
+        
+        /** Get a list of a users skins. */
+        SKIN_LIST_USER,
+        
         /** Download skins. */
         SKIN_DOWNLOAD,
 

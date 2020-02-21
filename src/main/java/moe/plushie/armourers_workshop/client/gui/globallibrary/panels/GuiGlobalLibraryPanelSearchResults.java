@@ -2,9 +2,6 @@ package moe.plushie.armourers_workshop.client.gui.globallibrary.panels;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.Future;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonArray;
@@ -35,10 +32,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
 
     private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibGuiResources.GUI_GLOBAL_LIBRARY);
-    protected static final String BASE_URL = "http://plushie.moe/armourers_workshop/";
-    private static final String SEARCH_URL = BASE_URL + "skin-search-page.php";
-
-    protected final CompletionService<JsonObject> pageCompletion;
 
     protected final GuiControlSkinPanel skinPanelResults;
 
@@ -59,7 +52,6 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
 
     public GuiGlobalLibraryPanelSearchResults(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
-        pageCompletion = new ExecutorCompletionService<JsonObject>(((GuiGlobalLibrary) parent).jsonDownloadExecutor);
         skinPanelResults = new GuiControlSkinPanel();
         pageList = null;
         downloadedPageList = new HashSet<Integer>();
@@ -135,22 +127,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         });
     }
 
-    @Override
-    public void update() {
-        Future<JsonObject> futureJson = pageCompletion.poll();
-        if (futureJson != null) {
-            try {
-                JsonObject pageJson = futureJson.get();
-                if (pageJson != null) {
-                    onPageJsonDownload(pageJson);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void onPageJsonDownload(JsonObject pageJson) {
+    protected void onPageJsonDownload(JsonObject pageJson) {
         if (pageJson.has("totalPages")) {
             totalPages = pageJson.get("totalPages").getAsInt();
         }
