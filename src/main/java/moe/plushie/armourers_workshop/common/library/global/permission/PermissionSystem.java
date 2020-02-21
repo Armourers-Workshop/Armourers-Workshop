@@ -153,4 +153,8 @@ public final class PermissionSystem {
             return plushieAction;
         }
     }
+    
+    public static class AuthenticationException extends Exception {
+        
+    }
 }

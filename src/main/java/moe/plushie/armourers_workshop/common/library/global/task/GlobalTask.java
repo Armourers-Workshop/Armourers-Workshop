@@ -8,18 +8,23 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.Level;
 
 import com.google.common.base.Charsets;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
+import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.InsufficientPermissionsException;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
 import moe.plushie.armourers_workshop.utils.ModLogger;
+import net.minecraft.client.Minecraft;
 
 public abstract class GlobalTask<V> implements Callable<V> {
 
@@ -91,6 +96,21 @@ public abstract class GlobalTask<V> implements Callable<V> {
             IOUtils.closeQuietly(in);
         }
         return data;
+    }
+    
+    protected boolean authenticateUser () {
+        GameProfile gameProfile = Minecraft.getMinecraft().player.getGameProfile();
+        PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
+        if (!plushieSession.isAuthenticated()) {
+            JsonObject jsonObject = PlushieAuth.authenticateUser(gameProfile.getName(), gameProfile.getId().toString());
+            plushieSession.authenticate(jsonObject);
+        }
+        
+        if (!plushieSession.isAuthenticated()) {
+            ModLogger.log(Level.ERROR, "Authentication failed.");
+            return false;
+        }
+        return true;
     }
     
     public ListenableFutureTask<V> createTaskAndRun(FutureCallback<V> callback) {

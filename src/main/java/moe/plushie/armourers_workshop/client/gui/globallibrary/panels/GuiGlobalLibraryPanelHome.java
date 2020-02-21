@@ -88,6 +88,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
 
                     @Override
                     public void run() {
+                        skinPanelRecentlyUploaded.clearIcons();
                         for (int i = 0; i < result.size(); i++) {
                             JsonObject skinJson = result.get(i).getAsJsonObject();
                             skinPanelRecentlyUploaded.addIcon(skinJson);
@@ -112,6 +113,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
 
                     @Override
                     public void run() {
+                        skinPanelMostDownloaded.clearIcons();
                         for (int i = 0; i < result.size(); i++) {
                             JsonObject skinJson = result.get(i).getAsJsonObject();
                             skinPanelMostDownloaded.addIcon(skinJson);
@@ -136,6 +138,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
 
                     @Override
                     public void run() {
+                        skinPanelMostLiked.clearIcons();
                         for (int i = 0; i < result.size(); i++) {
                             JsonObject skinJson = result.get(i).getAsJsonObject();
                             skinPanelMostLiked.addIcon(skinJson);
