@@ -6,6 +6,7 @@ import java.util.concurrent.FutureTask;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
+import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
@@ -28,6 +29,7 @@ import moe.plushie.armourers_workshop.common.library.global.SkinDownloader;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserSkinRating;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
@@ -66,7 +68,6 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     private boolean doneLikeCheck = false;
     private boolean haveLiked = false;
     
-    private FutureTask<JsonObject> taskCheckIfLiked;
     private FutureTask<JsonObject> taskDoLiked;
     
     public GuiGlobalLibraryPanelSkinInfo(GuiScreen parent, int x, int y, int width, int height) {
@@ -111,22 +112,6 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             }
         }
         buttonDownload.visible = PlushieAuth.PLUSHIE_SESSION.hasPermission(PlushieAction.SKIN_DOWNLOAD);
-        if (taskCheckIfLiked != null && taskCheckIfLiked.isDone()) {
-            try {
-                JsonObject json = taskCheckIfLiked.get();
-                ModLogger.log("taskCheckIfLiked: " + json);
-                if (json != null) {
-                    if (json.has("isLiked")) {
-                        haveLiked = json.get("isLiked").getAsBoolean();
-                        doneLikeCheck = true;
-                        updateLikeButtons();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            taskCheckIfLiked = null;
-        }
         if (taskDoLiked != null && taskDoLiked.isDone()) {
             try {
                 JsonObject json = taskDoLiked.get();
@@ -213,18 +198,23 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     }
     
     private void checkIfLiked() {
-        PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
-        GuiGlobalLibrary globalLibrary = (GuiGlobalLibrary) parent;
-        int userId = plushieSession.getServerId();
-        String accessToken = "";
         int skinId = skinJson.get("id").getAsInt();
-        String url = SKIN_ACTION_URL;
-        url += "?userId=" + String.valueOf(userId);
-        url += "&accessToken=" + accessToken;
-        url += "&action=hasLike";
-        url += "&skinId=" + String.valueOf(skinId);
-        taskCheckIfLiked = new FutureTask<JsonObject>(new DownloadJsonObjectCallable(url));
-        ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskCheckIfLiked);
+        new GlobalTaskUserSkinRating(skinId).createTaskAndRun(new FutureCallback<JsonObject>() {
+            
+            @Override
+            public void onSuccess(JsonObject result) {
+                if (result.has("isLiked")) {
+                    haveLiked = result.get("isLiked").getAsBoolean();
+                    doneLikeCheck = true;
+                    updateLikeButtons();
+                }
+            }
+            
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
     
     private void setSkinLike(boolean like) {

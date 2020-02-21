@@ -68,6 +68,9 @@ public final class PermissionSystem {
 
         /** Leave a skin rating. */
         SKIN_RATE,
+        
+        /** Gets the rating a user left on a skin. */
+        SKIN_GET_RATED,
 
         /** Report a skin. */
         SKIN_REPORT,
