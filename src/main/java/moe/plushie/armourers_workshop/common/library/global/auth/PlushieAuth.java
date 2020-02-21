@@ -121,7 +121,6 @@ public class PlushieAuth {
                 ModLogger.log("Getting new token. Time left: " + (PLUSHIE_SESSION.getTokenExpiryTime() / 1000));
                 String url = String.format(USER_TOKEN_UPDATE, PLUSHIE_SESSION.getServerId(), PLUSHIE_SESSION.getAccessToken());
                 new Thread(new TokenUpdate(url)).start();
-                ;
             } catch (Exception e) {
                 e.printStackTrace();
             }

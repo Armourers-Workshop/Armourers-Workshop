@@ -38,6 +38,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -77,9 +78,9 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         buttonUserSkins = new GuiButtonExt(0, x + 6, y + 6, 26, 26, "");
         buttonEditSkin = new GuiButtonExt(0, x + 6, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "editSkin"));
 
-        buttonLikeSkin = new GuiIconButton(parent, 0, x + 200, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "like"), BUTTON_TEXTURES);
+        buttonLikeSkin = new GuiIconButton(parent, 0, x + 200, this.y + 32, 20, 20, GuiHelper.getLocalizedControlName(guiName, "like"), BUTTON_TEXTURES);
         buttonLikeSkin.setIconLocation(96, 0, 16, 16);
-        buttonUnlikeSkin = new GuiIconButton(parent, 0, x + 200, this.y + 10, 20, 20, GuiHelper.getLocalizedControlName(guiName, "unlike"), BUTTON_TEXTURES);
+        buttonUnlikeSkin = new GuiIconButton(parent, 0, x + 200, this.y + 32, 20, 20, GuiHelper.getLocalizedControlName(guiName, "unlike"), BUTTON_TEXTURES);
         buttonUnlikeSkin.setIconLocation(96, 17, 16, 16);
 
         updateLikeButtons();
@@ -328,6 +329,21 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     public void drawPreviewBox(SkinIdentifier identifier, Skin skin, int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
         drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
         if (skin != null) {
+            mc.renderEngine.bindTexture(BUTTON_TEXTURES);
+            int rating = (int) ((System.currentTimeMillis() / 100D) % 11);
+            for (int i = 0; i < 5; i++) {
+                drawTexturedModalRect(boxX + 4 + i * 16, boxY + 4, 32, 85, 16, 16);
+            }
+            int stars = MathHelper.floor(rating / 2F);
+            int halfStar = rating % 2;
+            for (int i = 0; i < stars; i++) {
+                drawTexturedModalRect(boxX + 4 + i * 16, boxY + 4, 0, 85, 16, 16);
+            }
+            if (halfStar == 1) {
+                drawTexturedModalRect(boxX + 4 + stars * 16, boxY + 4, 0, 85, 8, 16);
+            }
+            
+            
             int iconSize = Math.min(boxWidth, boxHeight);
             ScaledResolution scaledResolution = new ScaledResolution(mc);
             float scale = 10 - scaledResolution.getScaleFactor();
