@@ -4,7 +4,6 @@ import org.apache.logging.log4j.Level;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonObject;
-import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.AbstractGuiDialog;
@@ -16,8 +15,6 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.
 import moe.plushie.armourers_workshop.client.gui.globallibrary.dialog.GuiGlobalLibraryDialogDelete;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.library.global.GlobalSkinLibraryUtils;
-import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
-import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinDelete;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinEdit;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -151,9 +148,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         }
         if (button == buttonUpdate) {
             if (skinJson != null && skinJson.has("id")) {
-                if (authenticateUser()) {
-                    updateSkin();
-                }
+                updateSkin();
             }
         }
         if (button == buttonDelete) {
@@ -166,21 +161,6 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         ((GuiGlobalLibrary) parent).switchScreen(Screen.SKIN_EDIT);
         this.returnScreen = returnScreen;
         firstTick = true;
-    }
-
-    private boolean authenticateUser() {
-        GameProfile gameProfile = mc.player.getGameProfile();
-        PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
-        if (!plushieSession.isAuthenticated()) {
-            JsonObject jsonObject = PlushieAuth.authenticateUser(gameProfile.getName(), gameProfile.getId().toString());
-            plushieSession.authenticate(jsonObject);
-        }
-
-        if (!plushieSession.isAuthenticated()) {
-            ModLogger.log(Level.ERROR, "Authentication failed.");
-            return false;
-        }
-        return true;
     }
 
     public void updateSkin() {
@@ -280,9 +260,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         ModLogger.log(result);
         if (result == DialogResult.OK) {
             if (skinJson != null && skinJson.has("id")) {
-                if (authenticateUser()) {
-                    deleteSkin();
-                }
+                deleteSkin();
             }
         }
         ((GuiGlobalLibrary) parent).closeDialog();

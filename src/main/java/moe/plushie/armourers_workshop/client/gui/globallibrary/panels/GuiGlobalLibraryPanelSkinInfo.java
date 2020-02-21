@@ -2,12 +2,10 @@ package moe.plushie.armourers_workshop.client.gui.globallibrary.panels;
 
 import java.io.File;
 
-import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonObject;
-import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
@@ -25,14 +23,12 @@ import moe.plushie.armourers_workshop.common.library.global.GlobalSkinLibraryUti
 import moe.plushie.armourers_workshop.common.library.global.PlushieUser;
 import moe.plushie.armourers_workshop.common.library.global.SkinDownloader;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
-import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserSkinRate;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserSkinRating;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -233,21 +229,6 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
                 t.printStackTrace();
             }
         });
-    }
-
-    private boolean authenticateUser() {
-        GameProfile gameProfile = mc.player.getGameProfile();
-        PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
-        if (!plushieSession.isAuthenticated()) {
-            JsonObject jsonObject = PlushieAuth.authenticateUser(gameProfile.getName(), gameProfile.getId().toString());
-            plushieSession.authenticate(jsonObject);
-        }
-
-        if (!plushieSession.isAuthenticated()) {
-            ModLogger.log(Level.ERROR, "Authentication failed.");
-            return false;
-        }
-        return true;
     }
 
     @Override
