@@ -1,86 +1,23 @@
 package moe.plushie.armourers_workshop.common.library.global;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.FutureTask;
 
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.Level;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFutureTask;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonObjectCallable;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserInfo;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 
 public final class GlobalSkinLibraryUtils {
 
-    private static final String BASE_URL = "http://plushie.moe/armourers_workshop/";
-    private static final String USER_SKIN_EDIT_URL = BASE_URL + "user-skin-edit.php";
-    private static final String USER_SKIN_DELETE_URL = BASE_URL + "user-skin-delete.php";
-
     private static final HashMap<Integer, PlushieUser> USERS = new HashMap<Integer, PlushieUser>();
     private static final HashSet<Integer> DOWNLOADED_USERS = new HashSet<Integer>();
 
     private GlobalSkinLibraryUtils() {
-    }
-
-    public static FutureTask<JsonObject> deleteSkin(Executor executor, int userId, String accessToken, int skinId) {
-        Validate.notNull(executor);
-        Validate.notNull(userId);
-        Validate.notNull(accessToken);
-        String searchUrl = USER_SKIN_DELETE_URL + "?userId=" + String.valueOf(userId) + "&accessToken=" + accessToken + "&skinId=" + String.valueOf(skinId);
-        FutureTask<JsonObject> futureTask = new FutureTask<JsonObject>(new DownloadJsonObjectCallable(searchUrl));
-        executor.execute(futureTask);
-        return futureTask;
-    }
-
-    public static FutureTask<JsonObject> editSkin(Executor executor, int userId, String accessToken, int skinId, String name, String description) {
-        Validate.notNull(executor);
-        Validate.notNull(userId);
-        Validate.notNull(accessToken);
-        String searchUrl = USER_SKIN_EDIT_URL + "?userId=" + String.valueOf(userId) + "&accessToken=" + accessToken + "&skinId=" + String.valueOf(skinId);
-        MultipartForm multipartForm = new MultipartForm(searchUrl);
-        multipartForm.addText("name", name);
-        multipartForm.addText("description", description);
-        FutureTask<JsonObject> futureTask = new FutureTask<JsonObject>(new PostMultipartFormCallable(multipartForm));
-        executor.execute(futureTask);
-        return futureTask;
-    }
-
-    public static class PostMultipartFormCallable implements Callable<JsonObject> {
-
-        private final MultipartForm multipartForm;
-
-        public PostMultipartFormCallable(MultipartForm multipartForm) {
-            this.multipartForm = multipartForm;
-        }
-
-        @Override
-        public JsonObject call() throws Exception {
-            JsonObject result = null;
-            try {
-                String downloadData = multipartForm.upload();
-                ModLogger.log(downloadData);
-                result = (JsonObject) new JsonParser().parse(downloadData);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return result;
-        }
     }
 
     public static PlushieUser getUserInfo(int userId) {
@@ -148,54 +85,5 @@ public final class GlobalSkinLibraryUtils {
             return false;
         }
         return true;
-    }
-
-    public static String performPostRequest(URL url, String post, String contentType) throws IOException {
-        Validate.notNull(url);
-        Validate.notNull(post);
-        Validate.notNull(contentType);
-        HttpURLConnection connection = createUrlConnection(url);
-        byte[] postAsBytes = post.getBytes(Charsets.UTF_8);
-
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", contentType + "; charset=utf-8");
-        connection.setRequestProperty("Content-Length", "" + postAsBytes.length);
-        connection.setDoOutput(true);
-
-        OutputStream outputStream = null;
-        try {
-            outputStream = connection.getOutputStream();
-            IOUtils.write(postAsBytes, outputStream);
-        } finally {
-            IOUtils.closeQuietly(outputStream);
-        }
-
-        InputStream inputStream = null;
-        try {
-            inputStream = connection.getInputStream();
-            String result = IOUtils.toString(inputStream, Charsets.UTF_8);
-            return result;
-        } catch (IOException e) {
-            IOUtils.closeQuietly(inputStream);
-            inputStream = connection.getErrorStream();
-
-            if (inputStream != null) {
-                String result = IOUtils.toString(inputStream, Charsets.UTF_8);
-                return result;
-            } else {
-                throw e;
-            }
-        } finally {
-            IOUtils.closeQuietly(inputStream);
-        }
-    }
-
-    private static HttpURLConnection createUrlConnection(URL url) throws IOException {
-        Validate.notNull(url);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setConnectTimeout(15000);
-        connection.setReadTimeout(15000);
-        connection.setUseCaches(false);
-        return connection;
     }
 }

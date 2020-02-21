@@ -199,9 +199,6 @@ public class PlushieAuth {
     }
     
     public static void updateAccessToken() {
-        //ModLogger.log(PLUSHIE_SESSION.isAuthenticated());
-        //ModLogger.log(PLUSHIE_SESSION.getTokenExpiryTime());
-        //updatingToken = false;
         if (PLUSHIE_SESSION.isAuthenticated() & !updatingToken & PLUSHIE_SESSION.getTokenExpiryTime() < TOKEN_UPDATE_TIME) {
             updatingToken = true;
             try {
@@ -211,8 +208,6 @@ public class PlushieAuth {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-            //updatingToken = false;
         }
     }
     

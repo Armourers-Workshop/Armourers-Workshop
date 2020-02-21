@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.client.gui.globallibrary.panels;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-
 import org.apache.logging.log4j.Level;
 
+import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
@@ -20,8 +18,11 @@ import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.library.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinDelete;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinEdit;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
@@ -33,12 +34,12 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
     private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibGuiResources.GUI_GLOBAL_LIBRARY);
 
     private final String guiName;
+    private boolean moderator = false;
     private GuiLabeledTextField textName;
     private GuiLabeledTextField textTags;
     private GuiLabeledTextField textDescription;
     private GuiButtonExt buttonUpdate;
     private GuiButtonExt buttonDelete;
-    private FutureTask<JsonObject> taskSkinEdit;
     private JsonObject skinJson = null;
     private Screen returnScreen;
     private boolean firstTick = false;
@@ -78,6 +79,10 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
 
         buttonList.add(buttonUpdate);
         buttonList.add(buttonDelete);
+    }
+
+    public void setModerator(boolean moderator) {
+        this.moderator = moderator;
     }
 
     @Override
@@ -134,34 +139,6 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
             buttonUpdate.enabled = true;
         }
         firstTick = false;
-        if (taskSkinEdit != null && taskSkinEdit.isDone()) {
-            try {
-                JsonObject json = taskSkinEdit.get();
-                taskSkinEdit = null;
-                if (json != null) {
-                    if (json.has("valid") & json.has("action")) {
-                        String action = json.get("action").getAsString();
-                        boolean valid = json.get("valid").getAsBoolean();
-                        if (action.equals("user-skin-edit")) {
-                            ((GuiGlobalLibrary) parent).panelHome.updateSkinPanels();
-                            ((GuiGlobalLibrary) parent).switchScreen(returnScreen);
-                        } else if (action.equals("user-skin-delete")) {
-                            ((GuiGlobalLibrary) parent).switchScreen(returnScreen);
-                        } else {
-                            ModLogger.log(Level.WARN, "Server send unknown action: " + action);
-                        }
-                    } else {
-                        ModLogger.log(Level.ERROR, "Server returned invalid responce.");
-                    }
-                } else {
-                    ModLogger.log(Level.ERROR, "Server returned invalid responce.");
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -207,23 +184,69 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
     }
 
     public void updateSkin() {
-        PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
-        GuiGlobalLibrary globalLibrary = (GuiGlobalLibrary) parent;
-        int userId = plushieSession.getServerId();
-        String accessToken = plushieSession.getAccessToken();
-        int skinId = skinJson.get("id").getAsInt();
-        String name = textName.getText().trim();
-        String description = textDescription.getText().trim();
-        taskSkinEdit = GlobalSkinLibraryUtils.editSkin(globalLibrary.uploadExecutor, userId, accessToken, skinId, name, description);
+        int skinID = skinJson.get("id").getAsInt();
+        new GlobalTaskSkinEdit(skinID, textName.getText().trim(), textDescription.getText().trim(), moderator).createTaskAndRun(new FutureCallback<JsonObject>() {
+
+            @Override
+            public void onSuccess(JsonObject result) {
+                Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (result.has("valid") & result.has("action")) {
+                            String action = result.get("action").getAsString();
+                            boolean valid = result.get("valid").getAsBoolean();
+                            if (action.equals("user-skin-edit")) {
+                                ((GuiGlobalLibrary) parent).panelHome.updateSkinPanels();
+                                ((GuiGlobalLibrary) parent).switchScreen(returnScreen);
+                            } else {
+                                ModLogger.log(Level.WARN, "Server send unknown action: " + action);
+                            }
+                        } else {
+                            ModLogger.log(Level.ERROR, "Server returned invalid responce.");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     public void deleteSkin() {
-        PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
-        GuiGlobalLibrary globalLibrary = (GuiGlobalLibrary) parent;
-        int userId = plushieSession.getServerId();
-        String accessToken = plushieSession.getAccessToken();
-        int skinId = skinJson.get("id").getAsInt();
-        taskSkinEdit = GlobalSkinLibraryUtils.deleteSkin(globalLibrary.jsonDownloadExecutor, userId, accessToken, skinId);
+        int skinID = skinJson.get("id").getAsInt();
+        new GlobalTaskSkinDelete(skinID, moderator).createTaskAndRun(new FutureCallback<JsonObject>() {
+
+            @Override
+            public void onSuccess(JsonObject result) {
+                Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (result.has("valid") & result.has("action")) {
+                            String action = result.get("action").getAsString();
+                            boolean valid = result.get("valid").getAsBoolean();
+
+                            if (action.equals("user-skin-delete")) {
+                                ((GuiGlobalLibrary) parent).switchScreen(returnScreen);
+                            } else {
+                                ModLogger.log(Level.WARN, "Server send unknown action: " + action);
+                            }
+                        } else {
+                            ModLogger.log(Level.ERROR, "Server returned invalid responce.");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     @Override

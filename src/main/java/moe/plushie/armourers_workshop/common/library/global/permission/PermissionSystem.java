@@ -53,6 +53,9 @@ public final class PermissionSystem {
 
         /** Get most downloaded skin list. */
         GET_MOST_DOWNLOADED,
+        
+        /** Tried to join the beta using a code. */
+        BETA_JOIN,
 
         /** Search for skins. */
         SKIN_SEARCH,

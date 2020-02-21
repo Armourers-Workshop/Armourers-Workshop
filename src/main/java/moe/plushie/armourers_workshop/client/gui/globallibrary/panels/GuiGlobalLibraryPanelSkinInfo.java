@@ -99,15 +99,19 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     @Override
     public void update() {
         buttonEditSkin.visible = false;
-        if (skinJson != null && skinJson.has("user_id")) {
-            boolean owner = PlushieAuth.PLUSHIE_SESSION.isOwner(skinJson.get("user_id").getAsInt());
-            if (owner) {
-                buttonEditSkin.visible = PlushieAuth.PLUSHIE_SESSION.hasPermission(PlushieAction.SKIN_OWNER_EDIT);
-            } else {
-                buttonEditSkin.visible = PlushieAuth.PLUSHIE_SESSION.hasPermission(PlushieAction.SKIN_MOD_EDIT);
-            }
+        if (isOwner()) {
+            buttonEditSkin.visible = PlushieAuth.PLUSHIE_SESSION.hasPermission(PlushieAction.SKIN_OWNER_EDIT);
+        } else {
+            buttonEditSkin.visible = PlushieAuth.PLUSHIE_SESSION.hasPermission(PlushieAction.SKIN_MOD_EDIT);
         }
         buttonDownload.visible = PlushieAuth.PLUSHIE_SESSION.hasPermission(PlushieAction.SKIN_DOWNLOAD);
+    }
+
+    private boolean isOwner() {
+        if (skinJson != null && skinJson.has("user_id")) {
+            return PlushieAuth.PLUSHIE_SESSION.isOwner(skinJson.get("user_id").getAsInt());
+        }
+        return false;
     }
 
     private void updateLikeButtons() {
@@ -161,6 +165,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     public void displaySkinInfo(JsonObject jsonObject, Screen returnScreen) {
         skinJson = jsonObject;
         ((GuiGlobalLibrary) parent).switchScreen(Screen.SKIN_INFO);
+        ((GuiGlobalLibrary) parent).panelSkinEdit.setModerator(!isOwner());
         this.returnScreen = returnScreen;
 
         doneLikeCheck = false;
