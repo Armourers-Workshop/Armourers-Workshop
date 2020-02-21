@@ -16,7 +16,9 @@ import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PermissionGroup;
+import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
+import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.InsufficientPermissionsException;
+import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 
 public abstract class GlobalTask<V> implements Callable<V> {
@@ -27,11 +29,11 @@ public abstract class GlobalTask<V> implements Callable<V> {
     private static final String URL_NORMAL = "http://" + URL_BASE;
     private static final String URL_SECURE = "https://" + URL_BASE;
 
-    private final PermissionGroup permissionGroup;
+    private final PlushieAction plushieAction;
     private final boolean needsSecure;
 
-    public GlobalTask(PermissionGroup permissionGroup, boolean needsSecure) {
-        this.permissionGroup = permissionGroup;
+    public GlobalTask(PlushieAction plushieAction, boolean needsSecure) {
+        this.plushieAction = plushieAction;
         this.needsSecure = needsSecure;
     }
 
@@ -39,8 +41,18 @@ public abstract class GlobalTask<V> implements Callable<V> {
         return needsSecure;
     }
 
-    public PermissionGroup getPermissionGroup() {
-        return permissionGroup;
+    public PlushieAction getAction() {
+        return plushieAction;
+    }
+    
+    public boolean havePermission() {
+        return PlushieAuth.PLUSHIE_SESSION.hasPermission(getAction());
+    }
+    
+    protected void permissionCheck() throws InsufficientPermissionsException {
+        if (!havePermission()) {
+            throw new InsufficientPermissionsException(getAction());
+        }
     }
 
     public String getBaseUrl() {

@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.client.gui.globallibrary.panels;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
 
+import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -21,11 +20,11 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonMultipartForm;
-import moe.plushie.armourers_workshop.common.library.global.MultipartForm;
-import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinSearch;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
@@ -35,38 +34,38 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
-    
+
     private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibGuiResources.GUI_GLOBAL_LIBRARY);
     protected static final String BASE_URL = "http://plushie.moe/armourers_workshop/";
     private static final String SEARCH_URL = BASE_URL + "skin-search-page.php";
-    
+
     protected final CompletionService<JsonObject> pageCompletion;
-    
+
     protected final GuiControlSkinPanel skinPanelResults;
-    
+
     protected GuiIconButton iconButtonSmall;
     protected GuiIconButton iconButtonMedium;
     protected GuiIconButton iconButtonLarge;
-    
+
     protected static int iconScale = 110;
-    
+
     protected String search = null;
     protected ISkinType skinType = null;
     protected JsonArray[] pageList;
     protected HashSet<Integer> downloadedPageList;
     protected JsonArray jsonCurrentPage;
     protected int currentPageIndex = 0;
-    protected int totalPages = 0;
+    protected int totalPages = -1;
     protected int totalResults = 0;
-    
+
     public GuiGlobalLibraryPanelSearchResults(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
-        pageCompletion = new ExecutorCompletionService<JsonObject>(((GuiGlobalLibrary)parent).jsonDownloadExecutor);
+        pageCompletion = new ExecutorCompletionService<JsonObject>(((GuiGlobalLibrary) parent).jsonDownloadExecutor);
         skinPanelResults = new GuiControlSkinPanel();
         pageList = null;
         downloadedPageList = new HashSet<Integer>();
     }
-    
+
     public void doSearch(String search, ISkinType skinType) {
         clearResults();
         this.search = search;
@@ -76,14 +75,14 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         }
         fetchPage(0);
     }
-    
+
     public void clearResults() {
         search = null;
         skinType = null;
         pageList = null;
         jsonCurrentPage = null;
         currentPageIndex = 0;
-        totalPages = 0;
+        totalPages = -1;
         totalResults = 0;
         skinPanelResults.clearIcons();
         downloadedPageList.clear();
@@ -96,44 +95,51 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         clearResults();
         doSearch(thisSearch, thisSkinType);
     }
-    
+
     protected void fetchPage(int pageIndex) {
         if (!downloadedPageList.contains(pageIndex)) {
             downloadedPageList.add(pageIndex);
         } else {
             return;
         }
-        try {
-            String searchUrl = SEARCH_URL;
-            searchUrl += "?search=" + URLEncoder.encode(search, "UTF-8");
-            searchUrl += "&maxFileVersion=" + String.valueOf(SkinSerializer.MAX_FILE_VERSION);
-            searchUrl += "&pageIndex=" + String.valueOf(pageIndex);
-            searchUrl += "&pageSize=" + String.valueOf(skinPanelResults.getIconCount());
-            ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
-            String searchTypes = "";
-            if (skinType == null) {
-                for (int i = 0; i < skinTypes.size(); i++) {
-                    searchTypes += (skinTypes.get(i).getRegistryName());
-                    if (i < skinTypes.size() - 1) {
-                        searchTypes += ";";
-                    }
+        ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
+        String searchTypes = "";
+        if (skinType == null) {
+            for (int i = 0; i < skinTypes.size(); i++) {
+                searchTypes += (skinTypes.get(i).getRegistryName());
+                if (i < skinTypes.size() - 1) {
+                    searchTypes += ";";
                 }
-            } else {
-                searchTypes = skinType.getRegistryName();
+            }
+        } else {
+            searchTypes = skinType.getRegistryName();
+        }
+        GlobalTaskSkinSearch taskSkinSearch = new GlobalTaskSkinSearch(search, searchTypes, pageIndex, skinPanelResults.getIconCount());
+        taskSkinSearch.createTaskAndRun(new FutureCallback<JsonObject>() {
+
+            @Override
+            public void onSuccess(JsonObject result) {
+                Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        onPageJsonDownload(result);
+                    }
+                });
             }
 
-            MultipartForm multipartForm = new MultipartForm(searchUrl);
-            multipartForm.addText("searchTypes", searchTypes);
-            pageCompletion.submit(new DownloadJsonMultipartForm(multipartForm));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+                // NO-OP
+            }
+        });
     }
-    
+
     @Override
     public void update() {
         Future<JsonObject> futureJson = pageCompletion.poll();
-        if (futureJson!= null) {
+        if (futureJson != null) {
             try {
                 JsonObject pageJson = futureJson.get();
                 if (pageJson != null) {
@@ -144,7 +150,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
             }
         }
     }
-    
+
     private void onPageJsonDownload(JsonObject pageJson) {
         if (pageJson.has("totalPages")) {
             totalPages = pageJson.get("totalPages").getAsInt();
@@ -154,7 +160,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         }
         int pageIndex = 0;
         if (pageJson.has("currentPageIndex")) {
-            
+
             pageIndex = pageJson.get("currentPageIndex").getAsInt();
             if (pageIndex == 0 & totalPages > 1) {
                 fetchPage(1);

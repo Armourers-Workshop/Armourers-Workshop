@@ -13,11 +13,16 @@ public final class PermissionSystem {
         EnumSet<PlushieAction> actions = EnumSet.noneOf(PlushieAction.class);
 
         actions.add(PlushieAction.SKIN_DOWNLOAD);
+        actions.add(PlushieAction.GET_RECENTLY_UPLOADED);
+        actions.add(PlushieAction.GET_MOST_DOWNLOADED);
+        actions.add(PlushieAction.GET_MOST_LIKED);
+        actions.add(PlushieAction.USER_INFO);
+        actions.add(PlushieAction.SKIN_SEARCH);
         groupNoLogin = new PermissionGroup("no login", actions.clone());
 
         actions.add(PlushieAction.SKIN_UPLOAD);
         actions.add(PlushieAction.SKIN_RATE);
-        actions.add(PlushieAction.SKIN_FLAG);
+        actions.add(PlushieAction.SKIN_REPORT);
         actions.add(PlushieAction.SKIN_OWNER_DELETE);
         actions.add(PlushieAction.SKIN_OWNER_EDIT);
         actions.add(PlushieAction.SKIN_COMMENT_CREATE);
@@ -39,6 +44,18 @@ public final class PermissionSystem {
     }
 
     public static enum PlushieAction {
+        /** Get recently uploaded skin list. */
+        GET_RECENTLY_UPLOADED,
+
+        /** Get the most liked skin list. */
+        GET_MOST_LIKED,
+
+        /** Get most downloaded skin list. */
+        GET_MOST_DOWNLOADED,
+
+        /** Get most downloaded skin list. */
+        SKIN_SEARCH,
+
         /** Download skins. */
         SKIN_DOWNLOAD,
 
@@ -49,7 +66,7 @@ public final class PermissionSystem {
         SKIN_RATE,
 
         /** Report a skin. */
-        SKIN_FLAG,
+        SKIN_REPORT,
 
         /** Delete their own skin. */
         SKIN_OWNER_DELETE,
@@ -68,10 +85,13 @@ public final class PermissionSystem {
 
         /** Delete their own comments. */
         SKIN_COMMENT_OWNER_DELETE,
+
         /** Delete other users comments. */
         SKIN_COMMENT_MOD_DELETE,
+
         /** Edit their own comments. */
         SKIN_COMMENT_OWNER_EDIT,
+
         /** Edit other users comments. */
         SKIN_COMMENT_MOD_EDIT,
 
@@ -80,12 +100,15 @@ public final class PermissionSystem {
         /**  */
         FLAG_DELETE,
 
+        /** Get user info. */
+        USER_INFO,
         /** Ban a user temporarily. */
         USER_BAN_TEMP,
         /** Ban a user permanently. */
         USER_BAN_PERM,
         /** Change users permission group. */
         USER_GROUP_CHANGE,
+        
         /** View server status. */
         SERVER_VIEW_STATS
     }
@@ -108,6 +131,19 @@ public final class PermissionSystem {
         public boolean havePermission(PlushieAction action) {
             // PermissionAPI.hasPermission(profile, node, context)
             return actions.contains(action);
+        }
+    }
+
+    public static class InsufficientPermissionsException extends Exception {
+
+        private final PlushieAction plushieAction;
+
+        public InsufficientPermissionsException(PlushieAction plushieAction) {
+            this.plushieAction = plushieAction;
+        }
+
+        public PlushieAction getAction() {
+            return plushieAction;
         }
     }
 }

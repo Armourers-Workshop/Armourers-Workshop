@@ -33,7 +33,6 @@ import moe.plushie.armourers_workshop.utils.ModLogger;
 public final class GlobalSkinLibraryUtils {
 
     private static final String BASE_URL = "http://plushie.moe/armourers_workshop/";
-    private static final String USER_INFO_URL = BASE_URL + "user-info.php";
     private static final String USER_SKINS_URL = BASE_URL + "user-skins.php";
     private static final String USER_SKIN_EDIT_URL = BASE_URL + "user-skin-edit.php";
     private static final String USER_SKIN_DELETE_URL = BASE_URL + "user-skin-delete.php";

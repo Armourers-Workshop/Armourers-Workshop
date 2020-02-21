@@ -4,24 +4,25 @@ import org.apache.logging.log4j.Level;
 
 import com.google.gson.JsonObject;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.library.global.PlushieUser;
+import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 
 public class GlobalTaskUserInfo extends GlobalTask<PlushieUser> {
 
-    private static final String USER_INFO_URL = "user-info.php?userId=%d";
+    private static final String URL = "user-info.php?userId=%d";
 
     private final int userID;
 
     public GlobalTaskUserInfo(int userID) {
-        super(ArmourersWorkshop.getProxy().getPermissionSystem().groupNoLogin, false);
+        super(PlushieAction.USER_INFO, false);
         this.userID = userID;
     }
 
     @Override
     public PlushieUser call() throws Exception {
-        String url = getBaseUrl() + USER_INFO_URL;
+        permissionCheck();
+        String url = getBaseUrl() + URL;
         url = String.format(url, userID);
         JsonObject json = downloadJson(url).getAsJsonObject();
         PlushieUser plushieUser = PlushieUser.readPlushieUser(json);
