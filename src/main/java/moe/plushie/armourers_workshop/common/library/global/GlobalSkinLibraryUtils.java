@@ -17,29 +17,34 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.Level;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonCallable;
 import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonObjectCallable;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserInfo;
 import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 
 public final class GlobalSkinLibraryUtils {
-    
+
     private static final String BASE_URL = "http://plushie.moe/armourers_workshop/";
     private static final String USER_INFO_URL = BASE_URL + "user-info.php";
     private static final String USER_SKINS_URL = BASE_URL + "user-skins.php";
     private static final String USER_SKIN_EDIT_URL = BASE_URL + "user-skin-edit.php";
     private static final String USER_SKIN_DELETE_URL = BASE_URL + "user-skin-delete.php";
-    
+
     private static final Executor JSON_DOWNLOAD_EXECUTOR = Executors.newFixedThreadPool(1);
     private static final HashMap<Integer, PlushieUser> USERS = new HashMap<Integer, PlushieUser>();
     private static final HashSet<Integer> DOWNLOADED_USERS = new HashSet<Integer>();
-    
-    private GlobalSkinLibraryUtils() {}
-    
+
+    private GlobalSkinLibraryUtils() {
+    }
+
     public static FutureTask<JsonArray> getUserSkinsList(Executor executor, int userId) {
         Validate.notNull(executor);
         Validate.notNull(userId);
@@ -48,7 +53,7 @@ public final class GlobalSkinLibraryUtils {
         executor.execute(futureTask);
         return futureTask;
     }
-    
+
     public static FutureTask<JsonObject> deleteSkin(Executor executor, int userId, String accessToken, int skinId) {
         Validate.notNull(executor);
         Validate.notNull(userId);
@@ -58,7 +63,7 @@ public final class GlobalSkinLibraryUtils {
         executor.execute(futureTask);
         return futureTask;
     }
-    
+
     public static FutureTask<JsonObject> editSkin(Executor executor, int userId, String accessToken, int skinId, String name, String description) {
         Validate.notNull(executor);
         Validate.notNull(userId);
@@ -71,15 +76,15 @@ public final class GlobalSkinLibraryUtils {
         executor.execute(futureTask);
         return futureTask;
     }
-    
+
     public static class PostMultipartFormCallable implements Callable<JsonObject> {
 
         private final MultipartForm multipartForm;
-        
+
         public PostMultipartFormCallable(MultipartForm multipartForm) {
             this.multipartForm = multipartForm;
         }
-        
+
         @Override
         public JsonObject call() throws Exception {
             JsonObject result = null;
@@ -87,13 +92,13 @@ public final class GlobalSkinLibraryUtils {
                 String downloadData = multipartForm.upload();
                 ModLogger.log(downloadData);
                 result = (JsonObject) new JsonParser().parse(downloadData);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return result;
         }
     }
-    
+
     public static PlushieUser getUserInfo(int userId) {
         synchronized (USERS) {
             if (USERS.containsKey(userId)) {
@@ -102,13 +107,34 @@ public final class GlobalSkinLibraryUtils {
         }
         if (!DOWNLOADED_USERS.contains(userId)) {
             DOWNLOADED_USERS.add(userId);
-            JSON_DOWNLOAD_EXECUTOR.execute(new DownloadUserCallable(userId));
+
+            GlobalTaskUserInfo taskUserInfo = new GlobalTaskUserInfo(userId);
+            ListenableFutureTask<PlushieUser> task = taskUserInfo.createTask();
+            Futures.addCallback(task, new FutureCallback<PlushieUser>() {
+
+                @Override
+                public void onSuccess(PlushieUser result) {
+                    if (result != null) {
+                        synchronized (USERS) {
+                            USERS.put(userId, result);
+                        }
+                    } else {
+                        ModLogger.log(Level.ERROR, "Failed downloading info for user id: " + userId);
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    // NO-OP
+                }
+            });
+            taskUserInfo.runTask(task);
         }
         return null;
     }
-    
+
     public static int[] getJavaVersion() {
-        int[] version = new int[] {6, 0};
+        int[] version = new int[] { 6, 0 };
         try {
             String java = System.getProperty("java.version");
             String[] javaSplit = java.split("_");
@@ -120,7 +146,7 @@ public final class GlobalSkinLibraryUtils {
         }
         return version;
     }
-    
+
     public static boolean isValidJavaVersion(int[] javaVersion) {
         if (javaVersion[0] < 8) {
             return false;
@@ -130,7 +156,7 @@ public final class GlobalSkinLibraryUtils {
         }
         return true;
     }
-    
+
     public static boolean isValidJavaVersion() {
         int[] javaVersion = getJavaVersion();
         if (javaVersion[0] < 8 & javaVersion[1] < 101) {
@@ -138,30 +164,7 @@ public final class GlobalSkinLibraryUtils {
         }
         return true;
     }
-    
-    
-    public static class DownloadUserCallable implements Runnable {
 
-        private final int userId;
-        
-        public DownloadUserCallable(int userId) {
-            this.userId = userId;
-        }
-
-        @Override
-        public void run() {
-            JsonObject json = DownloadUtils.downloadJsonObject(USER_INFO_URL + "?userId=" + userId);
-            PlushieUser plushieUser = PlushieUser.readPlushieUser(json);
-            if (plushieUser != null) {
-                synchronized (USERS) {
-                    USERS.put(userId, plushieUser);
-                }
-            } else {
-                ModLogger.log(Level.ERROR, "Failed downloading info for user id: " + userId);
-            }
-        }
-    }
-    
     public static String performPostRequest(URL url, String post, String contentType) throws IOException {
         Validate.notNull(url);
         Validate.notNull(post);
@@ -173,7 +176,7 @@ public final class GlobalSkinLibraryUtils {
         connection.setRequestProperty("Content-Type", contentType + "; charset=utf-8");
         connection.setRequestProperty("Content-Length", "" + postAsBytes.length);
         connection.setDoOutput(true);
-        
+
         OutputStream outputStream = null;
         try {
             outputStream = connection.getOutputStream();
@@ -181,7 +184,7 @@ public final class GlobalSkinLibraryUtils {
         } finally {
             IOUtils.closeQuietly(outputStream);
         }
-        
+
         InputStream inputStream = null;
         try {
             inputStream = connection.getInputStream();
@@ -201,7 +204,7 @@ public final class GlobalSkinLibraryUtils {
             IOUtils.closeQuietly(inputStream);
         }
     }
-    
+
     private static HttpURLConnection createUrlConnection(URL url) throws IOException {
         Validate.notNull(url);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

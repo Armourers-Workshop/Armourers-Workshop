@@ -5,12 +5,12 @@ import java.util.UUID;
 import com.google.gson.JsonObject;
 
 public class PlushieUser {
-    
+
     private int id;
     private UUID uuid;
     private String username;
     private int permissionGroupId;
-    
+
     public static PlushieUser readPlushieUser(JsonObject json) {
         if (json != null) {
             if (json.has("valid") && json.get("valid").getAsBoolean()) {
@@ -30,26 +30,30 @@ public class PlushieUser {
         }
         return null;
     }
-    
+
+    public PlushieUser() {
+        // TODO Auto-generated constructor stub
+    }
+
     private PlushieUser(int id, UUID uuid, String username, int permissionGroupId) {
         this.id = id;
         this.uuid = uuid;
         this.username = username;
         this.permissionGroupId = permissionGroupId;
     }
-    
+
     public int getId() {
         return id;
     }
-    
+
     public UUID getUuid() {
         return uuid;
     }
-    
+
     public String getUsername() {
         return username;
     }
-    
+
     public int getPermissionGroupId() {
         return permissionGroupId;
     }

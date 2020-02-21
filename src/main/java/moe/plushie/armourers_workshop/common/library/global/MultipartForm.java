@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 
-import moe.plushie.armourers_workshop.utils.ModLogger;
-
 public class MultipartForm {
     
     private static final String CRLF = "\r\n";
@@ -81,7 +79,7 @@ public class MultipartForm {
     }
     
     public String upload() throws IOException{
-        ModLogger.log("Accessing: " + uploadUrl);
+        //ModLogger.log("Accessing: " + uploadUrl);
         
         String boundary = Long.toHexString(System.currentTimeMillis());
         

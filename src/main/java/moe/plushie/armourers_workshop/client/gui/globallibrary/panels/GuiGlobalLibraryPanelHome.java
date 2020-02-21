@@ -5,6 +5,8 @@ import java.util.concurrent.FutureTask;
 
 import org.apache.logging.log4j.Level;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -17,9 +19,11 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonArrayMultipartForm;
 import moe.plushie.armourers_workshop.common.library.global.MultipartForm;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskRecentlyUploaded;
 import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -38,7 +42,6 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
     private final GuiControlSkinPanel skinPanelMostDownloaded;
     private final GuiControlSkinPanel skinPanelMostLiked;
     
-    private FutureTask<JsonArray> taskDownloadJsonRecentlyUploaded;
     private FutureTask<JsonArray> taskDownloadJsonMostDownloaded;
     private FutureTask<JsonArray> taskDownloadJsonMostLiked;
     
@@ -78,7 +81,6 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
     }
     
     public void updateSkinPanels() {
-        int iconCountRecentlyUploaded = skinPanelRecentlyUploaded.getIconCount();
         int iconCountMostDownloaded = skinPanelMostDownloaded.getIconCount();
         int iconCountMostLiked = skinPanelMostLiked.getIconCount();
         
@@ -90,42 +92,46 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
                 searchTypes += ";";
             }
         }
-        MultipartForm multipartFormRecently = new MultipartForm(RECENTLY_UPLOADED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(SkinSerializer.MAX_FILE_VERSION));
-        MultipartForm multipartFormMostDownloaded = new MultipartForm(MOST_DOWNLOADED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(SkinSerializer.MAX_FILE_VERSION));
-        MultipartForm multipartFormMostLiked = new MultipartForm(MOST_LIKED_URL + "?limit=" + iconCountRecentlyUploaded + "&maxFileVersion=" + String.valueOf(SkinSerializer.MAX_FILE_VERSION));
-        multipartFormRecently.addText("searchTypes", searchTypes);
+        
+        GlobalTaskRecentlyUploaded taskRecentlyUploaded = new GlobalTaskRecentlyUploaded(skinPanelRecentlyUploaded.getIconCount(), searchTypes);
+        ListenableFutureTask<JsonArray> futureTaskRecentlyUploaded = taskRecentlyUploaded.createTaskAndRun(new FutureCallback<JsonArray>() {
+            
+            @Override
+            public void onSuccess(JsonArray result) {
+                Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < result.size(); i++) {
+                            JsonObject skinJson = result.get(i).getAsJsonObject();
+                            skinPanelRecentlyUploaded.addIcon(skinJson);
+                        }
+                    }
+                });
+            }
+            
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+                // NO-OP
+            }
+        });
+        
+        
+        MultipartForm multipartFormMostDownloaded = new MultipartForm(MOST_DOWNLOADED_URL + "?limit=" + iconCountMostDownloaded + "&maxFileVersion=" + String.valueOf(SkinSerializer.MAX_FILE_VERSION));
+        MultipartForm multipartFormMostLiked = new MultipartForm(MOST_LIKED_URL + "?limit=" + iconCountMostLiked + "&maxFileVersion=" + String.valueOf(SkinSerializer.MAX_FILE_VERSION));
         multipartFormMostDownloaded.addText("searchTypes", searchTypes);
         multipartFormMostLiked.addText("searchTypes", searchTypes);
         
-        taskDownloadJsonRecentlyUploaded = new FutureTask<JsonArray>(new DownloadJsonArrayMultipartForm(multipartFormRecently));
         taskDownloadJsonMostDownloaded = new FutureTask<JsonArray>(new DownloadJsonArrayMultipartForm(multipartFormMostDownloaded));
         taskDownloadJsonMostLiked = new FutureTask<JsonArray>(new DownloadJsonArrayMultipartForm(multipartFormMostLiked));
         
-        ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDownloadJsonRecentlyUploaded);
         ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDownloadJsonMostDownloaded);
         ((GuiGlobalLibrary)parent).jsonDownloadExecutor.execute(taskDownloadJsonMostLiked);
     }
     
     @Override
     public void update() {
-        if (taskDownloadJsonRecentlyUploaded != null && taskDownloadJsonRecentlyUploaded.isDone()) {
-            try {
-                JsonArray jsonArray = taskDownloadJsonRecentlyUploaded.get();
-                skinPanelRecentlyUploaded.clearIcons();
-                if (jsonArray != null) {
-                    for (int i = 0; i < jsonArray.size(); i++) {
-                        JsonObject skinJson = jsonArray.get(i).getAsJsonObject();
-                        skinPanelRecentlyUploaded.addIcon(skinJson);
-                    }
-                } else {
-                	ModLogger.log(Level.WARN, "Failed to download.");
-                }
-                taskDownloadJsonRecentlyUploaded = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        
         if (taskDownloadJsonMostDownloaded != null && taskDownloadJsonMostDownloaded.isDone()) {
             try {
                 JsonArray jsonArray = taskDownloadJsonMostDownloaded.get();
