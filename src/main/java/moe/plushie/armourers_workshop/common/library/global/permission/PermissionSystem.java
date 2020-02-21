@@ -19,6 +19,7 @@ public final class PermissionSystem {
         actions.add(PlushieAction.USER_INFO);
         actions.add(PlushieAction.SKIN_SEARCH);
         actions.add(PlushieAction.SKIN_LIST_USER);
+        actions.add(PlushieAction.BETA_JOIN);
         groupNoLogin = new PermissionGroup("no login", actions.clone());
 
         actions.add(PlushieAction.SKIN_UPLOAD);

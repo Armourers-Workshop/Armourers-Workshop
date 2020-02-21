@@ -80,6 +80,9 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         } else {
             iconButtonJoinBeta.visible = false;
         }
+        
+        //iconButtonMyFiles.visible = false;
+        //iconButtonJoinBeta.visible = true;
     }
     
     @Override
