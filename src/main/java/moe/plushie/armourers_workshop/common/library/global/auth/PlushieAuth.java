@@ -33,7 +33,7 @@ public class PlushieAuth {
     private static boolean startedRemoteUserCheck = false;
     private static boolean isRemoteUser = false;
     
-    private static final int TOKEN_UPDATE_TIME = 30 * 1000;
+    private static final int TOKEN_UPDATE_TIME = 60 * 1000;
     private static volatile boolean updatingToken = false;
     
     private static FutureTask<JsonObject> taskBetaCheck;
@@ -200,6 +200,8 @@ public class PlushieAuth {
     
     public static void updateAccessToken() {
         //ModLogger.log(PLUSHIE_SESSION.isAuthenticated());
+        //ModLogger.log(PLUSHIE_SESSION.getTokenExpiryTime());
+        //updatingToken = false;
         if (PLUSHIE_SESSION.isAuthenticated() & !updatingToken & PLUSHIE_SESSION.getTokenExpiryTime() < TOKEN_UPDATE_TIME) {
             updatingToken = true;
             try {
@@ -210,7 +212,7 @@ public class PlushieAuth {
                 e.printStackTrace();
             }
         } else {
-            updatingToken = false;
+            //updatingToken = false;
         }
     }
     
