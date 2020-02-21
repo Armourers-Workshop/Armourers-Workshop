@@ -22,7 +22,6 @@ import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinSearch;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -171,11 +170,13 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
             if (pageList == null) {
                 pageList = new JsonArray[totalPages];
             }
-            pageList[pageIndex] = pageResults;
-            updateSkinForPage();
+            if (totalPages != 0) {
+                pageList[pageIndex] = pageResults;
+                updateSkinForPage();
+            }
         }
     }
-    
+
     @Override
     public GuiPanel setSize(int width, int height) {
         boolean resized = width != this.width | height != this.height;
@@ -186,37 +187,37 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         }
         return this;
     }
-    
+
     @Override
     public void initGui() {
         super.initGui();
-        
-        String guiName = ((GuiGlobalLibrary)parent).getGuiName();
+
+        String guiName = ((GuiGlobalLibrary) parent).getGuiName();
         buttonList.clear();
-        
+
         skinPanelResults.init(x + 5, this.y + 24, width - 10, height - 52);
         skinPanelResults.setIconSize(iconScale);
         skinPanelResults.setPanelPadding(0);
         skinPanelResults.setShowName(true);
-        
+
         iconButtonSmall = new GuiIconButton(parent, 0, x + width - 21 * 3, y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.small"), BUTTON_TEXTURES);
         iconButtonSmall.setIconLocation(51, 0, 16, 16);
-        
+
         iconButtonMedium = new GuiIconButton(parent, 0, x + width - 21 * 2, y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.medium"), BUTTON_TEXTURES);
         iconButtonMedium.setIconLocation(51, 17, 16, 16);
-        
+
         iconButtonLarge = new GuiIconButton(parent, 0, x + width - 21, y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.large"), BUTTON_TEXTURES);
         iconButtonLarge.setIconLocation(51, 34, 16, 16);
-        
+
         buttonList.add(iconButtonSmall);
         buttonList.add(iconButtonMedium);
         buttonList.add(iconButtonLarge);
         buttonList.add(skinPanelResults);
-        
+
         buttonList.add(new GuiButtonExt(1, x + 5, y + height - 25, 80, 20, "<<"));
         buttonList.add(new GuiButtonExt(2, x + width - 85, y + height - 25, 80, 20, ">>"));
     }
-    
+
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button.id == 1) {
@@ -244,13 +245,13 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
             resize();
         }
         if (button == skinPanelResults) {
-            SkinIcon skinIcon = ((GuiControlSkinPanel)button).getLastPressedSkinIcon();
+            SkinIcon skinIcon = ((GuiControlSkinPanel) button).getLastPressedSkinIcon();
             if (skinIcon != null) {
-                ((GuiGlobalLibrary)parent).panelSkinInfo.displaySkinInfo(skinIcon.getSkinJson(), Screen.SEARCH);
+                ((GuiGlobalLibrary) parent).panelSkinInfo.displaySkinInfo(skinIcon.getSkinJson(), Screen.SEARCH);
             }
         }
     }
-    
+
     protected void changePage(int pageIndex) {
         if (pageIndex < totalPages & pageIndex >= 0) {
             this.currentPageIndex = pageIndex;
@@ -263,7 +264,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         }
         updateSkinForPage();
     }
-    
+
     protected void updateSkinForPage() {
         jsonCurrentPage = getJsonForPage(currentPageIndex);
         if (jsonCurrentPage != null) {
@@ -280,7 +281,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
             }
         }
     }
-    
+
     private JsonArray getJsonForPage(int pageIndex) {
         if (pageList != null) {
             if (pageIndex >= 0 & pageIndex < pageList.length) {
@@ -290,7 +291,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         return null;
 
     }
-    
+
     @Override
     public void draw(int mouseX, int mouseY, float partialTickTime) {
         if (this.getClass().equals(GuiGlobalLibraryPanelSearchResults.class)) {
@@ -299,16 +300,19 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
             }
             drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
             super.draw(mouseX, mouseY, partialTickTime);
-            
+
             int maxPages = totalPages;
             int totalSkins = totalResults;
-            
-            String guiName = ((GuiGlobalLibrary)parent).getGuiName();
+
+            String guiName = ((GuiGlobalLibrary) parent).getGuiName();
             String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + "." + "searchResults.results";
-            
+
             String resultsText = TranslateUtils.translate(unlocalizedName, currentPageIndex + 1, maxPages, totalSkins);
-            if (jsonCurrentPage == null) {
+            if (jsonCurrentPage == null & totalPages == -1) {
                 resultsText = GuiHelper.getLocalizedControlName(guiName, "searchResults.label.searching");
+            }
+            if (totalPages == 0) {
+                resultsText = GuiHelper.getLocalizedControlName(guiName, "searchResults.label.no_results");
             }
             fontRenderer.drawString(resultsText, x + 5, y + 6, 0xFFEEEEEE);
         } else {

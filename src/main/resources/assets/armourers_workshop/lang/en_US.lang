@@ -528,6 +528,7 @@ inventory.armourers_workshop:global-skin-library.searchResults.small=Small
 inventory.armourers_workshop:global-skin-library.searchResults.medium=Medium
 inventory.armourers_workshop:global-skin-library.searchResults.large=Large
 inventory.armourers_workshop:global-skin-library.searchResults.label.searching=Searching...
+inventory.armourers_workshop:global-skin-library.searchResults.label.no_results=No results found.
 
 
 # Global Skin Library (Skin Info)
