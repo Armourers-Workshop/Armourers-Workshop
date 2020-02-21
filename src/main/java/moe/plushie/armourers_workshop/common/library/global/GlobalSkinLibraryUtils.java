@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
 import org.apache.commons.io.Charsets;
@@ -20,37 +19,23 @@ import org.apache.logging.log4j.Level;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFutureTask;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonCallable;
 import moe.plushie.armourers_workshop.common.library.global.DownloadUtils.DownloadJsonObjectCallable;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserInfo;
-import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 
 public final class GlobalSkinLibraryUtils {
 
     private static final String BASE_URL = "http://plushie.moe/armourers_workshop/";
-    private static final String USER_SKINS_URL = BASE_URL + "user-skins.php";
     private static final String USER_SKIN_EDIT_URL = BASE_URL + "user-skin-edit.php";
     private static final String USER_SKIN_DELETE_URL = BASE_URL + "user-skin-delete.php";
 
-    private static final Executor JSON_DOWNLOAD_EXECUTOR = Executors.newFixedThreadPool(1);
     private static final HashMap<Integer, PlushieUser> USERS = new HashMap<Integer, PlushieUser>();
     private static final HashSet<Integer> DOWNLOADED_USERS = new HashSet<Integer>();
 
     private GlobalSkinLibraryUtils() {
-    }
-
-    public static FutureTask<JsonArray> getUserSkinsList(Executor executor, int userId) {
-        Validate.notNull(executor);
-        Validate.notNull(userId);
-        String searchUrl = USER_SKINS_URL + "?userId=" + String.valueOf(userId) + "&maxFileVersion=" + String.valueOf(SkinSerializer.MAX_FILE_VERSION);
-        FutureTask<JsonArray> futureTask = new FutureTask<JsonArray>(new DownloadJsonCallable(searchUrl));
-        executor.execute(futureTask);
-        return futureTask;
     }
 
     public static FutureTask<JsonObject> deleteSkin(Executor executor, int userId, String accessToken, int skinId) {
@@ -124,6 +109,7 @@ public final class GlobalSkinLibraryUtils {
 
                 @Override
                 public void onFailure(Throwable t) {
+                    t.printStackTrace();
                     // NO-OP
                 }
             });
