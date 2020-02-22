@@ -46,6 +46,8 @@ public class GuiTabWardrobeDyes extends GuiTabPanel {
         //Bottom half of GUI. (player inventory)
         //this.drawTexturedModalRect(this.x + 29, this.y + 151, 29, 151, 178, 89);
         
+        // TODO Render dye slot numbers.
+        
         int sloImageSize = 18;
         GuiContainer guiContainer = (GuiContainer) parent;
         ContainerSkinWardrobe skinWardrobe = (ContainerSkinWardrobe) guiContainer.inventorySlots;
