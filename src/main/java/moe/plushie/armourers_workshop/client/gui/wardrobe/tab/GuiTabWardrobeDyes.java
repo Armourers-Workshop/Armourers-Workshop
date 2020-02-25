@@ -49,11 +49,15 @@ public class GuiTabWardrobeDyes extends GuiTabPanel {
         // TODO Render dye slot numbers.
         
         int sloImageSize = 18;
+        int sloSize = 16;
+        int slotCount = 0;
         GuiContainer guiContainer = (GuiContainer) parent;
         ContainerSkinWardrobe skinWardrobe = (ContainerSkinWardrobe) guiContainer.inventorySlots;
         for (int i = skinWardrobe.getIndexDyeStart(); i <  skinWardrobe.getIndexDyeEnd(); i++) {
             Slot slot = skinWardrobe.inventorySlots.get(i);
             this.drawTexturedModalRect(this.x + slot.xPos - 1,  this.y + slot.yPos - 1, 238, 194, sloImageSize, sloImageSize);
+            this.drawTexturedModalRect(this.x + slot.xPos,  this.y + slot.yPos + 18, slotCount * 16, 240, sloSize, sloSize);
+            slotCount++;
         }
     }
     
