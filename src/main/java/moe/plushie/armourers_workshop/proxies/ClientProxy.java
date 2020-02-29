@@ -212,6 +212,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         }
         loadErrorSkin();
         FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable() {
+            @Override
             public String call() throws Exception {
                 int bakeQueue = ModelBakery.INSTANCE.getBakingQueueSize();
                 String error = "\n";
@@ -233,6 +234,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
                 return error;
             }
 
+            @Override
             public String getLabel() {
                 return "Armourer's Workshop";
             }

@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ModelBlockArmourer extends ModelBase {
     
-    private static final ResourceLocation modelImage = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/models/ModelBlockArmourer-texturemap.png");
+    private static final ResourceLocation modelImage = new ResourceLocation(LibModInfo.ID, "textures/models/mini-armourer.png");
     
     public ModelRenderer FrameTop2;
     public ModelRenderer FrameBottom;

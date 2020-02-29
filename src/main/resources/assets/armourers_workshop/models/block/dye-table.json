@@ -937,7 +937,8 @@
 		},
 		"gui": {
 			"rotation":  [ 30, 225, 0 ],
-			"scale":  [ 0.625, 0.625, 0.625 ]
+      "translation":  [ 0, -0.6, 0 ],
+			"scale":  [ 0.66, 0.66, 0.66 ]
 		},
 		"ground": {
 			"translation":  [ 0, 3, 0 ],

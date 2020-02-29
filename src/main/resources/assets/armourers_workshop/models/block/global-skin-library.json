@@ -1363,7 +1363,8 @@
 		},
 		"gui": {
 			"rotation":  [ 30, 225, 0 ],
-			"scale":  [ 0.625, 0.625, 0.625 ]
+      "translation":  [ 0, -1.5, 0 ],
+			"scale":  [ 0.57, 0.57, 0.57 ]
 		},
 		"ground": {
 			"translation":  [ 0, 3, 0 ],

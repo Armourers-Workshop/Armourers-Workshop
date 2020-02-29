@@ -1,6 +1,10 @@
 package moe.plushie.armourers_workshop.common.init.blocks;
 
+import moe.plushie.armourers_workshop.client.render.item.RenderItemBlockMiniArmourer;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
+import net.minecraft.item.Item;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockMiniArmourer extends AbstractModBlock {
 
@@ -23,4 +27,11 @@ public class BlockMiniArmourer extends AbstractModBlock {
         }
         return true;
     }*/
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerModels() {
+        super.registerModels();
+        Item.getItemFromBlock(this).setTileEntityItemStackRenderer(new RenderItemBlockMiniArmourer());
+    }
 }

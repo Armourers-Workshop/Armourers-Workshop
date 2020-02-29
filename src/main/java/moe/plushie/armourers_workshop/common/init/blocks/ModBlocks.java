@@ -32,9 +32,9 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class ModBlocks {
 
     public static ArrayList<Block> BLOCK_LIST = new ArrayList<Block>();
-    
+
     public static Block armourer;
-    //public static Block miniArmourer;
+    // public static Block miniArmourer;
     public static Block skinLibrary;
     public static Block globalSkinLibrary;
     public static Block boundingBox;
@@ -55,11 +55,11 @@ public class ModBlocks {
     public static Block outfitMaker;
     public static final Block ADVANCED_SKIN_BUILDER = new BlockAdvancedSkinBuilder();
     public static final Block ADVANCED_SKIN_PART = new BlockAdvancedSkinPart();
-    
+
     public ModBlocks() {
         MinecraftForge.EVENT_BUS.register(this);
         armourer = new BlockArmourer();
-        //miniArmourer = new BlockMiniArmourer();
+        // miniArmourer = new BlockMiniArmourer();
         skinLibrary = new BlockSkinLibrary();
         globalSkinLibrary = new BlockGlobalSkinLibrary();
         boundingBox = new BlockBoundingBox();
@@ -79,7 +79,6 @@ public class ModBlocks {
         hologramProjector = new BlockHologramProjector();
         outfitMaker = new BlockOutfitMaker();
     }
-    
 
     @SubscribeEvent
     public void registerBlocks(RegistryEvent.Register<Block> event) {
@@ -88,14 +87,14 @@ public class ModBlocks {
             reg.register(BLOCK_LIST.get(i));
         }
     }
-    
+
     @SubscribeEvent
     public void registerItemBlocks(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> registry = event.getRegistry();
         for (int i = 0; i < BLOCK_LIST.size(); i++) {
             Block block = BLOCK_LIST.get(i);
             if (block instanceof ICustomItemBlock) {
-                ((ICustomItemBlock)block).registerItemBlock(registry);
+                ((ICustomItemBlock) block).registerItemBlock(registry);
             }
         }
     }

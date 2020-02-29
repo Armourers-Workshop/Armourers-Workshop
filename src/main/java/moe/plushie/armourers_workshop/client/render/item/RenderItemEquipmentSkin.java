@@ -31,7 +31,7 @@ public class RenderItemEquipmentSkin extends TileEntityItemStackRenderer {
             ModRenderHelper.enableAlphaBlend();
             GL11.glEnable(GL11.GL_CULL_FACE);
             GlStateManager.translate(8 * 0.0625F, -8 * 0.0625F, 0);
-            GlStateManager.scale(0.8F, 0.8F, 0.8F);
+            GlStateManager.scale(0.6F, 0.6F, 0.6F);
             GlStateManager.rotate(30, 1, 0, 0);
             GlStateManager.rotate(45, 0, 1, 0);
             SkinItemRenderHelper.renderSkinAsItem(itemStackIn, true, 16, 16);
@@ -67,7 +67,7 @@ public class RenderItemEquipmentSkin extends TileEntityItemStackRenderer {
             return;
         }
         Minecraft.getMinecraft().renderEngine.bindTexture(descriptor.getIdentifier().getSkinType().getIcon());
-        float angle = (float) ((double)(System.currentTimeMillis() / 5) % 360D);
+        float angle = (float) (System.currentTimeMillis() / 5 % 360D);
         
         GlStateManager.pushMatrix();
         

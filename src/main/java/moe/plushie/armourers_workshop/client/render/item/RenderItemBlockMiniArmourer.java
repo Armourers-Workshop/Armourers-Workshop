@@ -1,6 +1,26 @@
 package moe.plushie.armourers_workshop.client.render.item;
 
-public class RenderItemBlockMiniArmourer /*implements IItemRenderer*/ {
+import moe.plushie.armourers_workshop.client.model.block.ModelBlockArmourer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
+import net.minecraft.item.ItemStack;
+
+public class RenderItemBlockMiniArmourer extends TileEntityItemStackRenderer {
+
+    private static final ModelBlockArmourer modelArmourer = new ModelBlockArmourer();
+
+    @Override
+    public void renderByItem(ItemStack itemStackIn, float partialTicks) {
+        float scale = 0.0625F;
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(1.1F, 1.1F, 1.1F);
+        GlStateManager.rotate(180F, 1F, 0F, 0F);
+        GlStateManager.translate(0F, scale * 7F, 0F);
+        modelArmourer.render(null, 0, scale);
+        GlStateManager.popMatrix();
+    }
+    
+/*implements IItemRenderer*/ 
 /*
     private static final ModelBlockArmourer modelArmourer = new ModelBlockArmourer();
     
