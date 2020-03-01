@@ -377,6 +377,7 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
     private Color getColourAtPos(int x, int y) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(3);
         GL11.glReadPixels(x, y, 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, buffer);
+        GL11.glFinish();
         int r = Math.round(buffer.get() * 255);
         int g = Math.round(buffer.get() * 255);
         int b = Math.round(buffer.get() * 255);

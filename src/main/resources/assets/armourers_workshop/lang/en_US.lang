@@ -218,7 +218,7 @@ paintType.armourers_workshop:none.name=None
 paintType.armourers_workshop:skin.name=Skin
 paintType.armourers_workshop:hair.name=Hair
 paintType.armourers_workshop:eye.name=Eye
-paintType.armourers_workshop:misc.name=Miscellaneous
+paintType.armourers_workshop:misc_1.name=Misc 1
 
 
 # Colour Families
@@ -443,34 +443,49 @@ inventory.armourers_workshop:wardrobe.tab.colourSettings=Color Settings
 inventory.armourers_workshop:wardrobe.tab.dyes=Dyes
 inventory.armourers_workshop:wardrobe.tab.contributor=Contributor
 
-inventory.armourers_workshop:wardrobe.label.skinColour=Skin Color
-inventory.armourers_workshop:wardrobe.label.hairColour=Hair Color
-inventory.armourers_workshop:wardrobe.label.eyeColour=Eye Color
-inventory.armourers_workshop:wardrobe.label.miscColour=Misc. Color
-inventory.armourers_workshop:wardrobe.label.palette=Palette
+# Wardrobe - Tab Display Settings
+inventory.armourers_workshop:wardrobe.tab.display_settings.renderHeadArmour=Render head armor?
+inventory.armourers_workshop:wardrobe.tab.display_settings.renderChestArmour=Render chest armor?
+inventory.armourers_workshop:wardrobe.tab.display_settings.renderLegArmour=Render leg armor?
+inventory.armourers_workshop:wardrobe.tab.display_settings.renderFootArmour=Render foot armor?
 
-inventory.armourers_workshop:wardrobe.skinSelect=Pick Skin Color
-inventory.armourers_workshop:wardrobe.skinAuto=Auto Skin Color
-inventory.armourers_workshop:wardrobe.skinClear=Clear Skin Color
+# Wardrobe - Tab Color Settings
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.skin=Skin Color:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.hair=Hair Color:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.eye=Eye Color:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.misc_1=Misc. 1 Color:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.misc_2=Misc. 2 Color:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.misc_3=Misc. 3 Color:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.misc_4=Misc. 4 Color:
 
-inventory.armourers_workshop:wardrobe.hairSelect=Pick Hair Color
-inventory.armourers_workshop:wardrobe.hairAuto=Auto Hair Color
-inventory.armourers_workshop:wardrobe.hairClear=Clear Hair Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.skin.select=Pick Skin Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.skin.clear=Clear Skin Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.skin.auto=Auto Skin Color
 
-inventory.armourers_workshop:wardrobe.eyeSelect=Pick Eye Color
-inventory.armourers_workshop:wardrobe.eyeAuto=Auto Eye Color
-inventory.armourers_workshop:wardrobe.eyeClear=Clear Eye Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.hair.select=Pick Hair Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.hair.clear=Clear Hair Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.hair.auto=Auto Hair Color
 
-inventory.armourers_workshop:wardrobe.miscSelect=Pick Misc Color
-inventory.armourers_workshop:wardrobe.miscClear=Clear Misc Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.eye.select=Pick Eye Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.eye.clear=Clear Eye Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.eye.auto=Auto Eye Color
 
-inventory.armourers_workshop:wardrobe.label.skinOverride=Skin Override
-inventory.armourers_workshop:wardrobe.renderHeadArmour=Render head armor?
-inventory.armourers_workshop:wardrobe.renderChestArmour=Render chest armor?
-inventory.armourers_workshop:wardrobe.renderLegArmour=Render leg armor?
-inventory.armourers_workshop:wardrobe.renderFootArmour=Render foot armor?
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_1.select=Pick Misc. 1 Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_1.clear=Clear Misc. 1 Color
 
-inventory.armourers_workshop:wardrobe.label.contributor=Thank you for helping with the development of Armourer's Workshop.\n\nMuch love from RiskyKen ❤❤❤
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_2.select=Pick Misc. 2 Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_2.clear=Clear Misc. 2 Color
+
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_3.select=Pick Misc. 3 Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_3.clear=Clear Misc. 3 Color
+
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_4.select=Pick Misc. 4 Color
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_4.clear=Clear Misc. 4 Color
+
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.palette=Palette
+
+# Wardrobe - Tab Contributor
+inventory.armourers_workshop:wardrobe.tab.contributor.label.contributor=Thank you for helping with the development of Armourer's Workshop.\n\nMuch love from RiskyKen ❤❤❤
 
 
 # Mannequin

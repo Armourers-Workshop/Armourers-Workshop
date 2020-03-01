@@ -28,7 +28,7 @@ public class GuiTabWardrobeContributor extends GuiTabPanel {
     @Override
     public void initGui(int xPos, int yPos, int width, int height) {
         super.initGui(xPos, yPos, width, height);
-        checkBoxTest = new GuiCheckBox(0, 85, 130, "Test ?", testMode);
+        checkBoxTest = new GuiCheckBox(0, 85, 130, "Magic circle test?", testMode);
         
         buttonList.add(checkBoxTest);
     }
@@ -48,8 +48,8 @@ public class GuiTabWardrobeContributor extends GuiTabPanel {
     public void drawForegroundLayer(int mouseX, int mouseY, float partialTickTime) {
         super.drawForegroundLayer(mouseX, mouseY, partialTickTime);
         
-        String thanks = GuiHelper.getLocalizedControlName("wardrobe", "label.contributor");
-        thanks += "\n\n\nMore option coming here soon!";
+        String thanks = GuiHelper.getLocalizedControlName("wardrobe.tab.contributor", "label.contributor");
+        thanks += "\n\n\nOptions coming here soon!";
         
         fontRenderer.drawSplitString(thanks, 85, 26, 185, 0x404040);
         
