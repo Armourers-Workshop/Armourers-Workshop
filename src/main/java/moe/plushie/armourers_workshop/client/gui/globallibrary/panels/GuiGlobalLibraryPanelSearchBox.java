@@ -117,6 +117,9 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
     
     @Override
     public void draw(int mouseX, int mouseY, float partialTickTime) {
+        if (!visible) {
+            return;
+        }
         super.draw(mouseX, mouseY, partialTickTime);
         searchTextbox.drawTextBox();
     }

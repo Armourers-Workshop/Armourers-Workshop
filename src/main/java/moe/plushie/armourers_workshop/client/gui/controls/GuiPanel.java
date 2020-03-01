@@ -59,6 +59,14 @@ public abstract class GuiPanel extends Gui {
         return this;
     }
     
+    public int getWidth() {
+        return width;
+    }
+    
+    public int getHeight() {
+        return height;
+    }
+    
     public GuiPanel setVisible(boolean visible) {
         this.visible = visible;
         return this;

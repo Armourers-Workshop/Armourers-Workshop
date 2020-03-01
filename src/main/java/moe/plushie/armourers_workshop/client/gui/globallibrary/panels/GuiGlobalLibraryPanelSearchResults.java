@@ -39,7 +39,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     protected GuiIconButton iconButtonMedium;
     protected GuiIconButton iconButtonLarge;
 
-    protected static int iconScale = 110;
+    protected static int iconScale = 60;
 
     protected String search = null;
     protected ISkinType skinType = null;
@@ -172,18 +172,18 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         String guiName = ((GuiGlobalLibrary) parent).getGuiName();
         buttonList.clear();
 
-        skinPanelResults.init(x + 5, this.y + 24, width - 10, height - 52);
+        skinPanelResults.init(x + 2, this.y + 20, width - 4, height - 40);
         skinPanelResults.setIconSize(iconScale);
         skinPanelResults.setPanelPadding(0);
         skinPanelResults.setShowName(true);
 
-        iconButtonSmall = new GuiIconButton(parent, 0, x + width - 21 * 3, y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.small"), BUTTON_TEXTURES);
+        iconButtonSmall = new GuiIconButton(parent, 0, x + width - 21 * 3, y + 2, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.small"), BUTTON_TEXTURES);
         iconButtonSmall.setIconLocation(48, 0, 16, 16);
 
-        iconButtonMedium = new GuiIconButton(parent, 0, x + width - 21 * 2, y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.medium"), BUTTON_TEXTURES);
+        iconButtonMedium = new GuiIconButton(parent, 0, x + width - 21 * 2, y + 2, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.medium"), BUTTON_TEXTURES);
         iconButtonMedium.setIconLocation(48, 17, 16, 16);
 
-        iconButtonLarge = new GuiIconButton(parent, 0, x + width - 21, y + 5, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.large"), BUTTON_TEXTURES);
+        iconButtonLarge = new GuiIconButton(parent, 0, x + width - 21, y + 2, 16, 16, GuiHelper.getLocalizedControlName(guiName, "searchResults.large"), BUTTON_TEXTURES);
         iconButtonLarge.setIconLocation(48, 34, 16, 16);
 
         buttonList.add(iconButtonSmall);
@@ -191,8 +191,8 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         buttonList.add(iconButtonLarge);
         buttonList.add(skinPanelResults);
 
-        buttonList.add(new GuiButtonExt(1, x + 5, y + height - 25, 80, 20, "<<"));
-        buttonList.add(new GuiButtonExt(2, x + width - 85, y + height - 25, 80, 20, ">>"));
+        buttonList.add(new GuiButtonExt(1, x + 2, y + height - 18, 20, 16, "<<"));
+        buttonList.add(new GuiButtonExt(2, x + width - 22, y + height - 18, 20, 16, ">>"));
     }
 
     @Override
@@ -207,17 +207,17 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
             }
         }
         if (button == iconButtonSmall) {
-            iconScale = 50;
+            iconScale = 30;
             skinPanelResults.setIconSize(iconScale);
             resize();
         }
         if (button == iconButtonMedium) {
-            iconScale = 80;
+            iconScale = 60;
             skinPanelResults.setIconSize(iconScale);
             resize();
         }
         if (button == iconButtonLarge) {
-            iconScale = 110;
+            iconScale = 90;
             skinPanelResults.setIconSize(iconScale);
             resize();
         }

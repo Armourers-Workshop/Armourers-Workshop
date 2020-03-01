@@ -55,8 +55,8 @@ public class GuiControlSkinPanel extends GuiButtonExt {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.panelPadding = 2;
-        this.iconPadding = 5;
+        this.panelPadding = 1;
+        this.iconPadding = 1;
         this.iconSize = 50;
         this.showName = false;
         this.lastPressedSkinIcon = null;
@@ -103,7 +103,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 
                 SkinIcon skinIcon = iconList.get(i);
                 if (y < colCount) {
-                    skinIcon.drawIcon(iconX, iconY, mouseX, mouseY, iconSize, showName);
+                    skinIcon.drawIcon(iconX, iconY, mouseX, mouseY, iconSize, showName & iconSize > 30);
                 }
             }
         }
@@ -155,11 +155,23 @@ public class GuiControlSkinPanel extends GuiButtonExt {
         }
         
         public void drawIcon(int x, int y, int mouseX, int mouseY, int iconSize, boolean showName) {
+            int backgroundColour = 0x22AAAAAA;
+            int borderColour = 0x22FFFFFF;
+            
             if (mouseOver(x, y, mouseX, mouseY, iconSize)) {
-                drawRect(x, y, x + iconSize, y + iconSize, 0xC0777711);
-            } else {
-                drawRect(x, y, x + iconSize, y + iconSize, 0x22FFFFFF);
+                backgroundColour = 0xC0777711;
+                borderColour = 0xCC888811;
             }
+            
+            ModRenderHelper.enableScissorScaled(x, y, iconSize, iconSize);
+            
+            drawRect(x, y, x + iconSize, y + iconSize, backgroundColour);
+            
+            drawRect(x, y + 1, x + 1, y + iconSize, borderColour);
+            drawRect(x, y, x + iconSize - 1, y + 1, borderColour);
+            drawRect(x + 1, y + iconSize - 1, x + iconSize, y + iconSize, borderColour);
+            drawRect(x + iconSize - 1, y, x + iconSize + iconSize, y + iconSize - 1, borderColour);
+            
             SkinIdentifier identifier = new SkinIdentifier(0, null, id, null);
 
             Skin skin = ClientSkinCache.INSTANCE.getSkin(identifier);
@@ -231,6 +243,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                         256, 256
                         );
             }
+            ModRenderHelper.disableScissor();
         }
         
         public boolean mouseOver(int x, int y, int mouseX, int mouseY, int iconSize) {

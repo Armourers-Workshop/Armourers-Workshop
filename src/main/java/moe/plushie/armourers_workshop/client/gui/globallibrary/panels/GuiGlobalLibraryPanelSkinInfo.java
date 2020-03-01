@@ -73,14 +73,14 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         super.initGui();
         buttonList.clear();
         int panelCenter = this.x + this.width / 2;
-        buttonBack = new GuiButtonExt(0, panelCenter + 25, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "back"));
-        buttonDownload = new GuiButtonExt(0, panelCenter - 105, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "downloadSkin"));
-        buttonUserSkins = new GuiButtonExt(0, x + 6, y + 6, 26, 26, "");
-        buttonEditSkin = new GuiButtonExt(0, x + 6, this.y + this.height - 25, 80, 20, GuiHelper.getLocalizedControlName(guiName, "editSkin"));
+        buttonBack = new GuiButtonExt(0, 2, this.y + this.height - 18, 80, 16, GuiHelper.getLocalizedControlName(guiName, "back"));
+        buttonDownload = new GuiButtonExt(0, x + 185 + 6, this.y + this.height - 38, 80, 16, GuiHelper.getLocalizedControlName(guiName, "downloadSkin"));
+        buttonUserSkins = new GuiButtonExt(0, x + 3, y + 3, 26, 26, "");
+        buttonEditSkin = new GuiButtonExt(0, x + width - 82, this.y + this.height - 18, 80, 16, GuiHelper.getLocalizedControlName(guiName, "editSkin"));
 
-        buttonLikeSkin = new GuiIconButton(parent, 0, x + 200, this.y + 32, 20, 20, GuiHelper.getLocalizedControlName(guiName, "like"), BUTTON_TEXTURES);
+        buttonLikeSkin = new GuiIconButton(parent, 0, x + 191, this.y + 4, 20, 20, GuiHelper.getLocalizedControlName(guiName, "like"), BUTTON_TEXTURES);
         buttonLikeSkin.setIconLocation(96, 0, 16, 16);
-        buttonUnlikeSkin = new GuiIconButton(parent, 0, x + 200, this.y + 32, 20, 20, GuiHelper.getLocalizedControlName(guiName, "unlike"), BUTTON_TEXTURES);
+        buttonUnlikeSkin = new GuiIconButton(parent, 0, x + 191, this.y + 4, 20, 20, GuiHelper.getLocalizedControlName(guiName, "unlike"), BUTTON_TEXTURES);
         buttonUnlikeSkin.setIconLocation(96, 17, 16, 16);
 
         updateLikeButtons();
@@ -253,9 +253,9 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         }
 
         super.draw(mouseX, mouseY, partialTickTime);
-        drawUserbox(x + 5, y + 5, 185, 30, mouseX, mouseY, partialTickTime);
-        drawSkinInfo(skin, x + 5, y + 20 + 20, 185, height - 70, mouseX, mouseY, partialTickTime);
-        drawPreviewBox(identifier, skin, x + 195, y + 5, width - 200, height - 35, mouseX, mouseY, partialTickTime);
+        drawUserbox(x + 2, y + 2, 185, 30, mouseX, mouseY, partialTickTime);
+        drawSkinInfo(skin, x + 2, y + 30 + 4, 185, height - 54, mouseX, mouseY, partialTickTime);
+        drawPreviewBox(identifier, skin, x + 189, y + 2, width - 189 - 2, height - 22, mouseX, mouseY, partialTickTime);
     }
 
     public void drawUserbox(int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
@@ -267,7 +267,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             user = GlobalSkinLibraryUtils.getUserInfo(userId);
         }
         if (user != null) {
-            drawString(fontRenderer, I18n.format(fullName + "uploader", user.getUsername()), boxX + 28, boxY + 5, 0xFFEEEEEE);
+            drawString(fontRenderer, I18n.format(fullName + "uploader", user.getUsername()), boxX + 29, boxY + boxHeight - 12, 0xFFEEEEEE);
             GuiHelper.drawPlayerHead(boxX + 5, boxY + 5, 16, user.getUsername());
         } else {
             GuiHelper.drawPlayerHead(boxX + 5, boxY + 5, 16, null);
@@ -276,54 +276,38 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
 
     public void drawSkinInfo(Skin skin, int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
         drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
+        ModRenderHelper.enableScissorScaled(boxX, boxY, boxWidth, boxHeight);
 
         String fullName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + ".";
 
-        drawString(fontRenderer, GuiHelper.getLocalizedControlName(guiName, "title"), boxX + 5, boxY + 5, 0xFFEEEEEE);
+        String info = "";
+        
+        info += GuiHelper.getLocalizedControlName(guiName, "title") + "\n\n";
+        
         if (skinJson != null) {
-            int yOffset = 12 + 6;
-            drawString(fontRenderer, GuiHelper.getLocalizedControlName(guiName, "name"), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
-            yOffset += 12;
-            drawString(fontRenderer, skinJson.get("name").getAsString(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
-            yOffset += 12 + 6;
-            // drawString(fontRenderer, "file id: " +
-            // skinJson.get("file_name").getAsString(), boxX + 5, boxY + 5 + yOffset,
-            // 0xFFEEEEEE);
-            // yOffset += 12;
+            info += GuiHelper.getLocalizedControlName(guiName, "name") + " ";
+            info += skinJson.get("name").getAsString() + "\n\n";
+            
+            int yOffset = 100;
             if (skinJson.has("downloads")) {
-                drawString(fontRenderer, I18n.format(fullName + "downloads", skinJson.get("downloads").getAsInt()), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
-                yOffset += 12 + 6;
+                info += I18n.format(fullName + "downloads", skinJson.get("downloads").getAsInt()) + "\n\n";
             }
             if (skinJson.has("likes")) {
-                drawString(fontRenderer, I18n.format(fullName + "likes", skinJson.get("likes").getAsInt()), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
-                yOffset += 12 + 6;
+                info += I18n.format(fullName + "likes", skinJson.get("likes").getAsInt()) + "\n\n";
             }
-            /*
-             * if (skinJson.has("user_id")) { drawString(fontRenderer, "user_id: " +
-             * skinJson.get("user_id").getAsString(), boxX + 5, boxY + 5 + yOffset,
-             * 0xFFEEEEEE); yOffset += 12; }
-             */
             if (skin != null) {
-                drawString(fontRenderer, GuiHelper.getLocalizedControlName(guiName, "author"), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
-                yOffset += 12;
-                drawString(fontRenderer, skin.getAuthorName(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
-                yOffset += 12 + 6;
-                /*
-                 * if (!StringUtils.isNullOrEmpty(skin.getCustomName())) {
-                 * drawString(fontRenderer, "custom name:", boxX + 5, boxY + 5 + yOffset,
-                 * 0xFFEEEEEE); yOffset += 12; drawString(fontRenderer, skin.getCustomName(),
-                 * boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE); yOffset += 12 + 6; }
-                 */
+                info += GuiHelper.getLocalizedControlName(guiName, "author") + " ";
+                info +=  skin.getAuthorName() + "\n\n";
             }
-            drawString(fontRenderer, "Global ID: " + skinJson.get("id").getAsInt(), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
-            yOffset += 12 + 6;
+            info += "Global ID: " + skinJson.get("id").getAsInt() + "\n\n";
+            
             if (skinJson.has("description")) {
-                drawString(fontRenderer, GuiHelper.getLocalizedControlName(guiName, "description"), boxX + 5, boxY + 5 + yOffset, 0xFFEEEEEE);
-                yOffset += 12;
-                fontRenderer.drawSplitString(skinJson.get("description").getAsString(), boxX + 5, boxY + 5 + yOffset, boxWidth - 10, 0xFFEEEEEE);
-                yOffset += 12 + 6;
+                info += GuiHelper.getLocalizedControlName(guiName, "description") + " ";
+                info += skinJson.get("description").getAsString();
             }
         }
+        fontRenderer.drawSplitString(info, boxX + 2, boxY + 2, boxWidth - 4, 0xFFEEEEEE);
+        ModRenderHelper.disableScissor();
     }
 
     public void drawPreviewBox(SkinIdentifier identifier, Skin skin, int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
@@ -332,15 +316,15 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             mc.renderEngine.bindTexture(BUTTON_TEXTURES);
             int rating = (int) ((System.currentTimeMillis() / 100D) % 11);
             for (int i = 0; i < 5; i++) {
-                drawTexturedModalRect(boxX + 4 + i * 16, boxY + 4, 32, 85, 16, 16);
+                drawTexturedModalRect(boxX + 24 + i * 16, boxY + 4, 32, 85, 16, 16);
             }
             int stars = MathHelper.floor(rating / 2F);
             int halfStar = rating % 2;
             for (int i = 0; i < stars; i++) {
-                drawTexturedModalRect(boxX + 4 + i * 16, boxY + 4, 0, 85, 16, 16);
+                drawTexturedModalRect(boxX + 24 + i * 16, boxY + 4, 0, 85, 16, 16);
             }
             if (halfStar == 1) {
-                drawTexturedModalRect(boxX + 4 + stars * 16, boxY + 4, 0, 85, 8, 16);
+                drawTexturedModalRect(boxX + 24 + stars * 16, boxY + 4, 0, 85, 8, 16);
             }
             
             

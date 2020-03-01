@@ -68,10 +68,10 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
         this.player = Minecraft.getMinecraft().player;
         this.panelList = new ArrayList<GuiPanel>();
 
-        panelHeader = new GuiGlobalLibraryPanelHeader(this, 2, 2, width - 4, 26);
+        panelHeader = new GuiGlobalLibraryPanelHeader(this, 0, 0, width, 26);
         panelList.add(panelHeader);
 
-        panelSearchBox = new GuiGlobalLibraryPanelSearchBox(this, 2, 31, width - 4, 23);
+        panelSearchBox = new GuiGlobalLibraryPanelSearchBox(this, 0, 25, width, 23);
         panelList.add(panelSearchBox);
 
         panelHome = new GuiGlobalLibraryPanelHome(this, 2, 136, width / 2 - 5, height - 141);
@@ -194,10 +194,10 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
             panelList.get(i).setVisible(false);
         }
         setSlotVisibility(false);
-        int yOffset = PADDING;
-        panelHeader.setPosition(PADDING, PADDING).setSize(width - PADDING * 2, 26);
+        int yOffset = 1;
+        panelHeader.setPosition(1, 1).setSize(width - 2, 26);
         panelHeader.setVisible(true);
-        yOffset += PADDING + 26;
+        yOffset += panelHeader.getHeight() + 1;
         int neiBump = 0;
         if (isNEIVisible) {
             neiBump = 18;
@@ -205,28 +205,28 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
 
         switch (screen) {
         case HOME:
-            panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
+            panelSearchBox.setPosition(1, yOffset).setSize(width - 2, 23);
             panelSearchBox.setVisible(true);
-            yOffset += PADDING + 23;
-            panelHome.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
+            yOffset += panelSearchBox.getHeight() + 1;
+            panelHome.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
             panelHome.setVisible(true);
             break;
         case SEARCH:
-            panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
+            panelSearchBox.setPosition(1, yOffset).setSize(width - 2, 23);
             panelSearchBox.setVisible(true);
-            yOffset += PADDING + 23;
-            panelSearchResults.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
+            yOffset += panelSearchBox.getHeight() + 1;
+            panelSearchResults.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
             panelSearchResults.setVisible(true);
             break;
         case SKIN_INFO:
-            panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
+            panelSearchBox.setPosition(1, yOffset).setSize(width - 2, 23);
             panelSearchBox.setVisible(true);
-            yOffset += PADDING + 23;
-            panelSkinInfo.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
+            yOffset += panelSearchBox.getHeight() + 1;
+            panelSkinInfo.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
             panelSkinInfo.setVisible(true);
             break;
         case UPLOAD:
-            panelUpload.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
+            panelUpload.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
             panelUpload.setVisible(true);
             setSlotVisibility(true);
             break;
@@ -235,17 +235,17 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
             panelJoinBeta.setVisible(true);
             break;
         case USER_SKINS:
-            panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
+            panelSearchBox.setPosition(1, yOffset).setSize(width - 2, 23);
             panelSearchBox.setVisible(true);
-            yOffset += PADDING + 23;
-            panelUserSkins.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
+            yOffset += panelSearchBox.getHeight() + 1;
+            panelUserSkins.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
             panelUserSkins.setVisible(true);
             break;
         case SKIN_EDIT:
-            panelSearchBox.setPosition(PADDING, yOffset).setSize(width - PADDING * 2, 23);
+            panelSearchBox.setPosition(1, yOffset).setSize(width - 2, 23);
             panelSearchBox.setVisible(true);
-            yOffset += PADDING + 23;
-            panelSkinEdit.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
+            yOffset += panelSearchBox.getHeight() + 1;
+            panelSkinEdit.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
             panelSkinEdit.setVisible(true);
             break;
         default:

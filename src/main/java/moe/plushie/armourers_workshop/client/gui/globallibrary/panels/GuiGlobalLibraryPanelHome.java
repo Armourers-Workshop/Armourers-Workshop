@@ -48,13 +48,13 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
 
         buttonList.clear();
 
-        buttonShowAll = new GuiButtonExt(-1, x + 5, y + 5, 80, 20, GuiHelper.getLocalizedControlName(guiName, "home.showAllSkins"));
+        buttonShowAll = new GuiButtonExt(-1, x + 2, y + 2, 80, 16, GuiHelper.getLocalizedControlName(guiName, "home.showAllSkins"));
 
-        int boxW = (width - 15) / 2;
-        int boxH = height - 10 - 35;
-        skinPanelRecentlyUploaded.init(x + 5, y + 5 + 35, boxW, boxH);
-        skinPanelMostDownloaded.init(x + boxW + 10, y + 5 + 35, boxW, boxH / 2 - 10);
-        skinPanelMostLiked.init(x + boxW + 10, y + 5 + 35 + boxH / 2 + 5, boxW, boxH / 2 - 5);
+        int boxW = (width - 6) / 2;
+        int boxH = height - 10 - 22;
+        skinPanelRecentlyUploaded.init(x + 2, y + 2 + 28, boxW, boxH);
+        skinPanelMostDownloaded.init(x + boxW + 4, y + 2 + 28, boxW, boxH / 2 - 10);
+        skinPanelMostLiked.init(x + boxW + 4, y + 2 + 28 + boxH / 2 + 5, boxW, boxH / 2 - 5);
 
         skinPanelRecentlyUploaded.setIconSize(40);
         skinPanelMostDownloaded.setIconSize(40);
@@ -188,8 +188,8 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
         int boxW = (width - 15) / 2;
         int boxH = height - 10 - 35;
 
-        fontRenderer.drawString(labelRecentlyUploaded, x + 5, y + 30, 0xFFEEEEEE);
-        fontRenderer.drawString(labelMostDownloaded, x + boxW + 10, y + 30, 0xFFEEEEEE);
-        fontRenderer.drawString(labelMostLikes, x + boxW + 10, y + 30 + boxH / 2 + 5, 0xFFEEEEEE);
+        fontRenderer.drawString(labelRecentlyUploaded, x + 5, y + 20, 0xFFEEEEEE);
+        fontRenderer.drawString(labelMostDownloaded, x + boxW + 10, y + 20, 0xFFEEEEEE);
+        fontRenderer.drawString(labelMostLikes, x + boxW + 10, y + 28 + boxH / 2 + 5, 0xFFEEEEEE);
     }
 }
