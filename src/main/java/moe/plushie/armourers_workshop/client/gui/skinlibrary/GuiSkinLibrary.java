@@ -605,8 +605,6 @@ public class GuiSkinLibrary extends ModGuiContainer<ContainerSkinLibrary> implem
         GlStateManager.resetColor();
         GlStateManager.color(1, 1, 1, 1);
         GlStateManager.disableLighting();
-
-        dropDownList.drawForeground(mc, mouseX, mouseY, partialTickTime);
         // GlStateManager.popAttrib();
         RenderHelper.disableStandardItemLighting();
         ILibraryManager libraryManager = ArmourersWorkshop.getProxy().libraryManager;
@@ -702,8 +700,6 @@ public class GuiSkinLibrary extends ModGuiContainer<ContainerSkinLibrary> implem
         scrollAmount = scrollbar.getValue();
         fileList.setScrollAmount(scrollbar.getValue());
 
-
-
         if (showModelPreviews()) {
             GuiFileListItem item = (GuiFileListItem) fileList.getSelectedListEntry();
             if (item != null && !item.getFile().isDirectory()) {
@@ -767,11 +763,16 @@ public class GuiSkinLibrary extends ModGuiContainer<ContainerSkinLibrary> implem
         }
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.resetColor();
+
         if (dropDownList.getIsDroppedDown()) {
             super.drawScreen(0, 0, partialTickTime);
         } else {
             super.drawScreen(mouseX, mouseY, partialTickTime);
         }
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.resetColor();
+        GlStateManager.disableLighting();
+        dropDownList.drawForeground(mc, mouseX, mouseY, partialTickTime);
         if (!isDialogOpen()) {
             for (int i = 0; i < buttonList.size(); i++) {
                 GuiButton button = buttonList.get(i);
