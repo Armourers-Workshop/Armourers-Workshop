@@ -305,7 +305,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
             Contributor contributor = Contributors.INSTANCE.getContributor(te.PROP_OWNER.get());
             if (contributor != null) {
                 int offset = te.getPos().hashCode();
-                renderMagicCircle(contributor.r, contributor.g, contributor.b, partialTicks, offset, te.PROP_BIPED_ROTATIONS.get().isChild);
+                renderMagicCircle(mc, contributor.r, contributor.g, contributor.b, partialTicks, offset, te.PROP_BIPED_ROTATIONS.get().isChild);
             }
         }
         
@@ -344,7 +344,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         mc.profiler.endSection();
     }
     
-    private void renderMagicCircle(byte r, byte g, byte b, float partialTickTime, int offset, boolean isChild) {
+    public static void renderMagicCircle(Minecraft mc, byte r, byte g, byte b, float partialTickTime, int offset, boolean isChild) {
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
         if (isChild) {
@@ -361,7 +361,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         GL11.glRotatef(rotation, 0, 1, 0);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-        bindTexture(circle);
+        mc.renderEngine.bindTexture(circle);
         Tessellator tess = Tessellator.getInstance();
         tess.getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
         tess.getBuffer().pos(-1, 0, -1).tex(1, 0).color(r & 0xFF, g & 0xFF, b & 0xFF, 255).endVertex();

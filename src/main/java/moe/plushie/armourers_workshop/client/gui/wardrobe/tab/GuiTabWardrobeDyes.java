@@ -55,8 +55,10 @@ public class GuiTabWardrobeDyes extends GuiTabPanel {
         ContainerSkinWardrobe skinWardrobe = (ContainerSkinWardrobe) guiContainer.inventorySlots;
         for (int i = skinWardrobe.getIndexDyeStart(); i <  skinWardrobe.getIndexDyeEnd(); i++) {
             Slot slot = skinWardrobe.inventorySlots.get(i);
+            // Draw dye bottle slot.
             this.drawTexturedModalRect(this.x + slot.xPos - 1,  this.y + slot.yPos - 1, 238, 194, sloImageSize, sloImageSize);
-            this.drawTexturedModalRect(this.x + slot.xPos,  this.y + slot.yPos + 18, slotCount * 16, 240, sloSize, sloSize);
+            // Draw dye number.
+            this.drawTexturedModalRect(this.x + slot.xPos,  this.y + slot.yPos + 18, 112 + slotCount * 16, 240, sloSize, sloSize);
             slotCount++;
         }
     }

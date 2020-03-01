@@ -15,12 +15,15 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiTabbed;
 import moe.plushie.armourers_workshop.client.gui.style.GuiResourceManager;
 import moe.plushie.armourers_workshop.client.gui.style.GuiStyle;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeColourSettings;
+import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeContributor;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeDisplaySettings;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeDyes;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeOutfits;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeSkins;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
+import moe.plushie.armourers_workshop.common.Contributors;
+import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
@@ -34,7 +37,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -59,6 +61,7 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
     private final GuiTabWardrobeDisplaySettings tabDisplaySetting;
     private final GuiTabWardrobeColourSettings tabColourSettings;
     private final GuiTabWardrobeDyes tabDyes;
+    private final GuiTabWardrobeContributor tabContributor;
 
     EntitySkinCapability skinCapability;
     EntityPlayer player;
@@ -77,12 +80,13 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
 
         // Tab size 21
         this.xSize = 278;
-        this.ySize = 240;
+        this.ySize = 250;
 
         this.player = inventory.player;
         this.skinCapability = skinCapability;
         isPlayer = wardrobeCapability instanceof IPlayerWardrobeCap;
         boolean isCreative = player.capabilities.isCreativeMode;
+        tabController.setTabsPerSide(5);
         
         tabSkins = new GuiTabWardrobeSkins(tabList.size(), this);
         tabList.add(tabSkins);
@@ -131,9 +135,27 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
                 .setPadding(0, 4, 3, 3)
                 .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabDyes | isCreative))));
         
+        Contributor contributor = Contributors.INSTANCE.getContributor(player.getGameProfile());
+        
+        
+        tabContributor = new GuiTabWardrobeContributor(tabList.size(), this);
+        tabList.add(tabContributor);
+        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.contributor"))
+                .setIconLocation(32, 128)
+                .setTabTextureSize(26, 30)
+                .setPadding(0, 4, 3, 3)
+                .setVisable(contributor != null));
+        
+        
         tabController.setActiveTabIndex(getActiveTab());
         
         tabChanged();
+    }
+    
+    @Override
+    public void initGui() {
+        super.initGui();
+        tabController.initGui(getGuiLeft() - 17, guiTop, xSize + 42, ySize);
     }
 
     @Override
@@ -151,6 +173,10 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
         return (ContainerSkinWardrobe) inventorySlots;
     }
 
+    private void setSlotVisibilityPlayerInv(boolean visible) {
+        setSlotVisibility(getContainer().getPlayerInvStartIndex(), getContainer().getPlayerInvEndIndex(), visible);
+    }
+    
     private void setSlotVisibilitySkins(boolean visible) {
         setSlotVisibility(getContainer().getIndexSkinsStart(), getContainer().getIndexSkinsEnd(), visible);
     }
@@ -171,10 +197,15 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
             }
         }
     }
+    
+    private boolean tabNeedsPlayerSlots(int tabId) {
+        return tabId == tabSkins.getTabId() | tabId == tabOutfits.getTabId() | tabId == tabDyes.getTabId();
+    }
 
     @Override
     protected void tabChanged() {
         super.tabChanged();
+        setSlotVisibilityPlayerInv(tabNeedsPlayerSlots(getActiveTab()));
         setSlotVisibilitySkins(getActiveTab() == tabSkins.getTabId());
         setSlotVisibilityDyes(getActiveTab() == tabDyes.getTabId());
         setSlotVisibilityOutfits(getActiveTab() == tabOutfits.getTabId());
@@ -185,16 +216,21 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.enableBlend();
         mc.renderEngine.bindTexture(TEXTURE_1);
-        this.drawTexturedModalRect(getGuiLeft(), getGuiTop(), 0, 0, 256, 240);
+        this.drawTexturedModalRect(getGuiLeft(), getGuiTop(), 0, 0, 256, 151);
         mc.renderEngine.bindTexture(TEXTURE_2);
         this.drawTexturedModalRect(getGuiLeft() + 256, getGuiTop(), 0, 0, 22, 151);
-
+        
         for (int i = 0; i < tabList.size(); i++) {
             GuiTabPanel tab = tabList.get(i);
             if (tab.getTabId() == getActiveTab()) {
                 tab.drawBackgroundLayer(partialTickTime, mouseX, mouseY);
             }
         }
+        
+        if (tabNeedsPlayerSlots(getActiveTab())) {
+            GuiHelper.renderPlayerInvTexture(getGuiLeft() + 51, getGuiTop() + 152);
+        }
+        
         if (rotatingPlayer) {
             playerRotation += mouseX - lastMouseX;
             if (playerRotation < 0F) {
@@ -219,8 +255,9 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
                 tab.drawForegroundLayer(mouseX, mouseY, 0);
             }
         }
-        // Player inventory label.
-        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 58, this.ySize - 96 + 2, guiStyle.getColour("text"));
+        if (tabNeedsPlayerSlots(getActiveTab())) {
+            GuiHelper.renderPlayerInvlabel(51, 152, fontRenderer, guiStyle.getColour("text"));
+        }
         GL11.glPushMatrix();
         GL11.glTranslatef(-guiLeft, -guiTop, 0F);
         tabController.drawHoverText(mc, mouseX, mouseY);

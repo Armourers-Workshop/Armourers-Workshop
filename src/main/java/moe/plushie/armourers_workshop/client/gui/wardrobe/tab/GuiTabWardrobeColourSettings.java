@@ -32,7 +32,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiTabWardrobeColourSettings extends GuiTabPanel {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.GUI_WARDROBE_2);
+    private static final ResourceLocation TEXTURE_1 = new ResourceLocation(LibGuiResources.GUI_WARDROBE_1);
+    private static final ResourceLocation TEXTURE_2 = new ResourceLocation(LibGuiResources.GUI_WARDROBE_2);
     private static final ResourceLocation GUI_JSON = new ResourceLocation(LibGuiResources.JSON_WARDROBE);
     private static final ResourceLocation TEXTURE_BUTTONS = new ResourceLocation(LibGuiResources.CONTROL_BUTTONS);
 
@@ -236,9 +237,13 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         // Acc colour display
         drawColourDisplay(159, 70, colourMisc);
         GlStateManager.color(1F, 1F, 1F, 1F);
+
         // Palette
-        mc.renderEngine.bindTexture(TEXTURE);
-        this.drawTexturedModalRect(this.x + 83, this.y + 88, 22, 0, 128, 56);
+        mc.renderEngine.bindTexture(TEXTURE_1);
+        this.drawTexturedModalRect(this.x, this.y + 152, 0, 152, 256, 98);
+
+        mc.renderEngine.bindTexture(TEXTURE_2);
+        this.drawTexturedModalRect(this.x + 256, this.y + 152, 0, 152, 22, 98);
     }
 
     private void drawColourDisplay(int x, int y, Color colour) {
@@ -276,6 +281,8 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
 
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 83, 58, guiStyle.getColour("text"));
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.miscColour") + ":", 159, 58, guiStyle.getColour("text"));
+
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.palette"), 6, 152 + 5, guiStyle.getColour("text"));
 
         getColours();
 

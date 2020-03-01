@@ -441,11 +441,13 @@ inventory.armourers_workshop:wardrobe.tab.outfits=Outfits
 inventory.armourers_workshop:wardrobe.tab.displaySettings=Display Settings
 inventory.armourers_workshop:wardrobe.tab.colourSettings=Color Settings
 inventory.armourers_workshop:wardrobe.tab.dyes=Dyes
+inventory.armourers_workshop:wardrobe.tab.contributor=Contributor
 
 inventory.armourers_workshop:wardrobe.label.skinColour=Skin Color
 inventory.armourers_workshop:wardrobe.label.hairColour=Hair Color
 inventory.armourers_workshop:wardrobe.label.eyeColour=Eye Color
 inventory.armourers_workshop:wardrobe.label.miscColour=Misc. Color
+inventory.armourers_workshop:wardrobe.label.palette=Palette
 
 inventory.armourers_workshop:wardrobe.skinSelect=Pick Skin Color
 inventory.armourers_workshop:wardrobe.skinAuto=Auto Skin Color
@@ -467,6 +469,8 @@ inventory.armourers_workshop:wardrobe.renderHeadArmour=Render head armor?
 inventory.armourers_workshop:wardrobe.renderChestArmour=Render chest armor?
 inventory.armourers_workshop:wardrobe.renderLegArmour=Render leg armor?
 inventory.armourers_workshop:wardrobe.renderFootArmour=Render foot armor?
+
+inventory.armourers_workshop:wardrobe.label.contributor=Thank you for helping with the development of Armourer's Workshop.\n\nMuch love from RiskyKen ❤❤❤
 
 
 # Mannequin
