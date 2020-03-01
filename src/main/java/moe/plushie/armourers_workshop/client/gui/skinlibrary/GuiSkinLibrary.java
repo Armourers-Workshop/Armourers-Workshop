@@ -165,7 +165,7 @@ public class GuiSkinLibrary extends ModGuiContainer<ContainerSkinLibrary> implem
         buttonList.add(openFolderButton);
 
         reloadButton = new GuiIconButton(this, -1, PADDING * 2 + 20, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.refresh"), texture);
-        reloadButton.setIconLocation(75, 93, 24, 24);
+        reloadButton.setIconLocation(73, 93, 24, 24);
         buttonList.add(reloadButton);
 
         deleteButton = new GuiIconButton(this, -1, PADDING * 3 + 40, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.deleteSkin"), texture);
@@ -174,11 +174,11 @@ public class GuiSkinLibrary extends ModGuiContainer<ContainerSkinLibrary> implem
         deleteButton.enabled = false;
 
         newFolderButton = new GuiIconButton(this, -1, PADDING * 4 + 60, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.newFolder"), texture);
-        newFolderButton.setIconLocation(75, 118, 24, 24);
+        newFolderButton.setIconLocation(73, 118, 24, 24);
         buttonList.add(newFolderButton);
 
         backButton = new GuiIconButton(this, -1, INVENTORY_WIDTH + PADDING - 24, guiTop + 80, 24, 24, GuiHelper.getLocalizedControlName(guiName, "rollover.back"), texture);
-        backButton.setIconLocation(150, 93, 24, 24);
+        backButton.setIconLocation(146, 93, 24, 24);
         buttonList.add(backButton);
 
         int listWidth = this.width - INVENTORY_WIDTH - PADDING * 5;
