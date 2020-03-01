@@ -33,9 +33,9 @@ public final class PaintRegistry {
     public static final PaintType PAINT_TYPE_HAIR = new PaintType(254, 11, true, "hair").setExtraColourType(ExtraColourType.HAIR);
     public static final PaintType PAINT_TYPE_EYES = new PaintType(251, 12, true, "eye").setExtraColourType(ExtraColourType.EYE);
     public static final PaintType PAINT_TYPE_MISC_1 = new PaintType(252, 13, true, "misc_1").setExtraColourType(ExtraColourType.MISC_1);
-    public static final PaintType PAINT_TYPE_MISC_2 = new PaintType(250, 13, true, "misc_2").setExtraColourType(ExtraColourType.MISC_2);
-    public static final PaintType PAINT_TYPE_MISC_3 = new PaintType(249, 13, true, "misc_3").setExtraColourType(ExtraColourType.MISC_3);
-    public static final PaintType PAINT_TYPE_MISC_4 = new PaintType(248, 13, true, "misc_4").setExtraColourType(ExtraColourType.MISC_4);
+    public static final PaintType PAINT_TYPE_MISC_2 = new PaintType(250, 20, true, "misc_2").setExtraColourType(ExtraColourType.MISC_2);
+    public static final PaintType PAINT_TYPE_MISC_3 = new PaintType(249, 21, true, "misc_3").setExtraColourType(ExtraColourType.MISC_3);
+    public static final PaintType PAINT_TYPE_MISC_4 = new PaintType(248, 22, true, "misc_4").setExtraColourType(ExtraColourType.MISC_4);
 
     public static final PaintType PAINT_TYPE_NORMAL = new PaintType(255, 0, "normal");
 
