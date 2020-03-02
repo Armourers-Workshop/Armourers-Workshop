@@ -115,9 +115,10 @@ public class CommonProxy implements ILibraryCallback {
 
         ModCapabilityManager.register();
 
+        // Set API stuff!
         ReflectionHelper.setPrivateValue(ArmourersWorkshopApi.class, null, SkinNBTUtils.INSTANCE, "skinNBTUtils");
         ReflectionHelper.setPrivateValue(ArmourersWorkshopApi.class, null, SkinTypeRegistry.INSTANCE, "skinTypeRegistry");
-        ReflectionHelper.setPrivateValue(ArmourersWorkshopApi.class, null, SkinnableEntityRegisty.INSTANCE, "npcSkinDataHandler");
+        ReflectionHelper.setPrivateValue(ArmourersWorkshopApi.class, null, SkinnableEntityRegisty.INSTANCE, "skinnableEntityRegisty");
         ReflectionHelper.setPrivateValue(ArmourersWorkshopApi.class, null, paintTypeRegistry, "paintTypeRegistry");
     }
 
