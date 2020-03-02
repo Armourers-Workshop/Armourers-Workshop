@@ -58,12 +58,12 @@ processResources {
     }
 }
 
-//task apiJar(type: Jar) {
-//    from sourceSets.main.allSource
-//    from sourceSets.main.output
-//    include 'riskyken/armourersWorkshop/api/**'
-//    classifier = 'api'
-//}
+task apiJar(type: Jar) {
+    from sourceSets.main.allSource
+    from sourceSets.main.output
+    include 'moe/plushie/armourers_workshop/api/**'
+    classifier = 'api'
+}
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
@@ -76,7 +76,7 @@ task deobfJar(type: Jar) {
 }
 
 artifacts {
-    // archives apiJar
+    archives apiJar
     archives sourcesJar
     archives deobfJar
 }
