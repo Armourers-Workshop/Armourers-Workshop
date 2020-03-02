@@ -18,7 +18,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
-import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
+import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntityRegisty;
 import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntity;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -53,7 +53,7 @@ public class AddonHauntedAstolfoBeanPlushie extends ModAddon {
     @Override
     public void init() {
         ModLogger.log("Haunted Astolfo Bean Plushie mod detected! - Applying bulge to mannequins.");
-        EntitySkinHandler.INSTANCE.registerEntity(new SkinnableEntityCustomEntity());
+        SkinnableEntityRegisty.INSTANCE.registerEntity(new SkinnableEntityCustomEntity());
     }
 
     public static class SkinnableEntityCustomEntity extends SkinnableEntity {

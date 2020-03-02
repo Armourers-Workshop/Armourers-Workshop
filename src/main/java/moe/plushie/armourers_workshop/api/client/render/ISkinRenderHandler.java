@@ -5,8 +5,6 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 
 public interface ISkinRenderHandler {
@@ -48,6 +46,4 @@ public interface ISkinRenderHandler {
     public ModelBase getArmourerHandModel();
     
     public ISkin getSkinFromModelCache(ISkinDescriptor skinPointer);
-    
-    public boolean isArmourRenderOverridden(EntityPlayer player, EntityEquipmentSlot slotId);
 }

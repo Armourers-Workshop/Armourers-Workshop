@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Level;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererBibed;
 import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererHeldItem;
-import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
+import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntityRegisty;
 import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntity;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -36,8 +36,8 @@ public class AddonOverlord extends ModAddon {
     @Override
     public void init() {
         if (isModLoaded()) {
-            EntitySkinHandler.INSTANCE.registerEntity(new SkinnableEntityCustomEntity(ENTITY_SKELETON_WARRIOR_CLASS_NAME));
-            EntitySkinHandler.INSTANCE.registerEntity(new SkinnableEntityCustomEntity(ENTITY_CONVERTED_SKELETON));
+            SkinnableEntityRegisty.INSTANCE.registerEntity(new SkinnableEntityCustomEntity(ENTITY_SKELETON_WARRIOR_CLASS_NAME));
+            SkinnableEntityRegisty.INSTANCE.registerEntity(new SkinnableEntityCustomEntity(ENTITY_CONVERTED_SKELETON));
         }
     }
 

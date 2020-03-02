@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.common.init.items;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
-import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
+import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntityRegisty;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,7 +22,7 @@ public class ItemWandOfStyle extends AbstractModItem {
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
         if (entity instanceof EntityLivingBase) {
-            if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity((EntityLivingBase) entity, player)) {
+            if (SkinnableEntityRegisty.INSTANCE.canUseWandOfStyleOnEntity((EntityLivingBase) entity, player)) {
                 if (entity.getEntityWorld().isRemote) {
                     return true;
                 }
@@ -40,7 +40,7 @@ public class ItemWandOfStyle extends AbstractModItem {
     
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
-        if (EntitySkinHandler.INSTANCE.canUseWandOfStyleOnEntity(target, playerIn)) {
+        if (SkinnableEntityRegisty.INSTANCE.canUseWandOfStyleOnEntity(target, playerIn)) {
             if (target.getEntityWorld().isRemote) {
                 return true;
             }

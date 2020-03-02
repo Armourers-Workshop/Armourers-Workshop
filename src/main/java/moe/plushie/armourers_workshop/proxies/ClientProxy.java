@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Level;
 import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.ArmourersWorkshopClientApi;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
@@ -23,6 +24,7 @@ import moe.plushie.armourers_workshop.client.handler.ModClientFMLEventHandler;
 import moe.plushie.armourers_workshop.client.handler.PlayerTextureHandler;
 import moe.plushie.armourers_workshop.client.handler.RehostedJarHandler;
 import moe.plushie.armourers_workshop.client.handler.SkinPreviewHandler;
+import moe.plushie.armourers_workshop.client.handler.SkinRenderHandlerApi;
 import moe.plushie.armourers_workshop.client.library.ClientLibraryManager;
 import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.client.model.ModelMannequin;
@@ -144,6 +146,8 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         enableCrossModSupport();
         new RehostedJarHandler(event.getSourceFile(), "Armourers-Workshop-" + LibModInfo.MOD_VERSION + ".jar");
         new GuiResourceManager();
+
+        ReflectionHelper.setPrivateValue(ArmourersWorkshopClientApi.class, null, SkinRenderHandlerApi.INSTANCE, "skinRenderHandler");
     }
 
     @Override

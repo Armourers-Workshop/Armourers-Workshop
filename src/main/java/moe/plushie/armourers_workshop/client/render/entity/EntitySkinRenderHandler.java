@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import moe.plushie.armourers_workshop.api.client.render.entity.ISkinnableEntityRenderer;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
-import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
+import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntityRegisty;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,7 +35,7 @@ public final class EntitySkinRenderHandler {
     
     private void loadEntityRenderers() {
         ModLogger.log("Adding layer renderers to entities");
-        ArrayList<ISkinnableEntity> skinnableEntities = EntitySkinHandler.INSTANCE.getRegisteredEntities();
+        ArrayList<ISkinnableEntity> skinnableEntities = SkinnableEntityRegisty.INSTANCE.getRegisteredEntities();
         for (int i = 0; i < skinnableEntities.size(); i++) {
             ISkinnableEntity skinnableEntity = skinnableEntities.get(i);
             ModLogger.log("Adding layer renderer to entity " + skinnableEntity.getEntityClass());

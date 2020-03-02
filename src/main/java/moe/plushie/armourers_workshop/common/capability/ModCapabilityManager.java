@@ -19,7 +19,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWa
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeStorage;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
+import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntityRegisty;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -84,7 +84,7 @@ public final class ModCapabilityManager {
             return;
         }
         EntityLivingBase entityLivingBase = (EntityLivingBase) event.getObject();
-        ISkinnableEntity skinnableEntity = EntitySkinHandler.INSTANCE.getSkinnableEntity(entityLivingBase);
+        ISkinnableEntity skinnableEntity = SkinnableEntityRegisty.INSTANCE.getSkinnableEntity(entityLivingBase);
         if (skinnableEntity == null) {
             return;
         }

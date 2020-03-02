@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Random;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.common.skin.entity.IEntitySkinHandler;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
+import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntityRegisty;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.library.ILibraryManager;
@@ -18,17 +18,17 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 
-public final class EntitySkinHandler implements IEntitySkinHandler {
+public final class SkinnableEntityRegisty implements ISkinnableEntityRegisty {
     
-    public static EntitySkinHandler INSTANCE;
+    public static SkinnableEntityRegisty INSTANCE;
     
     private HashMap<Class <? extends EntityLivingBase>, ISkinnableEntity> entityMap;
     
     public static void init() {
-        INSTANCE = new EntitySkinHandler();
+        INSTANCE = new SkinnableEntityRegisty();
     }
     
-    public EntitySkinHandler() {
+    public SkinnableEntityRegisty() {
         MinecraftForge.EVENT_BUS.register(this);
         entityMap = new HashMap<Class <? extends EntityLivingBase>, ISkinnableEntity>();
         registerEntities();
@@ -56,6 +56,7 @@ public final class EntitySkinHandler implements IEntitySkinHandler {
         entityMap.put(skinnableEntity.getEntityClass(), skinnableEntity);
     }
     
+    @Override
     public ISkinnableEntity getSkinnableEntity(EntityLivingBase entity) {
         if (entityMap.containsKey(entity.getClass())) {
             return entityMap.get(entity.getClass());

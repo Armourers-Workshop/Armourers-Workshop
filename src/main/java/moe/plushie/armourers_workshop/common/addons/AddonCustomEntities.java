@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Level;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererBibed;
 import moe.plushie.armourers_workshop.client.render.entity.SkinLayerRendererHeldItem;
-import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
+import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntityRegisty;
 import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntity;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -35,7 +35,7 @@ public class AddonCustomEntities extends ModAddon {
     @Override
     public void init() {
         if (isModLoaded()) {
-            EntitySkinHandler.INSTANCE.registerEntity(new SkinnableEntityCustomEntity());
+            SkinnableEntityRegisty.INSTANCE.registerEntity(new SkinnableEntityCustomEntity());
         }
     }
 

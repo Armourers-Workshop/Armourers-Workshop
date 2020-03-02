@@ -22,7 +22,7 @@ import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
-import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
+import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntityRegisty;
 import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntity;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -60,7 +60,7 @@ public class AddonCustomNPCS extends ModAddon {
     @Override
     public void init() {
         if (isModLoaded()) {
-            EntitySkinHandler.INSTANCE.registerEntity(new SkinnableEntityCustomNPC());
+            SkinnableEntityRegisty.INSTANCE.registerEntity(new SkinnableEntityCustomNPC());
         }
     }
 

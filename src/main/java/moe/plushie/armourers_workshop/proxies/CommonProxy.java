@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Level;
 import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.ArmourersWorkshopApi;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.capability.ModCapabilityManager;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
@@ -42,10 +43,11 @@ import moe.plushie.armourers_workshop.common.skin.advanced.value.SkinValueRegist
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
-import moe.plushie.armourers_workshop.common.skin.entity.EntitySkinHandler;
+import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntityRegisty;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.SkinNBTUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -57,6 +59,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 @Mod.EventBusSubscriber(modid = LibModInfo.ID)
 public class CommonProxy implements ILibraryCallback {
@@ -67,7 +70,7 @@ public class CommonProxy implements ILibraryCallback {
     private File skinLibraryDirectory;
 
     private PaintTypeRegistry paintTypeRegistry;
-    
+
     private static ModItems modItems;
     private static ModBlocks modBlocks;
     private static ModSounds modSounds;
@@ -108,9 +111,14 @@ public class CommonProxy implements ILibraryCallback {
         modBlocks = new ModBlocks();
         modSounds = new ModSounds();
 
-        EntitySkinHandler.init();
+        SkinnableEntityRegisty.init();
 
         ModCapabilityManager.register();
+
+        ReflectionHelper.setPrivateValue(ArmourersWorkshopApi.class, null, SkinNBTUtils.INSTANCE, "skinNBTUtils");
+        ReflectionHelper.setPrivateValue(ArmourersWorkshopApi.class, null, SkinTypeRegistry.INSTANCE, "skinTypeRegistry");
+        ReflectionHelper.setPrivateValue(ArmourersWorkshopApi.class, null, SkinnableEntityRegisty.INSTANCE, "npcSkinDataHandler");
+        ReflectionHelper.setPrivateValue(ArmourersWorkshopApi.class, null, paintTypeRegistry, "paintTypeRegistry");
     }
 
     public void initLibraryManager() {
@@ -150,7 +158,7 @@ public class CommonProxy implements ILibraryCallback {
     public void receivedCommandFromSever(CommandType command) {
 
     }
-    
+
     public PaintTypeRegistry getPaintTypeRegistry() {
         return paintTypeRegistry;
     }
