@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.Loader;
 
 public final class ArmourersWorkshopApi {
 
-    @CapabilityInject(IWardrobeCap.class)
+    @CapabilityInject(IEntitySkinCapability.class)
     public static final Capability<IEntitySkinCapability> ENTITY_SKIN_CAP = null;
 
     @CapabilityInject(IWardrobeCap.class)
