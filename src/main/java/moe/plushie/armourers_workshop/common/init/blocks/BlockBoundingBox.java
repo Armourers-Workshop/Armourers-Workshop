@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
@@ -13,8 +14,7 @@ import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.permission.Permission;
 import moe.plushie.armourers_workshop.common.skin.SkinTextureHelper;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
@@ -198,8 +198,8 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                 if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
                     Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, facing);
                     int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
-                    PaintType paintType = PaintRegistry.getPaintTypeFromColour(colour);
-                    if (paintType != PaintRegistry.PAINT_TYPE_NONE) {
+                    IPaintType paintType = PaintTypeRegistry.getInstance().getPaintTypeFromColour(colour);
+                    if (paintType != PaintTypeRegistry.PAINT_TYPE_NONE) {
                         return colour;
                     } else {
                         if (te.getWorld().isRemote) {
@@ -244,7 +244,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public void setPaintType(IBlockAccess world, BlockPos pos, PaintType paintType, EnumFacing facing) {
+    public void setPaintType(IBlockAccess world, BlockPos pos, IPaintType paintType, EnumFacing facing) {
         if (world.getBlockState(pos.offset(facing)).getBlock() == this) {
             return;
         }
@@ -256,7 +256,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                     ISkinType skinType = parent.getSkinType();
                     Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, facing);
                     int oldColour = parent.getPaintData(texturePoint.x, texturePoint.y);
-                    int newColour = PaintRegistry.setPaintTypeOnColour(paintType, oldColour);
+                    int newColour = PaintTypeRegistry.getInstance().setPaintTypeOnColour(paintType, oldColour);
                     parent.updatePaintData(texturePoint.x, texturePoint.y, newColour);
                 }
             }
@@ -264,9 +264,9 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     }
     
     @Override
-    public PaintType getPaintType(IBlockAccess world, BlockPos pos, EnumFacing facing) {
+    public IPaintType getPaintType(IBlockAccess world, BlockPos pos, EnumFacing facing) {
         if (world.getBlockState(pos.offset(facing)).getBlock() == this) {
-            return PaintRegistry.PAINT_TYPE_NORMAL;
+            return PaintTypeRegistry.PAINT_TYPE_NORMAL;
         }
         
         TileEntity te = world.getTileEntity(pos);
@@ -276,11 +276,11 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
                 if (((TileEntityBoundingBox)te).getSkinPart() instanceof ISkinPartTypeTextured) {
                     Point texturePoint = SkinTextureHelper.getTextureLocationFromWorldBlock((TileEntityBoundingBox)te, facing);
                     int colour = parent.getPaintData(texturePoint.x, texturePoint.y);
-                    return PaintRegistry.getPaintTypeFromColour(colour);
+                    return PaintTypeRegistry.getInstance().getPaintTypeFromColour(colour);
                 }
             }
         }
-        return PaintRegistry.PAINT_TYPE_NORMAL;
+        return PaintTypeRegistry.PAINT_TYPE_NORMAL;
     }
 
     @Override

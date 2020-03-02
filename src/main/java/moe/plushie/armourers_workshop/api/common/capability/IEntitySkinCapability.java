@@ -1,8 +1,8 @@
-package moe.plushie.armourers_workshop.common.capability.entityskin;
+package moe.plushie.armourers_workshop.api.common.capability;
 
+import moe.plushie.armourers_workshop.api.common.ISkinInventoryContainer;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.common.inventory.SkinInventoryContainer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
@@ -67,7 +67,7 @@ public interface IEntitySkinCapability {
     public boolean setStackInNextFreeSlot(ItemStack stack);
     
     //TODO Change this to use CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
-    public SkinInventoryContainer getSkinInventoryContainer();
+    public ISkinInventoryContainer getSkinInventoryContainer();
     
     public void clear();
     

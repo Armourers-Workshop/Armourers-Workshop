@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.common.init.items.paintingtool;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPaintingTool;
 import moe.plushie.armourers_workshop.common.init.items.AbstractModItem;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import net.minecraft.item.ItemStack;
 
@@ -67,12 +67,12 @@ public class ItemPaintballGun extends AbstractModItem implements IPaintingTool {
     }
     
     @Override
-    public void setToolPaintType(ItemStack stack, PaintType paintType) {
+    public void setToolPaintType(ItemStack stack, IPaintType paintType) {
         PaintingHelper.setToolPaint(stack, paintType);
     }
     
     @Override
-    public PaintType getToolPaintType(ItemStack stack) {
+    public IPaintType getToolPaintType(ItemStack stack) {
         return PaintingHelper.getToolPaintType(stack) ;
     }
 }

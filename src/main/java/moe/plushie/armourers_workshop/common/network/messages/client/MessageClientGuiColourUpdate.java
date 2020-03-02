@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -15,12 +15,12 @@ public class MessageClientGuiColourUpdate implements IMessage, IMessageHandler<M
 
     int colour;
     boolean item;
-    PaintType paintType;
+    IPaintType paintType;
 
     public MessageClientGuiColourUpdate() {
     }
 
-    public MessageClientGuiColourUpdate(int colour, boolean item, PaintType paintType) {
+    public MessageClientGuiColourUpdate(int colour, boolean item, IPaintType paintType) {
         this.colour = colour;
         this.item = item;
         this.paintType = paintType;
@@ -30,7 +30,7 @@ public class MessageClientGuiColourUpdate implements IMessage, IMessageHandler<M
     public void fromBytes(ByteBuf buf) {
         this.colour = buf.readInt();
         this.item = buf.readBoolean();
-        this.paintType = PaintRegistry.getPaintTypeFromIndex(buf.readInt());
+        this.paintType = PaintTypeRegistry.getInstance().getPaintTypeFromIndex(buf.readInt());
     }
 
     @Override

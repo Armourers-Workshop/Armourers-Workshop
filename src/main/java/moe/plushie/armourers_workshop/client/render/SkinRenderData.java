@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.client.render;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
@@ -13,18 +14,18 @@ public class SkinRenderData {
 
     private final float scale;
     private final ISkinDye skinDye;
-    private final ExtraColours extraColours;
+    private final IExtraColours extraColours;
     private final int lod;
     private final boolean doLodLoading;
     private final boolean showSkinPaint;
     private final boolean itemRender;
     private final ResourceLocation entityTexture;
 
-    public SkinRenderData(float scale, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading, boolean showSkinPaint, boolean itemRender, ResourceLocation entityTexture) {
+    public SkinRenderData(float scale, ISkinDye skinDye, IExtraColours extraColours, double distance, boolean doLodLoading, boolean showSkinPaint, boolean itemRender, ResourceLocation entityTexture) {
         this(scale, skinDye, extraColours, getLOD(distance), doLodLoading, showSkinPaint, itemRender, entityTexture);
     }
 
-    public SkinRenderData(float scale, ISkinDye skinDye, ExtraColours extraColours, int lod, boolean doLodLoading, boolean showSkinPaint, boolean itemRender, ResourceLocation entityTexture) {
+    public SkinRenderData(float scale, ISkinDye skinDye, IExtraColours extraColours, int lod, boolean doLodLoading, boolean showSkinPaint, boolean itemRender, ResourceLocation entityTexture) {
         this.scale = scale;
         if (skinDye == null) {
             this.skinDye = BLANK_DYE;
@@ -51,7 +52,7 @@ public class SkinRenderData {
         return skinDye;
     }
 
-    public ExtraColours getExtraColours() {
+    public IExtraColours getExtraColours() {
         return extraColours;
     }
 

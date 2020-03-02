@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.common.skin.type.block;
 
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
 import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperties;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.AbstractSkinPartTypeBase;
 
 public class SkinBlockPartBase extends AbstractSkinPartTypeBase {
@@ -21,7 +21,7 @@ public class SkinBlockPartBase extends AbstractSkinPartTypeBase {
     }
 
     @Override
-    public void renderBuildingGuide(float scale, SkinProperties skinProps, boolean showHelper) {
+    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
     }
     
     @Override

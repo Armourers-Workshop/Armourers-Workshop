@@ -3,10 +3,10 @@ package moe.plushie.armourers_workshop.client.skin;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
 import moe.plushie.armourers_workshop.utils.BitwiseUtils;
@@ -32,9 +32,9 @@ public class SkinModelTexture extends AbstractTexture {
 
 
                 int paintColour = skin.getPaintData()[ix + (iy * SkinTexture.TEXTURE_WIDTH)];
-                PaintType paintType = PaintRegistry.getPaintTypeFromColour(paintColour);
+                IPaintType paintType = PaintTypeRegistry.getInstance().getPaintTypeFromColour(paintColour);
                 if (cmk != null) {
-                    if (paintType == PaintRegistry.PAINT_TYPE_NORMAL) {
+                    if (paintType == PaintTypeRegistry.PAINT_TYPE_NORMAL) {
                         texture.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
                     } else if (paintType.getColourType() != null) {
                         int colour = dyeColour(cmk.getExtraColours().getColourBytes(paintType.getColourType()), paintColour, paintType.getChannelIndex(), skin, cmk);
@@ -44,8 +44,8 @@ public class SkinModelTexture extends AbstractTexture {
                         int dyeNumber = paintType.getId() - 1;
                         if (skinDye.haveDyeInSlot(dyeNumber)) {
                             byte[] dye = skinDye.getDyeColour(dyeNumber);
-                            PaintType dyeType = PaintRegistry.getPaintTypeFormByte(dye[3]);
-                            if (dyeType != PaintRegistry.PAINT_TYPE_NONE) {
+                            IPaintType dyeType = PaintTypeRegistry.getInstance().getPaintTypeFormByte(dye[3]);
+                            if (dyeType != PaintTypeRegistry.PAINT_TYPE_NONE) {
                                 int colour = dyeColour(dye, paintColour, paintType.getChannelIndex(), skin, cmk);
                                 texture.setRGB(ix, iy, colour);
                             }
@@ -54,7 +54,7 @@ public class SkinModelTexture extends AbstractTexture {
                         }
                     }
                 } else {
-                    if (paintType == PaintRegistry.PAINT_TYPE_NORMAL) {
+                    if (paintType == PaintTypeRegistry.PAINT_TYPE_NORMAL) {
                         texture.setRGB(ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
                     }
                     if (paintType.getId() >= 1 & paintType.getId() <= 8) {
@@ -73,7 +73,7 @@ public class SkinModelTexture extends AbstractTexture {
         byte b = (byte) (colour & 0xFF);
         
         if (dye.length > 3) {
-            PaintType t = PaintRegistry.getPaintTypeFormByte(dye[3]);
+            IPaintType t = PaintTypeRegistry.getInstance().getPaintTypeFormByte(dye[3]);
             if (t.getColourType() != null) {
                 //dye = cmk.getExtraColours().getColourBytes(t.getColourType());
             }

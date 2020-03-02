@@ -2,8 +2,9 @@ package moe.plushie.armourers_workshop.common.painting;
 
 import java.awt.Color;
 
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -92,12 +93,12 @@ public final class PaintingHelper {
     
     public static Color getToolDisplayColour(ItemStack stack) {
         byte[] rgbt = getToolPaintData(stack);
-        PaintType paintType = PaintRegistry.getPaintTypeFormByte(rgbt[3]);
-        if (paintType == PaintRegistry.PAINT_TYPE_RAINBOW) {
+        IPaintType paintType = PaintTypeRegistry.getInstance().getPaintTypeFormByte(rgbt[3]);
+        if (paintType == PaintTypeRegistry.PAINT_TYPE_RAINBOW) {
             return getRainbowColour();
-        } else if (paintType == PaintRegistry.PAINT_TYPE_PULSE_1) {
+        } else if (paintType == PaintTypeRegistry.PAINT_TYPE_PULSE_1) {
             return getPulse1Colour(rgbt);
-        } else if (paintType == PaintRegistry.PAINT_TYPE_PULSE_2) {
+        } else if (paintType == PaintTypeRegistry.PAINT_TYPE_PULSE_2) {
             return getPulse2Colour(rgbt);
         }
         return new Color(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, 255);
@@ -108,7 +109,7 @@ public final class PaintingHelper {
      * @param stack Item stack to set the paint type on.
      * @param paintType Paint type to set.
      */
-    public static void setToolPaint(ItemStack stack, PaintType paintType) {
+    public static void setToolPaint(ItemStack stack, IPaintType paintType) {
         byte[] rgbt = getToolPaintData(stack);
         rgbt[3] = (byte)paintType.getId();
         setToolPaintData(stack, rgbt);
@@ -119,9 +120,9 @@ public final class PaintingHelper {
      * @param stack Item stack to get the paint type from.
      * @return Paint type enum.
      */
-    public static PaintType getToolPaintType(ItemStack stack) {
+    public static IPaintType getToolPaintType(ItemStack stack) {
         byte[] rgbt = getToolPaintData(stack);
-        return PaintRegistry.getPaintTypeFormByte(rgbt[3]);
+        return PaintTypeRegistry.getInstance().getPaintTypeFormByte(rgbt[3]);
     }
     
     public static byte[] getToolPaintData(ItemStack stack) {
@@ -167,12 +168,12 @@ public final class PaintingHelper {
     }
     
     public static double getPaintTextureOffset() {
-        double f = (double)(System.currentTimeMillis() % (255L * 25)) / 25D;
+        double f = System.currentTimeMillis() % (255L * 25) / 25D;
         return Math.round(f);
     }
     
     private static Color getRainbowColour() {
-        float f = (float)(System.currentTimeMillis() % (255L * 25)) / 25F;
+        float f = System.currentTimeMillis() % (255L * 25) / 25F;
         return new Color(Color.HSBtoRGB(f / 255F, 1F, 1F));
     }
     
@@ -199,7 +200,7 @@ public final class PaintingHelper {
     }
     
     @SideOnly(Side.CLIENT)
-    public static ExtraColours getLocalPlayerExtraColours() {
+    public static IExtraColours getLocalPlayerExtraColours() {
         IWardrobeCap wardrobeCapability = WardrobeCap.get(Minecraft.getMinecraft().player);
         if (wardrobeCapability != null) {
             return wardrobeCapability.getExtraColours();

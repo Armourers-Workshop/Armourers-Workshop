@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.common.network.messages.client;
 import org.apache.logging.log4j.Level;
 
 import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.entity.Entity;

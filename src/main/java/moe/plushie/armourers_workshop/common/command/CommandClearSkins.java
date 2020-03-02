@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.common.command;
 
 import java.util.List;
 
+import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;

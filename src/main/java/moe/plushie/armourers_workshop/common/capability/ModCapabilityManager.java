@@ -2,18 +2,18 @@ package moe.plushie.armourers_workshop.common.capability;
 
 import java.util.concurrent.Callable;
 
+import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinProvider;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinStorage;
-import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.holiday.HolidayTrackCap;
 import moe.plushie.armourers_workshop.common.capability.holiday.IHolidayTrackCap;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeProvider;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeStorage;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeProvider;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeStorage;

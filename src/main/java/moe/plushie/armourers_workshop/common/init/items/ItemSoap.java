@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.common.init.blocks.BlockBoundingBox;
 import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.init.sounds.ModSounds;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumActionResult;
@@ -32,7 +32,7 @@ public class ItemSoap extends AbstractModItem {
             BlockBoundingBox bb = (BlockBoundingBox) state.getBlock();
             if (!worldIn.isRemote) {
                 bb.setColour(worldIn, pos, 0x00FFFFFF, facing);
-                bb.setPaintType(worldIn, pos, PaintRegistry.PAINT_TYPE_NONE, facing);
+                bb.setPaintType(worldIn, pos, PaintTypeRegistry.PAINT_TYPE_NONE, facing);
                 worldIn.playSound(null, pos, ModSounds.PAINT, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 0.9F);
             }
             return EnumActionResult.SUCCESS;

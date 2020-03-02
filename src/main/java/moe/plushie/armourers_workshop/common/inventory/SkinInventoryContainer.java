@@ -3,13 +3,14 @@ package moe.plushie.armourers_workshop.common.inventory;
 import java.util.HashMap;
 import java.util.Set;
 
+import moe.plushie.armourers_workshop.api.common.ISkinInventoryContainer;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.inventory.ModInventory.IInventoryCallback;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class SkinInventoryContainer {
+public class SkinInventoryContainer implements ISkinInventoryContainer {
     
     private static final String TAG_WARDROBE_CONTAINER = "wardrobeContainer";
     

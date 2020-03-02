@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.skin.type;
 
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperties;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperty;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
@@ -57,7 +58,7 @@ public abstract class AbstractSkinTypeBase implements ISkinType {
     }
     
     @Override
-    public boolean haveBoundsChanged(SkinProperties skinPropsOld, SkinProperties skinPropsNew) {
+    public boolean haveBoundsChanged(ISkinProperties skinPropsOld, ISkinProperties skinPropsNew) {
         return true;
     }
 }

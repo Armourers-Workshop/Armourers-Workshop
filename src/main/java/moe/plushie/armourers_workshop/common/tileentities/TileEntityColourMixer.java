@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.tileentities;
 
 import java.awt.Color;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPaintingTool;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
@@ -12,8 +13,7 @@ import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
 import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibCommonTags;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.gui.GuiScreen;
@@ -36,7 +36,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     private static final int INVENTORY_SIZE = 2;
 
     public int colour;
-    private PaintType paintType;
+    private IPaintType paintType;
     private ColourFamily colourFamily;
 
     private boolean itemUpdate;
@@ -45,7 +45,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     public TileEntityColourMixer() {
         super(INVENTORY_SIZE);
         colour = 16777215;
-        paintType = PaintRegistry.PAINT_TYPE_NORMAL;
+        paintType = PaintTypeRegistry.PAINT_TYPE_NORMAL;
         colourUpdate = false;
         colourFamily = ColourFamily.MINECRAFT;
     }
@@ -102,7 +102,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         return LibBlockNames.COLOUR_MIXER;
     }
 
-    public void receiveColourUpdateMessage(int colour, boolean item, PaintType paintType) {
+    public void receiveColourUpdateMessage(int colour, boolean item, IPaintType paintType) {
         setColour(colour, item);
         setPaintType(paintType, 0);
     }
@@ -121,9 +121,9 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
         colourFamily = ColourFamily.values()[compound.getInteger(TAG_COLOUR_FAMILY)];
         if (compound.hasKey(TAG_PAINT_TYPE)) {
-            paintType = PaintRegistry.getPaintTypeFromIndex(compound.getInteger(TAG_PAINT_TYPE));
+            paintType = PaintTypeRegistry.getInstance().getPaintTypeFromIndex(compound.getInteger(TAG_PAINT_TYPE));
         } else {
-            paintType = PaintRegistry.PAINT_TYPE_NORMAL;
+            paintType = PaintTypeRegistry.PAINT_TYPE_NORMAL;
         }
     }
 
@@ -159,7 +159,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         NBTTagCompound compound = packet.getNbtCompound();
         readBaseFromNBT(compound);
         colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
-        paintType = PaintRegistry.getPaintTypeFromIndex(compound.getInteger(TAG_PAINT_TYPE));
+        paintType = PaintTypeRegistry.getInstance().getPaintTypeFromIndex(compound.getInteger(TAG_PAINT_TYPE));
         itemUpdate = compound.getBoolean(TAG_ITEM_UPDATE);
         syncWithClients();
         colourUpdate = true;
@@ -208,13 +208,13 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     }
 
     @Override
-    public void setPaintType(PaintType paintType, int side) {
+    public void setPaintType(IPaintType paintType, int side) {
         this.paintType = paintType;
         dirtySync();
     }
 
     @Override
-    public PaintType getPaintType(int side) {
+    public IPaintType getPaintType(int side) {
         return paintType;
     }
 

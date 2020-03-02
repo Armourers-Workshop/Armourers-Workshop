@@ -5,7 +5,7 @@ import java.util.Comparator;
 
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -23,7 +23,7 @@ public class CreativeTabPaintingTools extends CreativeTabs {
     @Override
     public ItemStack createIcon() {
         ItemStack itemStack = new ItemStack(ModItems.paintbrush);
-        PaintingHelper.setToolPaint(itemStack, PaintRegistry.PAINT_TYPE_RAINBOW);
+        PaintingHelper.setToolPaint(itemStack, PaintTypeRegistry.PAINT_TYPE_RAINBOW);
         return itemStack;
     }
     

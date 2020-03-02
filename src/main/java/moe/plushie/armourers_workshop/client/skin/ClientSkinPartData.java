@@ -9,13 +9,13 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.model.SkinModel;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData.ModelKey;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -89,10 +89,10 @@ public class ClientSkinPartData implements RemovalListener<ModelKey, SkinModel> 
     public static class ModelKey {
 
         private ISkinDye skinDye;
-        private ExtraColours extraColours;
+        private IExtraColours extraColours;
         private ResourceLocation entityTexture;
 
-        public ModelKey(ISkinDye skinDye, ExtraColours extraColours, ResourceLocation entityTexture) {
+        public ModelKey(ISkinDye skinDye, IExtraColours extraColours, ResourceLocation entityTexture) {
             this.skinDye = skinDye;
             this.extraColours = extraColours;
             this.entityTexture = entityTexture;

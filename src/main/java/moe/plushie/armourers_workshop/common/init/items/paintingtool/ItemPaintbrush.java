@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.common.init.items.paintingtool;
 import java.util.ArrayList;
 import java.util.List;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.init.sounds.ModSounds;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
@@ -53,7 +53,7 @@ public class ItemPaintbrush extends AbstractPaintingTool implements IConfigurabl
     @Override
     public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing face, boolean spawnParticles) {
         int colour = getToolColour(stack);
-        PaintType paintType = getToolPaintType(stack);
+        IPaintType paintType = getToolPaintType(stack);
         if (!world.isRemote) {
             IPantableBlock worldColourable = (IPantableBlock) block;
             int oldColour = worldColourable.getColour(world, pos, face);

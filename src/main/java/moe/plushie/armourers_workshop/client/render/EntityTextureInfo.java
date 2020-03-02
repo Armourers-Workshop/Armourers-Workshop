@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
@@ -12,8 +14,7 @@ import moe.plushie.armourers_workshop.common.SkinHelper;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.utils.BitwiseUtils;
@@ -110,7 +111,7 @@ public class EntityTextureInfo {
         }
     }
 
-    public void updateExtraColours(ExtraColours extraColours) {
+    public void updateExtraColours(IExtraColours extraColours) {
         if (!lastEntityColours.equals(extraColours)) {
             lastEntityColours = new ExtraColours(extraColours);
             needsUpdate = true;
@@ -216,8 +217,8 @@ public class EntityTextureInfo {
         for (int ix = 0; ix < TEXURE_REPLACMENT_WIDTH; ix++) {
             for (int iy = 0; iy < TEXURE_REPLACMENT_HEIGHT; iy++) {
                 int paintColour = skin.getPaintData()[ix + (iy * textureWidth)];
-                PaintType paintType = PaintRegistry.getPaintTypeFromColour(paintColour);
-                if (paintType == PaintRegistry.PAINT_TYPE_NORMAL) {
+                IPaintType paintType = PaintTypeRegistry.getInstance().getPaintTypeFromColour(paintColour);
+                if (paintType == PaintTypeRegistry.PAINT_TYPE_NORMAL) {
                     paintTexture(bufferedEntitySkinnedImage, ix, iy, BitwiseUtils.setUByteToInt(paintColour, 0, 255));
                 } else if (paintType.getId() >= 1 && paintType.getId() <= 8) {
                     int dyeNumber = paintType.getId() - 1;
@@ -299,7 +300,7 @@ public class EntityTextureInfo {
         byte b = (byte) (colour & 0xFF);
 
         if (dye.length > 3) {
-            PaintType t = PaintRegistry.getPaintTypeFormByte(dye[3]);
+            IPaintType t = PaintTypeRegistry.getInstance().getPaintTypeFormByte(dye[3]);
             if (t.getColourType() != null) {
                 dye = lastEntityColours.getColourBytes(t.getColourType());
             }

@@ -80,9 +80,6 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         } else {
             iconButtonJoinBeta.visible = false;
         }
-        
-        //iconButtonMyFiles.visible = false;
-        //iconButtonJoinBeta.visible = true;
     }
     
     @Override
@@ -117,10 +114,6 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
         
-        super.draw(mouseX, mouseY, partialTickTime);
-        
-        // TODO look in YggdrasilMinecraftSessionService
-        
         String username = "player";
         GameProfile gameProfile = mc.player.getGameProfile();
         if (gameProfile != null) {
@@ -132,6 +125,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         }
         String titleText = ((GuiGlobalLibrary)parent).getGuiName();
         drawCenteredString(fontRenderer, GuiHelper.getLocalizedControlName(titleText, "name"), x + (width / 2), this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFEEEEEE);
+        super.draw(mouseX, mouseY, partialTickTime);
     }
     
     private void drawPlayerHead(String username) {

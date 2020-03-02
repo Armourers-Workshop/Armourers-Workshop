@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.common.capability.wardrobe;
 
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
+import moe.plushie.armourers_workshop.api.common.IExtraColours.ExtraColourType;
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;

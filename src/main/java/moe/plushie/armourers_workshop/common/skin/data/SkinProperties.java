@@ -10,12 +10,13 @@ import java.util.LinkedHashMap;
 
 import org.apache.commons.io.IOUtils;
 
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperties;
 import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class SkinProperties {
+public class SkinProperties implements ISkinProperties {
 
     // Properties for all skins.
     public static final SkinProperty<String> PROP_ALL_CUSTOM_NAME = new SkinProperty<String>("customName", "");
@@ -159,14 +160,17 @@ public class SkinProperties {
         }
     }
 
+    @Override
     public void removeProperty(String key) {
         properties.remove(key);
     }
 
+    @Override
     public void setProperty(String key, Object value) {
         properties.put(key, value);
     }
 
+    @Override
     public String getPropertyString(String key, String defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof String) {
@@ -175,6 +179,7 @@ public class SkinProperties {
         return defaultValue;
     }
 
+    @Override
     public int getPropertyInt(String key, int defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof Integer) {
@@ -183,6 +188,7 @@ public class SkinProperties {
         return defaultValue;
     }
 
+    @Override
     public double getPropertyDouble(String key, double defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof Double) {
@@ -191,6 +197,7 @@ public class SkinProperties {
         return defaultValue;
     }
 
+    @Override
     public Boolean getPropertyBoolean(String key, Boolean defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof Boolean) {
@@ -199,6 +206,7 @@ public class SkinProperties {
         return defaultValue;
     }
 
+    @Override
     public Object getProperty(String key, Object defaultValue) {
         Object value = properties.get(key);
         if (value != null) {
@@ -207,6 +215,7 @@ public class SkinProperties {
         return defaultValue;
     }
 
+    @Override
     public boolean haveProperty(String key) {
         return properties.containsKey(key);
     }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
 
+import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;

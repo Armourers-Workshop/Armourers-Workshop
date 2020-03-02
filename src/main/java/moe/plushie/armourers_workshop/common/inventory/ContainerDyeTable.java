@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotDyeBottle;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotDyeableSkin;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotOutput;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityDyeTable;
@@ -174,7 +174,7 @@ public class ContainerDyeTable extends Container {
                 byte[] rgbt = dye.getDyeColour(i);
                 ItemStack bottle = new ItemStack(ModItems.dyeBottle, 1, 1);
                 PaintingHelper.setToolPaintColour(bottle, rgbt);
-                PaintingHelper.setToolPaint(bottle, PaintRegistry.getPaintTypeFormByte(rgbt[3]));
+                PaintingHelper.setToolPaint(bottle, PaintTypeRegistry.getInstance().getPaintTypeFormByte(rgbt[3]));
                 if (dye.hasName(i)) {
                     bottle.setStackDisplayName(dye.getDyeName(i));
                 }

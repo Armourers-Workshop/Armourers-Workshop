@@ -9,6 +9,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
@@ -48,7 +49,7 @@ public class ClientSkinPaintCache implements RemovalListener<SkinTextureKey, Ski
         FMLCommonHandler.instance().bus().register(this);
     }
 
-    public SkinModelTexture getTextureForSkin(Skin skin, ISkinDye skinDye, ExtraColours extraColours) {
+    public SkinModelTexture getTextureForSkin(Skin skin, ISkinDye skinDye, IExtraColours extraColours) {
         if (extraColours == null) {
             extraColours = ExtraColours.EMPTY_COLOUR;
         }

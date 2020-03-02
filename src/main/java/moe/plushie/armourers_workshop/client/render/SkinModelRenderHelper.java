@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.client.render;
 
 import java.util.HashMap;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
+import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
@@ -18,8 +20,6 @@ import moe.plushie.armourers_workshop.client.model.skin.ModelSkinWings;
 import moe.plushie.armourers_workshop.client.model.skin.ModelTypeHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperty;
@@ -224,7 +224,7 @@ public final class SkinModelRenderHelper {
         return true;
     }
     
-    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin skin, ISkinDye skinDye, ExtraColours extraColours, double distance, boolean doLodLoading) {
+    public boolean renderEquipmentPart(Entity entity, ModelBiped modelBiped, Skin skin, ISkinDye skinDye, IExtraColours extraColours, double distance, boolean doLodLoading) {
         if (skin == null) {
             return false;
         }

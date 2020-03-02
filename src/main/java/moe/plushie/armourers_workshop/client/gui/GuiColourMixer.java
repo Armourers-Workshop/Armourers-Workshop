@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiColourSelector;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
@@ -20,8 +21,7 @@ import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiColourUpdate;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.Minecraft;
@@ -120,8 +120,8 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
     private void updatePaintTypeDropDown() {
         int paintCount = 0;
         paintTypeDropDown.clearList();
-        for (PaintType paintType : PaintRegistry.getRegisteredTypes()) {
-            if (paintType == PaintRegistry.PAINT_TYPE_TEXTURE) {
+        for (IPaintType paintType : PaintTypeRegistry.getInstance().getRegisteredTypes()) {
+            if (paintType == PaintTypeRegistry.PAINT_TYPE_TEXTURE) {
                 paintTypeDropDown.addListItem(paintType.getLocalizedName(), "", true);
             } else {
                 paintTypeDropDown.addListItem(paintType.getLocalizedName());
@@ -192,7 +192,7 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
     
     private void updateColour() {
         Color colourOld = new Color(tileEntityColourMixer.getColour(0));
-        PaintType paintType = PaintRegistry.getRegisteredTypes().get((paintTypeDropDown.getListSelectedIndex()));
+        IPaintType paintType = PaintTypeRegistry.getInstance().getRegisteredTypes().get((paintTypeDropDown.getListSelectedIndex()));
         if (this.colour.equals(colourOld)) {
             if (paintType == tileEntityColourMixer.getPaintType(0))
             return;

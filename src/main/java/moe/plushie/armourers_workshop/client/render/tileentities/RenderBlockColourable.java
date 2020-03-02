@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.client.render.tileentities;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
 import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
@@ -9,8 +10,7 @@ import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -59,7 +59,7 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
             EnumFacing dir = EnumFacing.byIndex(i);
             int paintType = cubeColour.getPaintType(i) & 0xFF;
             if (paintType != 255) {
-                PaintType pt = PaintRegistry.getPaintTypeFromIndex(paintType);
+                IPaintType pt = PaintTypeRegistry.getInstance().getPaintTypeFromIndex(paintType);
                 renderFaceWithMarker(renderer, x, y, z, dir, pt.getMarkerIndex());
             }
         }

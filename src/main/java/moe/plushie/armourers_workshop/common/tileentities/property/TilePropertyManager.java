@@ -6,8 +6,8 @@ import org.apache.logging.log4j.Level;
 
 import com.mojang.authlib.GameProfile;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours.ExtraColourType;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector.PowerMode;
@@ -17,11 +17,11 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public final class TilePropertyManager {
-    
+
     public static TilePropertyManager INSTANCE = new TilePropertyManager();
-    
+
     private final HashMap<String, ITypeSerializer<NBTTagCompound>> typeSerializers;
-    
+
     private TilePropertyManager() {
         typeSerializers = new HashMap<String, ITypeSerializer<NBTTagCompound>>();
         typeSerializers.put(Boolean.class.getName(), new BooleanSerializer());
@@ -34,7 +34,7 @@ public final class TilePropertyManager {
         typeSerializers.put(TextureType.class.getName(), new TextureTypeSerializer());
         typeSerializers.put(PowerMode.class.getName(), new PowerModeSerializer());
     }
-    
+
     public NBTTagCompound writePropToCompound(TileProperty<?> tileProperty, NBTTagCompound compound) {
         if (tileProperty.get() != null) {
             String typeKey = tileProperty.getType().getName();
@@ -47,7 +47,7 @@ public final class TilePropertyManager {
         }
         return compound;
     }
-    
+
     public void readPropFromCompound(TileProperty<?> tileProperty, NBTTagCompound compound) {
         String typeKey = tileProperty.getType().getName();
         ITypeSerializer<NBTTagCompound> serializer = typeSerializers.get(typeKey);
@@ -57,7 +57,7 @@ public final class TilePropertyManager {
             ModLogger.log(Level.ERROR, "Could not find TypeSerializer when reading for type: " + typeKey);
         }
     }
-    
+
     private static class BooleanSerializer implements ITypeSerializer<NBTTagCompound> {
 
         @Override
@@ -72,7 +72,7 @@ public final class TilePropertyManager {
             target.setBoolean(tileProperty.getKey(), (Boolean) tileProperty.get());
         }
     }
-    
+
     private static class IntegerSerializer implements ITypeSerializer<NBTTagCompound> {
 
         @Override
@@ -87,7 +87,7 @@ public final class TilePropertyManager {
             target.setInteger(tileProperty.getKey(), (Integer) tileProperty.get());
         }
     }
-    
+
     private static class FloatSerializer implements ITypeSerializer<NBTTagCompound> {
 
         @Override
@@ -102,7 +102,7 @@ public final class TilePropertyManager {
             target.setFloat(tileProperty.getKey(), (Float) tileProperty.get());
         }
     }
-    
+
     private static class StringSerializer implements ITypeSerializer<NBTTagCompound> {
 
         @Override
@@ -117,7 +117,7 @@ public final class TilePropertyManager {
             target.setString(tileProperty.getKey(), (String) tileProperty.get());
         }
     }
-    
+
     private static class GameProfileSerializer implements ITypeSerializer<NBTTagCompound> {
 
         @Override
@@ -134,7 +134,7 @@ public final class TilePropertyManager {
             target.setTag(tileProperty.getKey(), compound);
         }
     }
-    
+
     private static class BipedRotationsSerializer implements ITypeSerializer<NBTTagCompound> {
 
         @Override
@@ -151,7 +151,7 @@ public final class TilePropertyManager {
             target.setTag(tileProperty.getKey(), rotations.saveNBTData(new NBTTagCompound()));
         }
     }
-    
+
     private static class ExtraColoursSerializer implements ITypeSerializer<NBTTagCompound> {
 
         @Override
@@ -175,7 +175,7 @@ public final class TilePropertyManager {
             target.setTag(tileProperty.getKey(), compound);
         }
     }
-    
+
     private static class TextureTypeSerializer implements ITypeSerializer<NBTTagCompound> {
 
         @Override
@@ -196,7 +196,7 @@ public final class TilePropertyManager {
             target.setString(tileProperty.getKey(), tt.name());
         }
     }
-    
+
     private static class PowerModeSerializer implements ITypeSerializer<NBTTagCompound> {
 
         @Override
@@ -217,11 +217,11 @@ public final class TilePropertyManager {
             target.setString(tileProperty.getKey(), pm.name());
         }
     }
-    
+
     private static interface ITypeSerializer<TAR_TYPE> {
-        
+
         public void readType(TileProperty<?> tileProperty, TAR_TYPE source);
-        
+
         public void writeType(TileProperty<?> tileProperty, TAR_TYPE target);
     }
 }

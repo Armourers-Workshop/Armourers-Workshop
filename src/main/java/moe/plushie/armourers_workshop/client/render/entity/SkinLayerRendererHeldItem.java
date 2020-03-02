@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.client.render.entity;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.model.skin.IEquipmentModel;
@@ -12,7 +13,6 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager.ItemOverrideType;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;

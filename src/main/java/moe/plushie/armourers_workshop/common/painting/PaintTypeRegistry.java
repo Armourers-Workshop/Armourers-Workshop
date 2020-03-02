@@ -2,11 +2,20 @@ package moe.plushie.armourers_workshop.common.painting;
 
 import java.util.ArrayList;
 
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
-import moe.plushie.armourers_workshop.utils.BitwiseUtils;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import org.apache.logging.log4j.Level;
 
-public final class PaintRegistry {
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.common.IExtraColours.ExtraColourType;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintTypeRegistry;
+import moe.plushie.armourers_workshop.utils.BitwiseUtils;
+import moe.plushie.armourers_workshop.utils.ModLogger;
+
+public final class PaintTypeRegistry implements IPaintTypeRegistry {
+
+    public static PaintTypeRegistry getInstance() {
+        return ArmourersWorkshop.getProxy().getPaintTypeRegistry();
+    }
 
     public static final PaintType PAINT_TYPE_NONE = new PaintType(0, 9, "none");
 
@@ -39,84 +48,65 @@ public final class PaintRegistry {
 
     public static final PaintType PAINT_TYPE_NORMAL = new PaintType(255, 0, "normal");
 
-    private static final PaintType[] PAINT_TYPES = new PaintType[256];
-    private static final ArrayList<PaintType> REGISTERED_TYPES = new ArrayList<PaintType>();
-    private static int extraChannels = 0;
+    private final IPaintType[] paintTypes = new IPaintType[256];
+    private final ArrayList<IPaintType> registeredTypes = new ArrayList<IPaintType>();
+    private int extraChannels = 0;
 
-    public static void init() {
-        try {
-            registerPaintType(PAINT_TYPE_NORMAL);
-
-            registerPaintType(PAINT_TYPE_DYE_1);
-            registerPaintType(PAINT_TYPE_DYE_2);
-            registerPaintType(PAINT_TYPE_DYE_3);
-            registerPaintType(PAINT_TYPE_DYE_4);
-            registerPaintType(PAINT_TYPE_DYE_5);
-            registerPaintType(PAINT_TYPE_DYE_6);
-            registerPaintType(PAINT_TYPE_DYE_7);
-            registerPaintType(PAINT_TYPE_DYE_8);
-
-            registerPaintType(PAINT_TYPE_TEXTURE);
-
-            registerPaintType(PAINT_TYPE_RAINBOW);
-
-            registerPaintType(PAINT_TYPE_PULSE_1);
-            registerPaintType(PAINT_TYPE_PULSE_2);
-            registerPaintType(PAINT_TYPE_FLICKER_1);
-            registerPaintType(PAINT_TYPE_FLICKER_2);
-
-            registerPaintType(PAINT_TYPE_SKIN);
-            registerPaintType(PAINT_TYPE_HAIR);
-            registerPaintType(PAINT_TYPE_EYES);
-            registerPaintType(PAINT_TYPE_MISC_1);
-            registerPaintType(PAINT_TYPE_MISC_2);
-            registerPaintType(PAINT_TYPE_MISC_3);
-            registerPaintType(PAINT_TYPE_MISC_4);
-
-            registerPaintType(PAINT_TYPE_NONE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            FMLCommonHandler.instance().raiseException(e, e.getMessage(), true);
+    public PaintTypeRegistry() {
+        for (int i = 0; i < paintTypes.length; i++) {
+            paintTypes[i] = PAINT_TYPE_NORMAL;
+        }
+        for (IPaintType paintType : PaintType.PAINT_TYPES) {
+            registerPaintType(paintType);
         }
 
-        for (int i = 0; i < PAINT_TYPES.length; i++) {
-            if (PAINT_TYPES[i] == null) {
-                PAINT_TYPES[i] = PAINT_TYPE_NORMAL;
-            }
-        }
     }
 
-    private static void registerPaintType(PaintType paintType) throws Exception {
-        if (PAINT_TYPES[paintType.getId()] != null) {
-            throw new Exception("Paint id " + paintType.getId() + " is already in use.");
+    @Override
+    public boolean registerPaintType(IPaintType paintType) {
+        if (paintType == null) {
+            ModLogger.log(Level.WARN, "A mod tried to register a null paint type.");
+            return false;
         }
-        PAINT_TYPES[paintType.getId()] = paintType;
-        REGISTERED_TYPES.add(paintType);
+
+        if (paintTypes[paintType.getId()] != PAINT_TYPE_NORMAL) {
+            ModLogger.log(Level.WARN, "A mod tried to register a paint type with an id that is in use.");
+            return false;
+        }
+
+        paintTypes[paintType.getId()] = paintType;
+        registeredTypes.add(paintType);
         if (paintType.hasAverageColourChannel()) {
             paintType.setColourChannelIndex(extraChannels);
             extraChannels++;
         }
+        return true;
     }
 
-    public static int getExtraChannels() {
+    @Override
+    public int getExtraChannels() {
         return extraChannels;
     }
 
-    public static PaintType getPaintTypeFromColour(int trgb) {
+    @Override
+    public IPaintType getPaintTypeFromColour(int trgb) {
         int type = 0xFF & (trgb >> 24);
         return getPaintTypeFromIndex(type);
     }
 
-    public static int setPaintTypeOnColour(PaintType paintType, int colour) {
+    @Override
+    public int setPaintTypeOnColour(IPaintType paintType, int colour) {
         return BitwiseUtils.setUByteToInt(colour, 0, paintType.getId());
     }
 
-    public static PaintType getPaintTypeFormByte(byte index) {
+    @Override
+    public IPaintType getPaintTypeFormByte(byte index) {
         return getPaintTypeFromIndex(index & 0xFF);
     }
 
-    public static PaintType getPaintTypeFormName(String name) {
-        for (PaintType paintType : PAINT_TYPES) {
+    @Override
+    public IPaintType getPaintTypeFormName(String name) {
+        for (IPaintType paintType : paintTypes) {
             if (paintType.getName().equals(name)) {
                 return paintType;
             }
@@ -124,11 +114,13 @@ public final class PaintRegistry {
         return PAINT_TYPE_NORMAL;
     }
 
-    public static ArrayList<PaintType> getRegisteredTypes() {
-        return REGISTERED_TYPES;
+    @Override
+    public ArrayList<IPaintType> getRegisteredTypes() {
+        return registeredTypes;
     }
 
-    public static PaintType getPaintTypeFromIndex(int index) {
-        return PAINT_TYPES[index];
+    @Override
+    public IPaintType getPaintTypeFromIndex(int index) {
+        return paintTypes[index];
     }
 }

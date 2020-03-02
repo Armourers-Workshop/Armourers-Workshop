@@ -1,5 +1,8 @@
 package moe.plushie.armourers_workshop.client.render.entity;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
+import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
@@ -13,8 +16,6 @@ import moe.plushie.armourers_workshop.common.Contributors;
 import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
@@ -79,7 +80,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
 
         ISkinType[] skinTypes = skinCap.getValidSkinTypes();
         SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
-        ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
+        IExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
         IPlayerWardrobeCap wardrobe = PlayerWardrobeCap.get(entitylivingbaseIn);
         if (wardrobe != null) {
             extraColours = wardrobe.getExtraColours();
@@ -103,7 +104,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
         }
     }
 
-    private void renderSkin(EntityPlayer entityPlayer, ISkinDescriptor skinDescriptor, EntitySkinCapability skinCap, IWardrobeCap wardrobe, ExtraColours extraColours, double distance, boolean doLodLoading) {
+    private void renderSkin(EntityPlayer entityPlayer, ISkinDescriptor skinDescriptor, EntitySkinCapability skinCap, IWardrobeCap wardrobe, IExtraColours extraColours, double distance, boolean doLodLoading) {
         SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
 

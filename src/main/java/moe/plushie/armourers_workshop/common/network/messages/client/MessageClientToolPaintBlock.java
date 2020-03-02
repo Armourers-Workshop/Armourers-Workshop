@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.world.undo.UndoManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -62,10 +62,10 @@ public class MessageClientToolPaintBlock implements IMessage, IMessageHandler<Me
                 UndoManager.begin(player);
                 IPantableBlock paintable = (IPantableBlock) block;
                 int oldColour = paintable.getColour(world, pos, message.facing);
-                PaintType oldPaintType = paintable.getPaintType(world, pos, message.facing);
+                IPaintType oldPaintType = paintable.getPaintType(world, pos, message.facing);
                 UndoManager.blockPainted(player, world, pos, oldColour, (byte)oldPaintType.getId(), message.facing);
                 paintable.setColour(world, pos, message.rgbt, message.facing);
-                paintable.setPaintType(world, pos, PaintRegistry.getPaintTypeFormByte(message.rgbt[3]), message.facing);
+                paintable.setPaintType(world, pos, PaintTypeRegistry.getInstance().getPaintTypeFormByte(message.rgbt[3]), message.facing);
                 UndoManager.end(player);
             }
         }

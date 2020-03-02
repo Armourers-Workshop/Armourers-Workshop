@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.common.capability.wardrobe;
 
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;

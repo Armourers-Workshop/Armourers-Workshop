@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.common.inventory.slot.SlotOutput;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton.IButtonPress;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -138,7 +138,7 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
                 int x = pos.x + ix;
                 int y = pos.y + iy;
                 byte[] rgbt = PaintingHelper.intToBytes(srcPaint[x + (y * textureWidth)]);
-                if ((rgbt[3] & 0xFF) != PaintRegistry.PAINT_TYPE_NONE.getId()) {
+                if ((rgbt[3] & 0xFF) != PaintTypeRegistry.PAINT_TYPE_NONE.getId()) {
                     desPaint[x + (y * textureWidth)] = srcPaint[x + (y * textureWidth)];
                 }
             }

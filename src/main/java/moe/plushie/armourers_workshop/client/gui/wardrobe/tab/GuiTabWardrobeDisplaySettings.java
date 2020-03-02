@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.client.gui.wardrobe.tab;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
@@ -9,8 +11,6 @@ import moe.plushie.armourers_workshop.client.gui.style.GuiResourceManager;
 import moe.plushie.armourers_workshop.client.gui.style.GuiStyle;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
-import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;

@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.IPoint3D;
 import moe.plushie.armourers_workshop.api.common.IRectangle3D;
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
 import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperties;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.model.armourer.ModelChest;
@@ -32,7 +33,7 @@ public class SkinChestPartBase extends AbstractSkinPartTypeBase implements ISkin
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void renderBuildingGuide(float scale, SkinProperties skinProps, boolean showHelper) {
+    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
         GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
         ModelChest.MODEL.renderChest(scale);
@@ -78,12 +79,12 @@ public class SkinChestPartBase extends AbstractSkinPartTypeBase implements ISkin
     }
 
     @Override
-    public boolean isModelOverridden(SkinProperties skinProps) {
+    public boolean isModelOverridden(ISkinProperties skinProps) {
         return SkinProperties.PROP_MODEL_OVERRIDE_CHEST.getValue(skinProps);
     }
 
     @Override
-    public boolean isOverlayOverridden(SkinProperties skinProps) {
+    public boolean isOverlayOverridden(ISkinProperties skinProps) {
         return SkinProperties.PROP_MODEL_HIDE_OVERLAY_CHEST.getValue(skinProps);
     }
 }

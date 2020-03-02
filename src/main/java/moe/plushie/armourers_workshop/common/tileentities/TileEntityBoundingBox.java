@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.common.tileentities;
 
 import java.awt.Point;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.SkinTextureHelper;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.NBTHelper;
@@ -138,15 +138,15 @@ public class TileEntityBoundingBox extends ModTileEntity {
         return true;
     }
     
-    public PaintType getPaintType(EnumFacing facing) {
+    public IPaintType getPaintType(EnumFacing facing) {
         if (isParentValid() && skinPart instanceof ISkinPartTypeTextured) {
             
             Point texPoint = SkinTextureHelper.getTextureLocationFromWorldBlock(this, facing);
             int colour = getParent().getPaintData(texPoint.x, texPoint.y);
-            return PaintRegistry.getPaintTypeFromColour(colour);
+            return PaintTypeRegistry.getInstance().getPaintTypeFromColour(colour);
         } else {
             //ModLogger.log("x" + parentX);
-            return PaintRegistry.PAINT_TYPE_NORMAL;
+            return PaintTypeRegistry.PAINT_TYPE_NORMAL;
         }
     }
     

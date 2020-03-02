@@ -15,7 +15,7 @@ import org.apache.commons.io.IOUtils;
 
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
@@ -85,46 +85,46 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         ModLogger.log("faces to export " + faces.size());
         for (int i = 0; i < faces.size(); i++) {
             ColouredFace cf = faces.get(i);
-            if (PaintRegistry.getPaintTypeFormByte(cf.t) == PaintRegistry.PAINT_TYPE_NONE) {
+            if (PaintTypeRegistry.getInstance().getPaintTypeFormByte(cf.t) == PaintTypeRegistry.PAINT_TYPE_NONE) {
                 continue;
             }
             // ModLogger.log("writing face " + cf.face);
             switch (cf.face) {
             case 0: // NegZFace
-                writeVert(os, scale * (float) -cf.z, scale * (float) cf.x, scale * (float) -cf.y - scale);
-                writeVert(os, scale * (float) -cf.z - scale, scale * (float) cf.x, scale * (float) -cf.y - scale);
-                writeVert(os, scale * (float) -cf.z - scale, scale * (float) cf.x + scale, scale * (float) -cf.y - scale);
-                writeVert(os, scale * (float) -cf.z, scale * (float) cf.x + scale, scale * (float) -cf.y - scale);
+                writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x + scale, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z, scale * cf.x + scale, scale * -cf.y - scale);
                 break;
             case 1: // PosZFace
-                writeVert(os, scale * (float) -cf.z, scale * (float) cf.x, scale * (float) -cf.y);
-                writeVert(os, scale * (float) -cf.z - scale, scale * (float) cf.x, scale * (float) -cf.y);
-                writeVert(os, scale * (float) -cf.z - scale, scale * (float) cf.x + scale, scale * (float) -cf.y);
-                writeVert(os, scale * (float) -cf.z, scale * (float) cf.x + scale, scale * (float) -cf.y);
+                writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x + scale, scale * -cf.y);
+                writeVert(os, scale * -cf.z, scale * cf.x + scale, scale * -cf.y);
                 break;
             case 2: // PosXFace
-                writeVert(os, scale * (float) -cf.z, scale * (float) cf.x, scale * (float) -cf.y);
-                writeVert(os, scale * (float) -cf.z, scale * (float) cf.x + scale, scale * (float) -cf.y);
-                writeVert(os, scale * (float) -cf.z, scale * (float) cf.x + scale, scale * (float) -cf.y - scale);
-                writeVert(os, scale * (float) -cf.z, scale * (float) cf.x, scale * (float) -cf.y - scale);
+                writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y);
+                writeVert(os, scale * -cf.z, scale * cf.x + scale, scale * -cf.y);
+                writeVert(os, scale * -cf.z, scale * cf.x + scale, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y - scale);
                 break;
             case 3: // NegXFace
-                writeVert(os, scale * (float) -cf.z - scale, scale * (float) cf.x, scale * (float) -cf.y);
-                writeVert(os, scale * (float) -cf.z - scale, scale * (float) cf.x + scale, scale * (float) -cf.y);
-                writeVert(os, scale * (float) -cf.z - scale, scale * (float) cf.x + scale, scale * (float) -cf.y - scale);
-                writeVert(os, scale * (float) -cf.z - scale, scale * (float) cf.x, scale * (float) -cf.y - scale);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x + scale, scale * -cf.y);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x + scale, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y - scale);
                 break;
             case 4: // PosYFace
-                writeVert(os, scale * (float) -cf.z, scale * (float) cf.x + scale, scale * (float) -cf.y);
-                writeVert(os, scale * (float) -cf.z - scale, scale * (float) cf.x + scale, scale * (float) -cf.y);
-                writeVert(os, scale * (float) -cf.z - scale, scale * (float) cf.x + scale, scale * (float) -cf.y - scale);
-                writeVert(os, scale * (float) -cf.z, scale * (float) cf.x + scale, scale * (float) -cf.y - scale);
+                writeVert(os, scale * -cf.z, scale * cf.x + scale, scale * -cf.y);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x + scale, scale * -cf.y);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x + scale, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z, scale * cf.x + scale, scale * -cf.y - scale);
                 break;
             case 5: // NegYFace
-                writeVert(os, scale * (float) -cf.z, scale * (float) cf.x, scale * (float) -cf.y);
-                writeVert(os, scale * (float) -cf.z - scale, scale * (float) cf.x, scale * (float) -cf.y);
-                writeVert(os, scale * (float) -cf.z - scale, scale * (float) cf.x, scale * (float) -cf.y - scale);
-                writeVert(os, scale * (float) -cf.z, scale * (float) cf.x, scale * (float) -cf.y - scale);
+                writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y - scale);
                 break;
             default:
                 break;
@@ -137,7 +137,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
         for (int i = 0; i < faces.size(); i++) {
             ColouredFace cf = faces.get(i);
-            if (PaintRegistry.getPaintTypeFormByte(cf.t) == PaintRegistry.PAINT_TYPE_NONE) {
+            if (PaintTypeRegistry.getInstance().getPaintTypeFormByte(cf.t) == PaintTypeRegistry.PAINT_TYPE_NONE) {
                 continue;
             }
             int colour = PaintingHelper.bytesToInt(new byte[] { cf.r, cf.g, cf.b, (byte) 255 });
@@ -150,10 +150,10 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
             float shift = 0.002F;
 
-            os.write(String.format("vt %f %f", (float) ix / 2F * pixelSize + pixelSize - shift, (float) iy / 2F * pixelSize + shift) + CRLF);
-            os.write(String.format("vt %f %f", (float) ix / 2F * pixelSize + pixelSize - shift, (float) iy / 2F * pixelSize + pixelSize - shift) + CRLF);
-            os.write(String.format("vt %f %f", (float) ix / 2F * pixelSize + shift, (float) iy / 2F * pixelSize + pixelSize - shift) + CRLF);
-            os.write(String.format("vt %f %f", (float) ix / 2F * pixelSize + shift, (float) iy / 2F * pixelSize + shift) + CRLF);
+            os.write(String.format("vt %f %f", ix / 2F * pixelSize + pixelSize - shift, iy / 2F * pixelSize + shift) + CRLF);
+            os.write(String.format("vt %f %f", ix / 2F * pixelSize + pixelSize - shift, iy / 2F * pixelSize + pixelSize - shift) + CRLF);
+            os.write(String.format("vt %f %f", ix / 2F * pixelSize + shift, iy / 2F * pixelSize + pixelSize - shift) + CRLF);
+            os.write(String.format("vt %f %f", ix / 2F * pixelSize + shift, iy / 2F * pixelSize + shift) + CRLF);
 
             ix++;
             ix++;
@@ -166,7 +166,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
         for (int i = 0; i < faces.size(); i++) {
             ColouredFace cf = faces.get(i);
-            if (PaintRegistry.getPaintTypeFormByte(faces.get(i).t) == PaintRegistry.PAINT_TYPE_NONE) {
+            if (PaintTypeRegistry.getInstance().getPaintTypeFormByte(faces.get(i).t) == PaintTypeRegistry.PAINT_TYPE_NONE) {
                 continue;
             }
             switch (cf.face) {
@@ -198,7 +198,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
         int index = 0;
         for (int i = 0; i < faces.size(); i++) {
-            if (PaintRegistry.getPaintTypeFormByte(faces.get(i).t) == PaintRegistry.PAINT_TYPE_NONE) {
+            if (PaintTypeRegistry.getInstance().getPaintTypeFormByte(faces.get(i).t) == PaintTypeRegistry.PAINT_TYPE_NONE) {
                 continue;
             }
             // Vertex / texture index / normal index

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.client.skin;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -10,9 +10,9 @@ public class SkinTextureKey {
     
     private final int skinId;
     private final ISkinDye skinDye;
-    private final ExtraColours extraColours;
+    private final IExtraColours extraColours;
     
-    public SkinTextureKey(int skinId, ISkinDye skinDye, ExtraColours extraColours) {
+    public SkinTextureKey(int skinId, ISkinDye skinDye, IExtraColours extraColours) {
         this.skinId = skinId;
         this.skinDye = skinDye;
         this.extraColours = extraColours;
@@ -22,7 +22,7 @@ public class SkinTextureKey {
         return skinDye;
     }
     
-    public ExtraColours getExtraColours() {
+    public IExtraColours getExtraColours() {
         return extraColours;
     }
 

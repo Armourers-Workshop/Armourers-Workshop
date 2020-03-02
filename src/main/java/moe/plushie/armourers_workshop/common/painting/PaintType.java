@@ -1,10 +1,17 @@
 package moe.plushie.armourers_workshop.common.painting;
 
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
+import java.util.ArrayList;
+
+import moe.plushie.armourers_workshop.api.common.IExtraColours.ExtraColourType;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PaintType {
+public class PaintType implements IPaintType {
+
+    public static final ArrayList<IPaintType> PAINT_TYPES = new ArrayList<IPaintType>();
 
     private final int id;
     private final int markerIndex;
@@ -22,12 +29,14 @@ public class PaintType {
         this.name = name;
         this.textureU = 0;
         this.textureV = 0;
+        PAINT_TYPES.add(this);
     }
 
     public PaintType(int id, int markerIndex, String name) {
         this(id, markerIndex, false, name);
     }
 
+    @Override
     public ExtraColourType getColourType() {
         return colourType;
     }
@@ -36,11 +45,13 @@ public class PaintType {
         this.colourType = colourType;
         return this;
     }
-    
+
+    @Override
     public float getU() {
         return textureU;
     }
-    
+
+    @Override
     public float getV() {
         return textureV;
     }
@@ -51,34 +62,47 @@ public class PaintType {
         return this;
     }
 
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public int getMarkerIndex() {
         return markerIndex;
     }
 
+    @Override
     public boolean hasAverageColourChannel() {
         return hasColourChannel;
     }
 
+    @Override
     public int getChannelIndex() {
         return channelIndex;
     }
 
+    @Override
     public void setColourChannelIndex(int channelIndex) {
         this.channelIndex = channelIndex;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
-    public String getLocalizedName() {
+    @Override
+    public String getUnlocalizedName() {
         String unlocalizedText = "paintType." + LibModInfo.ID.toLowerCase() + ":";
         unlocalizedText += name.toLowerCase() + ".name";
-        return TranslateUtils.translate(unlocalizedText);
+        return unlocalizedText;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public String getLocalizedName() {
+        return TranslateUtils.translate(getUnlocalizedName());
     }
 
     @Override

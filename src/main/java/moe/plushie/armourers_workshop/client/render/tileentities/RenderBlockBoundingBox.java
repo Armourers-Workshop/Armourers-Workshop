@@ -2,12 +2,12 @@ package moe.plushie.armourers_workshop.client.render.tileentities;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.RenderBridge;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -47,8 +47,8 @@ public class RenderBlockBoundingBox extends TileEntitySpecialRenderer<TileEntity
         for (int i = 0; i < 6; i++) {
             if (te.isPaintableSide(i)) {
                 EnumFacing dir = EnumFacing.byIndex(i);
-                PaintType paintType = te.getPaintType(dir);
-                if (paintType != PaintRegistry.PAINT_TYPE_NONE) {
+                IPaintType paintType = te.getPaintType(dir);
+                if (paintType != PaintTypeRegistry.PAINT_TYPE_NONE) {
                     RenderBlockColourable.renderFaceWithMarker(renderer, x, y, z, dir, paintType.getMarkerIndex());
                 }
             }

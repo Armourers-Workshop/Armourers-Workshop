@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
@@ -11,7 +12,6 @@ import moe.plushie.armourers_workshop.common.init.sounds.ModSounds;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientToolPaintBlock;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
@@ -49,7 +49,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
             if (te != null && te instanceof IPantable) {
                 if (!worldIn.isRemote) {
                     int colour = ((IPantable) te).getColour(0);
-                    PaintType paintType = ((IPantable) te).getPaintType(0);
+                    IPaintType paintType = ((IPantable) te).getPaintType(0);
                     setToolColour(stack, colour);
                     setToolPaintType(stack, paintType);
                 }
@@ -98,7 +98,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         boolean changePaintType = ToolOptions.CHANGE_PAINT_TYPE.getValue(stack);
 
         Color toolColour = new Color(getToolColour(stack));
-        PaintType paintType = getToolPaintType(stack);
+        IPaintType paintType = getToolPaintType(stack);
         float[] toolhsb;
         toolhsb = Color.RGBtoHSB(toolColour.getRed(), toolColour.getGreen(), toolColour.getBlue(), null);
         IPantableBlock worldColourable = (IPantableBlock) block;

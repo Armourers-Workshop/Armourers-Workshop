@@ -3,13 +3,13 @@ package moe.plushie.armourers_workshop.common.init.items;
 import java.awt.Color;
 import java.util.List;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPaintingTool;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.block.state.IBlockState;
@@ -46,7 +46,7 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
                 if (!worldIn.isRemote) {
                     ItemStack stack = player.getHeldItem(hand);
                     int colour = ((IPantable)te).getColour(0);
-                    PaintType paintType = ((IPantable)te).getPaintType(0);
+                    IPaintType paintType = ((IPantable)te).getPaintType(0);
                     setToolColour(stack, colour);
                     setToolPaintType(stack, paintType);
                 }
@@ -58,8 +58,8 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
     
     @Override
     public boolean hasEffect(ItemStack stack) {
-        PaintType paintType = PaintingHelper.getToolPaintType(stack);
-        if (paintType != PaintRegistry.PAINT_TYPE_NORMAL) {
+        IPaintType paintType = PaintingHelper.getToolPaintType(stack);
+        if (paintType != PaintTypeRegistry.PAINT_TYPE_NORMAL) {
             return true;
         }
         return super.hasEffect(stack);
@@ -70,7 +70,7 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         if (getToolHasColour(stack)) {
             Color c = new Color(getToolColour(stack));
-            PaintType paintType = getToolPaintType(stack);
+            IPaintType paintType = getToolPaintType(stack);
             String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
             String colourText = TranslateUtils.translate("item.armourers_workshop:rollover.colour", c.getRGB());
             String hexText = TranslateUtils.translate("item.armourers_workshop:rollover.hex", hex);
@@ -101,12 +101,12 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
     }
     
     @Override
-    public void setToolPaintType(ItemStack stack, PaintType paintType) {
+    public void setToolPaintType(ItemStack stack, IPaintType paintType) {
         PaintingHelper.setToolPaint(stack, paintType);
     }
     
     @Override
-    public PaintType getToolPaintType(ItemStack stack) {
+    public IPaintType getToolPaintType(ItemStack stack) {
         return PaintingHelper.getToolPaintType(stack) ;
     }
     

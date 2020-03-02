@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.client.model.skin;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.client.model.ModelMannequin;
@@ -9,7 +10,6 @@ import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.model.ModelBiped;
@@ -41,6 +41,7 @@ public abstract class ModelTypeHelper extends ModelBiped implements IEquipmentMo
         targetModel.rotateAngleZ = sourceModel.rotateAngleZ;
     }
     
+    @Override
     public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity p_78087_7_) {
         super.setRotationAngles(p_78087_1_, p_78087_2_, p_78087_3_, p_78087_4_, p_78087_5_, p_78087_6_, p_78087_7_);
         this.isRiding = false;
@@ -100,7 +101,7 @@ public abstract class ModelTypeHelper extends ModelBiped implements IEquipmentMo
     }
     
     @Override
-    public void render(Entity entity, Skin skin, ModelBiped modelBiped, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+    public void render(Entity entity, Skin skin, ModelBiped modelBiped, boolean showSkinPaint, ISkinDye skinDye, IExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         setRotationFromModelBiped(modelBiped);
         render(entity, skin, showSkinPaint, skinDye, extraColours, itemRender, distance, doLodLoading);
     }
@@ -122,7 +123,7 @@ public abstract class ModelTypeHelper extends ModelBiped implements IEquipmentMo
         GL11.glPopAttrib();
     }
     
-    public abstract void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading);
+    public abstract void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, IExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading);
     
     public abstract void render(Entity entity, Skin skin, SkinRenderData renderData);
     

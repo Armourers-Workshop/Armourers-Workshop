@@ -5,17 +5,17 @@ import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.api.common.IPoint3D;
 import moe.plushie.armourers_workshop.api.common.IRectangle3D;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperties;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeMarkerData;
 import moe.plushie.armourers_workshop.common.skin.data.SkinCubeData;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
-import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -79,12 +79,12 @@ public abstract class AbstractSkinPartTypeBase implements ISkinPartType {
     }
 
     @Override
-    public boolean isModelOverridden(SkinProperties skinProps) {
+    public boolean isModelOverridden(ISkinProperties skinProps) {
         return false;
     }
 
     @Override
-    public boolean isOverlayOverridden(SkinProperties skinProps) {
+    public boolean isOverlayOverridden(ISkinProperties skinProps) {
         return false;
     }
 
@@ -116,9 +116,9 @@ public abstract class AbstractSkinPartTypeBase implements ISkinPartType {
                     for (int side = 0; side < 6; side++) {
                         byte[] rgbt = ColouredFace.getColourFromTexture(x, y, z, (byte) 0, (byte) 0, (byte) 0, (byte) side, image, (ISkinPartTypeTextured) this, true);
                         cubeData.setCubeColour(i, side, rgbt[0], rgbt[1], rgbt[2]);
-                        PaintType paintType = PaintRegistry.getPaintTypeFormByte(rgbt[3]);
-                        if (paintType == PaintRegistry.PAINT_TYPE_NONE) {
-                            paintType = PaintRegistry.PAINT_TYPE_NONE;
+                        IPaintType paintType = PaintTypeRegistry.getInstance().getPaintTypeFormByte(rgbt[3]);
+                        if (paintType == PaintTypeRegistry.PAINT_TYPE_NONE) {
+                            paintType = PaintTypeRegistry.PAINT_TYPE_NONE;
                         }
                         cubeData.setCubePaintType(i, side, (byte) paintType.getId());
                     }

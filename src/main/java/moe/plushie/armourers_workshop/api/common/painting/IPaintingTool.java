@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.api.common.painting;
 
-import moe.plushie.armourers_workshop.common.painting.PaintType;
 import net.minecraft.item.ItemStack;
 
 public interface IPaintingTool {
@@ -12,7 +11,7 @@ public interface IPaintingTool {
     
     public void setToolColour(ItemStack stack, int colour);
     
-    public void setToolPaintType(ItemStack stack, PaintType paintType);
+    public void setToolPaintType(ItemStack stack, IPaintType paintType);
     
-    public PaintType getToolPaintType(ItemStack stack);
+    public IPaintType getToolPaintType(ItemStack stack);
 }

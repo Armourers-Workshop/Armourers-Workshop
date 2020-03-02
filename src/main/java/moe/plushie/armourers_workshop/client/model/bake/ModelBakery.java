@@ -11,11 +11,11 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import org.apache.logging.log4j.Level;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
@@ -132,7 +132,7 @@ public final class ModelBakery {
             long startTime = System.currentTimeMillis();
             skin.lightHash();
             
-            int extraDyes = PaintRegistry.getExtraChannels();
+            int extraDyes = PaintTypeRegistry.getInstance().getExtraChannels();
             
             int[][] dyeColour;
             int[] dyeUseCount;
@@ -157,7 +157,7 @@ public final class ModelBakery {
                 for (int ix = 0; ix < SkinTexture.TEXTURE_WIDTH; ix++) {
                     for (int iy = 0; iy < SkinTexture.TEXTURE_HEIGHT; iy++) {
                         int paintColour = skin.getPaintData()[ix + (iy * SkinTexture.TEXTURE_WIDTH)];
-                        PaintType paintType = PaintRegistry.getPaintTypeFromColour(paintColour);
+                        IPaintType paintType = PaintTypeRegistry.getInstance().getPaintTypeFromColour(paintColour);
                         if (paintType.hasAverageColourChannel()) {
                             int index = paintType.getChannelIndex();
                             byte r = (byte) (paintColour >>> 16 & 0xFF);

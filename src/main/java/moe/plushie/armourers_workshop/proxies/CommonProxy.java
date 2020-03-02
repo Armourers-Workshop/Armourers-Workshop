@@ -35,7 +35,7 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiSkinLibraryCommand.SkinLibraryCommand;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerClientCommand.CommandType;
 import moe.plushie.armourers_workshop.common.network.messages.server.MessageServerLibrarySendSkin.SendType;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.permission.PermissionManager;
 import moe.plushie.armourers_workshop.common.skin.SkinExtractor;
 import moe.plushie.armourers_workshop.common.skin.advanced.value.SkinValueRegistry;
@@ -66,6 +66,8 @@ public class CommonProxy implements ILibraryCallback {
     private File modDirectory;
     private File skinLibraryDirectory;
 
+    private PaintTypeRegistry paintTypeRegistry;
+    
     private static ModItems modItems;
     private static ModBlocks modBlocks;
     private static ModSounds modSounds;
@@ -97,7 +99,7 @@ public class CommonProxy implements ILibraryCallback {
 
         SkinExtractor.extractSkins();
 
-        PaintRegistry.init();
+        paintTypeRegistry = new PaintTypeRegistry();
         SkinTypeRegistry.init();
         CubeRegistry.init();
         SkinValueRegistry.init();
@@ -147,6 +149,10 @@ public class CommonProxy implements ILibraryCallback {
 
     public void receivedCommandFromSever(CommandType command) {
 
+    }
+    
+    public PaintTypeRegistry getPaintTypeRegistry() {
+        return paintTypeRegistry;
     }
 
     public void receivedAdminPanelCommand(EntityPlayer player, AdminPanelCommand command) {

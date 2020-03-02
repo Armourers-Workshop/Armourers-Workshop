@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
@@ -12,8 +14,6 @@ import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.settings.Keybindings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;

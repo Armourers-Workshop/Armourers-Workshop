@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.api.common.skin.type;
 
 import moe.plushie.armourers_workshop.api.common.IPoint3D;
 import moe.plushie.armourers_workshop.api.common.IRectangle3D;
-import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
-import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPart;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -59,7 +59,7 @@ public interface ISkinPartType {
      * @param showHelper
      */
     @SideOnly(Side.CLIENT)
-    public void renderBuildingGuide(float scale, SkinProperties skinProps, boolean showHelper);
+    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper);
 
     /**
      * Get the minimum number of markers needed for this skin part.
@@ -88,9 +88,9 @@ public interface ISkinPartType {
     @SideOnly(Side.CLIENT)
     public IRectangle3D getItemRenderTextureBounds();
 
-    public boolean isModelOverridden(SkinProperties skinProps);
+    public boolean isModelOverridden(ISkinProperties skinProps);
 
-    public boolean isOverlayOverridden(SkinProperties skinProps);
+    public boolean isOverlayOverridden(ISkinProperties skinProps);
 
-    public SkinPart makeDummyPaintPart(int[] paintData);
+    public ISkinPart makeDummyPaintPart(int[] paintData);
 }

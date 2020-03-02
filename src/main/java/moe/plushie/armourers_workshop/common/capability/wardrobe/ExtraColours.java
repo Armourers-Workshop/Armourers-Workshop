@@ -2,9 +2,10 @@ package moe.plushie.armourers_workshop.common.capability.wardrobe;
 
 import java.util.Arrays;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 
-public class ExtraColours {
+public class ExtraColours implements IExtraColours {
 
     public static final int COLOUR_NONE = 0x00000000;
 
@@ -18,7 +19,7 @@ public class ExtraColours {
 
     public final int[] extraColoursArray;
 
-    public ExtraColours(ExtraColours extraColours) {
+    public ExtraColours(IExtraColours extraColours) {
         extraColoursArray = new int[ExtraColourType.values().length];
         for (int i = 0; i < ExtraColourType.values().length; i++) {
             setColour(ExtraColourType.values()[i], extraColours.getColour(ExtraColourType.values()[i]));
@@ -32,18 +33,22 @@ public class ExtraColours {
         }
     }
 
+    @Override
     public int getColour(ExtraColourType type) {
         return extraColoursArray[type.ordinal()];
     }
 
+    @Override
     public byte[] getColourBytes(ExtraColourType type) {
         return PaintingHelper.intToBytes(extraColoursArray[type.ordinal()]);
     }
 
+    @Override
     public void setColour(ExtraColourType type, int trgb) {
         extraColoursArray[type.ordinal()] = trgb;
     }
 
+    @Override
     public void setColourBytes(ExtraColourType type, byte[] rgbt) {
         extraColoursArray[type.ordinal()] = PaintingHelper.bytesToInt(rgbt);
     }
@@ -66,9 +71,5 @@ public class ExtraColours {
         if (!Arrays.equals(extraColoursArray, other.extraColoursArray))
             return false;
         return true;
-    }
-
-    public enum ExtraColourType {
-        SKIN, HAIR, EYE, MISC_1, MISC_2, MISC_3, MISC_4;
     }
 }

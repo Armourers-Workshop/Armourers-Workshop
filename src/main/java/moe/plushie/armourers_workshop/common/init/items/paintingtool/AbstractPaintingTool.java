@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPaintingTool;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
@@ -14,8 +15,7 @@ import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.init.items.AbstractModItem;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
@@ -48,8 +48,8 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     @SideOnly(Side.CLIENT)
     @Override
     public boolean hasEffect(ItemStack stack) {
-        PaintType paintType = PaintingHelper.getToolPaintType(stack);
-        if (paintType != PaintRegistry.PAINT_TYPE_NORMAL) {
+        IPaintType paintType = PaintingHelper.getToolPaintType(stack);
+        if (paintType != PaintTypeRegistry.PAINT_TYPE_NORMAL) {
             return true;
         }
         return false;
@@ -95,7 +95,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
             if (te != null && te instanceof IPantable) {
                 if (!worldIn.isRemote) {
                     int colour = ((IPantable)te).getColour(0);
-                    PaintType paintType = ((IPantable)te).getPaintType(0);
+                    IPaintType paintType = ((IPantable)te).getPaintType(0);
                     setToolColour(stack, colour);
                     setToolPaintType(stack, paintType);
                 }
@@ -156,7 +156,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         Color c = new Color(PaintingHelper.getToolDisplayColourRGB(stack));
-        PaintType paintType = getToolPaintType(stack);
+        IPaintType paintType = getToolPaintType(stack);
         String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
         String colourText = TranslateUtils.translate("item.armourers_workshop:rollover.colour", c.getRGB());
         String hexText = TranslateUtils.translate("item.armourers_workshop:rollover.hex", hex);
@@ -200,12 +200,12 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     }
     
     @Override
-    public void setToolPaintType(ItemStack stack, PaintType paintType) {
+    public void setToolPaintType(ItemStack stack, IPaintType paintType) {
         PaintingHelper.setToolPaint(stack, paintType);
     }
     
     @Override
-    public PaintType getToolPaintType(ItemStack stack) {
+    public IPaintType getToolPaintType(ItemStack stack) {
         return PaintingHelper.getToolPaintType(stack) ;
     }
 }

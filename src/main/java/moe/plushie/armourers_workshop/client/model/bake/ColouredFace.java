@@ -3,15 +3,15 @@ package moe.plushie.armourers_workshop.client.model.bake;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
 import moe.plushie.armourers_workshop.common.SkinHelper;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.proxies.ClientProxy.TexturePaintType;
@@ -52,10 +52,10 @@ public class ColouredFace {
         byte r = this.r;
         byte g = this.g;
         byte b = this.b;
-        PaintType type = PaintRegistry.getPaintTypeFormByte(t);
+        IPaintType type = PaintTypeRegistry.getInstance().getPaintTypeFormByte(t);
         ISkinDye skinDye = renderData.getSkinDye();
-        ExtraColours extraColours = renderData.getExtraColours();
-        if (type == PaintRegistry.PAINT_TYPE_NONE) {
+        IExtraColours extraColours = renderData.getExtraColours();
+        if (type == PaintTypeRegistry.PAINT_TYPE_NONE) {
             return;
         }
         int channelIndex = type.getChannelIndex();
@@ -66,12 +66,12 @@ public class ColouredFace {
             if (skinDye != null && skinDye.haveDyeInSlot(type.getId() - 1)) {
                 byte[] dye = skinDye.getDyeColour(type.getId() - 1);
                 if (dye.length == 4) {
-                    PaintType dyeType = PaintRegistry.getPaintTypeFormByte(dye[3]);
-                    if (dyeType == PaintRegistry.PAINT_TYPE_NONE) {
+                    IPaintType dyeType = PaintTypeRegistry.getInstance().getPaintTypeFormByte(dye[3]);
+                    if (dyeType == PaintTypeRegistry.PAINT_TYPE_NONE) {
                         return;
                     }
                     
-                    if (dyeType == PaintRegistry.PAINT_TYPE_NORMAL) {
+                    if (dyeType == PaintTypeRegistry.PAINT_TYPE_NORMAL) {
                         //index = dyeType.getChannelIndex();
                         int[] averageRGB = cspd.getAverageDyeColour(channelIndex);
                         byte[] dyedColour = null;
@@ -94,13 +94,13 @@ public class ColouredFace {
             }
         }
         
-        if (type == PaintRegistry.PAINT_TYPE_RAINBOW) {
+        if (type == PaintTypeRegistry.PAINT_TYPE_RAINBOW) {
             int[] averageRGB = cspd.getAverageDyeColour(channelIndex);
             byte[] dyedColour = dyeColour(r, g, b, new byte[] { (byte) 127, (byte) 127, (byte) 127 }, averageRGB);
             r = dyedColour[0];
             g = dyedColour[1];
             b = dyedColour[2];
-        } else if (type == PaintRegistry.PAINT_TYPE_TEXTURE & renderData.getEntityTexture() != null & ClientProxy.getTexturePaintType() != TexturePaintType.TEXTURE_REPLACE) {
+        } else if (type == PaintTypeRegistry.PAINT_TYPE_TEXTURE & renderData.getEntityTexture() != null & ClientProxy.getTexturePaintType() != TexturePaintType.TEXTURE_REPLACE) {
             if (renderData.getSkinPart().getPartType() instanceof ISkinPartTypeTextured) {
                 BufferedImage image = SkinHelper.getBufferedImageSkin(renderData.getEntityTexture());
                 if (image != null) {
@@ -245,9 +245,9 @@ public class ColouredFace {
         }
         int average = ((r & 0xFF) + (g & 0xFF) + (b & 0xFF)) / 3;
         int modelAverage = (modelAverageColour[0] + modelAverageColour[1] + modelAverageColour[2]) / 3;
-        int nR = (int) (average + (dyeColour[0] & 0xFF) - modelAverage);
-        int nG = (int) (average + (dyeColour[1] & 0xFF) - modelAverage);
-        int nB = (int) (average + (dyeColour[2] & 0xFF) - modelAverage);
+        int nR = average + (dyeColour[0] & 0xFF) - modelAverage;
+        int nG = average + (dyeColour[1] & 0xFF) - modelAverage;
+        int nB = average + (dyeColour[2] & 0xFF) - modelAverage;
         nR = MathHelper.clamp(nR, 0, 255);
         nG = MathHelper.clamp(nG, 0, 255);
         nB = MathHelper.clamp(nB, 0, 255);

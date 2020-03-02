@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.common.init.items.paintingtool;
 import java.util.ArrayList;
 import java.util.List;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.init.sounds.ModSounds;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
@@ -47,6 +47,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
     }
     
+    @Override
     public void onPaint(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing usedFace) {
         paintArea(world, player, block, stack, pos, usedFace);
     }
@@ -103,7 +104,7 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
         
         if (block instanceof IPantableBlock) {
             int newColour = getToolColour(stack);
-            PaintType paintType = getToolPaintType(stack);
+            IPaintType paintType = getToolPaintType(stack);
             if (!world.isRemote) {
                 IPantableBlock worldColourable = (IPantableBlock) block;
                 if (fullBlock) {

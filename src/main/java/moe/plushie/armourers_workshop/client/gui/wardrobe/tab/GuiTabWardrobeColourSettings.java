@@ -5,6 +5,10 @@ import java.awt.image.BufferedImage;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
+import moe.plushie.armourers_workshop.api.common.IExtraColours.ExtraColourType;
+import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
@@ -14,11 +18,8 @@ import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.common.SkinHelper;
-import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours.ExtraColourType;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
@@ -109,7 +110,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     }
 
     private void getColours() {
-        ExtraColours extraColours = wardrobeCapability.getExtraColours();
+        IExtraColours extraColours = wardrobeCapability.getExtraColours();
         colours = new Color[ExtraColourType.values().length];
         for (int i = 0; i < colours.length; i++) {
             colours[i] = new Color(extraColours.getColour(ExtraColourType.values()[i]), true);
@@ -120,7 +121,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (button == 0 & selectingColourType != null) {
             byte[] newColour = PaintingHelper.intToBytes(selectingColour.getRGB());
-            newColour[3] = (byte) PaintRegistry.PAINT_TYPE_NORMAL.getId();
+            newColour[3] = (byte) PaintTypeRegistry.PAINT_TYPE_NORMAL.getId();
             wardrobeCapability.getExtraColours().setColourBytes(selectingColourType, newColour);
             wardrobeCapability.sendUpdateToServer();
             selectingColourType = null;

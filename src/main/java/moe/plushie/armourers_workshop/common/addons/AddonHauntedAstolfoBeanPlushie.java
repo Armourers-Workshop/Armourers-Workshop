@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
@@ -12,7 +14,6 @@ import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
@@ -164,7 +165,7 @@ public class AddonHauntedAstolfoBeanPlushie extends ModAddon {
 
             ISkinType[] skinTypes = skinCapability.getValidSkinTypes();
             SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
-            ExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
+            IExtraColours extraColours = ExtraColours.EMPTY_COLOUR;
             IWardrobeCap wardrobe = WardrobeCap.get(entitylivingbaseIn);
             if (wardrobe != null) {
                 extraColours = wardrobe.getExtraColours();

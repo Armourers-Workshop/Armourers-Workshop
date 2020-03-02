@@ -4,10 +4,10 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.cubes.ICube;
 import moe.plushie.armourers_workshop.common.skin.data.SkinCubeData;
@@ -47,9 +47,9 @@ public final class SkinBaker {
             int cubeId = cubeData.getCubeId(i);
             byte[] cubeLoc = cubeData.getCubeLocation(i);
             skinPart.getClientSkinPartData().totalCubesInPart[cubeId] += 1;
-            int x = (int)cubeLoc[0] - pb.getX();
-            int y = (int)cubeLoc[1] - pb.getY();
-            int z = (int)cubeLoc[2] - pb.getZ();
+            int x = cubeLoc[0] - pb.getX();
+            int y = cubeLoc[1] - pb.getY();
+            int z = cubeLoc[2] - pb.getZ();
             cubeArray[x][y][z] = i + 1;
             if (ConfigHandlerClient.slowModelBaking) {
                 updates++;
@@ -192,7 +192,7 @@ public final class SkinBaker {
          * 1 = glowing
          */
 
-        renderLists = (ArrayList<ColouredFace>[]) new ArrayList[ClientProxy.getNumberOfRenderLayers() * (lodLevels + 1)];
+        renderLists = new ArrayList[ClientProxy.getNumberOfRenderLayers() * (lodLevels + 1)];
 
         for (int i = 0; i < renderLists.length; i++) {
             renderLists[i] = new ArrayList<ColouredFace>();
@@ -222,7 +222,7 @@ public final class SkinBaker {
                         byte[] b = cubeData.getCubeColourB(i);
 
                         for (int j = 0; j < 6; j++) {
-                            PaintType type = PaintRegistry.getPaintTypeFormByte(paintType[j]);
+                            IPaintType type = PaintTypeRegistry.getInstance().getPaintTypeFormByte(paintType[j]);
                             if (type.hasAverageColourChannel()) {
                                 int index = type.getChannelIndex();
                                 dyeUseCount[index]++;

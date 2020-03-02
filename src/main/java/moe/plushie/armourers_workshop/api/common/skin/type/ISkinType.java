@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.api.common.skin.type;
 
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperties;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperty;
-import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -71,5 +71,5 @@ public interface ISkinType {
     
     public ArrayList<ISkinProperty<?>> getProperties();
 
-    public boolean haveBoundsChanged(SkinProperties skinPropsOld, SkinProperties skinPropsNew);
+    public boolean haveBoundsChanged(ISkinProperties skinPropsOld, ISkinProperties skinPropsNew);
 }

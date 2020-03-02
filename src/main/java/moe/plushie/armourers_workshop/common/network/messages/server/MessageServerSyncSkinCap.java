@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.common.network.messages.server;
 import org.apache.logging.log4j.Level;
 
 import io.netty.buffer.ByteBuf;
+import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.network.messages.client.DelayedMessageHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.DelayedMessageHandler.IDelayedMessage;
 import moe.plushie.armourers_workshop.utils.ModLogger;

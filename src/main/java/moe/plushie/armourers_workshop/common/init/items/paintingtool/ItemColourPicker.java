@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPaintingTool;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
@@ -16,8 +17,7 @@ import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiToolOptionUpdate;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
@@ -55,8 +55,8 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     @SideOnly(Side.CLIENT)
     @Override
     public boolean hasEffect(ItemStack stack) {
-        PaintType paintType = PaintingHelper.getToolPaintType(stack);
-        if (paintType != PaintRegistry.PAINT_TYPE_NORMAL) {
+        IPaintType paintType = PaintingHelper.getToolPaintType(stack);
+        if (paintType != PaintTypeRegistry.PAINT_TYPE_NORMAL) {
             return true;
         }
         return false;
@@ -67,7 +67,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         IBlockState state = worldIn.getBlockState(pos);
         ItemStack stack = player.getHeldItem(hand);
         boolean changePaintType = ToolOptions.CHANGE_PAINT_TYPE.getValue(stack);
-        PaintType paintType = getToolPaintType(stack);
+        IPaintType paintType = getToolPaintType(stack);
         
         if (player.isSneaking() & state.getBlock() == ModBlocks.colourMixer & getToolHasColour(stack)) {
             TileEntity te = worldIn.getTileEntity(pos);
@@ -83,7 +83,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         
         if (state.getBlock() instanceof IPantableBlock) {
             IPantableBlock paintable = (IPantableBlock) state.getBlock();
-            PaintType targetPaintType = paintable.getPaintType(worldIn, pos, facing);
+            IPaintType targetPaintType = paintable.getPaintType(worldIn, pos, facing);
             
             if (paintable.isRemoteOnly(worldIn, pos, facing) & worldIn.isRemote) {
                 int colour = paintable.getColour(worldIn, pos, facing);
@@ -124,7 +124,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         super.addInformation(stack, worldIn, tooltip, flagIn);
         if (getToolHasColour(stack)) {
             Color c = new Color(getToolColour(stack));
-            PaintType paintType = getToolPaintType(stack);
+            IPaintType paintType = getToolPaintType(stack);
             String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
             tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.colour", c.getRGB()));
             tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.hex", hex));
@@ -167,12 +167,12 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
     }
     
     @Override
-    public void setToolPaintType(ItemStack stack, PaintType paintType) {
+    public void setToolPaintType(ItemStack stack, IPaintType paintType) {
         PaintingHelper.setToolPaint(stack, paintType);
     }
     
     @Override
-    public PaintType getToolPaintType(ItemStack stack) {
+    public IPaintType getToolPaintType(ItemStack stack) {
         return PaintingHelper.getToolPaintType(stack) ;
     }
     

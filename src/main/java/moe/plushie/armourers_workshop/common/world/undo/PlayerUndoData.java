@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

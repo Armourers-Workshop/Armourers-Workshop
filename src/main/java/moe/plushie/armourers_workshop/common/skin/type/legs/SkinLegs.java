@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.common.skin.type.legs;
 
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperties;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperty;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -50,7 +51,7 @@ public class SkinLegs extends AbstractSkinTypeBase {
     }
     
     @Override
-    public boolean haveBoundsChanged(SkinProperties skinPropsOld, SkinProperties skinPropsNew) {
+    public boolean haveBoundsChanged(ISkinProperties skinPropsOld, ISkinProperties skinPropsNew) {
         if (SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.getValue(skinPropsOld) != SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT.getValue(skinPropsNew)) {
             return true;
         }

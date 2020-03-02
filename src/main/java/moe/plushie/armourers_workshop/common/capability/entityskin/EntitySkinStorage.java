@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.common.capability.entityskin;
 
+import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;

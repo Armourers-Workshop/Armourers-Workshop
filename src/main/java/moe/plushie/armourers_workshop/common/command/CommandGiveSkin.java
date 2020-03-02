@@ -7,9 +7,9 @@ import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.Level;
 
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
@@ -93,10 +93,10 @@ public class CommandGiveSkin extends ModCommand {
 
             int dyeIndex = parseInt(commandSplit[0], 1, 8) - 1;
             String dye = commandSplit[1];
-            PaintType t = PaintRegistry.PAINT_TYPE_NORMAL;
+            IPaintType t = PaintTypeRegistry.PAINT_TYPE_NORMAL;
             if (commandSplit.length == 3) {
                 String dyeString = commandSplit[2];
-                t = PaintRegistry.getPaintTypeFormName(dyeString);
+                t = PaintTypeRegistry.getInstance().getPaintTypeFormName(dyeString);
             }
 
             if (dye.startsWith("#") && dye.length() == 7) {

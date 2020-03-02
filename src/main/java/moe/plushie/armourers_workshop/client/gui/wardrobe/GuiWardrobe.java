@@ -8,6 +8,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTab;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
@@ -25,8 +27,6 @@ import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.common.Contributors;
 import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;

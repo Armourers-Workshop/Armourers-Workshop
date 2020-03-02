@@ -4,9 +4,9 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
 import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperties;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.model.armourer.ModelLegs;
-import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.AbstractSkinPartTypeBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -28,7 +28,7 @@ public class SkinSkirtPartBase extends AbstractSkinPartTypeBase {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void renderBuildingGuide(float scale, SkinProperties skinProps, boolean showHelper) {
+    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
         GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
         GL11.glTranslated(2 * scale, 0, 0);

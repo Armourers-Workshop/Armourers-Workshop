@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelSkinLegs extends ModelTypeHelper {
 
     @Override
-    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, ExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
+    public void render(Entity entity, Skin skin, boolean showSkinPaint, ISkinDye skinDye, IExtraColours extraColours, boolean itemRender, double distance, boolean doLodLoading) {
         render(entity, skin, new SkinRenderData(SCALE, skinDye, extraColours, distance, doLodLoading, showSkinPaint, itemRender, null));
     }
 

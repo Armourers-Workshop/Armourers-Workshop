@@ -1,18 +1,18 @@
 
 package moe.plushie.armourers_workshop.common.inventory;
 
+import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.init.items.ItemDyeBottle;
 import moe.plushie.armourers_workshop.common.init.items.ItemSkin;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotDyeBottle;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
@@ -262,7 +262,7 @@ public class ContainerSkinWardrobe extends ModContainer {
                     byte[] rgbt = dye.getDyeColour(i);
                     ItemStack bottle = new ItemStack(ModItems.dyeBottle, 1, 1);
                     PaintingHelper.setToolPaintColour(bottle, rgbt);
-                    PaintingHelper.setToolPaint(bottle, PaintRegistry.getPaintTypeFormByte(rgbt[3]));
+                    PaintingHelper.setToolPaint(bottle, PaintTypeRegistry.getInstance().getPaintTypeFormByte(rgbt[3]));
                     if (dye.hasName(i)) {
                         bottle.setStackDisplayName(dye.getDyeName(i));
                     }

@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop;
 
 import org.apache.logging.log4j.Logger;
 
-import moe.plushie.armourers_workshop.common.ApiRegistrar;
 import moe.plushie.armourers_workshop.common.command.CommandArmourers;
 import moe.plushie.armourers_workshop.common.creativetab.CreativeTabMain;
 import moe.plushie.armourers_workshop.common.creativetab.CreativeTabPaintingTools;
@@ -15,8 +14,6 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
-import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
@@ -73,19 +70,6 @@ public class ArmourersWorkshop {
     @EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
         CommonSkinCache.INSTANCE.serverStopped();
-    }
-
-    @EventHandler
-    public void processIMC(FMLInterModComms.IMCEvent event) {
-        for (IMCMessage imcMessage : event.getMessages()) {
-            if (!imcMessage.isStringMessage()) {
-                continue;
-            }
-            if (imcMessage.key.equalsIgnoreCase("register")) {
-                ModLogger.log(String.format("Receiving registration request from %s for class %s", imcMessage.getSender(), imcMessage.getStringValue()));
-                ApiRegistrar.INSTANCE.addApiRequest(imcMessage.getSender(), imcMessage.getStringValue());
-            }
-        }
     }
 
     public static boolean isDedicated() {

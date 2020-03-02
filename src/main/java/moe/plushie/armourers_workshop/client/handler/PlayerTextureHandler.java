@@ -5,14 +5,14 @@ import java.util.Map;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
+import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
+import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.EntityTextureInfo;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.entityskin.IEntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;

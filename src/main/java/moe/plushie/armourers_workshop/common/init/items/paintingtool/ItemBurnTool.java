@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.init.items.AbstractModItem;
@@ -14,8 +15,7 @@ import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientToolPaintBlock;
 import moe.plushie.armourers_workshop.common.painting.IBlockPainter;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.tool.IConfigurableTool;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOption;
 import moe.plushie.armourers_workshop.common.painting.tool.ToolOptions;
@@ -90,14 +90,14 @@ public class ItemBurnTool extends AbstractModItem implements IConfigurableTool, 
         if (worldColourable.isRemoteOnly(world, pos, face) & world.isRemote) {
             byte[] rgbt = new byte[4];
             int oldColour = worldColourable.getColour(world, pos, face);
-            PaintType oldPaintType = worldColourable.getPaintType(world, pos, face);
+            IPaintType oldPaintType = worldColourable.getPaintType(world, pos, face);
             Color c = UtilColour.makeColourDarker(new Color(oldColour), intensity);
             rgbt[0] = (byte)c.getRed();
             rgbt[1] = (byte)c.getGreen();
             rgbt[2] = (byte)c.getBlue();
             rgbt[3] = (byte)oldPaintType.getId();
-            if (block == ModBlocks.boundingBox && oldPaintType == PaintRegistry.PAINT_TYPE_NONE) {
-                rgbt[3] = (byte)PaintRegistry.PAINT_TYPE_NORMAL.getId();
+            if (block == ModBlocks.boundingBox && oldPaintType == PaintTypeRegistry.PAINT_TYPE_NONE) {
+                rgbt[3] = (byte)PaintTypeRegistry.PAINT_TYPE_NORMAL.getId();
             }
             MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(pos, face, rgbt);
             PacketHandler.networkWrapper.sendToServer(message);

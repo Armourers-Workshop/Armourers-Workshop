@@ -2,9 +2,10 @@ package moe.plushie.armourers_workshop.common.capability.wardrobe.player;
 
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
 import moe.plushie.armourers_workshop.api.common.skin.entity.ISkinnableEntity;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.nbt.NBTBase;

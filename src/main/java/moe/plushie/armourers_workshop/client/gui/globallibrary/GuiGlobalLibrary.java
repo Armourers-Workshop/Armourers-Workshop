@@ -59,7 +59,7 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
     private Screen screen;
 
     public static enum Screen {
-        HOME, SEARCH, UPLOAD, SKIN_INFO, USER_SKINS, FAVOURITES, JOIN_BETA, SKIN_EDIT
+        HOME, SEARCH, UPLOAD, SKIN_INFO, USER_SKINS, FAVOURITES, JOIN_BETA, SKIN_EDIT, INFO
     }
 
     public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity, InventoryPlayer inventoryPlayer) {
@@ -231,7 +231,7 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
             setSlotVisibility(true);
             break;
         case JOIN_BETA:
-            panelJoinBeta.setPosition(5, yOffset).setSize(width - PADDING * 2, height - yOffset - PADDING - neiBump);
+            panelJoinBeta.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
             panelJoinBeta.setVisible(true);
             break;
         case USER_SKINS:
@@ -247,8 +247,6 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
             yOffset += panelSearchBox.getHeight() + 1;
             panelSkinEdit.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
             panelSkinEdit.setVisible(true);
-            break;
-        default:
             break;
         }
     }

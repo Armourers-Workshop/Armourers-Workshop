@@ -3,11 +3,11 @@ package moe.plushie.armourers_workshop.common.init.blocks;
 import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
-import moe.plushie.armourers_workshop.common.painting.PaintRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintType;
+import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.permission.Permission;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
@@ -45,10 +45,12 @@ public class BlockSkinCube extends AbstractModBlockContainer implements IPantabl
         return new BlockStateContainer(this, new IProperty[] {STATE_MARKER});
     }
     
+    @Override
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState().withProperty(STATE_MARKER, meta);
     }
 
+    @Override
     public int getMetaFromState(IBlockState state) {
         return state.getValue(STATE_MARKER);
     }
@@ -105,7 +107,7 @@ public class BlockSkinCube extends AbstractModBlockContainer implements IPantabl
     }
     
     @Override
-    public void setPaintType(IBlockAccess world, BlockPos pos, PaintType paintType, EnumFacing facing) {
+    public void setPaintType(IBlockAccess world, BlockPos pos, IPaintType paintType, EnumFacing facing) {
         TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof IPantable) {
             ((IPantable)te).setPaintType(paintType, facing.ordinal());
@@ -113,12 +115,12 @@ public class BlockSkinCube extends AbstractModBlockContainer implements IPantabl
     }
     
     @Override
-    public PaintType getPaintType(IBlockAccess world, BlockPos pos, EnumFacing facing) {
+    public IPaintType getPaintType(IBlockAccess world, BlockPos pos, EnumFacing facing) {
         TileEntity te = world.getTileEntity(pos);
         if (te != null & te instanceof IPantable) {
             return ((IPantable)te).getPaintType(facing.ordinal());
         }
-        return PaintRegistry.PAINT_TYPE_NORMAL;
+        return PaintTypeRegistry.PAINT_TYPE_NORMAL;
     }
     
     @Override

@@ -3,6 +3,8 @@ package moe.plushie.armourers_workshop.common.network;
 import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
+import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
 import moe.plushie.armourers_workshop.client.gui.GuiAdminPanel;
 import moe.plushie.armourers_workshop.client.gui.GuiDebugTool;
 import moe.plushie.armourers_workshop.client.gui.GuiGuideBook;
@@ -10,9 +12,7 @@ import moe.plushie.armourers_workshop.client.gui.GuiToolOptions;
 import moe.plushie.armourers_workshop.client.gui.miniarmourer.GuiMiniArmourer;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.IWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
-import moe.plushie.armourers_workshop.common.capability.wardrobe.player.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
