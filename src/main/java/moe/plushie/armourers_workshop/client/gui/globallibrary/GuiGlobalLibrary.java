@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.client.gui.controls.ModGuiContainer;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPaneJoinBeta;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHome;
+import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelInfo;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchBox;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinEdit;
@@ -56,6 +57,8 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
     public GuiGlobalLibraryPaneJoinBeta panelJoinBeta;
     public GuiGlobalLibraryPanelUserSkins panelUserSkins;
     public GuiGlobalLibraryPanelSkinEdit panelSkinEdit;
+    public GuiGlobalLibraryPanelInfo panelInfo;
+    
     private Screen screen;
 
     public static enum Screen {
@@ -94,6 +97,9 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
 
         panelSkinEdit = new GuiGlobalLibraryPanelSkinEdit(this, 5, 5, 100, 100);
         panelList.add(panelSkinEdit);
+        
+        panelInfo = new GuiGlobalLibraryPanelInfo(this);
+        panelList.add(panelInfo);
 
         screen = Screen.HOME;
         isNEIVisible = ModAddonManager.addonNEI.isVisible();
@@ -247,6 +253,15 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
             yOffset += panelSearchBox.getHeight() + 1;
             panelSkinEdit.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
             panelSkinEdit.setVisible(true);
+            break;
+        case FAVOURITES:
+            panelSearchBox.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
+            panelSearchBox.setVisible(true);
+            yOffset += panelSearchBox.getHeight() + 1;
+            break;
+        case INFO:
+            panelInfo.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
+            panelInfo.setVisible(true);
             break;
         }
     }
