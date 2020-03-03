@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.api;
 
-import javax.annotation.Nonnull;
-
 import moe.plushie.armourers_workshop.api.common.ISkinNBTUtils;
 import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
@@ -56,11 +54,11 @@ public final class ArmourersWorkshopApi {
         return paintTypeRegistry;
     }
 
-    public static IEntitySkinCapability getEntitySkinCapability(@Nonnull Entity entity) {
+    public static IEntitySkinCapability getEntitySkinCapability(Entity entity) {
         return entity.getCapability(ENTITY_SKIN_CAP, null);
     }
 
-    public static IWardrobeCap getEntitWardrobeCapability(Entity entity) {
+    public static IWardrobeCap getEntityWardrobeCapability(Entity entity) {
         return entity.getCapability(ENTITY_WARDROBE_CAP, null);
     }
 
