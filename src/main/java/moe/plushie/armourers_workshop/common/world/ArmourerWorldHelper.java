@@ -255,7 +255,7 @@ public final class ArmourerWorldHelper {
         
         BlockPos target = pos.add(shiftX + origin.getX(), origin.getY() - shiftY, shiftZ + origin.getZ());
         
-        if (world.getBlockState(target).getBlock() == ModBlocks.boundingBox) {
+        if (world.getBlockState(target).getBlock() == ModBlocks.BOUNDING_BOX) {
             SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(Blocks.AIR.getDefaultState(), target, world));
             //world.setBlockToAir(target);
             //world.removeTileEntity(target);
@@ -326,7 +326,7 @@ public final class ArmourerWorldHelper {
                     byte guideZ = (byte) iz;
                     
                     TileEntity te = new TileEntityBoundingBox(parentPos, guideX, guideY, guideZ, guidePart);
-                    SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(ModBlocks.boundingBox.getDefaultState(), target, world).setTileEntity(te).setOnlyReplaceable(true));
+                    SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(ModBlocks.BOUNDING_BOX.getDefaultState(), target, world).setTileEntity(te).setOnlyReplaceable(true));
                 }
             }
         }
@@ -357,7 +357,7 @@ public final class ArmourerWorldHelper {
                             iz + offset.getZ() + guideSpace.getZ());
                     
                     if (world.isValid(pos)) {
-                        if (world.getBlockState(target).getBlock() == ModBlocks.boundingBox) {
+                        if (world.getBlockState(target).getBlock() == ModBlocks.BOUNDING_BOX) {
                             SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(Blocks.AIR.getDefaultState(), target, world));
                             //world.setBlockToAir(target);
                         }

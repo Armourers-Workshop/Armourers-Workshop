@@ -33,51 +33,31 @@ public class ModBlocks {
 
     public static ArrayList<Block> BLOCK_LIST = new ArrayList<Block>();
 
-    public static Block armourer;
-    // public static Block miniArmourer;
-    public static Block skinLibrary;
-    public static Block globalSkinLibrary;
-    public static Block boundingBox;
-    public static Block skinCube;
-    public static Block skinCubeGlowing;
-    public static Block skinCubeGlass;
-    public static Block skinCubeGlassGlowing;
-    public static Block colourMixer;
-    public static Block mannequin;
-    public static Block doll;
-    public static Block skinningTable;
-    public static Block skinnable;
-    public static Block skinnableGlowing;
-    public static Block skinnableChild;
-    public static Block skinnableChildGlowing;
-    public static Block dyeTable;
-    public static Block hologramProjector;
-    public static Block outfitMaker;
+    public static final Block ARMOURER = new BlockArmourer();
+    // public static final Block MINI_ARMOURER = new BlockMiniArmourer();
+    public static final Block SKIN_LIBRARY = new BlockSkinLibrary();
+    public static final Block GLOBAL_SKIN_LIBRARY = new BlockGlobalSkinLibrary();
+    public static final Block BOUNDING_BOX = new BlockBoundingBox();
+    public static final Block SKIN_CUBE = new BlockSkinCube(LibBlockNames.SKIN_CUBE, false);
+    public static final Block SKIN_CUBE_GLASS = new BlockSkinCubeGlass(LibBlockNames.SKIN_CUBE_GLASS, false);
+    public static final Block SKIN_CUBE_GLOWING = new BlockSkinCube(LibBlockNames.SKIN_CUBE_GLOWING, true);
+    public static final Block SKIN_CUBE_GLASS_GLOWING = new BlockSkinCubeGlass(LibBlockNames.SKIN_CUBE_GLASS_GLOWING, true);
+    public static final Block COLOUR_MIXER = new BlockColourMixer();
+    public static final Block MANNEQUIN = new BlockMannequin();
+    public static final Block DOLL = new BlockDoll();
+    public static final Block SKINNING_TABLE = new BlockSkinningTable();
+    public static final Block SKINNABLE = new BlockSkinnable();
+    public static final Block SKINNABLE_GLOWING = new BlockSkinnableGlowing();
+    public static final Block SKINNABLE_CHILD = new BlockSkinnableChild();
+    public static final Block SKINNABLE_CHILD_GLOWING = new BlockSkinnableChildGlowing();
+    public static final Block DYE_TABLE = new BlockDyeTable();
+    public static final Block HOLOGRAM_PROJECTOR = new BlockHologramProjector();
+    public static final Block OUTFIT_MAKER = new BlockOutfitMaker();
     public static final Block ADVANCED_SKIN_BUILDER = new BlockAdvancedSkinBuilder();
     public static final Block ADVANCED_SKIN_PART = new BlockAdvancedSkinPart();
 
     public ModBlocks() {
         MinecraftForge.EVENT_BUS.register(this);
-        armourer = new BlockArmourer();
-        // miniArmourer = new BlockMiniArmourer();
-        skinLibrary = new BlockSkinLibrary();
-        globalSkinLibrary = new BlockGlobalSkinLibrary();
-        boundingBox = new BlockBoundingBox();
-        skinCube = new BlockSkinCube(LibBlockNames.SKIN_CUBE, false);
-        skinCubeGlowing = new BlockSkinCube(LibBlockNames.SKIN_CUBE_GLOWING, true);
-        skinCubeGlass = new BlockSkinCubeGlass(LibBlockNames.SKIN_CUBE_GLASS, false);
-        skinCubeGlassGlowing = new BlockSkinCubeGlass(LibBlockNames.SKIN_CUBE_GLASS_GLOWING, true);
-        colourMixer = new BlockColourMixer();
-        mannequin = new BlockMannequin();
-        doll = new BlockDoll();
-        skinningTable = new BlockSkinningTable();
-        skinnable = new BlockSkinnable();
-        skinnableGlowing = new BlockSkinnableGlowing();
-        skinnableChild = new BlockSkinnableChild();
-        skinnableChildGlowing = new BlockSkinnableChildGlowing();
-        dyeTable = new BlockDyeTable();
-        hologramProjector = new BlockHologramProjector();
-        outfitMaker = new BlockOutfitMaker();
     }
 
     @SubscribeEvent

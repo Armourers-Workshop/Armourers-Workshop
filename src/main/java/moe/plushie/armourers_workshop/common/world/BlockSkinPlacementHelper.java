@@ -48,9 +48,9 @@ public final class BlockSkinPlacementHelper {
         }
         EnumFacing dir = UtilPlayer.getDirectionSide(player).getOpposite();
         
-        BlockSkinnable targetBlock = (BlockSkinnable) ModBlocks.skinnable;
+        BlockSkinnable targetBlock = (BlockSkinnable) ModBlocks.SKINNABLE;
         if (SkinProperties.PROP_BLOCK_GLOWING.getValue(skin.getProperties())) {
-            targetBlock = (BlockSkinnable) ModBlocks.skinnableGlowing;
+            targetBlock = (BlockSkinnable) ModBlocks.SKINNABLE_GLOWING;
         }
         
         boolean multiblock = SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skin.getProperties());
@@ -126,11 +126,11 @@ public final class BlockSkinPlacementHelper {
     private static void placeChild(World world, EntityPlayer player, EnumFacing sidePlacedOn, BlockPos pos, int ix, int iy, int iz, Skin skin, ISkinDescriptor descriptor, ArrayList<BlockPos> relatedBlocks) {
         EnumFacing dir = UtilPlayer.getDirectionSide(player).getOpposite();
         
-        BlockSkinnable targetBlock = (BlockSkinnable) ModBlocks.skinnableChild;
+        BlockSkinnable targetBlock = (BlockSkinnable) ModBlocks.SKINNABLE_CHILD;
         
         IBlockState state = targetBlock.getDefaultState().withProperty(BlockSkinnable.STATE_FACING, dir);
         if (SkinProperties.PROP_BLOCK_GLOWING.getValue(skin.getProperties())) {
-            targetBlock = (BlockSkinnable) ModBlocks.skinnableChildGlowing;
+            targetBlock = (BlockSkinnable) ModBlocks.SKINNABLE_CHILD_GLOWING;
         }
         
         float[] bounds = TileEntitySkinnable.getBlockBounds(skin, -ix + 2, iy, iz, dir);

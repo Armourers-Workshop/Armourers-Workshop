@@ -78,8 +78,8 @@ public class ItemPaintRoller extends AbstractPaintingTool implements IConfigurab
                     break;
                 }
                 Block block = world.getBlockState(target).getBlock();
-                if ((targetBlock != ModBlocks.boundingBox & block != ModBlocks.boundingBox) |
-                        (targetBlock == ModBlocks.boundingBox & block == ModBlocks.boundingBox)) {
+                if ((targetBlock != ModBlocks.BOUNDING_BOX & block != ModBlocks.BOUNDING_BOX) |
+                        (targetBlock == ModBlocks.BOUNDING_BOX & block == ModBlocks.BOUNDING_BOX)) {
                     usedOnBlockSide(stack, player, world, target, block, face, true);
                 }
             }

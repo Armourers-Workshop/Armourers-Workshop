@@ -28,6 +28,6 @@ public class Cube implements ICube {
     
     @Override
     public Block getMinecraftBlock() {
-        return ModBlocks.skinCube;
+        return ModBlocks.SKIN_CUBE;
     }
 }

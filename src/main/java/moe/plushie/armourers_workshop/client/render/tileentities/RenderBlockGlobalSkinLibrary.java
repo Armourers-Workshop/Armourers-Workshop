@@ -27,7 +27,7 @@ public class RenderBlockGlobalSkinLibrary extends TileEntitySpecialRenderer<Tile
             float xPos = 2.5F;
             float yPos = 4.6F;
             IBlockState state = te.getWorld().getBlockState(te.getPos());
-            if (state.getBlock() == ModBlocks.globalSkinLibrary) {
+            if (state.getBlock() == ModBlocks.GLOBAL_SKIN_LIBRARY) {
                 EnumFacing facing = state.getValue(BlockGlobalSkinLibrary.STATE_FACING);
                 GlStateManager.translate(
                         (xPos * SCALE * facing.getZOffset()) + (yPos * SCALE * -facing.getXOffset()),

@@ -20,7 +20,7 @@ public class HolidayChristmasSeason extends Holiday {
     
     @Override
     public ItemStack getGift(EntityPlayer player) {
-        ItemStack gift = new ItemStack(ModBlocks.doll);
+        ItemStack gift = new ItemStack(ModBlocks.DOLL);
         if (player != null) {
             gift.setTagCompound(new NBTTagCompound());
             NBTTagCompound owner = new NBTTagCompound();

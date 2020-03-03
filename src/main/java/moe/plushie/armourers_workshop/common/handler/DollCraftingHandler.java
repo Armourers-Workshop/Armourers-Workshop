@@ -74,7 +74,7 @@ public class DollCraftingHandler implements IWorldEventListener {
                 if (((EntityFallingBlock)entityIn).getBlock().getBlock() == Blocks.ANVIL) {
                     BlockPos pos = entityIn.getPosition();
                     IBlockState state = world.getBlockState(pos.offset(EnumFacing.DOWN));
-                    if (state.getBlock() == ModBlocks.mannequin) {
+                    if (state.getBlock() == ModBlocks.MANNEQUIN) {
                         ((BlockMannequin)state.getBlock()).convertToDoll(world, pos);
                     }
                 }

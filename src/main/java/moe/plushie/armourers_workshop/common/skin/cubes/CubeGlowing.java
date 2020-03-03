@@ -12,6 +12,6 @@ public class CubeGlowing extends Cube {
     
     @Override
     public Block getMinecraftBlock() {
-        return ModBlocks.skinCubeGlowing;
+        return ModBlocks.SKIN_CUBE_GLOWING;
     }
 }

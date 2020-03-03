@@ -40,7 +40,7 @@ public class ItemDyeBottle extends AbstractModItem implements IPaintingTool {
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         IBlockState state = worldIn.getBlockState(pos);
-        if (player.isSneaking() & state.getBlock() == ModBlocks.colourMixer) {
+        if (player.isSneaking() & state.getBlock() == ModBlocks.COLOUR_MIXER) {
             TileEntity te = worldIn.getTileEntity(pos);
             if (te != null && te instanceof IPantable) {
                 if (!worldIn.isRemote) {

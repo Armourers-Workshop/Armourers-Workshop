@@ -20,7 +20,7 @@ public class CreativeTabMain extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(ModBlocks.armourer);
+        return new ItemStack(ModBlocks.ARMOURER);
     }
     
     @SideOnly(Side.CLIENT)

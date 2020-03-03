@@ -44,7 +44,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
         IBlockState state = worldIn.getBlockState(pos);
         ItemStack stack = player.getHeldItem(hand);
 
-        if (player.isSneaking() & state.getBlock() == ModBlocks.colourMixer) {
+        if (player.isSneaking() & state.getBlock() == ModBlocks.COLOUR_MIXER) {
             TileEntity te = worldIn.getTileEntity(pos);
             if (te != null && te instanceof IPantable) {
                 if (!worldIn.isRemote) {
@@ -77,7 +77,7 @@ public class ItemHueTool extends AbstractPaintingTool implements IConfigurableTo
             return EnumActionResult.SUCCESS;
         }
 
-        if (state.getBlock() == ModBlocks.armourer & player.isSneaking()) {
+        if (state.getBlock() == ModBlocks.ARMOURER & player.isSneaking()) {
             if (!worldIn.isRemote) {
                 TileEntity te = worldIn.getTileEntity(pos);
                 if (te != null && te instanceof TileEntityArmourer) {

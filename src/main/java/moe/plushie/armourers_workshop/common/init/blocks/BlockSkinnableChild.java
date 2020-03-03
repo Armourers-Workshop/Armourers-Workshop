@@ -22,6 +22,6 @@ public class BlockSkinnableChild extends BlockSkinnable  {
     
     @Override
     public String getPermissionName() {
-        return ((IPermissionHolder)ModBlocks.skinnable).getPermissionName();
+        return ((IPermissionHolder)ModBlocks.SKINNABLE).getPermissionName();
     }
 }

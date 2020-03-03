@@ -80,7 +80,7 @@ public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurable
             return EnumActionResult.SUCCESS;
         }
         
-        if (state.getBlock() == ModBlocks.armourer & player.isSneaking()) {
+        if (state.getBlock() == ModBlocks.ARMOURER & player.isSneaking()) {
             if (!worldIn.isRemote) {
                 TileEntity te = worldIn.getTileEntity(pos);
                 if (te != null && te instanceof TileEntityArmourer) {
@@ -106,7 +106,7 @@ public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurable
             rgbt[1] = (byte)c.getGreen();
             rgbt[2] = (byte)c.getBlue();
             rgbt[3] = (byte)oldPaintType.getId();
-            if (block == ModBlocks.boundingBox && oldPaintType == PaintTypeRegistry.PAINT_TYPE_NONE) {
+            if (block == ModBlocks.BOUNDING_BOX && oldPaintType == PaintTypeRegistry.PAINT_TYPE_NONE) {
                 rgbt[3] = (byte)PaintTypeRegistry.PAINT_TYPE_NORMAL.getId();
             }
             MessageClientToolPaintBlock message = new MessageClientToolPaintBlock(pos, face, rgbt);

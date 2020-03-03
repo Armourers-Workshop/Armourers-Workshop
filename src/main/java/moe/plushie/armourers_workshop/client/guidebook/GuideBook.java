@@ -39,16 +39,16 @@ public class GuideBook extends BookBase {
         chapterContents.addPage(new BookPageContents(this));
         
         //Blocks
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.armourer));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinLibrary));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinCube));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinCubeGlass));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinCubeGlowing));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinCubeGlassGlowing));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.colourMixer));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.mannequin));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.skinningTable));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.dyeTable));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.ARMOURER));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.SKIN_LIBRARY));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.SKIN_CUBE));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.SKIN_CUBE_GLASS));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.SKIN_CUBE_GLOWING));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.SKIN_CUBE_GLASS_GLOWING));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.COLOUR_MIXER));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.MANNEQUIN));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.SKINNING_TABLE));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.DYE_TABLE));
         
         //Items
         chapterRecipes.addPage(new BookPageRecipe(this, ModItems.paintbrush));

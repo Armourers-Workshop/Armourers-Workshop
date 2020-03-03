@@ -28,7 +28,7 @@ public class ItemSoap extends AbstractModItem {
             IPantableBlock paintableBlock = (IPantableBlock) state.getBlock();
             // TODO This may make block sides transparent.
         }
-        if (state.getBlock() == ModBlocks.boundingBox) {
+        if (state.getBlock() == ModBlocks.BOUNDING_BOX) {
             BlockBoundingBox bb = (BlockBoundingBox) state.getBlock();
             if (!worldIn.isRemote) {
                 bb.setColour(worldIn, pos, 0x00FFFFFF, facing);

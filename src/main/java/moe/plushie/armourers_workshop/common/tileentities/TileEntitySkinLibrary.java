@@ -4,8 +4,8 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.gui.skinlibrary.GuiSkinLibrary;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockSkinLibrary;
-import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockSkinLibrary.EnumLibraryType;
+import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.init.items.ItemSkin;
 import moe.plushie.armourers_workshop.common.init.items.ItemSkinTemplate;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
@@ -54,7 +54,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
     
     public boolean isCreativeLibrary() {
         IBlockState blockState = getWorld().getBlockState(getPos());
-        if (blockState.getBlock() == ModBlocks.skinLibrary) {
+        if (blockState.getBlock() == ModBlocks.SKIN_LIBRARY) {
             return blockState.getValue(BlockSkinLibrary.STATE_TYPE) == EnumLibraryType.CREATIVE;
         }
         return false;

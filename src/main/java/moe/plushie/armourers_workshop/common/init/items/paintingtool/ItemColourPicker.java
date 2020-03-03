@@ -69,7 +69,7 @@ public class ItemColourPicker extends AbstractModItem implements IPaintingTool, 
         boolean changePaintType = ToolOptions.CHANGE_PAINT_TYPE.getValue(stack);
         IPaintType paintType = getToolPaintType(stack);
         
-        if (player.isSneaking() & state.getBlock() == ModBlocks.colourMixer & getToolHasColour(stack)) {
+        if (player.isSneaking() & state.getBlock() == ModBlocks.COLOUR_MIXER & getToolHasColour(stack)) {
             TileEntity te = worldIn.getTileEntity(pos);
             if (te != null && te instanceof IPantable) {
                 if (!worldIn.isRemote) {

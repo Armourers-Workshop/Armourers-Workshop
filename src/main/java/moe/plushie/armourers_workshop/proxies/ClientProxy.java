@@ -134,8 +134,8 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         ModelMannequin modelSteve = new ModelMannequin(false);
         ModelMannequin modelAlex = new ModelMannequin(true);
         RenderItemMannequin renderItemMannequin = new RenderItemMannequin(modelSteve, modelAlex);
-        Item.getItemFromBlock(ModBlocks.mannequin).setTileEntityItemStackRenderer(renderItemMannequin);
-        Item.getItemFromBlock(ModBlocks.doll).setTileEntityItemStackRenderer(renderItemMannequin);
+        Item.getItemFromBlock(ModBlocks.MANNEQUIN).setTileEntityItemStackRenderer(renderItemMannequin);
+        Item.getItemFromBlock(ModBlocks.DOLL).setTileEntityItemStackRenderer(renderItemMannequin);
     }
 
     @Override
@@ -188,11 +188,11 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.soap);
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.giftSack);
 
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.skinCube);
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.skinCubeGlass);
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.skinCubeGlowing);
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.skinCubeGlassGlowing);
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.colourMixer);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.SKIN_CUBE);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.SKIN_CUBE_GLASS);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.SKIN_CUBE_GLOWING);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.SKIN_CUBE_GLASS_GLOWING);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.COLOUR_MIXER);
     }
 
     @Override

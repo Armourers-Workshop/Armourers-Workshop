@@ -20,6 +20,6 @@ public class BlockSkinnableChildGlowing extends BlockSkinnableChild {
     
     @Override
     public String getPermissionName() {
-        return ((IPermissionHolder)ModBlocks.skinnable).getPermissionName();
+        return ((IPermissionHolder)ModBlocks.SKINNABLE).getPermissionName();
     }
 }

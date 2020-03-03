@@ -64,7 +64,7 @@ public class BlockDoll extends AbstractModBlockContainer {
     }
 
     public static ItemStack getStackWithTexture(PlayerTexture playerTexture) {
-        ItemStack result = new ItemStack(ModBlocks.doll);
+        ItemStack result = new ItemStack(ModBlocks.DOLL);
         result.setTagCompound(new NBTTagCompound());
         playerTexture.writeToNBT(result.getTagCompound());
         return result;
@@ -160,7 +160,7 @@ public class BlockDoll extends AbstractModBlockContainer {
     }
 
     private ItemStack createItemStackFromTile(TileEntityMannequin te) {
-        ItemStack stack = new ItemStack(ModBlocks.doll, 1);
+        ItemStack stack = new ItemStack(ModBlocks.DOLL, 1);
         if (te != null) {
             if (te.PROP_OWNER.get() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();

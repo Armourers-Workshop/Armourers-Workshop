@@ -221,7 +221,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
                 te.writeCommonToNBT(compound);
                 te.writeItemsToNBT(compound);
                 world.setBlockToAir(pos.offset(EnumFacing.UP));
-                world.setBlockState(pos, ModBlocks.doll.getDefaultState(), 3);
+                world.setBlockState(pos, ModBlocks.DOLL.getDefaultState(), 3);
                 TileEntity newTe = world.getTileEntity(pos);
                 if (newTe != null && newTe instanceof TileEntityMannequin) {
                     ((TileEntityMannequin) newTe).readCommonFromNBT(compound);
@@ -310,7 +310,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
     }
 
     private ItemStack createItemStackFromTile(TileEntityMannequin te) {
-        ItemStack stack = new ItemStack(ModBlocks.mannequin, 1);
+        ItemStack stack = new ItemStack(ModBlocks.MANNEQUIN, 1);
         if (te != null) {
             if (te.PROP_OWNER.get() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();

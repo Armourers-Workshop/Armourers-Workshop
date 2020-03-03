@@ -4,8 +4,8 @@ import java.util.List;
 
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockMannequin;
-import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockMannequin.EnumPartType;
+import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.NBTHelper;
@@ -38,8 +38,8 @@ public class ItemMannequinTool extends AbstractModItem {
     public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
         IBlockState state = world.getBlockState(pos);
-        if (state.getBlock() == ModBlocks.mannequin | state.getBlock() == ModBlocks.doll) {
-            if (state.getBlock() == ModBlocks.mannequin) {
+        if (state.getBlock() == ModBlocks.MANNEQUIN | state.getBlock() == ModBlocks.DOLL) {
+            if (state.getBlock() == ModBlocks.MANNEQUIN) {
                 if (state.getValue(BlockMannequin.STATE_PART) == EnumPartType.TOP) {
                     pos = pos.offset(EnumFacing.DOWN);
                 }

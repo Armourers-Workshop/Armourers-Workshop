@@ -90,7 +90,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     
     public boolean useOnColourMixer(EntityPlayer player, World worldIn, BlockPos pos, ItemStack stack) {
         IBlockState state = worldIn.getBlockState(pos);
-        if (player.isSneaking() & state.getBlock() == ModBlocks.colourMixer) {
+        if (player.isSneaking() & state.getBlock() == ModBlocks.COLOUR_MIXER) {
             TileEntity te = worldIn.getTileEntity(pos);
             if (te != null && te instanceof IPantable) {
                 if (!worldIn.isRemote) {
@@ -107,7 +107,7 @@ public abstract class AbstractPaintingTool extends AbstractModItem implements IP
     
     public boolean useOnArmourer(EntityPlayer player, World worldIn, BlockPos pos, ItemStack stack) {
         IBlockState state = worldIn.getBlockState(pos);
-        if (state.getBlock() == ModBlocks.armourer & player.isSneaking()) {
+        if (state.getBlock() == ModBlocks.ARMOURER & player.isSneaking()) {
             if (!worldIn.isRemote) {
                 TileEntity te = worldIn.getTileEntity(pos);
                 if (te != null && te instanceof TileEntityArmourer) {
