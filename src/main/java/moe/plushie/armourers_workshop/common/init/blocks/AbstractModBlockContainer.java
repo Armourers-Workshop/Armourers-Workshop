@@ -18,10 +18,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
@@ -35,7 +37,7 @@ import net.minecraftforge.server.permission.context.BlockPosContext;
 public abstract class AbstractModBlockContainer extends BlockContainer implements ISortOrder, ICustomItemBlock, ICustomModel, IPermissionHolder {
 
     private int sortPriority = 100;
-    
+
     public AbstractModBlockContainer(String name) {
         super(Material.IRON);
         setCreativeTab(ArmourersWorkshop.TAB_MAIN);
@@ -44,7 +46,7 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
         setTranslationKey(name);
         ModBlocks.BLOCK_LIST.add(this);
     }
-    
+
     public AbstractModBlockContainer(String name, Material material, SoundType soundType, boolean addCreativeTab) {
         super(material);
         if (addCreativeTab) {
@@ -55,26 +57,26 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
         setTranslationKey(name);
         ModBlocks.BLOCK_LIST.add(this);
     }
-    
+
     @Override
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
-    
+
     @Override
     public boolean isBlockNormalCube(IBlockState state) {
         return false;
     }
-    
+
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;
     }
-    
+
     protected static boolean getBitBool(int value, int index) {
         return getBit(value, index) == 1;
     }
-    
+
     protected static int getBit(int value, int index) {
         return (value >> index) & 1;
     }
@@ -86,7 +88,7 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
             return value & ~(1 << index);
         }
     }
-    
+
     @Override
     public Block setTranslationKey(String name) {
         super.setTranslationKey(name);
@@ -98,27 +100,35 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
         this.sortPriority = sortPriority;
         return this;
     }
-    
+
+    public <T extends TileEntity> T getTileEntity(IBlockAccess blockAccess, BlockPos pos, Class<T> type) {
+        TileEntity te = blockAccess.getTileEntity(pos);
+        if (te != null && type.isAssignableFrom(te.getClass())) {
+            return (T) te;
+        }
+        return null;
+    }
+
     @Override
     public int getSortPriority() {
         return sortPriority;
     }
-    
+
     @Override
     public void registerItemBlock(IForgeRegistry<Item> registry) {
         registry.register(new ModItemBlock(this).setRegistryName(getRegistryName()));
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public void registerModels() {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "normal"));
     }
-    
+
     protected void openGui(EntityPlayer playerIn, EnumGuiId guiId, World worldIn, BlockPos pos, IBlockState state, EnumFacing facing) {
         openGui(playerIn, guiId.ordinal(), worldIn, pos, state, facing);
     }
-    
+
     protected void openGui(EntityPlayer playerIn, int guiId, World worldIn, BlockPos pos, IBlockState state, EnumFacing facing) {
         if (!worldIn.isRemote) {
             if (PermissionAPI.hasPermission(playerIn.getGameProfile(), LibModInfo.ID + "." + getPermissionName() + ".open-gui", new BlockPosContext(playerIn, pos, state, facing))) {
@@ -126,12 +136,12 @@ public abstract class AbstractModBlockContainer extends BlockContainer implement
             }
         }
     }
-    
+
     @Override
     public void getPermissions(ArrayList<Permission> permissions) {
         permissions.add(new Permission(getPermissionName() + ".open-gui", DefaultPermissionLevel.ALL));
     }
-    
+
     @Override
     public String getPermissionName() {
         return getTranslationKey();

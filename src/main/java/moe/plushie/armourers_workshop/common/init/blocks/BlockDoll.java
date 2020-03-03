@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.common.init.blocks;
 
 import java.util.Random;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
@@ -13,6 +15,7 @@ import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
+import moe.plushie.armourers_workshop.utils.UtilItems;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -70,16 +73,25 @@ public class BlockDoll extends AbstractModBlockContainer {
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         if (!worldIn.isRemote) {
-            BlockUtils.dropInventoryBlocks(worldIn, pos);
+            TileEntityMannequin te = getTileEntity(worldIn, pos, TileEntityMannequin.class);
+            if (te != null) {
+                BlockUtils.dropInventoryBlocks(worldIn, te, pos);
+                UtilItems.spawnItemInWorld(worldIn, pos, createItemStackFromTile(te));
+            }
         }
         super.breakBlock(worldIn, pos, state);
+    }
+
+    @Override
+    public int quantityDropped(Random random) {
+        return 0;
     }
     
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         TileEntity te = worldIn.getTileEntity(pos);
         if (te != null && te instanceof TileEntityMannequin) {
-            int l = MathHelper.floor((double) (placer.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
+            int l = MathHelper.floor(placer.rotationYaw * 16.0F / 360.0F + 0.5D) & 15;
             ((TileEntityMannequin) te).PROP_ROTATION.set(l);
             if (!worldIn.isRemote) {
                 if (stack.hasTagCompound()) {
@@ -115,7 +127,7 @@ public class BlockDoll extends AbstractModBlockContainer {
                 if (contributor != null & te.PROP_VISIBLE.get()) {
                     for (int i = 0; i < 6; i++) {
                         Particle particle = particleManager.spawnEffectParticle(EnumParticleTypes.SPELL.getParticleID(), pos.getX() + rand.nextFloat() * 1F, pos.getY(), pos.getZ() + rand.nextFloat() * 1F, 0, 0, 0, null);
-                        particle.setRBGColorF((float) (contributor.r & 0xFF) / 255F, (float) (contributor.g & 0xFF) / 255F, (float) (contributor.b & 0xFF) / 255F);
+                        particle.setRBGColorF((contributor.r & 0xFF) / 255F, (contributor.g & 0xFF) / 255F, (contributor.b & 0xFF) / 255F);
                         Minecraft.getMinecraft().effectRenderer.addEffect(particle);
                     }
                 }
@@ -142,20 +154,22 @@ public class BlockDoll extends AbstractModBlockContainer {
     
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        TileEntityMannequin te = getTileEntity(world, pos, TileEntityMannequin.class);
+        return createItemStackFromTile(te);
+    }
+    
+    private ItemStack createItemStackFromTile(TileEntityMannequin te) {
         ItemStack stack = new ItemStack(ModBlocks.doll, 1);
-        int meta = 0;// world.getBlockMetadata(x, y, z);
-        int yOffset = 0;
-        if (meta == 1) {
-            yOffset = -1;
-        }
-        TileEntity te = world.getTileEntity(pos);;
-        if (te != null && te instanceof TileEntityMannequin) {
-            TileEntityMannequin teMan = (TileEntityMannequin) te;
-            if (teMan.PROP_OWNER.get() != null) {
+        if (te != null) {
+            if (te.PROP_OWNER.get() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.writeGameProfile(profileTag, teMan.PROP_OWNER.get());
+                NBTUtil.writeGameProfile(profileTag, te.PROP_OWNER.get());
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
+            }
+            if (!StringUtils.isEmpty(te.PROP_IMAGE_URL.get())) {
+                stack.setTagCompound(new NBTTagCompound());
+                stack.getTagCompound().setString(TAG_IMAGE_URL, te.PROP_IMAGE_URL.get());
             }
         }
         return stack;
@@ -180,11 +194,6 @@ public class BlockDoll extends AbstractModBlockContainer {
         }
         openGui(playerIn, EnumGuiId.MANNEQUIN, worldIn, pos, state, facing);
         return true;
-    }
-    
-    @Override
-    public int quantityDropped(IBlockState state, int fortune, Random random) {
-        return 0;
     }
     
     @Override
