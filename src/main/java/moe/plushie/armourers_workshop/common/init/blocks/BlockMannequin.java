@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.common.init.blocks;
 
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
@@ -12,12 +11,12 @@ import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.Contributors;
 import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
-import moe.plushie.armourers_workshop.common.init.items.ItemDebugTool.IDebug;
 import moe.plushie.armourers_workshop.common.init.items.block.ItemBlockMannequin;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
+import moe.plushie.armourers_workshop.utils.UtilItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -57,7 +56,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 
-public class BlockMannequin extends AbstractModBlockContainer implements IDebug {
+public class BlockMannequin extends AbstractModBlockContainer {
 
     public static final PropertyEnum<EnumPartType> STATE_PART = PropertyEnum.<EnumPartType>create("part", EnumPartType.class);
     public static final PropertyInteger STATE_ROTATION = PropertyInteger.create("rotation", 0, 15);
@@ -106,7 +105,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
+        TileEntityMannequin te = getTileEntity(worldIn, pos, TileEntityMannequin.class);
         if (te != null) {
             state = state.withProperty(STATE_ROTATION, te.PROP_ROTATION.get());
         }
@@ -116,9 +115,18 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         if (!worldIn.isRemote) {
-            BlockUtils.dropInventoryBlocks(worldIn, pos);
+            TileEntityMannequin te = getTileEntity(worldIn, pos, TileEntityMannequin.class);
+            if (te != null) {
+                BlockUtils.dropInventoryBlocks(worldIn, te, pos);
+                UtilItems.spawnItemInWorld(worldIn, pos, createItemStackFromTile(te));
+            }
         }
         super.breakBlock(worldIn, pos, state);
+    }
+
+    @Override
+    public int quantityDropped(Random random) {
+        return 0;
     }
 
     public ItemStack getStackWithTexture(PlayerTexture playerTexture) {
@@ -141,20 +149,20 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        TileEntity te = worldIn.getTileEntity(pos);
-        if (te != null && te instanceof TileEntityMannequin) {
-            int l = MathHelper.floor((double) (placer.rotationYaw * 16.0F / 360.0F) + 0.5D) & 15;
-            ((TileEntityMannequin) te).PROP_ROTATION.set(l);
+        TileEntityMannequin te = getTileEntity(worldIn, pos, TileEntityMannequin.class);
+        if (te != null) {
+            int l = MathHelper.floor(placer.rotationYaw * 16.0F / 360.0F + 0.5D) & 15;
+            te.PROP_ROTATION.set(l);
             if (!worldIn.isRemote) {
                 if (stack.hasTagCompound()) {
                     NBTTagCompound compound = stack.getTagCompound();
                     GameProfile gameProfile = null;
                     if (compound.hasKey(TAG_OWNER, 10)) {
                         gameProfile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_OWNER));
-                        ((TileEntityMannequin) te).PROP_OWNER.set(gameProfile);
+                        te.PROP_OWNER.set(gameProfile);
                     }
                     if (compound.hasKey(TAG_IMAGE_URL, Constants.NBT.TAG_STRING)) {
-                        ((TileEntityMannequin) te).PROP_IMAGE_URL.set(compound.getString(TAG_IMAGE_URL));
+                        te.PROP_IMAGE_URL.set(compound.getString(TAG_IMAGE_URL));
                     }
                 }
             }
@@ -173,7 +181,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
                     Minecraft.getMinecraft().effectRenderer.addEffect(particle);
                 }
             }
-            TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
+            TileEntityMannequin te = getTileEntity(worldIn, pos, TileEntityMannequin.class);
             if (te != null && te.PROP_RENDER_EXTRAS.get()) {
                 Contributor contributor = Contributors.INSTANCE.getContributor(te.PROP_OWNER.get());
                 if (contributor != null & te.PROP_VISIBLE.get()) {
@@ -185,7 +193,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
                     } else {
                         for (int i = 0; i < 6; i++) {
                             Particle particle = particleManager.spawnEffectParticle(EnumParticleTypes.SPELL.getParticleID(), pos.getX() - 1 + rand.nextFloat() * 3F, pos.getY(), pos.getZ() - 1 + rand.nextFloat() * 3F, 0, 0, 0, null);
-                            particle.setRBGColorF((float) (contributor.r & 0xFF) / 255F, (float) (contributor.g & 0xFF) / 255F, (float) (contributor.b & 0xFF) / 255F);
+                            particle.setRBGColorF((contributor.r & 0xFF) / 255F, (contributor.g & 0xFF) / 255F, (contributor.b & 0xFF) / 255F);
                             Minecraft.getMinecraft().effectRenderer.addEffect(particle);
                         }
                     }
@@ -205,7 +213,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         }
 
         if (world.getBlockState(pos.offset(EnumFacing.UP)).getBlock() == this) {
-            TileEntityMannequin te = getMannequinTileEntity(world, pos);
+            TileEntityMannequin te = getTileEntity(world, pos, TileEntityMannequin.class);
             if (te != null) {
                 // te.setDropItems(false);
                 NBTTagCompound compound = new NBTTagCompound();
@@ -222,27 +230,16 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
             }
         }
     }
-    
+
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-        TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
+        TileEntityMannequin te = getTileEntity(worldIn, pos, TileEntityMannequin.class);
         if (te != null && te instanceof TileEntityMannequin) {
             if (te.PROP_NOCLIP.get()) {
                 return NULL_AABB;
             }
         }
         return blockState.getBoundingBox(worldIn, pos);
-    }
-
-    public TileEntityMannequin getMannequinTileEntity(IBlockAccess blockAccess, BlockPos pos) {
-        if (isTopOfMannequin(blockAccess, pos)) {
-            pos = pos.down();
-        }
-        TileEntity te = blockAccess.getTileEntity(pos);
-        if (te != null && te instanceof TileEntityMannequin) {
-            return (TileEntityMannequin) te;
-        }
-        return null;
     }
 
     public boolean isTopOfMannequin(IBlockAccess blockAccess, BlockPos pos) {
@@ -258,7 +255,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         if (world.isRemote) {
             return false;
         }
-        TileEntityMannequin te = getMannequinTileEntity(world, pos);
+        TileEntityMannequin te = getTileEntity(world, pos, TileEntityMannequin.class);
         if (te != null) {
             int rotation = te.PROP_ROTATION.get();
             rotation++;
@@ -282,7 +279,7 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         if (!isTopOfMannequin(worldIn, pos)) {
             return;
         }
-        
+
         if (entityLiving.posY != pos.getY() + (double) 0.9F) {
             return;
         }
@@ -294,10 +291,10 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         if (entityLiving.posZ < pos.getZ() + 0.2F | entityLiving.posZ > pos.getZ() + 0.8F) {
             return;
         }
-        TileEntityMannequin te = getMannequinTileEntity(worldIn, pos);
+        TileEntityMannequin te = getTileEntity(worldIn, pos, TileEntityMannequin.class);
         if (te != null) {
             if (te.PROP_OWNER.get() != null && te.PROP_OWNER.get().getId() != null) {
-                //ModLogger.log(te.PROP_OWNER.get());
+                // ModLogger.log(te.PROP_OWNER.get());
                 if (te.PROP_OWNER.get().getId().equals(VIC_PROFILE.getId())) {
                     entityLiving.attackEntityFrom(VIC_DAMAGE, 2.0F);
                 }
@@ -307,19 +304,22 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
 
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        TileEntityMannequin te = getTileEntity(world, pos, TileEntityMannequin.class);
+        return createItemStackFromTile(te);
+    }
+
+    private ItemStack createItemStackFromTile(TileEntityMannequin te) {
         ItemStack stack = new ItemStack(ModBlocks.mannequin, 1);
-        TileEntity te = world.getTileEntity(pos);
-        if (te != null && te instanceof TileEntityMannequin) {
-            TileEntityMannequin teMan = (TileEntityMannequin) te;
-            if (teMan.PROP_OWNER.get() != null) {
+        if (te != null) {
+            if (te.PROP_OWNER.get() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();
-                NBTUtil.writeGameProfile(profileTag, teMan.PROP_OWNER.get());
+                NBTUtil.writeGameProfile(profileTag, te.PROP_OWNER.get());
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
             }
-            if (!StringUtils.isEmpty(teMan.PROP_IMAGE_URL.get())) {
+            if (!StringUtils.isEmpty(te.PROP_IMAGE_URL.get())) {
                 stack.setTagCompound(new NBTTagCompound());
-                stack.getTagCompound().setString(TAG_IMAGE_URL, teMan.PROP_IMAGE_URL.get());
+                stack.getTagCompound().setString(TAG_IMAGE_URL, te.PROP_IMAGE_URL.get());
             }
         }
         return stack;
@@ -369,21 +369,10 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
         }
         return null;
     }
-    
+
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
         return null;
-    }
-
-    @Override
-    public void getDebugHoverText(World world, BlockPos pos, ArrayList<String> textLines) {
-        textLines.add("top=" + isTopOfMannequin(world, pos));
-        TileEntityMannequin te = getMannequinTileEntity(world, pos);
-        if (te != null && te.PROP_OWNER.get() != null) {
-            textLines.add("profile=" + te.PROP_OWNER.get().getName() + ":" + te.PROP_OWNER.get().getId());
-        } else {
-            textLines.add("profile=null");
-        }
     }
 
     @Override
@@ -400,16 +389,23 @@ public class BlockMannequin extends AbstractModBlockContainer implements IDebug 
     public boolean isFullBlock(IBlockState state) {
         return false;
     }
-    
+
     @Override
     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
     }
-    
 
     @Override
     public void registerItemBlock(IForgeRegistry<Item> registry) {
         registry.register(new ItemBlockMannequin(this).setRegistryName(getRegistryName()));
+    }
+
+    @Override
+    public <T extends TileEntity> T getTileEntity(IBlockAccess blockAccess, BlockPos pos, Class<T> type) {
+        if (isTopOfMannequin(blockAccess, pos)) {
+            pos = pos.offset(EnumFacing.DOWN);
+        }
+        return super.getTileEntity(blockAccess, pos, type);
     }
 
     @SideOnly(Side.CLIENT)
