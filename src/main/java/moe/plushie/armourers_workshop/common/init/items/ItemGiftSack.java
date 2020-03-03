@@ -96,7 +96,7 @@ public class ItemGiftSack extends AbstractModItem {
     }
     
     public static ItemStack createStack(int colour1, int colour2, Holiday holiday) {
-        ItemStack stack = new ItemStack(ModItems.giftSack);
+        ItemStack stack = new ItemStack(ModItems.GIFT_SACK);
         stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setInteger(TAG_COLOUR_1, colour1);
         stack.getTagCompound().setInteger(TAG_COLOUR_2, colour2);
@@ -105,7 +105,7 @@ public class ItemGiftSack extends AbstractModItem {
     }
     
     public static ItemStack createStack(int colour1, int colour2, ItemStack gift) {
-        ItemStack stack = new ItemStack(ModItems.giftSack);
+        ItemStack stack = new ItemStack(ModItems.GIFT_SACK);
         stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setInteger(TAG_COLOUR_1, colour1);
         stack.getTagCompound().setInteger(TAG_COLOUR_2, colour2);

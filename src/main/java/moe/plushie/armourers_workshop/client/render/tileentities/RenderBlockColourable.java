@@ -169,9 +169,9 @@ public class RenderBlockColourable extends TileEntitySpecialRenderer<TileEntityC
             Item item = stack.getItem();
             if (item instanceof IBlockPainter) {
                 return true;
-            } else if (item == ModItems.colourPicker) {
+            } else if (item == ModItems.COLOUR_PICKER) {
                 return true;
-            } else if (item == ModItems.blockMarker) {
+            } else if (item == ModItems.BLOCK_MARKER) {
                 return true;
             }
         }

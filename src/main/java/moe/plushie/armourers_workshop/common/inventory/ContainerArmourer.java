@@ -84,7 +84,7 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
 
         if (player.capabilities.isCreativeMode) {
             if (stackInput.isEmpty()) {
-                stackInput = new ItemStack(ModItems.skinTemplate);
+                stackInput = new ItemStack(ModItems.SKIN_TEMPLATE);
             }
         }
         

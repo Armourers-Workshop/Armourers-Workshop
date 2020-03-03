@@ -34,12 +34,12 @@ public class RecipeSkinRecover extends RecipeItemSkinning {
                 Item item = stack.getItem();
                 
                 
-                if (item != ModItems.skin && SkinNBTHelper.stackHasSkinData(stack)) {
+                if (item != ModItems.SKIN && SkinNBTHelper.stackHasSkinData(stack)) {
                     if (!skinStack.isEmpty()) {
                         return ItemStack.EMPTY;
                     }
                     skinStack = stack;
-                } else if (item == ModItems.skinTemplate & !SkinNBTHelper.stackHasSkinData(stack)) {
+                } else if (item == ModItems.SKIN_TEMPLATE & !SkinNBTHelper.stackHasSkinData(stack)) {
                     if (!blackStack.isEmpty()) {
                         return ItemStack.EMPTY;
                     }
@@ -52,7 +52,7 @@ public class RecipeSkinRecover extends RecipeItemSkinning {
         }
         
         if (!skinStack.isEmpty() && !blackStack.isEmpty()) {
-            ItemStack returnStack = new ItemStack(ModItems.skin, 1);
+            ItemStack returnStack = new ItemStack(ModItems.SKIN, 1);
             SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(skinStack);
             SkinNBTHelper.addSkinDataToStack(returnStack, skinData.getIdentifier(), new SkinDye(skinData.getSkinDye()));
             return returnStack;
@@ -68,7 +68,7 @@ public class RecipeSkinRecover extends RecipeItemSkinning {
         for (int slotId = 0; slotId < inventory.getSizeInventory(); slotId++) {
             ItemStack stack = inventory.getStackInSlot(slotId);
             Item item = stack.getItem();
-            if (item == ModItems.skinTemplate & !SkinNBTHelper.stackHasSkinData(stack)) {
+            if (item == ModItems.SKIN_TEMPLATE & !SkinNBTHelper.stackHasSkinData(stack)) {
                 inventory.decrStackSize(slotId, 1);
             }
         }

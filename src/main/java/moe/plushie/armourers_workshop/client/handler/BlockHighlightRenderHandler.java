@@ -48,7 +48,7 @@ public class BlockHighlightRenderHandler {
         IBlockState state = world.getBlockState(pos);
         ItemStack stack = player.getHeldItemMainhand();
 
-        if (stack.getItem()  == ModItems.skin) {
+        if (stack.getItem()  == ModItems.SKIN) {
             ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(stack);
 
             if (descriptor != null && descriptor.getIdentifier().getSkinType() == SkinTypeRegistry.skinBlock) {

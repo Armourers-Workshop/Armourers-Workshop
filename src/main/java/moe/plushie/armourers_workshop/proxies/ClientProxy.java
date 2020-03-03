@@ -130,7 +130,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
                 ((ICustomModel) item).registerModels();
             }
         }
-        ModItems.skin.setTileEntityItemStackRenderer(new RenderItemEquipmentSkin());
+        ModItems.SKIN.setTileEntityItemStackRenderer(new RenderItemEquipmentSkin());
         ModelMannequin modelSteve = new ModelMannequin(false);
         ModelMannequin modelAlex = new ModelMannequin(true);
         RenderItemMannequin renderItemMannequin = new RenderItemMannequin(modelSteve, modelAlex);
@@ -180,13 +180,13 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedSkinPart.class, new RenderBlockAdvancedSkinPart());
 
         // Register coloured items and blocks.
-        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.paintbrush);
-        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.paintRoller);
-        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.colourPicker);
-        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.dyeBottle);
-        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.hueTool);
-        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.soap);
-        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.giftSack);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.PAINT_BRUSH);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.PAINT_ROLLER);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.COLOUR_PICKER);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.DYE_BOTTLE);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.HUE_TOOL);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.SOAP);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.GIFT_SACK);
 
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.SKIN_CUBE);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.SKIN_CUBE_GLASS);
@@ -390,16 +390,16 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
 
         @Override
         public int colorMultiplier(ItemStack stack, int tintIndex) {
-            if (stack.getItem() == ModItems.giftSack) {
+            if (stack.getItem() == ModItems.GIFT_SACK) {
                 return ((ItemGiftSack) stack.getItem()).colorMultiplier(stack, tintIndex);
             }
-            if (stack.getItem() == ModItems.dyeBottle) {
+            if (stack.getItem() == ModItems.DYE_BOTTLE) {
                 if (tintIndex == 0) {
                     return PaintingHelper.getToolDisplayColourRGB(stack);
                 }
                 return 0xFFFFFFFF;
             }
-            if (stack.getItem() == ModItems.colourPicker) {
+            if (stack.getItem() == ModItems.COLOUR_PICKER) {
                 if (tintIndex == 0) {
                     return PaintingHelper.getToolDisplayColourRGB(stack);
                 }

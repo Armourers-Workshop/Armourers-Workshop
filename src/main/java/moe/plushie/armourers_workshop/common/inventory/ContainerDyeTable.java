@@ -172,7 +172,7 @@ public class ContainerDyeTable extends Container {
         for (int i = 0; i < 8; i++) {
             if (dye.haveDyeInSlot(i)) {
                 byte[] rgbt = dye.getDyeColour(i);
-                ItemStack bottle = new ItemStack(ModItems.dyeBottle, 1, 1);
+                ItemStack bottle = new ItemStack(ModItems.DYE_BOTTLE, 1, 1);
                 PaintingHelper.setToolPaintColour(bottle, rgbt);
                 PaintingHelper.setToolPaint(bottle, PaintTypeRegistry.getInstance().getPaintTypeFormByte(rgbt[3]));
                 if (dye.hasName(i)) {
@@ -250,7 +250,7 @@ public class ContainerDyeTable extends Container {
                     if (!this.mergeItemStack(stack, 36, 37, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (stack.getItem() == ModItems.dyeBottle && getSlot(36).getHasStack() & PaintingHelper.getToolHasPaint(stack)) {
+                } else if (stack.getItem() == ModItems.DYE_BOTTLE && getSlot(36).getHasStack() & PaintingHelper.getToolHasPaint(stack)) {
                     if (!this.mergeItemStack(stack, 37, 45, false)) {
                         return ItemStack.EMPTY;
                     }

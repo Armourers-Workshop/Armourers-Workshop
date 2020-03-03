@@ -22,7 +22,7 @@ public class CreativeTabPaintingTools extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     @Override
     public ItemStack createIcon() {
-        ItemStack itemStack = new ItemStack(ModItems.paintbrush);
+        ItemStack itemStack = new ItemStack(ModItems.PAINT_BRUSH);
         PaintingHelper.setToolPaint(itemStack, PaintTypeRegistry.PAINT_TYPE_RAINBOW);
         return itemStack;
     }

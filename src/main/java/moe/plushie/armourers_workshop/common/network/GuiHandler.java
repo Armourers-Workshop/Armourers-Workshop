@@ -108,7 +108,7 @@ public class GuiHandler implements IGuiHandler {
 
         switch (guiId) {
         case GUIDE_BOOK:
-            if (player.getHeldItemMainhand().getItem() == ModItems.guideBook) {
+            if (player.getHeldItemMainhand().getItem() == ModItems.GUIDE_BOOK) {
                 return new GuiGuideBook(player.getHeldItemMainhand());
             }
             break;

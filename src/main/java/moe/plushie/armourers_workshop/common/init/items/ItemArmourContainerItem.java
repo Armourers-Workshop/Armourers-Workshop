@@ -32,7 +32,7 @@ public class ItemArmourContainerItem extends AbstractModItem implements ISkinHol
         if (descriptor.getIdentifier().getSkinType().getVanillaArmourSlotId() == -1) {
             return ItemStack.EMPTY;
         }
-        ItemStack stack = new ItemStack(ModItems.armourContainer[descriptor.getIdentifier().getSkinType().getVanillaArmourSlotId()], 1);
+        ItemStack stack = new ItemStack(ModItems.ARMOUR_CONTAINER[descriptor.getIdentifier().getSkinType().getVanillaArmourSlotId()], 1);
         SkinNBTHelper.addSkinDataToStack(stack, (SkinDescriptor) descriptor);
         return stack;
     }

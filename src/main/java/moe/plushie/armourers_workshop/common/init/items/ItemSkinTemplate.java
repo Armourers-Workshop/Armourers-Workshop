@@ -31,7 +31,7 @@ public class ItemSkinTemplate extends AbstractModItem implements ISkinHolder {
 
     @Override
     public ItemStack makeSkinStack(ISkinDescriptor descriptor) {
-        ItemStack stack = new ItemStack(ModItems.skin);
+        ItemStack stack = new ItemStack(ModItems.SKIN);
         SkinNBTHelper.addSkinDataToStack(stack, (SkinDescriptor) descriptor);
         return stack;
     }

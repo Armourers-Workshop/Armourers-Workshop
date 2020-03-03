@@ -21,75 +21,44 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModItems {
 
-    public static ArrayList<Item> ITEM_LIST = new ArrayList<Item>();
+    public static final ArrayList<Item> ITEM_LIST = new ArrayList<Item>();
 
-    public static Item skinTemplate;
-    public static Item skin;
+    public static final Item SKIN_TEMPLATE = new ItemSkinTemplate();
+    public static final Item SKIN = new ItemSkin();
 
-    public static Item paintbrush;
-    public static Item paintRoller;
-    public static Item colourPicker;
-    public static Item burnTool;
-    public static Item dodgeTool;
-    public static Item colourNoiseTool;
-    public static Item shadeNoiseTool;
-    public static Item hueTool;
-    public static Item blendingTool;
-    public static Item blockMarker;
-    // public static Item paintballGun;
-    // public static Item palette;
+    public static final Item PAINT_BRUSH = new ItemPaintbrush();
+    public static final Item PAINT_ROLLER = new ItemPaintRoller();
+    public static final Item COLOUR_PICKER = new ItemColourPicker();
+    public static final Item BURN_TOOL = new ItemBurnTool();
+    public static final Item DODGE_TOOL = new ItemDodgeTool();
+    public static final Item COLOUR_NOISE_TOOL = new ItemColourNoiseTool();
+    public static final Item SHADE_NOISE_TOOL = new ItemShadeNoiseTool();
+    public static final Item HUE_TOOL = new ItemHueTool();
+    public static final Item BLENDING_TOOL = new ItemBlockMarker();
+    public static final Item BLOCK_MARKER = new ItemBlendingTool();
+    // public static final Item PAINTBALL_GUN = new ItemPaintballGun();
+    // public static final Item PALETTE = new ItemPalette();
 
-    public static Item mannequinTool;
-    public static Item wandOfStyle;
-    public static Item soap;
-    public static Item dyeBottle;
-    public static Item guideBook;
-    public static Item armourersHammer;
-    public static Item debugTool;
-    public static Item skinUnlock;
-    public static Item linkingTool;
-    public static Item giftSack;
+    public static final Item MANNEQUIN_TOOL = new ItemMannequinTool();
+    public static final Item WAND_OF_STYLE = new ItemWandOfStyle();
+    public static final Item SOAP = new ItemSoap();
+    public static final Item DYE_BOTTLE = new ItemDyeBottle();
+    public static final Item GUIDE_BOOK = new ItemGuideBook();
+    public static final Item ARMOURERS_HAMMER = new ItemArmourersHammer();
+    public static final Item DEBUG_TOOL = new ItemDebugTool();
+    public static final Item SKIN_UNLOCK = new ItemSkinUnlock();
+    public static final Item LINKING_TOOL = new ItemLinkingTool();
+    public static final Item GIFT_SACK = new ItemGiftSack();
 
-    public static Item armourContainerItem;
-    public static Item[] armourContainer;
+    public static final Item ARMOUR_CONTAINER_ITEM = new ItemArmourContainerItem();
+    public static final Item[] ARMOUR_CONTAINER = new Item[4];
 
     public ModItems() {
         MinecraftForge.EVENT_BUS.register(this);
-        skinTemplate = new ItemSkinTemplate();
-        skin = new ItemSkin();
-        // TODO Fix buildcraft compat. setEquipmentSkinType();
-
-        // Tools
-        paintbrush = new ItemPaintbrush();
-        paintRoller = new ItemPaintRoller();
-        colourPicker = new ItemColourPicker();
-        burnTool = new ItemBurnTool();
-        dodgeTool = new ItemDodgeTool();
-        colourNoiseTool = new ItemColourNoiseTool();
-        shadeNoiseTool = new ItemShadeNoiseTool();
-        hueTool = new ItemHueTool();
-        blockMarker = new ItemBlockMarker();
-        blendingTool = new ItemBlendingTool();
-        // paintballGun = new ItemPaintballGun();
-        // palette = new ItemPalette();
-
-        mannequinTool = new ItemMannequinTool();
-        wandOfStyle = new ItemWandOfStyle();
-        soap = new ItemSoap();
-        dyeBottle = new ItemDyeBottle();
-        guideBook = new ItemGuideBook();
-        armourersHammer = new ItemArmourersHammer();
-        debugTool = new ItemDebugTool();
-        skinUnlock = new ItemSkinUnlock();
-        linkingTool = new ItemLinkingTool();
-        giftSack = new ItemGiftSack();
-
-        armourContainerItem = new ItemArmourContainerItem();
-        armourContainer = new Item[4];
-        armourContainer[0] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_HEAD, EntityEquipmentSlot.HEAD);
-        armourContainer[1] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_CHEST, EntityEquipmentSlot.CHEST);
-        armourContainer[2] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_LEGS, EntityEquipmentSlot.LEGS);
-        armourContainer[3] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_FEET, EntityEquipmentSlot.FEET);
+        ARMOUR_CONTAINER[0] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_HEAD, EntityEquipmentSlot.HEAD);
+        ARMOUR_CONTAINER[1] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_CHEST, EntityEquipmentSlot.CHEST);
+        ARMOUR_CONTAINER[2] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_LEGS, EntityEquipmentSlot.LEGS);
+        ARMOUR_CONTAINER[3] = new ItemArmourContainer(LibItemNames.ARMOUR_CONTAINER_FEET, EntityEquipmentSlot.FEET);
     }
 
     @SubscribeEvent

@@ -22,7 +22,7 @@ public abstract class RecipeItemSkinning {
     public abstract void onCraft(IInventory inventory);
     
     protected boolean isValidSkinForType(ItemStack stack) {
-        return stack.getItem() == ModItems.skin &&
+        return stack.getItem() == ModItems.SKIN &&
                 SkinNBTHelper.stackHasSkinData(stack) &&
                 SkinNBTHelper.getSkinTypeFromStack(stack) == skinType;
     }

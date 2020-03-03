@@ -139,7 +139,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         if (isCreativeLibrary()) {
             if (stackInput.isEmpty()) {
-                stackInput = new ItemStack(ModItems.skinTemplate);
+                stackInput = new ItemStack(ModItems.SKIN_TEMPLATE);
             }
         }
         
@@ -236,7 +236,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         
         if (isCreativeLibrary()) {
             if (stackInput.isEmpty()) {
-                stackInput = new ItemStack(ModItems.skinTemplate);
+                stackInput = new ItemStack(ModItems.SKIN_TEMPLATE);
             }
         }
         

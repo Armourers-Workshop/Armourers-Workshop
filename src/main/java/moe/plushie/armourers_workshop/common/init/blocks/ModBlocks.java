@@ -31,7 +31,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModBlocks {
 
-    public static ArrayList<Block> BLOCK_LIST = new ArrayList<Block>();
+    public static final ArrayList<Block> BLOCK_LIST = new ArrayList<Block>();
 
     public static final Block ARMOURER = new BlockArmourer();
     // public static final Block MINI_ARMOURER = new BlockMiniArmourer();

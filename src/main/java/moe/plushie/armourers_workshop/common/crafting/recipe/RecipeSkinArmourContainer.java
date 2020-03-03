@@ -35,7 +35,7 @@ public class RecipeSkinArmourContainer extends RecipeItemSkinning {
                         return ItemStack.EMPTY;
                     }
                     skinStack = stack;
-                } else if (stack.getItem() == ModItems.armourContainerItem) {
+                } else if (stack.getItem() == ModItems.ARMOUR_CONTAINER_ITEM) {
                     if (armourStack != ItemStack.EMPTY) {
                         return ItemStack.EMPTY;
                     }

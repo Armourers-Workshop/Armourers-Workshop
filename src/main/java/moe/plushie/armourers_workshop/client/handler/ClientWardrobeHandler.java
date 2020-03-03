@@ -64,7 +64,7 @@ public final class ClientWardrobeHandler {
         EntityPlayer player = Minecraft.getMinecraft().player;
         ItemStack itemStack = event.getItemStack();
         
-        if (itemStack.getItem() == ModItems.skin) {
+        if (itemStack.getItem() == ModItems.SKIN) {
             return;
         }
         

@@ -202,7 +202,7 @@ public class ContainerSkinWardrobe extends ModContainer {
                 }
             }
             
-            if (stack.getItem() == ModItems.dyeBottle) {
+            if (stack.getItem() == ModItems.DYE_BOTTLE) {
                 if (((ItemDyeBottle)stack.getItem()).getToolHasColour(stack)) {
                     for (int i = indexDyeStart; i < indexDyeEnd; i++) {
                         Slot targetSlot = getSlot(i);
@@ -260,7 +260,7 @@ public class ContainerSkinWardrobe extends ModContainer {
             for (int i = 0; i < 8; i++) {
                 if (dye.haveDyeInSlot(i)) {
                     byte[] rgbt = dye.getDyeColour(i);
-                    ItemStack bottle = new ItemStack(ModItems.dyeBottle, 1, 1);
+                    ItemStack bottle = new ItemStack(ModItems.DYE_BOTTLE, 1, 1);
                     PaintingHelper.setToolPaintColour(bottle, rgbt);
                     PaintingHelper.setToolPaint(bottle, PaintTypeRegistry.getInstance().getPaintTypeFormByte(rgbt[3]));
                     if (dye.hasName(i)) {

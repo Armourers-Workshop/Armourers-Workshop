@@ -73,7 +73,7 @@ public class ItemSkin extends AbstractModItem {
     public static void addTooltipToSkinItem(ItemStack stack, EntityPlayer player, List tooltip, ITooltipFlag flagIn) {
         String cRed = TextFormatting.RED.toString();
         
-        boolean isEquipmentSkin = stack.getItem() == ModItems.skin;
+        boolean isEquipmentSkin = stack.getItem() == ModItems.SKIN;
         boolean isEquipmentContainer = stack.getItem() instanceof AbstractModItemArmour;
         
         if (SkinNBTHelper.stackHasSkinData(stack)) {
@@ -86,7 +86,7 @@ public class ItemSkin extends AbstractModItem {
             
             if (ClientSkinCache.INSTANCE.isSkinInCache(skinData)) {
                 Skin data = ClientSkinCache.INSTANCE.getSkin(skinData);
-                if (stack.getItem() != ModItems.skin & !data.getCustomName().trim().isEmpty()) {
+                if (stack.getItem() != ModItems.SKIN & !data.getCustomName().trim().isEmpty()) {
                     tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinName", data.getCustomName()));
                 }
                 if (!data.getAuthorName().trim().isEmpty()) {

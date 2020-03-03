@@ -75,12 +75,12 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
             setInventorySlotContents(0, ItemStack.EMPTY);
             setInventorySlotContents(1, stackInput);
 
-            if (stackInput.getItem() instanceof IPaintingTool && stackInput.getItem() != ModItems.colourPicker) {
+            if (stackInput.getItem() instanceof IPaintingTool && stackInput.getItem() != ModItems.COLOUR_PICKER) {
                 IPaintingTool paintingTool = (IPaintingTool) stackInput.getItem();
                 paintingTool.setToolColour(stackInput, colour);
                 paintingTool.setToolPaintType(stackInput, getPaintType(0));
             }
-            if (stackInput.getItem() == ModItems.colourPicker) {
+            if (stackInput.getItem() == ModItems.COLOUR_PICKER) {
                 setPaintType(((ItemColourPicker) stackInput.getItem()).getToolPaintType(stackInput), 0);
                 setColour(((ItemColourPicker) stackInput.getItem()).getToolColour(stackInput), true);
             }

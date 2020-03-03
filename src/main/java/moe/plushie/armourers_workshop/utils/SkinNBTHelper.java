@@ -111,10 +111,10 @@ public class SkinNBTHelper {
     }
 
     public static ItemStack makeEquipmentSkinStack(SkinDescriptor descriptor) {
-        return ((ItemSkinTemplate) ModItems.skinTemplate).makeSkinStack(descriptor);
+        return ((ItemSkinTemplate) ModItems.SKIN_TEMPLATE).makeSkinStack(descriptor);
     }
 
     public static ItemStack makeArmouerContainerStack(SkinDescriptor descriptor) {
-        return ((ItemArmourContainerItem) ModItems.armourContainerItem).makeSkinStack(descriptor);
+        return ((ItemArmourContainerItem) ModItems.ARMOUR_CONTAINER_ITEM).makeSkinStack(descriptor);
     }
 }

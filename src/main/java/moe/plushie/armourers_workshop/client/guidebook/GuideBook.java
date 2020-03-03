@@ -51,20 +51,20 @@ public class GuideBook extends BookBase {
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.DYE_TABLE));
         
         //Items
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.paintbrush));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.paintRoller));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.burnTool));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.dodgeTool));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.shadeNoiseTool));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourNoiseTool));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.colourPicker));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.soap));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.wandOfStyle));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.hueTool));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.guideBook));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.mannequinTool));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.dyeBottle));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.armourersHammer));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.PAINT_BRUSH));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.PAINT_ROLLER));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.BURN_TOOL));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.DODGE_TOOL));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.SHADE_NOISE_TOOL));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.COLOUR_NOISE_TOOL));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.COLOUR_PICKER));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.SOAP));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.WAND_OF_STYLE));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.HUE_TOOL));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.GUIDE_BOOK));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.MANNEQUIN_TOOL));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.DYE_BOTTLE));
+        chapterRecipes.addPage(new BookPageRecipe(this, ModItems.ARMOURERS_HAMMER));
         
         addChapter(chapterContents);
         addChapter(chapterIntroduction);
