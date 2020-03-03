@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Level;
 
 import com.google.common.util.concurrent.FutureCallback;
 
+import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskInfo;
@@ -33,7 +34,7 @@ public class GuiGlobalLibraryPanelInfo extends GuiPanel {
     private static final String URL_DONATION = "https://ko-fi.com/riskyken";
 
     private final String guiName;
-    
+
     private GuiCustomLabel statsText;
     private TaskData stats = null;
 
@@ -41,7 +42,7 @@ public class GuiGlobalLibraryPanelInfo extends GuiPanel {
 
     public GuiGlobalLibraryPanelInfo(GuiScreen parent) {
         super(parent, 0, 0, 1, 1);
-        guiName = ((GuiGlobalLibrary)parent).getGuiName() + ".panel.info";
+        guiName = ((GuiGlobalLibrary) parent).getGuiName() + ".panel.info";
     }
 
     @Override
@@ -98,59 +99,57 @@ public class GuiGlobalLibraryPanelInfo extends GuiPanel {
         GlStateManager.disableBlend();
 
         statsText.clearText();
-        statsText.addLine("Info");
+        statsText.addLine(GuiHelper.getLocalizedControlName(guiName, "name"));
         statsText.addNewLine();
 
         if (stats != null) {
-            statsText.addLine("Total skins uploaded: " + stats.getTotalSkin());
+            statsText.addLine(GuiHelper.getLocalizedControlName(guiName, "total_skins", stats.getTotalSkin()));
+            // statsText.addNewLine();
+            // statsText.addLine(stats.getSqlData()[7]);
             statsText.addNewLine();
-            statsText.addLine(stats.getSqlData()[7]);
+            statsText.addLine(GuiHelper.getLocalizedControlName(guiName, "download_count", stats.getDownloadsLastHour(), stats.getDownloadsLastDay(), stats.getDownloadsLastWeek()));
             statsText.addNewLine();
-            statsText.addText("Downloads last (hour " + stats.getDownloadsLastHour());
-            statsText.addText(") (day " + stats.getDownloadsLastDay());
-            statsText.addText(") (week: " + stats.getDownloadsLastWeek());
-            statsText.addLine(").");
         } else {
             if (failMessage != null) {
-                statsText.addLine("Error gettings stats:");
+                statsText.addLine(GuiHelper.getLocalizedControlName(guiName, "error_getting_stats"));
                 statsText.addLine(failMessage);
             } else {
-                statsText.addLine("Loading...");
-                statsText.addNewLine();
+                statsText.addLine(GuiHelper.getLocalizedControlName(guiName, "loading"));
+                // statsText.addNewLine();
+                // statsText.addNewLine();
                 statsText.addNewLine();
                 statsText.addNewLine();
                 statsText.addNewLine();
             }
         }
-        
 
         statsText.addNewLine();
-        statsText.addText("Links");
+        statsText.addText(GuiHelper.getLocalizedControlName(guiName, "links"));
         statsText.addNewLine();
         statsText.addNewLine();
-        
-        statsText.addText("Discord: ");
-        statsText.addUrl("https://discord.gg/5Z3KKvU");
+
+        statsText.addText(GuiHelper.getLocalizedControlName(guiName, "link.discord") + " ");
+        statsText.addUrl(URL_DISCORD);
         statsText.addNewLine();
         statsText.addNewLine();
-        
-        statsText.addText("GitHub: ");
-        statsText.addUrl("https://github.com/RiskyKen/Armourers-Workshop");
+
+        statsText.addText(GuiHelper.getLocalizedControlName(guiName, "link.github") + " ");
+        statsText.addUrl(URL_GITHUB);
         statsText.addNewLine();
         statsText.addNewLine();
-        
-        statsText.addText("Reddit: ");
-        statsText.addUrl("https://www.reddit.com/r/ArmourersWorkshop/");
+
+        statsText.addText(GuiHelper.getLocalizedControlName(guiName, "link.reddit") + " ");
+        statsText.addUrl(URL_REDDIT);
         statsText.addNewLine();
         statsText.addNewLine();
-        
+
         statsText.addNewLine();
-        
-        statsText.addText("Thank you for using Armourer's Workshop, if you want to help please consider donating to cover running cost of the global library. ");
+
+        statsText.addText(GuiHelper.getLocalizedControlName(guiName, "link.donation") + " ");
         statsText.addUrl(URL_DONATION);
         statsText.addNewLine();
         statsText.addNewLine();
-        
+
         statsText.draw(mouseX, mouseY);
     }
 
@@ -208,7 +207,7 @@ public class GuiGlobalLibraryPanelInfo extends GuiPanel {
         }
 
         public void draw(int mouseX, int mouseY) {
-            //drawRect(x, y, x + width, y + height, 0x88EEEEEE);
+            // drawRect(x, y, x + width, y + height, 0x88EEEEEE);
             String displayString = text;
             String textAtMouse = getWordAtPos(mouseX, mouseY);
 

@@ -93,9 +93,9 @@ public final class GuiHelper {
         fontRenderer.drawString(renderText, xPos, 6, colour);
     }
 
-    public static String getLocalizedControlName(String guiName, String controlName) {
+    public static String getLocalizedControlName(String guiName, String controlName, Object... args) {
         String unlocalizedName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + "." + controlName;
-        String localizedName = I18n.format(unlocalizedName);
+        String localizedName = I18n.format(unlocalizedName, args);
         localizedName = localizedName.replace("%n", "\n");
         localizedName = localizedName.replace("\\n", "\n");
         if (!unlocalizedName.equals(localizedName)) {

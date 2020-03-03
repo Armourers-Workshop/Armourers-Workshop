@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.common.library.global.task;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.concurrent.Callable;
@@ -68,7 +67,7 @@ public abstract class GlobalTask<V> implements Callable<V> {
         }
     }
 
-    protected static JsonElement downloadJson(String url) {
+    protected static JsonElement downloadJson(String url) throws Exception {
         String data = downloadString(url);
         if (data == null) {
             return null;
@@ -84,14 +83,12 @@ public abstract class GlobalTask<V> implements Callable<V> {
         return json;
     }
 
-    protected static String downloadString(String url) {
+    protected static String downloadString(String url) throws Exception {
         InputStream in = null;
         String data = null;
         try {
             in = new URL(url).openStream();
             data = IOUtils.toString(in, Charsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
             IOUtils.closeQuietly(in);
         }

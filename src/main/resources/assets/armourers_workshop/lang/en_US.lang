@@ -9,6 +9,7 @@
 # Email:   riskyken.web@gmail.com
 # Twitter: @RiskyKen
 # GitHub:  https://github.com/RiskyKen please send pull request to the development branch.
+# Discord: https://discord.gg/5Z3KKvU
 #
 # Please also send your Minecraft username/uuid so I can add you to the credits.
 #
@@ -219,6 +220,9 @@ paintType.armourers_workshop:skin.name=Skin
 paintType.armourers_workshop:hair.name=Hair
 paintType.armourers_workshop:eye.name=Eye
 paintType.armourers_workshop:misc_1.name=Misc 1
+paintType.armourers_workshop:misc_2.name=Misc 2
+paintType.armourers_workshop:misc_3.name=Misc 3
+paintType.armourers_workshop:misc_4.name=Misc 4
 
 
 # Colour Families
@@ -527,6 +531,7 @@ inventory.armourers_workshop:global-skin-library.header.myFiles=My Files
 inventory.armourers_workshop:global-skin-library.header.uploadSkin=Upload Skin
 inventory.armourers_workshop:global-skin-library.header.uploadSkinBan=You are banned from upload skins
 inventory.armourers_workshop:global-skin-library.header.joinBeta=Join Beta
+inventory.armourers_workshop:global-skin-library.header.info=Info
 
 
 # Global Skin Library (Search Box)
@@ -607,6 +612,19 @@ inventory.armourers_workshop:global-skin-library.edit.buttonDelete=Delete Skin
 inventory.armourers_workshop:global-skin-library.edit.dialog.delete.title=Delete Skin
 inventory.armourers_workshop:global-skin-library.edit.dialog.delete.ok=OK
 inventory.armourers_workshop:global-skin-library.edit.dialog.delete.cancel=Cancel
+
+
+# Global Skin Library (Info)
+inventory.armourers_workshop:global-skin-library.panel.info.name=Info
+inventory.armourers_workshop:global-skin-library.panel.info.total_skins=Total skins uploaded: %d
+inventory.armourers_workshop:global-skin-library.panel.info.download_count=Downloads last (hour %d) (day %d) (week %d).
+inventory.armourers_workshop:global-skin-library.panel.info.loading=Loading...
+inventory.armourers_workshop:global-skin-library.panel.info.error_getting_stats=Error getting stats:
+inventory.armourers_workshop:global-skin-library.panel.info.links=Links
+inventory.armourers_workshop:global-skin-library.panel.info.link.discord=Discord:
+inventory.armourers_workshop:global-skin-library.panel.info.link.github=GitHub:
+inventory.armourers_workshop:global-skin-library.panel.info.link.reddit=Reddit:
+inventory.armourers_workshop:global-skin-library.panel.info.link.donation=Thank you for using Armourer's Workshop, if you want to help please consider donating to cover running cost of the global library.
 
 
 # Hologram Projector
