@@ -21,7 +21,6 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.skin.entity.SkinnableEntityRegisty;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
@@ -80,31 +79,29 @@ public final class ModCapabilityManager {
 
     @SubscribeEvent
     public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (!(event.getObject() instanceof EntityLivingBase)) {
+        if (!(event.getObject() instanceof Entity)) {
             return;
         }
-        EntityLivingBase entityLivingBase = (EntityLivingBase) event.getObject();
-        ISkinnableEntity skinnableEntity = SkinnableEntityRegisty.INSTANCE.getSkinnableEntity(entityLivingBase);
+        Entity entity = event.getObject();
+        ISkinnableEntity skinnableEntity = SkinnableEntityRegisty.INSTANCE.getSkinnableEntity(entity);
         if (skinnableEntity == null) {
             return;
         }
-        event.addCapability(KEY_ENTITY_SKIN_PROVIDER, new EntitySkinProvider(entityLivingBase, skinnableEntity));
-        if (entityLivingBase instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entityLivingBase;
+        event.addCapability(KEY_ENTITY_SKIN_PROVIDER, new EntitySkinProvider(entity, skinnableEntity));
+        if (entity instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) entity;
             event.addCapability(KEY_PLAYER_WARDROBE_PROVIDER, new PlayerWardrobeProvider(player, skinnableEntity));
             event.addCapability(KEY_HOLIDAY_TRACKER, new HolidayTrackCap.Provider());
         } else {
-            event.addCapability(KEY_WARDROBE_PROVIDER, new WardrobeProvider(entityLivingBase, skinnableEntity));
+            event.addCapability(KEY_WARDROBE_PROVIDER, new WardrobeProvider(entity, skinnableEntity));
         }
     }
     
     @SubscribeEvent
     public static void onStartTracking(PlayerEvent.StartTracking event) {
-        if (event.getTarget() instanceof EntityLivingBase) {
-            IEntitySkinCapability skinCapability = EntitySkinCapability.get((EntityLivingBase) event.getTarget());
-            if (skinCapability != null) {
-                skinCapability.syncToPlayer((EntityPlayerMP) event.getEntityPlayer());
-            }
+        IEntitySkinCapability skinCapability = EntitySkinCapability.get(event.getTarget());
+        if (skinCapability != null) {
+            skinCapability.syncToPlayer((EntityPlayerMP) event.getEntityPlayer());
         }
         if (event.getTarget() instanceof EntityPlayer) {
             IPlayerWardrobeCap wardrobeCapability = PlayerWardrobeCap.get((EntityPlayer) event.getTarget());
@@ -121,7 +118,7 @@ public final class ModCapabilityManager {
     
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-        IEntitySkinCapability skinCapability = EntitySkinCapability.get((EntityLivingBase) event.player);
+        IEntitySkinCapability skinCapability = EntitySkinCapability.get(event.player);
         if (skinCapability != null) {
             skinCapability.syncToPlayer((EntityPlayerMP) event.player);
         }

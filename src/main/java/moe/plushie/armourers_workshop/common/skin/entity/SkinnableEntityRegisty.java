@@ -22,7 +22,7 @@ public final class SkinnableEntityRegisty implements ISkinnableEntityRegisty {
     
     public static SkinnableEntityRegisty INSTANCE;
     
-    private HashMap<Class <? extends EntityLivingBase>, ISkinnableEntity> entityMap;
+    private HashMap<Class <? extends Entity>, ISkinnableEntity> entityMap;
     
     public static void init() {
         INSTANCE = new SkinnableEntityRegisty();
@@ -30,7 +30,7 @@ public final class SkinnableEntityRegisty implements ISkinnableEntityRegisty {
     
     public SkinnableEntityRegisty() {
         MinecraftForge.EVENT_BUS.register(this);
-        entityMap = new HashMap<Class <? extends EntityLivingBase>, ISkinnableEntity>();
+        entityMap = new HashMap<Class <? extends Entity>, ISkinnableEntity>();
         registerEntities();
     }
     
@@ -41,6 +41,7 @@ public final class SkinnableEntityRegisty implements ISkinnableEntityRegisty {
         registerEntity(new SkinnableEntityPlayer());
         registerEntity(new SkinnableEntitySkeleton());
         registerEntity(new SkinnableEntitySlime());
+        registerEntity(new SkinnableEntityMannequin());
         //registerEntity(new SkinnableEntityZombie());
     }
     
@@ -57,7 +58,7 @@ public final class SkinnableEntityRegisty implements ISkinnableEntityRegisty {
     }
     
     @Override
-    public ISkinnableEntity getSkinnableEntity(EntityLivingBase entity) {
+    public ISkinnableEntity getSkinnableEntity(Entity entity) {
         if (entityMap.containsKey(entity.getClass())) {
             return entityMap.get(entity.getClass());
         }
@@ -73,16 +74,14 @@ public final class SkinnableEntityRegisty implements ISkinnableEntityRegisty {
     }
     
     @Override
-    public boolean isValidEntity(EntityLivingBase entity) {
-        if (entity instanceof EntityLivingBase) {
-            if (entityMap.containsKey(entity.getClass())) {
-                return true;
-            }
+    public boolean isValidEntity(Entity entity) {
+        if (entityMap.containsKey(entity.getClass())) {
+            return true;
         }
         return false;
     }
     
-    public boolean canUseWandOfStyleOnEntity(EntityLivingBase entity, EntityPlayer user) {
+    public boolean canUseWandOfStyleOnEntity(Entity entity, EntityPlayer user) {
         ISkinnableEntity skinnableEntity = getSkinnableEntity(entity);
         if (skinnableEntity != null) {
             return skinnableEntity.canUseWandOfStyle(user);

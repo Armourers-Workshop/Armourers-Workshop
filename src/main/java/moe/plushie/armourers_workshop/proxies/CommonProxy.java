@@ -17,6 +17,7 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerOverrides;
 import moe.plushie.armourers_workshop.common.config.ConfigSynchronizeHandler;
 import moe.plushie.armourers_workshop.common.crafting.CraftingManager;
+import moe.plushie.armourers_workshop.common.entity.EntityMannequin;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockSkinnable.Seat;
 import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
@@ -99,6 +100,7 @@ public class CommonProxy implements ILibraryCallback {
         ModLogger.log("user home: " + System.getProperty("user.home"));
 
         EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "seat"), Seat.class, "seat", 1, ArmourersWorkshop.getInstance(), 10, 20, false);
+        EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "mannequin"), EntityMannequin.class, "mannequin", 2, ArmourersWorkshop.getInstance(), 32, 20, false);
 
         SkinExtractor.extractSkins();
 

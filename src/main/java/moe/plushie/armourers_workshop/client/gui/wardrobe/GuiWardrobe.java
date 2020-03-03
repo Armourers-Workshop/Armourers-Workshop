@@ -304,33 +304,42 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
             }
         }
 
-        if (!overPlayerBox) {
-            ModRenderHelper.enableScissorScaled(x + 8, y + 27, 71, 111);
-        }
+
 
         // RenderHelper.enableStandardItemLighting();
 
-        GlStateManager.pushMatrix();
-        GlStateManager.pushAttrib();
+        if (skinCapability.getEntity() instanceof EntityLivingBase) {
+            if (!overPlayerBox) {
+                ModRenderHelper.enableScissorScaled(x + 8, y + 27, 71, 111);
+            }
+            
+            GlStateManager.pushMatrix();
+            GlStateManager.pushAttrib();
 
-        GL11.glTranslatef(boxX, boxY, 50);
-        GL11.glRotatef(-20, 1, 0, 0);
-        GL11.glRotatef(playerRotation, 0, 1, 0);
-        GL11.glTranslatef(0, 0, -50);
-        if (selectingColour) {
-            renderEntityWithoutLighting(0, 0, 45, 0, 0, (EntityLivingBase) skinCapability.getEntity());
-            colour = getColourAtPos(Mouse.getX(), Mouse.getY());
+            GL11.glTranslatef(boxX, boxY, 50);
+            GL11.glRotatef(-20, 1, 0, 0);
+            GL11.glRotatef(playerRotation, 0, 1, 0);
+            GL11.glTranslatef(0, 0, -50);
+            if (selectingColour) {
+                renderEntityWithoutLighting(0, 0, 45, 0, 0, (EntityLivingBase) skinCapability.getEntity());
+                colour = getColourAtPos(Mouse.getX(), Mouse.getY());
+            }
+            GuiInventory.drawEntityOnScreen(0, 0, 45, 0, 0, (EntityLivingBase) skinCapability.getEntity());
+
+            GlStateManager.popAttrib();
+            GlStateManager.popMatrix();
+
+            GlStateManager.enableBlend();
+
+            if (!overPlayerBox) {
+                ModRenderHelper.disableScissor();
+            }
+        } else {
+            if (selectingColour) {
+                colour = getColourAtPos(Mouse.getX(), Mouse.getY());
+            }
         }
-        GuiInventory.drawEntityOnScreen(0, 0, 45, 0, 0, (EntityLivingBase) skinCapability.getEntity());
 
-        GlStateManager.popAttrib();
-        GlStateManager.popMatrix();
-
-        GlStateManager.enableBlend();
-
-        if (!overPlayerBox) {
-            ModRenderHelper.disableScissor();
-        }
 
         return colour;
     }

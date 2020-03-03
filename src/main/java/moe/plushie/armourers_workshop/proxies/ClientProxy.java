@@ -34,6 +34,7 @@ import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.IBakedSkinRe
 import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandler;
+import moe.plushie.armourers_workshop.client.render.entity.RenderEntityMannequin;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemEquipmentSkin;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemMannequin;
 import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockAdvancedSkinBuilder;
@@ -50,6 +51,7 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
 import moe.plushie.armourers_workshop.client.texture.PlayerTextureDownloader;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
+import moe.plushie.armourers_workshop.common.entity.EntityMannequin;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.init.items.ItemGiftSack;
@@ -82,7 +84,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -97,6 +101,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ICrashCallable;
 import net.minecraftforge.fml.common.Mod;
@@ -148,6 +154,14 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         new GuiResourceManager();
 
         ReflectionHelper.setPrivateValue(ArmourersWorkshopClientApi.class, null, SkinRenderHandlerApi.INSTANCE, "skinRenderHandler");
+        
+        RenderingRegistry.registerEntityRenderingHandler(EntityMannequin.class, new IRenderFactory() {
+
+            @Override
+            public Render createRenderFor(RenderManager manager) {
+                return new RenderEntityMannequin<EntityMannequin>(manager);
+            }
+        });
     }
 
     @Override
@@ -193,6 +207,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.SKIN_CUBE_GLOWING);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.SKIN_CUBE_GLASS_GLOWING);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.COLOUR_MIXER);
+        
     }
 
     @Override

@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.common.network.messages.client.DelayedMess
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -74,8 +73,8 @@ public class MessageServerSyncSkinCap implements IMessage, IMessageHandler<Messa
     public void onDelayedMessage() {
         if (Minecraft.getMinecraft().world != null) {
             Entity entity = Minecraft.getMinecraft().world.getEntityByID(entityId);
-            if (entity != null && entity instanceof EntityLivingBase) {
-                IEntitySkinCapability skinCapability = EntitySkinCapability.get((EntityLivingBase) entity);
+            if (entity != null) {
+                IEntitySkinCapability skinCapability = EntitySkinCapability.get(entity);
                 if (skinCapability != null) {
                     EntitySkinCapability.ENTITY_SKIN_CAP.getStorage().readNBT(EntitySkinCapability.ENTITY_SKIN_CAP, skinCapability, null, compound);
                 }

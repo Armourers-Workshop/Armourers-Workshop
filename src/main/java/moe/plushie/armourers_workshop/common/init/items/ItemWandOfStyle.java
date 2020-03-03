@@ -21,8 +21,8 @@ public class ItemWandOfStyle extends AbstractModItem {
     
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
-        if (entity instanceof EntityLivingBase) {
-            if (SkinnableEntityRegisty.INSTANCE.canUseWandOfStyleOnEntity((EntityLivingBase) entity, player)) {
+        if (entity instanceof Entity) {
+            if (SkinnableEntityRegisty.INSTANCE.canUseWandOfStyleOnEntity(entity, player)) {
                 if (entity.getEntityWorld().isRemote) {
                     return true;
                 }
