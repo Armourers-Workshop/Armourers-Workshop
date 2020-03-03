@@ -117,6 +117,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
         if (!worldIn.isRemote) {
             TileEntityMannequin te = getTileEntity(worldIn, pos, TileEntityMannequin.class);
             if (te != null) {
+                te.disableSync();
                 BlockUtils.dropInventoryBlocks(worldIn, te, pos);
                 UtilItems.spawnItemInWorld(worldIn, pos, createItemStackFromTile(te));
             }

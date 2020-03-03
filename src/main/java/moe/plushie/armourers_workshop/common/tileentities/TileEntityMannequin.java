@@ -87,7 +87,7 @@ public class TileEntityMannequin extends AbstractTileEntityInventory implements 
 
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(getPos(), 5, getUpdateTag());
+        return new SPacketUpdateTileEntity(getPos(), -1, getUpdateTag());
     }
 
     @Override

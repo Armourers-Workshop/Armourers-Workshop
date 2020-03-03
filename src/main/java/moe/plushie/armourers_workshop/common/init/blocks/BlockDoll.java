@@ -46,35 +46,36 @@ public class BlockDoll extends AbstractModBlockContainer {
 
     private static final String TAG_OWNER = "owner";
     private static final String TAG_IMAGE_URL = "imageUrl";
-    
+
     private final boolean isValentins;
     private static final AxisAlignedBB AABB = new AxisAlignedBB(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
-    
+
     public BlockDoll() {
         super(LibBlockNames.DOLL, Material.CIRCUITS, SoundType.METAL, !ConfigHandler.hideDollFromCreativeTabs);
         setLightOpacity(0);
-        //setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
+        // setBlockBounds(0.2F, 0F, 0.2F, 0.8F, 0.95F, 0.8F);
         isValentins = ModHolidays.VALENTINES.isHolidayActive();
         setSortPriority(198);
     }
-    
+
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return AABB;
     }
-    
+
     public static ItemStack getStackWithTexture(PlayerTexture playerTexture) {
         ItemStack result = new ItemStack(ModBlocks.doll);
         result.setTagCompound(new NBTTagCompound());
         playerTexture.writeToNBT(result.getTagCompound());
         return result;
     }
-    
+
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         if (!worldIn.isRemote) {
             TileEntityMannequin te = getTileEntity(worldIn, pos, TileEntityMannequin.class);
             if (te != null) {
+                te.disableSync();
                 BlockUtils.dropInventoryBlocks(worldIn, te, pos);
                 UtilItems.spawnItemInWorld(worldIn, pos, createItemStackFromTile(te));
             }
@@ -86,7 +87,7 @@ public class BlockDoll extends AbstractModBlockContainer {
     public int quantityDropped(Random random) {
         return 0;
     }
-    
+
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         TileEntity te = worldIn.getTileEntity(pos);
@@ -108,7 +109,7 @@ public class BlockDoll extends AbstractModBlockContainer {
             }
         }
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
@@ -134,30 +135,30 @@ public class BlockDoll extends AbstractModBlockContainer {
             }
         }
     }
-    
+
     @Override
     public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
         if (world.isRemote) {
             return false;
         }
         TileEntity te = world.getTileEntity(pos);
-        if (te != null  && te instanceof TileEntityMannequin) {
-            int rotation = ((TileEntityMannequin)te).PROP_ROTATION.get();
+        if (te != null && te instanceof TileEntityMannequin) {
+            int rotation = ((TileEntityMannequin) te).PROP_ROTATION.get();
             rotation++;
             if (rotation > 15) {
                 rotation = 0;
             }
-            ((TileEntityMannequin)te).PROP_ROTATION.set(rotation);
+            ((TileEntityMannequin) te).PROP_ROTATION.set(rotation);
         }
         return true;
     }
-    
+
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         TileEntityMannequin te = getTileEntity(world, pos, TileEntityMannequin.class);
         return createItemStackFromTile(te);
     }
-    
+
     private ItemStack createItemStackFromTile(TileEntityMannequin te) {
         ItemStack stack = new ItemStack(ModBlocks.doll, 1);
         if (te != null) {
@@ -174,19 +175,19 @@ public class BlockDoll extends AbstractModBlockContainer {
         }
         return stack;
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
         return true;
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
         return true;
     }
-    
+
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!playerIn.canPlayerEdit(pos, facing, playerIn.getHeldItem(hand))) {
@@ -195,22 +196,22 @@ public class BlockDoll extends AbstractModBlockContainer {
         openGui(playerIn, EnumGuiId.MANNEQUIN, worldIn, pos, state, facing);
         return true;
     }
-    
+
     @Override
     public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
         return new TileEntityMannequin(true);
     }
-    
+
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.INVISIBLE;
     }
-    
+
     @Override
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
-    
+
     @Override
     public boolean isFullBlock(IBlockState state) {
         return false;
