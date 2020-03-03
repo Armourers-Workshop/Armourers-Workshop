@@ -60,6 +60,9 @@ public class GuiMannequin extends GuiTabbed<ContainerMannequin> {
         tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.name")).setIconLocation(128, 0).setAnimation(8, 150));
         tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(inventoryName, "tab.extraRenders")).setIconLocation(144, 0).setAnimation(8, 150));
         tabController.setActiveTabIndex(getActiveTab());
+        
+        tabController.setTabsPerSide(6);
+        
         tabChanged();
     }
 

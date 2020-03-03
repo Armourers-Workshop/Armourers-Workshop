@@ -74,6 +74,7 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         return new BlockStateContainer(this, new IProperty[] {STATE_FACING});
     }
     
+    @Override
     public IBlockState getStateFromMeta(int meta) {
         boolean northSouthBit = getBitBool(meta, 0);
         boolean posNegBit = getBitBool(meta, 1);
@@ -86,6 +87,7 @@ public class BlockSkinnable extends AbstractModBlockContainer {
         return this.getDefaultState().withProperty(STATE_FACING, facing);
     }
     
+    @Override
     public int getMetaFromState(IBlockState state) {
         EnumFacing facing = state.getValue(STATE_FACING);
         int meta = 0;
