@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.common.init.items;
 import java.util.List;
 
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
+import moe.plushie.armourers_workshop.common.entity.EntityMannequin;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockMannequin;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockMannequin.EnumPartType;
 import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
@@ -58,6 +59,13 @@ public class ItemMannequinTool extends AbstractModItem {
                     }
                 }
                 
+            }
+        } else if (side == EnumFacing.UP) {
+            if (!world.isRemote) {
+                pos = pos.offset(side);
+                EntityMannequin entityMannequin = new EntityMannequin(world);
+                entityMannequin.setPosition(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F);
+                world.spawnEntity(entityMannequin);
             }
         }
         return EnumActionResult.FAIL;
