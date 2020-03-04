@@ -87,9 +87,9 @@ public class SkinPart implements ISkinPart {
 
     public Rectangle3D getBlockBounds(int x, int y, int z) {
         if (blockGrid != null) {
-            x = MathHelper.clamp(x, 0, blockGrid[0].length);
+            x = MathHelper.clamp(x, 0, blockGrid.length);
             y = MathHelper.clamp(y, 0, blockGrid[1].length);
-            z = MathHelper.clamp(z, 0, blockGrid[2].length);
+            z = MathHelper.clamp(z, 0, blockGrid[0][1].length);
             return blockGrid[x][y][z];
         }
         return null;
