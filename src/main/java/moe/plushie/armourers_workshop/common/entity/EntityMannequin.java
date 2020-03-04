@@ -1,5 +1,9 @@
 package moe.plushie.armourers_workshop.common.entity;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.client.render.EntityTextureInfo;
+import moe.plushie.armourers_workshop.common.init.items.ModItems;
+import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -10,15 +14,34 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityMannequin extends Entity {
 
+    @SideOnly(Side.CLIENT)
+    private EntityTextureInfo textureInfo;
+    
     private int counter = 0;
 
     public EntityMannequin(World worldIn) {
         super(worldIn);
         this.setSize(0.8F, 1.9F);
         setPosition(posX, posY, posZ);
+        if (worldIn.isRemote) {
+            makeTexureInfo();
+        }
+    }
+    
+    @SideOnly(Side.CLIENT)
+    private void makeTexureInfo() {
+        textureInfo = new EntityTextureInfo();
+    }
+    
+    @SideOnly(Side.CLIENT)
+    public EntityTextureInfo getTextureInfo() {
+        return textureInfo;
     }
     
     @Override
@@ -76,26 +99,35 @@ public class EntityMannequin extends Entity {
     
     @Override
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
-        ItemStack itemStack = player.getHeldItem(hand);
-        if (itemStack.isEmpty()) {
-            if (world.isRemote) {
-                setDead();
-            }
+        if (player.isSneaking()) {
+            return true;
         }
-
-        return true;
+        FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), getEntityWorld(), getEntityId(), 0, 0);
+        return false;
     }
     
     @Override
     public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
-        //ModLogger.log("tick!");
-        return super.applyPlayerInteraction(player, vec, hand);
+        ItemStack itemStack = player.getHeldItem(hand);
+        if (itemStack.getItem() == ModItems.SOAP) {
+            if (!world.isRemote) {
+                setDead();
+            }
+            return EnumActionResult.SUCCESS;
+        }
+        return EnumActionResult.PASS;
     }
     
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
         //ModLogger.log("tick!");
         return super.attackEntityFrom(source, amount);
+    }
+    
+    @Override
+    public boolean equals(Object p_equals_1_) {
+        // TODO Auto-generated method stub
+        return super.equals(p_equals_1_);
     }
 
     @Override

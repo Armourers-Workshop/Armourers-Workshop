@@ -1,36 +1,38 @@
 package moe.plushie.armourers_workshop.client.render.entity;
 
 import moe.plushie.armourers_workshop.api.common.IExtraColours;
+import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.client.render.EntityTextureInfo;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
+import moe.plushie.armourers_workshop.common.entity.EntityMannequin;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.proxies.ClientProxy.TexturePaintType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderEntity;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderEntityMannequin<EntityMannequin> extends RenderEntity {
+public class RenderEntityMannequin extends Render<EntityMannequin> {
 
-    private final ModelPlayer modelPlayerSmall = new ModelPlayer(0F, false);
+    private final ModelPlayer modelPlayerSmall = new ModelPlayer(0F, true);
     private final ModelPlayer modelPlayerNormal = new ModelPlayer(0F, false);
 
     public RenderEntityMannequin(RenderManager renderManager) {
@@ -38,8 +40,8 @@ public class RenderEntityMannequin<EntityMannequin> extends RenderEntity {
     }
 
     @Override
-    public void doRender(Entity entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        
+    public void doRender(EntityMannequin entity, double x, double y, double z, float entityYaw, float partialTicks) {
+
         GlStateManager.pushMatrix();
 
         float scale = 0.0625F;
@@ -69,7 +71,7 @@ public class RenderEntityMannequin<EntityMannequin> extends RenderEntity {
         skinCap.hideArmRightOverlay = false;
         skinCap.hideLegLeftOverlay = false;
         skinCap.hideLegRightOverlay = false;
-        
+
         modelPlayerNormal.bipedHead.isHidden = false;
         modelPlayerNormal.bipedHeadwear.isHidden = false;
         modelPlayerNormal.bipedBody.isHidden = false;
@@ -97,12 +99,12 @@ public class RenderEntityMannequin<EntityMannequin> extends RenderEntity {
                 for (int skinIndex = 0; skinIndex < skinCap.getSlotCountForSkinType(skinType); skinIndex++) {
                     ISkinDescriptor skinDescriptor = skinCap.getSkinDescriptor(skinType, skinIndex);
                     if (skinDescriptor != null) {
-                        renderSkin(entity, skinDescriptor, skinCap, wardrobe, extraColours, 0, entity != Minecraft.getMinecraft().player);
+                        renderSkin(entity, skinDescriptor, skinCap, wardrobe, extraColours, 0, true);
                     }
                 }
             }
         }
-        
+
         // Head
         if (skinCap.hideHead) {
             modelPlayerNormal.bipedHead.isHidden = true;
@@ -151,16 +153,18 @@ public class RenderEntityMannequin<EntityMannequin> extends RenderEntity {
         if (skinCap.hideLegRight | skinCap.hideLegRightOverlay) {
             modelPlayerNormal.bipedRightLegwear.isHidden = true;
         }
-        
-        bindTexture(getEntityTexture(entity));
-        
+
+        buildTexture(entity.getTextureInfo(), skinCap, wardrobe);
+
+        bindTexture(entity.getTextureInfo().preRender());
+
         modelPlayerNormal.isChild = false;
         modelPlayerNormal.render(entity, 0, 0, 0, 0, 0, scale);
-        
+
         GlStateManager.popMatrix();
     }
 
-    private void renderSkin(Entity entity, ISkinDescriptor skinDescriptor, EntitySkinCapability skinCap, IWardrobeCap wardrobe, IExtraColours extraColours, double distance, boolean doLodLoading) {
+    private void renderSkin(EntityMannequin entity, ISkinDescriptor skinDescriptor, EntitySkinCapability skinCap, IWardrobeCap wardrobe, IExtraColours extraColours, double distance, boolean doLodLoading) {
         SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
 
@@ -235,8 +239,59 @@ public class RenderEntityMannequin<EntityMannequin> extends RenderEntity {
         }
     }
 
+    private void buildTexture(EntityTextureInfo textureInfo, IEntitySkinCapability skinCapability, IWardrobeCap wardrobeCap) {
+        textureInfo.updateTexture(getEntityTexture(null));
+
+        textureInfo.updateExtraColours(wardrobeCap.getExtraColours());
+
+        ISkinType[] skinTypes = new ISkinType[] { SkinTypeRegistry.skinHead, SkinTypeRegistry.skinChest, SkinTypeRegistry.skinLegs, SkinTypeRegistry.skinFeet, SkinTypeRegistry.skinOutfit };
+
+        Skin[] skins = new Skin[skinTypes.length * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
+        ISkinDye[] dyes = new ISkinDye[skinTypes.length * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE];
+
+        for (int skinIndex = 0; skinIndex < EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE; skinIndex++) {
+            Skin[] skin = new Skin[skinTypes.length];
+            ISkinDye[] dye = new ISkinDye[skinTypes.length];
+
+            for (int i = 0; i < skinTypes.length; i++) {
+                ISkinDescriptor descriptor = skinCapability.getSkinDescriptor(skinTypes[i], skinIndex);
+                if (descriptor != null) {
+                    skin[i] = ClientSkinCache.INSTANCE.getSkin(descriptor);
+                    dye[i] = descriptor.getSkinDye();
+                }
+            }
+
+            skins[0 + skinIndex * skinTypes.length] = skin[0];
+            skins[1 + skinIndex * skinTypes.length] = skin[1];
+            skins[2 + skinIndex * skinTypes.length] = skin[2];
+            skins[3 + skinIndex * skinTypes.length] = skin[3];
+            skins[4 + skinIndex * skinTypes.length] = skin[4];
+
+            dyes[0 + skinIndex * skinTypes.length] = mixDye(wardrobeCap.getDye(), dye[0]);
+            dyes[1 + skinIndex * skinTypes.length] = mixDye(wardrobeCap.getDye(), dye[1]);
+            dyes[2 + skinIndex * skinTypes.length] = mixDye(wardrobeCap.getDye(), dye[2]);
+            dyes[3 + skinIndex * skinTypes.length] = mixDye(wardrobeCap.getDye(), dye[3]);
+            dyes[4 + skinIndex * skinTypes.length] = mixDye(wardrobeCap.getDye(), dye[4]);
+        }
+
+        textureInfo.updateSkins(skins);
+        textureInfo.updateDyes(dyes);
+    }
+
+    private ISkinDye mixDye(ISkinDye wardrobeDye, ISkinDye itemDye) {
+        SkinDye dye = new SkinDye(wardrobeDye);
+        if (itemDye != null) {
+            for (int i = 0; i < 8; i++) {
+                if (itemDye.haveDyeInSlot(i)) {
+                    dye.addDye(i, dye.getDyeColour(i));
+                }
+            }
+        }
+        return dye;
+    }
+
     @Override
-    protected ResourceLocation getEntityTexture(Entity entity) {
+    protected ResourceLocation getEntityTexture(EntityMannequin entity) {
         return DefaultPlayerSkin.getDefaultSkinLegacy();
     }
 }

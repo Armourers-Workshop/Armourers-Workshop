@@ -136,15 +136,13 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
                 .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabDyes | isCreative))));
         
         Contributor contributor = Contributors.INSTANCE.getContributor(player.getGameProfile());
-        
-        
         tabContributor = new GuiTabWardrobeContributor(tabList.size(), this);
         tabList.add(tabContributor);
         tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.contributor"))
                 .setIconLocation(32, 128)
                 .setTabTextureSize(26, 30)
                 .setPadding(0, 4, 3, 3)
-                .setVisable(contributor != null));
+                .setVisable(isPlayer & contributor != null));
         
         
         tabController.setActiveTabIndex(getActiveTab());
@@ -335,6 +333,31 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
                 ModRenderHelper.disableScissor();
             }
         } else {
+            GlStateManager.pushAttrib();
+            GlStateManager.enableColorMaterial();
+            GlStateManager.pushMatrix();
+            GL11.glTranslatef(boxX, boxY, 50);
+            GL11.glRotatef(-20, 1, 0, 0);
+            GL11.glRotatef(playerRotation, 0, 1, 0);
+            GL11.glTranslatef(0, 0, -50);
+            
+            GlStateManager.translate(0, 0, 50.0F);
+            GlStateManager.scale((-45), 45, 45);
+            GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+            RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+            rendermanager.setPlayerViewY(180.0F);
+            rendermanager.setRenderShadow(false);
+            rendermanager.renderEntity(skinCapability.getEntity(), 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+            rendermanager.setRenderShadow(true);
+            GlStateManager.popMatrix();
+            RenderHelper.disableStandardItemLighting();
+            GlStateManager.disableRescaleNormal();
+            GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+            GlStateManager.disableTexture2D();
+            GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+            GlStateManager.popAttrib();
+            
+            GlStateManager.enableBlend();
             if (selectingColour) {
                 colour = getColourAtPos(Mouse.getX(), Mouse.getY());
             }

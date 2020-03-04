@@ -159,7 +159,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
 
             @Override
             public Render createRenderFor(RenderManager manager) {
-                return new RenderEntityMannequin<EntityMannequin>(manager);
+                return new RenderEntityMannequin(manager);
             }
         });
     }
