@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
-import moe.plushie.armourers_workshop.common.entity.EntityMannequin;
+import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;

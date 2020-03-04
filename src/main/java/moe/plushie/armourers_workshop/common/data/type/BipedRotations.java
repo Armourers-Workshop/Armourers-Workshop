@@ -1,140 +1,174 @@
 package moe.plushie.armourers_workshop.common.data.type;
 
+import java.util.Arrays;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants.NBT;
 
 public class BipedRotations {
+
+    private static final String TAG_ROTATION_DATA = "rotation_data";
+    private static final String TAG_CHILD = "child";
     
-    private static final String TAG_HEAD = "head";
-    private static final String TAG_CHEST = "chest";
-    private static final String TAG_LEFT_ARM = "leftArm";
-    private static final String TAG_RIGHT_ARM = "rightArm";
-    private static final String TAG_LEFT_LEG = "LeftLeg";
-    private static final String TAG_RIGHT_LEG = "RightLeg";
-    private static final String TAG_IS_CHILD = "isChild";
-    
-    public BipedPart head;
-    public BipedPart chest;
-    public BipedPart leftArm;
-    public BipedPart rightArm;
-    public BipedPart leftLeg;
-    public BipedPart rightLeg;
-    public boolean isChild;
-    public boolean hasCustomHead;
-    
-    //head - x: -90 - 90 y: -90 - 90 :z -20 - 20
-    //left arm - x: -90 - 180 y: -45 - 90 :z -45 - 45
-    //right arm - x: -90 - 180 y: -45 - 90 :z -45 - 45
-    //left leg - x: -90 - 90 y: -45 - 45 :z -45 - 45
-    //right leg - x: -90 - 90 y: -45 - 45 :z -45 - 45
+    private float[][] rotationData;
+    private boolean child;
     
     public BipedRotations() {
-        head = new BipedPart(TAG_HEAD);
-        chest = new BipedPart(TAG_CHEST);
-        leftArm = new BipedPart(TAG_LEFT_ARM);
-        rightArm = new BipedPart(TAG_RIGHT_ARM);
-        leftLeg = new BipedPart(TAG_LEFT_LEG);
-        rightLeg = new BipedPart(TAG_RIGHT_LEG);
+        rotationData = new float[BipedPart.values().length][3];
+        child = false;
         resetRotations();
     }
+
+    public void resetRotations() {
+        setPartRotations(BipedPart.HEAD, 0F, 0F, 0F);
+        setPartRotations(BipedPart.CHEST, 0F, 0F, 0F);
+        setPartRotations(BipedPart.LEFT_ARM, 0F, (float)Math.toRadians(-1F), (float)Math.toRadians(-5F));
+        setPartRotations(BipedPart.RIGHT_ARM, 0F, (float)Math.toRadians(1F), (float)Math.toRadians(5F));
+        setPartRotations(BipedPart.LEFT_LEG, 0F, 0F, 0F);
+        setPartRotations(BipedPart.RIGHT_LEG, 0F, 0F, 0F);
+    }
     
-    public BipedPart getPartForIndex(int index) {
-        switch (index) {
-        case 0:
-            return head;
-        case 1:
-            return chest;
-        case 2:
-            return leftArm;
-        case 3:
-            return rightArm;
-        case 4:
-            return leftLeg;
-        case 5:
-            return rightLeg;
-        default:
-            return null;
+    public void setChild(boolean child) {
+        this.child = child;
+    }
+    
+    public boolean isChild() {
+        return child;
+    }
+
+    public void setPartRotations(BipedPart bipedPart, float[] rotationData) {
+        setPartRotations(bipedPart, rotationData[0], rotationData[1], rotationData[2]);
+    }
+
+    public void setPartRotations(BipedPart bipedPart, float x, float y, float z) {
+        rotationData[bipedPart.ordinal()][0] = x;
+        rotationData[bipedPart.ordinal()][1] = y;
+        rotationData[bipedPart.ordinal()][2] = z;
+    }
+
+    public float[] getPartRotations(BipedPart bipedPart) {
+        return rotationData[bipedPart.ordinal()];
+    }
+
+    public void applyRotationsToBiped(ModelPlayer modelBiped) {
+        applyRotationsToBipedPart(modelBiped.bipedHead, getPartRotations(BipedPart.HEAD));
+        applyRotationsToBipedPart(modelBiped.bipedHeadwear, getPartRotations(BipedPart.HEAD));
+
+        applyRotationsToBipedPart(modelBiped.bipedBody, getPartRotations(BipedPart.CHEST));
+        applyRotationsToBipedPart(modelBiped.bipedBodyWear, getPartRotations(BipedPart.CHEST));
+
+        applyRotationsToBipedPart(modelBiped.bipedLeftArm, getPartRotations(BipedPart.LEFT_ARM));
+        applyRotationsToBipedPart(modelBiped.bipedLeftArmwear, getPartRotations(BipedPart.LEFT_ARM));
+
+        applyRotationsToBipedPart(modelBiped.bipedRightArm, getPartRotations(BipedPart.RIGHT_ARM));
+        applyRotationsToBipedPart(modelBiped.bipedRightArmwear, getPartRotations(BipedPart.RIGHT_ARM));
+
+        applyRotationsToBipedPart(modelBiped.bipedLeftLeg, getPartRotations(BipedPart.LEFT_LEG));
+        applyRotationsToBipedPart(modelBiped.bipedLeftLegwear, getPartRotations(BipedPart.LEFT_LEG));
+
+        applyRotationsToBipedPart(modelBiped.bipedRightLeg, getPartRotations(BipedPart.RIGHT_LEG));
+        applyRotationsToBipedPart(modelBiped.bipedRightLegwear, getPartRotations(BipedPart.RIGHT_LEG));
+    }
+
+    public void applyRotationsToBiped(ModelBiped modelBiped) {
+        applyRotationsToBipedPart(modelBiped.bipedHead, getPartRotations(BipedPart.HEAD));
+        applyRotationsToBipedPart(modelBiped.bipedHeadwear, getPartRotations(BipedPart.HEAD));
+
+        applyRotationsToBipedPart(modelBiped.bipedBody, getPartRotations(BipedPart.CHEST));
+
+        applyRotationsToBipedPart(modelBiped.bipedLeftArm, getPartRotations(BipedPart.LEFT_ARM));
+
+        applyRotationsToBipedPart(modelBiped.bipedRightArm, getPartRotations(BipedPart.RIGHT_ARM));
+
+        applyRotationsToBipedPart(modelBiped.bipedLeftLeg, getPartRotations(BipedPart.LEFT_LEG));
+
+        applyRotationsToBipedPart(modelBiped.bipedRightLeg, getPartRotations(BipedPart.RIGHT_LEG));
+    }
+
+    public void applyRotationsToBipedPart(ModelRenderer modelRenderer, float[] partRotations) {
+        modelRenderer.rotateAngleX = partRotations[0];
+        modelRenderer.rotateAngleY = partRotations[1];
+        modelRenderer.rotateAngleZ = partRotations[2];
+    }
+
+    public void getRotationsFromBiped(ModelBiped modelBiped) {
+        setPartRotations(BipedPart.HEAD, getRotationsFromBipedPart(modelBiped.bipedHead));
+        setPartRotations(BipedPart.CHEST, getRotationsFromBipedPart(modelBiped.bipedBody));
+        setPartRotations(BipedPart.LEFT_ARM, getRotationsFromBipedPart(modelBiped.bipedLeftArm));
+        setPartRotations(BipedPart.RIGHT_ARM, getRotationsFromBipedPart(modelBiped.bipedRightArm));
+        setPartRotations(BipedPart.LEFT_LEG, getRotationsFromBipedPart(modelBiped.bipedLeftLeg));
+        setPartRotations(BipedPart.RIGHT_LEG, getRotationsFromBipedPart(modelBiped.bipedRightLeg));
+    }
+
+    public float[] getRotationsFromBipedPart(ModelRenderer modelRenderer) {
+        return new float[] { modelRenderer.rotateAngleX, modelRenderer.rotateAngleY, modelRenderer.rotateAngleZ };
+    }
+
+    public void loadNBTData(NBTTagCompound compound) {
+        if (compound.hasKey(TAG_ROTATION_DATA, NBT.TAG_LIST)) {
+            NBTTagList list = compound.getTagList(TAG_ROTATION_DATA, NBT.TAG_FLOAT);
+            int totalRotations = BipedPart.values().length * 3;
+            if (list.tagCount() >= totalRotations) {
+                int counter = 0;
+                for (BipedPart bipedPart : BipedPart.values()) {
+                    NBTTagFloat rot1 = (NBTTagFloat) list.get(counter);
+                    NBTTagFloat rot2 = (NBTTagFloat) list.get(counter + 1);
+                    NBTTagFloat rot3 = (NBTTagFloat) list.get(counter + 2);
+                    counter += 3;
+                    setPartRotations(bipedPart, rot1.getFloat(), rot2.getFloat(), rot3.getFloat());
+                }
+            }
+        }
+        if (compound.hasKey(TAG_CHILD, NBT.TAG_BYTE)) {
+            child = compound.getBoolean(TAG_CHILD);
         }
     }
-    
-    public void resetRotations() {
-        head.setRotationsDegrees(0, 0, 0);
-        chest.setRotationsDegrees(0, 0, 0);
-        leftArm.setRotationsDegrees(0, -1, -10);
-        rightArm.setRotationsDegrees(0, 1, 10);
-        leftLeg.setRotationsDegrees(0, 0, 0);
-        rightLeg.setRotationsDegrees(0, 0, 0);
-    }
-    
-    public void applyRotationsToBiped(ModelBiped modelBiped) {
-        head.applyRotationsToBipedPart(modelBiped.bipedHead);
-        head.applyRotationsToBipedPart(modelBiped.bipedHeadwear);
-        chest.applyRotationsToBipedPart(modelBiped.bipedBody);
-        leftArm.applyRotationsToBipedPart(modelBiped.bipedLeftArm);
-        rightArm.applyRotationsToBipedPart(modelBiped.bipedRightArm);
-        leftLeg.applyRotationsToBipedPart(modelBiped.bipedLeftLeg);
-        rightLeg.applyRotationsToBipedPart(modelBiped.bipedRightLeg);
-        modelBiped.isChild = isChild;
-    }
-    
-    public void loadNBTData(NBTTagCompound compound) {
-        head.loadNBTData(compound);
-        chest.loadNBTData(compound);
-        leftArm.loadNBTData(compound);
-        rightArm.loadNBTData(compound);
-        leftLeg.loadNBTData(compound);
-        rightLeg.loadNBTData(compound);
-        this.isChild = compound.getBoolean(TAG_IS_CHILD);
-    }
-    
+
     public NBTTagCompound saveNBTData(NBTTagCompound compound) {
-        head.saveNBTData(compound);
-        chest.saveNBTData(compound);
-        leftArm.saveNBTData(compound);
-        rightArm.saveNBTData(compound);
-        leftLeg.saveNBTData(compound);
-        rightLeg.saveNBTData(compound);
-        compound.setBoolean(TAG_IS_CHILD, this.isChild);
+        NBTTagList list = new NBTTagList();
+        for (BipedPart bipedPart : BipedPart.values()) {
+            float[] rots = getPartRotations(bipedPart);
+            for (int i = 0; i < rots.length; i++) {
+                list.appendTag(new NBTTagFloat(rots[i]));
+            }
+        }
+        compound.setTag(TAG_ROTATION_DATA, list);
+        compound.setBoolean(TAG_CHILD, child);
         return compound;
     }
-    
+
     public void readFromBuf(ByteBuf buf) {
-        head.readFromBuf(buf);
-        chest.readFromBuf(buf);
-        leftArm.readFromBuf(buf);
-        rightArm.readFromBuf(buf);
-        leftLeg.readFromBuf(buf);
-        rightLeg.readFromBuf(buf);
-        this.isChild = buf.readBoolean();
+        for (BipedPart bipedPart : BipedPart.values()) {
+            float rot1 = buf.readFloat();
+            float rot2 = buf.readFloat();
+            float rot3 = buf.readFloat();
+            setPartRotations(bipedPart, rot1, rot2, rot3);
+        }
     }
-    
+
     public void writeToBuf(ByteBuf buf) {
-        head.writeToBuf(buf);
-        chest.writeToBuf(buf);
-        leftArm.writeToBuf(buf);
-        rightArm.writeToBuf(buf);
-        leftLeg.writeToBuf(buf);
-        rightLeg.writeToBuf(buf);
-        buf.writeBoolean(this.isChild);
+        for (BipedPart bipedPart : BipedPart.values()) {
+            float[] rots = getPartRotations(bipedPart);
+            for (int i = 0; i < rots.length; i++) {
+                buf.writeFloat(rots[i]);
+            }
+        }
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((chest == null) ? 0 : chest.hashCode());
-        result = prime * result + ((head == null) ? 0 : head.hashCode());
-        result = prime * result + (isChild ? 1231 : 1237);
-        result = prime * result + (hasCustomHead ? 1231 : 1237);
-        result = prime * result + ((leftArm == null) ? 0 : leftArm.hashCode());
-        result = prime * result + ((leftLeg == null) ? 0 : leftLeg.hashCode());
-        result = prime * result + ((rightArm == null) ? 0 : rightArm.hashCode());
-        result = prime * result + ((rightLeg == null) ? 0 : rightLeg.hashCode());
+        result = prime * result + Arrays.deepHashCode(rotationData);
         return result;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -144,137 +178,12 @@ public class BipedRotations {
         if (getClass() != obj.getClass())
             return false;
         BipedRotations other = (BipedRotations) obj;
-        if (chest == null) {
-            if (other.chest != null)
-                return false;
-        } else if (!chest.equals(other.chest))
-            return false;
-        if (head == null) {
-            if (other.head != null)
-                return false;
-        } else if (!head.equals(other.head))
-            return false;
-        if (isChild != other.isChild)
-            return false;
-        if (leftArm == null) {
-            if (other.leftArm != null)
-                return false;
-        } else if (!leftArm.equals(other.leftArm))
-            return false;
-        if (leftLeg == null) {
-            if (other.leftLeg != null)
-                return false;
-        } else if (!leftLeg.equals(other.leftLeg))
-            return false;
-        if (rightArm == null) {
-            if (other.rightArm != null)
-                return false;
-        } else if (!rightArm.equals(other.rightArm))
-            return false;
-        if (rightLeg == null) {
-            if (other.rightLeg != null)
-                return false;
-        } else if (!rightLeg.equals(other.rightLeg))
+        if (!Arrays.deepEquals(rotationData, other.rotationData))
             return false;
         return true;
     }
-    
-    public class BipedPart {
-        private static final String TAG_ROTATION_X = "rotationX";
-        private static final String TAG_ROTATION_Y = "rotationY";
-        private static final String TAG_ROTATION_Z = "rotationZ";
-        
-        private final String partName;
-        public float rotationX;
-        public float rotationY;
-        public float rotationZ;
-        
-        public BipedPart(String partName) {
-            this.partName = partName;
-        }
-        
-        public void applyRotationsToBipedPart(ModelRenderer modelRenderer) {
-            modelRenderer.rotateAngleX = this.rotationX;
-            modelRenderer.rotateAngleY = this.rotationY;
-            modelRenderer.rotateAngleZ = this.rotationZ;
-        }
-        
-        public void setRotations(float x, float y, float z) {
-            this.rotationX = x;
-            this.rotationY = y;
-            this.rotationZ = z;
-        }
-        
-        public void setRotationsDegrees(float x, float y, float z) {
-            this.rotationX = (float) Math.toRadians(x);
-            this.rotationY = (float) Math.toRadians(y);
-            this.rotationZ = (float) Math.toRadians(z);
-        }
-        
-        public void loadNBTData(NBTTagCompound compound) {
-            this.rotationX = compound.getFloat(TAG_ROTATION_X + this.partName);
-            this.rotationY = compound.getFloat(TAG_ROTATION_Y + this.partName);
-            this.rotationZ = compound.getFloat(TAG_ROTATION_Z + this.partName);
-        }
-        
-        public NBTTagCompound saveNBTData(NBTTagCompound compound) {
-            compound.setFloat(TAG_ROTATION_X + this.partName, this.rotationX);
-            compound.setFloat(TAG_ROTATION_Y + this.partName, this.rotationY);
-            compound.setFloat(TAG_ROTATION_Z + this.partName, this.rotationZ);
-            return compound;
-        }
-        
-        public void writeToBuf(ByteBuf buf) {
-            buf.writeFloat(this.rotationX);
-            buf.writeFloat(this.rotationY);
-            buf.writeFloat(this.rotationZ);
-        }
-        
-        public void readFromBuf(ByteBuf buf) {
-            this.rotationX = buf.readFloat();
-            this.rotationY = buf.readFloat();
-            this.rotationZ = buf.readFloat();
-        }
-        
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((partName == null) ? 0 : partName.hashCode());
-            result = prime * result + Float.floatToIntBits(rotationX);
-            result = prime * result + Float.floatToIntBits(rotationY);
-            result = prime * result + Float.floatToIntBits(rotationZ);
-            return result;
-        }
-        
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            BipedPart other = (BipedPart) obj;
-            if (partName == null) {
-                if (other.partName != null)
-                    return false;
-            } else if (!partName.equals(other.partName))
-                return false;
-            if (Float.floatToIntBits(rotationX) != Float
-                    .floatToIntBits(other.rotationX))
-                return false;
-            if (Float.floatToIntBits(rotationY) != Float
-                    .floatToIntBits(other.rotationY))
-                return false;
-            if (Float.floatToIntBits(rotationZ) != Float
-                    .floatToIntBits(other.rotationZ))
-                return false;
-            return true;
-        }
-        
-        private BipedRotations getOuterType() {
-            return BipedRotations.this;
-        }
+
+    public enum BipedPart {
+        HEAD, CHEST, LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG
     }
 }

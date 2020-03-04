@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.common.init.items;
 import java.util.List;
 
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
-import moe.plushie.armourers_workshop.common.entity.EntityMannequin;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockMannequin;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockMannequin.EnumPartType;
+import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
 import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;

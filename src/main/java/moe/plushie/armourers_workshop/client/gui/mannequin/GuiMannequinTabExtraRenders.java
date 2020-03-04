@@ -36,8 +36,8 @@ public class GuiMannequinTabExtraRenders extends GuiTabPanel<GuiMannequin> {
         isExtraRenders = new GuiCheckBox(0, this.width / 2 - 78, 40, GuiHelper.getLocalizedControlName(inventoryName, "label.isExtraRenders"), tileEntity.PROP_RENDER_EXTRAS.get());
         isFlying = new GuiCheckBox(0, this.width / 2 - 78, 55, GuiHelper.getLocalizedControlName(inventoryName, "label.isFlying"), tileEntity.PROP_FLYING.get());
         isVisible = new GuiCheckBox(0, this.width / 2 - 78, 70, GuiHelper.getLocalizedControlName(inventoryName, "label.isVisible"), tileEntity.PROP_VISIBLE.get());
-        if (((GuiMannequin)parent).tabRotations.getBipedRotations() != null) {
-            isChildCheck.setIsChecked(((GuiMannequin)parent).tabRotations.getBipedRotations().isChild);
+        if (parent.tabRotations.getBipedRotations() != null) {
+            isChildCheck.setIsChecked(parent.tabRotations.getBipedRotations().isChild());
         }
         noclip = new GuiCheckBox(0, this.width / 2 - 78, 85, GuiHelper.getLocalizedControlName(inventoryName, "label.noclip"), tileEntity.PROP_NOCLIP.get());
         buttonList.add(isChildCheck);
@@ -50,14 +50,14 @@ public class GuiMannequinTabExtraRenders extends GuiTabPanel<GuiMannequin> {
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button == isExtraRenders) {
-            ((GuiMannequin)parent).tabOffset.sendData();
+            parent.tabOffset.sendData();
         }
         if (button == isFlying) {
-            ((GuiMannequin)parent).tabOffset.sendData();
+            parent.tabOffset.sendData();
         }
         if (button == isChildCheck) {
-            ((GuiMannequin)parent).tabRotations.getBipedRotations().isChild = isChildCheck.isChecked();
-            ((GuiMannequin)parent).tabRotations.checkAndSendRotationValues();
+            parent.tabRotations.getBipedRotations().setChild(isChildCheck.isChecked());
+            parent.tabRotations.checkAndSendRotationValues();
         }
         if (button == isVisible) {
             tileEntity.PROP_VISIBLE.set(isVisible.isChecked());

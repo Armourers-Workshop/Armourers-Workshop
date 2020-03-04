@@ -1,7 +1,13 @@
-package moe.plushie.armourers_workshop.common.entity;
+package moe.plushie.armourers_workshop.common.init.entities;
+
+import java.util.Properties;
+
+import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.render.EntityTextureInfo;
+import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
+import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import net.minecraft.entity.Entity;
@@ -20,10 +26,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityMannequin extends Entity {
 
+    BipedRotations rotations;
+    int rotation;
+    boolean doll;
+    boolean renderExtras;
+    boolean flying;
+    boolean visable;
+    boolean noClip;
+    
+    boolean isChild;
+    boolean hasCustomHead;
+    
+    private Properties properties = new Properties();
+    
     @SideOnly(Side.CLIENT)
     private EntityTextureInfo textureInfo;
-    
-    private int counter = 0;
 
     public EntityMannequin(World worldIn) {
         super(worldIn);
@@ -46,55 +63,27 @@ public class EntityMannequin extends Entity {
     
     @Override
     public boolean canBeCollidedWith() {
-        // TODO Auto-generated method stub
         return true;
     }
     
     
     @Override
     public boolean canBeAttackedWithItem() {
-        // TODO Auto-generated method stub
         return false;
     }
+    
     @Override
     protected void entityInit() {
-        //this.setPosition(this.posX, this.posY, this.posZ);
     }
 
     @Override
     public void onEntityUpdate() {
-        if (world.isRemote) {
-            //return;
-        }
-        
-        //setDead();
         super.onEntityUpdate();
-        //this.setPosition(this.posX, this.posY, this.posZ);
-    }
-    
-    @Override
-    public void setEntityBoundingBox(AxisAlignedBB bb) {
-        // TODO Auto-generated method stub
-        super.setEntityBoundingBox(bb);
     }
     
     @Override
     public AxisAlignedBB getCollisionBoundingBox() {
-        // TODO Auto-generated method stub
         return super.getEntityBoundingBox();
-    }
-    
-    @Override
-    public AxisAlignedBB getEntityBoundingBox() {
-
-        return super.getEntityBoundingBox();
-    }
-    
-    @Override
-    public void applyEntityCollision(Entity entityIn) {
-        //ModLogger.log("tick!");
-        // TODO Auto-generated method stub
-        super.applyEntityCollision(entityIn);
     }
     
     @Override
@@ -123,12 +112,6 @@ public class EntityMannequin extends Entity {
         //ModLogger.log("tick!");
         return super.attackEntityFrom(source, amount);
     }
-    
-    @Override
-    public boolean equals(Object p_equals_1_) {
-        // TODO Auto-generated method stub
-        return super.equals(p_equals_1_);
-    }
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound compound) {
@@ -136,5 +119,12 @@ public class EntityMannequin extends Entity {
 
     @Override
     protected void writeEntityToNBT(NBTTagCompound compound) {
+    }
+    
+    public class TextureData {
+        
+        private TextureType textureType = TextureType.USER;
+        private GameProfile profile = null;
+        private String url = "";
     }
 }

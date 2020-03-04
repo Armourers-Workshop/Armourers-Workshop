@@ -17,9 +17,8 @@ import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.config.ConfigHandlerOverrides;
 import moe.plushie.armourers_workshop.common.config.ConfigSynchronizeHandler;
 import moe.plushie.armourers_workshop.common.crafting.CraftingManager;
-import moe.plushie.armourers_workshop.common.entity.EntityMannequin;
-import moe.plushie.armourers_workshop.common.init.blocks.BlockSkinnable.Seat;
 import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.init.entities.ModEntities;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.init.sounds.ModSounds;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinLibrary;
@@ -52,14 +51,12 @@ import moe.plushie.armourers_workshop.utils.SkinNBTUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 @Mod.EventBusSubscriber(modid = LibModInfo.ID)
@@ -99,9 +96,7 @@ public class CommonProxy implements ILibraryCallback {
 
         ModLogger.log("user home: " + System.getProperty("user.home"));
 
-        EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "seat"), Seat.class, "seat", 1, ArmourersWorkshop.getInstance(), 10, 20, false);
-        EntityRegistry.registerModEntity(new ResourceLocation(LibModInfo.ID, "mannequin"), EntityMannequin.class, "mannequin", 2, ArmourersWorkshop.getInstance(), 32, 20, false);
-
+        ModEntities.registerEntities();
         SkinExtractor.extractSkins();
 
         paintTypeRegistry = new PaintTypeRegistry();

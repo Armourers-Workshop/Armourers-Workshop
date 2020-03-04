@@ -17,6 +17,7 @@ import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.Contributors;
 import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
+import moe.plushie.armourers_workshop.common.data.type.BipedRotations.BipedPart;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.inventory.MannequinSlotType;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
@@ -80,9 +81,9 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         int rotaion = te.PROP_ROTATION.get();
         GlStateManager.translate(x + 0.5F + te.PROP_OFFSET_X.get(), y + 1F + te.PROP_OFFSET_Y.get(), z + 0.5F + te.PROP_OFFSET_Z.get());
         BipedRotations rots = te.PROP_BIPED_ROTATIONS.get();
-        GlStateManager.rotate((float) Math.toDegrees(rots.chest.rotationX), 1F, 0F, 0F);
-        GlStateManager.rotate((float) Math.toDegrees(rots.chest.rotationY), 0F, 1F, 0F);
-        GlStateManager.rotate((float) Math.toDegrees(rots.chest.rotationZ), 0F, 0F, 1F);
+        GlStateManager.rotate((float) Math.toDegrees(rots.getPartRotations(BipedPart.CHEST)[0]), 1F, 0F, 0F);
+        GlStateManager.rotate((float) Math.toDegrees(rots.getPartRotations(BipedPart.CHEST)[1]), 0F, 1F, 0F);
+        GlStateManager.rotate((float) Math.toDegrees(rots.getPartRotations(BipedPart.CHEST)[2]), 0F, 0F, 1F);
         GlStateManager.translate(0, 0.5D, 0);
         
         GlStateManager.scale(SCALE * 15, SCALE * 15, SCALE * 15);
@@ -305,7 +306,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
             Contributor contributor = Contributors.INSTANCE.getContributor(te.PROP_OWNER.get());
             if (contributor != null) {
                 int offset = te.getPos().hashCode();
-                renderMagicCircle(mc, contributor.r, contributor.g, contributor.b, partialTicks, offset, te.PROP_BIPED_ROTATIONS.get().isChild);
+                renderMagicCircle(mc, contributor.r, contributor.g, contributor.b, partialTicks, offset, te.PROP_BIPED_ROTATIONS.get().isChild());
             }
         }
         
@@ -383,19 +384,19 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
     
     private void renderModel(TileEntityMannequin te, ModelBiped targetBiped) {
         if (!hasCustomHead(te)) {
-            if (te.PROP_BIPED_ROTATIONS.get().isChild) {
+            if (te.PROP_BIPED_ROTATIONS.get().isChild()) {
                 ModelHelper.enableChildModelScale(true, SCALE);
             }
             targetBiped.bipedHead.render(SCALE);
             GL11.glDisable(GL11.GL_CULL_FACE);
             targetBiped.bipedHeadwear.render(SCALE);
             GL11.glEnable(GL11.GL_CULL_FACE);
-            if (te.PROP_BIPED_ROTATIONS.get().isChild) {
+            if (te.PROP_BIPED_ROTATIONS.get().isChild()) {
                 ModelHelper.disableChildModelScale();
             };
         }
         
-        if (te.PROP_BIPED_ROTATIONS.get().isChild) {
+        if (te.PROP_BIPED_ROTATIONS.get().isChild()) {
             ModelHelper.enableChildModelScale(false, SCALE);
         }
 
@@ -405,7 +406,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         targetBiped.bipedRightLeg.render(SCALE);
         targetBiped.bipedLeftLeg.render(SCALE);
         
-        if (te.PROP_BIPED_ROTATIONS.get().isChild) {
+        if (te.PROP_BIPED_ROTATIONS.get().isChild()) {
             ModelHelper.disableChildModelScale();
         }
     }
