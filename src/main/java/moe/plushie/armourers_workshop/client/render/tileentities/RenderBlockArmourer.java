@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.client.render.tileentities;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
-import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.ArmourerRenderHelper;
+import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
@@ -16,41 +16,40 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderBlockArmourer extends TileEntitySpecialRenderer<TileEntityArmourer> {
-    
-    
+
     @Override
     public void render(TileEntityArmourer te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         Minecraft mc = Minecraft.getMinecraft();
         mc.profiler.startSection("armourersArmourer");
         float scale = 0.0625F;
-        
+
         ISkinType skinType = te.getSkinType();
-        
+
         mc.profiler.startSection("textureBuild");
         if (te.skinTexture == null) {
             te.skinTexture = new SkinTexture();
         }
-        
+
         PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(te.getTexture());
         if (!playerTexture.isDownloaded()) {
             playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(te.getTextureOld());
         }
-        
+
         te.skinTexture.updateForResourceLocation(playerTexture.getResourceLocation());
         te.skinTexture.updatePaintData(te.getPaintData());
         mc.profiler.endSection();
-        
+
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
         GlStateManager.enableBlend();
         GlStateManager.enableRescaleNormal();
         GlStateManager.disableLighting();
-        
+
         ModRenderHelper.enableAlphaBlend();
-        
-        //ModRenderHelper.disableLighting();
+
+        // ModRenderHelper.disableLighting();
         GlStateManager.translate(x, y, z);
-        
+
         if (te.getDirection() != null) {
             switch (te.getDirection()) {
             case EAST:
@@ -58,7 +57,7 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer<TileEntityArm
                 break;
             case SOUTH:
                 GlStateManager.rotate(180F, 0F, 1F, 0F);
-                break; 
+                break;
             case WEST:
                 GlStateManager.rotate(90F, 0F, 1F, 0F);
                 break;
@@ -66,12 +65,12 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer<TileEntityArm
                 break;
             }
         }
-        
-        GlStateManager.translate(0F, (float)te.getHeightOffset(), 0F);
-        
+
+        GlStateManager.translate(0F, te.getHeightOffset(), 0F);
+
         GlStateManager.scale(-1F, -1F, 1F);
         GlStateManager.scale(16F, 16F, 16F);
-        
+
         if (skinType != null) {
             mc.profiler.startSection("modelRender");
             GlStateManager.enablePolygonOffset();
@@ -104,20 +103,20 @@ public class RenderBlockArmourer extends TileEntitySpecialRenderer<TileEntityArm
             GlStateManager.doPolygonOffset(0F, 0F);
             GlStateManager.disablePolygonOffset();
         }
-        //GlStateManager.color(1F, 1F, 1F, 1F);
-        //ModRenderHelper.enableLighting();
-        
+        // GlStateManager.color(1F, 1F, 1F, 1F);
+        // ModRenderHelper.enableLighting();
+
         ModRenderHelper.disableAlphaBlend();
-        
+
         GlStateManager.enableLighting();
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableBlend();
         GlStateManager.popAttrib();
         GlStateManager.popMatrix();
-        
+
         mc.profiler.endSection();
     }
-    
+
     @Override
     public boolean isGlobalRenderer(TileEntityArmourer te) {
         return true;

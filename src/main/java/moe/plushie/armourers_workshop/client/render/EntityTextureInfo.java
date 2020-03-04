@@ -49,7 +49,9 @@ public class EntityTextureInfo {
     private ResourceLocation normalTexture;
     /** The entities replacement texture. */
     private ResourceLocation replacementTexture;
-    /** The last extra colours the entity had when the replacement texture was made. */
+    /**
+     * The last extra colours the entity had when the replacement texture was made.
+     */
     private ExtraColours lastEntityColours;
     /** A buffered image of the entity texture. */
     private BufferedImage bufferedEntityImage;
@@ -193,14 +195,14 @@ public class EntityTextureInfo {
             }
         }
     }
-    
+
     public void makePartBlank(ISkinPartTypeTextured skinPartTex, BufferedImage texture, SkinProperties skinProps) {
         Point posBase = skinPartTex.getTextureBasePos();
         Point posOverlay = skinPartTex.getTextureOverlayPos();
-        
+
         int width = (skinPartTex.getTextureModelSize().getX() * 2) + (skinPartTex.getTextureModelSize().getZ() * 2);
         int height = skinPartTex.getTextureModelSize().getY() + skinPartTex.getTextureModelSize().getZ();
-        
+
         for (int ix = 0; ix < width; ix++) {
             for (int iy = 0; iy < height; iy++) {
                 if (skinPartTex.isModelOverridden(skinProps)) {
@@ -236,7 +238,7 @@ public class EntityTextureInfo {
             }
         }
     }
-    
+
     private void paintTexture(BufferedImage texture, int x, int y, int rgb) {
         texture.setRGB(x, y, rgb);
         // Paint left leg.
@@ -255,7 +257,7 @@ public class EntityTextureInfo {
                 } else {
                     texture.setRGB(23 + (8 - (x - 4)), y + 32, rgb);
                 }
-                
+
             }
         }
 
@@ -275,11 +277,11 @@ public class EntityTextureInfo {
                 } else {
                     texture.setRGB((8 - (x - 48) + 4) + 31, y + 32, rgb);
                 }
-                
+
             }
         }
     }
-    
+
     private void paintMirroredPart(BufferedImage texture, int x, int y, int rgb, int width, int height, int depth, int offsetX, int offsetY) {
         if (y >= 20) {
             if (x < 12) {
@@ -318,11 +320,21 @@ public class EntityTextureInfo {
 
     @Override
     protected void finalize() throws Throwable {
+        deleteTexture();
+        super.finalize();
+    }
+
+    public void deleteTexture() {
         TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
         if (replacementTexture != null) {
-            renderEngine.deleteTexture(replacementTexture);
+            Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+
+                @Override
+                public void run() {
+                    renderEngine.deleteTexture(replacementTexture);
+                }
+            });
         }
-        super.finalize();
     }
 
     private void createReplacmentTexture() {

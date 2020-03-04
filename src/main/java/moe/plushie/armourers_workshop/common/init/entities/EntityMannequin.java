@@ -5,7 +5,6 @@ import java.util.Properties;
 import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.client.render.EntityTextureInfo;
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
@@ -21,57 +20,39 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityMannequin extends Entity {
 
     BipedRotations rotations;
+    TextureData textureData;
     int rotation;
     boolean doll;
     boolean renderExtras;
     boolean flying;
     boolean visable;
     boolean noClip;
-    
+
     boolean isChild;
     boolean hasCustomHead;
-    
+
     private Properties properties = new Properties();
-    
-    @SideOnly(Side.CLIENT)
-    private EntityTextureInfo textureInfo;
 
     public EntityMannequin(World worldIn) {
         super(worldIn);
         this.setSize(0.8F, 1.9F);
         setPosition(posX, posY, posZ);
-        if (worldIn.isRemote) {
-            makeTexureInfo();
-        }
     }
-    
-    @SideOnly(Side.CLIENT)
-    private void makeTexureInfo() {
-        textureInfo = new EntityTextureInfo();
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public EntityTextureInfo getTextureInfo() {
-        return textureInfo;
-    }
-    
+
     @Override
     public boolean canBeCollidedWith() {
         return true;
     }
-    
-    
+
     @Override
     public boolean canBeAttackedWithItem() {
         return false;
     }
-    
+
     @Override
     protected void entityInit() {
     }
@@ -80,12 +61,12 @@ public class EntityMannequin extends Entity {
     public void onEntityUpdate() {
         super.onEntityUpdate();
     }
-    
+
     @Override
     public AxisAlignedBB getCollisionBoundingBox() {
         return super.getEntityBoundingBox();
     }
-    
+
     @Override
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
         if (player.isSneaking()) {
@@ -94,7 +75,7 @@ public class EntityMannequin extends Entity {
         FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), getEntityWorld(), getEntityId(), 0, 0);
         return false;
     }
-    
+
     @Override
     public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
         ItemStack itemStack = player.getHeldItem(hand);
@@ -106,10 +87,10 @@ public class EntityMannequin extends Entity {
         }
         return EnumActionResult.PASS;
     }
-    
+
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
-        //ModLogger.log("tick!");
+        // ModLogger.log("tick!");
         return super.attackEntityFrom(source, amount);
     }
 
@@ -120,9 +101,9 @@ public class EntityMannequin extends Entity {
     @Override
     protected void writeEntityToNBT(NBTTagCompound compound) {
     }
-    
+
     public class TextureData {
-        
+
         private TextureType textureType = TextureType.USER;
         private GameProfile profile = null;
         private String url = "";

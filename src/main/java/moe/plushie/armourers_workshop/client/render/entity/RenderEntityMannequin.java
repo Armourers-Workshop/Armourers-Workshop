@@ -1,5 +1,13 @@
 package moe.plushie.armourers_workshop.client.render.entity;
 
+import java.util.concurrent.TimeUnit;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
+
 import moe.plushie.armourers_workshop.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.api.common.capability.IWardrobeCap;
@@ -20,6 +28,7 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.proxies.ClientProxy.TexturePaintType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
@@ -32,11 +41,40 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderEntityMannequin extends Render<EntityMannequin> {
 
+    private static LoadingCache<EntityMannequin, EntityTextureInfo> textureCache;
+
     private final ModelPlayer modelPlayerSmall = new ModelPlayer(0F, true);
     private final ModelPlayer modelPlayerNormal = new ModelPlayer(0F, false);
 
     public RenderEntityMannequin(RenderManager renderManager) {
         super(renderManager);
+        if (textureCache == null) {
+            CacheBuilder builder = CacheBuilder.newBuilder();
+            builder.expireAfterAccess(1, TimeUnit.MINUTES);
+            builder.maximumSize(200);
+            builder.removalListener(new RemovalListener<EntityMannequin, EntityTextureInfo>() {
+
+                @Override
+                public void onRemoval(RemovalNotification<EntityMannequin, EntityTextureInfo> notification) {
+
+                    Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            notification.getValue().deleteTexture();
+                        }
+                    });
+                }
+            });
+            textureCache = builder.<EntityMannequin, EntityTextureInfo>build(new CacheLoader<EntityMannequin, EntityTextureInfo>() {
+
+                @Override
+                public EntityTextureInfo load(EntityMannequin key) throws Exception {
+                    return new EntityTextureInfo();
+                }
+            });
+        }
+
     }
 
     @Override
@@ -45,10 +83,15 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         GlStateManager.pushMatrix();
 
         float scale = 0.0625F;
+        float size = 1F;
 
         GlStateManager.translate(x, y, z);
         GlStateManager.scale(15F * scale, -15F * scale, -15F * scale);
+
+        GlStateManager.scale(size, size, size);
         GlStateManager.translate(0, -24F * scale, 0);
+        // GlStateManager.disableDepth();
+
         // GlStateManager.scale(1F, 0.7F, 1F);
 
         // super.doRender(entity, x, y, z, entityYaw, partialTicks);
@@ -154,10 +197,12 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             modelPlayerNormal.bipedRightLegwear.isHidden = true;
         }
 
-        buildTexture(entity.getTextureInfo(), skinCap, wardrobe);
+        EntityTextureInfo textureInfo = textureCache.getUnchecked(entity);
 
-        bindTexture(entity.getTextureInfo().preRender());
+        buildTexture(textureInfo, skinCap, wardrobe);
 
+        bindTexture(textureInfo.preRender());
+        textureCache.cleanUp();
         modelPlayerNormal.isChild = false;
         modelPlayerNormal.render(entity, 0, 0, 0, 0, 0, scale);
 
