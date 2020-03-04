@@ -53,11 +53,11 @@ public class ItemSkin extends AbstractModItem {
         super(LibItemNames.SKIN, false);
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, dispenserBehavior);
     }
-    
+
     public ISkinType getSkinType(ItemStack stack) {
         return SkinNBTHelper.getSkinTypeFromStack(stack);
     }
-    
+
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         Skin skin = SkinUtils.getSkinDetectSide(stack, true, false);
@@ -68,22 +68,22 @@ public class ItemSkin extends AbstractModItem {
         }
         return super.getItemStackDisplayName(stack);
     }
-    
+
     @SideOnly(Side.CLIENT)
     public static void addTooltipToSkinItem(ItemStack stack, EntityPlayer player, List tooltip, ITooltipFlag flagIn) {
         String cRed = TextFormatting.RED.toString();
-        
+
         boolean isEquipmentSkin = stack.getItem() == ModItems.SKIN;
         boolean isEquipmentContainer = stack.getItem() instanceof AbstractModItemArmour;
-        
+
         if (SkinNBTHelper.stackHasSkinData(stack)) {
             SkinDescriptor skinData = SkinNBTHelper.getSkinDescriptorFromStack(stack);
             ISkinIdentifier identifier = skinData.getIdentifier();
-            
+
             if (!isEquipmentSkin) {
                 tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.hasSkin"));
             }
-            
+
             if (ClientSkinCache.INSTANCE.isSkinInCache(skinData)) {
                 Skin data = ClientSkinCache.INSTANCE.getSkin(skinData);
                 if (stack.getItem() != ModItems.SKIN & !data.getCustomName().trim().isEmpty()) {
@@ -129,14 +129,15 @@ public class ItemSkin extends AbstractModItem {
                     if (identifier.getSkinLocalId() != data.lightHash()) {
                         tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinIdError1"));
                         tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinIdError2"));
-                        //tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinIdError3", data.requestId, data.lightHash()));
+                        // tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinIdError3",
+                        // data.requestId, data.lightHash()));
                     }
                 }
                 String flavour = SkinProperties.PROP_ALL_FLAVOUR_TEXT.getValue(data.getProperties()).trim();
                 if (!StringUtils.isEmpty(flavour)) {
                     tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.flavour", flavour));
                 }
-                
+
             } else {
                 tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skindownloading", identifier.toString()));
                 if (identifier.hasLocalId()) {
@@ -154,14 +155,14 @@ public class ItemSkin extends AbstractModItem {
                 tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinOpenWardrobe", keyName));
             }
         } else {
-            
+
             if (isEquipmentSkin) {
                 tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skinInvalidItem"));
             }
-            
+
         }
     }
-    
+
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = player.getHeldItem(hand);
@@ -180,51 +181,51 @@ public class ItemSkin extends AbstractModItem {
         }
         return EnumActionResult.PASS;
     }
-    
+
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack itemStack = playerIn.getHeldItem(handIn);
         IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(playerIn);
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(playerIn);
         ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(itemStack);
-        if (wardrobeCap == null | skinCapability == null |  descriptor == null) {
+        if (wardrobeCap == null | skinCapability == null | descriptor == null) {
             return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStack);
         }
         ISkinType skinType = descriptor.getIdentifier().getSkinType();
-        
-        
+
         for (int i = 0; i < wardrobeCap.getUnlockedSlotsForSkinType(skinType); i++) {
-            ISkinDescriptor descriptor2 = skinCapability.getSkinDescriptor(skinType, i);
-            if (descriptor2 == null) {
-                if (!worldIn.isRemote) {
-                    skinCapability.setSkinStack(skinType, i, itemStack);
-                    skinCapability.setSkinDescriptor(skinType, i, descriptor);
-                    skinCapability.syncToPlayer((EntityPlayerMP) playerIn);
-                    skinCapability.syncToAllTracking();
-                    itemStack.shrink(1);
+            if (!worldIn.isRemote) {
+                if (skinCapability.canHoldSkinType(descriptor.getIdentifier().getSkinType())) {
+                    if (skinCapability.setStackInNextFreeSlot(itemStack.copy())) {
+                        skinCapability.setSkinStack(skinType, i, itemStack);
+                        skinCapability.setSkinDescriptor(skinType, i, descriptor);
+                        skinCapability.syncToPlayer((EntityPlayerMP) playerIn);
+                        skinCapability.syncToAllTracking();
+                        itemStack.shrink(1);
+                    }
+                    return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStack);
                 }
-                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStack);
+
             }
         }
-        
         return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStack);
     }
-    
+
     private static final IBehaviorDispenseItem dispenserBehavior = new BehaviorDefaultDispenseItem() {
-        
+
         @Override
         protected ItemStack dispenseStack(IBlockSource blockSource, ItemStack itemStack) {
             if (!SkinNBTHelper.stackHasSkinData(itemStack)) {
                 return super.dispenseStack(blockSource, itemStack);
             }
-            
+
             IBlockState state = blockSource.getBlockState();
             EnumFacing facing = state.getValue(BlockDispenser.FACING);
             BlockPos target = blockSource.getBlockPos().offset(facing);
             AxisAlignedBB axisalignedbb = new AxisAlignedBB(target);
             List list = blockSource.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
             for (int i = 0; i < list.size(); i++) {
-                EntityLivingBase entitylivingbase = (EntityLivingBase)list.get(i);
+                EntityLivingBase entitylivingbase = (EntityLivingBase) list.get(i);
                 if (entitylivingbase instanceof EntityPlayer) {
                     EntityPlayer player = (EntityPlayer) entitylivingbase;
                     IEntitySkinCapability skinCap = EntitySkinCapability.get(player);
@@ -236,7 +237,7 @@ public class ItemSkin extends AbstractModItem {
                     }
                 }
             }
-            
+
             return super.dispenseStack(blockSource, itemStack);
         }
     };
