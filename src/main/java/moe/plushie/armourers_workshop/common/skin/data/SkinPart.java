@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SkinPart implements ISkinPart {
-    
+
     private Rectangle3D partBounds;
     private Rectangle3D[][][] blockGrid;
     private SkinCubeData cubeData;
@@ -24,43 +24,42 @@ public class SkinPart implements ISkinPart {
     private ISkinPartType skinPart;
     @SideOnly(Side.CLIENT)
     private ClientSkinPartData clientSkinPartData;
-    
+
     public SkinPart(SkinCubeData cubeData, ISkinPartType skinPart, ArrayList<CubeMarkerData> markerBlocks) {
         this.cubeData = cubeData;
         this.skinPart = skinPart;
         this.markerBlocks = markerBlocks;
         partBounds = setupPartBounds();
     }
-    
+
     @SideOnly(Side.CLIENT)
     public void setClientSkinPartData(ClientSkinPartData clientSkinPartData) {
         this.clientSkinPartData = clientSkinPartData;
     }
-    
+
     @SideOnly(Side.CLIENT)
     public ClientSkinPartData getClientSkinPartData() {
         return clientSkinPartData;
     }
-    
+
     @SideOnly(Side.CLIENT)
     public int getModelCount() {
         return clientSkinPartData.getModelCount();
     }
-    
+
     private Rectangle3D setupPartBounds() {
-        if (skinPart == SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:block.base") |
-            skinPart == SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:block.multiblock")) {
+        if (skinPart == SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:block.base") | skinPart == SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName("armourers:block.multiblock")) {
             setupBlockBounds();
         }
         int minX = 127;
         int maxX = -127;
-        
+
         int minY = 127;
         int maxY = -127;
-        
+
         int minZ = 127;
         int maxZ = -127;
-        
+
         for (int i = 0; i < cubeData.getCubeCount(); i++) {
             byte[] loc = cubeData.getCubeLocation(i);
             int x = loc[0];
@@ -73,34 +72,40 @@ public class SkinPart implements ISkinPart {
             minZ = Math.min(z, minZ);
             maxZ = Math.max(z, maxZ);
         }
-        
+
         int xSize = maxX - minX;
         int ySize = maxY - minY;
         int zSize = maxZ - minZ;
-        
+
         return new Rectangle3D(minX, minY, minZ, xSize + 1, ySize + 1, zSize + 1);
     }
-    
+
     public void setSkinPart(ISkinPartType skinPart) {
         this.skinPart = skinPart;
         setupPartBounds();
     }
-    
+
     public Rectangle3D getBlockBounds(int x, int y, int z) {
-        return blockGrid[x][y][z];
+        if (blockGrid != null) {
+            x = MathHelper.clamp(x, 0, blockGrid[0].length);
+            y = MathHelper.clamp(y, 0, blockGrid[1].length);
+            z = MathHelper.clamp(z, 0, blockGrid[2].length);
+            return blockGrid[x][y][z];
+        }
+        return null;
     }
-    
+
     public Rectangle3D[][][] getBlockGrid() {
         return blockGrid;
     }
-    
+
     private void setupBlockBounds() {
         blockGrid = new Rectangle3D[3][3][3];
         for (int i = 0; i < cubeData.getCubeCount(); i++) {
             byte[] loc = cubeData.getCubeLocation(i);
-            int x = MathHelper.floor((float)(loc[0] + 8) / 16F);
-            int y = MathHelper.floor((float)(loc[1] + 8) / 16F);
-            int z = MathHelper.floor((float)(loc[2] + 8) / 16F);
+            int x = MathHelper.floor((loc[0] + 8) / 16F);
+            int y = MathHelper.floor((loc[1] + 8) / 16F);
+            int z = MathHelper.floor((loc[2] + 8) / 16F);
             setupBlockBounds(x, y, z, loc[0] - x * 16, loc[1] - y * 16, loc[2] - z * 16);
         }
         for (int ix = 0; ix < 3; ix++) {
@@ -116,7 +121,7 @@ public class SkinPart implements ISkinPart {
             }
         }
     }
-    
+
     private void setupBlockBounds(int blockX, int blockY, int blockZ, int x, int y, int z) {
         BlockPos loc = new BlockPos(blockX + 1, -blockY, blockZ);
         if (blockGrid[loc.getX()][loc.getY()][loc.getZ()] == null) {
@@ -129,17 +134,17 @@ public class SkinPart implements ISkinPart {
         rec.setWidth(Math.max(rec.getWidth(), x));
         rec.setHeight(Math.max(rec.getHeight(), y));
         rec.setDepth(Math.max(rec.getDepth(), z));
-        //blockGrid[loc.x][loc.y][loc.z] = rec;
+        // blockGrid[loc.x][loc.y][loc.z] = rec;
     }
-    
+
     public SkinCubeData getCubeData() {
         return cubeData;
     }
-    
+
     public void clearCubeData() {
         cubeData = null;
     }
-    
+
     public Rectangle3D getPartBounds() {
         return partBounds;
     }
@@ -148,30 +153,30 @@ public class SkinPart implements ISkinPart {
     public ISkinPartType getPartType() {
         return this.skinPart;
     }
-    
+
     public ArrayList<CubeMarkerData> getMarkerBlocks() {
         return markerBlocks;
     }
-    
+
     @Override
     public int getMarkerCount() {
         return markerBlocks.size();
     }
-    
+
     @Override
     public Point3D getMarker(int index) {
         if (index >= 0 & index < markerBlocks.size()) {
             CubeMarkerData cmd = markerBlocks.get(index);
-            return  new Point3D(cmd.x, cmd.y, cmd.z);
+            return new Point3D(cmd.x, cmd.y, cmd.z);
         }
         return null;
     }
-    
+
     @Override
     public EnumFacing getMarkerSide(int index) {
         if (index >= 0 & index < markerBlocks.size()) {
             CubeMarkerData cmd = markerBlocks.get(index);
-            return  EnumFacing.byIndex(cmd.meta - 1);
+            return EnumFacing.byIndex(cmd.meta - 1);
         }
         return null;
     }
