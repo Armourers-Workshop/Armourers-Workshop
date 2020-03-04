@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -11,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -30,27 +33,25 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.DimensionManager;
 
 public final class SkinIOUtils {
-    
+
     public static final String SKIN_FILE_EXTENSION = ".armour";
-    
+
     public static boolean saveSkinFromFileName(String filePath, String fileName, Skin skin) {
         filePath = makeFilePathValid(filePath);
         fileName = makeFileNameValid(fileName);
         File file = new File(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), filePath + fileName);
         return saveSkinToFile(file, skin);
     }
-    
+
     public static boolean saveSkinToFile(File file, Skin skin) {
         File dir = file.getParentFile();
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        DataOutputStream stream = null;
-        
-        try {
-            stream = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-            SkinSerializer.writeToStream(skin, stream);
-            stream.flush();
+
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            saveSkinToStream(fos, skin);
+            fos.flush();
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Skin file not found.");
             e.printStackTrace();
@@ -59,17 +60,27 @@ public final class SkinIOUtils {
             ModLogger.log(Level.ERROR, "Skin file save failed.");
             e.printStackTrace();
             return false;
-        } finally {
-            IOUtils.closeQuietly(stream);
         }
-        
         return true;
     }
-    
+
+    public static boolean saveSkinToStream(OutputStream outputStream, Skin skin) {
+        try (BufferedOutputStream bos = new BufferedOutputStream(outputStream); DataOutputStream dos = new DataOutputStream(bos)) {
+            SkinSerializer.writeToStream(skin, dos);
+            dos.flush();
+            bos.flush();
+        } catch (IOException e) {
+            ModLogger.log(Level.ERROR, "Skin file save failed.");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     public static Skin loadSkinFromLibraryFile(LibraryFile libraryFile) {
         return loadSkinFromFileName(libraryFile.getFullName() + SKIN_FILE_EXTENSION);
     }
-    
+
     public static Skin loadSkinFromFileName(String fileName) {
         File file = new File(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), fileName);
         if (!isInSubDirectory(ArmourersWorkshop.getProxy().getSkinLibraryDirectory(), file)) {
@@ -79,17 +90,38 @@ public final class SkinIOUtils {
         }
         return loadSkinFromFile(file);
     }
-    
+
     public static Skin loadSkinFromFile(File file) {
-        DataInputStream stream = null;
         Skin skin = null;
-        
-        try {
-            stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-            skin = SkinSerializer.readSkinFromStream(stream);
+
+        try (FileInputStream fis = new FileInputStream(file)) {
+            skin = loadSkinFromStream(fis);
         } catch (FileNotFoundException e) {
             ModLogger.log(Level.WARN, "Skin file not found.");
             ModLogger.log(Level.WARN, file);
+        } catch (IOException e) {
+            ModLogger.log(Level.ERROR, "Skin file load failed.");
+            e.printStackTrace();
+        } catch (Exception e) {
+            ModLogger.log(Level.ERROR, "Unable to load skin. Unknown error.");
+            e.printStackTrace();
+        }
+        
+        if (skin == null) {
+            skin = loadSkinRecovery(file);
+            if (skin != null) {
+                ModLogger.log(Level.WARN, "Loaded skin with recovery system.");
+            }
+        }
+
+        return skin;
+    }
+
+    public static Skin loadSkinFromStream(InputStream inputStream) {
+        Skin skin = null;
+
+        try (BufferedInputStream bis = new BufferedInputStream(inputStream); DataInputStream dis = new DataInputStream(bis)) {
+            skin = SkinSerializer.readSkinFromStream(dis);
         } catch (IOException e) {
             ModLogger.log(Level.ERROR, "Skin file load failed.");
             e.printStackTrace();
@@ -102,58 +134,50 @@ public final class SkinIOUtils {
         } catch (Exception e) {
             ModLogger.log(Level.ERROR, "Unable to load skin. Unknown error.");
             e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(stream);
         }
-        return skin;
-    }
-    
-    public static Skin loadSkinFromStream(InputStream inputStream) {
-        DataInputStream stream = null;
-        Skin skin = null;
         
+        return skin;
+    }
+    
+    private static Skin loadSkinRecovery(File file) {
+        Skin skin = null;
         try {
-            stream = new DataInputStream(new BufferedInputStream(inputStream));
-            skin = SkinSerializer.readSkinFromStream(stream);
-        } catch (FileNotFoundException e) {
-            ModLogger.log(Level.WARN, "Skin file not found.");
+            byte[] fileBytes= Files.readAllBytes(file.toPath());
+            ArrayList<Integer> indexes=new ArrayList<>();
+            for(int i=0;i<fileBytes.length;i++){
+                if(fileBytes[i]==0x0A&&fileBytes[i-1]!=0){
+                    indexes.add(i-1);
+                }
+            }
+            byte[] newFile=new byte[fileBytes.length-indexes.size()];
+            int newFileIndex=0;
+            for(int i=0;i<fileBytes.length;i++){
+                if(!isInArrayList(i, indexes)){
+                    newFile[newFileIndex]=fileBytes[i];
+                    newFileIndex++;
+                }
+            }
+            ByteArrayInputStream bais = new ByteArrayInputStream(newFile);
+            skin = loadSkinFromStream(bais);
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            ModLogger.log(Level.ERROR, "Skin file load failed.");
-            e.printStackTrace();
-        } catch (NewerFileVersionException e) {
-            ModLogger.log(Level.ERROR, "Can not load skin file it was saved in newer version.");
-            e.printStackTrace();
-        } catch (InvalidCubeTypeException e) {
-            ModLogger.log(Level.ERROR, "Unable to load skin. Unknown cube types found.");
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(stream);
-            IOUtils.closeQuietly(inputStream);
         }
         return skin;
     }
     
-    public static boolean saveSkinToStream(OutputStream outputStream, Skin skin) {
-        BufferedOutputStream bufferedOutputStream = null;
-        try {
-            bufferedOutputStream =  new BufferedOutputStream(outputStream);
-            SkinSerializer.writeToStream(skin, new DataOutputStream(bufferedOutputStream));
-            bufferedOutputStream.flush();
-        } catch (IOException e) {
-            ModLogger.log(Level.ERROR, "Skin file load failed.");
-            e.printStackTrace();
-            return false;
-        } finally {
-            IOUtils.closeQuietly(bufferedOutputStream);
+    private static boolean isInArrayList(int index, ArrayList<Integer> list) {
+        for(int j=0;j<list.size();j++){
+            if(index==list.get(j)){
+                return true;
+            }
         }
-        return true;
+        return false;
     }
-    
+
     public static ISkinType getSkinTypeNameFromFile(File file) {
         DataInputStream stream = null;
         ISkinType skinType = null;
-        
+
         try {
             stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
             skinType = SkinSerializer.readSkinTypeNameFromStream(stream);
@@ -172,10 +196,18 @@ public final class SkinIOUtils {
         } finally {
             IOUtils.closeQuietly(stream);
         }
-    
+        
+        if (skinType == null) {
+            Skin skin = loadSkinRecovery(file);
+            if (skin != null) {
+                ModLogger.log(Level.WARN, "Loaded skin with recovery system.");
+                skinType = skin.getSkinType();
+            }
+        }
+
         return skinType;
     }
-    
+
     public static void makeDatabaseDirectory() {
         File directory = getSkinDatabaseDirectory();
         ModLogger.log("Loading skin database at: " + directory.getAbsolutePath());
@@ -184,7 +216,7 @@ public final class SkinIOUtils {
             directory.mkdir();
         }
     }
-    
+
     public static void copyGlobalDatabase() {
         File dirGlobalDatabase = ArmourersWorkshop.getInstance().getProxy().getGlobalSkinDatabaseDirectory();
         if (dirGlobalDatabase.exists()) {
@@ -204,7 +236,7 @@ public final class SkinIOUtils {
         }
         createGlobalDatabaseReadme();
     }
-    
+
     private static void createGlobalDatabaseReadme() {
         File globalDatabaseReadme = new File(ArmourersWorkshop.getInstance().getProxy().getGlobalSkinDatabaseDirectory(), "readme.txt");
         if (!ArmourersWorkshop.getInstance().getProxy().getGlobalSkinDatabaseDirectory().exists()) {
@@ -226,18 +258,18 @@ public final class SkinIOUtils {
             }
         }
     }
-    
+
     public static File getSkinDatabaseDirectory() {
         return new File(DimensionManager.getCurrentSaveRootDirectory(), "skin-database");
     }
-    
+
     public static boolean createDirectory(File file) {
         if (!file.exists()) {
             return file.mkdirs();
         }
         return true;
     }
-    
+
     public static void recoverSkins(EntityPlayer player) {
         player.sendMessage(new TextComponentString("Starting skin recovery."));
         File skinDir = getSkinDatabaseDirectory();
@@ -252,7 +284,7 @@ public final class SkinIOUtils {
             int unnamedSkinCount = 0;
             int successCount = 0;
             int failCount = 0;
-            
+
             for (int i = 0; i < skinFiles.length; i++) {
                 File skinFile = skinFiles[i];
                 Skin skin = loadSkinFromFile(skinFile);
@@ -294,7 +326,7 @@ public final class SkinIOUtils {
                         continue;
                     }
                     unnamedSkinCount++;
-                    saveSkinToFile(new File(recoverDir,"unnamed-skin-" + unnamedSkinCount + SKIN_FILE_EXTENSION), skin);
+                    saveSkinToFile(new File(recoverDir, "unnamed-skin-" + unnamedSkinCount + SKIN_FILE_EXTENSION), skin);
                     successCount++;
                 } else {
                     failCount++;
@@ -306,14 +338,14 @@ public final class SkinIOUtils {
             player.sendMessage(new TextComponentString("No skins found to recover."));
         }
     }
-    
+
     public static void updateSkins(EntityPlayer player) {
         File updateDir = new File(System.getProperty("user.dir"), "skin-update");
         if (!updateDir.exists() & updateDir.isDirectory()) {
             player.sendMessage(new TextComponentString("Directory skin-update not found."));
             return;
         }
-        
+
         File outputDir = new File(updateDir, "updated");
         if (!outputDir.exists()) {
             outputDir.mkdir();
@@ -323,7 +355,7 @@ public final class SkinIOUtils {
         player.sendMessage(new TextComponentString("Working..."));
         int successCount = 0;
         int failCount = 0;
-        
+
         for (int i = 0; i < skinFiles.length; i++) {
             File skinFile = skinFiles[i];
             if (skinFile.isFile()) {
@@ -344,35 +376,34 @@ public final class SkinIOUtils {
         player.sendMessage(new TextComponentString("Finished skin update."));
         player.sendMessage(new TextComponentString(String.format("%d skins were updated and %d failed.", successCount, failCount)));
     }
-    
+
     public static boolean isInSubDirectory(File dir, File file) {
         if (file == null) {
             return false;
         }
         if (file.isDirectory()) {
-            //return true;
+            // return true;
         }
         if (file.getParentFile().equals(dir)) {
             return true;
         }
         return isInSubDirectory(dir, file.getParentFile());
     }
-    
-    
+
     public static String makeFileNameValid(String fileName) {
         fileName = fileName.replace("\\", "/");
         fileName = fileName.replace("/", "_");
         fileName = fileName.replace(":", "_");
-        return fileName; //fileName.fileName.replaceAll("[^a-zA-Z0-9_()'`+& \\-\\.]", "_");
+        return fileName; // fileName.fileName.replaceAll("[^a-zA-Z0-9_()'`+& \\-\\.]", "_");
     }
-    
+
     public static String makeFilePathValid(String filePath) {
         filePath = filePath.replace("\\", "/");
         filePath = filePath.replace("../", "_");
         filePath = filePath.replace(":", "_");
-        return filePath; //filePath.replaceAll("[^a-zA-Z0-9_()'`+&/ \\-\\.]", "_");
+        return filePath; // filePath.replaceAll("[^a-zA-Z0-9_()'`+&/ \\-\\.]", "_");
     }
-    
+
     public static boolean isInLibraryDir(File file) {
         return isInSubDirectory(file, ArmourersWorkshop.getProxy().getSkinLibraryDirectory());
     }
