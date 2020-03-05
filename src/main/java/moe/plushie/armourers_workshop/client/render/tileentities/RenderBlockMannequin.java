@@ -358,7 +358,7 @@ public class RenderBlockMannequin extends TileEntitySpecialRenderer<TileEntityMa
         ModRenderHelper.disableLighting();
         float circleScale = 2.0F;
         GlStateManager.scale(circleScale, circleScale, circleScale);
-        float rotation = (float)((double)(mc.world.getTotalWorldTime() + offset) / 0.8F % 360) + partialTickTime;
+        float rotation = (float)((mc.world.getTotalWorldTime() + offset) / 0.8D % 360D) + partialTickTime;
         GL11.glRotatef(rotation, 0, 1, 0);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);

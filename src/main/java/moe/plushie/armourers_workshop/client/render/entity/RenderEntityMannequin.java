@@ -17,10 +17,15 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.render.EntityTextureInfo;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
+import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockMannequin;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.common.Contributors;
+import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
+import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
@@ -33,7 +38,6 @@ import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -90,6 +94,9 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
 
         GlStateManager.scale(size, size, size);
         GlStateManager.translate(0, -24F * scale, 0);
+
+        GlStateManager.rotate(entity.getRotation(), 0F, 1F, 0F);
+
         // GlStateManager.disableDepth();
 
         // GlStateManager.scale(1F, 0.7F, 1F);
@@ -101,32 +108,39 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             return;
         }
 
-        skinCap.hideHead = false;
-        skinCap.hideChest = false;
-        skinCap.hideArmLeft = false;
-        skinCap.hideArmRight = false;
-        skinCap.hideLegLeft = false;
-        skinCap.hideLegRight = false;
+        PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(entity.getTextureData());
 
-        skinCap.hideHeadOverlay = false;
-        skinCap.hideChestOverlay = false;
-        skinCap.hideArmLeftOverlay = false;
-        skinCap.hideArmRightOverlay = false;
-        skinCap.hideLegLeftOverlay = false;
-        skinCap.hideLegRightOverlay = false;
+        ModelPlayer targetModel = modelPlayerNormal;
+        if (playerTexture.isSlimModel()) {
+            targetModel = modelPlayerSmall;
+        }
 
-        modelPlayerNormal.bipedHead.isHidden = false;
-        modelPlayerNormal.bipedHeadwear.isHidden = false;
-        modelPlayerNormal.bipedBody.isHidden = false;
-        modelPlayerNormal.bipedBodyWear.isHidden = false;
-        modelPlayerNormal.bipedLeftArm.isHidden = false;
-        modelPlayerNormal.bipedLeftArmwear.isHidden = false;
-        modelPlayerNormal.bipedRightArm.isHidden = false;
-        modelPlayerNormal.bipedRightArmwear.isHidden = false;
-        modelPlayerNormal.bipedLeftLeg.isHidden = false;
-        modelPlayerNormal.bipedLeftLegwear.isHidden = false;
-        modelPlayerNormal.bipedRightLeg.isHidden = false;
-        modelPlayerNormal.bipedRightLegwear.isHidden = false;
+//        skinCap.hideHead = false;
+//        skinCap.hideChest = false;
+//        skinCap.hideArmLeft = false;
+//        skinCap.hideArmRight = false;
+//        skinCap.hideLegLeft = false;
+//        skinCap.hideLegRight = false;
+//
+//        skinCap.hideHeadOverlay = false;
+//        skinCap.hideChestOverlay = false;
+//        skinCap.hideArmLeftOverlay = false;
+//        skinCap.hideArmRightOverlay = false;
+//        skinCap.hideLegLeftOverlay = false;
+//        skinCap.hideLegRightOverlay = false;
+
+        targetModel.bipedHead.isHidden = false;
+        targetModel.bipedHeadwear.isHidden = false;
+        targetModel.bipedBody.isHidden = false;
+        targetModel.bipedBodyWear.isHidden = false;
+        targetModel.bipedLeftArm.isHidden = false;
+        targetModel.bipedLeftArmwear.isHidden = false;
+        targetModel.bipedRightArm.isHidden = false;
+        targetModel.bipedRightArmwear.isHidden = false;
+        targetModel.bipedLeftLeg.isHidden = false;
+        targetModel.bipedLeftLegwear.isHidden = false;
+        targetModel.bipedRightLeg.isHidden = false;
+        targetModel.bipedRightLegwear.isHidden = false;
 
         ISkinType[] skinTypes = skinCap.getValidSkinTypes();
         SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
@@ -136,6 +150,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             extraColours = wardrobe.getExtraColours();
         }
 
+        // Render skins.
         for (int i = 0; i < skinTypes.length; i++) {
             ISkinType skinType = skinTypes[i];
             if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings | skinType == SkinTypeRegistry.skinOutfit) {
@@ -150,61 +165,73 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
 
         // Head
         if (skinCap.hideHead) {
-            modelPlayerNormal.bipedHead.isHidden = true;
+            targetModel.bipedHead.isHidden = true;
         }
         if (skinCap.hideHead | skinCap.hideHeadOverlay) {
-            modelPlayerNormal.bipedHeadwear.isHidden = true;
+            targetModel.bipedHeadwear.isHidden = true;
         }
 
         // Chest
         if (skinCap.hideChest) {
-            modelPlayerNormal.bipedBody.isHidden = true;
+            targetModel.bipedBody.isHidden = true;
 
         }
         if (skinCap.hideChest | skinCap.hideChestOverlay) {
-            modelPlayerNormal.bipedBodyWear.isHidden = true;
+            targetModel.bipedBodyWear.isHidden = true;
         }
 
         // Left arm
         if (skinCap.hideArmLeft) {
-            modelPlayerNormal.bipedLeftArm.isHidden = true;
+            targetModel.bipedLeftArm.isHidden = true;
         }
         if (skinCap.hideArmLeft | skinCap.hideArmLeftOverlay) {
-            modelPlayerNormal.bipedLeftArmwear.isHidden = true;
+            targetModel.bipedLeftArmwear.isHidden = true;
         }
 
         // Right arm
         if (skinCap.hideArmRight) {
-            modelPlayerNormal.bipedRightArm.isHidden = true;
+            targetModel.bipedRightArm.isHidden = true;
         }
         if (skinCap.hideArmRight | skinCap.hideArmRightOverlay) {
-            modelPlayerNormal.bipedRightArmwear.isHidden = true;
+            targetModel.bipedRightArmwear.isHidden = true;
         }
 
         // Left leg
         if (skinCap.hideLegLeft) {
-            modelPlayerNormal.bipedLeftLeg.isHidden = true;
+            targetModel.bipedLeftLeg.isHidden = true;
         }
         if (skinCap.hideLegLeft | skinCap.hideLegLeftOverlay) {
-            modelPlayerNormal.bipedLeftLegwear.isHidden = true;
+            targetModel.bipedLeftLegwear.isHidden = true;
         }
 
         // Right leg
         if (skinCap.hideLegRight) {
-            modelPlayerNormal.bipedRightLeg.isHidden = true;
+            targetModel.bipedRightLeg.isHidden = true;
         }
         if (skinCap.hideLegRight | skinCap.hideLegRightOverlay) {
-            modelPlayerNormal.bipedRightLegwear.isHidden = true;
+            targetModel.bipedRightLegwear.isHidden = true;
         }
 
+        // Build texture.
         EntityTextureInfo textureInfo = textureCache.getUnchecked(entity);
-
-        buildTexture(textureInfo, skinCap, wardrobe);
-
-        bindTexture(textureInfo.preRender());
         textureCache.cleanUp();
-        modelPlayerNormal.isChild = false;
-        modelPlayerNormal.render(entity, 0, 0, 0, 0, 0, scale);
+        buildTexture(playerTexture.getResourceLocation(), textureInfo, skinCap, wardrobe);
+        bindTexture(textureInfo.preRender());
+
+        // Render main model.
+        if (entity.isVisible()) {
+            entity.getBipedRotations().applyRotationsToBiped(targetModel);
+            targetModel.render(entity, 0, 0, 0, 0, 0, scale);
+        }
+
+        // Render magic circle.
+        if (entity.isRenderExtras() & entity.isVisible() & entity.getTextureData().getTextureType() == TextureType.USER) {
+            Contributor contributor = Contributors.INSTANCE.getContributor(entity.getTextureData().getProfile());
+            if (contributor != null) {
+                int offset = entity.getEntityId() * 31;
+                RenderBlockMannequin.renderMagicCircle(Minecraft.getMinecraft(), contributor.r, contributor.g, contributor.b, partialTicks, offset, targetModel.isChild);
+            }
+        }
 
         GlStateManager.popMatrix();
     }
@@ -284,8 +311,8 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         }
     }
 
-    private void buildTexture(EntityTextureInfo textureInfo, IEntitySkinCapability skinCapability, IWardrobeCap wardrobeCap) {
-        textureInfo.updateTexture(getEntityTexture(null));
+    private void buildTexture(ResourceLocation texture, EntityTextureInfo textureInfo, IEntitySkinCapability skinCapability, IWardrobeCap wardrobeCap) {
+        textureInfo.updateTexture(texture);
 
         textureInfo.updateExtraColours(wardrobeCap.getExtraColours());
 
@@ -337,6 +364,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
 
     @Override
     protected ResourceLocation getEntityTexture(EntityMannequin entity) {
-        return DefaultPlayerSkin.getDefaultSkinLegacy();
+        PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(entity.getTextureData());
+        return playerTexture.getResourceLocation();
     }
 }

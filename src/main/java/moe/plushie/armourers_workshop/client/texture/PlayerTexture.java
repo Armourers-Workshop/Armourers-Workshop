@@ -18,7 +18,7 @@ import net.minecraft.util.StringUtils;
 
 public class PlayerTexture {
     
-    public static final PlayerTexture NO_TEXTURE  = new PlayerTexture("", TextureType.USER);
+    public static final PlayerTexture NO_TEXTURE  = new PlayerTexture("", TextureType.NONE);
     private static final String TAG_TEXTURE_STRING = "string";
     private static final String TAG_TEXTURE_TYPE = "type";
     

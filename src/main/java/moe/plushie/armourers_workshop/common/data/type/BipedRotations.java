@@ -57,6 +57,7 @@ public class BipedRotations {
     }
 
     public void applyRotationsToBiped(ModelPlayer modelBiped) {
+        modelBiped.isChild = child;
         applyRotationsToBipedPart(modelBiped.bipedHead, getPartRotations(BipedPart.HEAD));
         applyRotationsToBipedPart(modelBiped.bipedHeadwear, getPartRotations(BipedPart.HEAD));
 
@@ -77,6 +78,7 @@ public class BipedRotations {
     }
 
     public void applyRotationsToBiped(ModelBiped modelBiped) {
+        modelBiped.isChild = child;
         applyRotationsToBipedPart(modelBiped.bipedHead, getPartRotations(BipedPart.HEAD));
         applyRotationsToBipedPart(modelBiped.bipedHeadwear, getPartRotations(BipedPart.HEAD));
 

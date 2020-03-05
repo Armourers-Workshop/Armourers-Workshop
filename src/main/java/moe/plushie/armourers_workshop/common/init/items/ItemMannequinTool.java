@@ -5,8 +5,8 @@ import java.util.List;
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockMannequin;
 import moe.plushie.armourers_workshop.common.init.blocks.BlockMannequin.EnumPartType;
-import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
 import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
+import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.NBTHelper;
@@ -21,6 +21,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
@@ -63,8 +64,11 @@ public class ItemMannequinTool extends AbstractModItem {
         } else if (side == EnumFacing.UP) {
             if (!world.isRemote) {
                 pos = pos.offset(side);
+                int l = MathHelper.floor(player.rotationYaw * 16.0F / 360.0F + 0.5D) & 15;
                 EntityMannequin entityMannequin = new EntityMannequin(world);
                 entityMannequin.setPosition(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F);
+                entityMannequin.setRotation(player.rotationYaw + 180F);
+                //entityMannequin.setTextureData(new TextureData(player.getGameProfile()));
                 world.spawnEntity(entityMannequin);
             }
         }

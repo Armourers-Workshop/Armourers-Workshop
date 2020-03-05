@@ -1,46 +1,191 @@
 package moe.plushie.armourers_workshop.common.init.entities;
 
-import java.util.Properties;
+import java.io.IOException;
 
 import com.mojang.authlib.GameProfile;
 
+import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializer;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 
 public class EntityMannequin extends Entity {
 
-    BipedRotations rotations;
-    TextureData textureData;
-    int rotation;
-    boolean doll;
-    boolean renderExtras;
-    boolean flying;
-    boolean visable;
-    boolean noClip;
+    public static final DataSerializer<BipedRotations> BIPED_ROTATIONS_SERIALIZER = new DataSerializer<BipedRotations>() {
 
-    boolean isChild;
-    boolean hasCustomHead;
+        @Override
+        public void write(PacketBuffer buf, BipedRotations value) {
+            value.writeToBuf(buf);
+        }
 
-    private Properties properties = new Properties();
+        @Override
+        public BipedRotations read(PacketBuffer buf) throws IOException {
+            BipedRotations bipedRotations = new BipedRotations();
+            bipedRotations.readFromBuf(buf);
+            return bipedRotations;
+        }
+
+        @Override
+        public DataParameter<BipedRotations> createKey(int id) {
+            return new DataParameter<BipedRotations>(id, this);
+        }
+
+        @Override
+        public BipedRotations copyValue(BipedRotations value) {
+            return value;
+        }
+    };
+
+    public static final DataSerializer<TextureData> TEXTURE_DATA_SERIALIZER = new DataSerializer<TextureData>() {
+
+        @Override
+        public void write(PacketBuffer buf, TextureData value) {
+            value.writeToBuf(buf);
+        }
+
+        @Override
+        public TextureData read(PacketBuffer buf) throws IOException {
+            TextureData textureData = new TextureData();
+            textureData.readFromBuf(buf);
+            return textureData;
+        }
+
+        @Override
+        public DataParameter<TextureData> createKey(int id) {
+            return new DataParameter<TextureData>(id, this);
+        }
+
+        @Override
+        public TextureData copyValue(TextureData value) {
+            return value;
+        }
+    };
+
+    static {
+        DataSerializers.registerSerializer(BIPED_ROTATIONS_SERIALIZER);
+        DataSerializers.registerSerializer(TEXTURE_DATA_SERIALIZER);
+    }
+
+    private static final String TAG_BIPED_ROTATIONS = "biped_rotations";
+    private static final String TAG_TEXTURE_DATA = "texture_data";
+    private static final String TAG_ROTATION = "rotation";
+    private static final String TAG_DOLL = "doll";
+    private static final String TAG_RENDER_EXTRAS = "render_extras";
+    private static final String TAG_FLYING = "flying";
+    private static final String TAG_VISIBLE = "visible";
+    private static final String TAG_NO_CLIP = "no_clip";
+
+    private static final DataParameter<BipedRotations> DATA_BIPED_ROTATIONS = EntityDataManager.<BipedRotations>createKey(EntityMannequin.class, BIPED_ROTATIONS_SERIALIZER);
+    private static final DataParameter<TextureData> DATA_TEXTURE_DATA = EntityDataManager.<TextureData>createKey(EntityMannequin.class, TEXTURE_DATA_SERIALIZER);
+    private static final DataParameter<Float> DATA_ROTATION = EntityDataManager.<Float>createKey(EntityMannequin.class, DataSerializers.FLOAT);
+    private static final DataParameter<Boolean> DATA_DOLL = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> DATA_RENDER_EXTRAS = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> DATA_FLYING = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> DATA_VISIBLE = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> DATA_NO_CLIP = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
 
     public EntityMannequin(World worldIn) {
         super(worldIn);
-        this.setSize(0.8F, 1.9F);
-        setPosition(posX, posY, posZ);
+        setSize(0.8F, 1.9F);
+    }
+
+    @Override
+    protected void entityInit() {
+        dataManager.register(DATA_BIPED_ROTATIONS, new BipedRotations());
+        dataManager.register(DATA_TEXTURE_DATA, new TextureData());
+        dataManager.register(DATA_ROTATION, Float.valueOf(0.0F));
+        dataManager.register(DATA_DOLL, Boolean.valueOf(false));
+        dataManager.register(DATA_RENDER_EXTRAS, Boolean.valueOf(true));
+        dataManager.register(DATA_FLYING, Boolean.valueOf(false));
+        dataManager.register(DATA_VISIBLE, Boolean.valueOf(true));
+        dataManager.register(DATA_NO_CLIP, Boolean.valueOf(false));
+    }
+
+    public void setBipedRotations(BipedRotations bipedRotations) {
+        dataManager.set(DATA_BIPED_ROTATIONS, bipedRotations);
+    }
+
+    public BipedRotations getBipedRotations() {
+        return dataManager.get(DATA_BIPED_ROTATIONS);
+    }
+
+    public void setTextureData(TextureData textureData) {
+        dataManager.set(DATA_TEXTURE_DATA, textureData);
+    }
+
+    public TextureData getTextureData() {
+        return dataManager.get(DATA_TEXTURE_DATA);
+    }
+
+    public void setRotation(float value) {
+        dataManager.set(DATA_ROTATION, Float.valueOf(value));
+    }
+
+    public float getRotation() {
+        return dataManager.get(DATA_ROTATION).floatValue();
+    }
+
+    public void setDoll(boolean value) {
+        dataManager.set(DATA_DOLL, Boolean.valueOf(value));
+    }
+
+    public boolean isDoll() {
+        return dataManager.get(DATA_DOLL).booleanValue();
+    }
+
+    public void setRenderExtras(boolean value) {
+        dataManager.set(DATA_RENDER_EXTRAS, Boolean.valueOf(value));
+    }
+
+    public boolean isRenderExtras() {
+        return dataManager.get(DATA_RENDER_EXTRAS).booleanValue();
+    }
+
+    public void setFlying(boolean value) {
+        dataManager.set(DATA_FLYING, Boolean.valueOf(value));
+    }
+
+    public boolean isFlying() {
+        return dataManager.get(DATA_FLYING).booleanValue();
+    }
+
+    public void setVisible(boolean value) {
+        dataManager.set(DATA_VISIBLE, Boolean.valueOf(value));
+    }
+
+    public boolean isVisible() {
+        return dataManager.get(DATA_VISIBLE).booleanValue();
+    }
+
+    public void setNoClip(boolean value) {
+        dataManager.set(DATA_NO_CLIP, Boolean.valueOf(value));
+    }
+
+    public boolean isNoClip() {
+        return dataManager.get(DATA_NO_CLIP).booleanValue();
     }
 
     @Override
@@ -54,16 +199,15 @@ public class EntityMannequin extends Entity {
     }
 
     @Override
-    protected void entityInit() {
-    }
-
-    @Override
     public void onEntityUpdate() {
         super.onEntityUpdate();
     }
 
     @Override
     public AxisAlignedBB getCollisionBoundingBox() {
+        if (isNoClip()) {
+            return null;
+        }
         return super.getEntityBoundingBox();
     }
 
@@ -72,7 +216,7 @@ public class EntityMannequin extends Entity {
         if (player.isSneaking()) {
             return true;
         }
-        FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), getEntityWorld(), getEntityId(), 0, 0);
+
         return false;
     }
 
@@ -85,27 +229,149 @@ public class EntityMannequin extends Entity {
             }
             return EnumActionResult.SUCCESS;
         }
+        if (player.isSneaking()) {
+            FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), getEntityWorld(), getEntityId(), 0, 0);
+        } else {
+            if (!world.isRemote) {
+                setRotation(player.rotationYaw + 180);
+            }
+
+        }
+
         return EnumActionResult.PASS;
     }
 
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
-        // ModLogger.log("tick!");
+        ModLogger.log("tick!");
         return super.attackEntityFrom(source, amount);
     }
 
     @Override
     protected void readEntityFromNBT(NBTTagCompound compound) {
+        if (compound.hasKey(TAG_BIPED_ROTATIONS, NBT.TAG_COMPOUND)) {
+            BipedRotations bipedRotations = new BipedRotations();
+            bipedRotations.loadNBTData(compound.getCompoundTag(TAG_BIPED_ROTATIONS));
+            setBipedRotations(bipedRotations);
+        }
+        if (compound.hasKey(TAG_TEXTURE_DATA, NBT.TAG_COMPOUND)) {
+            TextureData textureData = new TextureData();
+            textureData.readFromNBT(compound.getCompoundTag(TAG_TEXTURE_DATA));
+            setTextureData(textureData);
+        }
+        if (compound.hasKey(TAG_ROTATION, NBT.TAG_FLOAT)) {
+            setRotation(compound.getFloat(TAG_ROTATION));
+        }
+        if (compound.hasKey(TAG_DOLL, NBT.TAG_BYTE)) {
+            setDoll(compound.getBoolean(TAG_DOLL));
+        }
+        if (compound.hasKey(TAG_RENDER_EXTRAS, NBT.TAG_BYTE)) {
+            setRenderExtras(compound.getBoolean(TAG_RENDER_EXTRAS));
+        }
+        if (compound.hasKey(TAG_FLYING, NBT.TAG_BYTE)) {
+            setFlying(compound.getBoolean(TAG_FLYING));
+        }
+        if (compound.hasKey(TAG_VISIBLE, NBT.TAG_BYTE)) {
+            setVisible(compound.getBoolean(TAG_VISIBLE));
+        }
+        if (compound.hasKey(TAG_NO_CLIP, NBT.TAG_BYTE)) {
+            setNoClip(compound.getBoolean(TAG_NO_CLIP));
+        }
     }
 
     @Override
     protected void writeEntityToNBT(NBTTagCompound compound) {
+        compound.setTag(TAG_BIPED_ROTATIONS, getBipedRotations().saveNBTData(new NBTTagCompound()));
+        compound.setTag(TAG_TEXTURE_DATA, getTextureData().writeToNBT(new NBTTagCompound()));
+        compound.setFloat(TAG_ROTATION, getRotation());
+        compound.setBoolean(TAG_DOLL, isDoll());
+        compound.setBoolean(TAG_RENDER_EXTRAS, isRenderExtras());
+        compound.setBoolean(TAG_FLYING, isFlying());
+        compound.setBoolean(TAG_VISIBLE, isVisible());
+        compound.setBoolean(TAG_NO_CLIP, isNoClip());
     }
 
-    public class TextureData {
+    public static class TextureData {
 
-        private TextureType textureType = TextureType.USER;
+        private static final String TAG_TEXTURE_TYPE = "texture_type";
+        private static final String TAG_PROFILE = "profile";
+        private static final String TAG_URL = "url";
+
+        private TextureType textureType = TextureType.NONE;
         private GameProfile profile = null;
-        private String url = "";
+        private String url = null;
+
+        public TextureData() {
+            textureType = TextureType.NONE;
+        }
+
+        public TextureData(GameProfile gameProfile) {
+            textureType = TextureType.USER;
+            this.profile = gameProfile;
+        }
+
+        public TextureData(String url) {
+            textureType = TextureType.URL;
+            this.url = url;
+        }
+
+        public TextureType getTextureType() {
+            return textureType;
+        }
+
+        public GameProfile getProfile() {
+            return profile;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void readFromNBT(NBTTagCompound compound) {
+            if (compound.hasKey(TAG_TEXTURE_TYPE, NBT.TAG_STRING)) {
+                textureType = TextureType.valueOf(compound.getString(TAG_TEXTURE_TYPE));
+            }
+            switch (textureType) {
+            case NONE:
+                break;
+            case USER:
+                if (compound.hasKey(TAG_PROFILE, NBT.TAG_COMPOUND)) {
+                    profile = NBTUtil.readGameProfileFromNBT(compound);
+                }
+                break;
+            case URL:
+                if (compound.hasKey(TAG_URL, NBT.TAG_STRING)) {
+                    url = compound.getString(TAG_URL);
+                }
+                break;
+            }
+        }
+
+        public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+            switch (textureType) {
+            case NONE:
+                break;
+            case USER:
+                if (profile != null) {
+                    compound.setTag(TAG_PROFILE, NBTUtil.writeGameProfile(new NBTTagCompound(), profile));
+                }
+                break;
+            case URL:
+                if (!StringUtils.isNullOrEmpty(url)) {
+                    compound.setString(TAG_URL, url);
+                }
+                break;
+            }
+            return compound;
+        }
+
+        public void writeToBuf(ByteBuf buf) {
+            ByteBufUtils.writeTag(buf, writeToNBT(new NBTTagCompound()));
+        }
+
+        public void readFromBuf(ByteBuf buf) {
+            readFromNBT(ByteBufUtils.readTag(buf));
+        }
     }
+
 }

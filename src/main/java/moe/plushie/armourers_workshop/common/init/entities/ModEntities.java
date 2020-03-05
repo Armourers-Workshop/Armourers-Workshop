@@ -13,7 +13,7 @@ public class ModEntities {
     private static final ArrayList<ModEntity> MOD_ENTITIES = new ArrayList<ModEntity>();
 
     private static final ModEntity ENTITY_SEAT = new ModEntity("seat", EntitySeat.class, 1, 10, 20, false);
-    private static final ModEntity ENTITY_MANNEQUIN = new ModEntity("mannequin", EntityMannequin.class, 2, 32, 20, false);
+    private static final ModEntity ENTITY_MANNEQUIN = new ModEntity("mannequin", EntityMannequin.class, 2, 64, 200, false);
 
     public static void registerEntities() {
         for (ModEntity modEntity : MOD_ENTITIES) {
