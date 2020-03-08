@@ -6,6 +6,8 @@ import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.common.GameProfileCache;
+import moe.plushie.armourers_workshop.common.GameProfileCache.IGameProfileCallback;
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
@@ -29,10 +31,13 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityMannequin extends Entity {
+public class EntityMannequin extends Entity implements IGameProfileCallback {
 
     public static final DataSerializer<BipedRotations> BIPED_ROTATIONS_SERIALIZER = new DataSerializer<BipedRotations>() {
 
@@ -132,8 +137,20 @@ public class EntityMannequin extends Entity {
         return dataManager.get(DATA_BIPED_ROTATIONS);
     }
 
-    public void setTextureData(TextureData textureData) {
+    public void setTextureData(TextureData textureData, boolean updateProfile) {
         dataManager.set(DATA_TEXTURE_DATA, textureData);
+        if (updateProfile) {
+            if (!getEntityWorld().isRemote) {
+                if (textureData.getTextureType() == TextureType.USER & textureData.getProfile() != null) {
+                    GameProfileCache.getGameProfile(textureData.getProfile(), this);
+                }
+            }
+        }
+    }
+
+    private void setTextureDataProfile(GameProfile gameProfile) {
+        ModLogger.log("got profile back: " + gameProfile);
+        dataManager.set(DATA_TEXTURE_DATA, new TextureData(gameProfile));
     }
 
     public TextureData getTextureData() {
@@ -195,7 +212,7 @@ public class EntityMannequin extends Entity {
 
     @Override
     public boolean canBeAttackedWithItem() {
-        return false;
+        return true;
     }
 
     @Override
@@ -210,13 +227,16 @@ public class EntityMannequin extends Entity {
         }
         return super.getEntityBoundingBox();
     }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        // TODO Auto-generated method stub
+        return super.getRenderBoundingBox();
+    }
 
     @Override
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
-        if (player.isSneaking()) {
-            return true;
-        }
-
         return false;
     }
 
@@ -230,12 +250,11 @@ public class EntityMannequin extends Entity {
             return EnumActionResult.SUCCESS;
         }
         if (player.isSneaking()) {
-            FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), getEntityWorld(), getEntityId(), 0, 0);
-        } else {
             if (!world.isRemote) {
                 setRotation(player.rotationYaw + 180);
             }
-
+        } else {
+            FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), getEntityWorld(), getEntityId(), 0, 0);
         }
 
         return EnumActionResult.PASS;
@@ -243,8 +262,14 @@ public class EntityMannequin extends Entity {
 
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
-        ModLogger.log("tick!");
+        ModLogger.log("attackEntityFrom");
         return super.attackEntityFrom(source, amount);
+    }
+    
+    @Override
+    public boolean hitByEntity(Entity entityIn) {
+        // TODO Auto-generated method stub
+        return true;
     }
 
     @Override
@@ -257,7 +282,7 @@ public class EntityMannequin extends Entity {
         if (compound.hasKey(TAG_TEXTURE_DATA, NBT.TAG_COMPOUND)) {
             TextureData textureData = new TextureData();
             textureData.readFromNBT(compound.getCompoundTag(TAG_TEXTURE_DATA));
-            setTextureData(textureData);
+            setTextureData(textureData, false);
         }
         if (compound.hasKey(TAG_ROTATION, NBT.TAG_FLOAT)) {
             setRotation(compound.getFloat(TAG_ROTATION));
@@ -330,18 +355,24 @@ public class EntityMannequin extends Entity {
         public void readFromNBT(NBTTagCompound compound) {
             if (compound.hasKey(TAG_TEXTURE_TYPE, NBT.TAG_STRING)) {
                 textureType = TextureType.valueOf(compound.getString(TAG_TEXTURE_TYPE));
+            } else {
+                textureType = TextureType.NONE;
             }
             switch (textureType) {
             case NONE:
                 break;
             case USER:
                 if (compound.hasKey(TAG_PROFILE, NBT.TAG_COMPOUND)) {
-                    profile = NBTUtil.readGameProfileFromNBT(compound);
+                    profile = NBTUtil.readGameProfileFromNBT(compound.getCompoundTag(TAG_PROFILE));
+                } else {
+                    textureType = TextureType.NONE;
                 }
                 break;
             case URL:
                 if (compound.hasKey(TAG_URL, NBT.TAG_STRING)) {
                     url = compound.getString(TAG_URL);
+                } else {
+                    textureType = TextureType.NONE;
                 }
                 break;
             }
@@ -354,14 +385,19 @@ public class EntityMannequin extends Entity {
             case USER:
                 if (profile != null) {
                     compound.setTag(TAG_PROFILE, NBTUtil.writeGameProfile(new NBTTagCompound(), profile));
+                } else {
+                    textureType = TextureType.NONE;
                 }
                 break;
             case URL:
                 if (!StringUtils.isNullOrEmpty(url)) {
                     compound.setString(TAG_URL, url);
+                } else {
+                    textureType = TextureType.NONE;
                 }
                 break;
             }
+            compound.setString(TAG_TEXTURE_TYPE, textureType.toString());
             return compound;
         }
 
@@ -372,6 +408,21 @@ public class EntityMannequin extends Entity {
         public void readFromBuf(ByteBuf buf) {
             readFromNBT(ByteBufUtils.readTag(buf));
         }
+
+        @Override
+        public String toString() {
+            return "TextureData [textureType=" + textureType + ", profile=" + profile + ", url=" + url + "]";
+        }
     }
 
+    @Override
+    public void profileDownloaded(GameProfile gameProfile) {
+        FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(new Runnable() {
+            
+            @Override
+            public void run() {
+                setTextureDataProfile(gameProfile);
+            }
+        });
+    }
 }

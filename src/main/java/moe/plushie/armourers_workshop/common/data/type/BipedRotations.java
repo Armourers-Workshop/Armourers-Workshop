@@ -184,6 +184,11 @@ public class BipedRotations {
             return false;
         return true;
     }
+    
+    @Override
+    public String toString() {
+        return "BipedRotations [rotationData=" + Arrays.deepToString(rotationData) + ", child=" + child + "]";
+    }
 
     public enum BipedPart {
         HEAD, CHEST, LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG

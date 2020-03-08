@@ -38,9 +38,13 @@ public abstract class GuiTabPanel<T extends GuiScreen> extends Gui {
         buttonList = new ArrayList<GuiButton>();
     }
     
+    public GuiTabPanel(int tabId, T parent) {
+        this(tabId, parent, false);
+    }
+    
     public void initGui(int xPos, int yPos, int width, int height) {
         buttonList.clear();
-        if (fullscreen) {
+        if (isFullscreen()) {
             this.x = 0;
             this.y = 0;
             this.width = parent.width;
@@ -51,6 +55,10 @@ public abstract class GuiTabPanel<T extends GuiScreen> extends Gui {
             this.width = width;
             this.height = height;
         }
+    }
+    
+    protected boolean isFullscreen() {
+        return this.fullscreen;
     }
     
     public int getTabId() {
@@ -104,4 +112,7 @@ public abstract class GuiTabPanel<T extends GuiScreen> extends Gui {
     }
     
     public abstract void drawBackgroundLayer(float partialTickTime, int mouseX, int mouseY);
+
+    public void update() {
+    }
 }

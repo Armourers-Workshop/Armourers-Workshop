@@ -20,6 +20,9 @@ import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeColo
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeContributor;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeDisplaySettings;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeDyes;
+import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeManExtras;
+import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeManRotations;
+import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeManTextureData;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeOutfits;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeSkins;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
@@ -28,6 +31,7 @@ import moe.plushie.armourers_workshop.common.Contributors;
 import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
 import moe.plushie.armourers_workshop.common.inventory.ContainerSkinWardrobe;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -62,6 +66,10 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
     private final GuiTabWardrobeColourSettings tabColourSettings;
     private final GuiTabWardrobeDyes tabDyes;
     private final GuiTabWardrobeContributor tabContributor;
+    
+    private final GuiTabWardrobeManTextureData tabManTextureData;
+    private final GuiTabWardrobeManRotations tabManRotations;
+    private final GuiTabWardrobeManExtras tabManExtras;
 
     EntitySkinCapability skinCapability;
     EntityPlayer player;
@@ -69,6 +77,7 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
     private boolean rotatingPlayer = false;
     private float playerRotation = 45F;
     private final boolean isPlayer;
+    private final boolean isMannequin;
 
     private int lastMouseX;
     private int lastMouseY;
@@ -85,25 +94,28 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
         this.player = inventory.player;
         this.skinCapability = skinCapability;
         isPlayer = wardrobeCapability instanceof IPlayerWardrobeCap;
+        isMannequin = skinCapability.getEntity() instanceof EntityMannequin;
         boolean isCreative = player.capabilities.isCreativeMode;
         tabController.setTabsPerSide(5);
         
         tabSkins = new GuiTabWardrobeSkins(tabList.size(), this);
         tabList.add(tabSkins);
-        tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.skins"))
-                .setIconLocation(192, 0)
-                .setTabTextureSize(26, 30)
-                .setPadding(0, 4, 3, 3)
-                .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabSkins | isCreative))));
+        GuiTab tabListItemSkins = new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.skins"));
+        tabListItemSkins.setIconLocation(192, 0);
+        tabListItemSkins.setTabTextureSize(26, 30);
+        tabListItemSkins.setPadding(0, 4, 3, 3);
+        tabListItemSkins.setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabSkins | isCreative)));
+        tabController.addTab(tabListItemSkins);
         
         tabOutfits = new GuiTabWardrobeOutfits(tabList.size(), this, player, skinCapability, wardrobeCapability);
         if (skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinOutfit)  > 0) {
             tabList.add(tabOutfits);
-            tabController.addTab(new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.outfits"))
-                    .setIconLocation(0, 128)
-                    .setTabTextureSize(26, 30)
-                    .setPadding(0, 4, 3, 3)
-                    .setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabOutfits | isCreative))));
+            GuiTab tabListItemOutfits = new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.outfits"));
+            tabListItemOutfits.setIconLocation(0, 128);
+            tabListItemOutfits.setTabTextureSize(26, 30);
+            tabListItemOutfits.setPadding(0, 4, 3, 3);
+            tabListItemOutfits.setVisable(!isPlayer | (isPlayer & (ConfigHandler.wardrobeTabOutfits | isCreative)));
+            tabController.addTab(tabListItemOutfits);
         }
         
         if (isPlayer) {
@@ -117,7 +129,6 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
         } else {
             tabDisplaySetting = null;
         }
-        
         
         tabColourSettings = new GuiTabWardrobeColourSettings(tabList.size(), this, player, skinCapability, wardrobeCapability);
         tabList.add(tabColourSettings);
@@ -144,6 +155,37 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
                 .setPadding(0, 4, 3, 3)
                 .setVisable(isPlayer & contributor != null));
         
+        if (isMannequin) {
+            EntityMannequin entityMannequin = (EntityMannequin) skinCapability.getEntity();
+            
+            tabManRotations = new GuiTabWardrobeManRotations(tabList.size(), this, entityMannequin);
+            tabList.add(tabManRotations);
+            GuiTab tabListItemManRotations = new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.man_rotations"));
+            tabListItemManRotations.setIconLocation(80, 0);
+            tabListItemManRotations.setAnimation(8, 150);
+            tabListItemManRotations.setVisable(isMannequin);
+            tabController.addTab(tabListItemManRotations);
+            
+            tabManTextureData = new GuiTabWardrobeManTextureData(tabList.size(), this, entityMannequin);
+            tabList.add(tabManTextureData);
+            GuiTab tabListItemManTextureData = new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.man_texture_data"));
+            tabListItemManTextureData.setIconLocation(128, 0);
+            tabListItemManTextureData.setAnimation(8, 150);
+            tabListItemManTextureData.setVisable(isMannequin);
+            tabController.addTab(tabListItemManTextureData);
+            
+            tabManExtras = new GuiTabWardrobeManExtras(tabList.size(), this, entityMannequin);
+            tabList.add(tabManExtras);
+            GuiTab tabListItemManExtras = new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.man_extras"));
+            tabListItemManExtras.setIconLocation(144, 0);
+            tabListItemManExtras.setAnimation(8, 150);
+            tabListItemManExtras.setVisable(isMannequin);
+            tabController.addTab(tabListItemManExtras);
+        } else {
+            tabManRotations = null;
+            tabManTextureData = null;
+            tabManExtras = null;
+        }
         
         tabController.setActiveTabIndex(getActiveTab());
         
@@ -154,6 +196,17 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
     public void initGui() {
         super.initGui();
         tabController.initGui(getGuiLeft() - 17, guiTop, xSize + 42, ySize);
+    }
+    
+    @Override
+    public void updateScreen() {
+        super.updateScreen();
+        for (int i = 0; i < tabList.size(); i++) {
+            GuiTabPanel tab = tabList.get(i);
+            if (tab.getTabId() == getActiveTab()) {
+                tab.update();
+            }
+        }
     }
 
     @Override
@@ -306,11 +359,12 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
 
         // RenderHelper.enableStandardItemLighting();
 
+        if (!overPlayerBox) {
+            ModRenderHelper.enableScissorScaled(x + 8, y + 27, 71, 111);
+        }
+        
         if (skinCapability.getEntity() instanceof EntityLivingBase) {
-            if (!overPlayerBox) {
-                ModRenderHelper.enableScissorScaled(x + 8, y + 27, 71, 111);
-            }
-            
+
             GlStateManager.pushMatrix();
             GlStateManager.pushAttrib();
 
@@ -329,9 +383,7 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
 
             GlStateManager.enableBlend();
 
-            if (!overPlayerBox) {
-                ModRenderHelper.disableScissor();
-            }
+
         } else {
             GlStateManager.pushAttrib();
             GlStateManager.enableColorMaterial();
@@ -339,6 +391,10 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
             GL11.glTranslatef(boxX, boxY, 50);
             GL11.glRotatef(-20, 1, 0, 0);
             GL11.glRotatef(playerRotation, 0, 1, 0);
+            if (isMannequin) {
+                float rot = ((EntityMannequin)skinCapability.getEntity()).getRotation();
+                GL11.glRotatef(rot, 0, 1, 0);
+            }
             GL11.glTranslatef(0, 0, -50);
             
             GlStateManager.translate(0, 0, 50.0F);
@@ -362,7 +418,9 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
                 colour = getColourAtPos(Mouse.getX(), Mouse.getY());
             }
         }
-
+        if (!overPlayerBox) {
+            ModRenderHelper.disableScissor();
+        }
 
         return colour;
     }

@@ -45,7 +45,10 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
         case NONE:
             return NO_TEXTURE;
         case USER:
-            return getPlayerTexture(textureData.getProfile().getName(), TextureType.USER);
+            if (textureData.getProfile() != null) {
+                return getPlayerTexture(textureData.getProfile().getName(), TextureType.USER);
+            }
+            
         case URL:
             return getPlayerTexture(textureData.getUrl(), TextureType.URL);
         }
