@@ -262,7 +262,7 @@ public class TileEntitySkinnable extends ModTileEntity implements IGuiFactory {
     }
 
     private Skin getSkinServer(ISkinDescriptor skinPointer) {
-        return CommonSkinCache.INSTANCE.getSkin(skinPointer);
+        return CommonSkinCache.INSTANCE.softGetSkin(skinPointer.getIdentifier());
     }
     
     public void setRelatedBlocks(ArrayList<BlockPos> relatedBlocks) {
@@ -357,7 +357,7 @@ public class TileEntitySkinnable extends ModTileEntity implements IGuiFactory {
                 NBTTagList list = compound.getTagList(TAG_RELATED_BLOCKS, Constants.NBT.TAG_COMPOUND);
                 relatedBlocks = new ArrayList<BlockPos>();
                 for (int i = 0; i < list.tagCount(); i++) {
-                    NBTTagCompound blockCompound = (NBTTagCompound)list.getCompoundTagAt(i);
+                    NBTTagCompound blockCompound = list.getCompoundTagAt(i);
                     int x = blockCompound.getInteger(TAG_X);
                     int y = blockCompound.getInteger(TAG_Y);
                     int z = blockCompound.getInteger(TAG_Z);
