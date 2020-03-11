@@ -45,7 +45,7 @@ public class GuiTabWardrobeManTextureData extends GuiTabPanel implements IDropDo
         super.initGui(xPos, yPos, width, height);
         textureData = entityMannequin.getTextureData();
 
-        textureTypeList = new GuiDropDownList(0, 81, 25, 50, "", this);
+        textureTypeList = new GuiDropDownList(0, 81, 25, 80, "", this);
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(guiName, "dropdown.user"), TextureType.USER.toString(), true);
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(guiName, "dropdown.url"), TextureType.URL.toString(), true);
         textureTypeList.setListSelectedIndex(0);

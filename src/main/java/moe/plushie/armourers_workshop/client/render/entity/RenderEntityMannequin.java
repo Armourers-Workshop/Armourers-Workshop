@@ -121,19 +121,20 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         targetModel.setRotationAngles(0F, 0F, 0F, 0F, 0F, scale, entity);
         BipedRotations bipedRotations = entity.getBipedRotations();
         bipedRotations.applyRotationsToBiped(targetModel);
-//        skinCap.hideHead = false;
-//        skinCap.hideChest = false;
-//        skinCap.hideArmLeft = false;
-//        skinCap.hideArmRight = false;
-//        skinCap.hideLegLeft = false;
-//        skinCap.hideLegRight = false;
-//
-//        skinCap.hideHeadOverlay = false;
-//        skinCap.hideChestOverlay = false;
-//        skinCap.hideArmLeftOverlay = false;
-//        skinCap.hideArmRightOverlay = false;
-//        skinCap.hideLegLeftOverlay = false;
-//        skinCap.hideLegRightOverlay = false;
+        
+        skinCap.hideHead = false;
+        skinCap.hideChest = false;
+        skinCap.hideArmLeft = false;
+        skinCap.hideArmRight = false;
+        skinCap.hideLegLeft = false;
+        skinCap.hideLegRight = false;
+
+        skinCap.hideHeadOverlay = false;
+        skinCap.hideChestOverlay = false;
+        skinCap.hideArmLeftOverlay = false;
+        skinCap.hideArmRightOverlay = false;
+        skinCap.hideLegLeftOverlay = false;
+        skinCap.hideLegRightOverlay = false;
 
         targetModel.bipedHead.isHidden = false;
         targetModel.bipedHeadwear.isHidden = false;
@@ -164,7 +165,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
                 for (int skinIndex = 0; skinIndex < skinCap.getSlotCountForSkinType(skinType); skinIndex++) {
                     ISkinDescriptor skinDescriptor = skinCap.getSkinDescriptor(skinType, skinIndex);
                     if (skinDescriptor != null) {
-                        renderSkin(entity, skinDescriptor, skinCap, wardrobe, extraColours, 0, true);
+                        renderSkin(entity, skinDescriptor, skinCap, wardrobe, extraColours, 0, true, targetModel);
                     }
                 }
             }
@@ -280,7 +281,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         GlStateManager.popMatrix();
     }
 
-    private void renderSkin(EntityMannequin entity, ISkinDescriptor skinDescriptor, EntitySkinCapability skinCap, IWardrobeCap wardrobe, IExtraColours extraColours, double distance, boolean doLodLoading) {
+    private void renderSkin(EntityMannequin entity, ISkinDescriptor skinDescriptor, EntitySkinCapability skinCap, IWardrobeCap wardrobe, IExtraColours extraColours, double distance, boolean doLodLoading, ModelPlayer targetModel) {
         SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
         Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
 
@@ -350,7 +351,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             }
             GlStateManager.pushMatrix();
             SkinRenderData renderData = new SkinRenderData(0.0625F, dye, extraColours, distance, doLodLoading, false, false, getEntityTexture(entity));
-            modelRenderer.renderEquipmentPart(skin, renderData, entity, modelPlayerNormal);
+            modelRenderer.renderEquipmentPart(skin, renderData, entity, targetModel);
             GlStateManager.popMatrix();
         }
     }

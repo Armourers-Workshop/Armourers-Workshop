@@ -168,7 +168,7 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
             
             tabManTextureData = new GuiTabWardrobeManTextureData(tabList.size(), this, entityMannequin);
             tabList.add(tabManTextureData);
-            GuiTab tabListItemManTextureData = new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.man_texture_data"));
+            GuiTab tabListItemManTextureData = new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.man_texture"));
             tabListItemManTextureData.setIconLocation(128, 0);
             tabListItemManTextureData.setAnimation(8, 150);
             tabListItemManTextureData.setVisable(isMannequin);

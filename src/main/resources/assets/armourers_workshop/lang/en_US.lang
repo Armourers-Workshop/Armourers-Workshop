@@ -491,6 +491,23 @@ inventory.armourers_workshop:wardrobe.tab.colour_settings.label.palette=Palette
 # Wardrobe - Tab Contributor
 inventory.armourers_workshop:wardrobe.tab.contributor.label.contributor=Thank you for helping with the development of Armourer's Workshop.\n\nMuch love from RiskyKen ❤❤❤
 
+# Wardrobe - Mannequin Tabs
+inventory.armourers_workshop:wardrobe.tab.man_rotations=Mannequin Rotations
+inventory.armourers_workshop:wardrobe.tab.man_rotations.random=Random
+inventory.armourers_workshop:wardrobe.tab.man_rotations.reset=Reset
+
+inventory.armourers_workshop:wardrobe.tab.man_texture=Mannequin Texture
+inventory.armourers_workshop:wardrobe.tab.man_texture.dropdown.user=User
+inventory.armourers_workshop:wardrobe.tab.man_texture.dropdown.url=URL
+inventory.armourers_workshop:wardrobe.tab.man_texture.set=Set
+
+inventory.armourers_workshop:wardrobe.tab.man_extras=Mannequin Extras
+inventory.armourers_workshop:wardrobe.tab.man_extras.label.isChild=Child Model?
+inventory.armourers_workshop:wardrobe.tab.man_extras.label.isExtraRenders=Extra Renders?
+inventory.armourers_workshop:wardrobe.tab.man_extras.label.isFlying=Flying?
+inventory.armourers_workshop:wardrobe.tab.man_extras.label.isVisible=Visible?
+inventory.armourers_workshop:wardrobe.tab.man_extras.label.noclip=Noclip?
+
 
 # Mannequin
 inventory.armourers_workshop:mannequin.label.headRotation=Head Rotation
