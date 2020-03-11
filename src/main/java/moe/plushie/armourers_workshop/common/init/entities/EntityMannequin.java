@@ -98,7 +98,6 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     private static final String TAG_BIPED_ROTATIONS = "biped_rotations";
     private static final String TAG_TEXTURE_DATA = "texture_data";
     private static final String TAG_ROTATION = "rotation";
-    private static final String TAG_DOLL = "doll";
     private static final String TAG_RENDER_EXTRAS = "render_extras";
     private static final String TAG_FLYING = "flying";
     private static final String TAG_VISIBLE = "visible";
@@ -108,7 +107,6 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     private static final DataParameter<BipedRotations> DATA_BIPED_ROTATIONS = EntityDataManager.<BipedRotations>createKey(EntityMannequin.class, BIPED_ROTATIONS_SERIALIZER);
     private static final DataParameter<TextureData> DATA_TEXTURE_DATA = EntityDataManager.<TextureData>createKey(EntityMannequin.class, TEXTURE_DATA_SERIALIZER);
     private static final DataParameter<Float> DATA_ROTATION = EntityDataManager.<Float>createKey(EntityMannequin.class, DataSerializers.FLOAT);
-    private static final DataParameter<Boolean> DATA_DOLL = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> DATA_RENDER_EXTRAS = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> DATA_FLYING = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> DATA_VISIBLE = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
@@ -125,7 +123,6 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         dataManager.register(DATA_BIPED_ROTATIONS, new BipedRotations());
         dataManager.register(DATA_TEXTURE_DATA, new TextureData());
         dataManager.register(DATA_ROTATION, Float.valueOf(0.0F));
-        dataManager.register(DATA_DOLL, Boolean.valueOf(false));
         dataManager.register(DATA_RENDER_EXTRAS, Boolean.valueOf(true));
         dataManager.register(DATA_FLYING, Boolean.valueOf(false));
         dataManager.register(DATA_VISIBLE, Boolean.valueOf(true));
@@ -167,14 +164,6 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
 
     public float getRotation() {
         return dataManager.get(DATA_ROTATION).floatValue();
-    }
-
-    public void setDoll(boolean value) {
-        dataManager.set(DATA_DOLL, Boolean.valueOf(value));
-    }
-
-    public boolean isDoll() {
-        return dataManager.get(DATA_DOLL).booleanValue();
     }
 
     public void setRenderExtras(boolean value) {
@@ -306,9 +295,6 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         if (compound.hasKey(TAG_ROTATION, NBT.TAG_FLOAT)) {
             setRotation(compound.getFloat(TAG_ROTATION));
         }
-        if (compound.hasKey(TAG_DOLL, NBT.TAG_BYTE)) {
-            setDoll(compound.getBoolean(TAG_DOLL));
-        }
         if (compound.hasKey(TAG_RENDER_EXTRAS, NBT.TAG_BYTE)) {
             setRenderExtras(compound.getBoolean(TAG_RENDER_EXTRAS));
         }
@@ -331,7 +317,6 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         compound.setTag(TAG_BIPED_ROTATIONS, getBipedRotations().saveNBTData(new NBTTagCompound()));
         compound.setTag(TAG_TEXTURE_DATA, getTextureData().writeToNBT(new NBTTagCompound()));
         compound.setFloat(TAG_ROTATION, getRotation());
-        compound.setBoolean(TAG_DOLL, isDoll());
         compound.setBoolean(TAG_RENDER_EXTRAS, isRenderExtras());
         compound.setBoolean(TAG_FLYING, isFlying());
         compound.setBoolean(TAG_VISIBLE, isVisible());
