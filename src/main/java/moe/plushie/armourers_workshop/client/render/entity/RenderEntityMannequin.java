@@ -81,16 +81,20 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
                 }
             });
         }
-
     }
 
     @Override
     public void doRender(EntityMannequin entity, double x, double y, double z, float entityYaw, float partialTicks) {
-
+        EntitySkinCapability skinCap = (EntitySkinCapability) EntitySkinCapability.get(entity);
+        if (skinCap == null) {
+            return;
+        }
+        
+        GlStateManager.pushAttrib();
         GlStateManager.pushMatrix();
 
         float scale = 0.0625F;
-        float size = 1F;
+        float size = entity.getScale();
 
         GlStateManager.translate(x, y, z);
         GlStateManager.scale(15F * scale, -15F * scale, -15F * scale);
@@ -99,17 +103,19 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         GlStateManager.translate(0, -24F * scale, 0);
 
         GlStateManager.rotate(entity.getRotation(), 0F, 1F, 0F);
-
+        
+        GlStateManager.enableNormalize();
+        GlStateManager.enableLighting();
+        GlStateManager.enableRescaleNormal();
+        
+        //GlStateManager.enableLighting();
         // GlStateManager.disableDepth();
 
         // GlStateManager.scale(1F, 0.7F, 1F);
 
         // super.doRender(entity, x, y, z, entityYaw, partialTicks);
 
-        EntitySkinCapability skinCap = (EntitySkinCapability) EntitySkinCapability.get(entity);
-        if (skinCap == null) {
-            return;
-        }
+
 
         PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(entity.getTextureData());
 
@@ -279,6 +285,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         }
 
         GlStateManager.popMatrix();
+        GlStateManager.popAttrib();
     }
 
     private void renderSkin(EntityMannequin entity, ISkinDescriptor skinDescriptor, EntitySkinCapability skinCap, IWardrobeCap wardrobe, IExtraColours extraColours, double distance, boolean doLodLoading, ModelPlayer targetModel) {

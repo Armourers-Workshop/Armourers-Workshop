@@ -103,6 +103,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     private static final String TAG_FLYING = "flying";
     private static final String TAG_VISIBLE = "visible";
     private static final String TAG_NO_CLIP = "no_clip";
+    private static final String TAG_SCALE = "scale";
 
     private static final DataParameter<BipedRotations> DATA_BIPED_ROTATIONS = EntityDataManager.<BipedRotations>createKey(EntityMannequin.class, BIPED_ROTATIONS_SERIALIZER);
     private static final DataParameter<TextureData> DATA_TEXTURE_DATA = EntityDataManager.<TextureData>createKey(EntityMannequin.class, TEXTURE_DATA_SERIALIZER);
@@ -112,6 +113,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     private static final DataParameter<Boolean> DATA_FLYING = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> DATA_VISIBLE = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> DATA_NO_CLIP = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Float> DATA_SCALE = EntityDataManager.<Float>createKey(EntityMannequin.class, DataSerializers.FLOAT);
 
     public EntityMannequin(World worldIn) {
         super(worldIn);
@@ -128,6 +130,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         dataManager.register(DATA_FLYING, Boolean.valueOf(false));
         dataManager.register(DATA_VISIBLE, Boolean.valueOf(true));
         dataManager.register(DATA_NO_CLIP, Boolean.valueOf(false));
+        dataManager.register(DATA_SCALE, Float.valueOf(1F));
     }
 
     public void setBipedRotations(BipedRotations bipedRotations) {
@@ -206,6 +209,14 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         return dataManager.get(DATA_NO_CLIP).booleanValue();
     }
 
+    public void setScale(float value) {
+        dataManager.set(DATA_SCALE, Float.valueOf(value));
+    }
+
+    public float getScale() {
+        return dataManager.get(DATA_SCALE).floatValue();
+    }
+
     @Override
     public boolean canBeCollidedWith() {
         return true;
@@ -220,20 +231,27 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     public void onEntityUpdate() {
         super.onEntityUpdate();
     }
+    
+    @Override
+    public AxisAlignedBB getEntityBoundingBox() {
+        float halfWidthScaled = (width / 2F) * getScale();
+        AxisAlignedBB bb = new AxisAlignedBB(posX - halfWidthScaled, posY, posZ - halfWidthScaled, posX + halfWidthScaled, posY + (height * getScale()), posZ + halfWidthScaled);
+        return bb;
+    }
 
     @Override
     public AxisAlignedBB getCollisionBoundingBox() {
         if (isNoClip()) {
             return null;
         }
-        return super.getEntityBoundingBox();
+        return getEntityBoundingBox();
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         // TODO Auto-generated method stub
-        return super.getRenderBoundingBox();
+        return getEntityBoundingBox();
     }
 
     @Override
@@ -258,7 +276,6 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         } else {
             FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), getEntityWorld(), getEntityId(), 0, 0);
         }
-
         return EnumActionResult.PASS;
     }
 
@@ -267,7 +284,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         ModLogger.log("attackEntityFrom");
         return super.attackEntityFrom(source, amount);
     }
-    
+
     @Override
     public boolean hitByEntity(Entity entityIn) {
         // TODO Auto-generated method stub
@@ -304,6 +321,9 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         if (compound.hasKey(TAG_NO_CLIP, NBT.TAG_BYTE)) {
             setNoClip(compound.getBoolean(TAG_NO_CLIP));
         }
+        if (compound.hasKey(TAG_SCALE, NBT.TAG_FLOAT)) {
+            setScale(compound.getFloat(TAG_SCALE));
+        }
     }
 
     @Override
@@ -316,6 +336,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         compound.setBoolean(TAG_FLYING, isFlying());
         compound.setBoolean(TAG_VISIBLE, isVisible());
         compound.setBoolean(TAG_NO_CLIP, isNoClip());
+        compound.setFloat(TAG_SCALE, getScale());
     }
 
     public static class TextureData {
@@ -420,7 +441,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     @Override
     public void profileDownloaded(GameProfile gameProfile) {
         FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(new Runnable() {
-            
+
             @Override
             public void run() {
                 setTextureDataProfile(gameProfile);

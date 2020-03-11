@@ -392,8 +392,11 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
             GL11.glRotatef(-20, 1, 0, 0);
             GL11.glRotatef(playerRotation, 0, 1, 0);
             if (isMannequin) {
-                float rot = ((EntityMannequin)skinCapability.getEntity()).getRotation();
+                EntityMannequin mannequin = (EntityMannequin) skinCapability.getEntity();
+                float rot = mannequin.getRotation();
                 GL11.glRotatef(rot, 0, 1, 0);
+                float manScale = mannequin.getScale();
+                GL11.glScalef(1F / manScale, 1F / manScale, 1F / manScale);
             }
             GL11.glTranslatef(0, 0, -50);
             

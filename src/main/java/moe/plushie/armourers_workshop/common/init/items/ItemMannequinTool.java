@@ -70,6 +70,7 @@ public class ItemMannequinTool extends AbstractModItem {
                 entityMannequin.setPosition(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F);
                 double angle = TrigUtils.getAngleDegrees(player.posX, player.posZ, pos.getX() + 0.5F, pos.getZ() + 0.5F) + 90D;
                 entityMannequin.setRotation((float) angle);
+                entityMannequin.setScale(0.25F + world.rand.nextFloat() * 9.45F);
                 //entityMannequin.setTextureData(new TextureData(player.getGameProfile()));
                 world.spawnEntity(entityMannequin);
             }
