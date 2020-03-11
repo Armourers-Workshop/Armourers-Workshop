@@ -39,6 +39,7 @@ import moe.plushie.armourers_workshop.proxies.ClientProxy.TexturePaintType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -104,9 +105,16 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
 
         GlStateManager.rotate(entity.getRotation(), 0F, 1F, 0F);
         
+        GlStateManager.disableNormalize();
+        GlStateManager.disableLighting();
+        GlStateManager.disableRescaleNormal();
+        
         GlStateManager.enableNormalize();
         GlStateManager.enableLighting();
         GlStateManager.enableRescaleNormal();
+        
+        RenderHelper.enableStandardItemLighting();
+        
         
         //GlStateManager.enableLighting();
         // GlStateManager.disableDepth();
