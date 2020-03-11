@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.client.gui.controls.AbstractGuiDialog;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomLabel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiLabeledTextField;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTextFieldCustom;
 import moe.plushie.armourers_workshop.client.gui.controls.IDialogCallback;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
@@ -36,7 +37,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
     private boolean moderator = false;
     private GuiLabeledTextField textName;
     private GuiLabeledTextField textTags;
-    private GuiLabeledTextField textDescription;
+    private GuiTextFieldCustom textDescription;
     private GuiButtonExt buttonUpdate;
     private GuiButtonExt buttonDelete;
     private GuiCustomLabel statsText;
@@ -54,14 +55,14 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
     public void initGui() {
         super.initGui();
         buttonList.clear();
-        textName = new GuiLabeledTextField(fontRenderer, x + 5, y + 35, 180, 12);
+        textName = new GuiLabeledTextField(fontRenderer, x + 5, y + 35, width - 15 - 162, 12);
         textName.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterName"));
         textName.setMaxStringLength(80);
 
-        textTags = new GuiLabeledTextField(fontRenderer, x + 5, y + 65, 180, 12);
+        textTags = new GuiLabeledTextField(fontRenderer, x + 5, y + 65, width - 15 - 162, 12);
         textTags.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterTags"));
 
-        textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, 180, 12);
+        textDescription = new GuiTextFieldCustom(x + 5, y + 95, width - 15 - 162, height - 95 - 40);
         textDescription.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterDescription"));
         textDescription.setMaxStringLength(255);
 
@@ -78,7 +79,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         buttonUpdate = new GuiButtonExt(0, x + 5, y + height - 25, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonUpdate"));
         buttonDelete = new GuiButtonExt(0, x + width - 105, y + height - 25, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonDelete"));
 
-        statsText = new GuiCustomLabel(fontRenderer, x + 180 + 10, y + 5, width - 180 - 15, height - 35);
+        statsText = new GuiCustomLabel(fontRenderer, x + width - 162 - 5, y + 5, 162, height - 90);
 
         buttonList.add(buttonUpdate);
         buttonList.add(buttonDelete);
@@ -99,7 +100,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         if (textTags.textboxKeyTyped(c, keycode)) {
             return true;
         }
-        if (textDescription.textboxKeyTyped(c, keycode)) {
+        if (textDescription.keyTyped(c, keycode)) {
             return true;
         }
         return false;
@@ -113,11 +114,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         boolean clicked = super.mouseClicked(mouseX, mouseY, button);
         if (!clicked) {
             clicked = textName.mouseClicked(mouseX, mouseY, button);
-        }
-        if (!clicked) {
             clicked = textTags.mouseClicked(mouseX, mouseY, button);
-        }
-        if (!clicked) {
             clicked = textDescription.mouseClicked(mouseX, mouseY, button);
         }
         if (!clicked) {
@@ -255,8 +252,8 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         textTags.drawTextBox();
 
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
-        textDescription.drawTextBox();
-        fontRenderer.drawString(textDescription.getText().length() + " / " + "255", x + 5, y + 115, 0xFFFFFF);
+        textDescription.drawButton(mc, mouseX, mouseY, partialTickTime);
+        //fontRenderer.drawString(textDescription.getText().length() + " / " + "255", x + 5, y + 115, 0xFFFFFF);
 
         statsText.clearText();
         int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();

@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomLabel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiLabeledTextField;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTextFieldCustom;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
@@ -46,7 +47,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     private final String guiName;
     private GuiLabeledTextField textName;
     private GuiLabeledTextField textTags;
-    private GuiLabeledTextField textDescription;
+    private GuiTextFieldCustom textDescription;
     private GuiButtonExt buttonUpload;
     private GuiCustomLabel statsText;
 
@@ -62,21 +63,21 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     public void initGui() {
         super.initGui();
         buttonList.clear();
-        textName = new GuiLabeledTextField(fontRenderer, x + 5, y + 35, 180, 12);
+        textName = new GuiLabeledTextField(fontRenderer, x + 5, y + 35, width - 15 - 162, 12);
         textName.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterName"));
         textName.setMaxStringLength(80);
 
-        textTags = new GuiLabeledTextField(fontRenderer, x + 5, y + 65, 180, 12);
+        textTags = new GuiLabeledTextField(fontRenderer, x + 5, y + 65, width - 15 - 162, 12);
         textTags.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterTags"));
 
-        textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, 180, 12);
+        textDescription = new GuiTextFieldCustom(x + 5, y + 95, width - 15 - 162, height - 95 - 40);
         textDescription.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterDescription"));
         textDescription.setMaxStringLength(255);
 
-        buttonUpload = new GuiButtonExt(0, x + 5, y + 110, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonUpload"));
+        buttonUpload = new GuiButtonExt(0, x + 23, y + height - 28, 96, 18, GuiHelper.getLocalizedControlName(guiName, "buttonUpload"));
         buttonUpload.enabled = false;
 
-        statsText = new GuiCustomLabel(fontRenderer, x + 180 + 10, y + 5, width - 180 - 15, height - 90);
+        statsText = new GuiCustomLabel(fontRenderer, x + width - 162 - 5, y + 5, 162, height - 90);
 
         buttonList.add(buttonUpload);
         if (visible) {
@@ -93,9 +94,9 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     }
 
     private void updatePlayerSlots() {
-        ((GuiGlobalLibrary) parent).setPlayerSlotLocation(x + width / 2 - 18 * 9 / 2, y + height - 81);
-        ((GuiGlobalLibrary) parent).setInputSlotLocation(x + 6, y + 140);
-        ((GuiGlobalLibrary) parent).setOutputSlotLocation(x + 83, y + 140);
+        ((GuiGlobalLibrary) parent).setPlayerSlotLocation(x + width - 18 * 9 - 4, y + height - 81);
+        ((GuiGlobalLibrary) parent).setInputSlotLocation(x + 3, y + height - 27);
+        ((GuiGlobalLibrary) parent).setOutputSlotLocation(x + 127, y + height - 27);
     }
 
     @Override
@@ -109,7 +110,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         if (textTags.textboxKeyTyped(c, keycode)) {
             return true;
         }
-        if (textDescription.textboxKeyTyped(c, keycode)) {
+        if (textDescription.keyTyped(c, keycode)) {
             return true;
         }
         return false;
@@ -123,11 +124,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         boolean clicked = super.mouseClicked(mouseX, mouseY, button);
         if (!clicked) {
             clicked = textName.mouseClicked(mouseX, mouseY, button);
-        }
-        if (!clicked) {
             clicked = textTags.mouseClicked(mouseX, mouseY, button);
-        }
-        if (!clicked) {
             clicked = textDescription.mouseClicked(mouseX, mouseY, button);
         }
         if (!clicked) {
@@ -224,11 +221,11 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
         mc.renderEngine.bindTexture(BUTTON_TEXTURES);
         // inv
-        drawTexturedModalRect(x + width / 2 - 162 / 2 - 1, y + height - 82, 0, 180, 162, 76);
+        drawTexturedModalRect(x + width - 18 * 9 - 5, y + height - 82, 0, 180, 162, 76);
         // input
-        drawTexturedModalRect(x + 5, y + 139, 0, 162, 18, 18);
+        drawTexturedModalRect(x + 2, y + height - 28, 0, 162, 18, 18);
         // output
-        drawTexturedModalRect(x + 78, y + 135, 18, 154, 26, 26);
+        drawTexturedModalRect(x + 122, y + height - 32, 18, 154, 26, 26);
 
         super.draw(mouseX, mouseY, partialTickTime);
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "name"), x + 5, y + 5, 0xFFFFFF);
@@ -240,8 +237,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         textTags.drawTextBox();
 
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
-        textDescription.drawTextBox();
-
+        textDescription.drawButton(mc, mouseX, mouseY, partialTickTime);
         statsText.clearText();
 
         statsText.addText(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"));
