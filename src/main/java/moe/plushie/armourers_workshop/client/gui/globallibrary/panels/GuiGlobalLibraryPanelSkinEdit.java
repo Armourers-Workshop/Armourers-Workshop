@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.AbstractGuiDialog;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomLabel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiLabeledTextField;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.IDialogCallback;
@@ -24,6 +25,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCallback {
@@ -37,6 +39,8 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
     private GuiLabeledTextField textDescription;
     private GuiButtonExt buttonUpdate;
     private GuiButtonExt buttonDelete;
+    private GuiCustomLabel statsText;
+    
     private JsonObject skinJson = null;
     private Screen returnScreen;
     private boolean firstTick = false;
@@ -57,7 +61,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         textTags = new GuiLabeledTextField(fontRenderer, x + 5, y + 65, 180, 12);
         textTags.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterTags"));
 
-        textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, width - 10, 12);
+        textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, 180, 12);
         textDescription.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterDescription"));
         textDescription.setMaxStringLength(255);
 
@@ -73,6 +77,8 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
 
         buttonUpdate = new GuiButtonExt(0, x + 5, y + height - 25, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonUpdate"));
         buttonDelete = new GuiButtonExt(0, x + width - 105, y + height - 25, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonDelete"));
+
+        statsText = new GuiCustomLabel(fontRenderer, x + 180 + 10, y + 5, width - 180 - 15, height - 35);
 
         buttonList.add(buttonUpdate);
         buttonList.add(buttonDelete);
@@ -113,6 +119,9 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         }
         if (!clicked) {
             clicked = textDescription.mouseClicked(mouseX, mouseY, button);
+        }
+        if (!clicked) {
+            clicked = statsText.mouseClick(mouseX, mouseY, button);
         }
         if (button == 1) {
             if (textName.isFocused()) {
@@ -249,10 +258,17 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
         textDescription.drawTextBox();
         fontRenderer.drawString(textDescription.getText().length() + " / " + "255", x + 5, y + 115, 0xFFFFFF);
 
+        statsText.clearText();
         int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
         if (!GlobalSkinLibraryUtils.isValidJavaVersion(javaVersion)) {
-            fontRenderer.drawSplitString(TranslateUtils.translate("inventory.armourersworkshop:globalSkinLibrary.invalidJava", javaVersion[0], javaVersion[1]), x + 135, y + 65, width - 140, 0xFF8888);
+            statsText.addText(TextFormatting.RED.toString());
+            statsText.addText(TranslateUtils.translate("inventory.armourers_workshop:global-skin-library.invalidJava", javaVersion[0], javaVersion[1]));
+            statsText.addText(TextFormatting.RESET.toString());
+            statsText.addNewLine();
+            statsText.addNewLine();
         }
+
+        statsText.draw(mouseX, mouseY);
     }
 
     @Override

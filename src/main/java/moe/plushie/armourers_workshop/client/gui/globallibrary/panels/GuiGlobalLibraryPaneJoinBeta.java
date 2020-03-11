@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.google.common.util.concurrent.FutureCallback;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomLabel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiLabeledTextField;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
@@ -18,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,6 +31,7 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
 
     private GuiLabeledTextField textBetaCode;
     private GuiButtonExt buttonCheckBetaCode;
+    private GuiCustomLabel statsText;
 
     private boolean joining = false;
     private String joinState = "";
@@ -49,6 +52,8 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
 
         buttonCheckBetaCode = new GuiButtonExt(0, x + 5, y + 50, 230, 20, GuiHelper.getLocalizedControlName(guiName, "buttonJoinBeta"));
         buttonCheckBetaCode.enabled = false;
+
+        statsText = new GuiCustomLabel(fontRenderer, x + 5, y + 75, width - 10, height - 75 - 5);
 
         buttonList.add(buttonCheckBetaCode);
     }
@@ -86,6 +91,7 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
         }
         boolean clicked = super.mouseClicked(mouseX, mouseY, button);
         textBetaCode.mouseClicked(mouseX, mouseY, button);
+        statsText.mouseClick(mouseX, mouseY, button);
         if (button == 1) {
             if (textBetaCode.isFocused()) {
                 textBetaCode.setText("");
@@ -163,19 +169,35 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "betaCode"), x + 5, y + 25, 0xFFFFFF);
         textBetaCode.drawTextBox();
 
-        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBeta"), x + 5, y + 75, 230, 0xEEEEEE);
+        statsText.clearText();
 
-        if (joinState != null && !StringUtils.isNullOrEmpty(joinState)) {
-            fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, joinState), x + 5, y + 115, 230, 0xEEEEEE);
+        statsText.addText(GuiHelper.getLocalizedControlName(guiName, "closedBeta"));
+        statsText.addNewLine();
+        statsText.addNewLine();
+
+        if (!StringUtils.isNullOrEmpty(joinState)) {
+            statsText.addText(GuiHelper.getLocalizedControlName(guiName, joinState));
+            statsText.addNewLine();
+            statsText.addNewLine();
         }
 
-        if (joinFailMessage != null) {
-            fontRenderer.drawSplitString(joinFailMessage, x + 5, y + 140, 230, 0xFF8888);
+        if (!StringUtils.isNullOrEmpty(joinFailMessage)) {
+            statsText.addText(TextFormatting.RED.toString());
+            statsText.addText(joinFailMessage);
+            statsText.addText(TextFormatting.RESET.toString());
+            statsText.addNewLine();
+            statsText.addNewLine();
         }
 
         int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
         if (!GlobalSkinLibraryUtils.isValidJavaVersion(javaVersion)) {
-            fontRenderer.drawSplitString(TranslateUtils.translate("inventory.armourers_workshop:global-skin-library.invalidJava", javaVersion[0], javaVersion[1]), x + 5, y + 160, 230, 0xFF8888);
+            statsText.addText(TextFormatting.RED.toString());
+            statsText.addText(TranslateUtils.translate("inventory.armourers_workshop:global-skin-library.invalidJava", javaVersion[0], javaVersion[1]));
+            statsText.addText(TextFormatting.RESET.toString());
+            statsText.addNewLine();
+            statsText.addNewLine();
         }
+
+        statsText.draw(mouseX, mouseY);
     }
 }

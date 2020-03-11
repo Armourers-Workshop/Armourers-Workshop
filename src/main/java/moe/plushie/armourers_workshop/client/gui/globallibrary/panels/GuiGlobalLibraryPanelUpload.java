@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomLabel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiLabeledTextField;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
@@ -32,6 +33,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,21 +42,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiGlobalLibraryPanelUpload extends GuiPanel {
 
     private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibGuiResources.GUI_GLOBAL_LIBRARY);
-    
+
     private final String guiName;
     private GuiLabeledTextField textName;
     private GuiLabeledTextField textTags;
     private GuiLabeledTextField textDescription;
     private GuiButtonExt buttonUpload;
-    
+    private GuiCustomLabel statsText;
+
     private FutureTask<JsonObject> taskSkinUpload;
     private String error = null;
-    
+
     public GuiGlobalLibraryPanelUpload(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
-        guiName = ((GuiGlobalLibrary)parent).getGuiName() + ".upload";
+        guiName = ((GuiGlobalLibrary) parent).getGuiName() + ".upload";
     }
-    
+
     @Override
     public void initGui() {
         super.initGui();
@@ -62,23 +65,25 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         textName = new GuiLabeledTextField(fontRenderer, x + 5, y + 35, 180, 12);
         textName.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterName"));
         textName.setMaxStringLength(80);
-        
+
         textTags = new GuiLabeledTextField(fontRenderer, x + 5, y + 65, 180, 12);
         textTags.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterTags"));
-        
-        textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, width - 10, 12);
+
+        textDescription = new GuiLabeledTextField(fontRenderer, x + 5, y + 95, 180, 12);
         textDescription.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "enterDescription"));
         textDescription.setMaxStringLength(255);
-        
+
         buttonUpload = new GuiButtonExt(0, x + 5, y + 110, 100, 20, GuiHelper.getLocalizedControlName(guiName, "buttonUpload"));
         buttonUpload.enabled = false;
-        
+
+        statsText = new GuiCustomLabel(fontRenderer, x + 180 + 10, y + 5, width - 180 - 15, height - 90);
+
         buttonList.add(buttonUpload);
         if (visible) {
             updatePlayerSlots();
         }
     }
-    
+
     @Override
     public GuiPanel setVisible(boolean visible) {
         if (visible) {
@@ -86,13 +91,13 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         }
         return super.setVisible(visible);
     }
-    
+
     private void updatePlayerSlots() {
-        ((GuiGlobalLibrary)parent).setPlayerSlotLocation(x + width / 2 - 18 * 9 / 2, y + height - 81);
-        ((GuiGlobalLibrary)parent).setInputSlotLocation(x + 6, y + 140);
-        ((GuiGlobalLibrary)parent).setOutputSlotLocation(x + 83, y + 140);
+        ((GuiGlobalLibrary) parent).setPlayerSlotLocation(x + width / 2 - 18 * 9 / 2, y + height - 81);
+        ((GuiGlobalLibrary) parent).setInputSlotLocation(x + 6, y + 140);
+        ((GuiGlobalLibrary) parent).setOutputSlotLocation(x + 83, y + 140);
     }
-    
+
     @Override
     public boolean keyTyped(char c, int keycode) {
         if (!visible | !enabled) {
@@ -109,7 +114,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         }
         return false;
     }
-    
+
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (!visible | !enabled) {
@@ -125,6 +130,9 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         if (!clicked) {
             clicked = textDescription.mouseClicked(mouseX, mouseY, button);
         }
+        if (!clicked) {
+            clicked = statsText.mouseClick(mouseX, mouseY, button);
+        }
         if (button == 1) {
             if (textName.isFocused()) {
                 textName.setText("");
@@ -138,13 +146,13 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         }
         return clicked;
     }
-    
+
     @Override
     public void update() {
         super.update();
         buttonUpload.enabled = false;
         if (!StringUtils.isNullOrEmpty(textName.getText())) {
-            SlotHidable slot = ((GuiGlobalLibrary)parent).getInputSlot();
+            SlotHidable slot = ((GuiGlobalLibrary) parent).getInputSlot();
             if (SkinNBTHelper.stackHasSkinData(slot.getStack())) {
                 buttonUpload.enabled = true;
             }
@@ -158,8 +166,8 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
                         String action = json.get("action").getAsString();
                         boolean valid = json.get("valid").getAsBoolean();
                         if (valid & action.equals("skin-upload")) {
-                            ((GuiGlobalLibrary)parent).panelHome.updateSkinPanels();
-                            ((GuiGlobalLibrary)parent).switchScreen(Screen.HOME);
+                            ((GuiGlobalLibrary) parent).panelHome.updateSkinPanels();
+                            ((GuiGlobalLibrary) parent).switchScreen(Screen.HOME);
                         }
                     } else {
                         if (json.has("reason")) {
@@ -177,7 +185,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
             }
         }
     }
-    
+
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button == buttonUpload) {
@@ -187,17 +195,17 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
                 JsonObject jsonObject = PlushieAuth.authenticateUser(gameProfile.getName(), gameProfile.getId().toString());
                 plushieSession.authenticate(jsonObject);
             }
-            
+
             if (!plushieSession.isAuthenticated()) {
                 ModLogger.log(Level.ERROR, "Authentication failed.");
                 return;
             }
-            
+
             MessageClientGuiButton message = new MessageClientGuiButton((byte) 0);
             PacketHandler.networkWrapper.sendToServer(message);
         }
     }
-    
+
     public void uploadSkin(Skin skin) {
         GameProfile gameProfile = mc.player.getGameProfile();
         PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
@@ -207,7 +215,7 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         IOUtils.closeQuietly(outputStream);
         taskSkinUpload = SkinUploader.uploadSkin(fileBytes, textName.getText().trim(), Integer.toString(plushieSession.getServerId()), textDescription.getText().trim(), plushieSession.getAccessToken());
     }
-    
+
     @Override
     public void draw(int mouseX, int mouseY, float partialTickTime) {
         if (!visible) {
@@ -215,34 +223,48 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
         mc.renderEngine.bindTexture(BUTTON_TEXTURES);
-        //inv
+        // inv
         drawTexturedModalRect(x + width / 2 - 162 / 2 - 1, y + height - 82, 0, 180, 162, 76);
-        //input
+        // input
         drawTexturedModalRect(x + 5, y + 139, 0, 162, 18, 18);
-        //output
+        // output
         drawTexturedModalRect(x + 78, y + 135, 18, 154, 26, 26);
-        
+
         super.draw(mouseX, mouseY, partialTickTime);
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "name"), x + 5, y + 5, 0xFFFFFF);
-        
+
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinName"), x + 5, y + 25, 0xFFFFFF);
         textName.drawTextBox();
-        
+
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinTags"), x + 5, y + 55, 0xFFFFFF);
         textTags.drawTextBox();
-        
+
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
         textDescription.drawTextBox();
-        
-        fontRenderer.drawSplitString(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"), x + 195, y + 35, width - 200, 0xFF8888);
-        
+
+        statsText.clearText();
+
+        statsText.addText(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"));
+        statsText.addNewLine();
+        statsText.addNewLine();
+
         if (!StringUtils.isNullOrEmpty(error)) {
-            fontRenderer.drawSplitString("Error: " + error, x + 195, y + 115, width - 200, 0xFF8888);
+            statsText.addText(TextFormatting.RED.toString());
+            statsText.addText("Error: " + error);
+            statsText.addText(TextFormatting.RESET.toString());
+            statsText.addNewLine();
+            statsText.addNewLine();
         }
-        
+
         int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
         if (!GlobalSkinLibraryUtils.isValidJavaVersion(javaVersion)) {
-            fontRenderer.drawSplitString(TranslateUtils.translate("inventory.armourersworkshop:globalSkinLibrary.invalidJava", javaVersion[0], javaVersion[1]), x + 135, y + 65, width - 140, 0xFF8888);
+            statsText.addText(TextFormatting.RED.toString());
+            statsText.addText(TranslateUtils.translate("inventory.armourers_workshop:global-skin-library.invalidJava", javaVersion[0], javaVersion[1]));
+            statsText.addText(TextFormatting.RESET.toString());
+            statsText.addNewLine();
+            statsText.addNewLine();
         }
+
+        statsText.draw(mouseX, mouseY);
     }
 }
