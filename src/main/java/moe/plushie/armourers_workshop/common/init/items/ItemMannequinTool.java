@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import moe.plushie.armourers_workshop.utils.NBTHelper;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -67,7 +68,8 @@ public class ItemMannequinTool extends AbstractModItem {
                 int l = MathHelper.floor(player.rotationYaw * 16.0F / 360.0F + 0.5D) & 15;
                 EntityMannequin entityMannequin = new EntityMannequin(world);
                 entityMannequin.setPosition(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F);
-                entityMannequin.setRotation(player.rotationYaw + 180F);
+                double angle = TrigUtils.getAngleDegrees(player.posX, player.posZ, pos.getX() + 0.5F, pos.getZ() + 0.5F) + 90D;
+                entityMannequin.setRotation((float) angle);
                 //entityMannequin.setTextureData(new TextureData(player.getGameProfile()));
                 world.spawnEntity(entityMannequin);
             }

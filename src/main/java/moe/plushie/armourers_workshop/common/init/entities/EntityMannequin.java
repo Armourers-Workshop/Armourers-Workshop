@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.utils.ModLogger;
+import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -251,7 +252,8 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         }
         if (player.isSneaking()) {
             if (!world.isRemote) {
-                setRotation(player.rotationYaw + 180);
+                double angle = TrigUtils.getAngleDegrees(player.posX, player.posZ, posX, posZ) + 90D;
+                setRotation((float) angle);
             }
         } else {
             FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), getEntityWorld(), getEntityId(), 0, 0);
