@@ -63,6 +63,7 @@ public class ModelSkinHead extends ModelTypeHelper {
              */
         }
 
+        GlStateManager.pushAttrib();
         RenderHelper.enableGUIStandardItemLighting();
 
         if (skin.hasPaintData() & renderData.isShowSkinPaint() & ClientProxy.getTexturePaintType() == TexturePaintType.TEXTURE_REPLACE) {
@@ -97,8 +98,8 @@ public class ModelSkinHead extends ModelTypeHelper {
 
             GL11.glPopMatrix();
         }
-
-        GL11.glColor3f(1F, 1F, 1F);
+        GlStateManager.popAttrib();
+        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
     private void renderHead(SkinPartRenderData renderData) {

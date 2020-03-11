@@ -49,5 +49,6 @@ public class ModelDummy extends ModelTypeHelper {
         // GlStateManager.disableBlend();
         GlStateManager.disableCull();
         GlStateManager.popAttrib();
+        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 }

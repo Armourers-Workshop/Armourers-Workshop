@@ -36,6 +36,11 @@ public class ModelSkinChest extends ModelTypeHelper {
             return;
         }
         ArrayList<SkinPart> parts = skin.getParts();
+        
+        if (parts.size() > -1) {
+            //return;
+        }
+        
 
         if (entity != null && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
@@ -46,7 +51,8 @@ public class ModelSkinChest extends ModelTypeHelper {
              * this.heldItemRight = 1; }
              */
         }
-
+        GlStateManager.pushAttrib();
+        //GlStateManager.enableColorMaterial();
         RenderHelper.enableGUIStandardItemLighting();
 
         if (skin.hasPaintData() & renderData.isShowSkinPaint() & ClientProxy.getTexturePaintType() == TexturePaintType.TEXTURE_REPLACE) {
@@ -87,8 +93,8 @@ public class ModelSkinChest extends ModelTypeHelper {
 
             GL11.glPopMatrix();
         }
-
-        GL11.glColor3f(1F, 1F, 1F);
+        GlStateManager.popAttrib();
+        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
     private void renderChest(SkinPartRenderData skinPartRenderData) {

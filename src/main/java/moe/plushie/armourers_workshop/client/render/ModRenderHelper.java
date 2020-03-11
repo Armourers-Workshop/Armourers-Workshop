@@ -33,7 +33,7 @@ public final class ModRenderHelper {
         int i = world.getCombinedLight(pos, 0);
         int j = i % 65536;
         int k = i / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
     }
     
     public static void setGLForSkinRender() {
@@ -72,13 +72,13 @@ public final class ModRenderHelper {
     public static void enableScissorScaled(int x, int y, int width, int height) {
         Minecraft mc = Minecraft.getMinecraft();
         ScaledResolution sr = new ScaledResolution(mc);
-        double scaledWidth = (double)mc.displayWidth / sr.getScaledWidth_double();
-        double scaledHeight = (double)mc.displayHeight / sr.getScaledHeight_double();
+        double scaledWidth = mc.displayWidth / sr.getScaledWidth_double();
+        double scaledHeight = mc.displayHeight / sr.getScaledHeight_double();
         enableScissor(
-                MathHelper.floor((double)x * scaledWidth),
-                mc.displayHeight - MathHelper.floor((double)((double)y + (double)height) * scaledHeight),
-                MathHelper.floor((double)width * scaledWidth),
-                MathHelper.floor((double)height * scaledHeight));
+                MathHelper.floor(x * scaledWidth),
+                mc.displayHeight - MathHelper.floor(((double)y + (double)height) * scaledHeight),
+                MathHelper.floor(width * scaledWidth),
+                MathHelper.floor(height * scaledHeight));
     }
     
     public static void enableScissor(int x, int y, int width, int height) {

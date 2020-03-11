@@ -44,6 +44,7 @@ public class ModelSkinOutfit extends ModelTypeHelper {
             this.isRiding = player.isRiding();
         }
 
+        GlStateManager.pushAttrib();
         RenderHelper.enableGUIStandardItemLighting();
 
         if (skin.hasPaintData() & renderData.isShowSkinPaint() & ClientProxy.getTexturePaintType() == TexturePaintType.TEXTURE_REPLACE) {
@@ -131,10 +132,13 @@ public class ModelSkinOutfit extends ModelTypeHelper {
                 renderRightWing(new SkinPartRenderData(part, renderData), -angle);
             }
 
+            
+            
+            
             GL11.glPopMatrix();
         }
-
-        GL11.glColor3f(1F, 1F, 1F);
+        GlStateManager.popAttrib();
+        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
     private void renderHead(SkinPartRenderData partRenderData) {

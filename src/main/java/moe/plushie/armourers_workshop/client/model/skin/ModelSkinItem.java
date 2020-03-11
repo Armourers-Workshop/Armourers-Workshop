@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -42,6 +43,9 @@ public class ModelSkinItem extends ModelTypeHelper {
             }*/
         }
         
+        GlStateManager.pushAttrib();
+        RenderHelper.enableGUIStandardItemLighting();
+        
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
             
@@ -65,9 +69,8 @@ public class ModelSkinItem extends ModelTypeHelper {
             GL11.glPopMatrix();
             
         }
-        
-        
-        GL11.glColor3f(1F, 1F, 1F);
+        GlStateManager.popAttrib();
+        GlStateManager.color(1F, 1F, 1F, 1F);
     }
     
     private void renderRightArm(SkinPartRenderData partRenderData) {

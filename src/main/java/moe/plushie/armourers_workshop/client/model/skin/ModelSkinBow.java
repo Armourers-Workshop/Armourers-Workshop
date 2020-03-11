@@ -11,6 +11,8 @@ import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.utils.ModLogger;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -47,6 +49,9 @@ public class ModelSkinBow extends ModelTypeHelper {
             */
         }
         
+        GlStateManager.pushAttrib();
+        RenderHelper.enableGUIStandardItemLighting();
+        
         if (frame > parts.size() - 1) {
             frame = parts.size() - 1;
         }
@@ -69,8 +74,8 @@ public class ModelSkinBow extends ModelTypeHelper {
         
         GL11.glPopMatrix();
         
-        
-        GL11.glColor3f(1F, 1F, 1F);
+        GlStateManager.popAttrib();
+        GlStateManager.color(1F, 1F, 1F, 1F);
         frame = 0;
     }
     
