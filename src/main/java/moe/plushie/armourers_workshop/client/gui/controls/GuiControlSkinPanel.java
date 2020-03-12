@@ -211,6 +211,8 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
                 RenderHelper.enableGUIStandardItemLighting();
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                GlStateManager.disableNormalize();
+                GlStateManager.disableColorMaterial();
                 GlStateManager.enableNormalize();
                 GlStateManager.enableColorMaterial();
                 ModRenderHelper.enableAlphaBlend();

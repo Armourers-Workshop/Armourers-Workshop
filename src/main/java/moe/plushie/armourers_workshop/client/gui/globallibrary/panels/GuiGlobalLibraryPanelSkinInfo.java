@@ -342,6 +342,8 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
 
             RenderHelper.enableGUIStandardItemLighting();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.disableNormalize();
+            GlStateManager.disableColorMaterial();
             GlStateManager.enableNormalize();
             GlStateManager.enableColorMaterial();
             ModRenderHelper.enableAlphaBlend();
