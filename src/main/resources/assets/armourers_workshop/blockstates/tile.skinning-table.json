@@ -1,10 +1,18 @@
 {
-	"forge_marker": 1,
-	"variants": {
-		"normal": { "model": "armourers_workshop:skinning-table" },
-		"facing=north": {"model": "armourers_workshop:skinning-table"},
-		"facing=east": {"model": "armourers_workshop:skinning-table", "y": 90},
-		"facing=south": {"model": "armourers_workshop:skinning-table", "y": 180},
-		"facing=west": {"model": "armourers_workshop:skinning-table", "y": 270}
-	}
+  "forge_marker": 1,
+  "defaults": {
+      "textures": {
+      "particle": "blocks/planks_oak"
+    },
+    "model": "armourers_workshop:skinning-table"
+  },
+  "variants": {
+    "normal": [{}],
+    "facing": {
+      "north": {},
+      "south": {"y": 180},
+      "east": {"y": 90},
+      "west": {"y": 270}
+    }
+  }
 }
