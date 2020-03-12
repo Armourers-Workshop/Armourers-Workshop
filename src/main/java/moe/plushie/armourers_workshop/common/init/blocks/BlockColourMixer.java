@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.common.init.blocks;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
@@ -17,6 +18,7 @@ public class BlockColourMixer extends AbstractModBlockContainer {
 
     public BlockColourMixer() {
         super(LibBlockNames.COLOUR_MIXER);
+        setCreativeTab(ArmourersWorkshop.TAB_PAINTING_TOOLS);
         setSortPriority(124);
     }
     

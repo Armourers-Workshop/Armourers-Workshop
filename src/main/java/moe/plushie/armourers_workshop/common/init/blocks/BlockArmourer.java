@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.common.init.blocks;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
@@ -21,6 +22,7 @@ public class BlockArmourer extends AbstractModBlockContainer {
 
     public BlockArmourer() {
         super(LibBlockNames.ARMOURER);
+        setCreativeTab(ArmourersWorkshop.TAB_PAINTING_TOOLS);
         setSortPriority(200);
     }
     
