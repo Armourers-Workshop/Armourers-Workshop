@@ -1,12 +1,22 @@
 {
-    "forge_marker": 1,
-    "variants": {
-        "normal": { "model": "armourers_workshop:hologram-projector" },
-        "facing=north": {"model": "armourers_workshop:hologram-projector", "x": 90},
-        "facing=east": {"model": "armourers_workshop:hologram-projector", "x": 90, "y": 90},
-        "facing=south": {"model": "armourers_workshop:hologram-projector", "x": 90, "y": 180},
-        "facing=west": {"model": "armourers_workshop:hologram-projector", "x": 90, "y": 270},
-        "facing=up": {"model": "armourers_workshop:hologram-projector"},
-        "facing=down": {"model": "armourers_workshop:hologram-projector", "x": 180}
+  "forge_marker": 1,
+  "defaults": {
+      "textures": {
+        "side": "armourers_workshop:blocks/hologram-projector/hologram-projector-side",
+        "top": "armourers_workshop:blocks/hologram-projector/hologram-projector-top",
+        "bottom": "armourers_workshop:blocks/hologram-projector/hologram-projector-bottom"
+    },
+    "model": "armourers_workshop:hologram-projector"
+  },
+  "variants": {
+    "normal": [{}],
+    "facing": {
+      "up" : {},
+      "down" : {"x": 180},
+      "north" : {"x": 90},
+      "east" : {"x": 90, "y": 90},
+      "south" : {"x": 90, "y": 180},
+      "west" : {"x": 90, "y": 270}
     }
+  }
 }
