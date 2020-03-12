@@ -39,7 +39,8 @@ public class GuiHologramProjector extends GuiTabbed<ContainerHologramProjector> 
         super(new ContainerHologramProjector(invPlayer, tileEntity), true, TEXTURE_TAB_ICONS);
         this.tileEntity = tileEntity;
         this.inventoryName = tileEntity.getName();
-
+        tabController.setTabsPerSide(6);
+        
         tabInventory = new GuiHologramProjectorTabInventory(0, this);
         tabOffset = new GuiHologramProjectorTabOffset(1, this, inventoryName, tileEntity);
         tabAngle = new GuiHologramProjectorTabAngle(2, this, inventoryName, tileEntity);
