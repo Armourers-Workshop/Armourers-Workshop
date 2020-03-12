@@ -17,7 +17,7 @@ public final class PaintTypeRegistry implements IPaintTypeRegistry {
         return ArmourersWorkshop.getProxy().getPaintTypeRegistry();
     }
 
-    public static final PaintType PAINT_TYPE_NONE = new PaintType(0, 9, "none");
+    public static final PaintType PAINT_TYPE_NORMAL = new PaintType(255, 0, "normal");
 
     public static final PaintType PAINT_TYPE_DYE_1 = new PaintType(1, 1, true, "dye_1");
     public static final PaintType PAINT_TYPE_DYE_2 = new PaintType(2, 2, true, "dye_2");
@@ -36,17 +36,18 @@ public final class PaintTypeRegistry implements IPaintTypeRegistry {
 
     public static final PaintType PAINT_TYPE_FLICKER_1 = new PaintType(108, 18, "flicker_1").setTextureUV(4F, 0F);
     public static final PaintType PAINT_TYPE_FLICKER_2 = new PaintType(109, 19, "flicker_2").setTextureUV(5F, 0F);
-    // WATER(100), LAVA(101), SKY(102), STAR_FIELD(103), RAINBOW(104),
+    // WATER(100), LAVA(101), SKY(102), STAR_FIELD(103),
 
     public static final PaintType PAINT_TYPE_SKIN = new PaintType(253, 10, true, "skin").setExtraColourType(ExtraColourType.SKIN);
     public static final PaintType PAINT_TYPE_HAIR = new PaintType(254, 11, true, "hair").setExtraColourType(ExtraColourType.HAIR);
     public static final PaintType PAINT_TYPE_EYES = new PaintType(251, 12, true, "eye").setExtraColourType(ExtraColourType.EYE);
+
     public static final PaintType PAINT_TYPE_MISC_1 = new PaintType(252, 13, true, "misc_1").setExtraColourType(ExtraColourType.MISC_1);
     public static final PaintType PAINT_TYPE_MISC_2 = new PaintType(250, 20, true, "misc_2").setExtraColourType(ExtraColourType.MISC_2);
     public static final PaintType PAINT_TYPE_MISC_3 = new PaintType(249, 21, true, "misc_3").setExtraColourType(ExtraColourType.MISC_3);
     public static final PaintType PAINT_TYPE_MISC_4 = new PaintType(248, 22, true, "misc_4").setExtraColourType(ExtraColourType.MISC_4);
 
-    public static final PaintType PAINT_TYPE_NORMAL = new PaintType(255, 0, "normal");
+    public static final PaintType PAINT_TYPE_NONE = new PaintType(0, 9, "none");
 
     private final IPaintType[] paintTypes = new IPaintType[256];
     private final ArrayList<IPaintType> registeredTypes = new ArrayList<IPaintType>();
@@ -59,7 +60,6 @@ public final class PaintTypeRegistry implements IPaintTypeRegistry {
         for (IPaintType paintType : PaintType.PAINT_TYPES) {
             registerPaintType(paintType);
         }
-
     }
 
     @Override
