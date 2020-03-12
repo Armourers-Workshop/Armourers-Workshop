@@ -1,12 +1,12 @@
 {
     "parent": "block/cube",
     "textures": {
-			"particle": "armourers_workshop:blocks/outfit-maker/outfit-maker-front",
-			"down": "armourers_workshop:blocks/outfit-maker/outfit-maker-bottom",
-			"up": "armourers_workshop:blocks/outfit-maker/outfit-maker-top",
-			"north": "armourers_workshop:blocks/outfit-maker/outfit-maker-back",
-			"east": "armourers_workshop:blocks/outfit-maker/outfit-maker-right",
-			"south": "armourers_workshop:blocks/outfit-maker/outfit-maker-front",
-			"west": "armourers_workshop:blocks/outfit-maker/outfit-maker-left"
+      "particle": "armourers_workshop:blocks/outfit-maker/outfit-maker-front",
+      "down": "armourers_workshop:blocks/outfit-maker/outfit-maker-bottom",
+      "up": "armourers_workshop:blocks/outfit-maker/outfit-maker-top",
+      "north": "armourers_workshop:blocks/outfit-maker/outfit-maker-back",
+      "east": "armourers_workshop:blocks/outfit-maker/outfit-maker-right",
+      "south": "armourers_workshop:blocks/outfit-maker/outfit-maker-front",
+      "west": "armourers_workshop:blocks/outfit-maker/outfit-maker-left"
     }
 }
