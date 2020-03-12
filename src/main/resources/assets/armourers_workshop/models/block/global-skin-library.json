@@ -1,7 +1,6 @@
 {
   "__comment": "Designed by Thundercat_ with Cubik Studio - https://cubik.studio",
   "textures": {
-    "texture": "blocks/texture",
     "cobblestone": "blocks/cobblestone",
     "planks": "blocks/planks_oak",
     "stone": "blocks/stone",
