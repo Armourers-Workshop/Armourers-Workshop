@@ -1,23 +1,23 @@
 {
-    "forge_marker": 1,
-	"defaults": {
-	    "textures": {
-			"top": "armourers_workshop:blocks/skin-library/skin-library-top",
-			"side": "armourers_workshop:blocks/skin-library/skin-library-normal-side",
-			"bottom": "armourers_workshop:blocks/skin-library/skin-library-bottom"
-		},
-		"model": "cube_bottom_top"
-	},
-	"variants": {
-		"normal": [{}],
-		"creative": [{
-			"textures": {"side": "armourers_workshop:blocks/skin-library/skin-library-creative-side"}
-		}],
-		
-		"type=normal": [{}],
-		
-		"type=creative": [{
-			"textures": {"side": "armourers_workshop:blocks/skin-library/skin-library-creative-side"}
-		}]
-	}
+  "forge_marker": 1,
+  "defaults": {
+      "textures": {
+      "top": "armourers_workshop:blocks/skin-library/skin-library-top",
+      "side": "armourers_workshop:blocks/skin-library/skin-library-normal-side",
+      "bottom": "armourers_workshop:blocks/skin-library/skin-library-bottom"
+    },
+    "model": "cube_bottom_top"
+  },
+  "variants": {
+    "normal": [{}],
+    "creative": [{
+      "textures": {"side": "armourers_workshop:blocks/skin-library/skin-library-creative-side"}
+    }],
+    
+    "type=normal": [{}],
+    
+    "type=creative": [{
+      "textures": {"side": "armourers_workshop:blocks/skin-library/skin-library-creative-side"}
+    }]
+  }
 }

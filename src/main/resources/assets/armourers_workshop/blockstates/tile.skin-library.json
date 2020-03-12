@@ -1,15 +1,22 @@
 {
-    "forge_marker": 1,
-    "variants": {
-		"normal": { "model": "armourers_workshop:armour-library-normal" },
-		"creative": { "model": "armourers_workshop:armour-library-creative" },
-		"facing=north,type=normal": {"model": "armourers_workshop:armour-library-normal"},
-		"facing=east,type=normal": {"model": "armourers_workshop:armour-library-normal", "y": 90},
-		"facing=south,type=normal": {"model": "armourers_workshop:armour-library-normal", "y": 180},
-		"facing=west,type=normal": {"model": "armourers_workshop:armour-library-normal", "y": 270},
-        "facing=north,type=creative": {"model": "armourers_workshop:armour-library-creative"},
-		"facing=east,type=creative": {"model": "armourers_workshop:armour-library-creative", "y": 90},
-		"facing=south,type=creative": {"model": "armourers_workshop:armour-library-creative", "y": 180},
-		"facing=west,type=creative": {"model": "armourers_workshop:armour-library-creative", "y": 270}
+  "forge_marker": 1,
+  "defaults": {
+      "textures": {
+      "particle": "blocks/planks_oak"
     }
+  },
+  "variants": {
+    "normal": { "model": "armourers_workshop:armour-library-normal" },
+    "creative": { "model": "armourers_workshop:armour-library-creative" },
+    "type": {
+      "normal": {"model": "armourers_workshop:armour-library-normal"},
+      "creative": {"model": "armourers_workshop:armour-library-creative"}
+    },
+    "facing": {
+      "north": {},
+      "south": {"y": 180},
+      "east": {"y": 90},
+      "west": {"y": 270}
+    }
+  }
 }
