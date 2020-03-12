@@ -1,10 +1,19 @@
 {
-    "forge_marker": 1,
-    "variants": {
-        "normal": { "model": "armourers_workshop:dye-table" },
-        "facing=north": {"model": "armourers_workshop:dye-table"},
-		"facing=east": {"model": "armourers_workshop:dye-table", "y": 90},
-		"facing=south": {"model": "armourers_workshop:dye-table", "y": 180},
-		"facing=west": {"model": "armourers_workshop:dye-table", "y": 270}
+  "forge_marker": 1,
+  "defaults": {
+      "textures": {
+      "wood_texture": "blocks/planks_oak",
+      "particle": "#wood_texture"
+    },
+    "model": "armourers_workshop:dye-table"
+  },
+  "variants": {
+    "normal": [{}],
+    "facing": {
+      "north": {},
+      "south": {"y": 180},
+      "east": {"y": 90},
+      "west": {"y": 270}
     }
+  }
 }
