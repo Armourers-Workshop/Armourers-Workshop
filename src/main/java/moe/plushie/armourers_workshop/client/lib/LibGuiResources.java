@@ -34,7 +34,6 @@ public class LibGuiResources {
     public static final String GUI_GUIDE_BOOK = PREFIX_TEXTURE + "guide_book/guide-book.png";
     public static final String GUI_GUIDE_BOOK_PAGES = PREFIX_TEXTURE + "guide_book/guide-book-page.png";
     public static final String GUI_HOLOGRAM_PROJECTOR = PREFIX_TEXTURE + "hologram_projector/hologram-projector.png";
-    public static final String GUI_MANNEQUIN = PREFIX_TEXTURE + "mannequin/mannequin.png";
     public static final String GUI_OUTFIT_MAKER = PREFIX_TEXTURE + "outfit_maker/outfit-maker.png";
     public static final String GUI_SKIN_LIBRARY = PREFIX_TEXTURE + "skin_library/armour-library.png";
     public static final String GUI_SKINNING_TABLE = PREFIX_TEXTURE + "skinning_table/skinning-table.png";
