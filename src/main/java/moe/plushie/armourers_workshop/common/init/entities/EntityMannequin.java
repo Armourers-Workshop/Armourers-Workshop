@@ -211,7 +211,6 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     
     @Override
     public float getEyeHeight() {
-        // TODO Auto-generated method stub
         return super.getEyeHeight() * getScale();
     }
 
@@ -304,8 +303,15 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     @Override
     public boolean hitByEntity(Entity entityIn) {
         if (!getEntityWorld().isRemote) {
-            playSound(SoundEvents.ENTITY_ARMORSTAND_HIT, 0.8F, 1F);
-            hitCount += 20;
+            if (entityIn instanceof EntityPlayer) {
+                EntityPlayer entityPlayer = (EntityPlayer) entityIn;
+                playSound(SoundEvents.ENTITY_ARMORSTAND_HIT, 0.8F, 1F);
+                if (entityPlayer.capabilities.isCreativeMode) {
+                    hitCount += 200;
+                } else {
+                    hitCount += 20;
+                }
+            }
         }
         return true;
     }
