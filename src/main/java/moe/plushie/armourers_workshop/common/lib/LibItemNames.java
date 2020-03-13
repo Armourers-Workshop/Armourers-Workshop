@@ -33,4 +33,5 @@ public class LibItemNames {
     public static final String SKIN_UNLOCK = "skin-unlock";
     public static final String LINKING_TOOL = "linking-tool";
     public static final String GIFT_SACK = "gift-sack";
+    public static final String MANNEQUIN = "mannequin";
 }

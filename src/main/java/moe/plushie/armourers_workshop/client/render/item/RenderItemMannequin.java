@@ -1,33 +1,31 @@
 package moe.plushie.armourers_workshop.client.render.item;
 
-import moe.plushie.armourers_workshop.client.helper.MannequinTextureHelper;
-import moe.plushie.armourers_workshop.client.model.ModelMannequin;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin.TextureData;
+import moe.plushie.armourers_workshop.common.init.items.ItemMannequin;
+import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 
 public class RenderItemMannequin extends TileEntityItemStackRenderer {
     
-    private final ModelMannequin modelSteve;
-    private final ModelMannequin modelAlex;
-    
-    public RenderItemMannequin(ModelMannequin modelSteve, ModelMannequin modelAlex) {
-        this.modelSteve = modelSteve;
-        this.modelAlex = modelAlex;
-    }
-    
-    public RenderItemMannequin() {
-        this.modelAlex = null;
-        this.modelSteve = null;
-        // TODO Auto-generated constructor stub
-    }
+    private final ModelPlayer modelPlayerSmall = new ModelPlayer(0F, true);
+    private final ModelPlayer modelPlayerNormal = new ModelPlayer(0F, false);
 
     @Override
     public void renderByItem(ItemStack itemStackIn, float partialTicks) {
-        PlayerTexture texture = MannequinTextureHelper.getMannequinTexture(itemStackIn);
-        Minecraft.getMinecraft().renderEngine.bindTexture(texture.getResourceLocation());
+        TextureData textureData = ItemMannequin.getTextureData(itemStackIn);
+        PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(textureData);
+        Minecraft.getMinecraft().renderEngine.bindTexture(playerTexture.getResourceLocation());
+        
+        ModelPlayer targetModel = modelPlayerNormal;
+        if (playerTexture.isSlimModel()) {
+            targetModel = modelPlayerSmall;
+        }
+        
         float scale = 0.0625F;
         GlStateManager.pushMatrix();
         GlStateManager.scale(-1, -1, 1);
@@ -39,7 +37,25 @@ public class RenderItemMannequin extends TileEntityItemStackRenderer {
         
         GlStateManager.translate(0F * scale, 0, 0);
         */
-        modelSteve.render(null, 0, 0, 0, 0, 0, 0.0625F, true);
+        
+        targetModel.bipedHead.render(scale);
+        targetModel.bipedHeadwear.render(scale);
+        
+        targetModel.bipedBody.render(scale);
+        targetModel.bipedBodyWear.render(scale);
+        
+        targetModel.bipedLeftArm.render(scale);
+        targetModel.bipedLeftArmwear.render(scale);
+        
+        targetModel.bipedRightArm.render(scale);
+        targetModel.bipedRightArmwear.render(scale);
+        
+        
+        targetModel.bipedLeftLeg.render(scale);
+        targetModel.bipedLeftLegwear.render(scale);
+        
+        targetModel.bipedRightLeg.render(scale);
+        targetModel.bipedRightLegwear.render(scale);
         GlStateManager.popMatrix();
     }
     /*

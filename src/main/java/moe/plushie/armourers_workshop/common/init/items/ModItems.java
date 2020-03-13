@@ -49,6 +49,7 @@ public class ModItems {
     public static final Item SKIN_UNLOCK = new ItemSkinUnlock();
     public static final Item LINKING_TOOL = new ItemLinkingTool();
     public static final Item GIFT_SACK = new ItemGiftSack();
+    public static final Item MANNEQUIN = new ItemMannequin();
 
     public static final Item ARMOUR_CONTAINER_ITEM = new ItemArmourContainerItem();
     public static final Item[] ARMOUR_CONTAINER = new Item[4];
