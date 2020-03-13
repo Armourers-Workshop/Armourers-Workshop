@@ -98,6 +98,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         float size = entity.getScale();
 
         GlStateManager.translate(x, y, z);
+        
         GlStateManager.scale(15F * scale, -15F * scale, -15F * scale);
 
         GlStateManager.scale(size, size, size);

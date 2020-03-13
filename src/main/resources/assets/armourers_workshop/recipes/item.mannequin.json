@@ -18,6 +18,6 @@
         }
     },
     "result": {
-        "item": "armourers_workshop:tile.mannequin"
+        "item": "armourers_workshop:item.mannequin"
     }
 }
