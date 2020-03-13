@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.client.handler.BlockHighlightRenderHandler
 import moe.plushie.armourers_workshop.client.handler.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.client.handler.DebugTextHandler;
 import moe.plushie.armourers_workshop.client.handler.ItemTooltipHandler;
+import moe.plushie.armourers_workshop.client.handler.MannequinPlacementHandler;
 import moe.plushie.armourers_workshop.client.handler.ModClientFMLEventHandler;
 import moe.plushie.armourers_workshop.client.handler.PlayerTextureHandler;
 import moe.plushie.armourers_workshop.client.handler.RehostedJarHandler;
@@ -167,6 +168,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         SkinModelRenderHelper.init();
         EntitySkinRenderHandler.init();
         new BlockHighlightRenderHandler();
+        new MannequinPlacementHandler();
         new ItemTooltipHandler();
         new SkinPreviewHandler();
         RenderBridge.init();
