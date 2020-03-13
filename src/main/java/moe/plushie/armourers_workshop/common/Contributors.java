@@ -42,11 +42,11 @@ public class Contributors {
         addContributor("40aada04-7e7b-4f5f-a513-a92e581c1097", "M_H_Berre", EnumSet.of(ContributionFlags.TRANSLATOR), 255, 255, 64);
 
         addContributor("c1a62d17-65bc-4256-9f54-af38270f9559", "DoomRater", EnumSet.of(ContributionFlags.WIKI_EDITOR), 158, 25, 2);
-        
+
         addContributor("f9a9c7bc-c73a-4f0e-af73-133468513bb9", "Duvain_Feynorim", EnumSet.of(ContributionFlags.MODELER), 121, 9, 219);
-        
+
         addContributor("b027a4f4-d480-426c-84a3-a9cb029f4b72", "Vic", EnumSet.of(ContributionFlags.OTHER), 208, 212, 248);
-        
+
         addContributor("4fda0709-ada7-48a6-b4bf-0bbce8c40dfa", "Nanoha", EnumSet.of(ContributionFlags.NONE), 255, 173, 255);
         addContributor("31873a23-125e-4752-8607-0f1c3cb22c84", "Garoam", EnumSet.of(ContributionFlags.NONE), 96, 25, 149);
 
@@ -100,7 +100,7 @@ public class Contributors {
         MODELER,
         WIKI_EDITOR,
         OTHER;
-        
+
         public static final EnumSet<ContributionFlags> ALL_OPTS = EnumSet.allOf(ContributionFlags.class);
     }
 }
