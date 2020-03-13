@@ -16,6 +16,7 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntityDyeTable;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -78,8 +79,8 @@ public class GuiDyeTable extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        // GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getName());
-        // this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 46, this.ySize - 96 + 2, 4210752);
+         GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getName());
+         this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
 
         Slot slot = ((ContainerDyeTable) inventorySlots).getOutputSlot();
         ItemStack skinStack = slot.getStack();
