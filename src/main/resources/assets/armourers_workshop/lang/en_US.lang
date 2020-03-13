@@ -57,6 +57,7 @@ tile.armourers_workshop:dye-table.name=Dye Table
 tile.armourers_workshop:skinnable.name=Skinnable Block
 tile.armourers_workshop:hologram-projector.name=Hologram Projector
 tile.armourers_workshop:outfit-maker.name=Outfit Maker
+tile.armourers_workshop:advanced-skin-builder.name=Advanced Skin Builder
 
 
 # Block flavour text

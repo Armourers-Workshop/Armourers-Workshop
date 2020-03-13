@@ -49,7 +49,7 @@ public class ItemMannequin extends AbstractModItem {
             items.add(create((TextureData) null, 2F));
         }
     }
-    
+
     @Override
     protected String getModdedUnlocalizedName(String unlocalizedName, ItemStack stack) {
         String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
@@ -63,7 +63,8 @@ public class ItemMannequin extends AbstractModItem {
         }
         return moddedUnlocalizedName;
     }
-    
+
+    @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         if (stack.hasTagCompound()) {

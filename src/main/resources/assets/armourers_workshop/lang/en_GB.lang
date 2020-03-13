@@ -73,6 +73,7 @@ tile.armourers_workshop:mannequin.flavour=Show your equipment off with a creepy 
 tile.armourers_workshop:doll.flavour=Mini mannequin!
 tile.armourers_workshop:skinning-table.flavour=Apply and remove skins from items.
 tile.armourers_workshop:outfit-maker.flavour=Use to combine multiple skins into one.
+tile.armourers_workshop:advanced-skin-builder.name=Advanced Skin Builder
 
 
 # Item names
