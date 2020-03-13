@@ -105,6 +105,7 @@ public class MannequinPlacementHandler {
         double zOff = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * event.getPartialTicks();
         
         TextureData textureData = ItemMannequin.getTextureData(stack);
+        float size = ItemMannequin.getScale(stack);
         PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(textureData);
         ModelPlayer targetModel = modelPlayerNormal;
         
@@ -119,6 +120,7 @@ public class MannequinPlacementHandler {
         
         GlStateManager.translate(target.hitVec.x - xOff, pos.getY() - yOff, target.hitVec.z - zOff);
         GlStateManager.scale(15F * scale, -15F * scale, -15F * scale);
+        GlStateManager.scale(size, size, size);
         GlStateManager.translate(0, -24F * scale, 0);
         GlStateManager.rotate((float) angle, 0, 1, 0);
         
