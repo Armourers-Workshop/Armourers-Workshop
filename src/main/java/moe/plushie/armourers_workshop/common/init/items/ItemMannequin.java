@@ -4,10 +4,12 @@ import java.util.List;
 
 import moe.plushie.armourers_workshop.client.render.item.RenderItemMannequin;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
 import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin.TextureData;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -64,7 +66,15 @@ public class ItemMannequin extends AbstractModItem {
     
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        // TODO Auto-generated method stub
+        if (stack.hasTagCompound()) {
+            TextureData textureData = getTextureData(stack);
+            if (textureData.getTextureType() == TextureType.USER) {
+                tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.user", textureData.getProfile().getName()));
+            }
+            if (textureData.getTextureType() == TextureType.URL) {
+                tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.url", textureData.getUrl()));
+            }
+        }
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
