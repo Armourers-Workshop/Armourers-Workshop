@@ -1,20 +1,29 @@
 package moe.plushie.armourers_workshop.common.init.blocks;
 
-import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
+import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
+import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityOutfitMaker;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockOutfitMaker extends AbstractModBlockContainer {
 
@@ -30,6 +39,7 @@ public class BlockOutfitMaker extends AbstractModBlockContainer {
         return new BlockStateContainer(this, new IProperty[] {STATE_FACING});
     }
     
+    @Override
     public IBlockState getStateFromMeta(int meta) {
         boolean northSouthBit = getBitBool(meta, 0);
         boolean posNegBit = getBitBool(meta, 1);
@@ -42,6 +52,7 @@ public class BlockOutfitMaker extends AbstractModBlockContainer {
         return this.getDefaultState().withProperty(STATE_FACING, facing);
     }
 
+    @Override
     public int getMetaFromState(IBlockState state) {
         EnumFacing facing = state.getValue(STATE_FACING);
         int meta = 0;
@@ -72,5 +83,35 @@ public class BlockOutfitMaker extends AbstractModBlockContainer {
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntityOutfitMaker();
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        if (!ConfigHandlerClient.useClassicBlockModels) {
+            return BlockRenderLayer.CUTOUT_MIPPED;
+        } else {
+            return BlockRenderLayer.SOLID;
+        }
+    }
+
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+    
+    @Override
+    public boolean isBlockNormalCube(IBlockState state) {
+        return false;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerModels() {
+        if (!ConfigHandlerClient.useClassicBlockModels) {
+            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey()), "normal"));
+        } else {
+            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(new ResourceLocation(LibModInfo.ID, getTranslationKey() + "-classic"), "normal"));
+        }
     }
 }

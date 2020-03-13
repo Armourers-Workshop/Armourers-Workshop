@@ -1,10 +1,18 @@
 {
-    "forge_marker": 1,
-    "variants": {
-        "normal": { "model": "armourers_workshop:outfit-maker", "y": 180},
-        "facing=north": {"model": "armourers_workshop:outfit-maker", "y": 180},
-        "facing=east": {"model": "armourers_workshop:outfit-maker", "y": 270},
-        "facing=south": {"model": "armourers_workshop:outfit-maker"},
-        "facing=west": {"model": "armourers_workshop:outfit-maker", "y": 90}
+  "forge_marker": 1,
+  "defaults": {
+      "textures": {
+      "particle": "blocks/planks_oak"
+    },
+    "model": "armourers_workshop:outfit-maker"
+  },
+  "variants": {
+    "normal": [{}],
+    "facing": {
+      "north": {},
+      "south": {"y": 180},
+      "east": {"y": 90},
+      "west": {"y": 270}
     }
+  }
 }
