@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.client.render.item;
 
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin.TextureData;
 import moe.plushie.armourers_workshop.common.init.items.ItemMannequin;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
@@ -37,6 +38,12 @@ public class RenderItemMannequin extends TileEntityItemStackRenderer {
         
         GlStateManager.translate(0F * scale, 0, 0);
         */
+        
+        targetModel.setRotationAngles(0F, 0F, 0F, 0F, 0F, 0F, Minecraft.getMinecraft().player);
+        
+        BipedRotations bipedRotations = new BipedRotations();
+        
+        bipedRotations.applyRotationsToBiped(targetModel);
         
         targetModel.bipedHead.render(scale);
         targetModel.bipedHeadwear.render(scale);

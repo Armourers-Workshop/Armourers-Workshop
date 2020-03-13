@@ -7,19 +7,15 @@ import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
 import moe.plushie.armourers_workshop.utils.NBTHelper;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.utils.TrigUtils;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,51 +26,16 @@ public class ItemMannequinTool extends AbstractModItem {
     public ItemMannequinTool() {
         super(LibItemNames.MANNEQUIN_TOOL);
         setSortPriority(10);
+        MinecraftForge.EVENT_BUS.register(this);
     }
-
-    @Override
-    public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        ItemStack stack = player.getHeldItem(hand);
-        IBlockState state = world.getBlockState(pos);
-
-//        if (state.getBlock() == ModBlocks.MANNEQUIN | state.getBlock() == ModBlocks.DOLL) {
-//            if (state.getBlock() == ModBlocks.MANNEQUIN) {
-//                if (state.getValue(BlockMannequin.STATE_PART) == EnumPartType.TOP) {
-//                    pos = pos.offset(EnumFacing.DOWN);
-//                }
-//            }
-//            TileEntity te = world.getTileEntity(pos);
-//            if (te != null && te instanceof TileEntityMannequin) {
-//                TileEntityMannequin teMan = (TileEntityMannequin) te;
-//                if (player.isSneaking()) {
-//                    setRotationDataOnStack(stack, teMan.PROP_BIPED_ROTATIONS.get());
-//                    return EnumActionResult.SUCCESS;
-//                } else {
-//                    BipedRotations bipedRotations = getRotationDataFromStack(stack);
-//                    if (bipedRotations != null) {
-//                        teMan.PROP_BIPED_ROTATIONS.set(bipedRotations);
-//                        return EnumActionResult.SUCCESS;
-//                    }
-//                }
-//                
-//            }
-//        }
-
-        if (side == EnumFacing.UP) {
-            if (!world.isRemote) {
-                pos = pos.offset(side);
-                int l = MathHelper.floor(player.rotationYaw * 16.0F / 360.0F + 0.5D) & 15;
-                EntityMannequin entityMannequin = new EntityMannequin(world);
-                entityMannequin.setPosition(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F);
-                double angle = TrigUtils.getAngleDegrees(player.posX, player.posZ, pos.getX() + 0.5F, pos.getZ() + 0.5F) + 90D;
-                entityMannequin.setRotation((float) angle);
-                entityMannequin.setScale(0.25F + world.rand.nextFloat() * 4.45F);
-                // entityMannequin.setTextureData(new TextureData(player.getGameProfile()));
-                world.spawnEntity(entityMannequin);
-            }
+    
+    @SubscribeEvent
+    public void onInteractEntity(PlayerInteractEvent.EntityInteract event) {
+        ItemStack itemStack = event.getItemStack();
+        if (itemStack.getItem() == this & event.getTarget() instanceof EntityMannequin) {
+            EntityMannequin mannequin;
+            event.setCancellationResult(EnumActionResult.SUCCESS);
         }
-
-        return EnumActionResult.FAIL;
     }
 
     private BipedRotations getRotationDataFromStack(ItemStack stack) {

@@ -115,6 +115,9 @@ item.armourers_workshop:armour-container-head.name=Head Armour Container
 item.armourers_workshop:armour-container-chest.name=Chest Armour Container
 item.armourers_workshop:armour-container-legs.name=Legs Armour Container
 item.armourers_workshop:armour-container-feet.name=Feet Armour Container
+item.armourers_workshop:mannequin.name=Mannequin
+item.armourers_workshop:mannequin.small.name=Doll
+item.armourers_workshop:mannequin.big.name=Giant
 
 
 # Item flavour text
@@ -142,6 +145,9 @@ item.armourers_workshop:skin-unlock.3.flavour=Unlocks 1 additional feet skin slo
 item.armourers_workshop:skin-unlock.4.flavour=Unlocks 1 additional wings skin slot in the wardrobe.
 item.armourers_workshop:skin-unlock.5.flavour=Unlocks 1 additional outfit skin slot in the wardrobe.
 item.armourers_workshop:linking-tool.flavour=Use to link usable blocks to block skins.%nFirst right click on a usable block then%nright click on a block skin to link them.
+item.armourers_workshop:mannequin.flavour=Show your equipment off with a creepy mannequin!
+item.armourers_workshop:mannequin.small.flavour=Mini mannequin!
+item.armourers_workshop:mannequin.big.flavour=Look at the size of that thing!
 
 
 # Rollover Text

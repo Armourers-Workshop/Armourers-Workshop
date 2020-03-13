@@ -1,11 +1,15 @@
 package moe.plushie.armourers_workshop.common.init.items;
 
+import java.util.List;
+
 import moe.plushie.armourers_workshop.client.render.item.RenderItemMannequin;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
 import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
 import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin.TextureData;
 import moe.plushie.armourers_workshop.common.lib.LibItemNames;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,8 +27,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemMannequin extends AbstractModItem {
 
+    private static final String TAG_TEXTURE_DATA = "texture_data";
+    private static final String TAG_SCALE = "scale";
+
     public ItemMannequin() {
         super(LibItemNames.MANNEQUIN);
+        setSortPriority(199);
         setMaxStackSize(1);
     }
 
@@ -39,16 +47,34 @@ public class ItemMannequin extends AbstractModItem {
             items.add(create((TextureData) null, 2F));
         }
     }
+    
+    @Override
+    protected String getModdedUnlocalizedName(String unlocalizedName, ItemStack stack) {
+        String name = unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+        String moddedUnlocalizedName = "item." + LibModInfo.ID.toLowerCase() + ":" + name;
+        float scale = getScale(stack);
+        if (scale <= 0.5F) {
+            moddedUnlocalizedName += ".small";
+        }
+        if (scale >= 2F) {
+            moddedUnlocalizedName += ".big";
+        }
+        return moddedUnlocalizedName;
+    }
+    
+    @Override
+    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        // TODO Auto-generated method stub
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+    }
 
     public static ItemStack create(TextureData textureData, float scale) {
         ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN);
         itemStack.setTagCompound(new NBTTagCompound());
         if (textureData != null) {
-            NBTTagCompound compoundTextureData = new NBTTagCompound();
-            textureData.writeToNBT(compoundTextureData);
-            itemStack.getTagCompound().setTag("texture_data", compoundTextureData);
+            setTextureData(itemStack, textureData);
         }
-        itemStack.getTagCompound().setFloat("scale", scale);
+        setScale(itemStack, scale);
         return itemStack;
     }
 
@@ -59,14 +85,47 @@ public class ItemMannequin extends AbstractModItem {
         return new ItemStack(ModItems.MANNEQUIN);
     }
 
+    public static void setTextureData(ItemStack itemStack, TextureData textureData) {
+        if (itemStack.isEmpty()) {
+            return;
+        }
+        if (!itemStack.hasTagCompound()) {
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+        NBTTagCompound compoundTextureData = new NBTTagCompound();
+        textureData.writeToNBT(compoundTextureData);
+        itemStack.getTagCompound().setTag(TAG_TEXTURE_DATA, compoundTextureData);
+    }
+
     public static TextureData getTextureData(ItemStack itemStack) {
         TextureData textureData = new TextureData();
         if (itemStack.hasTagCompound()) {
-            if (itemStack.getTagCompound().hasKey("texture_data", NBT.TAG_COMPOUND)) {
-                textureData.readFromNBT(itemStack.getTagCompound().getCompoundTag("texture_data"));
+            if (itemStack.getTagCompound().hasKey(TAG_TEXTURE_DATA, NBT.TAG_COMPOUND)) {
+                textureData.readFromNBT(itemStack.getTagCompound().getCompoundTag(TAG_TEXTURE_DATA));
             }
         }
         return textureData;
+    }
+
+    public static void setScale(ItemStack itemStack, float scale) {
+        if (itemStack.isEmpty()) {
+            return;
+        }
+        if (!itemStack.hasTagCompound()) {
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+        itemStack.getTagCompound().setFloat(TAG_SCALE, scale);
+    }
+
+    public static float getScale(ItemStack itemStack) {
+        if (!itemStack.isEmpty()) {
+            if (itemStack.hasTagCompound()) {
+                if (itemStack.getTagCompound().hasKey(TAG_SCALE, NBT.TAG_FLOAT)) {
+                    return itemStack.getTagCompound().getFloat(TAG_SCALE);
+                }
+            }
+        }
+        return 1F;
     }
 
     @Override
@@ -81,18 +140,11 @@ public class ItemMannequin extends AbstractModItem {
                 double angle = TrigUtils.getAngleDegrees(player.posX, player.posZ, pos.getX() + 0.5F, pos.getZ() + 0.5F) + 90D;
                 entityMannequin.setRotation((float) angle);
                 if (itemStack.hasTagCompound()) {
-                    NBTTagCompound compound = itemStack.getTagCompound();
-                    if (compound.hasKey("scale", NBT.TAG_FLOAT)) {
-                        entityMannequin.setScale(compound.getFloat("scale"));
-                    }
-                    if (compound.hasKey("texture_data", NBT.TAG_COMPOUND)) {
-                        TextureData textureData = new TextureData();
-                        textureData.readFromNBT(compound.getCompoundTag("texture_data"));
-                        entityMannequin.setTextureData(textureData, true);
-                    }
+                    TextureData textureData = getTextureData(itemStack);
+                    float scale = getScale(itemStack);
+                    entityMannequin.setTextureData(textureData, true);
+                    entityMannequin.setScale(scale);
                 }
-                // entityMannequin.setScale(0.25F + worldIn.rand.nextFloat() * 4.45F);
-                // entityMannequin.setTextureData(new TextureData(player.getGameProfile()));
                 worldIn.spawnEntity(entityMannequin);
                 itemStack.shrink(1);
             }

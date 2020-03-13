@@ -10,12 +10,14 @@ import moe.plushie.armourers_workshop.common.GameProfileCache;
 import moe.plushie.armourers_workshop.common.GameProfileCache.IGameProfileCallback;
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
+import moe.plushie.armourers_workshop.common.init.items.ItemMannequin;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -24,7 +26,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.StringUtils;
@@ -113,6 +114,8 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     private static final DataParameter<Boolean> DATA_NO_CLIP = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Float> DATA_SCALE = EntityDataManager.<Float>createKey(EntityMannequin.class, DataSerializers.FLOAT);
 
+    private int hitCount = 0;
+    
     public EntityMannequin(World worldIn) {
         super(worldIn);
         setSize(0.8F, 1.9F);
@@ -205,6 +208,12 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     public float getScale() {
         return dataManager.get(DATA_SCALE).floatValue();
     }
+    
+    @Override
+    public float getEyeHeight() {
+        // TODO Auto-generated method stub
+        return super.getEyeHeight() * getScale();
+    }
 
     @Override
     public boolean canBeCollidedWith() {
@@ -219,6 +228,12 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     @Override
     public void onEntityUpdate() {
         super.onEntityUpdate();
+        if (hitCount > 80) {
+            setDead();
+        }
+        if (hitCount > 0) {
+            hitCount --;
+        }
     }
     
     @Override
@@ -239,13 +254,12 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        // TODO Auto-generated method stub
         return getEntityBoundingBox();
     }
 
     @Override
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
-        return false;
+        return true;
     }
 
     @Override
@@ -263,20 +277,36 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
                 setRotation((float) angle);
             }
         } else {
-            FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), getEntityWorld(), getEntityId(), 0, 0);
+            if (itemStack.getItem() != ModItems.MANNEQUIN_TOOL) {
+                FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), getEntityWorld(), getEntityId(), 0, 0);
+            }
+            
         }
         return EnumActionResult.PASS;
     }
-
+    
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
-        ModLogger.log("attackEntityFrom");
-        return super.attackEntityFrom(source, amount);
+    public void setDead() {
+        if (!isDead) {
+            if (!getEntityWorld().isRemote) {
+                playSound(SoundEvents.ENTITY_ARMORSTAND_BREAK, 1F, 1F);
+                ItemStack itemStack = createStackForEntity();
+                entityDropItem(itemStack, 0F);
+            }
+        }
+        super.setDead();
+    }
+    
+    public ItemStack createStackForEntity() {
+        return ItemMannequin.create(getTextureData(), getScale());
     }
 
     @Override
     public boolean hitByEntity(Entity entityIn) {
-        // TODO Auto-generated method stub
+        if (!getEntityWorld().isRemote) {
+            playSound(SoundEvents.ENTITY_ARMORSTAND_HIT, 0.8F, 1F);
+            hitCount += 20;
+        }
         return true;
     }
 
