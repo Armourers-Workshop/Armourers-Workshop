@@ -32,6 +32,7 @@ public class BlockOutfitMaker extends AbstractModBlockContainer {
     public BlockOutfitMaker() {
         super(LibBlockNames.OUTFIT_MAKER);
         setDefaultState(this.blockState.getBaseState().withProperty(STATE_FACING, EnumFacing.NORTH));
+        setSortPriority(150);
     }
     
     @Override
