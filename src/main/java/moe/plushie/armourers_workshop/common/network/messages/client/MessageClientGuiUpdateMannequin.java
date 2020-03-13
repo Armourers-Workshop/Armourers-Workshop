@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
 import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin.TextureData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -17,11 +18,11 @@ public class MessageClientGuiUpdateMannequin implements IMessage {
     private int id;
     private BipedRotations bipedRotations = null;
     private TextureData textureData = null;
-
     private Boolean extraRenders = null;
     private Boolean flying = null;
     private Boolean visible = null;
     private Boolean noClip = null;
+    private Vec3d offset = null;
 
     public MessageClientGuiUpdateMannequin() {
     }
@@ -57,6 +58,11 @@ public class MessageClientGuiUpdateMannequin implements IMessage {
 
     public MessageClientGuiUpdateMannequin setNoClip(boolean checked) {
         noClip = Boolean.valueOf(checked);
+        return this;
+    }
+
+    public MessageClientGuiUpdateMannequin setOffset(Vec3d offset) {
+        this.offset = offset;
         return this;
     }
 
@@ -105,6 +111,15 @@ public class MessageClientGuiUpdateMannequin implements IMessage {
         } else {
             buf.writeBoolean(false);
         }
+
+        if (offset != null) {
+            buf.writeBoolean(true);
+            buf.writeDouble(offset.x);
+            buf.writeDouble(offset.y);
+            buf.writeDouble(offset.z);
+        } else {
+            buf.writeBoolean(false);
+        }
     }
 
     @Override
@@ -134,6 +149,10 @@ public class MessageClientGuiUpdateMannequin implements IMessage {
 
         if (buf.readBoolean()) {
             noClip = Boolean.valueOf(buf.readBoolean());
+        }
+
+        if (buf.readBoolean()) {
+            offset = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
         }
     }
 
@@ -174,6 +193,12 @@ public class MessageClientGuiUpdateMannequin implements IMessage {
 
                         if (message.noClip != null) {
                             entityMannequin.setNoClip(message.noClip.booleanValue());
+                        }
+
+                        if (message.offset != null) {
+                            Vec3d pos = entityMannequin.getPositionVector();
+                            pos = pos.add(message.offset);
+                            entityMannequin.setPosition(pos.x, pos.y, pos.z);
                         }
                     }
                 }

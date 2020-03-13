@@ -21,6 +21,7 @@ import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeCont
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeDisplaySettings;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeDyes;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeManExtras;
+import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeManOffset;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeManRotations;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeManTextureData;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.tab.GuiTabWardrobeOutfits;
@@ -70,9 +71,10 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
     private final GuiTabWardrobeManTextureData tabManTextureData;
     private final GuiTabWardrobeManRotations tabManRotations;
     private final GuiTabWardrobeManExtras tabManExtras;
+    private final GuiTabWardrobeManOffset tabManOffset;
 
-    EntitySkinCapability skinCapability;
-    EntityPlayer player;
+    private EntitySkinCapability skinCapability;
+    private EntityPlayer player;
 
     private boolean rotatingPlayer = false;
     private float playerRotation = 45F;
@@ -154,9 +156,11 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
                 .setTabTextureSize(26, 30)
                 .setPadding(0, 4, 3, 3)
                 .setVisable(isPlayer & contributor != null));
-        
+
         if (isMannequin) {
             EntityMannequin entityMannequin = (EntityMannequin) skinCapability.getEntity();
+
+            tabController.setTabsPerSide(4);
             
             tabManRotations = new GuiTabWardrobeManRotations(tabList.size(), this, entityMannequin);
             tabList.add(tabManRotations);
@@ -164,31 +168,44 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
             tabListItemManRotations.setIconLocation(80, 0);
             tabListItemManRotations.setAnimation(8, 150);
             tabListItemManRotations.setVisable(isMannequin);
+            tabListItemManRotations.setPadding(0, 0, 3, 3);
             tabController.addTab(tabListItemManRotations);
-            
+
             tabManTextureData = new GuiTabWardrobeManTextureData(tabList.size(), this, entityMannequin);
             tabList.add(tabManTextureData);
             GuiTab tabListItemManTextureData = new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.man_texture"));
             tabListItemManTextureData.setIconLocation(128, 0);
             tabListItemManTextureData.setAnimation(8, 150);
             tabListItemManTextureData.setVisable(isMannequin);
+            tabListItemManTextureData.setPadding(0, 0, 3, 3);
             tabController.addTab(tabListItemManTextureData);
-            
+
             tabManExtras = new GuiTabWardrobeManExtras(tabList.size(), this, entityMannequin);
             tabList.add(tabManExtras);
             GuiTab tabListItemManExtras = new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.man_extras"));
             tabListItemManExtras.setIconLocation(144, 0);
             tabListItemManExtras.setAnimation(8, 150);
             tabListItemManExtras.setVisable(isMannequin);
+            tabListItemManExtras.setPadding(0, 0, 3, 3);
             tabController.addTab(tabListItemManExtras);
+
+            tabManOffset = new GuiTabWardrobeManOffset(tabList.size(), this, entityMannequin);
+            tabList.add(tabManOffset);
+            GuiTab tabListItemManOffset = new GuiTab(tabController, GuiHelper.getLocalizedControlName(GUI_NAME, "tab.man_offsets"));
+            tabListItemManOffset.setIconLocation(96, 0);
+            tabListItemManOffset.setAnimation(8, 150);
+            tabListItemManOffset.setVisable(isMannequin);
+            tabListItemManOffset.setPadding(0, 0, 3, 3);
+            tabController.addTab(tabListItemManOffset);
         } else {
             tabManRotations = null;
             tabManTextureData = null;
             tabManExtras = null;
+            tabManOffset = null;
         }
-        
+
         tabController.setActiveTabIndex(getActiveTab());
-        
+
         tabChanged();
     }
     

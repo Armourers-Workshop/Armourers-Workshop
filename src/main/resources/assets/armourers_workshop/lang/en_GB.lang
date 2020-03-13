@@ -513,6 +513,14 @@ inventory.armourers_workshop:wardrobe.tab.man_extras.label.isFlying=Flying?
 inventory.armourers_workshop:wardrobe.tab.man_extras.label.isVisible=Visible?
 inventory.armourers_workshop:wardrobe.tab.man_extras.label.noclip=Noclip?
 
+inventory.armourers_workshop:wardrobe.tab.man_offsets=Mannequin Offsets
+inventory.armourers_workshop:wardrobe.tab.man_offsets.button.sub.1=Subtract 1/16
+inventory.armourers_workshop:wardrobe.tab.man_offsets.button.sub.2=Subtract 1/8
+inventory.armourers_workshop:wardrobe.tab.man_offsets.button.sub.3=Subtract 1
+inventory.armourers_workshop:wardrobe.tab.man_offsets.button.add.1=Add 1/16
+inventory.armourers_workshop:wardrobe.tab.man_offsets.button.add.2=Add 1/8
+inventory.armourers_workshop:wardrobe.tab.man_offsets.button.add.3=Add 1
+
 
 # Mannequin
 inventory.armourers_workshop:mannequin.label.update=This mannequin is using an old format and needs to be updated. Press the button below to update the mannequin to the new format.
