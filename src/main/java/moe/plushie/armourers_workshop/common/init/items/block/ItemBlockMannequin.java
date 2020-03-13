@@ -7,9 +7,11 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,6 +25,10 @@ public class ItemBlockMannequin extends ModItemBlock {
     public ItemBlockMannequin(Block block) {
         super(block);
         setMaxStackSize(1);
+    }
+    
+    @Override
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
     }
     
     @SideOnly(Side.CLIENT)

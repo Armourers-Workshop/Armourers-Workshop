@@ -3,14 +3,16 @@ package moe.plushie.armourers_workshop.common.init.blocks;
 import java.util.Random;
 import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.mojang.authlib.GameProfile;
 
+import moe.plushie.armourers_workshop.client.render.item.RenderItemMannequin;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.Contributors;
 import moe.plushie.armourers_workshop.common.Contributors.Contributor;
+import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
+import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
+import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin.TextureData;
 import moe.plushie.armourers_workshop.common.init.items.block.ItemBlockMannequin;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
@@ -44,6 +46,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -203,6 +206,46 @@ public class BlockMannequin extends AbstractModBlockContainer {
         }
     }
 
+    public void convertToEntity(World world, BlockPos pos) {
+        
+        if (isTopOfMannequin(world, pos)) {
+            pos = pos.offset(EnumFacing.DOWN);
+            IBlockState state = world.getBlockState(pos);
+            if (state.getBlock() == this) {
+                ((BlockMannequin) state.getBlock()).convertToEntity(world, pos);
+            }
+            return;
+        }
+
+        TileEntityMannequin tileEntity = getTileEntity(world, pos, TileEntityMannequin.class);
+        if (tileEntity != null) {
+            TextureData textureData = new TextureData();
+            if (tileEntity.PROP_OWNER.get() != null && tileEntity.PROP_TEXTURE_TYPE.get() == TextureType.USER) {
+                textureData = new TextureData(tileEntity.PROP_OWNER.get());
+            }
+            if (!StringUtils.isNullOrEmpty(tileEntity.PROP_IMAGE_URL.get()) && tileEntity.PROP_TEXTURE_TYPE.get() == TextureType.URL) {
+                textureData = new TextureData(tileEntity.PROP_IMAGE_URL.get());
+            }
+            
+            float offsetX = tileEntity.PROP_OFFSET_X.get();
+            float offsetY = tileEntity.PROP_OFFSET_Y.get();
+            float offsetZ = tileEntity.PROP_OFFSET_Z.get();
+
+            EntityMannequin entityMannequin = new EntityMannequin(world);
+            entityMannequin.setPosition(pos.getX() + 0.5F + offsetX, pos.getY() + offsetY, pos.getZ() + 0.5F + offsetZ);
+            entityMannequin.setRotation(tileEntity.PROP_ROTATION.get() * 22.5F + 180);
+            world.spawnEntity(entityMannequin);
+            entityMannequin.setTextureData(textureData, true);
+            
+            world.removeTileEntity(pos);
+            
+            world.setBlockToAir(pos);
+            if (world.getBlockState(pos.offset(EnumFacing.UP)).getBlock() == this) {
+                world.setBlockToAir(pos.offset(EnumFacing.UP));
+            }
+        }
+    }
+
 //    public void convertToDoll(World world, BlockPos pos) {
 //        if (isTopOfMannequin(world, pos)) {
 //            pos = pos.offset(EnumFacing.DOWN);
@@ -318,7 +361,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
             }
-            if (!StringUtils.isEmpty(te.PROP_IMAGE_URL.get())) {
+            if (!StringUtils.isNullOrEmpty(te.PROP_IMAGE_URL.get())) {
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setString(TAG_IMAGE_URL, te.PROP_IMAGE_URL.get());
             }
@@ -414,6 +457,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
     public void registerModels() {
         super.registerModels();
         ModelLoader.setCustomStateMapper(this, new StateMap.Builder().ignore(STATE_ROTATION, STATE_PART).build());
+        Item.getItemFromBlock(this).setTileEntityItemStackRenderer(new RenderItemMannequin());
     }
 
     public static enum EnumPartType implements IStringSerializable {

@@ -2,14 +2,16 @@ package moe.plushie.armourers_workshop.common.init.blocks;
 
 import java.util.Random;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.mojang.authlib.GameProfile;
 
+import moe.plushie.armourers_workshop.client.render.item.RenderItemMannequin;
 import moe.plushie.armourers_workshop.common.Contributors;
 import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
+import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
+import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
+import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin.TextureData;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
@@ -23,6 +25,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -31,6 +34,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -160,7 +164,7 @@ public class BlockDoll extends AbstractModBlockContainer {
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setTag(TAG_OWNER, profileTag);
             }
-            if (!StringUtils.isEmpty(te.PROP_IMAGE_URL.get())) {
+            if (!StringUtils.isNullOrEmpty(te.PROP_IMAGE_URL.get())) {
                 stack.setTagCompound(new NBTTagCompound());
                 stack.getTagCompound().setString(TAG_IMAGE_URL, te.PROP_IMAGE_URL.get());
             }
@@ -207,5 +211,43 @@ public class BlockDoll extends AbstractModBlockContainer {
     @Override
     public boolean isFullBlock(IBlockState state) {
         return false;
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerModels() {
+        super.registerModels();
+        Item.getItemFromBlock(this).setTileEntityItemStackRenderer(new RenderItemMannequin());
+    }
+    
+    public void convertToEntity(World world, BlockPos pos) {
+        TileEntityMannequin tileEntity = getTileEntity(world, pos, TileEntityMannequin.class);
+        if (tileEntity != null) {
+            TextureData textureData = new TextureData();
+            if (tileEntity.PROP_OWNER.get() != null && tileEntity.PROP_TEXTURE_TYPE.get() == TextureType.USER) {
+                textureData = new TextureData(tileEntity.PROP_OWNER.get());
+            }
+            if (!StringUtils.isNullOrEmpty(tileEntity.PROP_IMAGE_URL.get()) && tileEntity.PROP_TEXTURE_TYPE.get() == TextureType.URL) {
+                textureData = new TextureData(tileEntity.PROP_IMAGE_URL.get());
+            }
+
+            float offsetX = tileEntity.PROP_OFFSET_X.get();
+            float offsetY = tileEntity.PROP_OFFSET_Y.get();
+            float offsetZ = tileEntity.PROP_OFFSET_Z.get();
+
+            EntityMannequin entityMannequin = new EntityMannequin(world);
+            entityMannequin.setPosition(pos.getX() + 0.5F + offsetX, pos.getY() + offsetY, pos.getZ() + 0.5F + offsetZ);
+            entityMannequin.setRotation(tileEntity.PROP_ROTATION.get() * 22.5F + 180);
+            entityMannequin.setScale(0.5F);
+            world.spawnEntity(entityMannequin);
+            entityMannequin.setTextureData(textureData, true);
+            
+            world.removeTileEntity(pos);
+            
+            world.setBlockToAir(pos);
+            if (world.getBlockState(pos.offset(EnumFacing.UP)).getBlock() == this) {
+                world.setBlockToAir(pos.offset(EnumFacing.UP));
+            }
+        }
     }
 }

@@ -50,8 +50,8 @@ tile.armourers_workshop:skin-cube-glowing.name=Skin Cube (Glowing)
 tile.armourers_workshop:skin-cube-glass.name=Glass Skin Cube
 tile.armourers_workshop:skin-cube-glass-glowing.name=Glass Skin Cube (Glowing)
 tile.armourers_workshop:colour-mixer.name=Color Mixer
-tile.armourers_workshop:mannequin.name=Mannequin
-tile.armourers_workshop:doll.name=Doll
+tile.armourers_workshop:mannequin.name=Mannequin - Obsolete Please Update
+tile.armourers_workshop:doll.name=Doll - Obsolete Please Update
 tile.armourers_workshop:skinning-table.name=Skinning Table
 tile.armourers_workshop:dye-table.name=Dye Table
 tile.armourers_workshop:skinnable.name=Skinnable Block
@@ -70,8 +70,6 @@ tile.armourers_workshop:skin-cube-glowing.flavour=Glow in the dark equipment cub
 tile.armourers_workshop:skin-cube-glass.flavour=Transparent equipment cube.%n(Paintable)
 tile.armourers_workshop:skin-cube-glass-glowing.flavour=Glowing transparent equipment cube!%n(Paintable)
 tile.armourers_workshop:colour-mixer.flavour=Mix up colors to paint your equipment with.%nSneak right click with tool to quickly paint.
-tile.armourers_workshop:mannequin.flavour=Show your equipment off with a creepy mannequin!%nRight click with a name tag to set a skin.
-tile.armourers_workshop:doll.flavour=Mini mannequin!
 tile.armourers_workshop:skinning-table.flavour=Apply and remove skins from items.
 tile.armourers_workshop:outfit-maker.flavour=Use to combine multiple skins into one.
 
@@ -517,31 +515,7 @@ inventory.armourers_workshop:wardrobe.tab.man_extras.label.noclip=Noclip?
 
 
 # Mannequin
-inventory.armourers_workshop:mannequin.label.headRotation=Head Rotation
-inventory.armourers_workshop:mannequin.label.leftArmRotation=Left Arm Rotation
-inventory.armourers_workshop:mannequin.label.rightArmRotation=Right Arm Rotation
-inventory.armourers_workshop:mannequin.label.leftLegRotation=Left Leg Rotation
-inventory.armourers_workshop:mannequin.label.rightLegRotation=Right Leg Rotation
-inventory.armourers_workshop:mannequin.label.isChild=Child Model?
-inventory.armourers_workshop:mannequin.label.isExtraRenders=Extra Renders?
-inventory.armourers_workshop:mannequin.label.isFlying=Flying?
-inventory.armourers_workshop:mannequin.label.isVisible=Visible?
-inventory.armourers_workshop:mannequin.label.noclip=Noclip?
-inventory.armourers_workshop:mannequin.random=Random
-inventory.armourers_workshop:mannequin.reset=Reset
-inventory.armourers_workshop:mannequin.dropdown.user=User
-inventory.armourers_workshop:mannequin.dropdown.url=URL
-inventory.armourers_workshop:mannequin.set=Set
-inventory.armourers_workshop:mannequin.selectSkin=Select Skin
-inventory.armourers_workshop:mannequin.selectHair=Select Hair
-inventory.armourers_workshop:mannequin.autoSkin=Auto Skin
-inventory.armourers_workshop:mannequin.autoHair=Auto Hair
-inventory.armourers_workshop:mannequin.tab.inventory=Inventory
-inventory.armourers_workshop:mannequin.tab.rotations=Rotations
-inventory.armourers_workshop:mannequin.tab.offset=Offset
-inventory.armourers_workshop:mannequin.tab.skinAndHair=Skin & Hair Color
-inventory.armourers_workshop:mannequin.tab.name=Name
-inventory.armourers_workshop:mannequin.tab.extraRenders=Extra Renders
+inventory.armourers_workshop:mannequin.label.update=This mannequin is using an old format and needs to be updated. Press the button below to update the mannequin to the new format.
 
 
 # Global Skin Library
