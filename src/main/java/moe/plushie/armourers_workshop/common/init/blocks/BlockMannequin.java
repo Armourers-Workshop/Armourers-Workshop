@@ -203,34 +203,34 @@ public class BlockMannequin extends AbstractModBlockContainer {
         }
     }
 
-    public void convertToDoll(World world, BlockPos pos) {
-        if (isTopOfMannequin(world, pos)) {
-            pos = pos.offset(EnumFacing.DOWN);
-            IBlockState state = world.getBlockState(pos);
-            if (state.getBlock() == this) {
-                ((BlockMannequin) state.getBlock()).convertToDoll(world, pos);
-            }
-            return;
-        }
-
-        if (world.getBlockState(pos.offset(EnumFacing.UP)).getBlock() == this) {
-            TileEntityMannequin te = getTileEntity(world, pos, TileEntityMannequin.class);
-            if (te != null) {
-                // te.setDropItems(false);
-                NBTTagCompound compound = new NBTTagCompound();
-                te.writeCommonToNBT(compound);
-                te.writeItemsToNBT(compound);
-                world.setBlockToAir(pos.offset(EnumFacing.UP));
-                world.setBlockState(pos, ModBlocks.DOLL.getDefaultState(), 3);
-                TileEntity newTe = world.getTileEntity(pos);
-                if (newTe != null && newTe instanceof TileEntityMannequin) {
-                    ((TileEntityMannequin) newTe).readCommonFromNBT(compound);
-                    ((TileEntityMannequin) newTe).readItemsFromNBT(compound);
-                    ((TileEntityMannequin) newTe).PROP_DOLL.set(true);
-                }
-            }
-        }
-    }
+//    public void convertToDoll(World world, BlockPos pos) {
+//        if (isTopOfMannequin(world, pos)) {
+//            pos = pos.offset(EnumFacing.DOWN);
+//            IBlockState state = world.getBlockState(pos);
+//            if (state.getBlock() == this) {
+//                ((BlockMannequin) state.getBlock()).convertToDoll(world, pos);
+//            }
+//            return;
+//        }
+//
+//        if (world.getBlockState(pos.offset(EnumFacing.UP)).getBlock() == this) {
+//            TileEntityMannequin te = getTileEntity(world, pos, TileEntityMannequin.class);
+//            if (te != null) {
+//                // te.setDropItems(false);
+//                NBTTagCompound compound = new NBTTagCompound();
+//                te.writeCommonToNBT(compound);
+//                te.writeItemsToNBT(compound);
+//                world.setBlockToAir(pos.offset(EnumFacing.UP));
+//                world.setBlockState(pos, ModBlocks.DOLL.getDefaultState(), 3);
+//                TileEntity newTe = world.getTileEntity(pos);
+//                if (newTe != null && newTe instanceof TileEntityMannequin) {
+//                    ((TileEntityMannequin) newTe).readCommonFromNBT(compound);
+//                    ((TileEntityMannequin) newTe).readItemsFromNBT(compound);
+//                    ((TileEntityMannequin) newTe).PROP_DOLL.set(true);
+//                }
+//            }
+//        }
+//    }
 
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
@@ -310,7 +310,7 @@ public class BlockMannequin extends AbstractModBlockContainer {
     }
 
     private ItemStack createItemStackFromTile(TileEntityMannequin te) {
-        ItemStack stack = new ItemStack(ModBlocks.MANNEQUIN, 1);
+        ItemStack stack = new ItemStack(this, 1);
         if (te != null) {
             if (te.PROP_OWNER.get() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();

@@ -1,8 +1,6 @@
 package moe.plushie.armourers_workshop.common.handler;
 
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
-import moe.plushie.armourers_workshop.common.init.blocks.BlockMannequin;
-import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -74,9 +72,9 @@ public class DollCraftingHandler implements IWorldEventListener {
                 if (((EntityFallingBlock)entityIn).getBlock().getBlock() == Blocks.ANVIL) {
                     BlockPos pos = entityIn.getPosition();
                     IBlockState state = world.getBlockState(pos.offset(EnumFacing.DOWN));
-                    if (state.getBlock() == ModBlocks.MANNEQUIN) {
-                        ((BlockMannequin)state.getBlock()).convertToDoll(world, pos);
-                    }
+                    // if (state.getBlock() == ModBlocks.MANNEQUIN) {
+                    //     ((BlockMannequin)state.getBlock()).convertToDoll(world, pos);
+                    // }
                 }
             }
         }

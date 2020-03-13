@@ -18,6 +18,12 @@ public class RenderItemMannequin extends TileEntityItemStackRenderer {
         this.modelAlex = modelAlex;
     }
     
+    public RenderItemMannequin() {
+        this.modelAlex = null;
+        this.modelSteve = null;
+        // TODO Auto-generated constructor stub
+    }
+
     @Override
     public void renderByItem(ItemStack itemStackIn, float partialTicks) {
         PlayerTexture texture = MannequinTextureHelper.getMannequinTexture(itemStackIn);

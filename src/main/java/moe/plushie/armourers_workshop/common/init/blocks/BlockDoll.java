@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.mojang.authlib.GameProfile;
 
-import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.Contributors;
 import moe.plushie.armourers_workshop.common.Contributors.Contributor;
 import moe.plushie.armourers_workshop.common.config.ConfigHandler;
@@ -61,13 +60,6 @@ public class BlockDoll extends AbstractModBlockContainer {
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return AABB;
-    }
-
-    public static ItemStack getStackWithTexture(PlayerTexture playerTexture) {
-        ItemStack result = new ItemStack(ModBlocks.DOLL);
-        result.setTagCompound(new NBTTagCompound());
-        playerTexture.writeToNBT(result.getTagCompound());
-        return result;
     }
 
     @Override
@@ -160,7 +152,7 @@ public class BlockDoll extends AbstractModBlockContainer {
     }
 
     private ItemStack createItemStackFromTile(TileEntityMannequin te) {
-        ItemStack stack = new ItemStack(ModBlocks.DOLL, 1);
+        ItemStack stack = new ItemStack(this, 1);
         if (te != null) {
             if (te.PROP_OWNER.get() != null) {
                 NBTTagCompound profileTag = new NBTTagCompound();

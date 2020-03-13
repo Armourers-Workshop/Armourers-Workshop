@@ -27,7 +27,6 @@ import moe.plushie.armourers_workshop.client.handler.SkinPreviewHandler;
 import moe.plushie.armourers_workshop.client.handler.SkinRenderHandlerApi;
 import moe.plushie.armourers_workshop.client.library.ClientLibraryManager;
 import moe.plushie.armourers_workshop.client.model.ICustomModel;
-import moe.plushie.armourers_workshop.client.model.ModelMannequin;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.BakedSkin;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.IBakedSkinReceiver;
@@ -36,7 +35,6 @@ import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandler;
 import moe.plushie.armourers_workshop.client.render.entity.RenderEntityMannequin;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemEquipmentSkin;
-import moe.plushie.armourers_workshop.client.render.item.RenderItemMannequin;
 import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockAdvancedSkinPart;
 import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockArmourer;
@@ -137,11 +135,6 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             }
         }
         ModItems.SKIN.setTileEntityItemStackRenderer(new RenderItemEquipmentSkin());
-        ModelMannequin modelSteve = new ModelMannequin(false);
-        ModelMannequin modelAlex = new ModelMannequin(true);
-        RenderItemMannequin renderItemMannequin = new RenderItemMannequin(modelSteve, modelAlex);
-        Item.getItemFromBlock(ModBlocks.MANNEQUIN).setTileEntityItemStackRenderer(renderItemMannequin);
-        Item.getItemFromBlock(ModBlocks.DOLL).setTileEntityItemStackRenderer(renderItemMannequin);
     }
 
     @Override

@@ -61,9 +61,6 @@ public final class CraftingManager {
     }
 
     public static void hideItemsInNEI() {
-        if (ConfigHandler.hideDollFromCreativeTabs) {
-            hideItemInNEI(new ItemStack(ModBlocks.DOLL, 1));
-        }
         hideItemInNEI(new ItemStack(ModBlocks.BOUNDING_BOX, 1));
         hideItemInNEI(new ItemStack(ModItems.ARMOUR_CONTAINER[0], 1));
         hideItemInNEI(new ItemStack(ModItems.ARMOUR_CONTAINER[1], 1));

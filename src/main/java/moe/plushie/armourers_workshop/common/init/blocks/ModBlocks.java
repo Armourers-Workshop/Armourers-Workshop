@@ -42,7 +42,7 @@ public class ModBlocks {
     public static final Block SKIN_CUBE_GLASS_GLOWING = new BlockSkinCubeGlass(LibBlockNames.SKIN_CUBE_GLASS_GLOWING, true);
     public static final Block COLOUR_MIXER = new BlockColourMixer();
     // public static final Block MANNEQUIN = new BlockMannequin();
-    public static final Block DOLL = new BlockDoll();
+    // public static final Block DOLL = new BlockDoll();
     public static final Block SKINNING_TABLE = new BlockSkinningTable();
     public static final Block SKINNABLE = new BlockSkinnable();
     public static final Block SKINNABLE_GLOWING = new BlockSkinnableGlowing();

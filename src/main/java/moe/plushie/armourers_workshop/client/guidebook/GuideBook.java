@@ -46,7 +46,7 @@ public class GuideBook extends BookBase {
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.SKIN_CUBE_GLOWING));
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.SKIN_CUBE_GLASS_GLOWING));
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.COLOUR_MIXER));
-        chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.MANNEQUIN));
+        // chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.MANNEQUIN));
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.SKINNING_TABLE));
         chapterRecipes.addPage(new BookPageRecipe(this, ModBlocks.DYE_TABLE));
         
