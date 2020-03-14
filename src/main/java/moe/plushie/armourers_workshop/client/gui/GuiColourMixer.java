@@ -88,6 +88,7 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
         buttonList.add(colourFamilyList);
         
         paintTypeDropDown = new GuiDropDownList(5, this.guiLeft + 164, this.guiTop + 30, 86, "", this);
+        paintTypeDropDown.setMaxDisplayCount(10);
         updatePaintTypeDropDown();
         buttonList.add(paintTypeDropDown);
         

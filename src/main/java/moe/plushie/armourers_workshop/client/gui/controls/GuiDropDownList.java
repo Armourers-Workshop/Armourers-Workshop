@@ -8,6 +8,7 @@ import org.lwjgl.input.Mouse;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.Loader;
@@ -28,6 +29,10 @@ public class GuiDropDownList extends GuiButtonExt {
     private int dropButtonHeight;
     private IDropDownListCallback callback;
     
+    private GuiScrollbar scrollbar = new GuiScrollbar(0, x, y, 10, 10, "", false);
+    private int maxDisplayCount = 0;
+    private int scrollAmount = 0;
+    
     public GuiDropDownList(int id, int xPos, int yPos, int width, String displayString, IDropDownListCallback callback) {
         super(id, xPos, yPos, width, 14, displayString);
         this.callback = callback;
@@ -42,8 +47,25 @@ public class GuiDropDownList extends GuiButtonExt {
         this.dropButtonX = this.x + this.width - this.dropButtonWidth;
     }
     
+    public void setMaxDisplayCount(int maxDisplayCount) {
+        this.maxDisplayCount = maxDisplayCount;
+    }
+    
     public boolean getIsDroppedDown() {
         return this.isDroppedDown;
+    }
+    
+    public int getDropdownListCount() {
+        int listSize = listItems.size();
+        int limit = listSize;
+        if (maxDisplayCount > 0) {
+            limit = MathHelper.clamp(maxDisplayCount, 1, listSize);
+        }
+        return limit;
+    }
+    
+    public boolean hasScrollbar() {
+        return getDropdownListCount() < listItems.size();
     }
 
     @Override
@@ -67,13 +89,30 @@ public class GuiDropDownList extends GuiButtonExt {
         this.hoverIndex = -1;
         if (this.isDroppedDown) {
             int listSize = listItems.size();
-            GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x, this.y + this.height + 1, 0, 46, this.width, 10 * listSize + 4, 200, 20, 2, 3, 2, 2, this.zLevel);
-            for (int i = 0; i < listSize; i++) {
-                DropDownListItem listItem = listItems.get(i);
+            int limit = getDropdownListCount();
+            
+            scrollbar.x = x + width - 10;
+            scrollbar.y = y + height + 1;
+            scrollbar.height = 10 * limit + 4;
+            scrollbar.setSliderMaxValue(listSize - limit);
+            scrollAmount = scrollbar.getValue();
+            
+            int dropDownWidth = this.width;
+            if (hasScrollbar()) {
+                dropDownWidth = this.width - 10;
+            }
+            GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x, this.y + this.height + 1, 0, 46, dropDownWidth, 10 * limit + 4, 200, 20, 2, 3, 2, 2, this.zLevel);
+
+            if (hasScrollbar()) {
+                scrollbar.drawButton(mc, mouseX, mouseY, partial);
+            }
+            
+            for (int i = 0; i < limit; i++) {
+                DropDownListItem listItem = listItems.get(i + scrollAmount);
                 int textX = this.x + 4;
                 int textY = this.y + this.height + 4 + (i * 10);
                 if (listItem.isMouseOver(this, textX, textY, mouseX, mouseY) & listItem.enabled) {
-                    hoverIndex = i;
+                    hoverIndex = i + scrollAmount;
                 }
                 listItem.drawItem(mc, this, textX, textY, mouseX, mouseY, partial, false);
             } 
@@ -95,8 +134,8 @@ public class GuiDropDownList extends GuiButtonExt {
                         mouseDown = false;
                         Minecraft mc = Minecraft.getMinecraft();
                         ScaledResolution reso = new ScaledResolution(mc);
-                        double scaleWidth = (double)mc.displayWidth / reso.getScaledWidth_double();
-                        double scaleHeight = (double)mc.displayHeight / reso.getScaledHeight_double();
+                        double scaleWidth = mc.displayWidth / reso.getScaledWidth_double();
+                        double scaleHeight = mc.displayHeight / reso.getScaledHeight_double();
                         int mouseX = (int) (Mouse.getX() / scaleWidth);
                         int mouseY = (int) (-(Mouse.getY() - mc.displayHeight) / scaleHeight);
                         mouseReleased(mouseX, mouseY);
@@ -126,6 +165,7 @@ public class GuiDropDownList extends GuiButtonExt {
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
         int oldHeight = this.height;
         if (this.isDroppedDown) {
+            scrollbar.mousePressed(mc, mouseX, mouseY);
             this.height += 10 * listItems.size() + 4;
         }
         if (super.mousePressed(mc, mouseX, mouseY)) {
@@ -145,6 +185,9 @@ public class GuiDropDownList extends GuiButtonExt {
     
     @Override
     public void mouseReleased(int mouseX, int mouseY) {
+        if (this.isDroppedDown) {
+            scrollbar.mouseReleased(mouseX, mouseY);
+        }
         if (this.isMouseDownOver && mouseOverDropDownButton(mouseX, mouseY)) {
             this.isDroppedDown = !this.isDroppedDown;
             this.isMouseDownOver = false;
@@ -212,6 +255,9 @@ public class GuiDropDownList extends GuiButtonExt {
         
         public boolean isMouseOver(GuiDropDownList parent, int x, int y, int mouseX, int mouseY) {
             int textWidth = parent.width - 8;
+            if (parent.hasScrollbar()) {
+                textWidth -= 10;
+            }
             int textHeight = 8;
             if (mouseX >= x && mouseY >= y && mouseX < x + textWidth && mouseY < y + textHeight) {
                 return true;
@@ -221,6 +267,9 @@ public class GuiDropDownList extends GuiButtonExt {
 
         public void drawItem(Minecraft mc, GuiDropDownList parent, int x, int y, int mouseX, int mouseY, float partial, boolean topItem) {
             int textWidth = parent.width - 8;
+            if (parent.hasScrollbar()) {
+                textWidth -= 10;
+            }
             int textHeight = 8;
             int textColour = 16777215;
             if (!enabled) {
