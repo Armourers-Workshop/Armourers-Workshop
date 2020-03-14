@@ -55,6 +55,7 @@ public class ConfigHandler {
     public static boolean disableDollRecipe;
     public static boolean disableSkinningRecipes;
     public static boolean hideDollFromCreativeTabs;
+    public static boolean hideGiantFromCreativeTabs;
     public static boolean enableRecoveringSkins;
     
     // Holiday events
@@ -215,6 +216,9 @@ public class ConfigHandler {
         
         hideDollFromCreativeTabs = config.getBoolean("hideDollFromCreativeTabs", CATEGORY_RECIPE, true,
                 "Hides the doll block from the creative tab and NEI.");
+        
+        hideGiantFromCreativeTabs = config.getBoolean("hideGiantFromCreativeTabs", CATEGORY_RECIPE, true,
+                "Hides the giant block from the creative tab and NEI.");
         
         enableRecoveringSkins = config.getBoolean("enableRecoveringSkins", CATEGORY_RECIPE, false,
                 "Enable copying the skin off an item in the skinning table");

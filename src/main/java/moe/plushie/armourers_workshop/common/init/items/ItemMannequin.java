@@ -44,8 +44,9 @@ public class ItemMannequin extends AbstractModItem {
             if (!ConfigHandler.hideDollFromCreativeTabs) {
                 items.add(create((TextureData) null, 0.5F));
             }
-            items.add(create((TextureData) null, 0.5F));
-            items.add(create((TextureData) null, 2F));
+            if (!ConfigHandler.hideGiantFromCreativeTabs) {
+                items.add(create((TextureData) null, 2F));
+            }
         }
     }
 
