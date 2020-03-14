@@ -3,10 +3,8 @@ package moe.plushie.armourers_workshop.common.creativetab;
 import java.util.Collections;
 import java.util.Comparator;
 
-import moe.plushie.armourers_workshop.common.init.items.ModItems;
+import moe.plushie.armourers_workshop.common.init.blocks.ModBlocks;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
-import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -22,9 +20,7 @@ public class CreativeTabPaintingTools extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     @Override
     public ItemStack createIcon() {
-        ItemStack itemStack = new ItemStack(ModItems.PAINT_BRUSH);
-        PaintingHelper.setToolPaint(itemStack, PaintTypeRegistry.PAINT_TYPE_RAINBOW);
-        return itemStack;
+        return new ItemStack(ModBlocks.ARMOURER);
     }
     
     @SideOnly(Side.CLIENT)
