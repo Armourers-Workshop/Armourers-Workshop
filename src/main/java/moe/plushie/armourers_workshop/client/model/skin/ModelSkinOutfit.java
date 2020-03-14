@@ -157,6 +157,7 @@ public class ModelSkinOutfit extends ModelTypeHelper {
 
     private void renderChest(SkinPartRenderData partRenderData) {
         GL11.glPushMatrix();
+        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
             GlStateManager.rotate((float) Math.toDegrees(bipedBody.rotateAngleX), 1F, 0, 0);
@@ -289,6 +290,7 @@ public class ModelSkinOutfit extends ModelTypeHelper {
 
     private void renderSkirt(SkinPartRenderData partRenderData) {
         GL11.glPushMatrix();
+        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         GL11.glColor3f(1F, 1F, 1F);
         if (isSneak) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);

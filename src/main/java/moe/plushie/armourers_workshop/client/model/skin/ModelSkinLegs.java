@@ -123,6 +123,7 @@ public class ModelSkinLegs extends ModelTypeHelper {
 
     private void renderSkirt(SkinPartRenderData partRenderData) {
         GL11.glPushMatrix();
+        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         GL11.glColor3f(1F, 1F, 1F);
         // if (!itemRender) {
         GL11.glTranslated(0, 12 * partRenderData.getScale(), 0);

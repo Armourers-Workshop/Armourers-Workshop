@@ -99,6 +99,7 @@ public class ModelSkinChest extends ModelTypeHelper {
 
     private void renderChest(SkinPartRenderData skinPartRenderData) {
         GL11.glPushMatrix();
+        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
         if (isSneak) {
             GL11.glRotated(Math.toDegrees(bipedBody.rotateAngleX), 1F, 0, 0);
         }
