@@ -140,8 +140,8 @@ public class GuiTabWardrobeManRotations extends GuiTabPanel implements ISlider {
         if (button == resetRotsButton) {
             guiLoaded = false;
             bipedRotations.resetRotations();
+            
             bipedPartChange(activeBipedPart);
-
             guiLoaded = true;
             checkAndSendRotationValues();
         }
@@ -170,14 +170,8 @@ public class GuiTabWardrobeManRotations extends GuiTabPanel implements ISlider {
     }
 
     public void checkAndSendRotationValues() {
-        float[] rots = bipedRotations.getPartRotations(activeBipedPart);
-        rots[0] = (float) Math.toRadians(-bipedRotXslider.getValue());
-        rots[1] = (float) Math.toRadians(-bipedRotYslider.getValue());
-        rots[2] = (float) Math.toRadians(-bipedRotZslider.getValue());
-        bipedRotations.setPartRotations(activeBipedPart, rots);
-
         if (!this.bipedRotations.equals(this.lastBipedRotations)) {
-            //ArmourersWorkshop.getLogger().info("Sending rotations to server.");
+            // ArmourersWorkshop.getLogger().info("Sending rotations to server.");
             
             entityMannequin.setBipedRotations(bipedRotations);
             MessageClientGuiUpdateMannequin message = new MessageClientGuiUpdateMannequin(entityMannequin);
@@ -185,15 +179,6 @@ public class GuiTabWardrobeManRotations extends GuiTabPanel implements ISlider {
             
             //lastBipedRotations = bipedRotations;
             PacketHandler.networkWrapper.sendToServer(message);
-            // parent.tileEntity.PROP_BIPED_ROTATIONS.set(bipedRotations);
-            // parent.updateProperty(parent.tileEntity.PROP_BIPED_ROTATIONS);
-            /*
-             * NBTTagCompound compound = new NBTTagCompound();
-             * this.bipedRotations.saveNBTData(compound);
-             * this.lastBipedRotations.loadNBTData(compound); MessageClientGuiBipedRotations
-             * message = new MessageClientGuiBipedRotations(bipedRotations);
-             * PacketHandler.networkWrapper.sendToServer(message);
-             */
         }
     }
 
@@ -229,6 +214,11 @@ public class GuiTabWardrobeManRotations extends GuiTabPanel implements ISlider {
         if (!guiLoaded) {
             return;
         }
+        float[] rots = bipedRotations.getPartRotations(activeBipedPart);
+        rots[0] = (float) Math.toRadians(-bipedRotXslider.getValue());
+        rots[1] = (float) Math.toRadians(-bipedRotYslider.getValue());
+        rots[2] = (float) Math.toRadians(-bipedRotZslider.getValue());
+        bipedRotations.setPartRotations(activeBipedPart, rots);
         checkAndSendRotationValues();
     }
 }
