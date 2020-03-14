@@ -248,6 +248,10 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
     private void setSlotVisibilitySkins(boolean visible) {
         setSlotVisibility(getContainer().getIndexSkinsStart(), getContainer().getIndexSkinsEnd(), visible);
     }
+    
+    private void setSlotVisibilityMannequinHands(boolean visible) {
+        setSlotVisibility(getContainer().getIndexMannequinHandsStart(), getContainer().getIndexMannequinHandsEnd(), visible);
+    }
 
     private void setSlotVisibilityDyes(boolean visible) {
         setSlotVisibility(getContainer().getIndexDyeStart(), getContainer().getIndexDyeEnd(), visible);
@@ -275,6 +279,7 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
         super.tabChanged();
         setSlotVisibilityPlayerInv(tabNeedsPlayerSlots(getActiveTab()));
         setSlotVisibilitySkins(getActiveTab() == tabSkins.getTabId());
+        setSlotVisibilityMannequinHands(getActiveTab() == tabSkins.getTabId());
         setSlotVisibilityDyes(getActiveTab() == tabDyes.getTabId());
         setSlotVisibilityOutfits(getActiveTab() == tabOutfits.getTabId());
     }

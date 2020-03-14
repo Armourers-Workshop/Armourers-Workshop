@@ -36,11 +36,18 @@ public class GuiTabWardrobeSkins extends GuiTabPanel {
         ContainerSkinWardrobe skinWardrobe = (ContainerSkinWardrobe) guiContainer.inventorySlots;
         
         for (int i = skinWardrobe.getIndexSkinsStart(); i <  skinWardrobe.getIndexSkinsEnd(); i++) {
-            Slot slot = (Slot) skinWardrobe.inventorySlots.get(i);
+            Slot slot = skinWardrobe.inventorySlots.get(i);
             this.drawTexturedModalRect(this.x + slot.xPos - 1,
                     this.y + slot.yPos - 1,
                     238, 194, sloImageSize, sloImageSize);
         }
+        for (int i = skinWardrobe.getIndexMannequinHandsStart(); i <  skinWardrobe.getIndexMannequinHandsEnd(); i++) {
+            Slot slot = skinWardrobe.inventorySlots.get(i);
+            this.drawTexturedModalRect(this.x + slot.xPos - 1,
+                    this.y + slot.yPos - 1,
+                    238, 194, sloImageSize, sloImageSize);
+        }
+        
     }
     
     @Override

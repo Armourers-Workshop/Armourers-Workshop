@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.client.render.entity;
 
 import java.util.concurrent.TimeUnit;
 
+import org.lwjgl.opengl.GL11;
+
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -32,15 +34,18 @@ import moe.plushie.armourers_workshop.common.data.type.BipedRotations.BipedPart;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
+import moe.plushie.armourers_workshop.common.inventory.ModInventory;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.proxies.ClientProxy.TexturePaintType;
+import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.CullFace;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -295,6 +300,55 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             }
             // targetModel.render(entity, 0, 0, 0, 0, 0, scale);
             ModRenderHelper.disableAlphaBlend();
+        }
+        
+        ModInventory inventoryHands = entity.getInventoryHands();
+        for (int i = 0; i < inventoryHands.getSizeInventory(); i++) {
+            boolean flag = i == 0;
+            ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(inventoryHands.getStackInSlot(i));
+            if (descriptor != null) {
+                GlStateManager.pushMatrix();
+                
+                float[] armRots = bipedRotations.getPartRotations(BipedPart.RIGHT_ARM);
+                
+                if (flag) {
+                    armRots = bipedRotations.getPartRotations(BipedPart.LEFT_ARM);
+                }
+                
+                if (!flag) {
+                    GlStateManager.translate(scale * -5, scale * 2, scale * 0);
+                } else {
+                    GlStateManager.translate(scale * 5, scale * 2, scale * 0);
+                }
+                
+                
+                
+                GlStateManager.rotate((float) Math.toDegrees(armRots[2]), 0, 0, 1);
+                GlStateManager.rotate((float) Math.toDegrees(armRots[1]), 0, 1, 0);
+                GlStateManager.rotate((float) Math.toDegrees(armRots[0]), 1, 0, 0);
+                
+                if (!flag) {
+                    GlStateManager.translate(scale * -1, scale * 8, scale * 0);
+                } else {
+                    GlStateManager.translate(scale * 1, scale * 8, scale * 0);
+                }
+                
+                GlStateManager.rotate(90, 1, 0, 0);
+                
+                if (flag) {
+                    GlStateManager.scale(-1, 1, 1);
+                    GlStateManager.cullFace(CullFace.FRONT);
+                }
+                //GlStateManager.translate((flag ? -1 : 1) / 16.0F, 0.125F, -0.625F);
+                if (playerTexture.isSlimModel()) {
+                    GL11.glScaled(0.75F, 1F, 1F);
+                }
+                renderSkin(entity, descriptor, skinCap, wardrobe, extraColours, 0, true, targetModel);
+                if (flag) {
+                    GlStateManager.cullFace(CullFace.BACK);
+                }
+                GlStateManager.popMatrix();
+            }
         }
 
         // ModLogger.log(entity.getTextureData());

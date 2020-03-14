@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.init.items.ItemMannequin;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
+import moe.plushie.armourers_workshop.common.inventory.ModInventory;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
@@ -104,6 +105,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     private static final String TAG_VISIBLE = "visible";
     private static final String TAG_NO_CLIP = "no_clip";
     private static final String TAG_SCALE = "scale";
+    private static final String TAG_INVENTORY = "inventory";
 
     private static final DataParameter<BipedRotations> DATA_BIPED_ROTATIONS = EntityDataManager.<BipedRotations>createKey(EntityMannequin.class, BIPED_ROTATIONS_SERIALIZER);
     private static final DataParameter<TextureData> DATA_TEXTURE_DATA = EntityDataManager.<TextureData>createKey(EntityMannequin.class, TEXTURE_DATA_SERIALIZER);
@@ -114,8 +116,9 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     private static final DataParameter<Boolean> DATA_NO_CLIP = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Float> DATA_SCALE = EntityDataManager.<Float>createKey(EntityMannequin.class, DataSerializers.FLOAT);
 
+    private final ModInventory inventoryHands = new ModInventory("", 2);
     private int hitCount = 0;
-    
+
     public EntityMannequin(World worldIn) {
         super(worldIn);
         setSize(0.8F, 1.9F);
@@ -209,6 +212,10 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         return dataManager.get(DATA_SCALE).floatValue();
     }
     
+    public ModInventory getInventoryHands() {
+        return inventoryHands;
+    }
+
     @Override
     public float getEyeHeight() {
         return super.getEyeHeight() * getScale();
@@ -231,10 +238,10 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
             setDead();
         }
         if (hitCount > 0) {
-            hitCount --;
+            hitCount--;
         }
     }
-    
+
     @Override
     public AxisAlignedBB getEntityBoundingBox() {
         float halfWidthScaled = (width / 2F) * getScale();
@@ -279,11 +286,11 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
             if (itemStack.getItem() != ModItems.MANNEQUIN_TOOL) {
                 FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), getEntityWorld(), getEntityId(), 0, 0);
             }
-            
+
         }
         return EnumActionResult.PASS;
     }
-    
+
     @Override
     public void setDead() {
         if (!isDead) {
@@ -295,7 +302,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         }
         super.setDead();
     }
-    
+
     public ItemStack createStackForEntity() {
         return ItemMannequin.create(getTextureData(), getScale());
     }
@@ -346,6 +353,9 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         if (compound.hasKey(TAG_SCALE, NBT.TAG_FLOAT)) {
             setScale(compound.getFloat(TAG_SCALE));
         }
+        if (compound.hasKey(TAG_INVENTORY, NBT.TAG_COMPOUND)) {
+            inventoryHands.loadItemsFromNBT(compound.getCompoundTag(TAG_INVENTORY));
+        }
     }
 
     @Override
@@ -358,6 +368,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         compound.setBoolean(TAG_VISIBLE, isVisible());
         compound.setBoolean(TAG_NO_CLIP, isNoClip());
         compound.setFloat(TAG_SCALE, getScale());
+        compound.setTag(TAG_INVENTORY, inventoryHands.saveItemsToNBT(new NBTTagCompound()));
     }
 
     public static class TextureData {

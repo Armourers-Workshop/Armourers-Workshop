@@ -100,8 +100,9 @@ public class ModInventory implements IInventory {
         return true;
     }
     
-    public void saveItemsToNBT(NBTTagCompound compound) {
+    public NBTTagCompound saveItemsToNBT(NBTTagCompound compound) {
         NBTHelper.writeStackArrayToNBT(compound, TAG_ITEMS, slots);
+        return compound;
     }
     
     public void loadItemsFromNBT(NBTTagCompound compound) {

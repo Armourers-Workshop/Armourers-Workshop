@@ -29,15 +29,6 @@ public class SkinnableEntityMannequin extends SkinnableEntity {
         skinTypes.add(SkinTypeRegistry.skinLegs);
         skinTypes.add(SkinTypeRegistry.skinFeet);
         skinTypes.add(SkinTypeRegistry.skinWings);
-        
-        skinTypes.add(SkinTypeRegistry.skinSword);
-        skinTypes.add(SkinTypeRegistry.skinShield);
-        skinTypes.add(SkinTypeRegistry.skinBow);
-        
-        skinTypes.add(SkinTypeRegistry.skinPickaxe);
-        skinTypes.add(SkinTypeRegistry.skinAxe);
-        skinTypes.add(SkinTypeRegistry.skinShovel);
-        skinTypes.add(SkinTypeRegistry.skinHoe);
     }
     
     @Override
