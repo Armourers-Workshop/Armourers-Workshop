@@ -25,7 +25,6 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -35,7 +34,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCallback {
+public class GuiTabArmourerMain extends GuiTabPanel<GuiArmourer> implements IDropDownListCallback {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.GUI_ARMOURER);
     
@@ -46,9 +45,9 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     private GuiTextField textFlavour;
     private boolean resetting;
     
-    public GuiTabArmourerMain(int tabId, GuiScreen parent) {
+    public GuiTabArmourerMain(int tabId, GuiArmourer parent) {
         super(tabId, parent, false);
-        tileEntity = ((GuiArmourer)parent).tileEntity;
+        tileEntity = parent.tileEntity;
     }
     
     @Override
@@ -257,13 +256,16 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
         GlStateManager.color(1, 1, 1, 1);
         dropDownSkinType.drawForeground(mc, mouseX - x, mouseY - y, partialTickTime);
         
-
+        GL11.glPushMatrix();
+        GL11.glTranslatef(-x, -y, 0F);
         for (int i = 0; i < buttonList.size(); i++) {
-            GuiButton button = (GuiButton) buttonList.get(i);
+            GuiButton button = buttonList.get(i);
             if (button instanceof GuiHelp) {
                 ((GuiHelp)button).drawRollover(mc, mouseX - x, mouseY - y);
             }
         }
+        GL11.glPopMatrix();
+
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
     
@@ -271,7 +273,7 @@ public class GuiTabArmourerMain extends GuiTabPanel implements IDropDownListCall
     public void onDropDownListChanged(GuiDropDownList dropDownList) {
         DropDownListItem listItem = dropDownList.getListSelectedItem();
         ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(listItem.tag);
-        ((GuiArmourer)parent).skinTypeUpdate(skinType);
+        parent.skinTypeUpdate(skinType);
         PacketHandler.networkWrapper.sendToServer(new MessageClientGuiSetArmourerSkinType(skinType));
     }
 }

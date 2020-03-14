@@ -130,7 +130,7 @@ public final class GuiHelper {
             }
 
             if (renderX + textWidth > width - 2) {
-                renderX -= 28 + textWidth;
+                renderX = width - textWidth - 2;
             }
 
             if (renderY + textHeight + 6 > height) {

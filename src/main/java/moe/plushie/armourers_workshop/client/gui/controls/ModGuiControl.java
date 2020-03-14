@@ -3,15 +3,16 @@ package moe.plushie.armourers_workshop.client.gui.controls;
 import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
+import moe.plushie.armourers_workshop.client.gui.controls.ModGuiControl.IScreenSize;
+import moe.plushie.armourers_workshop.common.data.type.Rectangle_I_2D;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public abstract class ModGuiControl<CONTROL_TYPE, PARENT_TYPE extends GuiScreen> extends GuiButtonExt {
+public abstract class ModGuiControl<CONTROL_TYPE, PARENT_TYPE extends IScreenSize> extends GuiButtonExt {
     
     private final PARENT_TYPE parent;
     private String hoverText;
@@ -69,7 +70,7 @@ public abstract class ModGuiControl<CONTROL_TYPE, PARENT_TYPE extends GuiScreen>
             if (!StringUtils.isNullOrEmpty(hoverTextDisable)) {
                 ArrayList<String> textList = new ArrayList<String>();
                 textList.add(hoverTextDisable);
-                GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, parent.width, parent.height, zLevel);
+                GuiHelper.drawHoveringText(textList, mouseX + parent.getSize().x, mouseY + parent.getSize().y, mc.fontRenderer, parent.getSize().width, parent.getSize().height, zLevel);
             }
         }
         if (hoverState == 2) {
@@ -79,8 +80,13 @@ public abstract class ModGuiControl<CONTROL_TYPE, PARENT_TYPE extends GuiScreen>
                 for (String line : split) {
                     textList.add(line);
                 }
-                GuiHelper.drawHoveringText(textList, mouseX, mouseY, mc.fontRenderer, parent.width, parent.height, zLevel);
+                GuiHelper.drawHoveringText(textList, mouseX + parent.getSize().x, mouseY + parent.getSize().y, mc.fontRenderer, parent.getSize().width, parent.getSize().height, zLevel);
             }
         }
+    }
+    
+    public static interface IScreenSize {
+        
+        public Rectangle_I_2D getSize();
     }
 }

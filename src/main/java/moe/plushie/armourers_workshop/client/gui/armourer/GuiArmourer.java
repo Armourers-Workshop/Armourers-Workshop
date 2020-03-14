@@ -13,7 +13,9 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiTab;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTabbed;
 import moe.plushie.armourers_workshop.client.gui.controls.IDialogCallback;
+import moe.plushie.armourers_workshop.client.gui.controls.ModGuiControl.IScreenSize;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
+import moe.plushie.armourers_workshop.common.data.type.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -26,7 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiArmourer extends GuiTabbed<ContainerArmourer> implements IDialogCallback {
+public class GuiArmourer extends GuiTabbed<ContainerArmourer> implements IDialogCallback, IScreenSize {
 
     private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.GUI_ARMOURER);
     
@@ -168,5 +170,10 @@ public class GuiArmourer extends GuiTabbed<ContainerArmourer> implements IDialog
             }
         }
         closeDialog();
+    }
+
+    @Override
+    public Rectangle_I_2D getSize() {
+        return new Rectangle_I_2D(guiLeft, guiTop, width, height);
     }
 }

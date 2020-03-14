@@ -4,7 +4,6 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,7 +13,7 @@ public class GuiHelp extends ModGuiControl {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.CONTROL_HELP);
     
-    public GuiHelp(GuiScreen parent, int id, int xPos, int yPos, String hoverText) {
+    public GuiHelp(IScreenSize parent, int id, int xPos, int yPos, String hoverText) {
         super(parent, id, xPos, yPos, 7, 8);
         setHoverText(hoverText);
     }
