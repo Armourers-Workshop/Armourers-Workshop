@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " i ",
+    "www",
+    "wsw"
+  ],
+  "key": {
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "w": {
+      "type": "forge:ore_dict",
+      "ore": "plankWood"
+    },
+    "s": {
+      "item": "#SKINCUBE"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:tile.outfit-maker",
+    "data": 0
+  }
+}

@@ -37,7 +37,7 @@ public class GuiHologramProjectorTabInventory extends GuiTabPanel {
         super.initGui(xPos, yPos, width, height);
         
         GuiContainer guiCon = (GuiContainer) parent;
-        //Move player inventory slots.
+        // Move player inventory slots.
         for (int x = 0; x < 9; x++) {
             Slot slot = guiCon.inventorySlots.inventorySlots.get(x);
             if (slot instanceof SlotHidable) {
