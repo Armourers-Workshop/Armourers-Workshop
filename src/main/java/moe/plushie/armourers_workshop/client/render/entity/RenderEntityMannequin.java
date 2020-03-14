@@ -28,7 +28,9 @@ import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCap
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.WardrobeCap;
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
+import moe.plushie.armourers_workshop.common.data.type.BipedRotations.BipedPart;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
+import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
@@ -50,6 +52,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class RenderEntityMannequin extends Render<EntityMannequin> {
 
     private static LoadingCache<EntityMannequin, EntityTextureInfo> textureCache;
+
+    private boolean isHalloweenSeason;
+    private boolean isHalloween;
 
     private final ModelPlayer modelPlayerSmall = new ModelPlayer(0F, true);
     private final ModelPlayer modelPlayerNormal = new ModelPlayer(0F, false);
@@ -90,7 +95,10 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         if (skinCap == null) {
             return;
         }
-        
+
+        isHalloweenSeason = ModHolidays.HALLOWEEN_SEASON.isHolidayActive();
+        isHalloween = ModHolidays.HALLOWEEN.isHolidayActive();
+
         GlStateManager.pushAttrib();
         GlStateManager.pushMatrix();
 
@@ -98,33 +106,30 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         float size = entity.getScale();
 
         GlStateManager.translate(x, y, z);
-        
+
         GlStateManager.scale(15F * scale, -15F * scale, -15F * scale);
 
         GlStateManager.scale(size, size, size);
         GlStateManager.translate(0, -24F * scale, 0);
 
         GlStateManager.rotate(entity.getRotation(), 0F, 1F, 0F);
-        
+
         GlStateManager.disableNormalize();
         GlStateManager.disableLighting();
         GlStateManager.disableRescaleNormal();
-        
+
         GlStateManager.enableNormalize();
         GlStateManager.enableLighting();
         GlStateManager.enableRescaleNormal();
-        
+
         RenderHelper.enableStandardItemLighting();
-        
-        
-        //GlStateManager.enableLighting();
+
+        // GlStateManager.enableLighting();
         // GlStateManager.disableDepth();
 
         // GlStateManager.scale(1F, 0.7F, 1F);
 
         // super.doRender(entity, x, y, z, entityYaw, partialTicks);
-
-
 
         PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(entity.getTextureData());
 
@@ -132,11 +137,25 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         if (playerTexture.isSlimModel()) {
             targetModel = modelPlayerSmall;
         }
-        
+
         targetModel.setRotationAngles(0F, 0F, 0F, 0F, 0F, scale, entity);
         BipedRotations bipedRotations = entity.getBipedRotations();
         bipedRotations.applyRotationsToBiped(targetModel);
-        
+
+        float[] bodyRots = bipedRotations.getPartRotations(BipedPart.CHEST);
+
+        GlStateManager.rotate((float) Math.toDegrees(bodyRots[0]), 1F, 0F, 0F);
+        GlStateManager.rotate((float) Math.toDegrees(bodyRots[1]), 0F, 1F, 0F);
+        GlStateManager.rotate((float) Math.toDegrees(bodyRots[2]), 0F, 0F, 1F);
+
+        targetModel.bipedBody.rotateAngleX = 0F;
+        targetModel.bipedBody.rotateAngleY = 0F;
+        targetModel.bipedBody.rotateAngleZ = 0F;
+
+        targetModel.bipedBodyWear.rotateAngleX = 0F;
+        targetModel.bipedBodyWear.rotateAngleY = 0F;
+        targetModel.bipedBodyWear.rotateAngleZ = 0F;
+
         skinCap.hideHead = false;
         skinCap.hideChest = false;
         skinCap.hideArmLeft = false;
@@ -163,7 +182,6 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         targetModel.bipedLeftLegwear.isHidden = false;
         targetModel.bipedRightLeg.isHidden = false;
         targetModel.bipedRightLegwear.isHidden = false;
-        
 
         ISkinType[] skinTypes = skinCap.getValidSkinTypes();
         SkinModelRenderHelper modelRenderer = SkinModelRenderHelper.INSTANCE;
@@ -245,7 +263,6 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         if (entity.isVisible()) {
             ModRenderHelper.enableAlphaBlend();
 
-            
             if (bipedRotations.isChild()) {
                 ModelHelper.enableChildModelScale(true, scale);
             }
@@ -254,36 +271,34 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             if (bipedRotations.isChild()) {
                 ModelHelper.disableChildModelScale();
             }
-            
-            
+
             if (bipedRotations.isChild()) {
                 ModelHelper.enableChildModelScale(false, scale);
             }
-            
+
             targetModel.bipedBody.render(scale);
             targetModel.bipedBodyWear.render(scale);
-            
+
             targetModel.bipedLeftArm.render(scale);
             targetModel.bipedLeftArmwear.render(scale);
-            
+
             targetModel.bipedRightArm.render(scale);
             targetModel.bipedRightArmwear.render(scale);
-            
-            
+
             targetModel.bipedLeftLeg.render(scale);
             targetModel.bipedLeftLegwear.render(scale);
-            
+
             targetModel.bipedRightLeg.render(scale);
             targetModel.bipedRightLegwear.render(scale);
             if (bipedRotations.isChild()) {
                 ModelHelper.disableChildModelScale();
             }
-            //targetModel.render(entity, 0, 0, 0, 0, 0, scale);
+            // targetModel.render(entity, 0, 0, 0, 0, 0, scale);
             ModRenderHelper.disableAlphaBlend();
         }
 
-        //ModLogger.log(entity.getTextureData());
-        
+        // ModLogger.log(entity.getTextureData());
+
         // Render magic circle.
         if (entity.isRenderExtras() & entity.isVisible() & entity.getTextureData().getTextureType() == TextureType.USER) {
             Contributor contributor = Contributors.INSTANCE.getContributor(entity.getTextureData().getProfile());
