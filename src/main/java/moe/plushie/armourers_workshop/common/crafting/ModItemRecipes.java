@@ -112,30 +112,5 @@ public final class ModItemRecipes {
             new ItemStack(Items.WATER_BUCKET, 1),
             new ItemStack(Items.ROTTEN_FLESH, 1),
             "slimeball"});
-        
-        CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.SKIN_UNLOCK, 1, 0), new Object[] {
-                new ItemStack(Items.DIAMOND_HELMET, 1),
-                new ItemStack(ModItems.SKIN_TEMPLATE, 1),
-                new ItemStack(Items.NETHER_STAR, 1)});
-        
-        CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.SKIN_UNLOCK, 1, 1), new Object[] {
-                new ItemStack(Items.DIAMOND_CHESTPLATE, 1),
-                new ItemStack(ModItems.SKIN_TEMPLATE, 1),
-                new ItemStack(Items.NETHER_STAR, 1)});
-        
-        CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.SKIN_UNLOCK, 1, 2), new Object[] {
-                new ItemStack(Items.DIAMOND_LEGGINGS, 1),
-                new ItemStack(ModItems.SKIN_TEMPLATE, 1),
-                new ItemStack(Items.NETHER_STAR, 1)});
-        
-        CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.SKIN_UNLOCK, 1, 3), new Object[] {
-                new ItemStack(Items.DIAMOND_BOOTS, 1),
-                new ItemStack(ModItems.SKIN_TEMPLATE, 1),
-                new ItemStack(Items.NETHER_STAR, 1)});
-        
-        CraftingManager.addShapelessRecipe(iForgeRegistry, new ItemStack(ModItems.SKIN_UNLOCK, 1, 4), new Object[] {
-                new ItemStack(Items.FEATHER, 1),
-                new ItemStack(ModItems.SKIN_TEMPLATE, 1),
-                new ItemStack(Items.NETHER_STAR, 1)});
     }
 }

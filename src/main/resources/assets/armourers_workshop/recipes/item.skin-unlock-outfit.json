@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "armourers_workshop:item.skin-unlock",
+      "data": 0
+    },
+    {
+      "item": "armourers_workshop:item.skin-unlock",
+      "data": 1
+    },
+    {
+      "item": "armourers_workshop:item.skin-unlock",
+      "data": 2
+    },
+    {
+      "item": "armourers_workshop:item.skin-unlock",
+      "data": 3
+    },
+    {
+      "item": "armourers_workshop:item.skin-unlock",
+      "data": 4
+    }
+  ],
+  "result": {
+    "item": "armourers_workshop:item.skin-unlock",
+    "data": 5
+  }
+}
