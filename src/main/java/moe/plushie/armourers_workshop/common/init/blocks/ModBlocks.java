@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
@@ -52,7 +51,7 @@ public class ModBlocks {
     public static final Block DYE_TABLE = new BlockDyeTable();
     public static final Block HOLOGRAM_PROJECTOR = new BlockHologramProjector();
     public static final Block OUTFIT_MAKER = new BlockOutfitMaker();
-    public static final Block ADVANCED_SKIN_BUILDER = new BlockAdvancedSkinBuilder();
+    // public static final Block ADVANCED_SKIN_BUILDER = new BlockAdvancedSkinBuilder();
     // public static final Block ADVANCED_SKIN_PART = new BlockAdvancedSkinPart();
 
     public ModBlocks() {
@@ -92,7 +91,7 @@ public class ModBlocks {
         registerTileEntity(TileEntitySkinnableChild.class, LibBlockNames.SKINNABLE_CHILD);
         registerTileEntity(TileEntityHologramProjector.class, LibBlockNames.HOLOGRAM_PROJECTOR);
         registerTileEntity(TileEntityOutfitMaker.class, LibBlockNames.OUTFIT_MAKER);
-        registerTileEntity(TileEntityAdvancedSkinBuilder.class, LibBlockNames.ADVANCED_SKIN_BUILDER);
+        // registerTileEntity(TileEntityAdvancedSkinBuilder.class, LibBlockNames.ADVANCED_SKIN_BUILDER);
         // registerTileEntity(TileEntityAdvancedSkinPart.class, LibBlockNames.ADVANCED_SKIN_PART);
     }
 
