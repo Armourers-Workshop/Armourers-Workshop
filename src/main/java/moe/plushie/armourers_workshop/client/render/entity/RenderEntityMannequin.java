@@ -282,19 +282,19 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             }
 
             targetModel.bipedBody.render(scale);
-            targetModel.bipedBodyWear.render(scale);
+            //targetModel.bipedBodyWear.render(scale);
 
             targetModel.bipedLeftArm.render(scale);
-            targetModel.bipedLeftArmwear.render(scale);
+            //targetModel.bipedLeftArmwear.render(scale);
 
             targetModel.bipedRightArm.render(scale);
-            targetModel.bipedRightArmwear.render(scale);
+            //targetModel.bipedRightArmwear.render(scale);
 
             targetModel.bipedLeftLeg.render(scale);
-            targetModel.bipedLeftLegwear.render(scale);
+            //targetModel.bipedLeftLegwear.render(scale);
 
             targetModel.bipedRightLeg.render(scale);
-            targetModel.bipedRightLegwear.render(scale);
+            //targetModel.bipedRightLegwear.render(scale);
             if (bipedRotations.isChild()) {
                 ModelHelper.disableChildModelScale();
             }
@@ -308,6 +308,9 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(inventoryHands.getStackInSlot(i));
             if (descriptor != null) {
                 GlStateManager.pushMatrix();
+                if (bipedRotations.isChild()) {
+                    ModelHelper.enableChildModelScale(false, scale);
+                }
                 
                 float[] armRots = bipedRotations.getPartRotations(BipedPart.RIGHT_ARM);
                 
@@ -316,21 +319,29 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
                 }
                 
                 if (!flag) {
-                    GlStateManager.translate(scale * -5, scale * 2, scale * 0);
+                    GlStateManager.translate(scale * -5F, scale * 2F, scale * 0);
                 } else {
                     GlStateManager.translate(scale * 5, scale * 2, scale * 0);
                 }
                 
-                
+                if (playerTexture.isSlimModel()) {
+                    GlStateManager.translate(0, scale * 0.5F, 0);
+                }
                 
                 GlStateManager.rotate((float) Math.toDegrees(armRots[2]), 0, 0, 1);
                 GlStateManager.rotate((float) Math.toDegrees(armRots[1]), 0, 1, 0);
                 GlStateManager.rotate((float) Math.toDegrees(armRots[0]), 1, 0, 0);
                 
                 if (!flag) {
-                    GlStateManager.translate(scale * -1, scale * 8, scale * 0);
+                    GlStateManager.translate(scale * -1F, scale * 8, scale * 0);
+                    if (playerTexture.isSlimModel()) {
+                        GlStateManager.translate(scale * 0.5F, 0, 0);
+                    }
                 } else {
                     GlStateManager.translate(scale * 1, scale * 8, scale * 0);
+                    if (playerTexture.isSlimModel()) {
+                        GlStateManager.translate(scale * -0.5F, 0, 0);
+                    }
                 }
                 
                 GlStateManager.rotate(90, 1, 0, 0);
@@ -343,9 +354,15 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
                 if (playerTexture.isSlimModel()) {
                     GL11.glScaled(0.75F, 1F, 1F);
                 }
-                renderSkin(entity, descriptor, skinCap, wardrobe, extraColours, 0, true, targetModel);
+
+                renderSkin(entity, descriptor, skinCap, wardrobe, extraColours, 0, true, null);
+
                 if (flag) {
                     GlStateManager.cullFace(CullFace.BACK);
+                }
+                
+                if (bipedRotations.isChild()) {
+                    ModelHelper.disableChildModelScale();
                 }
                 GlStateManager.popMatrix();
             }
