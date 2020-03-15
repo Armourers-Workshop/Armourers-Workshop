@@ -269,12 +269,6 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     @Override
     public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
         ItemStack itemStack = player.getHeldItem(hand);
-        if (itemStack.getItem() == ModItems.SOAP) {
-            if (!world.isRemote) {
-                setDead();
-            }
-            return EnumActionResult.SUCCESS;
-        }
         if (player.isSneaking()) {
             if (!world.isRemote) {
                 double angle = TrigUtils.getAngleDegrees(player.posX, player.posZ, posX, posZ) + 90D;
