@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
+import moe.plushie.armourers_workshop.utils.BlockUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -21,17 +22,17 @@ public class BlockColourMixer extends AbstractModBlockContainer {
         setCreativeTab(ArmourersWorkshop.TAB_PAINTING_TOOLS);
         setSortPriority(124);
     }
-    
+
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;
     }
-    
+
     @Override
     public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
         return layer == BlockRenderLayer.CUTOUT;
     }
-    
+
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!playerIn.canPlayerEdit(pos, facing, playerIn.getHeldItem(hand))) {
@@ -40,15 +41,13 @@ public class BlockColourMixer extends AbstractModBlockContainer {
         openGui(playerIn, EnumGuiId.COLOUR_MIXER, worldIn, pos, state, facing);
         return true;
     }
-    
-    /*
+
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
-        BlockUtils.dropInventoryBlocks(world, x, y, z);
-        super.breakBlock(world, x, y, z, block, meta);
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        BlockUtils.dropInventoryBlocks(worldIn, pos);
+        super.breakBlock(worldIn, pos, state);
     }
-    */
-    
+
     @Override
     public TileEntity createNewTileEntity(World world, int p_149915_2_) {
         return new TileEntityColourMixer();
