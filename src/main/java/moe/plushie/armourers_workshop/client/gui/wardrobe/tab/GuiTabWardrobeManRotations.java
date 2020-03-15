@@ -55,16 +55,29 @@ public class GuiTabWardrobeManRotations extends GuiTabPanel implements ISlider {
     public GuiTabWardrobeManRotations(int tabId, GuiScreen parent, EntityMannequin entityMannequin) {
         super(tabId, parent);
         this.entityMannequin = entityMannequin;
+        bipedRotations = new BipedRotations();
+        lastBipedRotations = new BipedRotations();
         updateRotationData(entityMannequin.getBipedRotations());
+    }
+    
+    @Override
+    public void tabChanged(int tabIndex) {
+        if (tabIndex == getTabId()) {
+            updateRotationData(entityMannequin.getBipedRotations());
+        }
     }
 
     public void updateRotationData(BipedRotations rots) {
-        this.bipedRotations = new BipedRotations();
-        this.lastBipedRotations = new BipedRotations();
         NBTTagCompound compound = new NBTTagCompound();
         rots.saveNBTData(compound);
         this.bipedRotations.loadNBTData(compound);
         this.lastBipedRotations.loadNBTData(compound);
+    }
+    
+    public void updateLastRotations() {
+        NBTTagCompound compound = new NBTTagCompound();
+        bipedRotations.saveNBTData(compound);
+        lastBipedRotations.loadNBTData(compound);
     }
 
     @Override
@@ -171,14 +184,11 @@ public class GuiTabWardrobeManRotations extends GuiTabPanel implements ISlider {
 
     public void checkAndSendRotationValues() {
         if (!this.bipedRotations.equals(this.lastBipedRotations)) {
-            // ArmourersWorkshop.getLogger().info("Sending rotations to server.");
-            
             entityMannequin.setBipedRotations(bipedRotations);
             MessageClientGuiUpdateMannequin message = new MessageClientGuiUpdateMannequin(entityMannequin);
             message.setBipedRotations(bipedRotations);
-            
-            //lastBipedRotations = bipedRotations;
             PacketHandler.networkWrapper.sendToServer(message);
+            updateLastRotations();
         }
     }
 

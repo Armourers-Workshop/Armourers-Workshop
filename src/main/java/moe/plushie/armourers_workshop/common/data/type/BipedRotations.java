@@ -15,10 +15,10 @@ public class BipedRotations {
 
     private static final String TAG_ROTATION_DATA = "rotation_data";
     private static final String TAG_CHILD = "child";
-    
+
     private float[][] rotationData;
     private boolean child;
-    
+
     public BipedRotations() {
         rotationData = new float[BipedPart.values().length][3];
         child = false;
@@ -28,16 +28,16 @@ public class BipedRotations {
     public void resetRotations() {
         setPartRotations(BipedPart.HEAD, 0F, 0F, 0F);
         setPartRotations(BipedPart.CHEST, 0F, 0F, 0F);
-        setPartRotations(BipedPart.LEFT_ARM, 0F, (float)Math.toRadians(-1F), (float)Math.toRadians(-5F));
-        setPartRotations(BipedPart.RIGHT_ARM, 0F, (float)Math.toRadians(1F), (float)Math.toRadians(5F));
+        setPartRotations(BipedPart.LEFT_ARM, 0F, (float) Math.toRadians(-1F), (float) Math.toRadians(-5F));
+        setPartRotations(BipedPart.RIGHT_ARM, 0F, (float) Math.toRadians(1F), (float) Math.toRadians(5F));
         setPartRotations(BipedPart.LEFT_LEG, 0F, 0F, 0F);
         setPartRotations(BipedPart.RIGHT_LEG, 0F, 0F, 0F);
     }
-    
+
     public void setChild(boolean child) {
         this.child = child;
     }
-    
+
     public boolean isChild() {
         return child;
     }
@@ -152,6 +152,7 @@ public class BipedRotations {
             float rot3 = buf.readFloat();
             setPartRotations(bipedPart, rot1, rot2, rot3);
         }
+        child = buf.readBoolean();
     }
 
     public void writeToBuf(ByteBuf buf) {
@@ -161,12 +162,14 @@ public class BipedRotations {
                 buf.writeFloat(rots[i]);
             }
         }
+        buf.writeBoolean(child);
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + (child ? 1231 : 1237);
         result = prime * result + Arrays.deepHashCode(rotationData);
         return result;
     }
@@ -180,11 +183,13 @@ public class BipedRotations {
         if (getClass() != obj.getClass())
             return false;
         BipedRotations other = (BipedRotations) obj;
+        if (child != other.child)
+            return false;
         if (!Arrays.deepEquals(rotationData, other.rotationData))
             return false;
         return true;
     }
-    
+
     @Override
     public String toString() {
         return "BipedRotations [rotationData=" + Arrays.deepToString(rotationData) + ", child=" + child + "]";
