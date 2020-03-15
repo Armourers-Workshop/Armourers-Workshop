@@ -57,6 +57,7 @@ tile.armourers_workshop:dye-table.name=Dye Table
 tile.armourers_workshop:skinnable.name=Skinnable Block
 tile.armourers_workshop:hologram-projector.name=Hologram Projector
 tile.armourers_workshop:outfit-maker.name=Outfit Maker
+tile.armourers_workshop:advanced-skin-builder.name=Advanced Skin Builder
 
 
 # Block flavour text
@@ -71,7 +72,6 @@ tile.armourers_workshop:skin-cube-glass-glowing.flavour=Glowing transparent equi
 tile.armourers_workshop:colour-mixer.flavour=Mix up colours to paint your equipment with.%nSneak right click with tool to quickly paint.
 tile.armourers_workshop:skinning-table.flavour=Apply and remove skins from items.
 tile.armourers_workshop:outfit-maker.flavour=Use to combine multiple skins into one.
-tile.armourers_workshop:advanced-skin-builder.name=Advanced Skin Builder
 
 
 # Item names
