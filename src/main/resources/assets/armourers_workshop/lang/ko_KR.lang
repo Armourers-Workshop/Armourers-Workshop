@@ -49,7 +49,7 @@ tile.armourers_workshop:skin-cube-glowing.name=스킨 큐브 (발광)
 tile.armourers_workshop:skin-cube-glass.name=유리 스킨 큐브
 tile.armourers_workshop:skin-cube-glass-glowing.name=유리 스킨 큐브 (발광)
 tile.armourers_workshop:colour-mixer.name=혼합기
-tile.armourers_workshop:mannequin.name=마네킹
+	
 tile.armourers_workshop:doll.name=인형
 tile.armourers_workshop:skinning-table.name=스킨을 입힐 수 있는 테이블
 tile.armourers_workshop:dye-table.name=염색 작업대
@@ -68,7 +68,7 @@ tile.armourers_workshop:skin-cube-glowing.flavour=야광 커스텀 장비,건축
 tile.armourers_workshop:skin-cube-glass.flavour=투명한 커스텀 장비,건축 블럭입니다.%n(색칠 가능)
 tile.armourers_workshop:skin-cube-glass-glowing.flavour=투명한 커스텀 장비,건축 블럭입니다!%n(색칠 가능)
 tile.armourers_workshop:colour-mixer.flavour=커스텀 장비,블럭 에 칠할 색을 선택할 수 있습니다.%n붓과 롤러같은 장비를 들고 shift + 우클릭하면 색이 복사됩니다..
-tile.armourers_workshop:mannequin.flavour=커스텀 장비를 마네킹에 착용하여 보여줄 수 있습니다!%n이름표에 플레이어 이름을 적어 마네킹의 모습을 바꿀 수 있습니다..
+tile.armourers_workshop:Mannequin.flavour=커스텀 장비를 마네킹에 착용하여 보여줄 수 있습니다!%n이름표에 플레이어 이름을 적어 마네킹의 모습을 바꿀 수 있습니다..
 tile.armourers_workshop:doll.flavour=미니 마네킹!
 tile.armourers_workshop:skinning-table.flavour=아이템에 스킨을 적용 및 제거할 수 있습니다.
 tile.armourers_workshop:outfit-maker.flavour=여러 스킨들을 하나로 합칠 수 있습니다.
@@ -108,6 +108,9 @@ item.armourers_workshop:skin-unlock.3.name=신발 스킨 슬롯 잠금 해제
 item.armourers_workshop:skin-unlock.4.name=날개 스킨 슬롯 잠금 해제
 item.armourers_workshop:skin-unlock.5.name=외형 스킨 슬롯 잠금 해제
 item.armourers_workshop:linking-tool.name=연결 도구
+item.armourers_workshop:mannequin.name=마네킹
+item.armourers_workshop:mannequin.small.name=인형
+item.armourers_workshop:mannequin.big.name=거인
 item.armourers_workshop:gift-sack.name=선물 보따리
 item.armourers_workshop:armour-container.name=장비 컨테이너
 item.armourers_workshop:armour-container-head.name=모자 장비 컨테이너
@@ -141,7 +144,9 @@ item.armourers_workshop:skin-unlock.3.flavour=옷장에 신발 스킨 슬롯 1 �
 item.armourers_workshop:skin-unlock.4.flavour=옷장에 날개 스킨 슬롯 1 개를 늘립니다.
 item.armourers_workshop:skin-unlock.5.flavour=옷장에 외형 스킨 슬롯 1 개를 늘립니다.
 item.armourers_workshop:linking-tool.flavour=사용 가능한 블록을 %n 마우스 오른쪽 버튼으로 클릭하고 블록 스킨을 %n클릭하여 연결합니다.
-
+item.armourers_workshop:mannequin.flavour=이 기이한 마네킹과 함께 당신의 장비를 보여주세요!
+item.armourers_workshop:mannequin.small.flavour=작은 마네킹!
+item.armourers_workshop:mannequin.big.flavour=이 거대한 사이즈를 보세요!
 
 # 롤오버 텍스트
 item.armourers_workshop:rollover.intensity=&6강도:&7 %s
@@ -293,7 +298,7 @@ inventory.armourers_workshop:skin-library0.name.name=스킨 라이브러리
 inventory.armourers_workshop:skin-library1.name=스킨 라이브러리 - (크리에이티브)
 inventory.armourers_workshop:global-skin-library.name=글로벌 스킨 라이브러리
 inventory.armourers_workshop:wardrobe.name=장비 옷장
-inventory.armourers_workshop:mannequin.name=마네킹
+inventory.armourers_workshop:Mannequin.name=마네킹
 inventory.armourers_workshop:doll.name=인형
 inventory.armourers_workshop:miniArmourer.name=미니 무구 제조기 - (WIP)(미완성)
 inventory.armourers_workshop:skinning-table.name=스킨 조합대
