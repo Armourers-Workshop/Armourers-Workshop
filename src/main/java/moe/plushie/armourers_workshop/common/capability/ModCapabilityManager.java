@@ -46,7 +46,7 @@ public final class ModCapabilityManager {
     private static final ResourceLocation KEY_WARDROBE_PROVIDER = new ResourceLocation(LibModInfo.ID, "wardrobe-provider");
     private static final ResourceLocation KEY_PLAYER_WARDROBE_PROVIDER = new ResourceLocation(LibModInfo.ID, "player-wardrobe-provider");
     private static final ResourceLocation KEY_HOLIDAY_TRACKER = new ResourceLocation(LibModInfo.ID, "holiday-tracker");
-    
+
     private ModCapabilityManager() {
     }
 
@@ -66,7 +66,7 @@ public final class ModCapabilityManager {
                 return null;
             }
         });
-        
+
         CapabilityManager.INSTANCE.register(IPlayerWardrobeCap.class, new PlayerWardrobeStorage(), new Callable<IPlayerWardrobeCap>() {
 
             @Override
@@ -96,7 +96,7 @@ public final class ModCapabilityManager {
             event.addCapability(KEY_WARDROBE_PROVIDER, new WardrobeProvider(entity, skinnableEntity));
         }
     }
-    
+
     @SubscribeEvent
     public static void onStartTracking(PlayerEvent.StartTracking event) {
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(event.getTarget());
@@ -115,22 +115,22 @@ public final class ModCapabilityManager {
             }
         }
     }
-    
+
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
         IEntitySkinCapability skinCapability = EntitySkinCapability.get(event.player);
         if (skinCapability != null) {
             skinCapability.syncToPlayer((EntityPlayerMP) event.player);
         }
-        
+
         IPlayerWardrobeCap wardrobeCapability = PlayerWardrobeCap.get(event.player);
         if (wardrobeCapability != null) {
             wardrobeCapability.syncToPlayer((EntityPlayerMP) event.player);
         }
     }
-    
+
     @SubscribeEvent
-    public static void onLivingDeathEvent(LivingDeathEvent  event) {
+    public static void onLivingDeathEvent(LivingDeathEvent event) {
         if (!event.getEntity().getEntityWorld().isRemote & event.getEntityLiving() instanceof EntityPlayer) {
             IEntitySkinCapability skinCapability = EntitySkinCapability.get(event.getEntityLiving());
             if (skinCapability == null) {
@@ -143,7 +143,7 @@ public final class ModCapabilityManager {
             if (gr.hasRule("keepInventory")) {
                 keepInventory = gr.getBoolean("keepInventory");
             }
-            
+
             switch (ConfigHandler.wardrobeDropSkinsOnDeath) {
             case 0:
                 dropSkins = !keepInventory;
@@ -159,11 +159,11 @@ public final class ModCapabilityManager {
                 break;
             }
             if (dropSkins) {
-                skinCapability.getSkinInventoryContainer().dropItems((EntityPlayer) event.getEntityLiving());
+                skinCapability.getSkinInventoryContainer().dropItems(event.getEntityLiving().getEntityWorld(), event.getEntityLiving().getPositionVector());
             }
         }
     }
-    
+
     private static GameRules getGameRules(MinecraftServer server) {
         return server.getWorld(0).getGameRules();
     }
@@ -177,31 +177,31 @@ public final class ModCapabilityManager {
         IStorage<IPlayerWardrobeCap> storageWardrobe = PlayerWardrobeCap.PLAYER_WARDROBE_CAP.getStorage();
         nbt = storageWardrobe.writeNBT(PlayerWardrobeCap.PLAYER_WARDROBE_CAP, wardrobeCapOld, null);
         storageWardrobe.readNBT(PlayerWardrobeCap.PLAYER_WARDROBE_CAP, wardrobeCapNew, null, nbt);
-        
+
         IEntitySkinCapability skinCapOld = EntitySkinCapability.get(event.getOriginal());
         IEntitySkinCapability skinCapNew = EntitySkinCapability.get(event.getEntityPlayer());
         IStorage<IEntitySkinCapability> storageEntitySkin = EntitySkinCapability.ENTITY_SKIN_CAP.getStorage();
         nbt = storageEntitySkin.writeNBT(EntitySkinCapability.ENTITY_SKIN_CAP, skinCapOld, null);
         storageEntitySkin.readNBT(EntitySkinCapability.ENTITY_SKIN_CAP, skinCapNew, null, nbt);
     }
-    
+
     @SubscribeEvent
     public static void onRespawn(PlayerRespawnEvent event) {
         // Called after onPlayerClone. Used to sync after death.
         IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(event.player);
         wardrobeCap.syncToAllTracking();
         wardrobeCap.syncToPlayer((EntityPlayerMP) event.player);
-        
+
         IEntitySkinCapability skinCap = EntitySkinCapability.get(event.player);
         skinCap.syncToAllTracking();
         skinCap.syncToPlayer((EntityPlayerMP) event.player);
     }
-    
+
     @SubscribeEvent
     public static void onChangedDimension(PlayerChangedDimensionEvent event) {
         IPlayerWardrobeCap wardrobeCap = PlayerWardrobeCap.get(event.player);
         wardrobeCap.syncToPlayer((EntityPlayerMP) event.player);
-        
+
         IEntitySkinCapability skinCap = EntitySkinCapability.get(event.player);
         skinCap.syncToPlayer((EntityPlayerMP) event.player);
     }

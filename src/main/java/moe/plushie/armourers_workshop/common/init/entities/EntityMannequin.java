@@ -6,14 +6,17 @@ import com.mojang.authlib.GameProfile;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.common.GameProfileCache;
 import moe.plushie.armourers_workshop.common.GameProfileCache.IGameProfileCallback;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.init.items.ItemMannequin;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.inventory.ModInventory;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
+import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.minecraft.entity.Entity;
@@ -206,7 +209,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     public float getScale() {
         return dataManager.get(DATA_SCALE).floatValue();
     }
-    
+
     public ModInventory getInventoryHands() {
         return inventoryHands;
     }
@@ -290,6 +293,11 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     public void setDead() {
         if (!isDead) {
             if (!getEntityWorld().isRemote) {
+                IEntitySkinCapability skinCapability = EntitySkinCapability.get(this);
+                if (skinCapability != null) {
+                    skinCapability.getSkinInventoryContainer().dropItems(getEntityWorld(), getPositionVector());
+                }
+                BlockUtils.dropInventoryBlocks(getEntityWorld(), inventoryHands, getPosition());
                 playSound(SoundEvents.ENTITY_ARMORSTAND_BREAK, 1F, 1F);
                 ItemStack itemStack = createStackForEntity();
                 entityDropItem(itemStack, 0F);

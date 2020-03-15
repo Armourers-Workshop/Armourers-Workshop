@@ -3,9 +3,10 @@ package moe.plushie.armourers_workshop.common.inventory;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.utils.NBTHelper;
 import moe.plushie.armourers_workshop.utils.UtilItems;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 public class WardrobeInventory extends ModInventory {
     
@@ -34,11 +35,11 @@ public class WardrobeInventory extends ModInventory {
         return 1;
     }
     
-    public void dropItems(EntityPlayer player) {
+    public void dropItems(World world, Vec3d pos) {
         for (int i = 0; i < getSizeInventory(); i++) {
             ItemStack stack = getStackInSlot(i);
             if (!stack.isEmpty()) {
-                UtilItems.spawnItemAtEntity(player, stack, false);
+                UtilItems.spawnItemInWorld(world, pos, stack);
                 setInventorySlotContents(i, ItemStack.EMPTY);
             }
         }
