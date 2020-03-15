@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.init.items.ItemMannequin;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.inventory.ModInventory;
+import moe.plushie.armourers_workshop.common.inventory.ModInventory.IInventoryCallback;
 import moe.plushie.armourers_workshop.common.lib.EnumGuiId;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -22,6 +23,7 @@ import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -43,57 +45,10 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityMannequin extends Entity implements IGameProfileCallback {
+public class EntityMannequin extends Entity implements IGameProfileCallback, IInventoryCallback {
 
-    public static final DataSerializer<BipedRotations> BIPED_ROTATIONS_SERIALIZER = new DataSerializer<BipedRotations>() {
-
-        @Override
-        public void write(PacketBuffer buf, BipedRotations value) {
-            value.writeToBuf(buf);
-        }
-
-        @Override
-        public BipedRotations read(PacketBuffer buf) throws IOException {
-            BipedRotations bipedRotations = new BipedRotations();
-            bipedRotations.readFromBuf(buf);
-            return bipedRotations;
-        }
-
-        @Override
-        public DataParameter<BipedRotations> createKey(int id) {
-            return new DataParameter<BipedRotations>(id, this);
-        }
-
-        @Override
-        public BipedRotations copyValue(BipedRotations value) {
-            return value;
-        }
-    };
-
-    public static final DataSerializer<TextureData> TEXTURE_DATA_SERIALIZER = new DataSerializer<TextureData>() {
-
-        @Override
-        public void write(PacketBuffer buf, TextureData value) {
-            value.writeToBuf(buf);
-        }
-
-        @Override
-        public TextureData read(PacketBuffer buf) throws IOException {
-            TextureData textureData = new TextureData();
-            textureData.readFromBuf(buf);
-            return textureData;
-        }
-
-        @Override
-        public DataParameter<TextureData> createKey(int id) {
-            return new DataParameter<TextureData>(id, this);
-        }
-
-        @Override
-        public TextureData copyValue(TextureData value) {
-            return value;
-        }
-    };
+    public static final DataSerializer<TextureData> TEXTURE_DATA_SERIALIZER = new DataSerializerTextureData();
+    public static final DataSerializer<BipedRotations> BIPED_ROTATIONS_SERIALIZER = new DataSerializerBipedRotations();
 
     private static final String TAG_BIPED_ROTATIONS = "biped_rotations";
     private static final String TAG_TEXTURE_DATA = "texture_data";
@@ -113,8 +68,10 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
     private static final DataParameter<Boolean> DATA_VISIBLE = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> DATA_NO_CLIP = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Float> DATA_SCALE = EntityDataManager.<Float>createKey(EntityMannequin.class, DataSerializers.FLOAT);
+    private static final DataParameter<ItemStack> DATA_HAND_LEFT = EntityDataManager.<ItemStack>createKey(EntityMannequin.class, DataSerializers.ITEM_STACK);
+    private static final DataParameter<ItemStack> DATA_HAND_RIGHT = EntityDataManager.<ItemStack>createKey(EntityMannequin.class, DataSerializers.ITEM_STACK);
 
-    private final ModInventory inventoryHands = new ModInventory("", 2);
+    private final ModInventory inventoryHands = new ModInventory("", 2, this);
     private int hitCount = 0;
 
     public EntityMannequin(World worldIn) {
@@ -132,6 +89,8 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         dataManager.register(DATA_VISIBLE, Boolean.valueOf(true));
         dataManager.register(DATA_NO_CLIP, Boolean.valueOf(false));
         dataManager.register(DATA_SCALE, Float.valueOf(1F));
+        dataManager.register(DATA_HAND_LEFT, ItemStack.EMPTY);
+        dataManager.register(DATA_HAND_RIGHT, ItemStack.EMPTY);
     }
 
     public void setBipedRotations(BipedRotations bipedRotations) {
@@ -210,8 +169,31 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         return dataManager.get(DATA_SCALE).floatValue();
     }
 
+    public void setHandLeft(ItemStack itemStack) {
+        dataManager.set(DATA_HAND_LEFT, itemStack);
+    }
+
+    public ItemStack getHandLeft() {
+        return dataManager.get(DATA_HAND_LEFT);
+    }
+
+    public void setHandRight(ItemStack itemStack) {
+        dataManager.set(DATA_HAND_RIGHT, itemStack);
+    }
+
+    public ItemStack getHandRight() {
+        return dataManager.get(DATA_HAND_RIGHT);
+    }
+
     public ModInventory getInventoryHands() {
         return inventoryHands;
+    }
+    
+    public void updateInventory() {
+        if (!getEntityWorld().isRemote) {
+            setHandLeft(inventoryHands.getStackInSlot(0));
+            setHandRight(inventoryHands.getStackInSlot(1));
+        }
     }
 
     @Override
@@ -351,6 +333,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         }
         if (compound.hasKey(TAG_INVENTORY, NBT.TAG_COMPOUND)) {
             inventoryHands.loadItemsFromNBT(compound.getCompoundTag(TAG_INVENTORY));
+            updateInventory();
         }
     }
 
@@ -475,5 +458,64 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
                 setTextureDataProfile(gameProfile);
             }
         });
+    }
+
+    public static class DataSerializerBipedRotations implements DataSerializer<BipedRotations> {
+
+        @Override
+        public void write(PacketBuffer buf, BipedRotations value) {
+            value.writeToBuf(buf);
+        }
+
+        @Override
+        public BipedRotations read(PacketBuffer buf) throws IOException {
+            BipedRotations bipedRotations = new BipedRotations();
+            bipedRotations.readFromBuf(buf);
+            return bipedRotations;
+        }
+
+        @Override
+        public DataParameter<BipedRotations> createKey(int id) {
+            return new DataParameter<BipedRotations>(id, this);
+        }
+
+        @Override
+        public BipedRotations copyValue(BipedRotations value) {
+            return value;
+        }
+    }
+
+    public static class DataSerializerTextureData implements DataSerializer<TextureData> {
+
+        @Override
+        public void write(PacketBuffer buf, TextureData value) {
+            value.writeToBuf(buf);
+        }
+
+        @Override
+        public TextureData read(PacketBuffer buf) throws IOException {
+            TextureData textureData = new TextureData();
+            textureData.readFromBuf(buf);
+            return textureData;
+        }
+
+        @Override
+        public DataParameter<TextureData> createKey(int id) {
+            return new DataParameter<TextureData>(id, this);
+        }
+
+        @Override
+        public TextureData copyValue(TextureData value) {
+            return value;
+        }
+    }
+
+    @Override
+    public void setInventorySlotContents(IInventory inventory, int index, ItemStack stack) {
+        updateInventory();
+    }
+
+    @Override
+    public void dirty() {
     }
 }

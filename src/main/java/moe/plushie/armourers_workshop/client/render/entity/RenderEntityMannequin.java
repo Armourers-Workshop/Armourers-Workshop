@@ -34,7 +34,6 @@ import moe.plushie.armourers_workshop.common.data.type.BipedRotations.BipedPart;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
 import moe.plushie.armourers_workshop.common.init.entities.EntityMannequin;
-import moe.plushie.armourers_workshop.common.inventory.ModInventory;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -302,10 +301,14 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             ModRenderHelper.disableAlphaBlend();
         }
         
-        ModInventory inventoryHands = entity.getInventoryHands();
-        for (int i = 0; i < inventoryHands.getSizeInventory(); i++) {
-            boolean flag = i == 0;
-            ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(inventoryHands.getStackInSlot(i));
+        for (int i = 0; i < 2; i++) {
+            boolean leftArm = i == 0;
+            ISkinDescriptor descriptor = null;
+            if (leftArm) {
+                descriptor = SkinNBTHelper.getSkinDescriptorFromStack(entity.getHandLeft());
+            } else {
+                descriptor = SkinNBTHelper.getSkinDescriptorFromStack(entity.getHandRight());
+            }
             if (descriptor != null) {
                 GlStateManager.pushMatrix();
                 if (bipedRotations.isChild()) {
@@ -314,11 +317,11 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
                 
                 float[] armRots = bipedRotations.getPartRotations(BipedPart.RIGHT_ARM);
                 
-                if (flag) {
+                if (leftArm) {
                     armRots = bipedRotations.getPartRotations(BipedPart.LEFT_ARM);
                 }
                 
-                if (!flag) {
+                if (!leftArm) {
                     GlStateManager.translate(scale * -5F, scale * 2F, scale * 0);
                 } else {
                     GlStateManager.translate(scale * 5, scale * 2, scale * 0);
@@ -332,7 +335,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
                 GlStateManager.rotate((float) Math.toDegrees(armRots[1]), 0, 1, 0);
                 GlStateManager.rotate((float) Math.toDegrees(armRots[0]), 1, 0, 0);
                 
-                if (!flag) {
+                if (!leftArm) {
                     GlStateManager.translate(scale * -1F, scale * 8, scale * 0);
                     if (playerTexture.isSlimModel()) {
                         GlStateManager.translate(scale * 0.5F, 0, 0);
@@ -346,7 +349,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
                 
                 GlStateManager.rotate(90, 1, 0, 0);
                 
-                if (flag) {
+                if (leftArm) {
                     GlStateManager.scale(-1, 1, 1);
                     GlStateManager.cullFace(CullFace.FRONT);
                 }
@@ -357,7 +360,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
 
                 renderSkin(entity, descriptor, skinCap, wardrobe, extraColours, 0, true, null);
 
-                if (flag) {
+                if (leftArm) {
                     GlStateManager.cullFace(CullFace.BACK);
                 }
                 
