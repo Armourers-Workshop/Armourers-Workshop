@@ -524,6 +524,7 @@ inventory.armourers_workshop:wardrobe.tab.man_offsets.button.add.3=Add 1
 
 # Mannequin
 inventory.armourers_workshop:mannequin.label.update=This mannequin is using an old format and needs to be updated. Press the button below to update the mannequin to the new format.
+inventory.armourers_workshop:mannequin.button.update=Update
 
 
 # Global Skin Library
