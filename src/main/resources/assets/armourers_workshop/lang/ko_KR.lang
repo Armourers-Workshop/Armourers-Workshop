@@ -56,7 +56,7 @@ tile.armourers_workshop:skinning-table.name=스킨을 입힐 수 있는 테이�
 tile.armourers_workshop:dye-table.name=염색 작업대
 tile.armourers_workshop:skinnable.name=스킨을 입힐 수 있는 블록
 tile.armourers_workshop:hologram-projector.name=홀로그램 영사기
-tile.armourers_workshop:outfit-maker.name=외형 제작대
+tile.armourers_workshop:outfit-maker.name=스킨 통합기
 
 
 # 블럭 설명 텍스트
@@ -450,8 +450,7 @@ inventory.armourers_workshop:wardrobe.tab.outfits=외형
 inventory.armourers_workshop:wardrobe.tab.displaySettings=표시 설정
 inventory.armourers_workshop:wardrobe.tab.colourSettings=색상 설정
 inventory.armourers_workshop:wardrobe.tab.dyes=염료
-#MISSING inventory.armourers_workshop:wardrobe.tab.contributor=Contributor
-
+inventory.armourers_workshop:wardrobe.tab.contributor=기여자
 # Wardrobe - Tab Display Settings
 inventory.armourers_workshop:wardrobe.tab.display_settings.renderHeadArmour=머리 무구 보이기
 inventory.armourers_workshop:wardrobe.tab.display_settings.renderChestArmour=상의 무구 보이기
@@ -530,7 +529,7 @@ inventory.armourers_workshop:global-skin-library.header.myFiles=내 파일
 inventory.armourers_workshop:global-skin-library.header.uploadSkin=스킨 업로드
 inventory.armourers_workshop:global-skin-library.header.uploadSkinBan=당신은 스킨 업로드를 금지합니다
 inventory.armourers_workshop:global-skin-library.header.joinBeta=베타 참여
-#MISSING inventory.armourers_workshop:global-skin-library.header.info=Info
+inventory.armourers_workshop:global-skin-library.header.info=정보
 
 
 # 글로벌 스킨 라이브러리 (검색 창)
@@ -614,16 +613,16 @@ inventory.armourers_workshop:global-skin-library.edit.dialog.delete.cancel=취�
 
 
 # Global Skin Library (Info)
-#MISSING inventory.armourers_workshop:global-skin-library.panel.info.name=Info
-#MISSING inventory.armourers_workshop:global-skin-library.panel.info.total_skins=Total skins uploaded: %d
-#MISSING inventory.armourers_workshop:global-skin-library.panel.info.download_count=Downloads last (hour %d) (day %d) (week %d).
-#MISSING inventory.armourers_workshop:global-skin-library.panel.info.loading=Loading...
-#MISSING inventory.armourers_workshop:global-skin-library.panel.info.error_getting_stats=Error getting stats:
-#MISSING inventory.armourers_workshop:global-skin-library.panel.info.links=Links
-#MISSING inventory.armourers_workshop:global-skin-library.panel.info.link.discord=Discord:
-#MISSING inventory.armourers_workshop:global-skin-library.panel.info.link.github=GitHub:
-#MISSING inventory.armourers_workshop:global-skin-library.panel.info.link.reddit=Reddit:
-#MISSING inventory.armourers_workshop:global-skin-library.panel.info.link.donation=Thank you for using Armourer's Workshop, if you want to help please consider donating to cover running cost of the global library.
+inventory.armourers_workshop:global-skin-library.panel.info.name=정보
+inventory.armourers_workshop:global-skin-library.panel.info.total_skins=전체 스킨 uploaded: %d
+inventory.armourers_workshop:global-skin-library.panel.info.download_count=Downloads last (hour %d) (day %d) (week %d).
+inventory.armourers_workshop:global-skin-library.panel.info.loading=로딩중...
+inventory.armourers_workshop:global-skin-library.panel.info.error_getting_stats=통계를 얻는 중 오류 발생:
+inventory.armourers_workshop:global-skin-library.panel.info.links=링크:
+inventory.armourers_workshop:global-skin-library.panel.info.link.discord=디스코드:
+inventory.armourers_workshop:global-skin-library.panel.info.link.github=GitHub:
+inventory.armourers_workshop:global-skin-library.panel.info.link.reddit=Reddit:
+inventory.armourers_workshop:global-skin-library.panel.info.link.donation=아머러스 워크샵을 사용해주셔서 감사합니다, 만약 도움을 주기 원하신다면, 글로벌 라이브러리의 유지 비용을 위한 기부를 고려해 주십시오.
 
 
 # 홀로그램 영사기
@@ -678,7 +677,7 @@ death.attack.victorious=%1$s Vic의 왕관에 찔려 죽었어요
 # 명령어
 commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable | setWardrobeOption>
 commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
-#MISSING commands.armourers.clearSkin.usage=/armourers clearSkin <player> <skintype> <slot id>
+commands.armourers.clearSkin.usage=/armourers clearSkin <player> <skintype> <slot id>
 commands.armourers.clearSkins.usage=/armourers clearSkins <player>
 commands.armourers.exportSkin.usage=/armourers exportSkin <file format> "<file name>" [scale]
 commands.armourers.giveSkin.usage=/armourers giveSkin <player> "<skin name>" [R,G,B] | [0xRRGGBB]
