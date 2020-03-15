@@ -23,21 +23,30 @@ public class RenderItemEquipmentSkin extends TileEntityItemStackRenderer {
         ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(itemStackIn);
         if (canRenderModel(descriptor)) {
             Minecraft mc = Minecraft.getMinecraft();
-            GL11.glPushMatrix();
-            GL11.glScalef(-1F, -1F, 1F);
-            GL11.glRotatef(180, 0, 1, 0);
+            GlStateManager.pushMatrix();
+            GlStateManager.pushAttrib();
+            GlStateManager.scale(-1F, -1F, 1F);
+            GlStateManager.rotate(180, 0, 1, 0);
             mc.profiler.startSection("armourersItemSkin");
-            GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             ModRenderHelper.enableAlphaBlend();
             GL11.glEnable(GL11.GL_CULL_FACE);
+            
+            GlStateManager.disableNormalize();
+            GlStateManager.disableRescaleNormal();
+            GlStateManager.disableDepth();
+            
+            GlStateManager.enableNormalize();
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.enableDepth();
+            
             GlStateManager.translate(8 * 0.0625F, -8 * 0.0625F, 0);
             GlStateManager.scale(0.6F, 0.6F, 0.6F);
             GlStateManager.rotate(30, 1, 0, 0);
             GlStateManager.rotate(45, 0, 1, 0);
             SkinItemRenderHelper.renderSkinAsItem(itemStackIn, true, 16, 16);
-            GL11.glPopAttrib();
             mc.profiler.endSection();
-            GL11.glPopMatrix();
+            GlStateManager.popAttrib();
+            GlStateManager.popMatrix();
         } else {
             GL11.glPushMatrix();
             GlStateManager.translate(8 * 0.0625F, 8 * 0.0625F, 0);
