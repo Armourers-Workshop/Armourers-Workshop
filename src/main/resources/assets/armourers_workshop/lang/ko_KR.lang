@@ -161,6 +161,8 @@ item.armourers_workshop:rollover.noSettingsSaved=&c저장된 세팅 없음.
 item.armourers_workshop:rollover.user=&6유저:&7 %s
 item.armourers_workshop:rollover.url=&6URL:&7 %s
 item.armourers_workshop:rollover.empty=&6비었음.
+item.armourers_workshop:rollover.radius.sample=&6샘플 범위:&7 %d
+item.armourers_workshop:rollover.radius.effect=&6효과 범위:&7 %d
 item.armourers_workshop:rollover.openSettings=shift+우클릭으로 설정창 열기.
 
 item.armourers_workshop:rollover.hasSkin=&6Armourer's Workshop(아머러스 워크샵) 스킨이 합성되었습니다.
