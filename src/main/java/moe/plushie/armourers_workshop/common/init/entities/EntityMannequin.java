@@ -92,11 +92,6 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
         }
     };
 
-    static {
-        DataSerializers.registerSerializer(BIPED_ROTATIONS_SERIALIZER);
-        DataSerializers.registerSerializer(TEXTURE_DATA_SERIALIZER);
-    }
-
     private static final String TAG_BIPED_ROTATIONS = "biped_rotations";
     private static final String TAG_TEXTURE_DATA = "texture_data";
     private static final String TAG_ROTATION = "rotation";
