@@ -9,6 +9,7 @@
 # 이메일 :   riskyken.web@gmail.com
 # 트위터: @RiskyKen
 # GitHub:  https://github.com/RiskyKen 개발 페이지에 요청을 보내주십시오.
+# Discord: https://discord.gg/5Z3KKvU
 #
 # 당신을 크레딧에 추가 할 수 있도록 Minecraft 사용자 이름 / uuid도 보내주십시오.
 #
@@ -68,7 +69,6 @@ tile.armourers_workshop:skin-cube-glowing.flavour=야광 커스텀 장비,건축
 tile.armourers_workshop:skin-cube-glass.flavour=투명한 커스텀 장비,건축 블럭입니다.%n(색칠 가능)
 tile.armourers_workshop:skin-cube-glass-glowing.flavour=투명한 커스텀 장비,건축 블럭입니다!%n(색칠 가능)
 tile.armourers_workshop:colour-mixer.flavour=커스텀 장비,블럭 에 칠할 색을 선택할 수 있습니다.%n붓과 롤러같은 장비를 들고 shift + 우클릭하면 빠른 채색을 할 수 있습니다.
-tile.armourers_workshop:Mannequin.flavour=커스텀 장비를 마네킹에 착용하여 보여줄 수 있습니다!%n이름표에 플레이어 이름을 적어 마네킹의 모습을 바꿀 수 있습니다.
 tile.armourers_workshop:doll.flavour=미니 마네킹!
 tile.armourers_workshop:skinning-table.flavour=아이템에 스킨을 적용 및 제거할 수 있습니다.
 tile.armourers_workshop:outfit-maker.flavour=여러 스킨들을 하나로 합칠 수 있습니다.
@@ -128,7 +128,7 @@ item.armourers_workshop:burn-tool.flavour=블록 색을 더 어둡게 만듭니�
 item.armourers_workshop:dodge-tool.flavour=블록을 더 밝게 만듭니다.
 item.armourers_workshop:colour-noise-tool.flavour=블록에 임의의 색상 노이즈를 적용합니다.
 item.armourers_workshop:shade-noise-tool.flavour=블록에 임의의 음영을 적용합니다.
-item.armourers_workshop:mannequin-tool.flavour=마네킹 포즈 설정을 저장하고 로드하십시오. %n 클릭하여 설정을 적용하십시오. %n 설정을 저장하려면 마우스 오른쪽 버튼을 클릭하십시오.
+item.armourers_workshop:mannequin-tool.flavour=마네킹 포즈 설정을 저장하고 로드하십시오.%n클릭하여 설정을 적용하십시오.%n설정을 저장하려면 마우스 오른쪽 버튼을 클릭하십시오.
 item.armourers_workshop:guide-book.flavour=Armourer's Workshop(아머러스 워크샵)에 대한 가이드
 item.armourers_workshop:armour-container.flavour=개발자를 위한 게임모드 전용 아이템.%nNPC에 제작한 장비를 입힐 수 있다(Custom NPCs 모드와 함께 사용).%n스킨 조합대에서 제작한 장비와 합성. 
 item.armourers_workshop:wand-of-style.flavour=스킨을 NPC에 입힐 수 있습니다.
@@ -147,6 +147,7 @@ item.armourers_workshop:linking-tool.flavour=사용 가능한 블록을 %n 마�
 item.armourers_workshop:mannequin.flavour=이 기이한 마네킹과 함께 당신의 장비를 보여주세요!
 item.armourers_workshop:mannequin.small.flavour=작은 마네킹!
 item.armourers_workshop:mannequin.big.flavour=이 거대한 사이즈를 보세요!
+
 
 # 롤오버 텍스트
 item.armourers_workshop:rollover.intensity=&6강도:&7 %s
@@ -227,6 +228,7 @@ paintType.armourers_workshop:misc_1.name=기타 1
 paintType.armourers_workshop:misc_2.name=기타 2
 paintType.armourers_workshop:misc_3.name=기타 3
 paintType.armourers_workshop:misc_4.name=기타 4
+
 
 # 색상 계열
 colourFamily.armourers_workshop:minecraft.name=마인크래프트
@@ -448,6 +450,7 @@ inventory.armourers_workshop:wardrobe.tab.outfits=외형
 inventory.armourers_workshop:wardrobe.tab.displaySettings=표시 설정
 inventory.armourers_workshop:wardrobe.tab.colourSettings=색상 설정
 inventory.armourers_workshop:wardrobe.tab.dyes=염료
+#MISSING inventory.armourers_workshop:wardrobe.tab.contributor=Contributor
 
 # Wardrobe - Tab Display Settings
 inventory.armourers_workshop:wardrobe.tab.display_settings.renderHeadArmour=머리 무구 보이기
@@ -483,23 +486,25 @@ inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_4.clear=�
 inventory.armourers_workshop:wardrobe.tab.colour_settings.label.palette=팔레트
 
 # Wardrobe - 기여자 탭
-
 inventory.armourers_workshop:wardrobe.tab.contributor.label.contributor=아머러스 워크샵 모드의 개발에 도움을 주셔서 감사합니다.\n\nRiskyKen은 당신을 사랑합니다 ❤❤❤
 
 # Wardrobe - Mannequin Tabs
 inventory.armourers_workshop:wardrobe.tab.man_rotations=마네킹 회전
 inventory.armourers_workshop:wardrobe.tab.man_rotations.random=랜덤
 inventory.armourers_workshop:wardrobe.tab.man_rotations.reset=초기화
+
 inventory.armourers_workshop:wardrobe.tab.man_texture=마네킹 외형
 inventory.armourers_workshop:wardrobe.tab.man_texture.dropdown.user=유저
 inventory.armourers_workshop:wardrobe.tab.man_texture.dropdown.url=URL
 inventory.armourers_workshop:wardrobe.tab.man_texture.set=설정
+
 inventory.armourers_workshop:wardrobe.tab.man_extras=기타 설정
 inventory.armourers_workshop:wardrobe.tab.man_extras.label.isChild=어린이 모델
 inventory.armourers_workshop:wardrobe.tab.man_extras.label.isExtraRenders=추가 렌더링
 inventory.armourers_workshop:wardrobe.tab.man_extras.label.isFlying=비행
 inventory.armourers_workshop:wardrobe.tab.man_extras.label.isVisible=투명
 inventory.armourers_workshop:wardrobe.tab.man_extras.label.noclip=블럭 통과
+
 inventory.armourers_workshop:wardrobe.tab.man_offsets=마네킹 위치
 inventory.armourers_workshop:wardrobe.tab.man_offsets.button.sub.1=1/16 뒤로
 inventory.armourers_workshop:wardrobe.tab.man_offsets.button.sub.2=1/8 뒤로
@@ -508,9 +513,11 @@ inventory.armourers_workshop:wardrobe.tab.man_offsets.button.add.1=1/16 앞으�
 inventory.armourers_workshop:wardrobe.tab.man_offsets.button.add.2=1/8 앞으로
 inventory.armourers_workshop:wardrobe.tab.man_offsets.button.add.3=1 앞으로
 
+
 # Mannequin
 inventory.armourers_workshop:mannequin.label.update=이 마네킹은 오래된 형식을 사용하고 있으며, 업데이트가 필요합니다. 마네킹을 업데이트 하려면 아래의 버튼을 누르십시오.
 inventory.armourers_workshop:mannequin.button.update=업데이트
+
 
 # 글로벌 스킨 라이브러리
 inventory.armourers_workshop:global-skin-library.invalidJava=[Java %d 업데이트 %d]이 (가) 너무 오래되었습니다. [Java 8 Update 101] 또는 그 이상으로 업데이트하십시오.
@@ -523,6 +530,7 @@ inventory.armourers_workshop:global-skin-library.header.myFiles=내 파일
 inventory.armourers_workshop:global-skin-library.header.uploadSkin=스킨 업로드
 inventory.armourers_workshop:global-skin-library.header.uploadSkinBan=당신은 스킨 업로드를 금지합니다
 inventory.armourers_workshop:global-skin-library.header.joinBeta=베타 참여
+#MISSING inventory.armourers_workshop:global-skin-library.header.info=Info
 
 
 # 글로벌 스킨 라이브러리 (검색 창)
@@ -543,6 +551,7 @@ inventory.armourers_workshop:global-skin-library.searchResults.small =작음
 inventory.armourers_workshop:global-skin-library.searchResults.medium =중간
 inventory.armourers_workshop:global-skin-library.searchResults.large =큼
 inventory.armourers_workshop:global-skin-library.searchResults.label.searching =검색 중 ...
+#MISSING inventory.armourers_workshop:global-skin-library.searchResults.label.no_results=No results found.
 
 
 # 글로벌 스킨 라이브러리 (스킨 정보)
@@ -604,6 +613,19 @@ inventory.armourers_workshop:global-skin-library.edit.dialog.delete.ok=확인
 inventory.armourers_workshop:global-skin-library.edit.dialog.delete.cancel=취소
 
 
+# Global Skin Library (Info)
+#MISSING inventory.armourers_workshop:global-skin-library.panel.info.name=Info
+#MISSING inventory.armourers_workshop:global-skin-library.panel.info.total_skins=Total skins uploaded: %d
+#MISSING inventory.armourers_workshop:global-skin-library.panel.info.download_count=Downloads last (hour %d) (day %d) (week %d).
+#MISSING inventory.armourers_workshop:global-skin-library.panel.info.loading=Loading...
+#MISSING inventory.armourers_workshop:global-skin-library.panel.info.error_getting_stats=Error getting stats:
+#MISSING inventory.armourers_workshop:global-skin-library.panel.info.links=Links
+#MISSING inventory.armourers_workshop:global-skin-library.panel.info.link.discord=Discord:
+#MISSING inventory.armourers_workshop:global-skin-library.panel.info.link.github=GitHub:
+#MISSING inventory.armourers_workshop:global-skin-library.panel.info.link.reddit=Reddit:
+#MISSING inventory.armourers_workshop:global-skin-library.panel.info.link.donation=Thank you for using Armourer's Workshop, if you want to help please consider donating to cover running cost of the global library.
+
+
 # 홀로그램 영사기
 inventory.armourers_workshop:hologram-projector.tab.inventory=목록
 inventory.armourers_workshop:hologram-projector.tab.offset=오프셋
@@ -656,6 +678,7 @@ death.attack.victorious=%1$s Vic의 왕관에 찔려 죽었어요
 # 명령어
 commands.armourers.usage=/armourers <giveSkin | clearSkins | setSkin | clearModelCache | setUnlockedWardrobeSlots | resyncWardrobe | adminPanel | setItemAsSkinnable | setWardrobeOption>
 commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
+#MISSING commands.armourers.clearSkin.usage=/armourers clearSkin <player> <skintype> <slot id>
 commands.armourers.clearSkins.usage=/armourers clearSkins <player>
 commands.armourers.exportSkin.usage=/armourers exportSkin <file format> "<file name>" [scale]
 commands.armourers.giveSkin.usage=/armourers giveSkin <player> "<skin name>" [R,G,B] | [0xRRGGBB]
@@ -670,6 +693,7 @@ commands.armourers.invalidDyeFormat=%1$s 은(는) 유효한 염료 형식이 아
 
 # 크리에이티브 창
 itemGroup.armourers_workshop=Armourer's Workshop(아머러스 워크샵)
+#MISSING itemGroup.armourers_workshop_painting_tools=Armourer's Workshop - Building
 
 
 # 키보드

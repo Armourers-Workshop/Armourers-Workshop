@@ -466,31 +466,23 @@ inventory.armourers_workshop:wardrobe.tab.colour_settings.label.misc_1=Misc. 1 C
 inventory.armourers_workshop:wardrobe.tab.colour_settings.label.misc_2=Misc. 2 Colour:
 inventory.armourers_workshop:wardrobe.tab.colour_settings.label.misc_3=Misc. 3 Colour:
 inventory.armourers_workshop:wardrobe.tab.colour_settings.label.misc_4=Misc. 4 Colour:
-
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.skin.select=Pick Skin Colour
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.skin.clear=Clear Skin Colour
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.skin.auto=Auto Skin Colour
-
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.hair.select=Pick Hair Colour
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.hair.clear=Clear Hair Colour
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.hair.auto=Auto Hair Colour
-
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.eye.select=Pick Eye Colour
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.eye.clear=Clear Eye Colour
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.eye.auto=Auto Eye Colour
-
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_1.select=Pick Misc. 1 Colour
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_1.clear=Clear Misc. 1 Colour
-
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_2.select=Pick Misc. 2 Colour
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_2.clear=Clear Misc. 2 Colour
-
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_3.select=Pick Misc. 3 Colour
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_3.clear=Clear Misc. 3 Colour
-
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_4.select=Pick Misc. 4 Colour
 inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_4.clear=Clear Misc. 4 Colour
-
 inventory.armourers_workshop:wardrobe.tab.colour_settings.label.palette=Palette
 
 # Wardrobe - Tab Contributor
@@ -524,6 +516,7 @@ inventory.armourers_workshop:wardrobe.tab.man_offsets.button.add.3=Add 1
 
 # Mannequin
 inventory.armourers_workshop:mannequin.label.update=This mannequin is using an old format and needs to be updated. Press the button below to update the mannequin to the new format.
+inventory.armourers_workshop:mannequin.button.update=Update
 
 
 # Global Skin Library
