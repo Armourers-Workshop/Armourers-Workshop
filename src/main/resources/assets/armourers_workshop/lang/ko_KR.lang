@@ -48,7 +48,7 @@ tile.armourers_workshop:skin-cube.name=스킨 큐브
 tile.armourers_workshop:skin-cube-glowing.name=스킨 큐브 (발광)
 tile.armourers_workshop:skin-cube-glass.name=유리 스킨 큐브
 tile.armourers_workshop:skin-cube-glass-glowing.name=유리 스킨 큐브 (발광)
-tile.armourers_workshop:colour-mixer.name=혼합기
+tile.armourers_workshop:colour-mixer.name=색상 혼합기
 	
 tile.armourers_workshop:doll.name=인형
 tile.armourers_workshop:skinning-table.name=스킨을 입힐 수 있는 테이블
@@ -67,8 +67,8 @@ tile.armourers_workshop:skin-cube.flavour=커스텀 장비,블럭의 메인 건�
 tile.armourers_workshop:skin-cube-glowing.flavour=야광 커스텀 장비,건축 블럭입니다!%n(색칠 가능)
 tile.armourers_workshop:skin-cube-glass.flavour=투명한 커스텀 장비,건축 블럭입니다.%n(색칠 가능)
 tile.armourers_workshop:skin-cube-glass-glowing.flavour=투명한 커스텀 장비,건축 블럭입니다!%n(색칠 가능)
-tile.armourers_workshop:colour-mixer.flavour=커스텀 장비,블럭 에 칠할 색을 선택할 수 있습니다.%n붓과 롤러같은 장비를 들고 shift + 우클릭하면 색이 복사됩니다..
-tile.armourers_workshop:Mannequin.flavour=커스텀 장비를 마네킹에 착용하여 보여줄 수 있습니다!%n이름표에 플레이어 이름을 적어 마네킹의 모습을 바꿀 수 있습니다..
+tile.armourers_workshop:colour-mixer.flavour=커스텀 장비,블럭 에 칠할 색을 선택할 수 있습니다.%n붓과 롤러같은 장비를 들고 shift + 우클릭하면 빠른 채색을 할 수 있습니다.
+tile.armourers_workshop:Mannequin.flavour=커스텀 장비를 마네킹에 착용하여 보여줄 수 있습니다!%n이름표에 플레이어 이름을 적어 마네킹의 모습을 바꿀 수 있습니다.
 tile.armourers_workshop:doll.flavour=미니 마네킹!
 tile.armourers_workshop:skinning-table.flavour=아이템에 스킨을 적용 및 제거할 수 있습니다.
 tile.armourers_workshop:outfit-maker.flavour=여러 스킨들을 하나로 합칠 수 있습니다.
@@ -89,7 +89,7 @@ item.armourers_workshop:colour-noise-tool.name=채도 도구 (노이즈)
 item.armourers_workshop:shade-noise-tool.name=명도 도구 (노이즈)
 item.armourers_workshop:hue-tool.name=색상 도구
 item.armourers_workshop:block-marker.name=블럭 마커
-item.armourers_workshop:blending-tool.name=블렌딩 도구 - (미완성)
+item.armourers_workshop:blending-tool.name=혼합 도구 - (미완성)
 item.armourers_workshop:paintball-gun.name=페인트볼 총
 item.armourers_workshop:palette.name=팔레트
 
@@ -135,7 +135,7 @@ item.armourers_workshop:wand-of-style.flavour=스킨을 NPC에 입힐 수 있습
 item.armourers_workshop:soap.flavour=Skinner Table(스킨 테이블)에서 항목 스킨을 지우십시오.
 item.armourers_workshop:hue-tool.flavour=음영에 영향을 미치지 않는 블록 %n의 색상을 변경합니다.
 item.armourers_workshop:block-marker.flavour=커스텀장비,블럭 스킨 큐브에 마커를 만듭니다. %n 마커 블록이 필요한 스킨에만 사용하십시오.
-item.armourers_workshop:dye-bottle.flavour=염색 작업대에 사용됩니다. 부분 염색이되는 커스텀장비,블럭 스킨에 염색할 수 있습니다.
+item.armourers_workshop:dye-bottle.flavour=스킨을 염색하기 위해 염색 작업대에서 사용됩니다.
 item.armourers_workshop:armourers-hammer.flavour=블럭을 회전하는데 쓰인다 (마네킹의 회전).
 item.armourers_workshop:skin-unlock.0.flavour=옷장에 머리 스킨 슬롯 1 개를 늘립니다.
 item.armourers_workshop:skin-unlock.1.flavour=옷장에 상의 스킨 슬롯 1 개를 늘립니다.
@@ -223,8 +223,10 @@ paintType.armourers_workshop:none.name=투명화
 paintType.armourers_workshop:skin.name=피부
 paintType.armourers_workshop:hair.name=머리
 paintType.armourers_workshop:eye.name=눈
-paintType.armourers_workshop:misc.name=그 외
-
+paintType.armourers_workshop:misc_1.name=기타 1
+paintType.armourers_workshop:misc_2.name=기타 2
+paintType.armourers_workshop:misc_3.name=기타 3
+paintType.armourers_workshop:misc_4.name=기타 4
 
 # 색상 계열
 colourFamily.armourers_workshop:minecraft.name=마인크래프트
@@ -424,11 +426,11 @@ inventory.armourers_workshop:armourer.dialog.copy.srcPart=시작 부분:
 inventory.armourers_workshop:armourer.dialog.copy.desPart=도착 부분:
 inventory.armourers_workshop:armourer.dialog.copy.mirror=거울 모드
 
-inventory.armourers_workshop:armourer.main.help.skinType=Select a skin type.
-inventory.armourers_workshop:armourer.main.help.save=Saves the blocks in the world into a skin item.
-inventory.armourers_workshop:armourer.main.help.load=Loads a skin item into the world as blocks.
-inventory.armourers_workshop:armourer.main.help.itemName=Enter a name for your item.
-inventory.armourers_workshop:armourer.main.help.itemFlavour=Text that is displayed in the items tool-tip.
+inventory.armourers_workshop:armourer.main.help.skinType=스킨 타입을 고르십시오.
+inventory.armourers_workshop:armourer.main.help.save=월드의 블럭을 스킨 아이템으로 저장합니다.
+inventory.armourers_workshop:armourer.main.help.load=스킨 아이템을 월드에 블럭 형태로 불러옵니다.
+inventory.armourers_workshop:armourer.main.help.itemName=당신의 아이템에 이름을 작성하십시오.
+inventory.armourers_workshop:armourer.main.help.itemFlavour=아이템 설명란에 기재될 문구를 작성하십시오.
 
 
 # Color Mixer
@@ -447,53 +449,68 @@ inventory.armourers_workshop:wardrobe.tab.displaySettings=표시 설정
 inventory.armourers_workshop:wardrobe.tab.colourSettings=색상 설정
 inventory.armourers_workshop:wardrobe.tab.dyes=염료
 
-inventory.armourers_workshop:wardrobe.label.skinColour=스킨 색
-inventory.armourers_workshop:wardrobe.label.hairColour=머리카락 색
-inventory.armourers_workshop:wardrobe.label.eyeColour=눈 색
-inventory.armourers_workshop:wardrobe.label.miscColour=그 외 색
+# Wardrobe - Tab Display Settings
+inventory.armourers_workshop:wardrobe.tab.display_settings.renderHeadArmour=머리 무구 보이기
+inventory.armourers_workshop:wardrobe.tab.display_settings.renderChestArmour=상의 무구 보이기
+inventory.armourers_workshop:wardrobe.tab.display_settings.renderLegArmour=하의 무구 보이기
+inventory.armourers_workshop:wardrobe.tab.display_settings.renderFootArmour=신발 무구 보이기 armour?
 
-inventory.armourers_workshop:wardrobe.selectSkin=스킨 색 선택
-inventory.armourers_workshop:wardrobe.autoSkin=자동 설정
-inventory.armourers_workshop:wardrobe.selectHair=머리 색 선택
-inventory.armourers_workshop:wardrobe.autoHair=자동 설정
-inventory.armourers_workshop:wardrobe.selectEye=눈 색 설정
-inventory.armourers_workshop:wardrobe.autoEye=자동 설정
-inventory.armourers_workshop:wardrobe.selectAcc=장신구 색 설정
+# Wardrobe - Tab Colour Settings
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.skin=스킨 색상:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.hair=머리 색상:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.eye=눈 색상:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.misc_1=기타. 1 색상:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.misc_2=기타. 2 색상:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.misc_3=기타. 3 색상:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.misc_4=기타. 4 색상:
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.skin.select=스킨 색상 선택
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.skin.clear=스킨 색상 초기화
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.skin.auto=자동 스킨 색상
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.hair.select=머리 색상 선택
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.hair.clear=머리 색상 초기화
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.hair.auto=자동 머리 색상
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.eye.select=눈 색상 선택
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.eye.clear=눈 색상 초기화
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.eye.auto=자동 눈 색상
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_1.select=기타. 1 색상 선택
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_1.clear=기타. 1 색상 초기화
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_2.select=기타. 2 색상 선택
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_2.clear=기타. 2 색상 초기화
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_3.select=기타. 3 색상 선택
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_3.clear=기타. 3 색상 초기화
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_4.select=기타. 4 색상 선택
+inventory.armourers_workshop:wardrobe.tab.colour_settings.button.misc_4.clear=기타. 4 색상 초기화
+inventory.armourers_workshop:wardrobe.tab.colour_settings.label.palette=팔레트
 
-inventory.armourers_workshop:wardrobe.label.skinOverride=스킨 덮어쓰기
-inventory.armourers_workshop:wardrobe.renderHeadArmour=머리 무구 렌더링
-inventory.armourers_workshop:wardrobe.renderChestArmour=상의 무구 렌더링
-inventory.armourers_workshop:wardrobe.renderLegArmour=하의 무구 렌더링
-inventory.armourers_workshop:wardrobe.renderFootArmour=신발 무구 렌더링
+# Wardrobe - 기여자 탭
 
+inventory.armourers_workshop:wardrobe.tab.contributor.label.contributor=아머러스 워크샵 모드의 개발에 도움을 주셔서 감사합니다.\n\nRiskyKen은 당신을 사랑합니다 ❤❤❤
 
-# 마네킹
-inventory.armourers_workshop:mannequin.label.headRotation=머리 회전
-inventory.armourers_workshop:mannequin.label.leftArmRotation=왼쪽 팔 회전
-inventory.armourers_workshop:mannequin.label.rightArmRotation=오른쪽 팔 회전
-inventory.armourers_workshop:mannequin.label.leftLegRotation=왼쪽 다리 회전
-inventory.armourers_workshop:mannequin.label.rightLegRotation=오른쪽 다리 회전
-inventory.armourers_workshop:mannequin.label.isChild=어린이 모델 
-inventory.armourers_workshop:mannequin.label.isExtraRenders=추가 렌더링
-inventory.armourers_workshop:mannequin.label.isFlying=빠르게
-inventory.armourers_workshop:mannequin.label.isVisible=보이게 하기
-inventory.armourers_workshop:mannequin.label.noclip=클립 제거
-inventory.armourers_workshop:mannequin.random=랜덤
-inventory.armourers_workshop:mannequin.reset=초기화
-inventory.armourers_workshop:mannequin.dropdown.user=사용자
-inventory.armourers_workshop:mannequin.dropdown.url=링크
-inventory.armourers_workshop:mannequin.set=적용
-inventory.armourers_workshop:mannequin.selectSkin=스킨색 선택
-inventory.armourers_workshop:mannequin.selectHair=머리색 선택
-inventory.armourers_workshop:mannequin.autoSkin=자동 스킨색 적용
-inventory.armourers_workshop:mannequin.autoHair=자동 머리색 적용
-inventory.armourers_workshop:mannequin.tab.inventory=인벤토리
-inventory.armourers_workshop:mannequin.tab.rotations=몸통 회전
-inventory.armourers_workshop:mannequin.tab.offset=위치 설정
-inventory.armourers_workshop:mannequin.tab.skinAndHair=스킨과 머리 색상
-inventory.armourers_workshop:mannequin.tab.name=이름
-inventory.armourers_workshop:mannequin.tab.extraRenders=추가 랜더링
+# Wardrobe - Mannequin Tabs
+inventory.armourers_workshop:wardrobe.tab.man_rotations=마네킹 회전
+inventory.armourers_workshop:wardrobe.tab.man_rotations.random=랜덤
+inventory.armourers_workshop:wardrobe.tab.man_rotations.reset=초기화
+inventory.armourers_workshop:wardrobe.tab.man_texture=마네킹 외형
+inventory.armourers_workshop:wardrobe.tab.man_texture.dropdown.user=유저
+inventory.armourers_workshop:wardrobe.tab.man_texture.dropdown.url=URL
+inventory.armourers_workshop:wardrobe.tab.man_texture.set=설정
+inventory.armourers_workshop:wardrobe.tab.man_extras=기타 설정
+inventory.armourers_workshop:wardrobe.tab.man_extras.label.isChild=어린이 모델
+inventory.armourers_workshop:wardrobe.tab.man_extras.label.isExtraRenders=추가 렌더링
+inventory.armourers_workshop:wardrobe.tab.man_extras.label.isFlying=비행
+inventory.armourers_workshop:wardrobe.tab.man_extras.label.isVisible=투명
+inventory.armourers_workshop:wardrobe.tab.man_extras.label.noclip=블럭 통과
+inventory.armourers_workshop:wardrobe.tab.man_offsets=마네킹 위치
+inventory.armourers_workshop:wardrobe.tab.man_offsets.button.sub.1=1/16 뒤로
+inventory.armourers_workshop:wardrobe.tab.man_offsets.button.sub.2=1/8 뒤로
+inventory.armourers_workshop:wardrobe.tab.man_offsets.button.sub.3=1 뒤로
+inventory.armourers_workshop:wardrobe.tab.man_offsets.button.add.1=1/16 앞으로
+inventory.armourers_workshop:wardrobe.tab.man_offsets.button.add.2=1/8 앞으로
+inventory.armourers_workshop:wardrobe.tab.man_offsets.button.add.3=1 앞으로
 
+# Mannequin
+inventory.armourers_workshop:mannequin.label.update=이 마네킹은 오래된 형식을 사용하고 있으며, 업데이트가 필요합니다. 마네킹을 업데이트 하려면 아래의 버튼을 누르십시오.
+inventory.armourers_workshop:mannequin.button.update=업데이트
 
 # 글로벌 스킨 라이브러리
 inventory.armourers_workshop:global-skin-library.invalidJava=[Java %d 업데이트 %d]이 (가) 너무 오래되었습니다. [Java 8 Update 101] 또는 그 이상으로 업데이트하십시오.
