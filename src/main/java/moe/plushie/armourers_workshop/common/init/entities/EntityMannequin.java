@@ -278,7 +278,6 @@ public class EntityMannequin extends Entity implements IGameProfileCallback {
             if (itemStack.getItem() != ModItems.MANNEQUIN_TOOL) {
                 FMLNetworkHandler.openGui(player, ArmourersWorkshop.getInstance(), EnumGuiId.WARDROBE_ENTITY.ordinal(), getEntityWorld(), getEntityId(), 0, 0);
             }
-
         }
         return EnumActionResult.PASS;
     }

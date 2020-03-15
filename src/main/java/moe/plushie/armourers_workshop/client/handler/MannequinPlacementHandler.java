@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
@@ -110,6 +111,10 @@ public class MannequinPlacementHandler {
         ModelPlayer targetModel = modelPlayerNormal;
         
         double angle = TrigUtils.getAngleDegrees(xOff, zOff, target.hitVec.x, target.hitVec.z) + 90D;
+        if (player.isSneaking()) {
+            int l = MathHelper.floor(player.rotationYaw * 16.0F / 360.0F + 0.5D) & 15;
+            angle = l * 22.5F + 180F;
+        }
         
         if (playerTexture.isSlimModel()) {
             targetModel = modelPlayerSmall;
@@ -118,7 +123,12 @@ public class MannequinPlacementHandler {
         GlStateManager.pushMatrix();
         //ModLogger.log(target.hitVec);
         
-        GlStateManager.translate(target.hitVec.x - xOff, pos.getY() - yOff, target.hitVec.z - zOff);
+        if (player.isSneaking()) {
+            GlStateManager.translate(pos.getX() + 0.5F - xOff, pos.getY() - yOff, pos.getZ() + 0.5F - zOff);
+        } else {
+            GlStateManager.translate(target.hitVec.x - xOff, pos.getY() - yOff, target.hitVec.z - zOff);
+        }
+        
         GlStateManager.scale(15F * scale, -15F * scale, -15F * scale);
         GlStateManager.scale(size, size, size);
         GlStateManager.translate(0, -24F * scale, 0);

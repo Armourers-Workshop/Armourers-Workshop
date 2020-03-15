@@ -21,6 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
@@ -146,9 +147,15 @@ public class ItemMannequin extends AbstractModItem {
             if (!worldIn.isRemote) {
                 pos = pos.offset(facing);
                 EntityMannequin entityMannequin = new EntityMannequin(worldIn);
-                entityMannequin.setPosition(pos.getX() + hitX, pos.getY(), pos.getZ() + hitZ);
-                double angle = TrigUtils.getAngleDegrees(player.posX, player.posZ, pos.getX() + hitX, pos.getZ() + hitZ) + 90D;
-                entityMannequin.setRotation((float) angle);
+                if (player.isSneaking()) {
+                    int l = MathHelper.floor(player.rotationYaw * 16.0F / 360.0F + 0.5D) & 15;
+                    entityMannequin.setPosition(pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5F);
+                    entityMannequin.setRotation(l * 22.5F + 180F);
+                } else {
+                    entityMannequin.setPosition(pos.getX() + hitX, pos.getY(), pos.getZ() + hitZ);
+                    double angle = TrigUtils.getAngleDegrees(player.posX, player.posZ, pos.getX() + hitX, pos.getZ() + hitZ) + 90D;
+                    entityMannequin.setRotation((float) angle);
+                }
                 if (itemStack.hasTagCompound()) {
                     TextureData textureData = getTextureData(itemStack);
                     float scale = getScale(itemStack);
