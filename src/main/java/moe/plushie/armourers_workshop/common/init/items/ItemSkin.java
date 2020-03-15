@@ -193,19 +193,14 @@ public class ItemSkin extends AbstractModItem {
         }
         ISkinType skinType = descriptor.getIdentifier().getSkinType();
 
-        for (int i = 0; i < wardrobeCap.getUnlockedSlotsForSkinType(skinType); i++) {
-            if (!worldIn.isRemote) {
-                if (skinCapability.canHoldSkinType(descriptor.getIdentifier().getSkinType())) {
-                    if (skinCapability.setStackInNextFreeSlot(itemStack.copy())) {
-                        skinCapability.setSkinStack(skinType, i, itemStack);
-                        skinCapability.setSkinDescriptor(skinType, i, descriptor);
-                        skinCapability.syncToPlayer((EntityPlayerMP) playerIn);
-                        skinCapability.syncToAllTracking();
-                        itemStack.shrink(1);
-                    }
-                    return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStack);
+        if (!worldIn.isRemote) {
+            if (skinCapability.canHoldSkinType(descriptor.getIdentifier().getSkinType())) {
+                if (skinCapability.setStackInNextFreeSlot(itemStack.copy())) {
+                    skinCapability.syncToPlayer((EntityPlayerMP) playerIn);
+                    skinCapability.syncToAllTracking();
+                    itemStack.shrink(1);
                 }
-
+                return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStack);
             }
         }
         return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStack);
