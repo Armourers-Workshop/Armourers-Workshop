@@ -4,8 +4,8 @@ import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.armourer.GuiArmourer;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTabPanel;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
@@ -46,15 +46,15 @@ public class GuiTabArmourerDisplaySettings extends GuiTabPanel implements IDropD
         
         buttonList.clear();
         
-        checkShowGuides = new GuiCheckBox(7, 10, 95, GuiHelper.getLocalizedControlName(guiName, "showGuide"), tileEntity.isShowGuides());
-        checkShowHelper = new GuiCheckBox(6, 10, 110, GuiHelper.getLocalizedControlName(guiName, "showHelper"), tileEntity.isShowHelper());
+        checkShowGuides = new GuiCheckBox(7, 10, 110, GuiHelper.getLocalizedControlName(guiName, "showGuide"), tileEntity.isShowGuides());
+        checkShowHelper = new GuiCheckBox(6, 10, 125, GuiHelper.getLocalizedControlName(guiName, "showHelper"), tileEntity.isShowHelper());
         
-        buttonList.add(new GuiButtonExt(8, width - 36 - 5, 70, 30, 16, GuiHelper.getLocalizedControlName(guiName, "set")));
+        buttonList.add(new GuiButtonExt(8, 10, 90, 80, 16, GuiHelper.getLocalizedControlName(guiName, "set")));
         textUserSkin = new GuiTextField(-1, fontRenderer, x + 10, y + 70, 120, 16);
         textUserSkin.setMaxStringLength(300);
         textUserSkin.setText(tileEntity.getTexture().getTextureString());
         
-        textureTypeList = new GuiDropDownList(0, 10, 30, 50, "", this);
+        textureTypeList = new GuiDropDownList(0, 10, 30, 80, "", this);
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getName(), "dropdown.user"), TextureType.USER.toString(), true);
         textureTypeList.addListItem(GuiHelper.getLocalizedControlName(tileEntity.getName(), "dropdown.url"), TextureType.URL.toString(), true);
         textureTypeList.setListSelectedIndex(tileEntity.getTexture().getTextureType().ordinal());
