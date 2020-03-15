@@ -550,7 +550,7 @@ inventory.armourers_workshop:global-skin-library.searchResults.small =작음
 inventory.armourers_workshop:global-skin-library.searchResults.medium =중간
 inventory.armourers_workshop:global-skin-library.searchResults.large =큼
 inventory.armourers_workshop:global-skin-library.searchResults.label.searching =검색 중 ...
-#MISSING inventory.armourers_workshop:global-skin-library.searchResults.label.no_results=No results found.
+inventory.armourers_workshop:global-skin-library.searchResults.label.no_results=No results found.
 
 
 # 글로벌 스킨 라이브러리 (스킨 정보)
@@ -692,7 +692,7 @@ commands.armourers.invalidDyeFormat=%1$s 은(는) 유효한 염료 형식이 아
 
 # 크리에이티브 창
 itemGroup.armourers_workshop=Armourer's Workshop(아머러스 워크샵)
-#MISSING itemGroup.armourers_workshop_painting_tools=Armourer's Workshop - Building
+itemGroup.armourers_workshop_painting_tools=Armourer's Workshop - Building
 
 
 # 키보드

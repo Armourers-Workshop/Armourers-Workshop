@@ -44,7 +44,7 @@ public class GuiMannequin extends ModGuiContainer<ContainerMannequin> {
     public void initGui() {
         super.initGui();
         buttonList.clear();
-        GuiButtonExt buttonExt = new GuiButtonExt(0, guiLeft + xSize / 2 - 50, guiTop + ySize - 28, 100, 18, "Update");
+        GuiButtonExt buttonExt = new GuiButtonExt(0, guiLeft + xSize / 2 - 50, guiTop + ySize - 28, 100, 18, GuiHelper.getLocalizedControlName(inventoryName, "button.update"));
         buttonList.add(buttonExt);
     }
     
