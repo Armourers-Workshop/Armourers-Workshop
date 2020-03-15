@@ -161,6 +161,8 @@ item.armourers_workshop:rollover.noSettingsSaved=&cNo Settings Saved.
 item.armourers_workshop:rollover.user=&6User:&7 %s
 item.armourers_workshop:rollover.url=&6URL:&7 %s
 item.armourers_workshop:rollover.empty=&6Empty.
+item.armourers_workshop:rollover.radius.sample=&6Sample Radius:&7 %d
+item.armourers_workshop:rollover.radius.effect=&6Effect Radius:&7 %d
 item.armourers_workshop:rollover.openSettings=Sneak right click to open settings.
 
 item.armourers_workshop:rollover.hasSkin=&6Has Armouerer's Workshop Skin

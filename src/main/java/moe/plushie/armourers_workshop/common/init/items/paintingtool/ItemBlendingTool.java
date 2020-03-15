@@ -240,8 +240,8 @@ public class ItemBlendingTool extends AbstractModItem implements IConfigurableTo
         int radiusSample = ToolOptions.RADIUS_SAMPLE.getValue(stack);
         int radiusEffect = ToolOptions.RADIUS_EFFECT.getValue(stack);
         tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.intensity", intensity));
-        tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.radius", radiusSample, radiusSample, 1));
-        tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.radius", radiusEffect, radiusEffect, 1));
+        tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.radius.sample", radiusSample, radiusSample, 1));
+        tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.radius.effect", radiusEffect, radiusEffect, 1));
         tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.openSettings"));
     }
     
