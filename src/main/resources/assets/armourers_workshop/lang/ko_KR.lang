@@ -455,7 +455,7 @@ inventory.armourers_workshop:wardrobe.tab.contributor=기여자
 inventory.armourers_workshop:wardrobe.tab.display_settings.renderHeadArmour=머리 무구 보이기
 inventory.armourers_workshop:wardrobe.tab.display_settings.renderChestArmour=상의 무구 보이기
 inventory.armourers_workshop:wardrobe.tab.display_settings.renderLegArmour=하의 무구 보이기
-inventory.armourers_workshop:wardrobe.tab.display_settings.renderFootArmour=신발 무구 보이기 armour?
+inventory.armourers_workshop:wardrobe.tab.display_settings.renderFootArmour=신발 무구 보이기
 
 # Wardrobe - Tab Colour Settings
 inventory.armourers_workshop:wardrobe.tab.colour_settings.label.skin=스킨 색상:
@@ -550,8 +550,7 @@ inventory.armourers_workshop:global-skin-library.searchResults.small =작음
 inventory.armourers_workshop:global-skin-library.searchResults.medium =중간
 inventory.armourers_workshop:global-skin-library.searchResults.large =큼
 inventory.armourers_workshop:global-skin-library.searchResults.label.searching =검색 중 ...
-inventory.armourers_workshop:global-skin-library.searchResults.label.no_results=No results found.
-
+inventory.armourers_workshop:global-skin-library.searchResults.label.no_results=발견된 결과 없음
 
 # 글로벌 스킨 라이브러리 (스킨 정보)
 inventory.armourers_workshop:global-skin-library.skinInfo.back=뒤로
@@ -614,8 +613,8 @@ inventory.armourers_workshop:global-skin-library.edit.dialog.delete.cancel=취�
 
 # Global Skin Library (Info)
 inventory.armourers_workshop:global-skin-library.panel.info.name=정보
-inventory.armourers_workshop:global-skin-library.panel.info.total_skins=전체 스킨 uploaded: %d
-inventory.armourers_workshop:global-skin-library.panel.info.download_count=Downloads last (hour %d) (day %d) (week %d).
+inventory.armourers_workshop:global-skin-library.panel.info.total_skins=전체 스킨 업로드: %d
+inventory.armourers_workshop:global-skin-library.panel.info.download_count=마지막 다운로드 (hour %d) (day %d) (week %d).
 inventory.armourers_workshop:global-skin-library.panel.info.loading=로딩중...
 inventory.armourers_workshop:global-skin-library.panel.info.error_getting_stats=통계를 얻는 중 오류 발생:
 inventory.armourers_workshop:global-skin-library.panel.info.links=링크:
@@ -692,7 +691,7 @@ commands.armourers.invalidDyeFormat=%1$s 은(는) 유효한 염료 형식이 아
 
 # 크리에이티브 창
 itemGroup.armourers_workshop=Armourer's Workshop(아머러스 워크샵)
-itemGroup.armourers_workshop_painting_tools=Armourer's Workshop - Building
+itemGroup.armourers_workshop_painting_tools=Armourer's Workshop - 제작중
 
 
 # 키보드
