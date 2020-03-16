@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.common.skin.type.AbstractSkinTypeBase;
 
-public class SkinPart extends AbstractSkinTypeBase {
+public class SkinAdvancedPart extends AbstractSkinTypeBase {
 
     public final ISkinPartType partBase;
     private ArrayList<ISkinPartType> skinParts;
     
-    public SkinPart() {
+    public SkinAdvancedPart() {
         this.skinParts = new ArrayList<ISkinPartType>();
-        this.partBase = new SkinPartBase(this);
+        this.partBase = new SkinAdvancedPartBase(this);
         this.skinParts.add(this.partBase);
     }
     

@@ -7,21 +7,21 @@ import net.minecraft.util.math.Vec3d;
 public class AdvancedPart {
 
     private final ArrayList<AdvancedPart> children = new ArrayList<AdvancedPart>();
-    private final int partIndex;
-    private String name;
-    private boolean isStatic = true;
-    private boolean enabled = true;
-    private float scale = 1F;
-    private boolean mirror = false;
+    public final int partIndex;
+    public String name;
+    public boolean isStatic = true;
+    public boolean enabled = true;
+    public float scale = 1F;
+    public boolean mirror = false;
 
-    private Vec3d pos = Vec3d.ZERO;
-    private Vec3d posOffset = Vec3d.ZERO;
+    public Vec3d pos = Vec3d.ZERO;
+    public Vec3d posOffset = Vec3d.ZERO;
 
-    private Vec3d rotationAngle = Vec3d.ZERO;
-    private Vec3d rotationAngleOffset = Vec3d.ZERO;
+    public Vec3d rotationAngle = Vec3d.ZERO;
+    public Vec3d rotationAngleOffset = Vec3d.ZERO;
 
-    private Vec3d rotationPos = Vec3d.ZERO;
-    private Vec3d rotationPosOffset = Vec3d.ZERO;
+    public Vec3d rotationPos = Vec3d.ZERO;
+    public Vec3d rotationPosOffset = Vec3d.ZERO;
 
     public AdvancedPart(int partIndex, String name) {
         this.partIndex = partIndex;

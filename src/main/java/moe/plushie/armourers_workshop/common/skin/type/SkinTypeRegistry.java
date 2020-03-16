@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Level;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinTypeRegistry;
-import moe.plushie.armourers_workshop.common.skin.type.advanced.SkinPart;
+import moe.plushie.armourers_workshop.common.skin.type.advanced.SkinAdvancedPart;
 import moe.plushie.armourers_workshop.common.skin.type.arrow.SkinArrow;
 import moe.plushie.armourers_workshop.common.skin.type.block.SkinBlock;
 import moe.plushie.armourers_workshop.common.skin.type.bow.SkinBow;
@@ -89,7 +89,7 @@ public final class SkinTypeRegistry implements ISkinTypeRegistry {
 
         skinBlock = new SkinBlock();
         // skinHorse = new SkinHorse();
-        skinPart = new SkinPart();
+        skinPart = new SkinAdvancedPart();
         skinOutfit = new SkinOutfit(skinHead, skinChest, skinLegs, skinFeet, skinWings);
 
         oldSkinSkirt = new SkinSkirt();

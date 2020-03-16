@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.common.skin.advanced.action.SkinActionRota
 import moe.plushie.armourers_workshop.common.skin.advanced.trigger.SkinTriggerAlways;
 import moe.plushie.armourers_workshop.common.skin.advanced.value.SkinValueHealthPercentage;
 import moe.plushie.armourers_workshop.common.skin.advanced.value.SkinValueInWater;
+import moe.plushie.armourers_workshop.common.skin.advanced.value.SkinValueRaining;
 import moe.plushie.armourers_workshop.common.skin.advanced.value.SkinValueSneaking;
 import moe.plushie.armourers_workshop.common.skin.advanced.value.SkinValueTime;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -47,7 +48,6 @@ public class AdvancedSkinRegistry {
         // START_ANIMATION,
         // STOP_ANIMATION,
         // SET_PART_PROPERTY
-
         registrySkinActions.register(new SkinActionRotate());
 
         // Values
@@ -57,7 +57,6 @@ public class AdvancedSkinRegistry {
         // IN_WATER,
         // SNEAKING,
         // TIME,
-        //
         // CLOSEST_MOB_RANGE,
         // TARGET_RANGE,
         // IN_COMBAT,
@@ -69,6 +68,7 @@ public class AdvancedSkinRegistry {
         registrySkinValues.register(new SkinValueInWater());
         registrySkinValues.register(new SkinValueSneaking());
         registrySkinValues.register(new SkinValueTime());
+        registrySkinValues.register(new SkinValueRaining());
     }
 
     public static abstract class AdvancedSkinTrigger extends ModRegistry.RegistryItem {

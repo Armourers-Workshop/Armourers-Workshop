@@ -6,10 +6,13 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.client.render.AdvancedPartRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedData;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPart;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
@@ -18,6 +21,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -64,6 +68,8 @@ public class ModelSkinLegs extends ModelTypeHelper {
             GL11.glPopAttrib();
             GL11.glPopMatrix();
         }
+        
+        boolean isAdvanced = false;
 
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
@@ -85,10 +91,69 @@ public class ModelSkinLegs extends ModelTypeHelper {
                 renderRightLeg(new SkinPartRenderData(part, renderData));
             } else if (part.getPartType().getPartName().equals("skirt")) {
                 renderSkirt(new SkinPartRenderData(part, renderData));
+            } else if (part.getPartType().getPartName().equals("advanced_part")) {
+                isAdvanced = true;
             }
 
             GL11.glPopMatrix();
         }
+
+        if (isAdvanced) {
+            AdvancedData advancedData = new AdvancedData();
+            
+            int partCount = 4;
+            
+            AdvancedPart base = new AdvancedPart(0, "base");
+            
+            AdvancedPart advParts1[] = new AdvancedPart[partCount];
+            AdvancedPart advParts2[] = new AdvancedPart[partCount];
+            AdvancedPart advParts3[] = new AdvancedPart[partCount];
+            
+            for (int i = 0; i < partCount; i++) {
+                advParts1[i] = new AdvancedPart(0, String.valueOf(i));
+                advParts1[i].pos = new Vec3d(0D, 0D, 8D);
+                
+                advParts2[i] = new AdvancedPart(0, String.valueOf(i));
+                advParts2[i].pos = new Vec3d(0D, 0D, 8D);
+                
+                advParts3[i] = new AdvancedPart(0, String.valueOf(i));
+                advParts3[i].pos = new Vec3d(0D, 0D, 8D);
+            }
+            
+            for (int i = 0; i < partCount - 1; i++) {
+                advParts1[i].getChildren().add(advParts1[i + 1]);
+                
+                advParts2[i].getChildren().add(advParts2[i + 1]);
+                
+                advParts3[i].getChildren().add(advParts3[i + 1]);
+            }
+            
+            base.getChildren().add(advParts1[0]);
+            base.getChildren().add(advParts2[0]);
+            base.getChildren().add(advParts3[0]);
+            
+            base.rotationAngle = new Vec3d(-30, 0, 0);
+            
+            advParts1[0].rotationAngle = new Vec3d(10, 0, 0);
+            advParts1[1].rotationAngle = new Vec3d(10, 0, 0);
+            advParts1[2].rotationAngle = new Vec3d(10, 0, 0);
+            
+            advParts2[0].rotationAngle = new Vec3d(10, 10, 0);
+            advParts2[1].rotationAngle = new Vec3d(10, 0, 0);
+            advParts2[2].rotationAngle = new Vec3d(10, 0, 0);
+            
+            advParts3[0].rotationAngle = new Vec3d(10, -10, 0);
+            advParts3[1].rotationAngle = new Vec3d(10, 0, 0);
+            advParts3[2].rotationAngle = new Vec3d(10, 0, 0);
+            
+            GlStateManager.pushMatrix();
+            if (!renderData.isItemRender()) {
+                GlStateManager.translate(0F, 12F * renderData.getScale(), 0F);
+            }
+            AdvancedPartRenderer.renderAdvancedSkin(skin, renderData, entity, advancedData, base);
+            GlStateManager.popMatrix();
+        }
+
         GlStateManager.popAttrib();
         GlStateManager.color(1F, 1F, 1F, 1F);
     }
