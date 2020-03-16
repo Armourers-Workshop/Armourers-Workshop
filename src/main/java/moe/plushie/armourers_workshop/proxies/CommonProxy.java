@@ -39,7 +39,7 @@ import moe.plushie.armourers_workshop.common.network.messages.server.MessageServ
 import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.permission.PermissionManager;
 import moe.plushie.armourers_workshop.common.skin.SkinExtractor;
-import moe.plushie.armourers_workshop.common.skin.advanced.value.SkinValueRegistry;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedSkinRegistry;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -74,6 +74,7 @@ public class CommonProxy implements ILibraryCallback {
     private static ModSounds modSounds;
     public ILibraryManager libraryManager;
     private PermissionSystem permissionSystem;
+    private AdvancedSkinRegistry advancedSkinRegistry;
 
     public void preInit(FMLPreInitializationEvent event) {
         modConfigDirectory = new File(event.getSuggestedConfigurationFile().getParentFile(), LibModInfo.ID);
@@ -102,7 +103,7 @@ public class CommonProxy implements ILibraryCallback {
         paintTypeRegistry = new PaintTypeRegistry();
         SkinTypeRegistry.init();
         CubeRegistry.init();
-        SkinValueRegistry.init();
+        advancedSkinRegistry = new AdvancedSkinRegistry();
 
         modItems = new ModItems();
         modBlocks = new ModBlocks();
@@ -292,6 +293,10 @@ public class CommonProxy implements ILibraryCallback {
 
     public File getGlobalSkinDatabaseDirectory() {
         return new File(modDirectory, "global-skin-database");
+    }
+    
+    public AdvancedSkinRegistry getAdvancedSkinRegistry() {
+        return advancedSkinRegistry;
     }
 
     @SubscribeEvent

@@ -7,6 +7,8 @@ import moe.plushie.armourers_workshop.client.gui.controls.ModGuiContainer;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
+import moe.plushie.armourers_workshop.common.network.PacketHandler;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder.SkinPartSettings;
 import net.minecraft.client.gui.GuiButton;
@@ -165,6 +167,10 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         }
         if (button == indexIncrease) {
             indexActive++;
+        }
+        if (button == parentDecrease) {
+            MessageClientGuiButton message = new MessageClientGuiButton((byte) 0);
+            PacketHandler.networkWrapper.sendToServer(message);
         }
         indexActive = MathHelper.clamp(indexActive, 0, 9);
         setSlidersForIndex(indexActive);

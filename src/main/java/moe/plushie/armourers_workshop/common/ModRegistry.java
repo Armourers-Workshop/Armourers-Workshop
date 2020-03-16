@@ -4,10 +4,11 @@ import java.util.LinkedHashMap;
 
 import org.apache.logging.log4j.Level;
 
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.util.ResourceLocation;
 
-public abstract class ModRegistry<TYPE extends ModRegistry.IRegistryItem> {
+public class ModRegistry<TYPE extends ModRegistry.IRegistryItem> {
     
     private LinkedHashMap<ResourceLocation, TYPE> registryMap = new LinkedHashMap<ResourceLocation, TYPE>();
     
@@ -38,6 +39,25 @@ public abstract class ModRegistry<TYPE extends ModRegistry.IRegistryItem> {
     
     public TYPE get(ResourceLocation key) {
         return registryMap.get(key);
+    }
+    
+    public static class RegistryItem implements IRegistryItem {
+        
+        private final String name;
+
+        public RegistryItem(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public ResourceLocation getRegistryName() {
+            return new ResourceLocation(LibModInfo.ID, name);
+        }
+        
+        @Override
+        public String getName() {
+            return name;
+        }
     }
     
     public static interface IRegistryItem {
