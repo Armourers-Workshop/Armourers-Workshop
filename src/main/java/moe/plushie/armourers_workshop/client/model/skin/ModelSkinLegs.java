@@ -147,6 +147,15 @@ public class ModelSkinLegs extends ModelTypeHelper {
             advParts3[2].rotationAngle = new Vec3d(10, 0, 0);
             
             GlStateManager.pushMatrix();
+            if (isChild) {
+                float f6 = 2.0F;
+                GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+                GL11.glTranslatef(0.0F, 24.0F * SCALE, 0.0F);
+            }
+            if (isSneak) {
+                GlStateManager.translate(0.0F, 0.2F, 0.0F);
+                GL11.glTranslated(0, -3 * SCALE, 4 * SCALE);
+            }
             if (!renderData.isItemRender()) {
                 GlStateManager.translate(0F, 12F * renderData.getScale(), 0F);
             }
