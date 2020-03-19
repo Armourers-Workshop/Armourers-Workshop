@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityDyeTable;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import moe.plushie.armourers_workshop.utils.UtilItems;
-import moe.plushie.armourers_workshop.utils.UtilPlayer;
+import moe.plushie.armourers_workshop.utils.PlayerUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -122,7 +122,7 @@ public class ContainerDyeTable extends Container {
             for (int i = 0; i < 8; i++) {
                 SlotDyeBottle slot = (SlotDyeBottle) getSlot(37 + i);
                 if (!slot.isLocked()) {
-                    UtilPlayer.giveItem(invPlayer.player, getSlot(37 + i).getStack());
+                    PlayerUtils.giveItem(invPlayer.player, getSlot(37 + i).getStack());
                 } else {
                     slot.setLocked(false);
                 }

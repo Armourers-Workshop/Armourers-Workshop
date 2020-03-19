@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntitySkinnable;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
-import moe.plushie.armourers_workshop.utils.UtilPlayer;
+import moe.plushie.armourers_workshop.utils.PlayerUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -78,7 +78,7 @@ public class BlockHighlightRenderHandler {
         float f1 = 0.002F;
         float scale = 0.0625F;
         
-        EnumFacing dir = UtilPlayer.getDirectionSide(player).getOpposite();
+        EnumFacing dir = PlayerUtils.getDirectionSide(player).getOpposite();
         
         for (int ix = 0; ix < 3; ix++) {
             for (int iy = 0; iy < 3; iy++) {
