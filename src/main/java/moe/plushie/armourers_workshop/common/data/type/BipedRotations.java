@@ -164,6 +164,12 @@ public class BipedRotations {
         }
         buf.writeBoolean(child);
     }
+    
+    public BipedRotations copy() {
+        BipedRotations rotations = new BipedRotations();
+        rotations.loadNBTData(saveNBTData(new NBTTagCompound()));
+        return rotations;
+    }
 
     @Override
     public int hashCode() {

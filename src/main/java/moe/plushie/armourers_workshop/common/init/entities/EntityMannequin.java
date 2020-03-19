@@ -188,7 +188,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback, IIn
     public ModInventory getInventoryHands() {
         return inventoryHands;
     }
-    
+
     public void updateInventory() {
         if (!getEntityWorld().isRemote) {
             setHandLeft(inventoryHands.getStackInSlot(0));
@@ -447,6 +447,12 @@ public class EntityMannequin extends Entity implements IGameProfileCallback, IIn
         public String toString() {
             return "TextureData [textureType=" + textureType + ", profile=" + profile + ", url=" + url + "]";
         }
+
+        public TextureData copy() {
+            TextureData textureData = new TextureData();
+            textureData.readFromNBT(writeToNBT(new NBTTagCompound()));
+            return textureData;
+        }
     }
 
     @Override
@@ -481,7 +487,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback, IIn
 
         @Override
         public BipedRotations copyValue(BipedRotations value) {
-            return value;
+            return value.copy();
         }
     }
 
@@ -506,7 +512,7 @@ public class EntityMannequin extends Entity implements IGameProfileCallback, IIn
 
         @Override
         public TextureData copyValue(TextureData value) {
-            return value;
+            return value.copy();
         }
     }
 
