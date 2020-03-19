@@ -36,11 +36,10 @@ public class ModelSkinChest extends ModelTypeHelper {
             return;
         }
         ArrayList<SkinPart> parts = skin.getParts();
-        
+
         if (parts.size() > -1) {
-            //return;
+            // return;
         }
-        
 
         if (entity != null && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
@@ -52,7 +51,7 @@ public class ModelSkinChest extends ModelTypeHelper {
              */
         }
         GlStateManager.pushAttrib();
-        //GlStateManager.enableColorMaterial();
+        // GlStateManager.enableColorMaterial();
         RenderHelper.enableGUIStandardItemLighting();
 
         if (skin.hasPaintData() & renderData.isShowSkinPaint() & ClientProxy.getTexturePaintType() == TexturePaintType.TEXTURE_REPLACE) {
@@ -110,8 +109,13 @@ public class ModelSkinChest extends ModelTypeHelper {
 
     private void renderLeftArm(SkinPartRenderData partRenderData, boolean override) {
         GL11.glPushMatrix();
+        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
+
         GL11.glTranslatef(5.0F * partRenderData.getScale(), 0F, 0F);
         GL11.glTranslatef(0F, 2.0F * partRenderData.getScale(), 0F);
+        if (slim & !override) {
+            GlStateManager.translate(0, partRenderData.getScale() * 0.5F, 0);
+        }
 
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftArm.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedLeftArm.rotateAngleY), 0, 1, 0);
@@ -119,8 +123,6 @@ public class ModelSkinChest extends ModelTypeHelper {
 
         if (slim & !override) {
             GL11.glTranslatef(-0.25F * partRenderData.getScale(), 0F, 0F);
-            GL11.glTranslatef(0F, 0.5F * partRenderData.getScale(), 0F);
-
             GL11.glScalef(0.75F, 1F, 1F);
         }
         renderPart(partRenderData);
@@ -130,8 +132,13 @@ public class ModelSkinChest extends ModelTypeHelper {
 
     private void renderRightArm(SkinPartRenderData partRenderData, boolean override) {
         GL11.glPushMatrix();
+        GL11.glRotatef((float) Math.toDegrees(this.bipedBody.rotateAngleY), 0, 1, 0);
+
         GL11.glTranslatef(-5.0F * partRenderData.getScale(), 0F, 0F);
-        GL11.glTranslatef(0F, 2.0F * partRenderData.getScale(), 0F);
+        GL11.glTranslatef(0, 2.0F * partRenderData.getScale(), 0F);
+        if (slim & !override) {
+            GlStateManager.translate(0, partRenderData.getScale() * 0.5F, 0);
+        }
 
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleZ), 0, 0, 1);
         GL11.glRotatef((float) Math.toDegrees(this.bipedRightArm.rotateAngleY), 0, 1, 0);
@@ -139,8 +146,6 @@ public class ModelSkinChest extends ModelTypeHelper {
 
         if (slim & !override) {
             GL11.glTranslatef(0.25F * partRenderData.getScale(), 0F, 0F);
-            GL11.glTranslatef(0F, 0.5F * partRenderData.getScale(), 0F);
-
             GL11.glScalef(0.75F, 1F, 1F);
         }
 
