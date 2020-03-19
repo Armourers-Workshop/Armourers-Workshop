@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.client.handler;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
 import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
@@ -24,7 +25,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
@@ -48,13 +48,14 @@ public class PlayerTextureHandler {
     public static PlayerTextureHandler INSTANCE;
 
     // TODO Change this map to a cache.
-    private HashMap<EntityPlayer, EntityTextureInfo> playerTextureMap = new HashMap<EntityPlayer, EntityTextureInfo>();
+    public HashMap<GameProfile, EntityTextureInfo> playerTextureMap = new HashMap<GameProfile, EntityTextureInfo>();
     private final Profiler profiler;
     private boolean useTexturePainting;
 
     public PlayerTextureHandler() {
         MinecraftForge.EVENT_BUS.register(this);
         profiler = Minecraft.getMinecraft().profiler;
+        INSTANCE = this;
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -79,8 +80,8 @@ public class PlayerTextureHandler {
             return;
         }
         profiler.startSection("textureBuild");
-        if (playerTextureMap.containsKey(player)) {
-            EntityTextureInfo textureInfo = playerTextureMap.get(player);
+        if (playerTextureMap.containsKey(player.getGameProfile())) {
+            EntityTextureInfo textureInfo = playerTextureMap.get(player.getGameProfile());
             textureInfo.updateTexture(player.getLocationSkin());
 
             textureInfo.updateExtraColours(wardrobeCap.getExtraColours());
@@ -179,8 +180,8 @@ public class PlayerTextureHandler {
         }
 
         profiler.startSection("textureReset");
-        if (playerTextureMap.containsKey(player)) {
-            EntityTextureInfo textureInfo = playerTextureMap.get(player);
+        if (playerTextureMap.containsKey(player.getGameProfile())) {
+            EntityTextureInfo textureInfo = playerTextureMap.get(player.getGameProfile());
             ResourceLocation replacmentTexture = textureInfo.getReplacementTexture();
             ResourceLocation normalTexture = textureInfo.postRender();
             NetworkPlayerInfo playerInfo = Minecraft.getMinecraft().getConnection().getPlayerInfo(player.getUniqueID());
@@ -194,7 +195,7 @@ public class PlayerTextureHandler {
                 }
             }
         } else {
-            playerTextureMap.put(player, new EntityTextureInfo());
+            playerTextureMap.put(player.getGameProfile(), new EntityTextureInfo());
         }
         profiler.endSection();
     }

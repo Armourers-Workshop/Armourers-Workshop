@@ -8,6 +8,8 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.client.handler.PlayerTextureHandler;
+import moe.plushie.armourers_workshop.client.render.EntityTextureInfo;
 import moe.plushie.armourers_workshop.common.GameProfileCache;
 import moe.plushie.armourers_workshop.common.GameProfileCache.IGameProfileCallback;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
@@ -50,9 +52,13 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
             EntityPlayerSP localPlayer = Minecraft.getMinecraft().player;
             GameProfile localProfile = localPlayer.getGameProfile();
             if (PlayerUtils.gameProfilesMatch(localProfile, textureData.getProfile())) {
+                EntityTextureInfo textureInfo = PlayerTextureHandler.INSTANCE.playerTextureMap.get(localProfile);
                 PlayerTexture playerTexture = new PlayerTexture(localProfile.getName(), TextureType.USER);
                 playerTexture.setModelTypeFromProfile(localProfile);
                 playerTexture.setResourceLocation(localPlayer.getLocationSkin());
+                if (textureInfo != null) {
+                    playerTexture.setResourceLocation(textureInfo.postRender());
+                }
                 return playerTexture;
             }
             if (textureData.getProfile() != null) {
