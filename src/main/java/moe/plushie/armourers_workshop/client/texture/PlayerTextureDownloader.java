@@ -56,7 +56,7 @@ public class PlayerTextureDownloader implements IGameProfileCallback {
                 PlayerTexture playerTexture = new PlayerTexture(localProfile.getName(), TextureType.USER);
                 playerTexture.setModelTypeFromProfile(localProfile);
                 playerTexture.setResourceLocation(localPlayer.getLocationSkin());
-                if (textureInfo != null) {
+                if (textureInfo != null && textureInfo.postRender() != null) {
                     playerTexture.setResourceLocation(textureInfo.postRender());
                 }
                 return playerTexture;
