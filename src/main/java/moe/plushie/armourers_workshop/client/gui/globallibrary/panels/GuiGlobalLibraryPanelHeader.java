@@ -84,11 +84,10 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         } else {
             iconButtonMyFiles.visible = false;
             iconButtonUploadSkin.visible = false;
+            iconButtonJoinBeta.visible = true;
         }
         if (doneBetaCheck) {
             iconButtonJoinBeta.visible = !inBeta;
-        } else {
-            iconButtonJoinBeta.visible = false;
         }
     }
 
