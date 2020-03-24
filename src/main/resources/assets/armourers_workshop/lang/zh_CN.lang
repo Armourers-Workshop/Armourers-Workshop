@@ -90,7 +90,7 @@ item.armourers_workshop:shade-noise-tool.name=阴影噪点工具
 item.armourers_workshop:hue-tool.name=颜色调节工具
 item.armourers_workshop:block-marker.name=标记工具
 item.armourers_workshop:blending-tool.name=混合工具 - (未完成)
-item.armourers_workshop:paintball-gun.name=绘画枪
+item.armourers_workshop:paintball-gun.name=彩弹枪
 item.armourers_workshop:palette.name=调色板
 
 # Other
