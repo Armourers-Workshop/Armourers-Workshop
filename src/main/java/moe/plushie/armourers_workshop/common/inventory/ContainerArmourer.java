@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.common.inventory;
 
+import com.mojang.authlib.GameProfile;
+
 import moe.plushie.armourers_workshop.common.exception.SkinSaveException;
 import moe.plushie.armourers_workshop.common.init.items.ItemArmourContainerItem;
 import moe.plushie.armourers_workshop.common.init.items.ItemSkin;
@@ -27,7 +29,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextComponentString;
 
 public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
-    
+
     public ContainerArmourer(InventoryPlayer invPlayer, TileEntityArmourer tileEntity) {
         super(invPlayer, tileEntity);
 
@@ -43,18 +45,14 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
         if (slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             ItemStack result = stack.copy();
-            
-            if ((
-                    stack.getItem() instanceof ItemSkinTemplate) |
-                    stack.getItem() instanceof ItemSkin |
-                    stack.getItem() instanceof ItemArmourContainerItem) {
+
+            if ((stack.getItem() instanceof ItemSkinTemplate) | stack.getItem() instanceof ItemSkin | stack.getItem() instanceof ItemArmourContainerItem) {
                 if (!this.mergeItemStack(stack, 0, 1, false)) {
                     return ItemStack.EMPTY;
                 }
             } else {
                 return ItemStack.EMPTY;
             }
-            
 
             if (stack.getCount() == 0) {
                 slot.putStack(ItemStack.EMPTY);
@@ -68,11 +66,12 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
         }
         return ItemStack.EMPTY;
     }
-    
+
     /**
      * Get blocks in the world and saved them onto an items NBT data.
+     * 
      * @param player The player that pressed the save button.
-     * @param name Custom name for the item.
+     * @param name   Custom name for the item.
      */
     public void saveArmourItem(EntityPlayerMP player, String customName, String tags) {
         if (tileEntity.getWorld().isRemote) {
@@ -87,24 +86,27 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
                 stackInput = new ItemStack(ModItems.SKIN_TEMPLATE);
             }
         }
-        
+
         if (stackInput.isEmpty()) {
             return;
         }
-        
+
         if (!stackOutput.isEmpty()) {
             return;
         }
-        
+
         if (!(stackInput.getItem() instanceof ISkinHolder)) {
             return;
         }
 
+        GameProfile authorProfile = player.getGameProfile();
+        // authorProfile = new GameProfile(UUID.fromString("b9e99f95-09fe-497a-8a77-1ccc839ab0f4"), "VermillionX");
+
         Skin skin = null;
         SkinProperties skinProps = new SkinProperties();
-        SkinProperties.PROP_ALL_AUTHOR_NAME.setValue(skinProps, player.getName());
+        SkinProperties.PROP_ALL_AUTHOR_NAME.setValue(skinProps, authorProfile.getName());
         if (player.getGameProfile() != null && player.getGameProfile().getId() != null) {
-            SkinProperties.PROP_ALL_AUTHOR_UUID.setValue(skinProps, player.getGameProfile().getId().toString());
+            SkinProperties.PROP_ALL_AUTHOR_UUID.setValue(skinProps, authorProfile.getId().toString());
         }
         SkinProperties.PROP_ALL_CUSTOM_NAME.setValue(skinProps, customName);
 
@@ -114,8 +116,7 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
         }
 
         try {
-            skin = ArmourerWorldHelper.saveSkinFromWorld(tileEntity.getWorld(), skinProps, tileEntity.getSkinType(),
-                    tileEntity.getPaintData(), tileEntity.getPos().offset(EnumFacing.UP, tileEntity.getHeightOffset()), tileEntity.getDirection());
+            skin = ArmourerWorldHelper.saveSkinFromWorld(tileEntity.getWorld(), skinProps, tileEntity.getSkinType(), tileEntity.getPaintData(), tileEntity.getPos().offset(EnumFacing.UP, tileEntity.getHeightOffset()), tileEntity.getDirection());
         } catch (SkinSaveException e) {
             switch (e.getType()) {
             case NO_DATA:
@@ -135,15 +136,15 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
                 break;
             }
         }
-        
+
         if (skin == null) {
             return;
         }
-        
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile)null);
-        
-        ItemStack stackArmour = ((ISkinHolder)stackInput.getItem()).makeSkinStack(skin);
-        
+
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile) null);
+
+        ItemStack stackArmour = ((ISkinHolder) stackInput.getItem()).makeSkinStack(skin);
+
         if (stackArmour.isEmpty()) {
             return;
         }
@@ -155,6 +156,7 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
 
     /**
      * Reads the NBT data from an item and places blocks in the world.
+     * 
      * @param player The player that pressed the load button.
      */
     public void loadArmourItem(EntityPlayerMP player) {
@@ -163,7 +165,7 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
         }
         ItemStack stackInput = tileEntity.getStackInSlot(0);
         ItemStack stackOuput = tileEntity.getStackInSlot(1);
-        
+
         if (stackInput.isEmpty()) {
             return;
         }
@@ -185,14 +187,14 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
                 return;
             }
         }
-        
+
         Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointerInput);
         if (skin == null) {
             return;
         }
-        
+
         tileEntity.setSkinProps(new SkinProperties(skin.getProperties()));
-        
+
         ArmourerWorldHelper.loadSkinIntoWorld(tileEntity.getWorld(), tileEntity.getPos().offset(EnumFacing.UP, tileEntity.getHeightOffset()), skin, tileEntity.getDirection());
         if (skin.hasPaintData()) {
             tileEntity.setPaintData(skin.getPaintData().clone());
@@ -200,7 +202,7 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
             tileEntity.clearPaintData(true);
         }
         tileEntity.dirtySync();
-        
+
         tileEntity.setInventorySlotContents(0, ItemStack.EMPTY);
         tileEntity.setInventorySlotContents(1, stackInput);
     }
