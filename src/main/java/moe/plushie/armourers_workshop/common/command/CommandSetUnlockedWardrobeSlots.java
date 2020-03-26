@@ -5,6 +5,7 @@ import java.util.List;
 
 import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -55,7 +56,7 @@ public class CommandSetUnlockedWardrobeSlots extends ModCommand {
         }
 
         int count = 3;
-        count = parseInt(args[3], 0, 10);
+        count = parseInt(args[3], 0, EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE);
 
         ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(skinTypeName);
         if (skinType == null) {
