@@ -60,8 +60,10 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         if (faces.isEmpty()) {
             return;
         }
+        
+        int textureSize = 64;
 
-        BufferedImage texture = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage texture = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_ARGB);
 
         FileOutputStream outputStream = null;
         try {
@@ -83,18 +85,18 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         os.flush();
 
         ModLogger.log("faces to export " + faces.size());
+        // Export vertex list.
         for (int i = 0; i < faces.size(); i++) {
             ColouredFace cf = faces.get(i);
             if (PaintTypeRegistry.getInstance().getPaintTypeFormByte(cf.t) == PaintTypeRegistry.PAINT_TYPE_NONE) {
                 continue;
             }
-            // ModLogger.log("writing face " + cf.face);
             switch (cf.face) {
             case 0: // NegZFace
-                writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y - scale);
-                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y - scale);
-                writeVert(os, scale * -cf.z - scale, scale * cf.x + scale, scale * -cf.y - scale);
                 writeVert(os, scale * -cf.z, scale * cf.x + scale, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x + scale, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y - scale);
                 break;
             case 1: // PosZFace
                 writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y);
@@ -109,10 +111,10 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
                 writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y - scale);
                 break;
             case 3: // NegXFace
-                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y);
-                writeVert(os, scale * -cf.z - scale, scale * cf.x + scale, scale * -cf.y);
-                writeVert(os, scale * -cf.z - scale, scale * cf.x + scale, scale * -cf.y - scale);
                 writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x + scale, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x + scale, scale * -cf.y);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y);
                 break;
             case 4: // PosYFace
                 writeVert(os, scale * -cf.z, scale * cf.x + scale, scale * -cf.y);
@@ -121,10 +123,10 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
                 writeVert(os, scale * -cf.z, scale * cf.x + scale, scale * -cf.y - scale);
                 break;
             case 5: // NegYFace
-                writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y);
-                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y);
-                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y - scale);
                 writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y - scale);
+                writeVert(os, scale * -cf.z - scale, scale * cf.x, scale * -cf.y);
+                writeVert(os, scale * -cf.z, scale * cf.x, scale * -cf.y);
                 break;
             default:
                 break;
@@ -133,7 +135,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
         int ix = 0;
         int iy = 0;
-        float pixelSize = 0.0078125F;
+        float pixelSize = (1F / textureSize) * 2F;
 
         for (int i = 0; i < faces.size(); i++) {
             ColouredFace cf = faces.get(i);
@@ -141,14 +143,14 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
                 continue;
             }
             int colour = PaintingHelper.bytesToInt(new byte[] { cf.r, cf.g, cf.b, (byte) 255 });
-            texture.setRGB(ix, 255 - iy, colour);
-            texture.setRGB(ix + 1, 255 - iy, colour);
+            texture.setRGB(ix, textureSize - 1 - iy, colour);
+            texture.setRGB(ix + 1, textureSize - 1  - iy, colour);
 
-            texture.setRGB(ix, 255 - iy - 1, colour);
+            texture.setRGB(ix, textureSize - 1  - iy - 1, colour);
 
-            texture.setRGB(ix + 1, 255 - iy - 1, colour);
+            texture.setRGB(ix + 1, textureSize - 1  - iy - 1, colour);
 
-            float shift = 0.002F;
+            float shift = pixelSize / 4F;
 
             os.write(String.format("vt %f %f", ix / 2F * pixelSize + pixelSize - shift, iy / 2F * pixelSize + shift) + CRLF);
             os.write(String.format("vt %f %f", ix / 2F * pixelSize + pixelSize - shift, iy / 2F * pixelSize + pixelSize - shift) + CRLF);
@@ -157,7 +159,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
             ix++;
             ix++;
-            if (ix > 255) {
+            if (ix >= textureSize) {
                 ix = 0;
                 iy++;
                 iy++;
@@ -219,6 +221,6 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
     private void writeVert(OutputStreamWriter os, float x, float y, float z) throws IOException {
         String CRLF = "\n";
-        os.write(String.format("v %f %f %f", x, y, z) + CRLF);
+        os.write(String.format("v %f %f %f", x, z, y) + CRLF);
     }
 }
