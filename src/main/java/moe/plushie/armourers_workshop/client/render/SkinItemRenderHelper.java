@@ -180,7 +180,7 @@ public final class SkinItemRenderHelper {
         GL11.glLineWidth(1.0F);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         //GL11.glDepthMask(false);
-        RenderGlobal.drawSelectionBoundingBox(aabb, (float)r / 255F, (float)g / 255F, (float)b / 255F, 1);
+        RenderGlobal.drawSelectionBoundingBox(aabb, r / 255F, g / 255F, b / 255F, 1);
         //GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_LIGHTING);

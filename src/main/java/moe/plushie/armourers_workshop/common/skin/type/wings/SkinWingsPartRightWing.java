@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.common.skin.type.wings;
 
+import moe.plushie.armourers_workshop.api.common.IPoint3D;
 import moe.plushie.armourers_workshop.api.common.skin.Point3D;
 import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinProperties;
@@ -30,6 +31,12 @@ public class SkinWingsPartRightWing extends AbstractSkinPartTypeBase {
         //ModelChest.MODEL.renderChest(scale);
         //GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
         //GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IPoint3D getItemRenderOffset() {
+        return new Point3D(0, 0, 2);
     }
     
     @Override
