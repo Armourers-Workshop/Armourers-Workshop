@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPart;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPart;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.cubes.ICube;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
@@ -305,5 +306,10 @@ public class Skin implements ISkin {
                 }
             }
         }
+    }
+
+    public AdvancedPart getAdvancedPart(int index) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

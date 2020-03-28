@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.common.skin.advanced.value.SkinValueTime;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 public class AdvancedSkinRegistry {
@@ -86,36 +85,28 @@ public class AdvancedSkinRegistry {
             super(name);
         }
 
-        public abstract void trigger(Object... data);
+        public abstract void trigger(World world, Entity entity, Skin skin, float... data);
 
-        public abstract int getInputCount();
-
-        public abstract Class getInputType(int index);
+        public abstract String[] getInputs();
     }
 
-    public static abstract class AdvancedSkinValue<TYPE> extends ModRegistry.RegistryItem {
+    public static abstract class AdvancedSkinValue extends ModRegistry.RegistryItem {
 
         public AdvancedSkinValue(String name) {
             super(name);
         }
 
-        public abstract TYPE getValue(World world, EntityLivingBase entityLivingBase, Skin skin, SkinPart skinPart);
-
-        public abstract Class getType();
+        public abstract float getValue(World world, Entity entity, Skin skin, SkinPart skinPart);
     }
 
-    public static abstract class AdvancedSkinMathValue<TYPE> extends ModRegistry.RegistryItem {
+    public static abstract class AdvancedSkinMathValue extends ModRegistry.RegistryItem {
 
         public AdvancedSkinMathValue(String name) {
             super(name);
         }
 
-        public abstract TYPE getValue(Object... data);
+        public abstract float getValue(World world, Entity entity, Skin skin, float... data);
 
-        public abstract Class getType();
-
-        public abstract int getInputCount();
-
-        public abstract Class getInputType(int index);
+        public abstract String[] getInputs();
     }
 }

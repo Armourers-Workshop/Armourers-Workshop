@@ -3,25 +3,22 @@ package moe.plushie.armourers_workshop.common.skin.advanced.value;
 import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedSkinRegistry.AdvancedSkinValue;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
-public class SkinValueRaining extends AdvancedSkinValue<Boolean> {
+public class SkinValueRaining extends AdvancedSkinValue {
 
     public SkinValueRaining() {
         super("raining");
     }
 
     @Override
-    public Boolean getValue(World world, EntityLivingBase entityLivingBase, Skin skin, SkinPart skinPart) {
+    public float getValue(World world, Entity entity, Skin skin, SkinPart skinPart) {
         if (world != null) {
-            return Boolean.valueOf(world.isRaining());
+            if (world.isRaining()) {
+                return 1F;
+            }
         }
-        return Boolean.FALSE;
-    }
-
-    @Override
-    public Class getType() {
-        return Boolean.class;
+        return 0F;
     }
 }
