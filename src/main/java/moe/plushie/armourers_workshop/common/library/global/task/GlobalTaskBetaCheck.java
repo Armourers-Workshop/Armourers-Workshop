@@ -12,9 +12,9 @@ import moe.plushie.armourers_workshop.common.library.global.permission.Permissio
 public class GlobalTaskBetaCheck extends GlobalTask<PlushieUser> {
 
     private static final String URL = "beta-check.php?uuid=%s";
-    
+
     private final UUID uuid;
-    
+
     public GlobalTaskBetaCheck(UUID uuid) {
         super(PlushieAction.BETA_CHECK, false);
         this.uuid = uuid;
@@ -25,6 +25,10 @@ public class GlobalTaskBetaCheck extends GlobalTask<PlushieUser> {
         permissionCheck();
         String url = String.format(getBaseUrl() + URL, URLEncoder.encode(uuid.toString(), "UTF-8"));
         JsonObject jsonObject = new JsonParser().parse(downloadString(url)).getAsJsonObject();
-        return PlushieUser.readPlushieUser(jsonObject);
+        PlushieUser plushieUser = PlushieUser.readPlushieUser(jsonObject);
+        if (plushieUser == null) {
+            throw new Exception("Remote user check error.\n\n" + jsonObject.toString());
+        }
+        return plushieUser;
     }
 }
