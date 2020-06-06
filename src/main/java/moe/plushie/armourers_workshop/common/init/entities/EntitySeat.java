@@ -30,6 +30,7 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData {
         super(world);
         setSize(0F, 0F);
         this.offset = new Point3D(0, 0, 0);
+        this.rotation = EnumFacing.EAST;
     }
 
     @Override
