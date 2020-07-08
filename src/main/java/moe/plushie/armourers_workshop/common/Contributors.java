@@ -25,7 +25,6 @@ public class Contributors {
         addContributor("e10ebd90-7922-4777-9cf6-76ecc70848ec", "LordPhrozen", EnumSet.of(ContributionFlags.ARTIST), 66, 244, 110);
         addContributor("3683eab5-5a23-4cdb-b1f5-38090f1ba4a8", "TheEpicJames", EnumSet.of(ContributionFlags.ARTIST), 255, 153, 0);
         addContributor("a0c827d3-51c2-4cec-b6d2-0096a6b82f03", "NexusTheBrony", EnumSet.of(ContributionFlags.ARTIST), 255, 0, 255);
-
         addContributor("2b10d8f1-3273-48a8-9061-cd5e02f45be2", "skylandersking", EnumSet.of(ContributionFlags.ARTIST), 51, 183, 115);
         addContributor("948d2c68-a2c0-4a45-a11c-d24d612af52a", "MikaPikaaa", EnumSet.of(ContributionFlags.ARTIST), 205, 41, 90);
         addContributor("996505b2-3ecd-4bce-aebd-82c713148b7e", "LillyFae", EnumSet.of(ContributionFlags.ARTIST), 136, 206, 201);
