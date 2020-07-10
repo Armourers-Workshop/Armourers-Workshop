@@ -37,7 +37,6 @@ import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandl
 import moe.plushie.armourers_workshop.client.render.entity.RenderEntityMannequin;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemEquipmentSkin;
 import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockAdvancedSkinBuilder;
-import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockAdvancedSkinPart;
 import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockArmourer;
 import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockBoundingBox;
 import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockColourable;
@@ -66,7 +65,6 @@ import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinPart;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityBoundingBox;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourable;
@@ -148,7 +146,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         new GuiResourceManager();
 
         ReflectionHelper.setPrivateValue(ArmourersWorkshopClientApi.class, null, SkinRenderHandlerApi.INSTANCE, "skinRenderHandler");
-        
+
         RenderingRegistry.registerEntityRenderingHandler(EntityMannequin.class, new IRenderFactory() {
 
             @Override
@@ -186,7 +184,6 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGlobalSkinLibrary.class, new RenderBlockGlobalSkinLibrary());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHologramProjector.class, new RenderBlockHologramProjector());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedSkinBuilder.class, new RenderBlockAdvancedSkinBuilder());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAdvancedSkinPart.class, new RenderBlockAdvancedSkinPart());
 
         // Register coloured items and blocks.
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemColour(), ModItems.PAINT_BRUSH);
@@ -202,7 +199,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.SKIN_CUBE_GLOWING);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.SKIN_CUBE_GLASS_GLOWING);
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new BlockColour(), ModBlocks.COLOUR_MIXER);
-        
+
     }
 
     @Override
