@@ -289,7 +289,7 @@ public final class SkinIOUtils {
                 File skinFile = skinFiles[i];
                 Skin skin = loadSkinFromFile(skinFile);
                 if (skin != null) {
-                    String fileName = skin.getProperties().getPropertyString(Skin.KEY_FILE_NAME, null);
+                    String fileName = skin.getProperties().getPropertyString("fileName", null);
                     String customName = SkinProperties.PROP_ALL_CUSTOM_NAME.getValue(skin.getProperties());
                     if (!StringUtils.isNullOrEmpty(fileName)) {
                         fileName = makeFileNameValid(fileName);
