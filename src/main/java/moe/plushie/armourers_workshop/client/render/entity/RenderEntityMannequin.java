@@ -478,7 +478,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             for (int i = 0; i < skinTypes.length; i++) {
                 ISkinDescriptor descriptor = skinCapability.getSkinDescriptor(skinTypes[i], skinIndex);
                 if (descriptor != null) {
-                    skin[i] = ClientSkinCache.INSTANCE.getSkin(descriptor);
+                    skin[i] = ClientSkinCache.INSTANCE.getSkin(descriptor, false);
                     dye[i] = descriptor.getSkinDye();
                 }
             }
@@ -505,7 +505,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
         if (itemDye != null) {
             for (int i = 0; i < 8; i++) {
                 if (itemDye.haveDyeInSlot(i)) {
-                    dye.addDye(i, dye.getDyeColour(i));
+                    dye.addDye(i, itemDye.getDyeColour(i));
                 }
             }
         }

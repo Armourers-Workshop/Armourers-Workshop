@@ -86,8 +86,10 @@ public class PlayerTextureHandler {
 
             textureInfo.updateExtraColours(wardrobeCap.getExtraColours());
 
+            // Array of skin types that are valid for the player.
             ISkinType[] skinTypes = new ISkinType[] { SkinTypeRegistry.skinHead, SkinTypeRegistry.skinChest, SkinTypeRegistry.skinLegs, SkinTypeRegistry.skinFeet, SkinTypeRegistry.skinOutfit };
 
+            // Extra 4 are for the players armour slots.
             Skin[] skins = new Skin[skinTypes.length * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE + 4];
             ISkinDye[] dyes = new ISkinDye[skinTypes.length * EntitySkinCapability.MAX_SLOTS_PER_SKIN_TYPE + 4];
 
@@ -98,7 +100,7 @@ public class PlayerTextureHandler {
                 for (int i = 0; i < skinTypes.length; i++) {
                     ISkinDescriptor descriptor = skinCapability.getSkinDescriptor(skinTypes[i], skinIndex);
                     if (descriptor != null) {
-                        skin[i] = ClientSkinCache.INSTANCE.getSkin(descriptor);
+                        skin[i] = ClientSkinCache.INSTANCE.getSkin(descriptor, false);
                         dye[i] = descriptor.getSkinDye();
                     }
                 }
@@ -121,8 +123,9 @@ public class PlayerTextureHandler {
             for (int i = 0; i < skinTypesArmour.length; i++) {
                 ISkinDescriptor skinDescriptor = getSkinDescriptorFromArmourer(player, skinTypesArmour[i]);
                 if (skinDescriptor != null) {
-                    skins[skins.length - 4 + i] = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
-                    dyes[dyes.length - 4 + i] = skinDescriptor.getSkinDye();
+                    // skins[skins.length - 4 + i] =
+                    // ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
+                    // dyes[dyes.length - 4 + i] = skinDescriptor.getSkinDye();
                 }
             }
 
@@ -156,7 +159,7 @@ public class PlayerTextureHandler {
         if (itemDye != null) {
             for (int i = 0; i < 8; i++) {
                 if (itemDye.haveDyeInSlot(i)) {
-                    dye.addDye(i, dye.getDyeColour(i));
+                    dye.addDye(i, itemDye.getDyeColour(i));
                 }
             }
         }
