@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.common.skin.data.serialize.v14;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import org.apache.commons.io.Charsets;
 import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
@@ -25,7 +25,7 @@ public final class SkinPartSerializerV14 {
         ISkinPartType skinPart = null;
         SkinCubeData cubeData = null;
         ArrayList<CubeMarkerData> markerBlocks = null;
-        String regName = StreamUtils.readString(stream, Charsets.US_ASCII);
+        String regName = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
         skinPart = SkinTypeRegistry.INSTANCE.getSkinPartFromRegistryName(regName);
         if (skinPart == null) {
             ModLogger.log(Level.ERROR, "Skin part was null - reg name: " + regName + " version: " + version);
@@ -43,7 +43,7 @@ public final class SkinPartSerializerV14 {
     }
     
     public static void saveSkinPart(SkinPart skinPart, DataOutputStream stream) throws IOException {
-        StreamUtils.writeString(stream, Charsets.US_ASCII, skinPart.getPartType().getRegistryName());
+        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, skinPart.getPartType().getRegistryName());
         skinPart.getCubeData().writeToStream(stream);
         stream.writeInt(skinPart.getMarkerCount());
         for (int i = 0; i < skinPart.getMarkerCount(); i++) {

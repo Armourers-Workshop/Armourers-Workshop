@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.common.skin.data.serialize.v14;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import org.apache.commons.io.Charsets;
 import org.apache.logging.log4j.Level;
 
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
@@ -25,9 +25,11 @@ public final class SkinSerializerV14 {
      * V14 Changes
      * 
      * Add protected skin option.
-     * Add skin properties to each skin part, also add more data types.
      * Move skin paint to each skin part. (can't have paint without a part)
      * Moved skin type to the start of the file.
+     * 
+     * 
+     * Add skin properties to each skin part, also add more data types.
      */
 
     private static final int FILE_VERSION = 14;
@@ -55,17 +57,17 @@ public final class SkinSerializerV14 {
         // Write the skin file version.
         stream.writeInt(FILE_VERSION);
         // Write skin header.
-        StreamUtils.writeString(stream, Charsets.US_ASCII, TAG_SKIN_HEADER);
+        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_HEADER);
         // Write the skin type.
-        StreamUtils.writeString(stream, Charsets.US_ASCII, TAG_SKIN_TYPE_HEADER);
+        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_TYPE_HEADER);
         stream.writeUTF(skin.getSkinType().getRegistryName());
-        StreamUtils.writeString(stream, Charsets.US_ASCII, TAG_SKIN_TYPE_FOOTER);
+        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_TYPE_FOOTER);
         // Write skin props.
-        StreamUtils.writeString(stream, Charsets.US_ASCII, TAG_SKIN_PROPS_HEADER);
+        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PROPS_HEADER);
         skin.getProperties().writeToStream(stream);
-        StreamUtils.writeString(stream, Charsets.US_ASCII, TAG_SKIN_PROPS_FOOTER);
+        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PROPS_FOOTER);
         // Write paint data.
-        StreamUtils.writeString(stream, Charsets.US_ASCII, TAG_SKIN_PAINT_HEADER);
+        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PAINT_HEADER);
         if (skin.hasPaintData()) {
             stream.writeBoolean(true);
             for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
@@ -74,32 +76,32 @@ public final class SkinSerializerV14 {
         } else {
             stream.writeBoolean(false);
         }
-        StreamUtils.writeString(stream, Charsets.US_ASCII, TAG_SKIN_PAINT_FOOTER);
+        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PAINT_FOOTER);
         // Write parts
         stream.writeByte(skin.getParts().size());
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
-            StreamUtils.writeString(stream, Charsets.US_ASCII, TAG_SKIN_PART_HEADER);
+            StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PART_HEADER);
             SkinPartSerializerV14.saveSkinPart(skinPart, stream);
-            StreamUtils.writeString(stream, Charsets.US_ASCII, TAG_SKIN_PART_FOOTER);
+            StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PART_FOOTER);
         }
         // Write skin footer.
-        StreamUtils.writeString(stream, Charsets.US_ASCII, TAG_SKIN_FOOTER);
+        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_FOOTER);
     }
 
     public static Skin readSkinFromStream(DataInputStream stream, int fileVersion) throws IOException, NewerFileVersionException, InvalidCubeTypeException {
-        if (!StreamUtils.readString(stream, Charsets.US_ASCII).equals(TAG_SKIN_HEADER)) {
+        if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_HEADER)) {
             ModLogger.log(Level.ERROR, "Error loading skin header.");
         }
 
-        if (!StreamUtils.readString(stream, Charsets.US_ASCII).equals(TAG_SKIN_TYPE_HEADER)) {
+        if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_TYPE_HEADER)) {
             ModLogger.log(Level.ERROR, "Error loading skin type header.");
         }
 
         String regName = stream.readUTF();
         ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
 
-        if (!StreamUtils.readString(stream, Charsets.US_ASCII).equals(TAG_SKIN_TYPE_FOOTER)) {
+        if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_TYPE_FOOTER)) {
             ModLogger.log(Level.ERROR, "Error loading skin type footer.");
         }
 
@@ -107,7 +109,7 @@ public final class SkinSerializerV14 {
             throw new InvalidCubeTypeException();
         }
 
-        if (!StreamUtils.readString(stream, Charsets.US_ASCII).equals(TAG_SKIN_PROPS_HEADER)) {
+        if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PROPS_HEADER)) {
             ModLogger.log(Level.ERROR, "Error loading skin props header.");
         }
         SkinProperties properties = new SkinProperties();
@@ -119,11 +121,11 @@ public final class SkinSerializerV14 {
             e = propE;
         }
 
-        if (!StreamUtils.readString(stream, Charsets.US_ASCII).equals(TAG_SKIN_PROPS_FOOTER)) {
+        if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PROPS_FOOTER)) {
             ModLogger.log(Level.ERROR, "Error loading skin props footer.");
         }
 
-        if (!StreamUtils.readString(stream, Charsets.US_ASCII).equals(TAG_SKIN_PAINT_HEADER)) {
+        if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PAINT_HEADER)) {
             ModLogger.log(Level.ERROR, "Error loading skin paint header.");
         }
 
@@ -136,24 +138,24 @@ public final class SkinSerializerV14 {
             }
         }
 
-        if (!StreamUtils.readString(stream, Charsets.US_ASCII).equals(TAG_SKIN_PAINT_FOOTER)) {
+        if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PAINT_FOOTER)) {
             ModLogger.log(Level.ERROR, "Error loading skin paint footer.");
         }
 
         int size = stream.readByte();
         ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
         for (int i = 0; i < size; i++) {
-            if (!StreamUtils.readString(stream, Charsets.US_ASCII).equals(TAG_SKIN_PART_HEADER)) {
+            if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PART_HEADER)) {
                 ModLogger.log(Level.ERROR, "Error loading skin part header.");
             }
             SkinPart part = SkinPartSerializerV14.loadSkinPart(stream, fileVersion);
             parts.add(part);
-            if (!StreamUtils.readString(stream, Charsets.US_ASCII).equals(TAG_SKIN_PART_FOOTER)) {
+            if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PART_FOOTER)) {
                 ModLogger.log(Level.ERROR, "Error loading skin part footer.");
             }
         }
 
-        if (!StreamUtils.readString(stream, Charsets.US_ASCII).equals(TAG_SKIN_FOOTER)) {
+        if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_FOOTER)) {
             ModLogger.log(Level.ERROR, "Error loading skin footer.");
         }
 
@@ -217,11 +219,11 @@ public final class SkinSerializerV14 {
     }
 
     public static ISkinType readSkinTypeNameFromStream(DataInputStream stream, int fileVersion) throws IOException, NewerFileVersionException {
-        if (!StreamUtils.readString(stream, Charsets.US_ASCII).equals(TAG_SKIN_HEADER)) {
+        if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_HEADER)) {
             ModLogger.log(Level.ERROR, "Error loading skin header.");
         }
 
-        if (!StreamUtils.readString(stream, Charsets.US_ASCII).equals(TAG_SKIN_TYPE_HEADER)) {
+        if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_TYPE_HEADER)) {
             ModLogger.log(Level.ERROR, "Error loading skin type header.");
         }
 
