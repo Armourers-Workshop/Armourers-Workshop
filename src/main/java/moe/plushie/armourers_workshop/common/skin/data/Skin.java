@@ -308,6 +308,6 @@ public class Skin implements ISkin {
 
     public AdvancedPart getAdvancedPart(int index) {
         // TODO Auto-generated method stub
-        return null;
+        return new AdvancedPart(0, "");
     }
 }
