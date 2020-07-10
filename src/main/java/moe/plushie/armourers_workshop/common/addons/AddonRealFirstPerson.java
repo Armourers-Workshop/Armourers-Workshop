@@ -1,9 +1,22 @@
 package moe.plushie.armourers_workshop.common.addons;
 
+import net.minecraftforge.fml.common.Loader;
+
 public class AddonRealFirstPerson extends ModAddon {
 
     public AddonRealFirstPerson() {
         super("rfpr", "Real First-Person Render");
+    }
+    
+    @Override
+    protected boolean setIsModLoaded() {
+        if (Loader.isModLoaded("rfpr")) {
+            return true;
+        }
+        if (Loader.isModLoaded("realrender")) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isModRender() {
