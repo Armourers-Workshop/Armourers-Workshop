@@ -76,6 +76,6 @@ public class GuiHologramProjectorTabRotationOffset extends GuiTabPanel implement
         tileEntity.getRotationOffsetX().set(xOffset);
         tileEntity.getRotationOffsetY().set(yOffset);
         tileEntity.getRotationOffsetZ().set(zOffset);
-        tileEntity.updateProperty(tileEntity.getOffsetX(), tileEntity.getOffsetY(), tileEntity.getOffsetZ());
+        tileEntity.updateProperty(tileEntity.getRotationOffsetX(), tileEntity.getRotationOffsetY(), tileEntity.getRotationOffsetZ());
     }
 }
