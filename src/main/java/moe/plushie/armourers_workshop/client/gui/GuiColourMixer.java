@@ -18,10 +18,12 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
 import moe.plushie.armourers_workshop.client.gui.controls.ModGuiContainer;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiColourUpdate;
 import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
+import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
 import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.Minecraft;
@@ -39,7 +41,8 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
 
     private TileEntityColourMixer tileEntityColourMixer;
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(LibGuiResources.GUI_COLOUR_MIXER);
-    
+    private static final ResourceLocation CUBE_TEXTURE = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
+
     private Color colour;
     private GuiHSBSlider[] slidersHSB;
     private GuiTextField colourHex;
@@ -48,18 +51,18 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
     private GuiDropDownList paintTypeDropDown;
     private GuiIconButton buttonPaletteAdd;
     private GuiIconButton buttonPaletteRemove;
-    
+
     public GuiColourMixer(InventoryPlayer invPlayer, TileEntityColourMixer tileEntityColourMixer) {
         super(new ContainerColourMixer(invPlayer, tileEntityColourMixer));
         this.tileEntityColourMixer = tileEntityColourMixer;
         this.xSize = 256;
         this.ySize = 240;
     }
-    
+
     @Override
     public void initGui() {
         super.initGui();
-        
+
         colour = new Color(tileEntityColourMixer.getColour(0));
         float[] hsbvals = Color.RGBtoHSB(colour.getRed(), colour.getGreen(), colour.getBlue(), null);
         slidersHSB = new GuiHSBSlider[3];
@@ -69,14 +72,14 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
         buttonList.add(slidersHSB[0]);
         buttonList.add(slidersHSB[1]);
         buttonList.add(slidersHSB[2]);
-        
+
         colourHex = new GuiTextField(-1, fontRenderer, this.guiLeft + 5, this.guiTop + 105, 50, 10);
         colourHex.setMaxStringLength(7);
         updateHexTextbox();
-        
+
         colourSelector = new GuiColourSelector(3, this.guiLeft + 166, this.guiTop + 80, 82, 42, 10, 10, 8, 4, GUI_TEXTURE);
         buttonList.add(colourSelector);
-        
+
         colourFamilyList = new GuiDropDownList(4, this.guiLeft + 164, this.guiTop + 60, 86, "", this);
         for (int i = 0; i < ColourFamily.values().length; i++) {
             ColourFamily cf = ColourFamily.values()[i];
@@ -86,19 +89,19 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
         colourFamilyList.setListSelectedIndex(cf.ordinal());
         colourSelector.setColourFamily(cf);
         buttonList.add(colourFamilyList);
-        
+
         paintTypeDropDown = new GuiDropDownList(5, this.guiLeft + 164, this.guiTop + 30, 86, "", this);
         paintTypeDropDown.setMaxDisplayCount(10);
         updatePaintTypeDropDown();
         buttonList.add(paintTypeDropDown);
-        
+
         buttonPaletteAdd = new GuiIconButton(this, -1, this.guiLeft + 166, this.guiTop + 124, 20, 20, "Add Palette", GUI_TEXTURE).setIconLocation(223, 240, 16, 16);
-        //buttonList.add(buttonPaletteAdd);
-        
+        // buttonList.add(buttonPaletteAdd);
+
         buttonPaletteRemove = new GuiIconButton(this, -1, this.guiLeft + 228, this.guiTop + 124, 20, 20, "Remove Palette", GUI_TEXTURE).setIconLocation(189, 240, 16, 16);
-        //buttonList.add(buttonPaletteRemove);
+        // buttonList.add(buttonPaletteRemove);
     }
-    
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
@@ -109,7 +112,7 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
         paintTypeDropDown.drawForeground(mc, mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
     }
-    
+
     private void checkForColourUpdates() {
         if (tileEntityColourMixer.getHasItemUpdateAndReset()) {
             this.colour = new Color(tileEntityColourMixer.getColour(0));
@@ -117,7 +120,7 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
             updatePaintTypeDropDown();
         }
     }
-    
+
     private void updatePaintTypeDropDown() {
         int paintCount = 0;
         paintTypeDropDown.clearList();
@@ -133,33 +136,29 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
             paintCount++;
         }
     }
-    
+
     private void updateSliders() {
         float[] hsbvals = Color.RGBtoHSB(this.colour.getRed(), this.colour.getGreen(), this.colour.getBlue(), null);
         slidersHSB[0].setValue(hsbvals[0]);
         slidersHSB[1].setValue(hsbvals[1]);
         slidersHSB[2].setValue(hsbvals[2]);
     }
-    
+
     private void updateHexTextbox() {
         if (!colourHex.isFocused()) {
-            colourHex.setText(String.format(
-                    "#%02x%02x%02x",
-                    this.colour.getRed(),
-                    this.colour.getGreen(),
-                    this.colour.getBlue()));
+            colourHex.setText(String.format("#%02x%02x%02x", this.colour.getRed(), this.colour.getGreen(), this.colour.getBlue()));
         }
     }
-    
+
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button.id == 3) {
-            this.colour = ((GuiColourSelector)button).getSelectedColour();
+            this.colour = ((GuiColourSelector) button).getSelectedColour();
             updateHexTextbox();
             updateSliders();
         }
     }
-    
+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         if (colourFamilyList.getIsDroppedDown()) {
@@ -173,7 +172,7 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
         super.mouseClicked(mouseX, mouseY, button);
         colourHex.mouseClicked(mouseX, mouseY, button);
     }
-    
+
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
         if (colourFamilyList.getIsDroppedDown()) {
@@ -190,19 +189,23 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
         }
         updateColour();
     }
-    
+
     private void updateColour() {
         Color colourOld = new Color(tileEntityColourMixer.getColour(0));
-        IPaintType paintType = PaintTypeRegistry.getInstance().getRegisteredTypes().get((paintTypeDropDown.getListSelectedIndex()));
+        IPaintType paintType = getDropDownPaintType();
         if (this.colour.equals(colourOld)) {
             if (paintType == tileEntityColourMixer.getPaintType(0))
-            return;
+                return;
         }
-        
+
         MessageClientGuiColourUpdate message = new MessageClientGuiColourUpdate(this.colour.getRGB(), false, paintType);
         PacketHandler.networkWrapper.sendToServer(message);
     }
-    
+
+    private IPaintType getDropDownPaintType() {
+        return PaintTypeRegistry.getInstance().getRegisteredTypes().get((paintTypeDropDown.getListSelectedIndex()));
+    }
+
     @Override
     protected void keyTyped(char key, int keyCode) throws IOException {
         if (!colourHex.textboxKeyTyped(key, keyCode)) {
@@ -219,61 +222,82 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
             }
         }
     }
-    
-    private boolean isValidHex (String colorStr) {
+
+    private boolean isValidHex(String colorStr) {
         String hexPatten = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
         Pattern pattern = Pattern.compile(hexPatten);
         Matcher matcher = pattern.matcher(colorStr);
         return matcher.matches();
     }
-    
+
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntityColourMixer.getName());
         this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 48, this.ySize - 96 + 2, 4210752);
-        
+
         String labelHue = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.hue");
         String labelSaturation = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.saturation");
         String labelBrightness = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.brightness");
         String labelHex = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.hex");
         String labelPresets = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.presets");
         String labelPaintType = GuiHelper.getLocalizedControlName(tileEntityColourMixer.getName(), "label.paintType");
-        
+
         this.fontRenderer.drawString(labelHue + ":", 5, 21, 4210752);
         this.fontRenderer.drawString(labelSaturation + ":", 5, 46, 4210752);
         this.fontRenderer.drawString(labelBrightness + ":", 5, 71, 4210752);
         this.fontRenderer.drawString(labelHex + ":", 5, 94, 4210752);
         this.fontRenderer.drawString(labelPresets + ":", 165, 51, 4210752);
         this.fontRenderer.drawString(labelPaintType + ":", 165, 21, 4210752);
-        
+
         GlStateManager.pushMatrix();
         GlStateManager.translate(-guiLeft, -guiTop, 0);
-        //buttonPaletteAdd.drawRollover(mc, mouseX, mouseY);
-        //buttonPaletteRemove.drawRollover(mc, mouseX, mouseY);
+        // buttonPaletteAdd.drawRollover(mc, mouseX, mouseY);
+        // buttonPaletteRemove.drawRollover(mc, mouseX, mouseY);
         GlStateManager.popMatrix();
     }
-    
+
     @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int x, int y) {
         checkForColourUpdates();
         GL11.glColor4f(1, 1, 1, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(GUI_TEXTURE);
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        
+
+        GlStateManager.pushAttrib();
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GlStateManager.matrixMode(GL11.GL_TEXTURE);
+        GlStateManager.pushMatrix();
+        double f = PaintingHelper.getPaintTextureOffset();
+        double paintScale = 0.00390625D;
+        GlStateManager.translate(getDropDownPaintType().getU() * paintScale, f / 256D, 0);
+
+        mc.renderEngine.bindTexture(CUBE_TEXTURE);
+
         float red = (float) colour.getRed() / 255;
         float green = (float) colour.getGreen() / 255;
         float blue = (float) colour.getBlue() / 255;
-        GL11.glColor4f(red, green, blue, 1F);
-        
-        drawTexturedModalRect(this.guiLeft + 108, this.guiTop + 102, 108, 102, 13, 13);
-        GL11.glColor4f(1F, 1F, 1F, 1F);
+
+        if (getDropDownPaintType() != PaintTypeRegistry.PAINT_TYPE_RAINBOW) {
+            GlStateManager.color(red, green, blue, 1F);
+        }
+
+        drawScaledCustomSizeModalRect(this.guiLeft + 108, this.guiTop + 102, 0, 0, 1, 1, 13, 13, 256, 256);
+
+        GlStateManager.popMatrix();
+        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+
+        GlStateManager.resetColor();
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.popAttrib();
+
+        GlStateManager.color(1F, 1F, 1F, 1F);
         colourHex.drawTextBox();
     }
-    
+
     @Override
     public void valueUpdated(GuiHSBSlider source, double sliderValue) {
-        float[] hsbvals = { (float)slidersHSB[0].getValue(), (float)slidersHSB[1].getValue(), (float)slidersHSB[2].getValue() };
-        hsbvals[source.getType().ordinal()] = (float)sliderValue;
+        float[] hsbvals = { (float) slidersHSB[0].getValue(), (float) slidersHSB[1].getValue(), (float) slidersHSB[2].getValue() };
+        hsbvals[source.getType().ordinal()] = (float) sliderValue;
         this.colour = Color.getHSBColor(hsbvals[0], hsbvals[1], hsbvals[2]);
         updateHexTextbox();
         if (source.getType() == HSBSliderType.HUE) {
