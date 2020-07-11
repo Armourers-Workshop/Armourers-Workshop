@@ -40,6 +40,7 @@ public class ConfigHandlerClient {
     public static int textureCacheExpireTime;
     public static int textureCacheMaxSize;
     public static int maxSkinRequests;
+    public static int fastCacheSize;
     
     // Skin preview
     public static boolean skinPreEnabled = false;
@@ -108,7 +109,7 @@ public class ConfigHandlerClient {
                 "Limits how fast models can be baked to provide a smoother frame rate.");
         
         int cores = Runtime.getRuntime().availableProcessors();
-        int bakingCores = MathHelper.ceil((float)cores / 2F);
+        int bakingCores = MathHelper.ceil(cores / 2F);
         bakingCores = MathHelper.clamp(bakingCores, 1, 16);
         modelBakingThreadCount = config.getInt("modelBakingThreadCount", CATEGORY_PERFORMANCE, bakingCores, 1, 16, "");
         config.getCategory(CATEGORY_PERFORMANCE).get("modelBakingThreadCount").setComment(
@@ -175,6 +176,10 @@ public class ConfigHandlerClient {
         
         maxSkinRequests = config.getInt("maxSkinRequests", CATEGORY_CACHE, 10, 1, 50,
                 "Maximum number of skin the client can request at one time.");
+        
+        fastCacheSize = config.getInt("fastCacheSize", CATEGORY_CACHE, 5000, 0, Integer.MAX_VALUE,
+                "Size of client size cache.\n"
+                + "Setting to 0 turns off this option.");
     }
     
     private static void loadCategorySkinPreview() {

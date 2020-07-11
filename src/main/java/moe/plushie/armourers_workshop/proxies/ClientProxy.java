@@ -47,6 +47,7 @@ import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockSkin
 import moe.plushie.armourers_workshop.client.settings.Keybindings;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
+import moe.plushie.armourers_workshop.client.skin.cache.FastCache;
 import moe.plushie.armourers_workshop.client.texture.PlayerTextureDownloader;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.holiday.ModHolidays;
@@ -211,6 +212,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         ClientSkinCache.init();
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new DebugTextHandler());
+        FastCache.INSTANCE.loadCacheData();
     }
 
     @Override
