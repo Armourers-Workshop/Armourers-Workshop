@@ -53,6 +53,7 @@ public final class FastCache {
                 byte[] data = ByteBufHelper.convertSkinToByteArray(skin);
                 data = ByteBufHelper.compressedByteArray(data);
                 try (FileOutputStream fos = new FileOutputStream(file); BufferedOutputStream bus = new BufferedOutputStream(fos)) {
+                    ArrayUtils.reverse(data);
                     bus.write(data);
                     bus.flush();
                 } catch (IOException e) {
