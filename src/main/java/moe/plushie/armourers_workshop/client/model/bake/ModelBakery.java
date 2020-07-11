@@ -22,6 +22,7 @@ import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinTexture;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import moe.plushie.armourers_workshop.proxies.ClientProxy.TexturePaintType;
+import moe.plushie.armourers_workshop.utils.FastCache;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -129,6 +130,8 @@ public final class ModelBakery {
                 return new BakedSkin(skin, skinIdentifierRequested, skinIdentifierUpdated, skinReceiver);
             }
 
+            FastCache.INSTANCE.saveSkin(skin);
+
             long startTime = System.currentTimeMillis();
             skin.lightHash();
 
@@ -202,7 +205,8 @@ public final class ModelBakery {
 
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart partData = skin.getParts().get(i);
-                // partData.getClientSkinPartData().setAverageDyeValues(averageR, averageG, averageB);
+                // partData.getClientSkinPartData().setAverageDyeValues(averageR, averageG,
+                // averageB);
             }
 
             skin.setAverageDyeValues(averageR, averageG, averageB);
@@ -216,6 +220,7 @@ public final class ModelBakery {
                 bakeTimesIndex.set(0);
             }
             bakeTimes.set(index, (int) totalTime);
+
             return new BakedSkin(skin, skinIdentifierRequested, skinIdentifierUpdated, skinReceiver);
         }
     }
