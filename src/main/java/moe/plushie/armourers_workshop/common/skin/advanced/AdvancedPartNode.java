@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import net.minecraft.util.math.Vec3d;
 
-public class AdvancedPart {
+public class AdvancedPartNode {
 
-    private final ArrayList<AdvancedPart> children = new ArrayList<AdvancedPart>();
+    private final ArrayList<AdvancedPartNode> children = new ArrayList<AdvancedPartNode>();
     public final int partIndex;
     public String name;
     public boolean isStatic = true;
@@ -23,12 +23,12 @@ public class AdvancedPart {
     public Vec3d rotationPos = Vec3d.ZERO;
     public Vec3d rotationPosOffset = Vec3d.ZERO;
 
-    public AdvancedPart(int partIndex, String name) {
+    public AdvancedPartNode(int partIndex, String name) {
         this.partIndex = partIndex;
         this.name = name;
     }
 
-    public ArrayList<AdvancedPart> getChildren() {
+    public ArrayList<AdvancedPartNode> getChildren() {
         return children;
     }
 

@@ -12,14 +12,15 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinPart;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
-import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPart;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
+import moe.plushie.armourers_workshop.common.skin.advanced.IAdvancedPartParent;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeRegistry;
 import moe.plushie.armourers_workshop.common.skin.cubes.ICube;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Skin implements ISkin {
+public class Skin implements ISkin, IAdvancedPartParent {
 
     private SkinProperties properties;
     private ISkinType skinType;
@@ -306,8 +307,13 @@ public class Skin implements ISkin {
         }
     }
 
-    public AdvancedPart getAdvancedPart(int index) {
-        // TODO Auto-generated method stub
-        return new AdvancedPart(0, "");
+    @Override
+    public SkinPart getAdvancedPart(int index) {
+        return getParts().get(index);
+    }
+
+    @Override
+    public AdvancedPartNode getAdvancedPartNode(int index) {
+        return null;
     }
 }

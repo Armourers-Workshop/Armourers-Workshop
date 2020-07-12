@@ -1,9 +1,11 @@
 package moe.plushie.armourers_workshop.common.tileentities;
 
+import java.util.ArrayList;
+
 import moe.plushie.armourers_workshop.client.gui.GuiAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
-import moe.plushie.armourers_workshop.common.skin.type.wings.SkinWings.MovementType;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -12,27 +14,26 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityAdvancedSkinBuilder extends AbstractTileEntityInventory implements IGuiFactory {
 
+    private static final String TAG_DIRECTION = "direction";
+    private static final String TAG_TYPE = "skinType";
+    private static final String TAG_SHOW_GUIDES = "showGuides";
+
     private static final int CONS_PARTS_MAX = 10;
 
-    private SkinPartSettings[] partSettings;
+    private ArrayList<AdvancedPartNode> advancedParts = new ArrayList<AdvancedPartNode>();
 
     public TileEntityAdvancedSkinBuilder() {
         super(CONS_PARTS_MAX);
-        partSettings = new SkinPartSettings[CONS_PARTS_MAX];
-        for (int i = 0; i < CONS_PARTS_MAX; i++) {
-            partSettings[i] = new SkinPartSettings();
-        }
     }
-    
-    public SkinPartSettings getPartSettings(int index) {
-        return partSettings[index];
+
+    public ArrayList<AdvancedPartNode> getAdvancedParts() {
+        return advancedParts;
     }
 
     @Override
@@ -57,23 +58,11 @@ public class TileEntityAdvancedSkinBuilder extends AbstractTileEntityInventory i
         return INFINITE_EXTENT_AABB;
     }
 
-    public static class SkinPartSettings {
-
-        public int parentIndex = -1;
-        public Vec3d posOffset = Vec3d.ZERO;
-        public Vec3d rotOffset = Vec3d.ZERO;
-        public boolean mirror = false;
-        public float moveAngleMin = 0F;
-        public float moveAngleMax = 0F;
-        public int moveSpeed = 0;
-        public MovementType moveType = MovementType.LINEAR;
-    }
-
     @Override
     public Container getServerGuiElement(EntityPlayer player, World world, BlockPos pos) {
         return new ContainerAdvancedSkinBuilder(player.inventory, this);
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getClientGuiElement(EntityPlayer player, World world, BlockPos pos) {

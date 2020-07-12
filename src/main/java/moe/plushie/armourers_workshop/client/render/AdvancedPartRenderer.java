@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.client.render;
 
-import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedData;
-import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPart;
-import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedScript;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
+import moe.plushie.armourers_workshop.common.skin.advanced.IAdvancedPartParent;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -10,12 +10,12 @@ import net.minecraft.util.math.Vec3d;
 
 public final class AdvancedPartRenderer {
 
-    public static void renderAdvancedSkin(Skin skin, SkinRenderData renderData, Entity entity, AdvancedData data, AdvancedPart part) {
-        updateParts(skin, renderData, entity, data, part, 0);
-        renderParts(skin, renderData, entity, part);
+    public static void renderAdvancedSkin(IAdvancedPartParent partParent, SkinRenderData renderData, Entity entity, AdvancedScript data, AdvancedPartNode part) {
+        updateParts(partParent, renderData, entity, data, part, 0);
+        renderParts(partParent, renderData, entity, part);
     }
 
-    private static void updateParts(Skin skin, SkinRenderData renderData, Entity entity, AdvancedData data, AdvancedPart part, int depth) {
+    private static void updateParts(IAdvancedPartParent partParent, SkinRenderData renderData, Entity entity, AdvancedScript data, AdvancedPartNode part, int depth) {
         double angle = 0;
         double flapTime = 5000F;
         if (entity != null) {
@@ -39,14 +39,14 @@ public final class AdvancedPartRenderer {
         part.rotationAngleOffset = new Vec3d(0, 0, 0);
         part.rotationAngleOffset = new Vec3d(x, fullAngle, fullAngle);
         for (int i = 0; i < part.getChildren().size(); i++) {
-            AdvancedPart advancedPart = part.getChildren().get(i);
-            updateParts(skin, renderData, entity, data, advancedPart, depth + 1);
+            AdvancedPartNode advancedPart = part.getChildren().get(i);
+            updateParts(partParent, renderData, entity, data, advancedPart, depth + 1);
         }
     }
 
-    private static void renderParts(Skin skin, SkinRenderData renderData, Entity entity, AdvancedPart part) {
+    private static void renderParts(IAdvancedPartParent partParent, SkinRenderData renderData, Entity entity, AdvancedPartNode part) {
         GlStateManager.pushMatrix();
-        SkinPart skinPart = skin.getParts().get(0);
+        SkinPart skinPart = partParent.getAdvancedPart(0);
         Vec3d pos = part.pos.add(part.posOffset);
         Vec3d rot = part.rotationAngle.add(part.rotationAngleOffset);
         float scale = renderData.getScale() * part.scale;
@@ -56,7 +56,7 @@ public final class AdvancedPartRenderer {
         GlStateManager.rotate((float) rot.z, 0, 0, 1);
         renderPart(new SkinPartRenderData(skinPart, renderData));
         for (int i = 0; i < part.getChildren().size(); i++) {
-            renderParts(skin, renderData, entity, part.getChildren().get(i));
+            renderParts(partParent, renderData, entity, part.getChildren().get(i));
         }
         GlStateManager.popMatrix();
     }

@@ -1,9 +1,13 @@
 package moe.plushie.armourers_workshop.client.render.tileentities;
 
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.client.render.AdvancedPartRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
+import moe.plushie.armourers_workshop.client.render.SkinRenderData;
+import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
+import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder.SkinPartSettings;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
@@ -37,8 +41,6 @@ public class RenderBlockAdvancedSkinBuilder extends TileEntitySpecialRenderer<Ti
             if (descriptor == null) {
                 continue;
             }
-            SkinPartSettings ps = te.getPartSettings(i);
-            
             
             GlStateManager.pushAttrib();
             GlStateManager.resetColor();
@@ -53,7 +55,15 @@ public class RenderBlockAdvancedSkinBuilder extends TileEntitySpecialRenderer<Ti
             GlStateManager.popAttrib();
             
             GlStateManager.pushMatrix();
-            GlStateManager.translate(ps.posOffset.x * scale, -ps.posOffset.y * scale, ps.posOffset.z * scale);
+            
+            GlStateManager.translate(0F, 16f * scale, 0F);
+            for (AdvancedPartNode advancedPart : te.getAdvancedParts()) {
+                Skin skin = ClientSkinCache.INSTANCE.getSkin(descriptor);
+                if (skin != null) {
+                    AdvancedPartRenderer.renderAdvancedSkin(skin, new SkinRenderData(scale, null, null, 0, false, false, false, null), null, null, advancedPart);
+                }
+            }
+            
             SkinItemRenderHelper.renderSkinWithoutHelper(descriptor, false);
             GlStateManager.popMatrix();
         }

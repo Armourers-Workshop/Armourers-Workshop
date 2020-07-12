@@ -11,8 +11,8 @@ import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
-import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedData;
-import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPart;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedScript;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
@@ -99,24 +99,24 @@ public class ModelSkinLegs extends ModelTypeHelper {
         }
 
         if (isAdvanced) {
-            AdvancedData advancedData = new AdvancedData();
+            AdvancedScript advancedData = new AdvancedScript();
             
             int partCount = 4;
             
-            AdvancedPart base = new AdvancedPart(0, "base");
+            AdvancedPartNode base = new AdvancedPartNode(0, "base");
             
-            AdvancedPart advParts1[] = new AdvancedPart[partCount];
-            AdvancedPart advParts2[] = new AdvancedPart[partCount];
-            AdvancedPart advParts3[] = new AdvancedPart[partCount];
+            AdvancedPartNode advParts1[] = new AdvancedPartNode[partCount];
+            AdvancedPartNode advParts2[] = new AdvancedPartNode[partCount];
+            AdvancedPartNode advParts3[] = new AdvancedPartNode[partCount];
             
             for (int i = 0; i < partCount; i++) {
-                advParts1[i] = new AdvancedPart(0, String.valueOf(i));
+                advParts1[i] = new AdvancedPartNode(0, String.valueOf(i));
                 advParts1[i].pos = new Vec3d(0D, 0D, 8D);
                 
-                advParts2[i] = new AdvancedPart(0, String.valueOf(i));
+                advParts2[i] = new AdvancedPartNode(0, String.valueOf(i));
                 advParts2[i].pos = new Vec3d(0D, 0D, 8D);
                 
-                advParts3[i] = new AdvancedPart(0, String.valueOf(i));
+                advParts3[i] = new AdvancedPartNode(0, String.valueOf(i));
                 advParts3[i].pos = new Vec3d(0D, 0D, 8D);
             }
             

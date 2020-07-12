@@ -85,7 +85,7 @@ public class AdvancedSkinRegistry {
             super(name);
         }
 
-        public abstract void trigger(World world, Entity entity, Skin skin, float... data);
+        public abstract void trigger(World world, Entity entity, IAdvancedPartParent partParent, float... data);
 
         public abstract String[] getInputs();
     }
@@ -105,7 +105,7 @@ public class AdvancedSkinRegistry {
             super(name);
         }
 
-        public abstract float getValue(World world, Entity entity, Skin skin, float... data);
+        public abstract float getValue(World world, Entity entity, float... data);
 
         public abstract String[] getInputs();
     }
