@@ -22,10 +22,10 @@ public class CommandWardrobeResync extends ModCommand {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
-        if (args.length == getParentCount()) {
+        if (args.length == getParentCount() + 1) {
             return getListOfStringsMatchingLastWord(args, getPlayers(server));
         }
-        return null;
+        return super.getTabCompletions(server, sender, args, targetPos);
     }
 
     // Arguments 1 - <player>

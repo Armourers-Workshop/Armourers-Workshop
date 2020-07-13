@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.command.ModCommand;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -23,10 +24,10 @@ public class CommandWardrobeClearSkin extends ModCommand {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
-        if (args.length == getParentCount()) {
+        if (args.length == getParentCount() + 1) {
             return getListOfStringsMatchingLastWord(args, getPlayers(server));
         }
-        if (args.length == getParentCount() + 1) {
+        if (args.length == getParentCount() + 2) {
             ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
             String[] typeNames = new String[skinTypes.size()];
             for (int i = 0; i < skinTypes.size(); i++) {
@@ -35,7 +36,7 @@ public class CommandWardrobeClearSkin extends ModCommand {
             return getListOfStringsMatchingLastWord(args, typeNames);
         }
 
-        return null;
+        return super.getTabCompletions(server, sender, args, targetPos);
     }
 
     // Arguments 3 - <player> <skin type> <slot id>
@@ -46,6 +47,9 @@ public class CommandWardrobeClearSkin extends ModCommand {
         }
 
         String argPlayer = args[getParentCount()];
+        
+        ModLogger.log(argPlayer);
+        
         String argSkinType = args[getParentCount() + 1];
         int argSlotId = parseInt(args[getParentCount() + 2], 1, 10);
 

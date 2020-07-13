@@ -26,10 +26,10 @@ public class CommandWardrobeSetUnlockedSlots extends ModCommand {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
-        if (args.length == getParentCount()) {
+        if (args.length == getParentCount() + 1) {
             return getListOfStringsMatchingLastWord(args, getPlayers(server));
         }
-        if (args.length == getParentCount() + 1) {
+        if (args.length == getParentCount() + 2) {
             ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
             String[] skinTypesNames = new String[skinTypes.size()];
             for (int i = 0; i < skinTypes.size(); i++) {
@@ -37,7 +37,10 @@ public class CommandWardrobeSetUnlockedSlots extends ModCommand {
             }
             return getListOfStringsMatchingLastWord(args, skinTypesNames);
         }
-        return null;
+        if (args.length == getParentCount() + 3) {
+            return getListOfStringsMatchingLastWord(args, new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
+        }
+        return super.getTabCompletions(server, sender, args, targetPos);
     }
 
     // Arguments 3 - <player> <skin type> <count>

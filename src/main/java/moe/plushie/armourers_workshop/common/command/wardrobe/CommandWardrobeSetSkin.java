@@ -35,16 +35,16 @@ public class CommandWardrobeSetSkin extends ModCommand {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
-        if (args.length == getParentCount()) {
+        if (args.length == getParentCount() + 1) {
             return getListOfStringsMatchingLastWord(args, getPlayers(server));
         }
-        return null;
+        return super.getTabCompletions(server, sender, args, targetPos);
     }
 
     // Arguments 3-4 - <player> <slot id> <"skin name"> [dye]
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (args.length < getParentCount() + 3) {
+        if (args.length <= getParentCount() + 3) {
             throw new WrongUsageException(getUsage(sender), (Object) args);
         }
 
@@ -57,7 +57,7 @@ public class CommandWardrobeSetSkin extends ModCommand {
         int slotNum = 0;
         slotNum = parseInt(args[getParentCount() + 1], 1, 10);
 
-        String skinName = args[getParentCount() + 3];
+        String skinName = args[getParentCount() + 2];
         if (!skinName.substring(0, 1).equals("\"")) {
             throw new WrongUsageException(getUsage(sender), (Object) skinName);
         }
@@ -65,7 +65,7 @@ public class CommandWardrobeSetSkin extends ModCommand {
         int usedCommands = 3;
 
         if (!skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
-            for (int i = getParentCount() + 4; i < args.length; i++) {
+            for (int i = getParentCount() + 3; i < args.length; i++) {
                 skinName += " " + args[i];
                 if (skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
                     usedCommands = i;

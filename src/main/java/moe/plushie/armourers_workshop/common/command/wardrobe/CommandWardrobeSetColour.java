@@ -38,7 +38,7 @@ public class CommandWardrobeSetColour extends ModCommand {
         }
         return super.getTabCompletions(server, sender, args, targetPos);
     }
-    
+
     // Arguments 3 - <player> <extra colour type> <dye>
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
