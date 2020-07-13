@@ -1,6 +1,14 @@
 package moe.plushie.armourers_workshop.common.skin.advanced;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import net.minecraft.util.math.Vec3d;
 
@@ -34,5 +42,23 @@ public class AdvancedPartNode {
 
     public void setRotationAngleOffset(double x, double y, double z) {
         this.rotationAngleOffset = new Vec3d(x, y, z);
+    }
+
+    public static class Serializer implements JsonSerializer<AdvancedPartNode>, JsonDeserializer<AdvancedPartNode> {
+
+        private static final String TAG_FILENAME = "filename";
+        private static final String TAG_LAST_ACCESS = "lastAccess";
+
+        @Override
+        public AdvancedPartNode deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public JsonElement serialize(AdvancedPartNode src, Type typeOfSrc, JsonSerializationContext context) {
+            // TODO Auto-generated method stub
+            return null;
+        }
     }
 }

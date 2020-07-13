@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.client.render;
 
-import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedScript;
 import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedScript;
 import moe.plushie.armourers_workshop.common.skin.advanced.IAdvancedPartParent;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import net.minecraft.client.renderer.GlStateManager;
@@ -11,7 +11,7 @@ import net.minecraft.util.math.Vec3d;
 public final class AdvancedPartRenderer {
 
     public static void renderAdvancedSkin(IAdvancedPartParent partParent, SkinRenderData renderData, Entity entity, AdvancedScript data, AdvancedPartNode part) {
-        updateParts(partParent, renderData, entity, data, part, 0);
+        // updateParts(partParent, renderData, entity, data, part, 0);
         renderParts(partParent, renderData, entity, part);
     }
 
