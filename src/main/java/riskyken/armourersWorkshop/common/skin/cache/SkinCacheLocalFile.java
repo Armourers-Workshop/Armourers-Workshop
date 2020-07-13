@@ -14,23 +14,23 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 public class SkinCacheLocalFile {
-    
+
     /** Cache of skins that are in memory. */
     private final BidirectionalHashMap<ILibraryFile, Integer> cacheMapFileLink;
     private final Object cacheMapLock = new Object();
-    
+
     /** A list of skin that need to be loaded. */
     private final ArrayList<SkinRequestMessage> skinLoadQueue;
     private final Object skinLoadQueueLock = new Object();
-    
+
     private final SkinCacheLocalDatabase cacheLocalDatabase;
-    
+
     public SkinCacheLocalFile(SkinCacheLocalDatabase cacheLocalDatabase) {
         this.cacheLocalDatabase = cacheLocalDatabase;
         cacheMapFileLink = new BidirectionalHashMap<ILibraryFile, Integer>();
         skinLoadQueue = new ArrayList<SkinRequestMessage>();
     }
-    
+
     public void doSkinLoading() {
         synchronized (cacheMapLock) {
             synchronized (skinLoadQueueLock) {
@@ -45,7 +45,7 @@ public class SkinCacheLocalFile {
             }
         }
     }
-    
+
     public Skin get(ISkinIdentifier identifier, boolean softLoad) {
         return get(new SkinRequestMessage(identifier, null), softLoad);
     }
@@ -64,7 +64,7 @@ public class SkinCacheLocalFile {
                     load(identifier);
                 }
             }
-            
+
             if (cacheMapFileLink.containsKey(libraryFile)) {
                 int id = cacheMapFileLink.get(libraryFile);
                 SkinIdentifier newIdentifier = new SkinIdentifier(id, requestMessage.getSkinIdentifier().getSkinLibraryFile(), 0, requestMessage.getSkinIdentifier().getSkinType());
@@ -84,13 +84,13 @@ public class SkinCacheLocalFile {
         }
         return null;
     }
-    
+
     private Skin load(ISkinIdentifier skinIdentifier) {
         Skin skin = SkinIOUtils.loadSkinFromFileName(skinIdentifier.getSkinLibraryFile().getFullName() + SkinIOUtils.SKIN_FILE_EXTENSION);
         addSkinToCache(skin, skinIdentifier.getSkinLibraryFile());
         return skin;
     }
-    
+
     private void addSkinToCache(Skin skin, ILibraryFile libraryFile) {
         if (skin == null) {
             return;
@@ -98,13 +98,13 @@ public class SkinCacheLocalFile {
         cacheLocalDatabase.add(skin);
         cacheMapFileLink.put(libraryFile, skin.lightHash());
     }
-    
+
     public void add(LibraryFile libraryFile, int skinId) {
         synchronized (cacheMapLock) {
             cacheMapFileLink.put(libraryFile, skinId);
         }
     }
-    
+
     public boolean containsValue(int skinId) {
         synchronized (cacheMapLock) {
             return cacheMapFileLink.containsValue(skinId);
@@ -113,28 +113,26 @@ public class SkinCacheLocalFile {
 
     public ILibraryFile getBackward(int skinId) {
         synchronized (cacheMapLock) {
-            synchronized (cacheMapLock) {
-                if (cacheMapFileLink.getMapBackward().containsKey(skinId)) {
-                    return cacheMapFileLink.getBackward(skinId);
-                } else {
-                    return null;
-                }
+            if (cacheMapFileLink.getMapBackward().containsKey(skinId)) {
+                return cacheMapFileLink.getBackward(skinId);
+            } else {
+                return null;
             }
         }
     }
-    
+
     public void remove(ILibraryFile libraryFile) {
         synchronized (cacheMapLock) {
             cacheMapFileLink.remove(libraryFile);
         }
     }
-    
+
     public int size() {
         synchronized (cacheMapLock) {
             return cacheMapFileLink.size();
         }
     }
-    
+
     public void clear() {
         synchronized (cacheMapLock) {
             cacheMapFileLink.clear();
