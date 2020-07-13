@@ -21,7 +21,7 @@ import net.minecraft.util.math.BlockPos;
 public class CommandExportSkin extends ModCommand {
 
     public CommandExportSkin(ModCommand parent) {
-        super(parent, "exportSkin");
+        super(parent, "export_skin");
     }
 
     @Override

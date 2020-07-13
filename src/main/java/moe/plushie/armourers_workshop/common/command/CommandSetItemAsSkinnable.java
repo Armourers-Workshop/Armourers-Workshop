@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 public class CommandSetItemAsSkinnable extends ModCommand {
 
     public CommandSetItemAsSkinnable(ModCommand parent) {
-        super(parent, "setItemSkinnable");
+        super(parent, "set_item_skinnable");
     }
 
     @Override
