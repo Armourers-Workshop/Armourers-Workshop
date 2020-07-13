@@ -47,7 +47,7 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
         int skinCount = 0;
         for (int i = 0; i < skinList.size(); i++) {
             ISkinType skinType = skinList.get(i);
-            if (!skinType.isHidden() & skinType != SkinTypeRegistry.skinOutfit) {
+            if (!skinType.isHidden() | skinType != SkinTypeRegistry.skinOutfit) {
                 String skinLocalizedName = str.getLocalizedSkinTypeName(skinType);
                 String skinRegistryName = skinType.getRegistryName();
                 dropDownList.addListItem(skinLocalizedName, skinRegistryName, skinType.enabled());
