@@ -21,6 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 import riskyken.armourersWorkshop.client.skin.SkinModelTexture;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
+import riskyken.armourersWorkshop.client.skin.cache.FastCache;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
@@ -118,6 +119,9 @@ public final class ModelBakery {
         @Override
         public BakedSkin call() throws Exception {
             Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+
+            FastCache.INSTANCE.saveSkin(skin);
+
             long startTime = System.currentTimeMillis();
             skin.lightHash();
 

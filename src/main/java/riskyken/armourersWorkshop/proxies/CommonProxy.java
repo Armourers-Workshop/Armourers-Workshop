@@ -54,81 +54,98 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 import riskyken.armourersWorkshop.utils.SkinIOUtils;
 
 public class CommonProxy implements ILibraryCallback {
-    
+
     private static ModItems modItems;
     private static ModBlocks modBlocks;
     public ILibraryManager libraryManager;
     private PermissionSystem permissionSystem;
-    
+
+    private File directoryInstance;
+    private File directoryConfig;
+    private File directoryConfigMod;
+    private File directoryMod;
+    private File directorySkinLibrary;
+
     public void preInit(FMLPreInitializationEvent event) {
-        File configDir = event.getSuggestedConfigurationFile().getParentFile();
-        configDir = new File(configDir, LibModInfo.ID);
-        if (!configDir.exists()) {
-            configDir.mkdirs();
+        directoryInstance = event.getSuggestedConfigurationFile().getParentFile().getParentFile();
+        directoryConfig = event.getSuggestedConfigurationFile().getParentFile();
+        directoryConfigMod = new File(directoryConfig, LibModInfo.ID);
+        directoryMod = new File(directoryInstance, "armourers_workshop_data");
+        directorySkinLibrary = new File(directoryInstance, LibModInfo.ID);
+
+        if (!directoryConfigMod.exists()) {
+            directoryConfigMod.mkdirs();
         }
-        
+        if (!directoryMod.exists()) {
+            directoryMod.mkdirs();
+        }
+        if (!directorySkinLibrary.exists()) {
+            directorySkinLibrary.mkdirs();
+        }
+
         ModAddonManager.preInit();
-        ConfigHandler.init(new File(configDir, "common.cfg"));
-        ConfigHandlerClient.init(new File(configDir, "client.cfg"));
-        ConfigHandlerOverrides.init(new File(configDir, "overrides.cfg"));
-        
+        ConfigHandler.init(new File(directoryConfigMod, "common.cfg"));
+        ConfigHandlerClient.init(new File(directoryConfigMod, "client.cfg"));
+        ConfigHandlerOverrides.init(new File(directoryConfigMod, "overrides.cfg"));
+
         EntityRegistry.registerModEntity(Seat.class, "seat", 1, ArmourersWorkshop.instance, 10, 20, false);
-        
+
         SkinIOUtils.makeLibraryDirectory();
         UpdateCheck.checkForUpdates();
         SkinExtractor.extractSkins();
-        
+
         SkinTypeRegistry.init();
         CubeRegistry.init();
-        
+
         modItems = new ModItems();
         modBlocks = new ModBlocks();
     }
-    
+
     public void initLibraryManager() {
         libraryManager = new CommonLibraryManager();
     }
-    
-    public void initRenderers() {}
-    
+
+    public void initRenderers() {
+    }
+
     public void init(FMLInitializationEvent event) {
         modBlocks.registerTileEntities();
         CraftingManager.init();
         new GuiHandler();
         new ConfigSynchronizeHandler();
-        
+
         PacketHandler.init();
         EntityEquipmentDataManager.init();
         EntitySkinHandler.init();
         permissionSystem = new PermissionSystem();
         ModAddonManager.init();
     }
-    
+
     public void postInit(FMLPostInitializationEvent event) {
         ModAddonManager.postInit();
         libraryManager.reloadLibrary();
     }
-    
+
     public PermissionSystem getPermissionSystem() {
         return permissionSystem;
     }
-    
+
     public void registerKeyBindings() {
-        
+
     }
-    
+
     public void addEquipmentData(PlayerPointer playerPointer, EntityEquipmentData equipmentData) {
-        
+
     }
-    
+
     public int getPlayerModelCacheSize() {
         return 0;
     }
-    
+
     public void receivedCommandFromSever(CommandType command) {
-        
+
     }
-    
+
     public void receivedAdminPanelCommand(EntityPlayer player, AdminPanelCommand command) {
         switch (command) {
         case RECOVER_SKINS:
@@ -142,19 +159,19 @@ public class CommonProxy implements ILibraryCallback {
             break;
         }
     }
-    
+
     public void receivedEquipmentData(EntityEquipmentData equipmentData, int entityId) {
-        
+
     }
-    
+
     public void receivedSkinFromLibrary(String fileName, String filePath, Skin skin, SendType sendType) {
-        
+
     }
-    
+
     public int getBlockRenderType(Block block) {
         return 0;
     }
-    
+
     public MinecraftServer getServer() {
         return MinecraftServer.getServer();
     }
@@ -192,7 +209,7 @@ public class CommonProxy implements ILibraryCallback {
                     }
                 }
             } else {
-                
+
                 ModLogger.log("public delete");
             }
             break;
@@ -207,7 +224,7 @@ public class CommonProxy implements ILibraryCallback {
                 if (!dir.exists()) {
                     dir.mkdir();
                 }
-                //TODO don't reload the library just add the folder
+                // TODO don't reload the library just add the folder
                 libraryManager.reloadLibrary();
                 ModLogger.log(String.format("making folder call %s in %s", file.fileName, file.filePath));
                 ModLogger.log("full path: " + dir.getAbsolutePath());
@@ -217,7 +234,7 @@ public class CommonProxy implements ILibraryCallback {
             break;
         }
     }
-    
+
     private ArrayList<LibraryFile> clearFiles = new ArrayList<LibraryFile>();
 
     @Override
@@ -226,16 +243,20 @@ public class CommonProxy implements ILibraryCallback {
             CommonSkinCache.INSTANCE.clearFileNameIdLink(clearFiles.get(i));
         }
     }
-    
+
     public boolean isLocalPlayer(String username) {
         return false;
     }
-    
+
     public boolean haveFullLocalProfile() {
         return false;
     }
-    
+
     public GameProfile getLocalGameProfile() {
         return null;
+    }
+
+    public File getModDirectory() {
+        return directoryMod;
     }
 }

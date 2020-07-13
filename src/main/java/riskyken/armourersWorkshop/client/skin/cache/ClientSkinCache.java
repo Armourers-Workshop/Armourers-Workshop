@@ -15,6 +15,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinIdentifier;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
+import riskyken.armourersWorkshop.client.model.bake.ModelBakery;
 import riskyken.armourersWorkshop.client.model.bake.ModelBakery.BakedSkin;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.data.ExpiringHashMap;
@@ -27,40 +28,40 @@ import riskyken.armourersWorkshop.utils.ModLogger;
 
 @SideOnly(Side.CLIENT)
 public class ClientSkinCache implements IExpiringMapCallback<Skin> {
-    
+
     public static ClientSkinCache INSTANCE;
-    
+
     /** Cache of skins that are in memory. */
     private final ExpiringHashMap<ISkinIdentifier, Skin> skinIDMap;
-    
+
     /** Skin IDs that have been requested from the server. */
     private final HashSet<ISkinIdentifier> requestedSkinIDs;
-    
+
     private final Executor skinRequestExecutor;
-    
+
     public static void init() {
         INSTANCE = new ClientSkinCache();
     }
-    
+
     protected ClientSkinCache() {
         skinIDMap = new ExpiringHashMap<ISkinIdentifier, Skin>(ConfigHandlerClient.clientModelCacheTime, this);
         requestedSkinIDs = new HashSet<ISkinIdentifier>();
         skinRequestExecutor = Executors.newFixedThreadPool(1);
         FMLCommonHandler.instance().bus().register(this);
     }
-    
+
     public Skin getSkin(ISkinPointer skinPointer) {
         return getSkin(skinPointer.getIdentifier(), true);
     }
-    
+
     public Skin getSkin(ISkinPointer skinPointer, boolean requestSkin) {
         return getSkin(skinPointer.getIdentifier(), requestSkin);
     }
-    
+
     public Skin getSkin(ISkinIdentifier identifier) {
         return getSkin(identifier, true);
     }
-    
+
     public Skin getSkin(ISkinIdentifier identifier, boolean requestSkin) {
         synchronized (skinIDMap) {
             if (skinIDMap.containsKey(identifier)) {
@@ -72,11 +73,11 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         }
         return null;
     }
-    
+
     public void requestSkinFromServer(ISkinPointer skinPointer) {
         requestSkinFromServer(skinPointer.getIdentifier());
     }
-    
+
     private void requestSkinFromServer(ISkinIdentifier identifier) {
         synchronized (requestedSkinIDs) {
             if (!requestedSkinIDs.contains(identifier)) {
@@ -85,23 +86,23 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
             }
         }
     }
-    
+
     public boolean isSkinInCache(ISkinPointer skinPointer) {
         return isSkinInCache(skinPointer.getIdentifier());
     }
-    
+
     public boolean isSkinInCache(ISkinIdentifier identifier) {
         synchronized (skinIDMap) {
-            return skinIDMap.containsKey(identifier); 
+            return skinIDMap.containsKey(identifier);
         }
     }
-    
+
     public void markSkinAsDirty(ISkinIdentifier identifier) {
         synchronized (skinIDMap) {
             skinIDMap.remove(identifier);
         }
     }
-    
+
     public void receivedModelFromBakery(BakedSkin bakedSkin) {
         SkinIdentifier identifierRequested = bakedSkin.getSkinIdentifierRequested();
         synchronized (requestedSkinIDs) {
@@ -124,19 +125,19 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
             }
         }
     }
-    
+
     public int getCacheSize() {
         synchronized (skinIDMap) {
             return skinIDMap.size();
         }
     }
-    
+
     public int getRequestQueueSize() {
         synchronized (requestedSkinIDs) {
             return requestedSkinIDs.size();
         }
     }
-    
+
     public int getModelCount() {
         int count = 0;
         synchronized (skinIDMap) {
@@ -151,7 +152,7 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         }
         return count;
     }
-    
+
     public int getPartCount() {
         int count = 0;
         synchronized (skinIDMap) {
@@ -164,7 +165,7 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
         }
         return count;
     }
-    
+
     public void clearCache() {
         synchronized (skinIDMap) {
             Object[] keySet = skinIDMap.getKeySet().toArray();
@@ -179,7 +180,7 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
             requestedSkinIDs.clear();
         }
     }
-    
+
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {
@@ -191,19 +192,24 @@ public class ClientSkinCache implements IExpiringMapCallback<Skin> {
     public void itemExpired(Skin mapItem) {
         mapItem.cleanUpDisplayLists();
     }
-    
+
     private static class SkinRequestThread implements Runnable {
-        
+
         private ISkinIdentifier skinIdentifier;
-        
+
         public SkinRequestThread(ISkinIdentifier skinIdentifier) {
             this.skinIdentifier = skinIdentifier;
         }
-        
+
         @Override
         public void run() {
             Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-            PacketHandler.networkWrapper.sendToServer(new MessageClientRequestSkinData(skinIdentifier));
+            Skin skin = FastCache.INSTANCE.loadSkin(skinIdentifier);
+            if (skin != null) {
+                ModelBakery.INSTANCE.receivedUnbakedModel(skin, new SkinIdentifier(skinIdentifier), new SkinIdentifier(skinIdentifier));
+            } else {
+                PacketHandler.networkWrapper.sendToServer(new MessageClientRequestSkinData(skinIdentifier));
+            }
         }
     }
 }

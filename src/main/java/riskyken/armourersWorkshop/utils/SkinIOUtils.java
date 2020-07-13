@@ -292,6 +292,10 @@ public final class SkinIOUtils {
         return new File(System.getProperty("user.dir"), LibModInfo.ID);
     }
     
+    public static File getFastCaheDirectory() {
+        return new File(System.getProperty("user.dir"), "fast-cache");
+    }
+    
     public static boolean createDirectory(File file) {
         if (!file.exists()) {
             return file.mkdirs();

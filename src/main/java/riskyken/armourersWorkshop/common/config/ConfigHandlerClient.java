@@ -12,6 +12,7 @@ public class ConfigHandlerClient {
     
     public static int clientModelCacheTime = 600000;
     public static int clientTextureCacheTime = 600000;
+    public static int fastCacheSize;
     public static int maxSkinRenderDistance = 128;
     public static int maxModelBakingThreads = 1;
     public static boolean multipassSkinRendering = true;
@@ -42,6 +43,7 @@ public class ConfigHandlerClient {
     public static boolean showSkinRenderBounds;
     
     public static Configuration config;
+    
     
     public static void init(File file) {
         if (config == null) {
@@ -81,6 +83,10 @@ public class ConfigHandlerClient {
                 .getInt("clientTextureCacheTime", CATEGORY_CLIENT, 600, 1, 3600,
                 "How long in seconds the client will keep textures in it's cache.\n" + 
                 "Default 600 seconds is 10 minutes.");
+        
+        fastCacheSize = config.getInt("fastCacheSize", CATEGORY_CLIENT, 5000, 0, Integer.MAX_VALUE,
+                "Size of client size cache.\n"
+                 + "Setting to 0 turns off this option.");
         
         multipassSkinRendering = config.getBoolean("multipassSkinRendering", CATEGORY_CLIENT, true,
                 "When enabled skin will render in multiple passes to reduce visual artifacts.\n"
