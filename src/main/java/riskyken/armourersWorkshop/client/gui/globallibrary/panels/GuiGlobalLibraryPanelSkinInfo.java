@@ -35,6 +35,7 @@ import riskyken.armourersWorkshop.common.library.global.PlushieUser;
 import riskyken.armourersWorkshop.common.library.global.SkinDownloader;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieAuth;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieSession;
+import riskyken.armourersWorkshop.common.library.global.permission.PermissionSystem.PlushieAction;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinIdentifier;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
@@ -102,7 +103,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         if (PlushieAuth.isRemoteUser()) {
             if (skinJson != null && skinJson.has("user_id")) {
                 buttonEditSkin.visible = skinJson.get("user_id").getAsInt() == PlushieAuth.PLUSHIE_SESSION.getServerId();
-                if (PlushieAuth.PLUSHIE_SESSION.getServerId() == 1) {
+                if (PlushieAuth.PLUSHIE_SESSION.hasPermission(PlushieAction.SKIN_MOD_EDIT)) {
                     buttonEditSkin.visible = true;
                 }
             }

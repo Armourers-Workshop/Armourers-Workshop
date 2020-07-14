@@ -16,6 +16,7 @@ import riskyken.armourersWorkshop.client.gui.globallibrary.GuiGlobalLibrary.Scre
 import riskyken.armourersWorkshop.common.lib.LibModInfo;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieAuth;
 import riskyken.armourersWorkshop.common.library.global.auth.PlushieSession;
+import riskyken.armourersWorkshop.common.library.global.permission.PermissionSystem.PlushieAction;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelHeader extends GuiPanel {
@@ -68,10 +69,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         if (session.hasServerId()) {
             iconButtonMyFiles.visible = inBeta;
             iconButtonUploadSkin.visible = inBeta;
-            iconButtonUploadSkin.enabled = true;
-            if (session.getPermission_group_id() == 255) {
-                iconButtonUploadSkin.enabled = false;
-            }
+            iconButtonUploadSkin.enabled = session.hasPermission(PlushieAction.SKIN_UPLOAD);
         } else {
             iconButtonMyFiles.visible = false;
             iconButtonUploadSkin.visible = false;

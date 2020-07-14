@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 
-import riskyken.armourersWorkshop.utils.ModLogger;
-
 public class MultipartForm {
     
     private static final String CRLF = "\r\n";
@@ -81,8 +79,6 @@ public class MultipartForm {
     }
     
     public String upload() throws IOException{
-        ModLogger.log("Upload Test Started");
-        
         String boundary = Long.toHexString(System.currentTimeMillis());
         
         URL uploadUrl = new URL(this.uploadUrl);
