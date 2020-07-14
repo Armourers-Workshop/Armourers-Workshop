@@ -216,8 +216,8 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.skinColour") + ":", 83, 26, 4210752);
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.hairColour") + ":", 159, 26, 4210752);
 
-        //fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 83, 58, 4210752);
-        //fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.miscColour") + ":", 159, 58, 4210752);
+        // fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.eyeColour") + ":", 83, 58, 4210752);
+        // fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "label.miscColour") + ":", 159, 58, 4210752);
 
         getColours();
 
