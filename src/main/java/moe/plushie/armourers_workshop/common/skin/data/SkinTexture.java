@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.IOUtils;
 
 import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
-import moe.plushie.armourers_workshop.common.SkinHelper;
+import moe.plushie.armourers_workshop.common.TextureHelper;
 import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.utils.BitwiseUtils;
 import net.minecraft.client.Minecraft;
@@ -88,7 +88,7 @@ public class SkinTexture {
             return;
         }
         
-        bufferedPlayerImage = SkinHelper.deepCopyBufferedImage(bi);
+        bufferedPlayerImage = TextureHelper.deepCopyBufferedImage(bi);
         lastProfileHash = resourceLocation.hashCode();
         needsUpdate = true;
     }

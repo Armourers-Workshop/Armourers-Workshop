@@ -17,7 +17,7 @@ import moe.plushie.armourers_workshop.client.gui.style.GuiStyle;
 import moe.plushie.armourers_workshop.client.gui.wardrobe.GuiWardrobe;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
-import moe.plushie.armourers_workshop.common.SkinHelper;
+import moe.plushie.armourers_workshop.common.TextureHelper;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
@@ -245,7 +245,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
     }
 
     public int autoColour(AbstractClientPlayer player, ExtraColourType type) {
-        BufferedImage playerTexture = SkinHelper.getBufferedImageSkin(player);
+        BufferedImage playerTexture = TextureHelper.getBufferedImageSkin(player);
         if (playerTexture == null) {
             return ExtraColours.COLOUR_NONE;
         }
