@@ -20,6 +20,7 @@ import riskyken.armourersWorkshop.client.gui.wardrobe.GuiWardrobe;
 import riskyken.armourersWorkshop.client.lib.LibGuiResources;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.common.SkinHelper;
+import riskyken.armourersWorkshop.common.data.PlayerPointer;
 import riskyken.armourersWorkshop.common.network.PacketHandler;
 import riskyken.armourersWorkshop.common.network.messages.client.MessageClientSkinWardrobeUpdate;
 import riskyken.armourersWorkshop.common.painting.PaintType;
@@ -28,6 +29,7 @@ import riskyken.armourersWorkshop.common.wardrobe.EquipmentWardrobeData;
 import riskyken.armourersWorkshop.common.wardrobe.ExPropsPlayerSkinData;
 import riskyken.armourersWorkshop.common.wardrobe.ExtraColours;
 import riskyken.armourersWorkshop.common.wardrobe.ExtraColours.ExtraColourType;
+import riskyken.armourersWorkshop.proxies.ClientProxy;
 
 @SideOnly(Side.CLIENT)
 public class GuiTabWardrobeColourSettings extends GuiTabPanel {
@@ -141,7 +143,7 @@ public class GuiTabWardrobeColourSettings extends GuiTabPanel {
         // selectingColourType = ExtraColourType.MISC;
         // buttonMiscSelect.setPressed(true);
         // }
-
+        this.equipmentWardrobeData = ClientProxy.equipmentWardrobeHandler.getEquipmentWardrobeData(new PlayerPointer(entityPlayer));
         if (button == buttonSkinAuto) {
             EquipmentWardrobeData ewd = new EquipmentWardrobeData(this.equipmentWardrobeData);
             int newSkinColour = autoColour((AbstractClientPlayer) this.entityPlayer, ExtraColourType.SKIN);
