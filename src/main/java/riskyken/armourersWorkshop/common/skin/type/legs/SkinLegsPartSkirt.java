@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinProperties;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelLegs;
 import riskyken.armourersWorkshop.common.skin.type.AbstractSkinPartTypeBase;
@@ -17,7 +18,7 @@ public class SkinLegsPartSkirt extends AbstractSkinPartTypeBase {
         super(baseType);
         this.buildingSpace = new Rectangle3D(-10, -12, -10, 20, 15, 20);
         this.guideSpace = new Rectangle3D(-4, -12, -2, 8, 12, 4);
-      //Offset -1 to match old skin system.
+        // Offset -1 to match old skin system.
         this.offset = new Point3D(0, -1, 20);
     }
 
@@ -25,10 +26,10 @@ public class SkinLegsPartSkirt extends AbstractSkinPartTypeBase {
     public String getPartName() {
         return "skirt";
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
-    public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper) {
+    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
         GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
         GL11.glTranslated(2 * scale, 0, 0);
@@ -39,7 +40,7 @@ public class SkinLegsPartSkirt extends AbstractSkinPartTypeBase {
         GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public IPoint3D getItemRenderOffset() {

@@ -299,14 +299,17 @@ public final class ArmourerWorldHelper {
         }
     }
     
-    public static void createBoundingBoxes(World world, int x, int y, int z, int parentX, int parentY, int parentZ, ISkinType skinType) {
+    public static void createBoundingBoxes(World world, int x, int y, int z, int parentX, int parentY, int parentZ, ISkinType skinType, SkinProperties skinProps) {
         for (int i = 0; i < skinType.getSkinParts().size(); i++) {
             ISkinPartType skinPart = skinType.getSkinParts().get(i);
-            createBoundingBoxesForSkinPart(world, x, y, z, parentX, parentY, parentZ, skinPart);
+            createBoundingBoxesForSkinPart(world, x, y, z, parentX, parentY, parentZ, skinPart, skinProps);
         }
     }
     
-    private static void createBoundingBoxesForSkinPart(World world, int x, int y, int z, int parentX, int parentY, int parentZ, ISkinPartType skinPart) {
+    private static void createBoundingBoxesForSkinPart(World world, int x, int y, int z, int parentX, int parentY, int parentZ, ISkinPartType skinPart, SkinProperties skinProps) {
+        if (skinPart.isModelOverridden(skinProps)) {
+            return;
+        }
         IRectangle3D buildSpace = skinPart.getBuildingSpace();
         IRectangle3D guideSpace = skinPart.getGuideSpace();
         IPoint3D offset = skinPart.getOffset();

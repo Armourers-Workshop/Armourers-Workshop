@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinProperties;
 
 
 public interface ISkinPartType {
@@ -51,7 +52,7 @@ public interface ISkinPartType {
      * @param showHelper
      */
     @SideOnly(Side.CLIENT)
-    public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper);
+    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper);
     
     /**
      * Get the minimum number of markers needed for this skin part.
@@ -76,4 +77,8 @@ public interface ISkinPartType {
     
     @SideOnly(Side.CLIENT)
     public IRectangle3D getItemRenderTextureBounds();
+    
+    public boolean isModelOverridden(ISkinProperties skinProps);
+
+    public boolean isOverlayOverridden(ISkinProperties skinProps);
 }

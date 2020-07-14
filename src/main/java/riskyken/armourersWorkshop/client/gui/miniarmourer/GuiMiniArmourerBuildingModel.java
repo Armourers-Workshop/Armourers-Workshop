@@ -105,7 +105,7 @@ public class GuiMiniArmourerBuildingModel {
         GL11.glPushMatrix();
         
         GL11.glTranslatef(parent.width / 2, parent.height / 2, 500.0F);
-        GL11.glScalef((float)(-zoom), (float)zoom, (float)zoom);
+        GL11.glScalef((-zoom), zoom, zoom);
         
         GL11.glRotatef(180F, 0F, 1F, 0F);
         
@@ -168,7 +168,7 @@ public class GuiMiniArmourerBuildingModel {
         GL11.glPushMatrix();
         
         GL11.glTranslatef(parent.width / 2, parent.height / 2, 500.0F);
-        GL11.glScalef((float)(-zoom), (float)zoom, (float)zoom);
+        GL11.glScalef((-zoom), zoom, zoom);
         
         GL11.glRotatef(180F, 0F, 1F, 0F);
         
@@ -231,7 +231,7 @@ public class GuiMiniArmourerBuildingModel {
         
         if (currentSkinPartType != null) {
             GL11.glTranslated(0, -currentSkinPartType.getBuildingSpace().getY() * scale, 0);
-            currentSkinPartType.renderBuildingGuide(scale, true, false);
+            //currentSkinPartType.renderBuildingGuide(scale, true, false);
             //SkinRenderHelper.renderBuildingGrid(currentSkinPartType, scale);
         }
         /*

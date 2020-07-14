@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockArmourer;
-import riskyken.armourersWorkshop.client.render.SkinRenderHelper;
 import riskyken.armourersWorkshop.common.tileentities.TileEntityMiniArmourer;
 
 @SideOnly(Side.CLIENT)
@@ -36,7 +35,7 @@ public class RenderBlockMiniArmourer extends TileEntitySpecialRenderer {
             float rotation = (float)((double)System.currentTimeMillis() / 25 % 360);
             GL11.glRotatef(rotation, 0F, 1F, 0F);
             bindTexture(Minecraft.getMinecraft().thePlayer.getLocationSkin());
-            SkinRenderHelper.renderBuildingGuide(skinType, scale, true, false);
+            //SkinRenderHelper.renderBuildingGuide(skinType, scale, true, false);
             
             //skinType.renderBuildingGrid(scale);
         }

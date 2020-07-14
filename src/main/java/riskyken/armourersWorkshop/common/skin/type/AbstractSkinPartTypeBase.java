@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinProperties;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 
@@ -64,5 +65,16 @@ public abstract class AbstractSkinPartTypeBase implements ISkinPartType {
     @Override
     public IRectangle3D getItemRenderTextureBounds() {
         return null;
+    }
+    
+
+    @Override
+    public boolean isModelOverridden(ISkinProperties skinProps) {
+        return false;
+    }
+
+    @Override
+    public boolean isOverlayOverridden(ISkinProperties skinProps) {
+        return false;
     }
 }

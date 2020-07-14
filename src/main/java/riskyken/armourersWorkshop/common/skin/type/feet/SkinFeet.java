@@ -14,13 +14,13 @@ import riskyken.armourersWorkshop.common.skin.type.AbstractSkinTypeBase;
 public class SkinFeet extends AbstractSkinTypeBase {
 
     private ArrayList<ISkinPartType> skinParts;
-    
+
     public SkinFeet() {
         skinParts = new ArrayList<ISkinPartType>();
         skinParts.add(new SkinFeetPartLeftFoot(this));
         skinParts.add(new SkinFeetPartRightFoot(this));
     }
-    
+
     @Override
     public ArrayList<ISkinPartType> getSkinParts() {
         return this.skinParts;
@@ -30,12 +30,12 @@ public class SkinFeet extends AbstractSkinTypeBase {
     public String getRegistryName() {
         return "armourers:feet";
     }
-    
+
     @Override
     public String getName() {
         return "Feet";
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcon(IIconRegister register) {
@@ -47,11 +47,15 @@ public class SkinFeet extends AbstractSkinTypeBase {
     public int getVanillaArmourSlotId() {
         return 3;
     }
-    
+
     @Override
     public ArrayList<ISkinProperty<?>> getProperties() {
         ArrayList<ISkinProperty<?>> properties = super.getProperties();
-        properties.add(SkinProperties.PROP_ARMOUR_OVERRIDE);
+        properties.add(SkinProperties.PROP_MODEL_OVERRIDE_LEG_LEFT);
+        properties.add(SkinProperties.PROP_MODEL_OVERRIDE_LEG_RIGHT);
+        properties.add(SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_LEFT);
+        properties.add(SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_RIGHT);
+        properties.add(SkinProperties.PROP_MODEL_LEGS_LIMIT_LIMBS);
         return properties;
     }
 }

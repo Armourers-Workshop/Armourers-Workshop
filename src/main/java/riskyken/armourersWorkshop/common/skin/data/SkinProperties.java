@@ -11,21 +11,42 @@ import java.util.LinkedHashMap;
 import org.apache.commons.io.IOUtils;
 
 import net.minecraft.nbt.NBTTagCompound;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.wings.SkinWings.MovementType;
 import riskyken.armourersWorkshop.utils.StreamUtils;
 
-public class SkinProperties {
+public class SkinProperties implements ISkinProperties {
 
+    // Properties for all skins.
     public static final SkinProperty<String> PROP_ALL_CUSTOM_NAME = new SkinProperty<String>("customName", "");
     public static final SkinProperty<String> PROP_ALL_FLAVOUR_TEXT = new SkinProperty<String>("flavour", "");
     public static final SkinProperty<String> PROP_ALL_AUTHOR_NAME = new SkinProperty<String>("authorName", "");
     public static final SkinProperty<String> PROP_ALL_AUTHOR_UUID = new SkinProperty<String>("authorUUID", "");
-    
+
+    // Properties for armour skins.
+    @Deprecated
     public static final SkinProperty<Boolean> PROP_ARMOUR_OVERRIDE = new SkinProperty<Boolean>("armourOverride", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_HEAD = new SkinProperty<Boolean>("overrideModelHead", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_CHEST = new SkinProperty<Boolean>("overrideModelChest", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_ARM_LEFT = new SkinProperty<Boolean>("overrideModelArmLeft", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_ARM_RIGHT = new SkinProperty<Boolean>("overrideModelArmRight", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_LEG_LEFT = new SkinProperty<Boolean>("overrideModelLegLeft", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_LEG_RIGHT = new SkinProperty<Boolean>("overrideModelLegRight", false);
+
+    @Deprecated
     public static final SkinProperty<Boolean> PROP_ARMOUR_HIDE_OVERLAY = new SkinProperty<Boolean>("armourHideOverlay", false);
-    
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_HEAD = new SkinProperty<Boolean>("hideOverlayHead", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_CHEST = new SkinProperty<Boolean>("hideOverlayChest", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_ARM_LEFT = new SkinProperty<Boolean>("hideOverlayArmLeft", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_ARM_RIGHT = new SkinProperty<Boolean>("hideOverlayArmRight", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_LEG_LEFT = new SkinProperty<Boolean>("hideOverlayLegLeft", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_LEG_RIGHT = new SkinProperty<Boolean>("hideOverlayLegRight", false);
+
+    public static final SkinProperty<Boolean> PROP_MODEL_LEGS_LIMIT_LIMBS = new SkinProperty<Boolean>("limitLimbs", false);
+
     public static final SkinProperty<String> PROP_OUTFIT_PART_INDEXS = new SkinProperty<String>("partIndexs", "");
-    
+
+    // Properties for block skins.
     public static final SkinProperty<Boolean> PROP_BLOCK_GLOWING = new SkinProperty<Boolean>("blockGlowing", false);
     public static final SkinProperty<Boolean> PROP_BLOCK_LADDER = new SkinProperty<Boolean>("blockLadder", false);
     public static final SkinProperty<Boolean> PROP_BLOCK_NO_COLLISION = new SkinProperty<Boolean>("blockNoCollision", false);
@@ -37,6 +58,7 @@ public class SkinProperties {
     public static final SkinProperty<Integer> PROP_BLOCK_INVENTORY_WIDTH = new SkinProperty<Integer>("blockInventoryWidth", 9);
     public static final SkinProperty<Integer> PROP_BLOCK_INVENTORY_HEIGHT = new SkinProperty<Integer>("blockInventoryHeight", 4);
 
+    // Properties for wing skins.
     public static final SkinProperty<Double> PROP_WINGS_MAX_ANGLE = new SkinProperty<Double>("wingsMaxAngle", 75D);
     public static final SkinProperty<Double> PROP_WINGS_MIN_ANGLE = new SkinProperty<Double>("wingsMinAngle", 0D);
     public static final SkinProperty<Double> PROP_WINGS_IDLE_SPEED = new SkinProperty<Double>("wingsIdleSpeed", 6000D);
@@ -130,14 +152,17 @@ public class SkinProperties {
         }
     }
 
+    @Override
     public void removeProperty(String key) {
         properties.remove(key);
     }
 
+    @Override
     public void setProperty(String key, Object value) {
         properties.put(key, value);
     }
 
+    @Override
     public String getPropertyString(String key, String defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof String) {
@@ -146,6 +171,7 @@ public class SkinProperties {
         return defaultValue;
     }
 
+    @Override
     public int getPropertyInt(String key, int defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof Integer) {
@@ -154,6 +180,7 @@ public class SkinProperties {
         return defaultValue;
     }
 
+    @Override
     public double getPropertyDouble(String key, double defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof Double) {
@@ -162,6 +189,7 @@ public class SkinProperties {
         return defaultValue;
     }
 
+    @Override
     public Boolean getPropertyBoolean(String key, Boolean defaultValue) {
         Object value = properties.get(key);
         if (value != null && value instanceof Boolean) {
@@ -170,6 +198,7 @@ public class SkinProperties {
         return defaultValue;
     }
 
+    @Override
     public Object getProperty(String key, Object defaultValue) {
         Object value = properties.get(key);
         if (value != null) {
@@ -178,6 +207,7 @@ public class SkinProperties {
         return defaultValue;
     }
 
+    @Override
     public boolean haveProperty(String key) {
         return properties.containsKey(key);
     }

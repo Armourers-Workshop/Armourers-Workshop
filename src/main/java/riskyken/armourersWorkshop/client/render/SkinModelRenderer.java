@@ -237,10 +237,10 @@ public final class SkinModelRenderer {
                 if (sp != null) {
                     Skin skin = ClientSkinCache.INSTANCE.getSkin(sp, false);
                     if (skin != null) {
-                        if (SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skin.getProperties())) {
+                        if (SkinProperties.PROP_MODEL_OVERRIDE_HEAD.getValue(skin.getProperties())) {
                             return true;
                         }
-                        if (SkinProperties.PROP_ARMOUR_HIDE_OVERLAY.getValue(skin.getProperties())) {
+                        if (SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD.getValue(skin.getProperties())) {
                             return true;
                         }
                     }
@@ -264,6 +264,41 @@ public final class SkinModelRenderer {
         }
         PlayerPointer playerPointer = new PlayerPointer(player);
 
+        ISkinType[] playerSkinTypes = {SkinTypeRegistry.skinHead, SkinTypeRegistry.skinChest, SkinTypeRegistry.skinLegs, SkinTypeRegistry.skinFeet, SkinTypeRegistry.skinOutfit};
+        
+        boolean hideHead = false, hideHeadOverlay = false;
+        
+        EntityEquipmentData equipmentData = playerEquipmentMap.get(new PlayerPointer(player));
+        if (equipmentData != null) {
+            for (int i = 0; i < ExPropsPlayerSkinData.MAX_SLOTS_PER_SKIN_TYPE; i++) {
+                for (ISkinType skinType : playerSkinTypes) {
+                    ISkinPointer skinPointer = equipmentData.getSkinPointer(skinType, i);
+                    if (skinPointer != null) {
+                        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer, false);
+                        if (skin != null) {
+                            if (SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD.getValue(skin.getProperties())) {
+                                hideHeadOverlay = true;
+                            }
+                            if (SkinProperties.PROP_MODEL_OVERRIDE_HEAD.getValue(skin.getProperties())) {
+                                hideHead = true;
+                                hideHeadOverlay = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        RenderPlayer renderer = event.renderer;
+        renderer.modelBipedMain.bipedHead.isHidden = false;
+        if (hideHead) {
+            //renderer.modelBipedMain.bipedHead.isHidden = true;
+            renderer.modelBipedMain.bipedHeadwear.isHidden = true;
+        }
+        if (hideHeadOverlay || hideHead) {
+            renderer.modelBipedMain.bipedHeadwear.isHidden = true;
+        }
+        
         // Limit the players limbs if they have a skirt equipped.
         // A proper lady should not swing her legs around!
         if (isPlayerWearingSkirt(playerPointer)) {
@@ -312,6 +347,8 @@ public final class SkinModelRenderer {
 
     @SubscribeEvent
     public void onRender(RenderPlayerEvent.Post event) {
+        RenderPlayer renderer = event.renderer;
+        renderer.modelBipedMain.bipedHeadwear.isHidden = false;
         targetPlayer = null;
     }
 

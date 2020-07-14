@@ -62,7 +62,8 @@ public class ModelSkinChest extends AbstractModelSkin {
             GL11.glPopAttrib();
         }
 
-        boolean override = SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(armourData.getProperties());
+        boolean overrideLeftArm = SkinProperties.PROP_MODEL_OVERRIDE_ARM_LEFT.getValue(armourData.getProperties());
+        boolean overrideRightArm = SkinProperties.PROP_MODEL_OVERRIDE_ARM_RIGHT.getValue(armourData.getProperties());
 
         for (int i = 0; i < parts.size(); i++) {
             SkinPart part = parts.get(i);
@@ -79,9 +80,9 @@ public class ModelSkinChest extends AbstractModelSkin {
             if (part.getPartType().getPartName().equals("base")) {
                 renderChest(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading);
             } else if (part.getPartType().getPartName().equals("leftArm")) {
-                renderLeftArm(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading, override);
+                renderLeftArm(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading, overrideLeftArm);
             } else if (part.getPartType().getPartName().equals("rightArm")) {
-                renderRightArm(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading, override);
+                renderRightArm(part, SCALE, skinDye, extraColour, itemRender, distance, doLodLoading, overrideRightArm);
             }
 
             GL11.glPopMatrix();

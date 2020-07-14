@@ -45,7 +45,7 @@ import riskyken.armourersWorkshop.common.undo.UndoManager;
 import riskyken.armourersWorkshop.utils.SkinNBTHelper;
 
 public class TileEntityArmourer extends AbstractTileEntityInventory {
-    
+
     private static final String TAG_DIRECTION = "direction";
     private static final String TAG_TYPE = "skinType";
     private static final String TAG_SHOW_GUIDES = "showGuides";
@@ -53,13 +53,13 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     private static final String TAG_SHOW_HELPER = "showHelper";
     private static final String TAG_PAINT_DATA = "paintData";
     private static final String TAG_TEXTURE = "texture";
-    
+
     private static final String TAG_TYPE_OLD = "type";
     private static final String TAG_OWNER_OLD = "owner";
-    
+
     private static final int HEIGHT_OFFSET = 1;
     private static final int INVENTORY_SIZE = 2;
-    
+
     private ForgeDirection direction;
     private ISkinType skinType;
     private boolean showGuides;
@@ -68,13 +68,13 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     private SkinProperties skinProps;
     private int[] paintData;
     public boolean loadedArmourItem = false;
-    
+
     private PlayerTexture texture = new PlayerTexture("", TextureType.USER);
     private PlayerTexture textureOld = new PlayerTexture("", TextureType.USER);
-    
+
     @SideOnly(Side.CLIENT)
     public SkinTexture skinTexture;
-    
+
     public TileEntityArmourer() {
         super(INVENTORY_SIZE);
         this.direction = ForgeDirection.NORTH;
@@ -85,30 +85,31 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         this.skinProps = new SkinProperties();
         clearPaintData(false);
     }
-    
+
     @Override
     public boolean canUpdate() {
         return false;
     }
-    
+
     public int[] getPaintData() {
         return paintData;
     }
-    
+
     public void updatePaintData(int x, int y, int colour) {
         paintData[x + (y * SkinTexture.TEXTURE_WIDTH)] = colour;
         this.markDirty();
         syncWithClients();
     }
-    
+
     public int getPaintData(int x, int y) {
         return paintData[x + (y * SkinTexture.TEXTURE_WIDTH)];
     }
-    
+
     /**
      * Get blocks in the world and saved them onto an items NBT data.
+     * 
      * @param player The player that pressed the save button.
-     * @param name Custom name for the item.
+     * @param name   Custom name for the item.
      */
     public void saveArmourItem(EntityPlayerMP player, String customName, String tags) {
         if (getWorldObj().isRemote) {
@@ -116,23 +117,23 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         }
         ItemStack stackInput = getStackInSlot(0);
         ItemStack stackOutput = getStackInSlot(1);
-        
+
         if (!player.capabilities.isCreativeMode) {
             if (stackInput == null) {
                 return;
             }
         }
-        
+
         if (stackOutput != null) {
             return;
         }
-        
+
         ISkinHolder inputItem = null;
         if (!player.capabilities.isCreativeMode) {
             if (!(stackInput.getItem() instanceof ISkinHolder)) {
                 return;
             }
-            inputItem = (ISkinHolder)stackInput.getItem();
+            inputItem = (ISkinHolder) stackInput.getItem();
         } else {
             inputItem = (ISkinHolder) ModItems.equipmentSkinTemplate;
         }
@@ -144,15 +145,14 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             skinProps.setProperty(Skin.KEY_AUTHOR_UUID, player.getGameProfile().getId().toString());
         }
         skinProps.setProperty(Skin.KEY_CUSTOM_NAME, customName);
-        
+
         for (int i = 0; i < skinType.getProperties().size(); i++) {
             SkinProperty skinProp = (SkinProperty) skinType.getProperties().get(i);
             skinProp.setValue(skinProps, skinProp.getValue(this.skinProps));
         }
-        
+
         try {
-            armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinProps, skinType,
-                    paintData, xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
+            armourItemData = ArmourerWorldHelper.saveSkinFromWorld(worldObj, skinProps, skinType, paintData, xCoord, yCoord + HEIGHT_OFFSET, zCoord, direction);
         } catch (SkinSaveException e) {
             switch (e.getType()) {
             case NO_DATA:
@@ -172,13 +172,13 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
                 break;
             }
         }
-        
+
         if (armourItemData == null) {
             return;
         }
-        
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(armourItemData, (LibraryFile)null);
-        
+
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(armourItemData, (LibraryFile) null);
+
         stackOutput = inputItem.makeStackForEquipment(armourItemData);
         if (stackOutput == null) {
             return;
@@ -191,6 +191,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
 
     /**
      * Reads the NBT data from an item and places blocks in the world.
+     * 
      * @param player The player that pressed the load button.
      */
     public void loadArmourItem(EntityPlayerMP player) {
@@ -199,7 +200,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         }
         ItemStack stackInput = this.getStackInSlot(0);
         ItemStack stackOuput = this.getStackInSlot(1);
-        
+
         if (stackInput == null) {
             return;
         }
@@ -221,14 +222,14 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
                 return;
             }
         }
-        
+
         Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointerInput);
         if (skin == null) {
             return;
         }
-        
+
         setSkinProps(new SkinProperties(skin.getProperties()));
-        
+
         ArmourerWorldHelper.loadSkinIntoWorld(worldObj, xCoord, yCoord + HEIGHT_OFFSET, zCoord, skin, direction);
         if (skin.hasPaintData()) {
             this.paintData = skin.getPaintData().clone();
@@ -236,11 +237,11 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             clearPaintData(true);
         }
         dirtySync();
-        
+
         this.setInventorySlotContents(0, null);
         this.setInventorySlotContents(1, stackInput);
     }
-    
+
     public void clearPaintData(boolean update) {
         this.paintData = new int[SkinTexture.TEXTURE_SIZE];
         for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
@@ -250,19 +251,18 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             dirtySync();
         }
     }
-    
+
     public void toolUsedOnArmourer(IBlockPainter tool, World world, ItemStack stack, EntityPlayer player) {
         UndoManager.begin(player);
         applyToolToBlocks(tool, world, stack, player);
         UndoManager.end(player);
     }
-    
+
     private void applyToolToBlocks(IBlockPainter tool, World world, ItemStack stack, EntityPlayer player) {
         if (skinType != null) {
             ArrayList<BlockLocation> paintableCubes = ArmourerWorldHelper.getListOfPaintableCubes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
             for (int i = 0; i < paintableCubes.size(); i++) {
                 BlockLocation bl = paintableCubes.get(i);
-                IPantableBlock pBlock = (IPantableBlock) worldObj.getBlock(bl.x, bl.y, bl.z);
                 Block block = world.getBlock(bl.x, bl.y, bl.z);
                 if (block instanceof IPantableBlock) {
                     for (int side = 0; side < 6; side++) {
@@ -272,19 +272,18 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             }
         }
     }
-    
+
     public void onPlaced() {
         createBoundingBoxes();
     }
-    
+
     public void preRemove() {
         removeBoundingBoxes();
     }
-    
+
     public int getHeightOffset() {
         return HEIGHT_OFFSET;
     }
-    
 
     public void copySkinCubes(EntityPlayerMP player, ISkinPartType srcPart, ISkinPartType desPart, boolean mirror) {
         try {
@@ -303,7 +302,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             dirtySync();
         }
     }
-    
+
     public void clearMarkers(ISkinPartType partType) {
         if (skinType != null) {
             ArmourerWorldHelper.clearMarkers(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType, skinProps, partType);
@@ -313,72 +312,68 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             dirtySync();
         }
     }
-    
+
     protected void removeBoundingBoxes() {
         if (skinType != null) {
             ArmourerWorldHelper.removeBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, skinType);
         }
     }
-    
+
     protected void createBoundingBoxes() {
         if (skinType != null) {
-            boolean hadBounds = !SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(this.skinProps);
-            if (hadBounds) {
-                ArmourerWorldHelper.createBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, xCoord, yCoord, zCoord, skinType);
-            }
+            ArmourerWorldHelper.createBoundingBoxes(worldObj, xCoord, yCoord + getHeightOffset(), zCoord, xCoord, yCoord, zCoord, skinType, skinProps);
         }
     }
-    
+
     public void setDirection(ForgeDirection direction) {
         this.direction = direction;
         dirtySync();
     }
-    
+
     public ForgeDirection getDirection() {
         return direction;
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         AxisAlignedBB bb = super.getRenderBoundingBox();
-        
-        bb = AxisAlignedBB.getBoundingBox(xCoord - 15, yCoord - 10, zCoord - 46,
-                xCoord + 30, yCoord + 40 + 23, zCoord + 35);
-        
+
+        bb = AxisAlignedBB.getBoundingBox(xCoord - 15, yCoord - 10, zCoord - 46, xCoord + 30, yCoord + 40 + 23, zCoord + 35);
+
         return bb;
     }
 
     public ISkinType getSkinType() {
         return skinType;
     }
-    
+
     public boolean isShowGuides() {
         return showGuides;
     }
-    
+
     public boolean isShowOverlay() {
         return showOverlay;
     }
-    
+
     public boolean isShowHelper() {
         return showHelper;
     }
-    
+
     public void setTexture(PlayerTexture texture) {
         this.textureOld = this.texture;
         this.texture = texture;
         dirtySync();
     }
-    
+
     public PlayerTexture getTexture() {
         return texture;
     }
-    
+
     public PlayerTexture getTextureOld() {
         return textureOld;
     }
-    
+
     public void setSkinType(ISkinType skinType) {
         if (this.skinType == skinType) {
             return;
@@ -387,37 +382,33 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         this.skinType = skinType;
         skinProps = new SkinProperties();
         clearPaintData(true);
-        createBoundingBoxes(); 
+        createBoundingBoxes();
         dirtySync();
     }
-    
+
     public void toggleGuides() {
         this.showGuides = !this.showGuides;
         dirtySync();
     }
-    
+
     public void toggleOverlay() {
         this.showOverlay = !this.showOverlay;
-        dirtySync();;
+        dirtySync();
     }
-    
+
     public void toggleHelper() {
         this.showHelper = !this.showHelper;
         dirtySync();
     }
-    
+
     public SkinProperties getSkinProps() {
         return skinProps;
     }
-    
+
     public void setSkinProps(SkinProperties skinProps) {
         boolean updateBounds = false;
         if (skinType != null && skinType.getVanillaArmourSlotId() != -1) {
-            boolean hadBounds = !SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(this.skinProps);
-            boolean haveBounds = !SkinProperties.PROP_ARMOUR_OVERRIDE.getValue(skinProps);
-            if (hadBounds != haveBounds) {
-                updateBounds = true;
-            }
+            updateBounds = skinType.haveBoundsChanged(this.skinProps, skinProps);
         }
         this.skinProps = skinProps;
         if (updateBounds) {
@@ -426,24 +417,25 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         }
         dirtySync();
     }
-    
+
     @Override
     public String getInventoryName() {
         return LibBlockNames.ARMOURER_BRAIN;
     }
-    
+
     @Override
     public double getMaxRenderDistanceSquared() {
         return super.getMaxRenderDistanceSquared() * 10;
     }
-    
+
+    @Override
     public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();
         writeBaseToNBT(compound);
         writeCommonToNBT(compound);
         return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 5, compound);
     }
-    
+
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
         NBTTagCompound compound = packet.func_148857_g();
@@ -456,25 +448,25 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         syncWithClients();
         loadedArmourItem = true;
     }
-    
+
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         readCommonFromNBT(compound);
     }
-    
+
     @Override
     public void writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         writeCommonToNBT(compound);
     }
-    
+
     @Override
     public void readCommonFromNBT(NBTTagCompound compound) {
         super.readCommonFromNBT(compound);
         direction = ForgeDirection.getOrientation(compound.getByte(TAG_DIRECTION));
         skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(compound.getString(TAG_TYPE));
-        //Update code for old saves
+        // Update code for old saves
         if (skinType == null && compound.hasKey(TAG_TYPE_OLD)) {
             skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromLegacyId(compound.getInteger(TAG_TYPE_OLD) - 1);
         }
@@ -482,7 +474,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             GameProfile gameProfile = NBTUtil.func_152459_a(compound.getCompoundTag(TAG_OWNER_OLD));
             texture = new PlayerTexture(gameProfile.getName(), TextureType.USER);
         }
-        
+
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
         showOverlay = compound.getBoolean(TAG_SHOW_OVERLAY);
         if (compound.hasKey(TAG_SHOW_HELPER)) {
@@ -497,7 +489,7 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             paintData = compound.getIntArray(TAG_PAINT_DATA);
         }
     }
-    
+
     @Override
     public void writeCommonToNBT(NBTTagCompound compound) {
         super.writeCommonToNBT(compound);

@@ -10,9 +10,11 @@ import riskyken.armourersWorkshop.api.common.IPoint3D;
 import riskyken.armourersWorkshop.api.common.IRectangle3D;
 import riskyken.armourersWorkshop.api.common.skin.Point3D;
 import riskyken.armourersWorkshop.api.common.skin.Rectangle3D;
+import riskyken.armourersWorkshop.api.common.skin.data.ISkinProperties;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartTypeTextured;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHead;
+import riskyken.armourersWorkshop.common.skin.data.SkinProperties;
 import riskyken.armourersWorkshop.common.skin.type.AbstractSkinPartTypeBase;
 
 public class SkinHeadPartBase extends AbstractSkinPartTypeBase implements ISkinPartTypeTextured {
@@ -31,10 +33,10 @@ public class SkinHeadPartBase extends AbstractSkinPartTypeBase implements ISkinP
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void renderBuildingGuide(float scale, boolean showSkinOverlay, boolean showHelper) {
+    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
         GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
-        ModelHead.MODEL.render(scale, showSkinOverlay);
+        ModelHead.MODEL.render(scale, !SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD.getValue(skinProps));
         GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
         GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
     }
@@ -64,5 +66,15 @@ public class SkinHeadPartBase extends AbstractSkinPartTypeBase implements ISkinP
     @Override
     public IRectangle3D getItemRenderTextureBounds() {
         return new Rectangle3D(-4, -8, -4, 8, 8, 8);
+    }
+    
+    @Override
+    public boolean isModelOverridden(ISkinProperties skinProps) {
+        return SkinProperties.PROP_MODEL_OVERRIDE_HEAD.getValue(skinProps);
+    }
+
+    @Override
+    public boolean isOverlayOverridden(ISkinProperties skinProps) {
+        return SkinProperties.PROP_MODEL_HIDE_OVERLAY_HEAD.getValue(skinProps);
     }
 }

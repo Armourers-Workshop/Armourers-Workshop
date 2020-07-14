@@ -340,8 +340,22 @@ inventory.armourersworkshop:armourerBrain.multiblock=Multiblock?
 inventory.armourersworkshop:armourerBrain.bed=Bed?
 inventory.armourersworkshop:armourerBrain.inventory=Inventory?
 inventory.armourersworkshop:armourerBrain.enderInventory=Ender Inventory?
-inventory.armourersworkshop:armourerBrain.overrideBodyPart=Override?
-inventory.armourersworkshop:armourerBrain.hideOverlay=Hide Head Overlay?
+
+inventory.armourersworkshop:armourerBrain.modelOverrideHead=Head Override?
+inventory.armourersworkshop:armourerBrain.modelOverrideChest=Chest Override?
+inventory.armourersworkshop:armourerBrain.modelOverrideArmLeft=Left Arm Override?
+inventory.armourersworkshop:armourerBrain.modelOverrideArmRight=Right Arm Override?
+inventory.armourersworkshop:armourerBrain.modelOverrideLegLeft=Left Leg Override?
+inventory.armourersworkshop:armourerBrain.modelOverrideLegRight=Right Leg Override?
+
+inventory.armourersworkshop:armourerBrain.hideOverlayHead=Hide Head Overlay?
+inventory.armourersworkshop:armourerBrain.hideOverlayChest=Hide Chest Overlay? (1.12.2)
+inventory.armourersworkshop:armourerBrain.hideOverlayArmLeft=Hide Left Arm Overlay? (1.12.2)
+inventory.armourersworkshop:armourerBrain.hideOverlayArmRight=Hide Right Arm Overlay? (1.12.2)
+inventory.armourersworkshop:armourerBrain.hideOverlayLegLeft=Hide Left Leg Overlay? (1.12.2)
+inventory.armourersworkshop:armourerBrain.hideOverlayLegRight=Hide Right Leg Overlay? (1.12.2)
+
+inventory.armourersworkshop:armourerBrain.limitLimbs=Limit Limb Movement?
 inventory.armourersworkshop:armourerBrain.tab.main=Main
 inventory.armourersworkshop:armourerBrain.tab.displaySettings=Display Settings
 inventory.armourersworkshop:armourerBrain.tab.skinSettings=Skin Settings
