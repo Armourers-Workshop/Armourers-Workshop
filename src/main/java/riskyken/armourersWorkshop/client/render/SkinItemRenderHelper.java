@@ -208,7 +208,8 @@ public final class SkinItemRenderHelper {
             SkinPart skinPart = skin.getParts().get(i);
             IPoint3D offset = skinPart.getPartType().getOffset();
             GL11.glTranslated(offset.getX() * scale, (offset.getY() + 1) * scale, offset.getZ() * scale);
-            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye(), null, doLodLoading);
+            SkinPartRenderData renderData = new SkinPartRenderData(skinPart, 0.0625F, skinPointer.getSkinDye(), null, 0, true, true, true, null);
+            SkinPartRenderer.INSTANCE.renderPart(renderData);
             GL11.glPopMatrix();
         }
 

@@ -21,6 +21,7 @@ import riskyken.armourersWorkshop.client.model.bake.FaceRenderer;
 import riskyken.armourersWorkshop.client.render.IRenderBuffer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.RenderBridge;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderData;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.data.MiniCube;
@@ -220,7 +221,8 @@ public class GuiMiniArmourerBuildingModel {
                 for (int i = 0; i < skin.getParts().size(); i++) {
                     SkinPart part = skin.getParts().get(i);
                     if (part.getPartType() == currentSkinPartType) {
-                        SkinPartRenderer.INSTANCE.renderPart(part, scale, skinPointer.getSkinDye(), null, false);
+                        SkinPartRenderData renderData = new SkinPartRenderData(part, 0.0625F, skinPointer.getSkinDye(), null, 0, true, false, false, null);
+                        SkinPartRenderer.INSTANCE.renderPart(renderData);
                     }
                 }
             }

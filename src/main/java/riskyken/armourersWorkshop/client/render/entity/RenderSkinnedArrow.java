@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderData;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -72,7 +73,8 @@ public class RenderSkinnedArrow extends RenderArrow {
         }
         GL11.glRotatef(-90, 0, 1, 0);
         GL11.glScalef(-1, -1, 1);
-        SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinDye, null, true);
+        SkinPartRenderData renderData = new SkinPartRenderData(skinPart, 0.0625F, skinDye, null, 0, true, false, false, null);
+        SkinPartRenderer.INSTANCE.renderPart(renderData);
         GL11.glPopMatrix();
     }
 }

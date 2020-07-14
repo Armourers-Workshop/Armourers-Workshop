@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.api.common.skin.type.ISkinPartType;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.model.armourer.ModelHand;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderData;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.data.PlayerPointer;
@@ -111,7 +112,8 @@ public class EquipmentRenderHandler implements ISkinRenderHandler {
         for (int i = 0; i < skin.getParts().size(); i++) {
             SkinPart skinPart = skin.getParts().get(i);
             if (skinPart.getPartType() == skinPartType) {
-                SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, skinPointer.getSkinDye(), null, true);
+                SkinPartRenderData renderData = new SkinPartRenderData(skinPart, 0.0625F, skinPointer.getSkinDye(), null, 0, true, false, false, null);
+                SkinPartRenderer.INSTANCE.renderPart(renderData);
                 return true;
             }
         }

@@ -14,6 +14,7 @@ import riskyken.armourersWorkshop.client.model.armourer.ModelArrow;
 import riskyken.armourersWorkshop.client.model.skin.ModelSkinBow;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
 import riskyken.armourersWorkshop.client.render.SkinModelRenderer;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderData;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.cubes.CubeMarkerData;
@@ -165,7 +166,8 @@ public class RenderItemBowSkin extends RenderItemEquipmentSkin {
                     GL11.glTranslatef(-0.01F * scale, 0.01F * scale, -0.01F * scale);
                     SkinPart skinPartArrow = skin.getPart("armourers:bow.arrow");
                     if (skinPartArrow != null) {
-                        SkinPartRenderer.INSTANCE.renderPart(skinPartArrow, scale, skinPointer.getSkinDye(), null, false);
+                        SkinPartRenderData renderData = new SkinPartRenderData(skinPartArrow, 0.0625F, skinPointer.getSkinDye(), null, 0, false, false, false, null);
+                        SkinPartRenderer.INSTANCE.renderPart(renderData);
                     } else {
                         ModelArrow.MODEL.render(scale, false);
                     }

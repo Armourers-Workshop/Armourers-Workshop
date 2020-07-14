@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.model.ModelMannequin;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderData;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
 import riskyken.armourersWorkshop.common.skin.data.SkinPart;
@@ -141,7 +142,11 @@ public abstract class AbstractModelSkin extends ModelBiped implements IEquipment
         }
     }
     
-    protected void renderPart(SkinPart armourPart, float scale, ISkinDye skinDye, byte[] extraColour, double distance, boolean doLodLoading) {
-        SkinPartRenderer.INSTANCE.renderPart(armourPart, scale, skinDye, extraColour, distance, doLodLoading);
+    protected void renderPart(SkinPartRenderData renderData) {
+        SkinPartRenderer.INSTANCE.renderPart(renderData);
+    }
+    
+    protected void renderPart(SkinPart skinPart, float scale, ISkinDye skinDye, byte[] extraColour, double distance, boolean doLodLoading) {
+        SkinPartRenderer.INSTANCE.renderPart(new SkinPartRenderData(skinPart, scale, skinDye, extraColour, distance, doLodLoading, false, false, null));
     }
 }

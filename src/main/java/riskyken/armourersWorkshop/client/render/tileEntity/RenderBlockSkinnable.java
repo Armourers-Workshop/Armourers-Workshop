@@ -21,12 +21,12 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import riskyken.armourersWorkshop.client.model.block.ModelBlockSkinnable;
 import riskyken.armourersWorkshop.client.render.ModRenderHelper;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderData;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.blocks.BlockSkinnable;
 import riskyken.armourersWorkshop.common.config.ConfigHandlerClient;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
-import riskyken.armourersWorkshop.common.skin.data.SkinPart;
 import riskyken.armourersWorkshop.common.skin.data.SkinPointer;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnable;
 import riskyken.armourersWorkshop.common.tileentities.TileEntitySkinnableChild;
@@ -120,8 +120,8 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer {
         
         
         for (int i = 0; i < skin.getParts().size(); i++) {
-            SkinPart skinPart = skin.getParts().get(i);
-            SkinPartRenderer.INSTANCE.renderPart(skinPart, 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance, true);
+            SkinPartRenderData renderData = new SkinPartRenderData(skin.getParts().get(i), 0.0625F, tileEntity.getSkinPointer().getSkinDye(), null, distance, true, false, false, null);
+            SkinPartRenderer.INSTANCE.renderPart(renderData);
         }
         
         

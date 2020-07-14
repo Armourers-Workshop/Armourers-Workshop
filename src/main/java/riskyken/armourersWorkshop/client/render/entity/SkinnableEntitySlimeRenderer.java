@@ -13,6 +13,7 @@ import riskyken.armourersWorkshop.api.common.skin.IEntityEquipment;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinPointer;
 import riskyken.armourersWorkshop.api.common.skin.type.ISkinType;
 import riskyken.armourersWorkshop.client.handler.ModClientFMLEventHandler;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderData;
 import riskyken.armourersWorkshop.client.render.SkinPartRenderer;
 import riskyken.armourersWorkshop.client.skin.cache.ClientSkinCache;
 import riskyken.armourersWorkshop.common.skin.data.Skin;
@@ -65,7 +66,8 @@ public class SkinnableEntitySlimeRenderer implements ISkinnableEntityRenderer<En
             GL11.glEnable(GL11.GL_NORMALIZE);
             float scale = 1F / 16F;
             for (int i = 0; i < skin.getParts().size(); i++) {
-                SkinPartRenderer.INSTANCE.renderPart(skin.getParts().get(i), scale, skinPointer.getSkinDye(), null, false);
+                SkinPartRenderData renderData = new SkinPartRenderData(skin.getParts().get(i), scale, skinPointer.getSkinDye(), null, 0, false, false, false, null);
+                SkinPartRenderer.INSTANCE.renderPart(renderData);
             }
             GL11.glDisable(GL11.GL_NORMALIZE);
         }

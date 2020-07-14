@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.model.SkinModel;
 import riskyken.armourersWorkshop.client.model.bake.ColouredFace;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderData;
 import riskyken.armourersWorkshop.common.skin.data.SkinDye;
 
 @SideOnly(Side.CLIENT)
@@ -21,20 +22,17 @@ public class ClientSkinPartData {
     public ArrayList<ColouredFace>[] vertexLists;
     public HashMap<ModelKey, SkinModel> dyeModels;
     public int[] totalCubesInPart;
-    
+
     private int[] averageR = new int[10];
     private int[] averageG = new int[10];
     private int[] averageB = new int[10];
-    
+
     public ClientSkinPartData() {
         dyeModels = new HashMap<ModelKey, SkinModel>();
     }
-    
-    public SkinModel getModelForDye(ISkinDye skinDye, byte[] extraColours) {
-        if (skinDye == null) {
-            skinDye = blankDye;
-        }
-        ModelKey modelKey = new ModelKey(skinDye, extraColours);
+
+    public SkinModel getModelForDye(SkinPartRenderData renderData) {
+        ModelKey modelKey = new ModelKey(renderData.getSkinDye(), renderData.getExtraColours());
         SkinModel skinModel = dyeModels.get(modelKey);
         if (skinModel == null) {
             skinModel = new SkinModel(vertexLists);
@@ -42,7 +40,7 @@ public class ClientSkinPartData {
         }
         return skinModel;
     }
-    
+
     public void cleanUpDisplayLists() {
         Set keys = dyeModels.keySet();
         Iterator<ModelKey> i = dyeModels.keySet().iterator();
@@ -51,7 +49,7 @@ public class ClientSkinPartData {
             dyeModels.get(modelKey).cleanUpDisplayLists();
         }
     }
-    
+
     public int getModelCount() {
         return dyeModels.size();
     }
@@ -59,24 +57,28 @@ public class ClientSkinPartData {
     public void setVertexLists(ArrayList<ColouredFace>[] vertexLists) {
         this.vertexLists = vertexLists;
     }
-    
+
     public void setAverageDyeValues(int[] r, int[] g, int[] b) {
         this.averageR = r;
         this.averageG = g;
         this.averageB = b;
     }
-    
+
     public int[] getAverageDyeColour(int dyeNumber) {
         return new int[] { averageR[dyeNumber], averageG[dyeNumber], averageB[dyeNumber] };
     }
-    
+
     private class ModelKey {
-        
+
         private ISkinDye skinDye;
         byte[] extraColours;
-        
+
         public ModelKey(ISkinDye skinDye, byte[] extraColours) {
-            this.skinDye = skinDye;
+            if (skinDye == null) {
+                this.skinDye = blankDye;
+            } else {
+                this.skinDye = skinDye;
+            }
             this.extraColours = extraColours;
         }
 
@@ -85,8 +87,7 @@ public class ClientSkinPartData {
             final int prime = 31;
             int result = 1;
             result = prime * result + Arrays.hashCode(extraColours);
-            result = prime * result
-                    + ((skinDye == null) ? 0 : skinDye.hashCode());
+            result = prime * result + ((skinDye == null) ? 0 : skinDye.hashCode());
             return result;
         }
 

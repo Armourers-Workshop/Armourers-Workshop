@@ -3,6 +3,7 @@ package riskyken.armourersWorkshop.client.model.bake;
 import net.minecraft.util.MathHelper;
 import riskyken.armourersWorkshop.api.common.skin.data.ISkinDye;
 import riskyken.armourersWorkshop.client.render.IRenderBuffer;
+import riskyken.armourersWorkshop.client.render.SkinPartRenderData;
 import riskyken.armourersWorkshop.client.skin.ClientSkinPartData;
 
 public class ColouredFace {
@@ -35,11 +36,13 @@ public class ColouredFace {
         this.lodLevel = lodLevel;
     }
     
-    public void renderVertex(IRenderBuffer renderBuffer, ISkinDye skinDye, byte[] extraColour, ClientSkinPartData cspd, boolean useTexture) {
+    public void renderVertex(IRenderBuffer renderBuffer, SkinPartRenderData renderData, ClientSkinPartData cspd, boolean useTexture) {
         byte r = this.r;
         byte g = this.g;
         byte b = this.b;
         int type = t & 0xFF;
+        ISkinDye skinDye = renderData.getSkinDye();
+        byte[] extraColour = renderData.getExtraColours();
         if (type != 0) {
             //Dye
             if (type >= 1 && type <=8) {
