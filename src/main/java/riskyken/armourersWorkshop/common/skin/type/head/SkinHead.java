@@ -35,11 +35,6 @@ public class SkinHead extends AbstractSkinTypeBase {
         return "Head";
     }
 
-    @Override
-    public boolean showSkinOverlayCheckbox() {
-        return true;
-    }
-
     @SideOnly(Side.CLIENT)
     @Override
     public void registerIcon(IIconRegister register) {

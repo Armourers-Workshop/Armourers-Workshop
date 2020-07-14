@@ -63,7 +63,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
     private ForgeDirection direction;
     private ISkinType skinType;
     private boolean showGuides;
-    private boolean showOverlay;
     private boolean showHelper;
     private SkinProperties skinProps;
     private int[] paintData;
@@ -79,7 +78,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         super(INVENTORY_SIZE);
         this.direction = ForgeDirection.NORTH;
         this.skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName("armourers:head");
-        this.showOverlay = true;
         this.showGuides = true;
         this.showHelper = true;
         this.skinProps = new SkinProperties();
@@ -352,10 +350,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         return showGuides;
     }
 
-    public boolean isShowOverlay() {
-        return showOverlay;
-    }
-
     public boolean isShowHelper() {
         return showHelper;
     }
@@ -388,11 +382,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
 
     public void toggleGuides() {
         this.showGuides = !this.showGuides;
-        dirtySync();
-    }
-
-    public void toggleOverlay() {
-        this.showOverlay = !this.showOverlay;
         dirtySync();
     }
 
@@ -476,7 +465,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
         }
 
         showGuides = compound.getBoolean(TAG_SHOW_GUIDES);
-        showOverlay = compound.getBoolean(TAG_SHOW_OVERLAY);
         if (compound.hasKey(TAG_SHOW_HELPER)) {
             showHelper = compound.getBoolean(TAG_SHOW_HELPER);
         }
@@ -498,7 +486,6 @@ public class TileEntityArmourer extends AbstractTileEntityInventory {
             compound.setString(TAG_TYPE, skinType.getRegistryName());
         }
         compound.setBoolean(TAG_SHOW_GUIDES, showGuides);
-        compound.setBoolean(TAG_SHOW_OVERLAY, showOverlay);
         compound.setBoolean(TAG_SHOW_HELPER, showHelper);
         skinProps.writeToNBT(compound);
         NBTTagCompound textureCompound = new NBTTagCompound();
