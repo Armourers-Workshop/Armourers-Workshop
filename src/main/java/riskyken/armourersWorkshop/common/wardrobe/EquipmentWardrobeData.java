@@ -14,30 +14,22 @@ import riskyken.armourersWorkshop.common.skin.type.SkinTypeRegistry;
 import riskyken.armourersWorkshop.common.wardrobe.ExtraColours.ExtraColourType;
 
 public class EquipmentWardrobeData {
-    
+
     private static final String TAG_EXTRA_COLOUR = "extra-colour-";
     private static final String TAG_ARMOUR_OVERRIDE = "armourOverride";
-    private static final String TAG_HEAD_OVERLAY = "headOverlay";
-    private static final String TAG_LIMIT_LIMBS = "limitLimbs";
     private static final String TAG_SLOTS_UNLOCKED = "slotsUnlocked";
     private static final String TAG_SLOT_KEY = "slotKey";
     private static final String TAG_SLOT_VALUE = "slotValue";
-    
+
     private ExtraColours extraColours;
     /** Bit set of what armour is hidden on the player. */
     public BitSet armourOverride;
-    /** Is the hair/hat overlay hidden? */
-    public boolean headOverlay;
-    /** Should limb movement be limited when the player has a skin on? */
-    public boolean limitLimbs;
     /** Number of slots the player has unlocked in the wardrobe */
     public HashMap<String, Integer> slotsUnlocked;
-    
+
     public EquipmentWardrobeData() {
         extraColours = new ExtraColours();
         armourOverride = new BitSet(4);
-        headOverlay = false;
-        limitLimbs = true;
         slotsUnlocked = new HashMap<String, Integer>();
         ISkinType[] validSkins = ExPropsPlayerSkinData.validSkins;
         for (int i = 0; i < validSkins.length; i++) {
@@ -45,7 +37,7 @@ public class EquipmentWardrobeData {
             slotsUnlocked.put(skinType.getRegistryName(), getUnlockedSlotsForSkinType(skinType));
         }
     }
-    
+
     public int getUnlockedSlotsForSkinType(ISkinType skinType) {
         if (skinType == SkinTypeRegistry.skinBow) {
             return 1;
@@ -59,23 +51,21 @@ public class EquipmentWardrobeData {
             return ConfigHandler.startingWardrobeSlots;
         }
     }
-    
+
     public void setUnlockedSlotsForSkinType(ISkinType skinType, int value) {
         slotsUnlocked.put(skinType.getRegistryName(), value);
     }
-    
+
     public EquipmentWardrobeData(EquipmentWardrobeData ewd) {
         extraColours = new ExtraColours(ewd.getExtraColours());
         armourOverride = (BitSet) ewd.armourOverride.clone();
-        headOverlay = ewd.headOverlay;
-        limitLimbs = ewd.limitLimbs;
         slotsUnlocked = ewd.slotsUnlocked;
     }
-    
+
     public ExtraColours getExtraColours() {
         return extraColours;
     }
-    
+
     public void saveNBTData(NBTTagCompound compound) {
         for (int i = 0; i < ExtraColourType.values().length; i++) {
             ExtraColourType type = ExtraColourType.values()[i];
@@ -84,9 +74,7 @@ public class EquipmentWardrobeData {
         for (int i = 0; i < 4; i++) {
             compound.setBoolean(TAG_ARMOUR_OVERRIDE + i, this.armourOverride.get(i));
         }
-        compound.setBoolean(TAG_HEAD_OVERLAY, this.headOverlay);
-        compound.setBoolean(TAG_LIMIT_LIMBS, this.limitLimbs);
-        
+
         NBTTagList slotsList = new NBTTagList();
         ISkinType[] validSkins = ExPropsPlayerSkinData.validSkins;
         for (int i = 0; i < validSkins.length; i++) {
@@ -98,7 +86,7 @@ public class EquipmentWardrobeData {
         }
         compound.setTag(TAG_SLOTS_UNLOCKED, slotsList);
     }
-    
+
     public void loadNBTData(NBTTagCompound compound) {
         for (int i = 0; i < ExtraColourType.values().length; i++) {
             ExtraColourType type = ExtraColourType.values()[i];
@@ -108,12 +96,6 @@ public class EquipmentWardrobeData {
         }
         for (int i = 0; i < 4; i++) {
             this.armourOverride.set(i, compound.getBoolean(TAG_ARMOUR_OVERRIDE + i));
-        }
-        if (compound.hasKey(TAG_HEAD_OVERLAY)) {
-            this.headOverlay = compound.getBoolean(TAG_HEAD_OVERLAY);
-        }
-        if (compound.hasKey(TAG_LIMIT_LIMBS)) {
-            this.limitLimbs = compound.getBoolean(TAG_LIMIT_LIMBS);
         }
         if (compound.hasKey(TAG_SLOTS_UNLOCKED, NBT.TAG_LIST)) {
             NBTTagList slotsList = compound.getTagList(TAG_SLOTS_UNLOCKED, NBT.TAG_COMPOUND);
@@ -128,7 +110,7 @@ public class EquipmentWardrobeData {
             }
         }
     }
-    
+
     public void fromBytes(ByteBuf buf) {
         NBTTagCompound compound = ByteBufUtils.readTag(buf);
         loadNBTData(compound);

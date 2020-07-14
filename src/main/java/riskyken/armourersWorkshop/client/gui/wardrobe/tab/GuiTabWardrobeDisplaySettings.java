@@ -28,12 +28,8 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
     EquipmentWardrobeData equipmentWardrobeData;
 
     BitSet armourOverride;
-    boolean headOverlay;
-    boolean limitLimbs;
 
     private GuiCheckBox[] armourOverrideCheck;
-    private GuiCheckBox[] overlayOverrideCheck;
-    private GuiCheckBox limitLimbsCheck;
 
     String guiName = "equipmentWardrobe";
 
@@ -44,8 +40,6 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
         this.equipmentWardrobeData = equipmentWardrobeData;
 
         this.armourOverride = equipmentWardrobeData.armourOverride;
-        this.headOverlay = equipmentWardrobeData.headOverlay;
-        this.limitLimbs = equipmentWardrobeData.limitLimbs;
     }
 
     @Override
@@ -57,32 +51,22 @@ public class GuiTabWardrobeDisplaySettings extends GuiTabPanel {
         armourOverrideCheck[2] = new GuiCheckBox(4, 83, 27 + 20, GuiHelper.getLocalizedControlName(guiName, "renderLegArmour"), !armourOverride.get(2));
         armourOverrideCheck[3] = new GuiCheckBox(5, 83, 27 + 30, GuiHelper.getLocalizedControlName(guiName, "renderFootArmour"), !armourOverride.get(3));
 
-        overlayOverrideCheck = new GuiCheckBox[1];
-        overlayOverrideCheck[0] = new GuiCheckBox(6, 83, 27 + 50, GuiHelper.getLocalizedControlName(guiName, "renderHeadOverlay"), !headOverlay);
-
-        limitLimbsCheck = new GuiCheckBox(7, 83, 27 + 70, GuiHelper.getLocalizedControlName(guiName, "limitLimbMovement"), limitLimbs);
-
-        buttonList.add(overlayOverrideCheck[0]);
         buttonList.add(armourOverrideCheck[0]);
         buttonList.add(armourOverrideCheck[1]);
         buttonList.add(armourOverrideCheck[2]);
         buttonList.add(armourOverrideCheck[3]);
-        buttonList.add(limitLimbsCheck);
     }
 
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button instanceof GuiCheckBox) {
-            headOverlay = !overlayOverrideCheck[0].isChecked();
             for (int i = 0; i < 4; i++) {
                 armourOverride.set(i, !armourOverrideCheck[i].isChecked());
             }
         }
 
         if (button.id >= 1) {
-            equipmentWardrobeData.headOverlay = headOverlay;
             equipmentWardrobeData.armourOverride = armourOverride;
-            equipmentWardrobeData.limitLimbs = limitLimbsCheck.isChecked();
             PacketHandler.networkWrapper.sendToServer(new MessageClientSkinWardrobeUpdate(equipmentWardrobeData));
         }
     }
