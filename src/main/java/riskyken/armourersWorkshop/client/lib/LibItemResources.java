@@ -36,6 +36,7 @@ public final class LibItemResources {
     public static final String TEMPLATE_WINGS = PREFIX_RESOURCE + "skin/template-wings";
     public static final String TEMPLATE_LOADING = PREFIX_RESOURCE + "skin/template-loading";
     public static final String TEMPLATE_OUTFIT = PREFIX_RESOURCE + "skin/template-outfit";
+    public static final String TEMPLATE_BLOCK = PREFIX_RESOURCE + "skin/template-block";
     
     public static final String TEMPLATE_BLANK = PREFIX_RESOURCE + "template-blank";
     public static final String GIFT_SACK = PREFIX_RESOURCE + "gift-sack";
