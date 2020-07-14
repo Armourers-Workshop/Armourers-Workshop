@@ -25,7 +25,7 @@ public class SkinProperties implements ISkinProperties {
 
     // Properties for armour skins.
     @Deprecated
-    public static final SkinProperty<Boolean> PROP_ARMOUR_OVERRIDE = new SkinProperty<Boolean>("armourOverride", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE = new SkinProperty<Boolean>("armourOverride", false);
     public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_HEAD = new SkinProperty<Boolean>("overrideModelHead", false);
     public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_CHEST = new SkinProperty<Boolean>("overrideModelChest", false);
     public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_ARM_LEFT = new SkinProperty<Boolean>("overrideModelArmLeft", false);
@@ -34,7 +34,7 @@ public class SkinProperties implements ISkinProperties {
     public static final SkinProperty<Boolean> PROP_MODEL_OVERRIDE_LEG_RIGHT = new SkinProperty<Boolean>("overrideModelLegRight", false);
 
     @Deprecated
-    public static final SkinProperty<Boolean> PROP_ARMOUR_HIDE_OVERLAY = new SkinProperty<Boolean>("armourHideOverlay", false);
+    public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY = new SkinProperty<Boolean>("armourHideOverlay", false);
     public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_HEAD = new SkinProperty<Boolean>("hideOverlayHead", false);
     public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_CHEST = new SkinProperty<Boolean>("hideOverlayChest", false);
     public static final SkinProperty<Boolean> PROP_MODEL_HIDE_OVERLAY_ARM_LEFT = new SkinProperty<Boolean>("hideOverlayArmLeft", false);
