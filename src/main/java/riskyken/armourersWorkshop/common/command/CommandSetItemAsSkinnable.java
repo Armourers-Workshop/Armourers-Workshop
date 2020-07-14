@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import riskyken.armourersWorkshop.common.addons.ModAddonManager;
-import riskyken.armourersWorkshop.common.config.ConfigHandler;
+import riskyken.armourersWorkshop.common.config.ConfigHandlerOverrides;
 import riskyken.armourersWorkshop.utils.ModLogger;
 
 public class CommandSetItemAsSkinnable extends ModCommand {
@@ -27,9 +27,9 @@ public class CommandSetItemAsSkinnable extends ModCommand {
         
         ItemStack stack = player.getCurrentEquippedItem();
         if (stack != null) {
-            Configuration config = ConfigHandler.config;
+            Configuration config = ConfigHandlerOverrides.config;
             
-            Property prop = config.get(ConfigHandler.CATEGORY_COMPATIBILITY, "itemOverrides", ModAddonManager.getDefaultOverrides());
+            Property prop = config.get(ConfigHandlerOverrides.CATEGORY_OVERRIDES, "itemOverrides", ModAddonManager.getDefaultOverrides());
             String[] itemOverrides = prop.getStringList();
             String[] newItemOverrides = new String[itemOverrides.length + 1];
             System.arraycopy(itemOverrides, 0, newItemOverrides, 0, itemOverrides.length);
