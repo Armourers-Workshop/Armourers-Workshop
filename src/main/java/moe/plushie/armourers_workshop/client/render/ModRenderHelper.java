@@ -1,5 +1,8 @@
 package moe.plushie.armourers_workshop.client.render;
 
+import java.awt.Rectangle;
+import java.util.ArrayDeque;
+
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -81,12 +84,56 @@ public final class ModRenderHelper {
                 MathHelper.floor(height * scaledHeight));
     }
     
+    private static ArrayDeque<Rectangle> scissorList = new ArrayDeque<Rectangle>();
+    
     public static void enableScissor(int x, int y, int width, int height) {
+        Rectangle cut = new Rectangle(x, y, width, height);
+        
+        Rectangle rec = scissorList.peek();
+        if (rec != null) {
+            int x1 = x;
+            int x2 = x + width;
+            int y1 = y;
+            int y2 = y + height;
+            
+            if (x1 < rec.x) {
+                x1 = rec.x;
+            }
+            if (x2 > rec.x + rec.width) {
+                x2 = rec.x + rec.width;
+            }
+             
+            if (y1 < rec.y) {
+                y1 = rec.y;
+            }
+            if (y2 > rec.y + rec.height) {
+                y2 = rec.y + rec.height;
+            }
+            
+            if (x2 < x1) {
+                x2 = x1;
+            }
+            if (y2 < y1) {
+                y2 = y1;
+            }
+            
+            cut = new Rectangle(x1, y1, x2 - x1, y2 - y1);
+            //ModLogger.log(cut);
+        }
+        
+        scissorList.push(cut);
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor(x, y, width, height);
+        GL11.glScissor(cut.x, cut.y, cut.width, cut.height);
     }
     
     public static void disableScissor() {
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        scissorList.poll();
+
+        Rectangle rec = scissorList.peek();
+        if (rec != null) {
+            GL11.glScissor(rec.x, rec.y, rec.width, rec.height);
+        } else {
+            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        }
     }
 }

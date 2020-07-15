@@ -163,14 +163,13 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 borderColour = 0xCC888811;
             }
             
-            ModRenderHelper.enableScissorScaled(x, y, iconSize, iconSize);
             
             drawRect(x, y, x + iconSize, y + iconSize, backgroundColour);
             
             drawRect(x, y + 1, x + 1, y + iconSize, borderColour);
             drawRect(x, y, x + iconSize - 1, y + 1, borderColour);
             drawRect(x + 1, y + iconSize - 1, x + iconSize, y + iconSize, borderColour);
-            drawRect(x + iconSize - 1, y, x + iconSize + iconSize, y + iconSize - 1, borderColour);
+            drawRect(x + iconSize - 1, y, x + iconSize, y + iconSize - 1, borderColour);
             
             SkinIdentifier identifier = new SkinIdentifier(0, null, id, null);
 
@@ -217,7 +216,9 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 GlStateManager.enableColorMaterial();
                 ModRenderHelper.enableAlphaBlend();
                 GlStateManager.enableDepth();
+                ModRenderHelper.enableScissorScaled(x, y, iconSize, iconSize);
                 SkinItemRenderHelper.renderSkinAsItem(skin, new SkinDescriptor(identifier), true, false, iconSize, iconSize);
+                ModRenderHelper.disableScissor();
                 GlStateManager.disableDepth();
                 
                 ModRenderHelper.disableAlphaBlend();
@@ -228,6 +229,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 GlStateManager.resetColor();
                 GlStateManager.popAttrib();
                 GlStateManager.popMatrix();
+                
             } else {
                 Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
                 int speed = 60;
@@ -245,7 +247,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                         256, 256
                         );
             }
-            ModRenderHelper.disableScissor();
+            
         }
         
         public boolean mouseOver(int x, int y, int mouseX, int mouseY, int iconSize) {
