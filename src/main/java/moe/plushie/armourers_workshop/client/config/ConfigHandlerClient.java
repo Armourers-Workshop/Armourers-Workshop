@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.client.config;
 
 import java.io.File;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.config.Configuration;
@@ -22,10 +21,8 @@ public class ConfigHandlerClient {
     public static int renderDistanceBlockSkin;
     public static int renderDistanceMannequinEquipment;
     public static int modelBakingThreadCount;
-    public static AtomicInteger modelBakingUpdateRate = new AtomicInteger(40);
     public static double lodDistance = 32F;
     public static boolean multipassSkinRendering = true;
-    public static boolean slowModelBaking = true;
     public static int maxLodLevels = 4;
     public static boolean useClassicBlockModels;
     
@@ -105,9 +102,6 @@ public class ConfigHandlerClient {
                 "The max distance in blocks that equipment will be rendered on mannequins.");
         
         
-        slowModelBaking = config.getBoolean("slowModelBaking", CATEGORY_PERFORMANCE, true,
-                "Limits how fast models can be baked to provide a smoother frame rate.");
-        
         int cores = Runtime.getRuntime().availableProcessors();
         int bakingCores = MathHelper.ceil(cores / 2F);
         bakingCores = MathHelper.clamp(bakingCores, 1, 16);
@@ -115,11 +109,6 @@ public class ConfigHandlerClient {
         config.getCategory(CATEGORY_PERFORMANCE).get("modelBakingThreadCount").setComment(
                 "The maximum number of threads that will be used to bake models. [range: " + 1 + " ~ " + 16 + ", default: " + "core count / 2" + "]");
         config.getCategory(CATEGORY_PERFORMANCE).get("modelBakingThreadCount").setRequiresMcRestart(true);
-        
-        int updateRate = config.getInt("modelBakingUpdateRate", CATEGORY_PERFORMANCE, 40, 10, 1000,
-                "How fast models are allowed to bake. Lower values will give smoother frame rate but models will load slower.\n"
-                + "Has no effect if 'slowModelBaking' is turned off.");
-        modelBakingUpdateRate.set(updateRate);
 
         multipassSkinRendering = config.getBoolean("multipassSkinRendering", CATEGORY_PERFORMANCE, true,
                 "When enabled skin will render in multiple passes to reduce visual artifacts.\n"
