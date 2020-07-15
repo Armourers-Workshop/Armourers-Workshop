@@ -391,19 +391,15 @@ public final class SkinIOUtils {
     }
 
     public static String makeFileNameValid(String fileName) {
-        fileName = fileName.replace("\\", "/");
-        fileName = fileName.replace("/", "_");
-        fileName = fileName.replace(":", "_");
-        fileName = fileName.replace("?", "_");
-        return fileName; // fileName.fileName.replaceAll("[^a-zA-Z0-9_()'`+& \\-\\.]", "_");
+        ModLogger.log("old name: " + fileName);
+        fileName = fileName.replaceAll("[<>:\"/\\\\|?*]", "_");
+        ModLogger.log("new name: " + fileName);
+        return fileName;
     }
 
     public static String makeFilePathValid(String filePath) {
-        filePath = filePath.replace("\\", "/");
-        filePath = filePath.replace("../", "_");
-        filePath = filePath.replace(":", "_");
-        filePath = filePath.replace("?", "_");
-        return filePath; // filePath.replaceAll("[^a-zA-Z0-9_()'`+&/ \\-\\.]", "_");
+        filePath = filePath.replaceAll("[<>:\"/\\\\|?*]", "_");
+        return filePath;
     }
 
     public static boolean isInLibraryDir(File file) {
