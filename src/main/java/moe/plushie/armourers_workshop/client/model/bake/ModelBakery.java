@@ -153,8 +153,8 @@ public final class ModelBakery {
 
                 SkinPart partData = skin.getParts().get(i);
                 partData.setClientSkinPartData(new ClientSkinPartData());
-                int[][][] cubeArray = SkinBaker.cullFacesOnEquipmentPart(partData, ConfigHandlerClient.modelBakingUpdateRate.get());
-                SkinBaker.buildPartDisplayListArray(partData, partDyeColour, partDyeUseCount, cubeArray, ConfigHandlerClient.modelBakingUpdateRate.get());
+                int[][][] cubeArray = SkinBaker.cullFacesOnEquipmentPart(partData);
+                SkinBaker.buildPartDisplayListArray(partData, partDyeColour, partDyeUseCount, cubeArray);
                 partData.clearCubeData();
 
                 int[] partAverageR = new int[extraDyes];

@@ -12,8 +12,10 @@ import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel.SkinIcon;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiScrollbar;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
+import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskGetMostDownloaded;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskGetMostLiked;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskGetRecentlyUploaded;
@@ -28,6 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelHome extends GuiPanel {
 
+    private final GuiScrollbar scrollbar;
     private final GuiControlSkinPanel skinPanelRecentlyUploaded;
     private final GuiControlSkinPanel skinPanelMostDownloaded;
     private final GuiControlSkinPanel skinPanelMostLiked;
@@ -36,9 +39,14 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
 
     public GuiGlobalLibraryPanelHome(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
+        scrollbar = new GuiScrollbar(-1, width - 11, y + 1, 10, height - 2, "", false);
+        scrollbar.setStyleFlat(true);
+        //scrollbar.setSliderMaxValue(600);
+        scrollbar.setAmount(14);
         skinPanelRecentlyUploaded = new GuiControlSkinPanel();
         skinPanelMostDownloaded = new GuiControlSkinPanel();
         skinPanelMostLiked = new GuiControlSkinPanel();
+        insideCheck = true;
     }
 
     @Override
@@ -48,18 +56,26 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
 
         buttonList.clear();
 
+        scrollbar.y = y + 1;
+        scrollbar.x = x + width - 11;
+        scrollbar.height = height - 2;
+        
         buttonShowAll = new GuiButtonExt(-1, x + 2, y + 2, 80, 16, GuiHelper.getLocalizedControlName(guiName, "home.showAllSkins"));
-
-        int boxW = (width - 6) / 2;
-        int boxH = height - 10 - 22;
-        skinPanelRecentlyUploaded.init(x + 2, y + 2 + 28, boxW, boxH);
-        skinPanelMostDownloaded.init(x + boxW + 4, y + 2 + 28, boxW, boxH / 2 - 10);
-        skinPanelMostLiked.init(x + boxW + 4, y + 2 + 28 + boxH / 2 + 5, boxW, boxH / 2 - 5);
+        
+        skinPanelRecentlyUploaded.init(x + 2, y + 2 + 28, width - 20, 206);
+        skinPanelMostDownloaded.init(x + 2, y + 2 + 28 + 206, width - 20, 206);
+        skinPanelMostLiked.init(x + 2, y + 2 + 28 + 600, width - 20, 206);
 
         skinPanelRecentlyUploaded.setIconSize(40);
         skinPanelMostDownloaded.setIconSize(40);
         skinPanelMostLiked.setIconSize(40);
 
+        int totalHeight = (206 + 14) * 3 + 28 + 2 * 2;
+        totalHeight -= height;
+        
+        scrollbar.setSliderMaxValue(totalHeight);
+        
+        buttonList.add(scrollbar);
         buttonList.add(buttonShowAll);
         buttonList.add(skinPanelRecentlyUploaded);
         buttonList.add(skinPanelMostDownloaded);
@@ -178,8 +194,19 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
             return;
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
+        ModRenderHelper.enableScissorScaled(x, y, width, height);
+        
+        int amount = scrollbar.getValue();
+        buttonShowAll.y = y + 2 - amount;
+        skinPanelRecentlyUploaded.y = y + 2 + 28 - amount;
+        skinPanelMostDownloaded.y = y + 2 + 28 + 206 + 14 - amount;
+        skinPanelMostLiked.y = y + 2 + 28  + 206 * 2 + 14 * 2 - amount;
+        
+        
         super.draw(mouseX, mouseY, partialTickTime);
+        
 
+        
         String guiName = ((GuiGlobalLibrary) parent).getGuiName();
         String labelRecentlyUploaded = GuiHelper.getLocalizedControlName(guiName, "home.recentlyUploaded");
         String labelMostDownloaded = GuiHelper.getLocalizedControlName(guiName, "home.mostDownloaded");
@@ -188,8 +215,9 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
         int boxW = (width - 15) / 2;
         int boxH = height - 10 - 35;
 
-        fontRenderer.drawString(labelRecentlyUploaded, x + 5, y + 20, 0xFFEEEEEE);
-        fontRenderer.drawString(labelMostDownloaded, x + boxW + 10, y + 20, 0xFFEEEEEE);
-        fontRenderer.drawString(labelMostLikes, x + boxW + 10, y + 28 + boxH / 2 + 5, 0xFFEEEEEE);
+        fontRenderer.drawString(labelRecentlyUploaded, x + 5, y + 20 - amount, 0xFFEEEEEE);
+        fontRenderer.drawString(labelMostDownloaded, x + 5, y + 20 + 220 - amount, 0xFFEEEEEE);
+        fontRenderer.drawString(labelMostLikes, x + 5, y + 20 + 220 * 2 - amount, 0xFFEEEEEE);
+        ModRenderHelper.disableScissor();
     }
 }

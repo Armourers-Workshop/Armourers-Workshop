@@ -680,17 +680,19 @@ death.attack.victorious=%1$s was stabbed to death by Vic's crown.
 
 
 # Commands
-commands.armourers.usage=/armourers <adminPanel | clearModelCache | clearSkin | clearSkins | exportSkin | giveSkin | resyncWardrobe | setItemSkinnable | setSkin | setUnlockedWardrobeSlots | setWardrobeOption>
-commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
-commands.armourers.clearSkin.usage=/armourers clearSkin <player> <skintype> <slot id>
-commands.armourers.clearSkins.usage=/armourers clearSkins <player>
-commands.armourers.exportSkin.usage=/armourers exportSkin <file format> "<file name>" [scale]
-commands.armourers.giveSkin.usage=/armourers giveSkin <player> "<skin name>" [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
-commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
-commands.armourers.setItemSkinnable.usage=/armourers setItemSkinnable <skintype> <add|remove>
-commands.armourers.setSkin.usage=/armourers setSkin <player> <slot id> "<skin name> [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
-commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
-commands.armourers.setWardrobeOption.usage=/armourers setWardrobeOption <player> <showHeadArmour | showChestArmour | showLegArmour | showFootArmour | showHeadOverlay> <true | false>
+commands.armourers_workshop:armourers.usage=/armourers <admin_panel | clear_cache | export_skin | give_skin | set_item_skinnable | wardrobe>
+commands.armourers_workshop:armourers.clear_cache.usage=/armourers clear_cache <client | server> [player if client]
+commands.armourers_workshop:armourers.export_skin.usage=/armourers export_skin <file format> "<file name>" [scale]
+commands.armourers_workshop:armourers.give_skin.usage=/armourers give_skin <player> "<skin name>" [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
+commands.armourers_workshop:armourers.set_item_skinnable.usage=/armourers set_item_skinnable <skintype> <add|remove>
+commands.armourers_workshop:armourers.wardrobe.usage=/armourers wardrobe <clear_skin | clear_skins | resync | set_colour | set_option | set_skin | set_unlocked_slots>
+commands.armourers_workshop:armourers.wardrobe.clear_skin.usage=/armourers wardrobe clear_skin <player> <skin type> <slot id>
+commands.armourers_workshop:armourers.wardrobe.clear_skins.usage=/armourers wardrobe clear_skins <player>
+commands.armourers_workshop:armourers.wardrobe.resync.usage=/armourers wardrobe resync <player>
+commands.armourers_workshop:armourers.wardrobe.set_colour.usage=/armourers wardrobe set_colour <player> <extra colour type> [<R,G,B> | <0xRRGGBB>]
+commands.armourers_workshop:armourers.wardrobe.set_option.usage=/armourers wardrobe set_option <player> <showHeadArmour | showChestArmour | showLegArmour | showFootArmour | showHeadOverlay> <true | false>
+commands.armourers_workshop:armourers.wardrobe.set_skin.usage=/armourers wardrobe set_skin <player> <slot id> <"skin name"> [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
+commands.armourers_workshop:armourers.wardrobe.set_unlocked_slots.usage=/armourers wardrobe set_unlocked_slots <player> <skin type> <count>
 commands.armourers.fileNotFound=The file %1$s was not found.
 commands.armourers.invalidDyeFormat=%1$s is not a valid dye format.
 

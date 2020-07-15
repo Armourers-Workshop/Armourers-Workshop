@@ -32,6 +32,8 @@ public class GuiScrollbar  extends GuiButton {
     private int xOffset = 0;
     
     private int yOffset = 0;
+    
+    private boolean styleFlat = false;
 	
 	public GuiScrollbar(int id, int x, int y, int width, int height, String text, boolean horizontal) {
 		super(id, x, y, width, height, text);
@@ -44,6 +46,14 @@ public class GuiScrollbar  extends GuiButton {
 			sliderMaxValue = height - 30;
 		}
 	}
+	
+	public void setStyleFlat(boolean styleFlat) {
+        this.styleFlat = styleFlat;
+    }
+	
+	public boolean isStyleFlat() {
+        return styleFlat;
+    }
 	
 	@Override
 	public int getHoverState(boolean par1) {

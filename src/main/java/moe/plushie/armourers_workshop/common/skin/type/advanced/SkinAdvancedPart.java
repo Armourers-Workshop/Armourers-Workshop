@@ -33,6 +33,6 @@ public class SkinAdvancedPart extends AbstractSkinTypeBase {
     
     @Override
     public boolean enabled() {
-        return true;
+        return false;
     }
 }

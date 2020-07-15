@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.texture.PlayerTexture;
-import moe.plushie.armourers_workshop.common.SkinHelper;
+import moe.plushie.armourers_workshop.common.TextureHelper;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
@@ -215,7 +215,7 @@ public class BlockBoundingBox extends AbstractModBlockContainer implements IPant
     @SideOnly(Side.CLIENT)
     private int getColourRemote(IBlockAccess world, BlockPos pos, EnumFacing facing, TileEntityArmourer parent, Point texturePoint, int colour) {
         PlayerTexture playerTexture = ClientProxy.playerTextureDownloader.getPlayerTexture(parent.getTexture());
-        BufferedImage playerSkin = SkinHelper.getBufferedImageSkin(playerTexture.getResourceLocation());
+        BufferedImage playerSkin = TextureHelper.getBufferedImageSkin(playerTexture.getResourceLocation());
         if (playerSkin != null) {
             colour = playerSkin.getRGB(texturePoint.x, texturePoint.y);
             return colour;
