@@ -57,7 +57,7 @@ public class RenderBlockAdvancedSkinBuilder extends TileEntitySpecialRenderer<Ti
             GlStateManager.pushMatrix();
             
             GlStateManager.translate(0F, 16f * scale, 0F);
-            for (AdvancedPartNode advancedPart : te.getAdvancedParts()) {
+            for (AdvancedPartNode advancedPart : te.getAdvancedPartNodes()) {
                 Skin skin = ClientSkinCache.INSTANCE.getSkin(descriptor);
                 if (skin != null) {
                     AdvancedPartRenderer.renderAdvancedSkin(skin, new SkinRenderData(scale, null, null, 0, false, false, false, null), null, null, advancedPart);

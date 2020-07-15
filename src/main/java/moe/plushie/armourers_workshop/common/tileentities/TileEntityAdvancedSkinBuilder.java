@@ -26,14 +26,14 @@ public class TileEntityAdvancedSkinBuilder extends AbstractTileEntityInventory i
 
     private static final int CONS_PARTS_MAX = 10;
 
-    private ArrayList<AdvancedPartNode> advancedParts = new ArrayList<AdvancedPartNode>();
+    private ArrayList<AdvancedPartNode> advancedPartNodes = new ArrayList<AdvancedPartNode>();
 
     public TileEntityAdvancedSkinBuilder() {
         super(CONS_PARTS_MAX);
     }
 
-    public ArrayList<AdvancedPartNode> getAdvancedParts() {
-        return advancedParts;
+    public ArrayList<AdvancedPartNode> getAdvancedPartNodes() {
+        return advancedPartNodes;
     }
 
     @Override

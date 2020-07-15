@@ -7,16 +7,13 @@ import moe.plushie.armourers_workshop.client.gui.controls.ModGuiContainer;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
-import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton;
 import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,21 +28,9 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
     private final TileEntityAdvancedSkinBuilder tileEntity;
 
-    private GuiButtonExt indexDecrease;
-    private GuiButtonExt indexIncrease;
-    private static int indexActive;
-
-    private GuiButtonExt parentDecrease;
-    private GuiButtonExt parentIncrease;
-    private int parentIndex;
-
-    private GuiCustomSlider sliderPosX;
-    private GuiCustomSlider sliderPosY;
-    private GuiCustomSlider sliderPosZ;
-
-    private GuiCustomSlider sliderRotX;
-    private GuiCustomSlider sliderRotY;
-    private GuiCustomSlider sliderRotZ;
+    private GuiCustomSlider sliderX;
+    private GuiCustomSlider sliderY;
+    private GuiCustomSlider sliderZ;
 
     public GuiAdvancedSkinBuilder(EntityPlayer player, TileEntityAdvancedSkinBuilder tileEntity) {
         super(new ContainerAdvancedSkinBuilder(player.inventory, tileEntity));
@@ -61,36 +46,13 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
         buttonList.clear();
 
-        int buttonsPosX = 5;
-        int buttonsPosY = 120;
+        sliderX = new GuiCustomSlider(0, guiLeft + width - 85, guiTop + 25 + 25, 80, 10, "X:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
+        sliderY = new GuiCustomSlider(0, guiLeft + width - 85, guiTop + 25 + 40, 80, 10, "Y:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
+        sliderZ = new GuiCustomSlider(0, guiLeft + width - 85, guiTop + 25 + 55, 80, 10, "Z:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
 
-        indexDecrease = new GuiButtonExt(0, guiLeft + buttonsPosX, guiTop + buttonsPosY, 20, 20, "-");
-        indexIncrease = new GuiButtonExt(0, guiLeft + buttonsPosX + 25, guiTop + buttonsPosY, 20, 20, "+");
-
-        parentDecrease = new GuiButtonExt(0, guiLeft + buttonsPosX, guiTop + buttonsPosY + 120, 20, 20, "-");
-        parentIncrease = new GuiButtonExt(0, guiLeft + buttonsPosX + 25, guiTop + buttonsPosY + 120, 20, 20, "+");
-
-        sliderPosX = new GuiCustomSlider(0, guiLeft + buttonsPosX, guiTop + buttonsPosY + 25, 80, 10, "X:", "pos", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-        sliderPosY = new GuiCustomSlider(0, guiLeft + buttonsPosX, guiTop + buttonsPosY + 40, 80, 10, "Y:", "pos", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-        sliderPosZ = new GuiCustomSlider(0, guiLeft + buttonsPosX, guiTop + buttonsPosY + 55, 80, 10, "Z:", "pos", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-
-        sliderRotX = new GuiCustomSlider(0, guiLeft + buttonsPosX, guiTop + buttonsPosY + 70, 80, 10, "X:", "rot", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-        sliderRotY = new GuiCustomSlider(0, guiLeft + buttonsPosX, guiTop + buttonsPosY + 85, 80, 10, "Y:", "rot", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-        sliderRotZ = new GuiCustomSlider(0, guiLeft + buttonsPosX, guiTop + buttonsPosY + 100, 80, 10, "Z:", "rot", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-
-        buttonList.add(indexDecrease);
-        buttonList.add(indexIncrease);
-
-        buttonList.add(parentDecrease);
-        buttonList.add(parentIncrease);
-
-        buttonList.add(sliderPosX);
-        buttonList.add(sliderPosY);
-        buttonList.add(sliderPosZ);
-
-        buttonList.add(sliderRotX);
-        buttonList.add(sliderRotY);
-        buttonList.add(sliderRotZ);
+        buttonList.add(sliderX);
+        buttonList.add(sliderY);
+        buttonList.add(sliderZ);
 
         int slotSize = 18;
 
@@ -118,31 +80,26 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         updatePropertiesForPart(null);
     }
 
-    private void updatePropertiesForPart(AdvancedPartNode advancedPart) {
-        if (advancedPart != null) {
-            sliderPosX.setValue(advancedPart.pos.x);
-            sliderPosY.setValue(advancedPart.pos.y);
-            sliderPosZ.setValue(advancedPart.pos.z);
-
-            sliderRotX.setValue(advancedPart.rotationAngle.x);
-            sliderRotY.setValue(advancedPart.rotationAngle.y);
-            sliderRotZ.setValue(advancedPart.rotationAngle.z);
+    private void updatePropertiesForPart(AdvancedPartNode advancedPartNode) {
+        if (advancedPartNode != null) {
+            updateSliders(advancedPartNode.pos);
         } else {
-            sliderPosX.setValue(0D);
-            sliderPosY.setValue(0D);
-            sliderPosZ.setValue(0D);
-
-            sliderRotX.setValue(0D);
-            sliderRotY.setValue(0D);
-            sliderRotZ.setValue(0D);
+            updateSliders(0D, 0D, 0D);
         }
-        sliderPosX.updateSlider();
-        sliderPosY.updateSlider();
-        sliderPosZ.updateSlider();
+    }
 
-        sliderRotX.updateSlider();
-        sliderRotY.updateSlider();
-        sliderRotZ.updateSlider();
+    private void updateSliders(Vec3d vec3d) {
+        updateSliders(vec3d.x, vec3d.y, vec3d.z);
+    }
+
+    private void updateSliders(double x, double y, double z) {
+        sliderX.setValue(x);
+        sliderY.setValue(y);
+        sliderZ.setValue(z);
+
+        sliderX.updateSlider();
+        sliderY.updateSlider();
+        sliderZ.updateSlider();
     }
 
     @Override
@@ -154,7 +111,8 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        fontRenderer.drawString("Index: " + indexActive, guiLeft + 55, guiTop + 127, 0xCCCCCC, true);
+        // fontRenderer.drawString("Index: " + indexActive, guiLeft + 55, guiTop + 127,
+        // 0xCCCCCC, true);
     }
 
     @Override
@@ -163,17 +121,6 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
-        if (button == indexDecrease) {
-            indexActive--;
-        }
-        if (button == indexIncrease) {
-            indexActive++;
-        }
-        if (button == parentDecrease) {
-            MessageClientGuiButton message = new MessageClientGuiButton((byte) 0);
-            PacketHandler.networkWrapper.sendToServer(message);
-        }
-        indexActive = MathHelper.clamp(indexActive, 0, 9);
     }
 
     @Override
