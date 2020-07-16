@@ -15,7 +15,7 @@ import net.minecraft.util.math.Vec3d;
 public class AdvancedPartNode {
 
     private final ArrayList<AdvancedPartNode> children = new ArrayList<AdvancedPartNode>();
-    public final int partIndex;
+    public int partIndex;
     public String name;
     public boolean isStatic = true;
     public boolean enabled = true;
