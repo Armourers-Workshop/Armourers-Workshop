@@ -4,15 +4,21 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.gui.armourer.tab.GuiTabArmourerMain.DropDownItemSkin;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.DropDownListItem;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTextFieldCustom;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTreeView;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTreeView.GuiTreeViewItem;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTreeView.IGuiTreeViewCallback;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiTreeView.IGuiTreeViewItem;
 import moe.plushie.armourers_workshop.client.gui.controls.ModGuiContainer;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
@@ -34,7 +40,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSkinBuilder> implements ISlider, IDropDownListCallback {
+public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSkinBuilder> implements ISlider, IDropDownListCallback, IGuiTreeViewCallback {
 
     private static final ResourceLocation TEXTURE_BUTTONS = new ResourceLocation(LibGuiResources.CONTROL_BUTTONS);
     private static final int PADDING = 2;
@@ -57,11 +63,16 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
     private GuiIconButton buttonRemove;
 
     // Node Options
+    private GuiDropDownList dropDownNoteSettings;
 
     // Settings
-    private GuiCustomSlider sliderX;
-    private GuiCustomSlider sliderY;
-    private GuiCustomSlider sliderZ;
+    private GuiTextFieldCustom textSetting;
+    private ISkinIdentifier identifierSetting;
+    private GuiCheckBox checkBoxSetting;
+    private GuiCustomSlider sliderSetting;
+    private GuiCustomSlider sliderSettingX;
+    private GuiCustomSlider sliderSettingY;
+    private GuiCustomSlider sliderSettingZ;
 
     // Preview
     private GuiDropDownList dropDownSkinType;
@@ -88,6 +99,7 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
         // Tree View
         treeView = new GuiTreeView(recTreeView.x + PADDING, recTreeView.y + PADDING, recTreeView.width - PADDING * 2, recTreeView.height - 20 - PADDING);
+        treeView.setCallback(this);
         buttonList.add(treeView);
 
         buttonAdd = new GuiIconButton(this, 0, recTreeView.x + PADDING, recTreeView.y + recTreeView.height - PADDING - 16, 16, 16, TEXTURE_BUTTONS);
@@ -99,17 +111,27 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         buttonList.add(buttonRemove);
 
         // Node Options
+        dropDownNoteSettings = new GuiDropDownList(0, recNoteProp.x + PADDING, recNoteProp.y + PADDING + 10, recNoteProp.width - PADDING * 2, "", this);
+        updateSettingsDropDown();
+        dropDownNoteSettings.setMaxDisplayCount(5);
+        buttonList.add(dropDownNoteSettings);
 
         // Settings
+        textSetting = new GuiTextFieldCustom(recSetting.x + PADDING, recSetting.y + PADDING + 10, 100, 16);
+        buttonList.add(textSetting);
+        checkBoxSetting = new GuiCheckBox(0, recSetting.x + PADDING, recSetting.y + PADDING + 10, "", false);
+        checkBoxSetting.setTextColour(0xFFFFFFFF);
+        buttonList.add(checkBoxSetting);
         int sliderPosX = recSetting.x + PADDING;
         int sliderPosY = recSetting.y + PADDING + 10;
-
-        sliderX = new GuiCustomSlider(0, sliderPosX, sliderPosY, 80, 10, "X:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-        sliderY = new GuiCustomSlider(0, sliderPosX, sliderPosY + 15, 80, 10, "Y:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-        sliderZ = new GuiCustomSlider(0, sliderPosX, sliderPosY + 30, 80, 10, "Z:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-        buttonList.add(sliderX);
-        buttonList.add(sliderY);
-        buttonList.add(sliderZ);
+        sliderSetting = new GuiCustomSlider(0, sliderPosX, sliderPosY, 100, 10, "Scale:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
+        sliderSettingX = new GuiCustomSlider(0, sliderPosX, sliderPosY, 100, 10, "X:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
+        sliderSettingY = new GuiCustomSlider(0, sliderPosX, sliderPosY + 15, 100, 10, "Y:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
+        sliderSettingZ = new GuiCustomSlider(0, sliderPosX, sliderPosY + 30, 100, 10, "Z:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
+        buttonList.add(sliderSetting);
+        buttonList.add(sliderSettingX);
+        buttonList.add(sliderSettingY);
+        buttonList.add(sliderSettingZ);
 
         // setPlayerSlotVisible(false);
         movePlayerInventorySlots(width - INVENTORY_WIDTH - PADDING, height - INVENTORY_HEIGHT - PADDING);
@@ -137,7 +159,22 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         updateActiveSkinType();
         buttonList.add(dropDownSkinType);
 
-        updatePropertiesForPart(null);
+        updateSetting();
+    }
+
+    private void updateSettingsDropDown() {
+        dropDownNoteSettings.clearList();
+        GuiTreeView.IGuiTreeViewItem treeViewItem = treeView.getSelectedItem();
+        if (treeViewItem != null && treeViewItem instanceof GuiTreeViewPartNote) {
+            GuiTreeViewPartNote treeNote = (GuiTreeViewPartNote) treeViewItem;
+            for (PartNodeSetting setting : PartNodeSetting.values()) {
+                boolean enabled = true;
+                if (treeNote.isLocked()) {
+                    enabled = setting.onRoot;
+                }
+                dropDownNoteSettings.addListItem(setting.name(), setting.name(), enabled);
+            }
+        }
     }
 
     private void movePlayerInventorySlots(int xPos, int yPos) {
@@ -187,13 +224,17 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
     }
 
     private void updateSliders(double x, double y, double z) {
-        sliderX.setValue(x);
-        sliderY.setValue(y);
-        sliderZ.setValue(z);
+        sliderSettingX.visible = true;
+        sliderSettingY.visible = true;
+        sliderSettingZ.visible = true;
 
-        sliderX.updateSlider();
-        sliderY.updateSlider();
-        sliderZ.updateSlider();
+        sliderSettingX.setValue(x);
+        sliderSettingY.setValue(y);
+        sliderSettingZ.setValue(z);
+
+        sliderSettingX.updateSlider();
+        sliderSettingY.updateSlider();
+        sliderSettingZ.updateSlider();
     }
 
     private void updateActiveSkinType() {
@@ -206,7 +247,7 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
                 GuiTreeViewPartNote treeViewPartNote = new GuiTreeViewPartNote("root - " + partName);
                 treeViewPartNote.setLocked(true);
                 treeViewPartNote.setColour(0xFFCCCCFF);
-                
+
                 for (int j = 0; j < 2; j++) {
                     GuiTreeViewPartNote sub1 = new GuiTreeViewPartNote(partName + " sub " + (j + 1));
                     for (int z = 0; z < 2; z++) {
@@ -220,7 +261,111 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
             treeViewPartFree.setLocked(true);
             treeViewPartFree.setColour(0xFFCCCCFF);
             treeView.addItem(treeViewPartFree);
+
+            GuiTreeViewPartNote treeViewPartStatic = new GuiTreeViewPartNote("root - Static");
+            treeViewPartStatic.setLocked(true);
+            treeViewPartStatic.setColour(0xFFCCCCFF);
+            treeView.addItem(treeViewPartStatic);
         }
+    }
+
+    private void updateSetting() {
+        PartNodeSetting nodeSetting = getActiveSetting();
+        GuiTreeViewPartNote treeViewPartNote = null;
+        GuiTreeView.IGuiTreeViewItem treeViewItem = treeView.getSelectedItem();
+        if (treeViewItem != null && treeViewItem instanceof GuiTreeViewPartNote) {
+            treeViewPartNote = (GuiTreeViewPartNote) treeViewItem;
+        }
+
+        textSetting.visible = false;
+        identifierSetting = null;
+        checkBoxSetting.visible = false;
+        sliderSetting.visible = false;
+        sliderSettingX.visible = false;
+        sliderSettingY.visible = false;
+        sliderSettingZ.visible = false;
+
+        if (nodeSetting == null | treeViewPartNote == null) {
+            return;
+        }
+
+        switch (nodeSetting) {
+        case NAME:
+            textSetting.visible = true;
+            break;
+        case SKIN:
+            identifierSetting = treeViewPartNote.getSkinIdentifier();
+            break;
+        case ENABLED:
+            checkBoxSetting.visible = true;
+            checkBoxSetting.displayString = "Enabled?";
+            checkBoxSetting.setIsChecked(treeViewPartNote.getAdvancedPartNode().enabled);
+            break;
+        case SCALE:
+            sliderSetting.visible = true;
+            sliderSetting.setValue(treeViewPartNote.getAdvancedPartNode().scale);
+            sliderSetting.updateSlider();
+            break;
+        case MIRROR:
+            checkBoxSetting.visible = true;
+            checkBoxSetting.displayString = "Mirror?";
+            checkBoxSetting.setIsChecked(treeViewPartNote.getAdvancedPartNode().mirror);
+            break;
+        case POSITION:
+            updateSliders(treeViewPartNote.getAdvancedPartNode().pos);
+            break;
+        case ROTATION:
+            updateSliders(treeViewPartNote.getAdvancedPartNode().rotationAngle);
+            break;
+        case ROTATION_POSITION:
+            updateSliders(treeViewPartNote.getAdvancedPartNode().rotationPos);
+            break;
+        }
+    }
+
+    private void applySetting() {
+        PartNodeSetting nodeSetting = getActiveSetting();
+        GuiTreeViewPartNote treeViewPartNote = null;
+        GuiTreeView.IGuiTreeViewItem treeViewItem = treeView.getSelectedItem();
+        if (treeViewItem != null && treeViewItem instanceof GuiTreeViewPartNote) {
+            treeViewPartNote = (GuiTreeViewPartNote) treeViewItem;
+        }
+
+        if (nodeSetting == null | treeViewPartNote == null) {
+            return;
+        }
+
+        switch (nodeSetting) {
+        case NAME:
+            treeViewPartNote.setName(textSetting.getText());
+            break;
+        case SKIN:
+            break;
+        case ENABLED:
+            treeViewPartNote.getAdvancedPartNode().enabled = checkBoxSetting.isChecked();
+            break;
+        case SCALE:
+            treeViewPartNote.getAdvancedPartNode().scale = (float) sliderSetting.getValue();
+            break;
+        case MIRROR:
+            treeViewPartNote.getAdvancedPartNode().mirror = checkBoxSetting.isChecked();
+            break;
+        case POSITION:
+            treeViewPartNote.getAdvancedPartNode().pos = new Vec3d(sliderSettingX.getValue(), sliderSettingY.getValue(), sliderSettingZ.getValue());
+            break;
+        case ROTATION:
+            treeViewPartNote.getAdvancedPartNode().rotationAngle = new Vec3d(sliderSettingX.getValue(), sliderSettingY.getValue(), sliderSettingZ.getValue());
+            break;
+        case ROTATION_POSITION:
+            treeViewPartNote.getAdvancedPartNode().rotationPos = new Vec3d(sliderSettingX.getValue(), sliderSettingY.getValue(), sliderSettingZ.getValue());
+            break;
+        }
+    }
+
+    private AdvancedPartNode convertTreeToAdvancedPartNode() {
+        AdvancedPartNode partNode = new AdvancedPartNode(-1, "");
+        
+        return partNode;
     }
 
     @Override
@@ -240,16 +385,12 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         fontRenderer.drawString("Node Options:", recNoteProp.x + PADDING, recNoteProp.y + PADDING, 0xCCFFFFFF);
         fontRenderer.drawString("Settings:", recSetting.x + PADDING, recSetting.y + PADDING, 0xCCFFFFFF);
         fontRenderer.drawString("Preview:", recSkinPreview.x + PADDING, recSkinPreview.y + PADDING, 0xCCFFFFFF);
-
-        String[] nodeOptions = { "name", "skin", "enabled", "scale", "mirror", "position", "rotation", "rotation position" };
-        for (int i = 0; i < nodeOptions.length; i++) {
-            fontRenderer.drawString(nodeOptions[i], recNoteProp.x + PADDING, recNoteProp.y + PADDING + 10 * i + 10, 0xCCFFFFFF);
-        }
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         dropDownSkinType.drawForeground(mc, mouseX, mouseY, 0);
+        dropDownNoteSettings.drawForeground(mc, mouseX, mouseY, 0);
     }
 
     @Override
@@ -273,33 +414,60 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
     @Override
     public void onDropDownListChanged(GuiDropDownList dropDownList) {
-        updateActiveSkinType();
+        if (dropDownList == dropDownSkinType) {
+            updateActiveSkinType();
+        }
+        if (dropDownList == dropDownNoteSettings) {
+            updateSetting();
+        }
+    }
+
+    private PartNodeSetting getActiveSetting() {
+        DropDownListItem listItem = dropDownNoteSettings.getListSelectedItem();
+        if (listItem != null) {
+            return PartNodeSetting.valueOf(listItem.tag);
+        }
+        return null;
+    }
+
+    @Override
+    public void onSelectionChange(GuiTreeView guiTreeView, IGuiTreeViewItem selectedItem) {
+        dropDownNoteSettings.setListSelectedIndex(-1);
+        updateSettingsDropDown();
     }
 
     public static class GuiTreeViewPartNote extends GuiTreeViewItem {
 
         private AdvancedPartNode advancedPartNode;
+        private ISkinIdentifier skinIdentifier;
 
         public GuiTreeViewPartNote(String name) {
             super(name);
             advancedPartNode = new AdvancedPartNode(-1, name);
         }
 
+        @Override
+        public void setName(String name) {
+            super.setName(name);
+            advancedPartNode.name = name;
+        }
+
         public AdvancedPartNode getAdvancedPartNode() {
             return advancedPartNode;
+        }
+
+        public ISkinIdentifier getSkinIdentifier() {
+            return skinIdentifier;
+        }
+
+        public void setSkinIdentifier(ISkinIdentifier skinIdentifier) {
+            this.skinIdentifier = skinIdentifier;
         }
     }
 
     public static enum PartNodeSetting {
 
-        NAME(false),
-        SKIN(true),
-        ENABLED(true),
-        SCALE(false),
-        MIRROR(true),
-        POSITION(false),
-        ROTATION(false),
-        ROTATION_POSITION(false);
+        NAME(false), SKIN(true), ENABLED(true), SCALE(false), MIRROR(true), POSITION(false), ROTATION(false), ROTATION_POSITION(false);
 
         private boolean onRoot;
 

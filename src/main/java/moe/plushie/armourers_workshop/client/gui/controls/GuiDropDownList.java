@@ -28,11 +28,11 @@ public class GuiDropDownList extends GuiButtonExt {
     private int dropButtonWidth;
     private int dropButtonHeight;
     private IDropDownListCallback callback;
-    
+
     private GuiScrollbar scrollbar = new GuiScrollbar(0, x, y, 10, 10, "", false);
     private int maxDisplayCount = 0;
     private int scrollAmount = 0;
-    
+
     public GuiDropDownList(int id, int xPos, int yPos, int width, String displayString, IDropDownListCallback callback) {
         super(id, xPos, yPos, width, 14, displayString);
         this.callback = callback;
@@ -46,15 +46,15 @@ public class GuiDropDownList extends GuiButtonExt {
         this.dropButtonY = this.y;
         this.dropButtonX = this.x + this.width - this.dropButtonWidth;
     }
-    
+
     public void setMaxDisplayCount(int maxDisplayCount) {
         this.maxDisplayCount = maxDisplayCount;
     }
-    
+
     public boolean getIsDroppedDown() {
         return this.isDroppedDown;
     }
-    
+
     public int getDropdownListCount() {
         int listSize = listItems.size();
         int limit = listSize;
@@ -63,7 +63,7 @@ public class GuiDropDownList extends GuiButtonExt {
         }
         return limit;
     }
-    
+
     public boolean hasScrollbar() {
         return getDropdownListCount() < listItems.size();
     }
@@ -75,28 +75,29 @@ public class GuiDropDownList extends GuiButtonExt {
             this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
             int k = this.getHoverState(this.hovered);
             GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x, this.y, 0, 46, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
-            
+
             drawDropDownButton(mc, mouseX, mouseY);
-            
+
             if (getListSelectedItem() != null) {
                 getListSelectedItem().drawItem(mc, this, this.x + 3, this.y + 3, mouseX, mouseY, partial, true);
             }
-            //mc.fontRenderer.drawString(this.displayString, this.x + 3, this.y + 3, 16777215);
+            // mc.fontRenderer.drawString(this.displayString, this.x + 3, this.y + 3,
+            // 16777215);
         }
     }
-    
+
     public void drawForeground(Minecraft mc, int mouseX, int mouseY, float partial) {
         this.hoverIndex = -1;
         if (this.isDroppedDown) {
             int listSize = listItems.size();
             int limit = getDropdownListCount();
-            
+
             scrollbar.x = x + width - 10;
             scrollbar.y = y + height + 1;
             scrollbar.height = 10 * limit + 4;
             scrollbar.setSliderMaxValue(listSize - limit);
             scrollAmount = scrollbar.getValue();
-            
+
             int dropDownWidth = this.width;
             if (hasScrollbar()) {
                 dropDownWidth = this.width - 10;
@@ -106,7 +107,7 @@ public class GuiDropDownList extends GuiButtonExt {
             if (hasScrollbar()) {
                 scrollbar.drawButton(mc, mouseX, mouseY, partial);
             }
-            
+
             for (int i = 0; i < limit; i++) {
                 DropDownListItem listItem = listItems.get(i + scrollAmount);
                 int textX = this.x + 4;
@@ -115,16 +116,16 @@ public class GuiDropDownList extends GuiButtonExt {
                     hoverIndex = i + scrollAmount;
                 }
                 listItem.drawItem(mc, this, textX, textY, mouseX, mouseY, partial, false);
-            } 
+            }
         }
         GlStateManager.enableBlend();
         GlStateManager.color(1, 1, 1, 1);
     }
-    
+
     private boolean mouseDown = false;
-    
+
     private void mouseCheck() {
-        //Fix for TMI, it stops the mouse released event in container GUI's.
+        // Fix for TMI, it stops the mouse released event in container GUI's.
         if (Loader.isModLoaded("TooManyItems")) {
             if (Mouse.isCreated()) {
                 if (Mouse.isButtonDown(0)) {
@@ -144,15 +145,15 @@ public class GuiDropDownList extends GuiButtonExt {
             }
         }
     }
-    
+
     private boolean mouseOverDropDownButton(int mouseX, int mouseY) {
         return mouseX >= this.dropButtonX && mouseY >= this.dropButtonY && mouseX < this.dropButtonX + this.dropButtonWidth && mouseY < this.dropButtonY + this.dropButtonHeight;
     }
-    
+
     private void drawDropDownButton(Minecraft mc, int mouseX, int mouseY) {
         int k = this.getHoverState(mouseOverDropDownButton(mouseX, mouseY));
         GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.dropButtonX, this.dropButtonY, 0, 46 + k * 20, this.dropButtonWidth, this.dropButtonHeight, 200, 20, 2, 3, 2, 2, this.zLevel);
-        
+
         String dropDownArrow = "v";
         if (isDroppedDown) {
             dropDownArrow = "^";
@@ -160,7 +161,7 @@ public class GuiDropDownList extends GuiButtonExt {
         int arrowWidth = mc.fontRenderer.getStringWidth(dropDownArrow);
         mc.fontRenderer.drawString(dropDownArrow, this.dropButtonX + (this.dropButtonWidth / 2) - (arrowWidth / 2), this.dropButtonY + 3, 16777215);
     }
-    
+
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
         int oldHeight = this.height;
@@ -182,7 +183,7 @@ public class GuiDropDownList extends GuiButtonExt {
             return false;
         }
     }
-    
+
     @Override
     public void mouseReleased(int mouseX, int mouseY) {
         if (this.isDroppedDown) {
@@ -200,59 +201,67 @@ public class GuiDropDownList extends GuiButtonExt {
             }
         }
     }
-    
+
     public void clearList() {
         listItems.clear();
     }
-    
+
     public void addListItem(DropDownListItem listItem) {
         listItems.add(listItem);
     }
-    
+
     public void addListItem(String displayText) {
         addListItem(displayText, "", true);
     }
-    
+
     public void addListItem(String displayText, String tag, boolean enabled) {
         listItems.add(new DropDownListItem(displayText, tag, enabled));
     }
-    
+
     public DropDownListItem getListIndex(int index) {
         return this.listItems.get(index);
     }
-    
+
     public int getListSelectedIndex() {
         return selectedIndex;
     }
-    
+
     public DropDownListItem getListSelectedItem() {
-        return this.listItems.get(this.selectedIndex);
+        DropDownListItem downListItem = null;
+        if (selectedIndex >= 0 & selectedIndex < listItems.size()) {
+            downListItem = listItems.get(selectedIndex);
+        }
+        return downListItem;
     }
-    
+
     public void setListSelectedIndex(int index) {
         this.selectedIndex = index;
-        this.displayString = listItems.get(this.selectedIndex).displayText;
+        if (selectedIndex >= 0 & selectedIndex < listItems.size()) {
+            this.displayString = listItems.get(this.selectedIndex).displayText;
+        } else {
+            this.displayString = null;
+        }
     }
-    
+
     public int getListSize() {
         return this.listItems.size();
     }
-    
+
     public interface IDropDownListCallback {
         public void onDropDownListChanged(GuiDropDownList dropDownList);
     }
-    
+
     public static class DropDownListItem {
         public String displayText;
         public String tag;
         public boolean enabled;
-        
+
         public DropDownListItem(String displayText, String tag, boolean enabled) {
             this.displayText = displayText;
             this.tag = tag;
             this.enabled = enabled;
         }
-        
+
         public boolean isMouseOver(GuiDropDownList parent, int x, int y, int mouseX, int mouseY) {
             int textWidth = parent.width - 8;
             if (parent.hasScrollbar()) {

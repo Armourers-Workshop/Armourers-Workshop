@@ -14,22 +14,13 @@ public class GuiTreeView extends GuiButtonExt {
 
     private final ArrayList<IGuiTreeViewItem> rootItems = new ArrayList<IGuiTreeViewItem>();
     private int selectedIndex = -1;
+    private IGuiTreeViewCallback callback;
 
     private long lastClickTime;
     private int lastClickIndex = -1;
 
     public GuiTreeView(int xPos, int yPos, int width, int height) {
         super(-1, xPos, yPos, width, height, "");
-    }
-
-    @Override
-    public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        return super.mousePressed(mc, mouseX, mouseY);
-    }
-
-    @Override
-    protected void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
-        super.mouseDragged(mc, mouseX, mouseY);
     }
 
     @Override
@@ -40,6 +31,7 @@ public class GuiTreeView extends GuiButtonExt {
         } else {
             selectedIndex = -1;
         }
+        sendCallback();
         if (lastClickTime + 500L > System.currentTimeMillis()) {
             if (lastClickIndex == selectedIndex) {
                 IGuiTreeViewItem item = getSelectedItem();
@@ -55,6 +47,16 @@ public class GuiTreeView extends GuiButtonExt {
         }
         super.mouseReleased(mouseX, mouseY);
     }
+    
+    public void setCallback(IGuiTreeViewCallback callback) {
+        this.callback = callback;
+    }
+
+    private void sendCallback() {
+        if (callback != null) {
+            callback.onSelectionChange(this, getSelectedItem());
+        }
+    }
 
     public int getSelectedIndex() {
         if (selectedIndex >= 0 & selectedIndex < getTotalItems(rootItems)) {
@@ -63,11 +65,11 @@ public class GuiTreeView extends GuiButtonExt {
         return -1;
     }
 
-    public IGuiTreeViewItem getSelectedItem() {
+    public GuiTreeView.IGuiTreeViewItem getSelectedItem() {
         return getItemFromIndex(getSelectedIndex());
     }
 
-    public IGuiTreeViewItem getItemFromIndex(int index) {
+    public GuiTreeView.IGuiTreeViewItem getItemFromIndex(int index) {
         ArrayList<IGuiTreeViewItem> fullList = getFullItemList();
         if (index >= 0 & index < fullList.size()) {
             return fullList.get(index);
@@ -93,6 +95,7 @@ public class GuiTreeView extends GuiButtonExt {
     public void removeItem(int index) {
         removeItem(rootItems, index);
         resetIndexes();
+        sendCallback();
     }
 
     private void removeItem(ArrayList<IGuiTreeViewItem> items, int index) {
@@ -115,12 +118,14 @@ public class GuiTreeView extends GuiButtonExt {
         if (parentItem != null) {
             parentItem.getSubItems().add(item);
             resetIndexes();
+            sendCallback();
         }
     }
 
     public void addItem(IGuiTreeViewItem item) {
         rootItems.add(item);
         resetIndexes();
+        sendCallback();
     }
 
     private int getIndexAsPos(int mouseX, int mouseY) {
@@ -163,7 +168,7 @@ public class GuiTreeView extends GuiButtonExt {
         GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x, this.y, 0, 46, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
         drawListItems(mc, x + 3, y + 3, rootItems);
 
-        if (selectedIndex >= 0) {
+        if (selectedIndex >= 0 & selectedIndex < getTotalItems(rootItems)) {
             drawRect(x + 2, y + 2 + selectedIndex * 10, x + width - 2, y + 2 + 10 * (selectedIndex + 1), 0x44FFFF00);
         }
 
@@ -200,6 +205,11 @@ public class GuiTreeView extends GuiButtonExt {
         return rootItems;
     }
 
+    public static interface IGuiTreeViewCallback {
+
+        public void onSelectionChange(GuiTreeView guiTreeView, IGuiTreeViewItem selectedItem);
+    }
+
     public static interface IGuiTreeViewItem<T> {
 
         public ArrayList<GuiTreeView.IGuiTreeViewItem> getSubItems();
@@ -233,6 +243,10 @@ public class GuiTreeView extends GuiButtonExt {
         private int colour = 0xFFFFFFFF;
 
         public GuiTreeViewItem(String name) {
+            this.name = name;
+        }
+        
+        public void setName(String name) {
             this.name = name;
         }
 
