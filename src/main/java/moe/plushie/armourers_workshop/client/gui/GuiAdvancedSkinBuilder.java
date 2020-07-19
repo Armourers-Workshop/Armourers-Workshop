@@ -25,6 +25,7 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiTreeView.IGuiTreeVi
 import moe.plushie.armourers_workshop.client.gui.controls.ModGuiContainer;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.AdvancedPartRenderer;
+import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
@@ -40,7 +41,10 @@ import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkin
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -443,18 +447,54 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         dropDownNoteSettings.drawForeground(mc, mouseX, mouseY, 0);
 
         GlStateManager.pushMatrix();
-
+        GlStateManager.pushAttrib();
         GlStateManager.translate(recSkinPreview.x + recSkinPreview.width / 2, recSkinPreview.y + recSkinPreview.height / 2, 500);
 
+        RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.disableNormalize();
+        GlStateManager.disableColorMaterial();
+        GlStateManager.enableNormalize();
+        GlStateManager.enableColorMaterial();
+        ModRenderHelper.enableAlphaBlend();
+        GlStateManager.enableDepth();
+        
         float scale = 50;
         GlStateManager.scale((-scale), scale, scale);
-
+        
+        GL11.glRotatef(-40, 1.0F, 0.0F, 0.0F);
         float rotation = (float) ((double) System.currentTimeMillis() / 10 % 360);
         GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
-
+        
+        mc.renderEngine.bindTexture(DefaultPlayerSkin.getDefaultSkinLegacy());
+        GlStateManager.pushMatrix();
+        
+        //GlStateManager.scale(16F / 1F, 1F, 1F);
+        ModelPlayer modelPlayer = new ModelPlayer(1, false);
+        modelPlayer.bipedHead.render(1F / 16F);
+        //ArmourerRenderHelper.renderBuildingGrid(skinType, 1F / 16F, true, new SkinProperties(), false);
+        GlStateManager.popMatrix();
+        
+        
         SkinRenderData renderData = new SkinRenderData(1F / 16F, null, null, 0, true, true, true, null);
         AdvancedPartRenderer.renderAdvancedSkin(this, renderData, null, null, convertTreeToAdvancedPartNode());
 
+        
+        ModRenderHelper.enableAlphaBlend();
+
+        
+        
+        GlStateManager.disablePolygonOffset();
+        GlStateManager.disableDepth();
+        
+        //ModRenderHelper.disableAlphaBlend();
+        GlStateManager.disableNormalize();
+        GlStateManager.disableColorMaterial();
+        
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.resetColor();
+        
+        GlStateManager.popAttrib();
         GlStateManager.popMatrix();
     }
 
@@ -507,7 +547,7 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
     @Override
     public SkinPart getAdvancedPart(int index) {
-        if (index == -1) {
+        if (index == 1) {
             return null;
         }
         Skin skin = null;
