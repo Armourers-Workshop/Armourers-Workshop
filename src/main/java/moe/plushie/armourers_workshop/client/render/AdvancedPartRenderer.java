@@ -46,7 +46,7 @@ public final class AdvancedPartRenderer {
 
     private static void renderParts(IAdvancedPartParent partParent, SkinRenderData renderData, Entity entity, AdvancedPartNode part) {
         GlStateManager.pushMatrix();
-        SkinPart skinPart = partParent.getAdvancedPart(0);
+        SkinPart skinPart = partParent.getAdvancedPart(part.partIndex);
         Vec3d pos = part.pos.add(part.posOffset);
         Vec3d rot = part.rotationAngle.add(part.rotationAngleOffset);
         float scale = renderData.getScale() * part.scale;
@@ -54,10 +54,17 @@ public final class AdvancedPartRenderer {
         GlStateManager.rotate((float) rot.x, 1, 0, 0);
         GlStateManager.rotate((float) rot.y, 0, 1, 0);
         GlStateManager.rotate((float) rot.z, 0, 0, 1);
-        renderPart(new SkinPartRenderData(skinPart, renderData));
-        for (int i = 0; i < part.getChildren().size(); i++) {
-            renderParts(partParent, renderData, entity, part.getChildren().get(i));
+        //GlStateManager.scale(scale, scale, scale);
+        //ModLogger.log(part.partIndex + "" +  skinPart);
+        if (part.enabled) {
+            if (skinPart != null) {
+                renderPart(new SkinPartRenderData(skinPart, renderData));
+            }
+            for (int i = 0; i < part.getChildren().size(); i++) {
+                renderParts(partParent, renderData, entity, part.getChildren().get(i));
+            }
         }
+
         GlStateManager.popMatrix();
     }
 

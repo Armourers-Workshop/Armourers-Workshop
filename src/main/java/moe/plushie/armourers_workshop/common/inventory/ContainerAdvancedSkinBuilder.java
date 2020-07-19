@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton.IButtonPress;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
@@ -26,7 +27,7 @@ public class ContainerAdvancedSkinBuilder extends ModTileContainer<TileEntityAdv
         super(invPlayer, tileEntity);
         addPlayerSlots(8, 40);
         for (int i = 0; i < tileEntity.getSizeInventory(); i++) {
-            //addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinPart, tileEntity, i, 108 + 18 * i, 5));
+            addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinPart, tileEntity, i, 108 + 18 * i, 5));
         }
     }
 

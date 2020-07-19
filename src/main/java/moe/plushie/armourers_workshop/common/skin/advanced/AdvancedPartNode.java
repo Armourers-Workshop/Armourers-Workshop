@@ -43,6 +43,36 @@ public class AdvancedPartNode {
     public void setRotationAngleOffset(double x, double y, double z) {
         this.rotationAngleOffset = new Vec3d(x, y, z);
     }
+    
+    
+
+
+    @Override
+    public String toString() {
+        return "AdvancedPartNode [children=" + children + ", partIndex=" + partIndex + ", name=" + name + ", isStatic=" + isStatic + ", enabled=" + enabled + ", scale=" + scale + ", mirror=" + mirror + ", pos=" + pos + ", posOffset=" + posOffset + ", rotationAngle=" + rotationAngle
+                + ", rotationAngleOffset=" + rotationAngleOffset + ", rotationPos=" + rotationPos + ", rotationPosOffset=" + rotationPosOffset + "]";
+    }
+
+    @Override
+    public AdvancedPartNode clone() {
+        AdvancedPartNode clone = new AdvancedPartNode(partIndex, name);
+        for (AdvancedPartNode child : children) {
+            clone.children.add(child.clone());
+        }
+        clone.isStatic = isStatic;
+        clone.enabled = enabled;
+        clone.scale = scale;
+        clone.mirror = mirror;
+        
+        clone.pos = pos;
+        clone.posOffset = posOffset;
+        clone.rotationAngle = rotationAngle;
+        clone.rotationAngleOffset = rotationAngleOffset;
+        clone.rotationPos = rotationPos;
+        clone.rotationPosOffset = rotationPosOffset;
+        return clone;
+    }
+
 
     public static class Serializer implements JsonSerializer<AdvancedPartNode>, JsonDeserializer<AdvancedPartNode> {
 
