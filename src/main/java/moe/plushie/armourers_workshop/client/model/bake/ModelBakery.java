@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
+import moe.plushie.armourers_workshop.client.skin.cache.FastCache;
 import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
@@ -129,6 +130,8 @@ public final class ModelBakery {
                 return new BakedSkin(skin, skinIdentifierRequested, skinIdentifierUpdated, skinReceiver);
             }
 
+            FastCache.INSTANCE.saveSkin(skin);
+
             long startTime = System.currentTimeMillis();
             skin.lightHash();
 
@@ -150,8 +153,8 @@ public final class ModelBakery {
 
                 SkinPart partData = skin.getParts().get(i);
                 partData.setClientSkinPartData(new ClientSkinPartData());
-                int[][][] cubeArray = SkinBaker.cullFacesOnEquipmentPart(partData, ConfigHandlerClient.modelBakingUpdateRate.get());
-                SkinBaker.buildPartDisplayListArray(partData, partDyeColour, partDyeUseCount, cubeArray, ConfigHandlerClient.modelBakingUpdateRate.get());
+                int[][][] cubeArray = SkinBaker.cullFacesOnEquipmentPart(partData);
+                SkinBaker.buildPartDisplayListArray(partData, partDyeColour, partDyeUseCount, cubeArray);
                 partData.clearCubeData();
 
                 int[] partAverageR = new int[extraDyes];
@@ -202,7 +205,8 @@ public final class ModelBakery {
 
             for (int i = 0; i < skin.getParts().size(); i++) {
                 SkinPart partData = skin.getParts().get(i);
-                // partData.getClientSkinPartData().setAverageDyeValues(averageR, averageG, averageB);
+                // partData.getClientSkinPartData().setAverageDyeValues(averageR, averageG,
+                // averageB);
             }
 
             skin.setAverageDyeValues(averageR, averageG, averageB);
@@ -216,6 +220,7 @@ public final class ModelBakery {
                 bakeTimesIndex.set(0);
             }
             bakeTimes.set(index, (int) totalTime);
+
             return new BakedSkin(skin, skinIdentifierRequested, skinIdentifierUpdated, skinReceiver);
         }
     }

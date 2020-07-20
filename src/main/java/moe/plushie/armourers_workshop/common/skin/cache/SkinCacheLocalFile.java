@@ -119,12 +119,10 @@ public class SkinCacheLocalFile {
 
     public ILibraryFile getBackward(int skinId) {
         synchronized (cacheMapLock) {
-            synchronized (cacheMapLock) {
-                if (cacheMapFileLink.getMapBackward().containsKey(skinId)) {
-                    return cacheMapFileLink.getBackward(skinId);
-                } else {
-                    return null;
-                }
+            if (cacheMapFileLink.getMapBackward().containsKey(skinId)) {
+                return cacheMapFileLink.getBackward(skinId);
+            } else {
+                return null;
             }
         }
     }

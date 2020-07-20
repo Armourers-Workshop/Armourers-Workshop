@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured
 import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
-import moe.plushie.armourers_workshop.common.SkinHelper;
+import moe.plushie.armourers_workshop.common.TextureHelper;
 import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
@@ -102,7 +102,7 @@ public class ColouredFace {
             b = dyedColour[2];
         } else if (type == PaintTypeRegistry.PAINT_TYPE_TEXTURE & renderData.getEntityTexture() != null & ClientProxy.getTexturePaintType() != TexturePaintType.TEXTURE_REPLACE) {
             if (renderData.getSkinPart().getPartType() instanceof ISkinPartTypeTextured) {
-                BufferedImage image = SkinHelper.getBufferedImageSkin(renderData.getEntityTexture());
+                BufferedImage image = TextureHelper.getBufferedImageSkin(renderData.getEntityTexture());
                 if (image != null) {
                     byte[] dyedColour = getColourFromTexture(x, y, z, r, g, b, face, image, (ISkinPartTypeTextured) renderData.getSkinPart().getPartType(), false);
                     r = dyedColour[0];

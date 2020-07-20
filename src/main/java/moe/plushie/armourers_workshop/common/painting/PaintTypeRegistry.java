@@ -36,6 +36,9 @@ public final class PaintTypeRegistry implements IPaintTypeRegistry {
 
     public static final PaintType PAINT_TYPE_FLICKER_1 = new PaintType(108, 18, "flicker_1").setTextureUV(4F, 0F);
     public static final PaintType PAINT_TYPE_FLICKER_2 = new PaintType(109, 19, "flicker_2").setTextureUV(5F, 0F);
+    
+    public static final PaintType PAINT_TYPE_FLASH_1 = new PaintType(110, 23, "flash_1").setTextureUV(6F, 0F);
+    public static final PaintType PAINT_TYPE_FLASH_2 = new PaintType(111, 24, "flash_2").setTextureUV(7F, 0F);
     // WATER(100), LAVA(101), SKY(102), STAR_FIELD(103),
 
     public static final PaintType PAINT_TYPE_SKIN = new PaintType(253, 10, true, "skin").setExtraColourType(ExtraColourType.SKIN);

@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.command;
+package moe.plushie.armourers_workshop.common.command.wardrobe;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import moe.plushie.armourers_workshop.api.common.IExtraColours.ExtraColourType;
 import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
+import moe.plushie.armourers_workshop.common.command.ModCommand;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -20,7 +21,7 @@ import net.minecraft.util.math.BlockPos;
 public class CommandWardrobeSetColour extends ModCommand {
 
     public CommandWardrobeSetColour(ModCommand parent) {
-        super(parent, "setColour");
+        super(parent, "set_colour");
     }
 
     @Override
@@ -38,6 +39,7 @@ public class CommandWardrobeSetColour extends ModCommand {
         return super.getTabCompletions(server, sender, args, targetPos);
     }
 
+    // Arguments 3 - <player> <extra colour type> <dye>
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length != getParentCount() + 3) {

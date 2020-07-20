@@ -21,8 +21,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Skin implements ISkin {
 
-    public static final String KEY_FILE_NAME = "fileName";
-
     private SkinProperties properties;
     private ISkinType skinType;
     private int[] paintData;
@@ -310,6 +308,6 @@ public class Skin implements ISkin {
 
     public AdvancedPart getAdvancedPart(int index) {
         // TODO Auto-generated method stub
-        return null;
+        return new AdvancedPart(0, "");
     }
 }

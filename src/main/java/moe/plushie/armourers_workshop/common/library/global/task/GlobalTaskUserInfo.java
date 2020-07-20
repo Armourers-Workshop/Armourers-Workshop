@@ -28,6 +28,7 @@ public class GlobalTaskUserInfo extends GlobalTask<PlushieUser> {
         PlushieUser plushieUser = PlushieUser.readPlushieUser(json);
         if (plushieUser == null) {
             ModLogger.log(Level.ERROR, "Failed downloading info for user id: " + userID);
+            throw new Exception("Remote user check error.\n\n" + json.toString());
         }
         return plushieUser;
     }

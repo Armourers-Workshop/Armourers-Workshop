@@ -30,7 +30,7 @@ import net.minecraft.util.math.BlockPos;
 public class CommandGiveSkin extends ModCommand {
 
     public CommandGiveSkin(ModCommand parent) {
-        super(parent, "giveSkin");
+        super(parent, "give_skin");
     }
 
     @Override

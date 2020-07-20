@@ -33,15 +33,13 @@ public final class SkinBaker {
         return true;
     }
     
-    public static int[][][] cullFacesOnEquipmentPart(SkinPart skinPart, int modelBakingUpdateRate) {
+    public static int[][][] cullFacesOnEquipmentPart(SkinPart skinPart) {
         SkinCubeData cubeData = skinPart.getCubeData();
         cubeData.setupFaceFlags();
         skinPart.getClientSkinPartData().totalCubesInPart = new int[CubeRegistry.INSTANCE.getTotalCubes()];
         
         Rectangle3D pb = skinPart.getPartBounds();
         int[][][] cubeArray = new int[pb.getWidth()][pb.getHeight()][pb.getDepth()];
-        
-        int updates = 0;
         
         for (int i = 0; i < cubeData.getCubeCount(); i++) {
             int cubeId = cubeData.getCubeId(i);
@@ -51,17 +49,6 @@ public final class SkinBaker {
             int y = cubeLoc[1] - pb.getY();
             int z = cubeLoc[2] - pb.getZ();
             cubeArray[x][y][z] = i + 1;
-            if (ConfigHandlerClient.slowModelBaking) {
-                updates++;
-                if (updates > modelBakingUpdateRate) {
-                    try {
-                        Thread.sleep(1);
-                        updates = 0;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
         }
 
         ArrayDeque<Vec3i> openList = new ArrayDeque<Vec3i>();
@@ -79,17 +66,6 @@ public final class SkinBaker {
                     closedSet.add(foundLocation);
                     if (isCubeInSearchArea(foundLocation, pb)) {
                         openList.add(foundLocation);
-                    }
-                }
-            }
-            if (ConfigHandlerClient.slowModelBaking) {
-                updates++;
-                if (updates > modelBakingUpdateRate) {
-                    try {
-                        Thread.sleep(1);
-                        updates = 0;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
             }
@@ -172,7 +148,7 @@ public final class SkinBaker {
         return false;
     }
     
-    public static void buildPartDisplayListArray(SkinPart partData, int[][] dyeColour, int[] dyeUseCount, int[][][] cubeArray, int modelBakingUpdateRate) {
+    public static void buildPartDisplayListArray(SkinPart partData, int[][] dyeColour, int[] dyeUseCount, int[][][] cubeArray) {
         boolean multipassSkinRendering = ClientProxy.useMultipassSkinRendering();
         
         ArrayList<ColouredFace>[] renderLists;

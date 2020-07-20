@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.command;
+package moe.plushie.armourers_workshop.common.command.wardrobe;
 
 import java.awt.Color;
 import java.util.List;
@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Level;
 import moe.plushie.armourers_workshop.api.common.capability.IEntitySkinCapability;
 import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
+import moe.plushie.armourers_workshop.common.command.ModCommand;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
@@ -26,36 +27,37 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-public class CommandSetSkin extends ModCommand {
+public class CommandWardrobeSetSkin extends ModCommand {
 
-    public CommandSetSkin(ModCommand parent) {
-        super(parent, "setSkin");
+    public CommandWardrobeSetSkin(ModCommand parent) {
+        super(parent, "set_skin");
     }
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos targetPos) {
-        if (args.length == 2) {
+        if (args.length == getParentCount() + 1) {
             return getListOfStringsMatchingLastWord(args, getPlayers(server));
         }
-        return null;
+        return super.getTabCompletions(server, sender, args, targetPos);
     }
 
+    // Arguments 3-4 - <player> <slot id> <"skin name"> [dye]
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (args.length < 3) {
+        if (args.length <= getParentCount() + 3) {
             throw new WrongUsageException(getUsage(sender), (Object) args);
         }
 
-        String playerName = args[1];
+        String playerName = args[getParentCount()];
         EntityPlayerMP player = getPlayer(server, sender, playerName);
         if (player == null) {
             return;
         }
 
         int slotNum = 0;
-        slotNum = parseInt(args[2], 1, 8);
+        slotNum = parseInt(args[getParentCount() + 1], 1, 10);
 
-        String skinName = args[3];
+        String skinName = args[getParentCount() + 2];
         if (!skinName.substring(0, 1).equals("\"")) {
             throw new WrongUsageException(getUsage(sender), (Object) skinName);
         }
@@ -63,7 +65,7 @@ public class CommandSetSkin extends ModCommand {
         int usedCommands = 3;
 
         if (!skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
-            for (int i = 4; i < args.length; i++) {
+            for (int i = getParentCount() + 3; i < args.length; i++) {
                 skinName += " " + args[i];
                 if (skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
                     usedCommands = i;

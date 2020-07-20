@@ -28,7 +28,7 @@ public final class AdvancedPartRenderer {
         fullAngle *= angle;
         int owo = depth % 2;
         if (owo == 1) {
-            //fullAngle = -fullAngle;
+            // fullAngle = -fullAngle;
         }
         double x = 0;
         if (entity != null) {
@@ -49,7 +49,8 @@ public final class AdvancedPartRenderer {
         SkinPart skinPart = skin.getParts().get(0);
         Vec3d pos = part.pos.add(part.posOffset);
         Vec3d rot = part.rotationAngle.add(part.rotationAngleOffset);
-        GlStateManager.translate(pos.x * renderData.getScale(), pos.y * renderData.getScale(), pos.z * renderData.getScale());
+        float scale = renderData.getScale() * part.scale;
+        GlStateManager.translate(pos.x * scale, pos.y * scale, pos.z * scale);
         GlStateManager.rotate((float) rot.x, 1, 0, 0);
         GlStateManager.rotate((float) rot.y, 0, 1, 0);
         GlStateManager.rotate((float) rot.z, 0, 0, 1);
@@ -57,7 +58,6 @@ public final class AdvancedPartRenderer {
         for (int i = 0; i < part.getChildren().size(); i++) {
             renderParts(skin, renderData, entity, part.getChildren().get(i));
         }
-        
         GlStateManager.popMatrix();
     }
 

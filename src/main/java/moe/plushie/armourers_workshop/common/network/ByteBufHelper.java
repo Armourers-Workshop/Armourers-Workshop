@@ -143,7 +143,7 @@ public final class ByteBufHelper {
         return skin;
     }
 
-    private static byte[] compressedByteArray(byte[] data) {
+    public static byte[] compressedByteArray(byte[] data) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         GZIPOutputStream gzos = null;
 
@@ -170,7 +170,7 @@ public final class ByteBufHelper {
         return compressedData;
     }
 
-    private static byte[] decompressByteArray(byte[] compressedData) {
+    public static byte[] decompressByteArray(byte[] compressedData) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         GZIPInputStream gzis = null;
 

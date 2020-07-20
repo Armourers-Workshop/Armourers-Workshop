@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.client.model.bake.ColouredFace;
-import moe.plushie.armourers_workshop.common.SkinHelper;
+import moe.plushie.armourers_workshop.common.TextureHelper;
 import moe.plushie.armourers_workshop.common.capability.entityskin.EntitySkinCapability;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
@@ -91,7 +91,7 @@ public class EntityTextureInfo {
 
     public void updateTexture(ResourceLocation resourceLocation) {
         if (lastEntityTextureHash != resourceLocation.hashCode()) {
-            BufferedImage buff = SkinHelper.getBufferedImageSkin(resourceLocation);
+            BufferedImage buff = TextureHelper.getBufferedImageSkin(resourceLocation);
             bufferedEntityImage = null;
             if (buff != null) {
                 loading = false;
@@ -105,7 +105,7 @@ public class EntityTextureInfo {
         if (bufferedEntityImage == null) {
             // Texture is most likely not downloaded yet.
             lastEntityTextureHash = DefaultPlayerSkin.getDefaultSkinLegacy().hashCode();
-            bufferedEntityImage = SkinHelper.getBufferedImageSkin(DefaultPlayerSkin.getDefaultSkinLegacy());
+            bufferedEntityImage = TextureHelper.getBufferedImageSkin(DefaultPlayerSkin.getDefaultSkinLegacy());
             if (bufferedEntityImage != null & !loading) {
                 loading = true;
                 needsUpdate = true;
@@ -169,7 +169,7 @@ public class EntityTextureInfo {
     }
 
     private void applyPlayerToTexture() {
-        bufferedEntitySkinnedImage = SkinHelper.deepCopyBufferedImage(bufferedEntityImage);
+        bufferedEntitySkinnedImage = TextureHelper.deepCopyBufferedImage(bufferedEntityImage);
     }
 
     private void applySkinsToTexture() {

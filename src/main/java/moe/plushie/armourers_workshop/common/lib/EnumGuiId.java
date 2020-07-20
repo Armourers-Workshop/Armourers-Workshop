@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.common.lib;
 
 public enum EnumGuiId {
-    
+
     COLOUR_MIXER,
     ARMOURER,
     GUIDE_BOOK(false),
@@ -19,19 +19,18 @@ public enum EnumGuiId {
     SKINNABLE,
     HOLOGRAM_PROJECTOR,
     OUTFIT_MAKER,
-    ADVANCED_SKIN_BUILDER,
-    ADVANCED_SKIN_PART;
-    
+    ADVANCED_SKIN_BUILDER;
+
     private final boolean tile;
-    
+
     private EnumGuiId() {
         this(true);
     }
-    
+
     private EnumGuiId(boolean tile) {
         this.tile = tile;
     }
-    
+
     public boolean isTile() {
         return tile;
     }

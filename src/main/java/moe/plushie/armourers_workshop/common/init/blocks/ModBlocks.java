@@ -53,7 +53,6 @@ public class ModBlocks {
     public static final Block HOLOGRAM_PROJECTOR = new BlockHologramProjector();
     public static final Block OUTFIT_MAKER = new BlockOutfitMaker();
     public static final Block ADVANCED_SKIN_BUILDER = new BlockAdvancedSkinBuilder();
-    // public static final Block ADVANCED_SKIN_PART = new BlockAdvancedSkinPart();
 
     public ModBlocks() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -93,7 +92,6 @@ public class ModBlocks {
         registerTileEntity(TileEntityHologramProjector.class, LibBlockNames.HOLOGRAM_PROJECTOR);
         registerTileEntity(TileEntityOutfitMaker.class, LibBlockNames.OUTFIT_MAKER);
         registerTileEntity(TileEntityAdvancedSkinBuilder.class, LibBlockNames.ADVANCED_SKIN_BUILDER);
-        // registerTileEntity(TileEntityAdvancedSkinPart.class, LibBlockNames.ADVANCED_SKIN_PART);
     }
 
     private void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {
