@@ -106,7 +106,7 @@ public final class SkinIOUtils {
             ModLogger.log(Level.ERROR, "Unable to load skin. Unknown error.");
             e.printStackTrace();
         }
-        
+
         if (skin == null) {
             skin = loadSkinRecovery(file);
             if (skin != null) {
@@ -135,25 +135,25 @@ public final class SkinIOUtils {
             ModLogger.log(Level.ERROR, "Unable to load skin. Unknown error.");
             e.printStackTrace();
         }
-        
+
         return skin;
     }
-    
+
     private static Skin loadSkinRecovery(File file) {
         Skin skin = null;
         try {
-            byte[] fileBytes= Files.readAllBytes(file.toPath());
-            ArrayList<Integer> indexes=new ArrayList<>();
-            for(int i=0;i<fileBytes.length;i++){
-                if(fileBytes[i]==0x0A&&fileBytes[i-1]!=0){
-                    indexes.add(i-1);
+            byte[] fileBytes = Files.readAllBytes(file.toPath());
+            ArrayList<Integer> indexes = new ArrayList<>();
+            for (int i = 0; i < fileBytes.length; i++) {
+                if (fileBytes[i] == 0x0A && fileBytes[i - 1] != 0) {
+                    indexes.add(i - 1);
                 }
             }
-            byte[] newFile=new byte[fileBytes.length-indexes.size()];
-            int newFileIndex=0;
-            for(int i=0;i<fileBytes.length;i++){
-                if(!isInArrayList(i, indexes)){
-                    newFile[newFileIndex]=fileBytes[i];
+            byte[] newFile = new byte[fileBytes.length - indexes.size()];
+            int newFileIndex = 0;
+            for (int i = 0; i < fileBytes.length; i++) {
+                if (!isInArrayList(i, indexes)) {
+                    newFile[newFileIndex] = fileBytes[i];
                     newFileIndex++;
                 }
             }
@@ -164,10 +164,10 @@ public final class SkinIOUtils {
         }
         return skin;
     }
-    
+
     private static boolean isInArrayList(int index, ArrayList<Integer> list) {
-        for(int j=0;j<list.size();j++){
-            if(index==list.get(j)){
+        for (int j = 0; j < list.size(); j++) {
+            if (index == list.get(j)) {
                 return true;
             }
         }
@@ -196,7 +196,7 @@ public final class SkinIOUtils {
         } finally {
             IOUtils.closeQuietly(stream);
         }
-        
+
         if (skinType == null) {
             Skin skin = loadSkinRecovery(file);
             if (skin != null) {
@@ -391,17 +391,15 @@ public final class SkinIOUtils {
     }
 
     public static String makeFileNameValid(String fileName) {
-        fileName = fileName.replace("\\", "/");
-        fileName = fileName.replace("/", "_");
-        fileName = fileName.replace(":", "_");
-        return fileName; // fileName.fileName.replaceAll("[^a-zA-Z0-9_()'`+& \\-\\.]", "_");
+        fileName = fileName.replaceAll("[<>:\"/\\\\|?*]", "_");
+        return fileName;
     }
 
     public static String makeFilePathValid(String filePath) {
         filePath = filePath.replace("\\", "/");
         filePath = filePath.replace("../", "_");
-        filePath = filePath.replace(":", "_");
-        return filePath; // filePath.replaceAll("[^a-zA-Z0-9_()'`+&/ \\-\\.]", "_");
+        filePath = filePath.replaceAll("[<>:\"|?*]", "_");
+        return filePath;
     }
 
     public static boolean isInLibraryDir(File file) {
