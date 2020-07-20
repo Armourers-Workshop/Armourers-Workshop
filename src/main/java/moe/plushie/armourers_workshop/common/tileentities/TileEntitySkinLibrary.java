@@ -94,7 +94,7 @@ public class TileEntitySkinLibrary extends AbstractTileEntityInventory implement
         if (!publicFiles) {
             // filePath = "/private/" + player.getUniqueID().toString() + filePath;
         }
-        // ModLogger.log("save");
+
         Skin skin = CommonSkinCache.INSTANCE.getSkin(skinPointer);
         if (skin == null) {
             ModLogger.log("no input");
