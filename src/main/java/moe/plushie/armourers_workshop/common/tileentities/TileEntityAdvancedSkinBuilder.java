@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.common.tileentities;
 
 import java.util.ArrayList;
 
-import moe.plushie.armourers_workshop.client.gui.GuiAdvancedSkinBuilder;
+import moe.plushie.armourers_workshop.client.gui.advanced_skin_builder.GuiAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;

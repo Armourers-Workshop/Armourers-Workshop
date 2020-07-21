@@ -48,6 +48,13 @@ public abstract class GuiPanel extends Gui {
     public void initGui() {
     }
     
+    public void updateSizeAndPos(int x, int y, int width, int height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+    
     public GuiPanel setPosition(int x, int y) {
         this.x = x;
         this.y = y;
@@ -119,6 +126,9 @@ public abstract class GuiPanel extends Gui {
     }
     
     protected void actionPerformed(GuiButton button) {}
+    
+    public void mouseDrag(int mouseX, int mouseY, int lastButtonClicked, long timeSinceMouseClick) {
+    }
     
     public void mouseMovedOrUp(int mouseX, int mouseY, int button) {
         if (!this.enabled | !this.visible) {

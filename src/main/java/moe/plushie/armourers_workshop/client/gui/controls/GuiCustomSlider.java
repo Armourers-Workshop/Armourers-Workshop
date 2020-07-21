@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.client.gui.controls;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
@@ -34,8 +33,7 @@ public class GuiCustomSlider extends GuiSlider {
                     lastValue = sliderValue;
                 }
             }
-
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.color(1F, 1F, 1F, 1F);
             if (fineTuneButtons) {
                 boolean overLeft = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + 9 && mouseY < this.y + this.height;
                 int k = 1;
@@ -57,9 +55,9 @@ public class GuiCustomSlider extends GuiSlider {
                 k = 2;
             }
             if (fineTuneButtons) {
-                GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x + 10 + (int)(this.sliderValue * (float)(this.width - 8 - 20)), this.y, 0, 46 + k * 20, 8, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
+                GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x + 10 + (int)(this.sliderValue * (this.width - 8 - 20)), this.y, 0, 46 + k * 20, 8, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
             } else {
-                GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x + (int)(this.sliderValue * (float)(this.width - 8)), this.y, 0, 46 + k * 20, 8, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
+                GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x + (int)(this.sliderValue * (this.width - 8)), this.y, 0, 46 + k * 20, 8, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
             }
         }
     }
@@ -113,6 +111,7 @@ public class GuiCustomSlider extends GuiSlider {
         if (!visible) {
             return;
         }
+        
         this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
         int k = this.getHoverState(this.hovered);
         if (fineTuneButtons) {
@@ -120,6 +119,7 @@ public class GuiCustomSlider extends GuiSlider {
         } else {
             GuiUtils.drawContinuousTexturedBox(BUTTON_TEXTURES, this.x, this.y, 0, 46 + k * 20, this.width, this.height, 200, 20, 2, 3, 2, 2, this.zLevel);
         }
+
         this.mouseDragged(minecraft, mouseX, mouseY);
         int color = 14737632;
         

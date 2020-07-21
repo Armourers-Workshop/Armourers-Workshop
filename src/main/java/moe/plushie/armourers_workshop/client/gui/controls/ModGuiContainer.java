@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.client.gui.controls;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.ModContainer;
@@ -17,11 +18,13 @@ public abstract class ModGuiContainer<CONTAINER_TYPE extends ModContainer> exten
     protected static final ResourceLocation TEXTURE_TAB_ICONS = new ResourceLocation(LibGuiResources.CONTROL_TAB_ICONS);
 
     protected AbstractGuiDialog dialog;
+    public ArrayList<GuiPanel> panelList;
     int oldMouseX;
     int oldMouseY;
 
     public ModGuiContainer(CONTAINER_TYPE container) {
         super(container);
+        this.panelList = new ArrayList<GuiPanel>();
     }
 
     @Override
@@ -59,6 +62,9 @@ public abstract class ModGuiContainer<CONTAINER_TYPE extends ModContainer> exten
         if (isDialogOpen()) {
             dialog.mouseClicked(mouseX, mouseY, button);
         } else {
+            for (GuiPanel panel : panelList) {
+                panel.mouseClicked(mouseX, mouseY, button);
+            }
             super.mouseClicked(mouseX, mouseY, button);
         }
     }
@@ -68,6 +74,9 @@ public abstract class ModGuiContainer<CONTAINER_TYPE extends ModContainer> exten
         if (isDialogOpen()) {
             dialog.mouseClickMove(mouseX, mouseY, lastButtonClicked, timeSinceMouseClick);
         } else {
+            for (GuiPanel panel : panelList) {
+                panel.mouseDrag(mouseX, mouseY, lastButtonClicked, timeSinceMouseClick);
+            }
             super.mouseClickMove(mouseX, mouseY, lastButtonClicked, timeSinceMouseClick);
         }
     }
@@ -77,6 +86,9 @@ public abstract class ModGuiContainer<CONTAINER_TYPE extends ModContainer> exten
         if (isDialogOpen()) {
             dialog.mouseMovedOrUp(mouseX, mouseY, state);
         } else {
+            for (GuiPanel panel : panelList) {
+                panel.mouseMovedOrUp(mouseX, mouseY, state);
+            }
             super.mouseReleased(mouseX, mouseY, state);
         }
     }
@@ -86,8 +98,29 @@ public abstract class ModGuiContainer<CONTAINER_TYPE extends ModContainer> exten
         if (isDialogOpen()) {
             dialog.keyTyped(c, keycode);
         } else {
-            super.keyTyped(c, keycode);
+            boolean keyTyped = false;
+            for (GuiPanel panel : panelList) {
+                if (panel.keyTyped(c, keycode)) {
+                    keyTyped = true;
+                    break;
+                }
+            }
+            if (!keyTyped) {
+                super.keyTyped(c, keycode);
+            }
         }
+    }
+    
+    @Override
+    public void updateScreen() {
+        if (isDialogOpen()) {
+            dialog.update();
+        } else {
+            for (GuiPanel panel : panelList) {
+                panel.update();
+            }
+        }
+        super.updateScreen();
     }
 
     @Override

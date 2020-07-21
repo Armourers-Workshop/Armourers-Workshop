@@ -49,11 +49,15 @@ public final class AdvancedPartRenderer {
         SkinPart skinPart = partParent.getAdvancedPart(part.partIndex);
         Vec3d pos = part.pos.add(part.posOffset);
         Vec3d rot = part.rotationAngle.add(part.rotationAngleOffset);
-        float scale = renderData.getScale() * part.scale;
-        GlStateManager.translate(pos.x * scale, pos.y * scale, pos.z * scale);
+        
+        float scale = 1F;
+        
+        GlStateManager.scale(scale, -scale, scale);
+        GlStateManager.translate(pos.x * renderData.getScale(), pos.y * renderData.getScale(), pos.z * renderData.getScale());
         GlStateManager.rotate((float) rot.x, 1, 0, 0);
-        GlStateManager.rotate((float) rot.y, 0, 1, 0);
+        GlStateManager.rotate((float) rot.y , 0, 1, 0);
         GlStateManager.rotate((float) rot.z, 0, 0, 1);
+        GlStateManager.scale(1, -1, 1);
         //GlStateManager.scale(scale, scale, scale);
         //ModLogger.log(part.partIndex + "" +  skinPart);
         if (part.enabled) {

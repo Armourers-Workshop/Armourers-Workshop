@@ -43,9 +43,6 @@ public class AdvancedPartNode {
     public void setRotationAngleOffset(double x, double y, double z) {
         this.rotationAngleOffset = new Vec3d(x, y, z);
     }
-    
-    
-
 
     @Override
     public String toString() {

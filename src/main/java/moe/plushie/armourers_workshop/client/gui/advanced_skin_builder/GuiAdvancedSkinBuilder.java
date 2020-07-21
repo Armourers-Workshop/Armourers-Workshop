@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.client.gui;
+package moe.plushie.armourers_workshop.client.gui.advanced_skin_builder;
 
 import java.awt.Rectangle;
 import java.io.IOException;
@@ -10,14 +10,13 @@ import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
+import moe.plushie.armourers_workshop.client.gui.advanced_skin_builder.panel.GuiAdvancedSkinBuilderPanelSettings;
 import moe.plushie.armourers_workshop.client.gui.armourer.tab.GuiTabArmourerMain.DropDownItemSkin;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.DropDownListItem;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiTextFieldCustom;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTreeView;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTreeView.GuiTreeViewItem;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTreeView.IGuiTreeViewCallback;
@@ -49,21 +48,21 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.client.config.GuiSlider;
-import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSkinBuilder> implements ISlider, IDropDownListCallback, IGuiTreeViewCallback, IAdvancedPartParent {
+public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSkinBuilder> implements IDropDownListCallback, IGuiTreeViewCallback, IAdvancedPartParent {
+
+    public static final int PADDING = 2;
 
     private static final ResourceLocation TEXTURE_BUTTONS = new ResourceLocation(LibGuiResources.CONTROL_BUTTONS);
-    private static final int PADDING = 2;
     private static final int INVENTORY_HEIGHT = 76;
     private static final int INVENTORY_WIDTH = 162;
 
     private final TileEntityAdvancedSkinBuilder tileEntity;
+
+    public GuiAdvancedSkinBuilderPanelSettings panelSettings;
 
     private ISkinType skinType = null;
 
@@ -80,15 +79,6 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
     // Node Options
     private GuiDropDownList dropDownNoteSettings;
-
-    // Settings
-    private GuiTextFieldCustom textSetting;
-    private ISkinIdentifier identifierSetting;
-    private GuiCheckBox checkBoxSetting;
-    private GuiCustomSlider sliderSetting;
-    private GuiCustomSlider sliderSettingX;
-    private GuiCustomSlider sliderSettingY;
-    private GuiCustomSlider sliderSettingZ;
 
     // Preview
     private GuiDropDownList dropDownSkinType;
@@ -135,21 +125,8 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         buttonList.add(dropDownNoteSettings);
 
         // Settings
-        textSetting = new GuiTextFieldCustom(recSetting.x + PADDING, recSetting.y + PADDING + 10, 100, 16);
-        
-        checkBoxSetting = new GuiCheckBox(0, recSetting.x + PADDING, recSetting.y + PADDING + 10, "", false);
-        checkBoxSetting.setTextColour(0xFFFFFFFF);
-        buttonList.add(checkBoxSetting);
-        int sliderPosX = recSetting.x + PADDING;
-        int sliderPosY = recSetting.y + PADDING + 10;
-        sliderSetting = new GuiCustomSlider(0, sliderPosX, sliderPosY, 100, 10, "Scale:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-        sliderSettingX = new GuiCustomSlider(0, sliderPosX, sliderPosY, 100, 10, "X:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-        sliderSettingY = new GuiCustomSlider(0, sliderPosX, sliderPosY + 15, 100, 10, "Y:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-        sliderSettingZ = new GuiCustomSlider(0, sliderPosX, sliderPosY + 30, 100, 10, "Z:", "", -64, 64, 0, false, true, this).setFineTuneButtons(true);
-        buttonList.add(sliderSetting);
-        buttonList.add(sliderSettingX);
-        buttonList.add(sliderSettingY);
-        buttonList.add(sliderSettingZ);
+        panelSettings = new GuiAdvancedSkinBuilderPanelSettings(this, recSetting.x, recSetting.y, recSetting.width, recSetting.height);
+        panelList.add(panelSettings);
 
         // setPlayerSlotVisible(false);
         movePlayerInventorySlots(width - INVENTORY_WIDTH - PADDING, height - INVENTORY_HEIGHT - PADDING);
@@ -174,33 +151,17 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
                 skinCount++;
             }
         }
+
+        for (int i = 0; i < panelList.size(); i++) {
+            panelList.get(i).initGui();
+        }
+
         updateActiveSkinType();
         buttonList.add(dropDownSkinType);
 
         updateSetting();
     }
 
-    @Override
-    public void updateScreen() {
-        textSetting.updateCursorCounter();
-        super.updateScreen();
-    }
-
-    @Override
-    protected void keyTyped(char c, int keycode) throws IOException {
-        if (textSetting.keyTyped(c, keycode)) {
-            applySetting();
-        }
-        super.keyTyped(c, keycode);
-    }
-
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
-        textSetting.mouseClicked(mouseX, mouseY, button);
-        // TODO Auto-generated method stub
-        super.mouseClicked(mouseX, mouseY, button);
-    }
-    
     private void updateSettingsDropDown() {
         dropDownNoteSettings.clearList();
         GuiTreeView.IGuiTreeViewItem treeViewItem = treeView.getSelectedItem();
@@ -250,32 +211,6 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         }
     }
 
-    private void updatePropertiesForPart(AdvancedPartNode advancedPartNode) {
-        if (advancedPartNode != null) {
-            updateSliders(advancedPartNode.pos);
-        } else {
-            updateSliders(0D, 0D, 0D);
-        }
-    }
-
-    private void updateSliders(Vec3d vec3d) {
-        updateSliders(vec3d.x, vec3d.y, vec3d.z);
-    }
-
-    private void updateSliders(double x, double y, double z) {
-        sliderSettingX.visible = true;
-        sliderSettingY.visible = true;
-        sliderSettingZ.visible = true;
-
-        sliderSettingX.setValue(x);
-        sliderSettingY.setValue(y);
-        sliderSettingZ.setValue(z);
-
-        sliderSettingX.updateSlider();
-        sliderSettingY.updateSlider();
-        sliderSettingZ.updateSlider();
-    }
-
     private void updateActiveSkinType() {
         skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(dropDownSkinType.getListSelectedItem().tag);
         treeView.getItems().clear();
@@ -286,14 +221,7 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
                 GuiTreeViewPartNote treeViewPartNote = new GuiTreeViewPartNote("root - " + partName);
                 treeViewPartNote.setLocked(true);
                 treeViewPartNote.setColour(0xFFCCCCFF);
-
-                for (int j = 0; j < 2; j++) {
-                    GuiTreeViewPartNote sub1 = new GuiTreeViewPartNote(partName + " sub " + (j + 1));
-                    for (int z = 0; z < 2; z++) {
-                        sub1.getSubItems().add(new GuiTreeViewPartNote("deep " + (z + 1)));
-                    }
-                    //treeViewPartNote.getSubItems().add(sub1);
-                }
+                treeViewPartNote.getAdvancedPartNode().partIndex = -1;
                 treeView.addItem(treeViewPartNote);
             }
             GuiTreeViewPartNote treeViewPartFree = new GuiTreeViewPartNote("root - Float");
@@ -317,95 +245,23 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         if (treeViewItem != null && treeViewItem instanceof GuiTreeViewPartNote) {
             treeViewPartNote = (GuiTreeViewPartNote) treeViewItem;
         }
-
-        textSetting.visible = false;
-        identifierSetting = null;
-        checkBoxSetting.visible = false;
-        sliderSetting.visible = false;
-        sliderSettingX.visible = false;
-        sliderSettingY.visible = false;
-        sliderSettingZ.visible = false;
-
-        if (nodeSetting == null | treeViewPartNote == null) {
-            return;
-        }
-
-        switch (nodeSetting) {
-        case NAME:
-            textSetting.visible = true;
-            break;
-        case SKIN:
-            identifierSetting = treeViewPartNote.getSkinIdentifier();
-            break;
-        case ENABLED:
-            checkBoxSetting.visible = true;
-            checkBoxSetting.displayString = "Enabled?";
-            checkBoxSetting.setIsChecked(treeViewPartNote.getAdvancedPartNode().enabled);
-            break;
-        case SCALE:
-            sliderSetting.visible = true;
-            sliderSetting.setValue(treeViewPartNote.getAdvancedPartNode().scale);
-            sliderSetting.updateSlider();
-            break;
-        case MIRROR:
-            checkBoxSetting.visible = true;
-            checkBoxSetting.displayString = "Mirror?";
-            checkBoxSetting.setIsChecked(treeViewPartNote.getAdvancedPartNode().mirror);
-            break;
-        case POSITION:
-            updateSliders(treeViewPartNote.getAdvancedPartNode().pos);
-            break;
-        case ROTATION:
-            updateSliders(treeViewPartNote.getAdvancedPartNode().rotationAngle);
-            break;
-        case ROTATION_POSITION:
-            updateSliders(treeViewPartNote.getAdvancedPartNode().rotationPos);
-            break;
-        }
+        panelSettings.updateSetting(nodeSetting, treeViewPartNote);
     }
 
-    private void applySetting() {
+    public void applySetting() {
         PartNodeSetting nodeSetting = getActiveSetting();
         GuiTreeViewPartNote treeViewPartNote = null;
         GuiTreeView.IGuiTreeViewItem treeViewItem = treeView.getSelectedItem();
         if (treeViewItem != null && treeViewItem instanceof GuiTreeViewPartNote) {
             treeViewPartNote = (GuiTreeViewPartNote) treeViewItem;
         }
-
-        if (nodeSetting == null | treeViewPartNote == null) {
-            return;
-        }
-
-        switch (nodeSetting) {
-        case NAME:
-            treeViewPartNote.setName(textSetting.getText());
-            break;
-        case SKIN:
-            break;
-        case ENABLED:
-            treeViewPartNote.getAdvancedPartNode().enabled = checkBoxSetting.isChecked();
-            break;
-        case SCALE:
-            treeViewPartNote.getAdvancedPartNode().scale = sliderSetting.getValueInt();
-            break;
-        case MIRROR:
-            treeViewPartNote.getAdvancedPartNode().mirror = checkBoxSetting.isChecked();
-            break;
-        case POSITION:
-            treeViewPartNote.getAdvancedPartNode().pos = new Vec3d(sliderSettingX.getValueInt(), sliderSettingY.getValueInt(), sliderSettingZ.getValueInt());
-            break;
-        case ROTATION:
-            treeViewPartNote.getAdvancedPartNode().rotationAngle = new Vec3d(sliderSettingX.getValueInt(), sliderSettingY.getValueInt(), sliderSettingZ.getValueInt());
-            break;
-        case ROTATION_POSITION:
-            treeViewPartNote.getAdvancedPartNode().rotationPos = new Vec3d(sliderSettingX.getValueInt(), sliderSettingY.getValueInt(), sliderSettingZ.getValueInt());
-            break;
-        }
+        panelSettings.applySetting(nodeSetting, treeViewPartNote);
     }
 
     private AdvancedPartNode convertTreeToAdvancedPartNode() {
         AdvancedPartNode partNode = new AdvancedPartNode(-1, "main root");
         convertTreeToAdvancedPartNode(partNode, treeView.getItems());
+        //ModLogger.log(partNode);
         return partNode;
     }
 
@@ -413,7 +269,6 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         for (GuiTreeView.IGuiTreeViewItem treeViewItem : treeViewItems) {
             GuiTreeViewPartNote partNote = (GuiTreeViewPartNote) treeViewItem;
             AdvancedPartNode node = partNote.getAdvancedPartNode().clone();
-            
             advancedPartNode.getChildren().add(node);
             convertTreeToAdvancedPartNode(node, treeViewItem.getSubItems());
 
@@ -433,12 +288,29 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         for (Rectangle rec : recLayout) {
             drawRect(rec.x, rec.y, rec.x + rec.width, rec.y + rec.height, 0x44808080);
         }
-        textSetting.drawButton(mc, mouseX, mouseY, partialTicks);
+
         fontRenderer.drawString("Tree View:", recTreeView.x + PADDING, recTreeView.y + PADDING, 0xCCFFFFFF);
         fontRenderer.drawString("Node Options:", recNoteProp.x + PADDING, recNoteProp.y + PADDING, 0xCCFFFFFF);
-        fontRenderer.drawString("Settings:", recSetting.x + PADDING, recSetting.y + PADDING, 0xCCFFFFFF);
-        fontRenderer.drawString("Preview:", recSkinPreview.x + PADDING, recSkinPreview.y + PADDING, 0xCCFFFFFF);
 
+        fontRenderer.drawString("Preview:", recSkinPreview.x + PADDING, recSkinPreview.y + PADDING, 0xCCFFFFFF);
+        
+        GlStateManager.disableDepth();
+        GlStateManager.pushAttrib();
+        for (GuiPanel panel : panelList) {
+            panel.drawBackground(mouseX, mouseY, partialTicks);
+        }
+        GlStateManager.popAttrib();
+        GlStateManager.pushAttrib();
+        for (GuiPanel panel : panelList) {
+            panel.draw(mouseX, mouseY, partialTicks);
+        }
+        GlStateManager.popAttrib();
+        GlStateManager.pushAttrib();
+        for (GuiPanel panel : panelList) {
+            panel.drawForeground(mouseX, mouseY, partialTicks);
+        }
+        GlStateManager.popAttrib();
+        GlStateManager.enableDepth();
     }
 
     @Override
@@ -458,42 +330,39 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         GlStateManager.enableColorMaterial();
         ModRenderHelper.enableAlphaBlend();
         GlStateManager.enableDepth();
-        
+
         float scale = 50;
         GlStateManager.scale((-scale), scale, scale);
-        
+
         GL11.glRotatef(-40, 1.0F, 0.0F, 0.0F);
         float rotation = (float) ((double) System.currentTimeMillis() / 10 % 360);
         GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
-        
+
         mc.renderEngine.bindTexture(DefaultPlayerSkin.getDefaultSkinLegacy());
         GlStateManager.pushMatrix();
-        
-        //GlStateManager.scale(16F / 1F, 1F, 1F);
+
+        // GlStateManager.scale(16F / 1F, 1F, 1F);
         ModelPlayer modelPlayer = new ModelPlayer(1, false);
         modelPlayer.bipedHead.render(1F / 16F);
-        //ArmourerRenderHelper.renderBuildingGrid(skinType, 1F / 16F, true, new SkinProperties(), false);
+        // ArmourerRenderHelper.renderBuildingGrid(skinType, 1F / 16F, true, new
+        // SkinProperties(), false);
         GlStateManager.popMatrix();
-        
-        
+
         SkinRenderData renderData = new SkinRenderData(1F / 16F, null, null, 0, true, true, true, null);
         AdvancedPartRenderer.renderAdvancedSkin(this, renderData, null, null, convertTreeToAdvancedPartNode());
 
-        
         ModRenderHelper.enableAlphaBlend();
 
-        
-        
         GlStateManager.disablePolygonOffset();
         GlStateManager.disableDepth();
-        
-        //ModRenderHelper.disableAlphaBlend();
+
+        // ModRenderHelper.disableAlphaBlend();
         GlStateManager.disableNormalize();
         GlStateManager.disableColorMaterial();
-        
+
         RenderHelper.disableStandardItemLighting();
         GlStateManager.resetColor();
-        
+
         GlStateManager.popAttrib();
         GlStateManager.popMatrix();
     }
@@ -506,14 +375,6 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         if (button == buttonRemove) {
             treeView.removeItem(treeView.getSelectedIndex());
         }
-        if (button == checkBoxSetting) {
-            applySetting();
-        }
-    }
-
-    @Override
-    public void onChangeSliderValue(GuiSlider slider) {
-        applySetting();
     }
 
     @Override
@@ -547,7 +408,7 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
     @Override
     public SkinPart getAdvancedPart(int index) {
-        if (index == 1) {
+        if (index < 0) {
             return null;
         }
         Skin skin = null;

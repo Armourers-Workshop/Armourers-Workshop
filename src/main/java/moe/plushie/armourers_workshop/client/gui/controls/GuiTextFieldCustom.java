@@ -41,7 +41,7 @@ public class GuiTextFieldCustom extends GuiButtonExt {
         }
 
         String s = text;
-        if (isFocused()) {
+        if (isFocused() & enabled) {
             if (this.cursorCounter / 6 % 2 == 0) {
                 s += "_";
             }
@@ -61,7 +61,7 @@ public class GuiTextFieldCustom extends GuiButtonExt {
     }
 
     public boolean keyTyped(char c, int keycode) {
-        if (!visible | !isFocused) {
+        if (!visible | !isFocused | !enabled) {
             return false;
         }
         switch (keycode) {

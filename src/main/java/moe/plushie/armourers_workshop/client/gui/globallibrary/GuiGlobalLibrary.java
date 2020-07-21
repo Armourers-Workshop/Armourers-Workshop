@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.client.gui.globallibrary;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -38,7 +37,6 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
 
     public final TileEntityGlobalSkinLibrary tileEntity;
     public final EntityPlayer player;
-    public ArrayList<GuiPanel> panelList;
     private int oldMouseX;
     private int oldMouseY;
 
@@ -69,7 +67,7 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
         super(new ContainerGlobalSkinLibrary(inventoryPlayer, tileEntity));
         this.tileEntity = tileEntity;
         this.player = Minecraft.getMinecraft().player;
-        this.panelList = new ArrayList<GuiPanel>();
+        panelList.clear();
 
         panelHeader = new GuiGlobalLibraryPanelHeader(this, 0, 0, width, 26);
         panelList.add(panelHeader);
@@ -270,11 +268,6 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
     public void updateScreen() {
         super.updateScreen();
         PlushieAuth.updateAccessToken();
-        // ModLogger.log(PlushieAuth.PLUSHIE_SESSION.getTimeSinceTokenUpdate() / 1000 +
-        // " - " + PlushieAuth.PLUSHIE_SESSION.getTokenExpiryTime() / 1000);
-        for (GuiPanel panel : panelList) {
-            panel.update();
-        }
     }
 
     public void switchScreen(Screen screen) {
@@ -286,40 +279,8 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
-        if (!isDialogOpen()) {
-            for (GuiPanel panel : panelList) {
-                if (panel.mouseClicked(mouseX, mouseY, button)) {
-                    return;
-                }
-            }
-        }
-        super.mouseClicked(mouseX, mouseY, button);
-    }
-
-    @Override
-    protected void mouseReleased(int mouseX, int mouseY, int state) {
-        if (!isDialogOpen()) {
-            for (GuiPanel panel : panelList) {
-                panel.mouseMovedOrUp(mouseX, mouseY, state);
-            }
-        }
-        super.mouseReleased(mouseX, mouseY, state);
-    }
-
-    @Override
     protected void keyTyped(char c, int keycode) throws IOException {
-        boolean keyTyped = false;
-        if (!isDialogOpen()) {
-            for (GuiPanel panel : panelList) {
-                if (panel.keyTyped(c, keycode)) {
-                    keyTyped = true;
-                }
-            }
-        }
-        if (!keyTyped) {
-            super.keyTyped(c, keycode);
-        }
+        super.keyTyped(c, keycode);
         checkNEIVisibility();
     }
 
