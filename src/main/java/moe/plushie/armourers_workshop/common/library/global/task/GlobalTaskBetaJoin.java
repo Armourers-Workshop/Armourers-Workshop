@@ -64,7 +64,7 @@ public class GlobalTaskBetaJoin extends GlobalTask<BetaJoinResult> {
         String uuid = URLEncoder.encode(gameProfile.getId().toString(), "UTF-8");
         String serverId = String.valueOf(getBaseUrl().hashCode());
         
-        if (MinecraftAuth.checkAndRefeshAuth(Minecraft.getMinecraft().getSession(), serverId)) {
+        if (!MinecraftAuth.checkAndRefeshAuth(Minecraft.getMinecraft().getSession(), serverId)) {
             ModLogger.log("Failed MC Auth");
             return new BetaJoinResult(JoinResult.MINECRAFT_AUTH_FAIL);
         } else {
