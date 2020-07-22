@@ -80,6 +80,10 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     }
 
     protected void resize() {
+        refresh();
+    }
+    
+    public void refresh() {
         String thisSearch = search;
         ISkinType thisSkinType = skinType;
         int thisPage = currentPageIndex;
