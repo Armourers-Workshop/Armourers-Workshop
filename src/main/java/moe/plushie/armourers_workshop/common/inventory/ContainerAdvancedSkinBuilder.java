@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkin;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton.IButtonPress;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
@@ -43,9 +44,9 @@ public class ContainerAdvancedSkinBuilder extends ModTileContainer<TileEntityAdv
         if (player.getGameProfile() != null && player.getGameProfile().getId() != null) {
             SkinProperties.PROP_ALL_AUTHOR_UUID.setValue(properties, player.getGameProfile().getId().toString());
         }
-        //SkinProperties.PROP_ALL_CUSTOM_NAME.setValue(properties, "");
-        //SkinProperties.PROP_ALL_FLAVOUR_TEXT.setValue(properties, "");
-        
+        // SkinProperties.PROP_ALL_CUSTOM_NAME.setValue(properties, "");
+        // SkinProperties.PROP_ALL_FLAVOUR_TEXT.setValue(properties, "");
+
         for (int i = 0; i < getTileEntity().getSizeInventory(); i++) {
             ItemStack itemStack = getTileEntity().getStackInSlot(i);
             if (!itemStack.isEmpty()) {
@@ -59,13 +60,30 @@ public class ContainerAdvancedSkinBuilder extends ModTileContainer<TileEntityAdv
                 }
             }
         }
-        
+
         ArmourersWorkshop.getLogger().info("Parts found: " + skinParts.size());
 
         Skin skin = new Skin(properties, skinType, null, skinParts);
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile)null);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile) null);
         ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinDescriptor(skin));
-        
+
         UtilItems.spawnItemAtEntity(player, skinStack, false);
+    }
+
+    public void setSkinType(ISkinType skinType) {
+
+    }
+
+    public ISkinType getSkinType() {
+        return null;
+    }
+
+    public void setAdvancedPartNode(AdvancedPartNode advancedPartNode) {
+
+    }
+
+    public AdvancedPartNode getAdvancedPartNode() {
+        return null;
+
     }
 }

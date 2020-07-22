@@ -7,9 +7,11 @@ import org.apache.logging.log4j.Level;
 import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.api.common.IExtraColours.ExtraColourType;
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.ExtraColours;
 import moe.plushie.armourers_workshop.common.data.type.BipedRotations;
 import moe.plushie.armourers_workshop.common.data.type.TextureType;
+import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector.PowerMode;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,6 +35,7 @@ public final class TilePropertyManager {
         typeSerializers.put(ExtraColours.class.getName(), new ExtraColoursSerializer());
         typeSerializers.put(TextureType.class.getName(), new TextureTypeSerializer());
         typeSerializers.put(PowerMode.class.getName(), new PowerModeSerializer());
+        typeSerializers.put(ISkinType.class.getName(), new SkinTypeSerializer());
     }
 
     public NBTTagCompound writePropToCompound(TileProperty<?> tileProperty, NBTTagCompound compound) {
@@ -215,6 +218,30 @@ public final class TilePropertyManager {
         public void writeType(TileProperty<?> tileProperty, NBTTagCompound target) {
             PowerMode pm = (PowerMode) tileProperty.get();
             target.setString(tileProperty.getKey(), pm.name());
+        }
+    }
+
+    private static class SkinTypeSerializer implements ITypeSerializer<NBTTagCompound> {
+
+        @Override
+        public void readType(TileProperty<?> tileProperty, NBTTagCompound source) {
+            if (source.hasKey(tileProperty.getKey(), NBT.TAG_STRING)) {
+                try {
+                    String regName = source.getString(tileProperty.getKey());
+                    ISkinType skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(regName);
+                    tileProperty.loadType(skinType);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void writeType(TileProperty<?> tileProperty, NBTTagCompound target) {
+            ISkinType skinType = (ISkinType) tileProperty.get();
+            if (skinType != null) {
+                target.setString(tileProperty.getKey(), skinType.getRegistryName());
+            }
         }
     }
 
