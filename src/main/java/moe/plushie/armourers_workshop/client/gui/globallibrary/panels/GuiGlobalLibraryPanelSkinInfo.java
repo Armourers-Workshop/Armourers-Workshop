@@ -276,7 +276,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
 
     public void drawSkinInfo(Skin skin, int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
         drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
-        ModRenderHelper.enableScissorScaled(boxX, boxY, boxWidth, boxHeight);
+        ModRenderHelper.enableScissor(boxX, boxY, boxWidth, boxHeight, true);
 
         String fullName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + ".";
 

@@ -47,7 +47,7 @@ public class GuiTextFieldCustom extends GuiButtonExt {
             }
         }
 
-        ModRenderHelper.enableScissorScaled(x + 2, y + 2, width - 4, height - 4);
+        ModRenderHelper.enableScissor(x + 2, y + 2, width - 4, height - 4, true);
         GlStateManager.pushMatrix();
         GlStateManager.translate(0F, -scrollAmount, 0F);
         mc.fontRenderer.drawSplitString(s, x + 5, y + 4, width - 8, 0x444444);
