@@ -16,8 +16,8 @@ import net.minecraft.client.Minecraft;
 
 public class GlobalTaskBetaJoin extends GlobalTask<BetaJoinResult> {
 
-    private static final String URL_CHECK = "beta-code-check.php?uuid=%s";
-    private static final String URL_JOIN = "beta-join.php?username=%s&uuid=%s&serverId=&betaCode=%s";
+    private static final String URL_CHECK = "beta-code-check.php?code=%s";
+    private static final String URL_JOIN = "beta-join.php?username=%s&uuid=%s&serverId=%s&betaCode=%s";
 
     private final UUID betaCode;
 
