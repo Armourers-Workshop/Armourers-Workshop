@@ -130,6 +130,9 @@ public class GuiGlobalLibraryPaneJoinBeta extends GuiPanel {
                                     case CODE_INVALID:
                                         joinedBetaFailed(result.getMessage());
                                         break;
+                                    case MINECRAFT_AUTH_FAIL:
+                                        joinedBetaFailed(result.getMessage());
+                                        break;
                                     case JOIN_FAILED:
                                         joinedBetaFailed(result.getMessage());
                                         break;

@@ -7,11 +7,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 
+import moe.plushie.armourers_workshop.common.library.global.auth.MinecraftAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskBetaJoin.BetaJoinResult;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskBetaJoin.BetaJoinResult.JoinResult;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.client.Minecraft;
 
 public class GlobalTaskBetaJoin extends GlobalTask<BetaJoinResult> {
@@ -60,7 +62,16 @@ public class GlobalTaskBetaJoin extends GlobalTask<BetaJoinResult> {
         GameProfile gameProfile = Minecraft.getMinecraft().player.getGameProfile();
         String username = URLEncoder.encode(gameProfile.getName(), "UTF-8");
         String uuid = URLEncoder.encode(gameProfile.getId().toString(), "UTF-8");
-        String urlJoin = String.format(getBaseUrl() + URL_JOIN, username, uuid, session.getAccessToken(), code);
+        String serverId = String.valueOf(getBaseUrl().hashCode());
+        
+        if (MinecraftAuth.checkAndRefeshAuth(Minecraft.getMinecraft().getSession(), serverId)) {
+            ModLogger.log("Failed MC Auth");
+            return new BetaJoinResult(JoinResult.MINECRAFT_AUTH_FAIL);
+        } else {
+            ModLogger.log("MC Auth Done");
+        }
+        
+        String urlJoin = String.format(getBaseUrl() + URL_JOIN, username, uuid, serverId, code);
 
         JsonObject jsonJoinResult = new JsonParser().parse(downloadString(urlJoin)).getAsJsonObject();
         
@@ -127,6 +138,7 @@ public class GlobalTaskBetaJoin extends GlobalTask<BetaJoinResult> {
             ALREADY_JOINED,
             CODE_CHECK_FAILED,
             CODE_INVALID,
+            MINECRAFT_AUTH_FAIL,
             JOIN_FAILED,
             JOINED
         }
