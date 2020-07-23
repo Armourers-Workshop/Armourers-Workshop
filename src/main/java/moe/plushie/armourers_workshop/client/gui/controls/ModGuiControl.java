@@ -64,6 +64,7 @@ public abstract class ModGuiControl<CONTROL_TYPE, PARENT_TYPE extends IScreenSiz
             return;
         }
         String CRLF = "\r\n";
+        //CRLF = "\n";
         this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
         int hoverState = this.getHoverState(this.hovered);
         if (hoverState == 0 & this.hovered) {

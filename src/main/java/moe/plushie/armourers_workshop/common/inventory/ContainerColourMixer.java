@@ -4,10 +4,8 @@ import moe.plushie.armourers_workshop.api.common.painting.IPaintingTool;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotColourTool;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotOutput;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
-import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -54,34 +52,6 @@ public class ContainerColourMixer extends ModContainer {
             return ItemStack.EMPTY;
         }
         return ItemStack.EMPTY;
-    }
-
-    private ColourFamily lastColourFamily;
-
-    @Override
-    public void addListener(IContainerListener listener) {
-        super.addListener(listener);
-        listener.sendWindowProperty(this, 0, tileEntityColourMixer.getColourFamily().ordinal());
-        lastColourFamily = tileEntityColourMixer.getColourFamily();
-    }
-
-    @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
-        for (int i = 0; i < listeners.size(); i++) {
-            IContainerListener crafter = listeners.get(i);
-            if (lastColourFamily != tileEntityColourMixer.getColourFamily()) {
-                crafter.sendWindowProperty(this, 0, tileEntityColourMixer.getColourFamily().ordinal());
-            }
-        }
-        lastColourFamily = tileEntityColourMixer.getColourFamily();
-    }
-
-    @Override
-    public void updateProgressBar(int id, int data) {
-        if (id == 0) {
-            tileEntityColourMixer.setColourFamily(ColourFamily.values()[data]);
-        }
     }
 
     @Override

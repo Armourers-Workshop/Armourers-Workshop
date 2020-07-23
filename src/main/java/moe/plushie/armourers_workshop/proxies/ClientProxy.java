@@ -31,6 +31,7 @@ import moe.plushie.armourers_workshop.client.model.ICustomModel;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.BakedSkin;
 import moe.plushie.armourers_workshop.client.model.bake.ModelBakery.IBakedSkinReceiver;
+import moe.plushie.armourers_workshop.client.palette.PaletteManager;
 import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandler;
@@ -119,6 +120,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
     public static ClientWardrobeHandler wardrobeHandler;
     public static PlayerTextureHandler playerTextureHandler;
     public static PlayerTextureDownloader playerTextureDownloader;
+    private static PaletteManager paletteManager;
 
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
@@ -213,6 +215,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         FMLCommonHandler.instance().bus().register(new ModClientFMLEventHandler());
         MinecraftForge.EVENT_BUS.register(new DebugTextHandler());
         FastCache.INSTANCE.loadCacheData();
+        paletteManager = new PaletteManager(getModDirectory());
     }
 
     @Override
@@ -424,5 +427,9 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
     @Override
     public MinecraftServer getServer() {
         return Minecraft.getMinecraft().getIntegratedServer();
+    }
+
+    public static PaletteManager getPaletteManager() {
+        return paletteManager;
     }
 }

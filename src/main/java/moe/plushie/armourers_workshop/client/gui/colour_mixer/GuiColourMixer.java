@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.client.gui;
+package moe.plushie.armourers_workshop.client.gui.colour_mixer;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -8,24 +8,31 @@ import java.util.regex.Pattern;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
+import moe.plushie.armourers_workshop.client.gui.GuiHelper;
+import moe.plushie.armourers_workshop.client.gui.controls.AbstractGuiDialog;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiColourSelector;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.DropDownListItem;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiDropDownList.IDropDownListCallback;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider.HSBSliderType;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiHSBSlider.IHSBSliderCallback;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiHelp;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
+import moe.plushie.armourers_workshop.client.gui.controls.IDialogCallback;
 import moe.plushie.armourers_workshop.client.gui.controls.ModGuiContainer;
+import moe.plushie.armourers_workshop.client.gui.controls.ModGuiControl.IScreenSize;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
+import moe.plushie.armourers_workshop.client.palette.Palette;
+import moe.plushie.armourers_workshop.common.data.type.Rectangle_I_2D;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
-import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiColourUpdate;
 import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.painting.PaintingHelper;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityColourMixer;
-import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
+import moe.plushie.armourers_workshop.proxies.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -33,15 +40,19 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implements IHSBSliderCallback, IDropDownListCallback {
+public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implements IHSBSliderCallback, IDropDownListCallback, IDialogCallback, IScreenSize {
 
     private TileEntityColourMixer tileEntityColourMixer;
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(LibGuiResources.GUI_COLOUR_MIXER);
     private static final ResourceLocation CUBE_TEXTURE = new ResourceLocation(LibModInfo.ID.toLowerCase(), "textures/armour/cube.png");
+    private static final ResourceLocation TEXTURE_BUTTONS = new ResourceLocation(LibGuiResources.CONTROL_BUTTONS);
+
+    private static String activePalette = ClientProxy.getPaletteManager().getFirstPaletteName();
 
     private Color colour;
     private GuiHSBSlider[] slidersHSB;
@@ -51,6 +62,7 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
     private GuiDropDownList paintTypeDropDown;
     private GuiIconButton buttonPaletteAdd;
     private GuiIconButton buttonPaletteRemove;
+    private GuiIconButton buttonPaletteRename;
 
     public GuiColourMixer(InventoryPlayer invPlayer, TileEntityColourMixer tileEntityColourMixer) {
         super(new ContainerColourMixer(invPlayer, tileEntityColourMixer));
@@ -81,13 +93,11 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
         buttonList.add(colourSelector);
 
         colourFamilyList = new GuiDropDownList(4, this.guiLeft + 164, this.guiTop + 60, 86, "", this);
-        for (int i = 0; i < ColourFamily.values().length; i++) {
-            ColourFamily cf = ColourFamily.values()[i];
-            colourFamilyList.addListItem(cf.getLocalizedName());
-        }
-        ColourFamily cf = tileEntityColourMixer.getColourFamily();
-        colourFamilyList.setListSelectedIndex(cf.ordinal());
-        colourSelector.setColourFamily(cf);
+        colourFamilyList.setMaxDisplayCount(16);
+
+        updateDropDownPalettes();
+
+        colourSelector.setPalette(ClientProxy.getPaletteManager().getPalette(activePalette));
         buttonList.add(colourFamilyList);
 
         paintTypeDropDown = new GuiDropDownList(5, this.guiLeft + 164, this.guiTop + 30, 86, "", this);
@@ -95,22 +105,48 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
         updatePaintTypeDropDown();
         buttonList.add(paintTypeDropDown);
 
-        buttonPaletteAdd = new GuiIconButton(this, -1, this.guiLeft + 166, this.guiTop + 124, 20, 20, "Add Palette", GUI_TEXTURE).setIconLocation(223, 240, 16, 16);
-        // buttonList.add(buttonPaletteAdd);
+        buttonPaletteAdd = new GuiIconButton(this, -1, this.guiLeft + 230, this.guiTop + 124, 20, 20, GuiHelper.getLocalizedControlName(getName(), "button.add_palette"), TEXTURE_BUTTONS);
+        buttonPaletteAdd.setDrawButtonBackground(false).setIconLocation(208, 176, 16, 16);
+        buttonList.add(buttonPaletteAdd);
 
-        buttonPaletteRemove = new GuiIconButton(this, -1, this.guiLeft + 228, this.guiTop + 124, 20, 20, "Remove Palette", GUI_TEXTURE).setIconLocation(189, 240, 16, 16);
-        // buttonList.add(buttonPaletteRemove);
+        buttonPaletteRemove = new GuiIconButton(this, -1, this.guiLeft + 230 - 18, this.guiTop + 124, 20, 20, GuiHelper.getLocalizedControlName(getName(), "button.remove_palette"), TEXTURE_BUTTONS);
+        buttonPaletteRemove.setDrawButtonBackground(false).setIconLocation(208, 160, 16, 16);
+        buttonList.add(buttonPaletteRemove);
+
+        buttonPaletteRename = new GuiIconButton(this, -1, this.guiLeft + 230 - 18 * 2, this.guiTop + 124, 20, 20, GuiHelper.getLocalizedControlName(getName(), "button.rename_palette"), TEXTURE_BUTTONS);
+        buttonPaletteRename.setDrawButtonBackground(false).setIconLocation(208, 192, 16, 16);
+        buttonList.add(buttonPaletteRename);
+
+        GuiHelp guiHelp = new GuiHelp(this, 0, guiLeft + 240 - 18 * 3, guiTop + 129, GuiHelper.getLocalizedControlName(getName(), "help.palette"));
+        buttonList.add(guiHelp);
+    }
+
+    private void updateDropDownPalettes() {
+        Palette[] palettes = ClientProxy.getPaletteManager().getPalettes();
+        colourFamilyList.clearList();
+        for (int i = 0; i < palettes.length; i++) {
+            colourFamilyList.addListItem(palettes[i].getName());
+            if (palettes[i].getName().equals(activePalette)) {
+                colourFamilyList.setListSelectedIndex(i);
+            }
+        }
+    }
+
+    @Override
+    public void onGuiClosed() {
+        super.onGuiClosed();
+        ClientProxy.getPaletteManager().save();
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
+        // this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
         GlStateManager.disableLighting();
         GlStateManager.disableDepth();
         colourFamilyList.drawForeground(mc, mouseX, mouseY, partialTicks);
         paintTypeDropDown.drawForeground(mc, mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
+        // this.renderHoveredToolTip(mouseX, mouseY);
     }
 
     private void checkForColourUpdates() {
@@ -150,12 +186,30 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
         }
     }
 
+    public void updatePaletteColour(Palette palette, int index) {
+        palette.setColour(index, colour.getRGB());
+        ClientProxy.getPaletteManager().markDirty();
+    }
+
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button.id == 3) {
-            this.colour = ((GuiColourSelector) button).getSelectedColour();
-            updateHexTextbox();
-            updateSliders();
+            if (!isShiftKeyDown()) {
+                this.colour = colourSelector.getSelectedColour();
+                updateHexTextbox();
+                updateSliders();
+            } else {
+                updatePaletteColour(colourSelector.getPalette(), colourSelector.getColourIndex());
+            }
+        }
+        if (button == buttonPaletteAdd) {
+            openDialog(new GuiDialogAddPalette(this, getName() + ".dialog.add_palette", this));
+        }
+        if (button == buttonPaletteRemove) {
+            openDialog(new GuiDialogConfirm(this, getName() + ".dialog.remove_palette", this, I18n.format("inventory." + LibModInfo.ID + ":" + getName() + ".dialog.remove_palette.message", activePalette)));
+        }
+        if (button == buttonPaletteRename) {
+            openDialog(new GuiDialogRename(this, getName() + ".dialog.rename_palette", this, activePalette));
         }
     }
 
@@ -251,8 +305,15 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(-guiLeft, -guiTop, 0);
-        // buttonPaletteAdd.drawRollover(mc, mouseX, mouseY);
-        // buttonPaletteRemove.drawRollover(mc, mouseX, mouseY);
+        for (int i = 0; i < buttonList.size(); i++) {
+            GuiButton button = buttonList.get(i);
+            if (button instanceof GuiHelp) {
+                ((GuiHelp) button).drawRollover(mc, mouseX, mouseY);
+            }
+            if (button instanceof GuiIconButton) {
+                ((GuiIconButton) button).drawRollover(mc, mouseX, mouseY);
+            }
+        }
         GlStateManager.popMatrix();
     }
 
@@ -311,10 +372,17 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
     @Override
     public void onDropDownListChanged(GuiDropDownList dropDownList) {
         if (dropDownList == colourFamilyList) {
-            ColourFamily cf = ColourFamily.values()[dropDownList.getListSelectedIndex()];
-            colourSelector.setColourFamily(cf);
-            MessageClientGuiButton message = new MessageClientGuiButton((byte) cf.ordinal());
-            PacketHandler.networkWrapper.sendToServer(message);
+            DropDownListItem listItem = dropDownList.getListSelectedItem();
+            colourSelector.setPalette(null);
+            if (listItem != null) {
+                Palette palette = ClientProxy.getPaletteManager().getPalette(listItem.displayText);
+                if (palette != null) {
+                    activePalette = palette.getName();
+                    colourSelector.setPalette(palette);
+                }
+            } else {
+                activePalette = null;
+            }
         }
         if (dropDownList == paintTypeDropDown) {
             updateColour();
@@ -324,5 +392,48 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
     @Override
     public String getName() {
         return tileEntityColourMixer.getName();
+    }
+
+    @Override
+    public void dialogResult(AbstractGuiDialog dialog, DialogResult result) {
+        if (result == DialogResult.OK) {
+            if (dialog instanceof GuiDialogAddPalette) {
+                String newName = ((GuiDialogAddPalette) dialog).getNewName();
+                if (!StringUtils.isNullOrEmpty(newName)) {
+                    if (ClientProxy.getPaletteManager().getPalette(newName) == null) {
+                        ClientProxy.getPaletteManager().addPalette(newName);
+                        ClientProxy.getPaletteManager().markDirty();
+                        activePalette = newName;
+                        updateDropDownPalettes();
+                        onDropDownListChanged(colourFamilyList);
+                    }
+                }
+            }
+            if (dialog instanceof GuiDialogConfirm) {
+                ClientProxy.getPaletteManager().deletePalette(activePalette);
+                ClientProxy.getPaletteManager().markDirty();
+                activePalette = ClientProxy.getPaletteManager().getFirstPaletteName();
+                updateDropDownPalettes();
+                onDropDownListChanged(colourFamilyList);
+            }
+            if (dialog instanceof GuiDialogRename) {
+                String newName = ((GuiDialogRename) dialog).getNewName();
+                if (!StringUtils.isNullOrEmpty(newName)) {
+                    if (ClientProxy.getPaletteManager().getPalette(newName) == null) {
+                        ClientProxy.getPaletteManager().renamePalette(activePalette, newName);
+                        ClientProxy.getPaletteManager().markDirty();
+                        activePalette = newName;
+                        updateDropDownPalettes();
+                        onDropDownListChanged(colourFamilyList);
+                    }
+                }
+            }
+        }
+        closeDialog();
+    }
+
+    @Override
+    public Rectangle_I_2D getSize() {
+        return new Rectangle_I_2D(0, 0, width, height);
     }
 }
