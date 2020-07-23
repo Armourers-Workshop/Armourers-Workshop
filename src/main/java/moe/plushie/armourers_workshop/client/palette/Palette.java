@@ -11,15 +11,17 @@ public class Palette {
     public static final int MAX_COLOURS_PER_PALETTE = 32;
 
     private String name;
+    private final boolean locked;
     private int[] colours;
 
-    public Palette(String name, int[] colours) {
+    public Palette(String name, boolean locked, int[] colours) {
         this.name = name;
+        this.locked = locked;
         this.colours = colours;
     }
 
     public Palette(String name) {
-        this(name, new int[MAX_COLOURS_PER_PALETTE]);
+        this(name, false, new int[MAX_COLOURS_PER_PALETTE]);
     }
 
     public void setName(String name) {
@@ -28,6 +30,10 @@ public class Palette {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 
     public int[] getColours() {
@@ -74,6 +80,6 @@ public class Palette {
 
     @Override
     protected Palette clone() {
-        return new Palette(name, colours.clone());
+        return new Palette(name, locked, colours.clone());
     }
 }

@@ -1,8 +1,11 @@
 package moe.plushie.armourers_workshop.client.palette;
 
+import java.awt.Color;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,11 +39,11 @@ public class PaletteManager {
 
     public void createDefaultPalettes() {
         ModLogger.log("Creating default palettes.");
-        putPaletteInMap(new Palette("Minecraft", UtilColour.PALETTE_MINECRAFT));
-        putPaletteInMap(new Palette("Shades", UtilColour.PALETTE_SHADES));
-        putPaletteInMap(new Palette("Warm32", UtilColour.PALETTE_WARM32));
-        putPaletteInMap(new Palette("Pastel-64 A", UtilColour.PALETTE_PASTEL_64_A));
-        putPaletteInMap(new Palette("Pastel-64 B", UtilColour.PALETTE_PASTEL_64_B));
+        putPaletteInMap(new Palette("\u2606 Minecraft", true, UtilColour.PALETTE_MINECRAFT));
+        putPaletteInMap(new Palette("\u2606 Shades", true, UtilColour.PALETTE_SHADES));
+        putPaletteInMap(new Palette("\u2606 Warm32", true, UtilColour.PALETTE_WARM32));
+        putPaletteInMap(new Palette("\u2606 Pastel-64 A", true, UtilColour.PALETTE_PASTEL_64_A));
+        putPaletteInMap(new Palette("\u2606 Pastel-64 B", true, UtilColour.PALETTE_PASTEL_64_B));
     }
 
     private void putPaletteInMap(Palette palette) {
@@ -96,6 +99,7 @@ public class PaletteManager {
         for (Palette palette : paletteMap.values()) {
             JsonObject jsonPalette = new JsonObject();
             jsonPalette.addProperty("name", palette.getName());
+            jsonPalette.addProperty("locked", palette.isLocked());
             jsonPalette.add("colours", intToJsonArray(palette.getColours()));
             json.add(jsonPalette);
         }
@@ -112,8 +116,9 @@ public class PaletteManager {
                 JsonObject jsonPalette = json.get(i).getAsJsonObject();
                 if (jsonPalette.has("name") & jsonPalette.has("colours")) {
                     String name = jsonPalette.get("name").getAsString();
+                    boolean locked = jsonPalette.get("locked").getAsBoolean();
                     int[] colours = jsonToIntArray(jsonPalette.get("colours").getAsJsonArray());
-                    Palette palette = new Palette(name, colours);
+                    Palette palette = new Palette(name, locked, colours);
                     paletteMap.put(palette.getName(), palette);
                 }
             }
@@ -127,7 +132,7 @@ public class PaletteManager {
     private JsonArray intToJsonArray(int[] intArray) {
         JsonArray jsonArray = new JsonArray();
         for (int i = 0; i < intArray.length; i++) {
-            jsonArray.add(intArray[i]);
+            jsonArray.add(colourToHex(intArray[i]));
         }
         return jsonArray;
     }
@@ -135,8 +140,32 @@ public class PaletteManager {
     private int[] jsonToIntArray(JsonArray jsonArray) {
         int[] intArray = new int[jsonArray.size()];
         for (int i = 0; i < jsonArray.size(); i++) {
-            intArray[i] = jsonArray.get(i).getAsInt();
+            String colourHex = jsonArray.get(i).getAsString();
+            intArray[i] = hexToColour(colourHex);
         }
         return intArray;
+    }
+
+    private boolean isValidHex(String colorStr) {
+        String hexPatten = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
+        Pattern pattern = Pattern.compile(hexPatten);
+        Matcher matcher = pattern.matcher(colorStr);
+        return matcher.matches();
+    }
+
+    private String colourToHex(int colour) {
+        return colourToHex(new Color(colour, false));
+    }
+
+    private String colourToHex(Color c) {
+        return String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
+    }
+
+    private int hexToColour(String hex) {
+        if (isValidHex(hex)) {
+            return Color.decode(hex).getRGB();
+        } else {
+            return 0xFF000000;
+        }
     }
 }

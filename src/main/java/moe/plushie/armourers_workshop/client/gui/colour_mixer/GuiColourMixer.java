@@ -199,17 +199,29 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
                 updateHexTextbox();
                 updateSliders();
             } else {
-                updatePaletteColour(colourSelector.getPalette(), colourSelector.getColourIndex());
+                if (!colourSelector.getPalette().isLocked()) {
+                    updatePaletteColour(colourSelector.getPalette(), colourSelector.getColourIndex());
+                }
             }
         }
         if (button == buttonPaletteAdd) {
             openDialog(new GuiDialogAddPalette(this, getName() + ".dialog.add_palette", this));
         }
         if (button == buttonPaletteRemove) {
-            openDialog(new GuiDialogConfirm(this, getName() + ".dialog.remove_palette", this, I18n.format("inventory." + LibModInfo.ID + ":" + getName() + ".dialog.remove_palette.message", activePalette)));
+            Palette palette = ClientProxy.getPaletteManager().getPalette(activePalette);
+            if (palette != null) {
+                if (!palette.isLocked()) {
+                    openDialog(new GuiDialogConfirm(this, getName() + ".dialog.remove_palette", this, I18n.format("inventory." + LibModInfo.ID + ":" + getName() + ".dialog.remove_palette.message", activePalette)));
+                }
+            }
         }
         if (button == buttonPaletteRename) {
-            openDialog(new GuiDialogRename(this, getName() + ".dialog.rename_palette", this, activePalette));
+            Palette palette = ClientProxy.getPaletteManager().getPalette(activePalette);
+            if (palette != null) {
+                if (!palette.isLocked()) {
+                    openDialog(new GuiDialogRename(this, getName() + ".dialog.rename_palette", this, activePalette));
+                }
+            }
         }
     }
 
@@ -251,7 +263,6 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
             if (paintType == tileEntityColourMixer.getPaintType(0))
                 return;
         }
-
         MessageClientGuiColourUpdate message = new MessageClientGuiColourUpdate(this.colour.getRGB(), false, paintType);
         PacketHandler.networkWrapper.sendToServer(message);
     }
@@ -410,21 +421,31 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
                 }
             }
             if (dialog instanceof GuiDialogConfirm) {
-                ClientProxy.getPaletteManager().deletePalette(activePalette);
-                ClientProxy.getPaletteManager().markDirty();
-                activePalette = ClientProxy.getPaletteManager().getFirstPaletteName();
-                updateDropDownPalettes();
-                onDropDownListChanged(colourFamilyList);
-            }
-            if (dialog instanceof GuiDialogRename) {
-                String newName = ((GuiDialogRename) dialog).getNewName();
-                if (!StringUtils.isNullOrEmpty(newName)) {
-                    if (ClientProxy.getPaletteManager().getPalette(newName) == null) {
-                        ClientProxy.getPaletteManager().renamePalette(activePalette, newName);
+                Palette palette = ClientProxy.getPaletteManager().getPalette(activePalette);
+                if (palette != null) {
+                    if (!palette.isLocked()) {
+                        ClientProxy.getPaletteManager().deletePalette(activePalette);
                         ClientProxy.getPaletteManager().markDirty();
-                        activePalette = newName;
+                        activePalette = ClientProxy.getPaletteManager().getFirstPaletteName();
                         updateDropDownPalettes();
                         onDropDownListChanged(colourFamilyList);
+                    }
+                }
+            }
+            if (dialog instanceof GuiDialogRename) {
+                Palette palette = ClientProxy.getPaletteManager().getPalette(activePalette);
+                if (palette != null) {
+                    if (!palette.isLocked()) {
+                        String newName = ((GuiDialogRename) dialog).getNewName();
+                        if (!StringUtils.isNullOrEmpty(newName)) {
+                            if (ClientProxy.getPaletteManager().getPalette(newName) == null) {
+                                ClientProxy.getPaletteManager().renamePalette(activePalette, newName);
+                                ClientProxy.getPaletteManager().markDirty();
+                                activePalette = newName;
+                                updateDropDownPalettes();
+                                onDropDownListChanged(colourFamilyList);
+                            }
+                        }
                     }
                 }
             }
