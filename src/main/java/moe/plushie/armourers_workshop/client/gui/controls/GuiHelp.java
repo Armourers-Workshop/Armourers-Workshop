@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,6 +36,10 @@ public class GuiHelp extends ModGuiControl {
         }
         mc.renderEngine.bindTexture(TEXTURE);
         drawTexturedModalRect(x, y , offsetPos, 0, width, height);
+    }
+    
+    @Override
+    public void playPressSound(SoundHandler soundHandlerIn) {
     }
     
     @Override
