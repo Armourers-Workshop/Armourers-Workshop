@@ -94,6 +94,7 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
 
         colourFamilyList = new GuiDropDownList(4, this.guiLeft + 164, this.guiTop + 60, 86, "", this);
         colourFamilyList.setMaxDisplayCount(16);
+        colourFamilyList.setScissor(true);
 
         updateDropDownPalettes();
 
@@ -314,18 +315,20 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
         this.fontRenderer.drawString(labelPresets + ":", 165, 51, 4210752);
         this.fontRenderer.drawString(labelPaintType + ":", 165, 21, 4210752);
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(-guiLeft, -guiTop, 0);
-        for (int i = 0; i < buttonList.size(); i++) {
-            GuiButton button = buttonList.get(i);
-            if (button instanceof GuiHelp) {
-                ((GuiHelp) button).drawRollover(mc, mouseX, mouseY);
+        if (!colourFamilyList.getIsDroppedDown()) {
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(-guiLeft, -guiTop, 0);
+            for (int i = 0; i < buttonList.size(); i++) {
+                GuiButton button = buttonList.get(i);
+                if (button instanceof GuiHelp) {
+                    ((GuiHelp) button).drawRollover(mc, mouseX, mouseY);
+                }
+                if (button instanceof GuiIconButton) {
+                    ((GuiIconButton) button).drawRollover(mc, mouseX, mouseY);
+                }
             }
-            if (button instanceof GuiIconButton) {
-                ((GuiIconButton) button).drawRollover(mc, mouseX, mouseY);
-            }
+            GlStateManager.popMatrix();
         }
-        GlStateManager.popMatrix();
     }
 
     @Override

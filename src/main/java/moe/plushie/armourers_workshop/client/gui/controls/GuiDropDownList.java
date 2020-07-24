@@ -29,6 +29,7 @@ public class GuiDropDownList extends GuiButtonExt {
     private int dropButtonWidth;
     private int dropButtonHeight;
     private IDropDownListCallback callback;
+    private boolean scissor = false;
 
     private GuiScrollbar scrollbar = new GuiScrollbar(0, x, y, 10, 10, "", false);
     private int maxDisplayCount = 0;
@@ -69,6 +70,10 @@ public class GuiDropDownList extends GuiButtonExt {
         return getDropdownListCount() < listItems.size();
     }
 
+    public void setScissor(boolean scissor) {
+        this.scissor = scissor;
+    }
+
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partial) {
         if (this.visible) {
@@ -80,9 +85,13 @@ public class GuiDropDownList extends GuiButtonExt {
             drawDropDownButton(mc, mouseX, mouseY);
 
             if (getListSelectedItem() != null) {
-                ModRenderHelper.enableScissor(x, y, width - dropButtonWidth, height, true);
+                if (scissor) {
+                    ModRenderHelper.enableScissor(this.x, this.y, width - dropButtonWidth, height, true);
+                }
                 getListSelectedItem().drawItem(mc, this, this.x + 3, this.y + 3, mouseX, mouseY, partial, true);
-                ModRenderHelper.disableScissor();
+                if (scissor) {
+                    ModRenderHelper.disableScissor();
+                }
             }
             // mc.fontRenderer.drawString(this.displayString, this.x + 3, this.y + 3,
             // 16777215);
@@ -115,16 +124,20 @@ public class GuiDropDownList extends GuiButtonExt {
                 DropDownListItem listItem = listItems.get(i + scrollAmount);
                 int textX = this.x + 4;
                 int textY = this.y + this.height + 4 + (i * 10);
-                if (hasScrollbar()) {
-                    ModRenderHelper.enableScissor(textX, textY, width - dropButtonWidth - 1, height, true);
-                } else {
-                    ModRenderHelper.enableScissor(textX, textY, width - 8, height, true);
+                if (scissor) {
+                    if (hasScrollbar()) {
+                        ModRenderHelper.enableScissor(textX, textY, width - dropButtonWidth - 1, height, true);
+                    } else {
+                        ModRenderHelper.enableScissor(textX, textY, width - 8, height, true);
+                    }
                 }
                 if (listItem.isMouseOver(this, textX, textY, mouseX, mouseY) & listItem.enabled) {
                     hoverIndex = i + scrollAmount;
                 }
                 listItem.drawItem(mc, this, textX, textY, mouseX, mouseY, partial, false);
-                ModRenderHelper.disableScissor();
+                if (scissor) {
+                    ModRenderHelper.disableScissor();
+                }
             }
 
         }
