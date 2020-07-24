@@ -36,6 +36,8 @@ import moe.plushie.armourers_workshop.client.render.RenderBridge;
 import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
 import moe.plushie.armourers_workshop.client.render.entity.EntitySkinRenderHandler;
 import moe.plushie.armourers_workshop.client.render.entity.RenderEntityMannequin;
+import moe.plushie.armourers_workshop.client.render.entity.RenderSpectralArrowSkinned;
+import moe.plushie.armourers_workshop.client.render.entity.RenderTippedArrowSkinned;
 import moe.plushie.armourers_workshop.client.render.item.RenderItemEquipmentSkin;
 import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.client.render.tileentities.RenderBlockArmourer;
@@ -89,6 +91,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntitySpectralArrow;
+import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -155,6 +159,20 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             @Override
             public Render createRenderFor(RenderManager manager) {
                 return new RenderEntityMannequin(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityTippedArrow.class, new IRenderFactory() {
+
+            @Override
+            public Render createRenderFor(RenderManager manager) {
+                return new RenderTippedArrowSkinned(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntitySpectralArrow.class, new IRenderFactory() {
+
+            @Override
+            public Render createRenderFor(RenderManager manager) {
+                return new RenderSpectralArrowSkinned(manager);
             }
         });
     }
