@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.client.gui.controls;
 
-import moe.plushie.armourers_workshop.utils.UtilColour;
-import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,10 +17,10 @@ public class GuiBookTextButton extends GuiButtonExt {
         if (this.visible) {
             this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
             int hoverState = this.getHoverState(this.hovered);
-            int color = UtilColour.getMinecraftColor(8, ColourFamily.MINECRAFT);
+            int color = 0xFF151515;
             
             if (hoverState == 2) {
-                color = UtilColour.getMinecraftColor(7, ColourFamily.MINECRAFT);
+                color = 0xFF2A2A2A;
             }
             
             String buttonText = this.displayString;

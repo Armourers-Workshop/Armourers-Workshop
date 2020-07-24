@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.client.guidebook;
 
-import moe.plushie.armourers_workshop.utils.UtilColour;
-import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 
@@ -19,7 +17,7 @@ public class BookPageContents extends BookPageBase {
             String chapterTitle = chapter.getUnlocalizedName();
             chapterTitle = I18n.format(chapterTitle + ".name");
             fontRenderer.drawString(chapterTitle, PAGE_PADDING_LEFT,
-                    PAGE_MARGIN_TOP  + fontRenderer.FONT_HEIGHT * 2 + i * 16, UtilColour.getMinecraftColor(7, ColourFamily.MINECRAFT));
+                    PAGE_MARGIN_TOP  + fontRenderer.FONT_HEIGHT * 2 + i * 16, 0xFF2A2A2A);
         }
     }
 

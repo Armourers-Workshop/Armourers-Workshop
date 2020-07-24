@@ -44,6 +44,8 @@ public class PaletteManager {
         putPaletteInMap(new Palette("\u2606 Warm32", true, UtilColour.PALETTE_WARM32));
         putPaletteInMap(new Palette("\u2606 Pastel-64 A", true, UtilColour.PALETTE_PASTEL_64_A));
         putPaletteInMap(new Palette("\u2606 Pastel-64 B", true, UtilColour.PALETTE_PASTEL_64_B));
+        putPaletteInMap(new Palette("\u2606 SoftMilk32", true, UtilColour.PALETTE_SOFTMILK32));
+        putPaletteInMap(new Palette("\u2606 Endesga 32", true, UtilColour.PALETTE_ENDESGA_32));
     }
 
     private void putPaletteInMap(Palette palette) {
