@@ -41,7 +41,7 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
     private GuiButtonExt buttonUpdate;
     private GuiButtonExt buttonDelete;
     private GuiCustomLabel statsText;
-    
+
     private JsonObject skinJson = null;
     private Screen returnScreen;
     private boolean firstTick = false;
@@ -215,8 +215,16 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
                         if (result.has("valid") & result.has("action")) {
                             String action = result.get("action").getAsString();
                             boolean valid = result.get("valid").getAsBoolean();
-
                             if (action.equals("user-skin-delete")) {
+                                if (returnScreen == Screen.HOME) {
+                                    ((GuiGlobalLibrary) parent).panelHome.updateSkinPanels();
+                                }
+                                if (returnScreen == Screen.SEARCH) {
+                                    ((GuiGlobalLibrary) parent).panelSearchResults.refresh();
+                                }
+                                if (returnScreen == Screen.USER_SKINS) {
+                                    ((GuiGlobalLibrary) parent).panelUserSkins.refresh();
+                                }
                                 ((GuiGlobalLibrary) parent).switchScreen(returnScreen);
                             } else {
                                 ModLogger.log(Level.WARN, "Server send unknown action: " + action);
@@ -253,7 +261,8 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
 
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "skinDescription"), x + 5, y + 85, 0xFFFFFF);
         textDescription.drawButton(mc, mouseX, mouseY, partialTickTime);
-        //fontRenderer.drawString(textDescription.getText().length() + " / " + "255", x + 5, y + 115, 0xFFFFFF);
+        // fontRenderer.drawString(textDescription.getText().length() + " / " + "255", x
+        // + 5, y + 115, 0xFFFFFF);
 
         statsText.clearText();
         int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();

@@ -3,8 +3,6 @@ package moe.plushie.armourers_workshop.client.guidebook;
 import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
-import moe.plushie.armourers_workshop.utils.UtilColour;
-import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.resources.I18n;
@@ -40,7 +38,7 @@ public abstract class BookPageBase implements IBookPage {
         
         int xCenter = 104 / 2 - fontRenderer.getStringWidth(text) / 2;
         fontRenderer.drawSplitString(text, contentWidth - stringWidth,
-                y, PAGE_TEXTURE_WIDTH, UtilColour.getMinecraftColor(7, ColourFamily.MINECRAFT));
+                y, PAGE_TEXTURE_WIDTH, 0xFF2A2A2A);
     }
     
     protected void drawPageTitleAndNumber(FontRenderer fontRenderer, int pageNumber) {

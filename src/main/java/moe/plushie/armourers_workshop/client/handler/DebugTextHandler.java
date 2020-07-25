@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class DebugTextHandler {
-    
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onDebugText(RenderGameOverlayEvent.Text event) {
@@ -34,7 +34,11 @@ public class DebugTextHandler {
         }
         if (event.getLeft() != null && event.getLeft().size() > 0) {
             EntityPlayerSP localPlayer = Minecraft.getMinecraft().player;
-            
+
+            if (!event.getLeft().get(0).contains("1.12.2")) {
+                return;
+            }
+
             event.getLeft().add("");
             event.getLeft().add(TextFormatting.GOLD + "[" + LibModInfo.NAME + "]");
             event.getLeft().add("Skins Rendered: " + ModClientFMLEventHandler.skinRenderLastTick);
@@ -47,7 +51,7 @@ public class DebugTextHandler {
                 if (Minecraft.getMinecraft().isIntegratedServerRunning()) {
                     event.getLeft().add("Common Skin Cache: S[" + CommonSkinCache.INSTANCE.size() + "] F[" + CommonSkinCache.INSTANCE.fileLinkSize() + "] G[" + CommonSkinCache.INSTANCE.globalLinkSize() + "]");
                 }
-                
+
                 int bakeQueue = ModelBakery.INSTANCE.getBakingQueueSize();
                 event.getLeft().add("Baking Queue: " + bakeQueue);
                 event.getLeft().add("Request Queue: " + (ClientSkinCache.INSTANCE.getRequestQueueSize() - bakeQueue));
@@ -56,21 +60,17 @@ public class DebugTextHandler {
                 event.getLeft().add("Average Bake Time: " + ModelBakery.INSTANCE.getAverageBakeTime() + "ms");
                 event.getLeft().add("Paint Type: " + ClientProxy.getTexturePaintType().toString());
                 /*
-                List playerList = localPlayer.sendQueue.playerInfoList;
-                if (!Minecraft.getMinecraft().isIntegratedServerRunning()) {
-                    for (int i = 0; i < playerList.size(); i++) {
-                        GuiPlayerInfo player = (GuiPlayerInfo) playerList.get(i);
-                        if (player.name.equals(localPlayer.getCommandSenderName())) {
-                            event.left.add("ping:" + player.responseTime + "ms");
-                            break;
-                        }
-                    } 
-                }
-                */
+                 * List playerList = localPlayer.sendQueue.playerInfoList; if
+                 * (!Minecraft.getMinecraft().isIntegratedServerRunning()) { for (int i = 0; i <
+                 * playerList.size(); i++) { GuiPlayerInfo player = (GuiPlayerInfo)
+                 * playerList.get(i); if
+                 * (player.name.equals(localPlayer.getCommandSenderName())) {
+                 * event.left.add("ping:" + player.responseTime + "ms"); break; } } }
+                 */
             } else {
-                event.getLeft().add("Hold " + TextFormatting.GREEN + "Ctrl" + TextFormatting.WHITE + " for more.");  
+                event.getLeft().add("Hold " + TextFormatting.GREEN + "Ctrl" + TextFormatting.WHITE + " for more.");
             }
         }
     }
-    
+
 }

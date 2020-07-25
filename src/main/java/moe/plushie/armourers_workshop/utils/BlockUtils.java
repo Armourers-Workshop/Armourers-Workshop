@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.painting.IPantableBlock;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
-import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.IInventory;
@@ -26,19 +25,19 @@ public final class BlockUtils {
     }
     
     public static int determineOrientation(int x, int y, int z, EntityLivingBase entity) {
-        if (MathHelper.abs((float) entity.posX - (float) x) < 2.0F && MathHelper.abs((float) entity.posZ - (float) z) < 2.0F) {
-            double d0 = entity.posY + entity.getEyeHeight() - (double) entity.getYOffset();
+        if (MathHelper.abs((float) entity.posX - x) < 2.0F && MathHelper.abs((float) entity.posZ - z) < 2.0F) {
+            double d0 = entity.posY + entity.getEyeHeight() - entity.getYOffset();
 
-            if (d0 - (double) y > 2.0D) { return 1; }
-            if ((double) y - d0 > 0.0D) { return 0; }
+            if (d0 - y > 2.0D) { return 1; }
+            if (y - d0 > 0.0D) { return 0; }
         }
 
-        int l = MathHelper.floor((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int l = MathHelper.floor(entity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         return l == 0 ? 2 : (l == 1 ? 5 : (l == 2 ? 3 : (l == 3 ? 4 : 0)));
     }
     
     public static int determineOrientationSide(EntityLivingBase entity) {
-        int rotation = MathHelper.floor((double) (entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        int rotation = MathHelper.floor(entity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         rotation = determineOrientationSideMeta(rotation);
         return rotation;
     }
@@ -59,14 +58,6 @@ public final class BlockUtils {
     
     public static EnumFacing determineDirectionSide(EntityLivingBase entity) {
         return EnumFacing.byIndex(determineOrientationSide(entity));
-    }
-    
-    public static int getColourFromTileEntity(World world, BlockPos pos, int side) {
-        TileEntity te = world.getTileEntity(pos);
-        if (te != null & te instanceof IPantable) {
-            return ((IPantable)te).getColour(side);
-        }
-        return UtilColour.getMinecraftColor(0, ColourFamily.MINECRAFT);
     }
     
     public static ICubeColour getColourFromTileEntity(World world, BlockPos pos) {

@@ -11,8 +11,6 @@ import moe.plushie.armourers_workshop.common.library.LibraryFile;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
-import moe.plushie.armourers_workshop.utils.UtilColour;
-import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -45,14 +43,14 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
             iconOffset = 10;
         }
         
-        int fontColour = UtilColour.getMinecraftColor(8, ColourFamily.MINECRAFT);
+        int fontColour = 0xFF151515;
         if (isHovering(fontRenderer, x, y, mouseX, mouseY, width)) {
             Gui.drawRect(x, y, x + width - 3, y + 12, 0xFFCCCCCC);
-            fontColour = UtilColour.getMinecraftColor(15, ColourFamily.MINECRAFT);
+            fontColour = 0xFFFFFFFF;
         }
         if (selected) {
             Gui.drawRect(x, y, x + width - 3, y + 12, 0xFFFFFF88);
-            fontColour = UtilColour.getMinecraftColor(15, ColourFamily.MINECRAFT);
+            fontColour = 0xFFFFFFFF;
         }
         if (!file.isDirectory()) {
             fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, fontColour);
