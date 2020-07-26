@@ -95,7 +95,7 @@ public abstract class GlobalTask<V> implements Callable<V> {
         return data;
     }
     
-    protected boolean authenticateUser () {
+    protected static synchronized boolean authenticateUser () {
         GameProfile gameProfile = Minecraft.getMinecraft().player.getGameProfile();
         PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
         if (!plushieSession.isAuthenticated()) {

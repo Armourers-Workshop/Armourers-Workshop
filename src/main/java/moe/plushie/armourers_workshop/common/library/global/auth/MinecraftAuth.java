@@ -23,28 +23,33 @@ public class MinecraftAuth {
     private static final String JOIN_URL = "https://sessionserver.mojang.com/session/minecraft/join";
 
     private static long lastAuthTime;
+    
+    private static final Object MC_AUTH_LOCK = new Object();
 
     public static boolean checkAndRefeshAuth(Session session, String serverId) {
-        if (lastAuthTime + 30000L > System.currentTimeMillis()) {
-            ModLogger.log("skipping mc auth");
-            return true;
-        }
-        ModLogger.log(Level.INFO, "MC Auth start");
-        HttpURLConnection conn = null;
-        String data = "{\"accessToken\":\"" + session.getToken() + "\", \"serverId\":\"" + serverId + "\", \"selectedProfile\":\"" + session.getPlayerID() + "\"}";
+        synchronized (MC_AUTH_LOCK) {
+            if (lastAuthTime + 30000L > System.currentTimeMillis()) {
+                ModLogger.log("skipping mc auth");
+                return true;
+            }
+            ModLogger.log(Level.INFO, "MC Auth start");
+            HttpURLConnection conn = null;
+            String data = "{\"accessToken\":\"" + session.getToken() + "\", \"serverId\":\"" + serverId + "\", \"selectedProfile\":\"" + session.getPlayerID() + "\"}";
 
-        try {
-            String result = performPostRequest(new URL(JOIN_URL), data, "application/json");
-            lastAuthTime = System.currentTimeMillis();
-            return true;
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            try {
+                String result = performPostRequest(new URL(JOIN_URL), data, "application/json");
+                lastAuthTime = System.currentTimeMillis();
+                return true;
+            } catch (MalformedURLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return false;
         }
-        return false;
+
         // returns non 204 if error occurred
     }
 
