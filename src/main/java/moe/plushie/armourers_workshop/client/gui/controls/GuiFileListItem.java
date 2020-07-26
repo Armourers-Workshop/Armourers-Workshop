@@ -24,13 +24,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiFileListItem extends Gui implements IGuiListItem {
 
     private static final ResourceLocation texture = new ResourceLocation(LibGuiResources.CONTROL_LIST);
-    
+
     private final LibraryFile file;
-    
+
     public GuiFileListItem(LibraryFile file) {
         this.file = file;
     }
-    
+
     public LibraryFile getFile() {
         return file;
     }
@@ -38,19 +38,19 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
     @Override
     public void drawListItem(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, boolean selected, int width) {
         int iconOffset = 0;
-        
+
         if (GuiSkinLibrary.showModelPreviews() | file.isDirectory()) {
             iconOffset = 10;
         }
-        
-        int fontColour = 0xFF151515;
+
+        int fontColour = 0xFFAAAAAA;
         if (isHovering(fontRenderer, x, y, mouseX, mouseY, width)) {
             Gui.drawRect(x, y, x + width - 3, y + 12, 0xFFCCCCCC);
-            fontColour = 0xFFFFFFFF;
+            fontColour = 0xFF000000;
         }
         if (selected) {
             Gui.drawRect(x, y, x + width - 3, y + 12, 0xFFFFFF88);
-            fontColour = 0xFFFFFFFF;
+            fontColour = 0xFF000000;
         }
         if (!file.isDirectory()) {
             fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, fontColour);
@@ -63,13 +63,13 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
                         SkinDescriptor skinPointer = new SkinDescriptor(identifier);
                         float scale = 10F;
                         GlStateManager.pushMatrix();
-                        GL11.glTranslatef((float)x + 5, (float)y + 6, 50.0F);
+                        GL11.glTranslatef((float) x + 5, (float) y + 6, 50.0F);
                         GL11.glScalef((-scale), scale, scale);
                         GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
                         GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
-                        float rotation = (float)((double)System.currentTimeMillis() / 10 % 360);
+                        float rotation = (float) ((double) System.currentTimeMillis() / 10 % 360);
                         GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
-                        
+
                         GlStateManager.pushAttrib();
                         RenderHelper.enableGUIStandardItemLighting();
                         GlStateManager.color(1F, 1F, 1F, 1F);
@@ -99,7 +99,7 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
                 fontRenderer.drawString(file.fileName, x + 2 + iconOffset, y + 2, 0xFF88FF88);
             }
         }
-        
+
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.resetColor();
     }
@@ -112,7 +112,7 @@ public class GuiFileListItem extends Gui implements IGuiListItem {
     @Override
     public void mouseReleased(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, int button, int width) {
     }
-    
+
     private boolean isHovering(FontRenderer fontRenderer, int x, int y, int mouseX, int mouseY, int width) {
         return mouseX >= x & mouseY >= y & mouseX <= x + width - 3 & mouseY <= y + 11;
     }
