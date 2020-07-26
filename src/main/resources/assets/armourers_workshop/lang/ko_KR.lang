@@ -52,12 +52,12 @@ tile.armourers_workshop:skin-cube-glass-glowing.name=유리 스킨 큐브 (발�
 tile.armourers_workshop:colour-mixer.name=색상 혼합기
 	
 tile.armourers_workshop:doll.name=인형
-tile.armourers_workshop:skinning-table.name=스킨을 입힐 수 있는 테이블
+tile.armourers_workshop:skinning-table.name=스킨 조합대
 tile.armourers_workshop:dye-table.name=염색 작업대
 tile.armourers_workshop:skinnable.name=스킨을 입힐 수 있는 블록
 tile.armourers_workshop:hologram-projector.name=홀로그램 영사기
 tile.armourers_workshop:outfit-maker.name=스킨 통합기
-
+tile.armourers_workshop:advanced-skin-builder.name=진보된 스킨 제작대
 
 # 블럭 설명 텍스트
 tile.armourers_workshop:armourer.flavour=커스텀 장비,블럭 스킨을 만들 수 있습니다.
@@ -444,6 +444,16 @@ inventory.armourers_workshop:colour-mixer.label.brightness=명도
 inventory.armourers_workshop:colour-mixer.label.hex=RGB Hex값
 inventory.armourers_workshop:colour-mixer.label.presets=색상 견본
 inventory.armourers_workshop:colour-mixer.label.paintType=붓 종류
+inventory.armourers_workshop:colour-mixer.button.add_palette=팔레트 추가...
+inventory.armourers_workshop:colour-mixer.button.remove_palette=팔레트 제거...
+inventory.armourers_workshop:colour-mixer.button.rename_palette=팔레트 이름 변경...
+inventory.armourers_workshop:colour-mixer.help.palette=팔레트의 색깔 을 고르려면 &a좌클릭&r.%n%n팔레트의 색을 설정 하려면 &ashift&r 와 &a좌클릭&r.%n%n☆로 시작하는 팔레트는 기본 옵션이며, 삭제할수 없음.
+inventory.armourers_workshop:colour-mixer.dialog.add_palette.title=팔레트 추가
+inventory.armourers_workshop:colour-mixer.dialog.add_palette.enter_name=이름 입력...
+inventory.armourers_workshop:colour-mixer.dialog.remove_palette.title=팔레트 제거
+inventory.armourers_workshop:colour-mixer.dialog.remove_palette.message=팔레트 %s 를 정말 제거하시겠습니까?
+inventory.armourers_workshop:colour-mixer.dialog.rename_palette.title=팔레트 이름 변경
+inventory.armourers_workshop:colour-mixer.dialog.rename_palette.enter_name=이름 입력...
 
 
 # Wardrobe
