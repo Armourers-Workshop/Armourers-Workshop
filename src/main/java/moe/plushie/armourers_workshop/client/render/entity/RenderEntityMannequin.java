@@ -195,7 +195,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             extraColours = wardrobe.getExtraColours();
         }
 
-        float distance = entity.getDistance(Minecraft.getMinecraft().player);
+        double distance = entity.getDistance(Minecraft.getMinecraft().player);
         // Render skins.
         for (int i = 0; i < skinTypes.length; i++) {
             ISkinType skinType = skinTypes[i];

@@ -52,8 +52,8 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
                 RenderBlockMannequin.renderMagicCircle(Minecraft.getMinecraft(), contributor.r, contributor.g, contributor.b, partialTicks, 0, false);
             }
         }
-        
-        double distance = Minecraft.getMinecraft().player.getDistance(entitylivingbaseIn.posX, entitylivingbaseIn.posY, entitylivingbaseIn.posZ);
+
+        double distance = Minecraft.getMinecraft().player.getDistance(entitylivingbaseIn);
         if (distance > ConfigHandlerClient.renderDistanceSkin) {
             return;
         }
@@ -90,13 +90,13 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
             ISkinType skinType = skinTypes[i];
             ISkinDescriptor skinDescriptorArmour = getSkinDescriptorFromArmourer(entitylivingbaseIn, skinType);
             if (skinDescriptorArmour != null) {
-                renderSkin(entitylivingbaseIn, skinDescriptorArmour, skinCap, wardrobe, extraColours, 0, entitylivingbaseIn != Minecraft.getMinecraft().player);
+                renderSkin(entitylivingbaseIn, skinDescriptorArmour, skinCap, wardrobe, extraColours, distance, entitylivingbaseIn != Minecraft.getMinecraft().player);
             } else {
                 if (skinType.getVanillaArmourSlotId() != -1 | skinType == SkinTypeRegistry.skinWings | skinType == SkinTypeRegistry.skinOutfit) {
                     for (int skinIndex = 0; skinIndex < skinCap.getSlotCountForSkinType(skinType); skinIndex++) {
                         ISkinDescriptor skinDescriptor = skinCap.getSkinDescriptor(skinType, skinIndex);
                         if (skinDescriptor != null) {
-                            renderSkin(entitylivingbaseIn, skinDescriptor, skinCap, wardrobe, extraColours, 0, entitylivingbaseIn != Minecraft.getMinecraft().player);
+                            renderSkin(entitylivingbaseIn, skinDescriptor, skinCap, wardrobe, extraColours, distance, entitylivingbaseIn != Minecraft.getMinecraft().player);
                         }
                     }
                 }
@@ -146,7 +146,7 @@ public class SkinLayerRendererPlayer implements LayerRenderer<EntityPlayer> {
             if (SkinProperties.PROP_MODEL_HIDE_OVERLAY_LEG_RIGHT.getValue(skin.getProperties())) {
                 skinCap.hideLegRightOverlay = true;
             }
-            
+
             if (skin.hasPaintData() & ClientProxy.getTexturePaintType() == TexturePaintType.MODEL_REPLACE_AW) {
                 if (skin.getSkinType() == SkinTypeRegistry.skinHead) {
                     skinCap.hideHead = true;
