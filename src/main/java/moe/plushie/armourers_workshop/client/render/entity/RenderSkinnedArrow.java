@@ -23,30 +23,32 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public abstract class RenderSkinnedArrow<T extends EntityArrow> extends RenderArrow<T> {
-    
+
     private final SkinModelRenderHelper equipmentModelRenderer;
-    
+
     public RenderSkinnedArrow(RenderManager renderManager) {
         super(renderManager);
         this.equipmentModelRenderer = SkinModelRenderHelper.INSTANCE;
     }
-    
+
     @Override
     public void doRender(T entityArrow, double x, double y, double z, float yaw, float partialTickTime) {
-        IEntitySkinCapability skinCapability = EntitySkinCapability.get(entityArrow.shootingEntity);
         boolean didRender = false;
-        if (skinCapability != null) {
-            for (int i = 0; i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinBow); i++) {
-                ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(SkinTypeRegistry.skinBow, i);
-                if (skinDescriptor != null) {
-                    Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
-                    if (skin != null) {
-                        SkinPart skinPart = skin.getPart("armourers:bow.arrow");
-                        if (skinPart != null) {
-                            ModRenderHelper.enableAlphaBlend();
-                            renderArrowSkin(entityArrow, x, y, z, partialTickTime, skinPart, skinDescriptor.getSkinDye());
-                            ModRenderHelper.disableAlphaBlend();
-                            didRender = true;
+        if (entityArrow.shootingEntity != null) {
+            IEntitySkinCapability skinCapability = EntitySkinCapability.get(entityArrow.shootingEntity);
+            if (skinCapability != null) {
+                for (int i = 0; i < skinCapability.getSlotCountForSkinType(SkinTypeRegistry.skinBow); i++) {
+                    ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(SkinTypeRegistry.skinBow, i);
+                    if (skinDescriptor != null) {
+                        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinDescriptor);
+                        if (skin != null) {
+                            SkinPart skinPart = skin.getPart("armourers:bow.arrow");
+                            if (skinPart != null) {
+                                ModRenderHelper.enableAlphaBlend();
+                                renderArrowSkin(entityArrow, x, y, z, partialTickTime, skinPart, skinDescriptor.getSkinDye());
+                                ModRenderHelper.disableAlphaBlend();
+                                didRender = true;
+                            }
                         }
                     }
                 }
@@ -56,12 +58,12 @@ public abstract class RenderSkinnedArrow<T extends EntityArrow> extends RenderAr
             super.doRender(entityArrow, x, y, z, yaw, partialTickTime);
         }
     }
-    
+
     private void renderArrowSkin(EntityArrow entityArrow, double x, double y, double z, float partialTickTime, SkinPart skinPart, ISkinDye skinDye) {
         float scale = 0.0625F;
         GL11.glPushMatrix();
-        GL11.glTranslatef((float)x, (float)y, (float)z);
-        
+        GL11.glTranslatef((float) x, (float) y, (float) z);
+
         GL11.glRotatef(entityArrow.prevRotationYaw + (entityArrow.rotationYaw - entityArrow.prevRotationYaw) * partialTickTime - 90.0F, 0.0F, 1.0F, 0.0F);
         GL11.glRotatef(entityArrow.prevRotationPitch + (entityArrow.rotationPitch - entityArrow.prevRotationPitch) * partialTickTime, 0.0F, 0.0F, 1.0F);
         GL11.glTranslatef(2.5F * scale, -0.5F * scale, -0.5F * scale);
