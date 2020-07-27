@@ -2,15 +2,19 @@ package moe.plushie.armourers_workshop.client.render.tileentities;
 
 import org.lwjgl.opengl.GL11;
 
+import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.config.ConfigHandlerClient;
+import moe.plushie.armourers_workshop.client.model.skin.IEquipmentModel;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
-import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper;
+import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper.ModelType;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityHologramProjector.PowerMode;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -165,13 +169,13 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         }
 
         if (angleX != 0) {
-            GL11.glRotatef((float) angleX, 1, 0, 0);
+            GL11.glRotatef(angleX, 1, 0, 0);
         }
         if (angleY != 0) {
-            GL11.glRotatef((float) angleY, 0, 1, 0);
+            GL11.glRotatef(angleY, 0, 1, 0);
         }
         if (angleZ != 0) {
-            GL11.glRotatef((float) angleZ, 0, 0, 1);
+            GL11.glRotatef(angleZ, 0, 0, 1);
         }
 
         GL11.glTranslated(tileEntity.getRotationOffsetX().get() * scale, tileEntity.getRotationOffsetY().get() * scale, tileEntity.getRotationOffsetZ().get() * scale);
@@ -181,7 +185,15 @@ public class RenderBlockHologramProjector extends TileEntitySpecialRenderer<Tile
         }
         ModRenderHelper.enableAlphaBlend();
 
-        SkinItemRenderHelper.renderSkinWithHelper(skin, skinPointer, true, false);
+        double distance = Minecraft.getMinecraft().player.getDistance(tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
+        ISkinType skinType = skinPointer.getIdentifier().getSkinType();
+        if (skinType == null) {
+            skinType = skin.getSkinType();
+        }
+        skinType = skin.getSkinType();
+        
+        IEquipmentModel targetModel = SkinModelRenderHelper.INSTANCE.getTypeHelperForModel(ModelType.MODEL_BIPED, skinType);
+        targetModel.render(null, skin, null, true, skinPointer.getSkinDye(), null, true, distance, true);
 
         GL11.glPopMatrix();
         if (tileEntity.isShowRotationPoint()) {

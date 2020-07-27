@@ -93,11 +93,12 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySk
                         GlStateManager.rotate(90F, 0, 1, 0);
                     }
                     
+                    double distance = Minecraft.getMinecraft().player.getDistance(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ());
                     //GL11.glRotatef((90F * ((-facing.getIndex() + 4))), 0, 1, 0);
                     GlStateManager.scale(-1, -1, 1);
                     for (int i = 0; i < skin.getParts().size(); i++) {
                         SkinPart skinPart = skin.getParts().get(i);
-                        SkinPartRenderer.INSTANCE.renderPart(new SkinPartRenderData(skinPart, SCALE, te.getSkinPointer().getSkinDye(), null, 0, true, true, true, null));
+                        SkinPartRenderer.INSTANCE.renderPart(new SkinPartRenderData(skinPart, SCALE, te.getSkinPointer().getSkinDye(), null, distance, true, true, true, null));
                     }
                     //renderSkin(tileEntity, x, y, z, skin);
                     GlStateManager.disableBlend();
@@ -263,9 +264,9 @@ public class RenderBlockSkinnable extends TileEntitySpecialRenderer<TileEntitySk
         }
         
         public double getDistanceFrom(double x, double y, double z) {
-            double d3 = (double)tileEntity.getPos().getX() + 0.5D - x;
-            double d4 = (double)tileEntity.getPos().getY() + 0.5D - y;
-            double d5 = (double)tileEntity.getPos().getZ() + 0.5D - z;
+            double d3 = tileEntity.getPos().getX() + 0.5D - x;
+            double d4 = tileEntity.getPos().getY() + 0.5D - y;
+            double d5 = tileEntity.getPos().getZ() + 0.5D - z;
             return d3 * d3 + d4 * d4 + d5 * d5;
         }
     }
