@@ -34,6 +34,12 @@ public class ContainerAdvancedSkinBuilder extends ModTileContainer<TileEntityAdv
 
     @Override
     public void buttonPressed(EntityPlayer player, byte buttonId) {
+        if (buttonId == 0) {
+            saveAdvancedSkin(player);
+        }
+    }
+
+    private void saveAdvancedSkin(EntityPlayer player) {
         ArmourersWorkshop.getLogger().info("Making advanced part.");
 
         SkinProperties properties = new SkinProperties();

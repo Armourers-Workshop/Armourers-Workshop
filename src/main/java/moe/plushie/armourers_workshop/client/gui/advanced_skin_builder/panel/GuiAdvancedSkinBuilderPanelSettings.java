@@ -1,5 +1,9 @@
 package moe.plushie.armourers_workshop.client.gui.advanced_skin_builder.panel;
 
+import java.util.ArrayList;
+
+import org.lwjgl.opengl.GL11;
+
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.client.gui.advanced_skin_builder.GuiAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.client.gui.advanced_skin_builder.GuiAdvancedSkinBuilder.GuiTreeViewPartNote;
@@ -8,8 +12,13 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiCheckBox;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiCustomSlider;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiTextFieldCustom;
+import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
+import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
+import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
@@ -18,6 +27,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiAdvancedSkinBuilderPanelSettings extends GuiPanel implements ISlider {
+
+    private PartNodeSetting nodeSetting = null;
 
     private GuiTextFieldCustom textSetting;
     private ISkinIdentifier identifierSetting;
@@ -74,6 +85,10 @@ public class GuiAdvancedSkinBuilderPanelSettings extends GuiPanel implements ISl
         textSetting.mouseClicked(mouseX, mouseY, button);
         return super.mouseClicked(mouseX, mouseY, button);
     }
+    
+    private ArrayList<ISkinIdentifier> getSkinIdentifier() {
+        return ((GuiAdvancedSkinBuilder) parent).getListOfSkins();
+    }
 
     @Override
     public void drawBackground(int mouseX, int mouseY, float partialTickTime) {
@@ -82,6 +97,56 @@ public class GuiAdvancedSkinBuilderPanelSettings extends GuiPanel implements ISl
         }
         textSetting.drawButton(mc, mouseX, mouseY, partialTickTime);
         fontRenderer.drawString("Settings:", x + GuiAdvancedSkinBuilder.PADDING, y + GuiAdvancedSkinBuilder.PADDING, 0xCCFFFFFF);
+    }
+
+    @Override
+    public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
+        if (!visible) {
+            return;
+        }
+        if (nodeSetting != null && nodeSetting == PartNodeSetting.SKIN) {
+            //ModLogger.log("pie");
+            ArrayList<ISkinIdentifier> skinIdentifiers = getSkinIdentifier();
+            GlStateManager.pushMatrix();
+            GlStateManager.pushAttrib();
+
+            RenderHelper.enableGUIStandardItemLighting();
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.disableNormalize();
+            GlStateManager.disableColorMaterial();
+            GlStateManager.enableNormalize();
+            GlStateManager.enableColorMaterial();
+            ModRenderHelper.enableAlphaBlend();
+            GlStateManager.enableDepth();
+
+            for (int i = 0; i < skinIdentifiers.size(); i++) {
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(x + 16 + i * 18, y + 20, 500);
+
+                float scale = 16;
+                GlStateManager.scale((-scale), scale, scale);
+
+                GL11.glRotatef(-40, 1.0F, 0.0F, 0.0F);
+                float rotation = (float) ((double) System.currentTimeMillis() / 10 % 360);
+                GL11.glRotatef(rotation, 0.0F, 1.0F, 0.0F);
+
+                SkinItemRenderHelper.renderSkinAsItem(new SkinDescriptor(skinIdentifiers.get(i)), true, false, 16, 16);
+                //SkinItemRenderHelper.renderSkinWithoutHelper(skinIdentifiers.get(i), false);
+                GlStateManager.popMatrix();
+            }
+
+            ModRenderHelper.enableAlphaBlend();
+
+            GlStateManager.disablePolygonOffset();
+            GlStateManager.disableDepth();
+            GlStateManager.disableNormalize();
+            GlStateManager.disableColorMaterial();
+            RenderHelper.disableStandardItemLighting();
+            GlStateManager.resetColor();
+
+            GlStateManager.popAttrib();
+            GlStateManager.popMatrix();
+        }
     }
 
     @Override
@@ -95,13 +160,13 @@ public class GuiAdvancedSkinBuilderPanelSettings extends GuiPanel implements ISl
     public void onChangeSliderValue(GuiSlider slider) {
         applySetting();
     }
-    
+
     @Override
     public void draw(int mouseX, int mouseY, float partialTickTime) {
         // TODO Auto-generated method stub
         super.draw(mouseX, mouseY, partialTickTime);
     }
-    
+
     public void updateSliders(Vec3d vec3d) {
         updateSliders(vec3d.x, vec3d.y, vec3d.z);
     }
@@ -128,10 +193,13 @@ public class GuiAdvancedSkinBuilderPanelSettings extends GuiPanel implements ISl
         sliderSettingX.visible = false;
         sliderSettingY.visible = false;
         sliderSettingZ.visible = false;
+        this.nodeSetting = null;
 
         if (nodeSetting == null | treeViewPartNote == null) {
             return;
         }
+        
+        this.nodeSetting = nodeSetting;
 
         switch (nodeSetting) {
         case NAME:
@@ -179,6 +247,7 @@ public class GuiAdvancedSkinBuilderPanelSettings extends GuiPanel implements ISl
             treeViewPartNote.setName(textSetting.getText());
             break;
         case SKIN:
+            treeViewPartNote.setSkinIdentifier(identifierSetting);
             break;
         case ENABLED:
             treeViewPartNote.getAdvancedPartNode().enabled = checkBoxSetting.isChecked();

@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.api.common.IPoint3D;
 import moe.plushie.armourers_workshop.api.common.IRectangle3D;
 import moe.plushie.armourers_workshop.api.common.skin.Rectangle3D;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDescriptor;
+import moe.plushie.armourers_workshop.api.common.skin.data.ISkinIdentifier;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartType;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
@@ -205,5 +206,13 @@ public final class SkinItemRenderHelper {
             return;
         }
         SkinModelRenderHelper.INSTANCE.modelHelperDummy.render(null, skin, null, true, skinPointer.getSkinDye(), null, true, 0, doLodLoading);
+    }
+    
+    public static void renderSkinWithoutHelper(ISkinIdentifier skinIdentifier, boolean doLodLoading) {
+        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinIdentifier);
+        if (skin == null) {
+            return;
+        }
+        SkinModelRenderHelper.INSTANCE.modelHelperDummy.render(null, skin, null, true, null, null, true, 0, doLodLoading);
     }
 }

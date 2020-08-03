@@ -77,7 +77,7 @@ public class GuiTreeView extends GuiButtonExt {
         return null;
     }
 
-    private ArrayList<IGuiTreeViewItem> getFullItemList() {
+    public ArrayList<IGuiTreeViewItem> getFullItemList() {
         ArrayList<IGuiTreeViewItem> buildList = new ArrayList<GuiTreeView.IGuiTreeViewItem>();
         getFullItemList(rootItems, buildList);
         return buildList;
@@ -90,6 +90,10 @@ public class GuiTreeView extends GuiButtonExt {
                 getFullItemList(item.getSubItems(), buildList);
             }
         }
+    }
+    
+    public void removeSelectedItem() {
+        removeItem(getSelectedIndex());
     }
 
     public void removeItem(int index) {

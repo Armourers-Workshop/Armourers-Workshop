@@ -34,9 +34,11 @@ import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
 import moe.plushie.armourers_workshop.common.skin.advanced.IAdvancedPartParent;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
+import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
+import moe.plushie.armourers_workshop.utils.ArrayUtils;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
@@ -83,7 +85,7 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
     // Preview
     private GuiDropDownList dropDownSkinType;
 
-    private AdvancedPartNode builtNode = null;
+    private ArrayList<ISkinIdentifier> skinIdentifiers = new ArrayList<ISkinIdentifier>();
 
     public GuiAdvancedSkinBuilder(EntityPlayer player, TileEntityAdvancedSkinBuilder tileEntity) {
         super(new ContainerAdvancedSkinBuilder(player.inventory, tileEntity));
@@ -202,6 +204,49 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         }
     }
 
+    private ArrayList<ISkinIdentifier> readSkinsFromInv() {
+        ArrayList<ISkinIdentifier> identifiers = new ArrayList<ISkinIdentifier>();
+        int i1 = getContainer().getPlayerInvStartIndex();
+        int i2 = getContainer().getPlayerInvEndIndex();
+        for (int i = i1; i < i2; i++) {
+            Slot slot = inventorySlots.inventorySlots.get(i);
+            ItemStack stack = slot.getStack();
+            ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(stack);
+            if (descriptor != null) {
+                if (descriptor.getIdentifier().getSkinType() == SkinTypeRegistry.skinPart) {
+                    identifiers.add(new SkinIdentifier(descriptor.getIdentifier()));
+                }
+            }
+        }
+        return identifiers;
+    }
+
+    private ArrayList<ISkinIdentifier> readSkinsFromTree() {
+        ArrayList<ISkinIdentifier> identifiers = new ArrayList<ISkinIdentifier>();
+        ArrayList<IGuiTreeViewItem> treeViewItems = treeView.getFullItemList();
+        for (IGuiTreeViewItem treeViewItem : treeViewItems) {
+            GuiTreeViewPartNote treeViewPartNote = (GuiTreeViewPartNote) treeViewItem;
+            if (treeViewPartNote.getSkinIdentifier() != null) {
+                if (!identifiers.contains(treeViewPartNote.getSkinIdentifier())) {
+                    identifiers.add(treeViewPartNote.getSkinIdentifier());
+                }
+            }
+        }
+        return identifiers;
+    }
+
+    public ArrayList<ISkinIdentifier> getListOfSkins() {
+        ArrayList<ISkinIdentifier> identifiers = new ArrayList<ISkinIdentifier>();
+        identifiers.addAll(readSkinsFromInv());
+        identifiers.addAll(readSkinsFromTree());
+        return ArrayUtils.removeDuplicates(identifiers);
+    }
+
+    private void updateSkinList() {
+        skinIdentifiers.clear();
+        skinIdentifiers.addAll(getListOfSkins());
+    }
+
     private void setPlayerSlotVisible(boolean visible) {
         for (int i = getContainer().getPlayerInvStartIndex(); i < getContainer().getPlayerInvEndIndex(); i++) {
             Slot slot = getContainer().getSlot(i);
@@ -261,7 +306,7 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
     private AdvancedPartNode convertTreeToAdvancedPartNode() {
         AdvancedPartNode partNode = new AdvancedPartNode(-1, "main root");
         convertTreeToAdvancedPartNode(partNode, treeView.getItems());
-        //ModLogger.log(partNode);
+        // ModLogger.log(partNode);
         return partNode;
     }
 
@@ -293,7 +338,7 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         fontRenderer.drawString("Node Options:", recNoteProp.x + PADDING, recNoteProp.y + PADDING, 0xCCFFFFFF);
 
         fontRenderer.drawString("Preview:", recSkinPreview.x + PADDING, recSkinPreview.y + PADDING, 0xCCFFFFFF);
-        
+
         GlStateManager.disableDepth();
         GlStateManager.pushAttrib();
         for (GuiPanel panel : panelList) {
@@ -343,12 +388,33 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
         // GlStateManager.scale(16F / 1F, 1F, 1F);
         ModelPlayer modelPlayer = new ModelPlayer(1, false);
-        modelPlayer.bipedHead.render(1F / 16F);
+        if (skinType == SkinTypeRegistry.skinHead) {
+            modelPlayer.bipedHead.render(1F / 16F);
+        }
+        if (skinType == SkinTypeRegistry.skinChest) {
+            modelPlayer.bipedBody.render(1F / 16F);
+            GlStateManager.translate(2F * (1F / 16F), 0, 0);
+            modelPlayer.bipedLeftArm.render(1F / 16F);
+            GlStateManager.translate(-2F * (1F / 16F), 0, 0);
+            
+            GlStateManager.translate(-2F * (1F / 16F), 0, 0);
+            modelPlayer.bipedRightArm.render(1F / 16F);
+            GlStateManager.translate(2F * (1F / 16F), 0, 0);
+        }
+        if (skinType == SkinTypeRegistry.skinLegs) {
+            modelPlayer.bipedLeftLeg.render(1F / 16F);
+            modelPlayer.bipedRightLeg.render(1F / 16F);
+        }
+        if (skinType == SkinTypeRegistry.skinFeet) {
+            modelPlayer.bipedLeftLeg.render(1F / 16F);
+            modelPlayer.bipedRightLeg.render(1F / 16F);
+        }
         // ArmourerRenderHelper.renderBuildingGrid(skinType, 1F / 16F, true, new
         // SkinProperties(), false);
         GlStateManager.popMatrix();
 
         SkinRenderData renderData = new SkinRenderData(1F / 16F, null, null, 0, true, true, true, null);
+        updateSkinList();
         AdvancedPartRenderer.renderAdvancedSkin(this, renderData, null, null, convertTreeToAdvancedPartNode());
 
         ModRenderHelper.enableAlphaBlend();
@@ -373,7 +439,7 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
             treeView.addItem(new GuiTreeViewPartNote("New Node"), treeView.getSelectedIndex());
         }
         if (button == buttonRemove) {
-            treeView.removeItem(treeView.getSelectedIndex());
+            treeView.removeSelectedItem();
         }
     }
 
@@ -408,14 +474,9 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
     @Override
     public SkinPart getAdvancedPart(int index) {
-        if (index < 0) {
-            return null;
-        }
-        Skin skin = null;
-        ItemStack stack = getContainer().getSlot(0).getStack();
-        ISkinDescriptor descriptor = SkinNBTHelper.getSkinDescriptorFromStack(stack);
-        if (descriptor != null) {
-            skin = ClientSkinCache.INSTANCE.getSkin(descriptor);
+        if (index >= 0 & index < skinIdentifiers.size()) {
+            Skin skin = null;
+            skin = ClientSkinCache.INSTANCE.getSkin(skinIdentifiers.get(index));
             if (skin != null) {
                 return skin.getParts().get(0);
             }
@@ -425,7 +486,6 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
     @Override
     public AdvancedPartNode getAdvancedPartNode(int index) {
-        // TODO Auto-generated method stub
         return null;
     }
 

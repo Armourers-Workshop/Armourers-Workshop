@@ -140,7 +140,14 @@ public class GuiControlSkinPanel extends GuiButtonExt {
         iconList.add(new SkinIcon(skinJson));
     }
     
-    public class SkinIcon {
+    public interface ISkinIcon {
+        
+        public void drawIcon(int x, int y, int mouseX, int mouseY, int iconSize, boolean showName);
+        
+        public boolean mouseOver(int x, int y, int mouseX, int mouseY, int iconSize);
+    }
+    
+    public class SkinIcon implements ISkinIcon {
         
         private final JsonObject skinJson;
         private final int id;
@@ -154,6 +161,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
             return skinJson;
         }
         
+        @Override
         public void drawIcon(int x, int y, int mouseX, int mouseY, int iconSize, boolean showName) {
             int backgroundColour = 0x22AAAAAA;
             int borderColour = 0x22FFFFFF;
@@ -250,6 +258,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
             
         }
         
+        @Override
         public boolean mouseOver(int x, int y, int mouseX, int mouseY, int iconSize) {
             return mouseX >= x & mouseY >= y & mouseX < x + iconSize & mouseY < y + iconSize;
         }
