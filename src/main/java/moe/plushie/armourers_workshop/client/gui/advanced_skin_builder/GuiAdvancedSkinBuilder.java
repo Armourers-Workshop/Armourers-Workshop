@@ -314,6 +314,15 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         for (GuiTreeView.IGuiTreeViewItem treeViewItem : treeViewItems) {
             GuiTreeViewPartNote partNote = (GuiTreeViewPartNote) treeViewItem;
             AdvancedPartNode node = partNote.getAdvancedPartNode().clone();
+            node.partIndex = -1;
+            if (partNote.getSkinIdentifier() != null) {
+                for (int i = 0; i < skinIdentifiers.size(); i++) {
+                    if (skinIdentifiers.get(i).equals(partNote.getSkinIdentifier())) {
+                        node.partIndex = i;
+                        break;
+                    }
+                }
+            }
             advancedPartNode.getChildren().add(node);
             convertTreeToAdvancedPartNode(node, treeViewItem.getSubItems());
 
@@ -396,7 +405,7 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
             GlStateManager.translate(2F * (1F / 16F), 0, 0);
             modelPlayer.bipedLeftArm.render(1F / 16F);
             GlStateManager.translate(-2F * (1F / 16F), 0, 0);
-            
+
             GlStateManager.translate(-2F * (1F / 16F), 0, 0);
             modelPlayer.bipedRightArm.render(1F / 16F);
             GlStateManager.translate(2F * (1F / 16F), 0, 0);

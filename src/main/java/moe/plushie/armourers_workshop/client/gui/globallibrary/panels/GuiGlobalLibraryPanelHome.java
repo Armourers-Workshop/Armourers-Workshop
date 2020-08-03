@@ -10,7 +10,8 @@ import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel.SkinIcon;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel.ISkinIcon;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel.SkinIconJson;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiScrollbar;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
@@ -41,7 +42,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
         super(parent, x, y, width, height);
         scrollbar = new GuiScrollbar(-1, width - 11, y + 1, 10, height - 2, "", false);
         scrollbar.setStyleFlat(true);
-        //scrollbar.setSliderMaxValue(600);
+        // scrollbar.setSliderMaxValue(600);
         scrollbar.setAmount(14);
         skinPanelRecentlyUploaded = new GuiControlSkinPanel();
         skinPanelMostDownloaded = new GuiControlSkinPanel();
@@ -59,9 +60,9 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
         scrollbar.y = y + 1;
         scrollbar.x = x + width - 11;
         scrollbar.height = height - 2;
-        
+
         buttonShowAll = new GuiButtonExt(-1, x + 2, y + 2, 80, 16, GuiHelper.getLocalizedControlName(guiName, "home.showAllSkins"));
-        
+
         skinPanelRecentlyUploaded.init(x + 2, y + 2 + 28, width - 20, 206);
         skinPanelMostDownloaded.init(x + 2, y + 2 + 28 + 206, width - 20, 206);
         skinPanelMostLiked.init(x + 2, y + 2 + 28 + 600, width - 20, 206);
@@ -72,9 +73,9 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
 
         int totalHeight = (206 + 14) * 3 + 28 + 2 * 2;
         totalHeight -= height;
-        
+
         scrollbar.setSliderMaxValue(totalHeight);
-        
+
         buttonList.add(scrollbar);
         buttonList.add(buttonShowAll);
         buttonList.add(skinPanelRecentlyUploaded);
@@ -107,7 +108,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
                         skinPanelRecentlyUploaded.clearIcons();
                         for (int i = 0; i < result.size(); i++) {
                             JsonObject skinJson = result.get(i).getAsJsonObject();
-                            skinPanelRecentlyUploaded.addIcon(skinJson);
+                            skinPanelRecentlyUploaded.addIcon(new SkinIconJson(skinJson));
                         }
                     }
                 });
@@ -132,7 +133,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
                         skinPanelMostDownloaded.clearIcons();
                         for (int i = 0; i < result.size(); i++) {
                             JsonObject skinJson = result.get(i).getAsJsonObject();
-                            skinPanelMostDownloaded.addIcon(skinJson);
+                            skinPanelMostDownloaded.addIcon(new SkinIconJson(skinJson));
                         }
                     }
                 });
@@ -157,7 +158,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
                         skinPanelMostLiked.clearIcons();
                         for (int i = 0; i < result.size(); i++) {
                             JsonObject skinJson = result.get(i).getAsJsonObject();
-                            skinPanelMostLiked.addIcon(skinJson);
+                            skinPanelMostLiked.addIcon(new SkinIconJson(skinJson));
                         }
                     }
                 });
@@ -181,9 +182,9 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
             ((GuiGlobalLibrary) parent).panelSearchResults.doSearch("", null);
         }
         if (button == skinPanelRecentlyUploaded | button == skinPanelMostDownloaded | button == skinPanelMostLiked) {
-            SkinIcon skinIcon = ((GuiControlSkinPanel) button).getLastPressedSkinIcon();
-            if (skinIcon != null) {
-                ((GuiGlobalLibrary) parent).panelSkinInfo.displaySkinInfo(skinIcon.getSkinJson(), Screen.HOME);
+            ISkinIcon skinIcon = ((GuiControlSkinPanel) button).getLastPressedSkinIcon();
+            if (skinIcon != null && skinIcon instanceof SkinIconJson) {
+                ((GuiGlobalLibrary) parent).panelSkinInfo.displaySkinInfo(((SkinIconJson) skinIcon).getSkinJson(), Screen.HOME);
             }
         }
     }
@@ -195,18 +196,15 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
         ModRenderHelper.enableScissorScaled(x, y, width, height);
-        
+
         int amount = scrollbar.getValue();
         buttonShowAll.y = y + 2 - amount;
         skinPanelRecentlyUploaded.y = y + 2 + 28 - amount;
         skinPanelMostDownloaded.y = y + 2 + 28 + 206 + 14 - amount;
-        skinPanelMostLiked.y = y + 2 + 28  + 206 * 2 + 14 * 2 - amount;
-        
-        
-        super.draw(mouseX, mouseY, partialTickTime);
-        
+        skinPanelMostLiked.y = y + 2 + 28 + 206 * 2 + 14 * 2 - amount;
 
-        
+        super.draw(mouseX, mouseY, partialTickTime);
+
         String guiName = ((GuiGlobalLibrary) parent).getGuiName();
         String labelRecentlyUploaded = GuiHelper.getLocalizedControlName(guiName, "home.recentlyUploaded");
         String labelMostDownloaded = GuiHelper.getLocalizedControlName(guiName, "home.mostDownloaded");

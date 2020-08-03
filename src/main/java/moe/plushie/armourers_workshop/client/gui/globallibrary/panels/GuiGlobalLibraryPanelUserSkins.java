@@ -8,7 +8,8 @@ import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel.SkinIcon;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel.ISkinIcon;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiControlSkinPanel.SkinIconJson;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
@@ -110,9 +111,9 @@ public class GuiGlobalLibraryPanelUserSkins extends GuiGlobalLibraryPanelSearchR
             resize();
         }
         if (button == skinPanelResults) {
-            SkinIcon skinIcon = ((GuiControlSkinPanel) button).getLastPressedSkinIcon();
-            if (skinIcon != null) {
-                ((GuiGlobalLibrary) parent).panelSkinInfo.displaySkinInfo(skinIcon.getSkinJson(), Screen.USER_SKINS);
+            ISkinIcon skinIcon = ((GuiControlSkinPanel) button).getLastPressedSkinIcon();
+            if (skinIcon != null && skinIcon instanceof SkinIconJson) {
+                ((GuiGlobalLibrary) parent).panelSkinInfo.displaySkinInfo(((SkinIconJson) skinIcon).getSkinJson(), Screen.USER_SKINS);
             }
         }
     }
