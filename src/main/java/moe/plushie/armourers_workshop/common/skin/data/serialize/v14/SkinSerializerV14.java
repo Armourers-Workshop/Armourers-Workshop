@@ -8,9 +8,12 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.Level;
 
+import com.google.gson.JsonParser;
+
 import moe.plushie.armourers_workshop.api.common.skin.type.ISkinType;
 import moe.plushie.armourers_workshop.common.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.common.exception.NewerFileVersionException;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
@@ -24,9 +27,8 @@ public final class SkinSerializerV14 {
     /**
      * V14 Changes
      * 
-     * Add protected skin option.
-     * Move skin paint to each skin part. (can't have paint without a part)
-     * Moved skin type to the start of the file.
+     * Add protected skin option. Move skin paint to each skin part. (can't have
+     * paint without a part) Moved skin type to the start of the file.
      * 
      * 
      * Add skin properties to each skin part, also add more data types.
@@ -44,6 +46,9 @@ public final class SkinSerializerV14 {
 
     private static final String TAG_SKIN_PAINT_HEADER = "PAINT-START";
     private static final String TAG_SKIN_PAINT_FOOTER = "PAINT-END";
+
+    private static final String TAG_SKIN_ADVANCED_NODE_HEADER = "ADVANCED-NODE-START";
+    private static final String TAG_SKIN_ADVANCED_NODE_FOOTER = "ADVANCED-NODE-END";
 
     private static final String TAG_SKIN_PART_HEADER = "PART-START";
     private static final String TAG_SKIN_PART_FOOTER = "PART-END";
@@ -77,6 +82,16 @@ public final class SkinSerializerV14 {
             stream.writeBoolean(false);
         }
         StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PAINT_FOOTER);
+
+        // Write advanced node data.
+        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_ADVANCED_NODE_HEADER);
+        if (skin.hasAdvancedPartNodes()) {
+            StreamUtils.writeString(stream, StandardCharsets.UTF_8, AdvancedPartNode.Serializer.serialize(skin.getAdvancedPartNode(0)).toString());
+        } else {
+            StreamUtils.writeString(stream, StandardCharsets.UTF_8, "");
+        }
+        StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_ADVANCED_NODE_FOOTER);
+
         // Write parts
         stream.writeByte(skin.getParts().size());
         for (int i = 0; i < skin.getParts().size(); i++) {
@@ -140,6 +155,20 @@ public final class SkinSerializerV14 {
 
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PAINT_FOOTER)) {
             ModLogger.log(Level.ERROR, "Error loading skin paint footer.");
+        }
+
+        if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_ADVANCED_NODE_HEADER)) {
+            ModLogger.log(Level.ERROR, "Error loading advanced node header.");
+        }
+
+        AdvancedPartNode advancedPartNode = null;
+        String advancedNodeJson = StreamUtils.readString(stream, StandardCharsets.UTF_8);
+        if (!advancedNodeJson.equals("")) {
+            ModLogger.log("loading node data");
+            advancedPartNode = AdvancedPartNode.Serializer.deserialize(new JsonParser().parse(advancedNodeJson));
+        }
+        if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_ADVANCED_NODE_FOOTER)) {
+            ModLogger.log(Level.ERROR, "Error loading advanced node footer.");
         }
 
         int size = stream.readByte();
@@ -215,7 +244,9 @@ public final class SkinSerializerV14 {
             SkinProperties.PROP_MODEL_HIDE_OVERLAY.clearValue(properties);
         }
 
-        return new Skin(properties, skinType, paintData, parts);
+        Skin skin = new Skin(properties, skinType, paintData, parts);
+        skin.setAdvancedPartData(advancedPartNode);
+        return skin;
     }
 
     public static ISkinType readSkinTypeNameFromStream(DataInputStream stream, int fileVersion) throws IOException, NewerFileVersionException {

@@ -11,8 +11,8 @@ import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
 import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinPaintCache;
-import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedScript;
 import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
+import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedScript;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.proxies.ClientProxy;
@@ -98,7 +98,7 @@ public class ModelSkinLegs extends ModelTypeHelper {
             GL11.glPopMatrix();
         }
 
-        if (isAdvanced) {
+        if (skin.hasAdvancedPartNodes()) {
             AdvancedScript advancedData = new AdvancedScript();
             
             int partCount = 4;
@@ -159,7 +159,7 @@ public class ModelSkinLegs extends ModelTypeHelper {
             if (!renderData.isItemRender()) {
                 GlStateManager.translate(0F, 12F * renderData.getScale(), 0F);
             }
-            AdvancedPartRenderer.renderAdvancedSkin(skin, renderData, entity, advancedData, base);
+            AdvancedPartRenderer.renderAdvancedSkin(skin, renderData, entity, null, skin.getAdvancedPartNode(0));
             GlStateManager.popMatrix();
         }
 

@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinBuil
 import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
 import moe.plushie.armourers_workshop.common.skin.data.SkinProperties;
-import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -22,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityAdvancedSkinBuilder extends AbstractTileEntityInventory implements IGuiFactory {
+public class TileEntityAdvancedSkinBuilder extends ModTileEntity implements IGuiFactory {
 
     private static final String TAG_TYPE = "skinType";
     private static final int CONS_PARTS_MAX = 10;
@@ -33,7 +32,7 @@ public class TileEntityAdvancedSkinBuilder extends AbstractTileEntityInventory i
     private ArrayList<AdvancedPartNode> advancedPartNodes = new ArrayList<AdvancedPartNode>();
 
     public TileEntityAdvancedSkinBuilder() {
-        super(CONS_PARTS_MAX);
+        super();
     }
 
     public ArrayList<AdvancedPartNode> getAdvancedPartNodes() {
@@ -48,7 +47,7 @@ public class TileEntityAdvancedSkinBuilder extends AbstractTileEntityInventory i
     @Override
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound compound = super.getUpdateTag();
-        writeCommonToNBT(compound);
+        //writeCommonToNBT(compound);
         return compound;
     }
     
@@ -59,40 +58,24 @@ public class TileEntityAdvancedSkinBuilder extends AbstractTileEntityInventory i
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         NBTTagCompound compound = packet.getNbtCompound();
-        readBaseFromNBT(compound);
-        readCommonFromNBT(compound);
+        //readCommonFromNBT(compound);
         syncWithClients();
     }
     
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        readCommonFromNBT(compound);
+        //readCommonFromNBT(compound);
     }
     
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        writeCommonToNBT(compound);
+        //writeCommonToNBT(compound);
         return compound;
     }
     
-    @Override
-    public void readCommonFromNBT(NBTTagCompound compound) {
-        super.readCommonFromNBT(compound);
-        skinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(compound.getString(TAG_TYPE));
-        skinProps = new SkinProperties();
-        skinProps.readFromNBT(compound);
-    }
-    
-    @Override
-    public void writeCommonToNBT(NBTTagCompound compound) {
-        super.writeCommonToNBT(compound);
-        if (skinType != null) {
-            compound.setString(TAG_TYPE, skinType.getRegistryName());
-        }
-        skinProps.writeToNBT(compound);
-    }
+
 
     @SideOnly(Side.CLIENT)
     @Override

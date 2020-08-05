@@ -96,6 +96,8 @@ public class ModelSkinHead extends ModelTypeHelper {
 
             renderHead(new SkinPartRenderData(skin.getParts().get(i), renderData));
 
+            
+            
             GL11.glPopMatrix();
         }
         GlStateManager.popAttrib();

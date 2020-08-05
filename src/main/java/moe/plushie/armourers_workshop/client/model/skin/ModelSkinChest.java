@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import moe.plushie.armourers_workshop.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.api.common.skin.data.ISkinDye;
+import moe.plushie.armourers_workshop.client.render.AdvancedPartRenderer;
 import moe.plushie.armourers_workshop.client.render.SkinPartRenderData;
 import moe.plushie.armourers_workshop.client.render.SkinRenderData;
 import moe.plushie.armourers_workshop.client.skin.SkinModelTexture;
@@ -92,6 +93,11 @@ public class ModelSkinChest extends ModelTypeHelper {
 
             GL11.glPopMatrix();
         }
+        
+        if (skin.hasAdvancedPartNodes()) {
+            AdvancedPartRenderer.renderAdvancedSkin(skin, renderData, entity, null, skin.getAdvancedPartNode(0));
+        }
+        
         GlStateManager.popAttrib();
         GlStateManager.color(1F, 1F, 1F, 1F);
     }

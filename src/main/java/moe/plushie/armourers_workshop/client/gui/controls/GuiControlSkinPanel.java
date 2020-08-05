@@ -72,7 +72,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
     public void setPanelPadding(int panelPadding) {
         this.panelPadding = panelPadding;
     }
-    
+
     public void setIconPadding(int iconPadding) {
         this.iconPadding = iconPadding;
     }
@@ -165,7 +165,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
         public SkinIconIdentifier(ISkinIdentifier identifier) {
             this.skinIdentifier = identifier;
         }
-        
+
         public ISkinIdentifier getSkinIdentifier() {
             return skinIdentifier;
         }

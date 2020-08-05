@@ -180,8 +180,6 @@ public class SkinPart implements ISkinPart {
         }
         return null;
     }
-    
-    
 
     @Override
     public int hashCode() {

@@ -37,14 +37,43 @@ public class Skin implements ISkin, IAdvancedPartParent {
     @SideOnly(Side.CLIENT)
     public int paintTextureId;
 
+    @SideOnly(Side.CLIENT)
     private int[] averageR = new int[10];
+    @SideOnly(Side.CLIENT)
     private int[] averageG = new int[10];
+    @SideOnly(Side.CLIENT)
     private int[] averageB = new int[10];
 
+    public Skin(SkinProperties properties, ISkinType skinType, int[] paintData, ArrayList<SkinPart> skinParts) {
+        this.properties = properties;
+        this.skinType = skinType;
+        this.paintData = null;
+        // Check if the paint data has any paint on it.
+        if (paintData != null) {
+            boolean validPaintData = false;
+            for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
+                if (paintData[i] >>> 16 != 255) {
+                    validPaintData = true;
+                    break;
+                }
+            }
+            if (validPaintData) {
+                this.paintData = paintData;
+            }
+        }
+        this.parts = skinParts;
+    }
+
+    @SideOnly(Side.CLIENT)
     public void setAverageDyeValues(int[] r, int[] g, int[] b) {
         this.averageR = r;
         this.averageG = g;
         this.averageB = b;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public int[] getAverageDyeColour(int dyeNumber) {
+        return new int[] { averageR[dyeNumber], averageG[dyeNumber], averageB[dyeNumber] };
     }
 
     @SideOnly(Side.CLIENT)
@@ -59,7 +88,6 @@ public class Skin implements ISkin, IAdvancedPartParent {
 
         for (int i = 0; i < getPartCount(); i++) {
             if (!(getSkinType() == SkinTypeRegistry.skinBow && i > 0)) {
-
                 SkinPart skinPart = getParts().get(i);
                 Rectangle3D bounds = skinPart.getPartBounds();
 
@@ -82,7 +110,6 @@ public class Skin implements ISkin, IAdvancedPartParent {
                     y = Math.max(y, skinRec.getY());
                     z = Math.max(z, skinRec.getZ());
                 }
-
             }
         }
 
@@ -105,33 +132,8 @@ public class Skin implements ISkin, IAdvancedPartParent {
         return new Rectangle3D(x, y, z, width, height, depth);
     }
 
-    public int[] getAverageDyeColour(int dyeNumber) {
-        return new int[] { averageR[dyeNumber], averageG[dyeNumber], averageB[dyeNumber] };
-    }
-
     public SkinProperties getProperties() {
         return properties;
-    }
-
-    public Skin(SkinProperties properties, ISkinType skinType, int[] paintData, ArrayList<SkinPart> skinParts) {
-        this.properties = properties;
-        this.skinType = skinType;
-        this.paintData = null;
-        // Check if the paint data has any paint on it.
-        if (paintData != null) {
-            boolean validPaintData = false;
-            for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
-                if (paintData[i] >>> 16 != 255) {
-                    validPaintData = true;
-                    break;
-                }
-            }
-            if (validPaintData) {
-                this.paintData = paintData;
-            }
-        }
-
-        this.parts = skinParts;
     }
 
     @SideOnly(Side.CLIENT)
@@ -282,6 +284,9 @@ public class Skin implements ISkin, IAdvancedPartParent {
         if (this.paintData != null) {
             returnString += ", paintData=" + Arrays.hashCode(paintData);
         }
+        if (this.advancedPartNode != null) {
+            returnString += ", advancedPartNode=" + advancedPartNode.toString();
+        }
         returnString += "]";
         return returnString;
     }
@@ -307,13 +312,26 @@ public class Skin implements ISkin, IAdvancedPartParent {
         }
     }
 
+    private AdvancedPartNode advancedPartNode = null;
+
+    public boolean hasAdvancedPartNodes() {
+        return advancedPartNode != null;
+    }
+
+    public void setAdvancedPartData(AdvancedPartNode advancedPartNode) {
+        this.advancedPartNode = advancedPartNode;
+    }
+
     @Override
     public SkinPart getAdvancedPart(int index) {
-        return getParts().get(index);
+        if (index >= 0 & index < getPartCount()) {
+            return getParts().get(index);
+        }
+        return null;
     }
 
     @Override
     public AdvancedPartNode getAdvancedPartNode(int index) {
-        return null;
+        return advancedPartNode;
     }
 }

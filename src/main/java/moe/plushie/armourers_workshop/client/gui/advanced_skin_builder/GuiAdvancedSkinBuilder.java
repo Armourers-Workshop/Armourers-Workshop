@@ -31,6 +31,8 @@ import moe.plushie.armourers_workshop.common.addons.ModAddonManager;
 import moe.plushie.armourers_workshop.common.inventory.ContainerAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
+import moe.plushie.armourers_workshop.common.network.PacketHandler;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton;
 import moe.plushie.armourers_workshop.common.skin.advanced.AdvancedPartNode;
 import moe.plushie.armourers_workshop.common.skin.advanced.IAdvancedPartParent;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -78,7 +80,8 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
     private GuiTreeView treeView;
     private GuiIconButton buttonAdd;
     private GuiIconButton buttonRemove;
-
+    private GuiIconButton buttonSave;
+    
     // Node Options
     private GuiDropDownList dropDownNoteSettings;
 
@@ -120,6 +123,10 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         buttonRemove.setIconLocation(208, 160, 16, 16).setDrawButtonBackground(false).setHoverText("Remove Node");
         buttonList.add(buttonRemove);
 
+        buttonSave = new GuiIconButton(this, 0, recTreeView.x + PADDING * 3 + 32, recTreeView.y + recTreeView.height - PADDING - 16, 16, 16, TEXTURE_BUTTONS);
+        buttonSave.setIconLocation(208, 64, 16, 16).setDrawButtonBackground(false).setHoverText("Save");
+        buttonList.add(buttonSave);
+        
         // Node Options
         dropDownNoteSettings = new GuiDropDownList(0, recNoteProp.x + PADDING, recNoteProp.y + PADDING + 10, recNoteProp.width - PADDING * 2, "", this);
         updateSettingsDropDown();
@@ -130,9 +137,9 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         panelSettings = new GuiAdvancedSkinBuilderPanelSettings(this, recSetting.x, recSetting.y, recSetting.width, recSetting.height);
         panelList.add(panelSettings);
 
-        // setPlayerSlotVisible(false);
+        
         movePlayerInventorySlots(width - INVENTORY_WIDTH - PADDING, height - INVENTORY_HEIGHT - PADDING);
-
+        setPlayerSlotVisible(false);
         // setPlayerSlotVisible(true);
 
         // Preview
@@ -221,7 +228,7 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         return identifiers;
     }
 
-    private ArrayList<ISkinIdentifier> readSkinsFromTree() {
+    public ArrayList<ISkinIdentifier> readSkinsFromTree() {
         ArrayList<ISkinIdentifier> identifiers = new ArrayList<ISkinIdentifier>();
         ArrayList<IGuiTreeViewItem> treeViewItems = treeView.getFullItemList();
         for (IGuiTreeViewItem treeViewItem : treeViewItems) {
@@ -244,7 +251,7 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
 
     private void updateSkinList() {
         skinIdentifiers.clear();
-        skinIdentifiers.addAll(getListOfSkins());
+        skinIdentifiers.addAll(readSkinsFromTree());
     }
 
     private void setPlayerSlotVisible(boolean visible) {
@@ -303,11 +310,15 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         panelSettings.applySetting(nodeSetting, treeViewPartNote);
     }
 
-    private AdvancedPartNode convertTreeToAdvancedPartNode() {
+    public AdvancedPartNode convertTreeToAdvancedPartNode() {
         AdvancedPartNode partNode = new AdvancedPartNode(-1, "main root");
         convertTreeToAdvancedPartNode(partNode, treeView.getItems());
         // ModLogger.log(partNode);
         return partNode;
+    }
+    
+    public ISkinType getSkinType() {
+        return skinType;
     }
 
     private AdvancedPartNode convertTreeToAdvancedPartNode(AdvancedPartNode advancedPartNode, ArrayList<GuiTreeView.IGuiTreeViewItem> treeViewItems) {
@@ -325,7 +336,6 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
             }
             advancedPartNode.getChildren().add(node);
             convertTreeToAdvancedPartNode(node, treeViewItem.getSubItems());
-
         }
         return advancedPartNode;
     }
@@ -449,6 +459,10 @@ public class GuiAdvancedSkinBuilder extends ModGuiContainer<ContainerAdvancedSki
         }
         if (button == buttonRemove) {
             treeView.removeSelectedItem();
+        }
+        if (button == buttonSave) {
+            MessageClientGuiButton message = new MessageClientGuiButton((byte) 0);
+            PacketHandler.networkWrapper.sendToServer(message);
         }
     }
 
