@@ -63,7 +63,9 @@ public abstract class ModGuiContainer<CONTAINER_TYPE extends ModContainer> exten
             dialog.mouseClicked(mouseX, mouseY, button);
         } else {
             for (GuiPanel panel : panelList) {
-                panel.mouseClicked(mouseX, mouseY, button);
+                if (panel.mouseClicked(mouseX, mouseY, button)) {
+                    return;
+                }
             }
             super.mouseClicked(mouseX, mouseY, button);
         }

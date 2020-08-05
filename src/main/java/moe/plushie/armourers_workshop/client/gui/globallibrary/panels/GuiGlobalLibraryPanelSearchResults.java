@@ -271,7 +271,6 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
             }
         }
         return null;
-
     }
 
     @Override
