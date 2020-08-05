@@ -40,6 +40,11 @@ public class GuiGlobalLibraryPanelUserSkins extends GuiGlobalLibraryPanelSearchR
 
     @Override
     protected void resize() {
+        refresh();
+    }
+    
+    @Override
+    public void refresh() {
         int thisUserId = userId;
         clearResults();
         switchToUser(thisUserId);

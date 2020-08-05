@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.client.gui.controls;
 
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,6 +173,13 @@ public class GuiControlSkinPanel extends GuiButtonExt {
 
         @Override
         public void drawIcon(int x, int y, int mouseX, int mouseY, int iconSize, boolean showName) {
+            Rectangle recScissor = ModRenderHelper.getScissor();
+            if (recScissor != null) {
+                if (!recScissor.intersects(x, y, iconSize, iconSize)) {
+                    return;
+                }
+            }
+
             int backgroundColour = 0x22AAAAAA;
             int borderColour = 0x22FFFFFF;
 
@@ -230,7 +238,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 GlStateManager.enableColorMaterial();
                 ModRenderHelper.enableAlphaBlend();
                 GlStateManager.enableDepth();
-                ModRenderHelper.enableScissorScaled(x, y, iconSize, iconSize);
+                ModRenderHelper.enableScissor(x, y, iconSize, iconSize, true);
                 SkinItemRenderHelper.renderSkinAsItem(skin, new SkinDescriptor(skinIdentifier), true, false, iconSize, iconSize);
                 ModRenderHelper.disableScissor();
                 GlStateManager.disableDepth();
@@ -279,6 +287,13 @@ public class GuiControlSkinPanel extends GuiButtonExt {
 
         @Override
         public void drawIcon(int x, int y, int mouseX, int mouseY, int iconSize, boolean showName) {
+            Rectangle recScissor = ModRenderHelper.getScissor();
+            if (recScissor != null) {
+                if (!recScissor.intersects(x, y, iconSize, iconSize)) {
+                    return;
+                }
+            }
+
             int backgroundColour = 0x22AAAAAA;
             int borderColour = 0x22FFFFFF;
 
@@ -339,7 +354,7 @@ public class GuiControlSkinPanel extends GuiButtonExt {
                 GlStateManager.enableColorMaterial();
                 ModRenderHelper.enableAlphaBlend();
                 GlStateManager.enableDepth();
-                ModRenderHelper.enableScissorScaled(x, y, iconSize, iconSize);
+                ModRenderHelper.enableScissor(x, y, iconSize, iconSize, true);
                 SkinItemRenderHelper.renderSkinAsItem(skin, new SkinDescriptor(identifier), true, false, iconSize, iconSize);
                 ModRenderHelper.disableScissor();
                 GlStateManager.disableDepth();

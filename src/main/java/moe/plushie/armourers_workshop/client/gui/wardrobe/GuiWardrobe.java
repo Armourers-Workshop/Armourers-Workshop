@@ -382,7 +382,7 @@ public class GuiWardrobe extends GuiTabbed<ContainerSkinWardrobe> {
         // RenderHelper.enableStandardItemLighting();
 
         if (!overPlayerBox) {
-            ModRenderHelper.enableScissorScaled(x + 8, y + 27, 71, 111);
+            ModRenderHelper.enableScissor(x + 8, y + 27, 71, 111, true);
         }
         
         if (skinCapability.getEntity() instanceof EntityLivingBase) {

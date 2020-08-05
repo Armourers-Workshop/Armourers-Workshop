@@ -3,8 +3,6 @@ package moe.plushie.armourers_workshop.client.guidebook;
 import java.util.ArrayList;
 import java.util.List;
 
-import moe.plushie.armourers_workshop.utils.UtilColour;
-import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -76,7 +74,7 @@ public class BookPage extends BookPageBase {
             fontRenderer.drawString(lines.get(i),
                     PAGE_PADDING_LEFT,
                     PAGE_PADDING_TOP + fontRenderer.FONT_HEIGHT * 2 + i * 9,
-                    UtilColour.getMinecraftColor(7, ColourFamily.MINECRAFT));
+                    0xFF2A2A2A);
         }
     }
     

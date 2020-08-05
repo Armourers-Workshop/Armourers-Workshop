@@ -98,6 +98,7 @@ public final class GuiHelper {
         String localizedName = I18n.format(unlocalizedName, args);
         localizedName = localizedName.replace("%n", "\n");
         localizedName = localizedName.replace("\\n", "\n");
+        localizedName = localizedName.replace("&", "\u00a7");
         if (!unlocalizedName.equals(localizedName)) {
             return localizedName;
         }

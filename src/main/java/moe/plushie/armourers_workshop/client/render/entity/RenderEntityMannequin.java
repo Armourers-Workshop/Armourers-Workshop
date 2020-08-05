@@ -195,6 +195,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             extraColours = wardrobe.getExtraColours();
         }
 
+        double distance = entity.getDistance(Minecraft.getMinecraft().player);
         // Render skins.
         for (int i = 0; i < skinTypes.length; i++) {
             ISkinType skinType = skinTypes[i];
@@ -202,7 +203,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
                 for (int skinIndex = 0; skinIndex < skinCap.getSlotCountForSkinType(skinType); skinIndex++) {
                     ISkinDescriptor skinDescriptor = skinCap.getSkinDescriptor(skinType, skinIndex);
                     if (skinDescriptor != null) {
-                        renderSkin(entity, skinDescriptor, skinCap, wardrobe, extraColours, 0, true, targetModel);
+                        renderSkin(entity, skinDescriptor, skinCap, wardrobe, extraColours, distance, true, targetModel);
                     }
                 }
             }
@@ -281,26 +282,26 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             }
 
             targetModel.bipedBody.render(scale);
-            //targetModel.bipedBodyWear.render(scale);
+            // targetModel.bipedBodyWear.render(scale);
 
             targetModel.bipedLeftArm.render(scale);
-            //targetModel.bipedLeftArmwear.render(scale);
+            // targetModel.bipedLeftArmwear.render(scale);
 
             targetModel.bipedRightArm.render(scale);
-            //targetModel.bipedRightArmwear.render(scale);
+            // targetModel.bipedRightArmwear.render(scale);
 
             targetModel.bipedLeftLeg.render(scale);
-            //targetModel.bipedLeftLegwear.render(scale);
+            // targetModel.bipedLeftLegwear.render(scale);
 
             targetModel.bipedRightLeg.render(scale);
-            //targetModel.bipedRightLegwear.render(scale);
+            // targetModel.bipedRightLegwear.render(scale);
             if (bipedRotations.isChild()) {
                 ModelHelper.disableChildModelScale();
             }
             // targetModel.render(entity, 0, 0, 0, 0, 0, scale);
             ModRenderHelper.disableAlphaBlend();
         }
-        
+
         for (int i = 0; i < 2; i++) {
             boolean leftArm = i == 0;
             ISkinDescriptor descriptor = null;
@@ -314,27 +315,27 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
                 if (bipedRotations.isChild()) {
                     ModelHelper.enableChildModelScale(false, scale);
                 }
-                
+
                 float[] armRots = bipedRotations.getPartRotations(BipedPart.RIGHT_ARM);
-                
+
                 if (leftArm) {
                     armRots = bipedRotations.getPartRotations(BipedPart.LEFT_ARM);
                 }
-                
+
                 if (!leftArm) {
                     GlStateManager.translate(scale * -5F, scale * 2F, scale * 0);
                 } else {
                     GlStateManager.translate(scale * 5, scale * 2, scale * 0);
                 }
-                
+
                 if (playerTexture.isSlimModel()) {
                     GlStateManager.translate(0, scale * 0.5F, 0);
                 }
-                
+
                 GlStateManager.rotate((float) Math.toDegrees(armRots[2]), 0, 0, 1);
                 GlStateManager.rotate((float) Math.toDegrees(armRots[1]), 0, 1, 0);
                 GlStateManager.rotate((float) Math.toDegrees(armRots[0]), 1, 0, 0);
-                
+
                 if (!leftArm) {
                     GlStateManager.translate(scale * -1F, scale * 8, scale * 0);
                     if (playerTexture.isSlimModel()) {
@@ -346,14 +347,14 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
                         GlStateManager.translate(scale * -0.5F, 0, 0);
                     }
                 }
-                
+
                 GlStateManager.rotate(90, 1, 0, 0);
-                
+
                 if (leftArm) {
                     GlStateManager.scale(-1, 1, 1);
                     GlStateManager.cullFace(CullFace.FRONT);
                 }
-                //GlStateManager.translate((flag ? -1 : 1) / 16.0F, 0.125F, -0.625F);
+                // GlStateManager.translate((flag ? -1 : 1) / 16.0F, 0.125F, -0.625F);
                 if (playerTexture.isSlimModel()) {
                     GL11.glScaled(0.75F, 1F, 1F);
                 }
@@ -363,7 +364,7 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
                 if (leftArm) {
                     GlStateManager.cullFace(CullFace.BACK);
                 }
-                
+
                 if (bipedRotations.isChild()) {
                     ModelHelper.disableChildModelScale();
                 }

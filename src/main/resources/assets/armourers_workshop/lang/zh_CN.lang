@@ -57,7 +57,7 @@ tile.armourers_workshop:dye-table.name=配色工作台
 tile.armourers_workshop:skinnable.name=时装方块
 tile.armourers_workshop:hologram-projector.name=全息投影仪
 tile.armourers_workshop:outfit-maker.name=套装工作台
-tile.armourers_workshop:advanced-skin-builder.name=Advanced Skin Builder
+tile.armourers_workshop:advanced-skin-builder.name=高级时装建造台
 
 
 # Block flavour text
@@ -230,6 +230,8 @@ paintType.armourers_workshop:misc_1.name=杂项 1
 paintType.armourers_workshop:misc_2.name=杂项 2
 paintType.armourers_workshop:misc_3.name=杂项 3
 paintType.armourers_workshop:misc_4.name=杂项 4
+paintType.armourers_workshop:flash_1.name=闪光 1
+paintType.armourers_workshop:flash_2.name=闪光 2
 
 
 # Colour Families
@@ -317,8 +319,8 @@ inventory.armourers_workshop:outfit-maker.name=套装工作台
 
 # Inventory Controls
 # Common
-inventory.armourers_workshop:common.button.ok=OK
-inventory.armourers_workshop:common.button.canel=取消
+inventory.armourers_workshop:common.button.ok=确定
+inventory.armourers_workshop:common.button.cancel=取消
 inventory.armourers_workshop:common.button.close=关闭
 inventory.armourers_workshop:common.button.clear=清空
 inventory.armourers_workshop:common.button.save=保存
@@ -445,6 +447,16 @@ inventory.armourers_workshop:colour-mixer.label.brightness=明度
 inventory.armourers_workshop:colour-mixer.label.hex=十六进制
 inventory.armourers_workshop:colour-mixer.label.presets=预设
 inventory.armourers_workshop:colour-mixer.label.paintType=染料类型
+inventory.armourers_workshop:colour-mixer.button.add_palette=添加调色板...
+inventory.armourers_workshop:colour-mixer.button.remove_palette=移除调色板...
+inventory.armourers_workshop:colour-mixer.button.rename_palette=重命名调色板...
+inventory.armourers_workshop:colour-mixer.help.palette=&a左键&r从调色板选择一%n个颜色%n%n按住&ashift&r并&a左键&r以设%n置调色板中的颜色%n%n以☆开头的调色板是%n内置的，且不可编辑
+inventory.armourers_workshop:colour-mixer.dialog.add_palette.title=添加调色板
+inventory.armourers_workshop:colour-mixer.dialog.add_palette.enter_name=输入名字...
+inventory.armourers_workshop:colour-mixer.dialog.remove_palette.title=移除调色板
+inventory.armourers_workshop:colour-mixer.dialog.remove_palette.message=你确定要移除调色板%s吗？
+inventory.armourers_workshop:colour-mixer.dialog.rename_palette.title=重命名调色板
+inventory.armourers_workshop:colour-mixer.dialog.rename_palette.enter_name=输入名字...
 
 
 # Wardrobe
@@ -678,17 +690,19 @@ death.attack.victorious=%1$s 被维克的王冠刺穿了
 
 
 # Commands
-commands.armourers.usage=/armourers <adminPanel | clearModelCache | clearSkin | clearSkins | exportSkin | giveSkin | resyncWardrobe | setItemSkinnable | setSkin | setUnlockedWardrobeSlots | setWardrobeOption>
-commands.armourers.clearModelCache.usage=/armourers clearModelCache <player>
-commands.armourers.clearSkin.usage=/armourers clearSkin <player> <skintype> <slot id>
-commands.armourers.clearSkins.usage=/armourers clearSkins <player>
-commands.armourers.exportSkin.usage=/armourers exportSkin <file format> "<file name>" [scale]
-commands.armourers.giveSkin.usage=/armourers giveSkin <player> "<skin name>" [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
-commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <player>
-commands.armourers.setItemSkinnable.usage=/armourers setItemSkinnable <skintype> <add|remove>
-commands.armourers.setSkin.usage=/armourers setSkin <player> <slot id> "<skin name> [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
-commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <player> <skin type> <amount 1-8>
-commands.armourers.setWardrobeOption.usage=/armourers setWardrobeOption <player> <showHeadArmour | showChestArmour | showLegArmour | showFootArmour | showHeadOverlay> <true | false>
+commands.armourers_workshop:armourers.usage=/armourers <admin_panel | clear_cache | export_skin | give_skin | set_item_skinnable | wardrobe>
+commands.armourers_workshop:armourers.clear_cache.usage=/armourers clear_cache <client | server> [player if client]
+commands.armourers_workshop:armourers.export_skin.usage=/armourers export_skin <file format> "<file name>" [scale]
+commands.armourers_workshop:armourers.give_skin.usage=/armourers give_skin <player> "<skin name>" [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
+commands.armourers_workshop:armourers.set_item_skinnable.usage=/armourers set_item_skinnable <skintype> <add|remove>
+commands.armourers_workshop:armourers.wardrobe.usage=/armourers wardrobe <clear_skin | clear_skins | resync | set_colour | set_option | set_skin | set_unlocked_slots>
+commands.armourers_workshop:armourers.wardrobe.clear_skin.usage=/armourers wardrobe clear_skin <player> <skin type> <slot id>
+commands.armourers_workshop:armourers.wardrobe.clear_skins.usage=/armourers wardrobe clear_skins <player>
+commands.armourers_workshop:armourers.wardrobe.resync.usage=/armourers wardrobe resync <player>
+commands.armourers_workshop:armourers.wardrobe.set_colour.usage=/armourers wardrobe set_colour <player> <extra colour type> [<R,G,B> | <0xRRGGBB>]
+commands.armourers_workshop:armourers.wardrobe.set_option.usage=/armourers wardrobe set_option <player> <showHeadArmour | showChestArmour | showLegArmour | showFootArmour | showHeadOverlay> <true | false>
+commands.armourers_workshop:armourers.wardrobe.set_skin.usage=/armourers wardrobe set_skin <player> <slot id> <"skin name"> [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
+commands.armourers_workshop:armourers.wardrobe.set_unlocked_slots.usage=/armourers wardrobe set_unlocked_slots <player> <skin type> <count>
 commands.armourers.fileNotFound=未找到文件 %1$s
 commands.armourers.invalidDyeFormat=%1$s 不是有效的染料格式
 

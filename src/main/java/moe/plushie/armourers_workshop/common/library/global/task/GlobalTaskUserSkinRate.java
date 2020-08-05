@@ -16,7 +16,7 @@ public class GlobalTaskUserSkinRate extends GlobalTask<JsonObject> {
     private final int rating;
     
     public GlobalTaskUserSkinRate(int skinID, int rating) {
-        super(PlushieAction.SKIN_GET_RATED, true);
+        super(PlushieAction.SKIN_RATE, true);
         this.skinID = skinID;
         this.rating = rating;
     }

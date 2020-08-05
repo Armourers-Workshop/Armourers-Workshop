@@ -42,12 +42,15 @@ public final class PermissionSystem {
         actions.add(PlushieAction.FLAG_DELETE);
         actions.add(PlushieAction.USER_BAN_TEMP);
         actions.add(PlushieAction.USER_BAN_PERM);
+        actions.add(PlushieAction.GET_REPORT_LIST);
         groupMod = new PermissionGroup("mod", actions.clone());
 
         groupAdmin = new PermissionGroup("admin", EnumSet.allOf(PlushieAction.class));
     }
 
     public static enum PlushieAction {
+        // ------- Actions for all clients. -------
+
         /** Get recently uploaded skin list. */
         GET_RECENTLY_UPLOADED,
 
@@ -72,6 +75,14 @@ public final class PermissionSystem {
         /** Download skins. */
         SKIN_DOWNLOAD,
 
+        /** Get user info. */
+        USER_INFO,
+
+        /** View server status. */
+        SERVER_VIEW_STATS,
+
+        // ------- Actions for users only. -------
+
         /** Upload skins */
         SKIN_UPLOAD,
 
@@ -87,14 +98,8 @@ public final class PermissionSystem {
         /** Delete their own skin. */
         SKIN_OWNER_DELETE,
 
-        /** Delete other users skins. */
-        SKIN_MOD_DELETE,
-
         /** Edit their own skins. */
         SKIN_OWNER_EDIT,
-
-        /** Edit other users skins. */
-        SKIN_MOD_EDIT,
 
         /** Comment on skins. */
         SKIN_COMMENT_CREATE,
@@ -102,31 +107,40 @@ public final class PermissionSystem {
         /** Delete their own comments. */
         SKIN_COMMENT_OWNER_DELETE,
 
-        /** Delete other users comments. */
-        SKIN_COMMENT_MOD_DELETE,
-
         /** Edit their own comments. */
         SKIN_COMMENT_OWNER_EDIT,
+
+        // ------- Actions for mods only. -------
+
+        /** Gets the list of reported skins. */
+        GET_REPORT_LIST,
+
+        /** Delete other users skins. */
+        SKIN_MOD_DELETE,
+
+        /** Edit other users skins. */
+        SKIN_MOD_EDIT,
+
+        /** Delete other users comments. */
+        SKIN_COMMENT_MOD_DELETE,
 
         /** Edit other users comments. */
         SKIN_COMMENT_MOD_EDIT,
 
         /** Get the permission flag list. */
         FLAG_GET_LIST,
+
         /**  */
         FLAG_DELETE,
 
-        /** Get user info. */
-        USER_INFO,
         /** Ban a user temporarily. */
         USER_BAN_TEMP,
+
         /** Ban a user permanently. */
         USER_BAN_PERM,
-        /** Change users permission group. */
-        USER_GROUP_CHANGE,
 
-        /** View server status. */
-        SERVER_VIEW_STATS
+        /** Change users permission group. */
+        USER_GROUP_CHANGE
     }
 
     public static class PermissionGroup {

@@ -76,7 +76,7 @@ tile.armourers_workshop:outfit-maker.flavour=Компонует нескольк
 
 # Item names
 #Skins
-item.armourers_workshop:skin-template.nameШаблон скина
+item.armourers_workshop:skin-template.name=Шаблон скина
 item.armourers_workshop:skin.name=Скин
 
 #Painting tools
@@ -222,6 +222,8 @@ paintType.armourers_workshop:pulse_1.name=Пульсация 1
 paintType.armourers_workshop:pulse_2.name=Пульсация 2
 paintType.armourers_workshop:flicker_1.name=Мерцание 1
 paintType.armourers_workshop:flicker_2.name=Мерцание 2
+paintType.armourers_workshop:flash_1.name=Вспышка 1
+paintType.armourers_workshop:flash_2.name=Вспышка 2
 paintType.armourers_workshop:none.name=404
 paintType.armourers_workshop:skin.name=Кожа
 paintType.armourers_workshop:hair.name=Волосы
@@ -315,6 +317,15 @@ inventory.armourers_workshop:outfit-maker.name=Компоновщик наряд
 
 
 # Inventory controls
+# Common
+inventory.armourers_workshop:common.button.ok=OK
+inventory.armourers_workshop:common.button.cancel=Отмена
+inventory.armourers_workshop:common.button.close=Закрыть
+inventory.armourers_workshop:common.button.clear=Clear
+inventory.armourers_workshop:common.button.save=Сохранить
+inventory.armourers_workshop:common.button.load=Загрузить
+
+
 # Skin Library
 inventory.armourers_workshop:skin-library.label.search=Поиск:
 inventory.armourers_workshop:skin-library.label.filename=Имя файла:
@@ -352,11 +363,13 @@ inventory.armourers_workshop:skin-library.dialog.overwrite.close=Закрыть
 inventory.armourers_workshop:skin-library.dialog.overwrite.ok=OK
 inventory.armourers_workshop:skin-library.dialog.overwrite.overwriteFile=Перезаписать "%s"?
 
+
 # Outfit Maker
 inventory.armourers_workshop:outfit-maker.save=Сохранить наряд
 inventory.armourers_workshop:outfit-maker.load=Загрузить наряд
 inventory.armourers_workshop:outfit-maker.skinName=Имя скина
 inventory.armourers_workshop:outfit-maker.skinFlavour=Подпись
+
 
 # Armourer
 inventory.armourers_workshop:armourer.label.itemName=Название скина:
@@ -436,6 +449,16 @@ inventory.armourers_workshop:colour-mixer.label.brightness=Яркость
 inventory.armourers_workshop:colour-mixer.label.hex=Hex
 inventory.armourers_workshop:colour-mixer.label.presets=Пресеты
 inventory.armourers_workshop:colour-mixer.label.paintType=Тип Краски
+inventory.armourers_workshop:colour-mixer.button.add_palette=Добавить палитру
+inventory.armourers_workshop:colour-mixer.button.remove_palette=Удалить палитру
+inventory.armourers_workshop:colour-mixer.button.rename_palette=Переименовать палитру
+inventory.armourers_workshop:colour-mixer.help.palette=&aЛКМ&r для выбора a%nцвета из палитры.%n%nУдерживайте &ashift&r при нажатии &aЛКМ&r для %nзанесения цвета в палитру.%n%nПалитры с ☆ в названии %nвстроенные и не могут быть изменены.
+inventory.armourers_workshop:colour-mixer.dialog.add_palette.title=Добавить палитру
+inventory.armourers_workshop:colour-mixer.dialog.add_palette.enter_name=Введите название
+inventory.armourers_workshop:colour-mixer.dialog.remove_palette.title=Удалить палитру
+inventory.armourers_workshop:colour-mixer.dialog.remove_palette.message=Вы уверены, что хотите удалить палитру "%s"?
+inventory.armourers_workshop:colour-mixer.dialog.rename_palette.title=Переименовать палитру
+inventory.armourers_workshop:colour-mixer.dialog.rename_palette.enter_name=Введите название
 
 
 # Wardrobe
@@ -670,17 +693,19 @@ death.attack.victorious=%1$s был зарезан короной Vic'а.
 
 
 # Commands
-commands.armourers.usage=/armourers <adminPanel | clearModelCache | clearSkins | exportSkin | giveSkin | resyncWardrobe | setItemSkinnable | setSkin | setUnlockedWardrobeSlots | setWardrobeOption>
-commands.armourers.clearModelCache.usage=/armourers clearModelCache <игрок>
-commands.armourers.clearSkin.usage=/armourers clearSkin <игрок> <тип скина> <id слота>
-commands.armourers.clearSkins.usage=/armourers clearSkins <игрок>
-commands.armourers.exportSkin.usage=/armourers exportSkin <формат файла> "<имя файла>" [масштаб]
-commands.armourers.giveSkin.usage=/armourers giveSkin <игрок> "<имя скина>" [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
-commands.armourers.resyncWardrobe.usage=/armourers resyncWardrobe <игрок>
-commands.armourers.setItemSkinnable.usage=/armourers setItemSkinnable <тип скина> <add | remove>
-commands.armourers.setSkin.usage=/armourers setSkin <игрок> <id слота> "<имя скина> [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]
-commands.armourers.setUnlockedWardrobeSlots.usage=/armourers setUnlockedWardrobeSlots <игрок> <тип скина> <1-8>
-commands.armourers.setWardrobeOption.usage=/armourers setWardrobeOption <игрок> <showHeadArmour | showChestArmour | showLegArmour | showFootArmour | showHeadOverlay> <true | false>
+commands.armourers_workshop:armourers.usage=/armourers <admin_panel | clear_cache | export_skin | give_skin | set_item_skinnable | wardrobe>
+commands.armourers_workshop:armourers.clear_cache.usage=/armourers clear_cache <client | server> [исп. игрока в случ. клиента]
+commands.armourers_workshop:armourers.export_skin.usage=/armourers export_skin <формат файла> "<имя файла>" [масштаб]
+commands.armourers_workshop:armourers.give_skin.usage=/armourers give_skin <игрок> "<имя скина>" [<R,G,B[-типКраски]> | <0xRRGGBB[-типКраски>]]
+commands.armourers_workshop:armourers.set_item_skinnable.usage=/armourers set_item_skinnable <тип скина> <add|remove>
+commands.armourers_workshop:armourers.wardrobe.usage=/armourers wardrobe <clear_skin | clear_skins | resync | set_colour | set_option | set_skin | set_unlocked_slots>
+commands.armourers_workshop:armourers.wardrobe.clear_skin.usage=/armourers wardrobe clear_skin <игрок> <тип скина> <id слота>
+commands.armourers_workshop:armourers.wardrobe.clear_skins.usage=/armourers wardrobe clear_skins <игрок>
+commands.armourers_workshop:armourers.wardrobe.resync.usage=/armourers wardrobe resync <игрок>
+commands.armourers_workshop:armourers.wardrobe.set_colour.usage=/armourers wardrobe set_colour <игрок> <тип доп. цвета> [<R,G,B> | <0xRRGGBB>]
+commands.armourers_workshop:armourers.wardrobe.set_option.usage=/armourers wardrobe set_option <игрок> <showHeadArmour | showChestArmour | showLegArmour | showFootArmour | showHeadOverlay> <true | false>
+commands.armourers_workshop:armourers.wardrobe.set_skin.usage=/armourers wardrobe set_skin <игрок> <id слота> <"имя скина"> [<R,G,B[-типКраски]> | <0xRRGGBB[-типКраски>]]
+commands.armourers_workshop:armourers.wardrobe.set_unlocked_slots.usage=/armourers wardrobe set_unlocked_slots <игрок> <тип скина> <количество>
 commands.armourers.fileNotFound=Файл %1$s не Был Найден.
 commands.armourers.invalidDyeFormat=%1$s - неправильный формат цвета.
 

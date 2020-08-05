@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.common.painting.IPaintType;
 import moe.plushie.armourers_workshop.api.common.painting.IPaintingTool;
 import moe.plushie.armourers_workshop.api.common.painting.IPantable;
 import moe.plushie.armourers_workshop.api.common.skin.cubes.ICubeColour;
-import moe.plushie.armourers_workshop.client.gui.GuiColourMixer;
+import moe.plushie.armourers_workshop.client.gui.colour_mixer.GuiColourMixer;
 import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.init.items.paintingtool.ItemColourPicker;
 import moe.plushie.armourers_workshop.common.inventory.ContainerColourMixer;
@@ -15,7 +15,6 @@ import moe.plushie.armourers_workshop.common.lib.LibBlockNames;
 import moe.plushie.armourers_workshop.common.lib.LibCommonTags;
 import moe.plushie.armourers_workshop.common.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.common.skin.cubes.CubeColour;
-import moe.plushie.armourers_workshop.utils.UtilColour.ColourFamily;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -31,13 +30,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityColourMixer extends AbstractTileEntityInventory implements IPantable, IGuiFactory {
 
     private static final String TAG_ITEM_UPDATE = "itemUpdate";
-    private static final String TAG_COLOUR_FAMILY = "colourFamily";
     private static final String TAG_PAINT_TYPE = "paintType";
     private static final int INVENTORY_SIZE = 2;
 
     public int colour;
     private IPaintType paintType;
-    private ColourFamily colourFamily;
 
     private boolean itemUpdate;
     private boolean colourUpdate;
@@ -47,7 +44,6 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         colour = 16777215;
         paintType = PaintTypeRegistry.PAINT_TYPE_NORMAL;
         colourUpdate = false;
-        colourFamily = ColourFamily.MINECRAFT;
     }
 
     public boolean isSpecial() {
@@ -88,15 +84,6 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
         }
     }
 
-    public void setColourFamily(ColourFamily colourFamily) {
-        this.colourFamily = colourFamily;
-        markDirty();
-    }
-
-    public ColourFamily getColourFamily() {
-        return colourFamily;
-    }
-
     @Override
     public String getName() {
         return LibBlockNames.COLOUR_MIXER;
@@ -119,7 +106,6 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
         colour = compound.getInteger(LibCommonTags.TAG_COLOUR);
-        colourFamily = ColourFamily.values()[compound.getInteger(TAG_COLOUR_FAMILY)];
         if (compound.hasKey(TAG_PAINT_TYPE)) {
             paintType = PaintTypeRegistry.getInstance().getPaintTypeFromIndex(compound.getInteger(TAG_PAINT_TYPE));
         } else {
@@ -131,7 +117,6 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         compound.setInteger(LibCommonTags.TAG_COLOUR, colour);
-        compound.setInteger(TAG_COLOUR_FAMILY, colourFamily.ordinal());
         compound.setInteger(TAG_PAINT_TYPE, paintType.getId());
         return compound;
     }
@@ -222,7 +207,7 @@ public class TileEntityColourMixer extends AbstractTileEntityInventory implement
     public Container getServerGuiElement(EntityPlayer player, World world, BlockPos pos) {
         return new ContainerColourMixer(player.inventory, this);
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getClientGuiElement(EntityPlayer player, World world, BlockPos pos) {

@@ -42,4 +42,14 @@ public class LibGuiResources {
 
     // JSONs
     public static final String JSON_WARDROBE = PREFIX_JSON + "wardrobe.json";
+
+    public class Controls {
+
+        private static final String PREFIX = "inventory." + LibModInfo.ID + ":common.";
+
+        public static final String BUTTON_CLOSE = PREFIX + "button.close";
+        public static final String BUTTON_CANCEL = PREFIX + "button.cancel";
+        public static final String BUTTON_OK = PREFIX + "button.ok";
+        public static final String BUTTON_EDIT = PREFIX + "button.edit";
+    }
 }

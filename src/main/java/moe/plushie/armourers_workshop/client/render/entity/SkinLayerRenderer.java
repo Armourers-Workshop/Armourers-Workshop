@@ -60,6 +60,7 @@ public abstract class SkinLayerRenderer<E extends EntityLivingBase, R extends Re
     protected abstract void setRotTranForPartType(E entitylivingbaseIn, ISkinType skinType, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale);
     
     protected void renderSkinType(EntityLivingBase entity, ISkinType skinType, IEntitySkinCapability skinCapability, IWardrobeCap wardrobeCap) {
+        double distance = entity.getDistance(Minecraft.getMinecraft().player);
         for (int i = 0; i < skinCapability.getSlotCountForSkinType(skinType); i++) {
             ISkinDescriptor skinDescriptor = skinCapability.getSkinDescriptor(skinType, i);
             if (skinDescriptor == null) {
@@ -85,7 +86,7 @@ public abstract class SkinLayerRenderer<E extends EntityLivingBase, R extends Re
             
             GL11.glEnable(GL11.GL_NORMALIZE);
             for (int partIndex = 0; partIndex < skin.getParts().size(); partIndex++) {
-                SkinPartRenderer.INSTANCE.renderPart(new SkinPartRenderData(skin.getParts().get(partIndex), SCALE, dye, extraColours, 0, false, false, false, null));
+                SkinPartRenderer.INSTANCE.renderPart(new SkinPartRenderData(skin.getParts().get(partIndex), SCALE, dye, extraColours, distance, false, false, false, null));
             }
             GL11.glDisable(GL11.GL_NORMALIZE);
         }
