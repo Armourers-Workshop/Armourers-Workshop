@@ -15,34 +15,34 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class EntitySkinRenderHandler {
-    
+
     public static EntitySkinRenderHandler INSTANCE;
-    
+
     public static void init() {
         INSTANCE = new EntitySkinRenderHandler();
     }
-    
+
     private HashMap<Class<? extends EntityLivingBase>, ISkinnableEntityRenderer> entityRenderer;
-    
+
     public EntitySkinRenderHandler() {
         MinecraftForge.EVENT_BUS.register(this);
         entityRenderer = new HashMap<Class<? extends EntityLivingBase>, ISkinnableEntityRenderer>();
     }
-    
+
     public void initRenderer() {
         loadEntityRenderers();
     }
-    
+
     private void loadEntityRenderers() {
         ModLogger.log("Adding layer renderers to entities");
-        ArrayList<ISkinnableEntity> skinnableEntities = SkinnableEntityRegisty.INSTANCE.getRegisteredEntities();
+        ArrayList<ISkinnableEntity> skinnableEntities = SkinnableEntityRegisty.INSTANCE.getRegisteredSkinnableEntities();
         for (int i = 0; i < skinnableEntities.size(); i++) {
             ISkinnableEntity skinnableEntity = skinnableEntities.get(i);
             ModLogger.log("Adding layer renderer to entity " + skinnableEntity.getEntityClass());
             skinnableEntity.addRenderLayer(Minecraft.getMinecraft().getRenderManager());
         }
     }
-    
+
     private void registerRendererForEntity(Class<? extends EntityLivingBase> entity, Class<? extends ISkinnableEntityRenderer> renderClass) {
         try {
             entityRenderer.put(entity, renderClass.newInstance());
