@@ -79,7 +79,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         iconButtonMyFiles.visible = false;
         iconButtonUploadSkin.visible = false;
         iconButtonJoinBeta.visible = false;
-        iconButtonInfo.visible = false;
+        iconButtonInfo.visible = true;
         iconButtonModeration.visible = false;
 
         iconButtonHome.x = buttonOffsetX;
