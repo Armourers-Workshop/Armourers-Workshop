@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
+import moe.plushie.armourers_workshop.client.gui.controls.GuiControlStarRating;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
@@ -38,7 +39,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -52,6 +52,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     private GuiButtonExt buttonDownload;
     private GuiButtonExt buttonUserSkins;
     private GuiButtonExt buttonEditSkin;
+    private GuiControlStarRating starRating;
     private GuiIconButton buttonLikeSkin;
     private GuiIconButton buttonUnlikeSkin;
 
@@ -78,6 +79,8 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         buttonUserSkins = new GuiButtonExt(0, x + 3, y + 3, 26, 26, "");
         buttonEditSkin = new GuiButtonExt(0, x + width - 82, this.y + this.height - 18, 80, 16, GuiHelper.getLocalizedControlName(guiName, "editSkin"));
 
+        starRating = new GuiControlStarRating(x + 191, this.y + 4);
+        
         buttonLikeSkin = new GuiIconButton(parent, 0, x + 191, this.y + 4, 20, 20, GuiHelper.getLocalizedControlName(guiName, "like"), BUTTON_TEXTURES);
         buttonLikeSkin.setIconLocation(96, 0, 16, 16);
         buttonUnlikeSkin = new GuiIconButton(parent, 0, x + 191, this.y + 4, 20, 20, GuiHelper.getLocalizedControlName(guiName, "unlike"), BUTTON_TEXTURES);
@@ -89,8 +92,9 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         buttonList.add(buttonDownload);
         buttonList.add(buttonUserSkins);
         buttonList.add(buttonEditSkin);
-        buttonList.add(buttonLikeSkin);
-        buttonList.add(buttonUnlikeSkin);
+        buttonList.add(starRating);
+        //buttonList.add(buttonLikeSkin);
+        //buttonList.add(buttonUnlikeSkin);
     }
 
     @Override
@@ -292,6 +296,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             if (skinJson.has("downloads")) {
                 info += I18n.format(fullName + "downloads", skinJson.get("downloads").getAsInt()) + "\n\n";
             }
+            info += "Rating:    8.4/10 \n\n";
             if (skinJson.has("likes")) {
                 info += I18n.format(fullName + "likes", skinJson.get("likes").getAsInt()) + "\n\n";
             }
@@ -307,27 +312,16 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             }
         }
         fontRenderer.drawSplitString(info, boxX + 2, boxY + 2, boxWidth - 4, 0xFFEEEEEE);
+        
+        mc.renderEngine.bindTexture(BUTTON_TEXTURES);
+        drawTexturedModalRect(boxX + 34, boxY + 51, 0, 85, 16, 16);
+        
         ModRenderHelper.disableScissor();
     }
 
     public void drawPreviewBox(SkinIdentifier identifier, Skin skin, int boxX, int boxY, int boxWidth, int boxHeight, int mouseX, int mouseY, float partialTickTime) {
         drawGradientRect(boxX, boxY, boxX + boxWidth, boxY + boxHeight, 0x22888888, 0x22CCCCCC);
         if (skin != null) {
-            mc.renderEngine.bindTexture(BUTTON_TEXTURES);
-            int rating = (int) ((System.currentTimeMillis() / 100D) % 11);
-            for (int i = 0; i < 5; i++) {
-                drawTexturedModalRect(boxX + 24 + i * 16, boxY + 4, 32, 85, 16, 16);
-            }
-            int stars = MathHelper.floor(rating / 2F);
-            int halfStar = rating % 2;
-            for (int i = 0; i < stars; i++) {
-                drawTexturedModalRect(boxX + 24 + i * 16, boxY + 4, 0, 85, 16, 16);
-            }
-            if (halfStar == 1) {
-                drawTexturedModalRect(boxX + 24 + stars * 16, boxY + 4, 0, 85, 8, 16);
-            }
-            
-            
             int iconSize = Math.min(boxWidth, boxHeight);
             ScaledResolution scaledResolution = new ScaledResolution(mc);
             float scale = 10 - scaledResolution.getScaleFactor();

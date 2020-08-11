@@ -24,6 +24,7 @@ public class LibGuiResources {
     public static final String CONTROL_SLIDER_HUE = PREFIX_TEXTURE + "_controls/slider-hue.png";
     public static final String CONTROL_TABS = PREFIX_TEXTURE + "_controls/tabs.png";
     public static final String CONTROL_TAB_ICONS = PREFIX_TEXTURE + "_controls/tab_icons.png";
+    public static final String CONTROL_RATING = PREFIX_TEXTURE + "_controls/rating.png";
 
     // GUIs
     public static final String GUI_ADVANCED_SKIN_BUILDER = PREFIX_TEXTURE + "advanced_skin_builder/advanced-skin-builder.png";
