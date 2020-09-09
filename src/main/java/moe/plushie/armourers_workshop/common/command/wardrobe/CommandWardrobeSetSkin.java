@@ -44,7 +44,7 @@ public class CommandWardrobeSetSkin extends ModCommand {
     // Arguments 3-4 - <player> <slot id> <"skin name"> [dye]
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (args.length <= getParentCount() + 3) {
+        if (args.length <= getParentCount() + 2) {
             throw new WrongUsageException(getUsage(sender), (Object) args);
         }
 
