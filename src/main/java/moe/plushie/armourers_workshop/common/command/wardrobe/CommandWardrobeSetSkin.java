@@ -44,7 +44,7 @@ public class CommandWardrobeSetSkin extends ModCommand {
     // Arguments 3-4 - <player> <slot id> <"skin name"> [dye]
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (args.length <= getParentCount() + 3) {
+        if (args.length <= getParentCount() + 2) {
             throw new WrongUsageException(getUsage(sender), (Object) args);
         }
 
@@ -62,20 +62,24 @@ public class CommandWardrobeSetSkin extends ModCommand {
             throw new WrongUsageException(getUsage(sender), (Object) skinName);
         }
 
-        int usedCommands = 3;
+        int usedCommands = getParentCount() + 3;
 
         if (!skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
             for (int i = getParentCount() + 3; i < args.length; i++) {
                 skinName += " " + args[i];
                 if (skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
-                    usedCommands = i;
+                    usedCommands = i + 1;
                     break;
                 }
             }
         }
 
-        ModLogger.log("usedCommands used: " + usedCommands);
-        ModLogger.log("total commands used: " + args.length);
+        // ModLogger.log("player name " + playerName);
+        // ModLogger.log("slot num " + slotNum);
+        // ModLogger.log("skin name " + skinName);
+
+        // ModLogger.log("usedCommands used: " + usedCommands);
+        // ModLogger.log("total commands used: " + args.length);
 
         if (!skinName.substring(skinName.length() - 1, skinName.length()).equals("\"")) {
             throw new WrongUsageException(getUsage(sender), (Object) skinName);
@@ -84,7 +88,7 @@ public class CommandWardrobeSetSkin extends ModCommand {
         skinName = skinName.replace("\"", "");
         SkinDye skinDye = new SkinDye();
 
-        for (int i = usedCommands + 1; i < args.length; i++) {
+        for (int i = usedCommands; i < args.length; i++) {
             String dyeCommand = args[i];
             ModLogger.log("Command dye: " + dyeCommand);
 

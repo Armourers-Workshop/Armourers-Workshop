@@ -108,6 +108,7 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ICrashCallable;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -301,6 +302,9 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             return TexturePaintType.DISABLED;
         }
         if (ConfigHandlerClient.texturePaintingType == 0) {
+            if (Loader.isModLoaded("tlauncher_custom_cape_skin")) {
+                return TexturePaintType.MODEL_REPLACE_AW;
+            }
             return TexturePaintType.TEXTURE_REPLACE;
         }
         return TexturePaintType.values()[ConfigHandlerClient.texturePaintingType];

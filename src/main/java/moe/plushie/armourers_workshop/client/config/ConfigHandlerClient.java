@@ -9,13 +9,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ConfigHandlerClient {
-    
+
     public static final String CATEGORY_MISC = "misc";
     public static final String CATEGORY_PERFORMANCE = "performance";
     public static final String CATEGORY_CACHE = "cache";
     public static final String CATEGORY_SKIN_PREVIEW = "skin-preview";
+    public static final String CATEGORY_TOOLTIP = "tooltip";
     public static final String CATEGORY_DEBUG = "debug";
-    
+
     // Performance
     public static int renderDistanceSkin;
     public static int renderDistanceBlockSkin;
@@ -25,10 +26,10 @@ public class ConfigHandlerClient {
     public static boolean multipassSkinRendering = true;
     public static int maxLodLevels = 4;
     public static boolean useClassicBlockModels;
-    
+
     // Misc
     public static int skinLoadAnimationTime;
-    
+
     // Cache
     public static int skinCacheExpireTime;
     public static int skinCacheMaxSize;
@@ -38,7 +39,7 @@ public class ConfigHandlerClient {
     public static int textureCacheMaxSize;
     public static int maxSkinRequests;
     public static int fastCacheSize;
-    
+
     // Skin preview
     public static boolean skinPreEnabled = false;
     public static boolean skinPreDrawBackground = true;
@@ -46,12 +47,20 @@ public class ConfigHandlerClient {
     public static float skinPreLocHorizontal = 1F;
     public static float skinPreLocVertical = 0.5F;
     public static boolean skinPreLocFollowMouse = false;
-    
+
+    // Tool-tip
+    public static boolean tooltipHasSkin;
+    public static boolean tooltipSkinName;
+    public static boolean tooltipSkinAuthor;
+    public static boolean tooltipSkinType;
+    public static boolean tooltipDebug;
+    public static boolean tooltipFlavour;
+    public static boolean tooltipOpenWardrobe;
+
     // Debug
     public static int texturePaintingType;
     public static boolean showF3DebugInfo;
-    public static boolean showSkinTooltipDebugInfo;
-    
+
     // Debug tool
     public static boolean showArmourerDebugRender;
     public static boolean wireframeRender;
@@ -59,27 +68,28 @@ public class ConfigHandlerClient {
     public static boolean showSkinBlockBounds;
     public static boolean showSkinRenderBounds;
     public static boolean showSortOrderToolTip;
-    
+
     public static Configuration config;
-    
+
     public static void init(File file) {
         if (config == null) {
             config = new Configuration(file, "1");
             loadConfigFile();
         }
     }
-    
+
     public static void loadConfigFile() {
         loadCategoryMisc();
         loadCategoryPerformance();
         loadCategoryCache();
         loadCategorySkinPreview();
+        loadCategoryTooltip();
         loadCategoryDebug();
         if (config.hasChanged()) {
             config.save();
         }
     }
-    
+
     private static void loadCategoryMisc() {
         config.setCategoryComment(CATEGORY_MISC, "Miscellaneous settings.");
         
@@ -89,7 +99,7 @@ public class ConfigHandlerClient {
     }
     
     private static void loadCategoryPerformance() {
-        config.setCategoryComment(CATEGORY_PERFORMANCE, "Change (visual quality/performance) ratio by category setting in this category.");
+        config.setCategoryComment(CATEGORY_PERFORMANCE, "Change (visual quality/performance) ratio by changing setting in this category.");
         
         renderDistanceSkin = config.getInt("renderDistanceSkin", CATEGORY_PERFORMANCE, 128, 16, 512,
                 "The max distance in blocks that skins will render.");
@@ -125,7 +135,7 @@ public class ConfigHandlerClient {
     }
     
     private static void loadCategoryCache() {
-        config.setCategoryComment(CATEGORY_CACHE, "Change (memory use/IO access) ratio by category setting in this category.");
+        config.setCategoryComment(CATEGORY_CACHE, "Change (memory use/IO access) ratio by changing setting in this category.");
         
         // Skin cache
         skinCacheExpireTime = config.getInt("skinCacheExpireTime", CATEGORY_CACHE, 600, 0, 3600,
@@ -192,7 +202,19 @@ public class ConfigHandlerClient {
         skinPreLocFollowMouse = config.getBoolean("skinPreLocFollowMouse", CATEGORY_SKIN_PREVIEW, true,
                 "Skin preview will be rendered next to the mouse.");
     }
-    
+
+    private static void loadCategoryTooltip() {
+        config.setCategoryComment(CATEGORY_TOOLTIP, "Setting to configure tooltips on skinned items.");
+
+        tooltipHasSkin = config.getBoolean("tooltipHasSkin", CATEGORY_TOOLTIP, true, "Show has skin tooltip on skinned items.");
+        tooltipSkinName = config.getBoolean("tooltipSkinName", CATEGORY_TOOLTIP, true, "Show skin name tooltip on items.");
+        tooltipSkinAuthor = config.getBoolean("tooltipSkinAuthor", CATEGORY_TOOLTIP, true, "Show skin author tooltip on items.");
+        tooltipSkinType = config.getBoolean("tooltipSkinType", CATEGORY_TOOLTIP, true, "Show skin type tooltip on items.");
+        tooltipDebug = config.getBoolean("tooltipDebug", CATEGORY_TOOLTIP, false, "Show skin debug info on items.");
+        tooltipFlavour = config.getBoolean("tooltipFlavour", CATEGORY_TOOLTIP, true, "Show skin flavoue text tooltip on items.");
+        tooltipOpenWardrobe = config.getBoolean("tooltipOpenWardrobe", CATEGORY_TOOLTIP, true, "Show open wardrobe message on skins.");
+    }
+
     private static void loadCategoryDebug() {
         config.setCategoryComment(CATEGORY_DEBUG, "Debug settings.");
         
@@ -200,11 +222,6 @@ public class ConfigHandlerClient {
                 .get(CATEGORY_DEBUG, "showF3DebugInfo", true,
                 "Shows extra info on the F3 debug screen.")
                 .getBoolean(true);
-        
-        showSkinTooltipDebugInfo = config
-                .get(CATEGORY_DEBUG, "showSkinTooltipDebugInfo", false,
-                "Shows extra debug info on skin tooltips.")
-                .getBoolean(false);
         
         texturePaintingType = config
                 .getInt("texturePaintingType", CATEGORY_DEBUG, 0, -1, 2,
