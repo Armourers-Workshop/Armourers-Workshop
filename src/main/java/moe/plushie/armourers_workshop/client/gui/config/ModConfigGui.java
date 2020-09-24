@@ -22,55 +22,20 @@ public class ModConfigGui extends GuiConfig {
 
     public static List<IConfigElement> makeConfigScreens() {
         List<IConfigElement> configs = new ArrayList<IConfigElement>();
+        configs.addAll(new ConfigElement(ConfigHandler.config.getCategory(ConfigHandler.CATEGORY_GENERAL)).getChildElements());
+        configs.addAll(new ConfigElement(ConfigHandler.config.getCategory(ConfigHandler.CATEGORY_WARDROBE)).getChildElements());
+        configs.addAll(new ConfigElement(ConfigHandler.config.getCategory(ConfigHandler.CATEGORY_LIBRARY)).getChildElements());
+        configs.addAll(new ConfigElement(ConfigHandler.config.getCategory(ConfigHandler.CATEGORY_RECIPE)).getChildElements());
+        configs.addAll(new ConfigElement(ConfigHandler.config.getCategory(ConfigHandler.CATEGORY_HOLIDAY)).getChildElements());
+        configs.addAll(new ConfigElement(ConfigHandler.config.getCategory(ConfigHandler.CATEGORY_ENTITY_SKINS)).getChildElements());
+        configs.addAll(new ConfigElement(ConfigHandler.config.getCategory(ConfigHandler.CATEGORY_CACHE)).getChildElements());
         
-        configs.addAll(new ConfigElement(ConfigHandler.config
-                .getCategory(ConfigHandler.CATEGORY_GENERAL))
-                .getChildElements());
-        
-        configs.addAll(new ConfigElement(ConfigHandler.config
-                .getCategory(ConfigHandler.CATEGORY_WARDROBE))
-                .getChildElements());
-        
-        configs.addAll(new ConfigElement(ConfigHandler.config
-                .getCategory(ConfigHandler.CATEGORY_LIBRARY))
-                .getChildElements());
-        
-        configs.addAll(new ConfigElement(ConfigHandler.config
-                .getCategory(ConfigHandler.CATEGORY_RECIPE))
-                .getChildElements());
-        
-        configs.addAll(new ConfigElement(ConfigHandler.config
-                .getCategory(ConfigHandler.CATEGORY_HOLIDAY))
-                .getChildElements());
-        
-        configs.addAll(new ConfigElement(ConfigHandler.config
-                .getCategory(ConfigHandler.CATEGORY_ENTITY_SKINS))
-                .getChildElements());
-        
-        configs.addAll(new ConfigElement(ConfigHandler.config
-                .getCategory(ConfigHandler.CATEGORY_CACHE))
-                .getChildElements());
-        
-        configs.addAll(new ConfigElement(ConfigHandlerClient.config
-                .getCategory(ConfigHandlerClient.CATEGORY_MISC))
-                .getChildElements());
-        
-        configs.addAll(new ConfigElement(ConfigHandlerClient.config
-                .getCategory(ConfigHandlerClient.CATEGORY_PERFORMANCE))
-                .getChildElements());
-        
-        configs.addAll(new ConfigElement(ConfigHandlerClient.config
-                .getCategory(ConfigHandlerClient.CATEGORY_CACHE))
-                .getChildElements());
-        
-        configs.addAll(new ConfigElement(ConfigHandlerClient.config
-                .getCategory(ConfigHandlerClient.CATEGORY_SKIN_PREVIEW))
-                .getChildElements());
-        
-        configs.addAll(new ConfigElement(ConfigHandlerClient.config
-                .getCategory(ConfigHandlerClient.CATEGORY_DEBUG))
-                .getChildElements());
-        
+        configs.addAll(new ConfigElement(ConfigHandlerClient.config.getCategory(ConfigHandlerClient.CATEGORY_MISC)).getChildElements());
+        configs.addAll(new ConfigElement(ConfigHandlerClient.config.getCategory(ConfigHandlerClient.CATEGORY_PERFORMANCE)).getChildElements());
+        configs.addAll(new ConfigElement(ConfigHandlerClient.config.getCategory(ConfigHandlerClient.CATEGORY_CACHE)).getChildElements());
+        configs.addAll(new ConfigElement(ConfigHandlerClient.config.getCategory(ConfigHandlerClient.CATEGORY_SKIN_PREVIEW)).getChildElements());
+        configs.addAll(new ConfigElement(ConfigHandlerClient.config.getCategory(ConfigHandlerClient.CATEGORY_TOOLTIP)).getChildElements());
+        configs.addAll(new ConfigElement(ConfigHandlerClient.config.getCategory(ConfigHandlerClient.CATEGORY_DEBUG)).getChildElements());
         return configs;
     }
 }
