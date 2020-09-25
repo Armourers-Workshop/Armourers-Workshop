@@ -133,11 +133,11 @@ public class LibraryFileList {
     }
 
     public void syncFileListWithPlayer(EntityPlayerMP player) {
-        ModLogger.log("Syncing library to " + player.getName() + ".");
-        ArrayList<LibraryFile> fileList = getFileList();
         synchronized (this.syncedClients) {
             if (!syncedClients.contains(player.getUniqueID())) {
                 syncedClients.add(player.getUniqueID());
+                ArrayList<LibraryFile> fileList = getFileList();
+                ModLogger.log("Syncing library to " + player.getName() + ".");
                 ModLogger.log(String.format("Sending file list type %s to %s", listType.toString(), player.getName()));
                 MessageServerLibraryFileList message = new MessageServerLibraryFileList(fileList, this.listType);
                 PacketHandler.networkWrapper.sendTo(message, player);
