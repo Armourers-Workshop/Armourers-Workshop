@@ -43,22 +43,22 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
         File outputFile = new File(filePath, filename + ".obj");
         try (FileOutputStream fos = new FileOutputStream(outputFile); OutputStreamWriter os = new OutputStreamWriter(fos, StandardCharsets.UTF_8)) {
-            
+
             int totalFaces = 0;
             for (int i = 0; i < skin.getPartCount(); i++) {
                 SkinPart skinPart = skin.getParts().get(i);
-                for (int j= 0; j < ClientProxy.getNumberOfRenderLayers(); j++) {
+                for (int j = 0; j < ClientProxy.getNumberOfRenderLayers(); j++) {
                     totalFaces += skinPart.getClientSkinPartData().vertexLists[j].size();
                 }
             }
             ModLogger.log("Exporting skin with " + totalFaces + " total faces.");
-            
+
             int textureSize = 0;
             while (textureSize * textureSize < totalFaces * 4) {
                 ModLogger.log("Texture size " + textureSize);
                 textureSize = getNextPowerOf2(textureSize + 1);
             }
-            //textureSize = 128;
+            // textureSize = 128;
             BufferedImage texture = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_ARGB);
 
             os.write("# WavefrontObj" + CRLF);
@@ -68,7 +68,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
             for (int i = 0; i < skin.getPartCount(); i++) {
                 SkinPart skinPart = skin.getParts().get(i);
-                exportPart(skinPart, skin, os, texture);
+                exportPart(skinPart, skin, os, texture, i);
             }
 
             os.flush();
@@ -82,42 +82,25 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         }
     }
 
-    private void createMtlFile(File filePath, String filename) {
-        File outputFile = new File(filePath, filename + ".mtl");
-        try (FileOutputStream fos = new FileOutputStream(outputFile); OutputStreamWriter os = new OutputStreamWriter(fos, StandardCharsets.UTF_8)) {
-            os.write("newmtl basetexture" + CRLF);
-            os.write("Ns 96.078431" + CRLF);
-            os.write("Ka 1.000000 1.000000 1.000000" + CRLF);
-            os.write("Kd 0.800000 0.800000 0.800000" + CRLF);
-            os.write("Ks 0.500000 0.500000 0.500000" + CRLF);
-            os.write("Ke 0.000000 0.000000 0.000000" + CRLF);
-            os.write("Ni 1.000000" + CRLF);
-            os.write("d 1.000000" + CRLF);
-            os.write("illum 0" + CRLF);
-            os.write("map_Kd " + filename + ".png" + CRLF);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void exportPart(SkinPart skinPart, Skin skin, OutputStreamWriter os, BufferedImage texture) throws IOException {
+    private void exportPart(SkinPart skinPart, Skin skin, OutputStreamWriter os, BufferedImage texture, int partIndex) throws IOException {
         ClientSkinPartData cspd = skinPart.getClientSkinPartData();
 
         for (int i = 0; i < ClientProxy.getNumberOfRenderLayers(); i++) {
-            exportLayer(skinPart, skin, os, texture, i);
+            exportLayer(skinPart, skin, os, texture, i, partIndex);
         }
     }
 
-    private void exportLayer(SkinPart skinPart, Skin skin, OutputStreamWriter os, BufferedImage texture, int layer) throws IOException {
+    private void exportLayer(SkinPart skinPart, Skin skin, OutputStreamWriter os, BufferedImage texture, int layer, int partIndex) throws IOException {
         ClientSkinPartData cspd = skinPart.getClientSkinPartData();
         ArrayList<ColouredFace> faces = cspd.vertexLists[layer];
         if (faces.isEmpty()) {
             return;
         }
 
+        String[] layerNames = {"opaque", "glowing", "transparent", "transparent-glowing"};
         ModLogger.log("Exporting part " + skinPart);
 
-        os.write("o " + skinPart.getPartType().getRegistryName().replace(":", "_") + CRLF);
+        os.write("o " + partIndex + "-" + skinPart.getPartType().getRegistryName().replace(":", "_") + "-" + layerNames[layer] + CRLF);
         os.write("usemtl basetexture" + CRLF);
         os.write("s 1" + CRLF);
         os.flush();
@@ -251,7 +234,26 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         IPoint3D pos = skinPart.getPartType().getItemRenderOffset();
         os.write(String.format("v %f %f %f", x + -scale * pos.getZ(), z + -scale * pos.getY(), y * -1 + -scale * pos.getX()) + CRLF);
     }
-    
+
+    private void createMtlFile(File filePath, String filename) {
+        File outputFile = new File(filePath, filename + ".mtl");
+        try (FileOutputStream fos = new FileOutputStream(outputFile); OutputStreamWriter os = new OutputStreamWriter(fos, StandardCharsets.UTF_8)) {
+            os.write("newmtl basetexture" + CRLF);
+            os.write("Ns 96.078431" + CRLF);
+            os.write("Ka 1.000000 1.000000 1.000000" + CRLF);
+            os.write("Kd 0.800000 0.800000 0.800000" + CRLF);
+            os.write("Ks 0.500000 0.500000 0.500000" + CRLF);
+            os.write("Ke 0.000000 0.000000 0.000000" + CRLF);
+            os.write("Ni 1.000000" + CRLF);
+            os.write("d 1.000000" + CRLF);
+            os.write("illum 0" + CRLF);
+            os.write("map_Kd " + filename + ".png" + CRLF);
+            os.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private int getNextPowerOf2(int value) {
         return (int) Math.pow(2, 32 - Integer.numberOfLeadingZeros(value - 1));
     }
