@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import scala.NotImplementedError;
+import org.apache.commons.lang3.NotImplementedException;
+
 
 public class BidirectionalHashMap<K, V> implements Map<K, V> {
 
@@ -72,7 +73,7 @@ public class BidirectionalHashMap<K, V> implements Map<K, V> {
 
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
-        throw new NotImplementedError();
+        throw new NotImplementedException("putAll() is not implemented yet.");
     }
 
     @Override
