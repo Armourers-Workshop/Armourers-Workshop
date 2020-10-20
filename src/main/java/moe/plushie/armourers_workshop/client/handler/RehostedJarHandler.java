@@ -40,7 +40,7 @@ public final class RehostedJarHandler {
             return;
         }
         
-        if (jarFile.getName().equals(originalName)) {
+        if (jarFile.getName().replaceAll("\\(\\d+\\)", "").replaceAll(" ", "").equals(originalName)) {
             // Names match.
             validJar = true;
             return;
