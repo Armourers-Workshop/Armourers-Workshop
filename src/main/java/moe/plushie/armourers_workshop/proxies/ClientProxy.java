@@ -150,7 +150,7 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
         ConfigHandlerClient.init(new File(getModConfigDirectory(), "client.cfg"));
 
         enableCrossModSupport();
-        new RehostedJarHandler(event.getSourceFile(), "Armourers-Workshop-" + LibModInfo.MOD_VERSION + ".jar");
+        new RehostedJarHandler(event.getSourceFile(), "Armourers-Workshop-" + LibModInfo.MOD_VERSION);
         new GuiResourceManager();
 
         ReflectionHelper.setPrivateValue(ArmourersWorkshopClientApi.class, null, SkinRenderHandlerApi.INSTANCE, "skinRenderHandler");
