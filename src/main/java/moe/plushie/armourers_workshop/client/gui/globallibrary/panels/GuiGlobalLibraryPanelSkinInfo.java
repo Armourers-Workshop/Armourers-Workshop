@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.client.gui.globallibrary.panels;
 
 import java.io.File;
 
+import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.util.concurrent.FutureCallback;
@@ -9,11 +10,13 @@ import com.google.gson.JsonObject;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.client.gui.GuiHelper;
+import moe.plushie.armourers_workshop.client.gui.controls.AbstractGuiDialog;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiControlStarRating;
-import moe.plushie.armourers_workshop.client.gui.controls.GuiIconButton;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
+import moe.plushie.armourers_workshop.client.gui.controls.IDialogCallback;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
+import moe.plushie.armourers_workshop.client.gui.globallibrary.dialog.GuiGlobalLibraryDialogReportSkin;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 import moe.plushie.armourers_workshop.client.render.SkinItemRenderHelper;
@@ -25,11 +28,18 @@ import moe.plushie.armourers_workshop.common.library.global.PlushieUser;
 import moe.plushie.armourers_workshop.common.library.global.SkinDownloader;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskGetSkinInfo;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskResult;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinReport;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinReport.SkinReportResult;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserSkinRate;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserSkinRate.UserSkinRateResult;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserSkinRating;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserSkinRating.UserSkinRatingResult;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.common.skin.data.SkinIdentifier;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -44,7 +54,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
+public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel implements IDialogCallback {
 
     private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibGuiResources.GUI_GLOBAL_LIBRARY);
 
@@ -52,17 +62,16 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     private GuiButtonExt buttonDownload;
     private GuiButtonExt buttonUserSkins;
     private GuiButtonExt buttonEditSkin;
+    private GuiButtonExt buttonReportSkin;
     private GuiControlStarRating starRating;
-    private GuiIconButton buttonLikeSkin;
-    private GuiIconButton buttonUnlikeSkin;
 
     private final String guiName;
 
     private JsonObject skinJson = null;
     private Screen returnScreen;
 
-    private boolean doneLikeCheck = false;
-    private boolean haveLiked = false;
+    private boolean doneRatingCheck = false;
+    private int rating = 0;
 
     public GuiGlobalLibraryPanelSkinInfo(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
@@ -78,13 +87,8 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         buttonDownload = new GuiButtonExt(0, x + 185 + 6, this.y + this.height - 38, 80, 16, GuiHelper.getLocalizedControlName(guiName, "downloadSkin"));
         buttonUserSkins = new GuiButtonExt(0, x + 3, y + 3, 26, 26, "");
         buttonEditSkin = new GuiButtonExt(0, x + width - 82, this.y + this.height - 18, 80, 16, GuiHelper.getLocalizedControlName(guiName, "editSkin"));
-
+        buttonReportSkin = new GuiButtonExt(0, x + width - 82 - 2, this.y + this.height - 38, 80, 16, GuiHelper.getLocalizedControlName(guiName, "button.report_skin"));
         starRating = new GuiControlStarRating(x + 191, this.y + 4);
-        
-        buttonLikeSkin = new GuiIconButton(parent, 0, x + 191, this.y + 4, 20, 20, GuiHelper.getLocalizedControlName(guiName, "like"), BUTTON_TEXTURES);
-        buttonLikeSkin.setIconLocation(96, 0, 16, 16);
-        buttonUnlikeSkin = new GuiIconButton(parent, 0, x + 191, this.y + 4, 20, 20, GuiHelper.getLocalizedControlName(guiName, "unlike"), BUTTON_TEXTURES);
-        buttonUnlikeSkin.setIconLocation(96, 17, 16, 16);
 
         updateLikeButtons();
 
@@ -92,9 +96,8 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         buttonList.add(buttonDownload);
         buttonList.add(buttonUserSkins);
         buttonList.add(buttonEditSkin);
+        buttonList.add(buttonReportSkin);
         buttonList.add(starRating);
-        //buttonList.add(buttonLikeSkin);
-        //buttonList.add(buttonUnlikeSkin);
     }
 
     @Override
@@ -116,13 +119,10 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
     }
 
     private void updateLikeButtons() {
-        buttonLikeSkin.visible = false;
-        buttonUnlikeSkin.visible = false;
-        buttonLikeSkin.enabled = true;
-        buttonUnlikeSkin.enabled = true;
-        if (doneLikeCheck) {
-            buttonLikeSkin.visible = !haveLiked;
-            buttonUnlikeSkin.visible = haveLiked;
+        starRating.visible = false;
+        if (doneRatingCheck) {
+            starRating.setRating(rating);
+            starRating.visible = true;
         }
     }
 
@@ -153,13 +153,12 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
                 ((GuiGlobalLibrary) parent).panelSkinEdit.displaySkinInfo(skinJson, returnScreen);
             }
         }
-        if (button == buttonLikeSkin) {
-            setSkinRating(1);
-            buttonLikeSkin.enabled = false;
+        if (button == starRating) {
+            setSkinRating(starRating.getRating());
         }
-        if (button == buttonUnlikeSkin) {
-            setSkinRating(0);
-            buttonUnlikeSkin.enabled = false;
+        if (button == buttonReportSkin) {
+            int skinId = skinJson.get("id").getAsInt();
+            ((GuiGlobalLibrary) parent).openDialog(new GuiGlobalLibraryDialogReportSkin(parent, guiName + ".dialog.report_skin", this, 240, 200, skinId));
         }
     }
 
@@ -169,7 +168,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         ((GuiGlobalLibrary) parent).panelSkinEdit.setModerator(!isOwner());
         this.returnScreen = returnScreen;
 
-        doneLikeCheck = false;
+        doneRatingCheck = false;
         if (PlushieAuth.isRemoteUser() & skinJson != null) {
             checkIfLiked();
         }
@@ -177,18 +176,20 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
 
     private void checkIfLiked() {
         int skinId = skinJson.get("id").getAsInt();
-        new GlobalTaskUserSkinRating(skinId).createTaskAndRun(new FutureCallback<JsonObject>() {
+        new GlobalTaskUserSkinRating(skinId).createTaskAndRun(new FutureCallback<UserSkinRatingResult>() {
 
             @Override
-            public void onSuccess(JsonObject result) {
+            public void onSuccess(UserSkinRatingResult result) {
                 Minecraft.getMinecraft().addScheduledTask(new Runnable() {
 
                     @Override
                     public void run() {
-                        if (result.has("isLiked")) {
-                            haveLiked = result.get("isLiked").getAsBoolean();
-                            doneLikeCheck = true;
+                        if (result.getResult() == GlobalTaskResult.SUCCESS) {
+                            rating = result.getRating();
+                            doneRatingCheck = true;
                             updateLikeButtons();
+                        } else {
+                            ModLogger.log(Level.WARN, result.getMessage());
                         }
                     }
                 });
@@ -203,27 +204,46 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
 
     private void setSkinRating(int rating) {
         int skinId = skinJson.get("id").getAsInt();
-        new GlobalTaskUserSkinRate(skinId, rating).createTaskAndRun(new FutureCallback<JsonObject>() {
+        new GlobalTaskUserSkinRate(skinId, rating).createTaskAndRun(new FutureCallback<UserSkinRateResult>() {
 
             @Override
-            public void onSuccess(JsonObject result) {
+            public void onSuccess(UserSkinRateResult result) {
 
                 Minecraft.getMinecraft().addScheduledTask(new Runnable() {
 
                     @Override
                     public void run() {
-                        if (result.has("valid") && result.get("valid").getAsBoolean()) {
-                            if (skinJson != null) {
-                                if (skinJson.has("likes")) {
-                                    if (haveLiked) {
-                                        skinJson.addProperty("likes", skinJson.get("likes").getAsInt() - 1);
-                                    } else {
-                                        skinJson.addProperty("likes", skinJson.get("likes").getAsInt() + 1);
-                                    }
-                                }
-                            }
-                            haveLiked = !haveLiked;
+                        if (result.getResult() == GlobalTaskResult.SUCCESS) {
                             updateLikeButtons();
+                            if (skinJson != null) {
+                                updateSkinJson();
+                            }
+                        } else {
+                            ModLogger.log(Level.WARN, result.getMessage());
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void updateSkinJson() {
+        int skinId = skinJson.get("id").getAsInt();
+        new GlobalTaskGetSkinInfo(skinId).createTaskAndRun(new FutureCallback<JsonObject>() {
+
+            @Override
+            public void onSuccess(JsonObject result) {
+                Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (result != null) {
+                            skinJson = result;
                         }
                     }
                 });
@@ -285,13 +305,13 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
         String fullName = "inventory." + LibModInfo.ID.toLowerCase() + ":" + guiName + ".";
 
         String info = "";
-        
+
         info += GuiHelper.getLocalizedControlName(guiName, "title") + "\n\n";
-        
+
         if (skinJson != null) {
             info += GuiHelper.getLocalizedControlName(guiName, "name") + " ";
             info += skinJson.get("name").getAsString() + "\n\n";
-            
+
             int yOffset = 100;
             if (skinJson.has("downloads")) {
                 info += I18n.format(fullName + "downloads", skinJson.get("downloads").getAsInt()) + "\n\n";
@@ -302,20 +322,20 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
             }
             if (skin != null) {
                 info += GuiHelper.getLocalizedControlName(guiName, "author") + " ";
-                info +=  skin.getAuthorName() + "\n\n";
+                info += skin.getAuthorName() + "\n\n";
             }
             info += "Global ID: " + skinJson.get("id").getAsInt() + "\n\n";
-            
+
             if (skinJson.has("description")) {
                 info += GuiHelper.getLocalizedControlName(guiName, "description") + " ";
                 info += skinJson.get("description").getAsString();
             }
         }
         fontRenderer.drawSplitString(info, boxX + 2, boxY + 2, boxWidth - 4, 0xFFEEEEEE);
-        
+
         mc.renderEngine.bindTexture(BUTTON_TEXTURES);
         drawTexturedModalRect(boxX + 34, boxY + 51, 0, 85, 16, 16);
-        
+
         ModRenderHelper.disableScissor();
     }
 
@@ -386,5 +406,27 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel {
                 }
             }
         }
+    }
+
+    @Override
+    public void dialogResult(AbstractGuiDialog dialog, DialogResult result) {
+        if (result == DialogResult.OK) {
+            if (dialog instanceof GuiGlobalLibraryDialogReportSkin) {
+                new GlobalTaskSkinReport(((GuiGlobalLibraryDialogReportSkin) dialog).getSkinReport()).createTaskAndRun(new FutureCallback<GlobalTaskSkinReport.SkinReportResult>() {
+
+                    @Override
+                    public void onSuccess(SkinReportResult result) {
+                        ModLogger.log("Skin report sent.");
+                        // NO-OP
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
+            }
+        }
+        ((GuiGlobalLibrary) parent).closeDialog();
     }
 }

@@ -299,6 +299,14 @@ movmentType.armourers_workshop:ease=Ease
 movmentType.armourers_workshop:linear=Linear
 
 
+# Skin Report Types
+skin_report_type.armourers_workshop:sexual=Sexual
+skin_report_type.armourers_workshop:inappropriate=Inappropriate
+skin_report_type.armourers_workshop:stolen=Stolen
+skin_report_type.armourers_workshop:spam=Spam
+skin_report_type.armourers_workshop:other=Other
+
+
 # Inventory names
 inventory.armourers_workshop:colour-mixer.name=Color Mixer
 inventory.armourers_workshop:armourer.name=Armourer
@@ -547,6 +555,7 @@ inventory.armourers_workshop:global-skin-library.header.myFiles=My Files
 inventory.armourers_workshop:global-skin-library.header.uploadSkin=Upload Skin
 inventory.armourers_workshop:global-skin-library.header.uploadSkinBan=You are banned from upload skins
 inventory.armourers_workshop:global-skin-library.header.joinBeta=Join Beta
+inventory.armourers_workshop:global-skin-library.header.moderation=Moderation
 inventory.armourers_workshop:global-skin-library.header.info=Info
 
 
@@ -584,6 +593,10 @@ inventory.armourers_workshop:global-skin-library.skinInfo.downloads=Downloads: %
 inventory.armourers_workshop:global-skin-library.skinInfo.likes=Likes: %d
 inventory.armourers_workshop:global-skin-library.skinInfo.author=Author:
 inventory.armourers_workshop:global-skin-library.skinInfo.description=Description:
+inventory.armourers_workshop:global-skin-library.skinInfo.button.report_skin=Report Skin...
+inventory.armourers_workshop:global-skin-library.skinInfo.dialog.report_skin.title=Report Skin
+inventory.armourers_workshop:global-skin-library.skinInfo.dialog.report_skin.optional_message=Optional message...
+inventory.armourers_workshop:global-skin-library.skinInfo.dialog.report_skin.label.report_warning=!!! Warning !!! - Your account may be permanently ban from the global libray if you abuse the report system.
 
 
 # Global Skin Library (Upload)

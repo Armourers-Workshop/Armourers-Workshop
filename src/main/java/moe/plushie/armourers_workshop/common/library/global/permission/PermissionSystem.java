@@ -81,6 +81,9 @@ public final class PermissionSystem {
         /** View server status. */
         SERVER_VIEW_STATS,
 
+        /** Get the skin info */
+        GET_SKIN_INFO,
+
         // ------- Actions for users only. -------
 
         /** Upload skins */

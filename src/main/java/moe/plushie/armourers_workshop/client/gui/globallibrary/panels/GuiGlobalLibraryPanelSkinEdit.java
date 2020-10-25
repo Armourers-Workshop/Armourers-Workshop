@@ -279,7 +279,6 @@ public class GuiGlobalLibraryPanelSkinEdit extends GuiPanel implements IDialogCa
 
     @Override
     public void dialogResult(AbstractGuiDialog dialog, DialogResult result) {
-        ModLogger.log(result);
         if (result == DialogResult.OK) {
             if (skinJson != null && skinJson.has("id")) {
                 deleteSkin();
