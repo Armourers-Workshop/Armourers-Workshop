@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.library.global.task;
+package moe.plushie.armourers_workshop.common.library.global.task.user;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -6,7 +6,9 @@ import com.google.gson.JsonParser;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserSkinRating.UserSkinRatingResult;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTask;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskResult;
+import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskUserSkinRating.UserSkinRatingResult;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 
 public class GlobalTaskUserSkinRating extends GlobalTask<UserSkinRatingResult> {

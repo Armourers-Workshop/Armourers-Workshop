@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.library.global.task;
+package moe.plushie.armourers_workshop.common.library.global.task.mod;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,8 +14,11 @@ import moe.plushie.armourers_workshop.common.library.global.MultipartForm;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinReport.SkinReport;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinReport.SkinReport.SkinReportType;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTask;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskResult;
+import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskSkinReport;
+import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskSkinReport.SkinReport;
+import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskSkinReport.SkinReport.SkinReportType;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 
 public class GlobalTaskGetReportList extends GlobalTask<GlobalTaskGetReportList.Result> {

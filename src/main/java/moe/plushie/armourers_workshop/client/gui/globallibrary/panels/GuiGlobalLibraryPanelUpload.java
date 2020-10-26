@@ -1,12 +1,11 @@
 package moe.plushie.armourers_workshop.client.gui.globallibrary.panels;
 
 import java.io.ByteArrayOutputStream;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 
+import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
@@ -20,9 +19,11 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
 import moe.plushie.armourers_workshop.common.library.global.GlobalSkinLibraryUtils;
-import moe.plushie.armourers_workshop.common.library.global.SkinUploader;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskResult;
+import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskSkinUpload;
+import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskSkinUpload.Result;
 import moe.plushie.armourers_workshop.common.network.PacketHandler;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -30,6 +31,7 @@ import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
@@ -50,8 +52,6 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     private GuiTextFieldCustom textDescription;
     private GuiButtonExt buttonUpload;
     private GuiCustomLabel statsText;
-
-    private FutureTask<JsonObject> taskSkinUpload;
     private String error = null;
 
     public GuiGlobalLibraryPanelUpload(GuiScreen parent, int x, int y, int width, int height) {
@@ -154,33 +154,6 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
                 buttonUpload.enabled = true;
             }
         }
-        if (taskSkinUpload != null && taskSkinUpload.isDone()) {
-            try {
-                JsonObject json = taskSkinUpload.get();
-                taskSkinUpload = null;
-                if (json != null) {
-                    if (json.has("valid") & json.has("action")) {
-                        String action = json.get("action").getAsString();
-                        boolean valid = json.get("valid").getAsBoolean();
-                        if (valid & action.equals("skin-upload")) {
-                            ((GuiGlobalLibrary) parent).panelHome.updateSkinPanels();
-                            ((GuiGlobalLibrary) parent).switchScreen(Screen.HOME);
-                        }
-                    } else {
-                        if (json.has("reason")) {
-                            String reason = json.get("reason").getAsString();
-                            error = reason;
-                        }
-                    }
-                } else {
-                    // TODO handle upload failure
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -204,13 +177,40 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
     }
 
     public void uploadSkin(Skin skin) {
-        GameProfile gameProfile = mc.player.getGameProfile();
-        PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         SkinIOUtils.saveSkinToStream(outputStream, skin);
         byte[] fileBytes = outputStream.toByteArray();
         IOUtils.closeQuietly(outputStream);
-        taskSkinUpload = SkinUploader.uploadSkin(fileBytes, textName.getText().trim(), Integer.toString(plushieSession.getServerId()), textDescription.getText().trim(), plushieSession.getAccessToken());
+        new GlobalTaskSkinUpload(fileBytes, textName.getText().trim(), textDescription.getText().trim()).createTaskAndRun(new FutureCallback<GlobalTaskSkinUpload.Result>() {
+
+            @Override
+            public void onSuccess(Result result) {
+                Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (result.getResult() == GlobalTaskResult.SUCCESS) {
+                            ((GuiGlobalLibrary) parent).panelHome.updateSkinPanels();
+                            ((GuiGlobalLibrary) parent).switchScreen(Screen.HOME);
+                        } else {
+                            error = result.getMessage();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+                Minecraft.getMinecraft().addScheduledTask(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        error = t.getMessage();
+                    }
+                });
+            }
+        });
     }
 
     @Override

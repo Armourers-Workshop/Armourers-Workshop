@@ -4,10 +4,10 @@ import com.google.common.util.concurrent.FutureCallback;
 
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskGetReportList;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskGetReportList.Filter;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskGetReportList.Result;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinReport.SkinReport;
+import moe.plushie.armourers_workshop.common.library.global.task.mod.GlobalTaskGetReportList;
+import moe.plushie.armourers_workshop.common.library.global.task.mod.GlobalTaskGetReportList.Filter;
+import moe.plushie.armourers_workshop.common.library.global.task.mod.GlobalTaskGetReportList.Result;
+import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskSkinReport.SkinReport;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
