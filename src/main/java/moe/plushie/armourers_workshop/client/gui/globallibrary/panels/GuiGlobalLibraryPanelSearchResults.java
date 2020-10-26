@@ -18,6 +18,8 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinSearch;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinSearch.SearchColumnType;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinSearch.SearchOrderType;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.Minecraft;
@@ -43,6 +45,9 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
 
     protected String search = null;
     protected ISkinType skinType = null;
+    protected SearchColumnType searchOrderColumn = null;
+    protected SearchOrderType searchOrder = null;
+
     protected JsonArray[] pageList;
     protected HashSet<Integer> downloadedPageList;
     protected JsonArray jsonCurrentPage;
@@ -57,10 +62,12 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         downloadedPageList = new HashSet<Integer>();
     }
 
-    public void doSearch(String search, ISkinType skinType) {
+    public void doSearch(String search, ISkinType skinType, SearchColumnType searchOrderColumn, SearchOrderType searchOrder) {
         clearResults();
         this.search = search;
         this.skinType = skinType;
+        this.searchOrderColumn = searchOrderColumn;
+        this.searchOrder = searchOrder;
         if (this.search == null) {
             return;
         }
@@ -82,13 +89,15 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
     protected void resize() {
         refresh();
     }
-    
+
     public void refresh() {
         String thisSearch = search;
         ISkinType thisSkinType = skinType;
+        SearchColumnType thisSearchOrderColumn = searchOrderColumn;
+        SearchOrderType thisSearchOrder = searchOrder;
         int thisPage = currentPageIndex;
         clearResults();
-        doSearch(thisSearch, thisSkinType);
+        doSearch(thisSearch, thisSkinType, thisSearchOrderColumn, thisSearchOrder);
     }
 
     protected void fetchPage(int pageIndex) {
@@ -110,6 +119,8 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
             searchTypes = skinType.getRegistryName();
         }
         GlobalTaskSkinSearch taskSkinSearch = new GlobalTaskSkinSearch(search, searchTypes, pageIndex, skinPanelResults.getIconCount());
+        taskSkinSearch.setSearchOrderColumn(searchOrderColumn);
+        taskSkinSearch.setSearchOrder(searchOrder);
         taskSkinSearch.createTaskAndRun(new FutureCallback<JsonObject>() {
 
             @Override

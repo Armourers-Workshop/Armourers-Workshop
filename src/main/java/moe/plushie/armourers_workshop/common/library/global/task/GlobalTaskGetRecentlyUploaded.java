@@ -10,10 +10,10 @@ import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
 public class GlobalTaskGetRecentlyUploaded extends GlobalTask<JsonArray> {
 
     private static final String URL = "recently-uploaded.php?limit=%d&maxFileVersion=%d";
-    
+
     private final int limit;
     private final String searchTypes;
-    
+
     public GlobalTaskGetRecentlyUploaded(int limit, String searchTypes) {
         super(PlushieAction.GET_RECENTLY_UPLOADED, false);
         this.limit = limit;
