@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserSkinRating.UserSkinRatingResult;
+import moe.plushie.armourers_workshop.utils.ModLogger;
 
 public class GlobalTaskUserSkinRating extends GlobalTask<UserSkinRatingResult> {
 
@@ -23,7 +24,7 @@ public class GlobalTaskUserSkinRating extends GlobalTask<UserSkinRatingResult> {
     public UserSkinRatingResult call() throws Exception {
         permissionCheck();
         PlushieSession plushieSession = PlushieAuth.PLUSHIE_SESSION;
-        String url = String.format(getBaseUrl() + URL, plushieSession.getServerId(), "", "getRating", skinID);
+        String url = String.format(getBaseUrl() + URL, plushieSession.getServerId(), "", "get_rating", skinID);
         String data = downloadString(url);
         JsonObject jsonObject = new JsonParser().parse(data).getAsJsonObject();
 
@@ -40,8 +41,9 @@ public class GlobalTaskUserSkinRating extends GlobalTask<UserSkinRatingResult> {
         }
 
         int rating = jsonObject.get("rating").getAsInt();
+        ModLogger.log("rating: " + rating);
 
-        return new UserSkinRatingResult(GlobalTaskResult.SUCCESS, jsonObject.get("reason").getAsString(), rating);
+        return new UserSkinRatingResult(GlobalTaskResult.SUCCESS, jsonObject.toString(), rating);
     }
 
     public class UserSkinRatingResult {

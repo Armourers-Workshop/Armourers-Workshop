@@ -154,7 +154,11 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel implements IDialogCa
             }
         }
         if (button == starRating) {
-            setSkinRating(starRating.getRating());
+            if (starRating.getRating() == rating) {
+                setSkinRating(0);
+            } else {
+                setSkinRating(starRating.getRating());
+            }
         }
         if (button == buttonReportSkin) {
             int skinId = skinJson.get("id").getAsInt();
@@ -204,6 +208,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel implements IDialogCa
 
     private void setSkinRating(int rating) {
         int skinId = skinJson.get("id").getAsInt();
+        this.rating = rating;
         new GlobalTaskUserSkinRate(skinId, rating).createTaskAndRun(new FutureCallback<UserSkinRateResult>() {
 
             @Override
@@ -216,7 +221,8 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel implements IDialogCa
                         if (result.getResult() == GlobalTaskResult.SUCCESS) {
                             updateLikeButtons();
                             if (skinJson != null) {
-                                updateSkinJson();
+                                skinJson.addProperty("rating", result.getNewRating());
+                                //updateSkinJson();
                             }
                         } else {
                             ModLogger.log(Level.WARN, result.getMessage());
@@ -316,7 +322,12 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel implements IDialogCa
             if (skinJson.has("downloads")) {
                 info += I18n.format(fullName + "downloads", skinJson.get("downloads").getAsInt()) + "\n\n";
             }
-            info += "Rating:    8.4/10 \n\n";
+            if (skinJson.has("rating") & skinJson.has("rating_count")) {
+                float rating = skinJson.get("rating").getAsFloat();
+                int ratingCount = skinJson.get("rating_count").getAsInt();
+                info += "Rating: (" + ratingCount + ") " + rating + "/10 \n\n";
+            }
+            
             if (skinJson.has("likes")) {
                 info += I18n.format(fullName + "likes", skinJson.get("likes").getAsInt()) + "\n\n";
             }
@@ -334,7 +345,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel implements IDialogCa
         fontRenderer.drawSplitString(info, boxX + 2, boxY + 2, boxWidth - 4, 0xFFEEEEEE);
 
         mc.renderEngine.bindTexture(BUTTON_TEXTURES);
-        drawTexturedModalRect(boxX + 34, boxY + 51, 0, 85, 16, 16);
+        //drawTexturedModalRect(boxX + 34, boxY + 51, 0, 85, 16, 16);
 
         ModRenderHelper.disableScissor();
     }

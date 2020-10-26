@@ -42,15 +42,14 @@ public class GuiControlStarRating extends GuiButtonExt {
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
         if (super.mousePressed(mc, mouseX, mouseY)) {
-            setRating(MathHelper.floor((mouseX - x) / 8F));
+            setRating(MathHelper.floor((mouseX + 8 - x) / 8F));
             return true;
         }
         return false;
     }
     
     private int getRatingAtPos(int mouseX, int mouseY) {
-        
-        return MathHelper.clamp(MathHelper.floor((mouseX - x) / 8F), 0, maxRating);
+        return MathHelper.clamp(MathHelper.floor((mouseX + 8 - x) / 8F), 0, maxRating);
     }
 
     @Override
@@ -67,6 +66,11 @@ public class GuiControlStarRating extends GuiButtonExt {
         for (int i = 0; i < (getMaxRating() / 2); i++) {
             drawTexturedModalRect(x + i * 16, y, 32, 0, 16, 16);
         }
+        
+        if (k == 2) {
+            rating = getRatingAtPos(mouseX, mouseY);
+        }
+        
         int stars = MathHelper.floor(rating / 2F);
         int halfStar = rating % 2;
         for (int i = 0; i < stars; i++) {

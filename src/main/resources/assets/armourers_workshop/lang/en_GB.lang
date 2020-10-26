@@ -568,7 +568,8 @@ inventory.armourers_workshop:global-skin-library.searchBox.search=Search
 inventory.armourers_workshop:global-skin-library.home.showAllSkins=Show All Skins
 inventory.armourers_workshop:global-skin-library.home.recentlyUploaded=Recently Uploaded
 inventory.armourers_workshop:global-skin-library.home.mostDownloaded=Most Downloaded
-inventory.armourers_workshop:global-skin-library.home.mostLikes=Most Likes
+inventory.armourers_workshop:global-skin-library.home.topRated=Top Rated
+inventory.armourers_workshop:global-skin-library.home.needRated=Need Rated
 
 
 # Global Skin Library (Search Results)

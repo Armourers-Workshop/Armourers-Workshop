@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskUserS
 
 public class GlobalTaskUserSkinRate extends GlobalTask<UserSkinRateResult> {
 
-    private static final String URL = "user-skin-action.php?userId=%d&accessToken=%s&action=%s&skinId=%d&rating%d";
+    private static final String URL = "user-skin-action.php?userId=%d&accessToken=%s&action=%s&skinId=%d&rating=%d";
 
     private final int skinID;
     private final int rating;
@@ -34,30 +34,32 @@ public class GlobalTaskUserSkinRate extends GlobalTask<UserSkinRateResult> {
         JsonObject jsonObject = new JsonParser().parse(data).getAsJsonObject();
 
         if (!jsonObject.has("valid")) {
-            return new UserSkinRateResult(GlobalTaskResult.FAILED, data);
+            return new UserSkinRateResult(GlobalTaskResult.FAILED, data, 0F);
         }
 
         boolean valid = jsonObject.get("valid").getAsBoolean();
         if (!valid) {
             if (jsonObject.has("reason")) {
-                return new UserSkinRateResult(GlobalTaskResult.FAILED, jsonObject.get("reason").getAsString());
+                return new UserSkinRateResult(GlobalTaskResult.FAILED, jsonObject.get("reason").getAsString(), 0F);
             }
-            return new UserSkinRateResult(GlobalTaskResult.FAILED, jsonObject.toString());
+            return new UserSkinRateResult(GlobalTaskResult.FAILED, jsonObject.toString(), 0F);
         }
 
-        int rating = jsonObject.get("rating").getAsInt();
+        float rating = jsonObject.get("rating").getAsFloat();
 
-        return new UserSkinRateResult(GlobalTaskResult.SUCCESS, jsonObject.get("reason").getAsString());
+        return new UserSkinRateResult(GlobalTaskResult.SUCCESS, jsonObject.toString(), rating);
     }
 
     public class UserSkinRateResult {
 
         private GlobalTaskResult result;
         private String message;
+        private float newRating;
 
-        public UserSkinRateResult(GlobalTaskResult result, String message) {
+        public UserSkinRateResult(GlobalTaskResult result, String message, float newRating) {
             this.result = result;
             this.message = message;
+            this.newRating = newRating;
         }
 
         public GlobalTaskResult getResult() {
@@ -66,6 +68,10 @@ public class GlobalTaskUserSkinRate extends GlobalTask<UserSkinRateResult> {
 
         public String getMessage() {
             return message;
+        }
+        
+        public float getNewRating() {
+            return newRating;
         }
     }
 }
