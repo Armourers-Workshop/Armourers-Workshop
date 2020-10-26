@@ -30,6 +30,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
     private GuiIconButton iconButtonUploadSkin;
     private GuiIconButton iconButtonJoinBeta;
     private GuiIconButton iconButtonInfo;
+    private GuiIconButton iconButtonModeration;
 
     public GuiGlobalLibraryPanelHeader(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
@@ -49,6 +50,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         iconButtonUploadSkin = new GuiIconButton(parent, 3, this.x + this.width - 61, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.uploadSkin"), BUTTON_TEXTURES).setIconLocation(0, 51, 16, 16);
         iconButtonJoinBeta = new GuiIconButton(parent, 4, this.x + this.width - 41, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.joinBeta"), BUTTON_TEXTURES).setIconLocation(0, 68, 16, 16);
         iconButtonInfo = new GuiIconButton(parent, 5, this.x + this.width - 81, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.info"), BUTTON_TEXTURES).setIconLocation(0, 17, 16, 16);
+        iconButtonModeration = new GuiIconButton(parent, -1, this.x, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.moderation"), BUTTON_TEXTURES).setIconLocation(0, 119, 16, 16);
 
         iconButtonUploadSkin.setDisableText(GuiHelper.getLocalizedControlName(guiName, "header.uploadSkinBan"));
 
@@ -58,6 +60,8 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         buttonList.add(iconButtonUploadSkin);
         buttonList.add(iconButtonJoinBeta);
         buttonList.add(iconButtonInfo);
+        buttonList.add(iconButtonModeration);
+
         betaCheckUpdate();
     }
 
@@ -68,27 +72,51 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
     }
 
     private void betaCheckUpdate() {
+        int padButton = 20;
+        int buttonOffsetX = this.x + this.width - 21;
+
+        iconButtonHome.visible = true;
+        iconButtonMyFiles.visible = false;
+        iconButtonUploadSkin.visible = false;
+        iconButtonJoinBeta.visible = false;
+        iconButtonInfo.visible = true;
+        iconButtonModeration.visible = false;
+
+        iconButtonHome.x = buttonOffsetX;
+        buttonOffsetX -= padButton;
+
         boolean inBeta = PlushieAuth.isRemoteUser();
         boolean doneBetaCheck = PlushieAuth.doneRemoteUserCheck();
         PlushieSession session = PlushieAuth.PLUSHIE_SESSION;
-        if (inBeta) {
-            iconButtonInfo.x = this.x + this.width - 81;
-        } else {
-            iconButtonInfo.x = this.x + this.width - 61;
+
+        if (doneBetaCheck & !inBeta) {
+            iconButtonJoinBeta.visible = true;
+            iconButtonJoinBeta.x = buttonOffsetX;
+            buttonOffsetX -= padButton;
         }
-        // iconButtonFavourites.visible = inBeta;
+
         if (session.hasServerId()) {
             iconButtonMyFiles.visible = inBeta;
+            iconButtonMyFiles.x = buttonOffsetX;
+            buttonOffsetX -= padButton;
+
             iconButtonUploadSkin.visible = inBeta;
             iconButtonUploadSkin.enabled = session.hasPermission(PlushieAction.SKIN_UPLOAD);
-        } else {
-            iconButtonMyFiles.visible = false;
-            iconButtonUploadSkin.visible = false;
-            iconButtonJoinBeta.visible = true;
+            iconButtonUploadSkin.x = buttonOffsetX;
+            buttonOffsetX -= padButton;
+
+            // iconButtonFavourites.visible = true;
+            // iconButtonFavourites.x = buttonOffsetX;
+            // buttonOffsetX -= padButton;
+
+            if (session.hasPermission(PlushieAction.GET_REPORT_LIST)) {
+                iconButtonModeration.visible = true;
+                iconButtonModeration.x = buttonOffsetX;
+                buttonOffsetX -= padButton;
+            }
         }
-        if (doneBetaCheck) {
-            iconButtonJoinBeta.visible = !inBeta;
-        }
+
+        iconButtonInfo.x = buttonOffsetX;
     }
 
     @Override
@@ -117,6 +145,9 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         if (button == iconButtonInfo) {
             ((GuiGlobalLibrary) parent).switchScreen(Screen.INFO);
             ((GuiGlobalLibrary) parent).panelInfo.updateInfo();
+        }
+        if (button == iconButtonModeration) {
+            ((GuiGlobalLibrary) parent).switchScreen(Screen.MODERATION);
         }
     }
 

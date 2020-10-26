@@ -294,7 +294,6 @@ public abstract class AbstractGuiDialog extends Gui implements IDialogCallback {
     }
 
     public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
-
         drawbuttons(mouseX, mouseY, partialTickTime);
         if (slotHandler != null) {
             updateSlots(false);

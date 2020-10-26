@@ -112,7 +112,9 @@ public abstract class GlobalTask<V> implements Callable<V> {
     
     public ListenableFutureTask<V> createTaskAndRun(FutureCallback<V> callback) {
         ListenableFutureTask<V> futureTask = createTask();
-        Futures.addCallback(futureTask, callback);
+        if (callback != null) {
+            Futures.addCallback(futureTask, callback);
+        }
         GLOBAL_TASK_EXECUTOR.execute(futureTask);
         return futureTask;
     }

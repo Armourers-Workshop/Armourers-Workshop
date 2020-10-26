@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalL
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHome;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelInfo;
+import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelModeration;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchBox;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinEdit;
@@ -58,11 +59,12 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
     public GuiGlobalLibraryPanelUserSkins panelUserSkins;
     public GuiGlobalLibraryPanelSkinEdit panelSkinEdit;
     public GuiGlobalLibraryPanelInfo panelInfo;
-    
+    public GuiGlobalLibraryPanelModeration panelModeration;
+
     private Screen screen;
 
     public static enum Screen {
-        HOME, SEARCH, UPLOAD, SKIN_INFO, USER_SKINS, FAVOURITES, JOIN_BETA, SKIN_EDIT, INFO
+        HOME, SEARCH, UPLOAD, SKIN_INFO, USER_SKINS, FAVOURITES, JOIN_BETA, SKIN_EDIT, INFO, MODERATION
     }
 
     public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity, InventoryPlayer inventoryPlayer) {
@@ -97,9 +99,12 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
 
         panelSkinEdit = new GuiGlobalLibraryPanelSkinEdit(this, 5, 5, 100, 100);
         panelList.add(panelSkinEdit);
-        
+
         panelInfo = new GuiGlobalLibraryPanelInfo(this);
         panelList.add(panelInfo);
+
+        panelModeration = new GuiGlobalLibraryPanelModeration(this);
+        panelList.add(panelModeration);
 
         screen = Screen.HOME;
         isNEIVisible = ModAddonManager.addonNEI.isVisible();
@@ -262,6 +267,10 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
         case INFO:
             panelInfo.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
             panelInfo.setVisible(true);
+            break;
+        case MODERATION:
+            panelModeration.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
+            panelModeration.setVisible(true);
             break;
         }
     }
