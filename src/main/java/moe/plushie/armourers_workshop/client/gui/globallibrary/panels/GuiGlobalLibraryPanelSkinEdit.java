@@ -17,8 +17,8 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.
 import moe.plushie.armourers_workshop.client.gui.globallibrary.dialog.GuiGlobalLibraryDialogDelete;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.library.global.GlobalSkinLibraryUtils;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinDelete;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinEdit;
+import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskSkinDelete;
+import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskSkinEdit;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.Minecraft;

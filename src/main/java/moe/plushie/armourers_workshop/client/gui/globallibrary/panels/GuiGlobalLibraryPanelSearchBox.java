@@ -12,6 +12,8 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiLabeledTextField;
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinSearch.SearchColumnType;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinSearch.SearchOrderType;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -20,49 +22,73 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDownListCallback {
-    
+
+    private static final String ARROW_UP = "\u2191";
+    private static final String ARROW_DOWN = "\u2193";
+
     private GuiLabeledTextField searchTextbox;
-    private GuiDropDownList dropDownList;
+    private GuiDropDownList dropDownSkinType;
+    private GuiDropDownList dropDownSort;
+
     public static ISkinType selectedSkinType;
-    
+    public static SearchColumnType searchColumnType = SearchColumnType.DATE_CREATED;
+    public static SearchOrderType searchOrderType = SearchOrderType.DESC;
+
     public GuiGlobalLibraryPanelSearchBox(GuiGlobalLibrary parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
     }
-    
+
     @Override
     public void initGui() {
         super.initGui();
-        String guiName = ((GuiGlobalLibrary)parent).getGuiName();
+        String guiName = ((GuiGlobalLibrary) parent).getGuiName();
         buttonList.clear();
-        searchTextbox = new GuiLabeledTextField(fontRenderer, x + 5, y + 5, width - 10 - 160, 12);
+        searchTextbox = new GuiLabeledTextField(fontRenderer, x + 5, y + 5, width - 10 - 160 - 70 - 5, 12);
         searchTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "searchBox.typeToSearch"));
         buttonList.add(new GuiButtonExt(0, x + width - 85, y + 3, 80, 16, GuiHelper.getLocalizedControlName(guiName, "searchBox.search")));
-        
+
         SkinTypeRegistry str = SkinTypeRegistry.INSTANCE;
-        dropDownList = new GuiDropDownList(1, x + width - 160, y + 4, 70, "", this);
+        dropDownSkinType = new GuiDropDownList(1, x + width - 160, y + 4, 70, "", this);
         ArrayList<ISkinType> skinList = str.getRegisteredSkinTypes();
-        dropDownList.addListItem("*");
+        dropDownSkinType.addListItem("*", "*", true);
         for (int i = 0; i < skinList.size(); i++) {
             ISkinType skinType = skinList.get(i);
             if (!skinType.isHidden()) {
                 String skinLocalizedName = str.getLocalizedSkinTypeName(skinType);
                 String skinRegistryName = skinType.getRegistryName();
                 DropDownItemSkin item = new DropDownItemSkin(skinLocalizedName, skinRegistryName, skinType.enabled(), skinType);
-                dropDownList.addListItem(item);
+                dropDownSkinType.addListItem(item);
                 if (skinType == selectedSkinType) {
-                    dropDownList.setListSelectedIndex(i + 1);
+                    dropDownSkinType.setListSelectedIndex(i + 1);
                 }
             }
         }
-        buttonList.add(dropDownList);
+        buttonList.add(dropDownSkinType);
+
+        dropDownSort = new GuiDropDownList(-1, x + width - 160 - 70 - 5, y + 4, 70, "", this);
+        for (SearchColumnType columnType : SearchColumnType.values()) {
+            dropDownSort.addListItem(columnType.toString() + " " + ARROW_UP, columnType.toString(), true);
+        }
+        buttonList.add(dropDownSort);
     }
-    
+
     @Override
     public void onDropDownListChanged(GuiDropDownList dropDownList) {
-        DropDownListItem listItem = dropDownList.getListSelectedItem();
-        selectedSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(listItem.tag);
+        if (dropDownList == dropDownSkinType) {
+            DropDownListItem listItem = dropDownList.getListSelectedItem();
+            if (listItem.tag.equals("*")) {
+                selectedSkinType = null;
+            } else {
+                selectedSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(listItem.tag);
+            }
+            
+        }
+        if (dropDownList == dropDownSort) {
+            DropDownListItem listItem = dropDownList.getListSelectedItem();
+            searchColumnType = SearchColumnType.valueOf(listItem.tag);
+        }
     }
-    
+
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
         if (!visible | !enabled) {
@@ -80,7 +106,7 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
         }
         return clicked;
     }
-    
+
     @Override
     public boolean keyTyped(char c, int keycode) {
         if (!visible | !enabled) {
@@ -92,21 +118,21 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
         }
         return pressed;
     }
-    
+
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button.id == 0) {
             doSearch();
         }
     }
-    
+
     private void doSearch() {
-        ((GuiGlobalLibrary)parent).panelSearchResults.clearResults();
+        ((GuiGlobalLibrary) parent).panelSearchResults.clearResults();
         String search = searchTextbox.getText();
-        ((GuiGlobalLibrary)parent).switchScreen(Screen.SEARCH);
-        ((GuiGlobalLibrary)parent).panelSearchResults.doSearch(search, selectedSkinType);
+        ((GuiGlobalLibrary) parent).switchScreen(Screen.SEARCH);
+        ((GuiGlobalLibrary) parent).panelSearchResults.doSearch(search, selectedSkinType, searchColumnType, searchOrderType);
     }
-    
+
     @Override
     public void drawBackground(int mouseX, int mouseY, float partialTickTime) {
         if (!visible) {
@@ -114,7 +140,7 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
     }
-    
+
     @Override
     public void draw(int mouseX, int mouseY, float partialTickTime) {
         if (!visible) {
@@ -123,9 +149,10 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
         super.draw(mouseX, mouseY, partialTickTime);
         searchTextbox.drawTextBox();
     }
-    
+
     @Override
     public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
-        dropDownList.drawForeground(mc, mouseX, mouseY, partialTickTime);
+        dropDownSkinType.drawForeground(mc, mouseX, mouseY, partialTickTime);
+        dropDownSort.drawForeground(mc, mouseX, mouseY, partialTickTime);
     }
 }

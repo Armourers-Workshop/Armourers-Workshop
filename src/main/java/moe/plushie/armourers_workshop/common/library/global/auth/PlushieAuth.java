@@ -11,6 +11,7 @@ import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 
 import moe.plushie.armourers_workshop.common.library.global.DownloadUtils;
+import moe.plushie.armourers_workshop.common.library.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.common.library.global.PlushieUser;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskBetaCheck;
 import moe.plushie.armourers_workshop.utils.ModLogger;
@@ -46,6 +47,11 @@ public class PlushieAuth {
 
     public static void doRemoteUserCheck() {
         startedRemoteUserCheck = true;
+        if (!GlobalSkinLibraryUtils.isValidJavaVersion()) {
+            isRemoteUser = false;
+            doneRemoteUserCheck = true;
+            return;
+        }
         Minecraft mc = Minecraft.getMinecraft();
         GameProfile gameProfile = mc.player.getGameProfile();
         new GlobalTaskBetaCheck(gameProfile.getId()).createTaskAndRun(new FutureCallback<PlushieUser>() {

@@ -35,6 +35,10 @@ public class GuiCustomLabel extends Gui {
         this.height = height;
         this.width = width;
     }
+    
+    public void setColour(int colour) {
+        this.colour = colour;
+    }
 
     public void addLine(String text) {
         this.text += text + "\n";
@@ -51,13 +55,19 @@ public class GuiCustomLabel extends Gui {
     public void addNewLine() {
         this.text += "\n";
     }
-
+    
+    public void addNewLines(int count) {
+        for (int i = 0; i < count; i++) {
+            this.text += "\n";
+        }
+    }
+    
     public void clearText() {
         this.text = "";
     }
 
     public boolean mouseClick(int mouseX, int mouseY, int button) {
-        if (isInside(mouseY, mouseY)) {
+        if (isInside(mouseX, mouseY)) {
             if (button != 0) {
                 return true;
             }
@@ -75,13 +85,13 @@ public class GuiCustomLabel extends Gui {
     }
 
     public void draw(int mouseX, int mouseY) {
-        //drawRect(x, y, x + width, y + height, 0x44EEEEEE);
+        // drawRect(x, y, x + width, y + height, 0x44EEEEEE);
         String displayString = text;
         String textAtMouse = getWordAtPos(mouseX, mouseY);
 
-        String replaceCheck = TextFormatting.BLUE.toString() + "http";
+        String replaceCheck = "http";
 
-        if (textAtMouse.startsWith(replaceCheck)) {
+        if (StringUtils.stripControlCodes(textAtMouse).startsWith(replaceCheck)) {
             String url = StringUtils.stripControlCodes(textAtMouse);
             displayString = displayString.replace(TextFormatting.BLUE.toString() + url, TextFormatting.BLUE.toString() + TextFormatting.UNDERLINE.toString() + url);
         }

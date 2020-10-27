@@ -17,6 +17,8 @@ public class GlobalTaskSkinSearch extends GlobalTask<JsonObject> {
     private final String searchTypes;
     private final int pageIndex;
     private final int pageSize;
+    private SearchColumnType searchOrderColumn = SearchColumnType.DATE_CREATED;
+    private SearchOrderType searchOrder = SearchOrderType.DESC;
 
     public GlobalTaskSkinSearch(String searchText, String searchTypes, int pageIndex, int pageSize) {
         super(PlushieAction.SKIN_SEARCH, false);
@@ -26,13 +28,37 @@ public class GlobalTaskSkinSearch extends GlobalTask<JsonObject> {
         this.pageSize = pageSize;
     }
 
+    public GlobalTaskSkinSearch setSearchOrderColumn(SearchColumnType searchOrderColumn) {
+        this.searchOrderColumn = searchOrderColumn;
+        return this;
+    }
+
+    public GlobalTaskSkinSearch setSearchOrder(SearchOrderType searchOrder) {
+        this.searchOrder = searchOrder;
+        return this;
+    }
+
     @Override
     public JsonObject call() throws Exception {
         permissionCheck();
         String url = String.format(getBaseUrl() + URL, URLEncoder.encode(searchText, "UTF-8"), SkinSerializer.MAX_FILE_VERSION, pageIndex, pageSize);
         MultipartForm multipartForm = new MultipartForm(url);
         multipartForm.addText("searchTypes", searchTypes);
+        if (searchOrderColumn != null) {
+            multipartForm.addText("searchOrderColumn", searchOrderColumn.toString().toLowerCase());
+        }
+        if (searchOrder != null) {
+            multipartForm.addText("searchOrder", searchOrder.toString());
+        }
         String data = multipartForm.upload();
         return new JsonParser().parse(data).getAsJsonObject();
+    }
+
+    public enum SearchColumnType {
+        ID, USER_ID, NAME, DESCRIPTION, FILE_NAME, FILE_VERSION, DATE_UPDATED, DATE_CREATED, SKIN_TYPE, DOWNLOADS, RATING, RATING_COUNT
+    }
+
+    public enum SearchOrderType {
+        DESC, ASC
     }
 }

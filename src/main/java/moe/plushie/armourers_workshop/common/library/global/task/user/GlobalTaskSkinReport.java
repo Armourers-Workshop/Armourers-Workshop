@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.common.library.global.task;
+package moe.plushie.armourers_workshop.common.library.global.task.user;
 
 import java.util.Date;
 
@@ -10,7 +10,9 @@ import moe.plushie.armourers_workshop.common.library.global.MultipartForm;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinReport.SkinReportResult;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTask;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskResult;
+import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskSkinReport.SkinReportResult;
 
 public class GlobalTaskSkinReport extends GlobalTask<SkinReportResult> {
 

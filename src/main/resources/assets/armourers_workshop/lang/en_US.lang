@@ -332,6 +332,8 @@ inventory.armourers_workshop:common.button.close=Close
 inventory.armourers_workshop:common.button.clear=Clear
 inventory.armourers_workshop:common.button.save=Save
 inventory.armourers_workshop:common.button.load=Load
+inventory.armourers_workshop:common.button.previous=Previous
+inventory.armourers_workshop:common.button.next=Next
 
 
 # Skin Library
@@ -544,17 +546,13 @@ inventory.armourers_workshop:mannequin.label.update=This mannequin is using an o
 inventory.armourers_workshop:mannequin.button.update=Update
 
 
-# Global Skin Library
-inventory.armourers_workshop:global-skin-library.invalidJava=[Java %d Update %d] is too old. Please update to [Java 8 Update 101] or newer.
-
-
 # Global Skin Library (Header)
 inventory.armourers_workshop:global-skin-library.header.home=Home
 inventory.armourers_workshop:global-skin-library.header.favourites=Favorites
 inventory.armourers_workshop:global-skin-library.header.myFiles=My Files
 inventory.armourers_workshop:global-skin-library.header.uploadSkin=Upload Skin
 inventory.armourers_workshop:global-skin-library.header.uploadSkinBan=You are banned from upload skins
-inventory.armourers_workshop:global-skin-library.header.joinBeta=Join Beta
+inventory.armourers_workshop:global-skin-library.header.join=Join
 inventory.armourers_workshop:global-skin-library.header.moderation=Moderation
 inventory.armourers_workshop:global-skin-library.header.info=Info
 
@@ -609,20 +607,23 @@ inventory.armourers_workshop:global-skin-library.upload.enterTags=Enter tags
 inventory.armourers_workshop:global-skin-library.upload.skinDescription=Skin Description:
 inventory.armourers_workshop:global-skin-library.upload.enterDescription=Enter description
 inventory.armourers_workshop:global-skin-library.upload.buttonUpload=Upload Skin
+inventory.armourers_workshop:global-skin-library.upload.label.upload_warning=!!! Warning !!! - Your account may be permanently ban from the global libray if you upload content that is against the rules.
 
 
-# Global Skin Library (Beta - Will be removed later).
-inventory.armourers_workshop:global-skin-library.joinBeta.name=Join Beta
-inventory.armourers_workshop:global-skin-library.joinBeta.enterBetaCode=Enter beta code
-inventory.armourers_workshop:global-skin-library.joinBeta.closedBeta=Uploading to the global skin library is currently in closed beta. Enter your beta code if you have one, otherwise please check back later.
-inventory.armourers_workshop:global-skin-library.joinBeta.buttonJoinBeta=Join Beta
-inventory.armourers_workshop:global-skin-library.joinBeta.betaCode=Beta Code:
-inventory.armourers_workshop:global-skin-library.joinBeta.checkCode=Checking beta code.
-inventory.armourers_workshop:global-skin-library.joinBeta.codeInvalid=Code invalid.
-inventory.armourers_workshop:global-skin-library.joinBeta.joiningBeta=Joining beta.
-inventory.armourers_workshop:global-skin-library.joinBeta.joinedFailed=Failed to join beta.
-inventory.armourers_workshop:global-skin-library.joinBeta.joinedBeta=Successfully joined beta.
-inventory.armourers_workshop:global-skin-library.upload.closedBetaWarning=Warning all skins uploading during the closed beta will be wiped when the beta ends.
+# Global Skin Library (Join)
+inventory.armourers_workshop:global-skin-library.join.name=Join
+inventory.armourers_workshop:global-skin-library.join.old_java=&cYour java version is too old to join the global skin library&r\n\nYour java version [Java %d Update %d] is too old. Please update to [Java 8 Update 101] or newer.\n\nPlease check the FAQ for help fixing this issue.\n%s\n\nThere is also a video guide to help fix this issue.\n%s
+inventory.armourers_workshop:global-skin-library.join.message_1.title=Welcome
+inventory.armourers_workshop:global-skin-library.join.message_1.text=Here you can join the Armourer's Workshop global skin library. Joining the global library will allow you to:\n* upload your creations\n* fill out your profile\n* rate skins\n* create lists of skins\n* earn badges\n\nPlease read each page of the rules carefully. ignorance of the rules is not an excuse if you get banned.\n\nClick the arrow on the buttom right to go to the next page.
+inventory.armourers_workshop:global-skin-library.join.message_2.title=Rules
+inventory.armourers_workshop:global-skin-library.join.message_2.text=The global library has a 3 strike rule, if you get 3 strikes your account will be permanently ban from uploading to the global library.\n\n1. Do not upload other peoples work without their permission.\n2. Do not abuse the report system.\n3. Do not upload loads of coloured versions of the same model. (use dyes)\n4. Do not upload adult content (sexual, drug use, etc)\n5. Do not upload illegal content.\n
+inventory.armourers_workshop:global-skin-library.join.message_3.title=Derivative Works
+inventory.armourers_workshop:global-skin-library.join.message_3.text=Derivative works are allowed on the global library. Please make sure any skins you upload from others are heavily edited and credited.\n\nBasic edits like recolours or settings changes are not allowed.
+inventory.armourers_workshop:global-skin-library.join.message_4.title=Account Requirements
+inventory.armourers_workshop:global-skin-library.join.message_4.text=Please note that you must have a legitimate Minecraft account to join. This is to help with moderation and prevent spammers.
+inventory.armourers_workshop:global-skin-library.join.message_5.title=All Done
+inventory.armourers_workshop:global-skin-library.join.message_5.text=Ready to join? Click the button below to join the community!\n\nIf you have any issues joining please come by the Discord server for help.\n%s
+inventory.armourers_workshop:global-skin-library.join.button.join=Join
 
 
 # Global Skin Library (User Skins)

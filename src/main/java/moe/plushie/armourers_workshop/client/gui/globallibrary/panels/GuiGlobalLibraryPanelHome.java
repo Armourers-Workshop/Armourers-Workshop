@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.client.gui.globallibrary.panels;
 import java.util.ArrayList;
 
 import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -16,10 +15,9 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiScrollbar;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskGetMostDownloaded;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskGetNeedRated;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskGetRecentlyUploaded;
-import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskGetTopRated;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinSearch;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinSearch.SearchColumnType;
+import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinSearch.SearchOrderType;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -43,7 +41,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
         super(parent, x, y, width, height);
         scrollbar = new GuiScrollbar(-1, width - 11, y + 1, 10, height - 2, "", false);
         scrollbar.setStyleFlat(true);
-        scrollbar.setAmount(14);
+        scrollbar.setAmount(20);
         skinPanelRecentlyUploaded = new GuiControlSkinPanel();
         skinPanelMostDownloaded = new GuiControlSkinPanel();
         skinPanelTopRated = new GuiControlSkinPanel();
@@ -88,7 +86,6 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
     }
 
     public void updateSkinPanels() {
-
         ArrayList<ISkinType> skinTypes = SkinTypeRegistry.INSTANCE.getRegisteredSkinTypes();
         String searchTypes = "";
         for (int i = 0; i < skinTypes.size(); i++) {
@@ -98,19 +95,23 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
             }
         }
 
-        GlobalTaskGetRecentlyUploaded taskGetRecentlyUploaded = new GlobalTaskGetRecentlyUploaded(skinPanelRecentlyUploaded.getIconCount(), searchTypes);
-        ListenableFutureTask<JsonArray> futureGetRecentlyUploaded = taskGetRecentlyUploaded.createTaskAndRun(new FutureCallback<JsonArray>() {
-
+        GlobalTaskSkinSearch taskGetRecentlyUploaded = new GlobalTaskSkinSearch("", searchTypes, 0, skinPanelRecentlyUploaded.getIconCount());
+        taskGetRecentlyUploaded.setSearchOrderColumn(SearchColumnType.DATE_CREATED);
+        taskGetRecentlyUploaded.setSearchOrder(SearchOrderType.DESC);
+        taskGetRecentlyUploaded.createTaskAndRun(new FutureCallback<JsonObject>() {
             @Override
-            public void onSuccess(JsonArray result) {
+            public void onSuccess(JsonObject result) {
                 Minecraft.getMinecraft().addScheduledTask(new Runnable() {
 
                     @Override
                     public void run() {
                         skinPanelRecentlyUploaded.clearIcons();
-                        for (int i = 0; i < result.size(); i++) {
-                            JsonObject skinJson = result.get(i).getAsJsonObject();
-                            skinPanelRecentlyUploaded.addIcon(skinJson);
+                        if (result.has("results")) {
+                            JsonArray pageResults = result.get("results").getAsJsonArray();
+                            for (int i = 0; i < pageResults.size(); i++) {
+                                JsonObject skinJson = pageResults.get(i).getAsJsonObject();
+                                skinPanelRecentlyUploaded.addIcon(skinJson);
+                            }
                         }
                     }
                 });
@@ -123,19 +124,23 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
             }
         });
 
-        GlobalTaskGetMostDownloaded taskGetMostDownloaded = new GlobalTaskGetMostDownloaded(skinPanelMostDownloaded.getIconCount(), searchTypes);
-        ListenableFutureTask<JsonArray> futureGetMostDownloaded = taskGetMostDownloaded.createTaskAndRun(new FutureCallback<JsonArray>() {
-
+        GlobalTaskSkinSearch taskGetMostDownloaded = new GlobalTaskSkinSearch("", searchTypes, 0, skinPanelMostDownloaded.getIconCount());
+        taskGetMostDownloaded.setSearchOrderColumn(SearchColumnType.DOWNLOADS);
+        taskGetMostDownloaded.setSearchOrder(SearchOrderType.DESC);
+        taskGetMostDownloaded.createTaskAndRun(new FutureCallback<JsonObject>() {
             @Override
-            public void onSuccess(JsonArray result) {
+            public void onSuccess(JsonObject result) {
                 Minecraft.getMinecraft().addScheduledTask(new Runnable() {
 
                     @Override
                     public void run() {
                         skinPanelMostDownloaded.clearIcons();
-                        for (int i = 0; i < result.size(); i++) {
-                            JsonObject skinJson = result.get(i).getAsJsonObject();
-                            skinPanelMostDownloaded.addIcon(skinJson);
+                        if (result.has("results")) {
+                            JsonArray pageResults = result.get("results").getAsJsonArray();
+                            for (int i = 0; i < pageResults.size(); i++) {
+                                JsonObject skinJson = pageResults.get(i).getAsJsonObject();
+                                skinPanelMostDownloaded.addIcon(skinJson);
+                            }
                         }
                     }
                 });
@@ -148,19 +153,23 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
             }
         });
 
-        GlobalTaskGetTopRated taskGetTopRated = new GlobalTaskGetTopRated(skinPanelTopRated.getIconCount(), searchTypes);
-        ListenableFutureTask<JsonArray> futureGetTopRated = taskGetTopRated.createTaskAndRun(new FutureCallback<JsonArray>() {
-
+        GlobalTaskSkinSearch taskGetTopRated = new GlobalTaskSkinSearch("", searchTypes, 0, skinPanelTopRated.getIconCount());
+        taskGetTopRated.setSearchOrderColumn(SearchColumnType.RATING);
+        taskGetTopRated.setSearchOrder(SearchOrderType.DESC);
+        taskGetTopRated.createTaskAndRun(new FutureCallback<JsonObject>() {
             @Override
-            public void onSuccess(JsonArray result) {
+            public void onSuccess(JsonObject result) {
                 Minecraft.getMinecraft().addScheduledTask(new Runnable() {
 
                     @Override
                     public void run() {
                         skinPanelTopRated.clearIcons();
-                        for (int i = 0; i < result.size(); i++) {
-                            JsonObject skinJson = result.get(i).getAsJsonObject();
-                            skinPanelTopRated.addIcon(skinJson);
+                        if (result.has("results")) {
+                            JsonArray pageResults = result.get("results").getAsJsonArray();
+                            for (int i = 0; i < pageResults.size(); i++) {
+                                JsonObject skinJson = pageResults.get(i).getAsJsonObject();
+                                skinPanelTopRated.addIcon(skinJson);
+                            }
                         }
                     }
                 });
@@ -173,18 +182,23 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
             }
         });
 
-        new GlobalTaskGetNeedRated(skinPanelNeedRated.getIconCount(), searchTypes).createTaskAndRun(new FutureCallback<JsonArray>() {
-
+        GlobalTaskSkinSearch taskNeedRated = new GlobalTaskSkinSearch("", searchTypes, 0, skinPanelNeedRated.getIconCount());
+        taskNeedRated.setSearchOrderColumn(SearchColumnType.RATING_COUNT);
+        taskNeedRated.setSearchOrder(SearchOrderType.ASC);
+        taskNeedRated.createTaskAndRun(new FutureCallback<JsonObject>() {
             @Override
-            public void onSuccess(JsonArray result) {
+            public void onSuccess(JsonObject result) {
                 Minecraft.getMinecraft().addScheduledTask(new Runnable() {
 
                     @Override
                     public void run() {
                         skinPanelNeedRated.clearIcons();
-                        for (int i = 0; i < result.size(); i++) {
-                            JsonObject skinJson = result.get(i).getAsJsonObject();
-                            skinPanelNeedRated.addIcon(skinJson);
+                        if (result.has("results")) {
+                            JsonArray pageResults = result.get("results").getAsJsonArray();
+                            for (int i = 0; i < pageResults.size(); i++) {
+                                JsonObject skinJson = pageResults.get(i).getAsJsonObject();
+                                skinPanelNeedRated.addIcon(skinJson);
+                            }
                         }
                     }
                 });
@@ -205,7 +219,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
             ((GuiGlobalLibrary) parent).switchScreen(Screen.SEARCH);
             ((GuiGlobalLibrary) parent).panelSearchBox.selectedSkinType = null;
             ((GuiGlobalLibrary) parent).panelSearchBox.initGui();
-            ((GuiGlobalLibrary) parent).panelSearchResults.doSearch("", null);
+            ((GuiGlobalLibrary) parent).panelSearchResults.doSearch("", null, null, null);
         }
         if (button == skinPanelRecentlyUploaded | button == skinPanelMostDownloaded | button == skinPanelTopRated | button == skinPanelNeedRated) {
             SkinIcon skinIcon = ((GuiControlSkinPanel) button).getLastPressedSkinIcon();
@@ -226,9 +240,9 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
         int amount = scrollbar.getValue();
         buttonShowAll.y = y + 2 - amount;
         skinPanelRecentlyUploaded.y = y + 2 + 28 - amount;
-        skinPanelMostDownloaded.y = y + 2 + 28 + 307 + 14 - amount;
-        skinPanelTopRated.y = y + 2 + 28 + 307 * 2 + 14 * 2 - amount;
-        skinPanelNeedRated.y = y + 2 + 28 + 307 * 3 + 14 * 3 - amount;
+        skinPanelTopRated.y = y + 2 + 28 + 307 * 1 + 14 * 1 - amount;
+        skinPanelNeedRated.y = y + 2 + 28 + 307 * 2 + 14 * 2 - amount;
+        skinPanelMostDownloaded.y = y + 2 + 28 + 307 * 3 + 14 * 3 - amount;
 
         super.draw(mouseX, mouseY, partialTickTime);
 

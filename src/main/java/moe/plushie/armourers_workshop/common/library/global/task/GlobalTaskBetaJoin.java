@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.common.library.global.task;
 
 import java.net.URLEncoder;
-import java.util.UUID;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -18,14 +17,10 @@ import net.minecraft.client.Minecraft;
 
 public class GlobalTaskBetaJoin extends GlobalTask<BetaJoinResult> {
 
-    private static final String URL_CHECK = "beta-code-check.php?code=%s";
-    private static final String URL_JOIN = "beta-join.php?username=%s&uuid=%s&serverId=%s&betaCode=%s";
+    private static final String URL_JOIN = "join.php?username=%s&uuid=%s&serverId=%s";
 
-    private final UUID betaCode;
-
-    public GlobalTaskBetaJoin(UUID betaCode) {
+    public GlobalTaskBetaJoin() {
         super(PlushieAction.BETA_JOIN, true);
-        this.betaCode = betaCode;
     }
 
     @Override
@@ -33,52 +28,29 @@ public class GlobalTaskBetaJoin extends GlobalTask<BetaJoinResult> {
         permissionCheck();
         PlushieSession session = PlushieAuth.PLUSHIE_SESSION;
         if (session.hasServerId()) {
-            return new BetaJoinResult(JoinResult.ALREADY_JOINED);
-        }
-        
-        String code = URLEncoder.encode(betaCode.toString(), "UTF-8");
-        
-        try {
-            String urlCheck = String.format(getBaseUrl() + URL_CHECK, code);
-            JsonObject jsonCheckResult = new JsonParser().parse(downloadString(urlCheck)).getAsJsonObject();
-            if (jsonCheckResult.has("action") & jsonCheckResult.has("valid")) {
-                String action = jsonCheckResult.get("action").getAsString();
-                boolean valid = jsonCheckResult.get("valid").getAsBoolean();
-                if (action.equals("beta-code-check")) {
-                    if (!valid) {
-                        return new BetaJoinResult(JoinResult.CODE_INVALID);
-                    }
-                } else {
-                    return new BetaJoinResult(JoinResult.CODE_CHECK_FAILED);
-                }
-            } else {
-                return new BetaJoinResult(JoinResult.CODE_CHECK_FAILED);
-            }
-            
-        } catch (Exception e) {
-            return new BetaJoinResult(JoinResult.CODE_CHECK_FAILED);
+            //return new BetaJoinResult(JoinResult.ALREADY_JOINED);
         }
 
         GameProfile gameProfile = Minecraft.getMinecraft().player.getGameProfile();
         String username = URLEncoder.encode(gameProfile.getName(), "UTF-8");
         String uuid = URLEncoder.encode(gameProfile.getId().toString(), "UTF-8");
         String serverId = String.valueOf(getBaseUrl().hashCode());
-        
+
         if (!MinecraftAuth.checkAndRefeshAuth(Minecraft.getMinecraft().getSession(), serverId)) {
             ModLogger.log("Failed MC Auth");
             return new BetaJoinResult(JoinResult.MINECRAFT_AUTH_FAIL);
         } else {
             ModLogger.log("MC Auth Done");
         }
-        
-        String urlJoin = String.format(getBaseUrl() + URL_JOIN, username, uuid, serverId, code);
+
+        String urlJoin = String.format(getBaseUrl() + URL_JOIN, username, uuid, serverId);
 
         JsonObject jsonJoinResult = new JsonParser().parse(downloadString(urlJoin)).getAsJsonObject();
-        
+
         if (jsonJoinResult.has("action") & jsonJoinResult.has("valid")) {
             String action = jsonJoinResult.get("action").getAsString();
             boolean valid = jsonJoinResult.get("valid").getAsBoolean();
-            if (action.equals("beta-join")) {
+            if (action.equals("join")) {
                 if (valid) {
                     PlushieAuth.doRemoteUserCheck();
                     PlushieAuth.PLUSHIE_SESSION.authenticate(jsonJoinResult);
@@ -96,21 +68,6 @@ public class GlobalTaskBetaJoin extends GlobalTask<BetaJoinResult> {
         return new BetaJoinResult(JoinResult.JOIN_FAILED);
     }
 
-    private boolean checkCode() throws Exception {
-        String urlCheck = String.format(getBaseUrl() + URL_CHECK, URLEncoder.encode(betaCode.toString(), "UTF-8"));
-        JsonObject checkJson = new JsonParser().parse(downloadString(urlCheck)).getAsJsonObject();
-        if (checkJson.has("action") & checkJson.has("valid")) {
-            String action = checkJson.get("action").getAsString();
-            boolean valid = checkJson.get("valid").getAsBoolean();
-            if (action.equals("beta-code-check")) {
-                if (valid) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public static class BetaJoinResult {
 
         private final JoinResult joinResult;
@@ -120,27 +77,22 @@ public class GlobalTaskBetaJoin extends GlobalTask<BetaJoinResult> {
             this.joinResult = joinResult;
             this.message = joinResult.toString().toLowerCase();
         }
-        
+
         public BetaJoinResult(JoinResult joinResult, String message) {
             this.joinResult = joinResult;
             this.message = message;
         }
-        
+
         public JoinResult getJoinResult() {
             return joinResult;
         }
-        
+
         public String getMessage() {
             return message;
         }
-        
+
         public enum JoinResult {
-            ALREADY_JOINED,
-            CODE_CHECK_FAILED,
-            CODE_INVALID,
-            MINECRAFT_AUTH_FAIL,
-            JOIN_FAILED,
-            JOINED
+            ALREADY_JOINED, MINECRAFT_AUTH_FAIL, JOIN_FAILED, JOINED
         }
     }
 }

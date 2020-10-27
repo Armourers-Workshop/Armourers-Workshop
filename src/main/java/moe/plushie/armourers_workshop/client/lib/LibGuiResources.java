@@ -52,5 +52,7 @@ public class LibGuiResources {
         public static final String BUTTON_CANCEL = PREFIX + "button.cancel";
         public static final String BUTTON_OK = PREFIX + "button.ok";
         public static final String BUTTON_EDIT = PREFIX + "button.edit";
+        public static final String BUTTON_PREVIOUS = PREFIX + "button.previous";
+        public static final String BUTTON_NEXT = PREFIX + "button.next";
     }
 }
