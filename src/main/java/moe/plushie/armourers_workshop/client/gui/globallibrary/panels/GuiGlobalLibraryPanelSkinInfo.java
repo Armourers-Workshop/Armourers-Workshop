@@ -31,10 +31,10 @@ import moe.plushie.armourers_workshop.common.library.global.permission.Permissio
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskGetSkinInfo;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskResult;
 import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskSkinReport;
-import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskUserSkinRate;
-import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskUserSkinRating;
 import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskSkinReport.SkinReportResult;
+import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskUserSkinRate;
 import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskUserSkinRate.UserSkinRateResult;
+import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskUserSkinRating;
 import moe.plushie.armourers_workshop.common.library.global.task.user.GlobalTaskUserSkinRating.UserSkinRatingResult;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.common.skin.data.SkinDescriptor;
@@ -222,7 +222,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel implements IDialogCa
                             updateLikeButtons();
                             if (skinJson != null) {
                                 skinJson.addProperty("rating", result.getNewRating());
-                                //updateSkinJson();
+                                // updateSkinJson();
                             }
                         } else {
                             ModLogger.log(Level.WARN, result.getMessage());
@@ -327,7 +327,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel implements IDialogCa
                 int ratingCount = skinJson.get("rating_count").getAsInt();
                 info += "Rating: (" + ratingCount + ") " + rating + "/10 \n\n";
             }
-            
+
             if (skinJson.has("likes")) {
                 info += I18n.format(fullName + "likes", skinJson.get("likes").getAsInt()) + "\n\n";
             }
@@ -345,7 +345,7 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel implements IDialogCa
         fontRenderer.drawSplitString(info, boxX + 2, boxY + 2, boxWidth - 4, 0xFFEEEEEE);
 
         mc.renderEngine.bindTexture(BUTTON_TEXTURES);
-        //drawTexturedModalRect(boxX + 34, boxY + 51, 0, 85, 16, 16);
+        // drawTexturedModalRect(boxX + 34, boxY + 51, 0, 85, 16, 16);
 
         ModRenderHelper.disableScissor();
     }

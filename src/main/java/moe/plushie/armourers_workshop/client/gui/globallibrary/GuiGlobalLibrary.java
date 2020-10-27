@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.ModGuiContainer;
-import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPaneJoinBeta;
+import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPaneJoin;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHome;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelInfo;
@@ -55,7 +55,7 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
     public GuiGlobalLibraryPanelSearchResults panelSearchResults;
     public GuiGlobalLibraryPanelSkinInfo panelSkinInfo;
     public GuiGlobalLibraryPanelUpload panelUpload;
-    public GuiGlobalLibraryPaneJoinBeta panelJoinBeta;
+    public GuiGlobalLibraryPaneJoin panelJoinBeta;
     public GuiGlobalLibraryPanelUserSkins panelUserSkins;
     public GuiGlobalLibraryPanelSkinEdit panelSkinEdit;
     public GuiGlobalLibraryPanelInfo panelInfo;
@@ -91,7 +91,7 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
         panelUpload = new GuiGlobalLibraryPanelUpload(this, 5, 5, 100, 100);
         panelList.add(panelUpload);
 
-        panelJoinBeta = new GuiGlobalLibraryPaneJoinBeta(this, 5, 5, 100, 100);
+        panelJoinBeta = new GuiGlobalLibraryPaneJoin(this, 5, 5, 100, 100);
         panelList.add(panelJoinBeta);
 
         panelUserSkins = new GuiGlobalLibraryPanelUserSkins(this, 5, 5, 100, 100);

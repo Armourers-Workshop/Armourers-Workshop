@@ -74,6 +74,9 @@ public class GuiGlobalLibraryPanelInfo extends GuiPanel {
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int button) {
+        if (!visible | !enabled) {
+            return false;
+        }
         statsText.mouseClick(mouseX, mouseY, button);
         return super.mouseClicked(mouseX, mouseY, button);
     }

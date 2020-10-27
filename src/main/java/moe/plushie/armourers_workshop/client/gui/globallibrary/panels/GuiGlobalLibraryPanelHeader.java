@@ -89,7 +89,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         boolean doneBetaCheck = PlushieAuth.doneRemoteUserCheck();
         PlushieSession session = PlushieAuth.PLUSHIE_SESSION;
 
-        if (doneBetaCheck & !inBeta) {
+        if (doneBetaCheck & inBeta) {
             iconButtonJoinBeta.visible = true;
             iconButtonJoinBeta.x = buttonOffsetX;
             buttonOffsetX -= padButton;
