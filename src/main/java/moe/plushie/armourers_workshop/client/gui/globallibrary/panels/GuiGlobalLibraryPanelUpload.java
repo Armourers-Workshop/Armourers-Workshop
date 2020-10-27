@@ -18,7 +18,6 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotHidable;
-import moe.plushie.armourers_workshop.common.library.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskResult;
@@ -30,7 +29,6 @@ import moe.plushie.armourers_workshop.common.skin.data.Skin;
 import moe.plushie.armourers_workshop.utils.ModLogger;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -240,22 +238,13 @@ public class GuiGlobalLibraryPanelUpload extends GuiPanel {
         textDescription.drawButton(mc, mouseX, mouseY, partialTickTime);
         statsText.clearText();
 
-        statsText.addText(GuiHelper.getLocalizedControlName(guiName, "closedBetaWarning"));
+        statsText.addText(GuiHelper.getLocalizedControlName(guiName, "label.upload_warning"));
         statsText.addNewLine();
         statsText.addNewLine();
 
         if (!StringUtils.isNullOrEmpty(error)) {
             statsText.addText(TextFormatting.RED.toString());
             statsText.addText("Error: " + error);
-            statsText.addText(TextFormatting.RESET.toString());
-            statsText.addNewLine();
-            statsText.addNewLine();
-        }
-
-        int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
-        if (!GlobalSkinLibraryUtils.isValidJavaVersion(javaVersion)) {
-            statsText.addText(TextFormatting.RED.toString());
-            statsText.addText(TranslateUtils.translate("inventory.armourers_workshop:global-skin-library.invalidJava", javaVersion[0], javaVersion[1]));
             statsText.addText(TextFormatting.RESET.toString());
             statsText.addNewLine();
             statsText.addNewLine();

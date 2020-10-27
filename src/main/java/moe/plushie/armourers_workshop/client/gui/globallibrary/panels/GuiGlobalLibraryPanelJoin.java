@@ -11,12 +11,14 @@ import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.GuiGlobalLibrary.Screen;
 import moe.plushie.armourers_workshop.client.lib.LibGuiResources;
+import moe.plushie.armourers_workshop.client.lib.LibURLs;
 import moe.plushie.armourers_workshop.common.library.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskBetaJoin;
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskBetaJoin.BetaJoinResult;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.MathHelper;
@@ -27,7 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiGlobalLibraryPaneJoin extends GuiPanel {
+public class GuiGlobalLibraryPanelJoin extends GuiPanel {
 
     private static final ResourceLocation TEXTURE_BUTTONS = new ResourceLocation(LibGuiResources.CONTROL_BUTTONS);
     private static final int MAX_PAGES = 5;
@@ -45,7 +47,7 @@ public class GuiGlobalLibraryPaneJoin extends GuiPanel {
     private String joinFailMessage = null;
     private int messagePageIndex = 0;
 
-    public GuiGlobalLibraryPaneJoin(GuiScreen parent, int x, int y, int width, int height) {
+    public GuiGlobalLibraryPanelJoin(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
         guiName = ((GuiGlobalLibrary) parent).getGuiName() + ".join";
     }
@@ -59,11 +61,11 @@ public class GuiGlobalLibraryPaneJoin extends GuiPanel {
         int recHeight = 180;
         rectangleRules = new Rectangle(x + width / 2 - recWidth / 2, y + height / 2 - recHeight / 2, recWidth, recHeight);
 
-        buttonPrevious = new GuiIconButton(parent, 0, rectangleRules.x + 5, rectangleRules.y + recHeight - 16 - 5, 16, 16, "Previous", TEXTURE_BUTTONS);
+        buttonPrevious = new GuiIconButton(parent, 0, rectangleRules.x + 5, rectangleRules.y + recHeight - 16 - 5, 16, 16, I18n.format(LibGuiResources.Controls.BUTTON_PREVIOUS), TEXTURE_BUTTONS);
         buttonPrevious.setIconLocation(208, 80, 16, 16);
         buttonPrevious.setDrawButtonBackground(false);
 
-        buttonNext = new GuiIconButton(parent, 0, rectangleRules.x + recWidth - 16 - 5, rectangleRules.y + recHeight - 16 - 5, 16, 16, "Next", TEXTURE_BUTTONS);
+        buttonNext = new GuiIconButton(parent, 0, rectangleRules.x + recWidth - 16 - 5, rectangleRules.y + recHeight - 16 - 5, 16, 16, I18n.format(LibGuiResources.Controls.BUTTON_NEXT), TEXTURE_BUTTONS);
         buttonNext.setIconLocation(208, 96, 16, 16);
         buttonNext.setDrawButtonBackground(false);
 
@@ -71,6 +73,7 @@ public class GuiGlobalLibraryPaneJoin extends GuiPanel {
         buttonJoin.visible = false;
 
         statsText = new GuiCustomLabel(fontRenderer, rectangleRules.x + 5, rectangleRules.y + 5, recWidth - 10, recHeight - 75 - 5);
+        statsText.setColour(0x333333);
 
         buttonList.add(buttonPrevious);
         buttonList.add(buttonNext);
@@ -188,64 +191,36 @@ public class GuiGlobalLibraryPaneJoin extends GuiPanel {
 
         super.draw(mouseX, mouseY, partialTickTime);
 
-        
-        
         fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "name"), x + 5, y + 5, 0xFFFFFF);
 
         statsText.clearText();
-        statsText.addText(TextFormatting.BLACK.toString());
         if (messagePageIndex == 0) {
-            statsText.addText("Welcome");
+            statsText.addText(GuiHelper.getLocalizedControlName(guiName, "message_1.title"));
             statsText.addNewLines(2);
-            statsText.addText("Here you can join the Armourer's Workshop global skin library. Joining the global library will allow you to:");
-            statsText.addNewLine();
-            statsText.addText("* upload your creations");
-            statsText.addNewLine();
-            statsText.addText("* fill out your profile");
-            statsText.addNewLine();
-            statsText.addText("* rate skins");
-            statsText.addNewLine();
-            statsText.addText("* create lists of skins");
-            statsText.addNewLine();
-            statsText.addText("* earn badges");
-            statsText.addNewLines(2);
-            statsText.addText("Please read each page of the rules carefully. ignorance of the rules is not an excuse if you get banned.");
-            statsText.addNewLines(2);
-            statsText.addText("Click the arrow on the buttom right to go to the next page.");
+            statsText.addText(GuiHelper.getLocalizedControlName(guiName, "message_1.text"));
         }
         if (messagePageIndex == 1) {
-            statsText.addText("Rules");
+            statsText.addText(GuiHelper.getLocalizedControlName(guiName, "message_2.title"));
             statsText.addNewLines(2);
-            statsText.addText("The global library has a 3 strike rule, if you get 3 strikes your account will be permanently ban from uploading to the global library.");
-            statsText.addNewLines(2);
-            statsText.addText("1. Do not upload other peoples work without their permission.");
-            statsText.addNewLine();
-            statsText.addText("2. Do not abuse the report system.");
-            statsText.addNewLine();
-            statsText.addText("3. Do not upload loads of coloured versions of the same model. (use dyes)");
-            statsText.addNewLine();
-            statsText.addText("4. Do not upload adult content (sexual, drug use, etc)");
-            statsText.addNewLine();
-            statsText.addText("5. Do not upload illegal content.");
+            statsText.addText(GuiHelper.getLocalizedControlName(guiName, "message_2.text"));
         }
         if (messagePageIndex == 2) {
-            statsText.addText("Derivative Works");
+            statsText.addText(GuiHelper.getLocalizedControlName(guiName, "message_3.title"));
             statsText.addNewLines(2);
-            statsText.addText("Derivative works are allowed on the global library. Please make sure any skins you upload from others are heavily edited and credited.");
-            statsText.addNewLines(2);
-            statsText.addText("Basic edits like recolours or settings changes are not allowed.");
+            statsText.addText(GuiHelper.getLocalizedControlName(guiName, "message_3.text"));
         }
         if (messagePageIndex == 3) {
-            statsText.addText("Account Requirements");
+            statsText.addText(GuiHelper.getLocalizedControlName(guiName, "message_4.title"));
             statsText.addNewLines(2);
-            statsText.addText("Please note that you must have a legitimate Minecraft account to join. This is to help with moderation and prevent spammers.");
+            statsText.addText(GuiHelper.getLocalizedControlName(guiName, "message_4.text"));
         }
         if (messagePageIndex == 4) {
-            statsText.addText("All Done");
+            String urlDiscord = TextFormatting.BLUE.toString() + LibURLs.URL_DISCORD + TextFormatting.RESET.toString();
+            statsText.addText(GuiHelper.getLocalizedControlName(guiName, "message_5.title"));
             statsText.addNewLines(2);
-            statsText.addText("Ready to join? Click the button below to join the community!");
+            statsText.addText(GuiHelper.getLocalizedControlName(guiName, "message_5.text", urlDiscord));
         }
-        if (!StringUtils.isNullOrEmpty(joinFailMessage)) {
+        if (!StringUtils.isNullOrEmpty(joinFailMessage) & messagePageIndex == 4) {
             statsText.addNewLines(2);
             statsText.addText(TextFormatting.RED.toString());
             statsText.addText("Error: " + joinFailMessage);
@@ -254,36 +229,19 @@ public class GuiGlobalLibraryPaneJoin extends GuiPanel {
             statsText.addNewLine();
         }
 
-        
         int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
         boolean validJava = GlobalSkinLibraryUtils.isValidJavaVersion(javaVersion);
-        
+
         buttonNext.visible = validJava;
         buttonPrevious.visible = validJava;
-        
+
         if (!validJava) {
+            String urlWikiFaq = TextFormatting.BLUE.toString() + LibURLs.URL_WIKI_FAQ + TextFormatting.RESET.toString();
+            String urlVideoUpdateJava = TextFormatting.BLUE.toString() + LibURLs.URL_VIDEO_UPDATE_JAVA + TextFormatting.RESET.toString();
             statsText.clearText();
-            statsText.addText(TextFormatting.RED.toString());
-            statsText.addText("Your java version is too old to join the global skin library");
-            statsText.addText(TextFormatting.BLACK.toString());
-            statsText.addNewLine();
-            statsText.addNewLine();
-            statsText.addText("Your java version is [Java " + javaVersion[0] + " update " + javaVersion[1] + "]. Please update to [Java 8 update 101] or newer.");
-            statsText.addNewLine();
-            statsText.addNewLine();
-            statsText.addText("Please check the FAQ for help fixing this issue.");
-            statsText.addNewLine();
-            statsText.addUrl("https://github.com/RiskyKen/Armourers-Workshop/wiki/FAQ");
-            statsText.addNewLine();
-            statsText.addNewLine();
-            statsText.addText(TextFormatting.BLACK.toString());
-            statsText.addText("There is also a video guide to help fix this issue. ");
-            statsText.addNewLine();
-            statsText.addUrl("https://youtu.be/xZfaXHulmKo");
-            statsText.addNewLine();
-            statsText.addNewLine();
+            statsText.addText(GuiHelper.getLocalizedControlName(guiName, "old_java", javaVersion[0], javaVersion[1], urlWikiFaq, urlVideoUpdateJava));
         }
-        
+
         statsText.draw(mouseX, mouseY);
     }
 

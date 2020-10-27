@@ -28,7 +28,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
     private GuiIconButton iconButtonFavourites;
     private GuiIconButton iconButtonMyFiles;
     private GuiIconButton iconButtonUploadSkin;
-    private GuiIconButton iconButtonJoinBeta;
+    private GuiIconButton iconButtonJoin;
     private GuiIconButton iconButtonInfo;
     private GuiIconButton iconButtonModeration;
 
@@ -48,7 +48,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         // "header.favourites"), BUTTON_TEXTURES).setIconLocation(0, 17, 16, 16);
         iconButtonMyFiles = new GuiIconButton(parent, 2, this.x + this.width - 41, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.myFiles"), BUTTON_TEXTURES).setIconLocation(0, 34, 16, 16);
         iconButtonUploadSkin = new GuiIconButton(parent, 3, this.x + this.width - 61, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.uploadSkin"), BUTTON_TEXTURES).setIconLocation(0, 51, 16, 16);
-        iconButtonJoinBeta = new GuiIconButton(parent, 4, this.x + this.width - 41, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.joinBeta"), BUTTON_TEXTURES).setIconLocation(0, 68, 16, 16);
+        iconButtonJoin = new GuiIconButton(parent, 4, this.x + this.width - 41, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.join"), BUTTON_TEXTURES).setIconLocation(0, 68, 16, 16);
         iconButtonInfo = new GuiIconButton(parent, 5, this.x + this.width - 81, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.info"), BUTTON_TEXTURES).setIconLocation(0, 17, 16, 16);
         iconButtonModeration = new GuiIconButton(parent, -1, this.x, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.moderation"), BUTTON_TEXTURES).setIconLocation(0, 119, 16, 16);
 
@@ -58,7 +58,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         // buttonList.add(iconButtonFavourites);
         buttonList.add(iconButtonMyFiles);
         buttonList.add(iconButtonUploadSkin);
-        buttonList.add(iconButtonJoinBeta);
+        buttonList.add(iconButtonJoin);
         buttonList.add(iconButtonInfo);
         buttonList.add(iconButtonModeration);
 
@@ -78,29 +78,29 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         iconButtonHome.visible = true;
         iconButtonMyFiles.visible = false;
         iconButtonUploadSkin.visible = false;
-        iconButtonJoinBeta.visible = false;
+        iconButtonJoin.visible = false;
         iconButtonInfo.visible = true;
         iconButtonModeration.visible = false;
 
         iconButtonHome.x = buttonOffsetX;
         buttonOffsetX -= padButton;
 
-        boolean inBeta = PlushieAuth.isRemoteUser();
-        boolean doneBetaCheck = PlushieAuth.doneRemoteUserCheck();
+        boolean isRemoteUser = PlushieAuth.isRemoteUser();
+        boolean doneRemoteUserCheck = PlushieAuth.doneRemoteUserCheck();
         PlushieSession session = PlushieAuth.PLUSHIE_SESSION;
 
-        if (doneBetaCheck & inBeta) {
-            iconButtonJoinBeta.visible = true;
-            iconButtonJoinBeta.x = buttonOffsetX;
+        if (doneRemoteUserCheck & !isRemoteUser) {
+            iconButtonJoin.visible = true;
+            iconButtonJoin.x = buttonOffsetX;
             buttonOffsetX -= padButton;
         }
 
         if (session.hasServerId()) {
-            iconButtonMyFiles.visible = inBeta;
+            iconButtonMyFiles.visible = isRemoteUser;
             iconButtonMyFiles.x = buttonOffsetX;
             buttonOffsetX -= padButton;
 
-            iconButtonUploadSkin.visible = inBeta;
+            iconButtonUploadSkin.visible = isRemoteUser;
             iconButtonUploadSkin.enabled = session.hasPermission(PlushieAction.SKIN_UPLOAD);
             iconButtonUploadSkin.x = buttonOffsetX;
             buttonOffsetX -= padButton;
@@ -139,8 +139,8 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         if (button == iconButtonUploadSkin) {
             ((GuiGlobalLibrary) parent).switchScreen(Screen.UPLOAD);
         }
-        if (button == iconButtonJoinBeta) {
-            ((GuiGlobalLibrary) parent).switchScreen(Screen.JOIN_BETA);
+        if (button == iconButtonJoin) {
+            ((GuiGlobalLibrary) parent).switchScreen(Screen.JOIN);
         }
         if (button == iconButtonInfo) {
             ((GuiGlobalLibrary) parent).switchScreen(Screen.INFO);

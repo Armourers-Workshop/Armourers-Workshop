@@ -35,6 +35,10 @@ public class GuiCustomLabel extends Gui {
         this.height = height;
         this.width = width;
     }
+    
+    public void setColour(int colour) {
+        this.colour = colour;
+    }
 
     public void addLine(String text) {
         this.text += text + "\n";
