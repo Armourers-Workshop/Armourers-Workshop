@@ -16,6 +16,7 @@ import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinS
 import moe.plushie.armourers_workshop.common.library.global.task.GlobalTaskSkinSearch.SearchOrderType;
 import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -43,7 +44,7 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
         super.initGui();
         String guiName = ((GuiGlobalLibrary) parent).getGuiName();
         buttonList.clear();
-        searchTextbox = new GuiLabeledTextField(fontRenderer, x + 5, y + 5, width - 10 - 160 - 70 - 5, 12);
+        searchTextbox = new GuiLabeledTextField(fontRenderer, x + 5, y + 5, width - 10 - 180 - 70 - 5, 12);
         searchTextbox.setEmptyLabel(GuiHelper.getLocalizedControlName(guiName, "searchBox.typeToSearch"));
         buttonList.add(new GuiButtonExt(0, x + width - 85, y + 3, 80, 16, GuiHelper.getLocalizedControlName(guiName, "searchBox.search")));
 
@@ -65,9 +66,18 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
         }
         buttonList.add(dropDownSkinType);
 
-        dropDownSort = new GuiDropDownList(-1, x + width - 160 - 70 - 5, y + 4, 70, "", this);
-        for (SearchColumnType columnType : SearchColumnType.values()) {
-            dropDownSort.addListItem(columnType.toString() + " " + ARROW_UP, columnType.toString(), true);
+        dropDownSort = new GuiDropDownList(-1, x + width - 180 - 70 - 5, y + 4, 90, "", this);
+        SearchColumnType[] columnTypes = { SearchColumnType.DATE_CREATED, SearchColumnType.NAME, SearchColumnType.DOWNLOADS, SearchColumnType.RATING };
+        for (int i = 0; i < columnTypes.length; i++) {
+            SearchColumnType columnType = columnTypes[i];
+            dropDownSort.addListItem(ARROW_UP + " " + I18n.format(columnType.getLangKey()), columnType.toString(), true);
+            dropDownSort.addListItem(ARROW_DOWN + " " + I18n.format(columnType.getLangKey()), columnType.toString(), true);
+            if (columnType == searchColumnType) {
+                dropDownSort.setListSelectedIndex(i * 2);
+                if (searchOrderType == SearchOrderType.ASC) {
+                    dropDownSort.setListSelectedIndex(i * 2 + 1);
+                }
+            }
         }
         buttonList.add(dropDownSort);
     }
@@ -81,11 +91,16 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
             } else {
                 selectedSkinType = SkinTypeRegistry.INSTANCE.getSkinTypeFromRegistryName(listItem.tag);
             }
-            
         }
         if (dropDownList == dropDownSort) {
             DropDownListItem listItem = dropDownList.getListSelectedItem();
             searchColumnType = SearchColumnType.valueOf(listItem.tag);
+            if (listItem.displayText.startsWith(ARROW_UP)) {
+                searchOrderType = SearchOrderType.DESC;
+            }
+            if (listItem.displayText.startsWith(ARROW_DOWN)) {
+                searchOrderType = SearchOrderType.ASC;
+            }
         }
     }
 

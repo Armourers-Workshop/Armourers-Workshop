@@ -35,9 +35,9 @@ public class GuiGlobalLibraryDialogReportSkin extends AbstractGuiDialog {
         buttonList.clear();
         buttonOk = new GuiButtonExt(0, x + width - 160 - 20, y + height - 30, 80, 20, I18n.format(LibGuiResources.Controls.BUTTON_OK));
         buttonCancel = new GuiButtonExt(0, x + width - 80 - 10, y + height - 30, 80, 20, I18n.format(LibGuiResources.Controls.BUTTON_CANCEL));
-        dropDownReportType = new GuiDropDownList(0, x + 10, y + 25, 100, "", null);
+        dropDownReportType = new GuiDropDownList(0, x + 10, y + 25, 140, "", null);
         for (SkinReportType reportType : SkinReportType.values()) {
-            dropDownReportType.addListItem(reportType.toString(), reportType.toString(), true);
+            dropDownReportType.addListItem(I18n.format(reportType.getLangKey()), reportType.toString(), true);
         }
         dropDownReportType.setListSelectedIndex(0);
 

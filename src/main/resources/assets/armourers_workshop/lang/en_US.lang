@@ -307,6 +307,23 @@ skin_report_type.armourers_workshop:spam=Spam
 skin_report_type.armourers_workshop:other=Other
 
 
+# Skin Search Column
+skin_search_column.armourers_workshop:id=ID
+skin_search_column.armourers_workshop:user_id=User ID
+skin_search_column.armourers_workshop:name=Name
+skin_search_column.armourers_workshop:description=Description
+skin_search_column.armourers_workshop:date_created=Date Created
+skin_search_column.armourers_workshop:skin_type=Skin Type
+skin_search_column.armourers_workshop:downloads=Downloads
+skin_search_column.armourers_workshop:rating=Rating
+skin_search_column.armourers_workshop:rating_count=Rating Count
+
+
+# Skin Search Order
+skin_search_order.armourers_workshop:asc=Ascending
+skin_search_order.armourers_workshop:desc=Descending
+
+
 # Inventory names
 inventory.armourers_workshop:colour-mixer.name=Color Mixer
 inventory.armourers_workshop:armourer.name=Armourer

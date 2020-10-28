@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.global.MultipartForm;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.PlushieAction;
 import moe.plushie.armourers_workshop.common.skin.data.serialize.SkinSerializer;
@@ -55,10 +56,18 @@ public class GlobalTaskSkinSearch extends GlobalTask<JsonObject> {
     }
 
     public enum SearchColumnType {
-        ID, USER_ID, NAME, DESCRIPTION, FILE_NAME, FILE_VERSION, DATE_UPDATED, DATE_CREATED, SKIN_TYPE, DOWNLOADS, RATING, RATING_COUNT
+        ID, USER_ID, NAME, DESCRIPTION, DATE_CREATED, SKIN_TYPE, DOWNLOADS, RATING, RATING_COUNT;
+        
+        public String getLangKey() {
+            return "skin_search_column." + LibModInfo.ID + ":" + toString().toLowerCase();
+        }
     }
 
     public enum SearchOrderType {
-        DESC, ASC
+        DESC, ASC;
+        
+        public String getLangKey() {
+            return "skin_search_order." + LibModInfo.ID + ":" + toString().toLowerCase();
+        }
     }
 }
