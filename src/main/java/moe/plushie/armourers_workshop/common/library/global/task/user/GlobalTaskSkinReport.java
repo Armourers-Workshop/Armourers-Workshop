@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.exceptions.AuthenticationException;
 
+import moe.plushie.armourers_workshop.common.lib.LibModInfo;
 import moe.plushie.armourers_workshop.common.library.global.MultipartForm;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
@@ -103,7 +104,11 @@ public class GlobalTaskSkinReport extends GlobalTask<SkinReportResult> {
         }
 
         public enum SkinReportType {
-            SEXUAL, INAPPROPRIATE, STOLEN, SPAM, OTHER
+            SEXUAL, INAPPROPRIATE, STOLEN, SPAM, OTHER;
+            
+            public String getLangKey() {
+                return "skin_report_type." + LibModInfo.ID + ":" + toString().toLowerCase();
+            }
         }
 
         @Override

@@ -7,10 +7,10 @@ import java.util.concurrent.Executors;
 
 import moe.plushie.armourers_workshop.client.gui.controls.GuiPanel;
 import moe.plushie.armourers_workshop.client.gui.controls.ModGuiContainer;
-import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelJoin;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHeader;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelHome;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelInfo;
+import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelJoin;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelModeration;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchBox;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
@@ -279,8 +279,6 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
     public void updateScreen() {
         super.updateScreen();
         PlushieAuth.updateAccessToken();
-        // ModLogger.log(PlushieAuth.PLUSHIE_SESSION.getTimeSinceTokenUpdate() / 1000 +
-        // " - " + PlushieAuth.PLUSHIE_SESSION.getTokenExpiryTime() / 1000);
         for (GuiPanel panel : panelList) {
             panel.update();
         }
