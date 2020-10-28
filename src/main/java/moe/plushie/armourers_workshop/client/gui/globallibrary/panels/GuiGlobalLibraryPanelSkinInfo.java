@@ -327,10 +327,6 @@ public class GuiGlobalLibraryPanelSkinInfo extends GuiPanel implements IDialogCa
                 int ratingCount = skinJson.get("rating_count").getAsInt();
                 info += "Rating: (" + ratingCount + ") " + rating + "/10 \n\n";
             }
-
-            if (skinJson.has("likes")) {
-                info += I18n.format(fullName + "likes", skinJson.get("likes").getAsInt()) + "\n\n";
-            }
             if (skin != null) {
                 info += GuiHelper.getLocalizedControlName(guiName, "author") + " ";
                 info += skin.getAuthorName() + "\n\n";
