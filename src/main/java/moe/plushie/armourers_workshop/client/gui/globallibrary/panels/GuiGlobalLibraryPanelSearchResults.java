@@ -71,6 +71,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         if (this.search == null) {
             return;
         }
+        ((GuiGlobalLibrary)parent).panelSearchBox.updateDropDowns(searchOrderColumn, searchOrder);
         fetchPage(0);
     }
 
