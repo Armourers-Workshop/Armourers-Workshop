@@ -1,12 +1,15 @@
 package moe.plushie.armourers_workshop.proxies;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
+import org.lwjgl.Sys;
 
 import com.mojang.authlib.GameProfile;
 
@@ -99,6 +102,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -337,6 +341,46 @@ public class ClientProxy extends CommonProxy implements IBakedSkinReceiver {
             CommonSkinCache.INSTANCE.clearAll();
             ClientSkinPaintCache.INSTANCE.clear();
             break;
+        case OPEN_MOD_FOLDER:
+            openFolder(getModDirectory());
+            break;
+        }
+    }
+
+    private void openFolder(File folder) {
+        String packPath = folder.getAbsolutePath();
+
+        if (Util.getOSType() == Util.EnumOS.OSX) {
+            try {
+                Runtime.getRuntime().exec(new String[] { "/usr/bin/open", packPath });
+                return;
+            } catch (IOException ioexception1) {
+                ArmourersWorkshop.getLogger().error("Couldn\'t open file: " + ioexception1);
+            }
+        } else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
+            String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] { packPath });
+            try {
+                Runtime.getRuntime().exec(s1);
+                return;
+            } catch (IOException ioexception) {
+                ArmourersWorkshop.getLogger().error("Couldn\'t open file: " + ioexception);
+            }
+        }
+
+        boolean openedFailed = false;
+
+        try {
+            Class oclass = Class.forName("java.awt.Desktop");
+            Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object) null, new Object[0]);
+            oclass.getMethod("browse", new Class[] { URI.class }).invoke(object, new Object[] { folder.toURI() });
+        } catch (Throwable throwable) {
+            ArmourersWorkshop.getLogger().error("Couldn\'t open link: " + throwable);
+            openedFailed = true;
+        }
+
+        if (openedFailed) {
+            ArmourersWorkshop.getLogger().error("Opening via system class!");
+            Sys.openURL("file://" + packPath);
         }
     }
 

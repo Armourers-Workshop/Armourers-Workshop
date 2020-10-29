@@ -725,7 +725,7 @@ death.attack.victorious=%1$s was stabbed to death by Vic's crown.
 
 
 # Commands
-commands.armourers_workshop:armourers.usage=/armourers <admin_panel | clear_cache | export_skin | give_skin | set_item_skinnable | wardrobe>
+commands.armourers_workshop:armourers.usage=/armourers <admin_panel | clear_cache | export_skin | give_skin | open_folder | set_item_skinnable | wardrobe>
 commands.armourers_workshop:armourers.clear_cache.usage=/armourers clear_cache <client | server> [player if client]
 commands.armourers_workshop:armourers.export_skin.usage=/armourers export_skin <file format> "<file name>" [scale]
 commands.armourers_workshop:armourers.give_skin.usage=/armourers give_skin <player> "<skin name>" [<dyeIndex-R,G,B[-paintType]> | <dyeIndex-0xRRGGBB[-paintType>]]

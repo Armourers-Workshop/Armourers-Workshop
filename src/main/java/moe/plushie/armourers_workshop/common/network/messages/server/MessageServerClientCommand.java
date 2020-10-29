@@ -9,10 +9,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class MessageServerClientCommand implements IMessage, IMessageHandler<MessageServerClientCommand, IMessage> {
 
     private CommandType command;
-    
+
     public MessageServerClientCommand() {
     }
-    
+
     public MessageServerClientCommand(CommandType command) {
         this.command = command;
     }
@@ -26,14 +26,14 @@ public class MessageServerClientCommand implements IMessage, IMessageHandler<Mes
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.command.ordinal());
     }
-    
+
     @Override
     public IMessage onMessage(MessageServerClientCommand message, MessageContext ctx) {
         ArmourersWorkshop.getProxy().receivedCommandFromSever(message.command);
         return null;
     }
-    
+
     public enum CommandType {
-        CLEAR_MODEL_CACHE
+        CLEAR_MODEL_CACHE, OPEN_MOD_FOLDER
     }
 }
