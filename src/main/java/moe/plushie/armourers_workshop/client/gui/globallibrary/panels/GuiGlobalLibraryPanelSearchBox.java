@@ -81,6 +81,24 @@ public class GuiGlobalLibraryPanelSearchBox extends GuiPanel implements IDropDow
         }
         buttonList.add(dropDownSort);
     }
+    
+    public void updateDropDowns(SearchColumnType searchOrderColumn, SearchOrderType searchOrder) {
+        this.searchColumnType = searchOrderColumn;
+        this.searchOrderType = searchOrder;
+        dropDownSort.clearList();
+        SearchColumnType[] columnTypes = { SearchColumnType.DATE_CREATED, SearchColumnType.NAME, SearchColumnType.DOWNLOADS, SearchColumnType.RATING };
+        for (int i = 0; i < columnTypes.length; i++) {
+            SearchColumnType columnType = columnTypes[i];
+            dropDownSort.addListItem(ARROW_UP + " " + I18n.format(columnType.getLangKey()), columnType.toString(), true);
+            dropDownSort.addListItem(ARROW_DOWN + " " + I18n.format(columnType.getLangKey()), columnType.toString(), true);
+            if (columnType == searchColumnType) {
+                dropDownSort.setListSelectedIndex(i * 2);
+                if (searchOrderType == SearchOrderType.ASC) {
+                    dropDownSort.setListSelectedIndex(i * 2 + 1);
+                }
+            }
+        }
+    }
 
     @Override
     public void onDropDownListChanged(GuiDropDownList dropDownList) {

@@ -43,7 +43,7 @@ public class GuiGlobalLibraryDialogReportSkin extends AbstractGuiDialog {
 
         textReportMessage = new GuiTextFieldCustom(x + 10, y + 45, width - 20, 80);
         textReportMessage.setEmptyLabel(GuiHelper.getLocalizedControlName(name, "optional_message"));
-        textReportMessage.setMaxStringLength(200);
+        textReportMessage.setMaxStringLength(255);
 
         buttonList.add(buttonOk);
         buttonList.add(buttonCancel);

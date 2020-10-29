@@ -219,7 +219,7 @@ public class GuiGlobalLibraryPanelHome extends GuiPanel {
             ((GuiGlobalLibrary) parent).switchScreen(Screen.SEARCH);
             ((GuiGlobalLibrary) parent).panelSearchBox.selectedSkinType = null;
             ((GuiGlobalLibrary) parent).panelSearchBox.initGui();
-            ((GuiGlobalLibrary) parent).panelSearchResults.doSearch("", null, null, null);
+            ((GuiGlobalLibrary) parent).panelSearchResults.doSearch("", null, SearchColumnType.DATE_CREATED, SearchOrderType.DESC);
         }
         if (button == skinPanelRecentlyUploaded | button == skinPanelMostDownloaded | button == skinPanelTopRated | button == skinPanelNeedRated) {
             SkinIcon skinIcon = ((GuiControlSkinPanel) button).getLastPressedSkinIcon();

@@ -102,6 +102,10 @@ public class GlobalTaskSkinReport extends GlobalTask<SkinReportResult> {
         public String getMessage() {
             return message;
         }
+        
+        public Date getDate() {
+            return date;
+        }
 
         public enum SkinReportType {
             SEXUAL, INAPPROPRIATE, STOLEN, SPAM, OTHER;
