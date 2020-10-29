@@ -33,6 +33,7 @@ public final class PermissionSystem {
         actions.add(PlushieAction.SKIN_COMMENT_CREATE);
         actions.add(PlushieAction.SKIN_COMMENT_OWNER_DELETE);
         actions.add(PlushieAction.SKIN_COMMENT_OWNER_EDIT);
+        actions.add(PlushieAction.SKIN_GET_RATED);
         groupUser = new PermissionGroup("user", actions.clone());
 
         actions.add(PlushieAction.SKIN_MOD_EDIT);
