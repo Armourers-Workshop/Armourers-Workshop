@@ -163,7 +163,7 @@ public class GuiColourMixer extends ModGuiContainer<ContainerColourMixer> implem
         paintTypeDropDown.clearList();
         for (IPaintType paintType : PaintTypeRegistry.getInstance().getRegisteredTypes()) {
             if (paintType == PaintTypeRegistry.PAINT_TYPE_TEXTURE) {
-                paintTypeDropDown.addListItem(paintType.getLocalizedName(), "", true);
+                paintTypeDropDown.addListItem(paintType.getLocalizedName(), "", false);
             } else {
                 paintTypeDropDown.addListItem(paintType.getLocalizedName());
             }
