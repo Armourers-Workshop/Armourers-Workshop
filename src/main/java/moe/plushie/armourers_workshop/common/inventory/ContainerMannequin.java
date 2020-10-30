@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.common.network.messages.client.MessageClie
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityMannequin;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.world.World;
 
@@ -18,7 +18,7 @@ public class ContainerMannequin extends ModTileContainer<TileEntityMannequin> im
     }
 
     @Override
-    public void buttonPressed(EntityPlayer player, byte buttonId) {
+    public void buttonPressed(EntityPlayerMP player, byte buttonId) {
         World world = getTileEntity().getWorld();
         if (buttonId == 0) {
             IBlockState blockState = world.getBlockState(getTileEntity().getPos());

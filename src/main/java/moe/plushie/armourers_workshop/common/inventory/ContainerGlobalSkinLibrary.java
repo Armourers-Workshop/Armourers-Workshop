@@ -90,7 +90,7 @@ public class ContainerGlobalSkinLibrary extends ModTileContainer<TileEntityGloba
     }
 
     @Override
-    public void buttonPressed(EntityPlayer player, byte buttonId) {
+    public void buttonPressed(EntityPlayerMP player, byte buttonId) {
         if (buttonId == 0) {
             if (!tileEntity.getWorld().isRemote) {
                 if (!getSlot(37).getHasStack()) {
@@ -101,7 +101,7 @@ public class ContainerGlobalSkinLibrary extends ModTileContainer<TileEntityGloba
                         if (skin != null) {
                             onSkinUploaded();
                             MessageServerLibrarySendSkin message = new MessageServerLibrarySendSkin(null, null, skin, SendType.GLOBAL_UPLOAD);
-                            PacketHandler.networkWrapper.sendTo(message, (EntityPlayerMP) player);
+                            PacketHandler.networkWrapper.sendTo(message, player);
                         }
                     }
                 }

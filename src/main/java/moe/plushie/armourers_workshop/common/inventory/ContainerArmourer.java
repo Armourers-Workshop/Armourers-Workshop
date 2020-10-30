@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.common.init.items.ModItems;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotOutput;
 import moe.plushie.armourers_workshop.common.inventory.slot.SlotSkinTemplate;
 import moe.plushie.armourers_workshop.common.library.LibraryFile;
+import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton.IButtonPress;
 import moe.plushie.armourers_workshop.common.skin.ISkinHolder;
 import moe.plushie.armourers_workshop.common.skin.cache.CommonSkinCache;
 import moe.plushie.armourers_workshop.common.skin.data.Skin;
@@ -28,7 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextComponentString;
 
-public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
+public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> implements IButtonPress {
 
     public ContainerArmourer(InventoryPlayer invPlayer, TileEntityArmourer tileEntity) {
         super(invPlayer, tileEntity);
@@ -205,5 +206,26 @@ public class ContainerArmourer extends ModTileContainer<TileEntityArmourer> {
 
         tileEntity.setInventorySlotContents(0, ItemStack.EMPTY);
         tileEntity.setInventorySlotContents(1, stackInput);
+    }
+
+    @Override
+    public void buttonPressed(EntityPlayerMP player, byte buttonId) {
+        TileEntityArmourer armourerBrain = getTileEntity();
+        // ModLogger.log("load " + message.buttonId);
+        if (buttonId == 14) {
+            loadArmourItem(player);
+        }
+        if (buttonId == 7) {
+            armourerBrain.toggleGuides();
+        }
+        if (buttonId == 6) {
+            armourerBrain.toggleHelper();
+        }
+        if (buttonId == 11) {
+            // armourerBrain.cloneToSide(ForgeDirection.WEST);
+        }
+        if (buttonId == 12) {
+            // armourerBrain.cloneToSide(ForgeDirection.EAST);
+        }
     }
 }

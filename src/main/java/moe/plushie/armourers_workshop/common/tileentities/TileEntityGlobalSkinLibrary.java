@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.common.inventory.IGuiFactory;
 import moe.plushie.armourers_workshop.common.network.messages.client.MessageClientGuiButton.IButtonPress;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -20,7 +21,7 @@ public class TileEntityGlobalSkinLibrary extends TileEntity implements IButtonPr
     }
 
     @Override
-    public void buttonPressed(EntityPlayer player, byte buttonId) {
+    public void buttonPressed(EntityPlayerMP player, byte buttonId) {
         if (buttonId == 0) {
 
         }

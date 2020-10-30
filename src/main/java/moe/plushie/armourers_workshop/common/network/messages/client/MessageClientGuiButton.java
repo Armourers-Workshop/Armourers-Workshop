@@ -1,9 +1,6 @@
 package moe.plushie.armourers_workshop.common.network.messages.client;
 
 import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.common.inventory.ContainerArmourer;
-import moe.plushie.armourers_workshop.common.tileentities.TileEntityArmourer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -38,36 +35,13 @@ public class MessageClientGuiButton implements IMessage, IMessageHandler<Message
             return null;
         }
         Container container = player.openContainer;
-
-        if (container != null && container instanceof ContainerArmourer) {
-            ContainerArmourer containerArmourer = (ContainerArmourer) container;
-            TileEntityArmourer armourerBrain = containerArmourer.getTileEntity();
-            // ModLogger.log("load " + message.buttonId);
-            if (message.buttonId == 14) {
-                containerArmourer.loadArmourItem(player);
-            }
-            if (message.buttonId == 7) {
-                armourerBrain.toggleGuides();
-            }
-            if (message.buttonId == 6) {
-                armourerBrain.toggleHelper();
-            }
-            if (message.buttonId == 11) {
-                // armourerBrain.cloneToSide(ForgeDirection.WEST);
-            }
-            if (message.buttonId == 12) {
-                // armourerBrain.cloneToSide(ForgeDirection.EAST);
-            }
-        }
-
         if (container instanceof IButtonPress) {
             ((IButtonPress) container).buttonPressed(ctx.getServerHandler().player, message.buttonId);
         }
-
         return null;
     }
 
     public static interface IButtonPress {
-        public void buttonPressed(EntityPlayer player, byte buttonId);
+        public void buttonPressed(EntityPlayerMP player, byte buttonId);
     }
 }

@@ -17,7 +17,7 @@ import moe.plushie.armourers_workshop.common.skin.type.SkinTypeRegistry;
 import moe.plushie.armourers_workshop.common.tileentities.TileEntityAdvancedSkinBuilder;
 import moe.plushie.armourers_workshop.utils.SkinNBTHelper;
 import moe.plushie.armourers_workshop.utils.UtilItems;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -32,7 +32,7 @@ public class ContainerAdvancedSkinBuilder extends ModTileContainer<TileEntityAdv
     }
 
     @Override
-    public void buttonPressed(EntityPlayer player, byte buttonId) {
+    public void buttonPressed(EntityPlayerMP player, byte buttonId) {
         ArmourersWorkshop.getLogger().info("Making advanced part.");
 
         SkinProperties properties = new SkinProperties();
