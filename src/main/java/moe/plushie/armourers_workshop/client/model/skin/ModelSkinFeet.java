@@ -57,10 +57,20 @@ public class ModelSkinFeet extends ModelTypeHelper {
             GL11.glDisable(GL11.GL_CULL_FACE);
             GL11.glEnable(GL11.GL_ALPHA_TEST);
             if (!renderData.isItemRender()) {
-                GL11.glTranslated(0, -12 * SCALE, 0);
+                GlStateManager.enablePolygonOffset();
+                GlStateManager.doPolygonOffset(-2, 1);
+                //GL11.glTranslated(0, -12 * SCALE, 0);
             }
+            GL11.glTranslated(0, 0 , 0.005F);
+            GL11.glTranslated(0.02F, 0 , 0);
             bipedLeftLeg.render(SCALE);
+            GL11.glTranslated(-0.02F, 0 , 0);
             bipedRightLeg.render(SCALE);
+            GL11.glTranslated(0, 0 , -0.005F);
+            if (!renderData.isItemRender()) {
+                GlStateManager.doPolygonOffset(0F, 0F);
+                GlStateManager.disablePolygonOffset();
+            }
             GL11.glPopAttrib();
             GL11.glPopMatrix();
         }
