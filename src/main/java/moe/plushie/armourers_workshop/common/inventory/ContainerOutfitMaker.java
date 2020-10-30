@@ -53,7 +53,7 @@ public class ContainerOutfitMaker extends ModTileContainer<TileEntityOutfitMaker
         indexSkinsEnd = indexSkinsStart;
         for (int skinIndex = 0; skinIndex < skinTypes.length; skinIndex++) {
             for (int i = 0; i < TileEntityOutfitMaker.OUTFIT_ROWS; i++) {
-                addSlotToContainer(new SlotSkin(skinTypes[skinIndex], tileEntity, skinIndex + (i * TileEntityOutfitMaker.OUTFIT_SKINS) + 2, 36 + skinIndex * 20, 58 + i * 20));
+                addSlotToContainer(new SlotSkin(tileEntity, skinIndex + (i * TileEntityOutfitMaker.OUTFIT_SKINS) + 2, 36 + skinIndex * 20, 58 + i * 20, skinTypes));
                 indexSkinsEnd++;
             }
         }

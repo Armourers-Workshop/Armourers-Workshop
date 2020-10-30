@@ -27,7 +27,7 @@ public class ContainerAdvancedSkinBuilder extends ModTileContainer<TileEntityAdv
         super(invPlayer, tileEntity);
         addPlayerSlots(8, 40);
         for (int i = 0; i < tileEntity.getSizeInventory(); i++) {
-            addSlotToContainer(new SlotSkin(SkinTypeRegistry.skinPart, tileEntity, i, 8 + 20 * i, 20));
+            addSlotToContainer(new SlotSkin(tileEntity, i, 8 + 20 * i, 20, SkinTypeRegistry.skinPart));
         }
     }
 
@@ -43,9 +43,9 @@ public class ContainerAdvancedSkinBuilder extends ModTileContainer<TileEntityAdv
         if (player.getGameProfile() != null && player.getGameProfile().getId() != null) {
             SkinProperties.PROP_ALL_AUTHOR_UUID.setValue(properties, player.getGameProfile().getId().toString());
         }
-        //SkinProperties.PROP_ALL_CUSTOM_NAME.setValue(properties, "");
-        //SkinProperties.PROP_ALL_FLAVOUR_TEXT.setValue(properties, "");
-        
+        // SkinProperties.PROP_ALL_CUSTOM_NAME.setValue(properties, "");
+        // SkinProperties.PROP_ALL_FLAVOUR_TEXT.setValue(properties, "");
+
         for (int i = 0; i < getTileEntity().getSizeInventory(); i++) {
             ItemStack itemStack = getTileEntity().getStackInSlot(i);
             if (!itemStack.isEmpty()) {
@@ -59,13 +59,13 @@ public class ContainerAdvancedSkinBuilder extends ModTileContainer<TileEntityAdv
                 }
             }
         }
-        
+
         ArmourersWorkshop.getLogger().info("Parts found: " + skinParts.size());
 
         Skin skin = new Skin(properties, skinType, null, skinParts);
-        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile)null);
+        CommonSkinCache.INSTANCE.addEquipmentDataToCache(skin, (LibraryFile) null);
         ItemStack skinStack = SkinNBTHelper.makeEquipmentSkinStack(new SkinDescriptor(skin));
-        
+
         UtilItems.spawnItemAtEntity(player, skinStack, false);
     }
 }
