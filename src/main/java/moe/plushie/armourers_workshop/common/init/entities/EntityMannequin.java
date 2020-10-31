@@ -33,6 +33,7 @@ import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -251,6 +252,9 @@ public class EntityMannequin extends Entity implements IGameProfileCallback, IIn
     @Override
     public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand) {
         ItemStack itemStack = player.getHeldItem(hand);
+        if (!player.canPlayerEdit(getPosition(), EnumFacing.UP, itemStack)) {
+            return EnumActionResult.PASS;
+        }
         if (player.isSneaking()) {
             if (!world.isRemote) {
                 double angle = TrigUtils.getAngleDegrees(player.posX, player.posZ, posX, posZ) + 90D;
@@ -290,6 +294,10 @@ public class EntityMannequin extends Entity implements IGameProfileCallback, IIn
         if (!getEntityWorld().isRemote) {
             if (entityIn instanceof EntityPlayer) {
                 EntityPlayer entityPlayer = (EntityPlayer) entityIn;
+                ItemStack itemStack = entityPlayer.getHeldItem(entityPlayer.getActiveHand());
+                if (!entityPlayer.canPlayerEdit(getPosition(), EnumFacing.UP, itemStack)) {
+                    return false;
+                }
                 playSound(SoundEvents.ENTITY_ARMORSTAND_HIT, 0.8F, 1F);
                 if (entityPlayer.capabilities.isCreativeMode) {
                     hitCount += 200;
