@@ -282,19 +282,19 @@ public class RenderEntityMannequin extends Render<EntityMannequin> {
             }
 
             targetModel.bipedBody.render(scale);
-            // targetModel.bipedBodyWear.render(scale);
+            targetModel.bipedBodyWear.render(scale);
 
             targetModel.bipedLeftArm.render(scale);
-            // targetModel.bipedLeftArmwear.render(scale);
+            targetModel.bipedLeftArmwear.render(scale);
 
             targetModel.bipedRightArm.render(scale);
-            // targetModel.bipedRightArmwear.render(scale);
+            targetModel.bipedRightArmwear.render(scale);
 
             targetModel.bipedLeftLeg.render(scale);
-            // targetModel.bipedLeftLegwear.render(scale);
+            targetModel.bipedLeftLegwear.render(scale);
 
             targetModel.bipedRightLeg.render(scale);
-            // targetModel.bipedRightLegwear.render(scale);
+            targetModel.bipedRightLegwear.render(scale);
             if (bipedRotations.isChild()) {
                 ModelHelper.disableChildModelScale();
             }
