@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.common.library.global.permission.Permissio
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,6 +32,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
     private GuiIconButton iconButtonJoin;
     private GuiIconButton iconButtonInfo;
     private GuiIconButton iconButtonModeration;
+    private GuiIconButton iconButtonProfile;
 
     public GuiGlobalLibraryPanelHeader(GuiScreen parent, int x, int y, int width, int height) {
         super(parent, x, y, width, height);
@@ -48,11 +50,11 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         // "header.favourites"), BUTTON_TEXTURES).setIconLocation(0, 17, 16, 16);
         iconButtonMyFiles = new GuiIconButton(parent, 2, this.x + this.width - 41, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.myFiles"), BUTTON_TEXTURES).setIconLocation(0, 34, 16, 16);
         iconButtonUploadSkin = new GuiIconButton(parent, 3, this.x + this.width - 61, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.uploadSkin"), BUTTON_TEXTURES).setIconLocation(0, 51, 16, 16);
+        iconButtonUploadSkin.setDisableText(GuiHelper.getLocalizedControlName(guiName, "header.uploadSkinBan"));
         iconButtonJoin = new GuiIconButton(parent, 4, this.x + this.width - 41, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.join"), BUTTON_TEXTURES).setIconLocation(0, 68, 16, 16);
         iconButtonInfo = new GuiIconButton(parent, 5, this.x + this.width - 81, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.info"), BUTTON_TEXTURES).setIconLocation(0, 17, 16, 16);
         iconButtonModeration = new GuiIconButton(parent, -1, this.x, this.y + 4, 18, 18, GuiHelper.getLocalizedControlName(guiName, "header.moderation"), BUTTON_TEXTURES).setIconLocation(0, 119, 16, 16);
-
-        iconButtonUploadSkin.setDisableText(GuiHelper.getLocalizedControlName(guiName, "header.uploadSkinBan"));
+        iconButtonProfile = new GuiIconButton(parent, -1, this.x + 1, this.y + 1, 24, 24, GuiHelper.getLocalizedControlName(guiName, "header.my_profile"), BUTTON_TEXTURES);
 
         buttonList.add(iconButtonHome);
         // buttonList.add(iconButtonFavourites);
@@ -61,6 +63,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         buttonList.add(iconButtonJoin);
         buttonList.add(iconButtonInfo);
         buttonList.add(iconButtonModeration);
+        buttonList.add(iconButtonProfile);
 
         betaCheckUpdate();
     }
@@ -149,6 +152,9 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         if (button == iconButtonModeration) {
             ((GuiGlobalLibrary) parent).switchScreen(Screen.MODERATION);
         }
+        if (button == iconButtonProfile) {
+            ((GuiGlobalLibrary) parent).switchScreen(Screen.PROFILE);
+        }
     }
 
     @Override
@@ -157,7 +163,9 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
             return;
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
-
+        String titleText = ((GuiGlobalLibrary) parent).getGuiName();
+        drawCenteredString(fontRenderer, GuiHelper.getLocalizedControlName(titleText, "name"), x + (width / 2), this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFEEEEEE);
+        super.draw(mouseX, mouseY, partialTickTime);
         String username = "player";
         GameProfile gameProfile = mc.player.getGameProfile();
         if (gameProfile != null) {
@@ -167,9 +175,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         } else {
             this.fontRenderer.drawString("Not logged in.", this.x + 90, this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFAAAA);
         }
-        String titleText = ((GuiGlobalLibrary) parent).getGuiName();
-        drawCenteredString(fontRenderer, GuiHelper.getLocalizedControlName(titleText, "name"), x + (width / 2), this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFEEEEEE);
-        super.draw(mouseX, mouseY, partialTickTime);
+        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
     private void drawPlayerHead(String username) {

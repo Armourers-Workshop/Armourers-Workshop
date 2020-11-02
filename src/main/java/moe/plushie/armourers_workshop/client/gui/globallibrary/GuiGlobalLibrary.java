@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalL
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelInfo;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelJoin;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelModeration;
+import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelProfile;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchBox;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSearchResults;
 import moe.plushie.armourers_workshop.client.gui.globallibrary.panels.GuiGlobalLibraryPanelSkinEdit;
@@ -60,11 +61,12 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
     public GuiGlobalLibraryPanelSkinEdit panelSkinEdit;
     public GuiGlobalLibraryPanelInfo panelInfo;
     public GuiGlobalLibraryPanelModeration panelModeration;
+    public GuiGlobalLibraryPanelProfile panelProfile;
 
     private Screen screen;
 
     public static enum Screen {
-        HOME, SEARCH, UPLOAD, SKIN_INFO, USER_SKINS, FAVOURITES, JOIN, SKIN_EDIT, INFO, MODERATION
+        HOME, SEARCH, UPLOAD, SKIN_INFO, USER_SKINS, FAVOURITES, JOIN, SKIN_EDIT, INFO, MODERATION, PROFILE
     }
 
     public GuiGlobalLibrary(TileEntityGlobalSkinLibrary tileEntity, InventoryPlayer inventoryPlayer) {
@@ -105,6 +107,9 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
 
         panelModeration = new GuiGlobalLibraryPanelModeration(this);
         panelList.add(panelModeration);
+
+        panelProfile = new GuiGlobalLibraryPanelProfile(this);
+        panelList.add(panelProfile);
 
         screen = Screen.HOME;
         isNEIVisible = ModAddonManager.addonNEI.isVisible();
@@ -274,6 +279,10 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
         case MODERATION:
             panelModeration.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
             panelModeration.setVisible(true);
+            break;
+        case PROFILE:
+            panelProfile.setPosition(1, yOffset).setSize(width - 2, height - yOffset - 1 - neiBump);
+            panelProfile.setVisible(true);
             break;
         }
     }

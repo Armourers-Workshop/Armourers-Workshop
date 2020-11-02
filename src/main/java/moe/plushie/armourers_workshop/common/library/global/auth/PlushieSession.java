@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.common.library.global.auth;
 
+import java.util.UUID;
+
 import com.google.gson.JsonObject;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
@@ -58,6 +60,18 @@ public class PlushieSession {
 
     public int getServerId() {
         return server_id;
+    }
+
+    public String getMcName() {
+        return mc_name;
+    }
+
+    public UUID getMcId() {
+        return UUID.fromString(mc_id);
+    }
+
+    public int getPermissionGroupID() {
+        return permission_group_id;
     }
 
     public boolean isOwner(int userId) {

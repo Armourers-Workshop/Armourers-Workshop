@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import com.google.gson.JsonObject;
 
+import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
+import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
+
 public class PlushieUser {
 
     private int id;
@@ -29,6 +32,11 @@ public class PlushieUser {
             }
         }
         return null;
+    }
+
+    public static PlushieUser getLocalUser() {
+        PlushieSession session = PlushieAuth.PLUSHIE_SESSION;
+        return new PlushieUser(session.getServerId(), session.getMcId(), session.getMcName(), session.getPermissionGroupID());
     }
 
     private PlushieUser(int id, UUID uuid, String username, int permissionGroupId) {
