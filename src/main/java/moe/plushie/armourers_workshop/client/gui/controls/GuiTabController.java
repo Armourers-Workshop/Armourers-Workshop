@@ -58,18 +58,18 @@ public class GuiTabController extends GuiButtonExt {
             this.height = height;
         }
     }
-    
+
     public boolean isFullscreen() {
         return fullscreen;
     }
 
     public void setActiveTabIndex(int index) {
-        if (index < getTabCount() - 1) {
+        if (index < getVisableTabCount() - 1) {
             activeTab = index;
         } else {
-            activeTab = getTabCount() - 1;
+            activeTab = getVisableTabCount() - 1;
         }
-        if (getTabCount() == 0) {
+        if (getVisableTabCount() == 0) {
             activeTab = -1;
         }
     }
@@ -84,6 +84,16 @@ public class GuiTabController extends GuiButtonExt {
 
     public int getTabCount() {
         return tabs.size();
+    }
+
+    public int getVisableTabCount() {
+        int count = 0;
+        for (GuiTab tab : tabs) {
+            if (tab.visible) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public int getActiveTabIndex() {
