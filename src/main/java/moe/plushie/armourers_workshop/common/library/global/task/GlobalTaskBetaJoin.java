@@ -28,7 +28,7 @@ public class GlobalTaskBetaJoin extends GlobalTask<BetaJoinResult> {
         permissionCheck();
         PlushieSession session = PlushieAuth.PLUSHIE_SESSION;
         if (session.hasServerId()) {
-            //return new BetaJoinResult(JoinResult.ALREADY_JOINED);
+            return new BetaJoinResult(JoinResult.ALREADY_JOINED);
         }
 
         GameProfile gameProfile = Minecraft.getMinecraft().player.getGameProfile();
