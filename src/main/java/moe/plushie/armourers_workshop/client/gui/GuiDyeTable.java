@@ -36,7 +36,7 @@ public class GuiDyeTable extends GuiContainer {
         super(new ContainerDyeTable(invPlayer, tileEntity));
         this.tileEntity = tileEntity;
 
-        this.xSize = 256;
+        this.xSize = 338;
         this.ySize = 190;
 
         rolloverDyes = new SkinDye[8];
@@ -79,8 +79,8 @@ public class GuiDyeTable extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-         GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getName());
-         this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+        GuiHelper.renderLocalizedGuiName(this.fontRenderer, this.xSize, tileEntity.getName());
+        this.fontRenderer.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 96 + 2, 4210752);
 
         Slot slot = ((ContainerDyeTable) inventorySlots).getOutputSlot();
         ItemStack skinStack = slot.getStack();
@@ -116,7 +116,8 @@ public class GuiDyeTable extends GuiContainer {
                 GL11.glPushMatrix();
                 // GL11.glEnable(GL11.GL_CULL_FACE);
                 SkinItemRenderHelper.renderSkinAsItem(skinPointer, true, false, 140, 176);
-                // ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true, false);
+                // ItemStackRenderHelper.renderItemModelFromSkinPointer(skinPointer, true,
+                // false);
                 GL11.glPopMatrix();
                 GL11.glPopMatrix();
                 Color c = new Color(198, 198, 198, (240));
