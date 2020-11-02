@@ -124,13 +124,15 @@ public class GuiSkinLibrary extends ModGuiContainer<ContainerSkinLibrary> implem
         String guiName = armourLibrary.getName();
 
         int slotSize = 18;
-
+        
+        neiBump = 0;
         if (ModAddonManager.addonNEI.isVisible()) {
             neiBump = 18;
-        } else {
-            neiBump = 0;
         }
-
+        if (ModAddonManager.addonJEI.isModLoaded()) {
+            neiBump = 20;
+        }
+        
         // Move player inventory slots.
         for (int x = 0; x < 9; x++) {
             Slot slot = inventorySlots.inventorySlots.get(x);

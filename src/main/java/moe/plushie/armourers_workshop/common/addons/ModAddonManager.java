@@ -28,6 +28,7 @@ public final class ModAddonManager {
     public static AddonHauntedAstolfoBeanPlushie addonHauntedAstolfoBeanPlushie;
     //public static AddonIntegratedCircuits addonIntegratedCircuits;
     public static AddonJBRAClient addonJBRAClient;
+    public static AddonJEI addonJEI;
     //public static AddonLittleMaidMob addonLittleMaidMob;
     //public static AddonMaplecrafted addonMaplecrafted;
     //public static AddonMekanismTools addonMekanismTools;
@@ -75,6 +76,7 @@ public final class ModAddonManager {
         addonHauntedAstolfoBeanPlushie = new AddonHauntedAstolfoBeanPlushie();
         //addonIntegratedCircuits = new AddonIntegratedCircuits();
         addonJBRAClient = new AddonJBRAClient();
+        addonJEI = new AddonJEI();
         //addonLittleMaidMob = new AddonLittleMaidMob();
         //addonMaplecrafted = new AddonMaplecrafted();
         //addonMekanismTools = new AddonMekanismTools();

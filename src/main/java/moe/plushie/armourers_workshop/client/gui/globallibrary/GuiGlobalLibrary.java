@@ -213,6 +213,9 @@ public class GuiGlobalLibrary extends ModGuiContainer<ContainerGlobalSkinLibrary
         if (isNEIVisible) {
             neiBump = 18;
         }
+        if (ModAddonManager.addonJEI.isModLoaded()) {
+            neiBump = 24;
+        }
 
         switch (screen) {
         case HOME:
