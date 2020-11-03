@@ -83,12 +83,11 @@ public class GuiGlobalLibraryPanelInfo extends GuiPanel {
 
     @Override
     public void drawForeground(int mouseX, int mouseY, float partialTickTime) {
-        super.drawForeground(mouseX, mouseY, partialTickTime);
         if (!this.visible) {
             return;
         }
         GlStateManager.color(1F, 1F, 1F, 1F);
-        GlStateManager.disableBlend();
+        GlStateManager.enableBlend();
 
         statsText.clearText();
         statsText.addLine(GuiHelper.getLocalizedControlName(guiName, "name"));
