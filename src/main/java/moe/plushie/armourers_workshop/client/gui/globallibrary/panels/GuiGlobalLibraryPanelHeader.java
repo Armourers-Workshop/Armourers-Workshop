@@ -63,7 +63,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         buttonList.add(iconButtonJoin);
         buttonList.add(iconButtonInfo);
         buttonList.add(iconButtonModeration);
-        buttonList.add(iconButtonProfile);
+        // buttonList.add(iconButtonProfile);
 
         betaCheckUpdate();
     }
