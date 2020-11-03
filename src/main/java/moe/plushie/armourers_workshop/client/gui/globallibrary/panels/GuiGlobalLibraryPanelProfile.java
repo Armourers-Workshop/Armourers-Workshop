@@ -16,7 +16,7 @@ public class GuiGlobalLibraryPanelProfile extends GuiPanel {
 
     public GuiGlobalLibraryPanelProfile(GuiScreen parent) {
         super(parent, 0, 0, 1, 1);
-        guiName = ((GuiGlobalLibrary) parent).getGuiName() + ".profile";
+        guiName = ((GuiGlobalLibrary) parent).getGuiName() + ".panel.profile";
     }
 
     @Override
@@ -39,7 +39,11 @@ public class GuiGlobalLibraryPanelProfile extends GuiPanel {
             return;
         }
         drawGradientRect(this.x, this.y, this.x + this.width, this.y + height, 0xC0101010, 0xD0101010);
-        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "name"), x + 5, y + 5, 0xFFFFFF);
+        String username = "MissingNo";
+        if (user != null) {
+            username = user.getUsername();
+        }
+        fontRenderer.drawString(GuiHelper.getLocalizedControlName(guiName, "name", username), x + 5, y + 5, 0xFFFFFF);
         
         String profileItems = "";
         profileItems += "Bio (info, links)\n";

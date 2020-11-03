@@ -153,6 +153,7 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
             ((GuiGlobalLibrary) parent).switchScreen(Screen.MODERATION);
         }
         if (button == iconButtonProfile) {
+            ((GuiGlobalLibrary) parent).panelProfile.setProfileTarget(null);
             ((GuiGlobalLibrary) parent).switchScreen(Screen.PROFILE);
         }
     }
@@ -166,22 +167,58 @@ public class GuiGlobalLibraryPanelHeader extends GuiPanel {
         String titleText = ((GuiGlobalLibrary) parent).getGuiName();
         drawCenteredString(fontRenderer, GuiHelper.getLocalizedControlName(titleText, "name"), x + (width / 2), this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFEEEEEE);
         super.draw(mouseX, mouseY, partialTickTime);
-        String username = "player";
+
+        GlStateManager.color(1F, 1F, 1F, 1F);
+    }
+
+    @Override
+    protected void drawbuttons(int mouseX, int mouseY, float partialTickTime) {
+        if (insideCheck & !isInside(mouseX, mouseY)) {
+            mouseX = -10;
+            mouseY = -10;
+        }
+        for (int i = 0; i < buttonList.size(); i++) {
+            buttonList.get(i).drawButton(mc, mouseX, mouseY, partialTickTime);
+        }
+
+        // Colours.
+        // White - not a member.
+        // Yellow - Member not authenticated.
+        // Green - Authenticated member.
+        // Red - Missing profile info.
+        String username = "MissingNo";
+        int colour = 0xFFFFFF;
+        if (PlushieAuth.PLUSHIE_SESSION.hasServerId()) {
+            colour = 0xFFFFAA;
+        }
+        if (PlushieAuth.PLUSHIE_SESSION.isAuthenticated()) {
+            colour = 0xAAFFAA;
+        }
         GameProfile gameProfile = mc.player.getGameProfile();
         if (gameProfile != null) {
             username = gameProfile.getName();
             GuiHelper.drawPlayerHead(x + 4, y + 4, 16, username);
-            this.fontRenderer.drawString(" - " + username, this.x + 24, this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xAAFFAA);
+            this.fontRenderer.drawString(" - " + username, this.x + 24, this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, colour);
         } else {
-            this.fontRenderer.drawString("Not logged in.", this.x + 90, this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, 0xFFAAAA);
+            GuiHelper.drawPlayerHead(x + 4, y + 4, 16, null);
+            colour = 0xFFAAAA;
+            this.fontRenderer.drawString(" - " + username, this.x + 24, this.y + (height / 2) - fontRenderer.FONT_HEIGHT / 2, colour);
         }
         GlStateManager.color(1F, 1F, 1F, 1F);
+
+        for (int i = 0; i < buttonList.size(); i++) {
+            if (buttonList.get(i) instanceof GuiIconButton) {
+                ((GuiIconButton) buttonList.get(i)).drawRollover(mc, mouseX, mouseY);
+            }
+        }
     }
 
     private void drawPlayerHead(String username) {
         ResourceLocation rl = DefaultPlayerSkin.getDefaultSkinLegacy();
-        rl = AbstractClientPlayer.getLocationSkin(username);
-        AbstractClientPlayer.getDownloadImageSkin(rl, username);
+        if (username != null) {
+            rl = AbstractClientPlayer.getLocationSkin(username);
+            AbstractClientPlayer.getDownloadImageSkin(rl, username);
+        }
         mc.renderEngine.bindTexture(rl);
 
         int sourceSize = 8;

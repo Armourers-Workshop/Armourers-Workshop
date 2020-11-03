@@ -572,6 +572,7 @@ inventory.armourers_workshop:global-skin-library.header.uploadSkinBan=You are ba
 inventory.armourers_workshop:global-skin-library.header.join=Join
 inventory.armourers_workshop:global-skin-library.header.moderation=Moderation
 inventory.armourers_workshop:global-skin-library.header.info=Info
+inventory.armourers_workshop:global-skin-library.header.my_profile=My Profile
 
 
 # Global Skin Library (Search Box)
@@ -673,6 +674,10 @@ inventory.armourers_workshop:global-skin-library.panel.info.link.discord=Discord
 inventory.armourers_workshop:global-skin-library.panel.info.link.github=GitHub:
 inventory.armourers_workshop:global-skin-library.panel.info.link.reddit=Reddit:
 inventory.armourers_workshop:global-skin-library.panel.info.link.donation=Thank you for using Armourer's Workshop, if you want to help please consider donating to cover running cost of the global library.
+
+
+# Global Skin Library (Info)
+inventory.armourers_workshop:global-skin-library.panel.profile.name=%s's Profile
 
 
 # Hologram Projector
