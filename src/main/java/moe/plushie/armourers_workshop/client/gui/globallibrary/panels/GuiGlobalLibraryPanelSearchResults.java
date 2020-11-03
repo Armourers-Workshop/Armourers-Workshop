@@ -25,8 +25,8 @@ import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -34,6 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
 
     private static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation(LibGuiResources.GUI_GLOBAL_LIBRARY);
+    private static final ResourceLocation TEXTURE_BUTTONS = new ResourceLocation(LibGuiResources.CONTROL_BUTTONS);
 
     protected final GuiControlSkinPanel skinPanelResults;
 
@@ -71,7 +72,7 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         if (this.search == null) {
             return;
         }
-        ((GuiGlobalLibrary)parent).panelSearchBox.updateDropDowns(searchOrderColumn, searchOrder);
+        ((GuiGlobalLibrary) parent).panelSearchBox.updateDropDowns(searchOrderColumn, searchOrder);
         fetchPage(0);
     }
 
@@ -207,8 +208,16 @@ public class GuiGlobalLibraryPanelSearchResults extends GuiPanel {
         buttonList.add(iconButtonLarge);
         buttonList.add(skinPanelResults);
 
-        buttonList.add(new GuiButtonExt(1, x + 2, y + height - 18, 20, 16, "<<"));
-        buttonList.add(new GuiButtonExt(2, x + width - 22, y + height - 18, 20, 16, ">>"));
+        GuiIconButton buttonPrevious = new GuiIconButton(parent, 1, x + 2, y + height - 18, 16, 16, I18n.format(LibGuiResources.Controls.BUTTON_PREVIOUS), TEXTURE_BUTTONS);
+        buttonPrevious.setIconLocation(208, 80, 16, 16);
+        buttonPrevious.setDrawButtonBackground(false);
+
+        GuiIconButton buttonNext = new GuiIconButton(parent, 2, x + width - 18, y + height - 18, 16, 16, I18n.format(LibGuiResources.Controls.BUTTON_NEXT), TEXTURE_BUTTONS);
+        buttonNext.setIconLocation(208, 96, 16, 16);
+        buttonNext.setDrawButtonBackground(false);
+
+        buttonList.add(buttonPrevious);
+        buttonList.add(buttonNext);
     }
 
     @Override
