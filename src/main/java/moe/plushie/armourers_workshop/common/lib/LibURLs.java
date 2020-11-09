@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.client.lib;
+package moe.plushie.armourers_workshop.common.lib;
 
 public class LibURLs {
 

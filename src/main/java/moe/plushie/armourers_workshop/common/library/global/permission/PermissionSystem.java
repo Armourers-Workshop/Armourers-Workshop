@@ -13,9 +13,6 @@ public final class PermissionSystem {
         EnumSet<PlushieAction> actions = EnumSet.noneOf(PlushieAction.class);
 
         actions.add(PlushieAction.SKIN_DOWNLOAD);
-        actions.add(PlushieAction.GET_RECENTLY_UPLOADED);
-        actions.add(PlushieAction.GET_MOST_DOWNLOADED);
-        actions.add(PlushieAction.GET_MOST_LIKED);
         actions.add(PlushieAction.USER_INFO);
         actions.add(PlushieAction.SKIN_SEARCH);
         actions.add(PlushieAction.SKIN_LIST_USER);
@@ -52,15 +49,6 @@ public final class PermissionSystem {
 
     public static enum PlushieAction {
         // ------- Actions for all clients. -------
-
-        /** Get recently uploaded skin list. */
-        GET_RECENTLY_UPLOADED,
-
-        /** Get the most liked skin list. */
-        GET_MOST_LIKED,
-
-        /** Get most downloaded skin list. */
-        GET_MOST_DOWNLOADED,
 
         /** Tried to join the beta using a code. */
         BETA_JOIN,

@@ -23,7 +23,7 @@ public class MinecraftAuth {
     private static final String JOIN_URL = "https://sessionserver.mojang.com/session/minecraft/join";
 
     private static long lastAuthTime;
-    
+
     private static final Object MC_AUTH_LOCK = new Object();
 
     public static boolean checkAndRefeshAuth(Session session, String serverId) {

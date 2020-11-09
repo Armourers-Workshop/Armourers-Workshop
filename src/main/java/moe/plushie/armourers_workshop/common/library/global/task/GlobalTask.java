@@ -18,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 
+import moe.plushie.armourers_workshop.common.lib.LibGlobalLibrary;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.common.library.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.common.library.global.permission.PermissionSystem.InsufficientPermissionsException;
@@ -28,10 +29,6 @@ import net.minecraft.client.Minecraft;
 public abstract class GlobalTask<V> implements Callable<V> {
 
     private static final Executor GLOBAL_TASK_EXECUTOR = Executors.newFixedThreadPool(2);
-
-    private static final String URL_BASE = "plushie.moe/armourers_workshop/";
-    private static final String URL_NORMAL = "http://" + URL_BASE;
-    private static final String URL_SECURE = "https://" + URL_BASE;
 
     private final PlushieAction plushieAction;
     private final boolean needsSecure;
@@ -61,9 +58,9 @@ public abstract class GlobalTask<V> implements Callable<V> {
 
     public String getBaseUrl() {
         if (isNeedsSecure()) {
-            return URL_SECURE;
+            return LibGlobalLibrary.URL_BASE_SECURE;
         } else {
-            return URL_NORMAL;
+            return LibGlobalLibrary.URL_BASE_NORMAL;
         }
     }
 
