@@ -123,20 +123,7 @@ public class PlushieSession {
         if (!isAuthenticated()) {
             this.permissionGroup = ps.groupNoLogin;
         }
-        switch (permission_group_id) {
-        case 0:
-            this.permissionGroup = ps.groupUser;
-            break;
-        case 1:
-            this.permissionGroup = ps.groupMod;
-            break;
-        case 255:
-            this.permissionGroup = ps.groupAdmin;
-            break;
-        default:
-            this.permissionGroup = ps.groupNoLogin;
-            break;
-        }
+        this.permissionGroup = ps.getPermissionGroup(permission_group_id);
         ModLogger.log("Permission group set to " + this.permissionGroup.getName());
     }
 

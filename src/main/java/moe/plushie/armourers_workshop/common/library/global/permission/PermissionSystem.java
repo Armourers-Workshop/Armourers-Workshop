@@ -6,45 +6,88 @@ public final class PermissionSystem {
 
     public final PermissionGroup groupNoLogin;
     public final PermissionGroup groupUser;
+    public final PermissionGroup groupUserBanned;
+    public final PermissionGroup groupUserBannedUploads;
+    public final PermissionGroup groupUserBannedRatings;
+    public final PermissionGroup groupUserBannedReporting;
+    public final PermissionGroup groupUserBannedComment;
     public final PermissionGroup groupMod;
     public final PermissionGroup groupAdmin;
 
     public PermissionSystem() {
-        EnumSet<PlushieAction> actions = EnumSet.noneOf(PlushieAction.class);
+        EnumSet<PlushieAction> actionsNoLogin = EnumSet.noneOf(PlushieAction.class);
+        EnumSet<PlushieAction> actionsUser = EnumSet.noneOf(PlushieAction.class);
+        EnumSet<PlushieAction> actionsUserBanned = EnumSet.noneOf(PlushieAction.class);
+        EnumSet<PlushieAction> actionsBannedUploads = EnumSet.noneOf(PlushieAction.class);
+        EnumSet<PlushieAction> actionsBannedRatings = EnumSet.noneOf(PlushieAction.class);
+        EnumSet<PlushieAction> actionsBannedReporting = EnumSet.noneOf(PlushieAction.class);
+        EnumSet<PlushieAction> actionsBannedComment = EnumSet.noneOf(PlushieAction.class);
+        EnumSet<PlushieAction> actionsMod = EnumSet.noneOf(PlushieAction.class);
+        EnumSet<PlushieAction> actionsAdmin = EnumSet.noneOf(PlushieAction.class);
 
-        actions.add(PlushieAction.SKIN_DOWNLOAD);
-        actions.add(PlushieAction.USER_INFO);
-        actions.add(PlushieAction.SKIN_SEARCH);
-        actions.add(PlushieAction.SKIN_LIST_USER);
-        actions.add(PlushieAction.BETA_JOIN);
-        actions.add(PlushieAction.BETA_CHECK);
-        actions.add(PlushieAction.SERVER_VIEW_STATS);
-        actions.add(PlushieAction.GET_SKIN_INFO);
-        groupNoLogin = new PermissionGroup("no login", actions.clone());
+        actionsNoLogin.add(PlushieAction.SKIN_DOWNLOAD);
+        actionsNoLogin.add(PlushieAction.USER_INFO);
+        actionsNoLogin.add(PlushieAction.SKIN_SEARCH);
+        actionsNoLogin.add(PlushieAction.SKIN_LIST_USER);
+        actionsNoLogin.add(PlushieAction.BETA_JOIN);
+        actionsNoLogin.add(PlushieAction.BETA_CHECK);
+        actionsNoLogin.add(PlushieAction.SERVER_VIEW_STATS);
+        actionsNoLogin.add(PlushieAction.GET_SKIN_INFO);
 
-        actions.add(PlushieAction.SKIN_UPLOAD);
-        actions.add(PlushieAction.SKIN_RATE);
-        actions.add(PlushieAction.SKIN_REPORT);
-        actions.add(PlushieAction.SKIN_OWNER_DELETE);
-        actions.add(PlushieAction.SKIN_OWNER_EDIT);
-        actions.add(PlushieAction.SKIN_COMMENT_CREATE);
-        actions.add(PlushieAction.SKIN_COMMENT_OWNER_DELETE);
-        actions.add(PlushieAction.SKIN_COMMENT_OWNER_EDIT);
-        actions.add(PlushieAction.SKIN_GET_RATED);
-        groupUser = new PermissionGroup("user", actions.clone());
+        actionsUser.addAll(actionsNoLogin);
+        actionsUser.add(PlushieAction.SKIN_UPLOAD);
+        actionsUser.add(PlushieAction.SKIN_RATE);
+        actionsUser.add(PlushieAction.SKIN_REPORT);
+        actionsUser.add(PlushieAction.SKIN_OWNER_DELETE);
+        actionsUser.add(PlushieAction.SKIN_OWNER_EDIT);
+        actionsUser.add(PlushieAction.SKIN_COMMENT_CREATE);
+        actionsUser.add(PlushieAction.SKIN_COMMENT_OWNER_DELETE);
+        actionsUser.add(PlushieAction.SKIN_COMMENT_OWNER_EDIT);
+        actionsUser.add(PlushieAction.SKIN_GET_RATED);
 
-        actions.add(PlushieAction.SKIN_MOD_EDIT);
-        actions.add(PlushieAction.SKIN_MOD_DELETE);
-        actions.add(PlushieAction.SKIN_COMMENT_MOD_DELETE);
-        actions.add(PlushieAction.SKIN_COMMENT_MOD_EDIT);
-        actions.add(PlushieAction.FLAG_GET_LIST);
-        actions.add(PlushieAction.FLAG_DELETE);
-        actions.add(PlushieAction.USER_BAN_TEMP);
-        actions.add(PlushieAction.USER_BAN_PERM);
-        actions.add(PlushieAction.GET_REPORT_LIST);
-        groupMod = new PermissionGroup("mod", actions.clone());
+        actionsUserBanned.addAll(actionsUser);
+        actionsUserBanned.remove(PlushieAction.SKIN_UPLOAD);
+        actionsUserBanned.remove(PlushieAction.SKIN_RATE);
+        actionsUserBanned.remove(PlushieAction.SKIN_REPORT);
+        actionsUserBanned.remove(PlushieAction.SKIN_OWNER_EDIT);
+        actionsUserBanned.remove(PlushieAction.SKIN_COMMENT_CREATE);
+        actionsUserBanned.remove(PlushieAction.SKIN_COMMENT_OWNER_EDIT);
 
-        groupAdmin = new PermissionGroup("admin", EnumSet.allOf(PlushieAction.class));
+        actionsBannedUploads.addAll(actionsUser);
+        actionsBannedUploads.remove(PlushieAction.SKIN_UPLOAD);
+
+        actionsBannedRatings.addAll(actionsUser);
+        actionsBannedRatings.remove(PlushieAction.SKIN_RATE);
+
+        actionsBannedReporting.addAll(actionsUser);
+        actionsBannedReporting.remove(PlushieAction.SKIN_REPORT);
+
+        actionsBannedComment.addAll(actionsUser);
+        actionsBannedComment.remove(PlushieAction.SKIN_COMMENT_CREATE);
+        actionsBannedComment.remove(PlushieAction.SKIN_COMMENT_OWNER_EDIT);
+
+        actionsMod.addAll(actionsUser);
+        actionsMod.add(PlushieAction.SKIN_MOD_EDIT);
+        actionsMod.add(PlushieAction.SKIN_MOD_DELETE);
+        actionsMod.add(PlushieAction.SKIN_COMMENT_MOD_DELETE);
+        actionsMod.add(PlushieAction.SKIN_COMMENT_MOD_EDIT);
+        actionsMod.add(PlushieAction.FLAG_GET_LIST);
+        actionsMod.add(PlushieAction.FLAG_DELETE);
+        actionsMod.add(PlushieAction.USER_BAN_TEMP);
+        actionsMod.add(PlushieAction.USER_BAN_PERM);
+        actionsMod.add(PlushieAction.GET_REPORT_LIST);
+
+        actionsAdmin.addAll(EnumSet.allOf(PlushieAction.class));
+
+        groupNoLogin = new PermissionGroup("no login", actionsNoLogin.clone());
+        groupUser = new PermissionGroup("user", actionsUser.clone());
+        groupUserBanned = new PermissionGroup("user", actionsUserBanned.clone());
+        groupUserBannedUploads = new PermissionGroup("user", actionsBannedUploads.clone());
+        groupUserBannedRatings = new PermissionGroup("user", actionsBannedRatings.clone());
+        groupUserBannedReporting = new PermissionGroup("user", actionsBannedReporting.clone());
+        groupUserBannedComment = new PermissionGroup("user", actionsBannedComment.clone());
+        groupMod = new PermissionGroup("mod", actionsMod.clone());
+        groupAdmin = new PermissionGroup("admin", actionsAdmin.clone());
     }
 
     public static enum PlushieAction {
@@ -134,6 +177,29 @@ public final class PermissionSystem {
 
         /** Change users permission group. */
         USER_GROUP_CHANGE
+    }
+
+    public PermissionGroup getPermissionGroup(int id) {
+        switch (id) {
+        case 0:
+            return groupUser;
+        case 1:
+            return groupMod;
+        case 10:
+            return groupUserBanned;
+        case 11:
+            return groupUserBannedUploads;
+        case 12:
+            return groupUserBannedRatings;
+        case 13:
+            return groupUserBannedReporting;
+        case 14:
+            return groupUserBannedComment;
+        case 255:
+            return groupAdmin;
+        default:
+            return groupNoLogin;
+        }
     }
 
     public static class PermissionGroup {
