@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.api.common.IExtraColours.ExtraColourType;
 import moe.plushie.armourers_workshop.api.common.capability.IPlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.capability.wardrobe.player.PlayerWardrobeCap;
 import moe.plushie.armourers_workshop.common.command.ModCommand;
-import moe.plushie.armourers_workshop.utils.ModLogger;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -86,7 +85,6 @@ public class CommandWardrobeSetColour extends ModCommand {
     }
 
     private boolean isValidHex(String colorStr) {
-        ModLogger.log(colorStr);
         String hexPatten = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
         Pattern pattern = Pattern.compile(hexPatten);
         Matcher matcher = pattern.matcher(colorStr);
