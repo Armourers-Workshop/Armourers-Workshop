@@ -43,7 +43,7 @@ public class SkinLegsPartRightLeg extends AbstractSkinPartTypeBase implements IS
 
     @Override
     public Point getTextureLocation() {
-        return new Point(16, 0);
+        return new Point(0, 16);
     }
 
     @Override
