@@ -5,7 +5,7 @@ package moe.plushie.armourers_workshop.core.render.other;//package moe.plushie.a
 //import java.io.IOException;
 //
 //import moe.plushie.armourers_workshop.core.api.common.IExtraColours;
-//import moe.plushie.armourers_workshop.core.api.common.painting.IPaintType;
+//import moe.plushie.armourers_workshop.core.api.IPaintType;
 //import moe.plushie.armourers_workshop.core.api.common.skin.data.ISkinDye;
 //import moe.plushie.armourers_workshop.core.api.common.skin.type.ISkinPartType;
 //import moe.plushie.armourers_workshop.core.api.common.skin.type.ISkinPartTypeTextured;
@@ -14,7 +14,7 @@ package moe.plushie.armourers_workshop.core.render.other;//package moe.plushie.a
 //import moe.plushie.armourers_workshop.core.capability.entityskin.EntitySkinCapability;
 //import moe.plushie.armourers_workshop.core.capability.wardrobe.ExtraColours;
 //import moe.plushie.armourers_workshop.core.lib.LibModInfo;
-//import moe.plushie.armourers_workshop.core.painting.PaintTypeRegistry;
+//import moe.plushie.armourers_workshop.core.skin.PaintTypeRegistry;
 //import moe.plushie.armourers_workshop.core.skin.data.Skin;
 //import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 //import moe.plushie.armourers_workshop.utils.BitwiseUtils;

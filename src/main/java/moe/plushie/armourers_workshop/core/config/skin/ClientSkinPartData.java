@@ -1,27 +1,29 @@
 package moe.plushie.armourers_workshop.core.config.skin;
 
-import com.google.common.cache.*;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 import moe.plushie.armourers_workshop.core.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
 import moe.plushie.armourers_workshop.core.model.SkinModel;
-import moe.plushie.armourers_workshop.core.model.bake.ColouredFace;
-import moe.plushie.armourers_workshop.core.render.other.SkinPartRenderData;
+import moe.plushie.armourers_workshop.core.model.bake.PackedCubeFace;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDye;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientSkinPartData implements RemovalListener<ClientSkinPartData.ModelKey, SkinModel> {
 
-    /** Blank dye that is used if no dye is applied. */
+    /**
+     * Blank dye that is used if no dye is applied.
+     */
     public static final SkinDye BLANK_DYE = new SkinDye();
-    public ArrayList<ColouredFace>[] vertexLists;
-    public final LoadingCache<ModelKey, SkinModel> modelCache;
+    //    public final LoadingCache<ModelKey, SkinModel> modelCache;
+    public PackedCubeFace vertexLists;
     public int[] totalCubesInPart;
 
     private int[] averageR = new int[12];
@@ -37,23 +39,18 @@ public class ClientSkinPartData implements RemovalListener<ClientSkinPartData.Mo
         if (SkinConfig.modelPartCacheMaxSize > 0) {
             builder.maximumSize(SkinConfig.skinCacheMaxSize);
         }
-        modelCache = builder.build(new ModelLoader());
+        //modelCache = builder.build(new ModelLoader());
     }
 
-    public SkinModel getModelForDye(SkinPartRenderData renderData) {
-        ModelKey modelKey = new ModelKey(renderData.getSkinDye(), renderData.getExtraColours(), renderData.getEntityTexture());
-        return modelCache.getUnchecked(modelKey);
-    }
-
-    public void cleanUpDisplayLists() {
-        modelCache.invalidateAll();
-    }
-
-    public int getModelCount() {
-        return (int) modelCache.size();
-    }
-
-    public void setVertexLists(ArrayList<ColouredFace>[] vertexLists) {
+    //    public void cleanUpDisplayLists() {
+//        modelCache.invalidateAll();
+//    }
+//
+//    public int getModelCount() {
+//        return (int) modelCache.size();
+//    }
+//
+    public void setVertexLists(PackedCubeFace vertexLists) {
         this.vertexLists = vertexLists;
     }
 
@@ -64,20 +61,12 @@ public class ClientSkinPartData implements RemovalListener<ClientSkinPartData.Mo
     }
 
     public int[] getAverageDyeColour(int dyeNumber) {
-        return new int[] { averageR[dyeNumber], averageG[dyeNumber], averageB[dyeNumber] };
+        return new int[]{averageR[dyeNumber], averageG[dyeNumber], averageB[dyeNumber]};
     }
 
     @Override
     public void onRemoval(RemovalNotification<ModelKey, SkinModel> notification) {
         notification.getValue().cleanUpDisplayLists();
-    }
-
-    private class ModelLoader extends CacheLoader<ModelKey, SkinModel> {
-
-        @Override
-        public SkinModel load(ModelKey key) throws Exception {
-            return new SkinModel(vertexLists);
-        }
     }
 
     public static class ModelKey {
@@ -130,4 +119,5 @@ public class ClientSkinPartData implements RemovalListener<ClientSkinPartData.Mo
         }
 
     }
+
 }

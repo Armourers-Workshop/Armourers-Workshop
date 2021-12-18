@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.api.common.skin;
 
+import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.library.ILibraryFile;
 
 public interface ISkinIdentifier {

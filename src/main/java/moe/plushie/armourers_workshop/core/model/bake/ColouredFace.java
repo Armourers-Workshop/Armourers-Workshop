@@ -2,22 +2,22 @@ package moe.plushie.armourers_workshop.core.model.bake;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import moe.plushie.armourers_workshop.core.api.common.IExtraColours;
-import moe.plushie.armourers_workshop.core.api.common.painting.IPaintType;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
+import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
+import moe.plushie.armourers_workshop.core.api.common.skin.ICube;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPartTypeTextured;
-import moe.plushie.armourers_workshop.core.config.SkinConfig;
-import moe.plushie.armourers_workshop.core.config.skin.ClientSkinPartData;
-import moe.plushie.armourers_workshop.core.painting.PaintTypeRegistry;
-import moe.plushie.armourers_workshop.core.painting.PaintingHelper;
-import moe.plushie.armourers_workshop.core.render.other.SkinPartRenderData;
-import moe.plushie.armourers_workshop.core.utils.TextureHelper;
+import moe.plushie.armourers_workshop.core.skin.data.SkinDye;
+import moe.plushie.armourers_workshop.core.skin.painting.PaintingHelper;
+import moe.plushie.armourers_workshop.core.render.part.SkinPartRenderer;
+import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+@OnlyIn(Dist.CLIENT)
 public class ColouredFace {
 
     public final byte x;
@@ -27,13 +27,16 @@ public class ColouredFace {
     public final byte r;
     public final byte g;
     public final byte b;
-    private final byte a;
+    public final byte a;
 
-    public final byte t;
-    public final byte face;
+    public final Direction direction;
+    public final ISkinPaintType paintType;
+
     private final byte lodLevel;
 
-    public ColouredFace(byte x, byte y, byte z, byte r, byte g, byte b, byte a, byte paintType, byte face, byte lodLevel) {
+    public ICube cube;
+
+    public ColouredFace(byte x, byte y, byte z, byte r, byte g, byte b, byte a, byte lodLevel, Direction direction, ICube cube, ISkinPaintType paintType) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -43,90 +46,84 @@ public class ColouredFace {
         this.b = b;
         this.a = a;
 
-        this.t = paintType;
-        this.face = face;
+        this.paintType = paintType;
+        this.direction = direction;
         this.lodLevel = lodLevel;
+
+        this.cube = cube;
     }
 
-    public void renderVertex(IVertexBuilder builder, MatrixStack matrix, SkinPartRenderData renderData, ClientSkinPartData cspd) {
+
+    public void renderVertex(SkinPart part, SkinDye dye, MatrixStack matrix, IVertexBuilder builder) {
         byte r = this.r;
         byte g = this.g;
         byte b = this.b;
-        IPaintType type = PaintTypeRegistry.getInstance().getPaintTypeFormByte(t);
-        ISkinDye skinDye = renderData.getSkinDye();
-        IExtraColours extraColours = renderData.getExtraColours();
-        if (type == PaintTypeRegistry.PAINT_TYPE_NONE) {
-            return;
-        }
-        int channelIndex = type.getChannelIndex();
-        // TODO Fix SkinModelTexture to work this way.
-        // Dye
-        if (type.getId() >= 1 && type.getId() <= 8) {
-            // Is a dye paint
-            if (skinDye != null && skinDye.haveDyeInSlot(type.getId() - 1)) {
-                byte[] dye = skinDye.getDyeColour(type.getId() - 1);
-                if (dye.length == 4) {
-                    IPaintType dyeType = PaintTypeRegistry.getInstance().getPaintTypeFormByte(dye[3]);
-                    if (dyeType == PaintTypeRegistry.PAINT_TYPE_NONE) {
-                        return;
-                    }
+//        ISkinDye skinDye = renderData.getSkinDye();
+//        IExtraColours extraColours = renderData.getExtraColours();
+//        int channelIndex = type.getChannelIndex();
+//        // TODO Fix SkinModelTexture to work this way.
+//        // Dye
+//        if (type.getId() >= 1 && type.getId() <= 8) {
+//            // Is a dye paint
+//            if (skinDye != null && skinDye.haveDyeInSlot(type.getId() - 1)) {
+//                byte[] dye = skinDye.getDyeColour(type.getId() - 1);
+//                if (dye.length == 4) {
+//                    IPaintType dyeType = PaintTypeRegistry.getInstance().getPaintTypeFormByte(dye[3]);
+//                    if (dyeType == PaintTypeRegistry.PAINT_TYPE_NONE) {
+//                        return;
+//                    }
+//
+//                    if (dyeType == PaintTypeRegistry.PAINT_TYPE_NORMAL) {
+//                        //index = dyeType.getChannelIndex();
+//                        int[] averageRGB = cspd.getAverageDyeColour(channelIndex);
+//                        byte[] dyedColour = null;
+//                        if (dyeType.getColourType() != null & extraColours != null) {
+//                            byte[] extraColour = extraColours.getColourBytes(dyeType.getColourType());
+//                            if (extraColour.length == 4 && (extraColour[3] & 0xFF) != 0) {
+//                                dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(dyeType.getColourType()), averageRGB);
+//                            } else {
+//                                dyedColour = dyeColour(r, g, b, dye, averageRGB);
+//                            }
+//                        } else {
+//                            dyedColour = dyeColour(r, g, b, dye, averageRGB);
+//                        }
+//                        r = dyedColour[0];
+//                        g = dyedColour[1];
+//                        b = dyedColour[2];
+//                    }
+//                    type = dyeType;
+//                }
+//            }
+//        }
+//
+//        if (paintType == PaintTypeRegistry.PAINT_TYPE_RAINBOW) {
+//            int[] averageRGB = cspd.getAverageDyeColour(channelIndex);
+//            byte[] dyedColour = dyeColour(r, g, b, new byte[] { (byte) 127, (byte) 127, (byte) 127 }, averageRGB);
+//            r = dyedColour[0];
+//            g = dyedColour[1];
+//            b = dyedColour[2];
+//        }
+//        else if (type == PaintTypeRegistry.PAINT_TYPE_TEXTURE & renderData.getEntityTexture() != null & SkinConfig.getTexturePaintType() != SkinConfig.TexturePaintType.TEXTURE_REPLACE) {
+//            if (skinPart.getType() instanceof ISkinPartTypeTextured) {
+//                BufferedImage image = TextureHelper.getBufferedImageSkin(renderData.getEntityTexture());
+//                if (image != null) {
+//                    byte[] dyedColour = getColourFromTexture(x, y, z, r, g, b, face, image, (ISkinPartTypeTextured) skinPart.getType(), false);
+//                    r = dyedColour[0];
+//                    g = dyedColour[1];
+//                    b = dyedColour[2];
+//                }
+//            }
+//        } else if (extraColours != null) {
+//            if (type.getColourType() != null) {
+//                int[] averageRGB = cspd.getAverageDyeColour(channelIndex);
+//                byte[] dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(type.getColourType()), averageRGB);
+//                r = dyedColour[0];
+//                g = dyedColour[1];
+//                b = dyedColour[2];
+//            }
+//        }
 
-                    if (dyeType == PaintTypeRegistry.PAINT_TYPE_NORMAL) {
-                        //index = dyeType.getChannelIndex();
-                        int[] averageRGB = cspd.getAverageDyeColour(channelIndex);
-                        byte[] dyedColour = null;
-                        if (dyeType.getColourType() != null & extraColours != null) {
-                            byte[] extraColour = extraColours.getColourBytes(dyeType.getColourType());
-                            if (extraColour.length == 4 && (extraColour[3] & 0xFF) != 0) {
-                                dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(dyeType.getColourType()), averageRGB);
-                            } else {
-                                dyedColour = dyeColour(r, g, b, dye, averageRGB);
-                            }
-                        } else {
-                            dyedColour = dyeColour(r, g, b, dye, averageRGB);
-                        }
-                        r = dyedColour[0];
-                        g = dyedColour[1];
-                        b = dyedColour[2];
-                    }
-                    type = dyeType;
-                }
-            }
-        }
-
-        if (type == PaintTypeRegistry.PAINT_TYPE_RAINBOW) {
-            int[] averageRGB = cspd.getAverageDyeColour(channelIndex);
-            byte[] dyedColour = dyeColour(r, g, b, new byte[] { (byte) 127, (byte) 127, (byte) 127 }, averageRGB);
-            r = dyedColour[0];
-            g = dyedColour[1];
-            b = dyedColour[2];
-        } else if (type == PaintTypeRegistry.PAINT_TYPE_TEXTURE & renderData.getEntityTexture() != null & SkinConfig.getTexturePaintType() != SkinConfig.TexturePaintType.TEXTURE_REPLACE) {
-            if (renderData.getSkinPart().getType() instanceof ISkinPartTypeTextured) {
-                BufferedImage image = TextureHelper.getBufferedImageSkin(renderData.getEntityTexture());
-                if (image != null) {
-                    byte[] dyedColour = getColourFromTexture(x, y, z, r, g, b, face, image, (ISkinPartTypeTextured) renderData.getSkinPart().getType(), false);
-                    r = dyedColour[0];
-                    g = dyedColour[1];
-                    b = dyedColour[2];
-                }
-            }
-        } else if (extraColours != null) {
-            if (type.getColourType() != null) {
-                int[] averageRGB = cspd.getAverageDyeColour(channelIndex);
-                byte[] dyedColour = dyeColour(r, g, b, extraColours.getColourBytes(type.getColourType()), averageRGB);
-                r = dyedColour[0];
-                g = dyedColour[1];
-                b = dyedColour[2];
-            }
-        }
-
-        // Paint scale 1 / 256.
-        double paintScale = 0.00390625D;
-        FaceRenderer.RE re = new FaceRenderer.RE();
-        re.matrix = matrix.last().pose();
-        re.builder = builder;
-
-        FaceRenderer.renderFace(re, x, y, z, r, g, b, (byte)128, face, lodLevel, type.getU() * paintScale, type.getV() * paintScale, (type.getU() * paintScale) + paintScale, (type.getV() * paintScale) + paintScale);
+        SkinPartRenderer.renderFace(builder, x, y, z, r, g, b, a, direction, paintType.getU(), paintType.getV());
     }
 
     public static byte[] getColourFromTexture(byte x, byte y, byte z, byte r, byte g, byte b, byte face, BufferedImage image, ISkinPartTypeTextured skinPartTex, boolean oldImage) {

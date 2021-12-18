@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.utils;
 
 import moe.plushie.armourers_workshop.core.api.common.IExtraColours;
-import moe.plushie.armourers_workshop.core.painting.PaintingHelper;
+import moe.plushie.armourers_workshop.core.skin.painting.PaintingHelper;
 
 import java.util.Arrays;
 

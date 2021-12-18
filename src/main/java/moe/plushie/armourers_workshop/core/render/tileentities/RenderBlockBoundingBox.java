@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.core.render.tileentities;//package moe.pl
 //import net.minecraft.profiler.Profiler;
 //import org.lwjgl.opengl.GL11;
 //
-//import moe.plushie.armourers_workshop.core.api.common.painting.IPaintType;
+//import moe.plushie.armourers_workshop.core.api.IPaintType;
 //import moe.plushie.armourers_workshop.core.api.common.skin.type.ISkinPartTypeTextured;
 //import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
 //import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 //import moe.plushie.armourers_workshop.client.render.RenderBridge;
-//import moe.plushie.armourers_workshop.core.painting.PaintTypeRegistry;
+//import moe.plushie.armourers_workshop.core.skin.PaintTypeRegistry;
 //import moe.plushie.armourers_workshop.core.tileentities.TileEntityBoundingBox;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.renderer.GlStateManager;

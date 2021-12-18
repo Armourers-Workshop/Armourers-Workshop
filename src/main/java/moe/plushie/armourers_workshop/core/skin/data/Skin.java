@@ -1,16 +1,20 @@
 package moe.plushie.armourers_workshop.core.skin.data;
 
-import moe.plushie.armourers_workshop.core.api.client.render.SkinBipedModel;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.api.ISkinPartType;
+import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ICube;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkin;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
 import moe.plushie.armourers_workshop.core.config.skin.SkinModelTexture;
+import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;
 import moe.plushie.armourers_workshop.core.skin.advanced.AdvancedPart;
-import moe.plushie.armourers_workshop.core.skin.cubes.CubeRegistry;
+import moe.plushie.armourers_workshop.core.skin.cubes.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.utils.SkinUtils;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -25,10 +29,10 @@ public class Skin implements ISkin {
     public int serverId = -1;
     public SkinModelTexture skinModelTexture;
     public int paintTextureId;
-    private SkinProperties properties;
-    private ISkinType skinType;
+    private final SkinProperties properties;
+    private final ISkinType skinType;
     private int[] paintData;
-    private ArrayList<SkinPart> parts;
+    private final ArrayList<SkinPart> parts;
     private int lightHash = 0;
     private Map<Integer, VoxelShape> cachedShapes = new HashMap<>();
 
@@ -136,23 +140,28 @@ public class Skin implements ISkin {
 //    }
 
     @OnlyIn(Dist.CLIENT)
-    public VoxelShape getRenderShape(SkinBipedModel<?> model) {
-        int key = (model.crouching ? 4 : 0) + (model.riding ? 2 : 0) + (model.young ? 1 : 0);
-        VoxelShape shape = cachedShapes.get(key);
-        if (shape != null) {
-            return shape;
-        }
-        shape = VoxelShapes.empty();
+    public VoxelShape getRenderShape(Model model, ItemCameraTransforms.TransformType transformType) {
+//        int key = (model.crouching ? 4 : 0) + (model.riding ? 2 : 0) + (model.young ? 1 : 0);
+//        VoxelShape shape = cachedShapes.get(key);
+//        if (shape != null) {
+//            return shape;
+//        }
+        VoxelShape shape = VoxelShapes.empty();
+        MatrixStack matrixStack = new MatrixStack();
         for (SkinPart skinPart : parts) {
             VoxelShape shape1 = skinPart.getRenderShape();
-            ModelRenderer modelRenderer = model.getModelRenderer(skinPart.getType());
+            ModelRenderer modelRenderer = ModelTransformer.getModelRenderer(skinPart, model, transformType);
             if (modelRenderer != null) {
-                shape1 = shape1.move(modelRenderer.x, modelRenderer.y, modelRenderer.z);
+                matrixStack.pushPose();
+                ModelTransformer.apply(matrixStack, modelRenderer);
+                SkinUtils.apply(matrixStack, null, skinPart);
+                shape1 = SkinUtils.apply(shape1, matrixStack.last().pose());
+                matrixStack.popPose();
             }
             shape = VoxelShapes.or(shape, shape1);
         }
         shape = shape.optimize();
-        cachedShapes.put(key, shape);
+//        cachedShapes.put(key, shape);
         return shape;
     }
 
@@ -188,6 +197,7 @@ public class Skin implements ISkin {
     public int getPartCount() {
         return parts.size();
     }
+
 
     public int lightHash() {
         if (lightHash == 0) {
@@ -265,8 +275,8 @@ public class Skin implements ISkin {
 
     public int getTotalCubes() {
         int totalCubes = 0;
-        for (int i = 0; i < CubeRegistry.INSTANCE.getTotalCubes(); i++) {
-            ICube cube = CubeRegistry.INSTANCE.getCubeFormId((byte) i);
+        for (int i = 0; i < SkinCubes.INSTANCE.getTotalCubes(); i++) {
+            ICube cube = SkinCubes.INSTANCE.getCubeFormId((byte) i);
             totalCubes += getTotalOfCubeType(cube);
         }
         return totalCubes;

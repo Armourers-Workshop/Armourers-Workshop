@@ -1,16 +1,7 @@
 package moe.plushie.armourers_workshop.core.model.skin;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import moe.plushie.armourers_workshop.core.api.common.IExtraColours;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkin;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
-import moe.plushie.armourers_workshop.core.render.other.SkinPartRenderData;
-import moe.plushie.armourers_workshop.core.render.SkinPartRenderer;
 import moe.plushie.armourers_workshop.core.skin.data.Skin;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -156,11 +147,11 @@ public abstract class ModelTypeHelper implements IEquipmentModel {
 //        }
 //    }
 //
-    protected void renderPart(SkinPartRenderData partRenderData, MatrixStack matrixStack, IRenderTypeBuffer renderer) {
-        SkinPartRenderer.INSTANCE.renderPart(partRenderData, matrixStack, renderer);
+//    protected void renderPart(SkinPartRenderData partRenderData, MatrixStack matrixStack, IRenderTypeBuffer renderer) {
+//        SkinPartRenderer.INSTANCE.renderPart(partRenderData, matrixStack, renderer);
 //        SkinPartRenderer.INSTANCE.renderPart(partRenderData);
-    }
-
+//    }
+//
 //    protected boolean skinHasHead(Skin skin) {
 //        if (skin.getType() == SkinTypes.BIPED_HEAD) {
 //            return true;

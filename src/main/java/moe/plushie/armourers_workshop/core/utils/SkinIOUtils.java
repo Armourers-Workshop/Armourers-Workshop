@@ -82,8 +82,7 @@ public final class SkinIOUtils {
         try (FileInputStream fis = new FileInputStream(file)) {
             skin = loadSkinFromStream(fis);
         } catch (FileNotFoundException e) {
-            SkinLog.warn("Skin file not found.");
-            SkinLog.warn(file);
+            SkinLog.warn("Skin file not found. {}", file);
         } catch (IOException e) {
             SkinLog.error("Skin file load failed.");
             e.printStackTrace();

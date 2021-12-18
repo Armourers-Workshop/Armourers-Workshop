@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize;
 
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.data.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
@@ -10,8 +10,8 @@ import moe.plushie.armourers_workshop.core.skin.data.serialize.v13.SkinSerialize
 import moe.plushie.armourers_workshop.core.skin.data.serialize.v14.SkinSerializerV14;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionException;
-import moe.plushie.armourers_workshop.core.skin.type.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.skin.type.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -80,38 +80,38 @@ public class SkinSerializer {
     public static Skin makeSkin(ISkinType skinType, SkinProperties properties, int[] paintData, ArrayList<SkinPart> skinParts) {
         // Update skin properties.
         if (properties.get(SkinProperty.MODEL_OVERRIDE)) {
-            if (skinType == SkinTypes.BIPED_HEAD) {
+            if (skinType == SkinTypes.ARMOR_HEAD) {
                 properties.put(SkinProperty.MODEL_OVERRIDE_HEAD, true);
             }
-            if (skinType == SkinTypes.BIPED_CHEST) {
+            if (skinType == SkinTypes.ARMOR_CHEST) {
                 properties.put(SkinProperty.MODEL_OVERRIDE_CHEST, true);
                 properties.put(SkinProperty.MODEL_OVERRIDE_ARM_LEFT, true);
                 properties.put(SkinProperty.MODEL_OVERRIDE_ARM_RIGHT, true);
             }
-            if (skinType == SkinTypes.BIPED_LEGS) {
+            if (skinType == SkinTypes.ARMOR_LEGS) {
                 properties.put(SkinProperty.MODEL_OVERRIDE_LEG_LEFT, true);
                 properties.put(SkinProperty.MODEL_OVERRIDE_LEG_RIGHT, true);
             }
-            if (skinType == SkinTypes.BIPED_FEET) {
+            if (skinType == SkinTypes.ARMOR_FEET) {
                 properties.put(SkinProperty.MODEL_OVERRIDE_LEG_LEFT, true);
                 properties.put(SkinProperty.MODEL_OVERRIDE_LEG_RIGHT, true);
             }
             properties.remove(SkinProperty.MODEL_OVERRIDE);
         }
         if (properties.get(SkinProperty.MODEL_HIDE_OVERLAY)) {
-            if (skinType == SkinTypes.BIPED_HEAD) {
+            if (skinType == SkinTypes.ARMOR_HEAD) {
                 properties.put(SkinProperty.MODEL_HIDE_OVERLAY_HEAD, true);
             }
-            if (skinType == SkinTypes.BIPED_CHEST) {
+            if (skinType == SkinTypes.ARMOR_CHEST) {
                 properties.put(SkinProperty.MODEL_HIDE_OVERLAY_CHEST, true);
                 properties.put(SkinProperty.MODEL_HIDE_OVERLAY_ARM_LEFT, true);
                 properties.put(SkinProperty.MODEL_HIDE_OVERLAY_ARM_RIGHT, true);
             }
-            if (skinType == SkinTypes.BIPED_LEGS) {
+            if (skinType == SkinTypes.ARMOR_LEGS) {
                 properties.put(SkinProperty.MODEL_HIDE_OVERLAY_LEG_LEFT, true);
                 properties.put(SkinProperty.MODEL_HIDE_OVERLAY_LEG_RIGHT, true);
             }
-            if (skinType == SkinTypes.BIPED_FEET) {
+            if (skinType == SkinTypes.ARMOR_FEET) {
                 properties.put(SkinProperty.MODEL_HIDE_OVERLAY_LEG_LEFT, true);
                 properties.put(SkinProperty.MODEL_HIDE_OVERLAY_LEG_RIGHT, true);
             }

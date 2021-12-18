@@ -2,15 +2,15 @@ package moe.plushie.armourers_workshop.core.render.tileentities;//package moe.pl
 //
 //import org.lwjgl.opengl.GL11;
 //
-//import moe.plushie.armourers_workshop.core.api.common.painting.IPaintType;
+//import moe.plushie.armourers_workshop.core.api.IPaintType;
 //import moe.plushie.armourers_workshop.core.api.common.skin.cubes.ICubeColour;
 //import moe.plushie.armourers_workshop.client.render.IRenderBuffer;
 //import moe.plushie.armourers_workshop.client.render.ModRenderHelper;
 //import moe.plushie.armourers_workshop.client.render.RenderBridge;
 //import moe.plushie.armourers_workshop.core.init.items.ModItems;
 //import moe.plushie.armourers_workshop.core.lib.LibModInfo;
-//import moe.plushie.armourers_workshop.core.painting.IBlockPainter;
-//import moe.plushie.armourers_workshop.core.painting.PaintTypeRegistry;
+//import moe.plushie.armourers_workshop.core.skin.painting.IBlockPainter;
+//import moe.plushie.armourers_workshop.core.skin.PaintTypeRegistry;
 //import moe.plushie.armourers_workshop.core.tileentities.TileEntityColourable;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.entity.EntityPlayerSP;

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.api.common.painting;
 
+import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ICubeColour;
 
 public interface IPantable {
@@ -18,9 +19,9 @@ public interface IPantable {
     
     public int getColour(int side);
     
-    public void setPaintType(IPaintType paintType, int side);
+    public void setPaintType(ISkinPaintType paintType, int side);
     
-    public IPaintType getPaintType(int side);
+    public ISkinPaintType getPaintType(int side);
     
     public ICubeColour getColour();
 }

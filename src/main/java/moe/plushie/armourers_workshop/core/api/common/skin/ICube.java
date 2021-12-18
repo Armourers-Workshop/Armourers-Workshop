@@ -4,14 +4,20 @@ import net.minecraft.block.Block;
 
 public interface ICube {
 
-    /** Will this cube glow in the dark? */
-    public boolean isGlowing();
+    /**
+     * Should this cube be rendered after the world?
+     */
+    boolean isGlass();
 
-    /** Should this cube be rendered after the world? */
-    public boolean needsPostRender();
-    
-    /** Get the cubes ID */
-    public byte getId();
-    
-    public Block getMinecraftBlock();
+    /**
+     * Will this cube glow in the dark?
+     */
+    boolean isGlowing();
+
+    /**
+     * Get the cubes ID
+     */
+    byte getId();
+
+    Block getMinecraftBlock();
 }
