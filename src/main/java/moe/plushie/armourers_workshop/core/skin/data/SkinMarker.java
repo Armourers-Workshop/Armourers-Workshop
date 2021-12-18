@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.data;
 
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinMarker;
-import moe.plushie.armourers_workshop.core.skin.type.Point3D;
+import moe.plushie.armourers_workshop.core.utils.Point3D;
 import net.minecraft.util.Direction;
 
 import java.io.DataInputStream;

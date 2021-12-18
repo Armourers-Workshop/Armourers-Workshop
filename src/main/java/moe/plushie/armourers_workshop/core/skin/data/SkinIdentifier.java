@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.data;
 
 import moe.plushie.armourers_workshop.core.api.common.library.ILibraryFile;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinIdentifier;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.api.ISkinType;
 
 public class SkinIdentifier implements ISkinIdentifier {
     

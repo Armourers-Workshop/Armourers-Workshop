@@ -1,18 +1,20 @@
 package moe.plushie.armourers_workshop.core.skin.data;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPart;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.config.skin.ClientSkinPartData;
+import moe.plushie.armourers_workshop.core.model.bake.ColouredFace;
+import moe.plushie.armourers_workshop.core.model.bake.PackedCubeFace;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.type.Rectangle3D;
-import moe.plushie.armourers_workshop.core.skin.type.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.utils.Rectangle3D;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.*;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -26,7 +28,8 @@ public class SkinPart implements ISkinPart {
     private SkinCubeData cubeData;
     private ArrayList<SkinMarker> markerBlocks;
     private ISkinPartType skinPart;
-    private ClientSkinPartData clientSkinPartData;
+
+    private PackedCubeFace packedFaces;
 
     private SkinProperties properties;
 
@@ -40,24 +43,17 @@ public class SkinPart implements ISkinPart {
         this.partBounds = cubeData.getBounds();
     }
 
-    public void setProperties(SkinProperties properties) {
-        this.properties = properties;
-    }
-
     public SkinProperties getProperties() {
         return properties;
     }
 
-    public void setClientSkinPartData(ClientSkinPartData clientSkinPartData) {
-        this.clientSkinPartData = clientSkinPartData;
+    public void setProperties(SkinProperties properties) {
+        this.properties = properties;
     }
 
-    public ClientSkinPartData getClientSkinPartData() {
-        return clientSkinPartData;
-    }
 
     public int getModelCount() {
-        return clientSkinPartData.getModelCount();
+        return 0;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -69,6 +65,28 @@ public class SkinPart implements ISkinPart {
                 partBounds.getMinX(), partBounds.getMinY(), partBounds.getMinZ(),
                 partBounds.getMaxX(), partBounds.getMaxY(), partBounds.getMaxZ());
     }
+
+    @OnlyIn(Dist.CLIENT)
+    public PackedCubeFace getPackedFaces() {
+        return packedFaces;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void setPackedFaces(PackedCubeFace packedFaces) {
+        this.packedFaces = packedFaces;
+    }
+
+
+    @OnlyIn(Dist.CLIENT)
+    public void render(SkinDye dye, int light, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
+        packedFaces.forEach((renderType, faces) -> {
+            IVertexBuilder builder = buffer.getBuffer(renderType);
+            for (ColouredFace face : faces) {
+                face.renderVertex(this, dye, matrixStack, builder);
+            }
+        });
+    }
+
 
     private void setupPartBounds() {
         if (skinPart == SkinPartTypes.BLOCK || skinPart == SkinPartTypes.BLOCK_MULTI) {

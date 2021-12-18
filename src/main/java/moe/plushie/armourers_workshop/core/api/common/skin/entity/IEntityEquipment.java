@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.api.common.skin.entity;
 
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.api.ISkinType;
 
 public interface IEntityEquipment {
     

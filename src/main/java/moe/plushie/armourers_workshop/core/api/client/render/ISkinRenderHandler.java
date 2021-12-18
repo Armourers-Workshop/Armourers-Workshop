@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.api.client.render;
 
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkin;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDescriptor;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.item.ItemStack;

@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:wooden_shovels",
+    "minecraft:stone_shovels",
+    "minecraft:iron_shovels",
+    "minecraft:golden_shovels",
+    "minecraft:diamond_shovels",
+    "minecraft:netherite_shovels"
+  ]
+}

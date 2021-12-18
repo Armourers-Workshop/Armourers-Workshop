@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.api.common.capability;
 
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.api.ISkinType;
 import net.minecraft.inventory.EquipmentSlotType;
 
 public interface IPlayerWardrobeCap extends IWardrobeCap {

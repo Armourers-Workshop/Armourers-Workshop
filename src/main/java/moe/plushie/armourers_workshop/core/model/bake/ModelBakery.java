@@ -1,9 +1,5 @@
 package moe.plushie.armourers_workshop.core.model.bake;
 
-import moe.plushie.armourers_workshop.core.api.common.painting.IPaintType;
-import moe.plushie.armourers_workshop.core.config.skin.ClientSkinPartData;
-import moe.plushie.armourers_workshop.core.config.skin.SkinModelTexture;
-import moe.plushie.armourers_workshop.core.painting.PaintTypeRegistry;
 import moe.plushie.armourers_workshop.core.render.other.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.data.*;
 
@@ -127,81 +123,78 @@ public final class ModelBakery {
             long startTime = System.currentTimeMillis();
             skin.lightHash();
 
-            int extraDyes = PaintTypeRegistry.getInstance().getExtraChannels();
-
-            int[][] dyeColour;
-            int[] dyeUseCount;
-
-            dyeColour = new int[3][extraDyes];
-            dyeUseCount = new int[extraDyes];
+//            int extraDyes = SkinPaintTypes.getInstance().getExtraChannels();
+//
+//            int[][] dyeColour;
+//            int[] dyeUseCount;
+//
+//            dyeColour = new int[3][extraDyes];
+//            dyeUseCount = new int[extraDyes];
 
 //            if (ClientProxy.getTexturePaintType() == TexturePaintType.MODEL_REPLACE_AW) {
 //                skin.addPaintDataParts();
 //            }
 
-            for (int i = 0; i < skin.getParts().size(); i++) {
-                int[][] partDyeColour = new int[3][extraDyes];
-                int[] partDyeUseCount = new int[extraDyes];
+            for (SkinPart skinPart : skin.getParts()) {
+//                int[][] partDyeColour = new int[3][extraDyes];
+//                int[] partDyeUseCount = new int[extraDyes];
 
-                SkinPart partData = skin.getParts().get(i);
-                partData.setClientSkinPartData(new ClientSkinPartData());
-                int[][][] cubeArray = SkinBaker.cullFacesOnEquipmentPart(partData);
-                SkinBaker.buildPartDisplayListArray(partData, partDyeColour, partDyeUseCount, cubeArray);
-                partData.clearCubeData();
+                skinPart.setPackedFaces(SkinBaker.cullFacesOnEquipmentPart(skinPart));
+                skinPart.clearCubeData();
 
-                int[] partAverageR = new int[extraDyes];
-                int[] partAverageG = new int[extraDyes];
-                int[] partAverageB = new int[extraDyes];
-                for (int j = 0; j < extraDyes; j++) {
-                    partAverageR[j] = (int) ((double) partDyeColour[0][j] / (double) partDyeUseCount[j]);
-                    partAverageG[j] = (int) ((double) partDyeColour[1][j] / (double) partDyeUseCount[j]);
-                    partAverageB[j] = (int) ((double) partDyeColour[2][j] / (double) partDyeUseCount[j]);
-
-                    dyeColour[0][j] += partDyeColour[0][j];
-                    dyeColour[1][j] += partDyeColour[1][j];
-                    dyeColour[2][j] += partDyeColour[2][j];
-                    dyeUseCount[j] += partDyeUseCount[j];
-                }
-                partData.getClientSkinPartData().setAverageDyeValues(partAverageR, partAverageG, partAverageB);
+//                int[] partAverageR = new int[extraDyes];
+//                int[] partAverageG = new int[extraDyes];
+//                int[] partAverageB = new int[extraDyes];
+//                for (int j = 0; j < extraDyes; j++) {
+//                    partAverageR[j] = (int) ((double) partDyeColour[0][j] / (double) partDyeUseCount[j]);
+//                    partAverageG[j] = (int) ((double) partDyeColour[1][j] / (double) partDyeUseCount[j]);
+//                    partAverageB[j] = (int) ((double) partDyeColour[2][j] / (double) partDyeUseCount[j]);
+//
+//                    dyeColour[0][j] += partDyeColour[0][j];
+//                    dyeColour[1][j] += partDyeColour[1][j];
+//                    dyeColour[2][j] += partDyeColour[2][j];
+//                    dyeUseCount[j] += partDyeUseCount[j];
+//                }
+//                partData.getClientSkinPartData().setAverageDyeValues(partAverageR, partAverageG, partAverageB);
             }
 
-            if (skin.hasPaintData()) {
-                skin.skinModelTexture = new SkinModelTexture();
-                for (int ix = 0; ix < SkinTexture.TEXTURE_WIDTH; ix++) {
-                    for (int iy = 0; iy < SkinTexture.TEXTURE_HEIGHT; iy++) {
-                        int paintColour = skin.getPaintData()[ix + (iy * SkinTexture.TEXTURE_WIDTH)];
-                        IPaintType paintType = PaintTypeRegistry.getInstance().getPaintTypeFromColour(paintColour);
-                        if (paintType.hasAverageColourChannel()) {
-                            int index = paintType.getChannelIndex();
-                            byte r = (byte) (paintColour >>> 16 & 0xFF);
-                            byte g = (byte) (paintColour >>> 8 & 0xFF);
-                            byte b = (byte) (paintColour & 0xFF);
-                            dyeUseCount[index]++;
-                            dyeColour[0][index] += r & 0xFF;
-                            dyeColour[1][index] += g & 0xFF;
-                            dyeColour[2][index] += b & 0xFF;
-                        }
-                    }
-                }
-            }
-
-            int[] averageR = new int[extraDyes];
-            int[] averageG = new int[extraDyes];
-            int[] averageB = new int[extraDyes];
-
-            for (int i = 0; i < extraDyes; i++) {
-                averageR[i] = (int) ((double) dyeColour[0][i] / (double) dyeUseCount[i]);
-                averageG[i] = (int) ((double) dyeColour[1][i] / (double) dyeUseCount[i]);
-                averageB[i] = (int) ((double) dyeColour[2][i] / (double) dyeUseCount[i]);
-            }
-
+//            if (skin.hasPaintData()) {
+//                skin.skinModelTexture = new SkinModelTexture();
+//                for (int ix = 0; ix < SkinTexture.TEXTURE_WIDTH; ix++) {
+//                    for (int iy = 0; iy < SkinTexture.TEXTURE_HEIGHT; iy++) {
+//                        int paintColour = skin.getPaintData()[ix + (iy * SkinTexture.TEXTURE_WIDTH)];
+//                        ISkinPaintType paintType = SkinPaintTypes.getInstance().getPaintTypeFromColour(paintColour);
+//                        if (paintType.hasAverageColourChannel()) {
+//                            int index = paintType.getChannelIndex();
+//                            byte r = (byte) (paintColour >>> 16 & 0xFF);
+//                            byte g = (byte) (paintColour >>> 8 & 0xFF);
+//                            byte b = (byte) (paintColour & 0xFF);
+//                            dyeUseCount[index]++;
+//                            dyeColour[0][index] += r & 0xFF;
+//                            dyeColour[1][index] += g & 0xFF;
+//                            dyeColour[2][index] += b & 0xFF;
+//                        }
+//                    }
+//                }
+//            }
+//
+//            int[] averageR = new int[extraDyes];
+//            int[] averageG = new int[extraDyes];
+//            int[] averageB = new int[extraDyes];
+//
+//            for (int i = 0; i < extraDyes; i++) {
+//                averageR[i] = (int) ((double) dyeColour[0][i] / (double) dyeUseCount[i]);
+//                averageG[i] = (int) ((double) dyeColour[1][i] / (double) dyeUseCount[i]);
+//                averageB[i] = (int) ((double) dyeColour[2][i] / (double) dyeUseCount[i]);
+//            }
+//
 //            for (int i = 0; i < skin.getParts().size(); i++) {
 //                SkinPart partData = skin.getParts().get(i);
 //                 partData.getClientSkinPartData().setAverageDyeValues(averageR, averageG,
 //                 averageB);
 //            }
-
-            skin.setAverageDyeValues(averageR, averageG, averageB);
+//
+//            skin.setAverageDyeValues(averageR, averageG, averageB);
             if (skin.hasPaintData()) {
                 skin.skinModelTexture.createTextureForColours(skin, null);
             }

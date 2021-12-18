@@ -20,6 +20,10 @@ public class SkinRenderData {
     private final boolean itemRender;
     private final ResourceLocation entityTexture;
 
+    public int light = 0;
+    public int overlayLight = 0;
+    public float partialTicks = 0;
+
     public SkinRenderData(ISkinDye skinDye, IExtraColours extraColours, double distance, boolean doLodLoading, boolean showSkinPaint, boolean itemRender, ResourceLocation entityTexture) {
         this(skinDye, extraColours, getLOD(distance), doLodLoading, showSkinPaint, itemRender, entityTexture);
     }

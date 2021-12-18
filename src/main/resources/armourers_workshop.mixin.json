@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.client.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "armourers_workshop.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "BipedArmorLayerMixin",
+    "FirstPersonRendererMixin",
+    "InventoryScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

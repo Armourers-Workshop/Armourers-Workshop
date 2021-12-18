@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.utils;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import moe.plushie.armourers_workshop.core.skin.type.Rectangle3D;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -19,12 +18,12 @@ public final class RenderUtils {
 //        Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation);
     }
 
-    private static void drawLine(IVertexBuilder builder, Matrix4f mat, int x0, int y0, int z0, int x1, int y1, int z1, Color color) {
+    private static void drawLine(IVertexBuilder builder, Matrix4f mat, float x0, float y0, float z0, float x1, float y1, float z1, Color color) {
         builder.vertex(mat, x0, y0, z0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
         builder.vertex(mat, x1, y1, z1).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
     }
 
-    public static void drawBoundingBox(Matrix4f mat, int x0, int y0, int z0, int x1, int y1, int z1, Color color) {
+    public static void drawBoundingBox(Matrix4f mat, float x0, float y0, float z0, float x1, float y1, float z1, Color color) {
         IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
         IVertexBuilder builder = buffer.getBuffer(RenderType.lines());
         drawLine(builder, mat, x1, y0, z1, x0, y0, z1, color);
@@ -42,15 +41,13 @@ public final class RenderUtils {
     }
 
     public static void drawBoundingBox(MatrixStack matrix, VoxelShape shape, Color color) {
-        IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        IVertexBuilder builder = buffer.getBuffer(RenderType.lines());
         AxisAlignedBB box = shape.bounds();
-        int x0 = (int) box.minX;
-        int y0 = (int) box.minY;
-        int z0 = (int) box.minZ;
-        int x1 = (int) box.maxX;
-        int y1 = (int) box.maxY;
-        int z1 = (int) box.maxZ;
+        float x0 = (float) box.minX;
+        float y0 = (float) box.minY;
+        float z0 = (float) box.minZ;
+        float x1 = (float) box.maxX;
+        float y1 = (float) box.maxY;
+        float z1 = (float) box.maxZ;
         drawBoundingBox(matrix.last().pose(), x0, y0, z0, x1, y1, z1, color);
     }
 
@@ -93,4 +90,27 @@ public final class RenderUtils {
 //        GL11.glDisable(GL11.GL_BLEND);
 //        GL11.glColor4f(1, 1, 1, 1);
     }
+
+
+    private static float lightX;
+    private static float lightY;
+
+    public static void disableLighting() {
+//        net.minecraft.client.GameSettings
+//        lightX = OpenGlHelper.lastBrightnessX;
+//        lightY = OpenGlHelper.lastBrightnessY;
+//        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+    }
+
+    public static void enableLighting() {
+//        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightX, lightY);
+    }
+
+//    public static void setLightingForBlock(World world, BlockPos pos) {
+//        int i = world.getCombinedLight(pos, 0);
+//        int j = i % 65536;
+//        int k = i / 65536;
+//        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
+//    }
+
 }

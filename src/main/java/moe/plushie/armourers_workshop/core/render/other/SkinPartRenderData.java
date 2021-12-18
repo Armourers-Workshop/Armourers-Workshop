@@ -17,6 +17,10 @@ public class SkinPartRenderData extends SkinRenderData {
 	public SkinPartRenderData(SkinPart skinPart, SkinRenderData renderData) {
 		super(renderData.getSkinDye(), renderData.getExtraColours(), renderData.getLod(), renderData.isDoLodLoading(), renderData.isShowSkinPaint(), renderData.isItemRender(), renderData.getEntityTexture());
 	    this.skinPart = skinPart;
+
+	    this.light = renderData.light;
+	    this.overlayLight = renderData.overlayLight;
+	    this.partialTicks = renderData.partialTicks;
 	}
 
 	public SkinPart getSkinPart() {
