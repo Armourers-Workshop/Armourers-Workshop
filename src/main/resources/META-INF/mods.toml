@@ -1,0 +1,34 @@
+# This is an example mods.toml file. It contains the data relating to the loading mods.
+# There are several mandatory fields (#mandatory), and many more that are optional (#optional).
+# The overall format is standard TOML format, v0.5.0.
+# Note that there are a couple of TOML lists in this file.
+# Find more information on toml format here:  https://github.com/toml-lang/toml
+# The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
+modLoader="javafml"
+loaderVersion="[36,)"
+license="All rights reserved"
+
+[[mods]]
+	modId="armourers_workshop"
+	version="${file.jarVersion}"
+	displayName="Armourer's Workshop"
+	updateJSONURL="http://plushie.moe/app_update/minecraft_mods/armourers_workshop/update.json"
+	logoFile="assets/armourers_workshop/textures/aw_logo_small.png"
+	authors="RiskyKen"
+	description='''
+	Minecraft armour customization mod.
+	'''
+
+[[dependencies.armourers_workshop]] #optional
+    modId="forge"
+    mandatory=true
+    versionRange="[36,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.armourers_workshop]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5,1.17)"
+    ordering="NONE"
+    side="BOTH"
