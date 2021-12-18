@@ -1,0 +1,364 @@
+package moe.plushie.armourers_workshop.core.skin.data.property;
+
+import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
+import moe.plushie.armourers_workshop.core.utils.StreamUtils;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
+public class SkinProperties implements ISkinProperties {
+
+//    // Properties for all skins.
+//    public static final SkinProperty<String> ALL_CUSTOM_NAME = new SkinProperty<>("customName", "");
+//    public static final SkinProperty<String> ALL_FLAVOUR_TEXT = new SkinProperty<>("flavour", "");
+//    public static final SkinProperty<String> ALL_AUTHOR_NAME = new SkinProperty<>("authorName", "");
+//    public static final SkinProperty<String> ALL_AUTHOR_UUID = new SkinProperty<>("authorUUID", "");
+//
+//    // Properties.
+//    @Deprecated
+//    public static final SkinProperty<Boolean> MODEL_OVERRIDE = new SkinProperty<>("armourOverride", false);
+//    public static final SkinProperty<Boolean> MODEL_OVERRIDE_HEAD = new SkinProperty<>("overrideModelHead", false);
+//    public static final SkinProperty<Boolean> MODEL_OVERRIDE_CHEST = new SkinProperty<>("overrideModelChest", false);
+//    public static final SkinProperty<Boolean> MODEL_OVERRIDE_ARM_LEFT = new SkinProperty<>("overrideModelArmLeft", false);
+//    public static final SkinProperty<Boolean> MODEL_OVERRIDE_ARM_RIGHT = new SkinProperty<>("overrideModelArmRight", false);
+//    public static final SkinProperty<Boolean> MODEL_OVERRIDE_LEG_LEFT = new SkinProperty<>("overrideModelLegLeft", false);
+//    public static final SkinProperty<Boolean> MODEL_OVERRIDE_LEG_RIGHT = new SkinProperty<>("overrideModelLegRight", false);
+//
+//    @Deprecated
+//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY = new SkinProperty<>("armourHideOverlay", false);
+//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_HEAD = new SkinProperty<>("hideOverlayHead", false);
+//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_CHEST = new SkinProperty<>("hideOverlayChest", false);
+//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_ARM_LEFT = new SkinProperty<>("hideOverlayArmLeft", false);
+//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_ARM_RIGHT = new SkinProperty<>("hideOverlayArmRight", false);
+//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_LEG_LEFT = new SkinProperty<>("hideOverlayLegLeft", false);
+//    public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_LEG_RIGHT = new SkinProperty<>("hideOverlayLegRight", false);
+//
+//    public static final SkinProperty<Boolean> MODEL_LEGS_LIMIT_LIMBS = new SkinProperty<>("limitLimbs", false);
+//
+//    public static final SkinProperty<String> OUTFIT_PART_INDEXS = new SkinProperty<>("partIndexs", "");
+//
+//    public static final SkinProperty<Boolean> BLOCK_GLOWING = new SkinProperty<>("blockGlowing", false);
+//    public static final SkinProperty<Boolean> BLOCK_LADDER = new SkinProperty<>("blockLadder", false);
+//    public static final SkinProperty<Boolean> BLOCK_NO_COLLISION = new SkinProperty<>("blockNoCollision", false);
+//    public static final SkinProperty<Boolean> BLOCK_SEAT = new SkinProperty<>("blockSeat", false);
+//    public static final SkinProperty<Boolean> BLOCK_MULTIBLOCK = new SkinProperty<>("blockMultiblock", false);
+//    public static final SkinProperty<Boolean> BLOCK_BED = new SkinProperty<>("blockBed", false);
+//    public static final SkinProperty<Boolean> BLOCK_INVENTORY = new SkinProperty<>("blockInventory", false);
+//    public static final SkinProperty<Boolean> BLOCK_ENDER_INVENTORY = new SkinProperty<>("blockEnderInventory", false);
+//    public static final SkinProperty<Integer> BLOCK_INVENTORY_WIDTH = new SkinProperty<>("blockInventoryWidth", 9);
+//    public static final SkinProperty<Integer> BLOCK_INVENTORY_HEIGHT = new SkinProperty<>("blockInventoryHeight", 4);
+//
+//    public static final SkinProperty<Double> WINGS_MAX_ANGLE = new SkinProperty<>("wingsMaxAngle", 75D);
+//    public static final SkinProperty<Double> WINGS_MIN_ANGLE = new SkinProperty<>("wingsMinAngle", 0D);
+//    public static final SkinProperty<Double> WINGS_IDLE_SPEED = new SkinProperty<>("wingsIdleSpeed", 6000D);
+//    public static final SkinProperty<Double> WINGS_FLYING_SPEED = new SkinProperty<>("wingsFlyingSpeed", 350D);
+//    public static final SkinProperty<String> WINGS_MOVMENT_TYPE = new SkinProperty<>("wingsMovmentType", MovementType.EASE.toString());
+//
+//    private static final String TAG_SKIN_PROPS = "skinProps";
+//
+//    // Properties for skin parts.
+//    public static final SkinProperty<String> PART_TARGET = new SkinProperty<>("target", "");
+//    public static final SkinProperty<Boolean> PART_OVERRIDE = new SkinProperty<>("partOverride", false);
+//    public static final SkinProperty<Boolean> PART_HIDE_OVERLAY = new SkinProperty<>("partHideOverlay", false);
+//    public static final SkinProperty<Boolean> PART_LEGS_LIMIT_LIMB = new SkinProperty<>("limitLimb", false);
+//
+//    // Legacy
+
+
+    protected LinkedHashMap<String, Object> properties;
+
+
+    public SkinProperties() {
+        properties = new LinkedHashMap<>();
+    }
+
+    public SkinProperties(SkinProperties skinProps) {
+
+        properties = (LinkedHashMap<String, Object>) skinProps.properties.clone();
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public <T> T get(SkinProperty<T> property) {
+        return (T) properties.getOrDefault(property.getKey(), property.getDefaultValue());
+    }
+
+    public <T> void put(SkinProperty<T> property, T value) {
+        properties.put(property.getKey(), value);
+    }
+
+    public <T> void remove(SkinProperty<T> property) {
+        properties.remove(property.getKey());
+    }
+
+
+    public <T> boolean containsKey(SkinProperty<T> property) {
+        return properties.containsKey(property.getKey());
+    }
+
+    public <T> boolean containsValue(SkinProperty<T> property) {
+        return properties.containsValue(property.getKey());
+    }
+
+    public ArrayList<String> getPropertiesList() {
+        ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < properties.size(); i++) {
+            String key = (String) properties.keySet().toArray()[i];
+            list.add(key + ":" + properties.get(key));
+        }
+        return list;
+    }
+
+    public void writeToStream(DataOutputStream stream) throws IOException {
+        stream.writeInt(properties.size());
+        for (int i = 0; i < properties.size(); i++) {
+            String key = (String) properties.keySet().toArray()[i];
+            Object value = properties.get(key);
+            StreamUtils.writeStringUtf8(stream, key);
+            if (value instanceof String) {
+                stream.writeByte(DataTypes.STRING.ordinal());
+                StreamUtils.writeStringUtf8(stream, (String) value);
+            }
+            if (value instanceof Integer) {
+                stream.writeByte(DataTypes.INT.ordinal());
+                stream.writeInt((Integer) value);
+            }
+            if (value instanceof Double) {
+                stream.writeByte(DataTypes.DOUBLE.ordinal());
+                stream.writeDouble((Double) value);
+            }
+            if (value instanceof Boolean) {
+                stream.writeByte(DataTypes.BOOLEAN.ordinal());
+                stream.writeBoolean((Boolean) value);
+            }
+        }
+    }
+
+    public void readFromStream(DataInputStream stream, int fileVersion) throws IOException {
+        int count = stream.readInt();
+        for (int i = 0; i < count; i++) {
+
+            String key = null;
+            if (fileVersion > 12) {
+                key = StreamUtils.readStringUtf8(stream);
+            } else {
+                key = stream.readUTF();
+            }
+            int byteType = stream.readByte();
+            DataTypes type = DataTypes.STRING;
+            if (byteType >= 0 & byteType < DataTypes.values().length) {
+                type = DataTypes.values()[byteType];
+            } else {
+                throw new IOException("Error loading skin properties " + byteType);
+            }
+
+            Object value = null;
+            switch (type) {
+                case STRING:
+                    if (fileVersion > 12) {
+                        value = StreamUtils.readStringUtf8(stream);
+                    } else {
+                        value = stream.readUTF();
+                    }
+                    break;
+                case INT:
+                    value = stream.readInt();
+                    break;
+                case DOUBLE:
+                    value = stream.readDouble();
+                    break;
+                case BOOLEAN:
+                    value = stream.readBoolean();
+                    break;
+            }
+            properties.put(key, value);
+        }
+    }
+
+//    @Override
+//    public void removeProperty(String key) {
+//        properties.remove(key);
+//    }
+//
+//    @Override
+//    public void setProperty(String key, Object value) {
+//        properties.put(key, value);
+//    }
+//
+//    @Override
+//    public String getPropertyString(String key, String defaultValue) {
+//        Object value = properties.get(key);
+//        if (value instanceof String) {
+//            return (String) value;
+//        }
+//        return defaultValue;
+//    }
+//
+//    @Override
+//    public int getPropertyInt(String key, int defaultValue) {
+//        Object value = properties.get(key);
+//        if (value instanceof Integer) {
+//            return (Integer) value;
+//        }
+//        return defaultValue;
+//    }
+//
+//    @Override
+//    public double getPropertyDouble(String key, double defaultValue) {
+//        Object value = properties.get(key);
+//        if (value instanceof Double) {
+//            return (Double) value;
+//        }
+//        return defaultValue;
+//    }
+//
+//    @Override
+//    public Boolean getPropertyBoolean(String key, Boolean defaultValue) {
+//        Object value = properties.get(key);
+//        if (value instanceof Boolean) {
+//            return (Boolean) value;
+//        }
+//        return defaultValue;
+//    }
+//
+//    @Override
+//    public Object getProperty(String key, Object defaultValue) {
+//        Object value = properties.get(key);
+//        if (value != null) {
+//            return value;
+//        }
+//        return defaultValue;
+//    }
+//
+//    @Override
+//    public boolean haveProperty(String key) {
+//        return properties.containsKey(key);
+//    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        SkinProperties other = (SkinProperties) obj;
+        if (properties == null) {
+            if (other.properties != null)
+                return false;
+        } else if (!properties.equals(other.properties))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "SkinProperties [properties=" + properties + "]";
+    }
+
+    // TODO: IMP
+//    public void readFromNBT(NBTTagCompound compound) {
+//        if (!compound.hasKey(TAG_SKIN_PROPS)) {
+//            return;
+//        }
+//        byte[] data = compound.getByteArray(TAG_SKIN_PROPS);
+//
+//        ByteArrayInputStream bais = new ByteArrayInputStream(data);
+//        DataInputStream dataInputStream = new DataInputStream(bais);
+//        try {
+//            readFromStream(dataInputStream, SkinSerializer.MAX_FILE_VERSION);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            IOUtils.closeQuietly(dataInputStream);
+//            IOUtils.closeQuietly(bais);
+//        }
+//    }
+//
+//    public void writeToNBT(NBTTagCompound compound) {
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        DataOutputStream dataOutputStream = new DataOutputStream(baos);
+//        try {
+//            writeToStream(dataOutputStream);
+//            dataOutputStream.flush();
+//            byte[] data = baos.toByteArray();
+//            compound.setByteArray(TAG_SKIN_PROPS, data);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            IOUtils.closeQuietly(dataOutputStream);
+//            IOUtils.closeQuietly(baos);
+//        }
+//    }
+
+    enum DataTypes {
+        STRING, INT, DOUBLE, BOOLEAN
+    }
+
+    public static class Stub extends SkinProperties {
+        private final int index;
+
+        public Stub(SkinProperties paranet, int index) {
+            super();
+            this.properties = paranet.properties;
+            this.index = index;
+        }
+
+        @Override
+        public <T> void put(SkinProperty<T> property, T value) {
+            if (property.isMultipleKey()) {
+                properties.put(getIndexedKey(property), value);
+            } else {
+                properties.put(property.getKey(), value);
+            }
+        }
+
+        @Override
+        public <T> void remove(SkinProperty<T> property) {
+            if (property.isMultipleKey()) {
+                properties.remove(getIndexedKey(property));
+            } else {
+                properties.remove(property.getKey());
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public <T> T get(SkinProperty<T> property) {
+            if (property.isMultipleKey() && properties.containsKey(getIndexedKey(property))) {
+                return (T) properties.getOrDefault(getIndexedKey(property), property.getDefaultValue());
+            } else {
+                return (T) properties.getOrDefault(property.getKey(), property.getDefaultValue());
+            }
+        }
+
+        @Override
+        public <T> boolean containsKey(SkinProperty<T> property) {
+            if (property.isMultipleKey() && properties.containsKey(getIndexedKey(property))) {
+                return true;
+            }
+            return properties.containsKey(property.getKey());
+        }
+
+        @Override
+        public <T> boolean containsValue(SkinProperty<T> property) {
+            if (property.isMultipleKey() && properties.containsValue(getIndexedKey(property))) {
+                return true;
+            }
+            return properties.containsValue(property.getKey());
+        }
+
+        private String getIndexedKey(SkinProperty property) {
+            return property.getKey() + String.valueOf(index);
+        }
+    }
+}
