@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPart;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -35,19 +36,19 @@ public class SkinConfig {
     public static int fastCacheSize;
 
     // Skin preview
-    public static boolean skinPreEnabled = false;
+    public static boolean skinPreEnabled = true;
     public static boolean skinPreDrawBackground = true;
-    public static double skinPreSize = 96.0;
-    public static double skinPreLocHorizontal = 1.0;
+    public static int skinPreSize = 96;
+    public static double skinPreLocHorizontal = 0.0;
     public static double skinPreLocVertical = 0.5;
-    public static boolean skinPreLocFollowMouse = false;
+    public static boolean skinPreLocFollowMouse = true;
 
     // Tool-tip
     public static boolean tooltipHasSkin;
     public static boolean tooltipSkinName;
     public static boolean tooltipSkinAuthor;
     public static boolean tooltipSkinType;
-    public static boolean tooltipDebug;
+    public static boolean tooltipDebug = false;
     public static boolean tooltipFlavour;
     public static boolean tooltipOpenWardrobe;
 
@@ -65,10 +66,11 @@ public class SkinConfig {
     public static boolean showSkinRenderBounds;
     public static boolean showSortOrderToolTip;
 
-    public static boolean showDebugFullBounds = true;
+    public static boolean showDebugFullBounds = false;
     public static boolean showDebugPartBounds = false;
+    public static boolean showDebugTargetBounds = false;
+
     public static boolean showDebugTextureBounds = false;
-    //public static boolean showDebugTargetBounds = false;
     public static boolean showDebugSpin = false;
     public static Set<String> disabledSkinParts = new HashSet<>();
 
@@ -80,7 +82,7 @@ public class SkinConfig {
         }
     }
 
-    public static boolean isEnabledEntity(@Nullable Entity entity) {
+    public static boolean isSkinnableEntity(@Nullable Entity entity) {
         if (entity instanceof PlayerEntity) {
             return true;
         }

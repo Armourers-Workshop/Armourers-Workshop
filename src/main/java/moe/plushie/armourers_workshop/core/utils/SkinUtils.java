@@ -11,13 +11,14 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.math.vector.Vector4f;
 
 import java.io.ByteArrayInputStream;
@@ -77,7 +78,7 @@ public final class SkinUtils {
         return null;
     }
 
-    public static void apply(MatrixStack matrixStack, Entity entity, SkinPart skinPart) {
+    public static void apply(MatrixStack matrixStack, Entity entity, SkinPart skinPart, int partialTicks) {
         ISkinPartType partType = skinPart.getType();
         if (!(partType instanceof ICanRotation)) {
             return;
@@ -87,9 +88,9 @@ public final class SkinUtils {
             return;
         }
         SkinMarker marker = markers.get(0);
-        Point3D point = marker.getPosition();
+        Vector3i point = marker.getPosition();
 
-        float angle = (float) getRotationDegrees(entity, skinPart, System.currentTimeMillis());
+        float angle = (float) getRotationDegrees(entity, skinPart, partialTicks);
         Vector3f offset = new Vector3f(point.getX() + 0.5f, point.getY() + 0.5f, point.getZ() + 0.5f);
         if (!((ICanRotation) partType).isMirror()) {
             angle = -angle;
@@ -100,7 +101,7 @@ public final class SkinUtils {
         matrixStack.translate(-offset.x() * SCALE, -offset.y() * SCALE, -offset.z() * SCALE);
     }
 
-    public static double getRotationDegrees(Entity entity, SkinPart skinPart, double partialTicks) {
+    public static double getRotationDegrees(Entity entity, SkinPart skinPart, int partialTicks) {
         SkinProperties properties = skinPart.getProperties();
 
         double maxAngle = properties.get(SkinProperty.WINGS_MAX_ANGLE);
@@ -109,7 +110,7 @@ public final class SkinUtils {
         SkinProperty.MovementType movementType = SkinProperty.MovementType.valueOf(movementTypeName);
 
         double flapTime = properties.get(SkinProperty.WINGS_IDLE_SPEED);
-        if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isFallFlying()) {
+        if (entity instanceof LivingEntity && ((LivingEntity) entity).isFallFlying()) {
             flapTime = properties.get(SkinProperty.WINGS_FLYING_SPEED);
         }
 

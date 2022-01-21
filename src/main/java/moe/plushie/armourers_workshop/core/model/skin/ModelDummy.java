@@ -25,7 +25,7 @@
 ////        for (int i = 0; i < skin.getParts().size(); i++) {
 ////            GL11.glPushMatrix();
 ////            SkinPart skinPart = skin.getParts().get(i);
-////            Point3D offset = skinPart.getType().getOffset();
+////            Vector3i offset = skinPart.getType().getOffset();
 ////            GL11.glTranslated(offset.getX() * SCALE, (offset.getY() + 1) * SCALE, offset.getZ() * SCALE);
 ////            SkinPartRenderer.INSTANCE.renderPart(new SkinPartRenderData(skinPart, renderData));
 ////            GL11.glPopMatrix();

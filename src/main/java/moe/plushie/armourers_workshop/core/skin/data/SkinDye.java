@@ -2,14 +2,18 @@ package moe.plushie.armourers_workshop.core.skin.data;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
+import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
 import moe.plushie.armourers_workshop.core.utils.SkinLog;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
-import org.apache.logging.log4j.Level;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class SkinDye implements ISkinDye {
-    
+
+    public final static SkinDye EMPTY = new SkinDye();
+
     public static final int MAX_SKIN_DYES = 8;
     private static final String TAG_SKIN_DYE = "dyeData";
     private static final String TAG_DYE = "dye";
@@ -18,46 +22,60 @@ public class SkinDye implements ISkinDye {
     private static final String TAG_GREEN = "g";
     private static final String TAG_BLUE = "b";
     private static final String TAG_TYPE = "t";
-    
+    private final HashMap<SkinDyeType, Integer> colors = new HashMap<>();
     private byte[][] dyes;
     private boolean[] hasDye;
     private String[] names;
-    
+
     public SkinDye() {
         dyes = new byte[MAX_SKIN_DYES][4];
         hasDye = new boolean[MAX_SKIN_DYES];
         names = new String[MAX_SKIN_DYES];
     }
-    
+
     public SkinDye(ISkinDye skinDye) {
         this();
         for (int i = 0; i < MAX_SKIN_DYES; i++) {
-            if(skinDye.haveDyeInSlot(i)) {
+            if (skinDye.haveDyeInSlot(i)) {
                 addDye(i, skinDye.getDyeColour(i));
             }
         }
     }
 
+
+    public int getColor(SkinDyeType dyeType) {
+        return colors.get(dyeType);
+    }
+
+    public void setColor(SkinDyeType dyeType, int color) {
+        colors.put(dyeType, color);
+    }
+
+    public void add(SkinDye dye) {
+        colors.putAll(dye.colors);
+    }
+
+
     @Override
     public byte[] getDyeColour(int index) {
         return dyes[index];
     }
-    
+
     @Override
     public String getDyeName(int index) {
         return names[index];
     }
-    
+
     @Override
     public boolean haveDyeInSlot(int index) {
         return hasDye[index];
     }
-    
+
     @Override
     public boolean hasName(int index) {
         return !StringUtils.isNullOrEmpty(names[index]);
     }
-    
+
     @Override
     public void addDye(byte[] rgbt, String name) {
         if (rgbt.length != 4) {
@@ -74,12 +92,12 @@ public class SkinDye implements ISkinDye {
             }
         }
     }
-    
+
     @Override
     public void addDye(byte[] rgbt) {
         addDye(rgbt, null);
     }
-    
+
     @Override
     public void addDye(int index, byte[] rgbt, String name) {
         if (rgbt.length != 4) {
@@ -91,15 +109,15 @@ public class SkinDye implements ISkinDye {
         hasDye[index] = true;
         names[index] = name;
     }
-    
+
     @Override
     public void addDye(int index, byte[] rgbt) {
         addDye(index, rgbt, null);
     }
-    
+
     @Override
     public void removeDye(int index) {
-        dyes[index] = new byte[] {(byte)0, (byte)0, (byte)0, (byte)255};
+        dyes[index] = new byte[]{(byte) 0, (byte) 0, (byte) 0, (byte) 255};
         hasDye[index] = false;
         names[index] = null;
     }
@@ -114,7 +132,7 @@ public class SkinDye implements ISkinDye {
         }
         return count;
     }
-    
+
     @Override
     public void writeToBuf(ByteBuf buf) {
         for (int i = 0; i < MAX_SKIN_DYES; i++) {
@@ -131,7 +149,7 @@ public class SkinDye implements ISkinDye {
             }
         }
     }
-    
+
     @Override
     public void readFromBuf(ByteBuf buf) {
         for (int i = 0; i < MAX_SKIN_DYES; i++) {

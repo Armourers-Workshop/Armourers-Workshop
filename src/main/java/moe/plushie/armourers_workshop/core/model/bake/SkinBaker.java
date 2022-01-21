@@ -1,15 +1,17 @@
 package moe.plushie.armourers_workshop.core.model.bake;
 
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
-import moe.plushie.armourers_workshop.core.skin.data.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 
+@OnlyIn(Dist.CLIENT)
 public final class SkinBaker {
 
     public static boolean withinMaxRenderDistance(Entity entity) {
@@ -25,13 +27,13 @@ public final class SkinBaker {
         return true;
     }
 
-    public static PackedCubeFace cullFacesOnEquipmentPart(SkinPart skinPart) {
-        SkinCubeData cubeData = skinPart.getCubeData();
-        cubeData.setupFaceFlags();
-
-        PackedCube packedCube = new PackedCube(skinPart.getPartBounds(), cubeData);
-        return packedCube.getFaces();
-
+//        public static PackedCubeFace cullFacesOnEquipmentPart(SkinPart skinPart) {
+//        SkinCubeData cubeData = skinPart.getCubeData();
+//        cubeData.setupFaceFlags();
+//
+//        PackedCube packedCube = new PackedCube(skinPart.getPartBounds(), cubeData);
+//        return packedCube.getFaces();
+//
 //        skinPart.getClientSkinPartData().totalCubesInPart = new int[CubeRegistry.INSTANCE.getTotalCubes()];
 //        int[][][] cubeArray = new int[pb.getWidth()][pb.getHeight()][pb.getDepth()];
 //        for (int i = 0; i < cubeData.getCubeCount(); i++) {
@@ -65,8 +67,7 @@ public final class SkinBaker {
 //
 //        buildPartDisplayListArray(skinPart, null, null, cubeArray);
 //        return skinPart.getClientSkinPartData().vertexLists;
-    }
-
+//    }
 
 
     public static void buildPartDisplayListArray(SkinPart partData, int[][] dyeColour, int[] dyeUseCount, int[][][] cubeArray) {

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.painting;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.common.IExtraColours.ExtraColourType;
+import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
 
 public class SkinPaintType implements ISkinPaintType {
 
@@ -10,7 +11,7 @@ public class SkinPaintType implements ISkinPaintType {
 
     private boolean hasColourChannel;
     private int channelIndex;
-    private ExtraColourType colourType;
+    private SkinDyeType dyeType;
     private float textureU;
     private float textureV;
     private String registryName;
@@ -36,16 +37,20 @@ public class SkinPaintType implements ISkinPaintType {
 //    public ExtraColourType getColourType() {
 //        return colourType;
 //    }
-//
-    public SkinPaintType setExtraColourType(ExtraColourType colourType) {
-        this.colourType = colourType;
-        return this;
-    }
 
-    public SkinPaintType setTextureUV(float u, float v) {
+    public SkinPaintType setTexture(float u, float v) {
         this.textureU = u;
         this.textureV = v;
         return this;
+    }
+
+    public SkinPaintType setDyeType(SkinDyeType dyeType) {
+        this.dyeType = dyeType;
+        return this;
+    }
+
+    public SkinDyeType getDyeType() {
+        return dyeType;
     }
 
     @Override
@@ -79,10 +84,9 @@ public class SkinPaintType implements ISkinPaintType {
         return channelIndex;
     }
 
-//    @Override
-//    public void setColourChannelIndex(int channelIndex) {
-//        this.channelIndex = channelIndex;
-//    }
+    public void setChannelIndex(int channelIndex) {
+        this.channelIndex = channelIndex;
+    }
 
 
     @Override

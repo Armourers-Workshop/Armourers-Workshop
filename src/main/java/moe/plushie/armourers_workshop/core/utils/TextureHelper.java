@@ -46,12 +46,11 @@ public final class TextureHelper {
     }
     
     public static BufferedImage getBufferedImageSkin(ResourceLocation resourceLocation) {
-        Minecraft mc = Minecraft.getInstance();
         BufferedImage bufferedImage = null;
         InputStream inputStream = null;
         
         try {
-            Texture skintex = mc.getTextureManager().getTexture(resourceLocation);
+            Texture texture = Minecraft.getInstance().getTextureManager().getTexture(resourceLocation);
 //            if (skintex instanceof ThreadDownloadImageData) {
 //                ThreadDownloadImageData imageData = (ThreadDownloadImageData)skintex;
 //                bufferedImage  = ObfuscationReflectionHelper.getPrivateValue(ThreadDownloadImageData.class, imageData, "bufferedImage", "field_110560_d", "bpr.h");

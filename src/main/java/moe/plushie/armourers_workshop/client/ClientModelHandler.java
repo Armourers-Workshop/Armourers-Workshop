@@ -1,9 +1,12 @@
 package moe.plushie.armourers_workshop.client;
 
+import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.render.model.HeldItemModel;
 import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.part.unknown.UnknownPartType;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.vector.Vector3f;
@@ -13,6 +16,7 @@ public class ClientModelHandler extends ModelTransformer {
     public static void init() {
         registerBipedModel();
         registerItemModel();
+        registerPlayerModel();
     }
 
     private static void registerItemModel() {
@@ -88,5 +92,14 @@ public class ClientModelHandler extends ModelTransformer {
             item.xRot = (float) Math.PI / 2;
             return item;
         });
+    }
+
+    private static void registerPlayerModel() {
+        // simple
+//        registerArmor(PlayerModel.class, SkinPartTypes.PLAYER_JACKET, m -> m.jacket);
+//        registerArmor(PlayerModel.class, SkinPartTypes.PLAYER_LEFT_PANTS, m -> m.leftPants);
+//        registerArmor(PlayerModel.class, SkinPartTypes.PLAYER_RIGHT_PANTS, m -> m.rightPants);
+//        registerArmor(PlayerModel.class, SkinPartTypes.PLAYER_LEFT_SLEEVE, m -> m.leftSleeve);
+//        registerArmor(PlayerModel.class, SkinPartTypes.PLAYER_RIGHT_SLEEVE, m -> m.rightSleeve);
     }
 }

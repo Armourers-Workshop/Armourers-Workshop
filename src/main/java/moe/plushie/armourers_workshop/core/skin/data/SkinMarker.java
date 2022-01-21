@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.data;
 
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinMarker;
-import moe.plushie.armourers_workshop.core.utils.Point3D;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3i;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -27,8 +27,8 @@ public class SkinMarker implements ISkinMarker {
     }
 
     @Override
-    public Point3D getPosition() {
-        return new Point3D(x, y, z);
+    public Vector3i getPosition() {
+        return new Vector3i(x, y, z);
     }
 
     @Override

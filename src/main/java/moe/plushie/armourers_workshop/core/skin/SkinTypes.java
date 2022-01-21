@@ -2,7 +2,8 @@ package moe.plushie.armourers_workshop.core.skin;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
-import moe.plushie.armourers_workshop.core.api.action.IHasTag;
+import moe.plushie.armourers_workshop.core.api.ISkinArmorType;
+import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.tags.SkinTags;
 import moe.plushie.armourers_workshop.core.utils.SkinLog;
@@ -18,12 +19,12 @@ public final class SkinTypes {
 
     public static final ISkinType UNKNOWN = register("unknown", SkinPartTypes.UNKNOWN);
 
-    public static final ISkinType ARMOR_HEAD = register("head", SkinPartTypes.BIPED_HEAD);
-    public static final ISkinType ARMOR_CHEST = register("chest", SkinPartTypes.BIPED_CHEST, SkinPartTypes.BIPED_LEFT_ARM, SkinPartTypes.BIPED_RIGHT_ARM);
-    public static final ISkinType ARMOR_LEGS = register("legs", SkinPartTypes.BIPED_LEFT_LEG, SkinPartTypes.BIPED_RIGHT_LEG, SkinPartTypes.BIPED_SKIRT);
-    public static final ISkinType ARMOR_FEET = register("feet", SkinPartTypes.BIPED_LEFT_FOOT, SkinPartTypes.BIPED_RIGHT_FOOT);
-    public static final ISkinType ARMOR_WINGS = register("wings", SkinPartTypes.BIPED_LEFT_WING, SkinPartTypes.BIPED_RIGHT_WING);
-    public static final ISkinType ARMOR_OUTFIT = register("outfit", new ParameterizedSkinType(ARMOR_HEAD, ARMOR_CHEST, ARMOR_LEGS, ARMOR_FEET, ARMOR_WINGS));
+    public static final ISkinType ARMOR_HEAD = registerArmor("head", SkinPartTypes.BIPED_HEAD);
+    public static final ISkinType ARMOR_CHEST = registerArmor("chest", SkinPartTypes.BIPED_CHEST, SkinPartTypes.BIPED_LEFT_ARM, SkinPartTypes.BIPED_RIGHT_ARM);
+    public static final ISkinType ARMOR_LEGS = registerArmor("legs", SkinPartTypes.BIPED_LEFT_LEG, SkinPartTypes.BIPED_RIGHT_LEG, SkinPartTypes.BIPED_SKIRT);
+    public static final ISkinType ARMOR_FEET = registerArmor("feet", SkinPartTypes.BIPED_LEFT_FOOT, SkinPartTypes.BIPED_RIGHT_FOOT);
+    public static final ISkinType ARMOR_WINGS = registerArmor("wings", SkinPartTypes.BIPED_LEFT_WING, SkinPartTypes.BIPED_RIGHT_WING);
+    public static final ISkinType ARMOR_OUTFIT = registerArmor("outfit", SkinTypes.ARMOR_HEAD, SkinTypes.ARMOR_CHEST, SkinTypes.ARMOR_LEGS, SkinTypes.ARMOR_FEET, SkinTypes.ARMOR_WINGS);
 
     public static final ISkinType HORSE = register("horse", SkinPartTypes.BLOCK, SkinPartTypes.BLOCK_MULTI);
 
@@ -54,21 +55,24 @@ public final class SkinTypes {
         return ALL_TYPES.getOrDefault(registryName, UNKNOWN);
     }
 
-
-    private static ISkinType register(String name, ISkinType... types) {
-        List<ISkinPartType> partTypes = new ArrayList<>();
-        for (ISkinType type : types) {
-            partTypes.addAll(type.getParts());
-        }
-        return register(name, new ParameterizedSkinType(partTypes));
-    }
-
     private static ISkinType register(String name, ISkinPartType... parts) {
         return register(name, new ParameterizedSkinType(Arrays.asList(parts)));
     }
 
+    private static ISkinType registerArmor(String name, ISkinPartType... parts) {
+        return register(name, new ArmorType(Arrays.asList(parts)));
+    }
+
+    private static ISkinType registerArmor(String name, ISkinType... types) {
+        List<ISkinPartType> partTypes = new ArrayList<>();
+        for (ISkinType type : types) {
+            partTypes.addAll(type.getParts());
+        }
+        return register(name, new ArmorType(partTypes));
+    }
+
     private static ISkinType registerItem(String name, ITag<Item> tag, ISkinPartType... parts) {
-        return register(name, new ParameterizedItemSkinType(Arrays.asList(parts), tag));
+        return register(name, new ItemType(Arrays.asList(parts), tag));
     }
 
     private static ISkinType register(String name, ParameterizedSkinType type) {
@@ -82,7 +86,7 @@ public final class SkinTypes {
             return type;
         }
         ALL_TYPES.put(type.getRegistryName(), type);
-        SkinLog.info("Registering Skin '{}'", type.getRegistryName());
+        SkinLog.debug("Registering Skin '{}'", type.getRegistryName());
         return type;
     }
 
@@ -94,14 +98,6 @@ public final class SkinTypes {
 
         public ParameterizedSkinType(List<? extends ISkinPartType> parts) {
             this.parts = parts;
-        }
-
-        public ParameterizedSkinType(ISkinType... types) {
-            List<ISkinPartType> partTypes = new ArrayList<>();
-            for (ISkinType type : types) {
-                partTypes.addAll(type.getParts());
-            }
-            this.parts = partTypes;
         }
 
         @Override
@@ -120,11 +116,17 @@ public final class SkinTypes {
 
     }
 
-    private static class ParameterizedItemSkinType extends ParameterizedSkinType implements IHasTag {
+    private static class ArmorType extends ParameterizedSkinType implements ISkinArmorType {
+        public ArmorType(List<? extends ISkinPartType> parts) {
+            super(parts);
+        }
+    }
+
+    private static class ItemType extends ParameterizedSkinType implements ISkinToolType {
 
         protected ITag<Item> tag;
 
-        public ParameterizedItemSkinType(List<? extends ISkinPartType> parts, ITag<Item> tag) {
+        public ItemType(List<? extends ISkinPartType> parts, ITag<Item> tag) {
             super(parts);
             this.tag = tag;
         }

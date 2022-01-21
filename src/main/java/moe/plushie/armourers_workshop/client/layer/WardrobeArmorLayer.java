@@ -22,6 +22,6 @@ public class WardrobeArmorLayer<T extends LivingEntity, M extends BipedModel<T>>
     @Override
     @ParametersAreNonnullByDefault
     public void render(MatrixStack matrixStack, IRenderTypeBuffer renderType, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        ClientWardrobeHandler.onRenderArmor(entity, getParentModel(), packedLightIn, partialTicks, matrixStack, renderType);
+        ClientWardrobeHandler.onRenderArmor(entity, getParentModel(), packedLightIn, matrixStack, renderType);
     }
 }

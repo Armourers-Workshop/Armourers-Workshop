@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.common.item;
 
-import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
+import moe.plushie.armourers_workshop.core.entity.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.utils.SkinCore;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -24,5 +24,7 @@ public class SkinItems {
         }
     });
 
-    public static final RegistryObject<Item> SKIN = ITEMS.register("skin", () -> new SkinItem(new Item.Properties().stacksTo(1).setISTER(() -> () -> SkinItemRenderer.INSTANCE).tab(TAB_SKIN)));
+    public static final RegistryObject<Item> SKIN = ITEMS.register("skin", () -> new SkinItem(new Item.Properties().stacksTo(1).setISTER(() -> () -> SkinItemStackRenderer.INSTANCE)));
+
+
 }

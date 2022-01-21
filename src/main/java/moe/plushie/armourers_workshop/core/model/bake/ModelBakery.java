@@ -1,18 +1,30 @@
 package moe.plushie.armourers_workshop.core.model.bake;
 
+import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.render.other.BakedSkin;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.*;
+import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
-//@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public final class ModelBakery {
 
     public static final ModelBakery INSTANCE = new ModelBakery();
 
-//    private final Executor skinBakeExecutor;
+    //    private final Executor skinBakeExecutor;
 //    private final Executor skinDownloadExecutor;
 //    private final CompletionService<BakedSkin> skinCompletion;
     private final AtomicInteger bakingQueue = new AtomicInteger(0);
@@ -135,13 +147,20 @@ public final class ModelBakery {
 //                skin.addPaintDataParts();
 //            }
 
+            PackedColorInfo colorInfo = new PackedColorInfo();
+
             for (SkinPart skinPart : skin.getParts()) {
 //                int[][] partDyeColour = new int[3][extraDyes];
 //                int[] partDyeUseCount = new int[extraDyes];
 
-                skinPart.setPackedFaces(SkinBaker.cullFacesOnEquipmentPart(skinPart));
+
+                PackedCube packedCube = new PackedCube(skinPart.getPartBounds(), skinPart.getCubeData());
+                skinPart.setPackedFaces(packedCube.getFaces());
                 skinPart.clearCubeData();
 
+                colorInfo.add(packedCube.getColorInfo());
+
+                skinPart.getQuads().colorInfo = packedCube.getColorInfo().optimize();
 //                int[] partAverageR = new int[extraDyes];
 //                int[] partAverageG = new int[extraDyes];
 //                int[] partAverageB = new int[extraDyes];
@@ -158,35 +177,51 @@ public final class ModelBakery {
 //                partData.getClientSkinPartData().setAverageDyeValues(partAverageR, partAverageG, partAverageB);
             }
 
-//            if (skin.hasPaintData()) {
-//                skin.skinModelTexture = new SkinModelTexture();
-//                for (int ix = 0; ix < SkinTexture.TEXTURE_WIDTH; ix++) {
-//                    for (int iy = 0; iy < SkinTexture.TEXTURE_HEIGHT; iy++) {
-//                        int paintColour = skin.getPaintData()[ix + (iy * SkinTexture.TEXTURE_WIDTH)];
-//                        ISkinPaintType paintType = SkinPaintTypes.getInstance().getPaintTypeFromColour(paintColour);
-//                        if (paintType.hasAverageColourChannel()) {
-//                            int index = paintType.getChannelIndex();
-//                            byte r = (byte) (paintColour >>> 16 & 0xFF);
-//                            byte g = (byte) (paintColour >>> 8 & 0xFF);
-//                            byte b = (byte) (paintColour & 0xFF);
-//                            dyeUseCount[index]++;
-//                            dyeColour[0][index] += r & 0xFF;
-//                            dyeColour[1][index] += g & 0xFF;
-//                            dyeColour[2][index] += b & 0xFF;
-//                        }
-//                    }
+            if (skin.hasPaintData()) {
+                int[] data = skin.getPaintData();
+//                try {
+////                    String a = "/Users/sagesse/Library/Application Support/minecraft/versions/1.16.5/1.16.5-assets/minecraft/textures/entity/alex.png";
+//                    String a = "/Users/sagesse/Library/Application Support/minecraft/versions/1.16.5/1.16.5-assets/minecraft/textures/entity/steve.png";
+////                    String a = "/Users/sagesse/Downloads/19248233.png";
+////                    String a = "/Users/sagesse/Downloads/18355538.png";
+//                    BufferedImage image = ImageIO.read(new File(a));
+//                    int[] data2 = new int[64 * 64];
+//                    image.getRGB(0, 0, 64, 64, data2, 0, 64);
+//                    data = data2;
+//                } catch (IOException e) {
+//                    e.printStackTrace();
 //                }
-//            }
-//
-//            int[] averageR = new int[extraDyes];
-//            int[] averageG = new int[extraDyes];
-//            int[] averageB = new int[extraDyes];
-//
-//            for (int i = 0; i < extraDyes; i++) {
-//                averageR[i] = (int) ((double) dyeColour[0][i] / (double) dyeUseCount[i]);
-//                averageG[i] = (int) ((double) dyeColour[1][i] / (double) dyeUseCount[i]);
-//                averageB[i] = (int) ((double) dyeColour[2][i] / (double) dyeUseCount[i]);
-//            }
+
+                int width = 64;
+                int height = 32;
+                int[] finalData = data;
+                int partIndex = 0;
+                ArrayList<SkinPart> paintParts = new ArrayList<>();
+                for (SkinTexturedModel model : SkinTexturedModel.getPlayerModels(width, height, false)) {
+                    PackedCubeFace faces = new PackedCubeFace();
+                    model.forEach((u, v, x, y, z, dir) -> {
+                        int c = finalData[v * width + u];
+                        ISkinPaintType paintType = SkinPaintTypes.byId((c >> 24) & 0xFF);
+                        if (paintType == SkinPaintTypes.NONE) {
+                            return;
+                        }
+                        ColouredFace f = new ColouredFace(x, y, z, c, (byte) 255, (byte) 0, dir, SkinCubes.SOLID, paintType);
+                        faces.add(f);
+                    });
+                    if (faces.getTotal() == 0) {
+                        continue;
+                    }
+                    SkinPaintPart paintPart = new SkinPaintPart(model);
+                    paintPart.setId(--partIndex);
+                    paintPart.setPackedFaces(faces);
+                    paintPart.setProperties(new SkinProperties());
+                    paintParts.add(0, paintPart);
+                }
+                skin.getRenderParts().addAll(paintParts);
+            }
+
+            skin.colorInfo = colorInfo.optimize();
+
 //
 //            for (int i = 0; i < skin.getParts().size(); i++) {
 //                SkinPart partData = skin.getParts().get(i);
@@ -195,9 +230,6 @@ public final class ModelBakery {
 //            }
 //
 //            skin.setAverageDyeValues(averageR, averageG, averageB);
-            if (skin.hasPaintData()) {
-                skin.skinModelTexture.createTextureForColours(skin, null);
-            }
             long totalTime = System.currentTimeMillis() - startTime;
             int index = bakeTimesIndex.getAndIncrement();
             if (index > bakeTimes.length() - 1) {

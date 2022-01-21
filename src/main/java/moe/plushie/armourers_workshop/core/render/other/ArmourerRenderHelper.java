@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.render.other;//package moe.plushie.a
 //
 //import org.lwjgl.opengl.GL11;
 //
-//import moe.plushie.armourers_workshop.core.api.common.Point3D;
+//import moe.plushie.armourers_workshop.core.api.common.Vector3i;
 //import moe.plushie.armourers_workshop.core.api.common.Rectangle3D;
 //import moe.plushie.armourers_workshop.core.api.common.skin.type.ISkinPartType;
 //import moe.plushie.armourers_workshop.core.api.common.skin.type.ISkinType;
@@ -34,7 +34,7 @@ package moe.plushie.armourers_workshop.core.render.other;//package moe.plushie.a
 //            if (skinPart.isModelOverridden(skinProps)) {
 //                continue;
 //            }
-//            Point3D partOffset = skinPart.getOffset();
+//            Vector3i partOffset = skinPart.getOffset();
 //            GlStateManager.translate(partOffset.getX() * scale, partOffset.getY() * scale, partOffset.getZ() * scale);
 //            skinPart.renderBuildingGuide(scale, skinProps, showHelper);
 //            GlStateManager.translate(-partOffset.getX() * scale, -partOffset.getY() * scale, -partOffset.getZ() * scale);
@@ -45,7 +45,7 @@ package moe.plushie.armourers_workshop.core.render.other;//package moe.plushie.a
 //    public static void renderBuildingGrid(ISkinType skinType, float scale, boolean showGuides, SkinProperties skinProps, boolean multiblock) {
 //        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
 //            ISkinPartType skinPartType = skinType.getSkinParts().get(i);
-//            Point3D partOffset = skinPartType.getOffset();
+//            Vector3i partOffset = skinPartType.getOffset();
 //            GlStateManager.translate(partOffset.getX() * scale, partOffset.getY() * scale, partOffset.getZ() * scale);
 //            if (skinType == SkinTypeRegistry.skinBlock) {
 //                if (skinPartType.getPartName().equals("multiblock") & multiblock) {
