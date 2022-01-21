@@ -4,12 +4,9 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
-import moe.plushie.armourers_workshop.core.utils.SkinUtils;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,25 +26,20 @@ public class ModelTransformer {
     private static final TransformerRegistry<ItemCameraTransforms.TransformType> HAND = new TransformerRegistry<>();
 
 
-    public static <T extends Model> ModelRenderer getModelRenderer(SkinPart skinPart, T model, ItemCameraTransforms.TransformType transformType) {
-        //
-        if (skinPart.getType() instanceof ICanHeld) {
-            if (transformType == null) {
-                transformType = ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND;
-            }
-            ModelRenderer modelRenderer = HAND.transform(transformType, model, skinPart);
+    public static <T extends Model> ModelRenderer getTransform(ISkinPartType partType, T model, ItemCameraTransforms.TransformType transformType) {
+        if (partType instanceof ICanHeld) {
+            ModelRenderer modelRenderer = HAND.transform(transformType, model);
             if (modelRenderer != null) {
                 return modelRenderer;
             }
         }
-        return ARMOR.transform(skinPart.getType(), model, skinPart);
+        return ARMOR.transform(partType, model);
     }
 
     public static void apply(MatrixStack matrixStack, ModelRenderer modelRenderer) {
         if (modelRenderer == EMPTY) {
             return;
         }
-        //
         Vector3f scale = null;
         if (modelRenderer instanceof OffsetModelRenderer) {
             OffsetModelRenderer offsetModelRenderer = (OffsetModelRenderer) modelRenderer;
@@ -71,46 +63,6 @@ public class ModelTransformer {
         }
     }
 
-    public static VoxelShape apply(VoxelShape shape, ModelRenderer modelRenderer) {
-        if (modelRenderer == EMPTY) {
-            return shape;
-        }
-        MatrixStack matrixStack = new MatrixStack();
-        apply(matrixStack, modelRenderer);
-//
-//        Matrix4f matrix = getMatrix(modelRenderer);
-//        if (modelRenderer instanceof OffsetModelRenderer) {
-//            OffsetModelRenderer offsetModelRenderer = ((OffsetModelRenderer) modelRenderer);
-//            if (offsetModelRenderer.modelRenderer != null) {
-//                Matrix4f matrix1 = getMatrix(offsetModelRenderer.modelRenderer);
-//                matrix1.multiply(matrix);
-//                matrix = matrix1;
-//            }
-//            if (offsetModelRenderer.scale != null) {
-//                Vector3f scale = offsetModelRenderer.scale;
-//                matrix.multiply(Matrix4f.createScaleMatrix(scale.x(), scale.y(), scale.z()));
-//            }
-//        }
-        return SkinUtils.apply(shape, matrixStack.last().pose());
-    }
-
-//    private static Matrix4f getMatrix(ModelRenderer modelRenderer) {
-//        Matrix4f matrix = new Matrix4f();
-//        matrix.setIdentity();
-//        matrix.setTranslation(modelRenderer.x, modelRenderer.y, modelRenderer.z);
-//        if (modelRenderer.zRot != 0) {
-//            matrix.multiply(Vector3f.ZP.rotation(modelRenderer.zRot));
-//        }
-//        if (modelRenderer.yRot != 0) {
-//            matrix.multiply(Vector3f.YP.rotation(modelRenderer.yRot));
-//        }
-//        if (modelRenderer.xRot != 0) {
-//            matrix.multiply(Vector3f.XP.rotation(modelRenderer.xRot));
-//        }
-//        return matrix;
-//    }
-
-
     public static <M extends Model> void registerArmor(Class<M> model, ISkinPartType key, Function<M, ModelRenderer> function) {
         ARMOR.add(model, key, function);
     }
@@ -130,7 +82,7 @@ public class ModelTransformer {
         }
 
         @SuppressWarnings("unchecked")
-        <M extends Model> ModelRenderer transform(K key, M model, SkinPart part, Map<K, List<Object>> list) {
+        <M extends Model> ModelRenderer transform(K key, M model, Map<K, List<Object>> list) {
             if (list == null) {
                 return null;
             }
@@ -147,12 +99,12 @@ public class ModelTransformer {
             return null;
         }
 
-        <M extends Model> ModelRenderer transform(K key, M model, SkinPart part) {
+        <M extends Model> ModelRenderer transform(K key, M model) {
             if (model == null) {
                 return EMPTY;
             }
             // fast path
-            ModelRenderer modelRenderer0 = transform(key, model, part, registerList.get(model.getClass()));
+            ModelRenderer modelRenderer0 = transform(key, model, registerList.get(model.getClass()));
             if (modelRenderer0 != null) {
                 return modelRenderer0;
             }
@@ -161,7 +113,7 @@ public class ModelTransformer {
                 if (!entry.getKey().isInstance(model)) {
                     continue;
                 }
-                ModelRenderer modelRenderer1 = transform(key, model, part, entry.getValue());
+                ModelRenderer modelRenderer1 = transform(key, model, entry.getValue());
                 if (modelRenderer1 != null) {
                     return modelRenderer1;
                 }

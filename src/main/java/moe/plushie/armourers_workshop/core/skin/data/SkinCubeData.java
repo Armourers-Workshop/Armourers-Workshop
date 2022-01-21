@@ -1,14 +1,15 @@
 package moe.plushie.armourers_workshop.core.skin.data;
 
+import moe.plushie.armourers_workshop.core.api.ISkinCube;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.api.common.skin.ICube;
 import moe.plushie.armourers_workshop.core.model.bake.ColouredFace;
-import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.skin.cubes.SkinCubes;
+import moe.plushie.armourers_workshop.core.render.other.SkinRenderShape;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.LegacyCubeHelper;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
-import moe.plushie.armourers_workshop.core.utils.Rectangle3D;
+import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
 import net.minecraft.util.Direction;
 
 import java.io.DataInputStream;
@@ -18,6 +19,17 @@ import java.util.Arrays;
 import java.util.BitSet;
 
 public class SkinCubeData {
+
+    // 0 = down, 1 = up, 2 = south, 3 = north, 4 = west, 5 = east
+    public final static byte[] DIRECTION_TO_SIDE = {
+            0, // down(0)
+            1, // up(1)
+            3, // north(2)
+            2, // south(3)
+            4, // west(4)
+            5, // east(5)
+    };
+
     private byte[] cubeId;
     private byte[] cubeLocX;
     private byte[] cubeLocY;
@@ -26,7 +38,6 @@ public class SkinCubeData {
     private byte[][] cubeColourG;
     private byte[][] cubeColourB;
     private byte[][] cubePaintType;
-
     private BitSet[] faceFlags;
 
     public void setFaceFlags(int index, BitSet faceFlags) {
@@ -67,8 +78,8 @@ public class SkinCubeData {
         return cubeId[index];
     }
 
-    public ICube getCube(int index) {
-        return SkinCubes.INSTANCE.getCubeFormId(cubeId[index]);
+    public ISkinCube getCube(int index) {
+        return SkinCubes.byId(cubeId[index]);
     }
 
     public void setCubeColour(int index, int side, byte r, byte g, byte b) {
@@ -76,43 +87,43 @@ public class SkinCubeData {
         cubeColourG[index][side] = g;
         cubeColourB[index][side] = b;
     }
-
-    public byte[] getCubeColour(int index, int side) {
-        return new byte[]{cubeColourR[index][side], cubeColourG[index][side], cubeColourB[index][side]};
-    }
-
-    public byte[] getCubeColourR(int index) {
-        return new byte[]{
-                cubeColourR[index][0],
-                cubeColourR[index][1],
-                cubeColourR[index][2],
-                cubeColourR[index][3],
-                cubeColourR[index][4],
-                cubeColourR[index][5],
-        };
-    }
-
-    public byte[] getCubeColourG(int index) {
-        return new byte[]{
-                cubeColourG[index][0],
-                cubeColourG[index][1],
-                cubeColourG[index][2],
-                cubeColourG[index][3],
-                cubeColourG[index][4],
-                cubeColourG[index][5],
-        };
-    }
-
-    public byte[] getCubeColourB(int index) {
-        return new byte[]{
-                cubeColourB[index][0],
-                cubeColourB[index][1],
-                cubeColourB[index][2],
-                cubeColourB[index][3],
-                cubeColourB[index][4],
-                cubeColourB[index][5],
-        };
-    }
+//
+//    public byte[] getCubeColour(int index, int side) {
+//        return new byte[]{cubeColourR[index][side], cubeColourG[index][side], cubeColourB[index][side]};
+//    }
+//
+//    public byte[] getCubeColourR(int index) {
+//        return new byte[]{
+//                cubeColourR[index][0],
+//                cubeColourR[index][1],
+//                cubeColourR[index][2],
+//                cubeColourR[index][3],
+//                cubeColourR[index][4],
+//                cubeColourR[index][5],
+//        };
+//    }
+//
+//    public byte[] getCubeColourG(int index) {
+//        return new byte[]{
+//                cubeColourG[index][0],
+//                cubeColourG[index][1],
+//                cubeColourG[index][2],
+//                cubeColourG[index][3],
+//                cubeColourG[index][4],
+//                cubeColourG[index][5],
+//        };
+//    }
+//
+//    public byte[] getCubeColourB(int index) {
+//        return new byte[]{
+//                cubeColourB[index][0],
+//                cubeColourB[index][1],
+//                cubeColourB[index][2],
+//                cubeColourB[index][3],
+//                cubeColourB[index][4],
+//                cubeColourB[index][5],
+//        };
+//    }
 
     public void setCubeLocation(int index, byte x, byte y, byte z) {
         cubeLocX[index] = x;
@@ -137,17 +148,17 @@ public class SkinCubeData {
     }
 
     public ColouredFace getCubeFace(int index, Direction dir) {
-        byte face = (byte) dir.get3DDataValue();
-        ICube cube = getCube(index);
-        ISkinPaintType paintType = SkinPaintTypes.byId(cubePaintType[index][face]);
-        byte r = cubeColourR[index][face];
-        byte g = cubeColourG[index][face];
-        byte b = cubeColourB[index][face];
-        byte a = (byte) 255;
+        byte side = DIRECTION_TO_SIDE[dir.get3DDataValue()];
+        ISkinCube cube = getCube(index);
+        ISkinPaintType paintType = SkinPaintTypes.byId(cubePaintType[index][side]);
+        byte r = cubeColourR[index][side];
+        byte g = cubeColourG[index][side];
+        byte b = cubeColourB[index][side];
         byte x = cubeLocX[index];
         byte y = cubeLocY[index];
         byte z = cubeLocZ[index];
 
+        byte a = (byte) 255;
         if (cube.isGlass()) {
             a = (byte) 127;
         }
@@ -155,8 +166,26 @@ public class SkinCubeData {
         return new ColouredFace(x, y, z, r, g, b, a, (byte) 1, dir, cube, paintType);
     }
 
+    public SkinRenderShape getRenderShape() {
+        if (cubeLocX == null) {
+            return SkinRenderShape.empty();
+        }
+        SkinRenderShape shape = SkinRenderShape.empty();
+        int count = cubeLocX.length;
+        if (count == 0) {
+            return shape;
+        }
+        for (int i = 0; i < count; ++i) {
+            byte x = cubeLocX[i];
+            byte y = cubeLocY[i];
+            byte z = cubeLocZ[i];
+            shape.add(x, y, z, 1, 1, 1);
+        }
+        shape.optimize();
+        return shape;
+    }
 
-    public Rectangle3D getBounds() {
+    public Rectangle3i getBounds() {
         byte minX = 127;
         byte minY = 127;
         byte minZ = 127;
@@ -175,7 +204,7 @@ public class SkinCubeData {
             if (maxY < y) maxY = y;
             if (maxZ < z) maxZ = z;
         }
-        return new Rectangle3D(minX, minY, minZ, maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
+        return new Rectangle3i(minX, minY, minZ, maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
     }
 
 
@@ -207,7 +236,6 @@ public class SkinCubeData {
             stream.writeByte(cubeLocZ[i]);
             for (int side = 0; side < 6; side++) {
                 stream.writeByte(cubeColourR[i][side]);
-                stream.writeByte(cubeColourG[i][side]);
                 stream.writeByte(cubeColourB[i][side]);
                 stream.writeByte(cubePaintType[i][side]);
             }

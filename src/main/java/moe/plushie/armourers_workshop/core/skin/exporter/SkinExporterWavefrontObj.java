@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.exporter;//package moe.plushie.armourers_workshop.core.skin.exporter;
 //
-//import moe.plushie.armourers_workshop.core.api.common.Point3D;
+//import moe.plushie.armourers_workshop.core.api.common.Vector3i;
 //import moe.plushie.armourers_workshop.core.api.common.skin.ISkinExporter;
 //import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
 //import moe.plushie.armourers_workshop.core.skin.PaintTypeRegistry;
@@ -232,7 +232,7 @@ package moe.plushie.armourers_workshop.core.skin.exporter;//package moe.plushie.
 //    }
 //
 //    private void writeVert(SkinPart skinPart, OutputStreamWriter os, float x, float y, float z) throws IOException {
-//        Point3D pos = skinPart.getType().getRenderOffset();
+//        Vector3i pos = skinPart.getType().getRenderOffset();
 //        os.write(String.format("v %f %f %f", x + -scale * pos.getZ(), z + -scale * pos.getY(), y * -1 + -scale * pos.getX()) + CRLF);
 //    }
 //

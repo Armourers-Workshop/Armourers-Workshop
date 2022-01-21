@@ -210,7 +210,7 @@
 //////        }
 //////        matrixStack.translate(0, 0, 2 * partRenderData.getScale());
 //////
-//////        Point3D point = new Point3D(0, 0, 0);
+//////        Vector3i point = new Vector3i(0, 0, 0);
 //////        EnumFacing axis = EnumFacing.DOWN;
 //////
 //////        if (partRenderData.getSkinPart().getMarkerCount() > 0) {
@@ -259,7 +259,7 @@
 //////            GlStateManager.rotate((float) Math.toDegrees(bipedBody.rotateAngleX), 1F, 0, 0);
 //////        }
 //////        matrixStack.translate(0, 0, 2 * partRenderData.getScale());
-//////        Point3D point = new Point3D(0, 0, 0);
+//////        Vector3i point = new Vector3i(0, 0, 0);
 //////        EnumFacing axis = EnumFacing.DOWN;
 //////
 //////        if (partRenderData.getSkinPart().getMarkerCount() > 0) {

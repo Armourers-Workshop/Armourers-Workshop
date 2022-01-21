@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.model.bake;
 
-import moe.plushie.armourers_workshop.core.api.common.skin.ICube;
+import moe.plushie.armourers_workshop.core.api.ISkinCube;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
-import moe.plushie.armourers_workshop.core.skin.cubes.SkinCubes;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinCubeData;
-import moe.plushie.armourers_workshop.core.utils.Rectangle3D;
+import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,21 +20,29 @@ import java.util.HashSet;
 @OnlyIn(Dist.CLIENT)
 public class PackedCube {
 
-    final Rectangle3D bounds;
+    final Rectangle3i bounds;
     final SkinCubeData cubeData;
 
     private int[] totals;
     private int[][][] indexes;
+    private PackedColorInfo colorInfo;
 
-    public PackedCube(Rectangle3D bounds, SkinCubeData cubeData) {
+    public PackedColorInfo getColorInfo() {
+        return colorInfo;
+    }
+
+    public PackedCube(Rectangle3i bounds, SkinCubeData cubeData) {
         this.bounds = bounds;
         this.cubeData = cubeData;
     }
 
     public PackedCubeFace getFaces() {
         //
-        this.totals = new int[SkinCubes.INSTANCE.getTotalCubes()];
+        this.totals = new int[SkinCubes.getTotalCubes()];
         this.indexes = new int[bounds.getDepth()][bounds.getHeight()][bounds.getWidth()];
+        this.colorInfo = new PackedColorInfo();
+
+        cubeData.setupFaceFlags();
 
         for (int i = 0; i < cubeData.getCubeCount(); i++) {
             int cubeId = cubeData.getCubeId(i);
@@ -56,71 +64,13 @@ public class PackedCube {
 
 
     private void buildFaces(PackedCubeFace packedFace) {
-        boolean multipassSkinRendering = SkinConfig.multipassSkinRendering;
-
-        int lodLevels = SkinConfig.maxLodLevels;
-
-        /* LOD Indexs
-         *
-         * with multipass;
-         * 0 = normal
-         * 1 = glowing
-         * 2 = glass
-         * 3 = glass glowing
-         *
-         * without multipass
-         * 0 = normal
-         * 1 = glowing
-         */
-
-//        for (int i = 0; i < renderLists.length; i++) {
-//            renderLists[i] = new ArrayList<ColouredFace>();
-//        }
-
-//        float scale = 0.0625F;
         for (int i = 0; i < cubeData.getCubeCount(); ++i) {
-//            byte[] loc = cubeData.getCubeLocation(i);
-//                byte[] paintType = cubeData.getCubePaintType(i);
-//            ICube cube = cubeData.getCube(i);
-//
-//
-//                byte[] r = cubeData.getCubeColourR(i);
-//                byte[] g = cubeData.getCubeColourG(i);
-//                byte[] b = cubeData.getCubeColourB(i);
-//
-//                for (int j = 0; j < 6; j++) {
-//                    IPaintType type = PaintTypeRegistry.getInstance().getPaintTypeFormByte(paintType[j]);
-//                    if (type.hasAverageColourChannel()) {
-//                        int index = type.getChannelIndex();
-//                        dyeUseCount[index]++;
-//                        dyeColour[0][index] += r[j] & 0xFF;
-//                        dyeColour[1][index] += g[j] & 0xFF;
-//                        dyeColour[2][index] += b[j] & 0xFF;
-//                    }
-//                }
-//
-//                int listIndex = 0;
-//                if (multipassSkinRendering) {
-//                    if (cube.isGlowing() && !cube.needsPostRender()) {
-//                        listIndex = 1;
-//                    }
-//                    if (cube.needsPostRender() && !cube.isGlowing()) {
-//                        listIndex = 2;
-//                    }
-//                    if (cube.isGlowing() && cube.needsPostRender()) {
-//                        listIndex = 3;
-//                    }
-//                } else {
-//                    if (cube.isGlowing()) {
-//                        listIndex = 1;
-//                    }
-//                }
-
             for (Direction dir : Direction.values()) {
                 if (!cubeData.getFaceFlags(i).get(dir.get3DDataValue())) {
                     continue;
                 }
                 ColouredFace face = cubeData.getCubeFace(i, dir);
+                colorInfo.add(face.paintType, face.rgb);
                 packedFace.add(face);
             }
         }
@@ -144,7 +94,7 @@ public class PackedCube {
                 Vector3i pos1 = pos.relative(dir, 1);
 
                 // Add new cubes to the open list.
-                ICube cube1 = getCube(pos1);
+                ISkinCube cube1 = getCube(pos1);
                 if (cube1 == null) {
                     pendingList.add(pos1);
                     continue;
@@ -170,7 +120,7 @@ public class PackedCube {
         }
     }
 
-    private ICube getCube(Vector3i pos) {
+    private ISkinCube getCube(Vector3i pos) {
         int index = getCubeIndex(pos.getX(), pos.getY(), pos.getZ());
         if (index == -1) {
             return null;
@@ -189,10 +139,10 @@ public class PackedCube {
         return -1;
     }
 
-    private boolean isLinkedGlass(ICube cube, Vector3i pos) {
+    private boolean isLinkedGlass(ISkinCube cube, Vector3i pos) {
         // When cube and target cube is linked glass, ignore.
         if (cube.isGlass()) {
-            ICube targetCube = getCube(pos);
+            ISkinCube targetCube = getCube(pos);
             return targetCube != null && targetCube.isGlass();
         }
         return false;
@@ -218,6 +168,6 @@ public class PackedCube {
     }
 
     public interface ICubeConsumer {
-        void consume(@Nonnull ICube cube, int x, int y, int z);
+        void consume(@Nonnull ISkinCube cube, int x, int y, int z);
     }
 }

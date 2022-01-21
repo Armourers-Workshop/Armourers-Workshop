@@ -10,17 +10,29 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import moe.plushie.armourers_workshop.common.item.SkinItems;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
-import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
+import moe.plushie.armourers_workshop.core.render.other.BakedSkin;
+import moe.plushie.armourers_workshop.core.render.renderer.SkinItemRenderer;
+import moe.plushie.armourers_workshop.core.skin.data.Skin;
+import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.utils.ReflectArgumentBuilder;
+import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class SkinCommands {
@@ -32,37 +44,12 @@ public class SkinCommands {
                 .then(Commands.literal("setSkin").then(players().then(slots().then(skins().executes(Executor::setSkin)))))
                 .then(Commands.literal("giveSkin").then(players().then(skins().executes(Executor::giveSkin))))
                 .then(Commands.literal("clearSkin").then(players().executes(Executor::clearSkin)))
+                .then(ReflectArgumentBuilder.literal("config", SkinConfig.class))
                 .then(Commands.literal("test")
                         .then(DebugCommand.disablePart())
                         .then(DebugCommand.clearCache())
                         .then(DebugCommand.rote()));
     }
-
-
-//    public static void register(CommandDispatcher<CommandSource> source) {
-//        p_198510_0_.register(Commands.literal("help").executes((p_198511_1_) -> {
-//            Map<CommandNode<CommandSource>, String> map = p_198510_0_.getSmartUsage(p_198510_0_.getRoot(), p_198511_1_.getSource());
-//
-//            for(String s : map.values()) {
-//                p_198511_1_.getSource().sendSuccess(new StringTextComponent("/" + s), false);
-//            }
-//
-//            return map.size();
-//        }).then(Commands.argument("command", StringArgumentType.greedyString()).executes((p_198512_1_) -> {
-//            ParseResults<CommandSource> parseresults = p_198510_0_.parse(StringArgumentType.getString(p_198512_1_, "command"), p_198512_1_.getSource());
-//            if (parseresults.getContext().getNodes().isEmpty()) {
-//                throw ERROR_FAILED.create();
-//            } else {
-//                Map<CommandNode<CommandSource>, String> map = p_198510_0_.getSmartUsage(Iterables.getLast(parseresults.getContext().getNodes()).getNode(), p_198512_1_.getSource());
-//
-//                for(String s : map.values()) {
-//                    p_198512_1_.getSource().sendSuccess(new StringTextComponent("/" + parseresults.getReader().getString() + " " + s), false);
-//                }
-//
-//                return map.size();
-//            }
-//        })));
-//    }
 
     static ArgumentBuilder<CommandSource, ?> players() {
         return Commands.argument("targets", EntityArgument.players());
@@ -81,19 +68,73 @@ public class SkinCommands {
     }
 
     private static class Executor {
-        static int setSkin(CommandContext<CommandSource> source) throws CommandSyntaxException {
-            int slot = IntegerArgumentType.getInteger(source, "slot");
-            String skin = StringArgumentType.getString(source, "skin");
-            Collection<ServerPlayerEntity> players = EntityArgument.getPlayers(source, "targets");
+
+        static Skin loadSkin(String str) {
+            BakedSkin bakedSkin = BakedSkin.by(str);
+            if (bakedSkin != null) {
+                return bakedSkin.getSkin();
+            }
+            return null;
+        }
+
+
+        static int setSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
+            int slot = IntegerArgumentType.getInteger(context, "slot");
+            String id = StringArgumentType.getString(context, "skin");
+            Skin skin = loadSkin(id);
+            if (skin == null) {
+                return 0;
+            }
+            SkinDescriptor descriptor = new SkinDescriptor(id, skin.getCustomName());
+            for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+                if (wardrobe != null) {
+                    wardrobe.setItemSlot(slot - 1, descriptor.asItemStack());
+                }
+            }
             return 0;
         }
 
-        static int clearSkin(CommandContext<CommandSource> source) {
+        static int clearSkin(CommandContext<CommandSource> source) throws CommandSyntaxException {
+            for (PlayerEntity player : EntityArgument.getPlayers(source, "targets")) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+                if (wardrobe != null) {
+                    wardrobe.clear();
+                }
+            }
             return 0;
         }
 
-        static int giveSkin(CommandContext<CommandSource> source) {
-            return 0;
+        static int giveSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
+            String id = StringArgumentType.getString(context, "skin");
+            Skin skin = loadSkin(id);
+            if (skin == null) {
+                return 0;
+            }
+            SkinDescriptor descriptor = new SkinDescriptor(id, skin.getCustomName());
+            ItemStack itemStack = descriptor.asItemStack();
+            int i = 0;
+            for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {
+                i++;
+                boolean flag = player.inventory.add(itemStack);
+                if (flag && itemStack.isEmpty()) {
+                    itemStack.setCount(1);
+                    ItemEntity itemEntity1 = player.drop(itemStack, false);
+                    if (itemEntity1 != null) {
+                        itemEntity1.makeFakeItem();
+                    }
+                    player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                    player.inventoryMenu.broadcastChanges();
+                } else {
+                    ItemEntity itemEntity = player.drop(itemStack, false);
+                    if (itemEntity != null) {
+                        itemEntity.setNoPickUpDelay();
+                        itemEntity.setOwner(player.getUUID());
+                    }
+                }
+            }
+            context.getSource().sendSuccess(new TranslationTextComponent("commands.give.success.single", 1, itemStack.getDisplayName(), i), true);
+            return 1;
         }
     }
 
@@ -155,3 +196,4 @@ public class SkinCommands {
         }
     }
 }
+

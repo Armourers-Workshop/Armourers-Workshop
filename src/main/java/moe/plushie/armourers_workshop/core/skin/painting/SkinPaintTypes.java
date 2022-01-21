@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.painting;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.api.common.IExtraColours.ExtraColourType;
-import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintType;
+import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
 import moe.plushie.armourers_workshop.core.utils.SkinLog;
 
 import java.util.HashMap;
@@ -13,50 +12,49 @@ public final class SkinPaintTypes {
 
     private static final ISkinPaintType[] ALL_PAINT_MAPPING = new ISkinPaintType[256];
     private static final Map<String, ISkinPaintType> ALL_PAINT_TYPES = new HashMap<>();
+    private static int ALL_EXTRA_CHANNELS = 0;
 
-    public static final ISkinPaintType NORMAL = register("normal", 0, 255, false);
+    public static final ISkinPaintType NORMAL = register("normal", 255, 0, false);
 
-    public static final ISkinPaintType DYE_1 = register("dye_1", 1, 1, true);
-    public static final ISkinPaintType DYE_2 = register("dye_2", 2, 2, true);
-    public static final ISkinPaintType DYE_3 = register("dye_3", 3, 3, true);
-    public static final ISkinPaintType DYE_4 = register("dye_4", 4, 4, true);
-    public static final ISkinPaintType DYE_5 = register("dye_5", 5, 5, true);
-    public static final ISkinPaintType DYE_6 = register("dye_6", 6, 6, true);
-    public static final ISkinPaintType DYE_7 = register("dye_7", 7, 7, true);
-    public static final ISkinPaintType DYE_8 = register("dye_8", 8, 8, true);
+    public static final ISkinPaintType DYE_1 = register("dye_1", 1, 1, true).setDyeType(SkinDyeType.DYE_1);
+    public static final ISkinPaintType DYE_2 = register("dye_2", 2, 2, true).setDyeType(SkinDyeType.DYE_2);
+    public static final ISkinPaintType DYE_3 = register("dye_3", 3, 3, true).setDyeType(SkinDyeType.DYE_3);
+    public static final ISkinPaintType DYE_4 = register("dye_4", 4, 4, true).setDyeType(SkinDyeType.DYE_4);
+    public static final ISkinPaintType DYE_5 = register("dye_5", 5, 5, true).setDyeType(SkinDyeType.DYE_5);
+    public static final ISkinPaintType DYE_6 = register("dye_6", 6, 6, true).setDyeType(SkinDyeType.DYE_6);
+    public static final ISkinPaintType DYE_7 = register("dye_7", 7, 7, true).setDyeType(SkinDyeType.DYE_7);
+    public static final ISkinPaintType DYE_8 = register("dye_8", 8, 8, true).setDyeType(SkinDyeType.DYE_8);
 
-    public static final ISkinPaintType RAINBOW = register("rainbow", 14, 104, true).setTextureUV(1F, 0F);
+    public static final ISkinPaintType RAINBOW = register("rainbow", 104, 14, true).setTexture(1F, 0F);
 
-    public static final ISkinPaintType PULSE_1 = register("pulse_1", 15, 105, false).setTextureUV(2F, 0F);
-    public static final ISkinPaintType PULSE_2 = register("pulse_2", 16, 106, false).setTextureUV(3F, 0F);
+    public static final ISkinPaintType PULSE_1 = register("pulse_1", 105, 15, false).setTexture(2F, 0F);
+    public static final ISkinPaintType PULSE_2 = register("pulse_2", 106, 16, false).setTexture(3F, 0F);
 
-    public static final ISkinPaintType TEXTURE = register("texture", 17, 107, false);
+    public static final ISkinPaintType TEXTURE = register("texture", 107, 17, false);
 
-    public static final ISkinPaintType FLICKER_1 = register("flicker_1", 18, 108, false).setTextureUV(4F, 0F);
-    public static final ISkinPaintType FLICKER_2 = register("flicker_2", 19, 109, false).setTextureUV(5F, 0F);
+    public static final ISkinPaintType FLICKER_1 = register("flicker_1", 108, 18, false).setTexture(4F, 0F);
+    public static final ISkinPaintType FLICKER_2 = register("flicker_2", 109, 19, false).setTexture(5F, 0F);
 
-    public static final ISkinPaintType FLASH_1 = register("flash_1", 23, 110, false).setTextureUV(6F, 0F);
-    public static final ISkinPaintType FLASH_2 = register("flash_2", 24, 111, false).setTextureUV(7F, 0F);
+    public static final ISkinPaintType FLASH_1 = register("flash_1", 110, 23, false).setTexture(6F, 0F);
+    public static final ISkinPaintType FLASH_2 = register("flash_2", 111, 24, false).setTexture(7F, 0F);
 
-    public static final ISkinPaintType SKIN = register("skin", 10, 253, true).setExtraColourType(ExtraColourType.SKIN);
-    public static final ISkinPaintType HAIR = register("hair", 11, 254, true).setExtraColourType(ExtraColourType.HAIR);
-    public static final ISkinPaintType EYES = register("eye", 12, 251, true).setExtraColourType(ExtraColourType.EYE);
+    public static final ISkinPaintType SKIN = register("skin", 253, 10, true).setDyeType(SkinDyeType.SKIN);
+    public static final ISkinPaintType HAIR = register("hair", 254, 11, true).setDyeType(SkinDyeType.HAIR);
+    public static final ISkinPaintType EYES = register("eye", 251, 12, true).setDyeType(SkinDyeType.EYE);
 
-    public static final ISkinPaintType MISC_1 = register("misc_1", 13, 252, true).setExtraColourType(ExtraColourType.MISC_1);
-    public static final ISkinPaintType MISC_2 = register("misc_2", 20, 250, true).setExtraColourType(ExtraColourType.MISC_2);
-    public static final ISkinPaintType MISC_3 = register("misc_3", 21, 249, true).setExtraColourType(ExtraColourType.MISC_3);
-    public static final ISkinPaintType MISC_4 = register("misc_4", 22, 248, true).setExtraColourType(ExtraColourType.MISC_4);
+    public static final ISkinPaintType MISC_1 = register("misc_1", 252, 13, true).setDyeType(SkinDyeType.MISC_1);
+    public static final ISkinPaintType MISC_2 = register("misc_2", 250, 20, true).setDyeType(SkinDyeType.MISC_2);
+    public static final ISkinPaintType MISC_3 = register("misc_3", 249, 21, true).setDyeType(SkinDyeType.MISC_3);
+    public static final ISkinPaintType MISC_4 = register("misc_4", 248, 22, true).setDyeType(SkinDyeType.MISC_4);
 
-    public static final ISkinPaintType NONE = register("none", 9, 0, false);
-
-//    private int extraChannels = 0;
+    public static final ISkinPaintType NONE = register("none", 0, 9, false);
 
     public static ISkinPaintType byName(String name) {
         ISkinPaintType paintType = ALL_PAINT_TYPES.get(name);
         if (paintType != null) {
             return paintType;
         }
-        return NORMAL;
+        return NONE;
     }
 
     public static ISkinPaintType byId(int index) {
@@ -64,10 +62,10 @@ public final class SkinPaintTypes {
         if (paintType != null) {
             return paintType;
         }
-        return NORMAL;
+        return NONE;
     }
 
-    private static SkinPaintType register(String name, int index, int id, boolean hasColourChannel) {
+    private static SkinPaintType register(String name, int id, int index, boolean hasColourChannel) {
         SkinPaintType paintType = new SkinPaintType(index, id, hasColourChannel);
         paintType.setRegistryName("armourers:" + name);
         if (ALL_PAINT_TYPES.containsKey(paintType.getRegistryName())) {
@@ -76,7 +74,10 @@ public final class SkinPaintTypes {
         }
         ALL_PAINT_TYPES.put(paintType.getRegistryName(), paintType);
         ALL_PAINT_MAPPING[paintType.getId() & 0xFF] = paintType;
-        SkinLog.info("Registering Skin Paint '{}'", paintType.getRegistryName());
+        if (hasColourChannel) {
+            paintType.setChannelIndex(ALL_EXTRA_CHANNELS++);
+        }
+        SkinLog.debug("Registering Skin Paint '{}'", paintType.getRegistryName());
         return paintType;
     }
 
@@ -110,10 +111,9 @@ public final class SkinPaintTypes {
 //        return true;
 //    }
 //
-//    @Override
-//    public int getExtraChannels() {
-//        return extraChannels;
-//    }
+    public static int getTotalExtraChannels() {
+        return ALL_EXTRA_CHANNELS;
+    }
 //
 //    @Override
 //    public ISkinSkinPaintType getSkinPaintTypeFromColour(int trgb) {

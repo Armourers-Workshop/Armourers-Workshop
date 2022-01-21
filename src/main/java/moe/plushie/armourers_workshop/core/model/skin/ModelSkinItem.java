@@ -6,7 +6,7 @@
 //import moe.plushie.armourers_workshop.core.api.common.IExtraColours;
 //import moe.plushie.armourers_workshop.core.api.common.skin.ISkin;
 //import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
-//import moe.plushie.armourers_workshop.core.render.part.SkinPartRenderer;
+//import moe.plushie.armourers_workshop.core.render.renderer.SkinPartRenderer;
 //import moe.plushie.armourers_workshop.core.render.other.BakedSkin;
 //import moe.plushie.armourers_workshop.core.render.model.SkinModelTransformer;
 //import moe.plushie.armourers_workshop.core.render.other.SkinPartRenderData;

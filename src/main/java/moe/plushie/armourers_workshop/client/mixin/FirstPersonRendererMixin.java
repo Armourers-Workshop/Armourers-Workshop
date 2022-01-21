@@ -20,7 +20,7 @@ public class FirstPersonRendererMixin {
         if (itemStack.isEmpty()) {
             return;
         }
-        ClientWardrobeHandler.onRenderItem(entity, itemStack, transformType, light, 0, matrixStack, renderType, callback);
+        ClientWardrobeHandler.onRenderItem(entity, itemStack, transformType, light, matrixStack, renderType, callback);
     }
 }
 

@@ -1,41 +1,40 @@
 package moe.plushie.armourers_workshop.core.skin.data;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.api.ISkinCube;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
-import moe.plushie.armourers_workshop.core.api.common.skin.ICube;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkin;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
-import moe.plushie.armourers_workshop.core.config.skin.SkinModelTexture;
-import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;
-import moe.plushie.armourers_workshop.core.skin.advanced.AdvancedPart;
-import moe.plushie.armourers_workshop.core.skin.cubes.SkinCubes;
+import moe.plushie.armourers_workshop.core.model.bake.PackedColorInfo;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
-import moe.plushie.armourers_workshop.core.utils.SkinUtils;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.Model;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Skin implements ISkin {
 
-    public SkinIdentifier requestId;
-    public int serverId = -1;
-    public SkinModelTexture skinModelTexture;
-    public int paintTextureId;
+    private final static AtomicInteger COUNTER = new AtomicInteger();
+
     private final SkinProperties properties;
     private final ISkinType skinType;
-    private int[] paintData;
     private final ArrayList<SkinPart> parts;
-    private int lightHash = 0;
-    private Map<Integer, VoxelShape> cachedShapes = new HashMap<>();
+    private final ArrayList<SkinPart> renderParts;
 
+    private final int id = COUNTER.incrementAndGet();
+
+    public SkinIdentifier requestId;
+    public int serverId = -1;
+    public int paintTextureId;
+    //    public SkinModelTexture skinModelTexture;
+    public PackedColorInfo colorInfo;
+    private int[] paintData;
+    private int lightHash = 0;
     private int[] averageR = new int[10];
     private int[] averageG = new int[10];
     private int[] averageB = new int[10];
@@ -43,22 +42,13 @@ public class Skin implements ISkin {
     public Skin(SkinProperties properties, ISkinType skinType, int[] paintData, ArrayList<SkinPart> skinParts) {
         this.properties = properties;
         this.skinType = skinType;
-        this.paintData = null;
-        // Check if the paint data has any paint on it.
-        if (paintData != null) {
-            boolean validPaintData = false;
-            for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
-                if (paintData[i] >>> 16 != 255) {
-                    validPaintData = true;
-                    break;
-                }
-            }
-            if (validPaintData) {
-                this.paintData = paintData;
-            }
-        }
-
+        this.paintData = paintData;
         this.parts = skinParts;
+        this.renderParts = new ArrayList<>(skinParts);
+    }
+
+    public int getId() {
+        return id;
     }
 
 //    public Rectangle3D getSkinBounds() {
@@ -140,50 +130,12 @@ public class Skin implements ISkin {
 //    }
 
     @OnlyIn(Dist.CLIENT)
-    public VoxelShape getRenderShape(Model model, ItemCameraTransforms.TransformType transformType) {
-//        int key = (model.crouching ? 4 : 0) + (model.riding ? 2 : 0) + (model.young ? 1 : 0);
-//        VoxelShape shape = cachedShapes.get(key);
-//        if (shape != null) {
-//            return shape;
-//        }
-        VoxelShape shape = VoxelShapes.empty();
-        MatrixStack matrixStack = new MatrixStack();
-        for (SkinPart skinPart : parts) {
-            VoxelShape shape1 = skinPart.getRenderShape();
-            ModelRenderer modelRenderer = ModelTransformer.getModelRenderer(skinPart, model, transformType);
-            if (modelRenderer != null) {
-                matrixStack.pushPose();
-                ModelTransformer.apply(matrixStack, modelRenderer);
-                SkinUtils.apply(matrixStack, null, skinPart);
-                shape1 = SkinUtils.apply(shape1, matrixStack.last().pose());
-                matrixStack.popPose();
-            }
-            shape = VoxelShapes.or(shape, shape1);
-        }
-        shape = shape.optimize();
-//        cachedShapes.put(key, shape);
-        return shape;
+    public List<SkinPart> getRenderParts() {
+        return renderParts;
     }
 
     public SkinProperties getProperties() {
         return properties;
-    }
-
-    public void cleanUpDisplayLists() {
-        // TODO: IMP
-//        for (int i = 0; i < parts.size(); i++) {
-//            parts.get(i).getClientSkinPartData().cleanUpDisplayLists();
-//        }
-//        if (hasPaintData()) {
-//            skinModelTexture.deleteGlTexture();
-//        }
-    }
-
-    public void blindPaintTexture() {
-        // TODO: IMP
-//        if (hasPaintData()) {
-//            GL11.glBindTexture(GL11.GL_TEXTURE_2D, paintTextureId);
-//        }
     }
 
     public int getModelCount() {
@@ -225,7 +177,7 @@ public class Skin implements ISkin {
     }
 
     public SkinPart getSkinPartFromType(ISkinPartType skinPartType) {
-        for (SkinPart part : parts) {
+        for (SkinPart part : renderParts) {
             if (part.getType() == skinPartType) {
                 return part;
             }
@@ -234,7 +186,7 @@ public class Skin implements ISkin {
     }
 
     public boolean isModelOverridden(ISkinPartType partType) {
-        for (SkinPart part : parts) {
+        for (SkinPart part : renderParts) {
             if (part.getType() == partType) {
                 if (!SkinConfig.isEnableSkinPart(part)) {
                     return false;
@@ -244,7 +196,6 @@ public class Skin implements ISkin {
         }
         return false;
     }
-
 
 
 //    public boolean hasPart(String partRegistryName) {
@@ -273,16 +224,21 @@ public class Skin implements ISkin {
         return properties.get(SkinProperty.ALL_AUTHOR_NAME);
     }
 
+    public String getFlavourText() {
+        return properties.get(SkinProperty.ALL_FLAVOUR_TEXT);
+    }
+
+
     public int getTotalCubes() {
         int totalCubes = 0;
-        for (int i = 0; i < SkinCubes.INSTANCE.getTotalCubes(); i++) {
-            ICube cube = SkinCubes.INSTANCE.getCubeFormId((byte) i);
+        for (int i = 0; i < SkinCubes.getTotalCubes(); i++) {
+            ISkinCube cube = SkinCubes.byId(i);
             totalCubes += getTotalOfCubeType(cube);
         }
         return totalCubes;
     }
 
-    public int getTotalOfCubeType(ICube cube) {
+    public int getTotalOfCubeType(ISkinCube cube) {
         int totalOfCube = 0;
         int cubeId = cube.getId();
         // TODO: IMP
@@ -292,31 +248,31 @@ public class Skin implements ISkin {
         return totalOfCube;
     }
 
-    @Override
-    public int hashCode() {
-        if (lightHash == 0) {
-            String result = this.toString();
-            for (SkinPart part : parts) {
-                result += part.toString();
-            }
-            lightHash = result.hashCode();
-        }
-        return lightHash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Skin other = (Skin) obj;
-        if (other.lightHash == lightHash)
-            return true;
-        return false;
-    }
+//    @Override
+//    public int hashCode() {
+//        if (lightHash == 0) {
+//            String result = this.toString();
+//            for (SkinPart part : parts) {
+//                result += part.toString();
+//            }
+//            lightHash = result.hashCode();
+//        }
+//        return lightHash;
+//    }
+//
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj)
+//            return true;
+//        if (obj == null)
+//            return false;
+//        if (getClass() != obj.getClass())
+//            return false;
+//        Skin other = (Skin) obj;
+//        if (other.lightHash == lightHash)
+//            return true;
+//        return false;
+//    }
 
     @Override
     public String toString() {
@@ -328,29 +284,29 @@ public class Skin implements ISkin {
         return returnString;
     }
 
-//    public int getMarkerCount() {
-//        int count = 0;
-//        for (SkinPart part : parts) {
-//            count += part.getMarkers().size();
-//        }
-//        return count;
-//    }
-
-    public void addPaintDataParts() {
-        if (hasPaintData()) {
-            for (ISkinPartType skinPartType : getType().getParts()) {
-                if (!skinPartType.isModelOverridden(getProperties())) {
-                    SkinPart dummyPart = (SkinPart) skinPartType.makeDummyPaintPart(paintData);
-                    if (dummyPart != null) {
-                        parts.add(0, dummyPart);
-                    }
-                }
-            }
+    public int getMarkerCount() {
+        int count = 0;
+        for (SkinPart part : parts) {
+            count += part.getMarkers().size();
         }
+        return count;
     }
 
-    public AdvancedPart getAdvancedPart(int index) {
-        // TODO Auto-generated method stub
-        return new AdvancedPart(0, "");
-    }
+//    public void addPaintDataParts() {
+//        if (hasPaintData()) {
+//            for (ISkinPartType skinPartType : getType().getParts()) {
+//                if (!skinPartType.isModelOverridden(getProperties())) {
+//                    SkinPart dummyPart = (SkinPart) skinPartType.makeDummyPaintPart(paintData);
+//                    if (dummyPart != null) {
+//                        parts.add(0, dummyPart);
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    public AdvancedPart getAdvancedPart(int index) {
+//        // TODO Auto-generated method stub
+//        return new AdvancedPart(0, "");
+//    }
 }

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.api.common.skin;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.utils.Point3D;
+import net.minecraft.util.math.vector.Vector3i;
 
 import java.awt.Point;
 
@@ -20,5 +20,5 @@ public interface ISkinPartTypeTextured extends ISkinPartType {
     Point getTextureOverlayPos();
 
     /** Size of the model the texture is used on. */
-    Point3D getTextureModelSize();
+    Vector3i getTextureModelSize();
 }

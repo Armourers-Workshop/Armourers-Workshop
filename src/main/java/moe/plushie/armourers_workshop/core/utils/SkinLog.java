@@ -7,6 +7,10 @@ public class SkinLog {
 
     private static final Logger LOGGER = LogManager.getLogger(SkinCore.class);
 
+    public static void debug(String message, Object... params) {
+        LOGGER.debug(message, params);
+    }
+
     public static void info(String message, Object... params) {
         LOGGER.info(message, params);
     }

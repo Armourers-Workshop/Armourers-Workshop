@@ -194,7 +194,7 @@ public final class SkinIOUtils {
 
     public static void makeDatabaseDirectory() {
         File directory = getSkinDatabaseDirectory();
-        SkinLog.info("Loading skin database at: " + directory.getAbsolutePath());
+        SkinLog.debug("Loading skin database at: " + directory.getAbsolutePath());
         copyGlobalDatabase();
         if (!directory.exists()) {
             directory.mkdir();

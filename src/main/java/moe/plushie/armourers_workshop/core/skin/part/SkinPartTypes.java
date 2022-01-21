@@ -1,26 +1,25 @@
 package moe.plushie.armourers_workshop.core.skin.part;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.skin.part.advanced.SkinAdvancedPartBase;
-import moe.plushie.armourers_workshop.core.skin.part.block.SkinBlockPartBase;
-import moe.plushie.armourers_workshop.core.skin.part.block.SkinBlockPartMultiBlock;
-import moe.plushie.armourers_workshop.core.skin.part.bow.SkinBowPartArrow;
-import moe.plushie.armourers_workshop.core.skin.part.bow.SkinBowPartBase;
-import moe.plushie.armourers_workshop.core.skin.part.bow.SkinBowPartFrame1;
-import moe.plushie.armourers_workshop.core.skin.part.bow.SkinBowPartFrame2;
-import moe.plushie.armourers_workshop.core.skin.part.chest.SkinChestPartBase;
-import moe.plushie.armourers_workshop.core.skin.part.chest.SkinChestPartLeftArm;
-import moe.plushie.armourers_workshop.core.skin.part.chest.SkinChestPartRightArm;
-import moe.plushie.armourers_workshop.core.skin.part.feet.SkinFeetPartLeftFoot;
-import moe.plushie.armourers_workshop.core.skin.part.feet.SkinFeetPartRightFoot;
-import moe.plushie.armourers_workshop.core.skin.part.head.SkinHeadPartBase;
-import moe.plushie.armourers_workshop.core.skin.part.item.SkinItemPartBase;
-import moe.plushie.armourers_workshop.core.skin.part.legs.SkinLegsPartLeftLeg;
-import moe.plushie.armourers_workshop.core.skin.part.legs.SkinLegsPartRightLeg;
-import moe.plushie.armourers_workshop.core.skin.part.legs.SkinLegsPartSkirt;
-import moe.plushie.armourers_workshop.core.skin.part.unknown.SkinUnknownPartUnknown;
-import moe.plushie.armourers_workshop.core.skin.part.wings.SkinWingsPartLeftWing;
-import moe.plushie.armourers_workshop.core.skin.part.wings.SkinWingsPartRightWing;
+import moe.plushie.armourers_workshop.core.skin.part.advanced.AdvancedPartType;
+import moe.plushie.armourers_workshop.core.skin.part.block.BlockPartType;
+import moe.plushie.armourers_workshop.core.skin.part.block.MultiBlockPartType;
+import moe.plushie.armourers_workshop.core.skin.part.bow.ArrowPartType;
+import moe.plushie.armourers_workshop.core.skin.part.bow.BowPartType;
+import moe.plushie.armourers_workshop.core.skin.part.chest.ChestPartType;
+import moe.plushie.armourers_workshop.core.skin.part.chest.LeftArmPartType;
+import moe.plushie.armourers_workshop.core.skin.part.chest.RightArmPartType;
+import moe.plushie.armourers_workshop.core.skin.part.feet.LeftFootPartType;
+import moe.plushie.armourers_workshop.core.skin.part.feet.RightFootPartType;
+import moe.plushie.armourers_workshop.core.skin.part.head.HatPartType;
+import moe.plushie.armourers_workshop.core.skin.part.head.HeadPartType;
+import moe.plushie.armourers_workshop.core.skin.part.item.ItemPartType;
+import moe.plushie.armourers_workshop.core.skin.part.legs.LeftLegPartType;
+import moe.plushie.armourers_workshop.core.skin.part.legs.RightLegPartType;
+import moe.plushie.armourers_workshop.core.skin.part.legs.SkirtPartType;
+import moe.plushie.armourers_workshop.core.skin.part.unknown.UnknownPartType;
+import moe.plushie.armourers_workshop.core.skin.part.wings.LeftWingPartType;
+import moe.plushie.armourers_workshop.core.skin.part.wings.RightWingPartType;
 import moe.plushie.armourers_workshop.core.utils.SkinLog;
 
 import java.util.Collection;
@@ -28,54 +27,49 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-
-// offset:
-//  1 left/right legs
-//  2 left/right feet
-//  3 skirt
-//  4 left/right arm
-//  5 chest
-//  8 head
-//  7 left/right wing
-//  9 item
-
 @SuppressWarnings("unused")
 public final class SkinPartTypes {
 
     private static final Map<String, ISkinPartType> ALL_PART_TYPES = new HashMap<>();
 
-    public static final ISkinPartType UNKNOWN = register("unknown", new SkinUnknownPartUnknown());
+    public static final ISkinPartType UNKNOWN = register("unknown", new UnknownPartType());
 
-    public static final ISkinPartType BIPED_HAT = register("hat.base", new SkinItemPartBase());
-    public static final ISkinPartType BIPED_HEAD = register("head.base", new SkinHeadPartBase());
-    public static final ISkinPartType BIPED_CHEST = register("chest.base", new SkinChestPartBase());
-    public static final ISkinPartType BIPED_LEFT_ARM = register("chest.leftArm", new SkinChestPartLeftArm());
-    public static final ISkinPartType BIPED_RIGHT_ARM = register("chest.rightArm", new SkinChestPartRightArm());
-    public static final ISkinPartType BIPED_SKIRT = register("legs.skirt", new SkinLegsPartSkirt());
-    public static final ISkinPartType BIPED_LEFT_LEG = register("legs.leftLeg", new SkinLegsPartLeftLeg());
-    public static final ISkinPartType BIPED_RIGHT_LEG = register("legs.rightLeg", new SkinLegsPartRightLeg());
-    public static final ISkinPartType BIPED_LEFT_FOOT = register("feet.leftFoot", new SkinFeetPartLeftFoot());
-    public static final ISkinPartType BIPED_RIGHT_FOOT = register("feet.rightFoot", new SkinFeetPartRightFoot());
-    public static final ISkinPartType BIPED_LEFT_WING = register("wings.leftWing", new SkinWingsPartLeftWing());
-    public static final ISkinPartType BIPED_RIGHT_WING = register("wings.rightWing", new SkinWingsPartRightWing());
+    public static final ISkinPartType BIPED_HAT = register("hat.base", new HatPartType());
+    public static final ISkinPartType BIPED_HEAD = register("head.base", new HeadPartType());
+    public static final ISkinPartType BIPED_CHEST = register("chest.base", new ChestPartType());
+    public static final ISkinPartType BIPED_LEFT_ARM = register("chest.leftArm", new LeftArmPartType());
+    public static final ISkinPartType BIPED_RIGHT_ARM = register("chest.rightArm", new RightArmPartType());
+    public static final ISkinPartType BIPED_SKIRT = register("legs.skirt", new SkirtPartType());
+    public static final ISkinPartType BIPED_LEFT_LEG = register("legs.leftLeg", new LeftLegPartType());
+    public static final ISkinPartType BIPED_RIGHT_LEG = register("legs.rightLeg", new RightLegPartType());
+    public static final ISkinPartType BIPED_LEFT_FOOT = register("feet.leftFoot", new LeftFootPartType());
+    public static final ISkinPartType BIPED_RIGHT_FOOT = register("feet.rightFoot", new RightFootPartType());
+    public static final ISkinPartType BIPED_LEFT_WING = register("wings.leftWing", new LeftWingPartType());
+    public static final ISkinPartType BIPED_RIGHT_WING = register("wings.rightWing", new RightWingPartType());
 
-    public static final ISkinPartType TOOL_PICKAXE = register("pickaxe.base", new SkinItemPartBase());
-    public static final ISkinPartType TOOL_AXE = register("axe.base", new SkinItemPartBase());
-    public static final ISkinPartType TOOL_SHOVEL = register("shovel.base", new SkinItemPartBase());
-    public static final ISkinPartType TOOL_HOPE = register("hope.base", new SkinItemPartBase());
+    public static final ISkinPartType TOOL_PICKAXE = register("pickaxe.base", new ItemPartType());
+    public static final ISkinPartType TOOL_AXE = register("axe.base", new ItemPartType());
+    public static final ISkinPartType TOOL_SHOVEL = register("shovel.base", new ItemPartType());
+    public static final ISkinPartType TOOL_HOPE = register("hope.base", new ItemPartType());
 
-    public static final ISkinPartType ITEM_BOW1 = register("bow.frame1", new SkinBowPartBase());
-    public static final ISkinPartType ITEM_BOW2 = register("bow.frame2", new SkinBowPartFrame1());
-    public static final ISkinPartType ITEM_BOW3 = register("bow.frame3", new SkinBowPartFrame2());
-    public static final ISkinPartType ITEM_ARROW = register("bow.arrow", new SkinBowPartArrow());
-    public static final ISkinPartType ITEM_SWORD = register("sword.base", new SkinItemPartBase());
-    public static final ISkinPartType ITEM_SHIELD = register("shield.base", new SkinItemPartBase());
+    public static final ISkinPartType ITEM_BOW1 = register("bow.frame1", new BowPartType(0));
+    public static final ISkinPartType ITEM_BOW2 = register("bow.frame2", new BowPartType(1));
+    public static final ISkinPartType ITEM_BOW3 = register("bow.frame3", new BowPartType(2));
+    public static final ISkinPartType ITEM_ARROW = register("bow.arrow", new ArrowPartType());
+    public static final ISkinPartType ITEM_SWORD = register("sword.base", new ItemPartType());
+    public static final ISkinPartType ITEM_SHIELD = register("shield.base", new ItemPartType());
 
-    public static final ISkinPartType ITEM = register("item.base", new SkinItemPartBase());
-    public static final ISkinPartType BLOCK = register("block.base", new SkinBlockPartBase());
-    public static final ISkinPartType BLOCK_MULTI = register("block.multiblock", new SkinBlockPartMultiBlock());
+    public static final ISkinPartType ITEM = register("item.base", new ItemPartType());
+    public static final ISkinPartType BLOCK = register("block.base", new BlockPartType());
+    public static final ISkinPartType BLOCK_MULTI = register("block.multiblock", new MultiBlockPartType());
 
-    public static final ISkinPartType ADVANCED = register("part.advanced_part", new SkinAdvancedPartBase());
+//    public static final ISkinPartType PLAYER_JACKET = register("player.jacket.base", new UnknownPartType());
+//    public static final ISkinPartType PLAYER_LEFT_PANTS = register("player.pants.leftPants", new UnknownPartType());
+//    public static final ISkinPartType PLAYER_RIGHT_PANTS = register("player.pants.rightPants", new UnknownPartType());
+//    public static final ISkinPartType PLAYER_LEFT_SLEEVE = register("player.sleeves.leftSleeve", new UnknownPartType());
+//    public static final ISkinPartType PLAYER_RIGHT_SLEEVE = register("player.sleeves.rightSleeve", new UnknownPartType());
+
+    public static final ISkinPartType ADVANCED = register("part.advanced_part", new AdvancedPartType());
 
 
     public static ISkinPartType byName(String registryName) {
@@ -104,7 +98,7 @@ public final class SkinPartTypes {
 
     private static ISkinPartType register(String name, SkinPartType partType) {
         partType.setRegistryName("armourers:" + name);
-        if (partType instanceof SkinUnknownPartUnknown) {
+        if (partType instanceof UnknownPartType) {
             return partType;
         }
         if (ALL_PART_TYPES.containsKey(partType.getRegistryName())) {
@@ -112,7 +106,7 @@ public final class SkinPartTypes {
             return partType;
         }
         ALL_PART_TYPES.put(partType.getRegistryName(), partType);
-        SkinLog.info("Registering Skin Part '{}'", partType.getRegistryName());
+        SkinLog.debug("Registering Skin Part '{}'", partType.getRegistryName());
         return partType;
     }
 

@@ -66,7 +66,7 @@
 ////    private void renderLeftWing(SkinPartRenderData partRenderData, double angle) {
 ////        GL11.glPushMatrix();
 ////
-////        Point3D point = new Point3D(0, 0, 0);
+////        Vector3i point = new Vector3i(0, 0, 0);
 ////        EnumFacing axis = EnumFacing.DOWN;
 ////
 ////        if (partRenderData.getSkinPart().getMarkerCount() > 0) {
@@ -111,7 +111,7 @@
 ////
 ////    private void renderRightWing(SkinPartRenderData partRenderData, double angle) {
 ////        GL11.glPushMatrix();
-////        Point3D point = new Point3D(0, 0, 0);
+////        Vector3i point = new Vector3i(0, 0, 0);
 ////        EnumFacing axis = EnumFacing.DOWN;
 ////
 ////        if (partRenderData.getSkinPart().getMarkerCount() > 0) {

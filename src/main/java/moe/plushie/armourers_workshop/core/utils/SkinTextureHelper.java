@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.utils;//package moe.plushie.armourer
 //
 //import java.awt.Point;
 //
-//import moe.plushie.armourers_workshop.core.skin.Point3D;
+//import moe.plushie.armourers_workshop.core.skin.Vector3i;
 //import moe.plushie.armourers_workshop.core.skin.type.ISkinPartTypeTextured;
 //import moe.plushie.armourers_workshop.core.tileentities.TileEntityBoundingBox;
 //import net.minecraft.util.EnumFacing;
@@ -22,7 +22,7 @@ package moe.plushie.armourers_workshop.core.utils;//package moe.plushie.armourer
 //
 //    public static Point getTextureLocationFromBlock(byte blockX, byte blockY, byte blockZ, ISkinPartTypeTextured skinPart, EnumFacing side) {
 //        Point textureLocation = skinPart.getTextureSkinPos();
-//        Point3D textureModelSize = skinPart.getTextureModelSize();
+//        Vector3i textureModelSize = skinPart.getTextureModelSize();
 //        EnumFacing blockFace = side;
 //
 //        int textureX = textureLocation.x;

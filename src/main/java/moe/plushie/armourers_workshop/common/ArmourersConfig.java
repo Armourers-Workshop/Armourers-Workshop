@@ -1,9 +1,6 @@
 package moe.plushie.armourers_workshop.common;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
-import net.minecraft.client.MainWindow;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
@@ -12,7 +9,56 @@ public class ArmourersConfig extends SkinConfig {
 
 
     public static boolean enableEntityInInventoryClip = true;
+    public static ClientConfig CLIENT;
+    public static ForgeConfigSpec CLIENT_SPEC;
 
+    public static void bakeConfig() {
+        skinLoadAnimationTime = CLIENT.skinLoadAnimationTime.get();
+
+        renderDistanceSkin = CLIENT.renderDistanceSkin.get();
+        renderDistanceBlockSkin = CLIENT.renderDistanceBlockSkin.get() * CLIENT.renderDistanceBlockSkin.get();
+        renderDistanceMannequinEquipment = CLIENT.renderDistanceMannequinEquipment.get();
+
+        modelBakingThreadCount = CLIENT.modelBakingThreadCount.get();
+        multipassSkinRendering = CLIENT.multipassSkinRendering.get();
+        lodDistance = CLIENT.lodDistance.get();
+        maxLodLevels = CLIENT.maxLodLevels.get();
+        useClassicBlockModels = CLIENT.useClassicBlockModels.get();
+
+        skinCacheExpireTime = CLIENT.skinCacheExpireTime.get();
+        skinCacheMaxSize = CLIENT.skinCacheMaxSize.get();
+        modelPartCacheExpireTime = CLIENT.modelPartCacheExpireTime.get();
+        modelPartCacheMaxSize = CLIENT.modelPartCacheMaxSize.get();
+        textureCacheExpireTime = CLIENT.textureCacheExpireTime.get();
+        textureCacheMaxSize = CLIENT.textureCacheMaxSize.get();
+        maxSkinRequests = CLIENT.maxSkinRequests.get();
+        fastCacheSize = CLIENT.fastCacheSize.get();
+
+        skinPreEnabled = CLIENT.skinPreEnabled.get();
+        skinPreDrawBackground = CLIENT.skinPreDrawBackground.get();
+        skinPreSize = CLIENT.skinPreSize.get();
+        skinPreLocHorizontal = CLIENT.skinPreLocHorizontal.get();
+        skinPreLocVertical = CLIENT.skinPreLocVertical.get();
+        skinPreLocFollowMouse = CLIENT.skinPreLocFollowMouse.get();
+
+        tooltipHasSkin = CLIENT.tooltipHasSkin.get();
+        tooltipSkinName = CLIENT.tooltipSkinName.get();
+        tooltipSkinAuthor = CLIENT.tooltipSkinAuthor.get();
+        tooltipSkinType = CLIENT.tooltipSkinType.get();
+        tooltipDebug = CLIENT.tooltipDebug.get();
+        tooltipFlavour = CLIENT.tooltipFlavour.get();
+        tooltipOpenWardrobe = CLIENT.tooltipOpenWardrobe.get();
+
+        showF3DebugInfo = CLIENT.showF3DebugInfo.get();
+        texturePaintingType = CLIENT.texturePaintingType.get();
+    }
+
+    public static void init() {
+        final Pair<ClientConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ClientConfig::new);
+        CLIENT_SPEC = specPair.getRight();
+        CLIENT = specPair.getLeft();
+        bakeConfig();
+    }
 
     static class ClientConfig {
 
@@ -42,7 +88,7 @@ public class ArmourersConfig extends SkinConfig {
         // Skin preview
         ForgeConfigSpec.BooleanValue skinPreEnabled;
         ForgeConfigSpec.BooleanValue skinPreDrawBackground;
-        ForgeConfigSpec.DoubleValue skinPreSize;
+        ForgeConfigSpec.IntValue skinPreSize;
         ForgeConfigSpec.DoubleValue skinPreLocHorizontal;
         ForgeConfigSpec.DoubleValue skinPreLocVertical;
         ForgeConfigSpec.BooleanValue skinPreLocFollowMouse;
@@ -153,7 +199,7 @@ public class ArmourersConfig extends SkinConfig {
                 skinPreDrawBackground = define("skinPreDrawBackground", true,
                         "Draw a background box for the skin preview.");
 
-                skinPreSize = defineInRange("skinPreSize", 96F, 16F, 256F,
+                skinPreSize = defineInRange("skinPreSize", 96, 16, 256,
                         "Size of the skin preview.");
 
                 skinPreLocHorizontal = defineInRange("skinPreLocHorizontal", 0F, 0F, 1F,
@@ -196,9 +242,11 @@ public class ArmourersConfig extends SkinConfig {
         private ForgeConfigSpec.BooleanValue define(String path, boolean defaultValue, String... description) {
             return builder.comment(description).define(path, defaultValue);
         }
+
         private ForgeConfigSpec.IntValue defineInRange(String path, int defaultValue, int min, int max, String... description) {
             return builder.comment(description).defineInRange(path, defaultValue, min, max);
         }
+
         private ForgeConfigSpec.DoubleValue defineInRange(String path, double defaultValue, double min, double max, String... description) {
             return builder.comment(description).defineInRange(path, defaultValue, min, max);
         }
@@ -209,57 +257,6 @@ public class ArmourersConfig extends SkinConfig {
             runnable.run();
             builder.pop();
         }
-    }
-
-    public static void bakeConfig() {
-        skinLoadAnimationTime = CLIENT.skinLoadAnimationTime.get();
-
-        renderDistanceSkin = CLIENT.renderDistanceSkin.get();
-        renderDistanceBlockSkin = CLIENT.renderDistanceBlockSkin.get() * CLIENT.renderDistanceBlockSkin.get();
-        renderDistanceMannequinEquipment = CLIENT.renderDistanceMannequinEquipment.get();
-
-        modelBakingThreadCount = CLIENT.modelBakingThreadCount.get();
-        multipassSkinRendering = CLIENT.multipassSkinRendering.get();
-        lodDistance = CLIENT.lodDistance.get();
-        maxLodLevels = CLIENT.maxLodLevels.get();
-        useClassicBlockModels = CLIENT.useClassicBlockModels.get();
-
-        skinCacheExpireTime = CLIENT.skinCacheExpireTime.get();
-        skinCacheMaxSize = CLIENT.skinCacheMaxSize.get();
-        modelPartCacheExpireTime = CLIENT.modelPartCacheExpireTime.get();
-        modelPartCacheMaxSize = CLIENT.modelPartCacheMaxSize.get();
-        textureCacheExpireTime = CLIENT.textureCacheExpireTime.get();
-        textureCacheMaxSize = CLIENT.textureCacheMaxSize.get();
-        maxSkinRequests = CLIENT.maxSkinRequests.get();
-        fastCacheSize = CLIENT.fastCacheSize.get();
-
-        skinPreEnabled = CLIENT.skinPreEnabled.get();
-        skinPreDrawBackground = CLIENT.skinPreDrawBackground.get();
-        skinPreSize = CLIENT.skinPreSize.get();
-        skinPreLocHorizontal = CLIENT.skinPreLocHorizontal.get();
-        skinPreLocVertical = CLIENT.skinPreLocVertical.get();
-        skinPreLocFollowMouse = CLIENT.skinPreLocFollowMouse.get();
-
-        tooltipHasSkin = CLIENT.tooltipHasSkin.get();
-        tooltipSkinName = CLIENT.tooltipSkinName.get();
-        tooltipSkinAuthor = CLIENT.tooltipSkinAuthor.get();
-        tooltipSkinType = CLIENT.tooltipSkinType.get();
-        tooltipDebug = CLIENT.tooltipDebug.get();
-        tooltipFlavour = CLIENT.tooltipFlavour.get();
-        tooltipOpenWardrobe = CLIENT.tooltipOpenWardrobe.get();
-
-        showF3DebugInfo = CLIENT.showF3DebugInfo.get();
-        texturePaintingType = CLIENT.texturePaintingType.get();
-    }
-
-    public static ClientConfig CLIENT;
-    public static ForgeConfigSpec CLIENT_SPEC;
-
-    public static void init() {
-        final Pair<ClientConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ClientConfig::new);
-        CLIENT_SPEC = specPair.getRight();
-        CLIENT = specPair.getLeft();
-        bakeConfig();
     }
 }
 

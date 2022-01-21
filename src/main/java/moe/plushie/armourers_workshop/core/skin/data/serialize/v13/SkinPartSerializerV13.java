@@ -47,7 +47,7 @@ public final class SkinPartSerializerV13 {
         for (int i = 0; i < markerCount; i++) {
             markerBlocks.add(new SkinMarker(stream, version));
         }
-        return new SkinPart(cubeData, skinPart, markerBlocks);
+        return new SkinPart(skinPart, markerBlocks, cubeData);
     }
 
     public static void saveSkinPart(SkinPart skinPart, DataOutputStream stream) throws IOException {

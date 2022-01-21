@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.wardrobe;
 
 import moe.plushie.armourers_workshop.core.utils.SkinCore;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -8,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -23,7 +25,7 @@ public class SkinWardrobeProvider implements ICapabilityProvider, INBTSerializab
 
     public final SkinWardrobe wardrobe;
 
-    public SkinWardrobeProvider(LivingEntity entity) {
+    public SkinWardrobeProvider(Entity entity) {
         this.wardrobe = new SkinWardrobe(entity);
     }
 

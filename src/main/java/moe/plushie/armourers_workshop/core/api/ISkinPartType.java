@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.api;
 
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPart;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
-import moe.plushie.armourers_workshop.core.utils.Point3D;
-import moe.plushie.armourers_workshop.core.utils.Rectangle3D;
+import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
+import net.minecraft.util.math.vector.Vector3i;
 
 /**
  * @author RiskyKen
@@ -28,7 +28,7 @@ public interface ISkinPartType {
      *
      * @return
      */
-    Rectangle3D getBuildingSpace();
+    Rectangle3i getBuildingSpace();
 
     /**
      * The last 3 values set the size of the invisible blocks that cubes can be
@@ -38,14 +38,14 @@ public interface ISkinPartType {
      *
      * @return
      */
-    Rectangle3D getGuideSpace();
+    Rectangle3i getGuideSpace();
 
     /**
      * This is used by the armourer to position this part
      */
-    Point3D getOffset();
+    Vector3i getOffset();
 
-    Point3D getRenderOffset();
+    Vector3i getRenderOffset();
 
 
     /**
@@ -77,16 +77,9 @@ public interface ISkinPartType {
     boolean isPartRequired();
 
 
-    default int getPolygonOffset() {
-        return 0;
-    }
-
-
-    Rectangle3D getItemRenderTextureBounds();
+    Rectangle3i getItemRenderTextureBounds();
 
     boolean isModelOverridden(ISkinProperties skinProps);
 
     boolean isOverlayOverridden(ISkinProperties skinProps);
-
-    ISkinPart makeDummyPaintPart(int[] paintData);
 }

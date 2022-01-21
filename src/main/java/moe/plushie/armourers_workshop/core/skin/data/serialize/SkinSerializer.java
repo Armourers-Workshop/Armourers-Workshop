@@ -119,7 +119,9 @@ public class SkinSerializer {
         }
 
         // bind properties to part.
+        int partId = 0;
         for (SkinPart part : skinParts) {
+            part.setId(partId++);
             part.setProperties(properties);
         }
         String skinIndexs = properties.get(SkinProperty.OUTFIT_PART_INDEXS);

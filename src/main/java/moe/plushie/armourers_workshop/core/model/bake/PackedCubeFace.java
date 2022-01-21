@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.model.bake;
 
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderType;
+import moe.plushie.armourers_workshop.core.render.SkinRenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -13,6 +13,8 @@ public class PackedCubeFace {
 
     private int total = 0;
     private final Map<SkinRenderType, ArrayList<ColouredFace>> faces = new HashMap<>();
+
+    public PackedColorInfo colorInfo;
 
     public void forEach(BiConsumer<SkinRenderType, ArrayList<ColouredFace>> action) {
         faces.forEach(action);

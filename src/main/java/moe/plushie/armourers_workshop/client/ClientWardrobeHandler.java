@@ -3,10 +3,10 @@ package moe.plushie.armourers_workshop.client;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.common.ArmourersConfig;
-import moe.plushie.armourers_workshop.core.render.model.SkinModelRenderer;
+import moe.plushie.armourers_workshop.core.render.SkinRenderBuffer;
 import moe.plushie.armourers_workshop.core.render.model.HeldItemModel;
 import moe.plushie.armourers_workshop.core.render.other.BakedSkin;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderDispatcher;
+import moe.plushie.armourers_workshop.core.render.renderer.SkinModelRenderer;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -28,27 +28,29 @@ public class ClientWardrobeHandler {
     }
 
 
-    public static void onRenderArmor(LivingEntity entity, Model model, int light, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderType) {
+    public static void onRenderArmor(LivingEntity entity, Model model, int light, MatrixStack matrixStack, IRenderTypeBuffer renderType) {
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             return;
         }
+        int t = (int) System.currentTimeMillis();
         float f = 1f / 16f;
         matrixStack.pushPose();
         matrixStack.scale(f, f, f);
-        SkinRenderDispatcher.startBatch();
+        SkinRenderBuffer buffer = SkinRenderBuffer.getInstance();
         for (BakedSkin bakedSkin : wardrobe.getArmorSkins()) {
-            SkinModelRenderer.INSTANCE.renderSkin(entity, bakedSkin, model, null, light, partialTicks, matrixStack, renderType);
+            SkinModelRenderer.renderSkin(bakedSkin, wardrobe.getDye(), entity, model, null, light, t, matrixStack, buffer);
         }
-        SkinRenderDispatcher.endBatch();
+        buffer.endBatch();
         matrixStack.popPose();
     }
 
-    public static void onRenderItem(LivingEntity entity, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderType, CallbackInfo callback) {
+    public static void onRenderItem(LivingEntity entity, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, MatrixStack matrixStack, IRenderTypeBuffer renderType, CallbackInfo callback) {
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             return;
         }
+        int t = (int) System.currentTimeMillis();
         float f = 1f / 16f;
         matrixStack.pushPose();
         matrixStack.scale(f, f, f);
@@ -82,12 +84,12 @@ public class ClientWardrobeHandler {
 //          p_228399_1_.mulPose(Vector3f.YP.rotationDegrees((float)i * -45.0F));
 
 
-        SkinRenderDispatcher.startBatch();
+        SkinRenderBuffer buffer = SkinRenderBuffer.getInstance();
         for (BakedSkin bakedSkin : wardrobe.getItemSkins(itemStack)) {
-            SkinModelRenderer.INSTANCE.renderSkin(entity, bakedSkin, HELD_ITEM_MODEL, transformType, light, partialTicks, matrixStack, renderType);
+            SkinModelRenderer.renderSkin(bakedSkin, wardrobe.getDye(), entity, HELD_ITEM_MODEL, transformType, light, t, matrixStack, buffer);
             callback.cancel();
         }
-        SkinRenderDispatcher.endBatch();
+        buffer.endBatch();
 
 //        this.itemRenderer.renderStatic(p_228397_1_, p_228397_2_, p_228397_3_, p_228397_4_, p_228397_5_, p_228397_6_, p_228397_1_.level, p_228397_7_, OverlayTexture.NO_OVERLAY);
 //        public void renderItem(LivingEntity p_228397_1_, ItemStack p_228397_2_, ItemCameraTransforms.TransformType p_228397_3_, boolean p_228397_4_, MatrixStack p_228397_5_, IRenderTypeBuffer p_228397_6_, int p_228397_7_) {
@@ -107,7 +109,7 @@ public class ClientWardrobeHandler {
         if (!ArmourersConfig.enableEntityInInventoryClip) {
             return;
         }
-        int left,top,width,height;
+        int left, top, width, height;
         switch (scale) {
             case 20: // in creative container screen
                 width = 32;
@@ -143,14 +145,13 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderEquipment(LivingEntity entity, EquipmentSlotType slotType, MatrixStack matrixStack, IRenderTypeBuffer renderType, CallbackInfo callback) {
-        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-        if (wardrobe == null) {
+        ItemStack itemStack = entity.getItemBySlot(slotType);
+        if (itemStack.isEmpty()) {
             return;
         }
-        if (wardrobe.hasEquipment(slotType)) {
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        if (wardrobe != null && wardrobe.hasOverriddenEquipment(slotType)) {
             callback.cancel();
         }
     }
-
-
 }

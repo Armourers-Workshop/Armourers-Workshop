@@ -1,77 +1,77 @@
 package moe.plushie.armourers_workshop.core.skin.data;
 
+import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.library.ILibraryFile;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinIdentifier;
-import moe.plushie.armourers_workshop.core.api.ISkinType;
 
 public class SkinIdentifier implements ISkinIdentifier {
-    
+
     private static final String TAG_SKIN_ID_DATA = "identifier";
     private static final String TAG_SKIN_LOCAL_ID = "localId";
     private static final String TAG_SKIN_LIBRARY_FILE = "libraryFile";
     private static final String TAG_SKIN_GLOBAL_ID = "globalId";
     private static final String TAG_SKIN_TYPE = "skinType";
-    
+
     private static final String TAG_SKIN_OLD_ID = "skinId";
-    
+
     private int localId;
     private ILibraryFile libraryFile;
     private int globalId;
     private ISkinType skinType;
-    
-    
+
+
     // 1 2 3
     // 1 3 2
     // 2 1 3
     // 2 3 1
     // 3 1 2
     // 3 2 1
-    
+
     // 6 Permutations
     // primary secondary tertiary
-    
+
     public SkinIdentifier() {
         this.localId = 0;
         this.libraryFile = null;
         this.globalId = 0;
         this.skinType = null;
     }
-    
+
     public SkinIdentifier(int localId, ILibraryFile libraryFile, int globalId, ISkinType skinType) {
         this.localId = localId;
         this.libraryFile = libraryFile;
         this.globalId = globalId;
         this.skinType = skinType;
     }
-    
+
     public SkinIdentifier(Skin skin) {
         this(skin.lightHash(), null, 0, skin.getType());
     }
-    
+
     public SkinIdentifier(ISkinIdentifier identifier) {
         this(identifier.getSkinLocalId(), identifier.getSkinLibraryFile(), identifier.getSkinGlobalId(), identifier.getType());
     }
-    
+
     @Override
     public boolean hasLocalId() {
         return localId != 0;
     }
-    
+
     @Override
     public boolean hasLibraryFile() {
         return libraryFile != null;
     }
-    
+
     @Override
     public boolean hasGlobalId() {
         return globalId != 0;
     }
-    
+
     @Override
     public boolean isValid() {
         return hasLocalId() | hasLibraryFile() | hasGlobalId();
     }
-    
+
     @Override
     public int getSkinLocalId() {
         return localId;
@@ -86,7 +86,7 @@ public class SkinIdentifier implements ISkinIdentifier {
     public int getSkinGlobalId() {
         return globalId;
     }
-    
+
     @Override
     public ISkinType getType() {
         return skinType;
@@ -96,7 +96,7 @@ public class SkinIdentifier implements ISkinIdentifier {
     public String toString() {
         return "SkinIdentifier [localId=" + localId + ", libraryFile=" + libraryFile + ", globalId=" + globalId + "]";
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -127,7 +127,7 @@ public class SkinIdentifier implements ISkinIdentifier {
             return false;
         return true;
     }
-    
+
     public enum SkinIdentifierType {
         LOCAL_DATABASE,
         LOCAL_FILE,
