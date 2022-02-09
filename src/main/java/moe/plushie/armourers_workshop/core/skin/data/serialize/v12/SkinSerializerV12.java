@@ -1,14 +1,14 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize.v12;
 
 import moe.plushie.armourers_workshop.core.api.ISkinType;
+import moe.plushie.armourers_workshop.core.bake.SkinTexture;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.data.SkinTexture;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
-import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.SkinLog;
 import moe.plushie.armourers_workshop.core.utils.StreamUtils;
 
@@ -43,15 +43,24 @@ public final class SkinSerializerV12 {
 
     public static String getTypeNameByLegacyId(int legacyId) {
         switch (legacyId) {
-            case 0: return "armourers:head";
-            case 1: return "armourers:chest";
-            case 2: return "armourers:legs";
-            case 3: return "armourers:skirt";
-            case 4: return "armourers:feet";
-            case 5: return "armourers:sword";
-            case 6: return "armourers:bow";
-            case 7: return "armourers:arrow";
-            default: return null;
+            case 0:
+                return "armourers:head";
+            case 1:
+                return "armourers:chest";
+            case 2:
+                return "armourers:legs";
+            case 3:
+                return "armourers:skirt";
+            case 4:
+                return "armourers:feet";
+            case 5:
+                return "armourers:sword";
+            case 6:
+                return "armourers:bow";
+            case 7:
+                return "armourers:arrow";
+            default:
+                return null;
         }
     }
 
@@ -72,7 +81,7 @@ public final class SkinSerializerV12 {
         StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PAINT_HEADER);
         if (skin.hasPaintData()) {
             stream.writeBoolean(true);
-            for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
+            for (int i = 0; i < SkinTexture.TEXTURE_OLD_SIZE; i++) {
                 stream.writeInt(skin.getPaintData()[i]);
             }
         } else {
@@ -194,8 +203,8 @@ public final class SkinSerializerV12 {
         if (fileVersion > 7) {
             boolean hasPaintData = stream.readBoolean();
             if (hasPaintData) {
-                paintData = new int[SkinTexture.TEXTURE_SIZE];
-                for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
+                paintData = new int[SkinTexture.TEXTURE_OLD_SIZE];
+                for (int i = 0; i < SkinTexture.TEXTURE_OLD_SIZE; i++) {
                     paintData[i] = stream.readInt();
                 }
             }

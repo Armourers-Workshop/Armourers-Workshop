@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.api.common.IExtraColours;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
 import moe.plushie.armourers_workshop.core.model.SkinModel;
-import moe.plushie.armourers_workshop.core.model.bake.PackedCubeFace;
+//import moe.plushie.armourers_workshop.core.model.bake.PackedCubeFace;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDye;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,7 +23,7 @@ public class ClientSkinPartData implements RemovalListener<ClientSkinPartData.Mo
      */
     public static final SkinDye BLANK_DYE = new SkinDye();
     //    public final LoadingCache<ModelKey, SkinModel> modelCache;
-    public PackedCubeFace vertexLists;
+//    public PackedCubeFace vertexLists;
     public int[] totalCubesInPart;
 
     private int[] averageR = new int[12];
@@ -50,9 +50,9 @@ public class ClientSkinPartData implements RemovalListener<ClientSkinPartData.Mo
 //        return (int) modelCache.size();
 //    }
 //
-    public void setVertexLists(PackedCubeFace vertexLists) {
-        this.vertexLists = vertexLists;
-    }
+//    public void setVertexLists(PackedCubeFace vertexLists) {
+//        this.vertexLists = vertexLists;
+//    }
 
     public void setAverageDyeValues(int[] r, int[] g, int[] b) {
         this.averageR = r;

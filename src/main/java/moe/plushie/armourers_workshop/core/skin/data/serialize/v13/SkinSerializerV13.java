@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize.v13;
 
 import moe.plushie.armourers_workshop.core.api.ISkinType;
+import moe.plushie.armourers_workshop.core.bake.SkinTexture;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.data.SkinTexture;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
-import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.SkinLog;
 import moe.plushie.armourers_workshop.core.utils.StreamUtils;
 
@@ -59,7 +59,7 @@ public final class SkinSerializerV13 {
         StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PAINT_HEADER);
         if (skin.hasPaintData()) {
             stream.writeBoolean(true);
-            for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
+            for (int i = 0; i < SkinTexture.TEXTURE_OLD_SIZE; i++) {
                 stream.writeInt(skin.getPaintData()[i]);
             }
         } else {
@@ -144,8 +144,8 @@ public final class SkinSerializerV13 {
         int[] paintData = null;
         boolean hasPaintData = stream.readBoolean();
         if (hasPaintData) {
-            paintData = new int[SkinTexture.TEXTURE_SIZE];
-            for (int i = 0; i < SkinTexture.TEXTURE_SIZE; i++) {
+            paintData = new int[SkinTexture.TEXTURE_OLD_SIZE];
+            for (int i = 0; i < SkinTexture.TEXTURE_OLD_SIZE; i++) {
                 paintData[i] = stream.readInt();
             }
         }

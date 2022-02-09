@@ -4,32 +4,38 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.util.Pair;
+import moe.plushie.armourers_workshop.core.bake.BakedSkinDye;
+import moe.plushie.armourers_workshop.core.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.core.bake.ColouredFace;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
-import moe.plushie.armourers_workshop.core.model.bake.ColouredFace;
-import moe.plushie.armourers_workshop.core.render.other.BakedSkinDye;
-import moe.plushie.armourers_workshop.core.render.other.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.skin.data.Skin;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.util.math.vector.Matrix4f;
 
 import java.awt.*;
 import java.nio.ByteBuffer;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class SkinVertexBufferBuilder {
 
+    protected final static ArrayDeque<SkinCache.Key> CACHING_KEYS_POOL = new ArrayDeque<>();
+
     protected final Skin skin;
-    protected final Cache<SkinCache.Key, ArrayList<CompiledTask>> cachingBuffers = CacheBuilder.newBuilder()
-            .expireAfterAccess(15, TimeUnit.MINUTES)
+    protected final Cache<Object, ArrayList<CompiledTask>> cachingTasks = CacheBuilder.newBuilder()
+            .expireAfterAccess(3, TimeUnit.SECONDS)
             .build();
 
-    protected final ArrayList<Pair<SkinRenderTask.Parameter, CompiledTask>> pendingTasks = new ArrayList<>();
-    protected final ArrayList<CompiledTask> compilingBuffers = new ArrayList<>();
+    protected final ArrayList<RenderTask> pendingTasks = new ArrayList<>();
+    protected final ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
 
     public SkinVertexBufferBuilder(Skin skin) {
         this.skin = skin;
@@ -40,41 +46,43 @@ public class SkinVertexBufferBuilder {
         if (SkinConfig.isEnableSkinPart(part.getPart())) {
             return;
         }
-        SkinCache.Key key = new SkinCache.Key(part.getId(), dye.getRequirements(part.getColorInfo()));
-        SkinRenderTask.Parameter parameter = new SkinRenderTask.Parameter(matrixStack, light, partialTicks);
-        ArrayList<CompiledTask> compiledTasks = cachingBuffers.getIfPresent(key);
+        Object key = SkinCache.borrowKey(part.getId(), dye.getRequirements(part.getColorInfo()));
+        ArrayList<CompiledTask> compiledTasks = cachingTasks.getIfPresent(key);
         if (compiledTasks != null) {
-            compiledTasks.forEach(compiledTask -> pendingTasks.add(new Pair<>(parameter, compiledTask)));
+            SkinCache.returnKey(key);
+            compiledTasks.forEach(compiledTask -> pendingTasks.add(new RenderTask(compiledTask, matrixStack, light, partialTicks)));
             return;
         }
         MatrixStack matrixStack1 = new MatrixStack();
-        ArrayList<CompiledTask> compiledTasks1 = new ArrayList<>();
+        ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
         part.forEach((renderType, quads) -> {
             BufferBuilder builder = new BufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
             builder.begin(renderType.mode(), renderType.format());
             for (ColouredFace quad : quads) {
-                quad.renderVertex(part, dye, matrixStack1, builder);
+                quad.render(part, dye, matrixStack1, builder);
             }
             builder.end();
             CompiledTask compiledTask = new CompiledTask(renderType, builder);
-            compiledTasks1.add(compiledTask);
-            compilingBuffers.add(compiledTask);
-            pendingTasks.add(new Pair<>(parameter, compiledTask));
+            mergedTasks.add(compiledTask);
+            buildingTasks.add(compiledTask);
+            pendingTasks.add(new RenderTask(compiledTask, matrixStack, light, partialTicks));
         });
-        cachingBuffers.put(key, compiledTasks1);
+        cachingTasks.put(key, mergedTasks);
     }
 
     public void addShapeData(Rectangle3f box, Color color, MatrixStack matrixStack) {
-        RenderUtils.drawBoundingBox(matrixStack, box, color);
+        IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+//        RenderUtils.drawBoundingBox(matrixStack, box, color, SkinRenderBuffer.getInstance());
+        RenderUtils.drawBoundingBox(matrixStack, box, color, buffer);
     }
 
-    public void endBatch(SkinRenderTask.Group group) {
-        if (compilingBuffers.size() != 0) {
+    public void endBatch(SkinRenderBuffer.Batch batch) {
+        if (buildingTasks.size() != 0) {
             combineAndUpload();
-            compilingBuffers.clear();
+            buildingTasks.clear();
         }
         if (pendingTasks.size() != 0) {
-            pendingTasks.forEach(pair -> group.add(pair.getSecond().build(pair.getFirst())));
+            pendingTasks.forEach(batch::add);
             pendingTasks.clear();
         }
     }
@@ -84,7 +92,7 @@ public class SkinVertexBufferBuilder {
         SkinVertexBuffer vertexBuffer = new SkinVertexBuffer();
         ArrayList<ByteBuffer> byteBuffers = new ArrayList<>();
 
-        for (CompiledTask compiledTask : compilingBuffers) {
+        for (CompiledTask compiledTask : buildingTasks) {
             VertexFormat format = compiledTask.renderType.format();
             Pair<BufferBuilder.DrawState, ByteBuffer> pair = compiledTask.bufferBuilder.popNextBuffer();
             ByteBuffer byteBuffer = pair.getSecond();
@@ -117,12 +125,55 @@ public class SkinVertexBufferBuilder {
             this.bufferBuilder = bufferBuilder;
         }
 
-        SkinRenderTask build(SkinRenderTask.Parameter parameter) {
-            return new SkinRenderTask(renderType, vertexBuffer, vertexOffset, vertexCount, parameter);
-        }
-
         void close() {
             vertexBuffer.close();
+        }
+    }
+
+    static class RenderTask implements SkinRenderTask {
+
+        int lightmap;
+        int partialTicks;
+
+        Matrix4f matrix;
+        CompiledTask compiledTask;
+
+        RenderTask(CompiledTask compiledTask, MatrixStack matrixStack, int lightmap, int partialTicks) {
+            super();
+            this.compiledTask = compiledTask;
+            this.matrix = matrixStack.last().pose().copy();
+            this.lightmap = lightmap;
+            this.partialTicks = partialTicks;
+        }
+
+        @Override
+        public RenderType getRenderType() {
+            return compiledTask.renderType;
+        }
+
+        @Override
+        public int getVertexOffset() {
+            return compiledTask.vertexOffset;
+        }
+
+        @Override
+        public int getVertexCount() {
+            return compiledTask.vertexCount;
+        }
+
+        @Override
+        public SkinVertexBuffer getVertexBuffer() {
+            return compiledTask.vertexBuffer;
+        }
+
+        @Override
+        public Matrix4f getMatrix() {
+            return matrix;
+        }
+
+        @Override
+        public int getLightmap() {
+            return lightmap;
         }
     }
 }

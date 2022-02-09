@@ -2,8 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.data;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPart;
-import moe.plushie.armourers_workshop.core.model.bake.PackedCubeFace;
-import moe.plushie.armourers_workshop.core.render.other.SkinRenderShape;
+import moe.plushie.armourers_workshop.core.utils.CustomVoxelShape;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
@@ -18,16 +17,15 @@ import java.util.List;
 public class SkinPart implements ISkinPart {
 
     protected ISkinPartType partType;
-    protected SkinRenderShape renderShape;
+
+    protected CustomVoxelShape renderShape;
     protected Rectangle3i partBounds;
 
-    private int id;
+    protected SkinProperties properties;
 
     private Rectangle3i[][][] blockGrid;
     private SkinCubeData cubeData;
     private ArrayList<SkinMarker> markerBlocks;
-    private PackedCubeFace packedFaces;
-    private SkinProperties properties;
 
     public SkinPart(ISkinPartType partType, ArrayList<SkinMarker> markerBlocks, SkinCubeData cubeData) {
         this.partType = partType;
@@ -36,14 +34,6 @@ public class SkinPart implements ISkinPart {
 
         this.cubeData = cubeData;
         this.markerBlocks = markerBlocks;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public SkinProperties getProperties() {
@@ -60,21 +50,11 @@ public class SkinPart implements ISkinPart {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public SkinRenderShape getRenderShape() {
+    public CustomVoxelShape getRenderShape() {
         if (getType() == SkinPartTypes.ITEM_ARROW) {
-            return SkinRenderShape.empty();
+            return CustomVoxelShape.empty();
         }
         return renderShape;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public PackedCubeFace getQuads() {
-        return packedFaces;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void setPackedFaces(PackedCubeFace packedFaces) {
-        this.packedFaces = packedFaces;
     }
 
     private void setupPartBounds() {
@@ -160,25 +140,6 @@ public class SkinPart implements ISkinPart {
     @Override
     public List<SkinMarker> getMarkers() {
         return markerBlocks;
-    }
-
-    @Override
-    public int hashCode() {
-        return toString().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        SkinPart other = (SkinPart) obj;
-        if (!toString().equals(other.toString()))
-            return false;
-        return true;
     }
 
     @Override

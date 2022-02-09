@@ -1,11 +1,13 @@
 package moe.plushie.armourers_workshop.common.item;
 
+import moe.plushie.armourers_workshop.core.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
-import moe.plushie.armourers_workshop.core.render.other.BakedSkin;
+import moe.plushie.armourers_workshop.core.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Keybindings;
+import moe.plushie.armourers_workshop.core.utils.SkinCore;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.Item;
@@ -37,7 +39,7 @@ public class SkinItem extends Item {
             }
             return tooltip;
         }
-        BakedSkin bakedSkin = BakedSkin.by(descriptor);
+        BakedSkin bakedSkin = SkinCore.bakery.loadSkin(descriptor);
         if (bakedSkin == null) {
             tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.skindownloading", descriptor.getIdentifier()));
             return tooltip;

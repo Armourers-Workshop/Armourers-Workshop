@@ -1,12 +1,12 @@
-package moe.plushie.armourers_workshop.core.model.bake;
+package moe.plushie.armourers_workshop.core.bake;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import javafx.util.Pair;
 import moe.plushie.armourers_workshop.core.api.ISkinCube;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.render.other.BakedSkinDye;
-import moe.plushie.armourers_workshop.core.render.other.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.render.renderer.SkinModelRenderer;
+import moe.plushie.armourers_workshop.core.api.ISkinPartType;
+import moe.plushie.armourers_workshop.core.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -20,54 +20,27 @@ public class ColouredFace {
     public final int y;
     public final int z;
 
-    public final int rgb;
-    //    public final byte r;
-//    public final byte g;
-//    public final byte b;
-    public final byte a;
+    public final int argb;
 
     public final Direction direction;
     public final ISkinPaintType paintType;
 
-    private final byte lodLevel;
 
     public ISkinCube cube;
 
-    public ColouredFace(int x, int y, int z, int rgb, byte a, byte lodLevel, Direction direction, ISkinCube cube, ISkinPaintType paintType) {
+    public ColouredFace(int x, int y, int z, int color, Direction direction, ISkinCube cube, ISkinPaintType paintType) {
         this.x = x;
         this.y = y;
         this.z = z;
 
-        this.rgb = rgb;
-//        this.r = r;
-//        this.g = g;
-//        this.b = b;
-        this.a = a;
+        this.argb = color;
 
         this.paintType = paintType;
         this.direction = direction;
-        this.lodLevel = lodLevel;
 
         this.cube = cube;
     }
 
-    public ColouredFace(int x, int y, int z, byte r, byte g, byte b, byte a, byte lodLevel, Direction direction, ISkinCube cube, ISkinPaintType paintType) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-
-        this.rgb = (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
-//        this.r = r;
-//        this.g = g;
-//        this.b = b;
-        this.a = a;
-
-        this.paintType = paintType;
-        this.direction = direction;
-        this.lodLevel = lodLevel;
-
-        this.cube = cube;
-    }
 
 //    public static byte[] getColourFromTexture(byte x, byte y, byte z, byte r, byte g, byte b, byte face, BufferedImage image, ISkinPartTypeTextured skinPartTex, boolean oldImage) {
 //        Direction facing = Direction.values()[face];
@@ -199,9 +172,22 @@ public class ColouredFace {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void renderVertex(BakedSkinPart part, BakedSkinDye dye, MatrixStack matrixStack, IVertexBuilder builder) {
-        int rgb = this.rgb;
+    public void render(BakedSkinPart part, BakedSkinDye dye, MatrixStack matrixStack, IVertexBuilder builder) {
+        dye.resolve(argb, this, part.getColorInfo(), paintType, part.getType(), (paintType1, color1) -> {
+            SkinModelRenderer.renderFace(x, y, z, color1, paintType1, direction, matrixStack, builder);
+        });
 
+
+//        public Pair<ISkinPaintType, Integer> getResolvedColor(int color, ColouredFace face, PackedColorInfo colorInfo, ISkinPaintType paintType, ISkinPartType
+//        partType) {
+
+
+//        ISkinPaintType paintType = dye.getResolvedPaintType(quad.paintType);
+//        int color = dye.getDyedColor(quad.argb, quad, part.getColorInfo(), paintType, partType);
+//        if ((color & 0xff000000) == 0) {
+//            return;
+//        }
+//        SkinModelRenderer.renderFace(quad, color, paintType, matrixStack1, builder);
 
 
 //        part.getPackedFaces().colorInfo.getColor(paintType);
@@ -273,14 +259,13 @@ public class ColouredFace {
 //                b = dyedColour[2];
 //            }
 //        }
-
-        if (paintType == SkinPaintTypes.TEXTURE) {
-            int newColor = dye.getColor(x, y, z, direction, part.getType());
-            if ((newColor & 0xFF000000) != 0) {
-                rgb = newColor;
-            }
-        }
-
-        SkinModelRenderer.renderFace(builder, x, y, z, rgb, a, direction, paintType.getU(), paintType.getV());
+//
+//        if (paintType == SkinPaintTypes.TEXTURE) {
+//            int newColor = dye.getColor(x, y, z, direction, part.getType());
+//            if ((newColor & 0xFF000000) != 0) {
+//                rgb = newColor;
+//            }
+//        }
+//
     }
 }

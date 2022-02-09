@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.model;
 
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
-import moe.plushie.armourers_workshop.core.model.bake.ColouredFace;
+import moe.plushie.armourers_workshop.core.bake.ColouredFace;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

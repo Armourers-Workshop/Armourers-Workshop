@@ -1,23 +1,16 @@
 package moe.plushie.armourers_workshop.core.api;
 
+import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
+
 public interface ISkinPaintType {
 
     int getId();
 
-    int getIndex();
-
-
-//    ExtraColourType getColourType();
-//void setColourChannelIndex(int channelIndex);
+    SkinDyeType getDyeType();
 
     float getU();
 
     float getV();
-
-
-    boolean hasAverageColourChannel();
-
-    int getChannelIndex();
 
     String getRegistryName();
 }

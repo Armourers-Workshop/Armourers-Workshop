@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SkinDescriptor implements ISkinDescriptor {
 
-    public static final SkinDescriptor EMPTY = new SkinDescriptor("", "");
+    public static final SkinDescriptor EMPTY = new SkinDescriptor("");
 
     public static final String NBT_KEY_SKIN = "armourersWorkshop";
     public static final String NBT_KEY_SKIN_NAME = "name";
@@ -23,8 +23,10 @@ public class SkinDescriptor implements ISkinDescriptor {
             .expireAfterAccess(15, TimeUnit.SECONDS)
             .build();
 
-    public final String identifier;
-    public final String name;
+    private final String name;
+    private final String identifier;
+    private final SkinDye dye;
+
 //    public static final SkinProperty<String> ALL_CUSTOM_NAME = new SkinProperty<>("customName", "");
 //    public static final SkinProperty<String> ALL_FLAVOUR_TEXT = new SkinProperty<>("flavour", "");
 //    public static final SkinProperty<String> ALL_AUTHOR_NAME = new SkinProperty<>("authorName", "");
@@ -33,22 +35,29 @@ public class SkinDescriptor implements ISkinDescriptor {
 //    private ISkinIdentifier identifier;
 //    public ISkinDye skinDye;
 
-//    public SkinDescriptor() {
+    //    public SkinDescriptor() {
 //        this.skinDye = new SkinDye();
 //        this.identifier = new SkinIdentifier(0, null, 0, null);
 //    }
 
-    public SkinDescriptor(String identifier, String name) {
+    public SkinDescriptor(String identifier) {
+        this(identifier, "", SkinDye.EMPTY);
+    }
+
+    public SkinDescriptor(String identifier, String name, SkinDye dye) {
         this.name = name;
         this.identifier = identifier;
+        this.dye = dye;
     }
 
     public SkinDescriptor(CompoundNBT nbt) {
         this.name = nbt.getString(NBT_KEY_SKIN_NAME);
         this.identifier = nbt.getString(NBT_KEY_SKIN_IDENTIFIER);
+        this.dye = new SkinDye();
 //        this.skinDye = new SkinDye();
 //        this.identifier = new SkinIdentifier(0, null, 0, null);
     }
+
 
     @Nonnull
     public static SkinDescriptor of(ItemStack itemStack) {
@@ -106,6 +115,10 @@ public class SkinDescriptor implements ISkinDescriptor {
 //    }
 //
 
+    public SkinDye getDye() {
+        return dye;
+    }
+
     public String getName() {
         return name;
     }
@@ -146,4 +159,18 @@ public class SkinDescriptor implements ISkinDescriptor {
 //        skinDye.writeToCompound(skinDataCompound);
 //        compound.setTag(tag, skinDataCompound);
 //    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SkinDescriptor that = (SkinDescriptor) o;
+        return identifier.equals(that.identifier);
+    }
+
+    @Override
+    public int hashCode() {
+        return identifier.hashCode();
+    }
 }

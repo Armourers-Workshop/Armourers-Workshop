@@ -1,15 +1,10 @@
 package moe.plushie.armourers_workshop.core.skin.part;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.api.common.skin.*;
-import moe.plushie.armourers_workshop.core.skin.data.SkinCubeData;
-import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
-import moe.plushie.armourers_workshop.core.skin.data.SkinTexture;
+import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
 import net.minecraft.util.math.vector.Vector3i;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public abstract class SkinPartType implements ISkinPartType {
@@ -23,16 +18,15 @@ public abstract class SkinPartType implements ISkinPartType {
     public SkinPartType() {
     }
 
-    public SkinPartType setRegistryName(String registryName) {
-        this.registryName = registryName;
-        return this;
-    }
-
     @Override
     public String getRegistryName() {
         return registryName;
     }
 
+    public SkinPartType setRegistryName(String registryName) {
+        this.registryName = registryName;
+        return this;
+    }
 
     @Override
     public Rectangle3i getBuildingSpace() {
@@ -137,5 +131,10 @@ public abstract class SkinPartType implements ISkinPartType {
     @Override
     public int hashCode() {
         return registryName.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "SkinPartType{" + "registryName=" + registryName + '}';
     }
 }
