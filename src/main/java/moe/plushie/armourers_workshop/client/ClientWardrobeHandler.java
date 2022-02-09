@@ -5,8 +5,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.common.ArmourersConfig;
 import moe.plushie.armourers_workshop.core.render.SkinRenderBuffer;
 import moe.plushie.armourers_workshop.core.render.model.HeldItemModel;
-import moe.plushie.armourers_workshop.core.render.other.BakedSkin;
-import moe.plushie.armourers_workshop.core.render.renderer.SkinModelRenderer;
+import moe.plushie.armourers_workshop.core.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -128,20 +129,14 @@ public class ClientWardrobeHandler {
             default:
                 return;
         }
-        MainWindow window = Minecraft.getInstance().getWindow();
-        double guiScale = window.getGuiScale();
-        int sx = (int) (left * guiScale);
-        int sy = (int) ((window.getGuiScaledHeight() - top - height) * guiScale);
-        int sw = (int) (width * guiScale);
-        int sh = (int) (height * guiScale);
-        RenderSystem.enableScissor(sx, sy, sw, sh);
+        RenderUtils.enableScissor(left, top, width, height);
     }
 
     public static void onRenderEntityInInventoryPost(LivingEntity entity) {
         if (!ArmourersConfig.enableEntityInInventoryClip) {
             return;
         }
-        RenderSystem.disableScissor();
+        RenderUtils.disableScissor();
     }
 
     public static void onRenderEquipment(LivingEntity entity, EquipmentSlotType slotType, MatrixStack matrixStack, IRenderTypeBuffer renderType, CallbackInfo callback) {

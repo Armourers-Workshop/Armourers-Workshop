@@ -1,9 +1,9 @@
-package moe.plushie.armourers_workshop.core.render.renderer;
+package moe.plushie.armourers_workshop.core.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.entity.SkinDummyEntity;
-import moe.plushie.armourers_workshop.core.render.SkinRenderBuffer;
-import moe.plushie.armourers_workshop.core.render.other.BakedSkin;
+import moe.plushie.armourers_workshop.core.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
@@ -26,6 +26,7 @@ public final class SkinItemRenderer {
 //    }
     private static ItemCameraTransforms.TransformType lastTransformType = ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND;
     private static SkinDummyEntity entity2;
+    private static SkinDye entityDye;
 
 
     public static void renderSkinAsItem(MatrixStack matrixStack, BakedSkin bakedSkin, int light, boolean showSkinPaint, boolean doLodLoading, int targetWidth, int targetHeight, SkinRenderBuffer buffer) {
@@ -65,6 +66,7 @@ public final class SkinItemRenderer {
 
         if (entity2 == null) {
             entity2 = new SkinDummyEntity();
+            entityDye = new SkinDye();
         }
 
         if (lastI != mp1) {
@@ -76,7 +78,7 @@ public final class SkinItemRenderer {
             lastI = mp1;
         }
 
-        SkinModelRenderer.renderSkin(bakedSkin, null, entity2, entity2.getModel(), lastTransformType, light, 0, matrixStack, buffer);
+        SkinModelRenderer.renderSkin(bakedSkin, entityDye, entity2, entity2.getModel(), lastTransformType, light, 0, matrixStack, buffer);
 
         matrixStack.popPose();
     }
@@ -101,31 +103,9 @@ public final class SkinItemRenderer {
         matrixStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ());
 
         SkinRenderBuffer buffer1 = SkinRenderBuffer.getInstance();
-        SkinModelRenderer.renderSkin(bakedSkin, null, entity, entity.getModel(), ItemCameraTransforms.TransformType.NONE, light, partialTicks, matrixStack, buffer1);
+        SkinModelRenderer.renderSkin(bakedSkin, entityDye, entity, entity.getModel(), ItemCameraTransforms.TransformType.NONE, light, partialTicks, matrixStack, buffer1);
         buffer1.endBatch();
 
         matrixStack.popPose();
     }
-
-
-//    public static void renderSkinWithHelper(Skin skin, ISkinDescriptor skinPointer, boolean showSkinPaint, boolean doLodLoading, MatrixStack matrixStack, IVertexBuilder builder) {
-//        ISkinType skinType = skinPointer.getIdentifier().getType();
-//        if (skinType == null) {
-//            skinType = skin.getType();
-//        }
-//        skinType = skin.getType();
-//
-//        IEquipmentModel targetModel = SkinModelRenderer.INSTANCE.getTypeHelperForModel(SkinModelRenderer.ModelType.MODEL_BIPED, skinType);
-////        targetModel.render(null, skin, matrix, renderer);
-//        targetModel.render(null, skin, null, showSkinPaint, skinPointer.getSkinDye(), null, true, 0, doLodLoading, matrixStack, builder);
-//
-//    }
-//
-//    public static void renderSkinWithoutHelper(ISkinDescriptor skinPointer, boolean doLodLoading) {
-//        Skin skin = ClientSkinCache.INSTANCE.getSkin(skinPointer);
-//        if (skin == null) {
-//            return;
-//        }
-//        SkinModelRenderHelper.INSTANCE.modelHelperDummy.render(null, skin, null, true, skinPointer.getSkinDye(), null, true, 0, doLodLoading);
-//    }
 }

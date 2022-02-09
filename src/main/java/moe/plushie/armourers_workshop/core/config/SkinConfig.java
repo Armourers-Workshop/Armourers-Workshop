@@ -55,6 +55,7 @@ public class SkinConfig {
     // Debug
     public static int texturePaintingType;
     public static boolean showF3DebugInfo;
+    public static float ploOffset = -0.01f;
 
     public static boolean enableModelOverridden = true;
     public static boolean enableWireframeRender;

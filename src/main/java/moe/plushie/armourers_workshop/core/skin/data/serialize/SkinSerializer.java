@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize;
 
+import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.data.Skin;
+import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
@@ -12,6 +14,9 @@ import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeExcepti
 import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.utils.PacketBufferCoder;
+import moe.plushie.armourers_workshop.core.utils.SkinPacketHandler;
+import net.minecraft.network.PacketBuffer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -119,9 +124,7 @@ public class SkinSerializer {
         }
 
         // bind properties to part.
-        int partId = 0;
         for (SkinPart part : skinParts) {
-            part.setId(partId++);
             part.setProperties(properties);
         }
         String skinIndexs = properties.get(SkinProperty.OUTFIT_PART_INDEXS);
@@ -143,5 +146,18 @@ public class SkinSerializer {
         }
 
         return new Skin(properties, skinType, paintData, skinParts);
+    }
+
+
+    public static void writeSkinToBuffer(Skin skin, ByteBuf buffer) {
+    }
+    public static Skin readSkinByBuffer(ByteBuf buffer) {
+        return null;
+    }
+
+    public static void writeSkinDescriptorToBuffer(SkinDescriptor descriptor, ByteBuf buffer) {
+    }
+    public static SkinDescriptor readSkinDescriptorByBuffer(ByteBuf buffer) {
+        return null;
     }
 }

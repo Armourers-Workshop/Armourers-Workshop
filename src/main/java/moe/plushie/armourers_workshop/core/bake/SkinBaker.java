@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.model.bake;
+package moe.plushie.armourers_workshop.core.bake;
 
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
 import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
@@ -14,19 +14,19 @@ import java.util.ArrayList;
 @OnlyIn(Dist.CLIENT)
 public final class SkinBaker {
 
-    public static boolean withinMaxRenderDistance(Entity entity) {
-        Vector3d pos = entity.position();
-        return withinMaxRenderDistance(pos.x, pos.y, pos.z);
-    }
-
-    public static boolean withinMaxRenderDistance(double x, double y, double z) {
-        PlayerEntity player = Minecraft.getInstance().player;
-        if (player.distanceToSqr(new Vector3d(x, y, z)) > SkinConfig.renderDistanceSkin) {
-            return false;
-        }
-        return true;
-    }
-
+//    public static boolean withinMaxRenderDistance(Entity entity) {
+//        Vector3d pos = entity.position();
+//        return withinMaxRenderDistance(pos.x, pos.y, pos.z);
+//    }
+//
+//    public static boolean withinMaxRenderDistance(double x, double y, double z) {
+//        PlayerEntity player = Minecraft.getInstance().player;
+//        if (player.distanceToSqr(new Vector3d(x, y, z)) > SkinConfig.renderDistanceSkin) {
+//            return false;
+//        }
+//        return true;
+//    }
+//
 //        public static PackedCubeFace cullFacesOnEquipmentPart(SkinPart skinPart) {
 //        SkinCubeData cubeData = skinPart.getCubeData();
 //        cubeData.setupFaceFlags();

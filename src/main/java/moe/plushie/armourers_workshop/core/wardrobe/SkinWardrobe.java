@@ -2,13 +2,18 @@ package moe.plushie.armourers_workshop.core.wardrobe;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Iterators;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.common.ISkinWardrobe;
-import moe.plushie.armourers_workshop.core.render.other.BakedSkin;
+import moe.plushie.armourers_workshop.core.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.cache.SkinCache;
+import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDye;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.SkinPacketHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -24,20 +29,20 @@ import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT> {
 
-    private final static Cache<Integer, LazyOptional<SkinWardrobe>> CACHES = CacheBuilder.newBuilder()
-            .maximumSize(32)
-            .expireAfterAccess(30, TimeUnit.SECONDS)
+    private final static Cache<Object, LazyOptional<SkinWardrobe>> CACHES = CacheBuilder.newBuilder()
+            .expireAfterAccess(3, TimeUnit.SECONDS)
             .build();
 
     public final NonNullList<ItemStack> skinItemStacks = NonNullList.withSize(64, ItemStack.EMPTY);
     public final NonNullList<ItemStack> dyeItemStacks = NonNullList.withSize(16, ItemStack.EMPTY);
 
     private final WeakReference<Entity> entityRef;
-    private SkinWardrobeState state;
+    private final SkinWardrobeState state = new SkinWardrobeState();
 
     public SkinWardrobe(Entity entity) {
         this.entityRef = new WeakReference<>(entity);
@@ -48,17 +53,30 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         if (entity == null) {
             return null;
         }
-        Integer key = entity.getId();
+        Object key = SkinCache.borrowKey(entity.getId(), entity.getClass());
         LazyOptional<SkinWardrobe> wardrobe = CACHES.getIfPresent(key);
         if (wardrobe != null) {
+            SkinCache.returnKey(key);
             return wardrobe.resolve().orElse(null);
         }
         wardrobe = entity.getCapability(SkinWardrobeProvider.WARDROBE_KEY);
+        if (!wardrobe.isPresent()) {
+            SkinCache.returnKey(key);
+            return null;
+        }
         wardrobe.addListener(self -> CACHES.invalidate(key));
         CACHES.put(key, wardrobe);
         return wardrobe.resolve().orElse(null);
     }
 
+    public int getFreeItemSlot() {
+        for (int i = 0; i < skinItemStacks.size(); ++i) {
+            if (skinItemStacks.get(i).isEmpty()) {
+                return i;
+            }
+        }
+        return Integer.MAX_VALUE;
+    }
 
     public ItemStack getItemBySlot(int slot) {
         if (slot >= skinItemStacks.size()) {
@@ -72,21 +90,18 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
             return;
         }
         skinItemStacks.set(slot, itemStack);
-        refresh();
+        state.invalidateAll();
         sync();
     }
 
     public void clear() {
         skinItemStacks.clear();
-        refresh();
+        state.invalidateAll();
         sync();
     }
 
     public void refresh() {
-        if (state != null) {
-            state.invalidateAll();
-            state = null;
-        }
+        state.invalidateAll(entityRef.get());
     }
 
     public void sync() {
@@ -102,10 +117,10 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     }
 
     public SkinWardrobeState getState() {
-        if (state == null) {
-            state = new SkinWardrobeState();
+        if (!state.isLoaded) {
             state.loadSkin(getEntity(), skinItemStacks);
-            state.loadSkinTheme(getEntity(), dyeItemStacks);
+            state.loadSkinDye(getEntity(), dyeItemStacks);
+            state.isLoaded = true;
         }
         return state;
     }
@@ -168,10 +183,24 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
 
     @Override
     public CompoundNBT serializeNBT() {
-        // save slot into ListNBT
+        CompoundNBT nbt = new CompoundNBT();
+        writeItemStacks(nbt, "dyes", dyeItemStacks);
+        writeItemStacks(nbt, "skins", skinItemStacks);
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundNBT nbt) {
+        skinItemStacks.clear();
+        readItemStacks(nbt, "dyes", dyeItemStacks);
+        readItemStacks(nbt, "skins", skinItemStacks);
+        refresh();
+    }
+
+    private void writeItemStacks(CompoundNBT nbt, String key, NonNullList<ItemStack> itemStacks) {
         ListNBT slots = new ListNBT();
-        for (int i = 0; i < skinItemStacks.size(); ++i) {
-            ItemStack itemStack = skinItemStacks.get(i);
+        for (int i = 0; i < itemStacks.size(); ++i) {
+            ItemStack itemStack = itemStacks.get(i);
             if (itemStack.isEmpty()) {
                 continue;
             }
@@ -180,24 +209,18 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
             itemStack.save(itemData);
             slots.add(itemData);
         }
-        CompoundNBT nbt = new CompoundNBT();
         if (slots.size() != 0) {
-            nbt.put("slots", slots);
+            nbt.put(key, slots);
         }
-        return nbt;
     }
 
-    @Override
-    public void deserializeNBT(CompoundNBT nbt) {
-        skinItemStacks.clear();
-        // restore slots from ListNBT
-        ListNBT slots = nbt.getList("slots", nbt.getId());
+    private void readItemStacks(CompoundNBT nbt, String key, NonNullList<ItemStack> itemStacks) {
+        ListNBT slots = nbt.getList(key, nbt.getId());
         for (int i = 0; i < slots.size(); ++i) {
             CompoundNBT itemData = slots.getCompound(i);
             int slot = itemData.getByte("slot") & 255;
             ItemStack itemStack = ItemStack.of(itemData);
-            skinItemStacks.set(slot, itemStack);
+            itemStacks.set(slot, itemStack);
         }
-        refresh();
     }
 }

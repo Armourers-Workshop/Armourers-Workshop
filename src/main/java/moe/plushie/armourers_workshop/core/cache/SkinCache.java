@@ -8,19 +8,34 @@ import moe.plushie.armourers_workshop.core.render.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.skin.data.Skin;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 public class SkinCache {
 
+    private final static ArrayDeque<Key> POOL = new ArrayDeque<>();
+
     public static SkinCache INSTANCE = new SkinCache();
     public Map<Skin, SkinVertexBufferBuilder> bufferBuilders = new HashMap<>();
 
+    public static Object borrowKey(Object... objects) {
+        Key key = POOL.poll();
+        if (key == null) {
+            key = new Key();
+        }
+        key.hash = Objects.hash(objects);
+        key.objects = objects;
+        return key;
+    }
+
+    public static void returnKey(Object key) {
+        if (key instanceof Key) {
+            ((Key) key).objects = null;
+            POOL.push((Key) key);
+        }
+    }
 
     public void cache(Skin key, SkinVertexBufferBuilder buffer) {
         bufferBuilders.put(key, buffer);
@@ -36,16 +51,10 @@ public class SkinCache {
         SkinRenderBuffer.getInstance().clear();
     }
 
-
     public static class Key {
 
-        private final int hash;
-        private final Object[] objects;
-
-        public Key(Object... objects) {
-            this.objects = objects;
-            this.hash = Objects.hash(objects);
-        }
+        private int hash;
+        private Object[] objects;
 
         @Override
         public boolean equals(Object o) {
@@ -90,5 +99,4 @@ public class SkinCache {
             cache.cleanUp();
         }
     }
-
 }

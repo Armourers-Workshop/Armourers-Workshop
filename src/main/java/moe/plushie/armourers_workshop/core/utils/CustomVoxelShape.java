@@ -1,9 +1,6 @@
-package moe.plushie.armourers_workshop.core.render.other;
+package moe.plushie.armourers_workshop.core.utils;
 
 import com.google.common.collect.Lists;
-import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
-import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
-import moe.plushie.armourers_workshop.core.utils.SkinLog;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector4f;
 
@@ -12,16 +9,22 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-public class SkinRenderShape {
+public class CustomVoxelShape {
 
     private Rectangle3f box;
     private ArrayList<Vector4f> vertexes;
 
-    public SkinRenderShape() {
+    public CustomVoxelShape() {
     }
 
-    public static SkinRenderShape empty() {
-        return new SkinRenderShape();
+    public static CustomVoxelShape empty() {
+        return new CustomVoxelShape();
+    }
+
+    public static CustomVoxelShape box(Rectangle3f bounds) {
+        CustomVoxelShape shape = new CustomVoxelShape();
+        shape.box = bounds;
+        return shape;
     }
 
     public Rectangle3f bounds() {
@@ -74,7 +77,7 @@ public class SkinRenderShape {
         box = null;
     }
 
-    public void add(SkinRenderShape shape1) {
+    public void add(CustomVoxelShape shape1) {
         List<Vector4f> list = getVertexes();
         list.addAll(shape1.getVertexes());
         box = null;
@@ -103,8 +106,8 @@ public class SkinRenderShape {
         vertexes = Lists.newArrayList(uniquesVertexes);
     }
 
-    public SkinRenderShape copy() {
-        SkinRenderShape shape = new SkinRenderShape();
+    public CustomVoxelShape copy() {
+        CustomVoxelShape shape = new CustomVoxelShape();
         if (box != null) {
             shape.box = box;
         }

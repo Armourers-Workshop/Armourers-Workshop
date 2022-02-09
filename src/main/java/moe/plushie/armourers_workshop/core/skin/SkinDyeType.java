@@ -15,5 +15,5 @@ public enum SkinDyeType {
     DYE_5,
     DYE_6,
     DYE_7,
-    DYE_8
+    DYE_8,
 }

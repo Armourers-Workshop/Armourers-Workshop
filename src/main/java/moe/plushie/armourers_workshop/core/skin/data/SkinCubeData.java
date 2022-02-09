@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.core.skin.data;
 import moe.plushie.armourers_workshop.core.api.ISkinCube;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.model.bake.ColouredFace;
-import moe.plushie.armourers_workshop.core.render.other.SkinRenderShape;
+import moe.plushie.armourers_workshop.core.bake.ColouredFace;
+import moe.plushie.armourers_workshop.core.utils.CustomVoxelShape;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.LegacyCubeHelper;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
@@ -16,7 +16,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.BitSet;
 
 public class SkinCubeData {
 
@@ -38,22 +37,6 @@ public class SkinCubeData {
     private byte[][] cubeColourG;
     private byte[][] cubeColourB;
     private byte[][] cubePaintType;
-    private BitSet[] faceFlags;
-
-    public void setFaceFlags(int index, BitSet faceFlags) {
-        this.faceFlags[index] = faceFlags;
-    }
-
-    public BitSet getFaceFlags(int index) {
-        return faceFlags[index];
-    }
-
-    public void setupFaceFlags() {
-        faceFlags = new BitSet[getCubeCount()];
-        for (int i = 0; i < getCubeCount(); i++) {
-            faceFlags[i] = new BitSet(6);
-        }
-    }
 
     public int getCubeCount() {
         return cubeId.length;
@@ -151,26 +134,26 @@ public class SkinCubeData {
         byte side = DIRECTION_TO_SIDE[dir.get3DDataValue()];
         ISkinCube cube = getCube(index);
         ISkinPaintType paintType = SkinPaintTypes.byId(cubePaintType[index][side]);
-        byte r = cubeColourR[index][side];
-        byte g = cubeColourG[index][side];
-        byte b = cubeColourB[index][side];
         byte x = cubeLocX[index];
         byte y = cubeLocY[index];
         byte z = cubeLocZ[index];
 
-        byte a = (byte) 255;
-        if (cube.isGlass()) {
-            a = (byte) 127;
+        int color = 0x7f000000;
+        color |= (cubeColourR[index][side] & 0xff) << 16;
+        color |= (cubeColourG[index][side] & 0xff) << 8;
+        color |= (cubeColourB[index][side] & 0xff);
+        if (!cube.isGlass()) {
+            color |= 0xff000000;
         }
 
-        return new ColouredFace(x, y, z, r, g, b, a, (byte) 1, dir, cube, paintType);
+        return new ColouredFace(x, y, z, color, dir, cube, paintType);
     }
 
-    public SkinRenderShape getRenderShape() {
+    public CustomVoxelShape getRenderShape() {
         if (cubeLocX == null) {
-            return SkinRenderShape.empty();
+            return CustomVoxelShape.empty();
         }
-        SkinRenderShape shape = SkinRenderShape.empty();
+        CustomVoxelShape shape = CustomVoxelShape.empty();
         int count = cubeLocX.length;
         if (count == 0) {
             return shape;
@@ -236,6 +219,7 @@ public class SkinCubeData {
             stream.writeByte(cubeLocZ[i]);
             for (int side = 0; side < 6; side++) {
                 stream.writeByte(cubeColourR[i][side]);
+                stream.writeByte(cubeColourG[i][side]);
                 stream.writeByte(cubeColourB[i][side]);
                 stream.writeByte(cubePaintType[i][side]);
             }

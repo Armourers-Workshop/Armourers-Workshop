@@ -12,6 +12,6 @@ public class Keybindings {
 
     public static KeyBinding KEY_UNDO = new KeyBinding(UNDO, KeyConflictContext.IN_GAME, KeyModifier.CONTROL, InputMappings.getKey("key.keyboard.z"), CATEGORY);
 
-    public static KeyBinding OPEN_WARDROBE = new KeyBinding(WARDROBE, KeyConflictContext.IN_GAME, InputMappings.getKey("key.keyboard.p"), CATEGORY);
+    public static KeyBinding OPEN_WARDROBE = new KeyBinding(WARDROBE, KeyConflictContext.IN_GAME, InputMappings.getKey("key.keyboard.o"), CATEGORY);
 
 }

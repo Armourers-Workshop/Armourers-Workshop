@@ -5,12 +5,10 @@ import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkin;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
-import moe.plushie.armourers_workshop.core.model.bake.PackedColorInfo;
+import moe.plushie.armourers_workshop.core.bake.PackedColorInfo;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +22,6 @@ public class Skin implements ISkin {
     private final SkinProperties properties;
     private final ISkinType skinType;
     private final ArrayList<SkinPart> parts;
-    private final ArrayList<SkinPart> renderParts;
 
     private final int id = COUNTER.incrementAndGet();
 
@@ -32,7 +29,6 @@ public class Skin implements ISkin {
     public int serverId = -1;
     public int paintTextureId;
     //    public SkinModelTexture skinModelTexture;
-    public PackedColorInfo colorInfo;
     private int[] paintData;
     private int lightHash = 0;
     private int[] averageR = new int[10];
@@ -44,7 +40,6 @@ public class Skin implements ISkin {
         this.skinType = skinType;
         this.paintData = paintData;
         this.parts = skinParts;
-        this.renderParts = new ArrayList<>(skinParts);
     }
 
     public int getId() {
@@ -129,11 +124,6 @@ public class Skin implements ISkin {
 //        return this.cachedShape;
 //    }
 
-    @OnlyIn(Dist.CLIENT)
-    public List<SkinPart> getRenderParts() {
-        return renderParts;
-    }
-
     public SkinProperties getProperties() {
         return properties;
     }
@@ -177,7 +167,7 @@ public class Skin implements ISkin {
     }
 
     public SkinPart getSkinPartFromType(ISkinPartType skinPartType) {
-        for (SkinPart part : renderParts) {
+        for (SkinPart part : parts) {
             if (part.getType() == skinPartType) {
                 return part;
             }
@@ -186,7 +176,7 @@ public class Skin implements ISkin {
     }
 
     public boolean isModelOverridden(ISkinPartType partType) {
-        for (SkinPart part : renderParts) {
+        for (SkinPart part : parts) {
             if (part.getType() == partType) {
                 if (!SkinConfig.isEnableSkinPart(part)) {
                     return false;

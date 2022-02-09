@@ -1,20 +1,17 @@
 package moe.plushie.armourers_workshop.core.skin.data;
 
-import io.netty.buffer.ByteBuf;
+import com.google.common.collect.Iterables;
+import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
-import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
-import moe.plushie.armourers_workshop.core.utils.SkinLog;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
+import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SkinDye implements ISkinDye {
 
     public final static SkinDye EMPTY = new SkinDye();
 
-    public static final int MAX_SKIN_DYES = 8;
     private static final String TAG_SKIN_DYE = "dyeData";
     private static final String TAG_DYE = "dye";
     private static final String TAG_NAME = "name";
@@ -22,149 +19,201 @@ public class SkinDye implements ISkinDye {
     private static final String TAG_GREEN = "g";
     private static final String TAG_BLUE = "b";
     private static final String TAG_TYPE = "t";
-    private final HashMap<SkinDyeType, Integer> colors = new HashMap<>();
-    private byte[][] dyes;
-    private boolean[] hasDye;
-    private String[] names;
+
+
+    private final HashMap<ISkinPaintType, Integer> colors = new HashMap<>();
+    private HashMap<ISkinPaintType, PaintColor> resolvedColors;
+
+//    private byte[][] dyes;
+//    private boolean[] hasDye;
+//    private String[] names;
 
     public SkinDye() {
-        dyes = new byte[MAX_SKIN_DYES][4];
-        hasDye = new boolean[MAX_SKIN_DYES];
-        names = new String[MAX_SKIN_DYES];
+//        dyes = new byte[MAX_SKIN_DYES][4];
+//        hasDye = new boolean[MAX_SKIN_DYES];
+//        names = new String[MAX_SKIN_DYES];
     }
 
-    public SkinDye(ISkinDye skinDye) {
-        this();
-        for (int i = 0; i < MAX_SKIN_DYES; i++) {
-            if (skinDye.haveDyeInSlot(i)) {
-                addDye(i, skinDye.getDyeColour(i));
-            }
-        }
+//    public SkinDye(ISkinDye skinDye) {
+//        this();
+////        for (int i = 0; i < MAX_SKIN_DYES; i++) {
+////            if (skinDye.haveDyeInSlot(i)) {
+////                addDye(i, skinDye.getDyeColour(i));
+////            }
+////        }
+//    }
+
+    public void clear() {
+        colors.clear();
+        resolvedColors = null;
     }
 
-
-    public int getColor(SkinDyeType dyeType) {
-        return colors.get(dyeType);
+    public boolean isEmpty() {
+        return colors.isEmpty();
     }
 
-    public void setColor(SkinDyeType dyeType, int color) {
-        colors.put(dyeType, color);
+    public PaintColor getResolvedColor(ISkinPaintType paintType) {
+        return getResolvedColors().get(paintType);
+    }
+
+    public Integer getColor(ISkinPaintType paintType) {
+        return colors.get(paintType);
+    }
+
+    public void setColor(ISkinPaintType paintType, int color) {
+        colors.put(paintType, color);
+        resolvedColors = null;
     }
 
     public void add(SkinDye dye) {
+        if (dye.colors.isEmpty()) {
+            return; // not any changes
+        }
         colors.putAll(dye.colors);
-    }
-
-
-    @Override
-    public byte[] getDyeColour(int index) {
-        return dyes[index];
-    }
-
-    @Override
-    public String getDyeName(int index) {
-        return names[index];
-    }
-
-    @Override
-    public boolean haveDyeInSlot(int index) {
-        return hasDye[index];
-    }
-
-    @Override
-    public boolean hasName(int index) {
-        return !StringUtils.isNullOrEmpty(names[index]);
-    }
-
-    @Override
-    public void addDye(byte[] rgbt, String name) {
-        if (rgbt.length != 4) {
-            SkinLog.warn("Something tried to set an invalid dye colour.");
-            Thread.dumpStack();
-            return;
+        resolvedColors = null;
+        if (colors.equals(dye.colors)) {
+            resolvedColors = dye.getResolvedColors();
         }
-        for (int i = 0; i < hasDye.length; i++) {
-            if (!hasDye[i]) {
-                dyes[i] = rgbt;
-                hasDye[i] = true;
-                names[i] = name;
-                break;
+    }
+
+    private HashMap<ISkinPaintType, PaintColor> getResolvedColors() {
+        if (resolvedColors != null) {
+            return resolvedColors;
+        }
+        resolvedColors = new HashMap<>();
+        if (colors.isEmpty()) {
+            return resolvedColors;
+        }
+        // build all item dependencies
+        HashMap<ISkinPaintType, ArrayList<ISkinPaintType>> dependencies = new HashMap<>();
+        colors.forEach((key, value) -> {
+            PaintColor color = new PaintColor(value);
+            if (color.getPaintType().getDyeType() != null) {
+                dependencies.computeIfAbsent(color.getPaintType(), k -> new ArrayList<>()).add(key);
+            } else {
+                resolvedColors.put(key, color);
             }
-        }
-    }
-
-    @Override
-    public void addDye(byte[] rgbt) {
-        addDye(rgbt, null);
-    }
-
-    @Override
-    public void addDye(int index, byte[] rgbt, String name) {
-        if (rgbt.length != 4) {
-            SkinLog.warn("Something tried to set an invalid dye colour.");
-            Thread.dumpStack();
-            return;
-        }
-        dyes[index] = rgbt;
-        hasDye[index] = true;
-        names[index] = name;
-    }
-
-    @Override
-    public void addDye(int index, byte[] rgbt) {
-        addDye(index, rgbt, null);
-    }
-
-    @Override
-    public void removeDye(int index) {
-        dyes[index] = new byte[]{(byte) 0, (byte) 0, (byte) 0, (byte) 255};
-        hasDye[index] = false;
-        names[index] = null;
-    }
-
-    @Override
-    public int getNumberOfDyes() {
-        int count = 0;
-        for (int i = 0; i < MAX_SKIN_DYES; i++) {
-            if (hasDye[i]) {
-                count++;
+        });
+        // merge all items whens dependencies
+        dependencies.forEach((key, value) -> Iterables.tryFind(dependencies.values(), v -> v.contains(key)).toJavaUtil().ifPresent(target -> {
+            if (target != value) {
+                target.addAll(value);
             }
-        }
-        return count;
+            value.clear(); // clear to prevent infinite loop occurs
+        }));
+        dependencies.forEach((key, value) -> value.forEach(paintType -> resolvedColors.put(paintType, resolvedColors.get(key))));
+        return resolvedColors;
     }
 
-    @Override
-    public void writeToBuf(ByteBuf buf) {
-        for (int i = 0; i < MAX_SKIN_DYES; i++) {
-            buf.writeBoolean(hasDye[i]);
-            if (hasDye[i]) {
-                buf.writeBytes(dyes[i]);
-                if (!StringUtils.isNullOrEmpty(names[i])) {
-                    buf.writeBoolean(true);
-                    // TODO: IMP
-//                    ByteBufUtils.writeUTF8String(buf, names[i]);
-                } else {
-                    buf.writeBoolean(false);
-                }
-            }
-        }
-    }
+//    @Override
+//    public byte[] getDyeColour(int index) {
+//        return dyes[index];
+//    }
+//
+//    @Override
+//    public String getDyeName(int index) {
+//        return names[index];
+//    }
+//
+//    @Override
+//    public boolean haveDyeInSlot(int index) {
+//        return hasDye[index];
+//    }
+//
+//    @Override
+//    public boolean hasName(int index) {
+//        return !StringUtils.isNullOrEmpty(names[index]);
+//    }
 
-    @Override
-    public void readFromBuf(ByteBuf buf) {
-        for (int i = 0; i < MAX_SKIN_DYES; i++) {
-            hasDye[i] = buf.readBoolean();
-            if (hasDye[i]) {
-                buf.readBytes(dyes[i]);
-                if (buf.readBoolean()) {
-                    // TODO: IMP
-//                    names[i] = ByteBufUtils.readUTF8String(buf);
-                }
-            }
-        }
-    }
+//    @Override
+//    public void addDye(byte[] rgbt, String name) {
+//        if (rgbt.length != 4) {
+//            SkinLog.warn("Something tried to set an invalid dye colour.");
+//            Thread.dumpStack();
+//            return;
+//        }
+//        for (int i = 0; i < hasDye.length; i++) {
+//            if (!hasDye[i]) {
+//                dyes[i] = rgbt;
+//                hasDye[i] = true;
+//                names[i] = name;
+//                break;
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void addDye(byte[] rgbt) {
+//        addDye(rgbt, null);
+//    }
+//
+//    @Override
+//    public void addDye(int index, byte[] rgbt, String name) {
+//        if (rgbt.length != 4) {
+//            SkinLog.warn("Something tried to set an invalid dye colour.");
+//            Thread.dumpStack();
+//            return;
+//        }
+//        dyes[index] = rgbt;
+//        hasDye[index] = true;
+//        names[index] = name;
+//    }
+//
+//    @Override
+//    public void addDye(int index, byte[] rgbt) {
+//        addDye(index, rgbt, null);
+//    }
+//
+//    @Override
+//    public void removeDye(int index) {
+//        dyes[index] = new byte[]{(byte) 0, (byte) 0, (byte) 0, (byte) 255};
+//        hasDye[index] = false;
+//        names[index] = null;
+//    }
+//
+//    @Override
+//    public int getNumberOfDyes() {
+//        int count = 0;
+//        for (int i = 0; i < MAX_SKIN_DYES; i++) {
+//            if (hasDye[i]) {
+//                count++;
+//            }
+//        }
+//        return count;
+//    }
 
-    // TODO: IMP
+//    @Override
+//    public void writeToBuf(ByteBuf buf) {
+//        for (int i = 0; i < MAX_SKIN_DYES; i++) {
+//            buf.writeBoolean(hasDye[i]);
+//            if (hasDye[i]) {
+//                buf.writeBytes(dyes[i]);
+//                if (!StringUtils.isNullOrEmpty(names[i])) {
+//                    buf.writeBoolean(true);
+//                    // TODO: IMP
+////                    ByteBufUtils.writeUTF8String(buf, names[i]);
+//                } else {
+//                    buf.writeBoolean(false);
+//                }
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void readFromBuf(ByteBuf buf) {
+//        for (int i = 0; i < MAX_SKIN_DYES; i++) {
+//            hasDye[i] = buf.readBoolean();
+//            if (hasDye[i]) {
+//                buf.readBytes(dyes[i]);
+//                if (buf.readBoolean()) {
+//                    // TODO: IMP
+////                    names[i] = ByteBufUtils.readUTF8String(buf);
+//                }
+//            }
+//        }
+//    }
+//
+//    // TODO: IMP
 //    public NBTTagCompound writeToCompound(NBTTagCompound compound) {
 //        NBTTagCompound dyeCompound = new NBTTagCompound();
 //        for (int i = 0; i < MAX_SKIN_DYES; i++) {
@@ -219,36 +268,40 @@ public class SkinDye implements ISkinDye {
 //        }
 //    }
 
+
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + Arrays.deepHashCode(dyes);
-        result = prime * result + Arrays.hashCode(hasDye);
-        result = prime * result + Arrays.hashCode(names);
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SkinDye dye = (SkinDye) o;
+        return colors.equals(dye.colors);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        SkinDye other = (SkinDye) obj;
-        if (!Arrays.deepEquals(dyes, other.dyes))
-            return false;
-        if (!Arrays.equals(hasDye, other.hasDye))
-            return false;
-        if (!Arrays.equals(names, other.names))
-            return false;
-        return true;
+    public int hashCode() {
+        return colors.hashCode();
     }
 
     @Override
     public String toString() {
-        return "SkinDye [dyes=" + Arrays.toString(dyes) + ", hasDye=" + Arrays.toString(hasDye) + ", names=" + Arrays.toString(names) + "]";
+        return "SkinDye [colors=" + colors + "]";
+    }
+
+    public static class PaintColor {
+        private final int rgb;
+        private final ISkinPaintType paintType;
+
+        public PaintColor(int value) {
+            this.paintType = SkinPaintTypes.byId(value >> 24 & 0xff);
+            this.rgb = 0xff000000 | value;
+        }
+
+        public int getRGB() {
+            return rgb;
+        }
+
+        public ISkinPaintType getPaintType() {
+            return paintType;
+        }
     }
 }
