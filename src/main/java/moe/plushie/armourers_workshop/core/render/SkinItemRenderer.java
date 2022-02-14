@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.render;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.entity.SkinDummyEntity;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDye;
+import moe.plushie.armourers_workshop.core.skin.data.Palette;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
@@ -26,7 +26,7 @@ public final class SkinItemRenderer {
 //    }
     private static ItemCameraTransforms.TransformType lastTransformType = ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND;
     private static SkinDummyEntity entity2;
-    private static SkinDye entityDye;
+    private static Palette entityDye = Palette.EMPTY;
 
 
     public static void renderSkinAsItem(MatrixStack matrixStack, BakedSkin bakedSkin, int light, boolean showSkinPaint, boolean doLodLoading, int targetWidth, int targetHeight, SkinRenderBuffer buffer) {
@@ -66,7 +66,6 @@ public final class SkinItemRenderer {
 
         if (entity2 == null) {
             entity2 = new SkinDummyEntity();
-            entityDye = new SkinDye();
         }
 
         if (lastI != mp1) {

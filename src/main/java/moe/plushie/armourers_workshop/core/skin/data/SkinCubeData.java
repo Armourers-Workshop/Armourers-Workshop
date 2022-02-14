@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.core.api.ISkinCube;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.bake.ColouredFace;
+import moe.plushie.armourers_workshop.core.skin.painting.PaintColor;
 import moe.plushie.armourers_workshop.core.utils.CustomVoxelShape;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.LegacyCubeHelper;
@@ -11,6 +12,8 @@ import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeExcepti
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
 import net.minecraft.util.Direction;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -130,6 +133,8 @@ public class SkinCubeData {
         return cubeLocZ[index];
     }
 
+
+    @OnlyIn(Dist.CLIENT)
     public ColouredFace getCubeFace(int index, Direction dir) {
         byte side = DIRECTION_TO_SIDE[dir.get3DDataValue()];
         ISkinCube cube = getCube(index);
@@ -146,7 +151,7 @@ public class SkinCubeData {
             color |= 0xff000000;
         }
 
-        return new ColouredFace(x, y, z, color, dir, cube, paintType);
+        return new ColouredFace(x, y, z, new PaintColor(color, paintType), dir, cube);
     }
 
     public CustomVoxelShape getRenderShape() {

@@ -10,5 +10,5 @@ public interface IBakedSkin {
 
     <T extends ISkin> T getSkin();
 
-    <T extends ISkinDye> T getSkinDye();
+//    <T extends ISkinDye> T getSkinDye();
 }

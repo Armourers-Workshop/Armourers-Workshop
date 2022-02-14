@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.common.ArmourersConfig;
 import moe.plushie.armourers_workshop.core.render.SkinRenderBuffer;
 import moe.plushie.armourers_workshop.core.render.model.HeldItemModel;
@@ -9,8 +8,6 @@ import moe.plushie.armourers_workshop.core.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
-import net.minecraft.client.MainWindow;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
@@ -38,9 +35,10 @@ public class ClientWardrobeHandler {
         float f = 1f / 16f;
         matrixStack.pushPose();
         matrixStack.scale(f, f, f);
+        SkinWardrobe.State snapshot = wardrobe.snapshot();
         SkinRenderBuffer buffer = SkinRenderBuffer.getInstance();
-        for (BakedSkin bakedSkin : wardrobe.getArmorSkins()) {
-            SkinModelRenderer.renderSkin(bakedSkin, wardrobe.getDye(), entity, model, null, light, t, matrixStack, buffer);
+        for (BakedSkin bakedSkin : snapshot.getArmorSkins()) {
+            SkinModelRenderer.renderSkin(bakedSkin, snapshot.getPalette(), entity, model, null, light, t, matrixStack, buffer);
         }
         buffer.endBatch();
         matrixStack.popPose();
@@ -57,37 +55,10 @@ public class ClientWardrobeHandler {
         matrixStack.scale(f, f, f);
         matrixStack.scale(-1, -1, 1);
 
-//        RenderUtils.drawBoundingBox(matrixStack, new Rectangle3D(0, 0, 0, 2, 2, 2), Color.MAGENTA);
-//        RenderUtils.drawBoundingBox(matrixStack, new Rectangle3D(0, 0, 0, -2, -2, -2), Color.MAGENTA);
-
-//        this.getParentModel().translateToHand(p_229135_4_, p_229135_5_);
-//        p_229135_5_.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
-//        p_229135_5_.mulPose(Vector3f.YP.rotationDegrees(180.0F));
-//        boolean flag = p_229135_4_ == HandSide.LEFT;
-//        p_229135_5_.translate((double)((float)(flag ? -1 : 1) / 16.0F), 0.125D, -0.625D);
-
-//        matrixStack.translate(x, y, z); // 0 -2 2  // -1/1, 2, 10
-//        matrixStack.mulPose(Vector3f.XP.rotationDegrees(180.0f));
-//
-
-
-//        this.applyItemArmTransform(p_228405_8_, handside, p_228405_7_);
-//          int i = p_228406_2_ == HandSide.RIGHT ? 1 : -1;
-//          p_228406_1_.translate((double)((float)i * 0.56F), (double)(-0.52F + p_228406_3_ * -0.6F), (double)-0.72F);
-
-//        this.applyItemArmAttackTransform(p_228405_8_, handside, p_228405_5_);
-//          int i = p_228399_2_ == HandSide.RIGHT ? 1 : -1;
-//          float f = MathHelper.sin(p_228399_3_ * p_228399_3_ * (float)Math.PI);
-//          p_228399_1_.mulPose(Vector3f.YP.rotationDegrees((float)i * (45.0F + f * -20.0F)));
-//          float f1 = MathHelper.sin(MathHelper.sqrt(p_228399_3_) * (float)Math.PI);
-//          p_228399_1_.mulPose(Vector3f.ZP.rotationDegrees((float)i * f1 * -20.0F));
-//          p_228399_1_.mulPose(Vector3f.XP.rotationDegrees(f1 * -80.0F));
-//          p_228399_1_.mulPose(Vector3f.YP.rotationDegrees((float)i * -45.0F));
-
-
+        SkinWardrobe.State snapshot = wardrobe.snapshot();
         SkinRenderBuffer buffer = SkinRenderBuffer.getInstance();
-        for (BakedSkin bakedSkin : wardrobe.getItemSkins(itemStack)) {
-            SkinModelRenderer.renderSkin(bakedSkin, wardrobe.getDye(), entity, HELD_ITEM_MODEL, transformType, light, t, matrixStack, buffer);
+        for (BakedSkin bakedSkin : snapshot.getItemSkins(itemStack)) {
+            SkinModelRenderer.renderSkin(bakedSkin, snapshot.getPalette(), entity, HELD_ITEM_MODEL, transformType, light, t, matrixStack, buffer);
             callback.cancel();
         }
         buffer.endBatch();
@@ -145,7 +116,7 @@ public class ClientWardrobeHandler {
             return;
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-        if (wardrobe != null && wardrobe.hasOverriddenEquipment(slotType)) {
+        if (wardrobe != null && wardrobe.snapshot().hasOverriddenEquipment(slotType)) {
             callback.cancel();
         }
     }

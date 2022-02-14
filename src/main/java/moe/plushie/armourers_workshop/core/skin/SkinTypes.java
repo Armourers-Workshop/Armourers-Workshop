@@ -6,9 +6,13 @@ import moe.plushie.armourers_workshop.core.api.ISkinArmorType;
 import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.tags.SkinTags;
+import moe.plushie.armourers_workshop.core.utils.SkinCore;
 import moe.plushie.armourers_workshop.core.utils.SkinLog;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.*;
 
@@ -35,7 +39,7 @@ public final class SkinTypes {
     public static final ISkinType TOOL_PICKAXE = registerItem("pickaxe", SkinTags.PICKAXES, SkinPartTypes.TOOL_PICKAXE);
     public static final ISkinType TOOL_AXE = registerItem("axe", SkinTags.AXES, SkinPartTypes.TOOL_AXE);
     public static final ISkinType TOOL_SHOVEL = registerItem("shovel", SkinTags.SHOVELS, SkinPartTypes.TOOL_SHOVEL);
-    public static final ISkinType TOOL_HOPE = registerItem("hope", SkinTags.HOES, SkinPartTypes.TOOL_SHOVEL);
+    public static final ISkinType TOOL_HOE = registerItem("hoe", SkinTags.HOES, SkinPartTypes.TOOL_HOE);
 
     public static final ISkinType ITEM = register("item", SkinPartTypes.ITEM);
     public static final ISkinType BLOCK = register("block", SkinPartTypes.BLOCK, SkinPartTypes.BLOCK_MULTI);
@@ -56,11 +60,11 @@ public final class SkinTypes {
     }
 
     private static ISkinType register(String name, ISkinPartType... parts) {
-        return register(name, new ParameterizedSkinType(Arrays.asList(parts)));
+        return register(name, new ParameterizedSkinType(name, Arrays.asList(parts)));
     }
 
     private static ISkinType registerArmor(String name, ISkinPartType... parts) {
-        return register(name, new ArmorType(Arrays.asList(parts)));
+        return register(name, new ArmorType(name, Arrays.asList(parts)));
     }
 
     private static ISkinType registerArmor(String name, ISkinType... types) {
@@ -68,11 +72,11 @@ public final class SkinTypes {
         for (ISkinType type : types) {
             partTypes.addAll(type.getParts());
         }
-        return register(name, new ArmorType(partTypes));
+        return register(name, new ArmorType(name, partTypes));
     }
 
     private static ISkinType registerItem(String name, ITag<Item> tag, ISkinPartType... parts) {
-        return register(name, new ItemType(Arrays.asList(parts), tag));
+        return register(name, new ItemType(name, Arrays.asList(parts), tag));
     }
 
     private static ISkinType register(String name, ParameterizedSkinType type) {
@@ -93,11 +97,13 @@ public final class SkinTypes {
 
     private static class ParameterizedSkinType implements ISkinType {
 
+        protected final String name;
         protected String registryName;
         protected List<? extends ISkinPartType> parts;
 
-        public ParameterizedSkinType(List<? extends ISkinPartType> parts) {
+        public ParameterizedSkinType(String name, List<? extends ISkinPartType> parts) {
             this.parts = parts;
+            this.name = name;
         }
 
         @Override
@@ -110,15 +116,19 @@ public final class SkinTypes {
         }
 
         @Override
+        public String toString() {
+            return registryName;
+        }
+
+        @Override
         public List<? extends ISkinPartType> getParts() {
             return parts;
         }
-
     }
 
     private static class ArmorType extends ParameterizedSkinType implements ISkinArmorType {
-        public ArmorType(List<? extends ISkinPartType> parts) {
-            super(parts);
+        public ArmorType(String name, List<? extends ISkinPartType> parts) {
+            super(name, parts);
         }
     }
 
@@ -126,8 +136,8 @@ public final class SkinTypes {
 
         protected ITag<Item> tag;
 
-        public ItemType(List<? extends ISkinPartType> parts, ITag<Item> tag) {
-            super(parts);
+        public ItemType(String name, List<? extends ISkinPartType> parts, ITag<Item> tag) {
+            super(name, parts);
             this.tag = tag;
         }
 

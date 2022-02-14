@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.client.ClientWardrobeHandler;
-import moe.plushie.armourers_workshop.client.ModContainers;
-import moe.plushie.armourers_workshop.client.SkinWardrobeContainer;
+import moe.plushie.armourers_workshop.common.item.BottleItem;
+import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.client.SkinWardrobeScreen;
 import moe.plushie.armourers_workshop.client.layer.WardrobeArmorLayer;
 import moe.plushie.armourers_workshop.common.ArmourersConfig;
@@ -13,18 +13,18 @@ import moe.plushie.armourers_workshop.common.item.SkinItem;
 import moe.plushie.armourers_workshop.common.item.SkinItems;
 import moe.plushie.armourers_workshop.core.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
+import moe.plushie.armourers_workshop.core.network.NetworkHandler;
+import moe.plushie.armourers_workshop.core.network.packet.OpenWardrobePacket;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.SkinRenderBuffer;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.Keybindings;
 import moe.plushie.armourers_workshop.core.utils.SkinCore;
-import moe.plushie.armourers_workshop.core.utils.SkinPacketHandler;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeProvider;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeStorage;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -37,13 +37,12 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -52,7 +51,6 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -61,6 +59,8 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class ArmourersWorkshop {
     int screenWidth = 0;
     private EntityRendererManager entityRenderManager;
 
-//    @SubscribeEvent
+    //    @SubscribeEvent
 //    void renderWorldLastEvent(RenderWorldLastEvent event) {
 //        IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 ////        IVertexBuilder builder = buffer.getBuffer(SkinPartRenderer.SOLID);
@@ -99,7 +99,7 @@ public class ArmourersWorkshop {
 //    }
     private SkinDescriptor outfit = new SkinDescriptor("3");
 
-//    @SubscribeEvent
+    //    @SubscribeEvent
 //    public void registerItems(RegistryEvent.Register<Item> event) {
 //        SkinItems.registerItems(event.getRegistry());;
 //    }
@@ -173,66 +173,27 @@ public class ArmourersWorkshop {
 //    }
 
     public ArmourersWorkshop() {
+//        IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+//        CustomSpriteUploader itemSpriteUploader = new CustomSpriteUploader(SkinCore.resource("textures/atlas/items.png"));
+//        if (resourceManager instanceof IReloadableResourceManager) {
+//            ((IReloadableResourceManager) resourceManager).registerReloadListener(itemSpriteUploader);
+//        }
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
 
         ArmourersConfig.init();
         ClientWardrobeHandler.init();
-        SkinPacketHandler.init();
+        NetworkHandler.init(SkinCore.resource("aw2cc"));
+
+        ForgeRegistries.CONTAINERS.register(SkinWardrobeContainer.TYPE);
+//        ContainerType<?> containerType = SkinWardrobeContainer.TYPE;
+//        CONTAINERS.register(containerType.getRegistryName().toString(), () -> containerType);
 
         SkinItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-
+//        CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
 //        CapabilityManager
 
-//        CapabilityManager.INSTANCE.register(IWardrobeCap.class, new WardrobeStorage(), new Callable<IWardrobeCap>() {
-//
-//            @Override
-//            public IWardrobeCap call() throws Exception {
-//                return null;
-//            }
-//        });
-//        Skin skin = SkinIOUtils.loadSkinFromFile(new File("/Users/sagesse/Projects/Minecraft/Armourers-Workshop/web/list/Witch's Skirt.armour"));
-
-//        this.skin = SkinIOUtils.loadSkinFromFile(new File("/Users/sagesse/Projects/Minecraft/Armourers-Workshop/web/list/Witch's Skirt.armour"));
-//        this.skin = SkinIOUtils.loadSkinFromFile(new File("/Users/sagesse/Downloads/胡桃/胡桃.armour"));
-//        this.skin = SkinIOUtils.loadSkinFromFile(new File("/Users/sagesse/Downloads/钟离/钟离.armour"));
-//        this.skin = SkinIOUtils.loadSkinFromFile(new File("/Users/sagesse/Downloads/胡桃/护摩之杖.armour"));
-//        this.skin = SkinIOUtils.loadSkinFromFile(new File("/Users/sagesse/Downloads/套装（完全）.armour"));
-//        this.skin = SkinIOUtils.loadSkinFromFile(new File("/Users/sagesse/Downloads/优菈.armour"));
-//        this.skin = SkinIOUtils.loadSkinFromFile(new File("/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/12531 - 早柚.armour"));
-//        this.skin = SkinIOUtils.loadSkinFromFile(new File("/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/T.armour"));
-
         // URL => armour://armourers_workshop.plushie.moe/library/userid/name.armour
-//
-//        String[] paths = {
-//                "/Users/sagesse/Downloads/胡桃/护摩之杖.armour",
-//                "/Users/sagesse/Downloads/胡桃/胡桃.armour",
-//                "/Users/sagesse/Downloads/钟离/钟离.armour",
-//                "/Users/sagesse/Downloads/浊心斯卡蒂/浊心斯卡蒂+海嗣背饰.armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/12531 - 早柚.armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/12740 - V1 Wings.armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/T.armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/T-SW.armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/T-RH.armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/TR-H.armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/T2-H.armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/T2.armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/11152 - Kagutsuchi Overlay (The Fire God).armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/9265 - Luke's Droid Shovel.armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/12072 - PINK PICKAXE.armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/10293 - Garry's mod Tool gun.armour",
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/12162 - Energized Pickaxe.armour",
-//
-//                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/12661 - Arcane Jayce Mercury Hammer - LoL.armour"
-//
-//
-//        };
-//        for (String p : paths) {
-//            this.skins.add(loadSkin(p));
-//        }
-//
-//        this.sword = this.skins.get(0);
-//        this.outfit = this.skins.get(11);
-//        SkinCore.skins = this.skins;
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -361,7 +322,8 @@ public class ArmourersWorkshop {
         }
         // Limit the players limbs if they have a skirt equipped.
         // A proper lady should not swing her legs around!
-        if (wardrobe.hasPart(SkinPartTypes.BIPED_SKIRT)) {
+        SkinWardrobe.State snapshot = wardrobe.snapshot();
+        if (snapshot.hasPart(SkinPartTypes.BIPED_SKIRT)) {
             if (entity.animationSpeed > 0.25F) {
                 entity.animationSpeed = 0.25F;
                 entity.animationSpeedOld = 0.25F;
@@ -373,22 +335,22 @@ public class ArmourersWorkshop {
         EntityModel<?> entityModel = event.getRenderer().getModel();
         if (entityModel instanceof BipedModel) {
             BipedModel<?> playerModel = (BipedModel<?>) entityModel;
-            if (wardrobe.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
+            if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
                 playerModel.leftArm.visible = false;
             }
-            if (wardrobe.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
+            if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
                 playerModel.rightArm.visible = false;
             }
-            if (wardrobe.hasOverriddenPart(SkinPartTypes.BIPED_HEAD)) {
+            if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_HEAD)) {
                 playerModel.head.visible = false;
             }
-            if (wardrobe.hasOverriddenPart(SkinPartTypes.BIPED_CHEST)) {
+            if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_CHEST)) {
                 playerModel.body.visible = false;
             }
-            if (wardrobe.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_LEG) || wardrobe.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
+            if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_LEG) || snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
                 playerModel.leftLeg.visible = false;
             }
-            if (wardrobe.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_LEG) || wardrobe.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
+            if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_LEG) || snapshot.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
                 playerModel.rightLeg.visible = false;
             }
         }
@@ -408,21 +370,22 @@ public class ArmourersWorkshop {
         buffer1.endBatch();
     }
 
-    @SubscribeEvent
-    public void onLivingEquipmentChangeEvent(LivingEvent.LivingUpdateEvent event) {
-        if (event.isCanceled()) {
-            return;
-        }
-        LivingEntity entity = event.getEntityLiving();
-        ClientPlayerEntity player = Minecraft.getInstance().player;
-        if (entity instanceof ServerPlayerEntity && player != null && player.getId() == entity.getId()) {
-            entity = player;
-        }
-        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-        if (wardrobe != null) {
-            wardrobe.refresh();
-        }
-    }
+//    @SubscribeEvent
+//    public void onLivingEquipmentChangeEvent(LivingEvent.LivingUpdateEvent event) {
+//        if (event.isCanceled()) {
+//            return;
+//        }
+//        LivingEntity entity = event.getEntityLiving();
+//        ClientPlayerEntity player = Minecraft.getInstance().player;
+//        if (entity instanceof ServerPlayerEntity && player != null && player.getId() == entity.getId()) {
+//            entity = player;
+//        }
+//        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+//        if (wardrobe != null) {
+//            wardrobe.refresh();
+//        }
+//    }
+
 
 //    public static ContainerType<ContainerFlowerBag> containerTypeFlowerBag;
 //
@@ -440,21 +403,11 @@ public class ArmourersWorkshop {
 
     @SubscribeEvent
     public void onKeyInputEvent(InputEvent.KeyInputEvent event) {
-
-//        if (Keybindings.KEY_UNDO.isDown()) {
-//            PacketHandler.networkWrapper.sendToServer(new MessageClientKeyPress(Button.UNDO));
-//        }
-        if (Keybindings.OPEN_WARDROBE.isDown() /*&& SkinConfig.canOpenWardrobe(Minecraft.getMinecraft().player)*/) {
-            PlayerEntity entity = Minecraft.getInstance().player;
-            if (entity == null) {
-                return;
+        if (Keybindings.OPEN_WARDROBE.consumeClick()) {
+            PlayerEntity player = Minecraft.getInstance().player;
+            if (player != null) {
+                NetworkHandler.getInstance().sendToServer(new OpenWardrobePacket(player));
             }
-            Minecraft.getInstance().setScreen(new SkinWardrobeScreen(entity, entity));
-//            INamedContainerProvider provider = new SimpleNamedContainerProvider(SkinWardrobeContainer::new, new StringTextComponent("??"));
-//            entity.openMenu(provider);
-            
-//            ContainerScreen
-//            PacketHandler.networkWrapper.sendToServer(new MessageClientKeyPress(Button.OPEN_WARDROBE));
         }
     }
 //    @SubscribeEvent
@@ -490,7 +443,7 @@ public class ArmourersWorkshop {
         ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
         SkinWardrobe wardrobe = SkinWardrobe.of(player);
         if (wardrobe != null) {
-            wardrobe.sync(player);
+            wardrobe.broadcast(player);
         }
     }
 
@@ -504,14 +457,17 @@ public class ArmourersWorkshop {
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(event.getTarget());
         if (wardrobe != null) {
-            wardrobe.sync((ServerPlayerEntity) event.getPlayer());
+            wardrobe.broadcast((ServerPlayerEntity) event.getPlayer());
         }
     }
+
+    private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, SkinCore.getModId());
 
 
     private void loadComplete(FMLLoadCompleteEvent evt) {
         CapabilityManager.INSTANCE.register(SkinWardrobe.class, new SkinWardrobeStorage(), () -> null);
-//        ScreenManager.register(ModContainers.SKIN_WARDROBE, SkinWardrobeScreen::new);
+        ScreenManager.register(SkinWardrobeContainer.TYPE, SkinWardrobeScreen::new);
+        ItemModelsProperties.register(SkinItems.BOTTLE.get(), SkinCore.resource("paint_type"), (itemStack, world, entity) -> BottleItem.getPaintType(itemStack).getId());
 
         evt.enqueueWork(() -> {
             // Add our own custom armor layer to the various player renderers.
@@ -533,6 +489,7 @@ public class ArmourersWorkshop {
 //                    }
 //                }
 //            }
+
         });
     }
 

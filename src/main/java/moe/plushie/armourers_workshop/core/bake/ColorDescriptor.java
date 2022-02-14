@@ -1,28 +1,30 @@
 package moe.plushie.armourers_workshop.core.bake;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
+import moe.plushie.armourers_workshop.core.skin.painting.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class PackedColorInfo {
+public class ColorDescriptor {
 
     private final HashMap<ISkinPaintType, Channel> channels = new HashMap<>();
 
-    public void add(ISkinPaintType paintType, int rgb) {
-        if (paintType.getDyeType() == null && paintType != SkinPaintTypes.TEXTURE) {
+    public void add(PaintColor color) {
+        ISkinPaintType paintType = color.getPaintType();
+        if (paintType.getDyeType() == null && paintType != SkinPaintTypes.RAINBOW) {
             return;
         }
         Channel channel = channels.computeIfAbsent(paintType, k -> new Channel());
-        channel.r += rgb >> 16 & 0xff;
-        channel.g += rgb >> 8 & 0xff;
-        channel.b += rgb & 0xff;
+        channel.r += color.getRed();
+        channel.g += color.getGreen();
+        channel.b += color.getBlue();
         channel.total += 1;
     }
 
-    public void add(PackedColorInfo colorInfo) {
+    public void add(ColorDescriptor colorInfo) {
         for (Map.Entry<ISkinPaintType, Channel> entry : colorInfo.channels.entrySet()) {
             Channel otherChannel = entry.getValue();
             Channel channel = channels.computeIfAbsent(entry.getKey(), k -> new Channel());
@@ -33,8 +35,12 @@ public class PackedColorInfo {
         }
     }
 
+    public boolean isEmpty() {
+        return channels.isEmpty();
+    }
 
-    public Integer getAverageDyeColor(ISkinPaintType paintType) {
+
+    public Integer getAverageColor(ISkinPaintType paintType) {
         if (paintType.getDyeType() == null) {
             return null;
         }

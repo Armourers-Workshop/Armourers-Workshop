@@ -17,7 +17,7 @@ public final class TranslateUtils {
     }
 
     public static TextComponent translate(String key) {
-        return new MergedTextComponent(new TranslationTextComponent(key));
+        return new TranslationTextComponent(key);
     }
 
     public static TextComponent translate(String key, Object... args) {

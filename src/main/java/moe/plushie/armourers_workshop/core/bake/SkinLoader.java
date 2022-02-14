@@ -3,7 +3,11 @@ package moe.plushie.armourers_workshop.core.bake;
 import moe.plushie.armourers_workshop.core.skin.data.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.DataLoader;
+import moe.plushie.armourers_workshop.core.utils.SkinCore;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.core.utils.SkinLog;
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -18,27 +22,53 @@ public class SkinLoader {
 
     static {
         String[] paths = {
-                "/Users/sagesse/Downloads/胡桃/护摩之杖.armour",
-                "/Users/sagesse/Downloads/胡桃/胡桃.armour",
-                "/Users/sagesse/Downloads/钟离/钟离.armour",
-                "/Users/sagesse/Downloads/浊心斯卡蒂/浊心斯卡蒂+海嗣背饰.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/12531 - 早柚.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/12740 - V1 Wings.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/T.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/T-SW.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/T-RH.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/TR-H.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/T2-H.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/T2.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/11152 - Kagutsuchi Overlay (The Fire God).armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/9265 - Luke's Droid Shovel.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/12072 - PINK PICKAXE.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/10293 - Garry's mod Tool gun.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/12162 - Energized Pickaxe.armour",
-                "/Users/sagesse/Library/Application Support/minecraft/armourers_workshop/skin-library/downloads/12661 - Arcane Jayce Mercury Hammer - LoL.armour"
+                "护摩之杖.armour",
+                "胡桃.armour",
+                "钟离.armour",
+                "浊心斯卡蒂+海嗣背饰.armour",
+                "12531 - 早柚.armour",
+                "12740 - V1 Wings.armour",
+                "T.armour",
+                "T-SW.armour",
+                "T-RH.armour",
+                "TR-H.armour",
+                "T2-H.armour",
+                "T2.armour",
+                "11152 - Kagutsuchi Overlay (The Fire God).armour",
+                "9265 - Luke's Droid Shovel.armour",
+                "12072 - PINK PICKAXE.armour",
+                "10293 - Garry's mod Tool gun.armour",
+                "12162 - Energized Pickaxe.armour",
+                "12661 - Arcane Jayce Mercury Hammer - LoL.armour",
+                "10564 - Rose Glass Shield.armour",
+                "12626 - 飞雷之弦振.armour",
+                "12418 - [Random] - Starlight Axe.armour",
+                "12729 - White Bat Ears.armour",
+                "12902 - Winter Before.armour",
+                "12414 - Komi.armour",
+                "10032 - ?.armour",
+                "2/5818 - æ˜Žæ—¥æ–¹èˆŸé›ªäººé™ˆ1.armour",
+                "2/5819 - æ˜Žæ—¥æ–¹èˆŸé›ªäººé™ˆ2.armour",
+                "2/5820 - æ˜Žæ—¥æ–¹èˆŸé›ªäººé™ˆ3.armour",
+                "2/5821 - æ˜Žæ—¥æ–¹èˆŸé›ªäººé™ˆ4.armour",
+                "2/6390 - å†°ä¸Žç\u0081«ä¹‹æ\u00ADŒ.armour",
+                "2/6397 - é—ªè€€è“\u009Dé“\u0081ä¹‹å‰‘.armour",
+                "2/6462 - ç¬¦æ–‡-æµ\u0081ç\u0081«.armour",
+                "2/6463 - ç¬¦æ–‡-å‡\u009Déœœ.armour",
+                "12388 - Light rifle (Halo).armour",
+                "T/T-H.armour",
+                "T/T-C.armour",
+                "T/T-F.armour",
+                "T/T-L.armour",
+                "T/T-W.armour",
+                "TP/TP-H.armour",
+                "TP/TP-C.armour",
+                "TP/TP-F.armour",
+                "TP/TP-L.armour",
+                "TP/TP-W.armour",
         };
         for (int i = 0; i < paths.length; ++i) {
-            PATHS.put(String.valueOf(i), paths[i]);
+            PATHS.put(String.valueOf(i), "./armoures/" + paths[i]);
         }
     }
 
@@ -48,6 +78,16 @@ public class SkinLoader {
                 Skin skin = loadSkinFromPath(key);
                 complete.accept(Optional.ofNullable(skin));
             });
+
+    @Nullable
+    public Skin getSkin(ItemStack itemStack) {
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        if (descriptor.isEmpty()) {
+            return null;
+        }
+        return getSkin(descriptor);
+    }
+
 
     @Nullable
     public Skin getSkin(SkinDescriptor descriptor) {
@@ -80,6 +120,8 @@ public class SkinLoader {
         if (path == null) {
             return null;
         }
-        return SkinIOUtils.loadSkinFromFile(new File(path));
+        Skin skin = SkinIOUtils.loadSkinFromFile(new File(path));
+        SkinLog.debug("Loading skin " + descriptor + " did complete !");
+        return skin;
     }
 }

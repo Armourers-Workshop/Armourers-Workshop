@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.bake;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
+import moe.plushie.armourers_workshop.core.skin.painting.PaintColor;
+import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IResource;
 import net.minecraft.util.Direction;
@@ -16,7 +18,7 @@ import java.util.HashMap;
 @OnlyIn(Dist.CLIENT)
 public class BakedSkinTexture {
 
-    HashMap<ISkinPartType, HashMap<Integer, Integer>> allParts = new HashMap<>();
+    HashMap<ISkinPartType, HashMap<Integer, PaintColor>> allParts = new HashMap<>();
 
     public BakedSkinTexture(ResourceLocation skinLocation) {
         BufferedImage bufferedImage;
@@ -33,13 +35,13 @@ public class BakedSkinTexture {
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
         for (SkinTexture model : SkinTexture.getPlayerModels(width, height, slim)) {
-            HashMap<Integer, Integer> part = allParts.computeIfAbsent(model.getPartType(), k -> new HashMap<>());
+            HashMap<Integer, PaintColor> part = allParts.computeIfAbsent(model.getPartType(), k -> new HashMap<>());
             model.forEach((u, v, x, y, z, dir) -> {
                 int color = bufferedImage.getRGB(u, v);
                 if ((color & 0xff000000) == 0) {
                     return;
                 }
-                part.put(getKey(x, y, z, dir), color);
+                part.put(getKey(x, y, z, dir), new PaintColor(color, SkinPaintTypes.NORMAL));
             });
         }
     }
@@ -48,8 +50,8 @@ public class BakedSkinTexture {
         return (dir.get3DDataValue() & 0xff) << 24 | (z & 0xff) << 16 | (y & 0xff) << 8 | (x & 0xff);
     }
 
-    public Integer getColor(int x, int y, int z, Direction dir, ISkinPartType partType) {
-        HashMap<Integer, Integer> part = allParts.get(partType);
+    public PaintColor getColor(int x, int y, int z, Direction dir, ISkinPartType partType) {
+        HashMap<Integer, PaintColor> part = allParts.get(partType);
         if (part == null) {
             return null;
         }

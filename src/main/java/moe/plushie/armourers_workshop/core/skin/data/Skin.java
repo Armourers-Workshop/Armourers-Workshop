@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkin;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
-import moe.plushie.armourers_workshop.core.bake.PackedColorInfo;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
@@ -148,6 +147,7 @@ public class Skin implements ISkin {
         return lightHash;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public ISkinType getType() {
         return skinType;

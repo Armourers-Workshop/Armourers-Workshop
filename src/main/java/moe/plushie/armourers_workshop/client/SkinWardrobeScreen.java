@@ -2,103 +2,176 @@ package moe.plushie.armourers_workshop.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import moe.plushie.armourers_workshop.client.setting.*;
+import moe.plushie.armourers_workshop.core.config.SkinConfig;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinCore;
-import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 @OnlyIn(Dist.CLIENT)
-@ParametersAreNonnullByDefault
 public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
-
-    private static final ResourceLocation TEXTURE_1 = SkinCore.resource("textures/gui/wardrobe/wardrobe-1.png");
-    private static final ResourceLocation TEXTURE_2 = SkinCore.resource("textures/gui/wardrobe/wardrobe-2.png");
-
-    private static final ResourceLocation INVENTORY_TEXTURE = SkinCore.resource("textures/gui/player_inventory.png");
 
     private final LivingEntity entity;
     private final PlayerEntity operator;
-    private Vector3f v3 = new Vector3f(70 / 2, 111, 50);         // 71:111
-    private int v4 = 180;
-    private int v5 = 45;
 
-    public SkinWardrobeScreen(LivingEntity entity, PlayerEntity operator) {
-        super(new SkinWardrobeContainer(0, operator.inventory, operator), operator.inventory, TranslateUtils.translate("inventory.armourers_workshop:wardrobe"));
+    private final TabController<SkinWardrobeContainer.Group> tabController = new TabController<>();
+
+    public SkinWardrobeScreen(SkinWardrobeContainer container, PlayerInventory inventory, ITextComponent title) {
+        super(container, inventory, title);
 
         this.imageWidth = 278;
         this.imageHeight = 250;
 
-        this.operator = operator;
+        this.operator = inventory.player;
         this.operator.containerMenu = this.menu;
 
-        this.entity = entity;
+        this.entity = container.getEntity();
+
+        this.initTabs();
     }
 
     @Override
     protected void init() {
         super.init();
 
-        int titleWidth = font.width(getTitle().getVisualOrderText());
-        int titleHeight = font.lineHeight;
-        this.titleLabelX = leftPos + (width - imageWidth - titleWidth) / 2;
-        this.titleLabelY = topPos + (16 - titleHeight) / 2;
+        titleLabelX = imageWidth / 2 - font.width(getTitle().getVisualOrderText()) / 2;
+        titleLabelY = 8;
+        inventoryLabelX = 51 + 8;
+        inventoryLabelY = 152 + 5;
+
+        tabController.init(leftPos, topPos, 278, 151);
+        addWidget(tabController);
+
+        tabController.getActiveTabs().forEach(tab -> {
+            if (tab.screen instanceof BaseSettingPanel) {
+                BaseSettingPanel panel = (BaseSettingPanel) tab.screen;
+                panel.leftPos = leftPos;
+                panel.topPos = topPos;
+            }
+        });
     }
 
-    protected void slotClicked(@Nullable Slot slot, int index, int button, ClickType clickType) {
-        if (slot != null) {
-            index = slot.index;
+    @Override
+    public void removed() {
+        tabController.removed();
+        super.removed();
+    }
+
+    protected void initTabs() {
+        boolean isPlayer = entity instanceof PlayerEntity;
+        boolean isMannequin = true;// entity instanceof MannequinEntity;
+
+        tabController.clear();
+
+        tabController.add(new SkinSettingPanel(menu))
+                .setIcon(192, 0)
+                .setTarget(SkinWardrobeContainer.Group.SKINS)
+                .setVisible(!isPlayer || SkinConfig.showWardrobeSkins || operator.isCreative());
+
+        // exists outfit slot
+        tabController.add(new OutfitSettingPanel(menu))
+                .setIcon(0, 128)
+                .setTarget(SkinWardrobeContainer.Group.OUTFITS)
+                .setVisible(!isPlayer || SkinConfig.showWardrobeOutfits || operator.isCreative());
+
+        tabController.add(new DisplaySettingPanel(entity))
+                .setIcon(208, 0)
+                .setVisible(isPlayer && (SkinConfig.showWardrobeDisplaySettings || operator.isCreative()));
+
+        tabController.add(new ColourSettingPanel(menu.getWardrobe()))
+                .setIcon(224, 0)
+                .setVisible(!isPlayer || SkinConfig.showWardrobeColourSettings || operator.isCreative());
+
+        tabController.add(new DyeSettingPanel(menu))
+                .setIcon(240, 0)
+                .setTarget(SkinWardrobeContainer.Group.DYES)
+                .setVisible(!isPlayer || SkinConfig.showWardrobeDyeSetting || operator.isCreative());
+
+//        tabController.add(new ContributorSettingPanel(entity))
+//                .setTarget(6)
+//                .setIcon(32, 128)
+//                .setVisible(!isPlayer || SkinConfig.showWardrobeColourSettings || operator.isCreative());
+
+        tabController.add(new RotationSettingPanel(entity))
+                .setIcon(80, 0)
+                .setIconAnimation(8, 150)
+                .setAlignment(1)
+                .setVisible(isMannequin);
+
+        tabController.add(new TextureSettingPanel(entity))
+                .setIcon(128, 0)
+                .setIconAnimation(8, 150)
+                .setAlignment(1)
+                .setVisible(isMannequin);
+
+        tabController.add(new ExtraSettingPanel(entity))
+                .setIcon(144, 0)
+                .setIconAnimation(8, 150)
+                .setAlignment(1)
+                .setVisible(isMannequin);
+
+        tabController.add(new LocationSettingPanel(entity))
+                .setIcon(96, 0)
+                .setIconAnimation(8, 150)
+                .setVisible(isMannequin);
+
+        tabController.addListener(tab -> getMenu().setGroup(tab.getTarget()));
+        tabController.setSelectedTab(tabController.get(0)); // active the first tab
+    }
+
+    @Override
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        bindTexture(SkinCore.TEX_WARDROBE_1);
+        blit(matrixStack, leftPos, topPos, 0, 0, 256, 151);
+
+        bindTexture(SkinCore.TEX_WARDROBE_2);
+        blit(matrixStack, leftPos + 256, topPos, 0, 0, 22, 151);
+
+        if (menu.isNeedsPlayerInventory()) {
+            bindTexture(SkinCore.TEX_PLAYER_INVENTORY);
+            blit(matrixStack, leftPos + 51, topPos + 152, 0, 0, 176, 98);
         }
-        menu.clicked(index, button, clickType, operator);
+
+        tabController.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     @Override
     protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {
         font.draw(matrixStack, getTitle(), titleLabelX, titleLabelY, 0x404040);
+        if (menu.isNeedsPlayerInventory()) {
+            font.draw(matrixStack, inventory.getDisplayName(), inventoryLabelX, inventoryLabelY, 0x404040);
+        }
     }
 
     @Override
-    protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-        bindTexture(TEXTURE_1);
-        blit(matrixStack, leftPos, topPos, 0, 0, 256, 151);
-
-        bindTexture(TEXTURE_2);
-        blit(matrixStack, leftPos + 256, topPos, 0, 0, 22, 151);
-
-        bindTexture(INVENTORY_TEXTURE);
-        blit(matrixStack, leftPos + 51, topPos + 152, 0, 0, 176, 98);
-
-        renderPlayer(matrixStack, mouseX, mouseY);
+    protected void renderTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
+        tabController.renderTooltip(matrixStack, mouseX, mouseY);
+        super.renderTooltip(matrixStack, mouseX, mouseY);
     }
 
-    protected void renderPlayer(MatrixStack matrixStack, int mouseX, int mouseY) {
-        int x = leftPos + 8;
-        int y = topPos + 27;
-        int width = 71;
-        int height = 111;
-        boolean clipping = (x <= mouseX && mouseX <= x + width) && (y <= mouseY && mouseY <= y + height);
+    protected void renderPlayer(MatrixStack matrixStack, int mouseX, int mouseY, int x, int y, int width, int height) {
+        boolean isFocus = (x <= mouseX && mouseX <= x + width) && (y <= mouseY && mouseY <= y + height);
 
-        if (clipping) {
+        if (!isFocus) {
             RenderUtils.enableScissor(x, y, width, height);
+        } else {
+            RenderSystem.translatef(0, 0, 300);
         }
 
         RenderSystem.pushMatrix();
         RenderSystem.translatef(x + (float) width / 2, y + height - 6, 50);
-        RenderSystem.rotatef(-20, 0, 1, 0);
+        RenderSystem.rotatef(-30, 0, 1, 0);
         RenderSystem.rotatef(45, 0, 1, 0);
         RenderSystem.translatef(0, 0, -50);
 
@@ -106,11 +179,52 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
         RenderSystem.popMatrix();
 
-        if (clipping) {
+        if (!isFocus) {
             RenderUtils.disableScissor();
+        } else {
+            RenderSystem.translatef(0, 0, -300);
         }
     }
 
+
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+
+        renderPlayer(matrixStack, mouseX, mouseY, leftPos + 8, topPos + 27, 71, 111);
+        renderTooltip(matrixStack, mouseX, mouseY);
+
+        ColourSettingPanel.ColorPicker colorPicker = getActivatedPicker();
+        if (colorPicker != null) {
+            colorPicker.pick(mouseX, mouseY);
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        ColourSettingPanel.ColorPicker colorPicker = getActivatedPicker();
+        if (colorPicker != null) {
+            colorPicker.endPick();
+            return false;
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
+        if (super.hasClickedOutside(mouseX, mouseY, left, top, button)) {
+            return tabController.get(mouseX, mouseY) == null;
+        }
+        return false;
+    }
+
+    private ColourSettingPanel.ColorPicker getActivatedPicker() {
+        Screen screen = tabController.getSelectedScreen();
+        if (screen instanceof ColourSettingPanel) {
+            return ((ColourSettingPanel) screen).getActivatedPicker();
+        }
+        return null;
+    }
 
     private void bindTexture(ResourceLocation location) {
         Minecraft.getInstance().getTextureManager().bind(location);

@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public final class TextureHelper {
+
+
+
     /*
      * Based on @KitsuneKihira texture helper class.
      * https://github.com/kihira/FoxLib/blob/2946cd6033d3039151064ceccfb8d38612d0af02/src/main/scala/kihira/foxlib/client/TextureHelper.scala#L28

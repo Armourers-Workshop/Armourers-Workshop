@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "armourers_workshop:items/dye-bottle"
+  },
+  "overrides": [
+    {
+      "predicate" : {
+        "armourers_workshop:paint_type": 0.5
+      },
+      "model": "armourers_workshop:item/dye-bottle-filled"
+    }
+  ]
+}

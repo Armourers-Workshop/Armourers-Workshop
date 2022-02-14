@@ -2,43 +2,58 @@ package moe.plushie.armourers_workshop.core.bake;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import javafx.util.Pair;
 import moe.plushie.armourers_workshop.core.api.ISkinCube;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.core.skin.data.Palette;
+import moe.plushie.armourers_workshop.core.skin.painting.PaintColor;
+import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.VanillaPacketSplitter;
 
 @OnlyIn(Dist.CLIENT)
 public class ColouredFace {
+
+    private static final PaintColor RAINBOW_TARGET = new PaintColor(0xff7f7f7f, SkinPaintTypes.RAINBOW);
 
     public final int x;
     public final int y;
     public final int z;
 
-    public final int argb;
+    private final Direction direction;
+    private final PaintColor color;
+    private final ISkinCube cube;
 
-    public final Direction direction;
-    public final ISkinPaintType paintType;
-
-
-    public ISkinCube cube;
-
-    public ColouredFace(int x, int y, int z, int color, Direction direction, ISkinCube cube, ISkinPaintType paintType) {
+    public ColouredFace(int x, int y, int z, PaintColor color, Direction direction, ISkinCube cube) {
         this.x = x;
         this.y = y;
         this.z = z;
 
-        this.argb = color;
-
-        this.paintType = paintType;
-        this.direction = direction;
-
         this.cube = cube;
+        this.color = color;
+        this.direction = direction;
+    }
+
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public PaintColor getColor() {
+        return color;
+    }
+
+    public ISkinCube getCube() {
+        return cube;
+    }
+
+    public ISkinPaintType getPaintType() {
+        return color.getPaintType();
     }
 
 
@@ -147,51 +162,14 @@ public class ColouredFace {
 //        return new byte[]{r, g, b, 0};
 //    }
 
-    /**
-     * Create a new colour for a dyed vertex.
-     *
-     * @param dyeColour          RGB byte array.
-     * @param modelAverageColour RGB int array.
-     * @return
-     */
-    public static byte[] dyeColour(byte r, byte g, byte b, byte[] dyeColour, int[] modelAverageColour) {
-        if (dyeColour.length == 4) {
-            if ((dyeColour[3] & 0xFF) == 0) {
-                return new byte[]{r, g, b};
-            }
-        }
-        int average = ((r & 0xFF) + (g & 0xFF) + (b & 0xFF)) / 3;
-        int modelAverage = (modelAverageColour[0] + modelAverageColour[1] + modelAverageColour[2]) / 3;
-        int nR = average + (dyeColour[0] & 0xFF) - modelAverage;
-        int nG = average + (dyeColour[1] & 0xFF) - modelAverage;
-        int nB = average + (dyeColour[2] & 0xFF) - modelAverage;
-        nR = MathHelper.clamp(nR, 0, 255);
-        nG = MathHelper.clamp(nG, 0, 255);
-        nB = MathHelper.clamp(nB, 0, 255);
-        return new byte[]{(byte) nR, (byte) nG, (byte) nB};
-    }
 
     @OnlyIn(Dist.CLIENT)
-    public void render(BakedSkinPart part, BakedSkinDye dye, MatrixStack matrixStack, IVertexBuilder builder) {
-        dye.resolve(argb, this, part.getColorInfo(), paintType, part.getType(), (paintType1, color1) -> {
-            SkinModelRenderer.renderFace(x, y, z, color1, paintType1, direction, matrixStack, builder);
-        });
-
-
-//        public Pair<ISkinPaintType, Integer> getResolvedColor(int color, ColouredFace face, PackedColorInfo colorInfo, ISkinPaintType paintType, ISkinPartType
-//        partType) {
-
-
-//        ISkinPaintType paintType = dye.getResolvedPaintType(quad.paintType);
-//        int color = dye.getDyedColor(quad.argb, quad, part.getColorInfo(), paintType, partType);
-//        if ((color & 0xff000000) == 0) {
-//            return;
-//        }
-//        SkinModelRenderer.renderFace(quad, color, paintType, matrixStack1, builder);
-
-
-//        part.getPackedFaces().colorInfo.getColor(paintType);
-
+    public void render(BakedSkinPart part, Palette palette, MatrixStack matrixStack, IVertexBuilder builder) {
+        PaintColor resolvedColor = resolve(color, palette, part.getColorInfo(), part.getType(), 0);
+        if (resolvedColor.getPaintType() == SkinPaintTypes.NONE) {
+            return;
+        }
+        SkinModelRenderer.renderFace(x, y, z, resolvedColor, direction, matrixStack, builder);
 //        byte r = this.r;
 //        byte g = this.g;
 //        byte b = this.b;
@@ -267,5 +245,50 @@ public class ColouredFace {
 //            }
 //        }
 //
+    }
+
+    private PaintColor dye(PaintColor source, PaintColor destination, Integer average) {
+        if (destination.getPaintType() == SkinPaintTypes.NONE) {
+            return PaintColor.CLEAR;
+        }
+        if (average == null) {
+            return source;
+        }
+        int alpha = source.getRGB() & destination.getRGB() & average & 0xff000000;
+        if (alpha == 0) {
+            return PaintColor.CLEAR;
+        }
+        int src = (source.getRed() + source.getGreen() + source.getBlue()) / 3;
+        int avg = ((average >> 16 & 0xff) + (average >> 8 & 0xff) + (average & 0xff)) / 3;
+        int r = MathHelper.clamp(destination.getRed() + src - avg, 0, 255);
+        int g = MathHelper.clamp(destination.getGreen() + src - avg, 0, 255);
+        int b = MathHelper.clamp(destination.getBlue() + src - avg, 0, 255);
+        return new PaintColor(alpha | r << 16 | g << 8 | b, destination.getPaintType());
+    }
+
+    private PaintColor resolve(PaintColor paintColor, Palette palette, ColorDescriptor descriptor, ISkinPartType partType, int count) {
+        ISkinPaintType paintType = paintColor.getPaintType();
+        if (paintType == SkinPaintTypes.NONE) {
+            return PaintColor.CLEAR;
+        }
+        if (paintType == SkinPaintTypes.RAINBOW) {
+            return dye(paintColor, RAINBOW_TARGET, descriptor.getAverageColor(paintType));
+        }
+        if (paintType == SkinPaintTypes.TEXTURE && palette.getTextureReader() != null) {
+            PaintColor paintColor1 = palette.getTextureReader().getColor(x, y, z, direction, partType);
+            if (paintColor1 != null) {
+                return paintColor1;
+            }
+            return paintColor;
+        }
+        if (paintType.getDyeType() != null && count < 2) {
+            PaintColor paintColor1 = palette.getResolvedColor(paintType);
+            if (paintColor1 == null) {
+                return paintColor;
+            }
+            paintColor = dye(paintColor, paintColor1, descriptor.getAverageColor(paintType));
+            return resolve(paintColor, palette, descriptor, partType, count + 1);
+        }
+        return paintColor;
     }
 }

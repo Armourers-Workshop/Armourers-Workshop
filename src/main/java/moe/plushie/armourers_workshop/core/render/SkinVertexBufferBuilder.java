@@ -4,11 +4,10 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.util.Pair;
-import moe.plushie.armourers_workshop.core.bake.BakedSkinDye;
 import moe.plushie.armourers_workshop.core.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.bake.ColouredFace;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
+import moe.plushie.armourers_workshop.core.skin.data.Palette;
 import moe.plushie.armourers_workshop.core.skin.data.Skin;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
@@ -21,13 +20,10 @@ import net.minecraft.util.math.vector.Matrix4f;
 
 import java.awt.*;
 import java.nio.ByteBuffer;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class SkinVertexBufferBuilder {
-
-    protected final static ArrayDeque<SkinCache.Key> CACHING_KEYS_POOL = new ArrayDeque<>();
 
     protected final Skin skin;
     protected final Cache<Object, ArrayList<CompiledTask>> cachingTasks = CacheBuilder.newBuilder()
@@ -41,16 +37,18 @@ public class SkinVertexBufferBuilder {
         this.skin = skin;
     }
 
-    public void addPartData(BakedSkinPart part, BakedSkinDye dye, int light, int partialTicks, MatrixStack matrixStack) {
+    public void addPartData(BakedSkinPart part, Palette palette, int light, int partialTicks, MatrixStack matrixStack, boolean shouldRender) {
         // ignore part when part is disable
         if (SkinConfig.isEnableSkinPart(part.getPart())) {
             return;
         }
-        Object key = SkinCache.borrowKey(part.getId(), dye.getRequirements(part.getColorInfo()));
+        Object key = SkinCache.borrowKey(part.getId(), part.requirements(palette));
         ArrayList<CompiledTask> compiledTasks = cachingTasks.getIfPresent(key);
         if (compiledTasks != null) {
             SkinCache.returnKey(key);
-            compiledTasks.forEach(compiledTask -> pendingTasks.add(new RenderTask(compiledTask, matrixStack, light, partialTicks)));
+            if (shouldRender) {
+                compiledTasks.forEach(compiledTask -> pendingTasks.add(new RenderTask(compiledTask, matrixStack, light, partialTicks)));
+            }
             return;
         }
         MatrixStack matrixStack1 = new MatrixStack();
@@ -58,14 +56,14 @@ public class SkinVertexBufferBuilder {
         part.forEach((renderType, quads) -> {
             BufferBuilder builder = new BufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
             builder.begin(renderType.mode(), renderType.format());
-            for (ColouredFace quad : quads) {
-                quad.render(part, dye, matrixStack1, builder);
-            }
+            quads.forEach(quad -> quad.render(part, palette, matrixStack1, builder));
             builder.end();
             CompiledTask compiledTask = new CompiledTask(renderType, builder);
             mergedTasks.add(compiledTask);
             buildingTasks.add(compiledTask);
-            pendingTasks.add(new RenderTask(compiledTask, matrixStack, light, partialTicks));
+            if (shouldRender) {
+                pendingTasks.add(new RenderTask(compiledTask, matrixStack, light, partialTicks));
+            }
         });
         cachingTasks.put(key, mergedTasks);
     }

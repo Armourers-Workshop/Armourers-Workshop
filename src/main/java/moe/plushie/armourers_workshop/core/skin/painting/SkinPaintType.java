@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.painting;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
+import net.minecraft.util.ResourceLocation;
 
 public class SkinPaintType implements ISkinPaintType {
 
@@ -11,7 +12,7 @@ public class SkinPaintType implements ISkinPaintType {
     private SkinDyeType dyeType;
     private float textureU;
     private float textureV;
-    private String registryName;
+    private ResourceLocation registryName;
 
     public SkinPaintType(int index, int id) {
         this.id = id;
@@ -21,11 +22,11 @@ public class SkinPaintType implements ISkinPaintType {
     }
 
     @Override
-    public String getRegistryName() {
+    public ResourceLocation getRegistryName() {
         return registryName;
     }
 
-    public void setRegistryName(String registryName) {
+    public void setRegistryName(ResourceLocation registryName) {
         this.registryName = registryName;
     }
 
@@ -88,6 +89,6 @@ public class SkinPaintType implements ISkinPaintType {
 
     @Override
     public String toString() {
-        return "SkinPaintType{" + "registryName=" + registryName + ", id=" + id + '}';
+        return registryName.toString();
     }
 }

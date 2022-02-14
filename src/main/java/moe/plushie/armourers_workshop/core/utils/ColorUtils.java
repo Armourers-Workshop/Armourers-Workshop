@@ -1,11 +1,15 @@
 package moe.plushie.armourers_workshop.core.utils;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
-public class UtilColour {
+public class ColorUtils {
 
     public static int[] PALETTE_MINECRAFT = {
             0xFFFFFF, 0xFFFF55, 0xFF55FF, 0xFF5555,
@@ -141,7 +145,7 @@ public class UtilColour {
 
 
     public static int getPaletteColor(int index, int type) {
-       return (type << 24) | (getPaletteColor(index).getRGB() & 0xffffff);
+        return (type << 24) | (getPaletteColor(index).getRGB() & 0xffffff);
     }
 
     /* Old pastel colours
@@ -150,4 +154,17 @@ public class UtilColour {
     0x9AA1A1, 0x2E6E89, 0x7E3DB5, 0x2E388D,
     0x4F321F, 0x35461B, 0x963430, 0x191616
     */
+
+    // #[A]RGB or 0x[A]RGB
+    public static Color parseColor(String colorString) {
+        try {
+            long value = Long.decode(colorString);
+            if ((value & 0xff000000) == 0) {
+                value |= 0xff000000;
+            }
+            return new Color((int) value, true);
+        } catch (NumberFormatException e) {
+            return Color.black;
+        }
+    }
 }

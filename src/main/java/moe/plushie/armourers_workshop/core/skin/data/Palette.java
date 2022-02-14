@@ -3,97 +3,122 @@ package moe.plushie.armourers_workshop.core.skin.data;
 import com.google.common.collect.Iterables;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
-import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.bake.BakedSkinTexture;
+import moe.plushie.armourers_workshop.core.bake.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.skin.painting.PaintColor;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
-public class SkinDye implements ISkinDye {
+public class Palette implements ISkinDye {
 
-    public final static SkinDye EMPTY = new SkinDye();
+    public final static Palette EMPTY = new Palette();
 
-    private static final String TAG_SKIN_DYE = "dyeData";
-    private static final String TAG_DYE = "dye";
-    private static final String TAG_NAME = "name";
-    private static final String TAG_RED = "r";
-    private static final String TAG_GREEN = "g";
-    private static final String TAG_BLUE = "b";
-    private static final String TAG_TYPE = "t";
+//    private static final String TAG_SKIN_DYE = "dyeData";
+//    private static final String TAG_DYE = "dye";
+//    private static final String TAG_NAME = "name";
+//    private static final String TAG_RED = "r";
+//    private static final String TAG_GREEN = "g";
+//    private static final String TAG_BLUE = "b";
+//    private static final String TAG_TYPE = "t";
 
-
-    private final HashMap<ISkinPaintType, Integer> colors = new HashMap<>();
+    private final HashMap<ISkinPaintType, PaintColor> colors = new HashMap<>();
     private HashMap<ISkinPaintType, PaintColor> resolvedColors;
 
-//    private byte[][] dyes;
-//    private boolean[] hasDye;
-//    private String[] names;
+    private ResourceLocation texture;
+    private Palette reference;
+    private int hashCode;
 
-    public SkinDye() {
-//        dyes = new byte[MAX_SKIN_DYES][4];
-//        hasDye = new boolean[MAX_SKIN_DYES];
-//        names = new String[MAX_SKIN_DYES];
+    public Palette() {
     }
 
-//    public SkinDye(ISkinDye skinDye) {
-//        this();
-////        for (int i = 0; i < MAX_SKIN_DYES; i++) {
-////            if (skinDye.haveDyeInSlot(i)) {
-////                addDye(i, skinDye.getDyeColour(i));
-////            }
-////        }
-//    }
-
-    public void clear() {
-        colors.clear();
-        resolvedColors = null;
+    public Palette copy() {
+        Palette palette = new Palette();
+        palette.colors.putAll(colors);
+        return palette;
     }
 
     public boolean isEmpty() {
+        if (reference != null && !reference.isEmpty()) {
+            return false;
+        }
         return colors.isEmpty();
     }
 
+    public boolean isTextureReady() {
+        return texture != null;
+    }
+
     public PaintColor getResolvedColor(ISkinPaintType paintType) {
-        return getResolvedColors().get(paintType);
+        if (resolvedColors == null) {
+            resolvedColors = getResolvedColors();
+        }
+        return resolvedColors.get(paintType);
     }
 
-    public Integer getColor(ISkinPaintType paintType) {
-        return colors.get(paintType);
+    public BakedSkinTexture getTextureReader() {
+        return null;
     }
 
-    public void setColor(ISkinPaintType paintType, int color) {
+    public ResourceLocation getTexture() {
+        return this.texture;
+    }
+
+    public void setTexture(ResourceLocation texture) {
+        this.texture = texture;
+        this.hashCode = 0;
+    }
+
+    public Palette getReference() {
+        if (reference != null) {
+            return reference;
+        }
+        return Palette.EMPTY;
+    }
+
+    public void setReference(Palette reference) {
+        if (!Objects.equals(this.reference, reference)) {
+            this.reference = reference;
+            this.resolvedColors = null;
+            this.hashCode = 0;
+        }
+    }
+
+    public PaintColor getColor(ISkinPaintType paintType) {
+        PaintColor color = colors.get(paintType);
+        if (color != null) {
+            return color;
+        }
+        if (reference != null) {
+            return reference.getColor(paintType);
+        }
+        return null;
+    }
+
+    public void setColor(ISkinPaintType paintType, PaintColor color) {
         colors.put(paintType, color);
         resolvedColors = null;
-    }
-
-    public void add(SkinDye dye) {
-        if (dye.colors.isEmpty()) {
-            return; // not any changes
-        }
-        colors.putAll(dye.colors);
-        resolvedColors = null;
-        if (colors.equals(dye.colors)) {
-            resolvedColors = dye.getResolvedColors();
-        }
+        hashCode = 0;
     }
 
     private HashMap<ISkinPaintType, PaintColor> getResolvedColors() {
-        if (resolvedColors != null) {
-            return resolvedColors;
-        }
-        resolvedColors = new HashMap<>();
-        if (colors.isEmpty()) {
-            return resolvedColors;
-        }
-        // build all item dependencies
+        HashMap<ISkinPaintType, PaintColor> resolvedColors = new HashMap<>();
         HashMap<ISkinPaintType, ArrayList<ISkinPaintType>> dependencies = new HashMap<>();
-        colors.forEach((key, value) -> {
-            PaintColor color = new PaintColor(value);
+        // build all item dependencies
+        Iterables.concat(colors.entrySet(), getReference().colors.entrySet()).forEach(e -> {
+            ISkinPaintType paintType = e.getKey();
+            PaintColor color = e.getValue();
             if (color.getPaintType().getDyeType() != null) {
-                dependencies.computeIfAbsent(color.getPaintType(), k -> new ArrayList<>()).add(key);
+                dependencies.computeIfAbsent(color.getPaintType(), k -> new ArrayList<>()).add(paintType);
             } else {
-                resolvedColors.put(key, color);
+                resolvedColors.put(paintType, color);
             }
         });
+        if (resolvedColors.isEmpty()) {
+            return resolvedColors;
+        }
         // merge all items whens dependencies
         dependencies.forEach((key, value) -> Iterables.tryFind(dependencies.values(), v -> v.contains(key)).toJavaUtil().ifPresent(target -> {
             if (target != value) {
@@ -273,35 +298,24 @@ public class SkinDye implements ISkinDye {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SkinDye dye = (SkinDye) o;
-        return colors.equals(dye.colors);
+        if (o.hashCode() != this.hashCode()) return false;
+        Palette palette = (Palette) o;
+        return colors.equals(palette.colors) && Objects.equals(texture, palette.texture) && Objects.equals(reference, palette.reference);
     }
 
     @Override
     public int hashCode() {
-        return colors.hashCode();
+        if (hashCode == 0) {
+            hashCode = Objects.hash(colors, texture, reference);
+            if (hashCode == 0) {
+                hashCode = ~hashCode;
+            }
+        }
+        return hashCode;
     }
 
     @Override
     public String toString() {
         return "SkinDye [colors=" + colors + "]";
-    }
-
-    public static class PaintColor {
-        private final int rgb;
-        private final ISkinPaintType paintType;
-
-        public PaintColor(int value) {
-            this.paintType = SkinPaintTypes.byId(value >> 24 & 0xff);
-            this.rgb = 0xff000000 | value;
-        }
-
-        public int getRGB() {
-            return rgb;
-        }
-
-        public ISkinPaintType getPaintType() {
-            return paintType;
-        }
     }
 }

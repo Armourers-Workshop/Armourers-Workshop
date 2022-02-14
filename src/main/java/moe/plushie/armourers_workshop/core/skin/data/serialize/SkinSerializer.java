@@ -14,9 +14,6 @@ import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeExcepti
 import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.utils.PacketBufferCoder;
-import moe.plushie.armourers_workshop.core.utils.SkinPacketHandler;
-import net.minecraft.network.PacketBuffer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
