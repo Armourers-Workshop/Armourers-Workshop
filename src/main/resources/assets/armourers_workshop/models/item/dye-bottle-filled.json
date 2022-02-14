@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "armourers_workshop:items/dye-bottle-paint",
+    "layer1": "armourers_workshop:items/dye-bottle"
+  }
+}

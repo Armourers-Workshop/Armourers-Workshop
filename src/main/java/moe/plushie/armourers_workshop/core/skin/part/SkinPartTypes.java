@@ -50,7 +50,7 @@ public final class SkinPartTypes {
     public static final ISkinPartType TOOL_PICKAXE = register("pickaxe.base", new ItemPartType());
     public static final ISkinPartType TOOL_AXE = register("axe.base", new ItemPartType());
     public static final ISkinPartType TOOL_SHOVEL = register("shovel.base", new ItemPartType());
-    public static final ISkinPartType TOOL_HOPE = register("hope.base", new ItemPartType());
+    public static final ISkinPartType TOOL_HOE = register("hoe.base", new ItemPartType());
 
     public static final ISkinPartType ITEM_BOW1 = register("bow.frame1", new BowPartType(0));
     public static final ISkinPartType ITEM_BOW2 = register("bow.frame2", new BowPartType(1));

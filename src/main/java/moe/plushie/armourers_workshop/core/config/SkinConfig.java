@@ -34,6 +34,7 @@ public class SkinConfig {
     public static int textureCacheMaxSize;
     public static int maxSkinRequests;
     public static int fastCacheSize;
+    public static int maxSkinSlots = 10;
 
     // Skin preview
     public static boolean skinPreEnabled = true;
@@ -59,6 +60,16 @@ public class SkinConfig {
 
     public static boolean enableModelOverridden = true;
     public static boolean enableWireframeRender;
+
+    // Wardrobe
+//    public static boolean wardrobeAllowOpening = true;
+    public static boolean showWardrobeSkins = true;
+    public static boolean showWardrobeOutfits = true;
+    public static boolean showWardrobeDisplaySettings = true;
+    public static boolean showWardrobeColourSettings = true;
+    public static boolean showWardrobeDyeSetting = true;
+//    public static int wardrobeStartingSlots = 3;
+//    public static int wardrobeDropSkinsOnDeath = 0;
 
     // Debug tool
     public static boolean showArmourerDebugRender;

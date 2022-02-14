@@ -1,17 +1,11 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.core.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.bake.BakedSkinTexture;
 import moe.plushie.armourers_workshop.core.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.bake.SkinLoader;
-import moe.plushie.armourers_workshop.core.skin.data.Skin;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.List;
-import java.util.function.Consumer;
 
 public class SkinCore {
 
@@ -20,9 +14,17 @@ public class SkinCore {
     public final static SkinBakery bakery = new SkinBakery();
     public final static SkinLoader loader = new SkinLoader();
 
+    public static final ResourceLocation TEX_WARDROBE_1 = SkinCore.resource("textures/gui/wardrobe/wardrobe-1.png");
+    public static final ResourceLocation TEX_WARDROBE_2 = SkinCore.resource("textures/gui/wardrobe/wardrobe-2.png");
 
-    public static ResourceLocation TEX_CUBE = resource("textures/armour/cube.png");
-    public static ResourceLocation TEX_GUI_PREVIEW = resource("textures/gui/skin-preview.png");
+    public static final ResourceLocation TEX_BUTTONS = SkinCore.resource("textures/gui/_controls/buttons.png");
+
+    public static final ResourceLocation TEX_PLAYER_INVENTORY = SkinCore.resource("textures/gui/player_inventory.png");
+
+    public static final ResourceLocation TEX_ITEMS = SkinCore.resource("textures/atlas/items.png");
+
+    public static final ResourceLocation TEX_CUBE = resource("textures/armour/cube.png");
+    public static final ResourceLocation TEX_GUI_PREVIEW = resource("textures/gui/skin-preview.png");
 
     public static ResourceLocation resource(String path) {
         return new ResourceLocation(getModId(), path);

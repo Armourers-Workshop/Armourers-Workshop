@@ -1,24 +1,30 @@
 package moe.plushie.armourers_workshop.core.bake;
 
+import com.google.common.collect.Range;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.common.item.SkinItem;
+import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
+import moe.plushie.armourers_workshop.core.api.action.ICanUse;
 import moe.plushie.armourers_workshop.core.api.client.render.IBakedSkin;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;
+import moe.plushie.armourers_workshop.core.skin.data.Palette;
 import moe.plushie.armourers_workshop.core.skin.data.Skin;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDye;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.CustomVoxelShape;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
-import moe.plushie.armourers_workshop.core.utils.SkinCore;
 import moe.plushie.armourers_workshop.core.utils.SkinUtils;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
@@ -36,18 +42,32 @@ import java.util.Map;
 public class BakedSkin implements IBakedSkin {
 
     private final Skin skin;
-    private final SkinDye skinDye;
     private final Map<Object, Rectangle3f> cachedBounds = new HashMap<>();
 
+    private final int maxUseTick;
     private final List<BakedSkinPart> skinParts;
 
-    PackedColorInfo colorInfo;
+    private final ColorDescriptor colorDescriptor;
 
-    public BakedSkin(Skin skin, SkinDye skinDye, PackedColorInfo colorInfo, ArrayList<BakedSkinPart> bakedSkinParts) {
+    private final Palette preference;
+    private final HashMap<Integer, Palette> resolvedPalettes = new HashMap<>();
+
+    public BakedSkin(Skin skin, Palette preference, ColorDescriptor colorDescriptor, ArrayList<BakedSkinPart> bakedParts) {
         this.skin = skin;
-        this.skinDye = skinDye;
-        this.skinParts = bakedSkinParts;
-        this.colorInfo = colorInfo;
+        this.skinParts = bakedParts;
+        this.preference = preference;
+        this.colorDescriptor = colorDescriptor;
+        this.maxUseTick = getMaxUseTick(bakedParts);
+    }
+
+    public Palette resolve(Entity entity, Palette palette) {
+        if (colorDescriptor.isEmpty()) {
+            return Palette.EMPTY;
+        }
+        Palette resolvedPalette = resolvedPalettes.computeIfAbsent(entity.getId(), k -> preference.copy());
+        resolvedPalette.setTexture(getTexture(entity));
+        resolvedPalette.setReference(palette);
+        return resolvedPalette;
     }
 
     @Override
@@ -60,11 +80,12 @@ public class BakedSkin implements IBakedSkin {
         return skinParts;
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public SkinDye getSkinDye() {
-        return skinDye;
-    }
+//    @Override
+//    @SuppressWarnings("unchecked")
+//    public SkinPalette getSkinDye() {
+//        return null;
+//        return skinDye;
+//    }
 
     public boolean isOverride(ItemStack itemStack) {
         if (itemStack.isEmpty()) {
@@ -121,4 +142,37 @@ public class BakedSkin implements IBakedSkin {
         return shape;
     }
 
+    public boolean shouldRenderPart(BakedSkinPart bakedPart, Entity entity, ItemCameraTransforms.TransformType transformType) {
+        ISkinPartType partType = bakedPart.getType();
+        if (partType == SkinPartTypes.ITEM_ARROW) {
+            return entity instanceof ArrowEntity; // arrow part only render in arrow entity
+        }
+        if (entity instanceof ArrowEntity) {
+            return false; // arrow entity only render arrow part
+        }
+        if (partType instanceof ICanUse && entity instanceof LivingEntity) {
+            int useTick = ((LivingEntity) entity).getTicksUsingItem();
+            Range<Integer> useRange = ((ICanUse) partType).getUseRange();
+            return useRange.contains(Math.min(useTick, maxUseTick));
+        }
+        return true;
+    }
+
+    private ResourceLocation getTexture(Entity entity) {
+        if (entity instanceof ClientPlayerEntity) {
+            return ((ClientPlayerEntity) entity).getSkinTextureLocation();
+        }
+        return DefaultPlayerSkin.getDefaultSkin();
+    }
+
+    private int getMaxUseTick(ArrayList<BakedSkinPart> bakedParts) {
+        int maxUseTick = 0;
+        for (BakedSkinPart bakedPart : bakedParts) {
+            ISkinPartType partType = bakedPart.getType();
+            if (partType instanceof ICanUse) {
+                maxUseTick = Math.max(maxUseTick, ((ICanUse) partType).getUseRange().upperEndpoint());
+            }
+        }
+        return maxUseTick;
+    }
 }

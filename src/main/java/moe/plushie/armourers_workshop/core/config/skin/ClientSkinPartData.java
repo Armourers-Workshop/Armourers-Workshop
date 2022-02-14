@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
 import moe.plushie.armourers_workshop.core.model.SkinModel;
 //import moe.plushie.armourers_workshop.core.model.bake.PackedCubeFace;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDye;
+import moe.plushie.armourers_workshop.core.skin.data.Palette;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -21,7 +21,7 @@ public class ClientSkinPartData implements RemovalListener<ClientSkinPartData.Mo
     /**
      * Blank dye that is used if no dye is applied.
      */
-    public static final SkinDye BLANK_DYE = new SkinDye();
+    public static final Palette BLANK_DYE = new Palette();
     //    public final LoadingCache<ModelKey, SkinModel> modelCache;
 //    public PackedCubeFace vertexLists;
     public int[] totalCubesInPart;

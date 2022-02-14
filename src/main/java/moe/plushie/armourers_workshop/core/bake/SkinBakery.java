@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.bake;
 import moe.plushie.armourers_workshop.core.skin.data.*;
 import moe.plushie.armourers_workshop.core.utils.DataLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinCore;
+import moe.plushie.armourers_workshop.core.utils.SkinLog;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -25,16 +26,23 @@ public final class SkinBakery {
     private final AtomicInteger bakingQueue = new AtomicInteger(0);
     private final AtomicIntegerArray bakeTimes = new AtomicIntegerArray(1000);
 
+    private final ArrayList<IBakeListener> listeners = new ArrayList<>();
 
     private final DataLoader<SkinDescriptor, BakedSkin> manager = DataLoader.newBuilder()
             .build(this::loadAndBakeSkin);
 
 
-    public Object addListener(Consumer<SkinDescriptor> listener) {
-        return listener;
+    public void addListener(IBakeListener listener) {
+        listeners.add(listener);
     }
 
-    public void removeListener(Object lister) {
+    public void removeListener(IBakeListener listener) {
+        listeners.remove(listener);
+    }
+
+    @FunctionalInterface
+    public interface IBakeListener {
+        void didBake(SkinDescriptor descriptor, BakedSkin bakedSkin);
     }
 
 
@@ -108,7 +116,7 @@ public final class SkinBakery {
 //            }
 
         ArrayList<BakedSkinPart> bakedParts = new ArrayList<>();
-        PackedColorInfo colorInfo = new PackedColorInfo();
+        ColorDescriptor colorInfo = new ColorDescriptor();
 
         for (SkinPart part : skin.getParts()) {
             BakedSkinPart bakedPart = new BakedSkinPart(part, PackedQuad.from(part.getCubeData()));
@@ -144,12 +152,11 @@ public final class SkinBakery {
 //            }
 //            bakeTimes.set(index, (int) totalTime);
 
-        BakedSkin bakedSkin = new BakedSkin(skin, new SkinDye(), colorInfo, bakedParts);
+        BakedSkin bakedSkin = new BakedSkin(skin, new Palette(), colorInfo, bakedParts);
         complete.accept(Optional.of(bakedSkin));
 
-//            return new BakedSkin(skin, skinIdentifierRequested, skinIdentifierUpdated, skinReceiver);
-//        }
-//    }
+        listeners.forEach(listener -> listener.didBake(descriptor, bakedSkin));
+        SkinLog.debug("Baking skin " + descriptor + " did complete !");
     }
 
     public void getModel(ResourceLocation location) {

@@ -1,18 +1,34 @@
 package moe.plushie.armourers_workshop.core.skin.part.bow;
 
+import com.google.common.collect.Range;
 import moe.plushie.armourers_workshop.core.api.action.ICanHeld;
+import moe.plushie.armourers_workshop.core.api.action.ICanUse;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
 import net.minecraft.util.math.vector.Vector3i;
 
-public class BowPartType extends SkinPartType implements ICanHeld {
+public class BowPartType extends SkinPartType implements ICanHeld, ICanUse {
+
+    private final Range<Integer> useRange;
 
     public BowPartType(int frame) {
         super();
         this.buildingSpace = new Rectangle3i(-10, -20, -46, 20, 62, 64);
         this.guideSpace = new Rectangle3i(-2, -2, 2, 4, 4, 8);
         this.offset = getFrameOffset(frame);
+        this.useRange = getFrameUseRange(frame);
+    }
+
+    public static Range<Integer> getFrameUseRange(int frame) {
+        switch (frame) {
+            case 0:
+                return Range.closed(0, 12);
+            case 1:
+                return Range.closed(13, 17);
+            default:
+                return Range.closed(18, 30);
+        }
     }
 
     public static Vector3i getFrameOffset(int frame) {
@@ -26,6 +42,11 @@ public class BowPartType extends SkinPartType implements ICanHeld {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public Range<Integer> getUseRange() {
+        return useRange;
     }
 
     @Override

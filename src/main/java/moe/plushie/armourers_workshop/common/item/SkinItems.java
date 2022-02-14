@@ -25,6 +25,6 @@ public class SkinItems {
     });
 
     public static final RegistryObject<Item> SKIN = ITEMS.register("skin", () -> new SkinItem(new Item.Properties().stacksTo(1).setISTER(() -> () -> SkinItemStackRenderer.INSTANCE)));
-
+    public static final RegistryObject<Item> BOTTLE = ITEMS.register("dye-bottle", () -> new BottleItem(new Item.Properties().stacksTo(1).tab(TAB_SKIN)));
 
 }

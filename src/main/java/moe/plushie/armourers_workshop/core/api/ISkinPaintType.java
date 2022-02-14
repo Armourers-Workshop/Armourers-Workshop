@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.api;
 
 import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
+import net.minecraft.util.ResourceLocation;
 
 public interface ISkinPaintType {
 
@@ -12,5 +13,5 @@ public interface ISkinPaintType {
 
     float getV();
 
-    String getRegistryName();
+    ResourceLocation getRegistryName();
 }

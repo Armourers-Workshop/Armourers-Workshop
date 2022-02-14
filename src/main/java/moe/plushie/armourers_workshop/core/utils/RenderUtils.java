@@ -11,17 +11,38 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Matrix4f;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.nio.FloatBuffer;
 
 public final class RenderUtils {
 
     private static float lightX;
     private static float lightY;
 
+    private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
+
+
     public static void bindTexture(ResourceLocation resourceLocation) {
 //        Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation);
     }
+
+    public static int getPixelColour(int x, int y) {
+        MainWindow window = Minecraft.getInstance().getWindow();
+        double guiScale = window.getGuiScale();
+        int sx = (int) (x * guiScale);
+        int sy = (int) ((window.getGuiScaledHeight() - y) * guiScale);
+        BUFFER.rewind();
+        GL11.glReadPixels(sx, sy, 1, 1, GL11.GL_RGB, GL11.GL_FLOAT, BUFFER);
+        GL11.glFinish();
+        int r = Math.round(BUFFER.get() * 255);
+        int g = Math.round(BUFFER.get() * 255);
+        int b = Math.round(BUFFER.get() * 255);
+        return 0xff000000 | r << 16 | g << 8 | b;
+    }
+
 
     public static void enableScissor(int x, int y, int width, int height) {
         MainWindow window = Minecraft.getInstance().getWindow();

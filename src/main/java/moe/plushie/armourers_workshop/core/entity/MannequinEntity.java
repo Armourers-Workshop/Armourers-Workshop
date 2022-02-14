@@ -6,9 +6,9 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 
-public class SkinMannequinEntity extends LivingEntity {
+public class MannequinEntity extends LivingEntity {
 
-    public SkinMannequinEntity() {
+    public MannequinEntity() {
         super(EntityType.ARMOR_STAND, null);
     }
 

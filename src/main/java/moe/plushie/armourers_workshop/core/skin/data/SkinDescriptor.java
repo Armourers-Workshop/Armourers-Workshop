@@ -3,7 +3,9 @@ package moe.plushie.armourers_workshop.core.skin.data;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import moe.plushie.armourers_workshop.common.item.SkinItems;
+import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -15,17 +17,17 @@ public class SkinDescriptor implements ISkinDescriptor {
     public static final SkinDescriptor EMPTY = new SkinDescriptor("");
 
     public static final String NBT_KEY_SKIN = "armourersWorkshop";
-    public static final String NBT_KEY_SKIN_NAME = "name";
+    public static final String NBT_KEY_SKIN_TYPE = "skinType";
     public static final String NBT_KEY_SKIN_IDENTIFIER = "identifier";
 
-    private final static Cache<ItemStack, SkinDescriptor> SKINS = CacheBuilder.newBuilder()
+    private final static Cache<ItemStack, SkinDescriptor> DESCRIPTOR_CACHES = CacheBuilder.newBuilder()
             .maximumSize(8)
             .expireAfterAccess(15, TimeUnit.SECONDS)
             .build();
 
-    private final String name;
     private final String identifier;
-    private final SkinDye dye;
+    private final ISkinType type;
+    private final Palette palette;
 
 //    public static final SkinProperty<String> ALL_CUSTOM_NAME = new SkinProperty<>("customName", "");
 //    public static final SkinProperty<String> ALL_FLAVOUR_TEXT = new SkinProperty<>("flavour", "");
@@ -41,36 +43,36 @@ public class SkinDescriptor implements ISkinDescriptor {
 //    }
 
     public SkinDescriptor(String identifier) {
-        this(identifier, "", SkinDye.EMPTY);
+        this(identifier, SkinTypes.UNKNOWN, Palette.EMPTY);
     }
 
-    public SkinDescriptor(String identifier, String name, SkinDye dye) {
-        this.name = name;
+    public SkinDescriptor(String identifier, ISkinType type, Palette palette) {
         this.identifier = identifier;
-        this.dye = dye;
+        this.type = type;
+        this.palette = palette;
     }
 
     public SkinDescriptor(CompoundNBT nbt) {
-        this.name = nbt.getString(NBT_KEY_SKIN_NAME);
         this.identifier = nbt.getString(NBT_KEY_SKIN_IDENTIFIER);
-        this.dye = new SkinDye();
-//        this.skinDye = new SkinDye();
-//        this.identifier = new SkinIdentifier(0, null, 0, null);
+        this.type = SkinTypes.byName(nbt.getString(NBT_KEY_SKIN_TYPE));
+        this.palette = new Palette();
     }
-
 
     @Nonnull
     public static SkinDescriptor of(ItemStack itemStack) {
+        if (itemStack.isEmpty()) {
+            return EMPTY;
+        }
         CompoundNBT nbt = itemStack.getTag();
         if (nbt == null || !nbt.contains(NBT_KEY_SKIN)) {
             return EMPTY;
         }
-        SkinDescriptor descriptor = SKINS.getIfPresent(itemStack);
+        SkinDescriptor descriptor = DESCRIPTOR_CACHES.getIfPresent(itemStack);
         if (descriptor != null) {
             return descriptor;
         }
         descriptor = new SkinDescriptor(nbt.getCompound(NBT_KEY_SKIN));
-        SKINS.put(itemStack, descriptor);
+        DESCRIPTOR_CACHES.put(itemStack, descriptor);
         return descriptor;
     }
 
@@ -82,7 +84,7 @@ public class SkinDescriptor implements ISkinDescriptor {
         ItemStack itemStack = new ItemStack(SkinItems.SKIN.get());
         CompoundNBT nbt = new CompoundNBT();
         nbt.putString(NBT_KEY_SKIN_IDENTIFIER, identifier);
-        nbt.putString(NBT_KEY_SKIN_NAME, name);
+        nbt.putString(NBT_KEY_SKIN_TYPE, type.getRegistryName());
         itemStack.addTagElement(NBT_KEY_SKIN, nbt);
         return itemStack;
     }
@@ -115,12 +117,12 @@ public class SkinDescriptor implements ISkinDescriptor {
 //    }
 //
 
-    public SkinDye getDye() {
-        return dye;
+    public Palette getPalette() {
+        return palette;
     }
 
-    public String getName() {
-        return name;
+    public ISkinType getType() {
+        return type;
     }
 
     public String getIdentifier() {
@@ -160,6 +162,14 @@ public class SkinDescriptor implements ISkinDescriptor {
 //        compound.setTag(tag, skinDataCompound);
 //    }
 
+
+    @Override
+    public String toString() {
+        return "SkinDescriptor{" +
+                "identifier='" + identifier + '\'' +
+                ", type=" + type +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {

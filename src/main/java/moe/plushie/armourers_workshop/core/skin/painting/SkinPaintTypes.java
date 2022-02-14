@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.painting;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
 import moe.plushie.armourers_workshop.core.utils.SkinLog;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ import java.util.Map;
 public final class SkinPaintTypes {
 
     private static final SkinPaintType[] ALL_PAINT_MAPPING = new SkinPaintType[256];
-    private static final Map<String, SkinPaintType> ALL_PAINT_TYPES = new HashMap<>();
+    private static final Map<ResourceLocation, SkinPaintType> ALL_PAINT_TYPES = new HashMap<>();
 
     public static final SkinPaintType NORMAL = register("normal", 255, 0);
 
@@ -50,7 +51,7 @@ public final class SkinPaintTypes {
     public static final SkinPaintType NONE = register("none", 0, 9);
 
     public static SkinPaintType byName(String name) {
-        SkinPaintType paintType = ALL_PAINT_TYPES.get(name);
+        SkinPaintType paintType = ALL_PAINT_TYPES.get(new ResourceLocation(name));
         if (paintType != null) {
             return paintType;
         }
@@ -67,7 +68,7 @@ public final class SkinPaintTypes {
 
     private static SkinPaintType register(String name, int id, int index) {
         SkinPaintType paintType = new SkinPaintType(index, id);
-        paintType.setRegistryName("armourers:" + name);
+        paintType.setRegistryName(new ResourceLocation("armourers", name));
         if (ALL_PAINT_TYPES.containsKey(paintType.getRegistryName())) {
             SkinLog.warn("A mod tried to register a paint type with an id that is in use.");
             return paintType;

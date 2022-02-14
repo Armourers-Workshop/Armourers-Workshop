@@ -8,22 +8,19 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
-import com.mojang.brigadier.exceptions.CommandExceptionType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import moe.plushie.armourers_workshop.core.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.bake.SkinLoader;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.config.SkinConfig;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.data.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDye;
+import moe.plushie.armourers_workshop.core.skin.data.Palette;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.ReflectArgumentBuilder;
 import moe.plushie.armourers_workshop.core.utils.SkinCore;
+import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -34,13 +31,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+
+
+// /give @p armourers_workshop:dye-bottle{color:0x3ff0000}
+// /give @p armourers_workshop:skin 1 0
 
 public class SkinCommands {
 
@@ -50,7 +50,7 @@ public class SkinCommands {
                 .requires(source -> source.hasPermission(2))
                 .then(Commands.literal("setSkin").then(players().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
                 .then(Commands.literal("giveSkin").then(players().then(skins().executes(Executor::giveSkin))))
-                .then(Commands.literal("clearSkin").then(players().then(slots().executes(Executor::clearSkin)).executes(Executor::clearSkin)))
+                .then(Commands.literal("clearSkin").then(players().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
                 .then(ReflectArgumentBuilder.literal("config", SkinConfig.class))
                 .then(Commands.literal("test")
                         .then(DebugCommand.disablePart())
@@ -63,7 +63,11 @@ public class SkinCommands {
     }
 
     static ArgumentBuilder<CommandSource, ?> slots() {
-        return Commands.argument("slot", IntegerArgumentType.integer(1, 64));
+        return Commands.argument("slot", IntegerArgumentType.integer(1, 10));
+    }
+
+    static ArgumentBuilder<CommandSource, ?> slotNames() {
+        return Commands.argument("slot_name", new DebugCommand.ListArgument(Arrays.stream(SkinSlotType.values()).map(SkinSlotType::getName).collect(Collectors.toList())));
     }
 
     static ArgumentBuilder<CommandSource, ?> skins() {
@@ -87,21 +91,22 @@ public class SkinCommands {
 
         static int setSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
             String identifier = StringArgumentType.getString(context, "skin");
-            Skin skin = SkinCore.loader.loadSkin(new SkinDescriptor(identifier, "", SkinDye.EMPTY));
+            Skin skin = SkinCore.loader.loadSkin(new SkinDescriptor(identifier));
             if (skin == null) {
                 return 0;
             }
-            SkinDescriptor descriptor = new SkinDescriptor(identifier, skin.getCustomName(), SkinDye.EMPTY);
+            SkinDescriptor descriptor = new SkinDescriptor(identifier, skin.getType(), Palette.EMPTY);
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {
                 SkinWardrobe wardrobe = SkinWardrobe.of(player);
-                if (wardrobe == null) {
+                SkinSlotType slotType = SkinSlotType.of(skin.getType());
+                if (slotType == null || wardrobe == null) {
                     continue;
                 }
-                int slot = wardrobe.getFreeItemSlot();
+                int slot = wardrobe.getFreeSlot(slotType);
                 if (containsNode(context, "slot")) {
                     slot = IntegerArgumentType.getInteger(context, "slot");
                 }
-                wardrobe.setItemSlot(slot - 1, descriptor.asItemStack());
+                wardrobe.setItem(slotType, slot - 1, descriptor.asItemStack());
             }
             return 0;
         }
@@ -117,18 +122,22 @@ public class SkinCommands {
                     continue;
                 }
                 int slot = IntegerArgumentType.getInteger(context, "slot");
-                wardrobe.setItemSlot(slot - 1, ItemStack.EMPTY);
+                SkinSlotType slotType = SkinSlotType.of(DebugCommand.ListArgument.getString(context, "slot_name"));
+                if (slotType == null) {
+                    continue;
+                }
+                wardrobe.setItem(slotType, slot - 1, ItemStack.EMPTY);
             }
             return 0;
         }
 
         static int giveSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
             String identifier = StringArgumentType.getString(context, "skin");
-            Skin skin = SkinCore.loader.loadSkin(new SkinDescriptor(identifier, "", SkinDye.EMPTY));
+            Skin skin = SkinCore.loader.loadSkin(new SkinDescriptor(identifier));
             if (skin == null) {
                 return 0;
             }
-            SkinDescriptor descriptor = new SkinDescriptor(identifier, skin.getCustomName(), SkinDye.EMPTY);
+            SkinDescriptor descriptor = new SkinDescriptor(identifier, skin.getType(), Palette.EMPTY);
             ItemStack itemStack = descriptor.asItemStack();
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {
                 boolean flag = player.inventory.add(itemStack);
