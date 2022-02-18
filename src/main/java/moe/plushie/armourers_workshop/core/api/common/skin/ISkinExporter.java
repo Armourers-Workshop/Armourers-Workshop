@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.api.common.skin;
 
 import java.io.File;
 
-import moe.plushie.armourers_workshop.core.skin.data.Skin;
+import moe.plushie.armourers_workshop.core.skin.Skin;
 
 public interface ISkinExporter {
     

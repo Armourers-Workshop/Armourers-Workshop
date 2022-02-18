@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.core.skin.data.Skin;
+import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 

@@ -3,21 +3,41 @@ package moe.plushie.armourers_workshop.core.utils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import moe.plushie.armourers_workshop.core.AWCore;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.nio.FloatBuffer;
 
+@OnlyIn(Dist.CLIENT)
 public final class RenderUtils {
+
+    public static final ResourceLocation TEX_WARDROBE_1 = AWCore.resource("textures/gui/wardrobe/wardrobe-1.png");
+    public static final ResourceLocation TEX_WARDROBE_2 = AWCore.resource("textures/gui/wardrobe/wardrobe-2.png");
+
+    public static final ResourceLocation TEX_TABS = AWCore.resource("textures/gui/controls/tabs.png");
+    public static final ResourceLocation TEX_TAB_ICONS = AWCore.resource("textures/gui/controls/tab_icons.png");
+
+    public static final ResourceLocation TEX_BUTTONS = AWCore.resource("textures/gui/controls/buttons.png");
+
+    public static final ResourceLocation TEX_PLAYER_INVENTORY = AWCore.resource("textures/gui/player_inventory.png");
+
+    public static final ResourceLocation TEX_ITEMS = AWCore.resource("textures/atlas/items.png");
+
+    public static final ResourceLocation TEX_CUBE = AWCore.resource("textures/armour/cube.png");
+    public static final ResourceLocation TEX_GUI_PREVIEW = AWCore.resource("textures/gui/skin-preview.png");
 
     private static float lightX;
     private static float lightY;
@@ -25,8 +45,23 @@ public final class RenderUtils {
     private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
 
 
-    public static void bindTexture(ResourceLocation resourceLocation) {
-//        Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation);
+    public static void call(Runnable task) {
+        if (RenderSystem.isOnRenderThread()) {
+            task.run();
+        } else {
+            RenderSystem.recordRenderCall(task::run);
+        }
+    }
+
+    public static void bind(ResourceLocation texture) {
+        Minecraft.getInstance().getTextureManager().bind(texture);
+    }
+    public static void blit(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height) {
+        Screen.blit(matrixStack, x, y, 0, u, v, width, height, 256, 256);
+    }
+    public static void blit(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, ResourceLocation texture) {
+        RenderUtils.bind(texture);
+        RenderUtils.blit(matrixStack, x, y, u, v, width, height);
     }
 
     public static int getPixelColour(int x, int y) {
@@ -125,16 +160,16 @@ public final class RenderUtils {
         drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, buffer);
     }
 
-    public static void disableLighting() {
+//    public static void disableLighting() {
 //        net.minecraft.client.GameSettings
 //        lightX = OpenGlHelper.lastBrightnessX;
 //        lightY = OpenGlHelper.lastBrightnessY;
 //        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-    }
+//    }
 
-    public static void enableLighting() {
+//    public static void enableLighting() {
 //        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightX, lightY);
-    }
+//    }
 
 //    public static void setLightingForBlock(World world, BlockPos pos) {
 //        int i = world.getCombinedLight(pos, 0);

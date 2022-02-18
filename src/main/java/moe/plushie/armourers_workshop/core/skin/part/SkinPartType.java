@@ -3,13 +3,14 @@ package moe.plushie.armourers_workshop.core.skin.part;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3i;
 
 import java.util.Objects;
 
 public abstract class SkinPartType implements ISkinPartType {
 
-    protected String registryName;
+    protected ResourceLocation registryName;
 
     protected Rectangle3i buildingSpace;
     protected Rectangle3i guideSpace;
@@ -19,11 +20,11 @@ public abstract class SkinPartType implements ISkinPartType {
     }
 
     @Override
-    public String getRegistryName() {
+    public ResourceLocation getRegistryName() {
         return registryName;
     }
 
-    public SkinPartType setRegistryName(String registryName) {
+    public SkinPartType setRegistryName(ResourceLocation registryName) {
         this.registryName = registryName;
         return this;
     }
@@ -79,47 +80,6 @@ public abstract class SkinPartType implements ISkinPartType {
         return false;
     }
 
-//    @Override
-//    public SkinPart makeDummyPaintPart(int[] paintData) {
-//        if (!(this instanceof ISkinPartTypeTextured)) {
-//            return null;
-//        }
-//        BufferedImage image = new BufferedImage(SkinTexture.TEXTURE_WIDTH, SkinTexture.TEXTURE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
-//        for (int ix = 0; ix < SkinTexture.TEXTURE_WIDTH; ix++) {
-//            for (int iy = 0; iy < SkinTexture.TEXTURE_HEIGHT; iy++) {
-//                int paintColour = paintData[ix + (iy * SkinTexture.TEXTURE_WIDTH)];
-//                image.setRGB(ix, iy, paintColour);
-//            }
-//        }
-//
-//        SkinCubeData cubeData = new SkinCubeData();
-//        cubeData.setCubeCount(guideSpace.getWidth() * guideSpace.getHeight() * guideSpace.getDepth());
-//        int i = 0;
-//        for (int ix = 0; ix < guideSpace.getWidth(); ix++) {
-//            for (int iy = 0; iy < guideSpace.getHeight(); iy++) {
-//                for (int iz = 0; iz < guideSpace.getDepth(); iz++) {
-//
-//                    byte x = (byte) (ix - guideSpace.getWidth() - guideSpace.getX());
-//                    byte y = (byte) (iy - guideSpace.getHeight() - guideSpace.getY());
-//                    byte z = (byte) (iz - guideSpace.getDepth() - guideSpace.getZ());
-//
-//                    cubeData.setCubeLocation(i, x, y, z);
-////                    for (int side = 0; side < 6; side++) {
-////                        byte[] rgbt = ColouredFace.getColourFromTexture(x, y, z, (byte) 0, (byte) 0, (byte) 0, (byte) side, image, (ISkinPartTypeTextured) this, true);
-////                        cubeData.setCubeColour(i, side, rgbt[0], rgbt[1], rgbt[2]);
-////                        IPaintType paintType = PaintTypeRegistry.getInstance().getPaintTypeFormByte(rgbt[3]);
-////                        if (paintType == PaintTypeRegistry.PAINT_TYPE_NONE) {
-////                            paintType = PaintTypeRegistry.PAINT_TYPE_NONE;
-////                        }
-////                        cubeData.setCubePaintType(i, side, (byte) paintType.getId());
-////                    }
-//                    i++;
-//                }
-//            }
-//        }
-//        return new SkinPart(this, new ArrayList<>(), cubeData);
-//    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -135,6 +95,6 @@ public abstract class SkinPartType implements ISkinPartType {
 
     @Override
     public String toString() {
-        return "SkinPartType{" + "registryName=" + registryName + '}';
+        return registryName.toString();
     }
 }

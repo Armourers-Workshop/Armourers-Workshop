@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.registry;
 
-import moe.plushie.armourers_workshop.core.skin.advanced.action.SkinActionRotate;
-import moe.plushie.armourers_workshop.core.skin.advanced.trigger.SkinTriggerAlways;
-import moe.plushie.armourers_workshop.core.skin.advanced.value.*;
-import moe.plushie.armourers_workshop.core.skin.data.Skin;
-import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
+import moe.plushie.armourers_workshop.core.skin.part.advanced.action.SkinActionRotate;
+import moe.plushie.armourers_workshop.core.skin.part.advanced.trigger.SkinTriggerAlways;
+import moe.plushie.armourers_workshop.core.skin.part.advanced.value.*;
+import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 

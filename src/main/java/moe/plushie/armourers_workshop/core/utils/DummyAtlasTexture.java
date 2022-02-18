@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class DummyAtlasTexture extends AtlasTexture {
 
-    public static AtlasTexture TEX_ITEMS = new DummyAtlasTexture(SkinCore.TEX_ITEMS);
+    public static AtlasTexture TEX_ITEMS = new DummyAtlasTexture(RenderUtils.TEX_ITEMS);
 
     DummyAtlasTexture(ResourceLocation resourceLocation) {
         super(resourceLocation);

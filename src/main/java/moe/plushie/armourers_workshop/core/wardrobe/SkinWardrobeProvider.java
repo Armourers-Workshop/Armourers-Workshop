@@ -1,15 +1,13 @@
 package moe.plushie.armourers_workshop.core.wardrobe;
 
-import moe.plushie.armourers_workshop.core.utils.SkinCore;
+import moe.plushie.armourers_workshop.core.AWCore;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -18,7 +16,7 @@ import javax.annotation.Nullable;
 
 public class SkinWardrobeProvider implements ICapabilityProvider, INBTSerializable<CompoundNBT> {
 
-    public static final ResourceLocation WARDROBE_ID = new ResourceLocation(SkinCore.getModId(), "entity-skin-provider");
+    public static final ResourceLocation WARDROBE_ID = new ResourceLocation(AWCore.getModId(), "entity-skin-provider");
 
     @CapabilityInject(SkinWardrobe.class)
     public static Capability<SkinWardrobe> WARDROBE_KEY = null;

@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.common.ArmourersConfig;
-import moe.plushie.armourers_workshop.core.render.SkinRenderBuffer;
+import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
 import moe.plushie.armourers_workshop.core.render.model.HeldItemModel;
-import moe.plushie.armourers_workshop.core.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
@@ -116,7 +116,7 @@ public class ClientWardrobeHandler {
             return;
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-        if (wardrobe != null && wardrobe.snapshot().hasOverriddenEquipment(slotType)) {
+        if (wardrobe != null && !wardrobe.shouldRenderEquipment(slotType)) {
             callback.cancel();
         }
     }

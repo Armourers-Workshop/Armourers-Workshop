@@ -1,9 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
 import moe.plushie.armourers_workshop.core.api.ISkinCube;
-import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.utils.SkinLog;
-import net.minecraft.block.Block;
+import moe.plushie.armourers_workshop.core.utils.AWLog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,12 +38,12 @@ public final class SkinCubes {
         SkinCube cube = new SkinCube(id, glass, glowing);
         cube.setRegistryName("armourers:" + name);
         if (ALL_CUBES.containsKey(cube.getRegistryName())) {
-            SkinLog.warn("A mod tried to register a cube with an id that is in use.");
+            AWLog.warn("A mod tried to register a cube with an id that is in use.");
             return cube;
         }
         ALL_CUBES.put(cube.getRegistryName(), cube);
         ALL_CUBES_MAPPING[cube.getId() & 0xFF] = cube;
-        SkinLog.debug("Registering Skin Cube '{}'", cube.getRegistryName());
+        AWLog.debug("Registering Skin Cube '{}'", cube.getRegistryName());
         return cube;
     }
 

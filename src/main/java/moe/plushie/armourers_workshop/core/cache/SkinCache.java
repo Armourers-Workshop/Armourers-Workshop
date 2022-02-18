@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.core.cache;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import moe.plushie.armourers_workshop.core.render.SkinRenderBuffer;
-import moe.plushie.armourers_workshop.core.render.SkinVertexBufferBuilder;
-import moe.plushie.armourers_workshop.core.skin.data.Skin;
+import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
+import moe.plushie.armourers_workshop.core.render.buffer.SkinVertexBufferBuilder;
+import moe.plushie.armourers_workshop.core.skin.Skin;
 
 import javax.annotation.Nullable;
 import java.util.*;

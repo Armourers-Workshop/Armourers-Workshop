@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.utils.SkinCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -25,7 +25,7 @@ public class SkinItemStackRenderer extends ItemStackTileEntityRenderer {
     public void renderByItem(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int light, int overlay) {
         IBakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
         ItemTransformVec3f transform = bakedModel.getTransforms().getTransform(transformType);
-        BakedSkin skin = SkinCore.bakery.loadSkin(SkinDescriptor.of(itemStack));
+        BakedSkin skin = AWCore.bakery.loadSkin(SkinDescriptor.of(itemStack));
         if (skin == null) {
             return;
         }

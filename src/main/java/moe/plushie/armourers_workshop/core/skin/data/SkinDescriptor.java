@@ -2,10 +2,10 @@ package moe.plushie.armourers_workshop.core.skin.data;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import moe.plushie.armourers_workshop.common.item.SkinItems;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.utils.AWItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -16,9 +16,9 @@ public class SkinDescriptor implements ISkinDescriptor {
 
     public static final SkinDescriptor EMPTY = new SkinDescriptor("");
 
-    public static final String NBT_KEY_SKIN = "armourersWorkshop";
-    public static final String NBT_KEY_SKIN_TYPE = "skinType";
-    public static final String NBT_KEY_SKIN_IDENTIFIER = "identifier";
+    private static final String NBT_KEY_SKIN = "armourersWorkshop";
+    private static final String NBT_KEY_SKIN_TYPE = "skinType";
+    private static final String NBT_KEY_SKIN_IDENTIFIER = "identifier";
 
     private final static Cache<ItemStack, SkinDescriptor> DESCRIPTOR_CACHES = CacheBuilder.newBuilder()
             .maximumSize(8)
@@ -27,26 +27,13 @@ public class SkinDescriptor implements ISkinDescriptor {
 
     private final String identifier;
     private final ISkinType type;
-    private final Palette palette;
-
-//    public static final SkinProperty<String> ALL_CUSTOM_NAME = new SkinProperty<>("customName", "");
-//    public static final SkinProperty<String> ALL_FLAVOUR_TEXT = new SkinProperty<>("flavour", "");
-//    public static final SkinProperty<String> ALL_AUTHOR_NAME = new SkinProperty<>("authorName", "");
-//    public static final SkinProperty<String> ALL_AUTHOR_UUID = new SkinProperty<>("authorUUID", "");
-
-//    private ISkinIdentifier identifier;
-//    public ISkinDye skinDye;
-
-    //    public SkinDescriptor() {
-//        this.skinDye = new SkinDye();
-//        this.identifier = new SkinIdentifier(0, null, 0, null);
-//    }
+    private final SkinPalette palette;
 
     public SkinDescriptor(String identifier) {
-        this(identifier, SkinTypes.UNKNOWN, Palette.EMPTY);
+        this(identifier, SkinTypes.UNKNOWN, SkinPalette.EMPTY);
     }
 
-    public SkinDescriptor(String identifier, ISkinType type, Palette palette) {
+    public SkinDescriptor(String identifier, ISkinType type, SkinPalette palette) {
         this.identifier = identifier;
         this.type = type;
         this.palette = palette;
@@ -55,7 +42,7 @@ public class SkinDescriptor implements ISkinDescriptor {
     public SkinDescriptor(CompoundNBT nbt) {
         this.identifier = nbt.getString(NBT_KEY_SKIN_IDENTIFIER);
         this.type = SkinTypes.byName(nbt.getString(NBT_KEY_SKIN_TYPE));
-        this.palette = new Palette();
+        this.palette = new SkinPalette();
     }
 
     @Nonnull
@@ -81,10 +68,10 @@ public class SkinDescriptor implements ISkinDescriptor {
         if (isEmpty()) {
             return ItemStack.EMPTY;
         }
-        ItemStack itemStack = new ItemStack(SkinItems.SKIN.get());
+        ItemStack itemStack = new ItemStack(AWItems.SKIN.get());
         CompoundNBT nbt = new CompoundNBT();
         nbt.putString(NBT_KEY_SKIN_IDENTIFIER, identifier);
-        nbt.putString(NBT_KEY_SKIN_TYPE, type.getRegistryName());
+        nbt.putString(NBT_KEY_SKIN_TYPE, type.getRegistryName().toString());
         itemStack.addTagElement(NBT_KEY_SKIN, nbt);
         return itemStack;
     }
@@ -94,30 +81,7 @@ public class SkinDescriptor implements ISkinDescriptor {
         return identifier.isEmpty();
     }
 
-    //    public SkinDescriptor(Skin skin) {
-//        this(new SkinIdentifier(skin.lightHash(), null, 0, skin.getType()));
-//    }
-//
-//    public SkinDescriptor(ISkinDescriptor skinPointer) {
-//        this.skinDye = new SkinDye(skinPointer.getSkinDye());
-//    }
-//
-//    public SkinDescriptor(ISkinIdentifier identifier) {
-//        this.identifier = identifier;
-//        this.skinDye = new SkinDye();
-//    }
-//
-//    public SkinDescriptor(ISkinIdentifier identifier, ISkinDye skinDye) {
-//        this.identifier = identifier;
-//        if (skinDye != null) {
-//            this.skinDye = new SkinDye(skinDye);
-//        } else {
-//            this.skinDye = new SkinDye();
-//        }
-//    }
-//
-
-    public Palette getPalette() {
+    public SkinPalette getPalette() {
         return palette;
     }
 

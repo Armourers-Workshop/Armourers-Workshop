@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.utils;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.core.skin.data.Skin;
+import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
@@ -38,11 +38,11 @@ public final class SkinIOUtils {
             saveSkinToStream(fos, skin);
             fos.flush();
         } catch (FileNotFoundException e) {
-            SkinLog.warn("Skin file not found.");
+            AWLog.warn("Skin file not found.");
             e.printStackTrace();
             return false;
         } catch (IOException e) {
-            SkinLog.error("Skin file save failed.");
+            AWLog.error("Skin file save failed.");
             e.printStackTrace();
             return false;
         }
@@ -55,7 +55,7 @@ public final class SkinIOUtils {
             dos.flush();
             bos.flush();
         } catch (IOException e) {
-            SkinLog.error("Skin file save failed.");
+            AWLog.error("Skin file save failed.");
             e.printStackTrace();
             return false;
         }
@@ -69,8 +69,8 @@ public final class SkinIOUtils {
     public static Skin loadSkinFromFileName(String fileName) {
         File file = new File(ArmourersWorkshop.getSkinLibraryDirectory(), fileName);
         if (!isInSubDirectory(ArmourersWorkshop.getSkinLibraryDirectory(), file)) {
-            SkinLog.warn("Player tried to load a file in a invalid location.");
-            SkinLog.warn(String.format("The file was: %s", file.getAbsolutePath().replace("%", "")));
+            AWLog.warn("Player tried to load a file in a invalid location.");
+            AWLog.warn(String.format("The file was: %s", file.getAbsolutePath().replace("%", "")));
             return null;
         }
         return loadSkinFromFile(file);
@@ -82,19 +82,19 @@ public final class SkinIOUtils {
         try (FileInputStream fis = new FileInputStream(file)) {
             skin = loadSkinFromStream(fis);
         } catch (FileNotFoundException e) {
-            SkinLog.warn("Skin file not found. {}", file);
+            AWLog.warn("Skin file not found. {}", file);
         } catch (IOException e) {
-            SkinLog.error("Skin file load failed.");
+            AWLog.error("Skin file load failed.");
             e.printStackTrace();
         } catch (Exception e) {
-            SkinLog.error("Unable to load skin. Unknown error.");
+            AWLog.error("Unable to load skin. Unknown error.");
             e.printStackTrace();
         }
 
         if (skin == null) {
             skin = loadSkinRecovery(file);
             if (skin != null) {
-                SkinLog.warn("Loaded skin with recovery system.");
+                AWLog.warn("Loaded skin with recovery system.");
             }
         }
 
@@ -107,16 +107,16 @@ public final class SkinIOUtils {
         try (BufferedInputStream bis = new BufferedInputStream(inputStream); DataInputStream dis = new DataInputStream(bis)) {
             skin = SkinSerializer.readSkinFromStream(dis);
         } catch (IOException e) {
-            SkinLog.error("Skin file load failed.");
+            AWLog.error("Skin file load failed.");
             e.printStackTrace();
         } catch (NewerFileVersionException e) {
-            SkinLog.error("Can not load skin file it was saved in newer version.");
+            AWLog.error("Can not load skin file it was saved in newer version.");
             e.printStackTrace();
         } catch (InvalidCubeTypeException e) {
-            SkinLog.error("Unable to load skin. Unknown cube types found.");
+            AWLog.error("Unable to load skin. Unknown cube types found.");
             e.printStackTrace();
         } catch (Exception e) {
-            SkinLog.error("Unable to load skin. Unknown error.");
+            AWLog.error("Unable to load skin. Unknown error.");
             e.printStackTrace();
         }
 
@@ -194,7 +194,7 @@ public final class SkinIOUtils {
 
     public static void makeDatabaseDirectory() {
         File directory = getSkinDatabaseDirectory();
-        SkinLog.debug("Loading skin database at: " + directory.getAbsolutePath());
+        AWLog.debug("Loading skin database at: " + directory.getAbsolutePath());
         copyGlobalDatabase();
         if (!directory.exists()) {
             directory.mkdir();
@@ -343,11 +343,11 @@ public final class SkinIOUtils {
                     if (saveSkinToFile(new File(outputDir, skinFile.getName()), skin)) {
                         successCount++;
                     } else {
-                        SkinLog.error("Failed to update skin " + skinFile.getName());
+                        AWLog.error("Failed to update skin " + skinFile.getName());
                         failCount++;
                     }
                 } else {
-                    SkinLog.error("Failed to update skin " + skinFile.getName());
+                    AWLog.error("Failed to update skin " + skinFile.getName());
                     failCount++;
                 }
             }

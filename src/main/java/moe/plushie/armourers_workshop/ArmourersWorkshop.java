@@ -3,25 +3,26 @@ package moe.plushie.armourers_workshop;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.client.ClientWardrobeHandler;
-import moe.plushie.armourers_workshop.common.item.BottleItem;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
-import moe.plushie.armourers_workshop.client.SkinWardrobeScreen;
 import moe.plushie.armourers_workshop.client.layer.WardrobeArmorLayer;
 import moe.plushie.armourers_workshop.common.ArmourersConfig;
-import moe.plushie.armourers_workshop.common.SkinCommands;
-import moe.plushie.armourers_workshop.common.item.SkinItem;
-import moe.plushie.armourers_workshop.common.item.SkinItems;
-import moe.plushie.armourers_workshop.core.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.config.SkinConfig;
+import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.command.SkinCommands;
+import moe.plushie.armourers_workshop.core.gui.SkinWardrobeScreen;
+import moe.plushie.armourers_workshop.core.item.BottleItem;
+import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.OpenWardrobePacket;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
-import moe.plushie.armourers_workshop.core.render.SkinRenderBuffer;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.utils.Keybindings;
-import moe.plushie.armourers_workshop.core.utils.SkinCore;
+import moe.plushie.armourers_workshop.core.utils.AWItems;
+import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
+import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeProvider;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeStorage;
 import net.minecraft.client.Minecraft;
@@ -183,15 +184,12 @@ public class ArmourersWorkshop {
 
         ArmourersConfig.init();
         ClientWardrobeHandler.init();
-        NetworkHandler.init(SkinCore.resource("aw2cc"));
+        NetworkHandler.init(AWCore.resource("aw2"));
 
+        //ForgeRegistries.ITEMS.register(null);
         ForgeRegistries.CONTAINERS.register(SkinWardrobeContainer.TYPE);
-//        ContainerType<?> containerType = SkinWardrobeContainer.TYPE;
-//        CONTAINERS.register(containerType.getRegistryName().toString(), () -> containerType);
 
-        SkinItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-//        CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
-//        CapabilityManager
+        AWItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         // URL => armour://armourers_workshop.plushie.moe/library/userid/name.armour
 
@@ -232,7 +230,7 @@ public class ArmourersWorkshop {
     @SubscribeEvent
     public void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         Entity entity = event.getObject();
-        if (!SkinConfig.isSkinnableEntity(entity)) {
+        if (!AWConfig.isSkinnableEntity(entity)) {
             return;
         }
         event.addCapability(SkinWardrobeProvider.WARDROBE_ID, new SkinWardrobeProvider(entity));
@@ -269,23 +267,23 @@ public class ArmourersWorkshop {
         if (event.isCanceled()) {
             return;
         }
-        if (!SkinConfig.skinPreEnabled) {
+        if (!AWConfig.skinPreEnabled) {
             return;
         }
         ItemStack itemStack = event.getStack();
-        if (itemStack.getItem() != SkinItems.SKIN.get()) {
+        if (itemStack.getItem() != AWItems.SKIN.get()) {
             return;
         }
         MatrixStack matrixStack = event.getMatrixStack();
-        BakedSkin bakedSkin = SkinCore.bakery.loadSkin(SkinDescriptor.of(itemStack));
+        BakedSkin bakedSkin = AWCore.bakery.loadSkin(SkinDescriptor.of(itemStack));
         if (bakedSkin == null) {
             return;
         }
 
         int x, y;
         int t = (int) System.currentTimeMillis();
-        int size = SkinConfig.skinPreSize;
-        if (SkinConfig.skinPreLocFollowMouse) {
+        int size = AWConfig.skinPreSize;
+        if (AWConfig.skinPreLocFollowMouse) {
             x = event.getX() - 28 - size;
             y = event.getY() - 4;
             if (event.getX() < mouseX) {
@@ -293,12 +291,12 @@ public class ArmourersWorkshop {
             }
             y = MathHelper.clamp(y, 0, screenHeight - size);
         } else {
-            x = MathHelper.ceil((screenWidth - size) * SkinConfig.skinPreLocHorizontal);
-            y = MathHelper.ceil((screenHeight - size) * SkinConfig.skinPreLocVertical);
+            x = MathHelper.ceil((screenWidth - size) * AWConfig.skinPreLocHorizontal);
+            y = MathHelper.ceil((screenHeight - size) * AWConfig.skinPreLocVertical);
         }
 
-        if (SkinConfig.skinPreDrawBackground) {
-            GuiUtils.drawContinuousTexturedBox(matrixStack, SkinCore.TEX_GUI_PREVIEW, x, y, 0, 0, size, size, 62, 62, 4, 400);
+        if (AWConfig.skinPreDrawBackground) {
+            GuiUtils.drawContinuousTexturedBox(matrixStack, RenderUtils.TEX_GUI_PREVIEW, x, y, 0, 0, size, size, 62, 62, 4, 400);
         }
 
         matrixStack.pushPose();
@@ -329,7 +327,7 @@ public class ArmourersWorkshop {
                 entity.animationSpeedOld = 0.25F;
             }
         }
-        if (!SkinConfig.enableModelOverridden) {
+        if (!AWConfig.enableModelOverridden) {
             return;
         }
         EntityModel<?> entityModel = event.getRenderer().getModel();
@@ -365,8 +363,8 @@ public class ArmourersWorkshop {
         MatrixStack stack = event.getMatrixStack();
 
         SkinRenderBuffer buffer1 = SkinRenderBuffer.getInstance();
-        SkinItemRenderer.renderSkinAsItem(stack, SkinCore.bakery.loadSkin(outfit), event.getLight(), true, false, 32, 32, buffer1);
-        SkinItemRenderer.renderSkinAsItem(stack, SkinCore.bakery.loadSkin(sword), event.getLight(), true, false, 32, 32, buffer1);
+        SkinItemRenderer.renderSkinAsItem(stack, AWCore.bakery.loadSkin(outfit), event.getLight(), true, false, 32, 32, buffer1);
+        SkinItemRenderer.renderSkinAsItem(stack, AWCore.bakery.loadSkin(sword), event.getLight(), true, false, 32, 32, buffer1);
         buffer1.endBatch();
     }
 
@@ -403,7 +401,7 @@ public class ArmourersWorkshop {
 
     @SubscribeEvent
     public void onKeyInputEvent(InputEvent.KeyInputEvent event) {
-        if (Keybindings.OPEN_WARDROBE.consumeClick()) {
+        if (AWKeyBindings.OPEN_WARDROBE_KEY.consumeClick()) {
             PlayerEntity player = Minecraft.getInstance().player;
             if (player != null) {
                 NetworkHandler.getInstance().sendToServer(new OpenWardrobePacket(player));
@@ -452,7 +450,7 @@ public class ArmourersWorkshop {
         if (event.isCanceled()) {
             return;
         }
-        if (!SkinConfig.isSkinnableEntity(event.getTarget())) {
+        if (!AWConfig.isSkinnableEntity(event.getTarget())) {
             return;
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(event.getTarget());
@@ -461,13 +459,13 @@ public class ArmourersWorkshop {
         }
     }
 
-    private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, SkinCore.getModId());
+    private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, AWCore.getModId());
 
 
     private void loadComplete(FMLLoadCompleteEvent evt) {
         CapabilityManager.INSTANCE.register(SkinWardrobe.class, new SkinWardrobeStorage(), () -> null);
         ScreenManager.register(SkinWardrobeContainer.TYPE, SkinWardrobeScreen::new);
-        ItemModelsProperties.register(SkinItems.BOTTLE.get(), SkinCore.resource("paint_type"), (itemStack, world, entity) -> BottleItem.getPaintType(itemStack).getId());
+        ItemModelsProperties.register(AWItems.BOTTLE.get(), AWCore.resource("paint_type"), (itemStack, world, entity) -> BottleItem.getPaintType(itemStack).getId());
 
         evt.enqueueWork(() -> {
             // Add our own custom armor layer to the various player renderers.

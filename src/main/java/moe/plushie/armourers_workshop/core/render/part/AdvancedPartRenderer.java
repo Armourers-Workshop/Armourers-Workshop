@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.part;//package moe.plushie.armourers_workshop.client.render;
 //
-//import moe.plushie.armourers_workshop.core.skin.advanced.AdvancedData;
-//import moe.plushie.armourers_workshop.core.skin.advanced.AdvancedPart;
+//import moe.plushie.armourers_workshop.core.skin.part.advanced.AdvancedData;
+//import moe.plushie.armourers_workshop.core.skin.part.advanced.AdvancedPart;
 //import moe.plushie.armourers_workshop.core.skin.data.Skin;
 //import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
 //import net.minecraft.client.renderer.GlStateManager;

@@ -1,29 +1,24 @@
 package moe.plushie.armourers_workshop.core.wardrobe;
 
 import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.mojang.blaze3d.systems.RenderSystem;
-import moe.plushie.armourers_workshop.common.item.BottleItem;
+import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.api.*;
 import moe.plushie.armourers_workshop.core.api.common.ISkinWardrobe;
-import moe.plushie.armourers_workshop.core.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.cache.SkinCache;
+import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
-import moe.plushie.armourers_workshop.core.skin.data.Palette;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.painting.PaintColor;
+import moe.plushie.armourers_workshop.core.skin.data.SkinPalette;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.utils.SkinCore;
-import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
+import moe.plushie.armourers_workshop.core.utils.PaintColor;
+import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
@@ -35,14 +30,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
+@SuppressWarnings("unused")
 public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT> {
 
-    private final static Cache<Object, LazyOptional<SkinWardrobe>> CACHES = CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.SECONDS).build();
-
-    private final Inventory inventory = new Inventory(SkinSlotType.getTotalSize());
+    private final Inventory inventory = new Inventory(SkinWardrobeSlotType.getTotalSize());
+    private final HashSet<EquipmentSlotType> equipmentVisibility = new HashSet<>();
 
     private final WeakReference<Entity> entityRef;
     private final State state = new State();
@@ -57,23 +51,19 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         if (entity == null) {
             return null;
         }
-        Object key = SkinCache.borrowKey(entity.getId(), entity.getClass());
-        LazyOptional<SkinWardrobe> wardrobe = CACHES.getIfPresent(key);
+        Object key = entity.getId();
+        Cache<Object, LazyOptional<SkinWardrobe>> caches = SkinWardrobeStorage.getCaches(entity);
+        LazyOptional<SkinWardrobe> wardrobe = caches.getIfPresent(key);
         if (wardrobe != null) {
-            SkinCache.returnKey(key);
             return wardrobe.resolve().orElse(null);
         }
         wardrobe = entity.getCapability(SkinWardrobeProvider.WARDROBE_KEY);
-        if (!wardrobe.isPresent()) {
-            SkinCache.returnKey(key);
-            return null;
-        }
-        wardrobe.addListener(self -> CACHES.invalidate(key));
-        CACHES.put(key, wardrobe);
+        wardrobe.addListener(self -> caches.invalidate(key));
+        caches.put(key, wardrobe);
         return wardrobe.resolve().orElse(null);
     }
 
-    public int getFreeSlot(SkinSlotType slotType) {
+    public int getFreeSlot(SkinWardrobeSlotType slotType) {
         int unlockedSize = getUnlockedSize(slotType);
         for (int i = 0; i < unlockedSize; ++i) {
             if (inventory.getItem(slotType.getIndex() + i).isEmpty()) {
@@ -83,24 +73,22 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         return Integer.MAX_VALUE;
     }
 
-    public ItemStack getItem(SkinSlotType slotType, int slot) {
+    public ItemStack getItem(SkinWardrobeSlotType slotType, int slot) {
         if (slot >= getUnlockedSize(slotType)) {
             return ItemStack.EMPTY;
         }
         return inventory.getItem(slotType.getIndex() + slot);
     }
 
-    public void setItem(SkinSlotType slotType, int slot, ItemStack itemStack) {
+    public void setItem(SkinWardrobeSlotType slotType, int slot, ItemStack itemStack) {
         if (slot >= getUnlockedSize(slotType)) {
             return;
         }
         inventory.setItem(slotType.getIndex() + slot, itemStack);
-        sendToAll();
     }
 
     public void clear() {
         inventory.clearContent();
-        sendToAll();
     }
 
     public void sendToAll() {
@@ -115,8 +103,20 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         NetworkHandler.getInstance().sendTo(new UpdateWardrobePacket(this), player);
     }
 
-    public int getUnlockedSize(SkinSlotType slotType) {
-        if (slotType == SkinSlotType.DYE) {
+    public boolean shouldRenderEquipment(EquipmentSlotType slotType) {
+        return !equipmentVisibility.contains(slotType);
+    }
+
+    public void setRenderEquipment(boolean enable, EquipmentSlotType slotType) {
+        if (enable) {
+            equipmentVisibility.remove(slotType);
+        } else {
+            equipmentVisibility.add(slotType);
+        }
+    }
+
+    public int getUnlockedSize(SkinWardrobeSlotType slotType) {
+        if (slotType == SkinWardrobeSlotType.DYE) {
             return 8;
         }
         return slotType.getSize();
@@ -130,43 +130,26 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         return entityRef.get();
     }
 
+
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
-        saveAllItems(nbt);
+        SkinWardrobeStorage.saveVisibility(equipmentVisibility, nbt);
+        SkinWardrobeStorage.saveInventoryItems(inventory, nbt);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        loadAllItems(nbt);
+        SkinWardrobeStorage.loadVisibility(equipmentVisibility, nbt);
+        SkinWardrobeStorage.loadInventoryItems(inventory, nbt);
         state.invalidateAll();
-    }
-
-    private void saveAllItems(CompoundNBT nbt) {
-        NonNullList<ItemStack> itemStacks = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
-        for (int i = 0; i < itemStacks.size(); ++i) {
-            itemStacks.set(i, inventory.getItem(i));
-        }
-        ItemStackHelper.saveAllItems(nbt, itemStacks);
-    }
-
-    private void loadAllItems(CompoundNBT nbt) {
-        NonNullList<ItemStack> itemStacks = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(nbt, itemStacks);
-        for (int i = 0; i < itemStacks.size(); ++i) {
-            ItemStack newItemStack = itemStacks.get(i);
-            ItemStack oldItemStack = inventory.getItem(i);
-            if (!Objects.equals(newItemStack, oldItemStack)) {
-                inventory.setItem(i, newItemStack);
-            }
-        }
     }
 
     @OnlyIn(Dist.CLIENT)
     public State snapshot() {
-        if (state.tick(getEntity())) {
-            state.refresh(getEntity());
+        if (state.tick()) {
+            state.reload();
         }
         return state;
     }
@@ -187,22 +170,25 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         private final HashMap<ISkinPaintType, PaintColor> lastDyeColors = new HashMap<>();
         private final NonNullList<ItemStack> lastEquipmentSlots = NonNullList.withSize(EquipmentSlotType.values().length, ItemStack.EMPTY);
 
-        private Palette palette = Palette.EMPTY;
+        private SkinPalette palette = SkinPalette.EMPTY;
 
-        private int tickCount = 0;
+        private int ticks = 0;
+
         private boolean isLoaded = false;
         private boolean isListening = false;
 
-        public boolean tick(Entity entity) {
-            int tickCount = entity.tickCount;
-            if (tickCount == this.tickCount && isLoaded) {
-                return false;
+        public boolean tick() {
+            Entity entity = getEntity();
+            int ticks = entity.tickCount;
+            if (this.ticks != ticks || !isLoaded) {
+                this.ticks = ticks;
+                return updateEquipmentSlots(entity) || !isLoaded;
             }
-            this.tickCount = tickCount;
-            return updateEquipmentSlots(entity) || !isLoaded;
+            return false;
         }
 
-        public void refresh(Entity entity) {
+        public void reload() {
+            Entity entity = getEntity();
             invalidateAll();
 
             loadDyeSlots(entity, this::updateDye);
@@ -213,23 +199,21 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         }
 
         public void invalidateAll() {
-            tickCount = 0;
+            ticks = 0;
             isLoaded = false;
 
             dyeColors.clear();
-            ;
             missingSkins.clear();
             armorSkins.clear();
             itemSkins.clear();
             hasParts.clear();
             hasOverriddenParts.clear();
-//            palette = new Palette();
         }
 
         @Override
         public void didBake(SkinDescriptor descriptor, BakedSkin bakedSkin) {
             if (missingSkins.contains(descriptor)) {
-                RenderSystem.recordRenderCall(this::invalidateAll);
+                RenderUtils.call(this::invalidateAll);
             }
         }
 
@@ -249,7 +233,7 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
             return Collections.emptyList();
         }
 
-        public Palette getPalette() {
+        public SkinPalette getPalette() {
             return palette;
         }
 
@@ -261,38 +245,33 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
             return hasOverriddenParts.contains(partType);
         }
 
-        public boolean hasOverriddenEquipment(EquipmentSlotType slotType) {
-            switch (slotType) {
-                case HEAD:
-                    return hasOverriddenPart(SkinPartTypes.BIPED_HEAD);
-                case CHEST:
-                    return hasOverriddenPart(SkinPartTypes.BIPED_CHEST) || hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM) || hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_ARM);
-                case FEET:
-                    return hasOverriddenPart(SkinPartTypes.BIPED_LEFT_FOOT) || hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_FOOT);
-                case LEGS:
-                    return hasOverriddenPart(SkinPartTypes.BIPED_LEFT_LEG) || hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_LEG);
-                case OFFHAND:
-                case MAINHAND:
-                    break;
-            }
-            return false;
-        }
+//        public boolean hasOverriddenEquipment(EquipmentSlotType slotType) {
+//            switch (slotType) {
+//                case HEAD:
+//                    return hasOverriddenPart(SkinPartTypes.BIPED_HEAD);
+//                case CHEST:
+//                    return hasOverriddenPart(SkinPartTypes.BIPED_CHEST) || hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM) || hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_ARM);
+//                case FEET:
+//                    return hasOverriddenPart(SkinPartTypes.BIPED_LEFT_FOOT) || hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_FOOT);
+//                case LEGS:
+//                    return hasOverriddenPart(SkinPartTypes.BIPED_LEFT_LEG) || hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_LEG);
+//                case OFFHAND:
+//                case MAINHAND:
+//                    break;
+//            }
+//            return false;
+//        }
 
         private boolean updateEquipmentSlots(Entity entity) {
-            if (!(entity instanceof LivingEntity)) {
-                return false;
-            }
-            LivingEntity livingEntity = (LivingEntity) entity;
-            boolean isChanges = false;
-            for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
-                int index = slotType.getFilterFlag();
-                ItemStack itemStack = livingEntity.getItemBySlot(slotType);
-                if (!lastEquipmentSlots.get(index).equals(itemStack)) {
+            int index = 0, changes = 0;
+            for (ItemStack itemStack : entity.getAllSlots()) {
+                if (lastEquipmentSlots.get(index).equals(itemStack)) {
                     lastEquipmentSlots.set(index, itemStack);
-                    isChanges = true;
+                    changes += 1;
                 }
+                index += 1;
             }
-            return isChanges;
+            return changes != 0;
         }
 
         private void updateDye(ISkinPaintType paintType, ItemStack itemStack) {
@@ -310,7 +289,7 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
             if (descriptor.isEmpty()) {
                 return;
             }
-            BakedSkin skin = SkinCore.bakery.loadSkin(descriptor);
+            BakedSkin skin = AWCore.bakery.loadSkin(descriptor);
             if (skin == null) {
                 missingSkins.add(descriptor);
                 return;
@@ -337,15 +316,15 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         }
 
         private void loadDyeSlots(Entity entity, BiConsumer<ISkinPaintType, ItemStack> consumer) {
-            ISkinPaintType[] dyeSlots = SkinSlotType.getDyeSlots();
+            ISkinPaintType[] dyeSlots = SkinWardrobeSlotType.getDyeSlots();
             for (int i = 0; i < dyeSlots.length; ++i) {
-                ItemStack itemStack = inventory.getItem(SkinSlotType.DYE.getIndex() + i);
+                ItemStack itemStack = inventory.getItem(SkinWardrobeSlotType.DYE.getIndex() + i);
                 consumer.accept(dyeSlots[i], itemStack);
             }
         }
 
         private void loadArmorSlots(Entity entity, BiConsumer<ItemStack, Boolean> consumer) {
-            int size = SkinSlotType.DYE.getIndex();
+            int size = SkinWardrobeSlotType.DYE.getIndex();
             entity.getArmorSlots().forEach(itemStack -> consumer.accept(itemStack, true));
             for (int i = 0; i < size; ++i) {
                 consumer.accept(inventory.getItem(i), true);
@@ -358,7 +337,7 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
 
         private void didLoad() {
             if (!lastDyeColors.equals(dyeColors)) {
-                palette = new Palette();
+                palette = new SkinPalette();
                 lastDyeColors.clear();
                 dyeColors.forEach((paintType, paintColor) -> {
                     lastDyeColors.put(paintType, paintColor);
@@ -368,12 +347,12 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
             isLoaded = true;
             if (missingSkins.isEmpty()) {
                 if (isListening) {
-                    SkinCore.bakery.removeListener(this);
+                    AWCore.bakery.removeListener(this);
                     isListening = false;
                 }
             } else {
                 if (!isListening) {
-                    SkinCore.bakery.addListener(this);
+                    AWCore.bakery.addListener(this);
                     isListening = true;
                 }
             }

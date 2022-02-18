@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.utils;
 
 import moe.plushie.armourers_workshop.core.api.common.IExtraColours;
-import moe.plushie.armourers_workshop.core.skin.painting.PaintingHelper;
 
 import java.util.Arrays;
 
@@ -40,7 +39,7 @@ public class ExtraColours implements IExtraColours {
 
     @Override
     public byte[] getColourBytes(ExtraColourType type) {
-        return PaintingHelper.intToBytes(extraColoursArray[type.ordinal()]);
+        return PaintingUtils.intToBytes(extraColoursArray[type.ordinal()]);
     }
 
     @Override
@@ -50,7 +49,7 @@ public class ExtraColours implements IExtraColours {
 
     @Override
     public void setColourBytes(ExtraColourType type, byte[] rgbt) {
-        extraColoursArray[type.ordinal()] = PaintingHelper.bytesToInt(rgbt);
+        extraColoursArray[type.ordinal()] = PaintingUtils.bytesToInt(rgbt);
     }
 
     @Override
