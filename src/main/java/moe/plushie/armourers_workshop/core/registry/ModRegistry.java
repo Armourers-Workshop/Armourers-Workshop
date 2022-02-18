@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.registry;
 
-import moe.plushie.armourers_workshop.core.utils.SkinLog;
+import moe.plushie.armourers_workshop.core.utils.AWLog;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.LinkedHashMap;
@@ -17,19 +17,19 @@ public class ModRegistry<TYPE extends ModRegistry.IRegistryItem> {
     
     public boolean register(TYPE value) {
         if (value == null) {
-            SkinLog.warn("[" + name + "] A mod tried to register a null value.");
+            AWLog.warn("[" + name + "] A mod tried to register a null value.");
             return false;
         }
         if (value.getRegistryName() == null || value.getRegistryName().toString().trim().isEmpty()) {
-            SkinLog.warn("[" + name + "] A mod tried to register with an invalid registry key.");
+            AWLog.warn("[" + name + "] A mod tried to register with an invalid registry key.");
             return false;
         }
         if (registryMap.containsKey(value.getRegistryName())) {
-            SkinLog.warn("[" + name + "] A mod tried to register with a key that is in use.");
+            AWLog.warn("[" + name + "] A mod tried to register with a key that is in use.");
             return false;
         }
 
-        SkinLog.info(String.format("[" + name + "] Registering: %s as %s.", value.getName(), value.getRegistryName()));
+        AWLog.info(String.format("[" + name + "] Registering: %s as %s.", value.getName(), value.getRegistryName()));
         registryMap.put(value.getRegistryName(), value);
         return true;
     }

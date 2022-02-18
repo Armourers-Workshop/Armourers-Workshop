@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.common;
 
-import moe.plushie.armourers_workshop.core.config.SkinConfig;
+import moe.plushie.armourers_workshop.core.AWConfig;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class ArmourersConfig extends SkinConfig {
+public class ArmourersConfig extends AWConfig {
 
 
     public static boolean enableEntityInInventoryClip = true;

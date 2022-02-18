@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.api;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPart;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3i;
 
 /**
@@ -18,7 +19,7 @@ public interface ISkinPartType {
      *
      * @return Registry name
      */
-    String getRegistryName();
+    ResourceLocation getRegistryName();
 
 
     /**

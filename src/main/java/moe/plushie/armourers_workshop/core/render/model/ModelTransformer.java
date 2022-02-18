@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.render.model;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.action.ICanHeld;
-import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;

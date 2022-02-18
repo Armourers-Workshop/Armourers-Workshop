@@ -1,8 +1,6 @@
 package moe.plushie.armourers_workshop.core.api;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -19,7 +17,7 @@ public interface ISkinType {
      *
      * @return registryName
      */
-    String getRegistryName();
+    ResourceLocation getRegistryName();
 
 
     List<? extends ISkinPartType> getParts();

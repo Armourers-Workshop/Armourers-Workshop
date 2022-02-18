@@ -21,7 +21,7 @@ public final class ContainerOpener {
     public static <I> boolean openContainer(ContainerType<?> type, PlayerEntity player, I host) {
         Opener<I> opener = (Opener<I>) registry.get(type);
         if (opener == null) {
-            SkinLog.warn("Trying to open container for unknown container type {}", type);
+            AWLog.warn("Trying to open container for unknown container type {}", type);
             return false;
         }
         return opener.open(player, host);

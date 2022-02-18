@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.utils;
 
+import moe.plushie.armourers_workshop.core.AWCore;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -57,7 +58,7 @@ public final class ContainerTypeBuilder<C extends Container, I> {
 
     public ContainerType<C> build(String id) {
         ContainerType<C> containerType = IForgeContainerType.create(this::fromNetwork);
-        containerType.setRegistryName(SkinCore.getModId(), id);
+        containerType.setRegistryName(AWCore.getModId(), id);
         ContainerOpener.addOpener(containerType, this::open);
         return containerType;
     }
@@ -69,7 +70,7 @@ public final class ContainerTypeBuilder<C extends Container, I> {
      */
     private C fromNetwork(int containerId, PlayerInventory inventory, PacketBuffer buffer) {
         if (deserializer != null) {
-            return factory.create(containerId, inventory, deserializer.deserialize(buffer));
+            return factory.create(containerId, inventory, deserializer.deserialize(inventory.player, buffer));
         }
         return null;
     }
@@ -107,7 +108,7 @@ public final class ContainerTypeBuilder<C extends Container, I> {
 
     @FunctionalInterface
     public interface DataDeserializer<I> {
-        I deserialize(PacketBuffer buffer);
+        I deserialize(PlayerEntity player, PacketBuffer buffer);
     }
 
 }

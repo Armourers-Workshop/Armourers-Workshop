@@ -1,13 +1,9 @@
 package moe.plushie.armourers_workshop.core.wardrobe;
 
+import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.utils.ContainerTypeBuilder;
-import moe.plushie.armourers_workshop.core.utils.SkinCore;
-import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -20,7 +16,6 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class SkinWardrobeContainer extends Container {
@@ -31,9 +26,11 @@ public class SkinWardrobeContainer extends Container {
             .withDataCoder(SkinWardrobeContainer::toPacket, SkinWardrobeContainer::fromPacket)
             .build("wardrobe");
 
+    private final ResourceLocation itemsAtlas = AWCore.resource("textures/atlas/items.png");
     private final SkinWardrobe wardrobe;
     private final ArrayList<Slot> customSlots = new ArrayList<>();
-    private Group group = null;
+
+    private SkinWardrobeGroup group = null;
 
     public SkinWardrobeContainer(int containerId, PlayerInventory inventory, SkinWardrobe wardrobe) {
         super(TYPE, containerId);
@@ -41,32 +38,29 @@ public class SkinWardrobeContainer extends Container {
 
         addPlayerSlots(inventory);
 
-        addSkinSlots(SkinSlotType.HEAD, Group.SKINS, 0, 0);
-        addSkinSlots(SkinSlotType.CHEST, Group.SKINS, 0, 1);
-        addSkinSlots(SkinSlotType.LEGS, Group.SKINS, 0, 2);
-        addSkinSlots(SkinSlotType.FEET, Group.SKINS, 0, 3);
-        addSkinSlots(SkinSlotType.WINGS, Group.SKINS, 0, 4);
+        addSkinSlots(SkinWardrobeSlotType.HEAD, SkinWardrobeGroup.SKINS, 0, 0);
+        addSkinSlots(SkinWardrobeSlotType.CHEST, SkinWardrobeGroup.SKINS, 0, 1);
+        addSkinSlots(SkinWardrobeSlotType.LEGS, SkinWardrobeGroup.SKINS, 0, 2);
+        addSkinSlots(SkinWardrobeSlotType.FEET, SkinWardrobeGroup.SKINS, 0, 3);
+        addSkinSlots(SkinWardrobeSlotType.WINGS, SkinWardrobeGroup.SKINS, 0, 4);
 
-        addSkinSlots(SkinSlotType.SWORD, Group.SKINS, 0, 5);
-        addSkinSlots(SkinSlotType.SHIELD, Group.SKINS, 1, 5);
-        addSkinSlots(SkinSlotType.BOW, Group.SKINS, 2, 5);
+        addSkinSlots(SkinWardrobeSlotType.SWORD, SkinWardrobeGroup.SKINS, 0, 5);
+        addSkinSlots(SkinWardrobeSlotType.SHIELD, SkinWardrobeGroup.SKINS, 1, 5);
+        addSkinSlots(SkinWardrobeSlotType.BOW, SkinWardrobeGroup.SKINS, 2, 5);
 
-        addSkinSlots(SkinSlotType.PICKAXE, Group.SKINS, 4, 5);
-        addSkinSlots(SkinSlotType.AXE, Group.SKINS, 5, 5);
-        addSkinSlots(SkinSlotType.SHOVEL, Group.SKINS, 6, 5);
-        addSkinSlots(SkinSlotType.HOE, Group.SKINS, 7, 5);
+        addSkinSlots(SkinWardrobeSlotType.PICKAXE, SkinWardrobeGroup.SKINS, 4, 5);
+        addSkinSlots(SkinWardrobeSlotType.AXE, SkinWardrobeGroup.SKINS, 5, 5);
+        addSkinSlots(SkinWardrobeSlotType.SHOVEL, SkinWardrobeGroup.SKINS, 6, 5);
+        addSkinSlots(SkinWardrobeSlotType.HOE, SkinWardrobeGroup.SKINS, 7, 5);
 
-        addSkinSlots(SkinSlotType.OUTFIT, Group.OUTFITS, 0, 0);
-        addSkinSlots(SkinSlotType.DYE, Group.DYES, 0, 0);
+        addSkinSlots(SkinWardrobeSlotType.OUTFIT, SkinWardrobeGroup.OUTFITS, 0, 0);
+        addSkinSlots(SkinWardrobeSlotType.DYE, SkinWardrobeGroup.DYES, 0, 0);
     }
 
     @Nullable
-    private static SkinWardrobe fromPacket(PacketBuffer buffer) {
-        ClientWorld level = Minecraft.getInstance().level;
-        if (level != null) {
-            return SkinWardrobe.of(level.getEntity(buffer.readInt()));
-        }
-        return null;
+    private static SkinWardrobe fromPacket(PlayerEntity player, PacketBuffer buffer) {
+        int entityId = buffer.readInt();
+        return SkinWardrobe.of(player.level.getEntity(entityId));
     }
 
     private static void toPacket(SkinWardrobe wardrobe, PacketBuffer buffer) {
@@ -89,7 +83,7 @@ public class SkinWardrobeContainer extends Container {
         }
     }
 
-    protected void addSkinSlots(SkinSlotType slotType, Group group, int column, int row) {
+    protected void addSkinSlots(SkinWardrobeSlotType slotType, SkinWardrobeGroup group, int column, int row) {
         int posX = 83;
         int posY = 27;
         int index = slotType.getIndex();
@@ -99,7 +93,7 @@ public class SkinWardrobeContainer extends Container {
             int x = posX + (column + i) * 19;
             int y = posY + row * 19;
             GroupSlot slot = new GroupSlot(slotType, inventory, group, index + i, x, y);
-            slot.setBackground(SkinCore.TEX_ITEMS, slotType.getNoItemIcon());
+            slot.setBackground(itemsAtlas, slotType.getNoItemIcon());
             addSlot(slot);
             customSlots.add(slot);
         }
@@ -128,7 +122,7 @@ public class SkinWardrobeContainer extends Container {
             slot.setChanged();
             return itemStack.copy();
         }
-        SkinSlotType slotType = SkinSlotType.of(itemStack);
+        SkinWardrobeSlotType slotType = SkinWardrobeSlotType.of(itemStack);
         if (slotType != null) {
             int startIndex = slotType.getIndex() + 36;
             if (!moveItemStackTo(itemStack, startIndex, startIndex + wardrobe.getUnlockedSize(slotType), false)) {
@@ -139,15 +133,15 @@ public class SkinWardrobeContainer extends Container {
         return ItemStack.EMPTY;
     }
 
-    public boolean isNeedsPlayerInventory() {
+    public boolean shouldRenderPlayerInventory() {
         return group != null && group.shouldRenderPlayerInventory();
     }
 
-    public Group getGroup() {
+    public SkinWardrobeGroup getGroup() {
         return this.group;
     }
 
-    public void setGroup(Group group) {
+    public void setGroup(SkinWardrobeGroup group) {
         this.group = group;
     }
 
@@ -155,8 +149,8 @@ public class SkinWardrobeContainer extends Container {
         return wardrobe;
     }
 
-    public LivingEntity getEntity() {
-        return (LivingEntity) wardrobe.getEntity();
+    public Entity getEntity() {
+        return wardrobe.getEntity();
     }
 
     public final class PlayerSlot extends Slot {
@@ -166,16 +160,16 @@ public class SkinWardrobeContainer extends Container {
 
         @Override
         public boolean isActive() {
-            return isNeedsPlayerInventory();
+            return shouldRenderPlayerInventory();
         }
     }
 
     public final class GroupSlot extends Slot {
 
-        private final Group group;
-        private final SkinSlotType slotType;
+        private final SkinWardrobeGroup group;
+        private final SkinWardrobeSlotType slotType;
 
-        public GroupSlot(SkinSlotType slotType, IInventory inventory, Group group, int index, int x, int y) {
+        public GroupSlot(SkinWardrobeSlotType slotType, IInventory inventory, SkinWardrobeGroup group, int index, int x, int y) {
             super(inventory, index, x, y);
             this.group = group;
             this.slotType = slotType;
@@ -183,7 +177,7 @@ public class SkinWardrobeContainer extends Container {
 
         @Override
         public boolean mayPlace(ItemStack itemStack) {
-            return slotType.equals(SkinSlotType.of(itemStack)) && super.mayPlace(itemStack);
+            return slotType.equals(SkinWardrobeSlotType.of(itemStack)) && super.mayPlace(itemStack);
         }
 
         @Override
@@ -192,14 +186,4 @@ public class SkinWardrobeContainer extends Container {
         }
     }
 
-    public enum Group {
-        SKINS(true), OUTFITS(true), DYES(true), COLORS(false);
-        final boolean needsPlayerInteract;
-        Group(boolean needsPlayerInteract) {
-            this.needsPlayerInteract = needsPlayerInteract;
-        }
-        public boolean shouldRenderPlayerInventory() {
-            return needsPlayerInteract;
-        }
-    }
 }

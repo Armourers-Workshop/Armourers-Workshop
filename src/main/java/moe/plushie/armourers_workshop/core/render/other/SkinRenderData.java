@@ -2,7 +2,7 @@
 //
 //import moe.plushie.armourers_workshop.core.api.common.IExtraColours;
 //import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
-//import moe.plushie.armourers_workshop.core.config.SkinConfig;
+//import moe.plushie.armourers_workshop.core.misc.SkinConfig;
 //import moe.plushie.armourers_workshop.core.skin.data.SkinDye;
 //import moe.plushie.armourers_workshop.core.utils.ExtraColours;
 //import net.minecraft.util.ResourceLocation;

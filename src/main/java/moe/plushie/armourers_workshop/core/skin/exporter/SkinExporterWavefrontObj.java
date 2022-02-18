@@ -4,7 +4,7 @@ package moe.plushie.armourers_workshop.core.skin.exporter;//package moe.plushie.
 //import moe.plushie.armourers_workshop.core.api.common.skin.ISkinExporter;
 //import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
 //import moe.plushie.armourers_workshop.core.skin.PaintTypeRegistry;
-//import moe.plushie.armourers_workshop.core.skin.painting.PaintingHelper;
+//import moe.plushie.armourers_workshop.core.utils.PaintingHelper;
 //import moe.plushie.armourers_workshop.proxies.ClientProxy;
 //import moe.plushie.armourers_workshop.core.skin.data.Skin;
 //import moe.plushie.armourers_workshop.core.skin.data.SkinPart;

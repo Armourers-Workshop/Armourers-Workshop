@@ -1,9 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.painting;
 
-import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.skin.SkinDyeType;
-import moe.plushie.armourers_workshop.core.utils.SkinLog;
-import net.minecraft.util.ResourceLocation;
+import moe.plushie.armourers_workshop.core.skin.data.SkinDyeType;
+import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.core.utils.SkinResourceLocation;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,7 +12,7 @@ import java.util.Map;
 public final class SkinPaintTypes {
 
     private static final SkinPaintType[] ALL_PAINT_MAPPING = new SkinPaintType[256];
-    private static final Map<ResourceLocation, SkinPaintType> ALL_PAINT_TYPES = new HashMap<>();
+    private static final Map<String, SkinPaintType> ALL_PAINT_TYPES = new HashMap<>();
 
     public static final SkinPaintType NORMAL = register("normal", 255, 0);
 
@@ -50,16 +49,12 @@ public final class SkinPaintTypes {
 
     public static final SkinPaintType NONE = register("none", 0, 9);
 
-    public static SkinPaintType byName(String name) {
-        SkinPaintType paintType = ALL_PAINT_TYPES.get(new ResourceLocation(name));
-        if (paintType != null) {
-            return paintType;
-        }
-        return NONE;
+    public static SkinPaintType byName(String registryName) {
+        return ALL_PAINT_TYPES.getOrDefault(registryName, NONE);
     }
 
     public static SkinPaintType byId(int index) {
-        SkinPaintType paintType = ALL_PAINT_MAPPING[index & 0xFF];
+        SkinPaintType paintType = ALL_PAINT_MAPPING[index & 0xff];
         if (paintType != null) {
             return paintType;
         }
@@ -68,84 +63,18 @@ public final class SkinPaintTypes {
 
     private static SkinPaintType register(String name, int id, int index) {
         SkinPaintType paintType = new SkinPaintType(index, id);
-        paintType.setRegistryName(new ResourceLocation("armourers", name));
-        if (ALL_PAINT_TYPES.containsKey(paintType.getRegistryName())) {
-            SkinLog.warn("A mod tried to register a paint type with an id that is in use.");
+        paintType.setRegistryName(new SkinResourceLocation("armourers", name));
+        if (ALL_PAINT_TYPES.containsKey(paintType.getRegistryName().toString())) {
+            AWLog.warn("A mod tried to register a paint type with an id that is in use.");
             return paintType;
         }
-        ALL_PAINT_TYPES.put(paintType.getRegistryName(), paintType);
+        ALL_PAINT_TYPES.put(paintType.getRegistryName().toString(), paintType);
         ALL_PAINT_MAPPING[paintType.getId() & 0xFF] = paintType;
-        SkinLog.debug("Registering Skin Paint '{}'", paintType.getRegistryName());
+        AWLog.debug("Registering Skin Paint '{}'", paintType.getRegistryName());
         return paintType;
     }
 
     public static Collection<SkinPaintType> values() {
         return ALL_PAINT_TYPES.values();
     }
-
-
-//    public SkinSkinPaintTypes() {
-//        for (int i = 0; i < paintTypes.length; i++) {
-//            paintTypes[i] = PAINT_TYPE_NORMAL;
-//        }
-//        for (ISkinSkinPaintType paintType : SkinPaintType.PAINT_TYPES) {
-//            registerSkinPaintType(paintType);
-//        }
-//    }
-//
-//    @Override
-//    public boolean registerSkinPaintType(ISkinSkinPaintType paintType) {
-//        if (paintType == null) {
-//            SkinLog.warn("A mod tried to register a null paint type.");
-//            return false;
-//        }
-//
-//        if (paintTypes[paintType.getId()] != PAINT_TYPE_NORMAL) {
-//            SkinLog.warn("A mod tried to register a paint type with an id that is in use.");
-//            return false;
-//        }
-//
-//        paintTypes[paintType.getId()] = paintType;
-//        registeredTypes.add(paintType);
-//        if (paintType.hasAverageColourChannel()) {
-//            paintType.setColourChannelIndex(extraChannels);
-//            extraChannels++;
-//        }
-//        return true;
-//    }
-//
-//    public static int getTotalExtraChannels() {
-//        return ALL_EXTRA_CHANNELS;
-//    }
-//
-//    @Override
-//    public ISkinSkinPaintType getSkinPaintTypeFromColour(int trgb) {
-//        int type = 0xFF & (trgb >> 24);
-//        return getSkinPaintTypeFromIndex(type);
-//    }
-//
-//    @Override
-//    public int setSkinPaintTypeOnColour(ISkinSkinPaintType paintType, int colour) {
-//        return BitwiseUtils.setUByteToInt(colour, 0, paintType.getId());
-//    }
-////
-//    @Override
-//    public ISkinSkinPaintType getSkinPaintTypeFormName(String name) {
-//        for (ISkinSkinPaintType paintType : paintTypes) {
-//            if (paintType.getName().equals(name)) {
-//                return paintType;
-//            }
-//        }
-//        return PAINT_TYPE_NORMAL;
-//    }
-//
-//    @Override
-//    public ArrayList<ISkinSkinPaintType> getRegisteredTypes() {
-//        return registeredTypes;
-//    }
-//
-//    @Override
-//    public ISkinSkinPaintType getSkinPaintTypeFromIndex(int index) {
-//        return paintTypes[index];
-//    }
 }

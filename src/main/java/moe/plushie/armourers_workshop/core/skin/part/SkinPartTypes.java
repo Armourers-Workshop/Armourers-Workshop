@@ -20,7 +20,8 @@ import moe.plushie.armourers_workshop.core.skin.part.legs.SkirtPartType;
 import moe.plushie.armourers_workshop.core.skin.part.unknown.UnknownPartType;
 import moe.plushie.armourers_workshop.core.skin.part.wings.LeftWingPartType;
 import moe.plushie.armourers_workshop.core.skin.part.wings.RightWingPartType;
-import moe.plushie.armourers_workshop.core.utils.SkinLog;
+import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.core.utils.SkinResourceLocation;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -97,16 +98,16 @@ public final class SkinPartTypes {
     }
 
     private static ISkinPartType register(String name, SkinPartType partType) {
-        partType.setRegistryName("armourers:" + name);
+        partType.setRegistryName(new SkinResourceLocation("armourers", name));
         if (partType instanceof UnknownPartType) {
             return partType;
         }
-        if (ALL_PART_TYPES.containsKey(partType.getRegistryName())) {
-            SkinLog.warn("A mod tried to register a skin type with a registry name that is in use.");
+        if (ALL_PART_TYPES.containsKey(partType.getRegistryName().toString())) {
+            AWLog.warn("A mod tried to register a skin type with a registry name that is in use.");
             return partType;
         }
-        ALL_PART_TYPES.put(partType.getRegistryName(), partType);
-        SkinLog.debug("Registering Skin Part '{}'", partType.getRegistryName());
+        ALL_PART_TYPES.put(partType.getRegistryName().toString(), partType);
+        AWLog.debug("Registering Skin Part '{}'", partType.getRegistryName());
         return partType;
     }
 

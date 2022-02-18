@@ -10,7 +10,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 
-@SuppressWarnings("all")
 @OnlyIn(Dist.CLIENT)
 public class SkinDummyEntity extends LivingEntity {
 

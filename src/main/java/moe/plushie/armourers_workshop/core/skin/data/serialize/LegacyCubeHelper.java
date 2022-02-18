@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.skin.data.SkinCubeData;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 
 import java.io.DataInputStream;
