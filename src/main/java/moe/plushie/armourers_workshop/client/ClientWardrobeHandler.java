@@ -2,45 +2,76 @@ package moe.plushie.armourers_workshop.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.common.ArmourersConfig;
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
 import moe.plushie.armourers_workshop.core.render.model.HeldItemModel;
-import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.render.SkinModelRenderer;
+import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Collections;
+import java.util.function.Function;
 
 public class ClientWardrobeHandler {
 
+    public final static float SCALE = 1 / 16f;
     public final static HeldItemModel HELD_ITEM_MODEL = new HeldItemModel();
-
 
     public static void init() {
         ClientModelHandler.init();
     }
 
+    public static void onRenderArrow(AbstractArrowEntity entity, Model model, float p_225623_2_, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer renderType, CallbackInfo callback) {
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        if (wardrobe == null) {
+            return;
+        }
+        matrixStack.pushPose();
+
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, entity.yRotO, entity.yRot) - 90.0F));
+        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, entity.xRotO, entity.xRot)));
+
+        float f9 = (float) entity.shakeTime - partialTicks;
+        if (f9 > 0.0F) {
+            float f10 = -MathHelper.sin(f9 * 3.0F) * f9;
+            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(f10));
+        }
+
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-90));
+        matrixStack.scale(-SCALE, -SCALE, SCALE);
+        matrixStack.translate(0, 0, -1);
+
+        int count = render(wardrobe, entity, model, light, matrixStack, null, SkinWardrobe.State::getItemSkins);
+        if (count != 0) {
+            callback.cancel();
+        }
+
+        matrixStack.popPose();
+    }
 
     public static void onRenderArmor(LivingEntity entity, Model model, int light, MatrixStack matrixStack, IRenderTypeBuffer renderType) {
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             return;
         }
-        int t = (int) System.currentTimeMillis();
-        float f = 1f / 16f;
         matrixStack.pushPose();
-        matrixStack.scale(f, f, f);
-        SkinWardrobe.State snapshot = wardrobe.snapshot();
-        SkinRenderBuffer buffer = SkinRenderBuffer.getInstance();
-        for (BakedSkin bakedSkin : snapshot.getArmorSkins()) {
-            SkinModelRenderer.renderSkin(bakedSkin, snapshot.getPalette(), entity, model, null, light, t, matrixStack, buffer);
-        }
-        buffer.endBatch();
+        matrixStack.scale(SCALE, SCALE, SCALE);
+
+        render(wardrobe, entity, model, light, matrixStack, null, SkinWardrobe.State::getArmorSkins);
+
         matrixStack.popPose();
     }
 
@@ -49,32 +80,15 @@ public class ClientWardrobeHandler {
         if (wardrobe == null) {
             return;
         }
-        int t = (int) System.currentTimeMillis();
-        float f = 1f / 16f;
         matrixStack.pushPose();
-        matrixStack.scale(f, f, f);
-        matrixStack.scale(-1, -1, 1);
+        matrixStack.scale(-SCALE, -SCALE, SCALE);
 
-        SkinWardrobe.State snapshot = wardrobe.snapshot();
-        SkinRenderBuffer buffer = SkinRenderBuffer.getInstance();
-        for (BakedSkin bakedSkin : snapshot.getItemSkins(itemStack)) {
-            SkinModelRenderer.renderSkin(bakedSkin, snapshot.getPalette(), entity, HELD_ITEM_MODEL, transformType, light, t, matrixStack, buffer);
+        int count = renderItemSkins(wardrobe, entity, HELD_ITEM_MODEL, light, matrixStack, transformType, itemStack);
+        if (count != 0) {
             callback.cancel();
         }
-        buffer.endBatch();
-
-//        this.itemRenderer.renderStatic(p_228397_1_, p_228397_2_, p_228397_3_, p_228397_4_, p_228397_5_, p_228397_6_, p_228397_1_.level, p_228397_7_, OverlayTexture.NO_OVERLAY);
-//        public void renderItem(LivingEntity p_228397_1_, ItemStack p_228397_2_, ItemCameraTransforms.TransformType p_228397_3_, boolean p_228397_4_, MatrixStack p_228397_5_, IRenderTypeBuffer p_228397_6_, int p_228397_7_) {
 
         matrixStack.popPose();
-//        if (transformType == ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND) {
-//            matrixStack.pushPose();
-//            ModelTransformer.apply(matrixStack, xq);
-//            Minecraft.getInstance().getItemRenderer().renderStatic(entity, itemStack, transformType, true, matrixStack, renderType, entity.level, 0, OverlayTexture.NO_OVERLAY);
-//            matrixStack.popPose();
-//        }
-
-        // this.minecraft.getEntityRenderDispatcher().getPackedLightCoords(this.minecraft.player, p_228381_3_)
     }
 
     public static void onRenderEntityInInventoryPre(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY) {
@@ -119,5 +133,38 @@ public class ClientWardrobeHandler {
         if (wardrobe != null && !wardrobe.shouldRenderEquipment(slotType)) {
             callback.cancel();
         }
+    }
+
+    private static int renderItemSkins(SkinWardrobe wardrobe, Entity entity, Model model, int light, MatrixStack matrixStack, ItemCameraTransforms.TransformType transformType, ItemStack itemStack) {
+        return render(wardrobe, entity, model, light, matrixStack, transformType, snapshot -> {
+            if (entity instanceof MannequinEntity) {
+                SkinDescriptor target = SkinDescriptor.of(itemStack);
+                for (BakedSkin bakedSkin : snapshot.getItemSkins()) {
+                    if (bakedSkin.accept(target)) {
+                        return Collections.singletonList(bakedSkin);
+                    }
+                }
+                return Collections.emptyList();
+            }
+            for (BakedSkin bakedSkin : snapshot.getItemSkins()) {
+                if (bakedSkin.accept(itemStack)) {
+                    return Collections.singletonList(bakedSkin);
+                }
+            }
+            return Collections.emptyList();
+        });
+    }
+
+    private static int render(SkinWardrobe wardrobe, Entity entity, Model model, int light, MatrixStack matrixStack, ItemCameraTransforms.TransformType transformType, Function<SkinWardrobe.State, Iterable<BakedSkin>> provider) {
+        int t = (int) System.currentTimeMillis();
+        int r = 0;
+        SkinWardrobe.State snapshot = wardrobe.snapshot();
+        SkinRenderBuffer buffer = SkinRenderBuffer.getInstance();
+        for (BakedSkin bakedSkin : provider.apply(snapshot)) {
+            SkinModelRenderer.renderSkin(bakedSkin, snapshot.getPalette(), entity, model, transformType, light, t, matrixStack, buffer);
+            r += 1;
+        }
+        buffer.endBatch();
+        return r;
     }
 }

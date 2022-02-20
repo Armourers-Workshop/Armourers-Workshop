@@ -180,7 +180,7 @@ public final class SkinBakery {
 //            }
 //            bakeTimes.set(index, (int) totalTime);
 
-        BakedSkin bakedSkin = new BakedSkin(skin, new SkinPalette(), colorInfo, bakedParts);
+        BakedSkin bakedSkin = new BakedSkin(descriptor, skin, new SkinPalette(), colorInfo, bakedParts);
         complete.accept(Optional.of(bakedSkin));
 
         listeners.forEach(listener -> listener.didBake(descriptor, bakedSkin));

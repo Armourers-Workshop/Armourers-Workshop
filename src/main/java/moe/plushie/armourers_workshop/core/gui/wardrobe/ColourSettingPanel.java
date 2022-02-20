@@ -5,13 +5,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.gui.widget.IconButton;
-import moe.plushie.armourers_workshop.core.item.BottleItem;
+import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.render.bake.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.*;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeSlotType;
+import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.item.ItemStack;
@@ -95,7 +95,7 @@ public class ColourSettingPanel extends BaseSettingPanel {
             this.y = y;
             this.enableAutoPick = enableAutoPick;
             this.paintType = paintType;
-            this.slot = SkinWardrobeSlotType.DYE.getIndex() + SkinWardrobeSlotType.getSlotIndex(paintType);
+            this.slot = SkinSlotType.DYE.getIndex() + SkinSlotType.getSlotIndex(paintType);
             this.title = TranslateUtils.translate("inventory.armourers_workshop.wardrobe.tab.colour_settings.label." + name);
         }
 
@@ -203,7 +203,7 @@ public class ColourSettingPanel extends BaseSettingPanel {
         }
 
         private PaintColor getColor() {
-            return BottleItem.getPaintColor(wardrobe.getInventory().getItem(slot));
+            return ColoredItem.getColor(wardrobe.getInventory().getItem(slot));
         }
 
         private void setColor(PaintColor newValue) {
@@ -219,7 +219,7 @@ public class ColourSettingPanel extends BaseSettingPanel {
             ItemStack itemStack = ItemStack.EMPTY;
             if (newValue != null) {
                 itemStack = new ItemStack(AWItems.BOTTLE.get());
-                BottleItem.setColor(itemStack, newValue);
+                ColoredItem.setColor(itemStack, newValue);
             }
             wardrobe.getInventory().setItem(slot, itemStack);
             wardrobe.sendToServer();

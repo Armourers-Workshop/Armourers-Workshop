@@ -1,30 +1,33 @@
 package moe.plushie.armourers_workshop.core.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.entity.SkinDummyEntity;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
+import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.data.SkinPalette;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ItemTransformVec3f;
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @OnlyIn(Dist.CLIENT)
 public final class SkinItemRenderer {
 
-    private static final Vector3f OFFSET = new Vector3f(30, 45, 0);
     public static int mp1 = 0;
     private static int lastI = 0;
-    //    public static void renderSkinAsItem(ItemStack stack, boolean showSkinPaint, int targetWidth, int targetHeight) {
-//        if (SkinNBTHelper.stackHasSkinData(stack)) {
-//            SkinDescriptor skinPointer = SkinNBTHelper.getSkinDescriptorFromStack(stack);
-//            renderSkinAsItem(skinPointer, showSkinPaint, false, targetWidth, targetHeight);
-//        }
-//    }
+
     private static ItemCameraTransforms.TransformType lastTransformType = ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND;
     private static SkinDummyEntity entity2;
     private static SkinPalette entityDye = SkinPalette.EMPTY;
@@ -107,5 +110,26 @@ public final class SkinItemRenderer {
         buffer1.endBatch();
 
         matrixStack.popPose();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static class ItemStackRenderer extends ItemStackTileEntityRenderer {
+
+        @Override
+        @SuppressWarnings({"deprecation", "NullableProblems"})
+        public void renderByItem(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int light, int overlay) {
+            IBakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
+            ItemTransformVec3f transform = bakedModel.getTransforms().getTransform(transformType);
+            BakedSkin skin = AWCore.bakery.loadSkin(SkinDescriptor.of(itemStack));
+            if (skin == null) {
+                return;
+            }
+            matrixStack.pushPose();
+            matrixStack.translate(0.5F, 0.5F, 0.5F); // reset to center
+
+            SkinItemRenderer.renderSkin(skin, light, 0, 1, 1, transformType, transform.rotation, matrixStack, renderTypeBuffer);
+
+            matrixStack.popPose();
+        }
     }
 }

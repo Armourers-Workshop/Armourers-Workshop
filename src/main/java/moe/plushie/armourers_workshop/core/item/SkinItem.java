@@ -93,7 +93,7 @@ public class SkinItem extends Item {
 //        }
 
         if (AWConfig.tooltipOpenWardrobe) {
-            String keyName = AWKeyBindings.OPEN_WARDROBE_KEY.getTranslatedKeyMessage().getContents().toUpperCase();
+            ITextComponent keyName = AWKeyBindings.OPEN_WARDROBE_KEY.getTranslatedKeyMessage();
             tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinOpenWardrobe", keyName));
         }
 

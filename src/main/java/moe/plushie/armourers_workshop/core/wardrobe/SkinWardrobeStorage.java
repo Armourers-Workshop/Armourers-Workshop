@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.wardrobe;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.Inventory;
@@ -9,12 +10,15 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.ShortNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -23,8 +27,6 @@ public class SkinWardrobeStorage implements Capability.IStorage<SkinWardrobe> {
 
     private final static Cache<Object, LazyOptional<SkinWardrobe>> CLIENT_CACHES = CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.SECONDS).build();
     private final static Cache<Object, LazyOptional<SkinWardrobe>> SERVER_CACHES = CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.SECONDS).build();
-
-    private final static String TAG_VISIBILITY = "Visibility";
 
     public static Cache<Object, LazyOptional<SkinWardrobe>> getCaches(Entity entity) {
         if (entity.level != null && entity.level.isClientSide) {
@@ -61,16 +63,46 @@ public class SkinWardrobeStorage implements Capability.IStorage<SkinWardrobe> {
         for (EquipmentSlotType slotType : visibility) {
             value |= 1 << slotType.getFilterFlag();
         }
-        nbt.putShort(TAG_VISIBILITY, value);
+        nbt.putShort("Visibility", value);
     }
 
     public static void loadVisibility(HashSet<EquipmentSlotType> visibility, CompoundNBT nbt) {
-        short value = nbt.getShort(TAG_VISIBILITY);
+        short value = nbt.getShort("Visibility");
         visibility.clear();
         for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
             int mask = 1 << slotType.getFilterFlag();
             if ((value & mask) != 0) {
                 visibility.add(slotType);
+            }
+        }
+    }
+
+    public static void saveSkinSlots(HashMap<SkinSlotType, Integer> slots, CompoundNBT nbt) {
+        if (slots.isEmpty()) {
+            return;
+        }
+        ListNBT value = new ListNBT();
+        slots.forEach((slotType, count) -> {
+            int index = slotType.ordinal() & 0xff;
+            int encoded = index << 8 | count & 0xff;
+            value.add(ShortNBT.valueOf((short) encoded));
+        });
+        if (!value.isEmpty()) {
+            nbt.put("Slots", value);
+        }
+    }
+
+    public static void loadSkinSlots(HashMap<SkinSlotType, Integer> slots, CompoundNBT nbt) {
+        ListNBT value = nbt.getList("Slots", 2);
+        if (value.isEmpty()) {
+            return;
+        }
+        SkinSlotType[] slotTypes = SkinSlotType.values();
+        for (int i = 0; i < value.size(); ++i) {
+            short encoded = value.getShort(i);
+            int index =     (encoded >> 8) & 0xff;
+            if (index < slotTypes.length) {
+                slots.put(slotTypes[index], encoded & 0xff);
             }
         }
     }

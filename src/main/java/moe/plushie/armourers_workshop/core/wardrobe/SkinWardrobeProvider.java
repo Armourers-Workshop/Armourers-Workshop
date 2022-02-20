@@ -2,7 +2,9 @@ package moe.plushie.armourers_workshop.core.wardrobe;
 
 import moe.plushie.armourers_workshop.core.AWCore;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,6 +27,15 @@ public class SkinWardrobeProvider implements ICapabilityProvider, INBTSerializab
 
     public SkinWardrobeProvider(Entity entity) {
         this.wardrobe = new SkinWardrobe(entity);
+    }
+
+    @Nullable
+    public static SkinWardrobe by(PlayerEntity player, PacketBuffer buffer) {
+        return SkinWardrobe.of(player.level.getEntity(buffer.readInt()));
+    }
+
+    public static void to(SkinWardrobe wardrobe, PacketBuffer buffer) {
+        buffer.writeInt(wardrobe.getId());
     }
 
     @Nonnull

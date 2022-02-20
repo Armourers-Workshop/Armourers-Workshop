@@ -13,11 +13,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.nio.FloatBuffer;
 
@@ -114,7 +116,22 @@ public final class RenderUtils {
         drawLine(builder, mat, x0, y0, z0, x0, y0, z1, color);
     }
 
-    public static void drawBoundingBox(MatrixStack matrix, float x0, float y0, float z0, float x1, float y1, float z1, Color color, IRenderTypeBuffer buffer) {
+    public static void drawPoint(MatrixStack matrix, Vector3f point, int size, @Nullable IRenderTypeBuffer buffer) {
+        if (buffer == null) {
+            buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+        }
+        Matrix4f mat = matrix.last().pose();
+        IVertexBuilder builder = buffer.getBuffer(RenderType.lines());
+        float x0 = point.x();
+        float y0 = point.y();
+        float z0 = point.z();
+        drawLine(builder, mat, x0 - size, y0, z0, x0 + size, y0, z0, Color.RED); // x
+        drawLine(builder, mat, x0, y0 - size, z0, x0, y0 + size, z0, Color.GREEN); // Y
+        drawLine(builder, mat, x0, y0, z0 - size, x0, y0, z0 + size, Color.BLUE); // Z
+    }
+
+
+        public static void drawBoundingBox(MatrixStack matrix, float x0, float y0, float z0, float x1, float y1, float z1, Color color, IRenderTypeBuffer buffer) {
         IVertexBuilder builder = buffer.getBuffer(RenderType.lines());
         drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, builder);
     }

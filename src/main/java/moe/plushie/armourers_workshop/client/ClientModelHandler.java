@@ -11,6 +11,11 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.vector.Vector3f;
 
+// PlayerEntity => LivingProfile
+// MannequinEntity => LivingProfile
+// ArrowEntity => ArrowProfile
+//
+
 public class ClientModelHandler extends ModelTransformer {
 
     public static void init() {

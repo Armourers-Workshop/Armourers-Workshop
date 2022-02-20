@@ -19,4 +19,12 @@ public class AWTags {
     private static ITag<Item> forge(String name) {
         return ItemTags.createOptional(new ResourceLocation("forge", name));
     }
+
+    public static boolean isToolItem(Item item) {
+        return item.is(PICKAXES) || item.is(AXES) || item.is(SHOVELS) || item.is(HOES);
+    }
+
+    public static boolean isWeaponItem(Item item) {
+        return item.is(SWORDS) || item.is(SHIELDS) || item.is(BOWS);
+    }
 }

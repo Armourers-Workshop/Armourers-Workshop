@@ -19,7 +19,7 @@ public class UpdateWardrobePacket extends CustomPacket {
     }
 
     public UpdateWardrobePacket(SkinWardrobe wardrobe) {
-        this.entityId = wardrobe.getEntity().getId();
+        this.entityId = wardrobe.getId();
         this.wardrobeNBT = wardrobe.serializeNBT();
     }
 
