@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.core;
 
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPart;
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -58,6 +60,7 @@ public class AWConfig {
 
     public static boolean enableModelOverridden = true;
     public static boolean enableWireframeRender;
+    public static boolean enableMagicWhenContributor = true;
 
     // Wardrobe
 //    public static boolean wardrobeAllowOpening = true;
@@ -66,6 +69,8 @@ public class AWConfig {
     public static boolean showWardrobeDisplaySettings = true;
     public static boolean showWardrobeColourSettings = true;
     public static boolean showWardrobeDyeSetting = true;
+    public static boolean showWardrobeContributorSetting = true;
+
     public static int prefersWardrobeSlots = 3;
     public static int prefersWardrobeDropOnDeath = 0;
 
@@ -76,8 +81,9 @@ public class AWConfig {
     public static boolean showSkinRenderBounds;
     public static boolean showSortOrderToolTip;
 
-    public static boolean showDebugFullBounds = false;
-    public static boolean showDebugPartBounds = false;
+    public static boolean showDebugFullFrame = false;
+    public static boolean showDebugPartPosition = false;
+    public static boolean showDebugPartFrame = false;
     public static boolean showDebugTargetBounds = false;
 
     public static boolean showDebugTextureBounds = false;
@@ -96,11 +102,17 @@ public class AWConfig {
         if (entity instanceof PlayerEntity) {
             return true;
         }
+        if (entity instanceof AbstractArrowEntity) {
+            return true;
+        }
+        if (entity instanceof MannequinEntity) {
+            return true;
+        }
         return false;
     }
 
     public static boolean isEnableSkinPart(ISkinPart skinPart) {
-        return disabledSkinParts.contains(skinPart.getType().getRegistryName());
+        return disabledSkinParts.contains(skinPart.getType().getRegistryName().toString());
     }
 
     public static TexturePaintType getTexturePaintType() {

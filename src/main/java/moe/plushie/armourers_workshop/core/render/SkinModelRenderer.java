@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -30,6 +31,8 @@ import java.awt.*;
 public final class SkinModelRenderer {
 
 //    private final static BakedPalette SHARED_DYE = new BakedPalette();
+
+    private final static Vector3f ZERO = new Vector3f();
 
     private final static byte[][][] FACE_VERTEXES = new byte[][][]{
             {{1, 1, 1}, {1, 1, 0}, {0, 1, 0}, {0, 1, 1}, {0, 1, 0}},  // -y
@@ -60,13 +63,19 @@ public final class SkinModelRenderer {
             SkinUtils.apply(matrixStack, entity, part.getPart(), partialTicks);
 
             builder.addPartData(part, palette1, light, partialTicks, matrixStack, shouldRenderPart);
-            if (AWConfig.showDebugPartBounds && shouldRenderPart) {
-                builder.addShapeData(part.getRenderShape().bounds(), ColorUtils.getPaletteColor(index++), matrixStack);
+            if (shouldRenderPart) {
+                if (AWConfig.showDebugPartPosition) {
+                    builder.addShapeData(ZERO, matrixStack);
+                }
+                if (AWConfig.showDebugPartFrame) {
+                    builder.addShapeData(part.getRenderShape().bounds(), ColorUtils.getPaletteColor(index++), matrixStack);
+                }
             }
+
             matrixStack.popPose();
         }
 
-        if (AWConfig.showDebugFullBounds) {
+        if (AWConfig.showDebugFullFrame) {
             builder.addShapeData(bakedSkin.getRenderShape(model, transformType).bounds(), Color.RED, matrixStack);
         }
     }

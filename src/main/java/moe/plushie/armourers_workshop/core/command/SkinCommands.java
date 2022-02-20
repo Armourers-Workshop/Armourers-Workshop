@@ -16,7 +16,7 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.data.SkinPalette;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeSlotType;
+import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
@@ -59,7 +59,7 @@ public class SkinCommands {
     }
 
     static ArgumentBuilder<CommandSource, ?> slotNames() {
-        return Commands.argument("slot_name", new ListArgument(Arrays.stream(SkinWardrobeSlotType.values()).map(SkinWardrobeSlotType::getName).collect(Collectors.toList())));
+        return Commands.argument("slot_name", new ListArgument(Arrays.stream(SkinSlotType.values()).map(SkinSlotType::getName).collect(Collectors.toList())));
     }
 
     static ArgumentBuilder<CommandSource, ?> skins() {
@@ -90,7 +90,7 @@ public class SkinCommands {
             SkinDescriptor descriptor = new SkinDescriptor(identifier, skin.getType(), SkinPalette.EMPTY);
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {
                 SkinWardrobe wardrobe = SkinWardrobe.of(player);
-                SkinWardrobeSlotType slotType = SkinWardrobeSlotType.of(skin.getType());
+                SkinSlotType slotType = SkinSlotType.of(skin.getType());
                 if (slotType == null || wardrobe == null) {
                     continue;
                 }
@@ -116,7 +116,7 @@ public class SkinCommands {
                     continue;
                 }
                 int slot = IntegerArgumentType.getInteger(context, "slot");
-                SkinWardrobeSlotType slotType = SkinWardrobeSlotType.of(ListArgument.getString(context, "slot_name"));
+                SkinSlotType slotType = SkinSlotType.of(ListArgument.getString(context, "slot_name"));
                 if (slotType == null) {
                     continue;
                 }

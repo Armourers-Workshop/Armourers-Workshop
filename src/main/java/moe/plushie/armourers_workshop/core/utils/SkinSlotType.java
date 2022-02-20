@@ -1,20 +1,21 @@
-package moe.plushie.armourers_workshop.core.wardrobe;
+package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.core.item.BottleItem;
-import moe.plushie.armourers_workshop.core.item.SkinItem;
+import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.api.ISkinArmorType;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
+import moe.plushie.armourers_workshop.core.item.BottleItem;
+import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.AWCore;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public enum SkinWardrobeSlotType {
+public enum SkinSlotType {
     HEAD("head", 10, SkinTypes.ARMOR_HEAD),
     CHEST("chest", 10, SkinTypes.ARMOR_CHEST),
     LEGS("legs", 10, SkinTypes.ARMOR_LEGS),
@@ -38,31 +39,15 @@ public enum SkinWardrobeSlotType {
     private final int size;
     private final ISkinType skinType;
 
-    SkinWardrobeSlotType(String name, int size, ISkinType skinType) {
+    SkinSlotType(String name, int size, ISkinType skinType) {
         this.name = name;
         this.index = Helper.COUNTER.getAndAdd(size);
         this.size = size;
         this.skinType = skinType;
     }
 
-    public ResourceLocation getNoItemIcon() {
-        return AWCore.resource("textures/items/slot/" + name + ".png");
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public static SkinWardrobeSlotType of(String name) {
-        for (SkinWardrobeSlotType slotType : values()) {
+    public static SkinSlotType of(String name) {
+        for (SkinSlotType slotType : values()) {
             if (Objects.equals(slotType.name, name)) {
                 return slotType;
             }
@@ -70,8 +55,8 @@ public enum SkinWardrobeSlotType {
         return null;
     }
 
-    public static SkinWardrobeSlotType of(ISkinType skinType) {
-        for (SkinWardrobeSlotType slotType : values()) {
+    public static SkinSlotType of(ISkinType skinType) {
+        for (SkinSlotType slotType : values()) {
             if (Objects.equals(slotType.skinType, skinType)) {
                 return slotType;
             }
@@ -79,7 +64,7 @@ public enum SkinWardrobeSlotType {
         return null;
     }
 
-    public static SkinWardrobeSlotType of(ItemStack itemStack) {
+    public static SkinSlotType of(ItemStack itemStack) {
         if (itemStack.isEmpty()) {
             return null;
         }
@@ -92,7 +77,6 @@ public enum SkinWardrobeSlotType {
         }
         return null;
     }
-
 
     public static int getTotalSize() {
         return Helper.COUNTER.get();
@@ -110,6 +94,26 @@ public enum SkinWardrobeSlotType {
             }
         }
         return i;
+    }
+
+    public boolean isArmor() {
+        return skinType instanceof ISkinArmorType;
+    }
+
+    public ResourceLocation getNoItemIcon() {
+        return AWCore.resource("textures/items/slot/" + name + ".png");
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public String getName() {
+        return name;
     }
 
     private static class Helper {

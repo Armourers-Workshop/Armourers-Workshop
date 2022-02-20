@@ -2,6 +2,9 @@ package moe.plushie.armourers_workshop.core.utils;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
+import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
@@ -154,6 +157,57 @@ public class ColorUtils {
     0x9AA1A1, 0x2E6E89, 0x7E3DB5, 0x2E388D,
     0x4F321F, 0x35461B, 0x963430, 0x191616
     */
+
+    private static int getRainbowRGB() {
+        float f = System.currentTimeMillis() % (255L * 25) / 25F;
+        return Color.HSBtoRGB(f / 255F, 1F, 1F);
+    }
+
+    private static int getPulse1Colour(PaintColor color) {
+        float f = (float)(System.currentTimeMillis() % (255L * 25D)) / 25F;
+        f = f * 2F;
+        if (f > 255) {
+            f =  255F - (f - 255);
+        }
+        f = MathHelper.clamp(f, 0, 255);
+        float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        return Color.HSBtoRGB(hsb[0], hsb[1], f / 255F);
+    }
+
+    private static int getPulse2Colour(PaintColor color) {
+        float f = (float)(System.currentTimeMillis() % (255L * 12.5D)) / 12.5F;
+        f = f * 2F;
+        if (f > 255) {
+            f =  255F - (f - 255);
+        }
+        f = MathHelper.clamp(f, 0, 255);
+        float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        return Color.HSBtoRGB(hsb[0], hsb[1], f / 255F);
+    }
+
+    public static int getDisplayRGB(PaintColor paintColor) {
+        ISkinPaintType paintType = paintColor.getPaintType();;
+        if (paintType == SkinPaintTypes.RAINBOW) {
+            return getRainbowRGB();
+        }
+        if (paintType == SkinPaintTypes.PULSE_1) {
+            return getPulse1Colour(paintColor);
+        }
+        if (paintType == SkinPaintTypes.PULSE_2) {
+            return getPulse2Colour(paintColor);
+        }
+        return paintColor.getRGB();
+//        IPaintType paintType = PaintTypeRegistry.getInstance().getPaintTypeFormByte(rgbt[3]);
+//        if (paintType == PaintTypeRegistry.PAINT_TYPE_RAINBOW) {
+//            return getRainbowColour();
+//        } else if (paintType == PaintTypeRegistry.PAINT_TYPE_PULSE_1) {
+//            return getPulse1Colour(rgbt);
+//        } else if (paintType == PaintTypeRegistry.PAINT_TYPE_PULSE_2) {
+//            return getPulse2Colour(rgbt);
+//        }
+//        return new Color(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, 255);
+    }
+
 
     // #[A]RGB or 0x[A]RGB
     public static Color parseColor(String colorString) {

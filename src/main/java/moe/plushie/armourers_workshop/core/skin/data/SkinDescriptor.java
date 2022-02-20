@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.data;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -63,6 +64,17 @@ public class SkinDescriptor implements ISkinDescriptor {
         return descriptor;
     }
 
+    public boolean accept(ItemStack itemStack) {
+        if (itemStack.isEmpty() || isEmpty()) {
+            return false;
+        }
+        ISkinType skinType = getType();
+        if (skinType instanceof ISkinToolType) {
+            return itemStack.getItem().is(((ISkinToolType) skinType).getTag());
+        }
+        return false;
+    }
+
     @Nonnull
     public ItemStack asItemStack() {
         if (isEmpty()) {
@@ -78,7 +90,7 @@ public class SkinDescriptor implements ISkinDescriptor {
 
 
     public boolean isEmpty() {
-        return identifier.isEmpty();
+        return this == EMPTY;
     }
 
     public SkinPalette getPalette() {

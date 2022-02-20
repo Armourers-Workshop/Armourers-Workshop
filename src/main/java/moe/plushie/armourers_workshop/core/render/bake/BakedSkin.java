@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.api.client.render.IBakedSkin;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;
+import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.data.SkinPalette;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -36,6 +37,7 @@ import java.util.*;
 public class BakedSkin implements IBakedSkin {
 
     private final Skin skin;
+    private final SkinDescriptor descriptor;
     private final Map<Object, Rectangle3f> cachedBounds = new HashMap<>();
 
     private final int maxUseTick;
@@ -46,12 +48,21 @@ public class BakedSkin implements IBakedSkin {
     private final SkinPalette preference;
     private final HashMap<Integer, SkinPalette> resolvedPalettes = new HashMap<>();
 
-    public BakedSkin(Skin skin, SkinPalette preference, ColorDescriptor colorDescriptor, ArrayList<BakedSkinPart> bakedParts) {
+    public BakedSkin(SkinDescriptor descriptor, Skin skin, SkinPalette preference, ColorDescriptor colorDescriptor, ArrayList<BakedSkinPart> bakedParts) {
+        this.descriptor = descriptor;
         this.skin = skin;
         this.skinParts = bakedParts;
         this.preference = preference;
         this.colorDescriptor = colorDescriptor;
         this.maxUseTick = getMaxUseTick(bakedParts);
+    }
+
+    public boolean accept(SkinDescriptor other) {
+        return descriptor.equals(other);
+    }
+
+    public boolean accept(ItemStack itemStack) {
+        return descriptor.accept(itemStack);
     }
 
     public SkinPalette resolve(Entity entity, SkinPalette palette) {
@@ -85,15 +96,9 @@ public class BakedSkin implements IBakedSkin {
 //        return skinDye;
 //    }
 
-    public boolean isOverride(ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            return false;
-        }
-        ISkinType skinType = skin.getType();
-        if (skinType instanceof ISkinToolType) {
-            return itemStack.getItem().is(((ISkinToolType) skinType).getTag());
-        }
-        return false;
+
+    public SkinDescriptor getDescriptor() {
+        return descriptor;
     }
 
     public Rectangle3f getRenderBounds(Entity entity, Model model, @Nullable Vector3f rotation) {

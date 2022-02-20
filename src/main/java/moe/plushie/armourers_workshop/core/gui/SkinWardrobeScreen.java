@@ -3,11 +3,13 @@ package moe.plushie.armourers_workshop.core.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.wardrobe.*;
 import moe.plushie.armourers_workshop.core.gui.widget.TabController;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
+import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeGroup;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
@@ -25,8 +27,9 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
     private final Entity entity;
     private final PlayerEntity operator;
+    private final SkinWardrobe wardrobe;
 
-    private final TabController<SkinWardrobeGroup> tabController = new TabController<>();
+    private final TabController<SkinWardrobeContainer.Group> tabController = new TabController<>();
 
     public SkinWardrobeScreen(SkinWardrobeContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
@@ -38,6 +41,7 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
         this.operator.containerMenu = this.menu;
 
         this.entity = container.getEntity();
+        this.wardrobe = container.getWardrobe();
 
         this.initTabs();
     }
@@ -71,20 +75,21 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
     protected void initTabs() {
         boolean isPlayer = entity instanceof PlayerEntity;
-        boolean isMannequin = true;// entity instanceof MannequinEntity;
+        boolean isMannequin = entity instanceof MannequinEntity;
 
         tabController.clear();
 
         tabController.add(new SkinSettingPanel(menu))
                 .setIcon(192, 0)
-                .setTarget(SkinWardrobeGroup.SKINS)
+                .setTarget(SkinWardrobeContainer.Group.SKINS)
                 .setVisible(!isPlayer || AWConfig.showWardrobeSkins || operator.isCreative());
 
-        // exists outfit slot
-        tabController.add(new OutfitSettingPanel(menu))
-                .setIcon(0, 128)
-                .setTarget(SkinWardrobeGroup.OUTFITS)
-                .setVisible(!isPlayer || AWConfig.showWardrobeOutfits || operator.isCreative());
+        if (wardrobe.getUnlockedSize(SkinSlotType.OUTFIT) != 0) {
+            tabController.add(new OutfitSettingPanel(menu))
+                    .setIcon(0, 128)
+                    .setTarget(SkinWardrobeContainer.Group.OUTFITS)
+                    .setVisible(!isPlayer || AWConfig.showWardrobeOutfits || operator.isCreative());
+        }
 
         tabController.add(new DisplaySettingPanel(menu))
                 .setIcon(208, 0)
@@ -96,13 +101,13 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
         tabController.add(new DyeSettingPanel(menu))
                 .setIcon(240, 0)
-                .setTarget(SkinWardrobeGroup.DYES)
+                .setTarget(SkinWardrobeContainer.Group.DYES)
                 .setVisible(!isPlayer || AWConfig.showWardrobeDyeSetting || operator.isCreative());
 
-//        tabController.add(new ContributorSettingPanel(menu))
-//                .setTarget(6)
-//                .setIcon(32, 128)
-//                .setVisible(!isPlayer || SkinConfig.showWardrobeColourSettings || operator.isCreative());
+        // is contributor
+        tabController.add(new ContributorSettingPanel(menu))
+                .setIcon(32, 128)
+                .setVisible(!isPlayer || AWConfig.showWardrobeContributorSetting || operator.isCreative());
 
         tabController.add(new RotationSettingPanel(menu))
                 .setIcon(80, 0)

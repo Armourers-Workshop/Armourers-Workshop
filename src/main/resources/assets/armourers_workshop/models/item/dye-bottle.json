@@ -8,7 +8,7 @@
       "predicate" : {
         "armourers_workshop:paint_type": 0.5
       },
-      "model": "armourers_workshop:item/dye-bottle-filled"
+      "model": "armourers_workshop:item/dye-bottle-fill"
     }
   ]
 }

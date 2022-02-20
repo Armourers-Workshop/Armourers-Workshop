@@ -50,7 +50,7 @@ public final class ContainerTypeBuilder<C extends Container, I> {
      * Sets a serializer and deserializer for additional data that should be transmitted from server->client when the
      * container is being first opened.
      */
-    public ContainerTypeBuilder<C, I> withDataCoder(DataSerializer<I> serializer, DataDeserializer<I> deserializer) {
+    public ContainerTypeBuilder<C, I> withDataCoder(DataDeserializer<I> deserializer, DataSerializer<I> serializer) {
         this.serializer = serializer;
         this.deserializer = deserializer;
         return this;

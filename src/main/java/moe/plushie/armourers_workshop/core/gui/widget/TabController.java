@@ -23,7 +23,6 @@ public class TabController<Target> extends Screen {
     private ArrayList<Tab> tabs = new ArrayList<>();
     private ArrayList<Tab> actives = new ArrayList<>();
 
-
     public TabController() {
         super(StringTextComponent.EMPTY);
     }

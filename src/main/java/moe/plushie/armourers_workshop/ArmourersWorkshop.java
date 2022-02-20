@@ -8,25 +8,26 @@ import moe.plushie.armourers_workshop.common.ArmourersConfig;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.command.SkinCommands;
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.SkinWardrobeScreen;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
+import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.OpenWardrobePacket;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
+import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.AWItems;
 import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeProvider;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeStorage;
+import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
+import moe.plushie.armourers_workshop.core.wardrobe.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.entity.ArmorStandRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
@@ -38,6 +39,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
@@ -51,6 +54,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -69,13 +73,13 @@ import java.util.Map;
 
 @Mod("armourers_workshop")
 public class ArmourersWorkshop {
+//    private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, AWCore.getModId());
     static float sx = 1.0f;
     PlayerRenderer playerRenderer;
     int mouseX = 0;
     int screenHeight = 0;
     int screenWidth = 0;
     private EntityRendererManager entityRenderManager;
-
     //    @SubscribeEvent
 //    void renderWorldLastEvent(RenderWorldLastEvent event) {
 //        IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
@@ -99,12 +103,6 @@ public class ArmourersWorkshop {
 //        matrixStack.popPose();
 //    }
     private SkinDescriptor outfit = new SkinDescriptor("3");
-
-    //    @SubscribeEvent
-//    public void registerItems(RegistryEvent.Register<Item> event) {
-//        SkinItems.registerItems(event.getRegistry());;
-//    }
-    private SkinDescriptor sword = new SkinDescriptor("0");
 
 
 //    @SubscribeEvent
@@ -157,7 +155,7 @@ public class ArmourersWorkshop {
 //    }
 
 
-//    @SubscribeEvent
+    //    @SubscribeEvent
 //    public void onRenderPlayerHand(RenderHandEvent event) {
 //        if (event.isCanceled()) {
 //            return;
@@ -172,6 +170,11 @@ public class ArmourersWorkshop {
 //        }
 //        event.setCanceled(wardrobe.hasOverriddenEquipment(partType));
 //    }
+    //    @SubscribeEvent
+//    public void registerItems(RegistryEvent.Register<Item> event) {
+//        SkinItems.registerItems(event.getRegistry());;
+//    }
+    private SkinDescriptor sword = new SkinDescriptor("0");
 
     public ArmourersWorkshop() {
 //        IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
@@ -180,7 +183,12 @@ public class ArmourersWorkshop {
 //            ((IReloadableResourceManager) resourceManager).registerReloadListener(itemSpriteUploader);
 //        }
 
+//        IEventBus iEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+//        iEventBus.addGenericListener(PaintingType.class, this::registerPaintingTypes);
+
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onEntityAttributeCreationEvent);
 
         ArmourersConfig.init();
         ClientWardrobeHandler.init();
@@ -188,17 +196,15 @@ public class ArmourersWorkshop {
 
         //ForgeRegistries.ITEMS.register(null);
         ForgeRegistries.CONTAINERS.register(SkinWardrobeContainer.TYPE);
+//        ForgeRegistries.ENTITIES.register(AWItems.MANNEQUIN);
 
         AWItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        AWItems.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         // URL => armour://armourers_workshop.plushie.moe/library/userid/name.armour
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    public static File getModDirectory() {
-        return null;
     }
 //
 //    private BakedSkin loadSkin(String file) {
@@ -206,7 +212,7 @@ public class ArmourersWorkshop {
 //        return SkinBakery.INSTANCE.backedModel(skin);
 //    }
 
-    public static File getSkinLibraryDirectory() {
+    public static File getModDirectory() {
         return null;
     }
 
@@ -218,6 +224,10 @@ public class ArmourersWorkshop {
 //        }
 //    }
 
+    public static File getSkinLibraryDirectory() {
+        return null;
+    }
+
     public static File getGlobalSkinDatabaseDirectory() {
         return null;
     }
@@ -227,14 +237,27 @@ public class ArmourersWorkshop {
         event.getDispatcher().register(SkinCommands.commands());
     }
 
+    public void onEntityAttributeCreationEvent(EntityAttributeCreationEvent event) {
+        event.put(AWItems.MANNEQUIN2.get(), MannequinEntity.createLivingAttributes().build());
+    }
+
+
     @SubscribeEvent
     public void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         Entity entity = event.getObject();
-        if (!AWConfig.isSkinnableEntity(entity)) {
-            return;
+        if (AWConfig.isSkinnableEntity(entity)) {
+            event.addCapability(SkinWardrobeProvider.WARDROBE_ID, new SkinWardrobeProvider(entity));
         }
-        event.addCapability(SkinWardrobeProvider.WARDROBE_ID, new SkinWardrobeProvider(entity));
     }
+
+
+//    @SubscribeEvent
+//    public void onPlayerClone(PlayerEvent.Clone event) {
+//        PlayerEntity player = event.getPlayer();
+//        LazyOptional<SkinWardrobe> newWardrobe = player.getCapability(SkinWardrobeProvider.WARDROBE_KEY, null);
+//        LazyOptional<SkinWardrobe> oldWardrobe = event.getOriginal().getCapability(SkinWardrobeProvider.WARDROBE_KEY, null);
+////        mana.setMana(oldMana.getMana());
+//    }
 
     @SubscribeEvent
     public void onItemTooltipEvent(ItemTooltipEvent event) {
@@ -246,14 +269,6 @@ public class ArmourersWorkshop {
             event.getToolTip().addAll(tooltip);
         }
     }
-
-//    @SubscribeEvent
-//    public void onPlayerClone(PlayerEvent.Clone event) {
-//        PlayerEntity player = event.getPlayer();
-//        LazyOptional<SkinWardrobe> newWardrobe = player.getCapability(SkinWardrobeProvider.WARDROBE_KEY, null);
-//        LazyOptional<SkinWardrobe> oldWardrobe = event.getOriginal().getCapability(SkinWardrobeProvider.WARDROBE_KEY, null);
-////        mana.setMana(oldMana.getMana());
-//    }
 
     @SubscribeEvent
     public void onRenderTooltipPre(RenderTooltipEvent.Pre event) {
@@ -354,20 +369,6 @@ public class ArmourersWorkshop {
         }
     }
 
-    @SubscribeEvent
-    public void onRenderLiving(RenderLivingEvent<LivingEntity, EntityModel<LivingEntity>> event) {
-        if (event.getEntity().getType() != EntityType.ARMOR_STAND) {
-            return;
-        }
-//        IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        MatrixStack stack = event.getMatrixStack();
-
-        SkinRenderBuffer buffer1 = SkinRenderBuffer.getInstance();
-        SkinItemRenderer.renderSkinAsItem(stack, AWCore.bakery.loadSkin(outfit), event.getLight(), true, false, 32, 32, buffer1);
-        SkinItemRenderer.renderSkinAsItem(stack, AWCore.bakery.loadSkin(sword), event.getLight(), true, false, 32, 32, buffer1);
-        buffer1.endBatch();
-    }
-
 //    @SubscribeEvent
 //    public void onLivingEquipmentChangeEvent(LivingEvent.LivingUpdateEvent event) {
 //        if (event.isCanceled()) {
@@ -399,15 +400,19 @@ public class ArmourersWorkshop {
 //    ScreenManager.registerFactory(StartupCommon.containerTypeFlowerBag, ContainerScreenFlowerBag::new);
 //
 
-    @SubscribeEvent
-    public void onKeyInputEvent(InputEvent.KeyInputEvent event) {
-        if (AWKeyBindings.OPEN_WARDROBE_KEY.consumeClick()) {
-            PlayerEntity player = Minecraft.getInstance().player;
-            if (player != null) {
-                NetworkHandler.getInstance().sendToServer(new OpenWardrobePacket(player));
-            }
-        }
-    }
+//    @SubscribeEvent
+//    public void onRenderLiving(RenderLivingEvent<LivingEntity, EntityModel<LivingEntity>> event) {
+//        if (event.getEntity().getType() != EntityType.ARMOR_STAND) {
+//            return;
+//        }
+////        IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+//        MatrixStack stack = event.getMatrixStack();
+//
+//        SkinRenderBuffer buffer1 = SkinRenderBuffer.getInstance();
+//        SkinItemRenderer.renderSkinAsItem(stack, AWCore.bakery.loadSkin(outfit), event.getLight(), true, false, 32, 32, buffer1);
+//        SkinItemRenderer.renderSkinAsItem(stack, AWCore.bakery.loadSkin(sword), event.getLight(), true, false, 32, 32, buffer1);
+//        buffer1.endBatch();
+//    }
 //    @SubscribeEvent
 //    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
 //        if (event.isCanceled()) {
@@ -431,17 +436,37 @@ public class ArmourersWorkshop {
 //    }
 
     @SubscribeEvent
+    public void onKeyInputEvent(InputEvent.KeyInputEvent event) {
+        if (AWKeyBindings.OPEN_WARDROBE_KEY.consumeClick()) {
+            PlayerEntity player = Minecraft.getInstance().player;
+            if (player != null) {
+                NetworkHandler.getInstance().sendToServer(new OpenWardrobePacket(player));
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.isCanceled()) {
             return;
         }
-        if (!(event.getEntity() instanceof ServerPlayerEntity)) {
-            return;
+        Entity entity = event.getEntity();
+        if (entity instanceof AbstractArrowEntity && !event.getWorld().isClientSide()) {
+            Entity owner = ((AbstractArrowEntity) entity).getOwner();
+            ItemStack itemStack = AWCore.getSkinFromEquipment(owner, SkinSlotType.BOW, EquipmentSlotType.MAINHAND);
+            if (!itemStack.isEmpty()) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+                if (wardrobe != null) {
+                    wardrobe.setItem(SkinSlotType.BOW, 0, itemStack.copy());
+                }
+            }
         }
-        ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
-        SkinWardrobe wardrobe = SkinWardrobe.of(player);
-        if (wardrobe != null) {
-            wardrobe.broadcast(player);
+        if (entity instanceof ServerPlayerEntity) {
+            ServerPlayerEntity player = (ServerPlayerEntity) entity;
+            SkinWardrobe wardrobe = SkinWardrobe.of(player);
+            if (wardrobe != null) {
+                wardrobe.broadcast(player);
+            }
         }
     }
 
@@ -459,13 +484,14 @@ public class ArmourersWorkshop {
         }
     }
 
-    private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, AWCore.getModId());
-
-
     private void loadComplete(FMLLoadCompleteEvent evt) {
         CapabilityManager.INSTANCE.register(SkinWardrobe.class, new SkinWardrobeStorage(), () -> null);
         ScreenManager.register(SkinWardrobeContainer.TYPE, SkinWardrobeScreen::new);
         ItemModelsProperties.register(AWItems.BOTTLE.get(), AWCore.resource("paint_type"), (itemStack, world, entity) -> BottleItem.getPaintType(itemStack).getId());
+//        EntityRendererManager
+        Minecraft.getInstance().getEntityRenderDispatcher().register(AWItems.MANNEQUIN2.get(), new MannequinEntityRenderer<>(Minecraft.getInstance().getEntityRenderDispatcher()));
+
+        Minecraft.getInstance().getItemColors().register(ColoredItem.getColorProvider(0), AWItems.BOTTLE.get());
 
         evt.enqueueWork(() -> {
             // Add our own custom armor layer to the various player renderers.
@@ -528,6 +554,7 @@ public class ArmourersWorkshop {
 //            LOGGER.debug("Added Custom Elytra Layer to entity of type: {}", type.getRegistryName());
 //        }
     }
+
 
 //    private void doClientStuff(final FMLClientSetupEvent event) {
 //        // do something that can only be done on the client
