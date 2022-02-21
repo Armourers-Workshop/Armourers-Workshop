@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.client.layer.WardrobeArmorLayer;
+import moe.plushie.armourers_workshop.core.render.layer.WardrobeArmorLayer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.render.model.MannequinModel;

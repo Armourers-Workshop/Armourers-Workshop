@@ -28,7 +28,6 @@ public class SkinWardrobeContainer extends Container {
             .withDataCoder(SkinWardrobeProvider::by, SkinWardrobeProvider::to)
             .build("wardrobe");
 
-    private final ResourceLocation itemsAtlas = AWCore.resource("textures/atlas/items.png");
     private final ArrayList<Slot> customSlots = new ArrayList<>();
     private final SkinWardrobe wardrobe;
 
@@ -98,7 +97,6 @@ public class SkinWardrobeContainer extends Container {
             int x = slotsX + (column + i) * 19;
             int y = slotsY + row * 19;
             GroupSlot slot = new GroupSlot(slotType, inventory, group, index + i, x, y);
-            slot.setBackground(itemsAtlas, slotType.getNoItemIcon());
             addSlot(slot);
             customSlots.add(slot);
         }
@@ -206,6 +204,9 @@ public class SkinWardrobeContainer extends Container {
             super(inventory, index, x, y);
             this.group = group;
             this.slotType = slotType;
+            if (slotType != null) {
+                this.setBackground(AWCore.resource("textures/atlas/items.png"), AWCore.getSlotIcon(slotType.getName()));
+            }
         }
 
         @Override

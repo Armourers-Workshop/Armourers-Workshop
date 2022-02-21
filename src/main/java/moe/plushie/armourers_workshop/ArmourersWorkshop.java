@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.client.ClientWardrobeHandler;
-import moe.plushie.armourers_workshop.client.layer.WardrobeArmorLayer;
+import moe.plushie.armourers_workshop.core.render.layer.WardrobeArmorLayer;
 import moe.plushie.armourers_workshop.common.ArmourersConfig;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
@@ -18,7 +18,9 @@ import moe.plushie.armourers_workshop.core.network.packet.OpenWardrobePacket;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.AWItems;
 import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
@@ -27,7 +29,6 @@ import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.wardrobe.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.entity.ArmorStandRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
@@ -41,7 +42,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -64,7 +64,6 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
@@ -73,7 +72,7 @@ import java.util.Map;
 
 @Mod("armourers_workshop")
 public class ArmourersWorkshop {
-//    private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, AWCore.getModId());
+    //    private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, AWCore.getModId());
     static float sx = 1.0f;
     PlayerRenderer playerRenderer;
     int mouseX = 0;
@@ -487,7 +486,23 @@ public class ArmourersWorkshop {
     private void loadComplete(FMLLoadCompleteEvent evt) {
         CapabilityManager.INSTANCE.register(SkinWardrobe.class, new SkinWardrobeStorage(), () -> null);
         ScreenManager.register(SkinWardrobeContainer.TYPE, SkinWardrobeScreen::new);
-        ItemModelsProperties.register(AWItems.BOTTLE.get(), AWCore.resource("paint_type"), (itemStack, world, entity) -> BottleItem.getPaintType(itemStack).getId());
+
+        ItemModelsProperties.register(AWItems.BOTTLE.get(), AWCore.resource("empty"), (itemStack, world, entity) -> {
+            if (BottleItem.getPaintType(itemStack) == SkinPaintTypes.NONE) {
+                return 1;
+            }
+            return 0;
+        });
+
+        ItemModelsProperties.register(AWItems.SKIN.get(), AWCore.resource("loading"), (itemStack, world, entity) -> {
+            SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+            BakedSkin bakedSkin = AWCore.bakery.loadSkin(descriptor);
+            if (bakedSkin != null) {
+                return 0;
+            }
+            return descriptor.getType().getId();
+        });
+
 //        EntityRendererManager
         Minecraft.getInstance().getEntityRenderDispatcher().register(AWItems.MANNEQUIN2.get(), new MannequinEntityRenderer<>(Minecraft.getInstance().getEntityRenderDispatcher()));
 

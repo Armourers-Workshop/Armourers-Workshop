@@ -14,6 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
+@SuppressWarnings("NullableProblems")
 public class BottleItem extends ColoredItem {
 
     public BottleItem(Item.Properties properties) {

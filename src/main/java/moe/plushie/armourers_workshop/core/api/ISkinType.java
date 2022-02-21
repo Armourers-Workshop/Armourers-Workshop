@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface ISkinType {
 
+    int getId();
+
     /**
      * Gets the name this skin will be registered with.
      * Armourer's Workshop uses the format armourers:skinName.

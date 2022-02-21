@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.client.layer;
+package moe.plushie.armourers_workshop.core.render.layer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.client.ClientWardrobeHandler;

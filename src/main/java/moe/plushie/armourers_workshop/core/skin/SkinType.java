@@ -13,12 +13,19 @@ import java.util.List;
 public class SkinType implements ISkinType {
 
     protected final String name;
+    protected final int id;
     protected ResourceLocation registryName;
     protected List<? extends ISkinPartType> parts;
 
-    public SkinType(String name, List<? extends ISkinPartType> parts) {
+    public SkinType(String name, int id, List<? extends ISkinPartType> parts) {
         this.parts = parts;
         this.name = name;
+        this.id = id;
+    }
+
+    @Override
+    public int getId() {
+        return id;
     }
 
     @Override
@@ -42,8 +49,8 @@ public class SkinType implements ISkinType {
 
 
     public static class Armor extends SkinType implements ISkinArmorType {
-        public Armor(String name, List<? extends ISkinPartType> parts) {
-            super(name, parts);
+        public Armor(String name, int id, List<? extends ISkinPartType> parts) {
+            super(name, id, parts);
         }
     }
 
@@ -51,8 +58,8 @@ public class SkinType implements ISkinType {
 
         protected ITag<Item> tag;
 
-        public Tool(String name, List<? extends ISkinPartType> parts, ITag<Item> tag) {
-            super(name, parts);
+        public Tool(String name, int id, List<? extends ISkinPartType> parts, ITag<Item> tag) {
+            super(name, id, parts);
             this.tag = tag;
         }
 

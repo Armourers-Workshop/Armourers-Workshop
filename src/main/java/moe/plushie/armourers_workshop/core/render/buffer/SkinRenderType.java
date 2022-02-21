@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
@@ -64,6 +65,26 @@ public class SkinRenderType extends RenderType {
             return SOLID_FACE;
         }
     }
+
+    public static RenderType createGUI(ResourceLocation r) {
+        //            BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();
+//            bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        ;
+        RenderType.State states = RenderType.State.builder()
+                .setCullState(NO_CULL)
+                .setTextureState(new TextureState(r, false, false))
+//                .setTextureState(COLORS)
+//                .setTexturingState(COLORS_OFFSET)
+//                .setDiffuseLightingState(DIFFUSE_LIGHTING)
+//                .setLightmapState(LIGHTMAP)
+//                .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+//                .setAlphaState(DEFAULT_ALPHA)
+//                .setOutputState(alpha ? TRANSLUCENT_TARGET : MAIN_TARGET)
+                .createCompositeState(false);
+        return RenderType.create("aw_quad_face222", DefaultVertexFormats.POSITION_TEX, GL11.GL_QUADS, 256, false, false, states);
+
+    }
+
 
     private static RenderType createSolidFace(boolean alpha) {
         ImmutableList<VertexFormatElement> elements = ImmutableList.<VertexFormatElement>builder()

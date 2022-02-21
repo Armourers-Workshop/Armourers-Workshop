@@ -51,6 +51,14 @@ public class AWCore {
 //        return null;
 //    }
 
+    public static ResourceLocation getSlotIcon(String name) {
+        return AWCore.resource("textures/items/slot/" + name + ".png");
+    }
+
+    public static ResourceLocation getItemIcon(String name) {
+        return AWCore.resource("textures/items/template/" + name + ".png");
+    }
+
     public static ItemStack getSkinFromEquipment(@Nullable Entity entity, SkinSlotType skinSlotType, EquipmentSlotType equipmentSlotType) {
         ItemStack itemStack = ItemStack.EMPTY;
         if (entity instanceof LivingEntity) {

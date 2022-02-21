@@ -58,12 +58,19 @@ public final class RenderUtils {
     public static void bind(ResourceLocation texture) {
         Minecraft.getInstance().getTextureManager().bind(texture);
     }
+
     public static void blit(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height) {
         Screen.blit(matrixStack, x, y, 0, u, v, width, height, 256, 256);
     }
+
     public static void blit(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, ResourceLocation texture) {
         RenderUtils.bind(texture);
-        RenderUtils.blit(matrixStack, x, y, u, v, width, height);
+        Screen.blit(matrixStack, x, y, 0, u, v, width, height, 256, 256);
+    }
+
+    public static void blit(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, ResourceLocation texture) {
+        RenderUtils.bind(texture);
+        Screen.blit(matrixStack, x, y, 0, u, v, width, height, texWidth, texHeight);
     }
 
     public static int getPixelColour(int x, int y) {
@@ -131,7 +138,7 @@ public final class RenderUtils {
     }
 
 
-        public static void drawBoundingBox(MatrixStack matrix, float x0, float y0, float z0, float x1, float y1, float z1, Color color, IRenderTypeBuffer buffer) {
+    public static void drawBoundingBox(MatrixStack matrix, float x0, float y0, float z0, float x1, float y1, float z1, Color color, IRenderTypeBuffer buffer) {
         IVertexBuilder builder = buffer.getBuffer(RenderType.lines());
         drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, builder);
     }

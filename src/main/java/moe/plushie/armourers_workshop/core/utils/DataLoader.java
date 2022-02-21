@@ -28,6 +28,13 @@ public class DataLoader<K, V> {
         return new Builder<>();
     }
 
+
+    public void put(K key, Optional<V> value) {
+        synchronized (this) {
+            caches.put(key, value);
+        }
+    }
+
     @Nullable
     public Optional<V> get(K key) {
         Optional<V> value;
@@ -71,6 +78,15 @@ public class DataLoader<K, V> {
         }
         dispatch(key, immediateTask);
     }
+
+    public void add(Runnable task) {
+        if (executor != null) {
+            executor.submit(task);
+        } else {
+            task.run();
+        }
+    }
+
 
     private void dispatch(K key, boolean immediateTask) {
         if (executor != null && !immediateTask) {

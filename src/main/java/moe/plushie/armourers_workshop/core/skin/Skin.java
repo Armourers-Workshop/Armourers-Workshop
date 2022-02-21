@@ -209,11 +209,7 @@ public class Skin implements ISkin {
 //    }
 
     public String getCustomName() {
-        String name = properties.get(SkinProperty.ALL_CUSTOM_NAME);
-        if (!name.isEmpty()) {
-            return name;
-        }
-        return "Skin";
+        return properties.get(SkinProperty.ALL_CUSTOM_NAME);
     }
 
     public String getAuthorName() {
