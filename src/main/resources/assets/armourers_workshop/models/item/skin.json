@@ -36,5 +36,24 @@
       "translation": [ 0, 0, 0],
       "scale":[ 0.8, 0.8, 0.8 ]
     }
-  }
+  },
+  "overrides": [
+    { "predicate": { "armourers_workshop:loading": 0 }, "model": "armourers_workshop:item/skin" },
+    { "predicate": { "armourers_workshop:loading": 1 }, "model": "armourers_workshop:loading/1" },
+    { "predicate": { "armourers_workshop:loading": 2 }, "model": "armourers_workshop:loading/2" },
+    { "predicate": { "armourers_workshop:loading": 3 }, "model": "armourers_workshop:loading/3" },
+    { "predicate": { "armourers_workshop:loading": 4 }, "model": "armourers_workshop:loading/4" },
+    { "predicate": { "armourers_workshop:loading": 5 }, "model": "armourers_workshop:loading/5" },
+    { "predicate": { "armourers_workshop:loading": 6 }, "model": "armourers_workshop:loading/6" },
+    { "predicate": { "armourers_workshop:loading": 7 }, "model": "armourers_workshop:loading/7" },
+    { "predicate": { "armourers_workshop:loading": 8 }, "model": "armourers_workshop:loading/8" },
+    { "predicate": { "armourers_workshop:loading": 9 }, "model": "armourers_workshop:loading/9" },
+    { "predicate": { "armourers_workshop:loading": 10 }, "model": "armourers_workshop:loading/10" },
+    { "predicate": { "armourers_workshop:loading": 11 }, "model": "armourers_workshop:loading/11" },
+    { "predicate": { "armourers_workshop:loading": 12 }, "model": "armourers_workshop:loading/12" },
+    { "predicate": { "armourers_workshop:loading": 13 }, "model": "armourers_workshop:loading/13" },
+    { "predicate": { "armourers_workshop:loading": 14 }, "model": "armourers_workshop:loading/14" },
+    { "predicate": { "armourers_workshop:loading": 15 }, "model": "armourers_workshop:loading/15" },
+    { "predicate": { "armourers_workshop:loading": 255 }, "model": "armourers_workshop:loading/0" }
+  ]
 }

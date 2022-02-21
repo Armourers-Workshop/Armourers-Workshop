@@ -21,6 +21,7 @@ import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("NullableProblems")
 public class SkinItem extends Item {
 
     public SkinItem(Item.Properties properties) {
@@ -29,11 +30,11 @@ public class SkinItem extends Item {
 
     @OnlyIn(Dist.CLIENT)
     public static ArrayList<ITextComponent> getTooltip(ItemStack itemStack) {
-        boolean isOwner = itemStack.getItem() == AWItems.SKIN.get();
+        boolean isItemOwner = itemStack.getItem() == AWItems.SKIN.get();
         ArrayList<ITextComponent> tooltip = new ArrayList<>();
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
-            if (isOwner) {
+            if (isItemOwner) {
                 tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinInvalidItem"));
             }
             return tooltip;
@@ -43,10 +44,9 @@ public class SkinItem extends Item {
             tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skindownloading", descriptor.getIdentifier()));
             return tooltip;
         }
-
         Skin skin = bakedSkin.getSkin();
 
-        if (!isOwner) {
+        if (!isItemOwner) {
             tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.hasSkin"));
             if (AWConfig.tooltipSkinName && Strings.isNotBlank(skin.getCustomName())) {
                 tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinName", skin.getCustomName().trim()));
@@ -75,11 +75,11 @@ public class SkinItem extends Item {
             tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinNumCubesGlassGlowing", skin.getTotalOfCubeType(SkinCubes.GLASS_GLOWING)));
             tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinPaintData", skin.hasPaintData()));
             tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinMarkerCount", skin.getMarkerCount()));
-//                    tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinDyeCount", skin.getSkinDye().getNumberOfDyes()));
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinProperties"));
-            for (String prop : skin.getProperties().getPropertiesList()) {
-                tooltip.add(TranslateUtils.literal(" " + prop));
-            }
+//            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinDyeCount", skin.getSkinDye().getNumberOfDyes()));
+//            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinProperties"));
+//            for (String prop : skin.getProperties().getPropertiesList()) {
+//                tooltip.add(TranslateUtils.literal(" " + prop));
+//            }
         } else if (AWConfig.tooltipDebug) {
             tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinHoldShiftForInfo"));
         }
@@ -103,9 +103,9 @@ public class SkinItem extends Item {
     @Override
     public ITextComponent getName(ItemStack itemStack) {
         Skin skin = AWCore.loader.getSkin(itemStack);
-        if (skin != null) {
+        if (skin != null && !skin.getCustomName().trim().isEmpty()) {
             return new StringTextComponent(skin.getCustomName());
         }
-        return TranslateUtils.translate("item.armourers_workshop.rollover.skinInvalidItem");
+        return super.getName(itemStack);
     }
 }

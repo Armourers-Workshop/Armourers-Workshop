@@ -6,12 +6,15 @@ import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
+import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -44,26 +47,22 @@ public enum SkinSlotType {
         this.index = Helper.COUNTER.getAndAdd(size);
         this.size = size;
         this.skinType = skinType;
+
+        Helper.SKIN_TO_SLOT.put(skinType, this);
+        Helper.NAME_TO_SLOT.put(name, this);
     }
 
+    @Nullable
     public static SkinSlotType of(String name) {
-        for (SkinSlotType slotType : values()) {
-            if (Objects.equals(slotType.name, name)) {
-                return slotType;
-            }
-        }
-        return null;
+        return Helper.NAME_TO_SLOT.get(name);
     }
 
+    @Nullable
     public static SkinSlotType of(ISkinType skinType) {
-        for (SkinSlotType slotType : values()) {
-            if (Objects.equals(slotType.skinType, skinType)) {
-                return slotType;
-            }
-        }
-        return null;
+        return Helper.SKIN_TO_SLOT.get(skinType);
     }
 
+    @Nullable
     public static SkinSlotType of(ItemStack itemStack) {
         if (itemStack.isEmpty()) {
             return null;
@@ -71,8 +70,8 @@ public enum SkinSlotType {
         if (itemStack.getItem() instanceof BottleItem) {
             return DYE;
         }
-        if (itemStack.getItem() instanceof SkinItem) {
-            SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        if (!descriptor.isEmpty()) {
             return of(descriptor.getType());
         }
         return null;
@@ -100,10 +99,6 @@ public enum SkinSlotType {
         return skinType instanceof ISkinArmorType;
     }
 
-    public ResourceLocation getNoItemIcon() {
-        return AWCore.resource("textures/items/slot/" + name + ".png");
-    }
-
     public int getIndex() {
         return index;
     }
@@ -118,6 +113,9 @@ public enum SkinSlotType {
 
     private static class Helper {
         static final AtomicInteger COUNTER = new AtomicInteger();
+
+        static final HashMap<ISkinType, SkinSlotType> SKIN_TO_SLOT = new HashMap<>();
+        static final HashMap<String, SkinSlotType> NAME_TO_SLOT = new HashMap<>();
 
         static final ISkinPaintType[] SLOT_TO_TYPES = {
                 SkinPaintTypes.DYE_1,

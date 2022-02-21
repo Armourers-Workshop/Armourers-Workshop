@@ -25,16 +25,13 @@ import java.util.function.Consumer;
 public final class SkinBakery {
 
 
-    //    private final Executor skinBakeExecutor;
-//    private final Executor skinDownloadExecutor;
-//    private final CompletionService<BakedSkin> skinCompletion;
     private final AtomicInteger bakingQueue = new AtomicInteger(0);
     private final AtomicIntegerArray bakeTimes = new AtomicIntegerArray(1000);
 
     private final ArrayList<IBakeListener> listeners = new ArrayList<>();
 
     private final DataLoader<SkinDescriptor, BakedSkin> manager = DataLoader.newBuilder()
-            .threadPool(1)
+            .threadPool(2)
             .build(this::loadAndBakeSkin);
 
     private final DataLoader<ResourceLocation, BakedEntityTexture> textureManager = DataLoader.newBuilder()
@@ -114,21 +111,30 @@ public final class SkinBakery {
     }
 
     public void loadSkin(SkinDescriptor descriptor, Consumer<Optional<BakedSkin>> consumer) {
-        manager.load(descriptor, false, consumer);
+        manager.load(descriptor, true, consumer);
     }
 
     private void loadAndBakeSkin(SkinDescriptor descriptor, Consumer<Optional<BakedSkin>> complete) {
         AWCore.loader.loadSkin(descriptor, skin -> {
             Skin skin1 = skin.orElse(null);
-            if (skin1 == null) {
+            if (skin1 != null) {
+                manager.add(() -> bakeSkin(skin1, descriptor, complete));
+            } else {
                 complete.accept(Optional.empty());
-                return;
             }
-            bakeSkin(skin1, descriptor, complete);
         });
+    }
+    private void sleep() {
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void bakeSkin(Skin skin, SkinDescriptor descriptor, Consumer<Optional<BakedSkin>> complete) {
+        AWLog.debug("Start baking task: {}", descriptor);
+        sleep();
         long startTime = System.currentTimeMillis();
 //            skin.lightHash();
 //            int extraDyes = SkinPaintTypes.getInstance().getExtraChannels();
@@ -184,7 +190,7 @@ public final class SkinBakery {
         complete.accept(Optional.of(bakedSkin));
 
         listeners.forEach(listener -> listener.didBake(descriptor, bakedSkin));
-        AWLog.debug("Baking skin " + descriptor + " did complete !");
+        AWLog.debug("Finish baking task: {}", descriptor);
     }
 
     public void getModel(ResourceLocation location) {
@@ -203,7 +209,7 @@ public final class SkinBakery {
 //    }
 
     private void loadAndBakeTexture(ResourceLocation texture, Consumer<Optional<BakedEntityTexture>> complete) {
-        BakedEntityTexture bakedTexture =  new BakedEntityTexture(texture);
+        BakedEntityTexture bakedTexture = new BakedEntityTexture(texture);
         complete.accept(Optional.of(bakedTexture));
     }
 

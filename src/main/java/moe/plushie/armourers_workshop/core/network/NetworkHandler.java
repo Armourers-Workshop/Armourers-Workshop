@@ -1,8 +1,6 @@
 package moe.plushie.armourers_workshop.core.network;
 
-import moe.plushie.armourers_workshop.core.network.packet.CustomPacket;
-import moe.plushie.armourers_workshop.core.network.packet.OpenWardrobePacket;
-import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.core.network.packet.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -97,7 +95,12 @@ public class NetworkHandler {
     }
 
     public enum PacketTypes {
-        PACKET_OPEN_WARDROBE(OpenWardrobePacket.class, OpenWardrobePacket::new), PACKET_UPDATE_WARDROBE(UpdateWardrobePacket.class, UpdateWardrobePacket::new);
+
+        PACKET_REQUEST_FILE(RequestFilePacket.class, RequestFilePacket::new),
+        PACKET_RESPONSE_FILE(ResponseFilePacket.class, ResponseFilePacket::new),
+
+        PACKET_OPEN_WARDROBE(OpenWardrobePacket.class, OpenWardrobePacket::new),
+        PACKET_UPDATE_WARDROBE(UpdateWardrobePacket.class, UpdateWardrobePacket::new);
 
         private final Function<PacketBuffer, CustomPacket> factory;
 

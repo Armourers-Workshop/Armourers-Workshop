@@ -12,6 +12,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.NumberNBT;
 import net.minecraft.nbt.StringNBT;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 public abstract class ColoredItem extends Item {
@@ -26,6 +27,7 @@ public abstract class ColoredItem extends Item {
         itemStack.getOrCreateTag().putInt(NBT_KEY_COLOR, color.getValue());
     }
 
+    @Nullable
     public static PaintColor getColor(ItemStack itemStack) {
         int color = getColorValue(itemStack);
         if (color != 0) {
