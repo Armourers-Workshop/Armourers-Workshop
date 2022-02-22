@@ -16,7 +16,7 @@ public final class TranslateUtils {
         return new StringTextComponent(content);
     }
 
-    public static TextComponent translate(String key) {
+    public static TranslationTextComponent translate(String key) {
         return new TranslationTextComponent(key);
     }
 

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.render.layer.WardrobeArmorLayer;
+import moe.plushie.armourers_workshop.core.render.layer.SkinWardrobeArmorLayer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.render.model.MannequinModel;
@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HeadLayer;
 import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,18 +28,13 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
         this.addLayer(new HeldItemLayer<>(this));
         this.addLayer(new ElytraLayer<>(this));
         this.addLayer(new HeadLayer<>(this));
-        this.addLayer(new WardrobeArmorLayer<>(this));
+        this.addLayer(new SkinWardrobeArmorLayer<>(this));
     }
 
     @Override
-    public void render(T p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack p_225623_4_, IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
+    public void render(T entity, float p_225623_2_, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int p_225623_6_) {
         this.model.setAllVisible(true);
-        super.render(p_225623_1_, p_225623_2_, p_225623_3_, p_225623_4_, p_225623_5_, p_225623_6_);
-    }
-
-    @Override
-    public Vector3d getRenderOffset(T entity, float p_225627_2_) {
-        return entity.isCrouching() ? new Vector3d(0.0D, -0.125D, 0.0D) : super.getRenderOffset(entity, p_225627_2_);
+        super.render(entity, p_225623_2_, p_225623_3_, matrixStack, renderTypeBuffer, p_225623_6_);
     }
 
     @Override
@@ -111,6 +105,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
         float f = entity.isCrouching() ? 32.0F : 64.0F;
         return d0 < (double) (f * f);
     }
+
 
 //    @Nullable
 //    protected RenderType getRenderType(ArmorStandEntity p_230496_1_, boolean p_230496_2_, boolean p_230496_3_, boolean p_230496_4_) {

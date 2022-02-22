@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.core.base.AWConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.wardrobe.*;
 import moe.plushie.armourers_workshop.core.gui.widget.TabController;
@@ -21,8 +21,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SuppressWarnings("unused")
 @OnlyIn(Dist.CLIENT)
+@SuppressWarnings({"unused", "NullableProblems"})
 public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
     private final Entity entity;
@@ -43,6 +43,7 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
         this.entity = container.getEntity();
         this.wardrobe = container.getWardrobe();
 
+//        Minecraft.getInstance().getSingleplayerServer().getWorldPath(new FolderName("skin-database"))
         this.initTabs();
     }
 
@@ -97,6 +98,7 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
         tabController.add(new ColourSettingPanel(menu))
                 .setIcon(224, 0)
+                .setTarget(SkinWardrobeContainer.Group.COLORS)
                 .setVisible(!isPlayer || AWConfig.showWardrobeColourSettings || operator.isCreative());
 
         tabController.add(new DyeSettingPanel(menu))
@@ -132,7 +134,7 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
                 .setIconAnimation(8, 150)
                 .setVisible(isMannequin);
 
-        tabController.addListener(tab -> getMenu().setGroup(tab.getTarget()));
+        tabController.addListener(this::switchTab);
         tabController.setSelectedTab(tabController.get(0)); // active the first tab
     }
 
@@ -162,7 +164,7 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
         super.renderTooltip(matrixStack, mouseX, mouseY);
     }
 
-    protected void renderPlayer(MatrixStack matrixStack, int mouseX, int mouseY, int x, int y, int width, int height) {
+    public void renderPlayer(MatrixStack matrixStack, int mouseX, int mouseY, int x, int y, int width, int height) {
         boolean isFocus = (x <= mouseX && mouseX <= x + width) && (y <= mouseY && mouseY <= y + height);
 
         if (!isFocus) {
@@ -219,6 +221,18 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
             return tabController.get(mouseX, mouseY) == null;
         }
         return false;
+    }
+
+    private void switchTab(TabController<SkinWardrobeContainer.Group>.Tab tab) {
+        getMenu().setGroup(tab.getTarget());
+    }
+
+    private int getExtendedHeight() {
+        TabController<SkinWardrobeContainer.Group>.Tab tab = tabController.getSelectedTab();
+        if (tab != null && tab.getTarget() != null) {
+            return tab.getTarget().getExtendedHeight();
+        }
+        return 0;
     }
 
     private ColourSettingPanel.ColorPicker getActivatedPicker() {

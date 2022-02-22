@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.common;
 
-import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.core.base.AWConfig;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;

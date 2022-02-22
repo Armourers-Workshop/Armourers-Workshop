@@ -8,6 +8,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
@@ -52,6 +54,7 @@ public class NetworkHandler {
         context.setPacketHandled(true);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onClientEvent(final NetworkEvent.ServerCustomPayloadEvent event) {
         if (event instanceof NetworkEvent.ServerCustomPayloadLoginEvent) {

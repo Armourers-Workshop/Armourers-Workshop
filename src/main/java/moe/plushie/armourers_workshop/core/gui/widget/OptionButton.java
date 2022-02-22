@@ -13,6 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
 @OnlyIn(Dist.CLIENT)
+@SuppressWarnings("NullableProblems")
 public class OptionButton extends Button {
 
     private final int iconWidth;
@@ -71,6 +72,6 @@ public class OptionButton extends Button {
             drawCenteredString(matrixStack, font, "x", x + iconWidth / 2 + 1, y, 0xffcccccc);
         }
         int color = this.textColour;
-        font.draw(matrixStack, getMessage(), x + iconWidth + 2, y, color);
+        font.draw(matrixStack, getMessage(), x + iconWidth + 2, y + 1, color);
     }
 }

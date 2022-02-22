@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
-import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.core.base.AWConfig;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

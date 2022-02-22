@@ -5,13 +5,16 @@ import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
 import net.minecraft.inventory.container.Slot;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class OutfitSettingPanel extends BaseSettingPanel {
 
     private final SkinWardrobeContainer container;
 
     public OutfitSettingPanel(SkinWardrobeContainer container) {
-        super(TranslateUtils.translate("inventory.armourers_workshop.wardrobe.tab.outfits"));
+        super("inventory.armourers_workshop.wardrobe.outfits");
         this.container = container;
     }
 

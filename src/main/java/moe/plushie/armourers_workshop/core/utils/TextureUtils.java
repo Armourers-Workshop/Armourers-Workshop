@@ -8,6 +8,8 @@ import net.minecraft.client.renderer.texture.Texture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.io.IOUtils;
 
 import javax.imageio.ImageIO;
@@ -17,6 +19,7 @@ import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.io.InputStream;
 
+@OnlyIn(Dist.CLIENT)
 public final class TextureUtils {
 
 

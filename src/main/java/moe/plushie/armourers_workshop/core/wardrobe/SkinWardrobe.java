@@ -100,22 +100,22 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     }
 
     public void sendToAll() {
-        NetworkHandler.getInstance().sendToAll(new UpdateWardrobePacket(this));
+        NetworkHandler.getInstance().sendToAll(UpdateWardrobePacket.all(this));
     }
 
     public void sendToServer() {
-        NetworkHandler.getInstance().sendToServer(new UpdateWardrobePacket(this));
+        NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.all(this));
     }
 
     public void broadcast(ServerPlayerEntity player) {
-        NetworkHandler.getInstance().sendTo(new UpdateWardrobePacket(this), player);
+        NetworkHandler.getInstance().sendTo(UpdateWardrobePacket.all(this), player);
     }
 
     public boolean shouldRenderEquipment(EquipmentSlotType slotType) {
         return !armourFlags.contains(slotType);
     }
 
-    public void setRenderEquipment(boolean enable, EquipmentSlotType slotType) {
+    public void setRenderEquipment(EquipmentSlotType slotType, boolean enable) {
         if (enable) {
             armourFlags.remove(slotType);
         } else {
