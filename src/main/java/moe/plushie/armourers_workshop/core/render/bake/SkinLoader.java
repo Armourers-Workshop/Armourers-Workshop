@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.DataLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -22,6 +23,7 @@ import java.util.function.Consumer;
 
 public class SkinLoader {
 
+    private final static AtomicInteger COUNTER = new AtomicInteger();
     static HashMap<String, String> PATHS = new HashMap<>();
 
     static {
@@ -77,15 +79,12 @@ public class SkinLoader {
     }
 
     private final int queueCount = 1;
-
-    private final DataLoader<SkinDescriptor, Skin> manager = DataLoader.newBuilder()
-            .threadPool(1)
-            .build(this::addTask);
-
-
     private final ArrayList<LoadingTask> working = new ArrayList<>();
     private final ArrayList<LoadingTask> pending = new ArrayList<>();
     private final HashMap<SkinDescriptor, LoadingTask> tasks = new HashMap<>();
+    private final DataLoader<SkinDescriptor, Skin> manager = DataLoader.newBuilder()
+            .threadPool(1)
+            .build(this::addTask);
 
     @Nullable
     public Skin getSkin(ItemStack itemStack) {
@@ -95,7 +94,6 @@ public class SkinLoader {
         }
         return getSkin(descriptor);
     }
-
 
     @Nullable
     public Skin getSkin(SkinDescriptor descriptor) {
@@ -129,12 +127,11 @@ public class SkinLoader {
         manager.load(descriptor, false, consumer);
     }
 
-
     private void addTask(SkinDescriptor descriptor, @Nullable Consumer<Optional<Skin>> complete) {
-//        if (Minecraft.getInstance().isLocalServer()) {
-//            loadSkinFile(descriptor, complete);
-//            return;
-//        }
+        if (Minecraft.getInstance().isLocalServer()) {
+            loadSkinFile(descriptor, complete);
+            return;
+        }
         LoadingTask task = tasks.computeIfAbsent(descriptor, LoadingTask::new);
         if (complete != null) {
             task.listeners.add(complete);
@@ -227,13 +224,30 @@ public class SkinLoader {
         }
     }
 
-
     private void sleep() {
 //        try {
 //            Thread.sleep(1000);
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
+
+
+//        new WorldSavedData("xxx") {
+//            @Override
+//            public void load(CompoundNBT p_76184_1_) {
+//                p_76184_1_.getString("Key");
+//                p_76184_1_.getByteArray("Value");
+//            }
+//
+//            @Override
+//            public CompoundNBT save(CompoundNBT p_189551_1_) {
+//                p_189551_1_.putString("Key", "???");
+//                p_189551_1_.putByteArray("Value", ...);
+//                return null;
+//            }
+//        };
+
+
     }
 
     @Nullable
@@ -267,8 +281,6 @@ public class SkinLoader {
         AWLog.debug("Loading skin " + descriptor + " did complete !");
         return skin;
     }
-
-    private final static AtomicInteger COUNTER = new AtomicInteger();
 
     public class LoadingTask {
 

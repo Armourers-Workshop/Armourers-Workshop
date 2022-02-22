@@ -4,8 +4,11 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
+import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.gui.widget.IconButton;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
+import moe.plushie.armourers_workshop.core.network.NetworkHandler;
+import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.render.bake.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.*;
@@ -17,10 +20,14 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
+@SuppressWarnings("NullableProblems")
+@OnlyIn(Dist.CLIENT)
 public class ColourSettingPanel extends BaseSettingPanel {
 
     private final ITextComponent paletteText;
@@ -30,8 +37,8 @@ public class ColourSettingPanel extends BaseSettingPanel {
     private ColorPicker activatedPicker;
 
     public ColourSettingPanel(SkinWardrobeContainer container) {
-        super(TranslateUtils.translate("inventory.armourers_workshop.wardrobe.tab.colourSettings"));
-        this.paletteText = TranslateUtils.translate("inventory.armourers_workshop.wardrobe.tab.colour_settings.label.palette");
+        super("inventory.armourers_workshop.wardrobe.colour_settings");
+        this.paletteText = getDisplayText("label.palette");
         this.wardrobe = container.getWardrobe();
         this.setup();
     }
@@ -96,17 +103,17 @@ public class ColourSettingPanel extends BaseSettingPanel {
             this.enableAutoPick = enableAutoPick;
             this.paintType = paintType;
             this.slot = SkinSlotType.DYE.getIndex() + SkinSlotType.getSlotIndex(paintType);
-            this.title = TranslateUtils.translate("inventory.armourers_workshop.wardrobe.tab.colour_settings.label." + name);
+            this.title = getDisplayText("label", name);
         }
 
         public void reload() {
             int posX = leftPos + x + 16;
             int posY = topPos + y + 9;
             String name = paintType.getRegistryName().getPath();
-            addIconButton(posX, posY, 144, 192, this::start, getText(name, "select"));
-            addIconButton(posX + 17, posY, 208, 160, this::clear, getText(name, "clear"));
+            addIconButton(posX, posY, 144, 192, this::start, getDisplayText("button", name, "select"));
+            addIconButton(posX + 17, posY, 208, 160, this::clear, getDisplayText("button", name, "clear"));
             if (enableAutoPick) {
-                addIconButton(posX + 17 * 2, posY, 144, 208, this::autoPick, getText(name, "auto"));
+                addIconButton(posX + 17 * 2, posY, 144, 208, this::autoPick, getDisplayText("button", name, "auto"));
             }
             color = getColor();
         }
@@ -218,15 +225,10 @@ public class ColourSettingPanel extends BaseSettingPanel {
             }
             ItemStack itemStack = ItemStack.EMPTY;
             if (newValue != null) {
-                itemStack = new ItemStack(AWItems.BOTTLE.get());
+                itemStack = new ItemStack(AWItems.BOTTLE);
                 ColoredItem.setColor(itemStack, newValue);
             }
-            wardrobe.getInventory().setItem(slot, itemStack);
-            wardrobe.sendToServer();
-        }
-
-        private ITextComponent getText(String name, String state) {
-            return TranslateUtils.translate("inventory.armourers_workshop.wardrobe.tab.colour_settings.button." + name + "." + state);
+            NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.item(wardrobe, slot, itemStack));
         }
     }
 }

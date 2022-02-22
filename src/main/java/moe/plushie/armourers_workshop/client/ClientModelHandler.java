@@ -49,7 +49,18 @@ public class ClientModelHandler extends ModelTransformer {
     private static void registerBipedModel() {
         // simple
         registerArmor(BipedModel.class, SkinPartTypes.BIPED_HAT, m -> m.hat);
-        registerArmor(BipedModel.class, SkinPartTypes.BIPED_HEAD, m -> m.head);
+        registerArmor(BipedModel.class, SkinPartTypes.BIPED_HEAD, m -> {
+            if (!m.young) {
+                return m.head;
+            }
+            OffsetModelRenderer item = new OffsetModelRenderer(m.head);
+            float scale = m.babyBodyScale;
+            if (m.scaleHead) {
+                scale = 1.5f;
+            }
+            item.scale = new Vector3f(scale, scale, scale);
+            return item;
+        });
         registerArmor(BipedModel.class, SkinPartTypes.BIPED_CHEST, m -> m.body);
         registerArmor(BipedModel.class, SkinPartTypes.BIPED_LEFT_ARM, m -> m.leftArm);
         registerArmor(BipedModel.class, SkinPartTypes.BIPED_RIGHT_ARM, m -> m.rightArm);

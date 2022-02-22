@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.core.base.AWConfig;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;

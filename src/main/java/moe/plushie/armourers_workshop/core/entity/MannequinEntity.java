@@ -1,11 +1,9 @@
 package moe.plushie.armourers_workshop.core.entity;
 
 import moe.plushie.armourers_workshop.core.api.ISkinToolType;
-import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWTags;
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
-import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
 import net.minecraft.entity.EntityType;
@@ -16,23 +14,21 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
+
+@SuppressWarnings("NullableProblems")
 public class MannequinEntity extends ArmorStandEntity {
 
-//    private static final DataParameter<BipedRotations> DATA_BIPED_ROTATIONS = EntityDataManager.<BipedRotations>createKey(EntityMannequin.class, BIPED_ROTATIONS_SERIALIZER);
-//    private static final DataParameter<TextureData> DATA_TEXTURE_DATA = EntityDataManager.<TextureData>createKey(EntityMannequin.class, TEXTURE_DATA_SERIALIZER);
-//    private static final DataParameter<Float> DATA_ROTATION = EntityDataManager.<Float>createKey(EntityMannequin.class, DataSerializers.FLOAT);
-//    private static final DataParameter<Boolean> DATA_RENDER_EXTRAS = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
-//    private static final DataParameter<Boolean> DATA_FLYING = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
-//    private static final DataParameter<Boolean> DATA_VISIBLE = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
-//    private static final DataParameter<Boolean> DATA_NO_CLIP = EntityDataManager.<Boolean>createKey(EntityMannequin.class, DataSerializers.BOOLEAN);
-//    private static final DataParameter<Float> DATA_SCALE = EntityDataManager.<Float>createKey(EntityMannequin.class, DataSerializers.FLOAT);
-//    private static final DataParameter<ItemStack> DATA_HAND_LEFT = EntityDataManager.<ItemStack>createKey(EntityMannequin.class, DataSerializers.ITEM_STACK);
-//    private static final DataParameter<ItemStack> DATA_HAND_RIGHT = EntityDataManager.<ItemStack>createKey(EntityMannequin.class, DataSerializers.ITEM_STACK);
+    public static final DataParameter<Integer> DATA_OPTIONS = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.INT);
 
 
     public MannequinEntity(EntityType<? extends MannequinEntity> entityType, World world) {
@@ -40,12 +36,52 @@ public class MannequinEntity extends ArmorStandEntity {
     }
 
     @Override
-    public boolean canBeCollidedWith() {
-        return this.isAlive();
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_OPTIONS, 0);
     }
 
     @Override
+    public void readAdditionalSaveData(CompoundNBT nbt) {
+        super.readAdditionalSaveData(nbt);
+        this.setOption(Option.NO_CLIP, nbt.getBoolean("NoClip"));
+        this.setOption(Option.IS_CHILD, nbt.getBoolean("Child"));
+        this.setOption(Option.IS_FLYING, nbt.getBoolean("Flying"));
+        this.setOption(Option.EXTRA_RENDER, nbt.getBoolean("ExtraRender"));
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
+        nbt.putBoolean("NoClip", getOption(Option.NO_CLIP));
+        nbt.putBoolean("Child", getOption(Option.IS_CHILD));
+        nbt.putBoolean("Flying", getOption(Option.IS_FLYING));
+        nbt.putBoolean("ExtraRender", getOption(Option.EXTRA_RENDER));
+    }
+
+
+    @Override
+    public boolean isBaby() {
+        return getOption(Option.IS_CHILD) || super.isBaby();
+    }
+
+    @Override
+    public boolean isFallFlying() {
+        return getOption(Option.IS_FLYING);
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
+        return this.isAlive() && getOption(Option.NO_CLIP);
+    }
+
+
+    @Override
     public ActionResultType interactAt(PlayerEntity player, Vector3d pos, Hand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        if (this.isMarker() || itemstack.getItem() == Items.NAME_TAG) {
+            return ActionResultType.PASS;
+        }
         if (player.level.isClientSide) {
             return ActionResultType.CONSUME;
         }
@@ -56,6 +92,33 @@ public class MannequinEntity extends ArmorStandEntity {
         return ActionResultType.SUCCESS;
     }
 
+    public boolean getOption(Option option) {
+        if (option == Option.IS_VISIBLE) {
+            return !isInvisible();
+        }
+        int flag = this.entityData.get(DATA_OPTIONS);
+        if (((flag >> option.ordinal()) & 1) != 0) {
+            return !option.defaultValue;
+        }
+        return option.defaultValue;
+    }
+
+    public void setOption(Option option, boolean value) {
+        if (option == Option.IS_VISIBLE) {
+            setInvisible(!value);
+            return;
+        }
+        int flag = this.entityData.get(DATA_OPTIONS);
+        int newFlag = flag;
+        if (value != option.defaultValue) {
+            newFlag |= 1 << option.ordinal();
+        } else {
+            newFlag &= ~(1 << option.ordinal());
+        }
+        if (newFlag != flag) {
+            this.entityData.set(DATA_OPTIONS, newFlag);
+        }
+    }
 
     public IInventory getInventory() {
         return new Inventory(getMainHandItem(), getOffhandItem()) {
@@ -78,5 +141,18 @@ public class MannequinEntity extends ArmorStandEntity {
                 return AWTags.isWeaponItem(item) || AWTags.isToolItem(item);
             }
         };
+    }
+
+    public enum Option {
+        IS_VISIBLE(true),
+        IS_CHILD(false),
+        IS_FLYING(false),
+        NO_CLIP(true),
+        EXTRA_RENDER(true);
+        final boolean defaultValue;
+
+        Option(boolean defaultValue) {
+            this.defaultValue = defaultValue;
+        }
     }
 }

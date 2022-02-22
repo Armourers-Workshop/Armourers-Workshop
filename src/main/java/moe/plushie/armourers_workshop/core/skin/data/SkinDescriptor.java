@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.utils.AWItems;
+import moe.plushie.armourers_workshop.core.base.AWItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -80,7 +80,7 @@ public class SkinDescriptor implements ISkinDescriptor {
         if (isEmpty()) {
             return ItemStack.EMPTY;
         }
-        ItemStack itemStack = new ItemStack(AWItems.SKIN.get());
+        ItemStack itemStack = new ItemStack(AWItems.SKIN);
         CompoundNBT nbt = new CompoundNBT();
         nbt.putString(NBT_KEY_SKIN_IDENTIFIER, identifier);
         nbt.putString(NBT_KEY_SKIN_TYPE, type.getRegistryName().toString());

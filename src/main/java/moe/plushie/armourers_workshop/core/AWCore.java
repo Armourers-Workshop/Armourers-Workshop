@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.core;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.render.bake.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
+import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -15,8 +15,8 @@ import javax.annotation.Nullable;
 
 public class AWCore {
 
-    public final static SkinBakery bakery = new SkinBakery();
-    public final static SkinLoader loader = new SkinLoader();
+    public static SkinBakery bakery;
+    public static SkinLoader loader = new SkinLoader();
 
     public static ResourceLocation resource(String path) {
         return new ResourceLocation(getModId(), path);
@@ -27,29 +27,9 @@ public class AWCore {
     }
 
     public static void init() {
-
+        bakery = new SkinBakery();
     }
 
-
-//    public static Skin loadSkin(String identifier) {
-//        BakedSkin skin = loadBakedSkin(identifier);
-//        if (skin != null) {
-//            return skin.getSkin();
-//        }
-//        return null;
-//    }
-//
-//    @OnlyIn(Dist.CLIENT)
-//    public static BakedSkin loadBakedSkin(String identifier) {
-//        if (identifier.isEmpty()) {
-//            return null;
-//        }
-//        int iq = Integer.parseInt(identifier);
-//        if (iq < skins.size()) {
-//            return skins.get(iq);
-//        }
-//        return null;
-//    }
 
     public static ResourceLocation getSlotIcon(String name) {
         return AWCore.resource("textures/items/slot/" + name + ".png");

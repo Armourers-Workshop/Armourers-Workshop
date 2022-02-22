@@ -13,15 +13,26 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @OnlyIn(Dist.CLIENT)
-public class WardrobeArmorLayer<T extends LivingEntity, M extends BipedModel<T>> extends LayerRenderer<T, M> {
+public class SkinWardrobeArmorLayer<T extends LivingEntity, M extends BipedModel<T>> extends LayerRenderer<T, M> {
 
-    public WardrobeArmorLayer(IEntityRenderer<T, M> renderer) {
+    public SkinWardrobeArmorLayer(IEntityRenderer<T, M> renderer) {
         super(renderer);
     }
 
     @Override
     @ParametersAreNonnullByDefault
     public void render(MatrixStack matrixStack, IRenderTypeBuffer renderType, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        ClientWardrobeHandler.onRenderArmor(entity, getParentModel(), packedLightIn, matrixStack, renderType);
+        matrixStack.pushPose();
+
+        BipedModel<?> model = getParentModel();
+        if (model.young) {
+            float scale = 1.0f / model.babyBodyScale;
+            matrixStack.scale(scale, scale, scale);
+            matrixStack.translate(0.0f, model.bodyYOffset / 16.0f, 0.0f);
+        }
+
+        ClientWardrobeHandler.onRenderArmor(entity, model, packedLightIn, matrixStack, renderType);
+
+        matrixStack.popPose();
     }
 }

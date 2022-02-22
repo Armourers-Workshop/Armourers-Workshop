@@ -1,15 +1,17 @@
 package moe.plushie.armourers_workshop.core.item;
 
+import moe.plushie.armourers_workshop.core.base.AWConfig;
+import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.utils.AWItems;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
-import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -19,6 +21,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.util.Strings;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 @SuppressWarnings("NullableProblems")
@@ -30,7 +33,7 @@ public class SkinItem extends Item {
 
     @OnlyIn(Dist.CLIENT)
     public static ArrayList<ITextComponent> getTooltip(ItemStack itemStack) {
-        boolean isItemOwner = itemStack.getItem() == AWItems.SKIN.get();
+        boolean isItemOwner = itemStack.getItem() == AWItems.SKIN;
         ArrayList<ITextComponent> tooltip = new ArrayList<>();
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
@@ -99,6 +102,17 @@ public class SkinItem extends Item {
 
         return tooltip;
     }
+
+    @OnlyIn(Dist.CLIENT)
+    public static float getIconIndex(ItemStack itemStack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        BakedSkin bakedSkin = AWCore.bakery.loadSkin(descriptor);
+        if (bakedSkin != null) {
+            return 0;
+        }
+        return descriptor.getType().getId();
+    }
+
 
     @Override
     public ITextComponent getName(ItemStack itemStack) {

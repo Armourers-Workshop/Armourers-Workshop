@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core;
+package moe.plushie.armourers_workshop.core.base;
 
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPart;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;

@@ -168,19 +168,24 @@ public class SkinWardrobeContainer extends Container {
     }
 
     public enum Group {
-        SKINS(true),
-        OUTFITS(true),
-        DYES(true),
-        COLORS(false);
+        SKINS(true, 99),
+        OUTFITS(true, 99),
+        DYES(true, 99),
+        COLORS(false, 99);
 
-        final boolean exchanges;
+        private final boolean exchanges;
+        private final int extendedHeight;
 
-        Group(boolean exchanges) {
+        Group(boolean exchanges, int extendedHeight) {
             this.exchanges = exchanges;
+            this.extendedHeight = extendedHeight;
         }
 
         public boolean shouldRenderPlayerInventory() {
             return exchanges;
+        }
+        public int getExtendedHeight() {
+            return extendedHeight;
         }
     }
 
