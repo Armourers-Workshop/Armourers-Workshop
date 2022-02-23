@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.base.AWConfig;
+import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.gui.widget.OptionButton;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
 import net.minecraft.client.Minecraft;

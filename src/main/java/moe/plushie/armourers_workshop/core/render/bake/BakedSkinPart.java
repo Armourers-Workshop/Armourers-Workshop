@@ -3,17 +3,17 @@ package moe.plushie.armourers_workshop.core.render.bake;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderType;
-import moe.plushie.armourers_workshop.core.skin.data.SkinPalette;
+import moe.plushie.armourers_workshop.core.skin.data.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.utils.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.utils.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.CustomVoxelShape;
-import moe.plushie.armourers_workshop.core.AWCore;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
@@ -36,15 +36,16 @@ public class BakedSkinPart {
         quads.forEach(action);
     }
 
-    public Object requirements(SkinPalette palette) {
-        if (descriptor.isEmpty() || palette.isEmpty()) {
+    @Nullable
+    public Object requirements(ColorScheme scheme) {
+        if (descriptor.isEmpty() || scheme.isEmpty()) {
             return null;
         }
         boolean needsEntityTexture = false;
         ArrayList<Object> requirements = new ArrayList<>();
         for (ISkinPaintType paintType : descriptor.getPaintTypes()) {
             if (paintType.getDyeType() != null) {
-                PaintColor resolvedColor = palette.getResolvedColor(paintType);
+                PaintColor resolvedColor = scheme.getResolvedColor(paintType);
                 requirements.add(paintType.getId());
                 requirements.add(resolvedColor);
                 // we must know then texture info for the resolved color.
@@ -56,9 +57,9 @@ public class BakedSkinPart {
                 needsEntityTexture = true;
             }
         }
-        if (needsEntityTexture && AWCore.bakery.getEntityTexture(palette.getTexture()) != null) {
+        if (needsEntityTexture && SkinBakery.getInstance().getEntityTexture(scheme.getTexture()) != null) {
             requirements.add(SkinPaintTypes.TEXTURE.getId());
-            requirements.add(palette.getTexture());
+            requirements.add(scheme.getTexture());
         }
         return requirements;
     }

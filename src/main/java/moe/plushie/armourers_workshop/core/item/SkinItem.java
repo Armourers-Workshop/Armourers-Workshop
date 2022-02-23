@@ -1,8 +1,9 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.core.base.AWConfig;
+import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.base.AWItems;
+import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
@@ -42,7 +43,7 @@ public class SkinItem extends Item {
             }
             return tooltip;
         }
-        BakedSkin bakedSkin = AWCore.bakery.loadSkin(descriptor);
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor);
         if (bakedSkin == null) {
             tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skindownloading", descriptor.getIdentifier()));
             return tooltip;
@@ -106,7 +107,7 @@ public class SkinItem extends Item {
     @OnlyIn(Dist.CLIENT)
     public static float getIconIndex(ItemStack itemStack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        BakedSkin bakedSkin = AWCore.bakery.loadSkin(descriptor);
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor);
         if (bakedSkin != null) {
             return 0;
         }

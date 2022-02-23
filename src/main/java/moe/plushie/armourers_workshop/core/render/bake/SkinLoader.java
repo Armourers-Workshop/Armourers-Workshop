@@ -2,6 +2,10 @@ package moe.plushie.armourers_workshop.core.render.bake;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
+import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
+import moe.plushie.armourers_workshop.core.data.DataManager;
+import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.RequestFilePacket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -19,72 +23,20 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 
 public class SkinLoader {
 
     private final static AtomicInteger COUNTER = new AtomicInteger();
-    static HashMap<String, String> PATHS = new HashMap<>();
 
-    static {
-        String[] paths = {
-                "护摩之杖.armour",
-                "胡桃.armour",
-                "钟离.armour",
-                "浊心斯卡蒂+海嗣背饰.armour",
-                "12531 - 早柚.armour",
-                "12740 - V1 Wings.armour",
-                "T.armour",
-                "T-SW.armour",
-                "T-RH.armour",
-                "TR-H.armour",
-                "T2-H.armour",
-                "T2.armour",
-                "11152 - Kagutsuchi Overlay (The Fire God).armour",
-                "9265 - Luke's Droid Shovel.armour",
-                "12072 - PINK PICKAXE.armour",
-                "10293 - Garry's mod Tool gun.armour",
-                "12162 - Energized Pickaxe.armour",
-                "12661 - Arcane Jayce Mercury Hammer - LoL.armour",
-                "10564 - Rose Glass Shield.armour",
-                "12626 - 飞雷之弦振.armour",
-                "12418 - [Random] - Starlight Axe.armour",
-                "12729 - White Bat Ears.armour",
-                "12902 - Winter Before.armour",
-                "12414 - Komi.armour",
-                "10032 - ?.armour",
-                "2/5818 - æ˜Žæ—¥æ–¹èˆŸé›ªäººé™ˆ1.armour",
-                "2/5819 - æ˜Žæ—¥æ–¹èˆŸé›ªäººé™ˆ2.armour",
-                "2/5820 - æ˜Žæ—¥æ–¹èˆŸé›ªäººé™ˆ3.armour",
-                "2/5821 - æ˜Žæ—¥æ–¹èˆŸé›ªäººé™ˆ4.armour",
-                "2/6390 - å†°ä¸Žç\u0081«ä¹‹æ\u00ADŒ.armour",
-                "2/6397 - é—ªè€€è“\u009Dé“\u0081ä¹‹å‰‘.armour",
-                "2/6462 - ç¬¦æ–‡-æµ\u0081ç\u0081«.armour",
-                "2/6463 - ç¬¦æ–‡-å‡\u009Déœœ.armour",
-                "12388 - Light rifle (Halo).armour",
-                "T/T-H.armour",
-                "T/T-C.armour",
-                "T/T-F.armour",
-                "T/T-L.armour",
-                "T/T-W.armour",
-                "TP/TP-H.armour",
-                "TP/TP-C.armour",
-                "TP/TP-F.armour",
-                "TP/TP-L.armour",
-                "TP/TP-W.armour",
-        };
-        for (int i = 0; i < paths.length; ++i) {
-            PATHS.put(String.valueOf(i), "./armoures/" + paths[i]);
-        }
-    }
-
-    private final int queueCount = 1;
+    private int queueCount = 1;
     private final ArrayList<LoadingTask> working = new ArrayList<>();
     private final ArrayList<LoadingTask> pending = new ArrayList<>();
     private final HashMap<SkinDescriptor, LoadingTask> tasks = new HashMap<>();
     private final DataLoader<SkinDescriptor, Skin> manager = DataLoader.newBuilder()
             .threadPool(1)
-            .build(this::addTask);
+            .build(this::loadSkinFileIfNeeded);
 
     @Nullable
     public Skin getSkin(ItemStack itemStack) {
@@ -127,11 +79,39 @@ public class SkinLoader {
         manager.load(descriptor, false, consumer);
     }
 
-    private void addTask(SkinDescriptor descriptor, @Nullable Consumer<Optional<Skin>> complete) {
-        if (Minecraft.getInstance().isLocalServer()) {
-            loadSkinFile(descriptor, complete);
+    public SkinDescriptor cacheSkin(SkinDescriptor descriptor, Skin skin) {
+        String identifier = descriptor.getIdentifier();
+        if (identifier.startsWith("db:")) {
+            return descriptor;
+        }
+        identifier = LocalDataService.getInstance().addFile(skin);
+        if (identifier != null) {
+            descriptor = new SkinDescriptor("db:" + identifier, descriptor.getType(), descriptor.getColorScheme());
+            manager.put(descriptor, Optional.of(skin));
+        }
+        return descriptor;
+    }
+
+
+    private void loadSkinFileIfNeeded(SkinDescriptor descriptor, @Nullable Consumer<Optional<Skin>> complete) {
+        if (!Minecraft.getInstance().isLocalServer()) {
+            addTask(descriptor, complete);
             return;
         }
+        Optional<Skin> skin = loadSkinFile(descriptor, () -> DataManager.getInstance().loadSkinData(descriptor));
+        if (complete != null) {
+            complete.accept(skin);
+        }
+    }
+
+    private Optional<Skin> loadSkinFile(SkinDescriptor descriptor, Supplier<Optional<ByteBuf>> buffer) {
+        AWLog.debug("Parsing skin from data: {} ", descriptor);
+        Optional<Skin> skin = buffer.get().map(buf1 -> SkinIOUtils.loadSkinFromStream(new ByteArrayInputStream(buf1.array())));
+        manager.put(descriptor, skin);
+        return skin;
+    }
+
+    private void addTask(SkinDescriptor descriptor, @Nullable Consumer<Optional<Skin>> complete) {
         LoadingTask task = tasks.computeIfAbsent(descriptor, LoadingTask::new);
         if (complete != null) {
             task.listeners.add(complete);
@@ -158,9 +138,7 @@ public class SkinLoader {
             });
             task.clear();
             removeTask(task);
-            Optional<Skin> skin = parseSkinFile(task.descriptor, buffer);
-            manager.put(task.descriptor, skin);
-            AWLog.debug("Notify loading task: {}", task.descriptor);
+            Optional<Skin> skin = loadSkinFile(task.descriptor, () -> Optional.of(buffer));
             listeners.forEach(t -> t.accept(skin));
         });
     }
@@ -187,103 +165,7 @@ public class SkinLoader {
         AWLog.debug("Start loading task: {}", task.descriptor);
     }
 
-    private Optional<Skin> parseSkinFile(SkinDescriptor descriptor, ByteBuf buf) {
-        AWLog.debug("Parsing skin from data: {} ", descriptor);
-        sleep();
-        ByteArrayInputStream nf = new ByteArrayInputStream(buf.array());
-        Skin skin = SkinIOUtils.loadSkinFromStream(nf);
-        return Optional.ofNullable(skin);
-    }
-
-    public void loadSkinData(SkinDescriptor descriptor, Consumer<Optional<ByteBuf>> consumer) {
-        AWLog.debug("Load skin data: {} ", descriptor);
-        manager.add(() -> {
-            InputStream stream = loadStreamFromPath(descriptor);
-            if (stream == null) {
-                consumer.accept(Optional.empty());
-                return;
-            }
-            try {
-                sleep();
-                int size = stream.available();
-                ByteBuf buf = Unpooled.buffer(size);
-                buf.writeBytes(stream, size);
-                buf.resetReaderIndex();
-                consumer.accept(Optional.of(buf));
-
-            } catch (IOException e) {
-                consumer.accept(Optional.empty());
-            }
-        });
-    }
-
-    private void loadSkinFile(SkinDescriptor descriptor, @Nullable Consumer<Optional<Skin>> complete) {
-        Skin skin = loadSkinFromPath(descriptor);
-        if (complete != null) {
-            complete.accept(Optional.ofNullable(skin));
-        }
-    }
-
-    private void sleep() {
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
-
-//        new WorldSavedData("xxx") {
-//            @Override
-//            public void load(CompoundNBT p_76184_1_) {
-//                p_76184_1_.getString("Key");
-//                p_76184_1_.getByteArray("Value");
-//            }
-//
-//            @Override
-//            public CompoundNBT save(CompoundNBT p_189551_1_) {
-//                p_189551_1_.putString("Key", "???");
-//                p_189551_1_.putByteArray("Value", ...);
-//                return null;
-//            }
-//        };
-
-
-    }
-
-    @Nullable
-    private InputStream loadStreamFromPath(SkinDescriptor descriptor) {
-        String identifier = descriptor.getIdentifier();
-        if (identifier.isEmpty()) {
-            return null;
-        }
-        String path = PATHS.get(identifier);
-        if (path == null) {
-            return null;
-        }
-        try {
-            return new FileInputStream(path);
-        } catch (FileNotFoundException e) {
-            return null;
-        }
-    }
-
-    @Nullable
-    private Skin loadSkinFromPath(SkinDescriptor descriptor) {
-        String identifier = descriptor.getIdentifier();
-        if (identifier.isEmpty()) {
-            return null;
-        }
-        String path = PATHS.get(identifier);
-        if (path == null) {
-            return null;
-        }
-        Skin skin = SkinIOUtils.loadSkinFromFile(new File(path));
-        AWLog.debug("Loading skin " + descriptor + " did complete !");
-        return skin;
-    }
-
     public class LoadingTask {
-
 
         private final int id;
         private final SkinDescriptor descriptor;

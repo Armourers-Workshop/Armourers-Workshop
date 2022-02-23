@@ -31,7 +31,7 @@ public class DisplaySettingPanel extends BaseSettingPanel {
     }
 
     private void addOption(int x, int y, SkinWardrobeOption option, String key) {
-        addButton(new OptionButton(x, y, 9, 9, getDisplayText(key), option.get(wardrobe), button -> {
+        addButton(new OptionButton(x, y, 9, 9, getDisplayText(key), option.get(wardrobe, false), button -> {
             if (button instanceof OptionButton) {
                 boolean newValue = ((OptionButton) button).isSelected();
                 NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.option(wardrobe, option, newValue));

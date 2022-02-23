@@ -10,6 +10,8 @@ import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
+import moe.plushie.armourers_workshop.core.texture.TextureDescriptor;
+import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -19,6 +21,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,7 +33,10 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DataSerializerEntry;
 
 public class AWRegistry {
 
@@ -40,7 +48,8 @@ public class AWRegistry {
     public void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
                 AWItems.SKIN,
-                AWItems.BOTTLE
+                AWItems.BOTTLE,
+                AWItems.MANNEQUIN
         );
     }
 
@@ -64,6 +73,7 @@ public class AWRegistry {
         );
     }
 
+
     public void registerCommands(RegisterCommandsEvent event) {
         event.getDispatcher().register(SkinCommands.commands());
     }
@@ -72,9 +82,6 @@ public class AWRegistry {
     public void registerItemModels(ModelRegistryEvent event) {
         ItemModelsProperties.register(AWItems.BOTTLE, AWCore.resource("empty"), BottleItem::isEmpty);
         ItemModelsProperties.register(AWItems.SKIN, AWCore.resource("loading"), SkinItem::getIconIndex);
-
-        EntityRendererManager rendererManager = Minecraft.getInstance().getEntityRenderDispatcher();
-        rendererManager.register(AWEntities.MANNEQUIN, new MannequinEntityRenderer<>(rendererManager));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -93,5 +100,10 @@ public class AWRegistry {
 //        modEventBus.addListener(this::handleModelBake);
 
         ScreenManager.register(SkinWardrobeContainer.TYPE, SkinWardrobeScreen::new);
+
+        ClientRegistry.registerKeyBinding(AWKeyBindings.UNDO_KEY);
+        ClientRegistry.registerKeyBinding(AWKeyBindings.OPEN_WARDROBE_KEY);
+
+        RenderingRegistry.registerEntityRenderingHandler(AWEntities.MANNEQUIN, MannequinEntityRenderer::new);
     }
 }

@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.render.model.HeldItemModel;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
@@ -58,7 +59,7 @@ public class ClientWardrobeHandler {
         matrixStack.scale(-SCALE, -SCALE, SCALE);
         matrixStack.translate(0, 0, -1);
 
-        int count = render(wardrobe, entity, model, light, matrixStack, null, SkinWardrobe.State::getItemSkins);
+        int count = render(wardrobe, entity, model, light, matrixStack, null, SkinWardrobeState::getItemSkins);
         if (count != 0) {
             callback.cancel();
         }
@@ -74,7 +75,7 @@ public class ClientWardrobeHandler {
         matrixStack.pushPose();
         matrixStack.scale(SCALE, SCALE, SCALE);
 
-        render(wardrobe, entity, model, light, matrixStack, null, SkinWardrobe.State::getArmorSkins);
+        render(wardrobe, entity, model, light, matrixStack, null, SkinWardrobeState::getArmorSkins);
 
         matrixStack.popPose();
     }
@@ -159,13 +160,13 @@ public class ClientWardrobeHandler {
         });
     }
 
-    private static int render(SkinWardrobe wardrobe, Entity entity, Model model, int light, MatrixStack matrixStack, ItemCameraTransforms.TransformType transformType, Function<SkinWardrobe.State, Iterable<BakedSkin>> provider) {
+    private static int render(SkinWardrobe wardrobe, Entity entity, Model model, int light, MatrixStack matrixStack, ItemCameraTransforms.TransformType transformType, Function<SkinWardrobeState, Iterable<BakedSkin>> provider) {
         int t = (int) System.currentTimeMillis();
         int r = 0;
-        SkinWardrobe.State snapshot = wardrobe.snapshot();
+        SkinWardrobeState snapshot = wardrobe.snapshot();
         SkinRenderBuffer buffer = SkinRenderBuffer.getInstance();
         for (BakedSkin bakedSkin : provider.apply(snapshot)) {
-            SkinModelRenderer.renderSkin(bakedSkin, snapshot.getPalette(), entity, model, transformType, light, t, matrixStack, buffer);
+            SkinModelRenderer.renderSkin(bakedSkin, snapshot.getColorScheme(), entity, model, transformType, light, t, matrixStack, buffer);
             r += 1;
         }
         buffer.endBatch();

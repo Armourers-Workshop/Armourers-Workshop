@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.base;
 
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
+import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import net.minecraft.item.Item;
@@ -18,14 +19,16 @@ import java.util.function.Function;
 @SuppressWarnings("unused")
 public class AWItems {
 
-    public static final SkinItem SKIN = register("skin", SkinItem::new, p -> p.setISTER(() -> SkinItemRenderer.ItemStackRenderer::new));
     private static final ItemGroup GROUP = new ItemGroup("skin") {
         @OnlyIn(Dist.CLIENT)
         public ItemStack makeIcon() {
             return new ItemStack(Items.APPLE);
         }
     };
+
+    public static final SkinItem SKIN = register("skin", SkinItem::new, p -> p.setISTER(() -> SkinItemRenderer.ItemStackRenderer::new));
     public static final BottleItem BOTTLE = register("dye-bottle", BottleItem::new, p -> p.tab(GROUP));
+    public static final MannequinItem MANNEQUIN = register("mannequin", MannequinItem::new, p -> p.tab(GROUP));
 
     private static <T extends Item> T register(String name, Function<Item.Properties, T> factory) {
         return register(name, factory, null);

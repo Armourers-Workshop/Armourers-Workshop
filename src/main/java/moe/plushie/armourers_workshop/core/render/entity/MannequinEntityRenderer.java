@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.core.render.layer.SkinWardrobeArmorLayer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.render.model.MannequinModel;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HeadLayer;
 import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -20,50 +22,42 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRenderer<T, MannequinModel<T>> {
 
-    private static final ResourceLocation DEFAULT_SKIN_LOCATION = new ResourceLocation("textures/entity/steve.png");
+    private static final ResourceLocation STEVE_SKIN_LOCATION = new ResourceLocation("textures/entity/steve.png");
+    private static final ResourceLocation ALEX_SKIN_LOCATION = new ResourceLocation("textures/entity/alex.png");
+
+    private final MannequinModel<T> normalModel;
+    private final MannequinModel<T> slimModel;
 
     public MannequinEntityRenderer(EntityRendererManager rendererManager) {
-        super(rendererManager, new MannequinModel<>(0), 0.0F);
-        this.addLayer(new BipedArmorLayer<>(this, new MannequinArmorModel<>(0.5F), new MannequinArmorModel<>(1.0F)));
+        super(rendererManager, new MannequinModel<>(0, false), 0.0f);
+        this.addLayer(new BipedArmorLayer<>(this, new MannequinArmorModel<>(0.5f), new MannequinArmorModel<>(1.0f)));
         this.addLayer(new HeldItemLayer<>(this));
         this.addLayer(new ElytraLayer<>(this));
         this.addLayer(new HeadLayer<>(this));
         this.addLayer(new SkinWardrobeArmorLayer<>(this));
+        // Has two models by mannequin, only deciding which model using when texture specified.
+        this.normalModel = this.model;
+        this.slimModel = new MannequinModel<>(0, true);
     }
 
     @Override
     public void render(T entity, float p_225623_2_, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int p_225623_6_) {
+        this.model = getResolvedModel(entity);
         this.model.setAllVisible(true);
         super.render(entity, p_225623_2_, p_225623_3_, matrixStack, renderTypeBuffer, p_225623_6_);
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(T entity) {
-        return DEFAULT_SKIN_LOCATION;
+    public MannequinModel<T> getResolvedModel(T entity) {
+        return normalModel;
+//        return slimModel;
     }
 
-//    protected void scale(AbstractClientPlayerEntity p_225620_1_, MatrixStack p_225620_2_, float p_225620_3_) {
-//        float f = 0.9375F;
-//        p_225620_2_.scale(0.9375F, 0.9375F, 0.9375F);
-//    }
-//
-//    protected void renderNameTag(AbstractClientPlayerEntity p_225629_1_, ITextComponent p_225629_2_, MatrixStack p_225629_3_, IRenderTypeBuffer p_225629_4_, int p_225629_5_) {
-//        double d0 = this.entityRenderDispatcher.distanceToSqr(p_225629_1_);
-//        p_225629_3_.pushPose();
-//        if (d0 < 100.0D) {
-//            Scoreboard scoreboard = p_225629_1_.getScoreboard();
-//            ScoreObjective scoreobjective = scoreboard.getDisplayObjective(2);
-//            if (scoreobjective != null) {
-//                Score score = scoreboard.getOrCreatePlayerScore(p_225629_1_.getScoreboardName(), scoreobjective);
-//                super.renderNameTag(p_225629_1_, (new StringTextComponent(Integer.toString(score.getScore()))).append(" ").append(scoreobjective.getDisplayName()), p_225629_3_, p_225629_4_, p_225629_5_);
-//                p_225629_3_.translate(0.0D, (double)(9.0F * 1.15F * 0.025F), 0.0D);
-//            }
-//        }
-//
-//        super.renderNameTag(p_225629_1_, p_225629_2_, p_225629_3_, p_225629_4_, p_225629_5_);
-//        p_225629_3_.popPose();
-//    }
-//
+    @Override
+    public ResourceLocation getTextureLocation(T entity) {
+        return STEVE_SKIN_LOCATION;
+//        return ALEX_SKIN_LOCATION;
+    }
+
 //    protected void setupRotations(ArmorStandEntity entity, MatrixStack matrixStack, float p_225621_3_, float p_225621_4_, float p_225621_5_) {
 //        float f = entity.getSwimAmount(p_225621_5_);
 //        if (entity.isFallFlying()) {
@@ -98,12 +92,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
 
     @Override
     protected boolean shouldShowName(T entity) {
-        if (!entity.isCustomNameVisible()) {
-            return false;
-        }
-        double d0 = this.entityRenderDispatcher.distanceToSqr(entity);
-        float f = entity.isCrouching() ? 32.0F : 64.0F;
-        return d0 < (double) (f * f);
+        return false;
     }
 
 

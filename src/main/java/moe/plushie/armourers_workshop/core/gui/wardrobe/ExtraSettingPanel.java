@@ -28,11 +28,11 @@ public class ExtraSettingPanel extends BaseSettingPanel {
         addOption(leftPos + 83, topPos + 47, SkinWardrobeOption.MANNEQUIN_EXTRA_RENDER, "label.isExtraRenders");
         addOption(leftPos + 83, topPos + 67, SkinWardrobeOption.MANNEQUIN_IS_FLYING, "label.isFlying");
         addOption(leftPos + 83, topPos + 87, SkinWardrobeOption.MANNEQUIN_IS_VISIBLE, "label.isVisible");
-        addOption(leftPos + 83, topPos + 107, SkinWardrobeOption.MANNEQUIN_NO_CLIP, "label.noclip");
+        addOption(leftPos + 83, topPos + 107, SkinWardrobeOption.MANNEQUIN_IS_GHOST, "label.noclip");
     }
 
     private void addOption(int x, int y, SkinWardrobeOption option, String key) {
-        addButton(new OptionButton(x, y, 9, 9, getDisplayText(key), option.get(wardrobe), button -> {
+        addButton(new OptionButton(x, y, 9, 9, getDisplayText(key), option.get(wardrobe, false), button -> {
             if (button instanceof OptionButton) {
                 boolean newValue = ((OptionButton) button).isSelected();
                 NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.option(wardrobe, option, newValue));

@@ -5,21 +5,17 @@ import com.google.common.cache.CacheBuilder;
 import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDescriptor;
+import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.base.AWItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
-import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
 
 public class SkinDescriptor implements ISkinDescriptor {
 
     public static final SkinDescriptor EMPTY = new SkinDescriptor("");
-
-    private static final String NBT_KEY_SKIN = "armourersWorkshop";
-    private static final String NBT_KEY_SKIN_TYPE = "skinType";
-    private static final String NBT_KEY_SKIN_IDENTIFIER = "identifier";
 
     private final static Cache<ItemStack, SkinDescriptor> DESCRIPTOR_CACHES = CacheBuilder.newBuilder()
             .maximumSize(8)
@@ -28,38 +24,37 @@ public class SkinDescriptor implements ISkinDescriptor {
 
     private final String identifier;
     private final ISkinType type;
-    private final SkinPalette palette;
+    private final ColorScheme colorScheme;
 
     public SkinDescriptor(String identifier) {
-        this(identifier, SkinTypes.UNKNOWN, SkinPalette.EMPTY);
+        this(identifier, SkinTypes.UNKNOWN, ColorScheme.EMPTY);
     }
 
-    public SkinDescriptor(String identifier, ISkinType type, SkinPalette palette) {
+    public SkinDescriptor(String identifier, ISkinType type, ColorScheme colorScheme) {
         this.identifier = identifier;
         this.type = type;
-        this.palette = palette;
+        this.colorScheme = colorScheme;
     }
 
     public SkinDescriptor(CompoundNBT nbt) {
-        this.identifier = nbt.getString(NBT_KEY_SKIN_IDENTIFIER);
-        this.type = SkinTypes.byName(nbt.getString(NBT_KEY_SKIN_TYPE));
-        this.palette = new SkinPalette();
+        this.identifier = nbt.getString(AWConstants.NBT.SKIN_IDENTIFIER);
+        this.type = SkinTypes.byName(nbt.getString(AWConstants.NBT.SKIN_TYPE));
+        this.colorScheme = new ColorScheme();
     }
 
-    @Nonnull
     public static SkinDescriptor of(ItemStack itemStack) {
         if (itemStack.isEmpty()) {
             return EMPTY;
         }
         CompoundNBT nbt = itemStack.getTag();
-        if (nbt == null || !nbt.contains(NBT_KEY_SKIN)) {
+        if (nbt == null || !nbt.contains(AWConstants.NBT.SKIN)) {
             return EMPTY;
         }
         SkinDescriptor descriptor = DESCRIPTOR_CACHES.getIfPresent(itemStack);
         if (descriptor != null) {
             return descriptor;
         }
-        descriptor = new SkinDescriptor(nbt.getCompound(NBT_KEY_SKIN));
+        descriptor = new SkinDescriptor(nbt.getCompound(AWConstants.NBT.SKIN));
         DESCRIPTOR_CACHES.put(itemStack, descriptor);
         return descriptor;
     }
@@ -75,16 +70,19 @@ public class SkinDescriptor implements ISkinDescriptor {
         return false;
     }
 
-    @Nonnull
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putString(AWConstants.NBT.SKIN_TYPE, type.getRegistryName().toString());
+        nbt.putString(AWConstants.NBT.SKIN_IDENTIFIER, identifier);
+        return nbt;
+    }
+
     public ItemStack asItemStack() {
         if (isEmpty()) {
             return ItemStack.EMPTY;
         }
         ItemStack itemStack = new ItemStack(AWItems.SKIN);
-        CompoundNBT nbt = new CompoundNBT();
-        nbt.putString(NBT_KEY_SKIN_IDENTIFIER, identifier);
-        nbt.putString(NBT_KEY_SKIN_TYPE, type.getRegistryName().toString());
-        itemStack.addTagElement(NBT_KEY_SKIN, nbt);
+        itemStack.addTagElement(AWConstants.NBT.SKIN, serializeNBT());
         return itemStack;
     }
 
@@ -93,8 +91,8 @@ public class SkinDescriptor implements ISkinDescriptor {
         return this == EMPTY;
     }
 
-    public SkinPalette getPalette() {
-        return palette;
+    public ColorScheme getColorScheme() {
+        return colorScheme;
     }
 
     public ISkinType getType() {
@@ -141,10 +139,7 @@ public class SkinDescriptor implements ISkinDescriptor {
 
     @Override
     public String toString() {
-        return "SkinDescriptor{" +
-                "identifier='" + identifier + '\'' +
-                ", type=" + type +
-                '}';
+        return identifier + "@" + type;
     }
 
     @Override

@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 
 public final class AWEntities {
 
-    public static final EntityType<MannequinEntity> MANNEQUIN = register("mannequin", MannequinEntity::new);
+    public static final EntityType<MannequinEntity> MANNEQUIN = register("mannequin", MannequinEntity::new, EntityClassification.MISC, b -> b.sized(0.6F, 1.8F));
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType.IFactory<T> entityFactory) {
         return register(name, entityFactory, EntityClassification.CREATURE, null);

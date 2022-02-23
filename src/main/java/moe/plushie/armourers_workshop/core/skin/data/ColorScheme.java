@@ -6,32 +6,33 @@ import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
 import moe.plushie.armourers_workshop.core.utils.PaintColor;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class SkinPalette implements ISkinDye {
+public class ColorScheme implements ISkinDye {
 
-    public final static SkinPalette EMPTY = new SkinPalette();
+    public final static ColorScheme EMPTY = new ColorScheme();
 
     private final HashMap<ISkinPaintType, PaintColor> colors = new HashMap<>();
     private HashMap<ISkinPaintType, PaintColor> resolvedColors;
 
-    private SkinPalette reference;
+    private ColorScheme reference;
     private ResourceLocation texture;
 
     private int hashCode;
 
-    public SkinPalette() {
+    public ColorScheme() {
     }
 
-    public SkinPalette copy() {
-        SkinPalette palette = new SkinPalette();
-        palette.colors.putAll(colors);
-        palette.reference = reference;
-        palette.texture = texture;
-        return palette;
+    public ColorScheme copy() {
+        ColorScheme scheme = new ColorScheme();
+        scheme.colors.putAll(colors);
+        scheme.reference = reference;
+        scheme.texture = texture;
+        return scheme;
     }
 
     public boolean isEmpty() {
@@ -41,6 +42,7 @@ public class SkinPalette implements ISkinDye {
         return colors.isEmpty();
     }
 
+    @Nullable
     public PaintColor getColor(ISkinPaintType paintType) {
         PaintColor color = colors.get(paintType);
         if (color != null) {
@@ -73,14 +75,14 @@ public class SkinPalette implements ISkinDye {
         return texture;
     }
 
-    public SkinPalette getReference() {
+    public ColorScheme getReference() {
         if (reference != null) {
             return reference;
         }
-        return SkinPalette.EMPTY;
+        return ColorScheme.EMPTY;
     }
 
-    public void setReference(SkinPalette reference) {
+    public void setReference(ColorScheme reference) {
         if (!Objects.equals(this.reference, reference)) {
             this.reference = reference;
             this.resolvedColors = null;
@@ -207,8 +209,8 @@ public class SkinPalette implements ISkinDye {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (o.hashCode() != this.hashCode()) return false;
-        SkinPalette palette = (SkinPalette) o;
-        return colors.equals(palette.colors) && Objects.equals(texture, palette.texture) && Objects.equals(reference, palette.reference);
+        ColorScheme scheme = (ColorScheme) o;
+        return colors.equals(scheme.colors) && Objects.equals(texture, scheme.texture) && Objects.equals(reference, scheme.reference);
     }
 
     @Override
@@ -224,6 +226,6 @@ public class SkinPalette implements ISkinDye {
 
     @Override
     public String toString() {
-        return "SkinDye [colors=" + colors + "]";
+        return "[" + colors + "]";
     }
 }
