@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.base.AWItems;
+import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.gui.widget.IconButton;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
@@ -168,7 +168,7 @@ public class ColourSettingPanel extends BaseSettingPanel {
                 return;
             }
             pickButton = button;
-            AWCore.bakery.loadEntityTexture(texture, bakedTexture -> {
+            SkinBakery.getInstance().loadEntityTexture(texture, bakedTexture -> {
                 if (this.pickButton == button) {
                     PaintColor paintColor = getColorFromTexture(bakedTexture.orElse(null));
                     RenderSystem.recordRenderCall(() -> setColor(paintColor));

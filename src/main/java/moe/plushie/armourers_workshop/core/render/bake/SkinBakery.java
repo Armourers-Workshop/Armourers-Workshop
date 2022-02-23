@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
 import moe.plushie.armourers_workshop.core.skin.*;
+import moe.plushie.armourers_workshop.core.skin.data.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.data.SkinPalette;
 import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.utils.ColorDescriptor;
@@ -13,9 +13,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
@@ -24,6 +26,24 @@ import java.util.function.Consumer;
 @OnlyIn(Dist.CLIENT)
 public final class SkinBakery {
 
+    private static SkinBakery running;
+
+    @Nonnull
+    public static SkinBakery getInstance() {
+        return Objects.requireNonNull(running);
+    }
+
+    public static void start() {
+        if (running == null) {
+            running = new SkinBakery();
+        }
+    }
+
+    public static void stop() {
+        if (running != null) {
+            running = null;
+        }
+    }
 
     private final AtomicInteger bakingQueue = new AtomicInteger(0);
     private final AtomicIntegerArray bakeTimes = new AtomicIntegerArray(1000);
@@ -124,6 +144,7 @@ public final class SkinBakery {
             }
         });
     }
+
     private void sleep() {
 //        try {
 //            Thread.sleep(1000);
@@ -186,7 +207,7 @@ public final class SkinBakery {
 //            }
 //            bakeTimes.set(index, (int) totalTime);
 
-        BakedSkin bakedSkin = new BakedSkin(descriptor, skin, new SkinPalette(), colorInfo, bakedParts);
+        BakedSkin bakedSkin = new BakedSkin(descriptor, skin, new ColorScheme(), colorInfo, bakedParts);
         complete.accept(Optional.of(bakedSkin));
 
         listeners.forEach(listener -> listener.didBake(descriptor, bakedSkin));

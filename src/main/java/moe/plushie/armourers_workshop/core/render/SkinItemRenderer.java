@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.core.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.entity.SkinDummyEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
+import moe.plushie.armourers_workshop.core.skin.data.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.data.SkinPalette;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -23,7 +23,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public final class SkinItemRenderer {
 
     public static int mp1 = 0;
-    private static SkinPalette entityDye = SkinPalette.EMPTY;
+    private static ColorScheme entityDye = ColorScheme.EMPTY;
 
     public static void renderSkin(BakedSkin bakedSkin, int light, int partialTicks, int targetWidth, int targetHeight, ItemCameraTransforms.TransformType transformType, Vector3f rotation, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
         SkinDummyEntity entity = SkinDummyEntity.shared();
@@ -57,7 +57,7 @@ public final class SkinItemRenderer {
 
         @Override
         public void renderByItem(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int light, int overlay) {
-            BakedSkin skin = AWCore.bakery.loadSkin(SkinDescriptor.of(itemStack));
+            BakedSkin skin = SkinBakery.getInstance().loadSkin(SkinDescriptor.of(itemStack));
             if (skin == null) {
                 return;
             }

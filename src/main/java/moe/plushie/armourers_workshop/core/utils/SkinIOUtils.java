@@ -21,12 +21,12 @@ public final class SkinIOUtils {
 
     public static final String SKIN_FILE_EXTENSION = ".armour";
 
-    public static boolean saveSkinFromFileName(String filePath, String fileName, Skin skin) {
-        filePath = makeFilePathValid(filePath);
-        fileName = makeFileNameValid(fileName);
-        File file = new File(ArmourersWorkshop.getSkinLibraryDirectory(), filePath + fileName);
-        return saveSkinToFile(file, skin);
-    }
+//    public static boolean saveSkinFromFileName(String filePath, String fileName, Skin skin) {
+//        filePath = makeFilePathValid(filePath);
+//        fileName = makeFileNameValid(fileName);
+//        File file = new File(ArmourersWorkshop.getSkinLibraryDirectory(), filePath + fileName);
+//        return saveSkinToFile(file, skin);
+//    }
 
     public static boolean saveSkinToFile(File file, Skin skin) {
         File dir = file.getParentFile();
@@ -66,15 +66,15 @@ public final class SkinIOUtils {
 //        return loadSkinFromFileName(libraryFile.getFullName() + SKIN_FILE_EXTENSION);
 //    }
 
-    public static Skin loadSkinFromFileName(String fileName) {
-        File file = new File(ArmourersWorkshop.getSkinLibraryDirectory(), fileName);
-        if (!isInSubDirectory(ArmourersWorkshop.getSkinLibraryDirectory(), file)) {
-            AWLog.warn("Player tried to load a file in a invalid location.");
-            AWLog.warn(String.format("The file was: %s", file.getAbsolutePath().replace("%", "")));
-            return null;
-        }
-        return loadSkinFromFile(file);
-    }
+//    public static Skin loadSkinFromFileName(String fileName) {
+//        File file = new File(ArmourersWorkshop.getSkinLibraryDirectory(), fileName);
+//        if (!isInSubDirectory(ArmourersWorkshop.getSkinLibraryDirectory(), file)) {
+//            AWLog.warn("Player tried to load a file in a invalid location.");
+//            AWLog.warn(String.format("The file was: %s", file.getAbsolutePath().replace("%", "")));
+//            return null;
+//        }
+//        return loadSkinFromFile(file);
+//    }
 
     public static Skin loadSkinFromFile(File file) {
         Skin skin = null;
@@ -191,56 +191,56 @@ public final class SkinIOUtils {
 //
 //        return skinType;
 //    }
+//
+//    public static void makeDatabaseDirectory() {
+//        File directory = getSkinDatabaseDirectory();
+//        AWLog.debug("Loading skin database at: " + directory.getAbsolutePath());
+//        copyGlobalDatabase();
+//        if (!directory.exists()) {
+//            directory.mkdir();
+//        }
+//    }
 
-    public static void makeDatabaseDirectory() {
-        File directory = getSkinDatabaseDirectory();
-        AWLog.debug("Loading skin database at: " + directory.getAbsolutePath());
-        copyGlobalDatabase();
-        if (!directory.exists()) {
-            directory.mkdir();
-        }
-    }
-
-    public static void copyGlobalDatabase() {
-        File dirGlobalDatabase = ArmourersWorkshop.getGlobalSkinDatabaseDirectory();
-        if (dirGlobalDatabase.exists()) {
-            File dirWorldDatabase = getSkinDatabaseDirectory();
-            File[] globalFiles = dirGlobalDatabase.listFiles();
-            for (File globalFile : globalFiles) {
-                File worldFile = new File(dirWorldDatabase, globalFile.getName());
-                if (!globalFile.getName().equals("readme.txt") & !worldFile.exists()) {
-                    try {
-                        FileUtils.copyFile(globalFile, worldFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        createGlobalDatabaseReadme();
-    }
-
-    private static void createGlobalDatabaseReadme() {
-        File globalDatabaseReadme = new File(ArmourersWorkshop.getGlobalSkinDatabaseDirectory(), "readme.txt");
-        if (!ArmourersWorkshop.getGlobalSkinDatabaseDirectory().exists()) {
-            ArmourersWorkshop.getGlobalSkinDatabaseDirectory().mkdirs();
-        }
-        if (!globalDatabaseReadme.exists()) {
-            DataOutputStream outputStream = null;
-            try {
-                String crlf = "\r\n";
-                outputStream = new DataOutputStream(new FileOutputStream(globalDatabaseReadme));
-                outputStream.writeBytes("Any files placed in this directory will be copied into the skin-database folder of any worlds that are loaded." + crlf);
-                outputStream.writeBytes("Please read Info for Map & Mod Pack Makers on the main forum post if you want to know how to use this." + crlf);
-                outputStream.writeBytes("http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2309193-wip-alpha-armourers-workshop-weapon-armour-skins");
-                outputStream.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                IOUtils.closeQuietly(outputStream);
-            }
-        }
-    }
+//    public static void copyGlobalDatabase() {
+//        File dirGlobalDatabase = ArmourersWorkshop.getGlobalSkinDatabaseDirectory();
+//        if (dirGlobalDatabase.exists()) {
+//            File dirWorldDatabase = getSkinDatabaseDirectory();
+//            File[] globalFiles = dirGlobalDatabase.listFiles();
+//            for (File globalFile : globalFiles) {
+//                File worldFile = new File(dirWorldDatabase, globalFile.getName());
+//                if (!globalFile.getName().equals("readme.txt") & !worldFile.exists()) {
+//                    try {
+//                        FileUtils.copyFile(globalFile, worldFile);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//        createGlobalDatabaseReadme();
+//    }
+//
+//    private static void createGlobalDatabaseReadme() {
+//        File globalDatabaseReadme = new File(ArmourersWorkshop.getGlobalSkinDatabaseDirectory(), "readme.txt");
+//        if (!ArmourersWorkshop.getGlobalSkinDatabaseDirectory().exists()) {
+//            ArmourersWorkshop.getGlobalSkinDatabaseDirectory().mkdirs();
+//        }
+//        if (!globalDatabaseReadme.exists()) {
+//            DataOutputStream outputStream = null;
+//            try {
+//                String crlf = "\r\n";
+//                outputStream = new DataOutputStream(new FileOutputStream(globalDatabaseReadme));
+//                outputStream.writeBytes("Any files placed in this directory will be copied into the skin-database folder of any worlds that are loaded." + crlf);
+//                outputStream.writeBytes("Please read Info for Map & Mod Pack Makers on the main forum post if you want to know how to use this." + crlf);
+//                outputStream.writeBytes("http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2309193-wip-alpha-armourers-workshop-weapon-armour-skins");
+//                outputStream.flush();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } finally {
+//                IOUtils.closeQuietly(outputStream);
+//            }
+//        }
+//    }
 
     public static File getSkinDatabaseDirectory() {
         return null;
@@ -381,7 +381,7 @@ public final class SkinIOUtils {
         return filePath;
     }
 
-    public static boolean isInLibraryDir(File file) {
-        return isInSubDirectory(file, ArmourersWorkshop.getSkinLibraryDirectory());
-    }
+//    public static boolean isInLibraryDir(File file) {
+//        return isInSubDirectory(file, ArmourersWorkshop.getSkinLibraryDirectory());
+//    }
 }

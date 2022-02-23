@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.base.AWConfig;
-import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.base.AWItems;
+import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.OpenWardrobePacket;
@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -31,6 +32,7 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -42,6 +44,7 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 
 @OnlyIn(Dist.CLIENT)
@@ -99,7 +102,7 @@ public class ClientEventHandler {
             return;
         }
         MatrixStack matrixStack = event.getMatrixStack();
-        BakedSkin bakedSkin = AWCore.bakery.loadSkin(SkinDescriptor.of(itemStack));
+        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(SkinDescriptor.of(itemStack));
         if (bakedSkin == null) {
             return;
         }
@@ -144,7 +147,7 @@ public class ClientEventHandler {
         }
         // Limit the players limbs if they have a skirt equipped.
         // A proper lady should not swing her legs around!
-        SkinWardrobe.State snapshot = wardrobe.snapshot();
+        SkinWardrobeState snapshot = wardrobe.snapshot();
         if (snapshot.hasPart(SkinPartTypes.BIPED_SKIRT)) {
             if (entity.animationSpeed > 0.25F) {
                 entity.animationSpeed = 0.25F;
@@ -287,4 +290,17 @@ public class ClientEventHandler {
 //        }
     }
 
+    @SubscribeEvent
+    public void onPlayerLogin(ClientPlayerNetworkEvent.LoggedInEvent event) {
+        if (Objects.equals(event.getPlayer(), Minecraft.getInstance().player)) {
+            SkinBakery.start();
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogout(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+        if (Objects.equals(event.getPlayer(), Minecraft.getInstance().player)) {
+            SkinBakery.stop();
+        }
+    }
 }

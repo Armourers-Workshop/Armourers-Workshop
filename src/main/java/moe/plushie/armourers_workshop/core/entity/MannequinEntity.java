@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.core.entity;
 
 import moe.plushie.armourers_workshop.core.api.ISkinToolType;
+import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.texture.TextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWTags;
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
@@ -28,8 +30,12 @@ import net.minecraft.world.World;
 @SuppressWarnings("NullableProblems")
 public class MannequinEntity extends ArmorStandEntity {
 
-    public static final DataParameter<Integer> DATA_OPTIONS = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.INT);
-
+    public static final DataParameter<Boolean> DATA_IS_CHILD = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> DATA_IS_FLYING = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> DATA_IS_VISIBLE = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> DATA_IS_GHOST = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> DATA_EXTRA_RENDERER = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<TextureDescriptor> DATA_TEXTURE = EntityDataManager.defineId(MannequinEntity.class, TextureDescriptor.SERIALIZER);
 
     public MannequinEntity(EntityType<? extends MannequinEntity> entityType, World world) {
         super(entityType, world);
@@ -38,43 +44,65 @@ public class MannequinEntity extends ArmorStandEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_OPTIONS, 0);
+        this.entityData.define(DATA_IS_CHILD, false);
+        this.entityData.define(DATA_IS_FLYING, false);
+        this.entityData.define(DATA_IS_VISIBLE, true);
+        this.entityData.define(DATA_IS_GHOST, false);
+        this.entityData.define(DATA_EXTRA_RENDERER, true);
+        this.entityData.define(DATA_TEXTURE, TextureDescriptor.EMPTY);
     }
+
 
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
         super.readAdditionalSaveData(nbt);
-        this.setOption(Option.NO_CLIP, nbt.getBoolean("NoClip"));
-        this.setOption(Option.IS_CHILD, nbt.getBoolean("Child"));
-        this.setOption(Option.IS_FLYING, nbt.getBoolean("Flying"));
-        this.setOption(Option.EXTRA_RENDER, nbt.getBoolean("ExtraRender"));
+        this.entityData.set(DATA_IS_CHILD, nbt.getBoolean(AWConstants.NBT.MANNEQUIN_IS_CHILD));
+        this.entityData.set(DATA_IS_FLYING, nbt.getBoolean(AWConstants.NBT.MANNEQUIN_IS_FLYING));
+        this.entityData.set(DATA_IS_GHOST, nbt.getBoolean(AWConstants.NBT.MANNEQUIN_IS_GHOST));
+        this.entityData.set(DATA_IS_VISIBLE, getBoolean(nbt, AWConstants.NBT.MANNEQUIN_IS_VISIBLE, true));
+        this.entityData.set(DATA_EXTRA_RENDERER, getBoolean(nbt, AWConstants.NBT.MANNEQUIN_EXTRA_RENDER, true));
+
+        CompoundNBT nbt1 = nbt.getCompound(AWConstants.NBT.MANNEQUIN_TEXTURE);
+        if (!nbt1.isEmpty()) {
+            setTextureDescriptor(new TextureDescriptor(nbt1));
+        }
     }
 
     @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putBoolean("NoClip", getOption(Option.NO_CLIP));
-        nbt.putBoolean("Child", getOption(Option.IS_CHILD));
-        nbt.putBoolean("Flying", getOption(Option.IS_FLYING));
-        nbt.putBoolean("ExtraRender", getOption(Option.EXTRA_RENDER));
+        nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_CHILD, entityData.get(DATA_IS_CHILD));
+        nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_FLYING, entityData.get(DATA_IS_FLYING));
+        nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_GHOST, entityData.get(DATA_IS_GHOST));
+        nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_VISIBLE, entityData.get(DATA_IS_VISIBLE));
+        nbt.putBoolean(AWConstants.NBT.MANNEQUIN_EXTRA_RENDER, entityData.get(DATA_EXTRA_RENDERER));
+
+        TextureDescriptor descriptor = getTextureDescriptor();
+        if (!descriptor.isEmpty()) {
+            nbt.put(AWConstants.NBT.MANNEQUIN_TEXTURE, descriptor.serializeNBT());
+        }
     }
 
 
     @Override
     public boolean isBaby() {
-        return getOption(Option.IS_CHILD) || super.isBaby();
+        return super.isBaby() || entityData.get(DATA_IS_CHILD);
     }
 
     @Override
     public boolean isFallFlying() {
-        return getOption(Option.IS_FLYING);
+        return super.isFallFlying() || entityData.get(DATA_IS_FLYING);
+    }
+
+    @Override
+    public boolean isInvisible() {
+        return super.isInvisible() || !entityData.get(DATA_IS_VISIBLE);
     }
 
     @Override
     public boolean canBeCollidedWith() {
-        return this.isAlive() && getOption(Option.NO_CLIP);
+        return this.isAlive() && !entityData.get(DATA_IS_GHOST);
     }
-
 
     @Override
     public ActionResultType interactAt(PlayerEntity player, Vector3d pos, Hand hand) {
@@ -92,32 +120,12 @@ public class MannequinEntity extends ArmorStandEntity {
         return ActionResultType.SUCCESS;
     }
 
-    public boolean getOption(Option option) {
-        if (option == Option.IS_VISIBLE) {
-            return !isInvisible();
-        }
-        int flag = this.entityData.get(DATA_OPTIONS);
-        if (((flag >> option.ordinal()) & 1) != 0) {
-            return !option.defaultValue;
-        }
-        return option.defaultValue;
+    public void setTextureDescriptor(TextureDescriptor descriptor) {
+        this.entityData.set(DATA_TEXTURE, descriptor);
     }
 
-    public void setOption(Option option, boolean value) {
-        if (option == Option.IS_VISIBLE) {
-            setInvisible(!value);
-            return;
-        }
-        int flag = this.entityData.get(DATA_OPTIONS);
-        int newFlag = flag;
-        if (value != option.defaultValue) {
-            newFlag |= 1 << option.ordinal();
-        } else {
-            newFlag &= ~(1 << option.ordinal());
-        }
-        if (newFlag != flag) {
-            this.entityData.set(DATA_OPTIONS, newFlag);
-        }
+    public TextureDescriptor getTextureDescriptor() {
+        return this.entityData.get(DATA_TEXTURE);
     }
 
     public IInventory getInventory() {
@@ -143,16 +151,11 @@ public class MannequinEntity extends ArmorStandEntity {
         };
     }
 
-    public enum Option {
-        IS_VISIBLE(true),
-        IS_CHILD(false),
-        IS_FLYING(false),
-        NO_CLIP(true),
-        EXTRA_RENDER(true);
-        final boolean defaultValue;
-
-        Option(boolean defaultValue) {
-            this.defaultValue = defaultValue;
+    private boolean getBoolean(CompoundNBT nbt, String key, boolean defaultValue) {
+        if (nbt.contains(key)) {
+            return nbt.getBoolean(key);
         }
+        return defaultValue;
     }
+
 }

@@ -2,15 +2,14 @@ package moe.plushie.armourers_workshop.core.render.bake;
 
 import com.google.common.collect.Range;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.action.ICanUse;
 import moe.plushie.armourers_workshop.core.api.client.render.IBakedSkin;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.data.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.data.SkinPalette;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.*;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -43,10 +42,10 @@ public class BakedSkin implements IBakedSkin {
 
     private final ColorDescriptor colorDescriptor;
 
-    private final SkinPalette preference;
-    private final HashMap<Integer, SkinPalette> resolvedPalettes = new HashMap<>();
+    private final ColorScheme preference;
+    private final HashMap<Integer, ColorScheme> resolvedColorSchemes = new HashMap<>();
 
-    public BakedSkin(SkinDescriptor descriptor, Skin skin, SkinPalette preference, ColorDescriptor colorDescriptor, ArrayList<BakedSkinPart> bakedParts) {
+    public BakedSkin(SkinDescriptor descriptor, Skin skin, ColorScheme preference, ColorDescriptor colorDescriptor, ArrayList<BakedSkinPart> bakedParts) {
         this.descriptor = descriptor;
         this.skin = skin;
         this.skinParts = bakedParts;
@@ -63,22 +62,22 @@ public class BakedSkin implements IBakedSkin {
         return descriptor.accept(itemStack);
     }
 
-    public SkinPalette resolve(Entity entity, SkinPalette palette) {
+    public ColorScheme resolve(Entity entity, ColorScheme scheme) {
         if (colorDescriptor.isEmpty()) {
-            return SkinPalette.EMPTY;
+            return ColorScheme.EMPTY;
         }
-        SkinPalette resolvedPalette = resolvedPalettes.computeIfAbsent(entity.getId(), k -> preference.copy());
+        ColorScheme resolvedColorScheme = resolvedColorSchemes.computeIfAbsent(entity.getId(), k -> preference.copy());
         ResourceLocation resolvedTexture = TextureUtils.getTexture(entity);
-        if (!Objects.equals(resolvedPalette.getTexture(), resolvedTexture)) {
-            resolvedPalette.setTexture(resolvedTexture);
-            AWCore.bakery.loadEntityTexture(resolvedTexture, null);
+        if (!Objects.equals(resolvedColorScheme.getTexture(), resolvedTexture)) {
+            resolvedColorScheme.setTexture(resolvedTexture);
+            SkinBakery.getInstance().loadEntityTexture(resolvedTexture, null);
         }
-        resolvedPalette.setReference(palette);
-        return resolvedPalette;
+        resolvedColorScheme.setReference(scheme);
+        return resolvedColorScheme;
     }
 
-    @Override
     @SuppressWarnings("unchecked")
+    @Override
     public Skin getSkin() {
         return skin;
     }
@@ -86,14 +85,6 @@ public class BakedSkin implements IBakedSkin {
     public List<BakedSkinPart> getSkinParts() {
         return skinParts;
     }
-
-//    @Override
-//    @SuppressWarnings("unchecked")
-//    public SkinPalette getSkinDye() {
-//        return null;
-//        return skinDye;
-//    }
-
 
     public SkinDescriptor getDescriptor() {
         return descriptor;

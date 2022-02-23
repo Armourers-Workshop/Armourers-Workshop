@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import moe.plushie.armourers_workshop.core.base.AWConfig;
+import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.wardrobe.*;
 import moe.plushie.armourers_workshop.core.gui.widget.TabController;
@@ -21,6 +21,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
+
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings({"unused", "NullableProblems"})
 public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
@@ -28,6 +30,11 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
     private final Entity entity;
     private final PlayerEntity operator;
     private final SkinWardrobe wardrobe;
+
+    private boolean enabledPlayerRotating = false;
+    private float playerRotation = 45.0f;
+    private int lastMouseX = 0;
+    private int lastMouseY = 0;
 
     private final TabController<SkinWardrobeContainer.Group> tabController = new TabController<>();
 
@@ -175,8 +182,8 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
         RenderSystem.pushMatrix();
         RenderSystem.translatef(x + (float) width / 2, y + height - 6, 50);
-        RenderSystem.rotatef(-30, 0, 1, 0);
-        RenderSystem.rotatef(45, 0, 1, 0);
+        RenderSystem.rotatef(-20, 0, 1, 0);
+        RenderSystem.rotatef(playerRotation, 0, 1, 0);
         RenderSystem.translatef(0, 0, -50);
 
         if (entity instanceof LivingEntity) {
@@ -196,6 +203,12 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
+        if (enabledPlayerRotating) {
+            playerRotation = (playerRotation + (mouseX - lastMouseX) + 360) % 360;
+        }
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
+
         renderPlayer(matrixStack, mouseX, mouseY, leftPos + 8, topPos + 27, 71, 111);
         renderTooltip(matrixStack, mouseX, mouseY);
 
@@ -212,7 +225,18 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
             colorPicker.end();
             return false;
         }
+        if (button == 1) {
+            enabledPlayerRotating = true;
+        }
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (button == 1) {
+            enabledPlayerRotating = false;
+        }
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -235,6 +259,7 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
         return 0;
     }
 
+    @Nullable
     private ColourSettingPanel.ColorPicker getActivatedPicker() {
         Screen screen = tabController.getSelectedScreen();
         if (screen instanceof ColourSettingPanel) {

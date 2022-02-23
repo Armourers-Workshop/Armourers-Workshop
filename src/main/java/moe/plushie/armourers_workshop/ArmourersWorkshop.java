@@ -4,10 +4,12 @@ package moe.plushie.armourers_workshop;
 import moe.plushie.armourers_workshop.client.ClientEventHandler;
 import moe.plushie.armourers_workshop.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.common.ArmourersConfig;
-import moe.plushie.armourers_workshop.core.registry.AWRegistry;
-import moe.plushie.armourers_workshop.core.base.AWConfig;
+import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
+import moe.plushie.armourers_workshop.core.registry.AWRegistry;
+import moe.plushie.armourers_workshop.core.texture.TextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
@@ -22,8 +24,8 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.world.storage.FolderName;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -41,8 +43,6 @@ import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
-import java.io.File;
 
 @Mod("armourers_workshop")
 public class ArmourersWorkshop {
@@ -87,14 +87,6 @@ public class ArmourersWorkshop {
 //            PlayerTextureReader reader = new PlayerTextureReader(player);
 //        }
 //    }
-
-    public static File getSkinLibraryDirectory() {
-        return null;
-    }
-
-    public static File getGlobalSkinDatabaseDirectory() {
-        return null;
-    }
 
 
     @SubscribeEvent
@@ -146,8 +138,10 @@ public class ArmourersWorkshop {
 
     private void onCommonSetup(FMLLoadCompleteEvent event) {
         ArmourersConfig.init();
-        CapabilityManager.INSTANCE.register(SkinWardrobe.class, new SkinWardrobeStorage(), () -> null);
         NetworkHandler.init(AWCore.resource("aw2"));
+
+        DataSerializers.registerSerializer(TextureDescriptor.SERIALIZER);
+        CapabilityManager.INSTANCE.register(SkinWardrobe.class, new SkinWardrobeStorage(), () -> null);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -158,20 +152,15 @@ public class ArmourersWorkshop {
     }
 
     private void onServerStart(FMLServerAboutToStartEvent event) {
-        AWLog.debug("hello - {}", event.getServer().getWorldPath(new FolderName("skin-database")));
-//        WorldData.onServerStarting(evt.getServer());
-//        ChunkLoadingService.getInstance().onServerAboutToStart(evt);
+        AWLog.debug("hello");
+        LocalDataService.start(event.getServer());
     }
 
     private void onServerWillStop(FMLServerStoppingEvent event) {
-        AWLog.debug("saving");
-//        WorldData.instance().onServerStopping();
-//        ChunkLoadingService.getInstance().onServerStopping(event);
+        LocalDataService.stop();
     }
 
     private void onServerStop(FMLServerStoppedEvent event) {
         AWLog.debug("bye");
-//        WorldData.instance().onServerStoppped();
-//        TickHandler.instance().shutdown();
     }
 }

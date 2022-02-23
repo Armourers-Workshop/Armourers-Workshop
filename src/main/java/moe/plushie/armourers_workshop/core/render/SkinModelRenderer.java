@@ -5,11 +5,11 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.base.AWConfig;
+import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;
-import moe.plushie.armourers_workshop.core.skin.data.SkinPalette;
+import moe.plushie.armourers_workshop.core.skin.data.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.utils.PaintColor;
 import moe.plushie.armourers_workshop.core.utils.SkinUtils;
@@ -30,8 +30,6 @@ import java.awt.*;
 @OnlyIn(Dist.CLIENT)
 public final class SkinModelRenderer {
 
-//    private final static BakedPalette SHARED_DYE = new BakedPalette();
-
     private final static Vector3f ZERO = new Vector3f();
 
     private final static byte[][][] FACE_VERTEXES = new byte[][][]{
@@ -46,12 +44,12 @@ public final class SkinModelRenderer {
 // VillagerEntity
 // VillagerModel
 
-    public static void renderSkin(BakedSkin bakedSkin, SkinPalette palette, Entity entity, Model model, ItemCameraTransforms.TransformType transformType, int light, int partialTicks, MatrixStack matrixStack, SkinRenderBuffer buffers) {
+    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, Entity entity, Model model, ItemCameraTransforms.TransformType transformType, int light, int partialTicks, MatrixStack matrixStack, SkinRenderBuffer buffers) {
         Skin skin = bakedSkin.getSkin();
         SkinVertexBufferBuilder builder = buffers.getBuffer(skin);
 
         int index = 0;
-        SkinPalette palette1 = bakedSkin.resolve(entity, palette);
+        ColorScheme scheme1 = bakedSkin.resolve(entity, scheme);
         for (BakedSkinPart part : bakedSkin.getSkinParts()) {
             boolean shouldRenderPart = bakedSkin.shouldRenderPart(part, entity, transformType);
             ModelRenderer modelRenderer = ModelTransformer.getTransform(part.getType(), model, transformType);
@@ -62,7 +60,7 @@ public final class SkinModelRenderer {
             ModelTransformer.apply(matrixStack, modelRenderer);
             SkinUtils.apply(matrixStack, entity, part.getPart(), partialTicks);
 
-            builder.addPartData(part, palette1, light, partialTicks, matrixStack, shouldRenderPart);
+            builder.addPartData(part, scheme1, light, partialTicks, matrixStack, shouldRenderPart);
             if (shouldRenderPart) {
                 if (AWConfig.showDebugPartPosition) {
                     builder.addShapeData(ZERO, matrixStack);

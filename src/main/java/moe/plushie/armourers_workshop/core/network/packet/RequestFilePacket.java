@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.network.packet;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 public class RequestFilePacket extends CustomPacket {
 
-    private final int MAX_SIZE = 30 * 1024;
+    public final int MAX_SIZE = 30 * 1024; // 30k
 
     private final int id;
     private final SkinDescriptor descriptor;
@@ -39,7 +40,7 @@ public class RequestFilePacket extends CustomPacket {
     @Override
     public void accept(ServerPlayNetHandler netHandler, ServerPlayerEntity player) {
         AWLog.debug("Process skin request: {}", descriptor);
-        AWCore.loader.loadSkinData(descriptor, buffer -> {
+        DataManager.getInstance().loadSkinData(descriptor, buffer -> {
             AWLog.debug("Response skin data: {}", descriptor);
             for (CustomPacket packet : buildResponsePacket(buffer.orElse(null))) {
                 NetworkHandler.getInstance().sendTo(packet, player);

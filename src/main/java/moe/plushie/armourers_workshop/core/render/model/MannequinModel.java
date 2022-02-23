@@ -3,14 +3,15 @@ package moe.plushie.armourers_workshop.core.render.model;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import net.minecraft.client.renderer.entity.model.ArmorStandArmorModel;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class MannequinModel<T extends MannequinEntity> extends MannequinArmorModel<T> {
+public class MannequinModel<T extends MannequinEntity> extends PlayerModel<T> {
 
-    public MannequinModel(float scale) {
-        super(scale, 64, 64);
+    public MannequinModel(float scale, boolean slim) {
+        super(scale, slim);
     }
 
 //    public void prepareMobModel(ArmorStandEntity p_212843_1_, float p_212843_2_, float p_212843_3_, float p_212843_4_) {

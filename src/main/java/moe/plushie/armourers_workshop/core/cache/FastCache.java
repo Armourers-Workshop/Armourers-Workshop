@@ -1,5 +1,5 @@
-package moe.plushie.armourers_workshop.core.cache;//package moe.plushie.armourers_workshop.client.skin.cache;
-//
+package moe.plushie.armourers_workshop.core.cache;
+
 //import com.google.gson.JsonArray;
 //import com.google.gson.JsonElement;
 //import com.google.gson.JsonObject;
@@ -19,7 +19,9 @@ package moe.plushie.armourers_workshop.core.cache;//package moe.plushie.armourer
 //import java.text.SimpleDateFormat;
 //import java.util.*;
 //
-//public final class FastCache {
+public final class FastCache {
+
+
 //
 //    public static final FastCache INSTANCE = new FastCache();
 //
@@ -237,4 +239,4 @@ package moe.plushie.armourers_workshop.core.cache;//package moe.plushie.armourer
 //            }
 //        }
 //    }
-//}
+}

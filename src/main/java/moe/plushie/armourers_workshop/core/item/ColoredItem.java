@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
+import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.PaintColor;
@@ -17,14 +18,12 @@ import java.awt.*;
 
 public abstract class ColoredItem extends Item {
 
-    private static final String NBT_KEY_COLOR = "color";
-
     public ColoredItem(Item.Properties properties) {
         super(properties);
     }
 
     public static void setColor(ItemStack itemStack, PaintColor color) {
-        itemStack.getOrCreateTag().putInt(NBT_KEY_COLOR, color.getValue());
+        itemStack.getOrCreateTag().putInt(AWConstants.NBT.COLOR, color.getValue());
     }
 
     @Nullable
@@ -44,17 +43,17 @@ public abstract class ColoredItem extends Item {
             return 0;
         }
         CompoundNBT tag = itemStack.getTag();
-        if (tag != null && tag.contains(NBT_KEY_COLOR)) {
-            INBT nbt = tag.get(NBT_KEY_COLOR);
+        if (tag != null && tag.contains(AWConstants.NBT.COLOR)) {
+            INBT nbt = tag.get(AWConstants.NBT.COLOR);
             if (nbt instanceof NumberNBT) {
                 return ((NumberNBT) nbt).getAsInt();
             }
             if (nbt instanceof StringNBT) {
                 Color color = ColorUtils.parseColor(nbt.getAsString());
-                tag.putInt(NBT_KEY_COLOR, color.getRGB());
+                tag.putInt(AWConstants.NBT.COLOR, color.getRGB());
                 return color.getRGB();
             }
-            tag.remove(NBT_KEY_COLOR);
+            tag.remove(AWConstants.NBT.COLOR);
         }
         return 0;
     }

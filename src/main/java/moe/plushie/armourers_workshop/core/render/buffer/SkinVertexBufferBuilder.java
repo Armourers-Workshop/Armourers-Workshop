@@ -4,11 +4,11 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.util.Pair;
-import moe.plushie.armourers_workshop.core.base.AWConfig;
+import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.data.SkinPalette;
+import moe.plushie.armourers_workshop.core.skin.data.ColorScheme;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -38,12 +38,12 @@ public class SkinVertexBufferBuilder {
         this.skin = skin;
     }
 
-    public void addPartData(BakedSkinPart part, SkinPalette palette, int light, int partialTicks, MatrixStack matrixStack, boolean shouldRender) {
+    public void addPartData(BakedSkinPart part, ColorScheme scheme, int light, int partialTicks, MatrixStack matrixStack, boolean shouldRender) {
         // ignore part when part is disable
         if (AWConfig.isEnableSkinPart(part.getPart())) {
             return;
         }
-        Object key = SkinCache.borrowKey(part.getId(), part.requirements(palette));
+        Object key = SkinCache.borrowKey(part.getId(), part.requirements(scheme));
         ArrayList<CompiledTask> compiledTasks = cachingTasks.getIfPresent(key);
         if (compiledTasks != null) {
             SkinCache.returnKey(key);
@@ -57,7 +57,7 @@ public class SkinVertexBufferBuilder {
         part.forEach((renderType, quads) -> {
             BufferBuilder builder = new BufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
             builder.begin(renderType.mode(), renderType.format());
-            quads.forEach(quad -> quad.render(part, palette, matrixStack1, builder));
+            quads.forEach(quad -> quad.render(part, scheme, matrixStack1, builder));
             builder.end();
             CompiledTask compiledTask = new CompiledTask(renderType, builder);
             mergedTasks.add(compiledTask);
