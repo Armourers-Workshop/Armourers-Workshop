@@ -1,21 +1,16 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.api.ISkinArmorType;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
-import moe.plushie.armourers_workshop.core.item.SkinItem;
-import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public enum SkinSlotType {

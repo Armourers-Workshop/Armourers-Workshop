@@ -13,20 +13,20 @@ import java.util.Objects;
 
 
 @SuppressWarnings("NullableProblems")
-public class TextureDescriptor {
+public class PlayerTextureDescriptor {
 
-    public static final TextureDescriptor EMPTY = new TextureDescriptor();
+    public static final PlayerTextureDescriptor EMPTY = new PlayerTextureDescriptor();
 
-    public static final IDataSerializer<TextureDescriptor> SERIALIZER = new IDataSerializer<TextureDescriptor>() {
-        public void write(PacketBuffer buffer, TextureDescriptor descriptor) {
+    public static final IDataSerializer<PlayerTextureDescriptor> SERIALIZER = new IDataSerializer<PlayerTextureDescriptor>() {
+        public void write(PacketBuffer buffer, PlayerTextureDescriptor descriptor) {
             buffer.writeNbt(descriptor.serializeNBT());
         }
 
-        public TextureDescriptor read(PacketBuffer buffer) {
-            return new TextureDescriptor(buffer.readNbt());
+        public PlayerTextureDescriptor read(PacketBuffer buffer) {
+            return new PlayerTextureDescriptor(buffer.readNbt());
         }
 
-        public TextureDescriptor copy(TextureDescriptor descriptor) {
+        public PlayerTextureDescriptor copy(PlayerTextureDescriptor descriptor) {
             return descriptor;
         }
     };
@@ -35,21 +35,21 @@ public class TextureDescriptor {
     private String url;
     private GameProfile profile;
 
-    public TextureDescriptor() {
+    public PlayerTextureDescriptor() {
         this.source = Source.NONE;
     }
 
-    public TextureDescriptor(String url) {
+    public PlayerTextureDescriptor(String url) {
         this.source = Source.URL;
         this.url = url;
     }
 
-    public TextureDescriptor(GameProfile profile) {
+    public PlayerTextureDescriptor(GameProfile profile) {
         this.source = Source.USER;
         this.profile = profile;
     }
 
-    public TextureDescriptor(@Nullable CompoundNBT nbt) {
+    public PlayerTextureDescriptor(@Nullable CompoundNBT nbt) {
         if (nbt == null || nbt.isEmpty()) {
             this.source = Source.NONE;
             return;
@@ -110,13 +110,13 @@ public class TextureDescriptor {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TextureDescriptor that = (TextureDescriptor) o;
-        return source == that.source && Objects.equals(url, that.url) && Objects.equals(profile, that.profile);
+        PlayerTextureDescriptor that = (PlayerTextureDescriptor) o;
+        return source == that.source && Objects.equals(url, that.url) && Objects.equals(getName(), that.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(source, url, profile);
+        return Objects.hash(source, url, getName());
     }
 
     public enum Source {

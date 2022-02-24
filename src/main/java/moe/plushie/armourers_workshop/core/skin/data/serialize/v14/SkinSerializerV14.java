@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize.v14;
 
 import moe.plushie.armourers_workshop.core.api.ISkinType;
-import moe.plushie.armourers_workshop.core.render.bake.PlayerTexture;
+import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
@@ -68,7 +68,7 @@ public final class SkinSerializerV14 {
         StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PAINT_HEADER);
         if (skin.hasPaintData()) {
             stream.writeBoolean(true);
-            for (int i = 0; i < PlayerTexture.TEXTURE_OLD_SIZE; i++) {
+            for (int i = 0; i < PlayerTextureModel.TEXTURE_OLD_SIZE; i++) {
                 stream.writeInt(skin.getPaintData()[i]);
             }
         } else {
@@ -129,8 +129,8 @@ public final class SkinSerializerV14 {
         int[] paintData = null;
         boolean hasPaintData = stream.readBoolean();
         if (hasPaintData) {
-            paintData = new int[PlayerTexture.TEXTURE_OLD_SIZE];
-            for (int i = 0; i < PlayerTexture.TEXTURE_OLD_SIZE; i++) {
+            paintData = new int[PlayerTextureModel.TEXTURE_OLD_SIZE];
+            for (int i = 0; i < PlayerTextureModel.TEXTURE_OLD_SIZE; i++) {
                 paintData[i] = stream.readInt();
             }
         }

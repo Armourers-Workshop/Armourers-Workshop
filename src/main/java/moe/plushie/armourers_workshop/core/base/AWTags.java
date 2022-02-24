@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.utils;
+package moe.plushie.armourers_workshop.core.base;
 
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;

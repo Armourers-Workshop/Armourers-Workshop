@@ -22,7 +22,7 @@ package moe.plushie.armourers_workshop.core.render.tileentities;//package moe.pl
 //import moe.plushie.armourers_workshop.core.inventory.MannequinSlotType;
 //import moe.plushie.armourers_workshop.core.lib.LibModInfo;
 //import moe.plushie.armourers_workshop.core.skin.data.Skin;
-//import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
+//import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 //import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 //import moe.plushie.armourers_workshop.core.tileentities.TileEntityMannequin;
 //import moe.plushie.armourers_workshop.utils.SkinNBTHelper;

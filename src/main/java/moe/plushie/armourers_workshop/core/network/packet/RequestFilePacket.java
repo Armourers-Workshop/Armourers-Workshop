@@ -1,10 +1,9 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
 import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;

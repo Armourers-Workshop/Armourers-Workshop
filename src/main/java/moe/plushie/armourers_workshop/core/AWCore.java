@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core;
 
-import moe.plushie.armourers_workshop.core.skin.SkinLoader;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import net.minecraft.entity.Entity;

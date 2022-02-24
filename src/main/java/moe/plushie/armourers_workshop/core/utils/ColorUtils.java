@@ -1,15 +1,11 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
+import moe.plushie.armourers_workshop.core.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 public class ColorUtils {

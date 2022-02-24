@@ -10,20 +10,14 @@ import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
-import moe.plushie.armourers_workshop.core.texture.TextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -36,7 +30,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DataSerializerEntry;
 
 public class AWRegistry {
 

@@ -11,7 +11,7 @@ import net.minecraft.util.text.StringTextComponent;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TabController<Target> extends Screen {
+public class AWTabController<Target> extends Screen {
 
     private ArrayList<Consumer<Tab>> listeners;
 
@@ -23,7 +23,7 @@ public class TabController<Target> extends Screen {
     private ArrayList<Tab> tabs = new ArrayList<>();
     private ArrayList<Tab> actives = new ArrayList<>();
 
-    public TabController() {
+    public AWTabController() {
         super(StringTextComponent.EMPTY);
     }
 

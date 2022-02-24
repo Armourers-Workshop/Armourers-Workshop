@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.wardrobe.*;
-import moe.plushie.armourers_workshop.core.gui.widget.TabController;
+import moe.plushie.armourers_workshop.core.gui.widget.AWTabController;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
@@ -20,6 +20,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
 
@@ -36,7 +37,7 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
     private int lastMouseX = 0;
     private int lastMouseY = 0;
 
-    private final TabController<SkinWardrobeContainer.Group> tabController = new TabController<>();
+    private final AWTabController<SkinWardrobeContainer.Group> tabController = new AWTabController<>();
 
     public SkinWardrobeScreen(SkinWardrobeContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
@@ -238,6 +239,15 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
     }
 
     @Override
+    public boolean keyPressed(int key, int p_231046_2_, int p_231046_3_) {
+        if (key == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
+            this.onClose();
+            return true;
+        }
+        return this.getFocused() != null && this.getFocused().keyPressed(key, p_231046_2_, p_231046_3_);
+    }
+
+    @Override
     protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
         if (super.hasClickedOutside(mouseX, mouseY, left, top, button)) {
             return tabController.get(mouseX, mouseY) == null;
@@ -245,12 +255,12 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
         return false;
     }
 
-    private void switchTab(TabController<SkinWardrobeContainer.Group>.Tab tab) {
+    private void switchTab(AWTabController<SkinWardrobeContainer.Group>.Tab tab) {
         getMenu().setGroup(tab.getTarget());
     }
 
     private int getExtendedHeight() {
-        TabController<SkinWardrobeContainer.Group>.Tab tab = tabController.getSelectedTab();
+        AWTabController<SkinWardrobeContainer.Group>.Tab tab = tabController.getSelectedTab();
         if (tab != null && tab.getTarget() != null) {
             return tab.getTarget().getExtendedHeight();
         }

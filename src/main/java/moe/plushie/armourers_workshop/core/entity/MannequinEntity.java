@@ -1,17 +1,14 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.realmsclient.util.RealmsUtil;
 import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.AWConstants;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.texture.TextureDescriptor;
-import moe.plushie.armourers_workshop.core.texture.TextureLoader;
-import moe.plushie.armourers_workshop.core.utils.AWTags;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.base.AWTags;
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +22,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.tileentity.SkullTileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
@@ -40,7 +36,7 @@ public class MannequinEntity extends ArmorStandEntity {
     public static final DataParameter<Boolean> DATA_IS_VISIBLE = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> DATA_IS_GHOST = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> DATA_EXTRA_RENDERER = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<TextureDescriptor> DATA_TEXTURE = EntityDataManager.defineId(MannequinEntity.class, TextureDescriptor.SERIALIZER);
+    public static final DataParameter<PlayerTextureDescriptor> DATA_TEXTURE = EntityDataManager.defineId(MannequinEntity.class, PlayerTextureDescriptor.SERIALIZER);
 
     public MannequinEntity(EntityType<? extends MannequinEntity> entityType, World world) {
         super(entityType, world);
@@ -54,7 +50,7 @@ public class MannequinEntity extends ArmorStandEntity {
         this.entityData.define(DATA_IS_VISIBLE, true);
         this.entityData.define(DATA_IS_GHOST, false);
         this.entityData.define(DATA_EXTRA_RENDERER, true);
-        this.entityData.define(DATA_TEXTURE, TextureDescriptor.EMPTY);
+        this.entityData.define(DATA_TEXTURE, PlayerTextureDescriptor.EMPTY);
     }
 
 
@@ -69,7 +65,7 @@ public class MannequinEntity extends ArmorStandEntity {
 
         CompoundNBT nbt1 = nbt.getCompound(AWConstants.NBT.MANNEQUIN_TEXTURE);
         if (!nbt1.isEmpty()) {
-            setTextureDescriptor(new TextureDescriptor(nbt1));
+            setTextureDescriptor(new PlayerTextureDescriptor(nbt1));
         }
     }
 
@@ -82,7 +78,7 @@ public class MannequinEntity extends ArmorStandEntity {
         nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_VISIBLE, entityData.get(DATA_IS_VISIBLE));
         nbt.putBoolean(AWConstants.NBT.MANNEQUIN_EXTRA_RENDER, entityData.get(DATA_EXTRA_RENDERER));
 
-        TextureDescriptor descriptor = getTextureDescriptor();
+        PlayerTextureDescriptor descriptor = getTextureDescriptor();
         if (!descriptor.isEmpty()) {
             nbt.put(AWConstants.NBT.MANNEQUIN_TEXTURE, descriptor.serializeNBT());
         }
@@ -91,8 +87,9 @@ public class MannequinEntity extends ArmorStandEntity {
     @Override
     public void onSyncedDataUpdated(DataParameter<?> dataParameter) {
         super.onSyncedDataUpdated(dataParameter);
-        if (dataParameter == DATA_TEXTURE && level != null && level.isClientSide()) {
-            TextureLoader.getInstance().loadTexture(entityData.get(DATA_TEXTURE), null);
+        // preload entity texture if needed
+        if (dataParameter == DATA_TEXTURE && level.isClientSide()) {
+            PlayerTextureLoader.getInstance().loadTexture(entityData.get(DATA_TEXTURE));
         }
     }
 
@@ -132,11 +129,11 @@ public class MannequinEntity extends ArmorStandEntity {
         return ActionResultType.SUCCESS;
     }
 
-    public void setTextureDescriptor(TextureDescriptor descriptor) {
+    public void setTextureDescriptor(PlayerTextureDescriptor descriptor) {
         this.entityData.set(DATA_TEXTURE, descriptor);
     }
 
-    public TextureDescriptor getTextureDescriptor() {
+    public PlayerTextureDescriptor getTextureDescriptor() {
         return this.entityData.get(DATA_TEXTURE);
     }
 

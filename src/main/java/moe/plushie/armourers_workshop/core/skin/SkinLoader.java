@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.RequestFilePacket;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.data.DataLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
