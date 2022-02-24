@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.utils;
+package moe.plushie.armourers_workshop.core.data;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -119,4 +119,8 @@ public class DataLoader<K, V> {
         }
     }
 
+    public void clear() {
+        caches.clear();
+        loading.clear();
+    }
 }

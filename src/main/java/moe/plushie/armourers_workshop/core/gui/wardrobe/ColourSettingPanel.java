@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.gui.widget.IconButton;
+import moe.plushie.armourers_workshop.core.gui.widget.AWImageButton;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
@@ -121,8 +121,8 @@ public class ColourSettingPanel extends BaseSettingPanel {
         public void start(Button button) {
             pickButton = button;
             activatedPicker = this;
-            if (pickButton instanceof IconButton) {
-                ((IconButton) pickButton).setSelected(true);
+            if (pickButton instanceof AWImageButton) {
+                ((AWImageButton) pickButton).setSelected(true);
             }
         }
 
@@ -151,7 +151,7 @@ public class ColourSettingPanel extends BaseSettingPanel {
 
         private void addIconButton(int x, int y, int u, int v, Button.IPressable pressable, ITextComponent tooltip) {
             ResourceLocation texture = RenderUtils.TEX_BUTTONS;
-            addButton(new IconButton(x, y, 16, 16, u, v, texture, pressable, this::renderIconTooltip, tooltip));
+            addButton(new AWImageButton(x, y, 16, 16, u, v, texture, pressable, this::renderIconTooltip, tooltip));
         }
 
         private void renderIconTooltip(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
@@ -215,8 +215,8 @@ public class ColourSettingPanel extends BaseSettingPanel {
 
         private void setColor(PaintColor newValue) {
             activatedPicker = null;
-            if (pickButton instanceof IconButton) {
-                ((IconButton) pickButton).setSelected(false);
+            if (pickButton instanceof AWImageButton) {
+                ((AWImageButton) pickButton).setSelected(false);
                 pickButton = null;
             }
             color = newValue;

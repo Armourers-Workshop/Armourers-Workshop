@@ -39,6 +39,16 @@ public class TextureDescriptor {
         this.source = Source.NONE;
     }
 
+    public TextureDescriptor(String url) {
+        this.source = Source.URL;
+        this.url = url;
+    }
+
+    public TextureDescriptor(GameProfile profile) {
+        this.source = Source.USER;
+        this.profile = profile;
+    }
+
     public TextureDescriptor(@Nullable CompoundNBT nbt) {
         if (nbt == null || nbt.isEmpty()) {
             this.source = Source.NONE;
@@ -72,6 +82,28 @@ public class TextureDescriptor {
 
     public boolean isEmpty() {
         return source == Source.NONE;
+    }
+
+    @Nullable
+    public String getURL() {
+        return url;
+    }
+
+    @Nullable
+    public String getName() {
+        if (profile != null) {
+            return profile.getName();
+        }
+        return null;
+    }
+
+    @Nullable
+    public GameProfile getProfile() {
+        return profile;
+    }
+
+    public Source getSource() {
+        return source;
     }
 
     @Override

@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.data.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -64,7 +65,7 @@ public class SkinCommands {
     }
 
     static ArgumentBuilder<CommandSource, ?> skins() {
-        return Commands.argument("skin", StringArgumentType.string());
+        return Commands.argument("skin", new FileArgument("./armoures"));
     }
 
     static ArgumentBuilder<CommandSource, ?> dyes() {
@@ -83,13 +84,13 @@ public class SkinCommands {
         }
 
         static int setSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
-            String identifier = StringArgumentType.getString(context, "skin");
+            String identifier = FileArgument.getString(context, "skin");
             SkinDescriptor requiredDescriptor = new SkinDescriptor(identifier);
-            Skin skin = AWCore.loader.loadSkin(requiredDescriptor);
+            Skin skin = SkinLoader.getInstance().loadSkin(requiredDescriptor);
             if (skin == null) {
                 return 0;
             }
-            requiredDescriptor = AWCore.loader.cacheSkin(requiredDescriptor, skin);
+            requiredDescriptor = SkinLoader.getInstance().cacheSkin(requiredDescriptor, skin);
             SkinDescriptor descriptor = new SkinDescriptor(requiredDescriptor.getIdentifier(), skin.getType(), ColorScheme.EMPTY);
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {
                 SkinWardrobe wardrobe = SkinWardrobe.of(player);
@@ -130,14 +131,14 @@ public class SkinCommands {
         }
 
         static int giveSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
-            String identifier = StringArgumentType.getString(context, "skin");
+            String identifier = FileArgument.getString(context, "skin");
             SkinDescriptor requiredDescriptor = new SkinDescriptor(identifier);
-            Skin skin = AWCore.loader.loadSkin(requiredDescriptor);
+            Skin skin = SkinLoader.getInstance().loadSkin(requiredDescriptor);
             if (skin == null) {
                 context.getSource().sendSuccess(new StringTextComponent("Can't found identifier " + identifier), true);
                 return 0;
             }
-            requiredDescriptor = AWCore.loader.cacheSkin(requiredDescriptor, skin);
+            requiredDescriptor = SkinLoader.getInstance().cacheSkin(requiredDescriptor, skin);
             SkinDescriptor descriptor = new SkinDescriptor(requiredDescriptor.getIdentifier(), skin.getType(), ColorScheme.EMPTY);
             ItemStack itemStack = descriptor.asItemStack();
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {

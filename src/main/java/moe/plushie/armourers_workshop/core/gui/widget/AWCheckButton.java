@@ -1,12 +1,10 @@
 package moe.plushie.armourers_workshop.core.gui.widget;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -14,7 +12,7 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("NullableProblems")
-public class OptionButton extends Button {
+public class AWCheckButton extends Button {
 
     private final int iconWidth;
     private final int iconHeight;
@@ -26,10 +24,10 @@ public class OptionButton extends Button {
     private FontRenderer font;
     private boolean isSelected;
 
-    public OptionButton(int x, int y, int iconWidth, int iconHeight, ITextComponent title, boolean isSelected) {
+    public AWCheckButton(int x, int y, int iconWidth, int iconHeight, ITextComponent title, boolean isSelected) {
         this(x, y, iconWidth, iconHeight, title, isSelected, null);
     }
-    public OptionButton(int x, int y, int iconWidth, int iconHeight, ITextComponent title, boolean isSelected, Button.IPressable changeHandler) {
+    public AWCheckButton(int x, int y, int iconWidth, int iconHeight, ITextComponent title, boolean isSelected, Button.IPressable changeHandler) {
         super(x, y, iconWidth, iconHeight, title, changeHandler, NO_TOOLTIP);
         this.isSelected = isSelected;
         this.iconWidth = iconWidth;

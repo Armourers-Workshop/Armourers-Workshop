@@ -1,9 +1,7 @@
 package moe.plushie.armourers_workshop.core.gui.widget;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -11,7 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class IconButton extends Button {
+public class AWImageButton extends Button {
     private final ResourceLocation resourceLocation;
     private final int xTexStart;
     private final int yTexStart;
@@ -20,11 +18,11 @@ public class IconButton extends Button {
 
     private boolean isSelected = false;
 
-    public IconButton(int x, int y, int width, int height, int u, int v, ResourceLocation texture, Button.IPressable pressable, Button.ITooltip tooltip, ITextComponent title) {
+    public AWImageButton(int x, int y, int width, int height, int u, int v, ResourceLocation texture, Button.IPressable pressable, Button.ITooltip tooltip, ITextComponent title) {
         this(x, y, width, height, u, v, texture, 256, 256, pressable, tooltip, title);
     }
 
-    public IconButton(int x, int y, int width, int height, int u, int v, ResourceLocation texture, int textureWidth, int textureHeight, Button.IPressable pressable, Button.ITooltip tooltip, ITextComponent title) {
+    public AWImageButton(int x, int y, int width, int height, int u, int v, ResourceLocation texture, int textureWidth, int textureHeight, Button.IPressable pressable, Button.ITooltip tooltip, ITextComponent title) {
         super(x, y, width, height, title, pressable, tooltip);
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;

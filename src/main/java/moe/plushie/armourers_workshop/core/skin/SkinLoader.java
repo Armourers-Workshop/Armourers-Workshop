@@ -1,17 +1,14 @@
-package moe.plushie.armourers_workshop.core.render.bake;
+package moe.plushie.armourers_workshop.core.skin;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
-import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.RequestFilePacket;
-import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
-import moe.plushie.armourers_workshop.core.utils.DataLoader;
+import moe.plushie.armourers_workshop.core.data.DataLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -28,6 +25,8 @@ import java.util.function.Supplier;
 
 public class SkinLoader {
 
+    private static final SkinLoader LOADER = new SkinLoader();
+
     private final static AtomicInteger COUNTER = new AtomicInteger();
 
     private int queueCount = 1;
@@ -37,6 +36,10 @@ public class SkinLoader {
     private final DataLoader<SkinDescriptor, Skin> manager = DataLoader.newBuilder()
             .threadPool(1)
             .build(this::loadSkinFileIfNeeded);
+
+    public static SkinLoader getInstance() {
+        return LOADER;
+    }
 
     @Nullable
     public Skin getSkin(ItemStack itemStack) {
@@ -92,6 +95,9 @@ public class SkinLoader {
         return descriptor;
     }
 
+    public void clear() {
+        manager.clear();
+    }
 
     private void loadSkinFileIfNeeded(SkinDescriptor descriptor, @Nullable Consumer<Optional<Skin>> complete) {
         if (!Minecraft.getInstance().isLocalServer()) {

@@ -168,14 +168,6 @@ public class Skin implements ISkin {
         return parts;
     }
 
-    public SkinPart getSkinPartFromType(ISkinPartType skinPartType) {
-        for (SkinPart part : parts) {
-            if (part.getType() == skinPartType) {
-                return part;
-            }
-        }
-        return null;
-    }
 
     public boolean isModelOverridden(ISkinPartType partType) {
         for (SkinPart part : parts) {

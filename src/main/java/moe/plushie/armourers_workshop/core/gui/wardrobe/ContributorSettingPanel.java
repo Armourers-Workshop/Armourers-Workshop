@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.gui.widget.OptionButton;
+import moe.plushie.armourers_workshop.core.gui.widget.AWCheckButton;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -34,9 +34,9 @@ public class ContributorSettingPanel extends BaseSettingPanel {
         super.init(minecraft, width, height);
 
         StringTextComponent title = new StringTextComponent("Magic circle test?");
-        addButton(new OptionButton(leftPos + 85, topPos + 128, 9, 9, title, AWConfig.enableMagicWhenContributor, button -> {
-            if (button instanceof OptionButton) {
-                AWConfig.enableMagicWhenContributor = ((OptionButton) button).isSelected();
+        addButton(new AWCheckButton(leftPos + 85, topPos + 128, 9, 9, title, AWConfig.enableMagicWhenContributor, button -> {
+            if (button instanceof AWCheckButton) {
+                AWConfig.enableMagicWhenContributor = ((AWCheckButton) button).isSelected();
             }
         }));
     }
