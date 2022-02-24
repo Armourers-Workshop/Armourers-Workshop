@@ -118,28 +118,26 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
                 .setIcon(32, 128)
                 .setVisible(!isPlayer || AWConfig.showWardrobeContributorSetting || operator.isCreative());
 
-        tabController.add(new RotationSettingPanel(menu))
-                .setIcon(80, 0)
-                .setIconAnimation(8, 150)
-                .setAlignment(1)
-                .setVisible(isMannequin);
+        if (isMannequin) {
+            tabController.add(new RotationSettingPanel(menu))
+                    .setIcon(80, 0)
+                    .setIconAnimation(8, 150)
+                    .setAlignment(1);
 
-        tabController.add(new TextureSettingPanel(menu))
-                .setIcon(128, 0)
-                .setIconAnimation(8, 150)
-                .setAlignment(1)
-                .setVisible(isMannequin);
+            tabController.add(new TextureSettingPanel(menu))
+                    .setIcon(128, 0)
+                    .setIconAnimation(8, 150)
+                    .setAlignment(1);
 
-        tabController.add(new ExtraSettingPanel(menu))
-                .setIcon(144, 0)
-                .setIconAnimation(8, 150)
-                .setAlignment(1)
-                .setVisible(isMannequin);
+            tabController.add(new ExtraSettingPanel(menu))
+                    .setIcon(144, 0)
+                    .setIconAnimation(8, 150)
+                    .setAlignment(1);
 
-        tabController.add(new LocationSettingPanel(menu))
-                .setIcon(96, 0)
-                .setIconAnimation(8, 150)
-                .setVisible(isMannequin);
+            tabController.add(new LocationSettingPanel(menu))
+                    .setIcon(96, 0)
+                    .setIconAnimation(8, 150);
+        }
 
         tabController.addListener(this::switchTab);
         tabController.setSelectedTab(tabController.get(0)); // active the first tab

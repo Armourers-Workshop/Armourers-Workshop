@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.network.packet;
 
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.core.AWCore;
-import moe.plushie.armourers_workshop.core.render.bake.SkinLoader;
+import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.PacketBuffer;
@@ -55,7 +55,7 @@ public class ResponseFilePacket extends CustomPacket {
 
     @Override
     public void accept(INetHandler netHandler, PlayerEntity player) {
-        SkinLoader.LoadingTask task = AWCore.loader.getTask(id);
+        SkinLoader.LoadingTask task = SkinLoader.getInstance().getTask(id);
         if (task != null) {
             task.append(offset, total, buffer);
         }

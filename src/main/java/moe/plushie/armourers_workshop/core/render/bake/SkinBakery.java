@@ -6,8 +6,7 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.utils.ColorDescriptor;
-import moe.plushie.armourers_workshop.core.utils.DataLoader;
-import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.data.DataLoader;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,22 +25,23 @@ import java.util.function.Consumer;
 @OnlyIn(Dist.CLIENT)
 public final class SkinBakery {
 
-    private static SkinBakery running;
+    private static SkinBakery RUNNING;
 
     @Nonnull
     public static SkinBakery getInstance() {
-        return Objects.requireNonNull(running);
+        return Objects.requireNonNull(RUNNING);
     }
 
     public static void start() {
-        if (running == null) {
-            running = new SkinBakery();
+        if (RUNNING == null) {
+            RUNNING = new SkinBakery();
         }
     }
 
     public static void stop() {
-        if (running != null) {
-            running = null;
+        if (RUNNING != null) {
+            RUNNING.manager.clear();
+            RUNNING = null;
         }
     }
 
@@ -135,7 +135,7 @@ public final class SkinBakery {
     }
 
     private void loadAndBakeSkin(SkinDescriptor descriptor, Consumer<Optional<BakedSkin>> complete) {
-        AWCore.loader.loadSkin(descriptor, skin -> {
+        SkinLoader.getInstance().loadSkin(descriptor, skin -> {
             Skin skin1 = skin.orElse(null);
             if (skin1 != null) {
                 manager.add(() -> bakeSkin(skin1, descriptor, complete));
@@ -145,17 +145,8 @@ public final class SkinBakery {
         });
     }
 
-    private void sleep() {
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-    }
-
     private void bakeSkin(Skin skin, SkinDescriptor descriptor, Consumer<Optional<BakedSkin>> complete) {
         AWLog.debug("Start baking task: {}", descriptor);
-        sleep();
         long startTime = System.currentTimeMillis();
 //            skin.lightHash();
 //            int extraDyes = SkinPaintTypes.getInstance().getExtraChannels();

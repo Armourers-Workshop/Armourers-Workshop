@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core;
 
-import moe.plushie.armourers_workshop.core.render.bake.SkinLoader;
+import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
@@ -13,8 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import javax.annotation.Nullable;
 
 public class AWCore {
-
-    public static SkinLoader loader = new SkinLoader();
 
     public static ResourceLocation resource(String path) {
         return new ResourceLocation(getModId(), path);

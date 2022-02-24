@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
@@ -117,7 +118,7 @@ public class SkinItem extends Item {
 
     @Override
     public ITextComponent getName(ItemStack itemStack) {
-        Skin skin = AWCore.loader.getSkin(itemStack);
+        Skin skin = SkinLoader.getInstance().getSkin(itemStack);
         if (skin != null && !skin.getCustomName().trim().isEmpty()) {
             return new StringTextComponent(skin.getCustomName());
         }

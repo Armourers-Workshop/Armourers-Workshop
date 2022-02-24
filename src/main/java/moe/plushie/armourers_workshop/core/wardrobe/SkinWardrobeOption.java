@@ -23,7 +23,9 @@ public enum SkinWardrobeOption {
     MANNEQUIN_IS_FLYING(MannequinEntity.DATA_IS_FLYING),
     MANNEQUIN_IS_VISIBLE(MannequinEntity.DATA_IS_VISIBLE),
     MANNEQUIN_IS_GHOST(MannequinEntity.DATA_IS_GHOST),
-    MANNEQUIN_EXTRA_RENDER(MannequinEntity.DATA_EXTRA_RENDERER);
+    MANNEQUIN_EXTRA_RENDER(MannequinEntity.DATA_EXTRA_RENDERER),
+
+    MANNEQUIN_TEXTURE(MannequinEntity.DATA_TEXTURE);
 
     private final boolean broadcastChanges;
     private final DataAccessor<?> dataAccessor;

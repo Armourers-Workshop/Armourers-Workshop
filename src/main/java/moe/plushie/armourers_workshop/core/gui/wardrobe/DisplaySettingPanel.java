@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
-import moe.plushie.armourers_workshop.core.gui.widget.OptionButton;
+import moe.plushie.armourers_workshop.core.gui.widget.AWCheckButton;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
@@ -31,9 +31,9 @@ public class DisplaySettingPanel extends BaseSettingPanel {
     }
 
     private void addOption(int x, int y, SkinWardrobeOption option, String key) {
-        addButton(new OptionButton(x, y, 9, 9, getDisplayText(key), option.get(wardrobe, false), button -> {
-            if (button instanceof OptionButton) {
-                boolean newValue = ((OptionButton) button).isSelected();
+        addButton(new AWCheckButton(x, y, 9, 9, getDisplayText(key), option.get(wardrobe, false), button -> {
+            if (button instanceof AWCheckButton) {
+                boolean newValue = ((AWCheckButton) button).isSelected();
                 NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.option(wardrobe, option, newValue));
             }
         }));

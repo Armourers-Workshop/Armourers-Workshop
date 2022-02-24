@@ -1,13 +1,17 @@
 package moe.plushie.armourers_workshop.core.entity;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.realmsclient.util.RealmsUtil;
 import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.TextureDescriptor;
+import moe.plushie.armourers_workshop.core.texture.TextureLoader;
 import moe.plushie.armourers_workshop.core.utils.AWTags;
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,6 +25,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.tileentity.SkullTileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
@@ -83,6 +88,13 @@ public class MannequinEntity extends ArmorStandEntity {
         }
     }
 
+    @Override
+    public void onSyncedDataUpdated(DataParameter<?> dataParameter) {
+        super.onSyncedDataUpdated(dataParameter);
+        if (dataParameter == DATA_TEXTURE && level != null && level.isClientSide()) {
+            TextureLoader.getInstance().loadTexture(entityData.get(DATA_TEXTURE), null);
+        }
+    }
 
     @Override
     public boolean isBaby() {
