@@ -1,7 +1,10 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
 import moe.plushie.armourers_workshop.core.api.ISkinCube;
+import moe.plushie.armourers_workshop.core.color.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.color.PaintColor;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderType;
+import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.utils.*;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
@@ -36,12 +39,12 @@ public class PackedQuad {
         return new PackedQuad(bounds, renderShape, CubeLoader.cullFaces(data, bounds));
     }
 
-    public static HashMap<PlayerTexture, PackedQuad> from(int width, int height, int[] paintData) {
-        HashMap<PlayerTexture, PackedQuad> allQuads = new HashMap<>();
+    public static HashMap<PlayerTextureModel, PackedQuad> from(int width, int height, int[] paintData) {
+        HashMap<PlayerTextureModel, PackedQuad> allQuads = new HashMap<>();
         if (paintData == null || paintData.length == 0) {
             return allQuads;
         }
-        for (PlayerTexture texturedModel : PlayerTexture.getPlayerModels(width, height, false)) {
+        for (PlayerTextureModel texturedModel : PlayerTextureModel.getPlayerModels(width, height, false)) {
             ArrayList<ColouredFace> quads = new ArrayList<>();
             texturedModel.forEach((u, v, x, y, z, dir) -> {
                 PaintColor paintColor = PaintColor.of(paintData[v * width + u]);

@@ -10,7 +10,7 @@ package moe.plushie.armourers_workshop.core.render.tileentities;//package moe.pl
 //import moe.plushie.armourers_workshop.client.render.SkinModelRenderHelper.ModelType;
 //import moe.plushie.armourers_workshop.client.skin.cache.ClientSkinCache;
 //import moe.plushie.armourers_workshop.core.skin.data.Skin;
-//import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
+//import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 //import moe.plushie.armourers_workshop.core.tileentities.TileEntityHologramProjector;
 //import moe.plushie.armourers_workshop.core.tileentities.TileEntityHologramProjector.PowerMode;
 //import moe.plushie.armourers_workshop.utils.SkinNBTHelper;

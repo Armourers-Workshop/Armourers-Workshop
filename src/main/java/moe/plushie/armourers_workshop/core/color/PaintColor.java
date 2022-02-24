@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.utils;
+package moe.plushie.armourers_workshop.core.color;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

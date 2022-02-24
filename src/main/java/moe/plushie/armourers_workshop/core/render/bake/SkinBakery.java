@@ -1,12 +1,14 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
 import moe.plushie.armourers_workshop.core.skin.*;
-import moe.plushie.armourers_workshop.core.skin.data.ColorScheme;
-import moe.plushie.armourers_workshop.core.skin.data.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
-import moe.plushie.armourers_workshop.core.utils.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.data.DataLoader;
+import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
+import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -170,7 +172,7 @@ public final class SkinBakery {
             // part.clearCubeData();
         }
 
-        for (Map.Entry<PlayerTexture, PackedQuad> entry : PackedQuad.from(64, 32, skin.getPaintData()).entrySet()) {
+        for (Map.Entry<PlayerTextureModel, PackedQuad> entry : PackedQuad.from(64, 32, skin.getPaintData()).entrySet()) {
             PackedQuad quads = entry.getValue();
             TexturePart part = new TexturePart(entry.getKey(), quads.getBounds(), quads.getRenderShape());
             BakedSkinPart bakedPart = new BakedSkinPart(part, quads);

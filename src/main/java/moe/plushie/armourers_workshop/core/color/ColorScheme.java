@@ -1,9 +1,8 @@
-package moe.plushie.armourers_workshop.core.skin.data;
+package moe.plushie.armourers_workshop.core.color;
 
 import com.google.common.collect.Iterables;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
-import moe.plushie.armourers_workshop.core.utils.PaintColor;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;

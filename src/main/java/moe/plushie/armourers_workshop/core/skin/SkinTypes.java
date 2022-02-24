@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
-import moe.plushie.armourers_workshop.core.utils.AWTags;
+import moe.plushie.armourers_workshop.core.base.AWTags;
 import moe.plushie.armourers_workshop.core.utils.SkinResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;

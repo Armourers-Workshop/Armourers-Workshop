@@ -1,8 +1,9 @@
-package moe.plushie.armourers_workshop.core.render.bake;
+package moe.plushie.armourers_workshop.core.texture;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
+import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.utils.PaintColor;
+import moe.plushie.armourers_workshop.core.color.PaintColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IResource;
 import net.minecraft.util.Direction;
@@ -42,7 +43,7 @@ public class BakedEntityTexture {
         boolean slim = (bufferedImage.getRGB(54, 20) & 0xff000000) == 0;
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
-        for (PlayerTexture model : PlayerTexture.getPlayerModels(width, height, slim)) {
+        for (PlayerTextureModel model : PlayerTextureModel.getPlayerModels(width, height, slim)) {
             HashMap<Integer, PaintColor> part = allParts.computeIfAbsent(model.getPartType(), k -> new HashMap<>());
             model.forEach((u, v, x, y, z, dir) -> {
                 int color = bufferedImage.getRGB(u, v);

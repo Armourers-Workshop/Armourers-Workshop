@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.render.bake;
+package moe.plushie.armourers_workshop.core.model;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class PlayerTexture {
+public class PlayerTextureModel {
 
     public static final int TEXTURE_OLD_WIDTH = 64;
     public static final int TEXTURE_OLD_HEIGHT = 32;
@@ -18,28 +18,28 @@ public class PlayerTexture {
 
 
     // steve 0x1, alex 0x2, v1 only 0x4, v2 only 0x8
-    private final static PlayerTexture[] PLAYER_TEXTURED_MODELS = {
+    private final static PlayerTextureModel[] PLAYER_TEXTURED_MODELS = {
             // entity + version
-            new PlayerTexture(SkinPartTypes.BIPED_HAT, -4, -8, -4, 8, 8, 8, 32, 0, 0x0),
-            new PlayerTexture(SkinPartTypes.BIPED_HEAD, -4, -8, -4, 8, 8, 8, 0, 0, 0x0),
-            new PlayerTexture(SkinPartTypes.BIPED_CHEST, -4, 0, -2, 8, 12, 4, 16, 16, 0x0),
-            new PlayerTexture(SkinPartTypes.BIPED_RIGHT_LEG, -2, 0, -2, 4, 12, 4, 0, 16, 0x0),
-            new PlayerTexture(SkinPartTypes.BIPED_LEFT_LEG, -2, 0, -2, 4, 12, 4, 0, 16, 0x4).setMirror(true), // Mirror Right LEG
+            new PlayerTextureModel(SkinPartTypes.BIPED_HAT, -4, -8, -4, 8, 8, 8, 32, 0, 0x0),
+            new PlayerTextureModel(SkinPartTypes.BIPED_HEAD, -4, -8, -4, 8, 8, 8, 0, 0, 0x0),
+            new PlayerTextureModel(SkinPartTypes.BIPED_CHEST, -4, 0, -2, 8, 12, 4, 16, 16, 0x0),
+            new PlayerTextureModel(SkinPartTypes.BIPED_RIGHT_LEG, -2, 0, -2, 4, 12, 4, 0, 16, 0x0),
+            new PlayerTextureModel(SkinPartTypes.BIPED_LEFT_LEG, -2, 0, -2, 4, 12, 4, 0, 16, 0x4).setMirror(true), // Mirror Right LEG
             // variant for player
-            new PlayerTexture(SkinPartTypes.BIPED_LEFT_LEG, -2, 0, -2, 4, 12, 4, 16, 48, 0x8),
+            new PlayerTextureModel(SkinPartTypes.BIPED_LEFT_LEG, -2, 0, -2, 4, 12, 4, 16, 48, 0x8),
 //            new SkinTexturedModel(SkinPartTypes.PLAYER_LEFT_PANTS, -2, 0, -2, 4, 12, 4, 0, 48, 0x8),
 //            new SkinTexturedModel(SkinPartTypes.PLAYER_RIGHT_PANTS, -2, 0, -2, 4, 12, 4, 0, 32, 0x8),
 //            new SkinTexturedModel(SkinPartTypes.PLAYER_JACKET, -4, 0, -2, 8, 12, 4, 16, 32, 0x8),
             // variant for player/steve
-            new PlayerTexture(SkinPartTypes.BIPED_RIGHT_ARM, -3, -2, -2, 4, 12, 4, 40, 16, 0x1),
-            new PlayerTexture(SkinPartTypes.BIPED_LEFT_ARM, -1, -2, -2, 4, 12, 4, 40, 16, 0x5).setMirror(true), // Mirror Right ARM
-            new PlayerTexture(SkinPartTypes.BIPED_LEFT_ARM, -1, -2, -2, 4, 12, 4, 32, 48, 0x9),
+            new PlayerTextureModel(SkinPartTypes.BIPED_RIGHT_ARM, -3, -2, -2, 4, 12, 4, 40, 16, 0x1),
+            new PlayerTextureModel(SkinPartTypes.BIPED_LEFT_ARM, -1, -2, -2, 4, 12, 4, 40, 16, 0x5).setMirror(true), // Mirror Right ARM
+            new PlayerTextureModel(SkinPartTypes.BIPED_LEFT_ARM, -1, -2, -2, 4, 12, 4, 32, 48, 0x9),
 //            new SkinTexturedModel(SkinPartTypes.PLAYER_LEFT_SLEEVE, -1, -2, -2, 4, 12, 4, 48, 48, 0x9),
 //            new SkinTexturedModel(SkinPartTypes.PLAYER_RIGHT_SLEEVE, -3, -2, -2, 4, 12, 4, 40, 32, 0x9),
             // variant for player/alex
-            new PlayerTexture(SkinPartTypes.BIPED_RIGHT_ARM, -2, -2, -2, 3, 12, 4, 40, 16, 0x2),
-            new PlayerTexture(SkinPartTypes.BIPED_LEFT_ARM, -1, -2, -2, 3, 12, 4, 40, 16, 0x6).setMirror(true), // Mirror Right ARM
-            new PlayerTexture(SkinPartTypes.BIPED_LEFT_ARM, -1, -2, -2, 3, 12, 4, 32, 48, 0xA),
+            new PlayerTextureModel(SkinPartTypes.BIPED_RIGHT_ARM, -2, -2, -2, 3, 12, 4, 40, 16, 0x2),
+            new PlayerTextureModel(SkinPartTypes.BIPED_LEFT_ARM, -1, -2, -2, 3, 12, 4, 40, 16, 0x6).setMirror(true), // Mirror Right ARM
+            new PlayerTextureModel(SkinPartTypes.BIPED_LEFT_ARM, -1, -2, -2, 3, 12, 4, 32, 48, 0xA),
 //            new SkinTexturedModel(SkinPartTypes.PLAYER_LEFT_SLEEVE, -1, -2, -2, 3, 12, 4, 48, 48, 0xA),
 //            new SkinTexturedModel(SkinPartTypes.PLAYER_RIGHT_SLEEVE, -2, -2, -2, 3, 12, 4, 40, 32, 0xA),
     };
@@ -53,7 +53,7 @@ public class PlayerTexture {
 
     private boolean mirror = false;
 
-    public PlayerTexture(ISkinPartType partType, int x, int y, int z, int width, int height, int depth, int u, int v, int flags) {
+    public PlayerTextureModel(ISkinPartType partType, int x, int y, int z, int width, int height, int depth, int u, int v, int flags) {
         this.u = u;
         this.v = v;
         // x = -1, y = v/h, z = u/d
@@ -74,12 +74,12 @@ public class PlayerTexture {
         this.partType = partType;
     }
 
-    public static ArrayList<PlayerTexture> getPlayerModels(int width, int height, boolean slim) {
+    public static ArrayList<PlayerTextureModel> getPlayerModels(int width, int height, boolean slim) {
         int flags = 0;
         flags |= slim ? 0x2 : 0x1;
         flags |= (height <= 32) ? 0x4 : 0x8;
-        ArrayList<PlayerTexture> playerModels = new ArrayList<>();
-        for (PlayerTexture model : PLAYER_TEXTURED_MODELS) {
+        ArrayList<PlayerTextureModel> playerModels = new ArrayList<>();
+        for (PlayerTextureModel model : PLAYER_TEXTURED_MODELS) {
             if ((model.flags & flags) == model.flags) {
                 playerModels.add(model);
             }
@@ -87,7 +87,7 @@ public class PlayerTexture {
         return playerModels;
     }
 
-    public PlayerTexture setMirror(boolean mirror) {
+    public PlayerTextureModel setMirror(boolean mirror) {
         this.mirror = mirror;
         return this;
     }
