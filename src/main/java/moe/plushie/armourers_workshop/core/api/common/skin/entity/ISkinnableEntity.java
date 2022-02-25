@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.api.common.skin.entity;
 
-import java.util.ArrayList;
-
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+
+import java.util.ArrayList;
 
 public interface ISkinnableEntity {
     

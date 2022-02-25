@@ -1,21 +1,21 @@
 package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.color.PaintColor;
-import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageButton;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
-import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.utils.*;
+import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
+import moe.plushie.armourers_workshop.core.utils.TextureUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
-import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.item.ItemStack;
@@ -164,17 +164,15 @@ public class ColourSettingPanel extends BaseSettingPanel {
         }
 
         private void autoPick(Button button) {
-            ResourceLocation texture = TextureUtils.getTexture(wardrobe.getEntity());
-            if (texture == null) {
+            ResourceLocation location = TextureUtils.getTexture(wardrobe.getEntity());
+            if (location == null) {
                 return;
             }
             pickButton = button;
-            SkinBakery.getInstance().loadEntityTexture(texture, bakedTexture -> {
-                if (this.pickButton == button) {
-                    PaintColor paintColor = getColorFromTexture(bakedTexture.orElse(null));
-                    RenderSystem.recordRenderCall(() -> setColor(paintColor));
-                }
-            });
+            BakedEntityTexture texture = PlayerTextureLoader.getInstance().getTextureModel(location);
+            if (texture != null) {
+                setColor(getColorFromTexture(texture));
+            }
         }
 
         private PaintColor getColorFromTexture(BakedEntityTexture texture) {

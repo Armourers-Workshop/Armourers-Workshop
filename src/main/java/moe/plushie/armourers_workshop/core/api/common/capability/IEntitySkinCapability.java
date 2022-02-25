@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.api.common.capability;
 
+import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.ISkinInventoryContainer;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDescriptor;
-import moe.plushie.armourers_workshop.core.api.ISkinType;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 

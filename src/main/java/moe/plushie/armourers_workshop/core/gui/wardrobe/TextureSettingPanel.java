@@ -107,6 +107,7 @@ public class TextureSettingPanel extends BaseSettingPanel {
         defaultValues.put(lastSource, textBox.getValue());
         textBox.setValue(defaultValues.getOrDefault(newSource, ""));
         textBox.setFocus(false);
+        textBox.moveCursorToStart();
         comboList.setSelectedIndex(newSource.ordinal() - 1);
         lastSource = newSource;
     }
@@ -121,17 +122,18 @@ public class TextureSettingPanel extends BaseSettingPanel {
                 descriptor = new PlayerTextureDescriptor(new GameProfile(null, value));
             }
         }
-        if (lastDescriptor.equals(descriptor)) {
-            return; // no changes
-        }
         PlayerTextureLoader.getInstance().loadTextureDescriptor(descriptor, resolvedDescriptor -> {
-            if (!resolvedDescriptor.isPresent()) {
-                AWLog.error("Setup entity texture error from {}", value);
-                return;
+            PlayerTextureDescriptor newValue = resolvedDescriptor.orElse(PlayerTextureDescriptor.EMPTY);;
+            if (lastDescriptor.equals(newValue)) {
+                return; // no changes
             }
-            lastDescriptor = resolvedDescriptor.get();
-            UpdateWardrobePacket packet = UpdateWardrobePacket.option(wardrobe, SkinWardrobeOption.MANNEQUIN_TEXTURE, lastDescriptor);
+            lastSource = PlayerTextureDescriptor.Source.NONE;
+            lastDescriptor = newValue;
+            UpdateWardrobePacket packet = UpdateWardrobePacket.option(wardrobe, SkinWardrobeOption.MANNEQUIN_TEXTURE, newValue);
             NetworkHandler.getInstance().sendToServer(packet);
+            // update to use
+            defaultValues.put(newValue.getSource(), newValue.getValue());
+            changeSource(newValue.getSource());
         });
     }
 
@@ -154,6 +156,7 @@ public class TextureSettingPanel extends BaseSettingPanel {
 
     private void addTextField(int x, int y, String defaultValue) {
         textBox = new TextFieldWidget(font, x, y, 165, 16, StringTextComponent.EMPTY);
+        textBox.setMaxLength(1024);
         if (Strings.isNotBlank(defaultValue)) {
             textBox.setValue(defaultValue);
         }

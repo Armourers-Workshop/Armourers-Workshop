@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.skin;
 
+import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.api.ISkinCube;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkin;
-import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;

@@ -2,13 +2,14 @@ package moe.plushie.armourers_workshop.core.render.bake;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderType;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.color.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.color.PaintColor;
+import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderType;
+import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.utils.CustomVoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -57,7 +58,7 @@ public class BakedSkinPart {
                 needsEntityTexture = true;
             }
         }
-        if (needsEntityTexture && SkinBakery.getInstance().getEntityTexture(scheme.getTexture()) != null) {
+        if (needsEntityTexture && PlayerTextureLoader.getInstance().getTextureModel(scheme.getTexture()) != null) {
             requirements.add(SkinPaintTypes.TEXTURE.getId());
             requirements.add(scheme.getTexture());
         }

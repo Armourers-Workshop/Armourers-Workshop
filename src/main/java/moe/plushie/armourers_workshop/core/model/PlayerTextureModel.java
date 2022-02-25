@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.model;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
 import net.minecraft.util.Direction;
@@ -82,6 +83,12 @@ public class PlayerTextureModel {
         for (PlayerTextureModel model : PLAYER_TEXTURED_MODELS) {
             if ((model.flags & flags) == model.flags) {
                 playerModels.add(model);
+                if (model.partType == SkinPartTypes.BIPED_LEFT_LEG) {
+                    playerModels.add(model.copy(SkinPartTypes.BIPED_LEFT_FOOT));
+                }
+                if (model.partType == SkinPartTypes.BIPED_RIGHT_LEG) {
+                    playerModels.add(model.copy(SkinPartTypes.BIPED_RIGHT_FOOT));
+                }
             }
         }
         return playerModels;
@@ -120,6 +127,16 @@ public class PlayerTextureModel {
                 }
             }
         }
+    }
+
+    public PlayerTextureModel copy(ISkinPartType partType) {
+        int x = bounds.getX();
+        int y = bounds.getY();
+        int z = bounds.getZ();
+        int width = bounds.getWidth();
+        int height = bounds.getHeight();
+        int depth = bounds.getDepth();
+        return new PlayerTextureModel(partType, x, y, z, width, height, depth, u, v, flags);
     }
 
     public Rectangle3i getBounds() {

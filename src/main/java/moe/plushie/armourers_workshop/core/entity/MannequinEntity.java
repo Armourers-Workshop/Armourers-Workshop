@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.AWConstants;
+import moe.plushie.armourers_workshop.core.api.ISkinToolType;
+import moe.plushie.armourers_workshop.core.base.AWTags;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import moe.plushie.armourers_workshop.core.base.AWTags;
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
@@ -84,14 +84,14 @@ public class MannequinEntity extends ArmorStandEntity {
         }
     }
 
-    @Override
-    public void onSyncedDataUpdated(DataParameter<?> dataParameter) {
-        super.onSyncedDataUpdated(dataParameter);
-        // preload entity texture if needed
-        if (dataParameter == DATA_TEXTURE && level.isClientSide()) {
-            PlayerTextureLoader.getInstance().loadTexture(entityData.get(DATA_TEXTURE));
-        }
-    }
+//    @Override
+//    public void onSyncedDataUpdated(DataParameter<?> dataParameter) {
+//        super.onSyncedDataUpdated(dataParameter);
+//        // preload entity texture if needed
+//        if (dataParameter == DATA_TEXTURE && level.isClientSide()) {
+//            PlayerTextureLoader.getInstance().loadTexture(entityData.get(DATA_TEXTURE));
+//        }
+//    }
 
     @Override
     public boolean isBaby() {
@@ -105,7 +105,7 @@ public class MannequinEntity extends ArmorStandEntity {
 
     @Override
     public boolean isInvisible() {
-        return super.isInvisible() || !entityData.get(DATA_IS_VISIBLE);
+        return !entityData.get(DATA_IS_VISIBLE);
     }
 
     @Override

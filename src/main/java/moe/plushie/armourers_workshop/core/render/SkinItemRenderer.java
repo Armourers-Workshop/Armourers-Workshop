@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.SkinDummyEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import net.minecraft.client.Minecraft;

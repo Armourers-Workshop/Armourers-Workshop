@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

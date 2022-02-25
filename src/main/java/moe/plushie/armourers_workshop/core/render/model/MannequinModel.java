@@ -1,8 +1,6 @@
 package moe.plushie.armourers_workshop.core.render.model;
 
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import net.minecraft.client.renderer.entity.model.ArmorStandArmorModel;
-import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

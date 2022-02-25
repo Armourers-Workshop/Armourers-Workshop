@@ -23,8 +23,7 @@ public class FileArgument implements ArgumentType<String> {
     public static final SimpleCommandExceptionType ERROR_START = new SimpleCommandExceptionType(new StringTextComponent("File must start with '/'"));
     public static final SimpleCommandExceptionType ERROR_NOT_FOUND = new SimpleCommandExceptionType(new StringTextComponent("Not found any file"));
 
-    private final File rootPath;
-    private final String rootPathS;
+    private final String rootPath;
     private final String ext;
 
     private String filteredName;
@@ -32,8 +31,7 @@ public class FileArgument implements ArgumentType<String> {
 
     FileArgument(String rootPath) {
         super();
-        this.rootPath = new File(rootPath);
-        this.rootPathS = rootPath;
+        this.rootPath = rootPath;
         this.ext = ".armour";
     }
 
@@ -83,7 +81,7 @@ public class FileArgument implements ArgumentType<String> {
             return filteredFileList;
         }
         filteredName = name;
-        filteredFileList = getFileList(rootPath, name);
+        filteredFileList = getFileList(new File(rootPath), name);
         return filteredFileList;
     }
 
@@ -94,7 +92,7 @@ public class FileArgument implements ArgumentType<String> {
             return results;
         }
         for (File file : files) {
-            String rv = file.toString().substring(rootPathS.length());
+            String rv = file.toString().substring(rootPath.length());
             if (file.isDirectory()) {
                 if (name.startsWith(rv)) {
                     results.addAll(getFileList(file, name));
@@ -103,7 +101,7 @@ public class FileArgument implements ArgumentType<String> {
                 }
                 continue;
             }
-            if (rv.endsWith(ext)) {
+            if (rv.toLowerCase().endsWith(ext)) {
                 if (rv.startsWith(name)) {
                     results.add(rv);
                 } else if (name.startsWith(rv)) {

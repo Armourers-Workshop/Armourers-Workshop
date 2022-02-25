@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.data;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 
@@ -58,7 +59,7 @@ public class DataManager {
         if (!identifier.endsWith(ext)) {
             identifier = identifier + ext;
         }
-        File file = new File("./armoures/" + identifier);
+        File file = new File(AWCore.getRootDirectory() + "/skin-library/" + identifier);
         if (!file.exists()) {
             return null;
         }

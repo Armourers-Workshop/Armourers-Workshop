@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
+import java.io.File;
 
 public class AWCore {
 
@@ -31,6 +33,10 @@ public class AWCore {
 
     public static ResourceLocation getItemIcon(String name) {
         return AWCore.resource("textures/items/template/" + name + ".png");
+    }
+
+    public static File getRootDirectory() {
+        return new File(Minecraft.getInstance().gameDirectory, "armourers_workshop");
     }
 
     public static ItemStack getSkinFromEquipment(@Nullable Entity entity, SkinSlotType skinSlotType, EquipmentSlotType equipmentSlotType) {

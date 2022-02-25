@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
 import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.INetHandler;

@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
@@ -10,8 +9,6 @@ import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionExcept
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.StringTextComponent;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.file.Files;
