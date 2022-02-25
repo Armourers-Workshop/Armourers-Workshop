@@ -1,25 +1,50 @@
 package moe.plushie.armourers_workshop.core.texture;
 
+import com.google.common.hash.Hashing;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.utils.AWLog;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.texture.DownloadingTexture;
+import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.client.renderer.texture.Texture;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.SkullTileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
+@OnlyIn(Dist.CLIENT)
 public class PlayerTextureLoader {
 
     private static final PlayerTextureLoader LOADER = new PlayerTextureLoader();
 
-    private final HashMap<String, GameProfile> profiles = new HashMap<>();
+    private static final ResourceLocation STEVE_SKIN_LOCATION = new ResourceLocation("textures/entity/steve.png");
+    private static final ResourceLocation ALEX_SKIN_LOCATION = new ResourceLocation("textures/entity/alex.png");
+
+    private final HashMap<String, Optional<GameProfile>> profiles = new HashMap<>();
     private final HashMap<PlayerTextureDescriptor, Optional<PlayerTexture>> textures = new HashMap<>();
+    private final HashSet<PlayerTextureDescriptor> loading = new HashSet<>();
+
+    private final HashMap<ResourceLocation, Optional<PlayerTexture>> textures2 = new HashMap<>();
 
     private final Executor executor = Executors.newFixedThreadPool(1);
 
@@ -28,27 +53,46 @@ public class PlayerTextureLoader {
     }
 
     @Nullable
-    public PlayerTexture getTexture(PlayerTextureDescriptor descriptor) {
-        Optional<PlayerTexture> texture = textures.get(descriptor);
-        if (texture != null && texture.isPresent()) {
-            return texture.get();
+    public BakedEntityTexture getTextureModel(ResourceLocation location) {
+        Optional<PlayerTexture> texture = textures2.get(location);
+        if (texture != null) {
+            return texture.map(PlayerTexture::getTexture).orElse(null);
         }
+        loadDefaultTexture(location);
         return null;
     }
 
+    public ResourceLocation getTextureLocation(Entity entity) {
+        if (entity instanceof MannequinEntity) {
+            PlayerTextureDescriptor descriptor = entity.getEntityData().get(MannequinEntity.DATA_TEXTURE);
+            PlayerTexture texture = loadTexture(descriptor);
+            if (texture != null && texture.getLocation() != null) {
+                return texture.getLocation();
+            }
+        }
+        if (entity instanceof ClientPlayerEntity) {
+            return ((ClientPlayerEntity) entity).getSkinTextureLocation();
+        }
+        return DefaultPlayerSkin.getDefaultSkin();
+    }
+
+
     @Nullable
     public PlayerTexture loadTexture(PlayerTextureDescriptor descriptor) {
-        Optional<PlayerTexture> texture = textures.get(descriptor);
-        if (texture == null) {
-            loadTextureDescriptor(descriptor, p -> {});
+        if (descriptor.isEmpty()) {
             return null;
         }
-        return texture.orElse(null);
+        Optional<PlayerTexture> texture = textures.get(descriptor);
+        if (texture != null) {
+            return texture.orElse(null);
+        }
+        loadTextureDescriptor(descriptor, descriptor1 -> {});
+        return null;
     }
 
     public void loadTextureDescriptor(PlayerTextureDescriptor descriptor, Consumer<Optional<PlayerTextureDescriptor>> complete) {
         Optional<PlayerTexture> texture = textures.get(descriptor);
-        if (texture != null) {
+        if (texture != null || descriptor.isEmpty() || !loading.add(descriptor)) {
             complete.accept(Optional.of(descriptor));
             return;
         }
@@ -56,8 +100,9 @@ public class PlayerTextureLoader {
         GameProfile profile = descriptor.getProfile();
         if (profile != null) {
             loadGameProfile(profile, profile1 -> complete.accept(profile1.map(resolvedProfile -> {
-                SkinManager manager = Minecraft.getInstance().getSkinManager();
-                manager.registerSkins(resolvedProfile, (type, location, texture1) -> onSkinTextureAvailable(type, location, texture1, resolvedProfile, descriptor), true);
+                if (resolvedProfile.isComplete()) {
+                    loadVanillaTexture(resolvedProfile);
+                }
                 return new PlayerTextureDescriptor(resolvedProfile);
             })));
             return;
@@ -65,8 +110,14 @@ public class PlayerTextureLoader {
         // from url
         String url = descriptor.getURL();
         if (url != null) {
-            //            ThreadDownloadImageData
-            complete.accept(Optional.of(descriptor));
+            try {
+                URL ignored = new URL(url);
+                loadCustomTexture(url);
+                complete.accept(Optional.of(descriptor));
+            } catch (MalformedURLException e) {
+                AWLog.info("input a invalid url '{}'", url);
+                complete.accept(Optional.empty());
+            }
             return;
         }
         // ignore
@@ -75,30 +126,106 @@ public class PlayerTextureLoader {
         }
     }
 
-    private void loadGameProfile(GameProfile profile, Consumer<Optional<GameProfile>> complete) {
+    public void loadGameProfile(GameProfile profile, Consumer<Optional<GameProfile>> complete) {
         if (profile.isComplete()) {
             complete.accept(Optional.of(profile));
             return;
         }
-        String name = profile.getName();
+        String name = profile.getName().toLowerCase();
         if (profiles.containsKey(name)) {
-            complete.accept(Optional.of(profiles.get(name)));
+            complete.accept(profiles.get(name));
             return;
         }
         executor.execute(() -> {
             GameProfile profile1 = SkullTileEntity.updateGameprofile(profile);
-            if (profile1 != null) {
-                profiles.put(name, profile1);
-            }
+            profiles.put(name, Optional.ofNullable(profile1));
             complete.accept(Optional.ofNullable(profile1));
         });
     }
 
-    public void onSkinTextureAvailable(MinecraftProfileTexture.Type type, ResourceLocation location, MinecraftProfileTexture texture, GameProfile profile, PlayerTextureDescriptor descriptor) {
-        if (type != MinecraftProfileTexture.Type.SKIN) {
+    public void bakingTexture(String url, NativeImage image, boolean slim) {
+        if (image == null) {
             return;
         }
-        PlayerTexture texture1 = new PlayerTexture(profile, location, texture);
-        textures.put(descriptor, Optional.of(texture1));
+        PlayerTexture pendingTexture = null;
+        for (Optional<PlayerTexture> texture : textures.values()) {
+            if (texture.isPresent() && Objects.equals(texture.get().getURL(), url)) {
+                pendingTexture = texture.get();
+                break;
+            }
+        }
+        if (pendingTexture != null) {
+            if (pendingTexture.getModel() == null) {
+                pendingTexture.setModel("default");
+                if (slim) {
+                    pendingTexture.setModel("slim");
+                }
+            }
+            slim = Objects.equals(pendingTexture.getModel(), "slim");
+            pendingTexture.setTexture(new BakedEntityTexture(pendingTexture.getLocation(), image, slim));
+            AWLog.debug("Baked a player texture => {}, slim => {}", pendingTexture.getLocation(), slim);
+        }
+    }
+
+    public void loadDefaultTexture(ResourceLocation location) {
+        boolean alex = location.equals(ALEX_SKIN_LOCATION);
+        if (!alex && !location.equals(STEVE_SKIN_LOCATION)) {
+            return;
+        }
+        textures2.put(location, Optional.empty());
+        executor.execute(() -> {
+            PlayerTexture resolvedTexture = new PlayerTexture("", location, null);
+            resolvedTexture.setTexture(new BakedEntityTexture(location, alex));
+            textures2.put(location, Optional.of(resolvedTexture));
+        });
+    }
+
+    private void loadVanillaTexture(GameProfile profile) {
+        PlayerTextureDescriptor descriptor = new PlayerTextureDescriptor(profile);
+        Optional<PlayerTexture> texture = textures.get(descriptor);
+        if (texture != null) {
+            return;
+        }
+        SkinManager manager = Minecraft.getInstance().getSkinManager();
+        manager.registerSkins(profile, (type, location, profileTexture) -> {
+            if (type != MinecraftProfileTexture.Type.SKIN) {
+                return;
+            }
+            String model = profileTexture.getMetadata("model");
+            if (model == null) {
+                model = "default";
+            }
+            AWLog.debug("Receive a player texture => {}", location);
+            PlayerTexture resolvedTexture = new PlayerTexture(profileTexture.getUrl(), location, model);
+            textures.put(descriptor, Optional.of(resolvedTexture));
+            textures2.put(location, Optional.of(resolvedTexture));
+            loading.remove(descriptor);
+        }, true);
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    private void loadCustomTexture(String url) {
+        PlayerTextureDescriptor descriptor = new PlayerTextureDescriptor(url);
+        Optional<PlayerTexture> texture = textures.get(descriptor);
+        if (texture != null) {
+            return;
+        }
+        String identifier = Hashing.sha1().hashUnencodedChars(url).toString();
+        ResourceLocation location = new ResourceLocation("skins/aw-" + identifier);
+        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+        Texture processingTexture = textureManager.getTexture(location);
+        PlayerTexture resolvedTexture = new PlayerTexture(url, location, null);
+        if (processingTexture != null) {
+            return;
+        }
+        String sub = identifier.length() > 2 ? identifier.substring(0, 2) : "xx";
+        File path = new File(AWCore.getRootDirectory() + "/skin-textures/" + sub + "/" + identifier);
+        DownloadingTexture downloadingTexture = new DownloadingTexture(path, url, DefaultPlayerSkin.getDefaultSkin(), true, () -> {
+            AWLog.debug("Receive a player texture => {}", location);
+            textures.put(descriptor, Optional.of(resolvedTexture));
+            textures2.put(location, Optional.of(resolvedTexture));
+            loading.remove(descriptor);
+        });
+        textureManager.register(location, downloadingTexture);
     }
 }

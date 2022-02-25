@@ -7,16 +7,17 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.cache.SkinCache;
+import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.SkinLoader;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
+import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
@@ -64,7 +65,7 @@ public class SkinCommands {
     }
 
     static ArgumentBuilder<CommandSource, ?> skins() {
-        return Commands.argument("skin", new FileArgument("./armoures"));
+        return Commands.argument("skin", new FileArgument(AWCore.getRootDirectory() + "/skin-library"));
     }
 
     static ArgumentBuilder<CommandSource, ?> dyes() {

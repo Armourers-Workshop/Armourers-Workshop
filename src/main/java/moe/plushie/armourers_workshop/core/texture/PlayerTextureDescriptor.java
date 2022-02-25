@@ -106,17 +106,27 @@ public class PlayerTextureDescriptor {
         return source;
     }
 
+    public String getValue() {
+        if (source == Source.URL) {
+            return getURL();
+        }
+        if (source == Source.USER) {
+            return getName();
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlayerTextureDescriptor that = (PlayerTextureDescriptor) o;
-        return source == that.source && Objects.equals(url, that.url) && Objects.equals(getName(), that.getName());
+        return source == that.source && Objects.equals(getValue(), that.getValue());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(source, url, getName());
+        return Objects.hash(source, getValue());
     }
 
     public enum Source {

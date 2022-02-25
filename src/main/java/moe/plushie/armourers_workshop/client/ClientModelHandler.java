@@ -1,12 +1,9 @@
 package moe.plushie.armourers_workshop.client;
 
-import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.render.model.HeldItemModel;
 import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.skin.part.unknown.UnknownPartType;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.vector.Vector3f;

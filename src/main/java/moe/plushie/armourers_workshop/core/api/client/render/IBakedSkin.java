@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.api.client.render;
 
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkin;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

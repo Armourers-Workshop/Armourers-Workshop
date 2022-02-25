@@ -1,54 +1,28 @@
 package moe.plushie.armourers_workshop.core.render.entity;
 
-import com.google.common.collect.Maps;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import moe.plushie.armourers_workshop.core.render.layer.SkinWardrobeArmorLayer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.render.layer.SkinWardrobeArmorLayer;
 import moe.plushie.armourers_workshop.core.render.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.render.model.MannequinModel;
-import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
-import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import net.minecraft.block.AbstractSkullBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SkullBlock;
-import net.minecraft.block.WallSkullBlock;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HeadLayer;
 import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
-import net.minecraft.client.renderer.entity.model.GenericHeadModel;
-import net.minecraft.client.renderer.entity.model.HumanoidHeadModel;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.tileentity.model.DragonHeadModel;
-import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.SkullTileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nullable;
-import java.util.Map;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
 public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRenderer<T, MannequinModel<T>> {
 
-    private static final ResourceLocation STEVE_SKIN_LOCATION = new ResourceLocation("textures/entity/steve.png");
-    private static final ResourceLocation ALEX_SKIN_LOCATION = new ResourceLocation("textures/entity/alex.png");
+    private ResourceLocation textureLocation;
 
     private final MannequinModel<T> normalModel;
     private final MannequinModel<T> slimModel;
@@ -67,20 +41,23 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
 
     @Override
     public void render(T entity, float p_225623_2_, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int p_225623_6_) {
+        this.textureLocation = PlayerTextureLoader.getInstance().getTextureLocation(entity);
         this.model = getResolvedModel(entity);
         this.model.setAllVisible(true);
         super.render(entity, p_225623_2_, p_225623_3_, matrixStack, renderTypeBuffer, p_225623_6_);
     }
 
     public MannequinModel<T> getResolvedModel(T entity) {
+        BakedEntityTexture texture = PlayerTextureLoader.getInstance().getTextureModel(getTextureLocation(entity));
+        if (texture != null && texture.isSlim()) {
+            return slimModel;
+        }
         return normalModel;
-//        return slimModel;
     }
 
     @Override
     public ResourceLocation getTextureLocation(T entity) {
-        return STEVE_SKIN_LOCATION;
-//        return ALEX_SKIN_LOCATION;
+        return textureLocation;
     }
 
 //    protected void setupRotations(ArmorStandEntity entity, MatrixStack matrixStack, float p_225621_3_, float p_225621_4_, float p_225621_5_) {
@@ -186,13 +163,13 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
 //    }
 //
 
-    @Nullable
-    @Override
-    protected RenderType getRenderType(T entity, boolean p_230496_2_, boolean p_230496_3_, boolean p_230496_4_) {
-        PlayerTexture texture = PlayerTextureLoader.getInstance().loadTexture(entity.getEntityData().get(MannequinEntity.DATA_TEXTURE));
-        if (texture != null && texture.getLocation() != null) {
-            return RenderType.entityTranslucent(texture.getLocation());
-        }
-        return super.getRenderType(entity, p_230496_2_, p_230496_3_, p_230496_4_);
-    }
+//    @Nullable
+//    @Override
+//    protected RenderType getRenderType(T entity, boolean p_230496_2_, boolean p_230496_3_, boolean p_230496_4_) {
+//        PlayerTexture texture = PlayerTextureLoader.getInstance().loadTexture(entity.getEntityData().get(MannequinEntity.DATA_TEXTURE));
+//        if (texture != null && texture.getLocation() != null) {
+//            return RenderType.entityTranslucent(texture.getLocation());
+//        }
+//        return super.getRenderType(entity, p_230496_2_, p_230496_3_, p_230496_4_);
+//    }
 }

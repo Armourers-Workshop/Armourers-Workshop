@@ -2,12 +2,12 @@ package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.base.AWItems;
-import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.client.gui.screen.Screen;

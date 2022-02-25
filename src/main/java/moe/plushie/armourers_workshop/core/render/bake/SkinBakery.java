@@ -1,14 +1,15 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
-import moe.plushie.armourers_workshop.core.skin.*;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.color.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.DataLoader;
-import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
+import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
+import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
+import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -56,9 +57,9 @@ public final class SkinBakery {
             .threadPool(2)
             .build(this::loadAndBakeSkin);
 
-    private final DataLoader<ResourceLocation, BakedEntityTexture> textureManager = DataLoader.newBuilder()
-            .threadPool(1)
-            .build(this::loadAndBakeTexture);
+//    private final DataLoader<ResourceLocation, BakedEntityTexture> textureManager = DataLoader.newBuilder()
+//            .threadPool(1)
+//            .build(this::loadAndBakeTexture);
 
 
     public void addListener(IBakeListener listener) {
@@ -90,22 +91,22 @@ public final class SkinBakery {
 //        FMLCommonHandler.instance().bus().register(this);
     }
 
-    @Nullable
-    public BakedEntityTexture getEntityTexture(@Nullable ResourceLocation texture) {
-        if (texture != null) {
-            Optional<BakedEntityTexture> bakedTexture = textureManager.get(texture);
-            if (bakedTexture != null && bakedTexture.isPresent()) {
-                return bakedTexture.get();
-            }
-        }
-        return null;
-    }
-
-    public void loadEntityTexture(@Nullable ResourceLocation texture, Consumer<Optional<BakedEntityTexture>> consumer) {
-        if (texture != null) {
-            textureManager.load(texture, false, consumer);
-        }
-    }
+//    @Nullable
+//    public BakedEntityTexture getEntityTexture(@Nullable ResourceLocation texture) {
+//        if (texture != null) {
+//            Optional<BakedEntityTexture> bakedTexture = textureManager.get(texture);
+//            if (bakedTexture != null && bakedTexture.isPresent()) {
+//                return bakedTexture.get();
+//            }
+//        }
+//        return null;
+//    }
+//
+//    public void loadEntityTexture(@Nullable ResourceLocation texture, Consumer<Optional<BakedEntityTexture>> consumer) {
+//        if (texture != null) {
+//            textureManager.load(texture, false, consumer);
+//        }
+//    }
 
 
     @Nullable
@@ -222,10 +223,10 @@ public final class SkinBakery {
 //        }
 //    }
 
-    private void loadAndBakeTexture(ResourceLocation texture, Consumer<Optional<BakedEntityTexture>> complete) {
-        BakedEntityTexture bakedTexture = new BakedEntityTexture(texture);
-        complete.accept(Optional.of(bakedTexture));
-    }
+//    private void loadAndBakeTexture(ResourceLocation texture, Consumer<Optional<BakedEntityTexture>> complete) {
+//        BakedEntityTexture bakedTexture = new BakedEntityTexture(texture);
+//        complete.accept(Optional.of(bakedTexture));
+//    }
 
 //    public BakedSkin backedModel(Skin skin) {
 //        BakingOven oven = new BakingOven(skin, null, null, null);

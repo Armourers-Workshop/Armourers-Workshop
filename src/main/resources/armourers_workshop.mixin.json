@@ -6,10 +6,11 @@
   "mixins": [
   ],
   "client": [
-    "BipedArmorLayerMixin",
     "ArrowRendererMixin",
+    "BipedArmorLayerMixin",
     "FirstPersonRendererMixin",
     "InventoryScreenMixin",
+    "DownloadingTextureMixin",
     "ModelManagerMixin"
   ],
   "injectors": {

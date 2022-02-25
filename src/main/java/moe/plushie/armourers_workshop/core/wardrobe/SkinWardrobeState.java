@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.core.wardrobe;
 
 import moe.plushie.armourers_workshop.core.api.*;
+import moe.plushie.armourers_workshop.core.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.color.PaintColor;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.color.PaintColor;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import net.minecraft.entity.Entity;

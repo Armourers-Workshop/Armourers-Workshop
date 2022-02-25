@@ -7,12 +7,16 @@ import moe.plushie.armourers_workshop.core.api.action.ICanUse;
 import moe.plushie.armourers_workshop.core.api.client.render.IBakedSkin;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.color.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.utils.*;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.utils.CustomVoxelShape;
+import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
+import moe.plushie.armourers_workshop.core.utils.SkinUtils;
+import moe.plushie.armourers_workshop.core.utils.TextureUtils;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
@@ -68,10 +72,9 @@ public class BakedSkin implements IBakedSkin {
             return ColorScheme.EMPTY;
         }
         ColorScheme resolvedColorScheme = resolvedColorSchemes.computeIfAbsent(entity.getId(), k -> preference.copy());
-        ResourceLocation resolvedTexture = TextureUtils.getTexture(entity);
+        ResourceLocation resolvedTexture = PlayerTextureLoader.getInstance().getTextureLocation(entity);
         if (!Objects.equals(resolvedColorScheme.getTexture(), resolvedTexture)) {
             resolvedColorScheme.setTexture(resolvedTexture);
-            SkinBakery.getInstance().loadEntityTexture(resolvedTexture, null);
         }
         resolvedColorScheme.setReference(scheme);
         return resolvedColorScheme;

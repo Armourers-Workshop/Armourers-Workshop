@@ -23,7 +23,6 @@ public class LocalDataService {
 
     private static LocalDataService RUNNING;
 
-    private final String type = "db";
     private final Path rootPath;
     private String lastGenUUID = "";
 
@@ -59,7 +58,7 @@ public class LocalDataService {
             AWLog.error("Init service config fail {}", rootDir);
             return;
         }
-        File indexDB = rootPath.resolve("index.db").toFile();
+        File indexDB = rootPath.resolve("index.dat").toFile();
         if (!indexDB.exists()) {
             AWLog.debug("Setup new service with {}", indexDB);
             return;
@@ -81,7 +80,7 @@ public class LocalDataService {
     }
 
     protected void saveConfig() {
-        File indexDB = rootPath.resolve("index.db").toFile();
+        File indexDB = rootPath.resolve("index.dat").toFile();
         AWLog.debug("Save service config into {}", indexDB);
         try {
             CompoundNBT nbt = new CompoundNBT();

@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.api.common.skin;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import net.minecraft.util.math.vector.Vector3i;
 
-import java.awt.Point;
+import java.awt.*;
 
 public interface ISkinPartTypeTextured extends ISkinPartType {
 

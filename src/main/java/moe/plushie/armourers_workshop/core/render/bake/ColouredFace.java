@@ -5,12 +5,13 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.core.api.ISkinCube;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.render.SkinModelRenderer;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.color.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.color.PaintColor;
+import moe.plushie.armourers_workshop.core.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
@@ -66,7 +67,7 @@ public class ColouredFace {
             return dye(paintColor, RAINBOW_TARGET, descriptor.getAverageColor(paintType));
         }
         if (paintType == SkinPaintTypes.TEXTURE) {
-            BakedEntityTexture texture = SkinBakery.getInstance().getEntityTexture(scheme.getTexture());
+            BakedEntityTexture texture = PlayerTextureLoader.getInstance().getTextureModel(scheme.getTexture());
             if (texture != null) {
                 PaintColor paintColor1 = texture.getColor(x, y, z, direction, partType);
                 if (paintColor1 != null) {
