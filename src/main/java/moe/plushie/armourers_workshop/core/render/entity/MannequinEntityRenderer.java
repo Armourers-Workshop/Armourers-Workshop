@@ -35,7 +35,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
         this.addLayer(new ElytraLayer<>(this));
         this.addLayer(new HeadLayer<>(this));
         this.addLayer(new SkinWardrobeArmorLayer<>(this));
-        // Has two models by mannequin, only deciding which model using when texture specified.
+        // two models by mannequin, only deciding which model using when texture specified.
         this.normalModel = this.model;
         this.slimModel = new MannequinModel<>(0, true);
     }

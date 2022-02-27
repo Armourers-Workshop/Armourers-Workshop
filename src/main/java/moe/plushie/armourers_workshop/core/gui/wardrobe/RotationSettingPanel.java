@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWSliderBox;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
@@ -48,17 +47,7 @@ public class RotationSettingPanel extends BaseSettingPanel {
     public RotationSettingPanel(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.man_rotations");
         this.wardrobe = container.getWardrobe();
-        this.entity = wardrobe.getEntity();
-        this.prepareDefaultValue();
-    }
-
-    public void prepareDefaultValue() {
-        Entity entity = wardrobe.getEntity();
-        if (!(entity instanceof MannequinEntity)) {
-            return;
-        }
-//         entity.getEntityData();
-
+        this.entity = container.getEntity();
     }
 
     @Override
@@ -158,11 +147,12 @@ public class RotationSettingPanel extends BaseSettingPanel {
     }
 
     private void didUpdateValue(Button button) {
-        if (entity instanceof MannequinEntity) {
-            CompoundNBT nbt = ((MannequinEntity) entity).saveCustomPose();
-            UpdateWardrobePacket packet = UpdateWardrobePacket.option(wardrobe, SkinWardrobeOption.MANNEQUIN_POSE, nbt);
-            NetworkHandler.getInstance().sendToServer(packet);
+        if (!(entity instanceof MannequinEntity)) {
+            return;
         }
+        CompoundNBT nbt = ((MannequinEntity) entity).saveCustomPose();
+        UpdateWardrobePacket packet = UpdateWardrobePacket.option(wardrobe, SkinWardrobeOption.MANNEQUIN_POSE, nbt);
+        NetworkHandler.getInstance().sendToServer(packet);
     }
 
     private void randomRotation(Button button) {

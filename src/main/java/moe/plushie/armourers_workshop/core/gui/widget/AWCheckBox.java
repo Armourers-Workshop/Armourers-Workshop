@@ -10,8 +10,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
-@OnlyIn(Dist.CLIENT)
 @SuppressWarnings("NullableProblems")
+@OnlyIn(Dist.CLIENT)
 public class AWCheckBox extends Button {
 
     private final int iconWidth;

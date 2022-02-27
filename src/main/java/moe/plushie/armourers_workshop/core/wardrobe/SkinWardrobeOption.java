@@ -3,10 +3,12 @@ package moe.plushie.armourers_workshop.core.wardrobe;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.network.datasync.IDataSerializer;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -26,6 +28,7 @@ public enum SkinWardrobeOption {
     MANNEQUIN_EXTRA_RENDER(MannequinEntity.DATA_EXTRA_RENDERER),
 
     MANNEQUIN_POSE(MannequinEntity::saveCustomPose, MannequinEntity::readCustomPose, DataSerializers.COMPOUND_TAG),
+    MANNEQUIN_POSITION(MannequinEntity::position, MannequinEntity::moveTo, DataAccessor.SERIALIZER_VECTOR),
     MANNEQUIN_TEXTURE(MannequinEntity.DATA_TEXTURE);
 
     private final boolean broadcastChanges;
@@ -103,6 +106,22 @@ public enum SkinWardrobeOption {
     }
 
     public static class DataAccessor<T> {
+        public static final IDataSerializer<Vector3d> SERIALIZER_VECTOR = new IDataSerializer<Vector3d>() {
+            public void write(PacketBuffer buffer, Vector3d pos) {
+                buffer.writeDouble(pos.x());
+                buffer.writeDouble(pos.y());
+                buffer.writeDouble(pos.z());
+            }
+
+            public Vector3d read(PacketBuffer buffer) {
+                return new Vector3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+            }
+
+            public Vector3d copy(Vector3d pos) {
+                return pos;
+            }
+        };
+
         IDataSerializer<T> dataSerializer;
         Function<SkinWardrobe, T> supplier;
         BiConsumer<SkinWardrobe, T> applier;
