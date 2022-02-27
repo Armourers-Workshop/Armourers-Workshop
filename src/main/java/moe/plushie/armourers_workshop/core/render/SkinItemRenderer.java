@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.SkinDummyEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
@@ -8,6 +9,7 @@ import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
+import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -22,15 +24,20 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public final class SkinItemRenderer {
 
-    public static int mp1 = 0;
     private static ColorScheme entityDye = ColorScheme.EMPTY;
 
-    public static void renderSkin(BakedSkin bakedSkin, int light, int partialTicks, int targetWidth, int targetHeight, ItemCameraTransforms.TransformType transformType, Vector3f rotation, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
+    public static void renderSkin(BakedSkin bakedSkin, int light, int partialTicks, int targetWidth, int targetHeight, ItemCameraTransforms.TransformType transformType, Vector3f rotation, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer) {
         SkinDummyEntity entity = SkinDummyEntity.shared();
         Rectangle3f rect = bakedSkin.getRenderBounds(entity, entity.getModel(), rotation);
 
         float width = rect.getWidth();
         float height = rect.getHeight();
+
+        if (AWConfig.showDebugTargetBounds) {
+            // TODO: draw target box
+//            RenderUtils.drawBoundingBox(matrixStack, -targetWidth / 2f, -targetHeight / 2f, -targetWidth / 2f, targetWidth / 2f, targetHeight / 2f, targetWidth / 2f, Color.YELLOW, renderTypeBuffer);
+            RenderUtils.drawPoint(matrixStack, new Vector3f(), targetHeight, renderTypeBuffer);
+        }
 
         // with non gui render, we need make sure has enough area.
         if (transformType != ItemCameraTransforms.TransformType.GUI && transformType != ItemCameraTransforms.TransformType.FIXED) {

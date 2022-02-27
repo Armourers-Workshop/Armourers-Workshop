@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
@@ -18,11 +19,13 @@ import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -127,13 +130,15 @@ public class ClientEventHandler {
             GuiUtils.drawContinuousTexturedBox(matrixStack, RenderUtils.TEX_GUI_PREVIEW, x, y, 0, 0, size, size, 62, 62, 4, 400);
         }
 
+        IRenderTypeBuffer.Impl renderTypeBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
         matrixStack.pushPose();
         matrixStack.translate(x + size / 2f, y + size / 2f, 500f);
         matrixStack.scale(-1, 1, 1);
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(150));
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(45 - (float) (t / 10 % 360)));
-        SkinItemRenderer.renderSkin(bakedSkin, 0xf000f0, 0, size, size, ItemCameraTransforms.TransformType.NONE, null, matrixStack, null);
+        SkinItemRenderer.renderSkin(bakedSkin, 0xf000f0, 0, size, size, ItemCameraTransforms.TransformType.NONE, null, matrixStack, renderTypeBuffer);
         matrixStack.popPose();
+        renderTypeBuffer.endBatch();
     }
 
     @SubscribeEvent
@@ -160,24 +165,44 @@ public class ClientEventHandler {
         }
         EntityModel<?> entityModel = event.getRenderer().getModel();
         if (entityModel instanceof BipedModel) {
-            BipedModel<?> playerModel = (BipedModel<?>) entityModel;
+            BipedModel<?> bipedModel = (BipedModel<?>) entityModel;
+            PlayerModel<?> playerModel = null;
+            if (entityModel instanceof PlayerModel) {
+                playerModel = (PlayerModel<?>) entityModel;
+            }
             if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
-                playerModel.leftArm.visible = false;
+                bipedModel.leftArm.visible = false;
+                if (playerModel != null) {
+                    playerModel.leftSleeve.visible = false;
+                }
             }
             if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
-                playerModel.rightArm.visible = false;
+                bipedModel.rightArm.visible = false;
+                if (playerModel != null) {
+                    playerModel.rightSleeve.visible = false;
+                }
             }
             if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_HEAD)) {
-                playerModel.head.visible = false;
+                bipedModel.head.visible = false;
+                bipedModel.hat.visible = false; // when override the head, the hat needs to override too
             }
             if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_CHEST)) {
-                playerModel.body.visible = false;
+                bipedModel.body.visible = false;
+                if (playerModel != null) {
+                    playerModel.jacket.visible = false;
+                }
             }
             if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_LEG) || snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
-                playerModel.leftLeg.visible = false;
+                bipedModel.leftLeg.visible = false;
+                if (playerModel != null) {
+                    playerModel.leftPants.visible = false;
+                }
             }
             if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_LEG) || snapshot.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
-                playerModel.rightLeg.visible = false;
+                bipedModel.rightLeg.visible = false;
+                if (playerModel != null) {
+                    playerModel.rightPants.visible = false;
+                }
             }
         }
     }

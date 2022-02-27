@@ -26,6 +26,7 @@ public final class AWConstants {
         public static final String MANNEQUIN_IS_VISIBLE = "Visible";
         public static final String MANNEQUIN_EXTRA_RENDER = "ExtraRender";
         public static final String MANNEQUIN_TEXTURE = "Texture";
+        public static final String MANNEQUIN_POSE = "Pose";
     }
 
 }

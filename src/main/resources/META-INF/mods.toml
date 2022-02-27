@@ -14,7 +14,7 @@ license="All rights reserved"
 	displayName="Armourer's Workshop"
 	#updateJSONURL="http://plushie.moe/app_update/minecraft_mods/armourers_workshop/update.json"
 	logoFile="assets/armourers_workshop/textures/aw_logo_small.png"
-	authors="RiskyKen"
+	authors=["RiskyKen", "SAGESSE"]
 	description='''
 	Minecraft armour customization mod.
 	'''

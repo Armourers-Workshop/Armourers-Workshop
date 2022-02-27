@@ -12,7 +12,7 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("NullableProblems")
-public class AWCheckButton extends Button {
+public class AWCheckBox extends Button {
 
     private final int iconWidth;
     private final int iconHeight;
@@ -24,10 +24,10 @@ public class AWCheckButton extends Button {
     private FontRenderer font;
     private boolean isSelected;
 
-    public AWCheckButton(int x, int y, int iconWidth, int iconHeight, ITextComponent title, boolean isSelected) {
+    public AWCheckBox(int x, int y, int iconWidth, int iconHeight, ITextComponent title, boolean isSelected) {
         this(x, y, iconWidth, iconHeight, title, isSelected, null);
     }
-    public AWCheckButton(int x, int y, int iconWidth, int iconHeight, ITextComponent title, boolean isSelected, Button.IPressable changeHandler) {
+    public AWCheckBox(int x, int y, int iconWidth, int iconHeight, ITextComponent title, boolean isSelected, Button.IPressable changeHandler) {
         super(x, y, iconWidth, iconHeight, title, changeHandler, NO_TOOLTIP);
         this.isSelected = isSelected;
         this.iconWidth = iconWidth;

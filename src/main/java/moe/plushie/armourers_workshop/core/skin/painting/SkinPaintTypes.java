@@ -69,7 +69,7 @@ public final class SkinPaintTypes {
             return paintType;
         }
         ALL_PAINT_TYPES.put(paintType.getRegistryName().toString(), paintType);
-        ALL_PAINT_MAPPING[paintType.getId() & 0xFF] = paintType;
+        ALL_PAINT_MAPPING[paintType.getId() & 0xff] = paintType;
         AWLog.debug("Registering Skin Paint '{}'", paintType.getRegistryName());
         return paintType;
     }

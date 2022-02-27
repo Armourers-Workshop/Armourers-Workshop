@@ -172,7 +172,7 @@ public class Skin implements ISkin {
     public boolean isModelOverridden(ISkinPartType partType) {
         for (SkinPart part : parts) {
             if (part.getType() == partType) {
-                if (!AWConfig.isEnableSkinPart(part)) {
+                if (!AWConfig.shouldRenderPart(part)) {
                     return false;
                 }
                 return part.getType().isModelOverridden(properties);

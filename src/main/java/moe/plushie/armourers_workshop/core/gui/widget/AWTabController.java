@@ -7,10 +7,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+@SuppressWarnings("NullableProblems")
+@OnlyIn(Dist.CLIENT)
 public class AWTabController<Target> extends Screen {
 
     private ArrayList<Consumer<Tab>> listeners;
@@ -59,7 +63,7 @@ public class AWTabController<Target> extends Screen {
 
     public Tab get(double x, double y) {
         for (Tab tab : actives) {
-            if (tab.isMouseOver(x, y)) {
+            if (tab.isHovered(x, y)) {
                 return tab;
             }
         }
@@ -98,6 +102,7 @@ public class AWTabController<Target> extends Screen {
         super.init(Minecraft.getInstance(), width, height);
         this.x = x;
         this.y = y;
+        this.actives.clear();
 
         int ly = 5, ry = 5, spacing = -5;
         for (Tab tab : tabs) {
@@ -133,7 +138,7 @@ public class AWTabController<Target> extends Screen {
 
     public void renderTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
         for (Tab tab : actives) {
-            if (tab.isMouseOver(mouseX, mouseY)) {
+            if (tab.isHovered(mouseX, mouseY)) {
                 renderTooltip(matrixStack, tab.screen.getTitle(), mouseX, mouseY);
             }
         }
@@ -211,18 +216,22 @@ public class AWTabController<Target> extends Screen {
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (isMouseOver(mouseX, mouseY)) {
+            if (isHovered(mouseX, mouseY)) {
                 setSelectedTab(this);
                 return true;
             }
             return false;
         }
 
+        public boolean isHovered(double mouseX, double mouseY) {
+            int top = 3, bottom = 3;
+            return mouseX >= x && mouseX <= (x + width) && mouseY >= (y + top) && mouseY <= (y + height - bottom);
+        }
+
 
         @Override
         public boolean isMouseOver(double mouseX, double mouseY) {
-            int top = 3, bottom = 3;
-            return mouseX >= x && mouseX <= (x + width) && mouseY >= (y + top) && mouseY <= (y + height - bottom);
+            return false; // reduce conflict with other button.
         }
 
         public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY) {
@@ -231,7 +240,7 @@ public class AWTabController<Target> extends Screen {
                 u += width * 2;
                 ix = 0;
             }
-            if (isMouseOver(mouseX, mouseY)) {
+            if (isHovered(mouseX, mouseY)) {
                 u += width;
                 if (animationFrames > 0) {
                     int frame = (int) ((System.currentTimeMillis() / animationSpeed) % animationFrames);
