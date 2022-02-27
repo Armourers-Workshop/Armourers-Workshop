@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.base.AWTags;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
+import moe.plushie.armourers_workshop.core.utils.TrigUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
 import net.minecraft.entity.EntityType;
@@ -19,9 +20,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Rotations;
@@ -113,6 +116,11 @@ public class MannequinEntity extends ArmorStandEntity {
     }
 
     @Override
+    public boolean isNoGravity() {
+        return true; // never gravity
+    }
+
+    @Override
     public boolean canBeCollidedWith() {
         return this.isAlive() && !entityData.get(DATA_IS_GHOST);
     }
@@ -125,6 +133,12 @@ public class MannequinEntity extends ArmorStandEntity {
         }
         if (player.level.isClientSide) {
             return ActionResultType.CONSUME;
+        }
+        if (player.isShiftKeyDown()) {
+            Rotations rotations = getBodyPose();
+            double angle = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
+            setBodyPose(new Rotations(rotations.getX(), (float) angle, rotations.getZ()));
+            return ActionResultType.SUCCESS;
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null) {

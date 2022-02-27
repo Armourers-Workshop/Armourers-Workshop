@@ -158,13 +158,10 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
     @Override
     protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {
-//        matrixStack.pushPose();
-//        matrixStack.translate(0, 0, -1000);
         font.draw(matrixStack, getTitle(), titleLabelX, titleLabelY, 0x404040);
         if (menu.shouldRenderPlayerInventory()) {
             font.draw(matrixStack, inventory.getDisplayName(), inventoryLabelX, inventoryLabelY, 0x404040);
         }
-//        matrixStack.popPose();
     }
 
     @Override

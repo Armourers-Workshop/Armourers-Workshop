@@ -7,6 +7,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+@SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
 public class OutfitSettingPanel extends BaseSettingPanel {
 
