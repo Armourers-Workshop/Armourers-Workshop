@@ -40,7 +40,7 @@ public class SkinVertexBufferBuilder {
 
     public void addPartData(BakedSkinPart part, ColorScheme scheme, int light, int partialTicks, MatrixStack matrixStack, boolean shouldRender) {
         // ignore part when part is disable
-        if (AWConfig.isEnableSkinPart(part.getPart())) {
+        if (!AWConfig.shouldRenderPart(part.getPart())) {
             return;
         }
         Object key = SkinCache.borrowKey(part.getId(), part.requirements(scheme));

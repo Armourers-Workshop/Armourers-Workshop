@@ -12,7 +12,7 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class AWComboButton extends Button {
+public class AWComboBox extends Button {
 
     private final List<ComboItem> items;
     private final FontRenderer font;
@@ -30,7 +30,7 @@ public class AWComboButton extends Button {
 
     protected boolean popping;
 
-    public AWComboButton(int x, int y, int width, int height, List<ComboItem> items, int selectedIndex, Button.IPressable changeHandler) {
+    public AWComboBox(int x, int y, int width, int height, List<ComboItem> items, int selectedIndex, Button.IPressable changeHandler) {
         super(x, y, width, height, StringTextComponent.EMPTY, changeHandler, NO_TOOLTIP);
         this.items = items;
         this.selectedIndex = selectedIndex;

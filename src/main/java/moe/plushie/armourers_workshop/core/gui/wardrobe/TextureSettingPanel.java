@@ -3,12 +3,11 @@ package moe.plushie.armourers_workshop.core.gui.wardrobe;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.gui.widget.AWComboButton;
+import moe.plushie.armourers_workshop.core.gui.widget.AWComboBox;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeOption;
@@ -19,24 +18,25 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import org.apache.logging.log4j.util.Strings;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
 public class TextureSettingPanel extends BaseSettingPanel {
 
     private final SkinWardrobe wardrobe;
     private final HashMap<PlayerTextureDescriptor.Source, String> defaultValues = new HashMap<>();
 
-    private AWComboButton comboList;
+    private AWComboBox comboList;
     private TextFieldWidget textBox;
 
     private PlayerTextureDescriptor lastDescriptor = PlayerTextureDescriptor.EMPTY;
     private PlayerTextureDescriptor.Source lastSource = PlayerTextureDescriptor.Source.NONE;
-
 
     public TextureSettingPanel(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.man_texture");
@@ -50,7 +50,7 @@ public class TextureSettingPanel extends BaseSettingPanel {
 
         this.addTextField(leftPos + 83 + 1, topPos + 70, defaultValues.get(lastSource));
         this.addComboList(leftPos + 83, topPos + 27, lastSource);
-        this.addButton(new Button(leftPos + 83, topPos + 90, 100, 20, getDisplayText("set"), button -> submit()));
+        this.addButton(new ExtendedButton(leftPos + 83, topPos + 90, 100, 20, getDisplayText("set"), this::submit));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class TextureSettingPanel extends BaseSettingPanel {
     public boolean keyPressed(int key, int p_231046_2_, int p_231046_3_) {
         boolean typed = super.keyPressed(key, p_231046_2_, p_231046_3_);
         if (!typed && textBox != null && textBox.isFocused() && key == GLFW.GLFW_KEY_ENTER) {
-            submit();
+            submit(null);
         }
         return typed;
     }
@@ -93,7 +93,7 @@ public class TextureSettingPanel extends BaseSettingPanel {
         }
     }
 
-    private void submit() {
+    private void submit(Button button) {
         textBox.setFocus(false);
         int index = comboList.getSelectedIndex();
         PlayerTextureDescriptor.Source source = PlayerTextureDescriptor.Source.values()[index + 1];
@@ -123,7 +123,7 @@ public class TextureSettingPanel extends BaseSettingPanel {
             }
         }
         PlayerTextureLoader.getInstance().loadTextureDescriptor(descriptor, resolvedDescriptor -> {
-            PlayerTextureDescriptor newValue = resolvedDescriptor.orElse(PlayerTextureDescriptor.EMPTY);;
+            PlayerTextureDescriptor newValue = resolvedDescriptor.orElse(PlayerTextureDescriptor.EMPTY);
             if (lastDescriptor.equals(newValue)) {
                 return; // no changes
             }
@@ -142,12 +142,12 @@ public class TextureSettingPanel extends BaseSettingPanel {
         if (source != PlayerTextureDescriptor.Source.NONE) {
             selectedIndex = source.ordinal() - 1;
         }
-        ArrayList<AWComboButton.ComboItem> items = new ArrayList<>();
-        items.add(new AWComboButton.ComboItem(getDisplayText("dropdown.user")));
-        items.add(new AWComboButton.ComboItem(getDisplayText("dropdown.url")));
-        comboList = new AWComboButton(x, y, 80, 14, items, selectedIndex, button -> {
-            if (button instanceof AWComboButton) {
-                int index = ((AWComboButton) button).getSelectedIndex();
+        ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
+        items.add(new AWComboBox.ComboItem(getDisplayText("dropdown.user")));
+        items.add(new AWComboBox.ComboItem(getDisplayText("dropdown.url")));
+        comboList = new AWComboBox(x, y, 80, 14, items, selectedIndex, button -> {
+            if (button instanceof AWComboBox) {
+                int index = ((AWComboBox) button).getSelectedIndex();
                 changeSource(PlayerTextureDescriptor.Source.values()[index + 1]);
             }
         });

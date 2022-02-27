@@ -25,6 +25,7 @@ public enum SkinWardrobeOption {
     MANNEQUIN_IS_GHOST(MannequinEntity.DATA_IS_GHOST),
     MANNEQUIN_EXTRA_RENDER(MannequinEntity.DATA_EXTRA_RENDERER),
 
+    MANNEQUIN_POSE(MannequinEntity::saveCustomPose, MannequinEntity::readCustomPose, DataSerializers.COMPOUND_TAG),
     MANNEQUIN_TEXTURE(MannequinEntity.DATA_TEXTURE);
 
     private final boolean broadcastChanges;
@@ -35,6 +36,23 @@ public enum SkinWardrobeOption {
         this.dataAccessor = DataAccessor.withDataSerializer(DataSerializers.BOOLEAN)
                 .withSupplier((wardrobe) -> wardrobe.shouldRenderEquipment(slotType))
                 .withApplier((wardrobe, value) -> wardrobe.setRenderEquipment(slotType, value));
+    }
+
+    @SuppressWarnings("unchecked")
+    <T, D> SkinWardrobeOption(Function<T, D> getter, BiConsumer<T, D> setter, IDataSerializer<D> dataSerializer) {
+        this.broadcastChanges = false;
+        this.dataAccessor = DataAccessor.withDataSerializer(dataSerializer)
+                .withSupplier((wardrobe) -> {
+                    if (wardrobe.getEntity() != null) {
+                        return getter.apply((T) wardrobe.getEntity());
+                    }
+                    return null;
+                })
+                .withApplier((wardrobe, value) -> {
+                    if (wardrobe.getEntity() != null) {
+                        setter.accept((T) wardrobe.getEntity(), value);
+                    }
+                });
     }
 
     <T> SkinWardrobeOption(DataParameter<T> dataParameter) {

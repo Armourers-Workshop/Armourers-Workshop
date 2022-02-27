@@ -11,11 +11,9 @@ import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import net.minecraft.command.CommandSource;
@@ -45,11 +43,8 @@ public class SkinCommands {
                 .then(Commands.literal("setSkin").then(players().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
                 .then(Commands.literal("giveSkin").then(players().then(skins().executes(Executor::giveSkin))))
                 .then(Commands.literal("clearSkin").then(players().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
-                .then(ReflectArgumentBuilder.literal("config", AWConfig.class))
-                .then(Commands.literal("test")
-                        .then(DebugCommand.disablePart())
-                        .then(DebugCommand.clearCache())
-                        .then(DebugCommand.rote()));
+                .then(Commands.literal("clearCache").executes(Executor::clearCache))
+                .then(ReflectArgumentBuilder.literal("config", AWConfig.class));
     }
 
     static ArgumentBuilder<CommandSource, ?> players() {
@@ -73,6 +68,7 @@ public class SkinCommands {
     }
 
     private static class Executor {
+
 
         static boolean containsNode(CommandContext<CommandSource> context, String name) {
             for (ParsedCommandNode<?> node : context.getNodes()) {
@@ -162,37 +158,10 @@ public class SkinCommands {
             }
             return 1;
         }
-    }
 
-    private static class DebugCommand {
-
-        static ArgumentBuilder<CommandSource, ?> clearCache() {
-            return Commands.literal("clearCache").executes(ctx -> {
-                SkinCache.INSTANCE.clear();
-                return 0;
-            });
-        }
-
-        static ArgumentBuilder<CommandSource, ?> rote() {
-            return Commands.literal("type").then(
-                    Commands.argument("cro", IntegerArgumentType.integer()).executes(ctx -> {
-                        int key = IntegerArgumentType.getInteger(ctx, "cro");
-                        SkinItemRenderer.mp1 = key;
-                        return 0;
-                    }));
-        }
-
-        static ArgumentBuilder<CommandSource, ?> disablePart() {
-            return Commands.literal("disablePart").then(
-                    Commands.argument("part_name", new ListArgument(SkinPartTypes.registeredNames())).executes(ctx -> {
-                        String key = ListArgument.getString(ctx, "part_name");
-                        if (AWConfig.disabledSkinParts.contains(key)) {
-                            AWConfig.disabledSkinParts.remove(key);
-                        } else {
-                            AWConfig.disabledSkinParts.add(key);
-                        }
-                        return 0;
-                    }));
+        static int clearCache(CommandContext<CommandSource> context) throws CommandSyntaxException {
+            SkinCache.INSTANCE.clear();
+            return 0;
         }
     }
 }

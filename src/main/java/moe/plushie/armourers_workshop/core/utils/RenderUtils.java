@@ -39,6 +39,7 @@ public final class RenderUtils {
     public static final ResourceLocation TEX_ITEMS = AWCore.resource("textures/atlas/items.png");
 
     public static final ResourceLocation TEX_CUBE = AWCore.resource("textures/armour/cube.png");
+    public static final ResourceLocation TEX_CIRCLE = AWCore.resource("textures/other/nanoha-circle.png");
     public static final ResourceLocation TEX_GUI_PREVIEW = AWCore.resource("textures/gui/skin-preview.png");
 
     private static float lightX;
@@ -123,12 +124,12 @@ public final class RenderUtils {
         drawLine(builder, mat, x0, y0, z0, x0, y0, z1, color);
     }
 
-    public static void drawPoint(MatrixStack matrix, Vector3f point, int size, @Nullable IRenderTypeBuffer buffer) {
-        if (buffer == null) {
-            buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+    public static void drawPoint(MatrixStack matrix, Vector3f point, int size, @Nullable IRenderTypeBuffer renderTypeBuffer) {
+        if (renderTypeBuffer == null) {
+            renderTypeBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
         }
         Matrix4f mat = matrix.last().pose();
-        IVertexBuilder builder = buffer.getBuffer(RenderType.lines());
+        IVertexBuilder builder = renderTypeBuffer.getBuffer(RenderType.lines());
         float x0 = point.x();
         float y0 = point.y();
         float z0 = point.z();
@@ -138,12 +139,12 @@ public final class RenderUtils {
     }
 
 
-    public static void drawBoundingBox(MatrixStack matrix, float x0, float y0, float z0, float x1, float y1, float z1, Color color, IRenderTypeBuffer buffer) {
-        IVertexBuilder builder = buffer.getBuffer(RenderType.lines());
+    public static void drawBoundingBox(MatrixStack matrix, float x0, float y0, float z0, float x1, float y1, float z1, Color color, IRenderTypeBuffer renderTypeBuffer) {
+        IVertexBuilder builder = renderTypeBuffer.getBuffer(RenderType.lines());
         drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, builder);
     }
 
-    public static void drawBoundingBox(MatrixStack matrix, VoxelShape shape, Color color, IRenderTypeBuffer buffer) {
+    public static void drawBoundingBox(MatrixStack matrix, VoxelShape shape, Color color, IRenderTypeBuffer renderTypeBuffer) {
         AxisAlignedBB box = shape.bounds();
         float x0 = (float) box.minX;
         float y0 = (float) box.minY;
@@ -151,7 +152,7 @@ public final class RenderUtils {
         float x1 = (float) box.maxX;
         float y1 = (float) box.maxY;
         float z1 = (float) box.maxZ;
-        drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, buffer);
+        drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
     }
 
     public static void drawAllEdges(MatrixStack matrix, VoxelShape shape, Color color) {
@@ -164,24 +165,24 @@ public final class RenderUtils {
         });
     }
 
-    public static void drawBoundingBox(MatrixStack matrix, Rectangle3f rec, Color color, IRenderTypeBuffer buffer) {
+    public static void drawBoundingBox(MatrixStack matrix, Rectangle3f rec, Color color, IRenderTypeBuffer renderTypeBuffer) {
         float x0 = rec.getMinX();
         float y0 = rec.getMinY();
         float z0 = rec.getMinZ();
         float x1 = rec.getMaxX();
         float y1 = rec.getMaxY();
         float z1 = rec.getMaxZ();
-        drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, buffer);
+        drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
     }
 
-    public static void drawBoundingBox(MatrixStack matrix, Rectangle3i rec, Color color, IRenderTypeBuffer buffer) {
+    public static void drawBoundingBox(MatrixStack matrix, Rectangle3i rec, Color color, IRenderTypeBuffer renderTypeBuffer) {
         int x0 = rec.getMinX();
         int y0 = rec.getMinY();
         int z0 = rec.getMinZ();
         int x1 = rec.getMaxX();
         int y1 = rec.getMaxY();
         int z1 = rec.getMaxZ();
-        drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, buffer);
+        drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
     }
 
 //    public static void disableLighting() {

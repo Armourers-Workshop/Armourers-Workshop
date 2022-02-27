@@ -72,6 +72,7 @@ public class ClientModelHandler extends ModelTransformer {
             skirt.x = m.body.x;
             skirt.xRot = m.riding ? skirt.xRot : 0;
             skirt.yRot = m.body.yRot;
+            skirt.zRot = 0;
             return skirt;
         });
 

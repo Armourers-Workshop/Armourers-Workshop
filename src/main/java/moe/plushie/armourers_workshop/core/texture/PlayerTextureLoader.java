@@ -126,20 +126,40 @@ public class PlayerTextureLoader {
         }
     }
 
-    public void loadGameProfile(GameProfile profile, Consumer<Optional<GameProfile>> complete) {
+    public GameProfile loadGameProfile(GameProfile profile) {
         if (profile.isComplete()) {
-            complete.accept(Optional.of(profile));
+            return profile;
+        }
+        String name = profile.getName().toLowerCase();
+        Optional<GameProfile> profile1 = profiles.get(name);
+        if (profile1 != null) {
+            return profile1.orElse(profile);
+        }
+        loadGameProfile(profile, null);
+        return profile;
+    }
+
+    public void loadGameProfile(GameProfile profile, @Nullable Consumer<Optional<GameProfile>> complete) {
+        if (profile.isComplete()) {
+            if (complete != null) {
+                complete.accept(Optional.of(profile));
+            }
             return;
         }
         String name = profile.getName().toLowerCase();
         if (profiles.containsKey(name)) {
-            complete.accept(profiles.get(name));
+            if (complete != null) {
+                complete.accept(profiles.get(name));
+            }
             return;
         }
+        profiles.put(name, Optional.empty());
         executor.execute(() -> {
             GameProfile profile1 = SkullTileEntity.updateGameprofile(profile);
             profiles.put(name, Optional.ofNullable(profile1));
-            complete.accept(Optional.ofNullable(profile1));
+            if (complete != null) {
+                complete.accept(Optional.ofNullable(profile1));
+            }
         });
     }
 

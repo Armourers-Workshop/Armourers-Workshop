@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
@@ -18,6 +17,7 @@ import org.lwjgl.opengl.GL11;
 @OnlyIn(Dist.CLIENT)
 public class SkinRenderType extends RenderType {
 
+    private static final RenderState.TextureState CIRCLE = new TextureState(RenderUtils.TEX_CIRCLE, false, false);
     private static final RenderState.TextureState COLORS = new TextureState(RenderUtils.TEX_CUBE, false, false);
     private static final RenderState.TexturingState COLORS_OFFSET = new TexturingState("offset_texturing", () -> {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
@@ -31,6 +31,9 @@ public class SkinRenderType extends RenderType {
         RenderSystem.popMatrix();
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
     });
+
+
+    public static final RenderType MAGIC = createMagicType();
 
     public static final SkinRenderType SOLID_FACE = new SkinRenderType("aw_quad_face", createSolidFace(false), true, false);
     public static final SkinRenderType LIGHTING_FACE = new SkinRenderType("aw_lighting_quad_face", createLightingPart(false), false, false);
@@ -66,25 +69,17 @@ public class SkinRenderType extends RenderType {
         }
     }
 
-    public static RenderType createGUI(ResourceLocation r) {
-        //            BufferBuilder bufferbuilder = Tessellator.getInstance().getBuilder();
-//            bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        ;
+    private static RenderType createMagicType() {
         RenderType.State states = RenderType.State.builder()
                 .setCullState(NO_CULL)
-                .setTextureState(new TextureState(r, false, false))
-//                .setTextureState(COLORS)
-//                .setTexturingState(COLORS_OFFSET)
-//                .setDiffuseLightingState(DIFFUSE_LIGHTING)
-//                .setLightmapState(LIGHTMAP)
-//                .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-//                .setAlphaState(DEFAULT_ALPHA)
-//                .setOutputState(alpha ? TRANSLUCENT_TARGET : MAIN_TARGET)
+                .setTextureState(CIRCLE)
+                .setAlphaState(DEFAULT_ALPHA)
+                .setWriteMaskState(COLOR_WRITE)
+                .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                .setOutputState(TRANSLUCENT_TARGET)
                 .createCompositeState(false);
-        return RenderType.create("aw_quad_face222", DefaultVertexFormats.POSITION_TEX, GL11.GL_QUADS, 256, false, false, states);
-
+        return RenderType.create("magic", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, states);
     }
-
 
     private static RenderType createSolidFace(boolean alpha) {
         ImmutableList<VertexFormatElement> elements = ImmutableList.<VertexFormatElement>builder()
@@ -103,7 +98,7 @@ public class SkinRenderType extends RenderType {
                 .setTransparencyState(alpha ? TRANSLUCENT_TRANSPARENCY : NO_TRANSPARENCY)
                 .setOutputState(alpha ? TRANSLUCENT_TARGET : MAIN_TARGET)
                 .createCompositeState(false);
-        return RenderType.create("aw_quad_face", new VertexFormat(elements), GL11.GL_QUADS, 256, false, false, states);
+        return RenderType.create("aw_quad_face", new VertexFormat(elements), GL11.GL_QUADS, 256, states);
     }
 
     private static RenderType createLightingPart(boolean hasAlpha) {
@@ -119,7 +114,7 @@ public class SkinRenderType extends RenderType {
                 .setTransparencyState(hasAlpha ? TRANSLUCENT_TRANSPARENCY : NO_TRANSPARENCY)
                 .setOutputState(hasAlpha ? TRANSLUCENT_TARGET : MAIN_TARGET)
                 .createCompositeState(false);
-        return RenderType.create("aw_light_quad_face", new VertexFormat(elements), GL11.GL_QUADS, 256, false, false, states);
+        return RenderType.create("aw_light_quad_face", new VertexFormat(elements), GL11.GL_QUADS, 256, states);
     }
 
     public boolean usesLight() {

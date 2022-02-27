@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.wardrobe.*;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabController;
+import moe.plushie.armourers_workshop.core.utils.AWContributors;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
@@ -31,13 +32,11 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
     private final Entity entity;
     private final PlayerEntity operator;
     private final SkinWardrobe wardrobe;
-
+    private final AWTabController<SkinWardrobeContainer.Group> tabController = new AWTabController<>();
     private boolean enabledPlayerRotating = false;
     private float playerRotation = 45.0f;
     private int lastMouseX = 0;
     private int lastMouseY = 0;
-
-    private final AWTabController<SkinWardrobeContainer.Group> tabController = new AWTabController<>();
 
     public SkinWardrobeScreen(SkinWardrobeContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
@@ -51,7 +50,6 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
         this.entity = container.getEntity();
         this.wardrobe = container.getWardrobe();
 
-//        Minecraft.getInstance().getSingleplayerServer().getWorldPath(new FolderName("skin-database"))
         this.initTabs();
     }
 
@@ -114,10 +112,11 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
                 .setTarget(SkinWardrobeContainer.Group.DYES)
                 .setVisible(!isPlayer || AWConfig.showWardrobeDyeSetting || operator.isCreative());
 
-        // is contributor
-        tabController.add(new ContributorSettingPanel(menu))
-                .setIcon(32, 128)
-                .setVisible(!isPlayer || AWConfig.showWardrobeContributorSetting || operator.isCreative());
+        if (isPlayer && AWContributors.getCurrentContributor() != null) {
+            tabController.add(new ContributorSettingPanel(menu))
+                    .setIcon(32, 128)
+                    .setVisible(AWConfig.showWardrobeContributorSetting || operator.isCreative());
+        }
 
         if (isMannequin) {
             tabController.add(new RotationSettingPanel(menu))
@@ -137,7 +136,8 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
             tabController.add(new LocationSettingPanel(menu))
                     .setIcon(96, 0)
-                    .setIconAnimation(8, 150);
+                    .setIconAnimation(8, 150)
+                    .setAlignment(1);
         }
 
         tabController.addListener(this::switchTab);
@@ -158,10 +158,13 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
     @Override
     protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {
+//        matrixStack.pushPose();
+//        matrixStack.translate(0, 0, -1000);
         font.draw(matrixStack, getTitle(), titleLabelX, titleLabelY, 0x404040);
         if (menu.shouldRenderPlayerInventory()) {
             font.draw(matrixStack, inventory.getDisplayName(), inventoryLabelX, inventoryLabelY, 0x404040);
         }
+//        matrixStack.popPose();
     }
 
     @Override
@@ -172,16 +175,17 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
     public void renderPlayer(MatrixStack matrixStack, int mouseX, int mouseY, int x, int y, int width, int height) {
         boolean isFocus = (x <= mouseX && mouseX <= x + width) && (y <= mouseY && mouseY <= y + height);
+        RenderSystem.pushMatrix();
 
         if (!isFocus) {
             RenderUtils.enableScissor(x, y, width, height);
+            RenderSystem.translatef(0, 0, 100);
         } else {
             RenderSystem.translatef(0, 0, 300);
         }
 
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(x + (float) width / 2, y + height - 6, 50);
-        RenderSystem.rotatef(-20, 0, 1, 0);
+        RenderSystem.translatef(x + (float) width / 2, y + height - 8, 50);
+        RenderSystem.rotatef(-20, 1, 0, 0);
         RenderSystem.rotatef(playerRotation, 0, 1, 0);
         RenderSystem.translatef(0, 0, -50);
 
@@ -189,13 +193,11 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
             InventoryScreen.renderEntityInInventory(0, 0, 45, 0, 0, (LivingEntity) entity);
         }
 
-        RenderSystem.popMatrix();
-
         if (!isFocus) {
             RenderUtils.disableScissor();
-        } else {
-            RenderSystem.translatef(0, 0, -300);
         }
+
+        RenderSystem.popMatrix();
     }
 
     @Override
@@ -239,12 +241,28 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
     }
 
     @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double p_231045_6_, double p_231045_8_) {
+        if (tabController.mouseDragged(mouseX, mouseY, button, p_231045_6_, p_231045_8_)) {
+            return true;
+        }
+        return super.mouseDragged(mouseX, mouseY, button, p_231045_6_, p_231045_8_);
+    }
+
+    @Override
     public boolean keyPressed(int key, int p_231046_2_, int p_231046_3_) {
         if (key == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
             this.onClose();
             return true;
         }
         return this.getFocused() != null && this.getFocused().keyPressed(key, p_231046_2_, p_231046_3_);
+    }
+
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        if (tabController.isDragging()) {
+            return true;
+        }
+        return super.isMouseOver(mouseX, mouseY);
     }
 
     @Override

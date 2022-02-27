@@ -60,7 +60,7 @@ public class AWConfig {
 
     public static boolean enableModelOverridden = true;
     public static boolean enableWireframeRender;
-    public static boolean enableMagicWhenContributor = true;
+    public static boolean enableMagicWhenContributor = false;
 
     // Wardrobe
 //    public static boolean wardrobeAllowOpening = true;
@@ -88,7 +88,6 @@ public class AWConfig {
 
     public static boolean showDebugTextureBounds = false;
     public static boolean showDebugSpin = false;
-    public static Set<String> disabledSkinParts = new HashSet<>();
 
     public static int getNumberOfRenderLayers() {
         if (multipassSkinRendering) {
@@ -111,9 +110,14 @@ public class AWConfig {
         return false;
     }
 
-    public static boolean isEnableSkinPart(ISkinPart skinPart) {
-        return disabledSkinParts.contains(skinPart.getType().getRegistryName().toString());
+    public static boolean shouldRenderPart(ISkinPart skinPart) {
+        return true;
     }
+///give @p chest{BlockEntityTag:{Items:[
+//        {id:"armourers_workshop:dye-bottle",Count:1,Slot:0, tag:{Color:0x1ffffff}},
+//    {id:"armourers_workshop:dye-bottle",Count:1,Slot:0, tag:{Color:0x2ffffff},
+//        {id:"armourers_workshop:dye-bottle",Count:1,Slot:0, tag:{Color:0x3ffffff}
+//        }}]}} 1
 
     public static TexturePaintType getTexturePaintType() {
         if (AWConfig.texturePaintingType < 0) {
