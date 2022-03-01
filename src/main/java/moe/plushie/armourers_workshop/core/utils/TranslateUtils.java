@@ -2,9 +2,7 @@ package moe.plushie.armourers_workshop.core.utils;
 
 
 import joptsimple.internal.Strings;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -16,12 +14,18 @@ public final class TranslateUtils {
         return new StringTextComponent(content);
     }
 
-    public static TranslationTextComponent translate(String key) {
+    public static TranslationTextComponent title(String key) {
         return new TranslationTextComponent(key);
     }
 
-    public static TextComponent translate(String key, Object... args) {
+    public static TextComponent title(String key, Object... args) {
         return new MergedTextComponent(new TranslationTextComponent(key, args));
+    }
+
+    public static TextComponent subtitle(String key, Object... args) {
+        MergedTextComponent text = new MergedTextComponent(new TranslationTextComponent(key, args));
+        text.setStyle(Style.EMPTY.withColor(TextFormatting.GRAY));
+        return text;
     }
 
     private static class MergedTextComponent extends TextComponent {

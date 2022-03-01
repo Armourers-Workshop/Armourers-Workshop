@@ -34,7 +34,7 @@ public class DisplaySettingPanel extends BaseSettingPanel {
         addButton(new AWCheckBox(x, y, 9, 9, getDisplayText(key), option.get(wardrobe, false), button -> {
             if (button instanceof AWCheckBox) {
                 boolean newValue = ((AWCheckBox) button).isSelected();
-                NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.option(wardrobe, option, newValue));
+                NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.opt(wardrobe, option, newValue));
             }
         }));
     }

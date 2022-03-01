@@ -1,65 +1,35 @@
 package moe.plushie.armourers_workshop.client;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.base.AWItems;
-import moe.plushie.armourers_workshop.core.item.SkinItem;
-import moe.plushie.armourers_workshop.core.network.NetworkHandler;
-import moe.plushie.armourers_workshop.core.network.packet.OpenWardrobePacket;
-import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
-import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.handler.ItemTooltipHandler;
+import moe.plushie.armourers_workshop.core.handler.KeyboardHandler;
+import moe.plushie.armourers_workshop.core.handler.PlayerNetworkHandler;
 import moe.plushie.armourers_workshop.core.render.layer.SkinWardrobeArmorLayer;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
 
 
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
 
     static ClientEventHandler handler;
-
-    int mouseX = 0;
-    int screenHeight = 0;
-    int screenWidth = 0;
-
 
     //    @SubscribeEvent
 //    public void onPlayerClone(PlayerEvent.Clone event) {
@@ -68,78 +38,15 @@ public class ClientEventHandler {
 //        LazyOptional<SkinWardrobe> oldWardrobe = event.getOriginal().getCapability(SkinWardrobeProvider.WARDROBE_KEY, null);
 ////        mana.setMana(oldMana.getMana());
 //    }
-    public static void init() {
+    public static void init(IEventBus eventBus) {
         handler = new ClientEventHandler();
-        MinecraftForge.EVENT_BUS.register(handler);
+        eventBus.register(handler);
+        eventBus.register(new ItemTooltipHandler());
+        eventBus.register(new KeyboardHandler());
+        eventBus.register(new PlayerNetworkHandler());
         handler.addCustomLayers();
     }
 
-
-    @SubscribeEvent
-    public void onItemTooltipEvent(ItemTooltipEvent event) {
-        if (event.isCanceled()) {
-            return;
-        }
-        ArrayList<ITextComponent> tooltip = SkinItem.getTooltip(event.getItemStack());
-        if (tooltip.size() != 0) {
-            event.getToolTip().addAll(tooltip);
-        }
-    }
-
-    @SubscribeEvent
-    public void onRenderTooltipPre(RenderTooltipEvent.Pre event) {
-        mouseX = event.getX();
-        screenWidth = event.getScreenWidth();
-        screenHeight = event.getScreenHeight();
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onRenderTooltip(RenderTooltipEvent.PostText event) {
-        if (event.isCanceled()) {
-            return;
-        }
-        if (!AWConfig.skinPreEnabled) {
-            return;
-        }
-        ItemStack itemStack = event.getStack();
-        if (itemStack.getItem() != AWItems.SKIN) {
-            return;
-        }
-        MatrixStack matrixStack = event.getMatrixStack();
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(SkinDescriptor.of(itemStack));
-        if (bakedSkin == null) {
-            return;
-        }
-
-        int x, y;
-        int t = (int) System.currentTimeMillis();
-        int size = AWConfig.skinPreSize;
-        if (AWConfig.skinPreLocFollowMouse) {
-            x = event.getX() - 28 - size;
-            y = event.getY() - 4;
-            if (event.getX() < mouseX) {
-                x = event.getX() + event.getWidth() + 28;
-            }
-            y = MathHelper.clamp(y, 0, screenHeight - size);
-        } else {
-            x = MathHelper.ceil((screenWidth - size) * AWConfig.skinPreLocHorizontal);
-            y = MathHelper.ceil((screenHeight - size) * AWConfig.skinPreLocVertical);
-        }
-
-        if (AWConfig.skinPreDrawBackground) {
-            GuiUtils.drawContinuousTexturedBox(matrixStack, RenderUtils.TEX_GUI_PREVIEW, x, y, 0, 0, size, size, 62, 62, 4, 400);
-        }
-
-        IRenderTypeBuffer.Impl renderTypeBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        matrixStack.pushPose();
-        matrixStack.translate(x + size / 2f, y + size / 2f, 500f);
-        matrixStack.scale(-1, 1, 1);
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(150));
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(45 - (float) (t / 10 % 360)));
-        SkinItemRenderer.renderSkin(bakedSkin, 0xf000f0, 0, size, size, ItemCameraTransforms.TransformType.NONE, null, matrixStack, renderTypeBuffer);
-        matrixStack.popPose();
-        renderTypeBuffer.endBatch();
-    }
 
     @SubscribeEvent
     public void onRenderLivingPre(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
@@ -249,15 +156,6 @@ public class ClientEventHandler {
 //        }
 //    }
 
-    @SubscribeEvent
-    public void onKeyInputEvent(InputEvent.KeyInputEvent event) {
-        if (AWKeyBindings.OPEN_WARDROBE_KEY.consumeClick()) {
-            PlayerEntity player = Minecraft.getInstance().player;
-            if (player != null) {
-                NetworkHandler.getInstance().sendToServer(new OpenWardrobePacket(player));
-            }
-        }
-    }
 
     private void addCustomLayers() {
         // Add our own custom armor layer to the various player renderers.
@@ -316,18 +214,4 @@ public class ClientEventHandler {
 //        }
     }
 
-    @SubscribeEvent
-    public void onPlayerLogin(ClientPlayerNetworkEvent.LoggedInEvent event) {
-        if (Objects.equals(event.getPlayer(), Minecraft.getInstance().player)) {
-            SkinBakery.start();
-        }
-    }
-
-    @SubscribeEvent
-    public void onPlayerLogout(ClientPlayerNetworkEvent.LoggedOutEvent event) {
-        if (Objects.equals(event.getPlayer(), Minecraft.getInstance().player)) {
-            SkinBakery.stop();
-            SkinLoader.getInstance().clear();
-        }
-    }
 }

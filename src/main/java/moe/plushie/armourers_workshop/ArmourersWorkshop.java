@@ -50,12 +50,6 @@ public class ArmourersWorkshop {
     private final AWRegistry registry = new AWRegistry();
 
     public ArmourersWorkshop() {
-//        IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-//        CustomSpriteUploader itemSpriteUploader = new CustomSpriteUploader(SkinCore.resource("textures/atlas/items.png"));
-//        if (resourceManager instanceof IReloadableResourceManager) {
-//            ((IReloadableResourceManager) resourceManager).registerReloadListener(itemSpriteUploader);
-//        }
-
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         eventBus.addGenericListener(Block.class, registry::registerBlocks);
@@ -146,7 +140,7 @@ public class ArmourersWorkshop {
 
     @OnlyIn(Dist.CLIENT)
     private void onClientSetup(FMLClientSetupEvent event) {
-        ClientEventHandler.init();
+        ClientEventHandler.init(MinecraftForge.EVENT_BUS);
         ClientWardrobeHandler.init();
         AWCore.init();
     }

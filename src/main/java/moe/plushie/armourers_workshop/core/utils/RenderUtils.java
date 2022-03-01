@@ -42,9 +42,6 @@ public final class RenderUtils {
     public static final ResourceLocation TEX_CIRCLE = AWCore.resource("textures/other/nanoha-circle.png");
     public static final ResourceLocation TEX_GUI_PREVIEW = AWCore.resource("textures/gui/skin-preview.png");
 
-    private static float lightX;
-    private static float lightY;
-
     private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
 
 
@@ -182,6 +179,17 @@ public final class RenderUtils {
         int x1 = rec.getMaxX();
         int y1 = rec.getMaxY();
         int z1 = rec.getMaxZ();
+        drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
+    }
+
+
+    public static void drawBoundingBox(MatrixStack matrix, AxisAlignedBB rec, Color color, IRenderTypeBuffer renderTypeBuffer) {
+        float x0 = (float) rec.minX;
+        float y0 = (float) rec.minY;
+        float z0 = (float) rec.minZ;
+        float x1 = (float) rec.maxX;
+        float y1 = (float) rec.maxY;
+        float z1 = (float) rec.maxZ;
         drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
     }
 

@@ -10,7 +10,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class AWImageButton extends Button {
+
     private final ResourceLocation resourceLocation;
+
     private final int xTexStart;
     private final int yTexStart;
     private final int textureWidth;

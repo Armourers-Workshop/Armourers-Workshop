@@ -30,8 +30,6 @@ import java.util.function.Function;
 @OnlyIn(Dist.CLIENT)
 public class RotationSettingPanel extends BaseSettingPanel {
 
-    private static final Rotations ZERO = new Rotations(0, 0, 0);
-
     private final SkinWardrobe wardrobe;
     private final Entity entity;
 
@@ -151,7 +149,7 @@ public class RotationSettingPanel extends BaseSettingPanel {
             return;
         }
         CompoundNBT nbt = ((MannequinEntity) entity).saveCustomPose();
-        UpdateWardrobePacket packet = UpdateWardrobePacket.option(wardrobe, SkinWardrobeOption.MANNEQUIN_POSE, nbt);
+        UpdateWardrobePacket packet = UpdateWardrobePacket.opt(wardrobe, SkinWardrobeOption.MANNEQUIN_POSE, nbt);
         NetworkHandler.getInstance().sendToServer(packet);
     }
 
@@ -179,7 +177,7 @@ public class RotationSettingPanel extends BaseSettingPanel {
         boolean isCtrl = Screen.hasControlDown();
         for (Part part : Part.values()) {
             if (isCtrl) {
-                part.setValue(entity, ZERO);
+                part.setValue(entity, new Rotations(0, 0, 0));
             } else {
                 part.setValue(entity, part.defaultValue);
             }

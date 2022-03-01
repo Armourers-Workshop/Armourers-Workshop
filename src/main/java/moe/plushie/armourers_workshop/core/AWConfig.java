@@ -7,8 +7,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.Set;
 
 public class AWConfig {
 
@@ -82,8 +80,8 @@ public class AWConfig {
     public static boolean showSortOrderToolTip;
 
     public static boolean showDebugFullFrame = false;
-    public static boolean showDebugPartPosition = false;
     public static boolean showDebugPartFrame = false;
+    public static boolean showDebugTargetPosition = false;
     public static boolean showDebugTargetBounds = false;
 
     public static boolean showDebugTextureBounds = false;

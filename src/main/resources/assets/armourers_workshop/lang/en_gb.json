@@ -456,7 +456,7 @@
   "item.armourers_workshop.rollover.skinIdError1": "§cWarning: This skin is using an old file format.",
   "item.armourers_workshop.rollover.skinIdError2": "§cPlease save and reload it from the library to fix this.",
   "item.armourers_workshop.rollover.skinIdError3": "§cDEBUG - Old ID: %s New ID: %s",
-  "item.armourers_workshop.rollover.skinIdentifier": "§eSkin Identifier: %s",
+  "item.armourers_workshop.rollover.skinIdentifier": "§eSkin Identifier:§r %s",
   "item.armourers_workshop.rollover.skinInvalidItem": "§cError: Invalid equipment skin, please delete.",
   "item.armourers_workshop.rollover.skinLibraryFile": "Library File: %s",
   "item.armourers_workshop.rollover.skinMarkerCount": "§eMarker Count:§r %d",

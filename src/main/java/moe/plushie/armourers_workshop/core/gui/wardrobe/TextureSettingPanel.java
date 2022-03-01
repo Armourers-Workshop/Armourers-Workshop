@@ -129,7 +129,7 @@ public class TextureSettingPanel extends BaseSettingPanel {
             }
             lastSource = PlayerTextureDescriptor.Source.NONE;
             lastDescriptor = newValue;
-            UpdateWardrobePacket packet = UpdateWardrobePacket.option(wardrobe, SkinWardrobeOption.MANNEQUIN_TEXTURE, newValue);
+            UpdateWardrobePacket packet = UpdateWardrobePacket.opt(wardrobe, SkinWardrobeOption.MANNEQUIN_TEXTURE, newValue);
             NetworkHandler.getInstance().sendToServer(packet);
             // update to use
             defaultValues.put(newValue.getSource(), newValue.getValue());

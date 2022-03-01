@@ -67,7 +67,7 @@ public class LocationSettingPanel extends BaseSettingPanel {
         double[] xyz = {pos.x(), pos.y(), pos.z()};
         xyz[axis] += step;
         pos = new Vector3d(xyz[0], xyz[1], xyz[2]);
-        UpdateWardrobePacket packet = UpdateWardrobePacket.option(wardrobe, SkinWardrobeOption.MANNEQUIN_POSITION, pos);
+        UpdateWardrobePacket packet = UpdateWardrobePacket.opt(wardrobe, SkinWardrobeOption.MANNEQUIN_POSITION, pos);
         NetworkHandler.getInstance().sendToServer(packet);
     }
 

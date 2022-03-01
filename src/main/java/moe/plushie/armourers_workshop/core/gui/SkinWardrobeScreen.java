@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.wardrobe.*;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabController;
+import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.core.utils.AWContributors;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
@@ -172,29 +173,29 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
     public void renderPlayer(MatrixStack matrixStack, int mouseX, int mouseY, int x, int y, int width, int height) {
         boolean isFocus = (x <= mouseX && mouseX <= x + width) && (y <= mouseY && mouseY <= y + height);
-        RenderSystem.pushMatrix();
-
         if (!isFocus) {
             RenderUtils.enableScissor(x, y, width, height);
             RenderSystem.translatef(0, 0, 100);
         } else {
             RenderSystem.translatef(0, 0, 300);
         }
-
+        RenderSystem.pushMatrix();
         RenderSystem.translatef(x + (float) width / 2, y + height - 8, 50);
         RenderSystem.rotatef(-20, 1, 0, 0);
         RenderSystem.rotatef(playerRotation, 0, 1, 0);
         RenderSystem.translatef(0, 0, -50);
+        MannequinEntityRenderer.enableLimitScale = true;
 
         if (entity instanceof LivingEntity) {
             InventoryScreen.renderEntityInInventory(0, 0, 45, 0, 0, (LivingEntity) entity);
         }
 
+        MannequinEntityRenderer.enableLimitScale = false;
+        RenderSystem.popMatrix();
+
         if (!isFocus) {
             RenderUtils.disableScissor();
         }
-
-        RenderSystem.popMatrix();
     }
 
     @Override

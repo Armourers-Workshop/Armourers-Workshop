@@ -39,53 +39,53 @@ public class SkinItem extends Item {
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             if (isItemOwner) {
-                tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinInvalidItem"));
+                tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinInvalidItem"));
             }
             return tooltip;
         }
         BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(descriptor);
         if (bakedSkin == null) {
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skindownloading", descriptor.getIdentifier()));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skindownloading", descriptor.getIdentifier()));
             return tooltip;
         }
         Skin skin = bakedSkin.getSkin();
 
         if (!isItemOwner) {
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.hasSkin"));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.hasSkin"));
             if (AWConfig.tooltipSkinName && Strings.isNotBlank(skin.getCustomName())) {
-                tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinName", skin.getCustomName().trim()));
+                tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinName", skin.getCustomName().trim()));
             }
         }
 
         if (AWConfig.tooltipSkinAuthor && Strings.isNotBlank(skin.getAuthorName())) {
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinAuthor", skin.getAuthorName().trim()));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinAuthor", skin.getAuthorName().trim()));
         }
 
         if (AWConfig.tooltipSkinType) {
-            TextComponent textComponent = TranslateUtils.translate("skinType." + skin.getType().getRegistryName());
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinType", textComponent));
+            TextComponent textComponent = TranslateUtils.subtitle("skinType." + skin.getType().getRegistryName());
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", textComponent));
         }
 
         if (AWConfig.tooltipFlavour && Strings.isNotBlank(skin.getFlavourText())) {
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
+            tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
         }
 
         if (AWConfig.tooltipDebug && Screen.hasShiftDown()) {
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinIdentifier", descriptor.getIdentifier()));
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinTotalCubes", skin.getTotalCubes()));
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinNumCubes", skin.getTotalOfCubeType(SkinCubes.SOLID)));
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinNumCubesGlowing", skin.getTotalOfCubeType(SkinCubes.GLOWING)));
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinNumCubesGlass", skin.getTotalOfCubeType(SkinCubes.GLASS)));
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinNumCubesGlassGlowing", skin.getTotalOfCubeType(SkinCubes.GLASS_GLOWING)));
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinPaintData", skin.hasPaintData()));
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinMarkerCount", skin.getMarkerCount()));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinIdentifier", descriptor.getIdentifier()));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinTotalCubes", skin.getTotalCubes()));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinNumCubes", skin.getTotalOfCubeType(SkinCubes.SOLID)));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinNumCubesGlowing", skin.getTotalOfCubeType(SkinCubes.GLOWING)));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinNumCubesGlass", skin.getTotalOfCubeType(SkinCubes.GLASS)));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinNumCubesGlassGlowing", skin.getTotalOfCubeType(SkinCubes.GLASS_GLOWING)));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinPaintData", skin.hasPaintData()));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinMarkerCount", skin.getMarkerCount()));
 //            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinDyeCount", skin.getSkinDye().getNumberOfDyes()));
 //            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinProperties"));
 //            for (String prop : skin.getProperties().getPropertiesList()) {
 //                tooltip.add(TranslateUtils.literal(" " + prop));
 //            }
         } else if (AWConfig.tooltipDebug) {
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinHoldShiftForInfo"));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinHoldShiftForInfo"));
         }
 
         // Skin ID error.
@@ -96,9 +96,9 @@ public class SkinItem extends Item {
 //            }
 //        }
 
-        if (AWConfig.tooltipOpenWardrobe) {
+        if (AWConfig.tooltipOpenWardrobe && isItemOwner) {
             ITextComponent keyName = AWKeyBindings.OPEN_WARDROBE_KEY.getTranslatedKeyMessage();
-            tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinOpenWardrobe", keyName));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinOpenWardrobe", keyName));
         }
 
         return tooltip;

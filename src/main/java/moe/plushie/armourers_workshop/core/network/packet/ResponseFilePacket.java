@@ -47,8 +47,6 @@ public class ResponseFilePacket extends CustomPacket {
         if (this.buffer != null) {
             buffer.writeInt(offset);
             buffer.writeBytes(this.buffer);
-        } else {
-
         }
     }
 

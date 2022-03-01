@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ArrowRenderer.class)
 public class ArrowRendererMixin<T extends AbstractArrowEntity> {
 
-    @Inject(method = "render", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "render*", at = @At("HEAD"), cancellable = true)
     public void hooked_render(T entity, float p_225623_2_, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderType, int light, CallbackInfo callback) {
         ClientWardrobeHandler.onRenderArrow(entity, null, p_225623_2_, partialTicks, light, matrixStack, renderType, callback);
     }

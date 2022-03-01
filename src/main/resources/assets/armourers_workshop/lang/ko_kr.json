@@ -456,7 +456,7 @@
   "item.armourers_workshop.rollover.skinIdError1": "§c주의: 이 스킨은 구 파일 형식을 사용합니다.",
   "item.armourers_workshop.rollover.skinIdError2": "§c이 문제 해결을 위해 장비 도감에서 저장 후 불러오기를 다시 해주세요.",
   "item.armourers_workshop.rollover.skinIdError3": "§c디버그 - 구 ID: %s 신 ID: %s",
-  "item.armourers_workshop.rollover.skinIdentifier": "§e스킨 식별자: %s",
+  "item.armourers_workshop.rollover.skinIdentifier": "§e스킨 식별자:§r %s",
   "item.armourers_workshop.rollover.skinInvalidItem": "&주의: 잘못된 장비 스킨입니다. 삭제해주세요.",
   "item.armourers_workshop.rollover.skinLibraryFile": "라이브러리 파일: %s",
   "item.armourers_workshop.rollover.skinMarkerCount": "§e마커 갯수:§r %d",

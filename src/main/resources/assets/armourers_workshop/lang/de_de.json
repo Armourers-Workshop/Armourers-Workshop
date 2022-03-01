@@ -456,7 +456,7 @@
   "item.armourers_workshop.rollover.skinIdError1": "§cWarnung: Dieser Skin verwendet ein altes Skinformat!",
   "item.armourers_workshop.rollover.skinIdError2": "§cBitte speichere und lade diesen Skin in deiner Biliothek um ihn zu reparieren!",
   "item.armourers_workshop.rollover.skinIdError3": "§cDEBUG - Alte ID: %s Neue ID: %s",
-  "item.armourers_workshop.rollover.skinIdentifier": "§eSkin Identifier: %s",
+  "item.armourers_workshop.rollover.skinIdentifier": "§eSkin Identifier:§r %s",
   "item.armourers_workshop.rollover.skinInvalidItem": "§cError: Korrupter Skin, bitte löschen!",
   "item.armourers_workshop.rollover.skinLibraryFile": "Library File: %s",
   "item.armourers_workshop.rollover.skinMarkerCount": "§eAnzahl der Markierungen:§r %d",

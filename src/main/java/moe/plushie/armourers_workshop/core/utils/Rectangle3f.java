@@ -1,7 +1,16 @@
 package moe.plushie.armourers_workshop.core.utils;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector4f;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class Rectangle3f {
 
@@ -124,12 +133,57 @@ public class Rectangle3f {
         return new Vector3f(getMidX(), getMidY(), getMidZ());
     }
 
+    public Rectangle3f getBounds() {
+        return new Rectangle3f(-width / 2, -height / 2, -depth / 2, width, height, depth);
+    }
+
     public Rectangle3f copy() {
         return new Rectangle3f(x, y, z, width, height, depth);
     }
 
     public Rectangle3f offset(Vector3f point) {
-        return new Rectangle3f(x + point.x(), y + point.y(), z + point.z(), width, height, depth);
+        return offset(point.x(), point.y(), point.z());
+    }
+
+    public Rectangle3f offset(float dx, float dy, float dz) {
+        return new Rectangle3f(x + dx, y + dy, z + dz, width, height, depth);
+    }
+
+    public void mul(Quaternion quaternion) {
+        mul(new Matrix4f(quaternion));
+    }
+
+    public void mul(Matrix4f matrix) {
+        List<Vector4f> vertexes = Arrays.asList(
+                new Vector4f(x, y, z, 1.0f),
+                new Vector4f(x + width, y, z, 1.0f),
+                new Vector4f(x + width, y + height, z, 1.0f),
+                new Vector4f(x + width, y + height, z + depth, 1.0f),
+                new Vector4f(x + width, y, z + depth, 1.0f),
+                new Vector4f(x, y + height, z, 1.0f),
+                new Vector4f(x, y + height, z + depth, 1.0f),
+                new Vector4f(x, y, z + depth, 1.0f)
+        );
+        Iterator<Vector4f> iterator = vertexes.iterator();
+        Vector4f point = iterator.next();
+        float minX = point.x(), minY = point.y(), minZ = point.z();
+        float maxX = point.x(), maxY = point.y(), maxZ = point.z();
+        while (iterator.hasNext()) {
+            point = iterator.next();
+            point.transform(matrix);
+            minX = Math.min(minX, point.x());
+            minY = Math.min(minY, point.y());
+            minZ = Math.min(minZ, point.z());
+            maxX = Math.max(maxX, point.x());
+            maxY = Math.max(maxY, point.y());
+            maxZ = Math.max(maxZ, point.z());
+        }
+        x = minX;
+        y = minY;
+        z = minZ;
+        width = maxX - minX;
+        height = maxY - minY;
+        depth = maxZ - minZ;
     }
 
     @Override

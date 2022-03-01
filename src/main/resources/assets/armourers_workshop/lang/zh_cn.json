@@ -456,7 +456,7 @@
   "item.armourers_workshop.rollover.skinIdError1": "§c警告:这个时装使用旧文件格式",
   "item.armourers_workshop.rollover.skinIdError2": "§c请从资源库保存并重新加载它来解决这个问题",
   "item.armourers_workshop.rollover.skinIdError3": "§c调试 - 旧 ID: %s 新 ID: %s",
-  "item.armourers_workshop.rollover.skinIdentifier": "§e时装标识符: %s",
+  "item.armourers_workshop.rollover.skinIdentifier": "§e时装标识符:§r %s",
   "item.armourers_workshop.rollover.skinInvalidItem": "§c错误: 无效的时装, 请删除",
   "item.armourers_workshop.rollover.skinLibraryFile": "库文件名: %s",
   "item.armourers_workshop.rollover.skinMarkerCount": "§e标记数量:§r %d",

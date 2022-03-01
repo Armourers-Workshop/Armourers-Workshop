@@ -43,15 +43,15 @@ public class BottleItem extends ColoredItem {
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable World world, List<ITextComponent> tooltips, ITooltipFlag flag) {
         PaintColor paintColor = getColor(itemStack);
-        tooltips.add(TranslateUtils.translate("item.armourers_workshop.dye-bottle.flavour"));
+        tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.dye-bottle.flavour"));
         if (paintColor != null) {
             String hexColor = String.format("#%02x%02x%02x", paintColor.getRed(), paintColor.getGreen(), paintColor.getBlue());
-            ITextComponent paintName = TranslateUtils.translate("paintType." + paintColor.getPaintType().getRegistryName());
-            tooltips.add(TranslateUtils.translate("item.armourers_workshop.rollover.colour", paintColor.getRGB() & 0xffffff));
-            tooltips.add(TranslateUtils.translate("item.armourers_workshop.rollover.hex", hexColor));
-            tooltips.add(TranslateUtils.translate("item.armourers_workshop.rollover.paintType", paintName));
+            ITextComponent paintName = TranslateUtils.subtitle("paintType." + paintColor.getPaintType().getRegistryName());
+            tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.colour", paintColor.getRGB() & 0xffffff));
+            tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.hex", hexColor));
+            tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.paintType", paintName));
         } else {
-            tooltips.add(TranslateUtils.translate("item.armourers_workshop.rollover.empty"));
+            tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.empty"));
         }
     }
 }

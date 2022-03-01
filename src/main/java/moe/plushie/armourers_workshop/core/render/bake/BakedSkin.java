@@ -104,7 +104,7 @@ public class BakedSkin implements IBakedSkin {
         Matrix4f matrix = Matrix4f.createScaleMatrix(1, 1, 1);
         CustomVoxelShape shape = getRenderShape(model, ItemCameraTransforms.TransformType.NONE);
         if (rotation != null) {
-            matrix.multiply(new Quaternion(-rotation.x(), -rotation.y(), rotation.z(), true));
+            matrix.multiply(new Quaternion(rotation.x(), rotation.y(), rotation.z(), true));
             shape.mul(matrix);
         }
         bounds = shape.bounds().copy();
