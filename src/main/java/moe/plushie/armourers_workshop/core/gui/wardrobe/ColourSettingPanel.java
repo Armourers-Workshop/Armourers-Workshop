@@ -227,7 +227,7 @@ public class ColourSettingPanel extends BaseSettingPanel {
                 itemStack = new ItemStack(AWItems.BOTTLE);
                 ColoredItem.setColor(itemStack, newValue);
             }
-            NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.item(wardrobe, slot, itemStack));
+            NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.pick(wardrobe, slot, itemStack));
         }
     }
 }

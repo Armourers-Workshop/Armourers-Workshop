@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.entity;
 
+import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.base.AWTags;
@@ -9,7 +10,9 @@ import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.TrigUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
+import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -20,17 +23,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Rotations;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+
+import java.util.Map;
 
 
 @SuppressWarnings("NullableProblems")
@@ -43,10 +47,14 @@ public class MannequinEntity extends ArmorStandEntity {
     public static final Rotations DEFAULT_LEFT_LEG_POSE = new Rotations(-1.0f, 0.0f, -1.0f);
     public static final Rotations DEFAULT_RIGHT_LEG_POSE = new Rotations(1.0f, 0.0f, 1.0f);
 
+    public static final EntitySize MARKER_DIMENSIONS = new EntitySize(0.0f, 0.0f, true);
+    public static final EntitySize BABY_DIMENSIONS = EntitySize.scalable(0.5f, 1.0f);
+    public static final EntitySize STANDING_DIMENSIONS = EntitySize.scalable(0.6f, 1.88f);
+
     public static final DataParameter<Boolean> DATA_IS_CHILD = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> DATA_IS_FLYING = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> DATA_IS_VISIBLE = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> DATA_IS_GHOST = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Float> DATA_SCALE = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.FLOAT);
     public static final DataParameter<Boolean> DATA_EXTRA_RENDERER = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
     public static final DataParameter<PlayerTextureDescriptor> DATA_TEXTURE = EntityDataManager.defineId(MannequinEntity.class, PlayerTextureDescriptor.SERIALIZER);
 
@@ -59,21 +67,23 @@ public class MannequinEntity extends ArmorStandEntity {
         super.defineSynchedData();
         this.entityData.define(DATA_IS_CHILD, false);
         this.entityData.define(DATA_IS_FLYING, false);
-        this.entityData.define(DATA_IS_VISIBLE, true);
         this.entityData.define(DATA_IS_GHOST, false);
         this.entityData.define(DATA_EXTRA_RENDERER, true);
+        this.entityData.define(DATA_SCALE, 1.0f);
         this.entityData.define(DATA_TEXTURE, PlayerTextureDescriptor.EMPTY);
     }
-
 
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
         super.readAdditionalSaveData(nbt);
-        this.entityData.set(DATA_IS_CHILD, nbt.getBoolean(AWConstants.NBT.MANNEQUIN_IS_CHILD));
+        this.entityData.set(DATA_IS_CHILD, nbt.getBoolean(AWConstants.NBT.MANNEQUIN_IS_SMALL));
         this.entityData.set(DATA_IS_FLYING, nbt.getBoolean(AWConstants.NBT.MANNEQUIN_IS_FLYING));
         this.entityData.set(DATA_IS_GHOST, nbt.getBoolean(AWConstants.NBT.MANNEQUIN_IS_GHOST));
-        this.entityData.set(DATA_IS_VISIBLE, readBoolean(nbt, AWConstants.NBT.MANNEQUIN_IS_VISIBLE, true));
         this.entityData.set(DATA_EXTRA_RENDERER, readBoolean(nbt, AWConstants.NBT.MANNEQUIN_EXTRA_RENDER, true));
+
+        if (nbt.contains(AWConstants.NBT.MANNEQUIN_SCALE)) {
+            this.entityData.set(DATA_SCALE, nbt.getFloat(AWConstants.NBT.MANNEQUIN_SCALE));
+        }
 
         CompoundNBT nbt1 = nbt.getCompound(AWConstants.NBT.MANNEQUIN_TEXTURE);
         if (!nbt1.isEmpty()) {
@@ -87,11 +97,14 @@ public class MannequinEntity extends ArmorStandEntity {
     @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_CHILD, entityData.get(DATA_IS_CHILD));
+        nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_SMALL, entityData.get(DATA_IS_CHILD));
         nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_FLYING, entityData.get(DATA_IS_FLYING));
         nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_GHOST, entityData.get(DATA_IS_GHOST));
-        nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_VISIBLE, entityData.get(DATA_IS_VISIBLE));
         nbt.putBoolean(AWConstants.NBT.MANNEQUIN_EXTRA_RENDER, entityData.get(DATA_EXTRA_RENDERER));
+
+        if (getScale() != 1.0f) {
+            nbt.putFloat(AWConstants.NBT.MANNEQUIN_SCALE, getScale());
+        }
 
         PlayerTextureDescriptor descriptor = getTextureDescriptor();
         if (!descriptor.isEmpty()) {
@@ -102,22 +115,41 @@ public class MannequinEntity extends ArmorStandEntity {
     }
 
     @Override
-    public boolean isBaby() {
-        return super.isBaby() || entityData.get(DATA_IS_CHILD);
+    public void onSyncedDataUpdated(DataParameter<?> dataParameter) {
+        if (dataParameter == DATA_IS_CHILD) {
+            refreshDimensions();
+        }
+        if (dataParameter == DATA_SCALE) {
+            refreshDimensions();
+        }
+        super.onSyncedDataUpdated(dataParameter);
+    }
+
+    public boolean isVisible() {
+        return !isInvisible();
+    }
+
+    public void setVisible(boolean value) {
+        setInvisible(!value);
     }
 
     @Override
-    public boolean isInvisible() {
-        return !entityData.get(DATA_IS_VISIBLE);
+    public float getScale() {
+        return entityData.get(DATA_SCALE);
     }
 
-    public boolean isFakeFlying() {
-        return entityData.get(DATA_IS_FLYING);
+    @Override
+    public boolean isSmall() {
+        return entityData.get(DATA_IS_CHILD);
     }
 
     @Override
     public boolean isNoGravity() {
         return true; // never gravity
+    }
+
+    public boolean isFakeFlying() {
+        return entityData.get(DATA_IS_FLYING);
     }
 
     @Override
@@ -126,13 +158,42 @@ public class MannequinEntity extends ArmorStandEntity {
     }
 
     @Override
+    public EntitySize getDimensions(Pose pose) {
+        if (isMarker()) {
+            return MARKER_DIMENSIONS;
+        }
+        EntitySize entitySize = STANDING_DIMENSIONS;
+        if (isBaby()) {
+            entitySize = BABY_DIMENSIONS;
+        }
+        return entitySize.scale(getScale());
+    }
+
+    @Override
+    public float getStandingEyeHeight(Pose pose, EntitySize entitySize) {
+        float eyeHeight = 1.62f;
+        if (isBaby()) {
+            eyeHeight = 0.88f;
+        }
+        return eyeHeight * getScale();
+    }
+
+    @Override
     public ActionResultType interactAt(PlayerEntity player, Vector3d pos, Hand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        if (this.isMarker() || itemstack.getItem() == Items.NAME_TAG) {
+        if (this.isMarker()) {
             return ActionResultType.PASS;
         }
         if (player.level.isClientSide) {
             return ActionResultType.CONSUME;
+        }
+        if (itemstack.getItem() == Items.NAME_TAG) {
+            ITextComponent customName = null;
+            if (itemstack.hasCustomHoverName() && !player.isShiftKeyDown()) {
+                customName = itemstack.getHoverName();
+            }
+            setCustomName(customName);
+            return ActionResultType.SUCCESS;
         }
         if (player.isShiftKeyDown()) {
             Rotations rotations = getBodyPose();
@@ -153,6 +214,10 @@ public class MannequinEntity extends ArmorStandEntity {
 
     public void setTextureDescriptor(PlayerTextureDescriptor descriptor) {
         this.entityData.set(DATA_TEXTURE, descriptor);
+    }
+
+    public void setExtraRenderer(boolean value) {
+        this.entityData.set(DATA_EXTRA_RENDERER, value);
     }
 
     public boolean isExtraRenderer() {
@@ -222,5 +287,4 @@ public class MannequinEntity extends ArmorStandEntity {
         }
         return defaultValue;
     }
-
 }

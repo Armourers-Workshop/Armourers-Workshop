@@ -1,7 +1,12 @@
 package moe.plushie.armourers_workshop.core.texture;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.AWConstants;
+import moe.plushie.armourers_workshop.core.base.AWItems;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.PacketBuffer;
@@ -10,6 +15,7 @@ import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 
 @SuppressWarnings("NullableProblems")
@@ -31,6 +37,11 @@ public class PlayerTextureDescriptor {
         }
     };
 
+    private final static Cache<ItemStack, PlayerTextureDescriptor> DESCRIPTOR_CACHES = CacheBuilder.newBuilder()
+            .maximumSize(8)
+            .expireAfterAccess(15, TimeUnit.SECONDS)
+            .build();
+
     private Source source;
     private String url;
     private GameProfile profile;
@@ -50,15 +61,12 @@ public class PlayerTextureDescriptor {
     }
 
     public PlayerTextureDescriptor(@Nullable CompoundNBT nbt) {
-        if (nbt == null || nbt.isEmpty()) {
-            this.source = Source.NONE;
-            return;
-        }
-        this.source = Source.valueOf(nbt.getString(AWConstants.NBT.TEXTURE_TYPE));
-        if (this.source == Source.URL && nbt.contains(AWConstants.NBT.TEXTURE_URL, Constants.NBT.TAG_STRING)) {
+        if (nbt != null && nbt.contains(AWConstants.NBT.TEXTURE_URL, Constants.NBT.TAG_STRING)) {
+            this.source = Source.URL;
             this.url = nbt.getString(AWConstants.NBT.TEXTURE_URL);
         }
-        if (this.source == Source.USER && nbt.contains(AWConstants.NBT.TEXTURE_PROFILE, Constants.NBT.TAG_COMPOUND)) {
+        if (nbt != null && nbt.contains(AWConstants.NBT.TEXTURE_PROFILE, Constants.NBT.TAG_COMPOUND)) {
+            this.source = Source.USER;
             this.profile = NBTUtil.readGameProfile(nbt.getCompound(AWConstants.NBT.TEXTURE_PROFILE));
         }
         if (this.url == null && this.profile == null) {
@@ -66,9 +74,25 @@ public class PlayerTextureDescriptor {
         }
     }
 
+    public static PlayerTextureDescriptor of(ItemStack itemStack) {
+        if (itemStack.getItem() != AWItems.MANNEQUIN) {
+            return EMPTY;
+        }
+        CompoundNBT nbt = itemStack.getTag();
+        if (nbt == null || !nbt.contains(AWConstants.NBT.MANNEQUIN_TEXTURE)) {
+            return EMPTY;
+        }
+        PlayerTextureDescriptor descriptor = DESCRIPTOR_CACHES.getIfPresent(itemStack);
+        if (descriptor != null) {
+            return descriptor;
+        }
+        descriptor = new PlayerTextureDescriptor(nbt.getCompound(AWConstants.NBT.MANNEQUIN_TEXTURE));
+        DESCRIPTOR_CACHES.put(itemStack, descriptor);
+        return descriptor;
+    }
+
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
-        nbt.putString(AWConstants.NBT.TEXTURE_TYPE, source.name());
         if (url != null) {
             nbt.putString(AWConstants.NBT.TEXTURE_URL, url);
         }

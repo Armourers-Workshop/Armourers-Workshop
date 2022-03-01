@@ -5,9 +5,13 @@ import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.data.AnimationMetadataSection;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 
+
+@OnlyIn(Dist.CLIENT)
 public class DummyAtlasTexture extends AtlasTexture {
 
     public static AtlasTexture TEX_ITEMS = new DummyAtlasTexture(RenderUtils.TEX_ITEMS);

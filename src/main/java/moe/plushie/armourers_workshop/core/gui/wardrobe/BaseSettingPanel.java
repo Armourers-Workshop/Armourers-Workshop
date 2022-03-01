@@ -15,7 +15,7 @@ public class BaseSettingPanel extends Screen {
     private final String baseKey;
 
     protected BaseSettingPanel(String baseKey) {
-        super(TranslateUtils.translate(baseKey));
+        super(TranslateUtils.title(baseKey));
         this.baseKey = baseKey;
     }
 
@@ -24,6 +24,6 @@ public class BaseSettingPanel extends Screen {
         for (String part : parts) {
             key1.append(".").append(part);
         }
-        return TranslateUtils.translate(key1.toString());
+        return TranslateUtils.title(key1.toString());
     }
 }

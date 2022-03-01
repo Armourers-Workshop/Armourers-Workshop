@@ -138,11 +138,11 @@ public class AWSliderBox extends Button {
         }
     }
 
-    public double getStepValue() {
+    public double getStep() {
         return stepValue;
     }
 
-    public void setStepValue(double stepValue) {
+    public void setStep(double stepValue) {
         this.stepValue = stepValue;
     }
 

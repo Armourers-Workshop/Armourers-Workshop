@@ -456,7 +456,7 @@
   "item.armourers_workshop.rollover.skinIdError1": "§cWarning: Este aspecto esta usando un formato antiguo.",
   "item.armourers_workshop.rollover.skinIdError2": "§cPorfavor guarde y recargue de la biblioteca para arreglarlo.",
   "item.armourers_workshop.rollover.skinIdError3": "§cDEBUG - Antigua ID: %s Nueva ID: %s",
-  "item.armourers_workshop.rollover.skinIdentifier": "§eIdentificador de aspecto: %s",
+  "item.armourers_workshop.rollover.skinIdentifier": "§eIdentificador de aspecto:§r %s",
   "item.armourers_workshop.rollover.skinInvalidItem": "§cError: Aspecto de Equipamiento Invalido, Porfavor Elimine.",
   "item.armourers_workshop.rollover.skinLibraryFile": "Archivo de Biblioteca: %s",
   "item.armourers_workshop.rollover.skinMarkerCount": "§eCantidad de marcas:§r %d",

@@ -23,7 +23,7 @@ public class SkinWardrobeContainer extends Container {
 
     public static final ContainerType<SkinWardrobeContainer> TYPE = ContainerTypeBuilder
             .create(SkinWardrobeContainer::new, SkinWardrobe.class)
-            .withTitle(TranslateUtils.translate("inventory.armourers_workshop.wardrobe"))
+            .withTitle(TranslateUtils.title("inventory.armourers_workshop.wardrobe"))
             .withDataCoder(SkinWardrobeProvider::by, SkinWardrobeProvider::to)
             .build("wardrobe");
 
@@ -118,7 +118,7 @@ public class SkinWardrobeContainer extends Container {
         }
         ItemStack itemStack = slot.getItem();
         if (slot instanceof GroupSlot) {
-            if (!moveItemStackTo(itemStack, 0, 36, false)) {
+            if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
                 return ItemStack.EMPTY;
             }
             slot.setChanged();

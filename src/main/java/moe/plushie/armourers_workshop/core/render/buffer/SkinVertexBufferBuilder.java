@@ -38,7 +38,7 @@ public class SkinVertexBufferBuilder {
         this.skin = skin;
     }
 
-    public void addPartData(BakedSkinPart part, ColorScheme scheme, int light, int partialTicks, MatrixStack matrixStack, boolean shouldRender) {
+    public void addPartData(BakedSkinPart part, ColorScheme scheme, int light, float partialTicks, MatrixStack matrixStack, boolean shouldRender) {
         // ignore part when part is disable
         if (!AWConfig.shouldRenderPart(part.getPart())) {
             return;
@@ -79,6 +79,7 @@ public class SkinVertexBufferBuilder {
         IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 //        RenderUtils.drawBoundingBox(matrixStack, box, color, SkinRenderBuffer.getInstance());
         RenderUtils.drawBoundingBox(matrixStack, box, color, buffer);
+        RenderUtils.drawPoint(matrixStack, new Vector3f(), 16, buffer);
     }
 
     public void endBatch(SkinRenderBuffer.Batch batch) {
@@ -138,12 +139,12 @@ public class SkinVertexBufferBuilder {
     static class RenderTask implements SkinRenderTask {
 
         int lightmap;
-        int partialTicks;
+        float partialTicks;
 
         Matrix4f matrix;
         CompiledTask compiledTask;
 
-        RenderTask(CompiledTask compiledTask, MatrixStack matrixStack, int lightmap, int partialTicks) {
+        RenderTask(CompiledTask compiledTask, MatrixStack matrixStack, int lightmap, float partialTicks) {
             super();
             this.compiledTask = compiledTask;
             this.matrix = matrixStack.last().pose().copy();

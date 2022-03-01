@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HeadLayer;
@@ -24,8 +25,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRenderer<T, MannequinModel<T>> {
 
+    public static boolean enableLimitScale = false;
+
     private final MannequinModel<T> normalModel;
     private final MannequinModel<T> slimModel;
+
     private ResourceLocation textureLocation;
 
     public MannequinEntityRenderer(EntityRendererManager rendererManager) {
@@ -57,12 +61,21 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
     }
 
     @Override
+    protected void scale(T entity, MatrixStack matrixStack, float p_225620_3_) {
+        float f = 0.9375f; // from player renderer (maybe 15/16)
+        if (!enableLimitScale) {
+            f *= entity.getScale();
+        }
+        matrixStack.scale(f, f, f);
+    }
+
+    @Override
     public ResourceLocation getTextureLocation(T entity) {
         return textureLocation;
     }
 
     @Override
     protected boolean shouldShowName(T entity) {
-        return false;
+        return entity.hasCustomName();
     }
 }

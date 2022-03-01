@@ -46,18 +46,18 @@ public class UpdateWardrobePacket extends CustomPacket {
         this.compoundNBT = compoundNBT;
     }
 
-    public static UpdateWardrobePacket all(SkinWardrobe wardrobe) {
+    public static UpdateWardrobePacket sync(SkinWardrobe wardrobe) {
         return new UpdateWardrobePacket(wardrobe, Mode.SYNC, wardrobe.serializeNBT(), null, null);
     }
 
-    public static UpdateWardrobePacket item(SkinWardrobe wardrobe, int slot, ItemStack itemStack) {
+    public static UpdateWardrobePacket pick(SkinWardrobe wardrobe, int slot, ItemStack itemStack) {
         CompoundNBT compoundNBT = new CompoundNBT();
         compoundNBT.putInt("Slot", slot);
         compoundNBT.put("Item", itemStack.serializeNBT());
         return new UpdateWardrobePacket(wardrobe, Mode.SYNC_ITEM, compoundNBT, null, null);
     }
 
-    public static UpdateWardrobePacket option(SkinWardrobe wardrobe, SkinWardrobeOption option, Object value) {
+    public static UpdateWardrobePacket opt(SkinWardrobe wardrobe, SkinWardrobeOption option, Object value) {
         return new UpdateWardrobePacket(wardrobe, Mode.SYNC_OPTION, null, option, value);
     }
 

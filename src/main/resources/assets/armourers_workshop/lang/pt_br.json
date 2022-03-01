@@ -456,7 +456,7 @@
   "item.armourers_workshop.rollover.skinIdError1": "§cAviso: este visual está usando um formato de arquivo antigo.",
   "item.armourers_workshop.rollover.skinIdError2": "§cFavor salvar e recarregá-lo na biblioteca para corrigir.",
   "item.armourers_workshop.rollover.skinIdError3": "§cDEBUG - Antigo ID: %s Novo ID: %s",
-  "item.armourers_workshop.rollover.skinIdentifier": "§eIdentificador de Visual: %s",
+  "item.armourers_workshop.rollover.skinIdentifier": "§eIdentificador de Visual:§r %s",
   "item.armourers_workshop.rollover.skinInvalidItem": "§cErro: Visual de visual inválida, favor excluir.",
   "item.armourers_workshop.rollover.skinLibraryFile": "Arquivo da Biblioteca: %s",
   "item.armourers_workshop.rollover.skinMarkerCount": "§eContagem de Marcadores:§r %d",

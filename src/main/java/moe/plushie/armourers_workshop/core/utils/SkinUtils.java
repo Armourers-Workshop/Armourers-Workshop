@@ -78,7 +78,7 @@ public final class SkinUtils {
         return null;
     }
 
-    public static void apply(MatrixStack matrixStack, Entity entity, SkinPart skinPart, int partialTicks) {
+    public static void apply(MatrixStack matrixStack, Entity entity, SkinPart skinPart, float partialTicks) {
         ISkinPartType partType = skinPart.getType();
         if (!(partType instanceof ICanRotation)) {
             return;
@@ -101,7 +101,7 @@ public final class SkinUtils {
         matrixStack.translate(-offset.x() * SCALE, -offset.y() * SCALE, -offset.z() * SCALE);
     }
 
-    public static double getRotationDegrees(Entity entity, SkinPart skinPart, int partialTicks) {
+    public static double getRotationDegrees(Entity entity, SkinPart skinPart, float partialTicks) {
         SkinProperties properties = skinPart.getProperties();
 
         double maxAngle = properties.get(SkinProperty.WINGS_MAX_ANGLE);

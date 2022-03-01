@@ -32,7 +32,8 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
 
     private final WeakReference<Entity> entity;
     private final SkinWardrobeState state;
-    private int id; //
+
+    private int id; // a.k.a entity id
 
     public SkinWardrobe(Entity entity) {
         this.id = entity.getId();
@@ -87,15 +88,15 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     }
 
     public void sendToAll() {
-        NetworkHandler.getInstance().sendToAll(UpdateWardrobePacket.all(this));
+        NetworkHandler.getInstance().sendToAll(UpdateWardrobePacket.sync(this));
     }
 
     public void sendToServer() {
-        NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.all(this));
+        NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.sync(this));
     }
 
     public void broadcast(ServerPlayerEntity player) {
-        NetworkHandler.getInstance().sendTo(UpdateWardrobePacket.all(this), player);
+        NetworkHandler.getInstance().sendTo(UpdateWardrobePacket.sync(this), player);
     }
 
     public boolean shouldRenderEquipment(EquipmentSlotType slotType) {
