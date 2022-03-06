@@ -3,14 +3,15 @@ package moe.plushie.armourers_workshop.client;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.common.ArmourersConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.render.SkinModelRenderer;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
-import moe.plushie.armourers_workshop.core.render.model.HeldItemModel;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
@@ -33,7 +34,6 @@ import java.util.function.Function;
 public class ClientWardrobeHandler {
 
     public final static float SCALE = 1 / 16f;
-    public final static HeldItemModel HELD_ITEM_MODEL = new HeldItemModel();
 
     public static void init() {
         ClientModelHandler.init();
@@ -67,7 +67,7 @@ public class ClientWardrobeHandler {
         matrixStack.popPose();
     }
 
-    public static void onRenderArmor(LivingEntity entity, Model model, int light, MatrixStack matrixStack, IRenderTypeBuffer renderType) {
+    public static void onRenderArmor(Entity entity, Model model, int light, MatrixStack matrixStack, IRenderTypeBuffer renderType) {
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             return;
@@ -80,7 +80,7 @@ public class ClientWardrobeHandler {
         matrixStack.popPose();
     }
 
-    public static void onRenderItem(LivingEntity entity, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, MatrixStack matrixStack, IRenderTypeBuffer renderType, CallbackInfo callback) {
+    public static void onRenderItem(Entity entity, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, MatrixStack matrixStack, IRenderTypeBuffer renderType, CallbackInfo callback) {
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             return;
@@ -88,7 +88,7 @@ public class ClientWardrobeHandler {
         matrixStack.pushPose();
         matrixStack.scale(-SCALE, -SCALE, SCALE);
 
-        int count = renderItemSkins(wardrobe, entity, HELD_ITEM_MODEL, light, matrixStack, transformType, itemStack);
+        int count = renderItemSkins(wardrobe, entity, null, light, matrixStack, transformType, itemStack);
         if (count != 0) {
             callback.cancel();
         }
@@ -161,12 +161,16 @@ public class ClientWardrobeHandler {
     }
 
     private static int render(SkinWardrobe wardrobe, Entity entity, Model model, int light, MatrixStack matrixStack, ItemCameraTransforms.TransformType transformType, Function<SkinWardrobeState, Iterable<BakedSkin>> provider) {
-        int t = (int) System.currentTimeMillis();
         int r = 0;
+        float partialTicks = System.currentTimeMillis() % 100000000;
         SkinWardrobeState snapshot = wardrobe.snapshot();
         SkinRenderBuffer buffer = SkinRenderBuffer.getInstance();
+        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity);
+        if (renderer == null) {
+            return 0;
+        }
         for (BakedSkin bakedSkin : provider.apply(snapshot)) {
-            SkinModelRenderer.renderSkin(bakedSkin, snapshot.getColorScheme(), entity, model, transformType, light, t, matrixStack, buffer);
+            renderer.render(entity, model, bakedSkin, snapshot.getColorScheme(), transformType, light, partialTicks, matrixStack, buffer);
             r += 1;
         }
         buffer.endBatch();

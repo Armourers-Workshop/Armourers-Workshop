@@ -5,6 +5,9 @@ public class TrigUtils {
     public static double getAngleRadians(double x1, double y1, double x2, double y2) {
         double x = x2 - x1;
         double y = y2 - y1;
+        if (x == 0 && y == 0) {
+            return 0;
+        }
         return Math.atan2(y, x);
     }
 

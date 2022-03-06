@@ -94,19 +94,19 @@ public class AWConfig {
             return 2;
         }
     }
-
-    public static boolean isSkinnableEntity(@Nullable Entity entity) {
-        if (entity instanceof PlayerEntity) {
-            return true;
-        }
-        if (entity instanceof AbstractArrowEntity) {
-            return true;
-        }
-        if (entity instanceof MannequinEntity) {
-            return true;
-        }
-        return false;
-    }
+//
+//    public static boolean isSkinnableEntity(@Nullable Entity entity) {
+//        if (entity instanceof PlayerEntity) {
+//            return true;
+//        }
+//        if (entity instanceof AbstractArrowEntity) {
+//            return true;
+//        }
+//        if (entity instanceof MannequinEntity) {
+//            return true;
+//        }
+//        return false;
+//    }
 
     public static boolean shouldRenderPart(ISkinPart skinPart) {
         return true;

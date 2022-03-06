@@ -21,6 +21,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ColouredFace {
 
     private static final PaintColor RAINBOW_TARGET = PaintColor.of(0xff7f7f7f, SkinPaintTypes.RAINBOW);
+    private static final byte[][][] FACE_VERTEXES = new byte[][][]{
+            {{1, 1, 1}, {1, 1, 0}, {0, 1, 0}, {0, 1, 1}, {0, 1, 0}},  // -y
+            {{0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {1, 0, 1}, {0, -1, 0}}, // +y
+            {{1, 0, 1}, {1, 1, 1}, {0, 1, 1}, {0, 0, 1}, {0, 0, 1}},  // -z
+            {{0, 0, 0}, {0, 1, 0}, {1, 1, 0}, {1, 0, 0}, {0, 0, -1}}, // +z
+            {{1, 0, 0}, {1, 1, 0}, {1, 1, 1}, {1, 0, 1}, {1, 0, 0}},  // -x
+            {{0, 0, 1}, {0, 1, 1}, {0, 1, 0}, {0, 0, 0}, {-1, 0, 0}}, // +x
+    };
 
     public final int x;
     public final int y;
@@ -92,7 +100,12 @@ public class ColouredFace {
         if (resolvedColor.getPaintType() == SkinPaintTypes.NONE) {
             return;
         }
-        SkinModelRenderer.renderFace(x, y, z, resolvedColor, alpha, direction, matrixStack, builder);
+        ISkinPaintType paintType = resolvedColor.getPaintType();
+        int color = resolvedColor.getRGB();
+        byte[][] vertexes = FACE_VERTEXES[direction.get3DDataValue()];
+        for (int i = 0; i < 4; ++i) {
+            builder.vertex(x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2]).color(color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff, alpha & 0xff).uv(paintType.getU() / 256.0f, paintType.getV() / 256.0f).normal(vertexes[4][0], vertexes[4][1], vertexes[4][2]).endVertex();
+        }
     }
 
     public ISkinCube getCube() {

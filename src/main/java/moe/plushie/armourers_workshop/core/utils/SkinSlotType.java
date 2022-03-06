@@ -106,6 +106,10 @@ public enum SkinSlotType {
         return name;
     }
 
+    public ISkinType getSkinType() {
+        return skinType;
+    }
+
     private static class Helper {
         static final AtomicInteger COUNTER = new AtomicInteger();
 

@@ -121,15 +121,24 @@ public final class RenderUtils {
         drawLine(builder, mat, x0, y0, z0, x0, y0, z1, color);
     }
 
-    public static void drawPoint(MatrixStack matrix, Vector3f point, int size, @Nullable IRenderTypeBuffer renderTypeBuffer) {
+    public static void drawPoint(MatrixStack matrix, @Nullable IRenderTypeBuffer renderTypeBuffer) {
+        drawPoint(matrix, null, 2, renderTypeBuffer);
+    }
+
+    public static void drawPoint(MatrixStack matrix, @Nullable Vector3f point, int size, @Nullable IRenderTypeBuffer renderTypeBuffer) {
         if (renderTypeBuffer == null) {
             renderTypeBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
         }
         Matrix4f mat = matrix.last().pose();
         IVertexBuilder builder = renderTypeBuffer.getBuffer(RenderType.lines());
-        float x0 = point.x();
-        float y0 = point.y();
-        float z0 = point.z();
+        float x0 = 0;
+        float y0 = 0;
+        float z0 = 0;
+        if (point != null) {
+            x0 = point.x();
+            y0 = point.y();
+            z0 = point.z();
+        }
         drawLine(builder, mat, x0 - size, y0, z0, x0 + size, y0, z0, Color.RED); // x
         drawLine(builder, mat, x0, y0 - size, z0, x0, y0 + size, z0, Color.GREEN); // Y
         drawLine(builder, mat, x0, y0, z0 - size, x0, y0, z0 + size, Color.BLUE); // Z

@@ -35,6 +35,9 @@ public class SkinRenderType extends RenderType {
 
     public static final RenderType MAGIC = createMagicType();
 
+    public static final RenderType ENTITY_OUTLINE = createEntityOutline();
+
+
     public static final SkinRenderType SOLID_FACE = new SkinRenderType("aw_quad_face", createSolidFace(false), true, false);
     public static final SkinRenderType LIGHTING_FACE = new SkinRenderType("aw_lighting_quad_face", createLightingPart(false), false, false);
     public static final SkinRenderType TRANSLUCENT_SOLID_FACE = new SkinRenderType("aw_translucent_quad_face", createSolidFace(true), true, true);
@@ -68,6 +71,23 @@ public class SkinRenderType extends RenderType {
             return SOLID_FACE;
         }
     }
+
+    private static RenderType createEntityOutline() {
+
+        RenderState.LayerState layerState = new RenderState.LayerState("custom_polygon_line_layering", () -> {
+            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+            GL11.glLineWidth(1.0f);
+        }, () -> {
+            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+        });
+
+        RenderType.State states = RenderType.State.builder()
+                .setCullState(NO_CULL)
+                .setLayeringState(layerState)
+                .createCompositeState(false);
+        return RenderType.create("entity_outline", DefaultVertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, states);
+    }
+
 
     private static RenderType createMagicType() {
         RenderType.State states = RenderType.State.builder()

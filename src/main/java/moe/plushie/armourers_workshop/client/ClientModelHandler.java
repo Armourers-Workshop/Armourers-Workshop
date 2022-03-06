@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.client;
 
-import moe.plushie.armourers_workshop.core.render.model.HeldItemModel;
 import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.minecraft.client.renderer.entity.model.BipedModel;
@@ -17,31 +16,31 @@ public class ClientModelHandler extends ModelTransformer {
 
     public static void init() {
         registerBipedModel();
-        registerItemModel();
+//        registerItemModel();
         registerPlayerModel();
     }
 
-    private static void registerItemModel() {
-        // vanilla: xRot=-90º yRot=180º x=-1/1 y=2 z=-10 xRot=180º
-        OffsetModelRenderer thirdPersonLeftItem = new OffsetModelRenderer();
-        thirdPersonLeftItem.y = 2;
-        thirdPersonLeftItem.z = 2;
-        thirdPersonLeftItem.scale = new Vector3f(-1, 1, 1);
-        ModelRenderer thirdPersonRightItem = new ModelRenderer(0, 0, 0, 0);
-        thirdPersonRightItem.y = 2;
-        thirdPersonRightItem.z = 2;
-        registerItem(HeldItemModel.class, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, m -> thirdPersonLeftItem);
-        registerItem(HeldItemModel.class, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, m -> thirdPersonRightItem);
-
-        // vanilla:
-        ModelRenderer firstPersonLeftItem = new ModelRenderer(0, 0, 0, 0);
-        firstPersonLeftItem.z = 1;
-        firstPersonLeftItem.yRot = (float) Math.PI / -2;
-        ModelRenderer firstPersonRightItem = new ModelRenderer(0, 0, 0, 0);
-        firstPersonRightItem.z = 1;
-        registerItem(HeldItemModel.class, ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, m -> firstPersonLeftItem);
-        registerItem(HeldItemModel.class, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, m -> firstPersonRightItem);
-    }
+//    private static void registerItemModel() {
+//        // vanilla: xRot=-90º yRot=180º x=-1/1 y=2 z=-10 xRot=180º
+//        OffsetModelRenderer thirdPersonLeftItem = new OffsetModelRenderer();
+//        thirdPersonLeftItem.y = 2;
+//        thirdPersonLeftItem.z = 2;
+//        thirdPersonLeftItem.scale = new Vector3f(-1, 1, 1);
+//        ModelRenderer thirdPersonRightItem = new ModelRenderer(0, 0, 0, 0);
+//        thirdPersonRightItem.y = 2;
+//        thirdPersonRightItem.z = 2;
+//        registerItem(HeldItemModel.class, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, m -> thirdPersonLeftItem);
+//        registerItem(HeldItemModel.class, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, m -> thirdPersonRightItem);
+//
+//        // vanilla:
+//        ModelRenderer firstPersonLeftItem = new ModelRenderer(0, 0, 0, 0);
+//        firstPersonLeftItem.z = 1;
+//        firstPersonLeftItem.yRot = (float) Math.PI / -2;
+//        ModelRenderer firstPersonRightItem = new ModelRenderer(0, 0, 0, 0);
+//        firstPersonRightItem.z = 1;
+//        registerItem(HeldItemModel.class, ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, m -> firstPersonLeftItem);
+//        registerItem(HeldItemModel.class, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, m -> firstPersonRightItem);
+//    }
 
     private static void registerBipedModel() {
         // simple

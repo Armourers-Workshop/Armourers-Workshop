@@ -35,10 +35,10 @@ import java.util.function.Consumer;
 @OnlyIn(Dist.CLIENT)
 public class PlayerTextureLoader {
 
-    private static final PlayerTextureLoader LOADER = new PlayerTextureLoader();
+    public static final ResourceLocation STEVE_SKIN_LOCATION = new ResourceLocation("textures/entity/steve.png");
+    public static final ResourceLocation ALEX_SKIN_LOCATION = new ResourceLocation("textures/entity/alex.png");
 
-    private static final ResourceLocation STEVE_SKIN_LOCATION = new ResourceLocation("textures/entity/steve.png");
-    private static final ResourceLocation ALEX_SKIN_LOCATION = new ResourceLocation("textures/entity/alex.png");
+    private static final PlayerTextureLoader LOADER = new PlayerTextureLoader();
 
     private final HashMap<String, Optional<GameProfile>> profiles = new HashMap<>();
     private final HashMap<PlayerTextureDescriptor, Optional<PlayerTexture>> textures = new HashMap<>();
@@ -167,6 +167,7 @@ public class PlayerTextureLoader {
         if (image == null) {
             return;
         }
+
         PlayerTexture pendingTexture = null;
         for (Optional<PlayerTexture> texture : textures.values()) {
             if (texture.isPresent() && Objects.equals(texture.get().getURL(), url)) {

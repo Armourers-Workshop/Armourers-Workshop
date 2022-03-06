@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.base.AWItems;
+import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -78,15 +79,15 @@ public class PlayerTextureDescriptor {
         if (itemStack.getItem() != AWItems.MANNEQUIN) {
             return EMPTY;
         }
-        CompoundNBT nbt = itemStack.getTag();
-        if (nbt == null || !nbt.contains(AWConstants.NBT.MANNEQUIN_TEXTURE)) {
+        CompoundNBT entityTag = MannequinItem.getEntityTag(itemStack);
+        if (entityTag == null || !entityTag.contains(AWConstants.NBT.MANNEQUIN_TEXTURE, Constants.NBT.TAG_COMPOUND)) {
             return EMPTY;
         }
         PlayerTextureDescriptor descriptor = DESCRIPTOR_CACHES.getIfPresent(itemStack);
         if (descriptor != null) {
             return descriptor;
         }
-        descriptor = new PlayerTextureDescriptor(nbt.getCompound(AWConstants.NBT.MANNEQUIN_TEXTURE));
+        descriptor = new PlayerTextureDescriptor(entityTag.getCompound(AWConstants.NBT.MANNEQUIN_TEXTURE));
         DESCRIPTOR_CACHES.put(itemStack, descriptor);
         return descriptor;
     }
