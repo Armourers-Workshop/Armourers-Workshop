@@ -12,6 +12,8 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWContributors;
@@ -25,16 +27,20 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemTransformVec3f;
+import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -57,7 +63,8 @@ public final class SkinItemRenderer {
     public static void renderSkin(BakedSkin bakedSkin, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer) {
         Entity entity = getItemStackRenderer().getMannequinEntity();
         BipedModel<?> model = getItemStackRenderer().getMannequinModel();
-        if (entity == null || entity.level == null) {
+        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity);
+        if (renderer == null || entity == null || entity.level == null) {
             return;
         }
         matrixStack.pushPose();
@@ -71,7 +78,7 @@ public final class SkinItemRenderer {
         if (AWConfig.showDebugTargetBounds) {
             RenderUtils.drawBoundingBox(matrixStack, -targetWidth / 2, -targetHeight / 2, -targetDepth / 2, targetWidth / 2, targetHeight / 2, targetDepth / 2, Color.BLUE, renderTypeBuffer);
             if (AWConfig.showDebugTargetPosition) {
-                RenderUtils.drawPoint(matrixStack, AWConstants.ZERO, 2, renderTypeBuffer);
+                RenderUtils.drawPoint(matrixStack, renderTypeBuffer);
             }
         }
 
@@ -79,7 +86,7 @@ public final class SkinItemRenderer {
         matrixStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
 
         SkinRenderBuffer buffer1 = SkinRenderBuffer.getInstance();
-        SkinModelRenderer.renderSkin(bakedSkin, entityDye, entity, model, ItemCameraTransforms.TransformType.NONE, light, partialTicks, matrixStack, buffer1);
+        renderer.render(entity, model, bakedSkin, entityDye, ItemCameraTransforms.TransformType.NONE, light, partialTicks, matrixStack, buffer1);
         buffer1.endBatch();
 
         matrixStack.popPose();
@@ -103,7 +110,7 @@ public final class SkinItemRenderer {
         if (AWConfig.showDebugTargetBounds) {
             RenderUtils.drawBoundingBox(matrixStack, -targetWidth / 2, -targetHeight / 2, -targetDepth / 2, targetWidth / 2, targetHeight / 2, targetDepth / 2, Color.BLUE, renderTypeBuffer);
             if (AWConfig.showDebugTargetPosition) {
-                RenderUtils.drawPoint(matrixStack, AWConstants.ZERO, 2, renderTypeBuffer);
+                RenderUtils.drawPoint(matrixStack, renderTypeBuffer);
             }
         }
 
@@ -191,8 +198,10 @@ public final class SkinItemRenderer {
                     profile = new GameProfile(contributor.uuid, contributor.username);
                 }
                 PlayerTextureDescriptor descriptor = new PlayerTextureDescriptor(profile);
+                CompoundNBT entityTag = new CompoundNBT();
+                entityTag.put(AWConstants.NBT.MANNEQUIN_TEXTURE, descriptor.serializeNBT());
                 playerMannequinItem = new ItemStack(AWItems.MANNEQUIN);
-                playerMannequinItem.getOrCreateTag().put(AWConstants.NBT.MANNEQUIN_TEXTURE, descriptor.serializeNBT());
+                playerMannequinItem.getOrCreateTag().put(AWConstants.NBT.ENTITY, entityTag);
             }
             return playerMannequinItem;
         }

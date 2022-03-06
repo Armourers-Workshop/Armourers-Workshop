@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ModelManager.class)
 public class ModelManagerMixin {
 
-
     @Inject(method = "getAtlas", at = @At("HEAD"), cancellable = true)
     private void hooked_getAtlas(ResourceLocation location, CallbackInfoReturnable<AtlasTexture> cir) {
         if (location.equals(RenderUtils.TEX_ITEMS)) {

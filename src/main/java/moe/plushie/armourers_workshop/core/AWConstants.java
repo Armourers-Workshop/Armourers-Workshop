@@ -22,6 +22,8 @@ public final class AWConstants {
 
         public static final String COLOR = "Color";
 
+        public static final String ENTITY = "EntityTag";
+
         public static final String MANNEQUIN_IS_SMALL = "Small";
         public static final String MANNEQUIN_IS_FLYING = "Flying";
         public static final String MANNEQUIN_IS_GHOST = "Ghost";

@@ -42,6 +42,7 @@ public class AWRegistry {
         event.getRegistry().registerAll(
                 AWItems.SKIN,
                 AWItems.BOTTLE,
+                AWItems.WAND_OF_STYLE,
                 AWItems.MANNEQUIN
         );
     }

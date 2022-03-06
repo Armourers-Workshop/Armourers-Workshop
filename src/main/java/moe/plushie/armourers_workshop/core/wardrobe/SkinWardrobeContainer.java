@@ -21,19 +21,15 @@ import java.util.List;
 @SuppressWarnings("NullableProblems")
 public class SkinWardrobeContainer extends Container {
 
-    public static final ContainerType<SkinWardrobeContainer> TYPE = ContainerTypeBuilder
+    private final ArrayList<Slot> customSlots = new ArrayList<>();    public static final ContainerType<SkinWardrobeContainer> TYPE = ContainerTypeBuilder
             .create(SkinWardrobeContainer::new, SkinWardrobe.class)
             .withTitle(TranslateUtils.title("inventory.armourers_workshop.wardrobe"))
             .withDataCoder(SkinWardrobeProvider::by, SkinWardrobeProvider::to)
             .build("wardrobe");
-
-    private final ArrayList<Slot> customSlots = new ArrayList<>();
     private final SkinWardrobe wardrobe;
-
     private final int slotsX = 83;
     private final int slotsY = 27;
     private Group group = null;
-
     public SkinWardrobeContainer(int containerId, PlayerInventory inventory, SkinWardrobe wardrobe) {
         super(TYPE, containerId);
         this.wardrobe = wardrobe;
@@ -46,14 +42,7 @@ public class SkinWardrobeContainer extends Container {
         addSkinSlots(SkinSlotType.FEET, Group.SKINS, 0, 3);
         addSkinSlots(SkinSlotType.WINGS, Group.SKINS, 0, 4);
 
-        addSkinSlots(SkinSlotType.SWORD, Group.SKINS, 0, 5);
-        addSkinSlots(SkinSlotType.SHIELD, Group.SKINS, 1, 5);
-        addSkinSlots(SkinSlotType.BOW, Group.SKINS, 2, 5);
-
-        addSkinSlots(SkinSlotType.PICKAXE, Group.SKINS, 4, 5);
-        addSkinSlots(SkinSlotType.AXE, Group.SKINS, 5, 5);
-        addSkinSlots(SkinSlotType.SHOVEL, Group.SKINS, 6, 5);
-        addSkinSlots(SkinSlotType.HOE, Group.SKINS, 7, 5);
+        addEquipmentSlots(Group.SKINS, 0, 5);
 
         addSkinSlots(SkinSlotType.OUTFIT, Group.OUTFITS, 0, 0);
         addSkinSlots(SkinSlotType.DYE, Group.DYES, 0, 0);
@@ -74,6 +63,32 @@ public class SkinWardrobeContainer extends Container {
         }
     }
 
+    protected void addEquipmentSlots(Group group, int column, int row) {
+        SkinSlotType[] slotTypes = {
+                SkinSlotType.SWORD,
+                SkinSlotType.SHIELD,
+                SkinSlotType.BOW,
+                null,
+                SkinSlotType.PICKAXE,
+                SkinSlotType.AXE,
+                SkinSlotType.SHOVEL,
+                SkinSlotType.HOE
+        };
+        boolean hasContents = false;
+        for (SkinSlotType slotType : slotTypes) {
+            if (slotType != null) {
+                int count = wardrobe.getUnlockedSize(slotType);
+                if (count > 0) {
+                    hasContents = true;
+                    addSkinSlots(slotType, group, column, row);
+                    column += count;
+                }
+            } else if (hasContents) {
+                column += 1;
+            }
+        }
+    }
+
     protected void addMannequinSlots(Group group, int column, int row) {
         if (wardrobe.getEntity() instanceof MannequinEntity) {
             IInventory inventory = ((MannequinEntity) wardrobe.getEntity()).getInventory();
@@ -86,7 +101,6 @@ public class SkinWardrobeContainer extends Container {
             }
         }
     }
-
 
     protected void addSkinSlots(SkinSlotType slotType, Group group, int column, int row) {
         int index = slotType.getIndex();
@@ -183,6 +197,7 @@ public class SkinWardrobeContainer extends Container {
         public boolean shouldRenderPlayerInventory() {
             return exchanges;
         }
+
         public int getExtendedHeight() {
             return extendedHeight;
         }
@@ -226,4 +241,6 @@ public class SkinWardrobeContainer extends Container {
             return getGroup() == group;
         }
     }
+
+
 }

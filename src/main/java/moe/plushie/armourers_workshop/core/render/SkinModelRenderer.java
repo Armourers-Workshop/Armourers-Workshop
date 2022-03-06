@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
+import moe.plushie.armourers_workshop.core.base.AWEntities;
 import moe.plushie.armourers_workshop.core.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.color.PaintColor;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
@@ -12,9 +13,14 @@ import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.data.adapter.SkinAdapter;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinUtils;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
@@ -30,51 +36,41 @@ import java.awt.*;
 @OnlyIn(Dist.CLIENT)
 public final class SkinModelRenderer {
 
-    private final static byte[][][] FACE_VERTEXES = new byte[][][]{
-            {{1, 1, 1}, {1, 1, 0}, {0, 1, 0}, {0, 1, 1}, {0, 1, 0}},  // -y
-            {{0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {1, 0, 1}, {0, -1, 0}}, // +y
-            {{1, 0, 1}, {1, 1, 1}, {0, 1, 1}, {0, 0, 1}, {0, 0, 1}},  // -z
-            {{0, 0, 0}, {0, 1, 0}, {1, 1, 0}, {1, 0, 0}, {0, 0, -1}}, // +z
-            {{1, 0, 0}, {1, 1, 0}, {1, 1, 1}, {1, 0, 1}, {1, 0, 0}},  // -x
-            {{0, 0, 1}, {0, 1, 1}, {0, 1, 0}, {0, 0, 0}, {-1, 0, 0}}, // +x
-    };
 
-// VillagerEntity
-// VillagerModel
 
-    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, Entity entity, Model model, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, MatrixStack matrixStack, SkinRenderBuffer buffers) {
-        Skin skin = bakedSkin.getSkin();
-        SkinVertexBufferBuilder builder = buffers.getBuffer(skin);
-
-        int index = 0;
-        ColorScheme scheme1 = bakedSkin.resolve(entity, scheme);
-        for (BakedSkinPart part : bakedSkin.getSkinParts()) {
-            boolean shouldRenderPart = bakedSkin.shouldRenderPart(part, entity, transformType);
-            ModelRenderer modelRenderer = ModelTransformer.getTransform(part.getType(), model, transformType);
-            if (modelRenderer == null) {
-                continue;
-            }
-            matrixStack.pushPose();
-            ModelTransformer.apply(matrixStack, modelRenderer);
-            SkinUtils.apply(matrixStack, entity, part.getPart(), partialTicks);
-
-            builder.addPartData(part, scheme1, light, partialTicks, matrixStack, shouldRenderPart);
-            if (shouldRenderPart) {
-                if (AWConfig.showDebugTargetPosition) {
-                    builder.addShapeData(AWConstants.ZERO, matrixStack);
-                }
-                if (AWConfig.showDebugPartFrame) {
-                    builder.addShapeData(part.getRenderShape().bounds(), ColorUtils.getPaletteColor(index++), matrixStack);
-                }
-            }
-
-            matrixStack.popPose();
-        }
-
-        if (AWConfig.showDebugFullFrame) {
-            builder.addShapeData(bakedSkin.getRenderShape(model, transformType).bounds(), Color.RED, matrixStack);
-        }
-    }
+//    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, Entity entity, Model model, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, MatrixStack matrixStack, SkinRenderBuffer buffers) {
+//        Skin skin = bakedSkin.getSkin();
+//        SkinVertexBufferBuilder builder = buffers.getBuffer(skin);
+//        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity);
+//        if (renderer == null) {
+//            return;
+//        }
+//
+//        int index = 0;
+//        ColorScheme scheme1 = bakedSkin.resolve(entity, scheme);
+//        for (BakedSkinPart bakedPart : bakedSkin.getSkinParts()) {
+//            if (!renderer.prepare(entity, model, bakedSkin, bakedPart, transformType)) {
+//                continue;
+//            }
+//            boolean shouldRenderPart = bakedSkin.shouldRenderPart(bakedPart, entity, transformType);
+//            matrixStack.pushPose();
+//            renderer.apply(entity, model, bakedSkin, bakedPart, transformType, partialTicks, matrixStack);
+//            builder.addPartData(bakedPart, scheme1, light, partialTicks, matrixStack, shouldRenderPart);
+//            if (shouldRenderPart) {
+//                if (AWConfig.showDebugTargetPosition) {
+//                    builder.addShapeData(AWConstants.ZERO, matrixStack);
+//                }
+//                if (AWConfig.showDebugPartFrame) {
+//                    builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(index++), matrixStack);
+//                }
+//            }
+//            matrixStack.popPose();
+//        }
+//
+//        if (AWConfig.showDebugFullFrame) {
+//            builder.addShapeData(bakedSkin.getRenderShape(entity, model, transformType).bounds(), Color.RED, matrixStack);
+//        }
+//    }
 
 //    public static boolean isPlayersArmSlim(BipedModel modelBiped, PlayerEntity entityPlayer, EnumHandSide handSide) {
 //        boolean slim = false;
@@ -153,14 +149,7 @@ public final class SkinModelRenderer {
 //        return helperModelsMap.get(skinType.getRegistryName() + ":" + modelType.name());
 //    }
 
-    public static void renderFace(int x, int y, int z, PaintColor resolvedColor, int alpha, Direction direction, MatrixStack matrixStack, IVertexBuilder builder) {
-        ISkinPaintType paintType = resolvedColor.getPaintType();
-        int color = resolvedColor.getRGB();
-        byte[][] vertexes = FACE_VERTEXES[direction.get3DDataValue()];
-        for (int i = 0; i < 4; ++i) {
-            builder.vertex(x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2]).color(color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff, alpha & 0xff).uv(paintType.getU() / 256.0f, paintType.getV() / 256.0f).normal(vertexes[4][0], vertexes[4][1], vertexes[4][2]).endVertex();
-        }
-    }
+
 
     private boolean isPlayerWearingSkirt(PlayerEntity player) {
 //        IEntitySkinCapability skinCapability = EntitySkinCapability.get(player);

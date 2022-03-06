@@ -3,14 +3,19 @@ package moe.plushie.armourers_workshop.core.render.bake;
 import com.google.common.collect.Range;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
+import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.action.ICanUse;
 import moe.plushie.armourers_workshop.core.api.client.render.IBakedSkin;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.model.ModelTransformer;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.data.adapter.SkinAdapter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.utils.CustomVoxelShape;
@@ -86,6 +91,10 @@ public class BakedSkin implements IBakedSkin {
         return skin;
     }
 
+    public ISkinType getType() {
+        return skin.getType();
+    }
+
     public List<BakedSkinPart> getSkinParts() {
         return skinParts;
     }
@@ -102,7 +111,7 @@ public class BakedSkin implements IBakedSkin {
             return bounds;
         }
         Matrix4f matrix = Matrix4f.createScaleMatrix(1, 1, 1);
-        CustomVoxelShape shape = getRenderShape(model, ItemCameraTransforms.TransformType.NONE);
+        CustomVoxelShape shape = getRenderShape(entity, model, ItemCameraTransforms.TransformType.NONE);
         if (rotation != null) {
             matrix.multiply(new Quaternion(rotation.x(), rotation.y(), rotation.z(), true));
             shape.mul(matrix);
@@ -120,20 +129,22 @@ public class BakedSkin implements IBakedSkin {
         return bounds;
     }
 
-    public CustomVoxelShape getRenderShape(Model model, ItemCameraTransforms.TransformType transformType) {
+    public CustomVoxelShape getRenderShape(Entity entity, Model model, ItemCameraTransforms.TransformType transformType) {
+        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity);
+        if (renderer == null) {
+            return CustomVoxelShape.empty();
+        }
         CustomVoxelShape shape = CustomVoxelShape.empty();
         MatrixStack matrixStack = new MatrixStack();
         for (BakedSkinPart part : skinParts) {
-            CustomVoxelShape shape1 = part.getRenderShape().copy();
-            ModelRenderer modelRenderer = ModelTransformer.getTransform(part.getType(), model, transformType);
-            if (modelRenderer != null) {
+            if (renderer.prepare(entity, model, this, part, transformType)) {
+                CustomVoxelShape shape1 = part.getRenderShape().copy();
                 matrixStack.pushPose();
-                ModelTransformer.apply(matrixStack, modelRenderer);
-                SkinUtils.apply(matrixStack, null, part.getPart(), 0);
+                renderer.apply(entity, model, this, part, transformType, 0, matrixStack);
                 shape1.mul(matrixStack.last().pose());
                 matrixStack.popPose();
+                shape.add(shape1);
             }
-            shape.add(shape1);
         }
         return shape;
     }

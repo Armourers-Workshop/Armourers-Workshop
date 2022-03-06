@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.wardrobe;
 
 import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -25,8 +26,8 @@ public class SkinWardrobeProvider implements ICapabilityProvider, INBTSerializab
 
     public final SkinWardrobe wardrobe;
 
-    public SkinWardrobeProvider(Entity entity) {
-        this.wardrobe = new SkinWardrobe(entity);
+    public SkinWardrobeProvider(Entity entity, EntityProfile profile) {
+        this.wardrobe = new SkinWardrobe(entity, profile);
     }
 
     @Nullable

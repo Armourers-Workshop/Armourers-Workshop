@@ -31,8 +31,15 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 
-// /give @p armourers_workshop:dye-bottle{color:0x3ff0000}
-// /give @p armourers_workshop:skin 1 0
+// /give @p armourers_workshop:dye-bottle{Color:0x3ff0000}
+// /give @p armourers_workshop:skin
+
+// /give @p armourers_workshop:mannequin{EntityTag:{Scale:0.5f,Texture:{URL:"http://plushie.moe/skins/maid1.png"}}}
+// /give @p armourers_workshop:mannequin{EntityTag:{Scale:2.0f,Texture:{User:{Name:RiskyKen}}}}
+// /give @p armourers_workshop:mannequin{EntityTag:{Scale:7.0f}}
+
+// /summon armourers_workshop:mannequin ~ ~1 ~ {ForgeCaps:{"armourers_workshop:entity-skin-provider":{Items:[{Slot:57b,id:"armourers_workshop:skin",Count:1b,tag:{ArmourersWorkshop:{SkinType:"armourers:outfit",Identifier:"db:a4df668d-0a2a-4f80-a89a-066f64b7fbd4"}}}]}}}
+
 
 public class SkinCommands {
 

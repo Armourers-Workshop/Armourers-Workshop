@@ -18,6 +18,7 @@ public final class ContainerOpener {
         registry.put(type, opener);
     }
 
+    @SuppressWarnings("unchecked")
     public static <I> boolean openContainer(ContainerType<?> type, PlayerEntity player, I host) {
         Opener<I> opener = (Opener<I>) registry.get(type);
         if (opener == null) {

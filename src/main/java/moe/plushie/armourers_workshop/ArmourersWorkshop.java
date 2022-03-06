@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.common.ArmourersConfig;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
+import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.registry.AWRegistry;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
@@ -86,8 +87,9 @@ public class ArmourersWorkshop {
     @SubscribeEvent
     public void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         Entity entity = event.getObject();
-        if (AWConfig.isSkinnableEntity(entity)) {
-            event.addCapability(SkinWardrobeProvider.WARDROBE_ID, new SkinWardrobeProvider(entity));
+        EntityProfile profile = EntityProfile.getProfile(entity);
+        if (profile != null) {
+            event.addCapability(SkinWardrobeProvider.WARDROBE_ID, new SkinWardrobeProvider(entity, profile));
         }
     }
 
@@ -121,7 +123,7 @@ public class ArmourersWorkshop {
         if (event.isCanceled()) {
             return;
         }
-        if (!AWConfig.isSkinnableEntity(event.getTarget())) {
+        if (EntityProfile.getProfile(event.getTarget()) == null) {
             return;
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(event.getTarget());

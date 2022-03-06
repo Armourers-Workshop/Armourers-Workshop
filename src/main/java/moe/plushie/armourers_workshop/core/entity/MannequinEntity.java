@@ -179,6 +179,15 @@ public class MannequinEntity extends ArmorStandEntity {
     }
 
     @Override
+    public void setYBodyRot(float rot) {
+        this.yRotO = this.yRot = 0;
+        this.yBodyRotO = this.yBodyRot = 0;
+        this.yHeadRotO = this.yHeadRot = 0;
+        Rotations rotations = getBodyPose();
+        setBodyPose(new Rotations(rotations.getX(), rot, rotations.getZ()));
+    }
+
+    @Override
     public ActionResultType interactAt(PlayerEntity player, Vector3d pos, Hand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (this.isMarker()) {
@@ -196,9 +205,8 @@ public class MannequinEntity extends ArmorStandEntity {
             return ActionResultType.SUCCESS;
         }
         if (player.isShiftKeyDown()) {
-            Rotations rotations = getBodyPose();
             double angle = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
-            setBodyPose(new Rotations(rotations.getX(), (float) angle, rotations.getZ()));
+            setYBodyRot((float) angle);
             return ActionResultType.SUCCESS;
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);

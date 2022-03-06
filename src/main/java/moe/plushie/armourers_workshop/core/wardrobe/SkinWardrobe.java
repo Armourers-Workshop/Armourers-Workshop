@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.core.wardrobe;
 
 import com.google.common.cache.Cache;
+import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.ISkinWardrobe;
-import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
@@ -32,13 +34,15 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
 
     private final WeakReference<Entity> entity;
     private final SkinWardrobeState state;
+    private final EntityProfile profile;
 
     private int id; // a.k.a entity id
 
-    public SkinWardrobe(Entity entity) {
+    public SkinWardrobe(Entity entity, EntityProfile profile) {
         this.id = entity.getId();
         this.state = new SkinWardrobeState(inventory);
         this.entity = new WeakReference<>(entity);
+        this.profile = profile;
         this.inventory.addListener(inventory -> state.invalidateAll());
     }
 
@@ -57,6 +61,10 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         wardrobe.addListener(self -> caches.invalidate(key));
         caches.put(key, wardrobe);
         return wardrobe.resolve().orElse(null);
+    }
+
+    public EntityProfile getProfile() {
+        return profile;
     }
 
     public int getFreeSlot(SkinSlotType slotType) {
@@ -115,10 +123,13 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         if (slotType == SkinSlotType.DYE) {
             return 8;
         }
-        if (getEntity() instanceof MannequinEntity) {
-            if (!slotType.isArmor()) {
-                return 0;
-            }
+        Integer modifiedSize = skinSlots.get(slotType);
+        if (modifiedSize != null) {
+            return Math.min(slotType.getSize(), modifiedSize);
+        }
+        ISkinType type = slotType.getSkinType();
+        if (type != null) {
+            return Math.min(slotType.getSize(), profile.getMaxCount(type));
         }
         return slotType.getSize();
     }

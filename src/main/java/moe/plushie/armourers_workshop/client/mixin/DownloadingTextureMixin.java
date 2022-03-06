@@ -20,7 +20,6 @@ public class DownloadingTextureMixin {
 
     private static boolean slimModel = false;
 
-    //
     @Inject(method = "processLegacySkin", at = @At(value = "HEAD"))
     private static void hooked_processLegacySkin(NativeImage image, CallbackInfoReturnable<NativeImage> cir) {
         slimModel = false;
