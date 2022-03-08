@@ -6,10 +6,13 @@ import moe.plushie.armourers_workshop.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.common.ArmourersConfig;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.base.AWEntities;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.registry.AWRegistry;
+import moe.plushie.armourers_workshop.core.render.renderer.*;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
@@ -87,7 +90,7 @@ public class ArmourersWorkshop {
     @SubscribeEvent
     public void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         Entity entity = event.getObject();
-        EntityProfile profile = EntityProfile.getProfile(entity);
+        EntityProfile profile = EntityProfiles.getProfile(entity);
         if (profile != null) {
             event.addCapability(SkinWardrobeProvider.WARDROBE_ID, new SkinWardrobeProvider(entity, profile));
         }
@@ -123,7 +126,7 @@ public class ArmourersWorkshop {
         if (event.isCanceled()) {
             return;
         }
-        if (EntityProfile.getProfile(event.getTarget()) == null) {
+        if (EntityProfiles.getProfile(event.getTarget()) == null) {
             return;
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(event.getTarget());
@@ -133,6 +136,7 @@ public class ArmourersWorkshop {
     }
 
     private void onCommonSetup(FMLLoadCompleteEvent event) {
+        EntityProfiles.init();
         ArmourersConfig.init();
         NetworkHandler.init(AWCore.resource("aw2"));
 

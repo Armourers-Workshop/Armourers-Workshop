@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.wardrobe;
 
 import com.google.common.cache.Cache;
-import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.ISkinWardrobe;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;

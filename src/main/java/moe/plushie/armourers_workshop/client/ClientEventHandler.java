@@ -1,26 +1,16 @@
 package moe.plushie.armourers_workshop.client;
 
-import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.base.AWEntities;
-import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
 import moe.plushie.armourers_workshop.core.handler.ItemTooltipHandler;
 import moe.plushie.armourers_workshop.core.handler.KeyboardHandler;
 import moe.plushie.armourers_workshop.core.handler.PlacementHighlightHandler;
 import moe.plushie.armourers_workshop.core.handler.PlayerNetworkHandler;
-import moe.plushie.armourers_workshop.core.render.layer.SkinWardrobeArmorLayer;
-import moe.plushie.armourers_workshop.core.render.skin.*;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
+import moe.plushie.armourers_workshop.core.render.renderer.*;
+import net.minecraft.client.renderer.entity.PiglinRenderer;
+import net.minecraft.client.renderer.entity.WitchRenderer;
+import net.minecraft.client.renderer.entity.WitherSkeletonRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.client.renderer.entity.model.SlimeModel;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,13 +19,9 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.Map;
-
 
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
-
-    static ClientEventHandler handler;
 
     //    @SubscribeEvent
 //    public void onPlayerClone(PlayerEvent.Clone event) {
@@ -45,13 +31,11 @@ public class ClientEventHandler {
 ////        mana.setMana(oldMana.getMana());
 //    }
     public static void init(IEventBus eventBus) {
-        handler = new ClientEventHandler();
-        eventBus.register(handler);
+        eventBus.register(new ClientEventHandler());
         eventBus.register(new ItemTooltipHandler());
         eventBus.register(new KeyboardHandler());
         eventBus.register(new PlayerNetworkHandler());
         eventBus.register(new PlacementHighlightHandler());
-        handler.addCustomLayers();
     }
 
 
@@ -61,28 +45,25 @@ public class ClientEventHandler {
             return;
         }
         LivingEntity entity = event.getEntity();
-        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-        if (wardrobe == null) {
-            return;
-        }
-        // Limit the players limbs if they have a skirt equipped.
-        // A proper lady should not swing her legs around!
-        SkinWardrobeState snapshot = wardrobe.snapshot();
-        if (snapshot.hasPart(SkinPartTypes.BIPED_SKIRT)) {
-            if (entity.animationSpeed > 0.25F) {
-                entity.animationSpeed = 0.25F;
-                entity.animationSpeedOld = 0.25F;
-            }
-        }
-        if (!AWConfig.enableModelOverridden) {
-            return;
-        }
-        EntityModel<?> entityModel = event.getRenderer().getModel();
         SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity);
-        if (renderer == null) {
+        if (renderer != null) {
+            EntityModel<?> entityModel = event.getRenderer().getModel();
+            renderer.willRender(entity, entityModel, event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
+        }
+    }
+
+
+    @SubscribeEvent
+    public void onRenderLivingPost(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
+        if (event.isCanceled()) {
             return;
         }
-        renderer.override(entity, entityModel, wardrobe);
+        LivingEntity entity = event.getEntity();
+        SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity);
+        if (renderer != null) {
+            EntityModel<?> entityModel = event.getRenderer().getModel();
+            renderer.didRender(entity, entityModel, event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
+        }
     }
 
 //    @SubscribeEvent
@@ -127,16 +108,4 @@ public class ClientEventHandler {
 //        }
 //    }
 
-
-    private void addCustomLayers() {
-        SkinRendererManager rendererManager = SkinRendererManager.getInstance();
-        rendererManager.register(EntityProfile.PLAYER, LivingSkinRenderer::new);
-        rendererManager.register(EntityProfile.ARROW, ArrowSkinRenderer::new);
-        rendererManager.register(EntityProfile.VILLAGER, VillagerSkinRenderer::new);
-        rendererManager.register(EntityProfile.SKELETON, LivingSkinRenderer::new);
-        rendererManager.register(EntityProfile.ZOMBIE, LivingSkinRenderer::new);
-//        rendererManager.register(EntityProfile.SLIME, LivingSkinRenderer::new);
-
-        rendererManager.register(EntityProfile.MANNEQUIN, LivingSkinRenderer::new);
-    }
 }

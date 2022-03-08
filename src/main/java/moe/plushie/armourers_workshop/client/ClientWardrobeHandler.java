@@ -5,13 +5,12 @@ import moe.plushie.armourers_workshop.common.ArmourersConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
-import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
-import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
+import moe.plushie.armourers_workshop.core.render.renderer.SkinRenderer;
+import moe.plushie.armourers_workshop.core.render.renderer.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
@@ -36,7 +35,6 @@ public class ClientWardrobeHandler {
     public final static float SCALE = 1 / 16f;
 
     public static void init() {
-        ClientModelHandler.init();
     }
 
     public static void onRenderArrow(AbstractArrowEntity entity, Model model, float p_225623_2_, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer renderType, CallbackInfo callback) {
@@ -59,7 +57,7 @@ public class ClientWardrobeHandler {
         matrixStack.scale(-SCALE, -SCALE, SCALE);
         matrixStack.translate(0, 0, -1);
 
-        int count = render(wardrobe, entity, model, light, matrixStack, null, SkinWardrobeState::getItemSkins);
+        int count = render(wardrobe, entity, model, light, matrixStack, ItemCameraTransforms.TransformType.NONE, SkinWardrobeState::getItemSkins);
         if (count != 0) {
             callback.cancel();
         }

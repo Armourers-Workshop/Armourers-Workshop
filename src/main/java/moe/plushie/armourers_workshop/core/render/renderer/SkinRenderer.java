@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.render.skin;
+package moe.plushie.armourers_workshop.core.render.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.AWConfig;
@@ -16,29 +16,40 @@ import moe.plushie.armourers_workshop.core.render.buffer.SkinVertexBufferBuilder
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinUtils;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-
+@OnlyIn(Dist.CLIENT)
 public class SkinRenderer<T extends Entity, M extends Model> {
 
-    protected final EntityType<T> type;
-    protected final EntityProfile<T> profile;
+    protected final EntityProfile profile;
     protected final Transformer<M> transformer = new Transformer<>();
 
-    public SkinRenderer(EntityType<T> entityType) {
-        this.type = entityType;
-        this.profile = EntityProfile.getProfile(entityType);
+    protected final ArrayList<ModelRenderer> overriders = new ArrayList<>();
+
+
+    public SkinRenderer(EntityProfile profile) {
+        this.profile = profile;
+    }
+
+    public void init(EntityRenderer<T> entityRenderer) {
+    }
+
+    public void initTransformers() {
     }
 
     public boolean prepare(T entity, M model, BakedSkin bakedSkin, BakedSkinPart bakedPart, ItemCameraTransforms.TransformType transformType) {
@@ -51,8 +62,6 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         return transformer.armors.containsKey(bakedPart.getType());
     }
 
-    public void override(T entity, M model, SkinWardrobe wardrobe) {
-    }
 
     public void apply(T entity, M model, BakedSkin bakedSkin, BakedSkinPart bakedPart, ItemCameraTransforms.TransformType transformType, float partialTicks, MatrixStack matrixStack) {
         ISkinPartType partType = bakedPart.getType();
@@ -69,6 +78,10 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             op.apply(matrixStack, model, transformType, bakedPart);
             SkinUtils.apply(matrixStack, entity, bakedPart.getPart(), partialTicks);
         }
+    }
+
+    public void willRender(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+        overriders.clear();
     }
 
     public void render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, MatrixStack matrixStack, SkinRenderBuffer buffers) {
@@ -104,11 +117,22 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         }
     }
 
-    public EntityType<T> getType() {
-        return type;
+    public void didRender(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+        for (ModelRenderer modelRenderer : overriders) {
+            modelRenderer.visible = true;
+        }
+        overriders.clear();
     }
 
-    public EntityProfile<T> getProfile() {
+    protected void addOverrider(ModelRenderer modelRenderer) {
+        if (!modelRenderer.visible) {
+            return;
+        }
+        modelRenderer.visible = false;
+        overriders.add(modelRenderer);
+    }
+
+    public EntityProfile getProfile() {
         return profile;
     }
 
@@ -156,6 +180,9 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             if (modelRenderer.xRot != 0) {
                 matrixStack.mulPose(Vector3f.XP.rotation(modelRenderer.xRot));
             }
+        }
+
+        public static <M> void none(MatrixStack matrixStack, M model) {
         }
     }
 }
