@@ -28,7 +28,7 @@ import java.util.function.Function;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class RotationSettingPanel extends BaseSettingPanel {
+public class WardrobeRotationSetting extends WardrobeBaseSetting {
 
     private final SkinWardrobe wardrobe;
     private final Entity entity;
@@ -42,7 +42,7 @@ public class RotationSettingPanel extends BaseSettingPanel {
     private AWSliderBox sliderZ;
 
 
-    public RotationSettingPanel(SkinWardrobeContainer container) {
+    public WardrobeRotationSetting(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.man_rotations");
         this.wardrobe = container.getWardrobe();
         this.entity = container.getEntity();

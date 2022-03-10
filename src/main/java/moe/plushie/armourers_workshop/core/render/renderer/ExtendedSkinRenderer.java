@@ -29,7 +29,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
     @Override
     public void initTransformers() {
         transformer.registerArmor(SkinPartTypes.BIPED_HAT, accessor::getHat);
-        transformer.registerArmor(SkinPartTypes.BIPED_HEAD, this::setHead);
+        transformer.registerArmor(SkinPartTypes.BIPED_HEAD, this::setHeadPart);
         transformer.registerArmor(SkinPartTypes.BIPED_CHEST, accessor::getBody);
         transformer.registerArmor(SkinPartTypes.BIPED_LEFT_ARM, accessor::getLeftArm);
         transformer.registerArmor(SkinPartTypes.BIPED_RIGHT_ARM, accessor::getRightArm);
@@ -37,7 +37,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         transformer.registerArmor(SkinPartTypes.BIPED_RIGHT_FOOT, accessor::getRightLeg);
         transformer.registerArmor(SkinPartTypes.BIPED_LEFT_LEG, accessor::getLeftLeg);
         transformer.registerArmor(SkinPartTypes.BIPED_RIGHT_LEG, accessor::getRightLeg);
-        transformer.registerArmor(SkinPartTypes.BIPED_SKIRT, this::setSkirt);
+        transformer.registerArmor(SkinPartTypes.BIPED_SKIRT, this::setSkirtPart);
         transformer.registerArmor(SkinPartTypes.BIPED_RIGHT_WING, this::setWings);
         transformer.registerArmor(SkinPartTypes.BIPED_LEFT_WING, this::setWings);
 
@@ -45,10 +45,10 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         transformer.registerItem(ItemCameraTransforms.TransformType.GUI, Transformer::none);
         transformer.registerItem(ItemCameraTransforms.TransformType.FIXED, Transformer::none);
         transformer.registerItem(ItemCameraTransforms.TransformType.GROUND, Transformer::none);
-        transformer.registerItem(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, this::setLeftHand);
-        transformer.registerItem(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, this::setRightHand);
-        transformer.registerItem(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, this::setLeftHand);
-        transformer.registerItem(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, this::setRightHand);
+        transformer.registerItem(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, this::setLeftHandPart);
+        transformer.registerItem(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, this::setRightHandPart);
+        transformer.registerItem(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, this::setLeftHandPart);
+        transformer.registerItem(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, this::setRightHandPart);
     }
 
     @Override
@@ -97,15 +97,11 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
     public abstract IPartAccessor<M> getAccessor();
 
 
-    private void setHead(MatrixStack matrixStack, M model) {
+    protected void setHeadPart(MatrixStack matrixStack, M model) {
         transformer.apply(matrixStack, accessor.getHead(model));
-        if (model.young) {
-            float scale = accessor.getHeadScale(model);
-            matrixStack.scale(scale, scale, scale);
-        }
     }
 
-    private void setSkirt(MatrixStack matrixStack, M model) {
+    protected void setSkirtPart(MatrixStack matrixStack, M model) {
         ModelRenderer body = accessor.getBody(model);
         ModelRenderer leg = accessor.getRightLeg(model);
         matrixStack.translate(body.x, leg.y, leg.z);
@@ -126,13 +122,13 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         matrixStack.translate(0, 0, 2);
     }
 
-    private void setLeftHand(MatrixStack matrixStack, M model) {
+    private void setLeftHandPart(MatrixStack matrixStack, M model) {
         // vanilla: xRot=-90º yRot=180º x=-1/1 y=2 z=-10 xRot=180º
         matrixStack.translate(0, 2, 2);
         matrixStack.scale(-1, 1, 1);
     }
 
-    private void setRightHand(MatrixStack matrixStack, M model) {
+    private void setRightHandPart(MatrixStack matrixStack, M model) {
         // vanilla: xRot=-90º yRot=180º x=-1/1 y=2 z=-10 xRot=180º
         matrixStack.translate(0, 2, 2);
     }
@@ -153,10 +149,6 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         ModelRenderer getLeftLeg(M model);
 
         ModelRenderer getRightLeg(M model);
-
-        default float getHeadScale(M model) {
-            return 1.0f;
-        }
     }
 }
 

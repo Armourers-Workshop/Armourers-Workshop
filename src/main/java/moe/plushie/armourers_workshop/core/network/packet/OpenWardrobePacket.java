@@ -30,7 +30,7 @@ public class OpenWardrobePacket extends CustomPacket {
         Entity entity = player.level.getEntity(entityId);
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null) {
-            ContainerOpener.openContainer(SkinWardrobeContainer.TYPE, player, wardrobe);
+            ContainerOpener.open(SkinWardrobeContainer.TYPE, player, wardrobe);
         }
     }
 }

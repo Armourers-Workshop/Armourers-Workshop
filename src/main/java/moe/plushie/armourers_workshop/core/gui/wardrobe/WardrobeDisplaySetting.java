@@ -12,11 +12,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class DisplaySettingPanel extends BaseSettingPanel {
+public class WardrobeDisplaySetting extends WardrobeBaseSetting {
 
     private final SkinWardrobe wardrobe;
 
-    public DisplaySettingPanel(SkinWardrobeContainer container) {
+    public WardrobeDisplaySetting(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.display_settings");
         this.wardrobe = container.getWardrobe();
     }

@@ -56,6 +56,11 @@ public class AWConfig {
     public static boolean showF3DebugInfo;
     public static float ploOffset = -0.01f;
 
+    public static boolean showDebugHologramProjector = false;
+
+    public static boolean enableEntityPlacementHighlight = true;
+    public static boolean enableBlockPlacementHighlight = true;
+
     public static boolean enableModelOverridden = true;
     public static boolean enableWireframeRender;
     public static boolean enableMagicWhenContributor = false;
@@ -70,6 +75,7 @@ public class AWConfig {
     public static boolean showWardrobeContributorSetting = true;
 
     public static int prefersWardrobeSlots = 3;
+    public static int prefersWardrobeMobSlots = 3;
     public static int prefersWardrobeDropOnDeath = 0;
 
     // Debug tool

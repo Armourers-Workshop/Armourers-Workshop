@@ -2,22 +2,20 @@ package moe.plushie.armourers_workshop.core.handler;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.AWConstants;
-import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -27,6 +25,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class ItemTooltipHandler {
@@ -36,18 +35,28 @@ public class ItemTooltipHandler {
     private int screenHeight = 0;
     private int screenWidth = 0;
 
-    private final Vector3f scale = new Vector3f(0.625f, 0.625f, 0.625f);
-
-
     @SubscribeEvent
     public void onItemTooltipEvent(ItemTooltipEvent event) {
         if (event.isCanceled()) {
             return;
         }
-        ArrayList<ITextComponent> tooltip = SkinItem.getTooltip(event.getItemStack());
-        if (tooltip.size() != 0) {
-            event.getToolTip().addAll(tooltip);
+        ItemStack itemStack = event.getItemStack();
+        ArrayList<ITextComponent> newTooltips = SkinItem.getTooltip(itemStack);
+        if (newTooltips.isEmpty()) {
+            return;
         }
+        List<ITextComponent> tooltips = event.getToolTip();
+        if (event.getFlags().isAdvanced() && itemStack.getItem().getRegistryName() != null) {
+            String registryName = itemStack.getItem().getRegistryName().toString();
+            for (int index = tooltips.size(); index > 0; --index) {
+                ITextComponent text = tooltips.get(index - 1);
+                if (text instanceof StringTextComponent && registryName.equals(text.getContents())) {
+                    tooltips.addAll(index - 1, newTooltips);
+                    return;
+                }
+            }
+        }
+        tooltips.addAll(newTooltips);
     }
 
     @SubscribeEvent
@@ -94,10 +103,12 @@ public class ItemTooltipHandler {
         IRenderTypeBuffer.Impl renderTypeBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
         matrixStack.pushPose();
         matrixStack.translate(x + size / 2f, y + size / 2f, 500f);
-        matrixStack.scale(-scale.x(), scale.y(), scale.z());
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(150));
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(45 - (float) (t / 10 % 360)));
-        SkinItemRenderer.renderSkin(bakedSkin, scale, AWConstants.ONE, size, size, size, 0, 0xf000f0, matrixStack, renderTypeBuffer);
+        matrixStack.scale(0.625f, 0.625f, 0.625f);
+        matrixStack.scale(size, size, size);
+        matrixStack.scale(-1, 1, 1);
+        SkinItemRenderer.renderSkin(bakedSkin, 0, 0xf000f0, matrixStack, renderTypeBuffer);
         matrixStack.popPose();
         renderTypeBuffer.endBatch();
     }

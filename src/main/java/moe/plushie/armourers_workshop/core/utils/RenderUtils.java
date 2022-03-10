@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.utils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -28,6 +29,8 @@ public final class RenderUtils {
 
     public static final ResourceLocation TEX_WARDROBE_1 = AWCore.resource("textures/gui/wardrobe/wardrobe-1.png");
     public static final ResourceLocation TEX_WARDROBE_2 = AWCore.resource("textures/gui/wardrobe/wardrobe-2.png");
+
+    public static final ResourceLocation TEX_HOLOGRAM_PROJECTOR = AWCore.resource("textures/gui/hologram_projector/hologram-projector.png");
 
     public static final ResourceLocation TEX_TABS = AWCore.resource("textures/gui/controls/tabs.png");
     public static final ResourceLocation TEX_TAB_ICONS = AWCore.resource("textures/gui/controls/tab_icons.png");
@@ -125,7 +128,11 @@ public final class RenderUtils {
         drawPoint(matrix, null, 2, renderTypeBuffer);
     }
 
-    public static void drawPoint(MatrixStack matrix, @Nullable Vector3f point, int size, @Nullable IRenderTypeBuffer renderTypeBuffer) {
+    public static void drawPoint(MatrixStack matrix, @Nullable Vector3f point, float size, @Nullable IRenderTypeBuffer renderTypeBuffer) {
+        drawPoint(matrix, point, size, size, size, renderTypeBuffer);
+    }
+
+    public static void drawPoint(MatrixStack matrix, @Nullable Vector3f point, float width, float height, float depth, @Nullable IRenderTypeBuffer renderTypeBuffer) {
         if (renderTypeBuffer == null) {
             renderTypeBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
         }
@@ -139,9 +146,18 @@ public final class RenderUtils {
             y0 = point.y();
             z0 = point.z();
         }
-        drawLine(builder, mat, x0 - size, y0, z0, x0 + size, y0, z0, Color.RED); // x
-        drawLine(builder, mat, x0, y0 - size, z0, x0, y0 + size, z0, Color.GREEN); // Y
-        drawLine(builder, mat, x0, y0, z0 - size, x0, y0, z0 + size, Color.BLUE); // Z
+        drawLine(builder, mat, x0 - width, y0, z0, x0 + width, y0, z0, Color.RED); // x
+        drawLine(builder, mat, x0, y0 - height, z0, x0, y0 + height, z0, Color.GREEN); // Y
+        drawLine(builder, mat, x0, y0, z0 - depth, x0, y0, z0 + depth, Color.BLUE); // Z
+    }
+
+    public static void drawTargetBox(MatrixStack matrixStack, float width, float height, float depth, IRenderTypeBuffer buffers) {
+        if (AWConfig.showDebugTargetBounds) {
+            drawBoundingBox(matrixStack, -width / 2, -height / 2, -depth / 2, width / 2, height / 2, depth / 2, Color.ORANGE, buffers);
+        }
+        if (AWConfig.showDebugTargetPosition) {
+            drawPoint(matrixStack, null, width, height, depth, buffers);
+        }
     }
 
 

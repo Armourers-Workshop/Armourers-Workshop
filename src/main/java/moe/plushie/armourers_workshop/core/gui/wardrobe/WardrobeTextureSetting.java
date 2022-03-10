@@ -27,7 +27,7 @@ import java.util.HashMap;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class TextureSettingPanel extends BaseSettingPanel {
+public class WardrobeTextureSetting extends WardrobeBaseSetting {
 
     private final SkinWardrobe wardrobe;
     private final HashMap<PlayerTextureDescriptor.Source, String> defaultValues = new HashMap<>();
@@ -38,7 +38,7 @@ public class TextureSettingPanel extends BaseSettingPanel {
     private PlayerTextureDescriptor lastDescriptor = PlayerTextureDescriptor.EMPTY;
     private PlayerTextureDescriptor.Source lastSource = PlayerTextureDescriptor.Source.NONE;
 
-    public TextureSettingPanel(SkinWardrobeContainer container) {
+    public WardrobeTextureSetting(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.man_texture");
         this.wardrobe = container.getWardrobe();
         this.prepareDefaultValue();

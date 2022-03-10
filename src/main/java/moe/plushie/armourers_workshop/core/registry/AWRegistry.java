@@ -1,14 +1,19 @@
 package moe.plushie.armourers_workshop.core.registry;
 
 import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.base.AWBlocks;
 import moe.plushie.armourers_workshop.core.base.AWEntities;
 import moe.plushie.armourers_workshop.core.base.AWItems;
+import moe.plushie.armourers_workshop.core.base.AWTileEntities;
+import moe.plushie.armourers_workshop.core.block.HologramProjectorContainer;
 import moe.plushie.armourers_workshop.core.command.SkinCommands;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.gui.SkinWardrobeScreen;
+import moe.plushie.armourers_workshop.core.gui.hologramprojector.HologramProjectorScreen;
+import moe.plushie.armourers_workshop.core.gui.wardrobe.SkinWardrobeScreen;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
+import moe.plushie.armourers_workshop.core.render.entity.HologramProjectorEntityRenderer;
 import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
@@ -35,22 +40,15 @@ public class AWRegistry {
 
 
     public void registerBlocks(RegistryEvent.Register<Block> event) {
-
+        AWBlocks.forEach(event.getRegistry()::register);
     }
 
     public void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().registerAll(
-                AWItems.SKIN,
-                AWItems.BOTTLE,
-                AWItems.WAND_OF_STYLE,
-                AWItems.MANNEQUIN
-        );
+        AWItems.forEach(event.getRegistry()::register);
     }
 
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
-        event.getRegistry().registerAll(
-                AWEntities.MANNEQUIN
-        );
+        AWEntities.forEach(event.getRegistry()::register);
     }
 
     public void registerEntityAttributes(EntityAttributeCreationEvent event) {
@@ -58,12 +56,13 @@ public class AWRegistry {
     }
 
     public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-
+        AWTileEntities.forEach(event.getRegistry()::register);
     }
 
     public void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
         event.getRegistry().registerAll(
-                SkinWardrobeContainer.TYPE
+                SkinWardrobeContainer.TYPE,
+                HologramProjectorContainer.TYPE
         );
     }
 
@@ -94,9 +93,12 @@ public class AWRegistry {
 //        modEventBus.addListener(this::handleModelBake);
 
         ScreenManager.register(SkinWardrobeContainer.TYPE, SkinWardrobeScreen::new);
+        ScreenManager.register(HologramProjectorContainer.TYPE, HologramProjectorScreen::new);
 
         ClientRegistry.registerKeyBinding(AWKeyBindings.UNDO_KEY);
         ClientRegistry.registerKeyBinding(AWKeyBindings.OPEN_WARDROBE_KEY);
+
+        ClientRegistry.bindTileEntityRenderer(AWTileEntities.HOLOGRAM_PROJECTOR, HologramProjectorEntityRenderer::new);
 
         RenderingRegistry.registerEntityRenderingHandler(AWEntities.MANNEQUIN, MannequinEntityRenderer::new);
     }

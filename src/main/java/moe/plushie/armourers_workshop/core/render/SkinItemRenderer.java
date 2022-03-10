@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.render;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.base.AWEntities;
 import moe.plushie.armourers_workshop.core.base.AWItems;
@@ -41,7 +40,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 
 @OnlyIn(Dist.CLIENT)
 public final class SkinItemRenderer {
@@ -57,8 +55,11 @@ public final class SkinItemRenderer {
         return INSTANCE;
     }
 
+    public static void renderSkin(BakedSkin bakedSkin, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+        renderSkin(bakedSkin, null, AWConstants.ONE, 1, 1, 1, partialTicks, light, matrixStack, buffers);
+    }
 
-    public static void renderSkin(BakedSkin bakedSkin, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer) {
+    public static void renderSkin(BakedSkin bakedSkin, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         Entity entity = getItemStackRenderer().getMannequinEntity();
         BipedModel<?> model = getItemStackRenderer().getMannequinModel();
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity);
@@ -66,19 +67,12 @@ public final class SkinItemRenderer {
             return;
         }
         matrixStack.pushPose();
-        matrixStack.translate(0.5f, 0.5f, 0.5f); // reset to center
         matrixStack.scale(-1, -1, 1);
 
         Rectangle3f rect = bakedSkin.getRenderBounds(entity, model, rotation);
         float newScale = Math.min(targetWidth / rect.getWidth(), targetHeight / rect.getHeight());
         newScale = Math.min(newScale, targetDepth / rect.getDepth());
-
-        if (AWConfig.showDebugTargetBounds) {
-            RenderUtils.drawBoundingBox(matrixStack, -targetWidth / 2, -targetHeight / 2, -targetDepth / 2, targetWidth / 2, targetHeight / 2, targetDepth / 2, Color.BLUE, renderTypeBuffer);
-            if (AWConfig.showDebugTargetPosition) {
-                RenderUtils.drawPoint(matrixStack, renderTypeBuffer);
-            }
-        }
+        RenderUtils.drawTargetBox(matrixStack, targetWidth, targetHeight, targetDepth, buffers);
 
         matrixStack.scale(newScale / scale.x(), newScale / scale.y(), newScale / scale.z());
         matrixStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
@@ -90,13 +84,12 @@ public final class SkinItemRenderer {
         matrixStack.popPose();
     }
 
-    public static void renderMannequin(PlayerTextureDescriptor descriptor, Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer) {
+    public static void renderMannequin(PlayerTextureDescriptor descriptor, Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         MannequinEntity entity = getItemStackRenderer().getMannequinEntity();
         if (entity == null || entity.level == null) {
             return;
         }
         matrixStack.pushPose();
-        matrixStack.translate(0.5f, 0.5f, 0.5f); // reset to center
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(180));
 
         if (!descriptor.equals(entity.getTextureDescriptor())) {
@@ -104,13 +97,7 @@ public final class SkinItemRenderer {
         }
 
         Rectangle3f rect = new Rectangle3f(entity.getBoundingBox());
-
-        if (AWConfig.showDebugTargetBounds) {
-            RenderUtils.drawBoundingBox(matrixStack, -targetWidth / 2, -targetHeight / 2, -targetDepth / 2, targetWidth / 2, targetHeight / 2, targetDepth / 2, Color.BLUE, renderTypeBuffer);
-            if (AWConfig.showDebugTargetPosition) {
-                RenderUtils.drawPoint(matrixStack, renderTypeBuffer);
-            }
-        }
+        RenderUtils.drawTargetBox(matrixStack, targetWidth, targetHeight, targetDepth, buffers);
 
         Rectangle3f resolvedRect = rect.offset(rect.getMidX(), rect.getMidY(), rect.getMidZ());
         resolvedRect.mul(new Matrix4f(new Quaternion(rotation.x(), rotation.y(), rotation.z(), true)));
@@ -145,6 +132,9 @@ public final class SkinItemRenderer {
             IBakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(itemStack);
             ItemTransformVec3f transform = bakedModel.getTransforms().getTransform(transformType);
 
+            matrixStack.pushPose();
+            matrixStack.translate(0.5f, 0.5f, 0.5f); // reset to center
+
             if (item == AWItems.SKIN) {
                 BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(SkinDescriptor.of(itemStack));
                 if (bakedSkin != null) {
@@ -157,6 +147,8 @@ public final class SkinItemRenderer {
                 PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.of(itemStack);
                 renderMannequin(descriptor, transform.rotation, transform.scale, 1, 1, 1, 0, light, matrixStack, renderTypeBuffer);
             }
+
+            matrixStack.popPose();
         }
 
         public MannequinEntity getMannequinEntity() {
@@ -197,7 +189,7 @@ public final class SkinItemRenderer {
                 }
                 PlayerTextureDescriptor descriptor = new PlayerTextureDescriptor(profile);
                 CompoundNBT entityTag = new CompoundNBT();
-                entityTag.put(AWConstants.NBT.MANNEQUIN_TEXTURE, descriptor.serializeNBT());
+                entityTag.put(AWConstants.NBT.ENTITY_TEXTURE, descriptor.serializeNBT());
                 playerMannequinItem = new ItemStack(AWItems.MANNEQUIN);
                 playerMannequinItem.getOrCreateTag().put(AWConstants.NBT.ENTITY, entityTag);
             }

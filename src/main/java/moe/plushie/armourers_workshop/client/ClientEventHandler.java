@@ -1,17 +1,14 @@
 package moe.plushie.armourers_workshop.client;
 
-import moe.plushie.armourers_workshop.core.base.AWEntities;
-import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.handler.ItemTooltipHandler;
 import moe.plushie.armourers_workshop.core.handler.KeyboardHandler;
 import moe.plushie.armourers_workshop.core.handler.PlacementHighlightHandler;
 import moe.plushie.armourers_workshop.core.handler.PlayerNetworkHandler;
 import moe.plushie.armourers_workshop.core.render.renderer.*;
-import net.minecraft.client.renderer.entity.PiglinRenderer;
-import net.minecraft.client.renderer.entity.WitchRenderer;
-import net.minecraft.client.renderer.entity.WitherSkeletonRenderer;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -52,6 +49,13 @@ public class ClientEventHandler {
         }
     }
 
+    public static void onRenderLiving(LivingRenderer<?, ?> livingRenderer, LivingEntity entity, float p_225623_2_, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer buffers, int p_225623_6_) {
+        SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity);
+        if (renderer != null) {
+            EntityModel<?> entityModel = livingRenderer.getModel();
+            renderer.willRenderModel(entity, entityModel, p_225623_6_, p_225623_3_, matrixStack, buffers);
+        }
+    }
 
     @SubscribeEvent
     public void onRenderLivingPost(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {

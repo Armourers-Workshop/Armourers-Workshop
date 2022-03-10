@@ -33,10 +33,6 @@ public class MannequinRayTraceResult extends BlockRayTraceResult {
     public static MannequinRayTraceResult test(PlayerEntity player, Vector3d origin, Vector3d target, BlockPos pos) {
         World world = player.level;
         ItemStack itemStack = player.getMainHandItem();
-        if (itemStack.getItem() != AWItems.MANNEQUIN) {
-            return null;
-        }
-
         float scale = MannequinItem.getScale(itemStack);
         float rotation = (float) TrigUtils.getAngleDegrees(origin.x(), origin.z(), target.x(), target.z()) + 90.0f;
 

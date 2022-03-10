@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.base.AWTags;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.TrigUtils;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
@@ -22,7 +22,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -32,9 +31,6 @@ import net.minecraft.util.math.Rotations;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
-
-import java.util.Map;
 
 
 @SuppressWarnings("NullableProblems")
@@ -54,9 +50,10 @@ public class MannequinEntity extends ArmorStandEntity {
     public static final DataParameter<Boolean> DATA_IS_CHILD = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> DATA_IS_FLYING = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> DATA_IS_GHOST = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> DATA_IS_VISIBLE = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Float> DATA_SCALE = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.FLOAT);
     public static final DataParameter<Boolean> DATA_EXTRA_RENDERER = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<PlayerTextureDescriptor> DATA_TEXTURE = EntityDataManager.defineId(MannequinEntity.class, PlayerTextureDescriptor.SERIALIZER);
+    public static final DataParameter<PlayerTextureDescriptor> DATA_TEXTURE = EntityDataManager.defineId(MannequinEntity.class, AWDataSerializers.PLAYER_TEXTURE);
 
     public MannequinEntity(EntityType<? extends MannequinEntity> entityType, World world) {
         super(entityType, world);
@@ -68,6 +65,7 @@ public class MannequinEntity extends ArmorStandEntity {
         this.entityData.define(DATA_IS_CHILD, false);
         this.entityData.define(DATA_IS_FLYING, false);
         this.entityData.define(DATA_IS_GHOST, false);
+        this.entityData.define(DATA_IS_VISIBLE, true);
         this.entityData.define(DATA_EXTRA_RENDERER, true);
         this.entityData.define(DATA_SCALE, 1.0f);
         this.entityData.define(DATA_TEXTURE, PlayerTextureDescriptor.EMPTY);
@@ -76,42 +74,33 @@ public class MannequinEntity extends ArmorStandEntity {
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
         super.readAdditionalSaveData(nbt);
-        this.entityData.set(DATA_IS_CHILD, nbt.getBoolean(AWConstants.NBT.MANNEQUIN_IS_SMALL));
-        this.entityData.set(DATA_IS_FLYING, nbt.getBoolean(AWConstants.NBT.MANNEQUIN_IS_FLYING));
-        this.entityData.set(DATA_IS_GHOST, nbt.getBoolean(AWConstants.NBT.MANNEQUIN_IS_GHOST));
-        this.entityData.set(DATA_EXTRA_RENDERER, readBoolean(nbt, AWConstants.NBT.MANNEQUIN_EXTRA_RENDER, true));
 
-        if (nbt.contains(AWConstants.NBT.MANNEQUIN_SCALE)) {
-            this.entityData.set(DATA_SCALE, nbt.getFloat(AWConstants.NBT.MANNEQUIN_SCALE));
-        }
+        this.entityData.set(DATA_IS_CHILD, AWDataSerializers.getBoolean(nbt, AWConstants.NBT.ENTITY_IS_SMALL, false));
+        this.entityData.set(DATA_IS_FLYING, AWDataSerializers.getBoolean(nbt, AWConstants.NBT.ENTITY_IS_FLYING, false));
+        this.entityData.set(DATA_IS_GHOST, AWDataSerializers.getBoolean(nbt, AWConstants.NBT.ENTITY_IS_GHOST, false));
+        this.entityData.set(DATA_IS_VISIBLE, AWDataSerializers.getBoolean(nbt, AWConstants.NBT.ENTITY_IS_VISIBLE, true));
+        this.entityData.set(DATA_EXTRA_RENDERER, AWDataSerializers.getBoolean(nbt, AWConstants.NBT.ENTITY_EXTRA_RENDER, true));
 
-        CompoundNBT nbt1 = nbt.getCompound(AWConstants.NBT.MANNEQUIN_TEXTURE);
-        if (!nbt1.isEmpty()) {
-            setTextureDescriptor(new PlayerTextureDescriptor(nbt1));
-        }
+        this.entityData.set(DATA_SCALE, AWDataSerializers.getFloat(nbt, AWConstants.NBT.ENTITY_SCALE, 1.0f));
+        this.entityData.set(DATA_TEXTURE, AWDataSerializers.getTextureDescriptor(nbt, AWConstants.NBT.ENTITY_TEXTURE, PlayerTextureDescriptor.EMPTY));
 
-        CompoundNBT poseNBT = nbt.getCompound(AWConstants.NBT.MANNEQUIN_POSE);
-        this.readCustomPose(poseNBT);
+        this.readCustomPose(nbt.getCompound(AWConstants.NBT.ENTITY_POSE));
     }
 
     @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_SMALL, entityData.get(DATA_IS_CHILD));
-        nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_FLYING, entityData.get(DATA_IS_FLYING));
-        nbt.putBoolean(AWConstants.NBT.MANNEQUIN_IS_GHOST, entityData.get(DATA_IS_GHOST));
-        nbt.putBoolean(AWConstants.NBT.MANNEQUIN_EXTRA_RENDER, entityData.get(DATA_EXTRA_RENDERER));
 
-        if (getScale() != 1.0f) {
-            nbt.putFloat(AWConstants.NBT.MANNEQUIN_SCALE, getScale());
-        }
+        AWDataSerializers.putBoolean(nbt, AWConstants.NBT.ENTITY_IS_SMALL, entityData.get(DATA_IS_CHILD), false);
+        AWDataSerializers.putBoolean(nbt, AWConstants.NBT.ENTITY_IS_FLYING, entityData.get(DATA_IS_FLYING), false);
+        AWDataSerializers.putBoolean(nbt, AWConstants.NBT.ENTITY_IS_GHOST, entityData.get(DATA_IS_GHOST), false);
+        AWDataSerializers.putBoolean(nbt, AWConstants.NBT.ENTITY_IS_VISIBLE, entityData.get(DATA_IS_VISIBLE), true);
+        AWDataSerializers.putBoolean(nbt, AWConstants.NBT.ENTITY_EXTRA_RENDER, entityData.get(DATA_EXTRA_RENDERER), true);
 
-        PlayerTextureDescriptor descriptor = getTextureDescriptor();
-        if (!descriptor.isEmpty()) {
-            nbt.put(AWConstants.NBT.MANNEQUIN_TEXTURE, descriptor.serializeNBT());
-        }
+        AWDataSerializers.putFloat(nbt, AWConstants.NBT.ENTITY_SCALE, getScale(), 1.0f);
+        AWDataSerializers.putTextureDescriptor(nbt, AWConstants.NBT.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);
 
-        nbt.put(AWConstants.NBT.MANNEQUIN_POSE, saveCustomPose());
+        nbt.put(AWConstants.NBT.ENTITY_POSE, saveCustomPose());
     }
 
     @Override
@@ -125,12 +114,12 @@ public class MannequinEntity extends ArmorStandEntity {
         super.onSyncedDataUpdated(dataParameter);
     }
 
-    public boolean isVisible() {
-        return !isInvisible();
+    public boolean isModelVisible() {
+        return entityData.get(DATA_IS_VISIBLE);
     }
 
-    public void setVisible(boolean value) {
-        setInvisible(!value);
+    public void setModelVisible(boolean value) {
+        entityData.set(DATA_IS_VISIBLE, value);
     }
 
     @Override
@@ -211,7 +200,7 @@ public class MannequinEntity extends ArmorStandEntity {
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null) {
-            ContainerOpener.openContainer(SkinWardrobeContainer.TYPE, player, wardrobe);
+            ContainerOpener.open(SkinWardrobeContainer.TYPE, player, wardrobe);
         }
         return ActionResultType.SUCCESS;
     }
@@ -257,42 +246,21 @@ public class MannequinEntity extends ArmorStandEntity {
 
     public CompoundNBT saveCustomPose() {
         CompoundNBT nbt = new CompoundNBT();
-        writeRotations(nbt, "HEAD", DEFAULT_HEAD_POSE, entityData.get(DATA_HEAD_POSE));
-        writeRotations(nbt, "Body", DEFAULT_BODY_POSE, entityData.get(DATA_BODY_POSE));
-        writeRotations(nbt, "LeftArm", DEFAULT_LEFT_ARM_POSE, entityData.get(DATA_LEFT_ARM_POSE));
-        writeRotations(nbt, "RightArm", DEFAULT_RIGHT_ARM_POSE, entityData.get(DATA_RIGHT_ARM_POSE));
-        writeRotations(nbt, "LeftLeg", DEFAULT_LEFT_LEG_POSE, entityData.get(DATA_LEFT_LEG_POSE));
-        writeRotations(nbt, "RightLeg", DEFAULT_RIGHT_LEG_POSE, entityData.get(DATA_RIGHT_LEG_POSE));
+        AWDataSerializers.putRotations(nbt, "Head", entityData.get(DATA_HEAD_POSE), DEFAULT_HEAD_POSE);
+        AWDataSerializers.putRotations(nbt, "Body", entityData.get(DATA_BODY_POSE), DEFAULT_BODY_POSE);
+        AWDataSerializers.putRotations(nbt, "LeftArm", entityData.get(DATA_LEFT_ARM_POSE), DEFAULT_LEFT_ARM_POSE);
+        AWDataSerializers.putRotations(nbt, "RightArm", entityData.get(DATA_RIGHT_ARM_POSE), DEFAULT_RIGHT_ARM_POSE);
+        AWDataSerializers.putRotations(nbt, "LeftLeg", entityData.get(DATA_LEFT_LEG_POSE), DEFAULT_LEFT_LEG_POSE);
+        AWDataSerializers.putRotations(nbt, "RightLeg", entityData.get(DATA_RIGHT_LEG_POSE), DEFAULT_RIGHT_LEG_POSE);
         return nbt;
     }
 
     public void readCustomPose(CompoundNBT nbt) {
-        this.setHeadPose(readRotations(nbt, "HEAD", DEFAULT_HEAD_POSE));
-        this.setBodyPose(readRotations(nbt, "Body", DEFAULT_BODY_POSE));
-        this.setLeftArmPose(readRotations(nbt, "LeftArm", DEFAULT_LEFT_ARM_POSE));
-        this.setRightArmPose(readRotations(nbt, "RightArm", DEFAULT_RIGHT_ARM_POSE));
-        this.setLeftLegPose(readRotations(nbt, "LeftLeg", DEFAULT_LEFT_LEG_POSE));
-        this.setRightLegPose(readRotations(nbt, "RightLeg", DEFAULT_RIGHT_LEG_POSE));
-    }
-
-    private void writeRotations(CompoundNBT nbt, String key, Rotations defaultValue, Rotations currentValue) {
-        if (!defaultValue.equals(currentValue)) {
-            nbt.put(key, currentValue.save());
-        }
-    }
-
-    private Rotations readRotations(CompoundNBT nbt, String key, Rotations defaultValue) {
-        ListNBT listNBT = nbt.getList(key, Constants.NBT.TAG_FLOAT);
-        if (listNBT.isEmpty()) {
-            return defaultValue;
-        }
-        return new Rotations(listNBT);
-    }
-
-    private boolean readBoolean(CompoundNBT nbt, String key, boolean defaultValue) {
-        if (nbt.contains(key)) {
-            return nbt.getBoolean(key);
-        }
-        return defaultValue;
+        this.setHeadPose(AWDataSerializers.getRotations(nbt, "Head", DEFAULT_HEAD_POSE));
+        this.setBodyPose(AWDataSerializers.getRotations(nbt, "Body", DEFAULT_BODY_POSE));
+        this.setLeftArmPose(AWDataSerializers.getRotations(nbt, "LeftArm", DEFAULT_LEFT_ARM_POSE));
+        this.setRightArmPose(AWDataSerializers.getRotations(nbt, "RightArm", DEFAULT_RIGHT_ARM_POSE));
+        this.setLeftLegPose(AWDataSerializers.getRotations(nbt, "LeftLeg", DEFAULT_LEFT_LEG_POSE));
+        this.setRightLegPose(AWDataSerializers.getRotations(nbt, "RightLeg", DEFAULT_RIGHT_LEG_POSE));
     }
 }

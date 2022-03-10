@@ -23,16 +23,24 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.HashMap;
 import java.util.function.Consumer;
 
 public final class AWEntities {
+
+    private static final HashMap<ResourceLocation, EntityType<?>> REGISTERED_ENTITY_TYPES = new HashMap<>();
 
     public static final EntityType<MannequinEntity> MANNEQUIN = register("mannequin", MannequinEntity::new, EntityClassification.MISC, b -> b.sized(0.6f, 1.88f));
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType.IFactory<T> entityFactory) {
         return register(name, entityFactory, EntityClassification.CREATURE, null);
+    }
+
+    public static void forEach(Consumer<EntityType<?>> action) {
+        REGISTERED_ENTITY_TYPES.values().forEach(action);
     }
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType.IFactory<T> entityFactory, EntityClassification classification, Consumer<EntityType.Builder<T>> customizer) {
@@ -41,8 +49,10 @@ public final class AWEntities {
         if (customizer != null) {
             customizer.accept(builder);
         }
-        EntityType<T> result = builder.build(name);
-        result.setRegistryName(registryName);
-        return result;
+        EntityType<T> entityType = builder.build(name);
+        entityType.setRegistryName(registryName);
+        REGISTERED_ENTITY_TYPES.put(registryName, entityType);
+        return entityType;
     }
+
 }

@@ -29,7 +29,7 @@ import java.util.Objects;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class ColourSettingPanel extends BaseSettingPanel {
+public class WardrobeColourSetting extends WardrobeBaseSetting {
 
     private final ITextComponent paletteText;
     private final ArrayList<ColorPicker> pickers = new ArrayList<>();
@@ -37,7 +37,7 @@ public class ColourSettingPanel extends BaseSettingPanel {
 
     private ColorPicker activatedPicker;
 
-    public ColourSettingPanel(SkinWardrobeContainer container) {
+    public WardrobeColourSetting(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.colour_settings");
         this.paletteText = getDisplayText("label.palette");
         this.wardrobe = container.getWardrobe();

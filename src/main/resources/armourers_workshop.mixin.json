@@ -8,9 +8,10 @@
   "client": [
     "ArrowRendererMixin",
     "BipedArmorLayerMixin",
+    "DownloadingTextureMixin",
     "FirstPersonRendererMixin",
     "InventoryScreenMixin",
-    "DownloadingTextureMixin",
+    "LivingRendererMixin",
     "ModelManagerMixin"
   ],
   "injectors": {

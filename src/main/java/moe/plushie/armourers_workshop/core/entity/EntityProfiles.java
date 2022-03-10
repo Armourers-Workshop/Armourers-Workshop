@@ -5,8 +5,6 @@ import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.base.AWEntities;
 import moe.plushie.armourers_workshop.core.render.renderer.*;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import net.minecraft.client.renderer.entity.PillagerRenderer;
-import net.minecraft.client.renderer.entity.model.IllagerModel;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -23,12 +21,12 @@ public class EntityProfiles {
     private static final HashMap<EntityType<?>, EntityProfile> PROFILES = new HashMap<>();
 
     public static final EntityProfile PLAYER = Builder.create()
-            .add(SkinTypes.ARMOR_HEAD, EntityProfiles::fromConfig)
-            .add(SkinTypes.ARMOR_CHEST, EntityProfiles::fromConfig)
-            .add(SkinTypes.ARMOR_LEGS, EntityProfiles::fromConfig)
-            .add(SkinTypes.ARMOR_FEET, EntityProfiles::fromConfig)
-            .add(SkinTypes.ARMOR_WINGS, EntityProfiles::fromConfig)
-            .add(SkinTypes.ARMOR_OUTFIT, EntityProfiles::fromConfig)
+            .add(SkinTypes.ARMOR_HEAD, EntityProfiles::playerSlots)
+            .add(SkinTypes.ARMOR_CHEST, EntityProfiles::playerSlots)
+            .add(SkinTypes.ARMOR_LEGS, EntityProfiles::playerSlots)
+            .add(SkinTypes.ARMOR_FEET, EntityProfiles::playerSlots)
+            .add(SkinTypes.ARMOR_WINGS, EntityProfiles::playerSlots)
+            .add(SkinTypes.ARMOR_OUTFIT, EntityProfiles::playerSlots)
             .add(SkinTypes.ITEM_BOW, 1)
             .add(SkinTypes.ITEM_SWORD, 1)
             .add(SkinTypes.ITEM_SHIELD, 1)
@@ -48,12 +46,12 @@ public class EntityProfiles {
             .build();
 
     public static final EntityProfile COMMON = Builder.create()
-            .add(SkinTypes.ARMOR_HEAD, 3)
-            .add(SkinTypes.ARMOR_CHEST, 3)
-            .add(SkinTypes.ARMOR_LEGS, 3)
-            .add(SkinTypes.ARMOR_FEET, 3)
-            .add(SkinTypes.ARMOR_WINGS, 3)
-            .add(SkinTypes.ARMOR_OUTFIT, 3)
+            .add(SkinTypes.ARMOR_HEAD, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_CHEST, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_LEGS, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_FEET, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_WINGS, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_OUTFIT, EntityProfiles::mobSlots)
             .add(SkinTypes.ITEM_BOW, 1)
             .add(SkinTypes.ITEM_SWORD, 1)
             .add(SkinTypes.ITEM_SHIELD, 1)
@@ -64,25 +62,24 @@ public class EntityProfiles {
             .build();
 
     public static final EntityProfile VILLAGER = Builder.create()
-            .add(SkinTypes.ARMOR_HEAD, 3)
-            .add(SkinTypes.ARMOR_CHEST, 3)
-            .add(SkinTypes.ARMOR_LEGS, 3)
-            .add(SkinTypes.ARMOR_FEET, 3)
-            .add(SkinTypes.ARMOR_WINGS, 3)
-            .add(SkinTypes.ARMOR_OUTFIT, 3)
+            .add(SkinTypes.ARMOR_HEAD, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_CHEST, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_LEGS, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_FEET, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_WINGS, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_OUTFIT, EntityProfiles::mobSlots)
+            .build();
+
+    public static final EntityProfile CHICKEN = Builder.create()
+            .add(SkinTypes.ARMOR_HEAD, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_CHEST, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_FEET, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_LEGS, EntityProfiles::mobSlots)
+            .add(SkinTypes.ARMOR_WINGS, EntityProfiles::mobSlots)
             .build();
 
     public static final EntityProfile SLIME = Builder.create()
-            .add(SkinTypes.ARMOR_HEAD, 3)
-            .build();
-
-
-    public static final EntityProfile CHICKEN = Builder.create()
-            .add(SkinTypes.ARMOR_HEAD, 3)
-            .add(SkinTypes.ARMOR_CHEST, 3)
-            .add(SkinTypes.ARMOR_FEET, 3)
-            .add(SkinTypes.ARMOR_LEGS, 3)
-            .add(SkinTypes.ARMOR_WINGS, 3)
+            .add(SkinTypes.ARMOR_HEAD, EntityProfiles::mobSlots)
             .build();
 
     public static final EntityProfile ARROW = Builder.create()
@@ -90,33 +87,47 @@ public class EntityProfiles {
             .fixed()
             .build();
 
-    private static int fromConfig(ISkinType type) {
+    private static int playerSlots(ISkinType type) {
         return AWConfig.prefersWardrobeSlots;
     }
 
+    private static int mobSlots(ISkinType type) {
+        return AWConfig.prefersWardrobeMobSlots;
+    }
+
     public static void init() {
-        EntityProfiles.register(EntityType.PLAYER, EntityProfiles.PLAYER, () -> BipedSkinRenderer::new);
-        EntityProfiles.register(EntityType.ARROW, EntityProfiles.ARROW, () -> ArrowSkinRenderer::new);
+        register(EntityType.PLAYER, EntityProfiles.PLAYER, () -> PlayerSkinRenderer::new);
 
-        EntityProfiles.register(EntityType.VILLAGER, EntityProfiles.VILLAGER, () -> VillagerSkinRenderer::new);
-        EntityProfiles.register(EntityType.WITCH, EntityProfiles.VILLAGER, () -> VillagerSkinRenderer::new);
+        register(EntityType.VILLAGER, EntityProfiles.VILLAGER, () -> VillagerSkinRenderer::new);
+        register(EntityType.WITCH, EntityProfiles.VILLAGER, () -> VillagerSkinRenderer::new);
+        register(EntityType.WANDERING_TRADER, EntityProfiles.VILLAGER, () -> VillagerSkinRenderer::new);
 
-        EntityProfiles.register(EntityType.SKELETON, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
-        EntityProfiles.register(EntityType.WITHER_SKELETON, EntityProfiles.COMMON, () -> BipedSkinRenderer::new); // 1.2x
+        register(EntityType.SKELETON, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
+        register(EntityType.STRAY, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
+        register(EntityType.WITHER_SKELETON, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
+        register(EntityType.ZOMBIE, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
+        register(EntityType.HUSK, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
+        register(EntityType.ZOMBIE_VILLAGER, EntityProfiles.COMMON, () -> ZombieVillagerSkinRenderer::new);
+        register(EntityType.DROWNED, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
 
-        EntityProfiles.register(EntityType.PILLAGER, EntityProfiles.COMMON, () -> IllagerSkinRenderer::new);
-        EntityProfiles.register(EntityType.ILLUSIONER, EntityProfiles.COMMON, () -> IllagerSkinRenderer::new);
+        register(EntityType.EVOKER, EntityProfiles.COMMON, () -> IllagerSkinRenderer::new);
+        register(EntityType.ILLUSIONER, EntityProfiles.COMMON, () -> IllagerSkinRenderer::new);
+        register(EntityType.PILLAGER, EntityProfiles.COMMON, () -> IllagerSkinRenderer::new);
+        register(EntityType.VINDICATOR, EntityProfiles.COMMON, () -> IllagerSkinRenderer::new);
 
-        EntityProfiles.register(EntityType.ZOMBIE, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
-        EntityProfiles.register(EntityType.ZOMBIE_VILLAGER, EntityProfiles.COMMON, () -> ZombieVillagerSkinRenderer::new);
+        register(EntityType.VEX, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
+        register(EntityType.PIGLIN, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
+        register(EntityType.PIGLIN_BRUTE, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
+        register(EntityType.ZOMBIFIED_PIGLIN, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
 
-        EntityProfiles.register(EntityType.SLIME, EntityProfiles.SLIME, () -> SlimeSkinRenderer::new);
-        EntityProfiles.register(EntityType.CHICKEN, EntityProfiles.CHICKEN, () -> ChickenSkinRenderer::new);
+        register(EntityType.SLIME, EntityProfiles.SLIME, () -> SlimeSkinRenderer::new);
+        register(EntityType.CHICKEN, EntityProfiles.CHICKEN, () -> ChickenSkinRenderer::new);
+        register(EntityType.ARROW, EntityProfiles.ARROW, () -> ArrowSkinRenderer::new);
 
-        EntityProfiles.register(EntityType.PIGLIN, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
-        EntityProfiles.register(EntityType.ZOMBIFIED_PIGLIN, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
+        register(AWEntities.MANNEQUIN, EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
 
-        EntityProfiles.register(AWEntities.MANNEQUIN, EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
+        // TODO: custom register
+        // register("minecraft.slime", EntityProfiles.COMMON, () -> BipedSkinRenderer::new)
     }
 
 

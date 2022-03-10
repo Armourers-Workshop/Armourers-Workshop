@@ -7,14 +7,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class BaseSettingPanel extends Screen {
+public class WardrobeBaseSetting extends Screen {
 
     public int leftPos = 0;
     public int topPos = 0;
 
     private final String baseKey;
 
-    protected BaseSettingPanel(String baseKey) {
+    protected WardrobeBaseSetting(String baseKey) {
         super(TranslateUtils.title(baseKey));
         this.baseKey = baseKey;
     }

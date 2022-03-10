@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "armourers_workshop:items/template/legs"
+    "layer0": "armourers_workshop:item/template/legs"
   }
 }

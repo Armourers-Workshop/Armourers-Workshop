@@ -15,11 +15,11 @@ import java.util.List;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class ContributorSettingPanel extends BaseSettingPanel {
+public class WardrobeContributorSetting extends WardrobeBaseSetting {
 
     private final List<IReorderingProcessor> thanks;
 
-    public ContributorSettingPanel(SkinWardrobeContainer container) {
+    public WardrobeContributorSetting(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.contributor");
 
         FontRenderer font = Minecraft.getInstance().font;

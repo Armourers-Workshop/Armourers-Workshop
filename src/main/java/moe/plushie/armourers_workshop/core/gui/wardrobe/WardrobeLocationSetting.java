@@ -19,13 +19,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class LocationSettingPanel extends BaseSettingPanel {
+public class WardrobeLocationSetting extends WardrobeBaseSetting {
 
     private final float[] steps = {1.0f, 1.0f / 8.0f, 1.0f / 16.0f};
     private final SkinWardrobe wardrobe;
     private final Entity entity;
 
-    public LocationSettingPanel(SkinWardrobeContainer container) {
+    public WardrobeLocationSetting(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.man_offsets");
         this.wardrobe = container.getWardrobe();
         this.entity = container.getEntity();

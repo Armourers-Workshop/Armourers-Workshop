@@ -23,6 +23,9 @@ public class SkinRendererManager {
     private static final SkinRendererManager INSTANCE = new SkinRendererManager();
     private final Map<EntityType<?>, SkinRenderer<?, ?>> renderers = Maps.newHashMap();
 
+    private EntityType<?> lastEntityType;
+    private SkinRenderer<?, ?> lastRenderer;
+
     public static SkinRendererManager getInstance() {
         return INSTANCE;
     }
@@ -53,8 +56,18 @@ public class SkinRendererManager {
     @SuppressWarnings("unchecked")
     @Nullable
     public <T extends Entity, M extends Model> SkinRenderer<T, M> getRenderer(@Nullable T entity) {
-        if (entity != null) {
-            return (SkinRenderer<T, M>) this.renderers.get(entity.getType());
+        if (entity == null) {
+            return null;
+        }
+        EntityType<?> entityType = entity.getType();
+        if (lastEntityType != null && lastEntityType.equals(entityType)) {
+            return (SkinRenderer<T, M>) lastRenderer;
+        }
+        SkinRenderer<?, ?> renderer = renderers.get(entity.getType());
+        if (renderer != null) {
+            lastEntityType = entityType;
+            lastRenderer = renderer;
+            return (SkinRenderer<T, M>) renderer;
         }
         return null;
     }

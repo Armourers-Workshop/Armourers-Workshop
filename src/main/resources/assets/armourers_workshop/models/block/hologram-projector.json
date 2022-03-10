@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "armourers_workshop:block/hologram-projector-side",
+    "north": "armourers_workshop:block/hologram-projector-side",
+    "south": "armourers_workshop:block/hologram-projector-side",
+    "east": "armourers_workshop:block/hologram-projector-side",
+    "west": "armourers_workshop:block/hologram-projector-side",
+    "up": "armourers_workshop:block/hologram-projector-top",
+    "down": "armourers_workshop:block/hologram-projector-bottom"
+  }
+}

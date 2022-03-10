@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.registry.AWRegistry;
 import moe.plushie.armourers_workshop.core.render.renderer.*;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
@@ -140,7 +141,7 @@ public class ArmourersWorkshop {
         ArmourersConfig.init();
         NetworkHandler.init(AWCore.resource("aw2"));
 
-        DataSerializers.registerSerializer(PlayerTextureDescriptor.SERIALIZER);
+        DataSerializers.registerSerializer(AWDataSerializers.PLAYER_TEXTURE);
         CapabilityManager.INSTANCE.register(SkinWardrobe.class, new SkinWardrobeStorage(), () -> null);
     }
 
