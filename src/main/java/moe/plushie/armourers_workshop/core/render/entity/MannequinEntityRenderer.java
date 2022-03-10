@@ -48,7 +48,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
     public void render(T entity, float p_225623_2_, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int p_225623_6_) {
         this.textureLocation = PlayerTextureLoader.getInstance().getTextureLocation(entity);
         this.model = getResolvedModel(entity);
-        this.model.setAllVisible(true);
+        this.model.setAllVisible(entity.isModelVisible());
         super.render(entity, p_225623_2_, p_225623_3_, matrixStack, renderTypeBuffer, p_225623_6_);
     }
 

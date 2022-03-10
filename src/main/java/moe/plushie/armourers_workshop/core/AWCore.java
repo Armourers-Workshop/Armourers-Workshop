@@ -28,11 +28,11 @@ public class AWCore {
 
 
     public static ResourceLocation getSlotIcon(String name) {
-        return AWCore.resource("textures/items/slot/" + name + ".png");
+        return AWCore.resource("textures/item/slot/" + name + ".png");
     }
 
     public static ResourceLocation getItemIcon(String name) {
-        return AWCore.resource("textures/items/template/" + name + ".png");
+        return AWCore.resource("textures/item/template/" + name + ".png");
     }
 
     public static File getRootDirectory() {

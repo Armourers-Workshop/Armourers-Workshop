@@ -30,15 +30,6 @@ public class SkinWardrobeProvider implements ICapabilityProvider, INBTSerializab
         this.wardrobe = new SkinWardrobe(entity, profile);
     }
 
-    @Nullable
-    public static SkinWardrobe by(PlayerEntity player, PacketBuffer buffer) {
-        return SkinWardrobe.of(player.level.getEntity(buffer.readInt()));
-    }
-
-    public static void to(SkinWardrobe wardrobe, PacketBuffer buffer) {
-        buffer.writeInt(wardrobe.getId());
-    }
-
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {

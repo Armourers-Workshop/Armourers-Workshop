@@ -28,6 +28,9 @@ public class SkinWardrobeArmorLayer<T extends Entity, M extends EntityModel<T>> 
     @Override
     @ParametersAreNonnullByDefault
     public void render(MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+        if (entity.isInvisible()) {
+            return;
+        }
         matrixStack.pushPose();
 
         // apply the model baby scale.

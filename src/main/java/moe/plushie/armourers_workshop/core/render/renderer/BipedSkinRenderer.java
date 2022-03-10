@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.render.renderer;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
@@ -19,25 +20,15 @@ public class BipedSkinRenderer<T extends LivingEntity, M extends BipedModel<T>> 
     }
 
     @Override
-    protected void applyOverriders(T entity, M model, SkinWardrobe wardrobe, SkinWardrobeState snapshot) {
-        super.applyOverriders(entity, model, wardrobe, snapshot);
-        if (model instanceof PlayerModel) {
-            PlayerModel<?> playerModel = (PlayerModel<?>) model;
-            if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
-                addOverrider(playerModel.leftSleeve);
+    protected void setHeadPart(MatrixStack matrixStack, M model) {
+        super.setHeadPart(matrixStack, model);
+        if (model.young) {
+            float scale = model.babyBodyScale;
+            if (model.scaleHead) {
+                scale = 1.5f;
             }
-            if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
-                addOverrider(playerModel.rightSleeve);
-            }
-            if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_CHEST)) {
-                addOverrider(playerModel.jacket);
-            }
-            if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_LEG) || snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
-                addOverrider(playerModel.leftPants);
-            }
-            if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_LEG) || snapshot.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
-                addOverrider(playerModel.rightPants);
-            }
+            matrixStack.scale(scale, scale, scale);
+            matrixStack.translate(0, model.yHeadOffset / 16.0f, model.zHeadOffset / 16.0f);
         }
     }
 
@@ -73,12 +64,6 @@ public class BipedSkinRenderer<T extends LivingEntity, M extends BipedModel<T>> 
                 return model.rightLeg;
             }
 
-            public float getHeadScale(M model) {
-                if (model.scaleHead) {
-                    return 1.5f;
-                }
-                return model.babyBodyScale;
-            }
         };
     }
 }

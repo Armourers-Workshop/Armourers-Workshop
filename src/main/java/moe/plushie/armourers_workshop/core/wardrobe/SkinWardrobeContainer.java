@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.wardrobe;
 
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.ContainerTypeBuilder;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
@@ -21,15 +22,19 @@ import java.util.List;
 @SuppressWarnings("NullableProblems")
 public class SkinWardrobeContainer extends Container {
 
-    private final ArrayList<Slot> customSlots = new ArrayList<>();    public static final ContainerType<SkinWardrobeContainer> TYPE = ContainerTypeBuilder
+    public static final ContainerType<SkinWardrobeContainer> TYPE = ContainerTypeBuilder
             .create(SkinWardrobeContainer::new, SkinWardrobe.class)
             .withTitle(TranslateUtils.title("inventory.armourers_workshop.wardrobe"))
-            .withDataCoder(SkinWardrobeProvider::by, SkinWardrobeProvider::to)
+            .withDataProvider(AWDataSerializers::readEntityWardrobe, AWDataSerializers::writeEntityWardrobe)
             .build("wardrobe");
+
     private final SkinWardrobe wardrobe;
+    private final ArrayList<Slot> customSlots = new ArrayList<>();
+
     private final int slotsX = 83;
     private final int slotsY = 27;
     private Group group = null;
+
     public SkinWardrobeContainer(int containerId, PlayerInventory inventory, SkinWardrobe wardrobe) {
         super(TYPE, containerId);
         this.wardrobe = wardrobe;
@@ -121,7 +126,11 @@ public class SkinWardrobeContainer extends Container {
 
     @Override
     public boolean stillValid(PlayerEntity player) {
-        return true;
+        Entity entity = getEntity();
+        if (entity == null || !entity.isAlive()) {
+            return false;
+        }
+        return entity.distanceToSqr(player.getX(), player.getY(), player.getZ()) <= 64.0;
     }
 
     @Override
@@ -241,6 +250,4 @@ public class SkinWardrobeContainer extends Container {
             return getGroup() == group;
         }
     }
-
-
 }

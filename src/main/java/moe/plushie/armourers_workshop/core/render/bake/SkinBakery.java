@@ -54,7 +54,7 @@ public final class SkinBakery {
     private final ArrayList<IBakeListener> listeners = new ArrayList<>();
 
     private final DataLoader<SkinDescriptor, BakedSkin> manager = DataLoader.newBuilder()
-            .threadPool(2)
+            .threadPool(1)
             .build(this::loadAndBakeSkin);
 
 //    private final DataLoader<ResourceLocation, BakedEntityTexture> textureManager = DataLoader.newBuilder()

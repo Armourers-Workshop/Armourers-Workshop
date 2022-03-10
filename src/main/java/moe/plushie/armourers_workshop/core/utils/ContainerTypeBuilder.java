@@ -22,8 +22,8 @@ public final class ContainerTypeBuilder<C extends Container, I> {
     private final Class<I> hostInterface;
     private final ContainerFactory<C, I> factory;
 
-    private DataSerializer<I> serializer;
-    private DataDeserializer<I> deserializer;
+    private DataSerializer<I> serializer = (object, buffer) -> {};
+    private DataDeserializer<I> deserializer = (player, buffer) -> null;
 
     private Function<I, ITextComponent> title = this::getDefaultTitle;
 
@@ -32,7 +32,7 @@ public final class ContainerTypeBuilder<C extends Container, I> {
         this.factory = factory;
     }
 
-    public static <C extends Container, I> ContainerTypeBuilder<C, I> create (ContainerFactory<C, I> factory, Class<I> hostInterface) {
+    public static <C extends Container, I> ContainerTypeBuilder<C, I> create(ContainerFactory<C, I> factory, Class<I> hostInterface) {
         return new ContainerTypeBuilder<>(hostInterface, factory);
     }
 
@@ -50,7 +50,7 @@ public final class ContainerTypeBuilder<C extends Container, I> {
      * Sets a serializer and deserializer for additional data that should be transmitted from server->client when the
      * container is being first opened.
      */
-    public ContainerTypeBuilder<C, I> withDataCoder(DataDeserializer<I> deserializer, DataSerializer<I> serializer) {
+    public ContainerTypeBuilder<C, I> withDataProvider(DataDeserializer<I> deserializer, DataSerializer<I> serializer) {
         this.serializer = serializer;
         this.deserializer = deserializer;
         return this;
@@ -59,7 +59,7 @@ public final class ContainerTypeBuilder<C extends Container, I> {
     public ContainerType<C> build(String id) {
         ContainerType<C> containerType = IForgeContainerType.create(this::fromNetwork);
         containerType.setRegistryName(AWCore.getModId(), id);
-        ContainerOpener.addOpener(containerType, this::open);
+        ContainerOpener.register(containerType, this::open);
         return containerType;
     }
 
@@ -69,10 +69,7 @@ public final class ContainerTypeBuilder<C extends Container, I> {
      * buffer.
      */
     private C fromNetwork(int containerId, PlayerInventory inventory, PacketBuffer buffer) {
-        if (deserializer != null) {
-            return factory.create(containerId, inventory, deserializer.deserialize(inventory.player, buffer));
-        }
-        return null;
+        return factory.create(containerId, inventory, deserializer.deserialize(inventory.player, buffer));
     }
 
     private ITextComponent getDefaultTitle(I accessInterface) {
@@ -89,9 +86,7 @@ public final class ContainerTypeBuilder<C extends Container, I> {
         }
         INamedContainerProvider container = new SimpleNamedContainerProvider((wnd, p, pl) -> factory.create(wnd, p, object), title.apply(object));
         NetworkHooks.openGui((ServerPlayerEntity) player, container, buffer -> {
-            if (serializer != null) {
-                serializer.serialize(object, buffer);
-            }
+            serializer.serialize(object, buffer);
         });
         return true;
     }

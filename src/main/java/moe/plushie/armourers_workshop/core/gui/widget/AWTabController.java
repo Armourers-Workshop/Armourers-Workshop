@@ -21,14 +21,16 @@ public class AWTabController<Target> extends Screen {
 
     private int x = 0;
     private int y = 0;
+    private boolean fullscreen = false;
 
     private Tab selectedTab = null;
 
     private ArrayList<Tab> tabs = new ArrayList<>();
     private ArrayList<Tab> actives = new ArrayList<>();
 
-    public AWTabController() {
+    public AWTabController(boolean fullscreen) {
         super(StringTextComponent.EMPTY);
+        this.fullscreen = fullscreen;
     }
 
     public void clear() {
@@ -45,6 +47,9 @@ public class AWTabController<Target> extends Screen {
     }
 
     public void removeListener(Consumer<Tab> listener) {
+        if (this.listeners == null) {
+            return;
+        }
         this.listeners.remove(listener);
     }
 
@@ -104,6 +109,18 @@ public class AWTabController<Target> extends Screen {
         this.y = y;
         this.actives.clear();
 
+        if (fullscreen) {
+            this.initFullscreenWidgets(x, y, width, height);
+        } else {
+            this.initNormalWidgets(x, y, width, height);
+        }
+
+        if (getSelectedScreen() != null) {
+            getSelectedScreen().init(Minecraft.getInstance(), width, height);
+        }
+    }
+
+    private void initNormalWidgets(int x, int y, int width, int height) {
         int ly = 5, ry = 5, spacing = -5;
         for (Tab tab : tabs) {
             if (!tab.visible) {
@@ -112,6 +129,7 @@ public class AWTabController<Target> extends Screen {
             if (tab.alignment == 0 && ly + tab.height <= height) { // left
                 tab.x = x + -tab.width + 5;
                 tab.y = y + ly;
+                tab.alignment1 = 0;
                 ly += tab.height;
                 ly += spacing;
                 actives.add(tab);
@@ -121,7 +139,7 @@ public class AWTabController<Target> extends Screen {
             if (ry + tab.height <= height) { // right
                 tab.x = x + width - 4;
                 tab.y = y + ry;
-                tab.alignment = 1;
+                tab.alignment1 = 1;
                 ry += tab.height;
                 ry += spacing;
                 actives.add(tab);
@@ -130,9 +148,55 @@ public class AWTabController<Target> extends Screen {
         }
     }
 
+    private void initFullscreenWidgets(int x, int y, int width, int height) {
+        int ly = 0, ry = 0, spacing = -2;
+        for (Tab tab : tabs) {
+            if (!tab.visible) {
+                continue;
+            }
+            if (tab.alignment == 0 && ly + tab.height <= height) { // left
+                tab.x = x - 4;
+                tab.y = y + ly;
+                tab.alignment1 = 1;
+                ly += tab.height;
+                ly += spacing;
+                actives.add(tab);
+                addWidget(tab);
+                continue;
+            }
+            if (ry + tab.height <= height) { // right
+                tab.x = x + width - tab.width + 5;
+                tab.y = y + ry;
+                tab.alignment1 = 0;
+                ry += tab.height;
+                ry += spacing;
+                actives.add(tab);
+                addWidget(tab);
+            }
+        }
+        int mly = (height - (ly - spacing)) / 2, mry = (height - (ry - spacing)) / 2;
+        for (Tab tab : actives) {
+            if (tab.alignment1 == 1) {
+                tab.y += mly;
+            } else {
+                tab.y += mry;
+            }
+        }
+    }
+
+//    private int getYOffSet() {
+//        if (!fullscreen) {
+//            return 5;
+//        } else {
+//            return (int) (height / 2F - ((float) tabs.size() * tabSpacing) / 2F);
+//        }
+//    }
+
     @Override
     public void removed() {
-        listeners.clear();
+        if (this.listeners != null) {
+            this.listeners.clear();
+        }
         super.removed();
     }
 
@@ -167,6 +231,7 @@ public class AWTabController<Target> extends Screen {
         int iconWidth = 16;
         int iconHeight = 16;
         int alignment = 0;
+        int alignment1 = 0;
         int animationFrames = 0;
         int animationSpeed = 0;
 
@@ -236,7 +301,7 @@ public class AWTabController<Target> extends Screen {
 
         public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY) {
             int u = 0, v = height, ix = -1, iv = 0;
-            if (alignment == 1) {
+            if (alignment1 == 1) {
                 u += width * 2;
                 ix = 0;
             }

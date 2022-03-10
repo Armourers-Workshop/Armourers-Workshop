@@ -7,17 +7,30 @@ import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.util.Strings;
@@ -112,6 +125,59 @@ public class SkinItem extends Item {
             return 0;
         }
         return descriptor.getType().getId();
+    }
+
+    @Override
+    public ActionResultType useOn(ItemUseContext context) {
+        ItemStack itemStack = context.getItemInHand();
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        if (descriptor.getType() == SkinTypes.BLOCK) {
+            return this.place(itemStack, descriptor, new BlockItemUseContext(context));
+        }
+        return ActionResultType.PASS;
+    }
+
+    public ActionResultType place(ItemStack itemStack, SkinDescriptor descriptor, BlockItemUseContext context) {
+        if (!context.canPlace()) {
+            return ActionResultType.FAIL;
+        }
+//        } else {
+//            BlockItemUseContext blockitemusecontext = this.updatePlacementContext(p_195942_1_);
+//            if (blockitemusecontext == null) {
+//                return ActionResultType.FAIL;
+//            } else {
+//                BlockState blockstate = this.getPlacementState(blockitemusecontext);
+//                if (blockstate == null) {
+//                    return ActionResultType.FAIL;
+//                } else if (!this.placeBlock(blockitemusecontext, blockstate)) {
+//                    return ActionResultType.FAIL;
+//                } else {
+//                    BlockPos blockpos = blockitemusecontext.getClickedPos();
+//                    World world = blockitemusecontext.getLevel();
+//                    PlayerEntity playerentity = blockitemusecontext.getPlayer();
+//                    ItemStack itemstack = blockitemusecontext.getItemInHand();
+//                    BlockState blockstate1 = world.getBlockState(blockpos);
+//                    Block block = blockstate1.getBlock();
+//                    if (block == blockstate.getBlock()) {
+//                        blockstate1 = this.updateBlockStateFromTag(blockpos, world, itemstack, blockstate1);
+//                        this.updateCustomBlockEntityTag(blockpos, world, playerentity, itemstack, blockstate1);
+//                        block.setPlacedBy(world, blockpos, blockstate1, playerentity, itemstack);
+//                        if (playerentity instanceof ServerPlayerEntity) {
+//                            CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity)playerentity, blockpos, itemstack);
+//                        }
+//                    }
+//
+//                    SoundType soundtype = blockstate1.getSoundType(world, blockpos, p_195942_1_.getPlayer());
+//                    world.playSound(playerentity, blockpos, this.getPlaceSound(blockstate1, world, blockpos, p_195942_1_.getPlayer()), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+//                    if (playerentity == null || !playerentity.abilities.instabuild) {
+//                        itemstack.shrink(1);
+//                    }
+//
+//                    return ActionResultType.sidedSuccess(world.isClientSide);
+//                }
+//            }
+//        }
+        return ActionResultType.PASS;
     }
 
 

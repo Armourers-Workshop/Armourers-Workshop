@@ -166,6 +166,7 @@ public class Rectangle3f {
         );
         Iterator<Vector4f> iterator = vertexes.iterator();
         Vector4f point = iterator.next();
+        point.transform(matrix);
         float minX = point.x(), minY = point.y(), minZ = point.z();
         float maxX = point.x(), maxY = point.y(), maxZ = point.z();
         while (iterator.hasNext()) {
@@ -184,6 +185,10 @@ public class Rectangle3f {
         width = maxX - minX;
         height = maxY - minY;
         depth = maxZ - minZ;
+    }
+
+    public AxisAlignedBB asAxisAlignedBB() {
+        return new AxisAlignedBB(x, y, z, x + width, y + height, z + depth);
     }
 
     @Override

@@ -6,37 +6,18 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-
-@SuppressWarnings("NullableProblems")
 public class PlayerTextureDescriptor {
 
     public static final PlayerTextureDescriptor EMPTY = new PlayerTextureDescriptor();
-
-    public static final IDataSerializer<PlayerTextureDescriptor> SERIALIZER = new IDataSerializer<PlayerTextureDescriptor>() {
-        public void write(PacketBuffer buffer, PlayerTextureDescriptor descriptor) {
-            buffer.writeNbt(descriptor.serializeNBT());
-        }
-
-        public PlayerTextureDescriptor read(PacketBuffer buffer) {
-            return new PlayerTextureDescriptor(buffer.readNbt());
-        }
-
-        public PlayerTextureDescriptor copy(PlayerTextureDescriptor descriptor) {
-            return descriptor;
-        }
-    };
 
     private final static Cache<ItemStack, PlayerTextureDescriptor> DESCRIPTOR_CACHES = CacheBuilder.newBuilder()
             .maximumSize(8)
@@ -80,14 +61,14 @@ public class PlayerTextureDescriptor {
             return EMPTY;
         }
         CompoundNBT entityTag = MannequinItem.getEntityTag(itemStack);
-        if (entityTag == null || !entityTag.contains(AWConstants.NBT.MANNEQUIN_TEXTURE, Constants.NBT.TAG_COMPOUND)) {
+        if (entityTag == null || !entityTag.contains(AWConstants.NBT.ENTITY_TEXTURE, Constants.NBT.TAG_COMPOUND)) {
             return EMPTY;
         }
         PlayerTextureDescriptor descriptor = DESCRIPTOR_CACHES.getIfPresent(itemStack);
         if (descriptor != null) {
             return descriptor;
         }
-        descriptor = new PlayerTextureDescriptor(entityTag.getCompound(AWConstants.NBT.MANNEQUIN_TEXTURE));
+        descriptor = new PlayerTextureDescriptor(entityTag.getCompound(AWConstants.NBT.ENTITY_TEXTURE));
         DESCRIPTOR_CACHES.put(itemStack, descriptor);
         return descriptor;
     }

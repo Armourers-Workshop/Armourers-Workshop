@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -46,17 +45,17 @@ public class MannequinItem extends Item {
     public static boolean isSmall(ItemStack itemStack) {
         CompoundNBT entityTag = getEntityTag(itemStack);
         if (entityTag != null) {
-            return entityTag.getBoolean(AWConstants.NBT.MANNEQUIN_IS_SMALL);
+            return entityTag.getBoolean(AWConstants.NBT.ENTITY_IS_SMALL);
         }
         return false;
     }
 
     public static float getScale(ItemStack itemStack) {
         CompoundNBT entityTag = getEntityTag(itemStack);
-        if (entityTag == null || !entityTag.contains(AWConstants.NBT.MANNEQUIN_SCALE, Constants.NBT.TAG_FLOAT)) {
+        if (entityTag == null || !entityTag.contains(AWConstants.NBT.ENTITY_SCALE, Constants.NBT.TAG_FLOAT)) {
             return 1.0f;
         }
-        return entityTag.getFloat(AWConstants.NBT.MANNEQUIN_SCALE);
+        return entityTag.getFloat(AWConstants.NBT.ENTITY_SCALE);
     }
 
     public static String getNameKey(ItemStack itemStack) {
@@ -79,12 +78,9 @@ public class MannequinItem extends Item {
         if (player == null) {
             return ActionResultType.FAIL;
         }
+        World world = context.getLevel();
         Vector3d origin = new Vector3d(player.getX(), player.getY(), player.getZ());
         MannequinRayTraceResult rayTraceResult = MannequinRayTraceResult.test(player, origin, context.getClickLocation(), context.getClickedPos());
-        if (rayTraceResult == null) {
-            return ActionResultType.FAIL;
-        }
-        World world = context.getLevel();
         ItemStack itemStack = context.getItemInHand();
         if (world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;

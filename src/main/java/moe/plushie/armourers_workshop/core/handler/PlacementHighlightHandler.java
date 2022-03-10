@@ -2,28 +2,22 @@ package moe.plushie.armourers_workshop.core.handler;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.base.AWItems;
-import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderType;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.MannequinRayTraceResult;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.core.utils.TrigUtils;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawHighlightEvent;
@@ -35,22 +29,28 @@ public class PlacementHighlightHandler {
 
     @SubscribeEvent
     public void onDrawBlockHighlightEvent(DrawHighlightEvent.HighlightBlock event) {
-        drawBounds(event);
+        PlayerEntity player = Minecraft.getInstance().player;
+        if (player == null || event.isCanceled()) {
+            return;
+        }
+        ItemStack itemStack = player.getMainHandItem();
+        if (AWConfig.enableEntityPlacementHighlight && itemStack.getItem() == AWItems.MANNEQUIN) {
+            renderEntityPlacement(player, event.getTarget(), event.getInfo(), event.getMatrix(), event.getBuffers());
+        }
+        if (AWConfig.enableBlockPlacementHighlight && itemStack.getItem() == AWItems.SKIN) {
+            SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+            if (descriptor.getType() == SkinTypes.BLOCK) {
+                renderBlockPlacement(player, event.getTarget(), event.getInfo(), event.getMatrix(), event.getBuffers());
+            }
+        }
     }
 
-    private void drawBounds(DrawHighlightEvent.HighlightBlock event) {
-        PlayerEntity player = Minecraft.getInstance().player;
-        if (player == null) {
-            return;
-        }
-        Vector3d origin = event.getInfo().getPosition();
-        BlockRayTraceResult traceResult = event.getTarget();
+    private void renderBlockPlacement(PlayerEntity player, BlockRayTraceResult traceResult, ActiveRenderInfo renderInfo, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer) {
+    }
+
+    private void renderEntityPlacement(PlayerEntity player, BlockRayTraceResult traceResult, ActiveRenderInfo renderInfo, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer) {
+        Vector3d origin = renderInfo.getPosition();
         MannequinRayTraceResult target = MannequinRayTraceResult.test(player, origin, traceResult.getLocation(), traceResult.getBlockPos());
-        if (target == null || event.isCanceled()) {
-            return;
-        }
-        IRenderTypeBuffer renderTypeBuffer = event.getBuffers();
-        MatrixStack matrixStack = event.getMatrix();
         matrixStack.pushPose();
 
         Vector3d location = target.getLocation();

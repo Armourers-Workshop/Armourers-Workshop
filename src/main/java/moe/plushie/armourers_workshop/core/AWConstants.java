@@ -24,12 +24,19 @@ public final class AWConstants {
 
         public static final String ENTITY = "EntityTag";
 
-        public static final String MANNEQUIN_IS_SMALL = "Small";
-        public static final String MANNEQUIN_IS_FLYING = "Flying";
-        public static final String MANNEQUIN_IS_GHOST = "Ghost";
-        public static final String MANNEQUIN_EXTRA_RENDER = "ExtraRender";
-        public static final String MANNEQUIN_SCALE = "Scale";
-        public static final String MANNEQUIN_TEXTURE = "Texture";
-        public static final String MANNEQUIN_POSE = "Pose";
+        public static final String ENTITY_SCALE = "Scale";
+
+        public static final String ENTITY_IS_SMALL = "Small";
+        public static final String ENTITY_IS_FLYING = "Flying";
+        public static final String ENTITY_IS_GHOST = "Ghost";
+        public static final String ENTITY_IS_VISIBLE = "ModelVisible";
+        public static final String ENTITY_EXTRA_RENDER = "ExtraRender";
+        public static final String ENTITY_TEXTURE = "Texture";
+        public static final String ENTITY_POSE = "Pose";
+
+        public static final String HOLOGRAM_PROJECTOR_ANGLE = "Angle";
+        public static final String HOLOGRAM_PROJECTOR_OFFSET = "Offset";
+        public static final String HOLOGRAM_PROJECTOR_ROTATION_SPEED = "RotSpeed";
+        public static final String HOLOGRAM_PROJECTOR_ROTATION_OFFSET = "RotOffset";
     }
 }
