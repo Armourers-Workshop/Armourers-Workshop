@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.utils;
 
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.FloatNBT;
@@ -11,6 +11,7 @@ import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Rotations;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.common.util.Constants;
 
@@ -18,6 +19,38 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class AWDataSerializers {
+
+    public static final IDataSerializer<Vector3d> VECTOR_3D = new IDataSerializer<Vector3d>() {
+        public void write(PacketBuffer buffer, Vector3d pos) {
+            buffer.writeDouble(pos.x());
+            buffer.writeDouble(pos.y());
+            buffer.writeDouble(pos.z());
+        }
+
+        public Vector3d read(PacketBuffer buffer) {
+            return new Vector3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+        }
+
+        public Vector3d copy(Vector3d pos) {
+            return pos;
+        }
+    };
+
+    public static final IDataSerializer<Vector3f> VECTOR_3F = new IDataSerializer<Vector3f>() {
+        public void write(PacketBuffer buffer, Vector3f pos) {
+            buffer.writeFloat(pos.x());
+            buffer.writeFloat(pos.y());
+            buffer.writeFloat(pos.z());
+        }
+
+        public Vector3f read(PacketBuffer buffer) {
+            return new Vector3f(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
+        }
+
+        public Vector3f copy(Vector3f pos) {
+            return pos;
+        }
+    };
 
     @SuppressWarnings("NullableProblems")
     public static final IDataSerializer<PlayerTextureDescriptor> PLAYER_TEXTURE = new IDataSerializer<PlayerTextureDescriptor>() {
@@ -50,14 +83,14 @@ public class AWDataSerializers {
     }
 
     @Nullable
-    public static SkinWardrobe readEntityWardrobe(PlayerEntity player, PacketBuffer buffer) {
+    public static Wardrobe readEntityWardrobe(PlayerEntity player, PacketBuffer buffer) {
         if (player.level == null) {
             return null;
         }
-        return SkinWardrobe.of(player.level.getEntity(buffer.readInt()));
+        return Wardrobe.of(player.level.getEntity(buffer.readInt()));
     }
 
-    public static void writeEntityWardrobe(SkinWardrobe wardrobe, PacketBuffer buffer) {
+    public static void writeEntityWardrobe(Wardrobe wardrobe, PacketBuffer buffer) {
         buffer.writeInt(wardrobe.getId());
     }
 
@@ -91,6 +124,19 @@ public class AWDataSerializers {
     public static void putBoolean(CompoundNBT nbt, String key, boolean value, boolean defaultValue) {
         if (defaultValue != value) {
             nbt.putBoolean(key, value);
+        }
+    }
+
+    public static int getInt(CompoundNBT nbt, String key, int defaultValue) {
+        if (nbt.contains(key, Constants.NBT.TAG_INT)) {
+            return nbt.getInt(key);
+        }
+        return defaultValue;
+    }
+
+    public static void putInt(CompoundNBT nbt, String key, int value, int defaultValue) {
+        if (defaultValue != value) {
+            nbt.putInt(key, value);
         }
     }
 

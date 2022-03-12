@@ -137,6 +137,7 @@ public class AWComboBox extends Button {
                 if (onPress != null) {
                     onPress.onPress(this);
                 }
+                playDownSound(Minecraft.getInstance().getSoundManager());
                 return true;
             }
         }

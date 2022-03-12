@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.color.PaintColor;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageButton;
+import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
@@ -14,8 +15,8 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.utils.TextureUtils;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
+import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
+import moe.plushie.armourers_workshop.core.wardrobe.WardrobeContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.item.ItemStack;
@@ -29,15 +30,15 @@ import java.util.Objects;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class WardrobeColourSetting extends WardrobeBaseSetting {
+public class WardrobeColourSetting extends AWTabPanel {
 
     private final ITextComponent paletteText;
     private final ArrayList<ColorPicker> pickers = new ArrayList<>();
-    private final SkinWardrobe wardrobe;
+    private final Wardrobe wardrobe;
 
     private ColorPicker activatedPicker;
 
-    public WardrobeColourSetting(SkinWardrobeContainer container) {
+    public WardrobeColourSetting(WardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.colour_settings");
         this.paletteText = getDisplayText("label.palette");
         this.wardrobe = container.getWardrobe();

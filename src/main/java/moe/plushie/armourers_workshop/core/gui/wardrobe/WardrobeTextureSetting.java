@@ -4,13 +4,13 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWComboBox;
+import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeOption;
+import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
+import moe.plushie.armourers_workshop.core.wardrobe.WardrobeContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -27,9 +27,9 @@ import java.util.HashMap;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class WardrobeTextureSetting extends WardrobeBaseSetting {
+public class WardrobeTextureSetting extends AWTabPanel {
 
-    private final SkinWardrobe wardrobe;
+    private final Wardrobe wardrobe;
     private final HashMap<PlayerTextureDescriptor.Source, String> defaultValues = new HashMap<>();
 
     private AWComboBox comboList;
@@ -38,7 +38,7 @@ public class WardrobeTextureSetting extends WardrobeBaseSetting {
     private PlayerTextureDescriptor lastDescriptor = PlayerTextureDescriptor.EMPTY;
     private PlayerTextureDescriptor.Source lastSource = PlayerTextureDescriptor.Source.NONE;
 
-    public WardrobeTextureSetting(SkinWardrobeContainer container) {
+    public WardrobeTextureSetting(WardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.man_texture");
         this.wardrobe = container.getWardrobe();
         this.prepareDefaultValue();
@@ -129,7 +129,7 @@ public class WardrobeTextureSetting extends WardrobeBaseSetting {
             }
             lastSource = PlayerTextureDescriptor.Source.NONE;
             lastDescriptor = newValue;
-            UpdateWardrobePacket packet = UpdateWardrobePacket.opt(wardrobe, SkinWardrobeOption.MANNEQUIN_TEXTURE, newValue);
+            UpdateWardrobePacket packet = UpdateWardrobePacket.field(wardrobe, UpdateWardrobePacket.Field.MANNEQUIN_TEXTURE, newValue);
             NetworkHandler.getInstance().sendToServer(packet);
             // update to use
             defaultValues.put(newValue.getSource(), newValue.getValue());

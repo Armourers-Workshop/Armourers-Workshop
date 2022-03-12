@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.core.gui.wardrobe;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageButton;
+import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeOption;
+import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
+import moe.plushie.armourers_workshop.core.wardrobe.WardrobeContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.Entity;
@@ -19,13 +19,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class WardrobeLocationSetting extends WardrobeBaseSetting {
+public class WardrobeLocationSetting extends AWTabPanel {
 
     private final float[] steps = {1.0f, 1.0f / 8.0f, 1.0f / 16.0f};
-    private final SkinWardrobe wardrobe;
+    private final Wardrobe wardrobe;
     private final Entity entity;
 
-    public WardrobeLocationSetting(SkinWardrobeContainer container) {
+    public WardrobeLocationSetting(WardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.man_offsets");
         this.wardrobe = container.getWardrobe();
         this.entity = container.getEntity();
@@ -67,7 +67,7 @@ public class WardrobeLocationSetting extends WardrobeBaseSetting {
         double[] xyz = {pos.x(), pos.y(), pos.z()};
         xyz[axis] += step;
         pos = new Vector3d(xyz[0], xyz[1], xyz[2]);
-        UpdateWardrobePacket packet = UpdateWardrobePacket.opt(wardrobe, SkinWardrobeOption.MANNEQUIN_POSITION, pos);
+        UpdateWardrobePacket packet = UpdateWardrobePacket.field(wardrobe, UpdateWardrobePacket.Field.MANNEQUIN_POSITION, pos);
         NetworkHandler.getInstance().sendToServer(packet);
     }
 

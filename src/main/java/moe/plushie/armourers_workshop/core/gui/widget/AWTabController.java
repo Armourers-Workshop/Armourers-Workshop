@@ -21,7 +21,7 @@ public class AWTabController<Target> extends Screen {
 
     private int x = 0;
     private int y = 0;
-    private boolean fullscreen = false;
+    private final boolean fullscreen;
 
     private Tab selectedTab = null;
 
@@ -98,22 +98,25 @@ public class AWTabController<Target> extends Screen {
         return null;
     }
 
-    public ArrayList<Tab> getActiveTabs() {
-        return actives;
-    }
-
-
     public void init(int x, int y, int width, int height) {
         super.init(Minecraft.getInstance(), width, height);
         this.x = x;
         this.y = y;
         this.actives.clear();
 
-        if (fullscreen) {
+        if (this.fullscreen) {
             this.initFullscreenWidgets(x, y, width, height);
         } else {
             this.initNormalWidgets(x, y, width, height);
         }
+
+        this.actives.forEach(tab -> {
+            if (tab.getScreen() instanceof AWTabPanel) {
+                AWTabPanel panel = (AWTabPanel) tab.getScreen();
+                panel.leftPos = x;
+                panel.topPos = y;
+            }
+        });
 
         if (getSelectedScreen() != null) {
             getSelectedScreen().init(Minecraft.getInstance(), width, height);
@@ -183,14 +186,6 @@ public class AWTabController<Target> extends Screen {
             }
         }
     }
-
-//    private int getYOffSet() {
-//        if (!fullscreen) {
-//            return 5;
-//        } else {
-//            return (int) (height / 2F - ((float) tabs.size() * tabSpacing) / 2F);
-//        }
-//    }
 
     @Override
     public void removed() {

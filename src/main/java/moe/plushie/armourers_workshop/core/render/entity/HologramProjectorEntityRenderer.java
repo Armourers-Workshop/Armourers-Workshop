@@ -33,7 +33,6 @@ import java.awt.*;
 @OnlyIn(Dist.CLIENT)
 public class HologramProjectorEntityRenderer<T extends HologramProjectorTileEntity> extends TileEntityRenderer<T> {
 
-
     public HologramProjectorEntityRenderer(TileEntityRendererDispatcher rendererManager) {
         super(rendererManager);
     }
@@ -114,12 +113,16 @@ public class HologramProjectorEntityRenderer<T extends HologramProjectorTileEnti
         if (entity.isOverrideOrigin()) {
             matrixStack.translate(0, -rect.getMaxY(), 0); // to model center
         }
+        matrixStack.translate(-offset.x(), -offset.y(), offset.z());
+
+        if (entity.shouldShowRotationPoint()) {
+            RenderUtils.drawBoundingBox(matrixStack, -1, -1, -1, 1, 1, 1, Color.MAGENTA, buffers);
+        }
 
         if (AWConfig.showDebugHologramProjector) {
             RenderUtils.drawPoint(matrixStack, null, 128, buffers);
         }
 
-        matrixStack.translate(-offset.x(), -offset.y(), offset.z());
         matrixStack.mulPose(new Quaternion(rotX, -rotY, rotZ, true));
         matrixStack.translate(rotationOffset.x(), -rotationOffset.y(), rotationOffset.z());
 

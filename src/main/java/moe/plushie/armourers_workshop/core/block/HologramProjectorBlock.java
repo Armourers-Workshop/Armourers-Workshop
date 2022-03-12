@@ -1,10 +1,7 @@
 package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFaceBlock;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
@@ -27,6 +24,7 @@ import javax.annotation.Nullable;
 public class HologramProjectorBlock extends HorizontalFaceBlock {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     public HologramProjectorBlock(AbstractBlock.Properties properties) {
         super(properties);
@@ -43,20 +41,11 @@ public class HologramProjectorBlock extends HorizontalFaceBlock {
         return true;
     }
 
-//    @Override
-//    public void neighborChanged(BlockState state, World world, BlockPos p_220069_3_, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
-//        if (!world.isClientSide) {
-//            boolean flag = state.getValue(LIT);
-//            if (flag != world.hasNeighborSignal(p_220069_3_)) {
-//                if (flag) {
-//                    world.getBlockTicks().scheduleTick(p_220069_3_, this, 4);
-//                } else {
-//                    world.setBlock(p_220069_3_, state.cycle(LIT), 2);
-//                }
-//            }
-//        }
-//    }
-//
+    @Override
+    public void neighborChanged(BlockState state, World world, BlockPos p_220069_3_, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
+        updatePoweredState(world, p_220069_3_);
+    }
+
 //    @Override
 //    public void tick(BlockState state, ServerWorld world, BlockPos p_225534_3_, Random p_225534_4_) {
 //        if (state.getValue(LIT) && !world.hasNeighborSignal(p_225534_3_)) {
@@ -82,5 +71,12 @@ public class HologramProjectorBlock extends HorizontalFaceBlock {
         }
         ContainerOpener.open(HologramProjectorContainer.TYPE, player, IWorldPosCallable.create(world, pos));
         return ActionResultType.CONSUME;
+    }
+
+    private void updatePoweredState(IBlockReader world, BlockPos pos) {
+        TileEntity tileEntity = world.getBlockEntity(pos);
+        if (tileEntity instanceof HologramProjectorTileEntity) {
+            ((HologramProjectorTileEntity) tileEntity).updatePowerStats();
+        }
     }
 }

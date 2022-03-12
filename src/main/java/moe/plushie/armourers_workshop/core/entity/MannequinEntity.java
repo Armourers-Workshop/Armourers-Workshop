@@ -8,8 +8,8 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.TrigUtils;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
+import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
+import moe.plushie.armourers_workshop.core.wardrobe.WardrobeContainer;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Pose;
@@ -198,9 +198,9 @@ public class MannequinEntity extends ArmorStandEntity {
             setYBodyRot((float) angle);
             return ActionResultType.SUCCESS;
         }
-        SkinWardrobe wardrobe = SkinWardrobe.of(this);
+        Wardrobe wardrobe = Wardrobe.of(this);
         if (wardrobe != null) {
-            ContainerOpener.open(SkinWardrobeContainer.TYPE, player, wardrobe);
+            ContainerOpener.open(WardrobeContainer.TYPE, player, wardrobe);
         }
         return ActionResultType.SUCCESS;
     }

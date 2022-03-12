@@ -18,30 +18,36 @@ import net.minecraft.world.World;
 @SuppressWarnings("NullableProblems")
 public class HologramProjectorContainer extends Container {
 
-    private final IWorldPosCallable pos;    public static final ContainerType<HologramProjectorContainer> TYPE = ContainerTypeBuilder
+    public static final ContainerType<HologramProjectorContainer> TYPE = ContainerTypeBuilder
             .create(HologramProjectorContainer::new, IWorldPosCallable.class)
             .withTitle(TranslateUtils.title("inventory.armourers_workshop.hologram-projector"))
             .withDataProvider(AWDataSerializers::readWorldPos, AWDataSerializers::writeWorldPos)
             .build("hologram-projector");
 
-    private final PlayerEntity player;
+    private final IWorldPosCallable pos;
+
     private final PlayerInventory playerInventory;
     private final IInventory inventory;
-
     private int group;
-
 
     public HologramProjectorContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable worldPos) {
         super(TYPE, containerId);
         this.pos = worldPos;
-        this.player = playerInventory.player;
         this.playerInventory = playerInventory;
-        this.inventory = getInventory(worldPos);
+        this.inventory = getInventory();
         this.reload(0, 0, 240, 240);
     }
 
-    private IInventory getInventory(IWorldPosCallable worldPos) {
-        TileEntity tileEntity = worldPos.evaluate(World::getBlockEntity).orElse(null);
+    public HologramProjectorTileEntity getEntity() {
+        TileEntity tileEntity = pos.evaluate(World::getBlockEntity).orElse(null);
+        if (tileEntity instanceof HologramProjectorTileEntity) {
+            return (HologramProjectorTileEntity) tileEntity;
+        }
+        return null;
+    }
+
+    public IInventory getInventory() {
+        TileEntity tileEntity = pos.evaluate(World::getBlockEntity).orElse(null);
         if (tileEntity instanceof IInventory) {
             return (IInventory) tileEntity;
         }
@@ -142,6 +148,4 @@ public class HologramProjectorContainer extends Container {
             return getGroup() == group;
         }
     }
-
-
 }
