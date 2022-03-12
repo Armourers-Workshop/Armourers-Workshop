@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.function.BiConsumer;
 
 @OnlyIn(Dist.CLIENT)
-public final class SkinWardrobeState implements SkinBakery.IBakeListener {
+public final class WardrobeState implements SkinBakery.IBakeListener {
 
     private final Inventory inventory;
 
@@ -48,7 +48,7 @@ public final class SkinWardrobeState implements SkinBakery.IBakeListener {
     private boolean isLoaded = false;
     private boolean isListening = false;
 
-    public SkinWardrobeState(Inventory inventory) {
+    public WardrobeState(Inventory inventory) {
         this.inventory = inventory;
     }
 

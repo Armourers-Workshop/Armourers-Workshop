@@ -9,14 +9,14 @@ import moe.plushie.armourers_workshop.core.block.HologramProjectorContainer;
 import moe.plushie.armourers_workshop.core.command.SkinCommands;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.hologramprojector.HologramProjectorScreen;
-import moe.plushie.armourers_workshop.core.gui.wardrobe.SkinWardrobeScreen;
+import moe.plushie.armourers_workshop.core.gui.wardrobe.WardrobeScreen;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.render.entity.HologramProjectorEntityRenderer;
 import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
+import moe.plushie.armourers_workshop.core.wardrobe.WardrobeContainer;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntityType;
@@ -61,7 +61,7 @@ public class AWRegistry {
 
     public void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
         event.getRegistry().registerAll(
-                SkinWardrobeContainer.TYPE,
+                WardrobeContainer.TYPE,
                 HologramProjectorContainer.TYPE
         );
     }
@@ -92,7 +92,7 @@ public class AWRegistry {
         modEventBus.addListener(this::registerItemModels);
 //        modEventBus.addListener(this::handleModelBake);
 
-        ScreenManager.register(SkinWardrobeContainer.TYPE, SkinWardrobeScreen::new);
+        ScreenManager.register(WardrobeContainer.TYPE, WardrobeScreen::new);
         ScreenManager.register(HologramProjectorContainer.TYPE, HologramProjectorScreen::new);
 
         ClientRegistry.registerKeyBinding(AWKeyBindings.UNDO_KEY);

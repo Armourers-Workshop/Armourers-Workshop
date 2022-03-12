@@ -20,22 +20,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("NullableProblems")
-public class SkinWardrobeContainer extends Container {
+public class WardrobeContainer extends Container {
 
-    public static final ContainerType<SkinWardrobeContainer> TYPE = ContainerTypeBuilder
-            .create(SkinWardrobeContainer::new, SkinWardrobe.class)
+    public static final ContainerType<WardrobeContainer> TYPE = ContainerTypeBuilder
+            .create(WardrobeContainer::new, Wardrobe.class)
             .withTitle(TranslateUtils.title("inventory.armourers_workshop.wardrobe"))
             .withDataProvider(AWDataSerializers::readEntityWardrobe, AWDataSerializers::writeEntityWardrobe)
             .build("wardrobe");
 
-    private final SkinWardrobe wardrobe;
+    private final Wardrobe wardrobe;
     private final ArrayList<Slot> customSlots = new ArrayList<>();
 
     private final int slotsX = 83;
     private final int slotsY = 27;
     private Group group = null;
 
-    public SkinWardrobeContainer(int containerId, PlayerInventory inventory, SkinWardrobe wardrobe) {
+    public WardrobeContainer(int containerId, PlayerInventory inventory, Wardrobe wardrobe) {
         super(TYPE, containerId);
         this.wardrobe = wardrobe;
 
@@ -180,7 +180,7 @@ public class SkinWardrobeContainer extends Container {
         this.group = group;
     }
 
-    public SkinWardrobe getWardrobe() {
+    public Wardrobe getWardrobe() {
         return wardrobe;
     }
 

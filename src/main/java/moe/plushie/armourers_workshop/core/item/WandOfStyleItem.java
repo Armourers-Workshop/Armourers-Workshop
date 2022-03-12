@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
+import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
+import moe.plushie.armourers_workshop.core.wardrobe.WardrobeContainer;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -51,9 +51,9 @@ public class WandOfStyleItem extends Item {
     }
 
     private void openGUI(PlayerEntity player, Entity entity) {
-        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        Wardrobe wardrobe = Wardrobe.of(entity);
         if (wardrobe != null && wardrobe.getProfile().canCustomize()) {
-            ContainerOpener.open(SkinWardrobeContainer.TYPE, player, wardrobe);
+            ContainerOpener.open(WardrobeContainer.TYPE, player, wardrobe);
         }
     }
 }

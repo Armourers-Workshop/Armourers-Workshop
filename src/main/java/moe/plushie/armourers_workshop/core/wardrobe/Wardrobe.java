@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.wardrobe;
 
 import com.google.common.cache.Cache;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
-import moe.plushie.armourers_workshop.core.api.common.ISkinWardrobe;
+import moe.plushie.armourers_workshop.core.api.common.IWardrobe;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 @SuppressWarnings("unused")
-public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT> {
+public class Wardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
 
     private final HashSet<EquipmentSlotType> armourFlags = new HashSet<>();
     private final HashMap<SkinSlotType, Integer> skinSlots = new HashMap<>();
@@ -32,31 +32,31 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     private final Inventory inventory = new Inventory(SkinSlotType.getTotalSize());
 
     private final WeakReference<Entity> entity;
-    private final SkinWardrobeState state;
+    private final WardrobeState state;
     private final EntityProfile profile;
 
     private int id; // a.k.a entity id
 
-    public SkinWardrobe(Entity entity, EntityProfile profile) {
+    public Wardrobe(Entity entity, EntityProfile profile) {
         this.id = entity.getId();
-        this.state = new SkinWardrobeState(inventory);
+        this.state = new WardrobeState(inventory);
         this.entity = new WeakReference<>(entity);
         this.profile = profile;
         this.inventory.addListener(inventory -> state.invalidateAll());
     }
 
     @Nullable
-    public static SkinWardrobe of(@Nullable Entity entity) {
+    public static Wardrobe of(@Nullable Entity entity) {
         if (entity == null) {
             return null;
         }
         Object key = entity.getId();
-        Cache<Object, LazyOptional<SkinWardrobe>> caches = SkinWardrobeStorage.getCaches(entity);
-        LazyOptional<SkinWardrobe> wardrobe = caches.getIfPresent(key);
+        Cache<Object, LazyOptional<Wardrobe>> caches = WardrobeStorage.getCaches(entity);
+        LazyOptional<Wardrobe> wardrobe = caches.getIfPresent(key);
         if (wardrobe != null) {
             return wardrobe.resolve().orElse(null);
         }
-        wardrobe = entity.getCapability(SkinWardrobeProvider.WARDROBE_KEY);
+        wardrobe = entity.getCapability(WardrobeProvider.WARDROBE_KEY);
         wardrobe.addListener(self -> caches.invalidate(key));
         caches.put(key, wardrobe);
         return wardrobe.resolve().orElse(null);
@@ -153,22 +153,22 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
-        SkinWardrobeStorage.saveSkinSlots(skinSlots, nbt);
-        SkinWardrobeStorage.saveVisibility(armourFlags, nbt);
-        SkinWardrobeStorage.saveInventoryItems(inventory, nbt);
+        WardrobeStorage.saveSkinSlots(skinSlots, nbt);
+        WardrobeStorage.saveVisibility(armourFlags, nbt);
+        WardrobeStorage.saveInventoryItems(inventory, nbt);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        SkinWardrobeStorage.loadSkinSlots(skinSlots, nbt);
-        SkinWardrobeStorage.loadVisibility(armourFlags, nbt);
-        SkinWardrobeStorage.loadInventoryItems(inventory, nbt);
+        WardrobeStorage.loadSkinSlots(skinSlots, nbt);
+        WardrobeStorage.loadVisibility(armourFlags, nbt);
+        WardrobeStorage.loadInventoryItems(inventory, nbt);
         state.invalidateAll();
     }
 
     @OnlyIn(Dist.CLIENT)
-    public SkinWardrobeState snapshot() {
+    public WardrobeState snapshot() {
         Entity entity = getEntity();
         if (entity != null) {
             if (state.tick(entity)) {

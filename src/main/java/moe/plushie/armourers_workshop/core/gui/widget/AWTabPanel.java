@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.gui.wardrobe;
+package moe.plushie.armourers_workshop.core.gui.widget;
 
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.client.gui.screen.Screen;
@@ -7,14 +7,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class WardrobeBaseSetting extends Screen {
+public class AWTabPanel extends Screen {
 
     public int leftPos = 0;
     public int topPos = 0;
 
     private final String baseKey;
 
-    protected WardrobeBaseSetting(String baseKey) {
+    protected AWTabPanel(String baseKey) {
         super(TranslateUtils.title(baseKey));
         this.baseKey = baseKey;
     }

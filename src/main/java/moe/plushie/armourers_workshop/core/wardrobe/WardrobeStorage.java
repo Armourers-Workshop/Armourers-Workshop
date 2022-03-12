@@ -23,12 +23,12 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-public class SkinWardrobeStorage implements Capability.IStorage<SkinWardrobe> {
+public class WardrobeStorage implements Capability.IStorage<Wardrobe> {
 
-    private final static Cache<Object, LazyOptional<SkinWardrobe>> CLIENT_CACHES = CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.SECONDS).build();
-    private final static Cache<Object, LazyOptional<SkinWardrobe>> SERVER_CACHES = CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.SECONDS).build();
+    private final static Cache<Object, LazyOptional<Wardrobe>> CLIENT_CACHES = CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.SECONDS).build();
+    private final static Cache<Object, LazyOptional<Wardrobe>> SERVER_CACHES = CacheBuilder.newBuilder().expireAfterAccess(3, TimeUnit.SECONDS).build();
 
-    public static Cache<Object, LazyOptional<SkinWardrobe>> getCaches(Entity entity) {
+    public static Cache<Object, LazyOptional<Wardrobe>> getCaches(Entity entity) {
         if (entity.level != null && entity.level.isClientSide) {
             return CLIENT_CACHES;
         }
@@ -109,11 +109,11 @@ public class SkinWardrobeStorage implements Capability.IStorage<SkinWardrobe> {
 
     @Nullable
     @Override
-    public INBT writeNBT(Capability<SkinWardrobe> capability, SkinWardrobe instance, Direction side) {
+    public INBT writeNBT(Capability<Wardrobe> capability, Wardrobe instance, Direction side) {
         return null;
     }
 
     @Override
-    public void readNBT(Capability<SkinWardrobe> capability, SkinWardrobe instance, Direction side, INBT nbt) {
+    public void readNBT(Capability<Wardrobe> capability, Wardrobe instance, Direction side, INBT nbt) {
     }
 }

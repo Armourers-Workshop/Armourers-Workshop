@@ -2,12 +2,11 @@ package moe.plushie.armourers_workshop.core.gui.hologramprojector;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorContainer;
-import moe.plushie.armourers_workshop.core.gui.wardrobe.WardrobeBaseSetting;
+import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabController;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -44,14 +43,6 @@ public class HologramProjectorScreen extends ContainerScreen<HologramProjectorCo
         menu.reload(inventoryX, inventoryY, width, height);
         tabController.init(0, 0, width, height);
         addWidget(tabController);
-
-        tabController.getActiveTabs().forEach(tab -> {
-            if (tab.getScreen() instanceof WardrobeBaseSetting) {
-                WardrobeBaseSetting panel = (WardrobeBaseSetting) tab.getScreen();
-                panel.leftPos = leftPos;
-                panel.topPos = topPos;
-            }
-        });
     }
 
     @Override
@@ -61,9 +52,6 @@ public class HologramProjectorScreen extends ContainerScreen<HologramProjectorCo
     }
 
     protected void initTabs() {
-//        boolean isPlayer = entity instanceof PlayerEntity;
-//        boolean isMannequin = entity instanceof MannequinEntity;
-//
         tabController.clear();
 
         tabController.add(new HologramProjectorInventorySetting(menu))
@@ -97,14 +85,10 @@ public class HologramProjectorScreen extends ContainerScreen<HologramProjectorCo
 
     @Override
     protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-//        RenderUtils.blit(matrixStack, leftPos, topPos, 0, 0, 256, 151, RenderUtils.TEX_WARDROBE_1);
-//        RenderUtils.blit(matrixStack, leftPos + 256, topPos, 0, 0, 22, 151, RenderUtils.TEX_WARDROBE_2);
-
+        tabController.render(matrixStack, mouseX, mouseY, partialTicks);
         if (menu.shouldRenderPlayerInventory()) {
             RenderUtils.blit(matrixStack, inventoryX, inventoryY, 0, 0, 176, 98, RenderUtils.TEX_PLAYER_INVENTORY);
         }
-
-        tabController.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -147,32 +131,23 @@ public class HologramProjectorScreen extends ContainerScreen<HologramProjectorCo
 //        }
 //        return super.mouseReleased(mouseX, mouseY, button);
 //    }
-//
-//    @Override
-//    public boolean mouseDragged(double mouseX, double mouseY, int button, double p_231045_6_, double p_231045_8_) {
-//        if (tabController.mouseDragged(mouseX, mouseY, button, p_231045_6_, p_231045_8_)) {
-//            return true;
-//        }
-//        return super.mouseDragged(mouseX, mouseY, button, p_231045_6_, p_231045_8_);
-//    }
-//
-//    @Override
-//    public boolean keyPressed(int key, int p_231046_2_, int p_231046_3_) {
-//        if (key == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
-//            this.onClose();
-//            return true;
-//        }
-//        return this.getFocused() != null && this.getFocused().keyPressed(key, p_231046_2_, p_231046_3_);
-//    }
-//
-//    @Override
-//    public boolean isMouseOver(double mouseX, double mouseY) {
-//        if (tabController.isDragging()) {
-//            return true;
-//        }
-//        return super.isMouseOver(mouseX, mouseY);
-//    }
-//
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double p_231045_6_, double p_231045_8_) {
+        if (tabController.mouseDragged(mouseX, mouseY, button, p_231045_6_, p_231045_8_)) {
+            return true;
+        }
+        return super.mouseDragged(mouseX, mouseY, button, p_231045_6_, p_231045_8_);
+    }
+
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        if (tabController.isDragging()) {
+            return true;
+        }
+        return super.isMouseOver(mouseX, mouseY);
+    }
+
 //    @Override
 //    protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
 //        if (super.hasClickedOutside(mouseX, mouseY, left, top, button)) {
@@ -184,21 +159,4 @@ public class HologramProjectorScreen extends ContainerScreen<HologramProjectorCo
     private void switchTab(AWTabController<Integer>.Tab tab) {
         menu.setGroup(tab.getTarget() != null ? tab.getTarget() : 0);
     }
-//
-//    private int getExtendedHeight() {
-//        AWTabController<SkinWardrobeContainer.Group>.Tab tab = tabController.getSelectedTab();
-//        if (tab != null && tab.getTarget() != null) {
-//            return tab.getTarget().getExtendedHeight();
-//        }
-//        return 0;
-//    }
-//
-//    @Nullable
-//    private ColourSettingPanel.ColorPicker getActivatedPicker() {
-//        Screen screen = tabController.getSelectedScreen();
-//        if (screen instanceof ColourSettingPanel) {
-//            return ((ColourSettingPanel) screen).getActivatedPicker();
-//        }
-//        return null;
-//    }
 }

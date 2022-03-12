@@ -34,9 +34,13 @@ public final class AWConstants {
         public static final String ENTITY_TEXTURE = "Texture";
         public static final String ENTITY_POSE = "Pose";
 
-        public static final String HOLOGRAM_PROJECTOR_ANGLE = "Angle";
-        public static final String HOLOGRAM_PROJECTOR_OFFSET = "Offset";
-        public static final String HOLOGRAM_PROJECTOR_ROTATION_SPEED = "RotSpeed";
-        public static final String HOLOGRAM_PROJECTOR_ROTATION_OFFSET = "RotOffset";
+        public static final String TILE_ENTITY_ANGLE = "Angle";
+        public static final String TILE_ENTITY_OFFSET = "Offset";
+        public static final String TILE_ENTITY_ROTATION_SPEED = "RotSpeed";
+        public static final String TILE_ENTITY_ROTATION_OFFSET = "RotOffset";
+
+        public static final String TILE_ENTITY_POWER_MODE = "PowerMode";
+        public static final String TILE_ENTITY_IS_GLOWING = "Glowing";
+        public static final String TILE_ENTITY_POWERED = "Powered";
     }
 }

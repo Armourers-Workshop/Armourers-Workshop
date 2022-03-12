@@ -69,11 +69,9 @@ public class AWSliderBox extends Button {
         GuiUtils.drawContinuousTexturedBox(matrixStack, rightIconX, y, 0, rightV, iconWidth, height, 200, 20, 2, 3, 2, 2, 0);
         GuiUtils.drawContinuousTexturedBox(matrixStack, valueX, y, 0, contentV, valueWidth, height, 200, 20, 2, 3, 2, 2, 0);
 
-        int color = 14737632;
-        if (packedFGColor != 0) {
-            color = packedFGColor;
-        } else if ((leftState | rightState | contentState) != 0) {
-            color = 16777120;
+        int color = 0xffffffff;
+        if ((leftState | rightState | contentState) != 0) {
+            color = 0xffffffa0;
         }
         drawCenteredString(matrixStack, fontRenderer, getMessage(), x + width / 2, y + (height - 8) / 2, color);
     }
@@ -162,7 +160,9 @@ public class AWSliderBox extends Button {
         if (Math.abs(value - 0.5) < 0.01) {
             value = 0.5; // attract to mid value.
         }
-        updateValue(minValue + value * (maxValue - minValue));
+        double resolvedValue = value * (maxValue - minValue);
+        resolvedValue = (int) (resolvedValue / stepValue) * stepValue;
+        updateValue(minValue + resolvedValue);
     }
 
     private void updateValue(double value) {

@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.core.gui.wardrobe;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWSliderBox;
+import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeContainer;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeOption;
+import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
+import moe.plushie.armourers_workshop.core.wardrobe.WardrobeContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -28,9 +28,9 @@ import java.util.function.Function;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class WardrobeRotationSetting extends WardrobeBaseSetting {
+public class WardrobeRotationSetting extends AWTabPanel {
 
-    private final SkinWardrobe wardrobe;
+    private final Wardrobe wardrobe;
     private final Entity entity;
 
     private int modelLeft = 0;
@@ -42,7 +42,7 @@ public class WardrobeRotationSetting extends WardrobeBaseSetting {
     private AWSliderBox sliderZ;
 
 
-    public WardrobeRotationSetting(SkinWardrobeContainer container) {
+    public WardrobeRotationSetting(WardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.man_rotations");
         this.wardrobe = container.getWardrobe();
         this.entity = container.getEntity();
@@ -128,7 +128,7 @@ public class WardrobeRotationSetting extends WardrobeBaseSetting {
 
     private AWSliderBox addSlider(int x, int y, int width, int height, String key) {
         Function<Double, ITextComponent> titleProvider = currentValue -> {
-            String formattedValue = String.format("%s%.2f", key, currentValue);
+            String formattedValue = String.format("%s%.2f\u00b0", key, currentValue);
             return new StringTextComponent(formattedValue);
         };
         AWSliderBox slider = new AWSliderBox(x, y, width, height, titleProvider, -180, 180, this::updateValue);
@@ -149,7 +149,7 @@ public class WardrobeRotationSetting extends WardrobeBaseSetting {
             return;
         }
         CompoundNBT nbt = ((MannequinEntity) entity).saveCustomPose();
-        UpdateWardrobePacket packet = UpdateWardrobePacket.opt(wardrobe, SkinWardrobeOption.MANNEQUIN_POSE, nbt);
+        UpdateWardrobePacket packet = UpdateWardrobePacket.field(wardrobe, UpdateWardrobePacket.Field.MANNEQUIN_POSE, nbt);
         NetworkHandler.getInstance().sendToServer(packet);
     }
 

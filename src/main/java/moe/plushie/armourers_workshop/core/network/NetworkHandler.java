@@ -102,6 +102,8 @@ public class NetworkHandler {
         PACKET_REQUEST_FILE(RequestFilePacket.class, RequestFilePacket::new),
         PACKET_RESPONSE_FILE(ResponseFilePacket.class, ResponseFilePacket::new),
 
+        PACKET_UPDATE_HOLOGRAM_PROJECTOR(UpdateHologramProjectorPacket.class, UpdateHologramProjectorPacket::new),
+
         PACKET_OPEN_WARDROBE(OpenWardrobePacket.class, OpenWardrobePacket::new),
         PACKET_UPDATE_WARDROBE(UpdateWardrobePacket.class, UpdateWardrobePacket::new);
 

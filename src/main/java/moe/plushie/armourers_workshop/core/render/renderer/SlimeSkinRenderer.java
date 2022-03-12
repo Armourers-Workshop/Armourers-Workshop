@@ -4,8 +4,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.render.layer.ForwardingLayer;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobeState;
+import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
+import moe.plushie.armourers_workshop.core.wardrobe.WardrobeState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.layers.SlimeGelLayer;
 import net.minecraft.client.renderer.entity.model.SlimeModel;
@@ -29,11 +29,11 @@ public class SlimeSkinRenderer<T extends SlimeEntity, M extends SlimeModel<T>> e
 
     @Override
     public void willRender(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
-        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        Wardrobe wardrobe = Wardrobe.of(entity);
         if (wardrobe == null) {
             return;
         }
-        SkinWardrobeState snapshot = wardrobe.snapshot();
+        WardrobeState snapshot = wardrobe.snapshot();
         if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_HEAD)) {
             for (ModelRenderer modelRenderer : model.parts()) {
                 addOverrider(modelRenderer);

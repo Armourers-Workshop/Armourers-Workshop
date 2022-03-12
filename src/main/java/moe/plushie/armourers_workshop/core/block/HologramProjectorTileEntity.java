@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.base.AWTileEntities;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
@@ -57,6 +58,11 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
 
     private float modelScale = 1.0f;
 
+    private boolean isGlowing = true;
+    private boolean isRunning = true;
+    private boolean showRotationPoint = false;
+    private int powerMode = 0;
+
     private Vector3f modelOffset = new Vector3f();
     private Vector3f modelAngle = new Vector3f();
 
@@ -67,22 +73,29 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
         super(AWTileEntities.HOLOGRAM_PROJECTOR);
     }
 
-    protected void readFromNBT(CompoundNBT nbt) {
-        ItemStackHelper.loadAllItems(nbt, this.items);
-        this.modelAngle = AWDataSerializers.getVector3f(nbt, AWConstants.NBT.HOLOGRAM_PROJECTOR_ANGLE);
-        this.modelOffset = AWDataSerializers.getVector3f(nbt, AWConstants.NBT.HOLOGRAM_PROJECTOR_OFFSET);
-        this.rotationSpeed = AWDataSerializers.getVector3f(nbt, AWConstants.NBT.HOLOGRAM_PROJECTOR_ROTATION_SPEED);
-        this.rotationOffset = AWDataSerializers.getVector3f(nbt, AWConstants.NBT.HOLOGRAM_PROJECTOR_ROTATION_OFFSET);
-        this.modelScale = AWDataSerializers.getFloat(nbt, AWConstants.NBT.ENTITY_SCALE, 1.0f);
+    public void readFromNBT(CompoundNBT nbt) {
+        ItemStackHelper.loadAllItems(nbt, items);
+        modelAngle = AWDataSerializers.getVector3f(nbt, AWConstants.NBT.TILE_ENTITY_ANGLE);
+        modelOffset = AWDataSerializers.getVector3f(nbt, AWConstants.NBT.TILE_ENTITY_OFFSET);
+        rotationSpeed = AWDataSerializers.getVector3f(nbt, AWConstants.NBT.TILE_ENTITY_ROTATION_SPEED);
+        rotationOffset = AWDataSerializers.getVector3f(nbt, AWConstants.NBT.TILE_ENTITY_ROTATION_OFFSET);
+        modelScale = AWDataSerializers.getFloat(nbt, AWConstants.NBT.ENTITY_SCALE, 1.0f);
+        powerMode = AWDataSerializers.getInt(nbt, AWConstants.NBT.TILE_ENTITY_POWER_MODE, 0);
+        isGlowing = AWDataSerializers.getBoolean(nbt, AWConstants.NBT.TILE_ENTITY_IS_GLOWING, true);
+        isRunning = AWDataSerializers.getBoolean(nbt, AWConstants.NBT.TILE_ENTITY_POWERED, false);
+        renderBoundingBox = null;
     }
 
-    protected void writeToNBT(CompoundNBT nbt) {
-        ItemStackHelper.saveAllItems(nbt, this.items);
-        AWDataSerializers.putVector3f(nbt, AWConstants.NBT.HOLOGRAM_PROJECTOR_ANGLE, this.modelAngle);
-        AWDataSerializers.putVector3f(nbt, AWConstants.NBT.HOLOGRAM_PROJECTOR_OFFSET, this.modelOffset);
-        AWDataSerializers.putVector3f(nbt, AWConstants.NBT.HOLOGRAM_PROJECTOR_ROTATION_SPEED, this.rotationSpeed);
-        AWDataSerializers.putVector3f(nbt, AWConstants.NBT.HOLOGRAM_PROJECTOR_ROTATION_OFFSET, this.rotationOffset);
-        AWDataSerializers.putFloat(nbt, AWConstants.NBT.ENTITY_SCALE, this.modelScale, 1.0f);
+    public void writeToNBT(CompoundNBT nbt) {
+        ItemStackHelper.saveAllItems(nbt, items);
+        AWDataSerializers.putVector3f(nbt, AWConstants.NBT.TILE_ENTITY_ANGLE, modelAngle);
+        AWDataSerializers.putVector3f(nbt, AWConstants.NBT.TILE_ENTITY_OFFSET, modelOffset);
+        AWDataSerializers.putVector3f(nbt, AWConstants.NBT.TILE_ENTITY_ROTATION_SPEED, rotationSpeed);
+        AWDataSerializers.putVector3f(nbt, AWConstants.NBT.TILE_ENTITY_ROTATION_OFFSET, rotationOffset);
+        AWDataSerializers.putFloat(nbt, AWConstants.NBT.ENTITY_SCALE, modelScale, 1.0f);
+        AWDataSerializers.putInt(nbt, AWConstants.NBT.TILE_ENTITY_POWER_MODE, powerMode, 0);
+        AWDataSerializers.putBoolean(nbt, AWConstants.NBT.TILE_ENTITY_IS_GLOWING, isGlowing, true);
+        AWDataSerializers.putBoolean(nbt, AWConstants.NBT.TILE_ENTITY_POWERED, isRunning, false);
     }
 
     @Override
@@ -96,13 +109,6 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
         super.save(nbt);
         this.writeToNBT(nbt);
         return nbt;
-    }
-
-    @Override
-    public void setChanged() {
-        super.setChanged();
-        // tile entity config has changed must recalculate render box
-        this.renderBoundingBox = null;
     }
 
     @Nullable
@@ -131,39 +137,79 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
         this.readFromNBT(tag);
     }
 
-    public Vector3f getRotationSpeed() {
-        return rotationSpeed;
+    public void updatePowerStats() {
+        boolean newValue = isRunningForState(getBlockState());
+        if (newValue != isRunning) {
+            updateBlockStates();
+        }
     }
 
-    public Vector3f getRotationOffset() {
-        return rotationOffset;
+    public void updateBlockStates() {
+        BlockState state = getBlockState();
+        isRunning = isRunningForState(state);
+        renderBoundingBox = null;
+        boolean growing = isRunning && isGlowing;
+        if (level != null && !level.isClientSide) {
+            if (state.getValue(HologramProjectorBlock.LIT) != growing) {
+                BlockState newState = state.setValue(HologramProjectorBlock.LIT, growing);
+                level.setBlock(getBlockPos(), newState, 2);
+            } else {
+                level.sendBlockUpdated(getBlockPos(), state, state, 2);
+            }
+        }
     }
 
-    public Vector3f getModelOffset() {
-        return modelOffset;
+    public int getPowerMode() {
+        return powerMode;
     }
 
-    public Vector3f getModelAngle() {
-        return modelAngle;
+    public void setPowerMode(int powerMode) {
+        this.powerMode = powerMode;
+        this.updateBlockStates();
     }
 
-    public float getModelScale() {
-        return modelScale;
+    public boolean isRunning() {
+        return isRunning;
     }
 
-
-    public boolean isPowered() {
-        return true;
+    public boolean isRunningForState(BlockState state) {
+        if (level != null && !SkinDescriptor.of(items.get(0)).isEmpty()) {
+            switch (powerMode) {
+                case 1:
+                    return level.hasNeighborSignal(getBlockPos());
+                case 2:
+                    return !level.hasNeighborSignal(getBlockPos());
+                default:
+                    return true;
+            }
+        }
+        return false;
     }
 
     public boolean isOverrideLight() {
-        return true;
+        return isGlowing;
     }
 
     public boolean isOverrideOrigin() {
         return true;
     }
 
+    public boolean isGlowing() {
+        return isGlowing;
+    }
+
+    public void setGlowing(boolean glowing) {
+        this.isGlowing = glowing;
+        this.updateBlockStates();
+    }
+
+    public void setShowRotationPoint(boolean showRotationPoint) {
+        this.showRotationPoint = showRotationPoint;
+    }
+
+    public boolean shouldShowRotationPoint() {
+        return showRotationPoint;
+    }
 
     @Override
     protected NonNullList<ItemStack> getItems() {
@@ -173,6 +219,12 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
     @Override
     protected void setItems(NonNullList<ItemStack> items) {
         this.items = items;
+    }
+
+    @Override
+    public void setItem(int p_70299_1_, ItemStack p_70299_2_) {
+        super.setItem(p_70299_1_, p_70299_2_);
+        this.updateBlockStates();
     }
 
     @Override
@@ -190,6 +242,46 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
         return null;
     }
 
+
+    public Vector3f getRotationSpeed() {
+        return this.rotationSpeed;
+    }
+
+    public void setRotationSpeed(Vector3f rotationSpeed) {
+        this.rotationSpeed = rotationSpeed;
+        this.updateBlockStates();
+    }
+
+    public Vector3f getRotationOffset() {
+        return this.rotationOffset;
+    }
+
+    public void setRotationOffset(Vector3f rotationOffset) {
+        this.rotationOffset = rotationOffset;
+        this.updateBlockStates();
+    }
+
+    public Vector3f getModelOffset() {
+        return this.modelOffset;
+    }
+
+    public void setModelOffset(Vector3f modelOffset) {
+        this.modelOffset = modelOffset;
+        this.updateBlockStates();
+    }
+
+    public Vector3f getModelAngle() {
+        return this.modelAngle;
+    }
+
+    public void setModelAngle(Vector3f modelAngle) {
+        this.modelAngle = modelAngle;
+        this.updateBlockStates();
+    }
+
+    public float getModelScale() {
+        return modelScale;
+    }
 
     @OnlyIn(Dist.CLIENT)
     public void setRenderBoundingBoxWithRect(Rectangle3f rect) {
@@ -244,7 +336,7 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
     @OnlyIn(Dist.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        if (!isPowered()) {
+        if (!isRunning()) {
             return IGNORED_RENDER_BOX;
         }
         if (renderBoundingBox != null) {

@@ -15,7 +15,7 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.core.wardrobe.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
@@ -96,7 +96,7 @@ public class SkinCommands {
             requiredDescriptor = SkinLoader.getInstance().cacheSkin(requiredDescriptor, skin);
             SkinDescriptor descriptor = new SkinDescriptor(requiredDescriptor.getIdentifier(), skin.getType(), ColorScheme.EMPTY);
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+                Wardrobe wardrobe = Wardrobe.of(player);
                 SkinSlotType slotType = SkinSlotType.of(skin.getType());
                 if (slotType == null || wardrobe == null) {
                     continue;
@@ -113,7 +113,7 @@ public class SkinCommands {
 
         static int clearSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+                Wardrobe wardrobe = Wardrobe.of(player);
                 if (wardrobe == null) {
                     continue;
                 }
