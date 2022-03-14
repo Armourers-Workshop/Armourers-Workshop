@@ -1,6 +1,7 @@
-package moe.plushie.armourers_workshop.core.block;
+package moe.plushie.armourers_workshop.core.container;
 
 import moe.plushie.armourers_workshop.core.base.AWBlocks;
+import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.ContainerTypeBuilder;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;

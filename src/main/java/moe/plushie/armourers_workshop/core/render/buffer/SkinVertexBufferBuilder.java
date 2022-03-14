@@ -6,7 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;

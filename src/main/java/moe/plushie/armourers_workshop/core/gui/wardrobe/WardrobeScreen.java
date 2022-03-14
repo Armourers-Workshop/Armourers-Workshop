@@ -9,8 +9,8 @@ import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer
 import moe.plushie.armourers_workshop.core.utils.AWContributors;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.WardrobeContainer;
+import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;

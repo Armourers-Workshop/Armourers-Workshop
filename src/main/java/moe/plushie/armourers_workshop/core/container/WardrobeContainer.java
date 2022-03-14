@@ -1,6 +1,7 @@
-package moe.plushie.armourers_workshop.core.wardrobe;
+package moe.plushie.armourers_workshop.core.container;
 
 import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.capability.Wardrobe;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.ContainerTypeBuilder;

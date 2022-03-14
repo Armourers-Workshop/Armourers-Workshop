@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.command;
+package moe.plushie.armourers_workshop.core.utils.command;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -10,12 +10,12 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
+import moe.plushie.armourers_workshop.core.capability.Wardrobe;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;

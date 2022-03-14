@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
-import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.WardrobeContainer;
+import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;

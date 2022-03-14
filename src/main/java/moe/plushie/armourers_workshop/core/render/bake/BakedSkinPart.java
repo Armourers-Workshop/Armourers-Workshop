@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.core.render.bake;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.color.ColorDescriptor;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.color.PaintColor;
+import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;

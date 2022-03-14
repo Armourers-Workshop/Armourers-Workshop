@@ -1,12 +1,6 @@
 package moe.plushie.armourers_workshop.core;
 
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPart;
-import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-
-import javax.annotation.Nullable;
 
 public class AWConfig {
 
@@ -47,22 +41,20 @@ public class AWConfig {
     public static boolean tooltipSkinName;
     public static boolean tooltipSkinAuthor;
     public static boolean tooltipSkinType;
-    public static boolean tooltipDebug = false;
     public static boolean tooltipFlavour;
     public static boolean tooltipOpenWardrobe;
+    public static boolean debugTooltip = false;
 
     // Debug
     public static int texturePaintingType;
     public static boolean showF3DebugInfo;
     public static float ploOffset = -0.01f;
 
-    public static boolean showDebugHologramProjector = false;
-
     public static boolean enableEntityPlacementHighlight = true;
     public static boolean enableBlockPlacementHighlight = true;
 
     public static boolean enableModelOverridden = true;
-    public static boolean enableWireframeRender;
+    public static boolean enableWireframeRender = false;
     public static boolean enableMagicWhenContributor = false;
 
     // Wardrobe
@@ -85,10 +77,15 @@ public class AWConfig {
     public static boolean showSkinRenderBounds;
     public static boolean showSortOrderToolTip;
 
-    public static boolean showDebugFullFrame = false;
-    public static boolean showDebugPartFrame = false;
-    public static boolean showDebugTargetPosition = false;
-    public static boolean showDebugTargetBounds = false;
+
+    public static boolean debugSkinnableBlock = false;
+    public static boolean debugHologramProjectorBlock = false;
+
+    public static boolean debugSkinBounds = false;
+    public static boolean debugSkinPartBounds = false;
+
+    public static boolean debugTargetOrigin = false;
+    public static boolean debugTargetBounds = false;
 
     public static boolean showDebugTextureBounds = false;
     public static boolean showDebugSpin = false;

@@ -5,14 +5,18 @@ import moe.plushie.armourers_workshop.core.api.ISkinCube;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkin;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
+import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -127,6 +131,21 @@ public class Skin implements ISkin {
 
     public SkinProperties getProperties() {
         return properties;
+    }
+
+
+    public HashMap<BlockPos, Rectangle3i> getBlockBounds() {
+        if (skinType != SkinTypes.BLOCK) {
+            return null;
+        }
+        HashMap<BlockPos, Rectangle3i> blockBounds = new HashMap<>();
+        for (SkinPart part: getParts()) {
+            HashMap<BlockPos, Rectangle3i> partBlockBounds = part.getBlockBounds();
+            if (partBlockBounds != null) {
+                blockBounds.putAll(partBlockBounds);
+            }
+        }
+        return blockBounds;
     }
 
     public int getModelCount() {

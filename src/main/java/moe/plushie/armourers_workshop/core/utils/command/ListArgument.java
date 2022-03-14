@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.command;
+package moe.plushie.armourers_workshop.core.utils.command;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;

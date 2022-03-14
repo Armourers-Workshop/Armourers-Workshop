@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.gui.widget.AWCheckBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
-import moe.plushie.armourers_workshop.core.wardrobe.WardrobeContainer;
+import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.IReorderingProcessor;

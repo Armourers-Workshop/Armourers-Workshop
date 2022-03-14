@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
-import moe.plushie.armourers_workshop.core.block.HologramProjectorTileEntity;
+import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.core.utils.AWDataAccessor;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import net.minecraft.entity.player.ServerPlayerEntity;

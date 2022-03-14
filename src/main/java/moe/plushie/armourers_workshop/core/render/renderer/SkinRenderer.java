@@ -2,12 +2,11 @@ package moe.plushie.armourers_workshop.core.render.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.api.ISkinArmorType;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.action.ICanHeld;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
@@ -108,13 +107,13 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             matrixStack.pushPose();
             apply(entity, model, bakedSkin, bakedPart, transformType, partialTicks, matrixStack);
             builder.addPartData(bakedPart, scheme1, light, partialTicks, matrixStack, shouldRenderPart);
-            if (shouldRenderPart && AWConfig.showDebugPartFrame) {
+            if (shouldRenderPart && AWConfig.debugSkinPartBounds) {
                 builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(index++), matrixStack);
             }
             matrixStack.popPose();
         }
 
-        if (AWConfig.showDebugFullFrame) {
+        if (AWConfig.debugSkinBounds) {
             builder.addShapeData(bakedSkin.getRenderShape(entity, model, transformType).bounds(), Color.RED, matrixStack);
         }
     }

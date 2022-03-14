@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core;
 
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
+import moe.plushie.armourers_workshop.core.capability.Wardrobe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

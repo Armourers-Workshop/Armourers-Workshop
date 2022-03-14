@@ -115,6 +115,26 @@ public class Rectangle3i {
         return this.z + this.depth;
     }
 
+
+    public AxisAlignedBB asAxisAlignedBB() {
+        return new AxisAlignedBB(x, y, z, x + width, y + height, z + depth);
+    }
+
+    public void union(Rectangle3i rect) {
+        int x1 = Math.min(getMinX(), rect.getMinX());
+        int y1 = Math.min(getMinY(), rect.getMinY());
+        int z1 = Math.min(getMinZ(), rect.getMinZ());
+        int x2 = Math.max(getMaxX(), rect.getMaxX());
+        int y2 = Math.max(getMaxY(), rect.getMaxY());
+        int z2 = Math.max(getMaxZ(), rect.getMaxZ());
+        x = x1;
+        y = y1;
+        z = z1;
+        width = x2 - x1;
+        height = y2 - y1;
+        depth = z2 - z1;
+    }
+
     public boolean contains(Vector3i point) {
         int x = point.getX();
         int y = point.getY();

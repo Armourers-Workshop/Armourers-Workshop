@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.wardrobe;
+package moe.plushie.armourers_workshop.core.capability;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

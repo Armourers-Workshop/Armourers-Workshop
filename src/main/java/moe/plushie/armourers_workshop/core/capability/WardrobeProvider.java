@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.wardrobe;
+package moe.plushie.armourers_workshop.core.capability;
 
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;

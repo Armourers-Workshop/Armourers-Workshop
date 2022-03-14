@@ -13,6 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SkinPart implements ISkinPart {
@@ -24,17 +25,17 @@ public class SkinPart implements ISkinPart {
 
     protected SkinProperties properties;
 
-    private Rectangle3i[][][] blockGrid;
+    private HashMap<Long, Rectangle3i> blockGrid;
     private SkinCubeData cubeData;
     private ArrayList<SkinMarker> markerBlocks;
 
     public SkinPart(ISkinPartType partType, ArrayList<SkinMarker> markerBlocks, SkinCubeData cubeData) {
         this.partType = partType;
         this.renderShape = cubeData.getRenderShape();
-        this.partBounds = new Rectangle3i(this.renderShape.bounds());
 
         this.cubeData = cubeData;
         this.markerBlocks = markerBlocks;
+        this.setupPartBounds();
     }
 
     public SkinProperties getProperties() {
@@ -61,6 +62,8 @@ public class SkinPart implements ISkinPart {
     private void setupPartBounds() {
         if (partType == SkinPartTypes.BLOCK || partType == SkinPartTypes.BLOCK_MULTI) {
             setupBlockBounds();
+        } else {
+            partBounds = new Rectangle3i(this.renderShape.bounds());
         }
     }
 
@@ -71,54 +74,31 @@ public class SkinPart implements ISkinPart {
 
     public Rectangle3i getBlockBounds(int x, int y, int z) {
         if (blockGrid != null) {
-            x = MathHelper.clamp(x, 0, blockGrid.length);
-            y = MathHelper.clamp(y, 0, blockGrid[1].length);
-            z = MathHelper.clamp(z, 0, blockGrid[0][1].length);
-            return blockGrid[x][y][z];
+            long key = BlockPos.asLong(x, y, z);
+            return blockGrid.get(key);
         }
         return null;
     }
 
-    public Rectangle3i[][][] getBlockGrid() {
-        return blockGrid;
+    public HashMap<BlockPos, Rectangle3i> getBlockBounds() {
+        if (blockGrid != null) {
+            HashMap<BlockPos, Rectangle3i> blockBounds = new HashMap<>();
+            blockGrid.forEach((key, value) -> blockBounds.put(BlockPos.of(key), value));
+            return blockBounds;
+        }
+        return null;
     }
 
     private void setupBlockBounds() {
-        blockGrid = new Rectangle3i[3][3][3];
-        for (int i = 0; i < cubeData.getCubeCount(); i++) {
-            byte[] loc = cubeData.getCubeLocation(i);
-            int x = MathHelper.floor((loc[0] + 8) / 16F);
-            int y = MathHelper.floor((loc[1] + 8) / 16F);
-            int z = MathHelper.floor((loc[2] + 8) / 16F);
-            setupBlockBounds(x, y, z, loc[0] - x * 16, loc[1] - y * 16, loc[2] - z * 16);
-        }
-        for (int ix = 0; ix < 3; ix++) {
-            for (int iy = 0; iy < 3; iy++) {
-                for (int iz = 0; iz < 3; iz++) {
-                    Rectangle3i rec = blockGrid[ix][iy][iz];
-                    if (rec != null) {
-                        rec.setWidth(rec.getWidth() - rec.getX() + 1);
-                        rec.setHeight(rec.getHeight() - rec.getY() + 1);
-                        rec.setDepth(rec.getDepth() - rec.getZ() + 1);
-                    }
-                }
-            }
-        }
-    }
-
-    private void setupBlockBounds(int blockX, int blockY, int blockZ, int x, int y, int z) {
-        BlockPos loc = new BlockPos(blockX + 1, -blockY, blockZ);
-        if (blockGrid[loc.getX()][loc.getY()][loc.getZ()] == null) {
-            blockGrid[loc.getX()][loc.getY()][loc.getZ()] = new Rectangle3i(127, 127, 127, -127, -127, -127);
-        }
-        Rectangle3i rec = blockGrid[loc.getX()][loc.getY()][loc.getZ()];
-        rec.setX(Math.min(rec.getX(), x));
-        rec.setY(Math.min(rec.getY(), y));
-        rec.setZ(Math.min(rec.getZ(), z));
-        rec.setWidth(Math.max(rec.getWidth(), x));
-        rec.setHeight(Math.max(rec.getHeight(), y));
-        rec.setDepth(Math.max(rec.getDepth(), z));
-        // blockGrid[loc.x][loc.y][loc.z] = rec;
+        blockGrid = new HashMap<>();
+        cubeData.forEach((i, x, y, z) -> {
+            int tx = MathHelper.floor((x + 8) / 16f);
+            int ty = MathHelper.floor((y + 8) / 16f);
+            int tz = MathHelper.floor((z + 8) / 16f);
+            long key = BlockPos.asLong(-tx, -ty, tz);
+            Rectangle3i rec = new Rectangle3i(-(x - tx * 16) - 1, -(y - ty * 16) - 1, z - tz * 16, 1, 1, 1);
+            blockGrid.computeIfAbsent(key, k -> rec).union(rec);
+        });
     }
 
     public SkinCubeData getCubeData() {
@@ -147,4 +127,5 @@ public class SkinPart implements ISkinPart {
     public String toString() {
         return "SkinPart [cubeData=" + cubeData + ", markerBlocks=" + markerBlocks + ", skinPart=" + partType.getRegistryName() + "]";
     }
+
 }

@@ -6,7 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.base.AWEntities;
 import moe.plushie.armourers_workshop.core.base.AWItems;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
@@ -136,7 +136,7 @@ public final class SkinItemRenderer {
             matrixStack.translate(0.5f, 0.5f, 0.5f); // reset to center
 
             if (item == AWItems.SKIN) {
-                BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(SkinDescriptor.of(itemStack));
+                BakedSkin bakedSkin = BakedSkin.of(itemStack);
                 if (bakedSkin != null) {
                     Vector3f rotation = new Vector3f(-transform.rotation.x(), -transform.rotation.y(), transform.rotation.z());
                     renderSkin(bakedSkin, rotation, transform.scale, 1, 1, 1, 0, light, matrixStack, renderTypeBuffer);

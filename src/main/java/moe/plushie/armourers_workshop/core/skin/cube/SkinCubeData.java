@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.skin.cube;
 import moe.plushie.armourers_workshop.core.api.ISkinCube;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.color.PaintColor;
+import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.render.bake.ColouredFace;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.LegacyCubeHelper;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
@@ -18,6 +18,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 public class SkinCubeData {
 
@@ -109,6 +110,12 @@ public class SkinCubeData {
 //                cubeColourB[index][5],
 //        };
 //    }
+
+    public void forEach(ICubeConsumer consumer) {
+        for (int i = 0; i < cubeId.length; ++i) {
+            consumer.apply(i, cubeLocX[i], cubeLocY[i], cubeLocZ[i]);
+        }
+    }
 
     public void setCubeLocation(int index, byte x, byte y, byte z) {
         cubeLocX[index] = x;
@@ -267,5 +274,9 @@ public class SkinCubeData {
                 + ", cubeColourR=" + Arrays.deepToString(cubeColourR) + ", cubeColourG=" + Arrays.deepToString(cubeColourG)
                 + ", cubeColourB=" + Arrays.deepToString(cubeColourB) + ", cubePaintType=" + Arrays.deepToString(cubePaintType)
                 + "]";
+    }
+
+    public interface ICubeConsumer {
+        void apply(int i, int x, int y, int z);
     }
 }

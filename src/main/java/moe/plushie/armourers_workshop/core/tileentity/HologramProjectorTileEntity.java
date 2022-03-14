@@ -1,40 +1,29 @@
-package moe.plushie.armourers_workshop.core.block;
+package moe.plushie.armourers_workshop.core.tileentity;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.base.AWTileEntities;
+import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
-import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.state.properties.AttachFace;
-import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
-
 @SuppressWarnings("NullableProblems")
-public class HologramProjectorTileEntity extends LockableLootTileEntity {
-
-    private static final AxisAlignedBB IGNORED_RENDER_BOX = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+public class HologramProjectorTileEntity extends RotableTileEntity {
 
     private static final ImmutableMap<?, Vector3f> FACING_TO_ROT = new ImmutableMap.Builder<Object, Vector3f>()
             .put(Pair.of(AttachFace.CEILING, Direction.EAST), new Vector3f(180, 270, 0))
@@ -54,17 +43,16 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
     private NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
 
     private Quaternion renderRotations;
-    private AxisAlignedBB renderBoundingBox;
 
+    private int powerMode = 0;
     private float modelScale = 1.0f;
 
     private boolean isGlowing = true;
-    private boolean isRunning = true;
+    private boolean isPowered = true;
     private boolean showRotationPoint = false;
-    private int powerMode = 0;
 
-    private Vector3f modelOffset = new Vector3f();
     private Vector3f modelAngle = new Vector3f();
+    private Vector3f modelOffset = new Vector3f();
 
     private Vector3f rotationSpeed = new Vector3f();
     private Vector3f rotationOffset = new Vector3f();
@@ -73,82 +61,45 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
         super(AWTileEntities.HOLOGRAM_PROJECTOR);
     }
 
+    @Override
     public void readFromNBT(CompoundNBT nbt) {
         ItemStackHelper.loadAllItems(nbt, items);
         modelAngle = AWDataSerializers.getVector3f(nbt, AWConstants.NBT.TILE_ENTITY_ANGLE);
         modelOffset = AWDataSerializers.getVector3f(nbt, AWConstants.NBT.TILE_ENTITY_OFFSET);
         rotationSpeed = AWDataSerializers.getVector3f(nbt, AWConstants.NBT.TILE_ENTITY_ROTATION_SPEED);
         rotationOffset = AWDataSerializers.getVector3f(nbt, AWConstants.NBT.TILE_ENTITY_ROTATION_OFFSET);
+        isGlowing = AWDataSerializers.getBoolean(nbt, AWConstants.NBT.TILE_ENTITY_IS_GLOWING, true);
+        isPowered = AWDataSerializers.getBoolean(nbt, AWConstants.NBT.TILE_ENTITY_IS_POWERED, false);
         modelScale = AWDataSerializers.getFloat(nbt, AWConstants.NBT.ENTITY_SCALE, 1.0f);
         powerMode = AWDataSerializers.getInt(nbt, AWConstants.NBT.TILE_ENTITY_POWER_MODE, 0);
-        isGlowing = AWDataSerializers.getBoolean(nbt, AWConstants.NBT.TILE_ENTITY_IS_GLOWING, true);
-        isRunning = AWDataSerializers.getBoolean(nbt, AWConstants.NBT.TILE_ENTITY_POWERED, false);
-        renderBoundingBox = null;
+        setRenderChanged();
     }
 
+    @Override
     public void writeToNBT(CompoundNBT nbt) {
         ItemStackHelper.saveAllItems(nbt, items);
         AWDataSerializers.putVector3f(nbt, AWConstants.NBT.TILE_ENTITY_ANGLE, modelAngle);
         AWDataSerializers.putVector3f(nbt, AWConstants.NBT.TILE_ENTITY_OFFSET, modelOffset);
         AWDataSerializers.putVector3f(nbt, AWConstants.NBT.TILE_ENTITY_ROTATION_SPEED, rotationSpeed);
         AWDataSerializers.putVector3f(nbt, AWConstants.NBT.TILE_ENTITY_ROTATION_OFFSET, rotationOffset);
+        AWDataSerializers.putBoolean(nbt, AWConstants.NBT.TILE_ENTITY_IS_GLOWING, isGlowing, true);
+        AWDataSerializers.putBoolean(nbt, AWConstants.NBT.TILE_ENTITY_IS_POWERED, isPowered, false);
         AWDataSerializers.putFloat(nbt, AWConstants.NBT.ENTITY_SCALE, modelScale, 1.0f);
         AWDataSerializers.putInt(nbt, AWConstants.NBT.TILE_ENTITY_POWER_MODE, powerMode, 0);
-        AWDataSerializers.putBoolean(nbt, AWConstants.NBT.TILE_ENTITY_IS_GLOWING, isGlowing, true);
-        AWDataSerializers.putBoolean(nbt, AWConstants.NBT.TILE_ENTITY_POWERED, isRunning, false);
-    }
-
-    @Override
-    public void load(BlockState state, CompoundNBT nbt) {
-        super.load(state, nbt);
-        this.readFromNBT(nbt);
-    }
-
-    @Override
-    public CompoundNBT save(CompoundNBT nbt) {
-        super.save(nbt);
-        this.writeToNBT(nbt);
-        return nbt;
-    }
-
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT nbt = new CompoundNBT();
-        this.writeToNBT(nbt);
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, nbt);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT nbt = pkt.getTag();
-        this.readFromNBT(nbt);
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = super.getUpdateTag();
-        this.writeToNBT(tag);
-        return tag;
-    }
-
-    @Override
-    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        super.handleUpdateTag(state, tag);
-        this.readFromNBT(tag);
     }
 
     public void updatePowerStats() {
         boolean newValue = isRunningForState(getBlockState());
-        if (newValue != isRunning) {
+        if (newValue != isPowered) {
             updateBlockStates();
         }
     }
 
     public void updateBlockStates() {
         BlockState state = getBlockState();
-        isRunning = isRunningForState(state);
-        renderBoundingBox = null;
-        boolean growing = isRunning && isGlowing;
+        isPowered = isRunningForState(state);
+        setRenderChanged();
+        boolean growing = isPowered && isGlowing;
         if (level != null && !level.isClientSide) {
             if (state.getValue(HologramProjectorBlock.LIT) != growing) {
                 BlockState newState = state.setValue(HologramProjectorBlock.LIT, growing);
@@ -168,11 +119,11 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
         this.updateBlockStates();
     }
 
-    public boolean isRunning() {
-        return isRunning;
+    public boolean isPowered() {
+        return isPowered;
     }
 
-    public boolean isRunningForState(BlockState state) {
+    protected boolean isRunningForState(BlockState state) {
         if (level != null && !SkinDescriptor.of(items.get(0)).isEmpty()) {
             switch (powerMode) {
                 case 1:
@@ -232,17 +183,6 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
         return items.size();
     }
 
-    @Override
-    protected ITextComponent getDefaultName() {
-        return TranslateUtils.title("block.armourers_workshop.hologram-projector");
-    }
-
-    @Override
-    protected Container createMenu(int containerId, PlayerInventory inventory) {
-        return null;
-    }
-
-
     public Vector3f getRotationSpeed() {
         return this.rotationSpeed;
     }
@@ -283,11 +223,29 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
         return modelScale;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void setRenderBoundingBoxWithRect(Rectangle3f rect) {
-        if (renderBoundingBox != null) {
-            return;
+    @Override
+    public Quaternion getRenderRotations() {
+        if (renderRotations != null) {
+            return renderRotations;
         }
+        AttachFace face = getBlockState().getValue(HologramProjectorBlock.FACE);
+        Direction facing = getBlockState().getValue(HologramProjectorBlock.FACING);
+        Vector3f rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), new Vector3f());
+        renderRotations = new Quaternion(rot.x(), rot.y(), rot.z(), true);
+        return renderRotations;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public Rectangle3f getRenderBoundingBox(BlockState state) {
+        if (!isPowered()) {
+            return null;
+        }
+        BakedSkin bakedSkin = BakedSkin.of(getItem(0));
+        if (bakedSkin == null) {
+            return null;
+        }
+        Rectangle3f rect = bakedSkin.getRenderBounds(null, null, null);
         float f = 1 / 16f;
         float scale = getModelScale() * f;
         float modelRadius = 0.0f;
@@ -316,32 +274,6 @@ public class HologramProjectorTileEntity extends LockableLootTileEntity {
             ty += rect.getMaxY() * scale;
         }
 
-        Rectangle3f rect1 = new Rectangle3f(tx - tr, ty - tr, tz - tr, tr * 2, tr * 2, tr * 2);
-        rect1.mul(getRenderRotations());
-        renderBoundingBox = rect1.asAxisAlignedBB().move(Vector3d.atCenterOf(getBlockPos()));
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public Quaternion getRenderRotations() {
-        if (renderRotations != null) {
-            return renderRotations;
-        }
-        AttachFace face = getBlockState().getValue(HologramProjectorBlock.FACE);
-        Direction facing = getBlockState().getValue(HologramProjectorBlock.FACING);
-        Vector3f rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), new Vector3f());
-        renderRotations = new Quaternion(rot.x(), rot.y(), rot.z(), true);
-        return renderRotations;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        if (!isRunning()) {
-            return IGNORED_RENDER_BOX;
-        }
-        if (renderBoundingBox != null) {
-            return renderBoundingBox;
-        }
-        return super.getRenderBoundingBox();
+        return new Rectangle3f(tx - tr, ty - tr, tz - tr, tr * 2, tr * 2, tr * 2);
     }
 }
