@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.command;
+package moe.plushie.armourers_workshop.core.utils.command;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.brigadier.arguments.*;

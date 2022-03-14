@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.color.PaintColor;
+import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.client.util.ITooltipFlag;

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.base;
 
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
+import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,7 +21,8 @@ public class AWBlocks {
 
     private static final HashMap<ResourceLocation, Block> REGISTERED_BLOCKS = new HashMap<>();
 
-    public static final Block HOLOGRAM_PROJECTOR = register("hologram-projector", HologramProjectorBlock::new, p -> p.requiresCorrectToolForDrops().lightLevel(litBlockEmission(13)).strength(5.0F, 1200.0F));
+    public static final Block HOLOGRAM_PROJECTOR = register("hologram-projector", HologramProjectorBlock::new, p -> p.requiresCorrectToolForDrops().lightLevel(litBlockEmission(13)).strength(5f, 1200f));
+    public static final Block SKINNABLE = register("skinnable", SkinnableBlock::new, p -> p.requiresCorrectToolForDrops().lightLevel(litBlockEmission(15)).strength(1.5f, 6.f).noOcclusion());
 
     private static ToIntFunction<BlockState> litBlockEmission(int level) {
         return state -> state.getValue(BlockStateProperties.LIT) ? level : 0;

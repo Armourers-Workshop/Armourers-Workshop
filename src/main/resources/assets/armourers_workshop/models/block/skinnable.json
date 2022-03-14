@@ -1,0 +1,6 @@
+{
+  "parent": "builtin/entity",
+  "textures": {
+    "particle": "armourers_workshop:block/skinnable"
+  }
+}

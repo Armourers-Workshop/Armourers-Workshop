@@ -1,16 +1,14 @@
-package moe.plushie.armourers_workshop.core.render.entity;
+package moe.plushie.armourers_workshop.core.render.tileentities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.block.HologramProjectorTileEntity;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
 import moe.plushie.armourers_workshop.core.render.renderer.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.renderer.SkinRendererManager;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -20,7 +18,6 @@ import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
@@ -31,16 +28,15 @@ import java.awt.*;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class HologramProjectorEntityRenderer<T extends HologramProjectorTileEntity> extends TileEntityRenderer<T> {
+public class HologramProjectorTileEntityRenderer<T extends HologramProjectorTileEntity> extends TileEntityRenderer<T> {
 
-    public HologramProjectorEntityRenderer(TileEntityRendererDispatcher rendererManager) {
+    public HologramProjectorTileEntityRenderer(TileEntityRendererDispatcher rendererManager) {
         super(rendererManager);
     }
 
     @Override
     public void render(T entity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffers, int light, int overlay) {
-        ItemStack itemStack = entity.getItem(0);
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(SkinDescriptor.of(itemStack));
+        BakedSkin bakedSkin = BakedSkin.of(entity.getItem(0));
         if (bakedSkin == null) {
             return;
         }
@@ -66,16 +62,16 @@ public class HologramProjectorEntityRenderer<T extends HologramProjectorTileEnti
         matrixStack.scale(-1, -1, 1);
 
         Rectangle3f rect = bakedSkin.getRenderBounds(mannequin, model, null);
-        entity.setRenderBoundingBoxWithRect(rect);
         apply(entity, rect, partialTicks1, matrixStack, buffers);
 
+        // TODO: performance optimize, merge all tile entity to one batch
         SkinRenderBuffer buffer1 = SkinRenderBuffer.getInstance();
         renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemCameraTransforms.TransformType.NONE, overLight, partialTicks1, matrixStack, buffer1);
         buffer1.endBatch();
 
         matrixStack.popPose();
 
-        if (AWConfig.showDebugHologramProjector) {
+        if (AWConfig.debugHologramProjectorBlock) {
             BlockPos pos = entity.getBlockPos();
             matrixStack.pushPose();
             matrixStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
@@ -119,14 +115,14 @@ public class HologramProjectorEntityRenderer<T extends HologramProjectorTileEnti
             RenderUtils.drawBoundingBox(matrixStack, -1, -1, -1, 1, 1, 1, Color.MAGENTA, buffers);
         }
 
-        if (AWConfig.showDebugHologramProjector) {
+        if (AWConfig.debugHologramProjectorBlock) {
             RenderUtils.drawPoint(matrixStack, null, 128, buffers);
         }
 
         matrixStack.mulPose(new Quaternion(rotX, -rotY, rotZ, true));
         matrixStack.translate(rotationOffset.x(), -rotationOffset.y(), rotationOffset.z());
 
-        if (AWConfig.showDebugHologramProjector) {
+        if (AWConfig.debugHologramProjectorBlock) {
             RenderUtils.drawPoint(matrixStack, null, 128, buffers);
         }
     }

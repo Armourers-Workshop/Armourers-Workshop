@@ -1,7 +1,12 @@
 package moe.plushie.armourers_workshop.core.block;
 
+import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
+import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
-import net.minecraft.block.*;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
@@ -24,7 +29,6 @@ import javax.annotation.Nullable;
 public class HologramProjectorBlock extends HorizontalFaceBlock {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     public HologramProjectorBlock(AbstractBlock.Properties properties) {
         super(properties);
@@ -42,16 +46,9 @@ public class HologramProjectorBlock extends HorizontalFaceBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos p_220069_3_, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
-        updatePoweredState(world, p_220069_3_);
+    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+        updatePoweredState(world, pos);
     }
-
-//    @Override
-//    public void tick(BlockState state, ServerWorld world, BlockPos p_225534_3_, Random p_225534_4_) {
-//        if (state.getValue(LIT) && !world.hasNeighborSignal(p_225534_3_)) {
-//            world.setBlock(p_225534_3_, state.cycle(LIT), 2);
-//        }
-//    }
 
     @Nullable
     @Override

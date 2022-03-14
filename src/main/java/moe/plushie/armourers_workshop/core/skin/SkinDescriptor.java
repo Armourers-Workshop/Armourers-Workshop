@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.core.base.AWItems;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 

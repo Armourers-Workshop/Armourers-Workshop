@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
@@ -139,6 +137,11 @@ public class Rectangle3f {
 
     public Rectangle3f copy() {
         return new Rectangle3f(x, y, z, width, height, depth);
+    }
+
+
+    public Rectangle3f scale(float s) {
+        return new Rectangle3f(x * s, y * s, z * s, width * s, height * s, depth * s);
     }
 
     public Rectangle3f offset(Vector3f point) {

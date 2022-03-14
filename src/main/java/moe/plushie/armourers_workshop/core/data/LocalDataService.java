@@ -18,12 +18,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class LocalDataService {
 
     private static LocalDataService RUNNING;
 
     private final Path rootPath;
+    private AtomicInteger counter = new AtomicInteger();
     private String lastGenUUID = "";
 
     private final HashMap<String, Node> nodes = new HashMap<>();
@@ -31,6 +33,7 @@ public class LocalDataService {
     public LocalDataService(Path rootPath) {
         this.rootPath = rootPath;
         this.loadConfig();
+
     }
 
     public static LocalDataService getInstance() {
@@ -74,6 +77,8 @@ public class LocalDataService {
                     nodes.put(node.uuid, node);
                 }
             }
+            counter.set(nbt.getInt("Counter"));
+
         } catch (IOException e) {
             AWLog.error("Load service config fail {}", indexDB);
         }
@@ -91,6 +96,7 @@ public class LocalDataService {
                 }
             }
             nbt.put("Nodes", listNBT);
+            nbt.putInt("Counter", counter.get());
             CompressedStreamTools.writeCompressed(nbt, indexDB);
         } catch (IOException e) {
             AWLog.error("Save service config fail for {}", indexDB);
@@ -170,7 +176,7 @@ public class LocalDataService {
     private String getFreeUUID() {
         String uuid = lastGenUUID;
         while (uuid.isEmpty() || nodes.containsKey(uuid)) {
-            uuid = UUID.randomUUID().toString();
+            uuid = String.format("%08x", counter.incrementAndGet());
         }
         lastGenUUID = uuid;
         return uuid;

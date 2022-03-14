@@ -5,18 +5,19 @@ import moe.plushie.armourers_workshop.core.base.AWBlocks;
 import moe.plushie.armourers_workshop.core.base.AWEntities;
 import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.base.AWTileEntities;
-import moe.plushie.armourers_workshop.core.block.HologramProjectorContainer;
-import moe.plushie.armourers_workshop.core.command.SkinCommands;
+import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
+import moe.plushie.armourers_workshop.core.utils.command.SkinCommands;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.hologramprojector.HologramProjectorScreen;
 import moe.plushie.armourers_workshop.core.gui.wardrobe.WardrobeScreen;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
-import moe.plushie.armourers_workshop.core.render.entity.HologramProjectorEntityRenderer;
+import moe.plushie.armourers_workshop.core.render.tileentities.HologramProjectorTileEntityRenderer;
 import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
+import moe.plushie.armourers_workshop.core.render.tileentities.SkinnableTileEntityRenderer;
 import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
-import moe.plushie.armourers_workshop.core.wardrobe.WardrobeContainer;
+import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntityType;
@@ -98,7 +99,8 @@ public class AWRegistry {
         ClientRegistry.registerKeyBinding(AWKeyBindings.UNDO_KEY);
         ClientRegistry.registerKeyBinding(AWKeyBindings.OPEN_WARDROBE_KEY);
 
-        ClientRegistry.bindTileEntityRenderer(AWTileEntities.HOLOGRAM_PROJECTOR, HologramProjectorEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(AWTileEntities.HOLOGRAM_PROJECTOR, HologramProjectorTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(AWTileEntities.SKINNABLE, SkinnableTileEntityRenderer::new);
 
         RenderingRegistry.registerEntityRenderingHandler(AWEntities.MANNEQUIN, MannequinEntityRenderer::new);
     }

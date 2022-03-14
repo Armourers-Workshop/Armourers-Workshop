@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.gui.hologramprojector;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.block.HologramProjectorContainer;
-import moe.plushie.armourers_workshop.core.block.HologramProjectorTileEntity;
+import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
+import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWSliderBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;

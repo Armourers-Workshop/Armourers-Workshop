@@ -77,7 +77,7 @@ public class ItemTooltipHandler {
         }
         ItemStack itemStack = event.getStack();
         MatrixStack matrixStack = event.getMatrixStack();
-        BakedSkin bakedSkin = SkinBakery.getInstance().loadSkin(SkinDescriptor.of(itemStack));
+        BakedSkin bakedSkin = BakedSkin.of(itemStack);
         if (bakedSkin == null) {
             return;
         }

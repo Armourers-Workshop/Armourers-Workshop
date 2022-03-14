@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.utils;
 
+import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
+import moe.plushie.armourers_workshop.core.capability.Wardrobe;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.FloatNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.*;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.IWorldPosCallable;
@@ -13,9 +13,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Rotations;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class AWDataSerializers {
@@ -94,6 +96,26 @@ public class AWDataSerializers {
         buffer.writeInt(wardrobe.getId());
     }
 
+    public static Vector3i getVector3i(CompoundNBT nbt, String key) {
+        ListNBT listNBT = nbt.getList(key, Constants.NBT.TAG_INT);
+        if (listNBT.size() >= 3) {
+            return new Vector3i(listNBT.getInt(0), listNBT.getInt(1), listNBT.getInt(2));
+        }
+        return new Vector3i(0, 0, 0);
+    }
+
+    public static void putVector3i(CompoundNBT nbt, String key, Vector3i vector) {
+        int x = vector.getX(), y = vector.getY(), z = vector.getZ();
+        if (x == 0 && y == 0 && z == 0) {
+            return;
+        }
+        ListNBT listnbt = new ListNBT();
+        listnbt.add(IntNBT.valueOf(x));
+        listnbt.add(IntNBT.valueOf(y));
+        listnbt.add(IntNBT.valueOf(z));
+        nbt.put(key, listnbt);
+    }
+
     public static Vector3f getVector3f(CompoundNBT nbt, String key) {
         ListNBT listNBT = nbt.getList(key, Constants.NBT.TAG_FLOAT);
         if (listNBT.size() >= 3) {
@@ -111,6 +133,28 @@ public class AWDataSerializers {
         listnbt.add(FloatNBT.valueOf(x));
         listnbt.add(FloatNBT.valueOf(y));
         listnbt.add(FloatNBT.valueOf(z));
+        nbt.put(key, listnbt);
+    }
+
+    public static Rectangle3i getRectangle3i(CompoundNBT nbt, String key, Rectangle3i defaultValue) {
+        ListNBT listNBT = nbt.getList(key, Constants.NBT.TAG_INT);
+        if (listNBT.size() >= 6) {
+            return new Rectangle3i(listNBT.getInt(0), listNBT.getInt(1), listNBT.getInt(2), listNBT.getInt(3), listNBT.getInt(4), listNBT.getInt(5));
+        }
+        return defaultValue;
+    }
+
+    public static void putRectangle3i(CompoundNBT nbt, String key, Rectangle3i value, Rectangle3i defaultValue) {
+        if (value.equals(defaultValue)) {
+            return;
+        }
+        ListNBT listnbt = new ListNBT();
+        listnbt.add(IntNBT.valueOf(value.getX()));
+        listnbt.add(IntNBT.valueOf(value.getY()));
+        listnbt.add(IntNBT.valueOf(value.getZ()));
+        listnbt.add(IntNBT.valueOf(value.getWidth()));
+        listnbt.add(IntNBT.valueOf(value.getHeight()));
+        listnbt.add(IntNBT.valueOf(value.getDepth()));
         nbt.put(key, listnbt);
     }
 
@@ -167,6 +211,22 @@ public class AWDataSerializers {
         return defaultValue;
     }
 
+    public static void putSkinDescriptor(CompoundNBT nbt, String key, SkinDescriptor value, SkinDescriptor defaultValue) {
+        if (!defaultValue.equals(value)) {
+            nbt.put(key, value.serializeNBT());
+        }
+    }
+
+    public static SkinDescriptor getSkinDescriptor(CompoundNBT nbt, String key, SkinDescriptor defaultValue) {
+        if (nbt.contains(key, Constants.NBT.TAG_COMPOUND)) {
+            CompoundNBT nbt1 = nbt.getCompound(key);
+            if (!nbt1.isEmpty()) {
+                return new SkinDescriptor(nbt1);
+            }
+        }
+        return defaultValue;
+    }
+
     public static void putTextureDescriptor(CompoundNBT nbt, String key, PlayerTextureDescriptor value, PlayerTextureDescriptor defaultValue) {
         if (!defaultValue.equals(value)) {
             nbt.put(key, value.serializeNBT());
@@ -182,4 +242,39 @@ public class AWDataSerializers {
         }
         return defaultValue;
     }
+
+    public static void putBlockPos(CompoundNBT nbt, String key, BlockPos value, BlockPos defaultValue) {
+        if (!defaultValue.equals(value)) {
+            nbt.putLong(key, value.asLong());
+        }
+    }
+
+    public static BlockPos getBlockPos(CompoundNBT nbt, String key, BlockPos defaultValue) {
+        if (nbt.contains(key, Constants.NBT.TAG_LONG)) {
+            return BlockPos.of(nbt.getLong(key));
+        }
+        return defaultValue;
+    }
+
+    public static void putBlockPosList(CompoundNBT nbt, String key, ArrayList<BlockPos> elements) {
+        if (elements.isEmpty()) {
+            return;
+        }
+        ArrayList<Long> list = new ArrayList<>(elements.size());
+        for (BlockPos pos : elements) {
+            list.add(pos.asLong());
+        }
+        nbt.putLongArray(key, list);
+    }
+
+    public static ArrayList<BlockPos> getBlockPosList(CompoundNBT nbt, String key) {
+        ArrayList<BlockPos> elements = new ArrayList<>();
+        if (nbt.contains(key, Constants.NBT.TAG_LONG_ARRAY)) {
+            for (long value : nbt.getLongArray(key)) {
+                elements.add(BlockPos.of(value));
+            }
+        }
+        return elements;
+    }
+
 }

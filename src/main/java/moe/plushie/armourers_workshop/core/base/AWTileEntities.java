@@ -19,26 +19,21 @@
 package moe.plushie.armourers_workshop.core.base;
 
 import moe.plushie.armourers_workshop.core.AWCore;
-import moe.plushie.armourers_workshop.core.block.HologramProjectorTileEntity;
-import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
+import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
+import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public final class AWTileEntities {
 
     private static final HashMap<ResourceLocation, TileEntityType<?>> REGISTERED_ENTITY_TYPES = new HashMap<>();
 
     public static final TileEntityType<HologramProjectorTileEntity> HOLOGRAM_PROJECTOR = register("hologram-projector", TileEntityType.Builder.of(HologramProjectorTileEntity::new, AWBlocks.HOLOGRAM_PROJECTOR));
-
+    public static final TileEntityType<SkinnableTileEntity> SKINNABLE = register("skinnable", TileEntityType.Builder.of(SkinnableTileEntity::new, AWBlocks.SKINNABLE));
 
     public static void forEach(Consumer<TileEntityType<?>> action) {
         REGISTERED_ENTITY_TYPES.values().forEach(action);

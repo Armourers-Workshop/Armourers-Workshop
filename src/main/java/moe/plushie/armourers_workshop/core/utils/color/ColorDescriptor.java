@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.color;
+package moe.plushie.armourers_workshop.core.utils.color;
 
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;

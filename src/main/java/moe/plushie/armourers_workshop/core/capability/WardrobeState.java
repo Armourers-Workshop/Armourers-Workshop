@@ -1,8 +1,8 @@
-package moe.plushie.armourers_workshop.core.wardrobe;
+package moe.plushie.armourers_workshop.core.capability;
 
 import moe.plushie.armourers_workshop.core.api.*;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.color.PaintColor;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
@@ -136,14 +136,11 @@ public final class WardrobeState implements SkinBakery.IBakeListener {
     }
 
     private void updateSkin(ItemStack itemStack, boolean allowsArmor) {
-        if (itemStack.isEmpty()) {
-            return;
-        }
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             return;
         }
-        BakedSkin skin = SkinBakery.getInstance().loadSkin(descriptor);
+        BakedSkin skin = BakedSkin.of(descriptor);
         if (skin == null) {
             missingSkins.add(descriptor);
             return;

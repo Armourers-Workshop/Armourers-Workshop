@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
 import moe.plushie.armourers_workshop.core.api.ISkinCube;
-import moe.plushie.armourers_workshop.core.color.ColorDescriptor;
-import moe.plushie.armourers_workshop.core.color.PaintColor;
+import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;

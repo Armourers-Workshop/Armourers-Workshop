@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.WardrobeContainer;
+import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

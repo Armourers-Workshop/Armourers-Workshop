@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.render.renderer;
 
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.wardrobe.Wardrobe;
-import moe.plushie.armourers_workshop.core.wardrobe.WardrobeState;
+import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.capability.WardrobeState;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;

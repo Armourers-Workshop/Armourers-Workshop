@@ -45,7 +45,7 @@ public class ArmourersConfig extends AWConfig {
         tooltipSkinName = CLIENT.tooltipSkinName.get();
         tooltipSkinAuthor = CLIENT.tooltipSkinAuthor.get();
         tooltipSkinType = CLIENT.tooltipSkinType.get();
-        tooltipDebug = CLIENT.tooltipDebug.get();
+        debugTooltip = CLIENT.tooltipDebug.get();
         tooltipFlavour = CLIENT.tooltipFlavour.get();
         tooltipOpenWardrobe = CLIENT.tooltipOpenWardrobe.get();
 

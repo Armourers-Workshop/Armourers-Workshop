@@ -7,16 +7,20 @@ import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.action.ICanUse;
 import moe.plushie.armourers_workshop.core.api.client.render.IBakedSkin;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
-import moe.plushie.armourers_workshop.core.color.ColorDescriptor;
-import moe.plushie.armourers_workshop.core.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.renderer.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.renderer.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.utils.CustomVoxelShape;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
+import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
+import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.entity.Entity;
@@ -24,6 +28,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
@@ -32,14 +37,18 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
 public class BakedSkin implements IBakedSkin {
 
     private final Skin skin;
     private final SkinDescriptor descriptor;
-    private final Map<Object, Rectangle3f> cachedBounds = new HashMap<>();
+    private final HashMap<Object, Rectangle3f> cachedBounds = new HashMap<>();
+    private final HashMap<BlockPos, Rectangle3i> cachedBlockBounds = new HashMap<>();
 
     private final int maxUseTick;
     private final List<BakedSkinPart> skinParts;
@@ -56,7 +65,25 @@ public class BakedSkin implements IBakedSkin {
         this.preference = preference;
         this.colorDescriptor = colorDescriptor;
         this.maxUseTick = getMaxUseTick(bakedParts);
+        this.loadBlockBounds();
     }
+
+    @Nullable
+    public static BakedSkin of(ItemStack itemStack) {
+        if (!itemStack.isEmpty()) {
+            return of(SkinDescriptor.of(itemStack));
+        }
+        return null;
+    }
+
+    @Nullable
+    public static BakedSkin of(SkinDescriptor descriptor) {
+        if (!descriptor.isEmpty()) {
+            return SkinBakery.getInstance().loadSkin(descriptor);
+        }
+        return null;
+    }
+
 
     public boolean accept(SkinDescriptor other) {
         return descriptor.equals(other);
@@ -97,7 +124,17 @@ public class BakedSkin implements IBakedSkin {
         return descriptor;
     }
 
-    public Rectangle3f getRenderBounds(Entity entity, Model model, @Nullable Vector3f rotation) {
+    public HashMap<BlockPos, Rectangle3i> getBlockBounds() {
+        return cachedBlockBounds;
+    }
+
+    public Rectangle3f getRenderBounds(@Nullable Entity entity, @Nullable Model model, @Nullable Vector3f rotation) {
+        if (entity == null) {
+            entity = SkinItemRenderer.getItemStackRenderer().getMannequinEntity();
+        }
+        if (model == null) {
+            model = SkinItemRenderer.getItemStackRenderer().getMannequinModel();
+        }
         Object key = SkinCache.borrowKey(model, rotation);
         Rectangle3f bounds = cachedBounds.get(key);
         if (bounds != null) {
@@ -157,6 +194,18 @@ public class BakedSkin implements IBakedSkin {
             return useRange.contains(Math.min(useTick, maxUseTick));
         }
         return true;
+    }
+
+    private void loadBlockBounds() {
+        if (skin.getType() != SkinTypes.BLOCK) {
+            return;
+        }
+        for (BakedSkinPart skinPart: skinParts) {
+            HashMap<BlockPos, Rectangle3i> bm = skinPart.getPart().getBlockBounds();
+            if (bm != null) {
+                cachedBlockBounds.putAll(bm);
+            }
+        }
     }
 
     private int getMaxUseTick(ArrayList<BakedSkinPart> bakedParts) {

@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "armourers_workshop:block/skinnable" }
+    }
+}
