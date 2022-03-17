@@ -35,7 +35,12 @@ public class SkinPart implements ISkinPart {
 
         this.cubeData = cubeData;
         this.markerBlocks = markerBlocks;
+
         this.setupPartBounds();
+
+        if (markerBlocks != null) {
+            cubeData.getUsedCounter().addMarkers(markerBlocks.size());
+        }
     }
 
     public SkinProperties getProperties() {

@@ -47,7 +47,10 @@ public class HologramProjectorBlock extends HorizontalFaceBlock {
 
     @Override
     public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-        updatePoweredState(world, pos);
+        HologramProjectorTileEntity tileEntity = getTileEntity(world, pos);
+        if (tileEntity != null) {
+            tileEntity.updateBlockStates();
+        }
     }
 
     @Nullable
@@ -70,10 +73,11 @@ public class HologramProjectorBlock extends HorizontalFaceBlock {
         return ActionResultType.CONSUME;
     }
 
-    private void updatePoweredState(IBlockReader world, BlockPos pos) {
+    private HologramProjectorTileEntity getTileEntity(IBlockReader world, BlockPos pos) {
         TileEntity tileEntity = world.getBlockEntity(pos);
         if (tileEntity instanceof HologramProjectorTileEntity) {
-            ((HologramProjectorTileEntity) tileEntity).updatePowerStats();
+            return (HologramProjectorTileEntity) tileEntity;
         }
+        return null;
     }
 }

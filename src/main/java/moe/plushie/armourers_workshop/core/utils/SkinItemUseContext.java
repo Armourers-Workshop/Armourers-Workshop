@@ -5,6 +5,9 @@ import moe.plushie.armourers_workshop.core.base.AWBlocks;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
+import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,28 +19,29 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector4f;
-import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class SkinItemUseContext extends BlockItemUseContext {
 
-    private Quaternion rotations = Quaternion.ONE;
+    private Vector3f rotations = new Vector3f();
     private SkinDescriptor skin = SkinDescriptor.EMPTY;
     private ArrayList<Part> parts = new ArrayList<>();
 
+    private SkinProperties properties;
+
     public SkinItemUseContext(ItemUseContext context) {
         super(context);
-        this.loadElements(true);
+        this.loadElements();
     }
 
-    public SkinItemUseContext(PlayerEntity player, Hand hand, ItemStack itemStack, BlockRayTraceResult traceResult, boolean dir) {
+    public SkinItemUseContext(PlayerEntity player, Hand hand, ItemStack itemStack, BlockRayTraceResult traceResult) {
         super(player.level, player, hand, itemStack, traceResult);
-        this.loadElements(dir);
+        this.loadElements();
     }
-
 
     public static SkinItemUseContext of(BlockPos pos) {
         if (pos instanceof AttachedBlockPos) {
@@ -46,7 +50,51 @@ public class SkinItemUseContext extends BlockItemUseContext {
         return null;
     }
 
-    protected boolean canPlace(Part part) {
+    protected void transform(Vector3f r) {
+        for (Part part : parts) {
+            part.transform(r);
+        }
+    }
+
+    protected void loadElements() {
+        ItemStack itemStack = getItemInHand();
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        Skin skin = SkinLoader.getInstance().getSkin(descriptor);
+        if (skin == null) {
+            return;
+        }
+        ArrayList<Part> parts = new ArrayList<>();
+        ArrayList<BlockPos> blockPosList = new ArrayList<>();
+        skin.getBlockBounds().forEach((pos, shape) -> {
+            if (pos.equals(BlockPos.ZERO)) {
+                parts.add(new ParentPart(pos, shape, blockPosList, descriptor, skin));
+            } else {
+                parts.add(new Part(pos, shape));
+            }
+        });
+        this.skin = descriptor;
+        this.parts = parts;
+        this.properties = skin.getProperties();
+        BlockState state = AWBlocks.SKINNABLE.getStateForPlacement(this);
+        if (state != null) {
+            this.rotations = SkinnableTileEntity.getRotations(state);
+            this.transform(rotations);
+        }
+        // copy all transformed block pose into list.
+        for (Part part : parts) {
+            blockPosList.add(part.getOffset());
+        }
+    }
+
+
+    public <V> V getProperty(SkinProperty<V> property) {
+        if (properties != null && !properties.isEmpty()) {
+            return properties.get(property);
+        }
+        return property.getDefaultValue();
+    }
+
+    public boolean canPlace(Part part) {
         BlockPos pos = super.getClickedPos().offset(part.getOffset());
         return this.getLevel().getBlockState(pos).canBeReplaced(this);
     }
@@ -61,57 +109,12 @@ public class SkinItemUseContext extends BlockItemUseContext {
         return new AttachedBlockPos(this, super.getClickedPos());
     }
 
-    public ArrayList<Part> getParts() {
-        return parts;
-    }
-
-    public ArrayList<BlockPos> getBlockPosList() {
-        ArrayList<BlockPos> blockPosList = new ArrayList<>();
-        for (Part part : parts) {
-            blockPosList.add(part.getOffset());
-        }
-        return blockPosList;
-    }
-
-
-    protected void transform(Quaternion r) {
-        for (Part part : parts) {
-            part.transform(r);
-        }
-    }
-
-    protected void loadElements(boolean dir) {
-        if (!super.canPlace()) {
-            return;
-        }
-        ItemStack itemStack = getItemInHand();
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        Skin skin = SkinLoader.getInstance().getSkin(descriptor);
-        if (skin == null) {
-            return;
-        }
-        ArrayList<Part> parts = new ArrayList<>();
-        skin.getBlockBounds().forEach((pos, shape) -> {
-            parts.add(new Part(pos, shape));
-        });
-        this.skin = descriptor;
-        this.parts = parts;
-        if (!dir) {
-            return;
-        }
-        BlockState state = AWBlocks.SKINNABLE.getStateForPlacement(this);
-        if (state != null) {
-            this.rotations = SkinnableTileEntity.getRotations(state);
-            this.transform(rotations);
-        }
-    }
-
     public SkinDescriptor getSkin() {
         return skin;
     }
 
-    public Quaternion getRotations() {
-        return rotations;
+    public ArrayList<Part> getParts() {
+        return parts;
     }
 
     public static class Part {
@@ -128,27 +131,11 @@ public class SkinItemUseContext extends BlockItemUseContext {
             this.shape = shape;
         }
 
-        public Part(CompoundNBT nbt) {
-            this.offset = AWDataSerializers.getBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_REFER, BlockPos.ZERO);
-            this.shape = AWDataSerializers.getRectangle3i(nbt, AWConstants.NBT.TILE_ENTITY_SHAPE, Rectangle3i.ZERO);
-        }
-
-        public void transform(Quaternion r) {
-            Vector4f f = new Vector4f(offset.getX(), offset.getY(), offset.getZ(), 1.0f);
-            f.transform(r);
-            offset = new BlockPos(Math.round(f.x()), Math.round(f.y()), Math.round(f.z()));
-
-            Rectangle3f of = new Rectangle3f(shape);
-            of.mul(r);
-            shape = new Rectangle3i(0, 0, 0, 0, 0, 0);
-            shape.setX(Math.round(of.getX()));
-            shape.setY(Math.round(of.getY()));
-            shape.setZ(Math.round(of.getZ()));
-            shape.setWidth(Math.round(of.getWidth()));
-            shape.setHeight(Math.round(of.getHeight()));
-            shape.setDepth(Math.round(of.getDepth()));
-        }
-
+//        public Part(CompoundNBT nbt) {
+//            this.offset = AWDataSerializers.getBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_REFER, BlockPos.ZERO);
+//            this.shape = AWDataSerializers.getRectangle3i(nbt, AWConstants.NBT.TILE_ENTITY_SHAPE, Rectangle3i.ZERO);
+//        }
+//
 //        public static void putBlockParts(CompoundNBT nbt, String key, ArrayList<Part> elements) {
 //            if (elements.isEmpty()) {
 //                return;
@@ -170,9 +157,27 @@ public class SkinItemUseContext extends BlockItemUseContext {
 //        }
 
         public CompoundNBT writeToNBT(CompoundNBT nbt) {
-            AWDataSerializers.putBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_REFER, offset, BlockPos.ZERO);
-            AWDataSerializers.putRectangle3i(nbt, AWConstants.NBT.TILE_ENTITY_SHAPE, shape, Rectangle3i.ZERO);
+            AWDataSerializers.putBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_REFER, offset, null);
+            AWDataSerializers.putRectangle3i(nbt, AWConstants.NBT.TILE_ENTITY_SHAPE, shape, null);
             return nbt;
+        }
+
+        public void transform(Vector3f r) {
+            Quaternion q = new Quaternion(r.x(), r.y(), r.z(), true);
+
+            Vector4f f = new Vector4f(offset.getX(), offset.getY(), offset.getZ(), 1.0f);
+            f.transform(q);
+            offset = new BlockPos(Math.round(f.x()), Math.round(f.y()), Math.round(f.z()));
+
+            Rectangle3f of = new Rectangle3f(shape);
+            of.mul(q);
+            shape = new Rectangle3i(0, 0, 0, 0, 0, 0);
+            shape.setX(Math.round(of.getX()));
+            shape.setY(Math.round(of.getY()));
+            shape.setZ(Math.round(of.getZ()));
+            shape.setWidth(Math.round(of.getWidth()));
+            shape.setHeight(Math.round(of.getHeight()));
+            shape.setDepth(Math.round(of.getDepth()));
         }
 
         public BlockPos getOffset() {
@@ -181,6 +186,37 @@ public class SkinItemUseContext extends BlockItemUseContext {
 
         public Rectangle3i getShape() {
             return shape;
+        }
+
+        public CompoundNBT getEntityTag() {
+            return writeToNBT(new CompoundNBT());
+        }
+    }
+
+    public static class ParentPart extends Part {
+
+        private SkinDescriptor descriptor;
+        private SkinProperties properties;
+        private Collection<BlockPos> blockPosList;
+        private Collection<SkinMarker> markerList;
+
+
+        public ParentPart(BlockPos offset, Rectangle3i shape, Collection<BlockPos> blockPosList, SkinDescriptor descriptor, Skin skin) {
+            super(offset, shape);
+            this.descriptor = descriptor;
+            this.blockPosList = blockPosList;
+            this.properties = skin.getProperties();
+            this.markerList = skin.getMarkers();
+        }
+
+        @Override
+        public CompoundNBT writeToNBT(CompoundNBT nbt) {
+            nbt = super.writeToNBT(nbt);
+            AWDataSerializers.putBlockPosList(nbt, AWConstants.NBT.TILE_ENTITY_REFERS, blockPosList);
+            AWDataSerializers.putMarkerList(nbt, AWConstants.NBT.TILE_ENTITY_MARKERS, markerList);
+            AWDataSerializers.putSkinDescriptor(nbt, AWConstants.NBT.TILE_ENTITY_SKIN, descriptor, SkinDescriptor.EMPTY);
+            AWDataSerializers.putSkinProperties(nbt, AWConstants.NBT.TILE_ENTITY_SKIN_PROPERTIES, properties);
+            return nbt;
         }
     }
 

@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import net.minecraft.block.BlockState;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -48,7 +49,7 @@ public class HologramProjectorTileEntity extends RotableTileEntity {
     private float modelScale = 1.0f;
 
     private boolean isGlowing = true;
-    private boolean isPowered = true;
+    private boolean isPowered = false;
     private boolean showRotationPoint = false;
 
     private Vector3f modelAngle = new Vector3f();
@@ -180,7 +181,7 @@ public class HologramProjectorTileEntity extends RotableTileEntity {
 
     @Override
     public int getContainerSize() {
-        return items.size();
+        return 1;
     }
 
     public Vector3f getRotationSpeed() {
@@ -221,6 +222,10 @@ public class HologramProjectorTileEntity extends RotableTileEntity {
 
     public float getModelScale() {
         return modelScale;
+    }
+
+    public IInventory getInventory() {
+        return this;
     }
 
     @Override

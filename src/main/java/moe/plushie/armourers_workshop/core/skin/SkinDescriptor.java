@@ -18,7 +18,7 @@ public class SkinDescriptor implements ISkinDescriptor {
     public static final SkinDescriptor EMPTY = new SkinDescriptor("");
 
     private final static Cache<ItemStack, SkinDescriptor> DESCRIPTOR_CACHES = CacheBuilder.newBuilder()
-            .maximumSize(8)
+            .maximumSize(32)
             .expireAfterAccess(15, TimeUnit.SECONDS)
             .build();
 

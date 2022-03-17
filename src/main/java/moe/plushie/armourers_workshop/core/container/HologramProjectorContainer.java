@@ -48,9 +48,9 @@ public class HologramProjectorContainer extends Container {
     }
 
     public IInventory getInventory() {
-        TileEntity tileEntity = pos.evaluate(World::getBlockEntity).orElse(null);
-        if (tileEntity instanceof IInventory) {
-            return (IInventory) tileEntity;
+        HologramProjectorTileEntity tileEntity = getEntity();
+        if (tileEntity != null) {
+            return tileEntity.getInventory();
         }
         return null;
     }

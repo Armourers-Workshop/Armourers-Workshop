@@ -449,7 +449,7 @@
   "item.armourers_workshop.rollover.radius.sample": "§6Радиус захвата цвета:§r %d",
   "item.armourers_workshop.rollover.settingsSaved": "§6Настройки сохранены.",
   "item.armourers_workshop.rollover.skinAuthor": "§6Автор:§r %s",
-  "item.armourers_workshop.rollover.skinDyeCount": "§eКоличество красителей:§r %d/8",
+  "item.armourers_workshop.rollover.skinDyeCount": "§eКоличество красителей:§r %d",
   "item.armourers_workshop.rollover.skinGlobalId": "ГлобальныйID: %s",
   "item.armourers_workshop.rollover.skinHoldShiftForInfo": "Зажмите §aShift§r для доп. информации.",
   "item.armourers_workshop.rollover.skinId": "§eId Скина:§r %s",

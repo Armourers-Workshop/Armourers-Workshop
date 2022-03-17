@@ -16,6 +16,7 @@ public final class AWConstants {
         public static final String SKIN = "ArmourersWorkshop";
         public static final String SKIN_TYPE = "SkinType";
         public static final String SKIN_IDENTIFIER = "Identifier";
+        public static final String SKIN_PROPERTIES = "SkinProperties";
 
         public static final String TEXTURE_URL = "URL";
         public static final String TEXTURE_PROFILE = "User";
@@ -45,8 +46,11 @@ public final class AWConstants {
 
         public static final String TILE_ENTITY_REFER = "Refer";
         public static final String TILE_ENTITY_REFERS = "Refers";
+        public static final String TILE_ENTITY_MARKERS = "Markers";
 
         public static final String TILE_ENTITY_SHAPE = "Shape";
+
         public static final String TILE_ENTITY_SKIN = "Skin";
+        public static final String TILE_ENTITY_SKIN_PROPERTIES = "SkinProperties";
     }
 }

@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.core.utils;
 
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
+import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.capability.Wardrobe;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,6 +20,7 @@ import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 public class AWDataSerializers {
@@ -198,7 +201,7 @@ public class AWDataSerializers {
     }
 
     public static void putRotations(CompoundNBT nbt, String key, Rotations value, Rotations defaultValue) {
-        if (!defaultValue.equals(value)) {
+        if (!value.equals(defaultValue)) {
             nbt.put(key, value.save());
         }
     }
@@ -211,8 +214,26 @@ public class AWDataSerializers {
         return defaultValue;
     }
 
+    public static void putSkinProperties(CompoundNBT nbt, String key, SkinProperties properties) {
+        if (properties == null || properties.isEmpty()) {
+            return;
+        }
+        CompoundNBT propertiesTag = new CompoundNBT();
+        properties.writeToNBT(propertiesTag);
+        nbt.put(key, propertiesTag);
+    }
+
+    public static SkinProperties getSkinProperties(CompoundNBT nbt, String key) {
+        SkinProperties properties = new SkinProperties();
+        if (nbt.contains(key, Constants.NBT.TAG_COMPOUND)) {
+            properties.readFromNBT(nbt.getCompound(key));
+        }
+        return properties;
+    }
+
+
     public static void putSkinDescriptor(CompoundNBT nbt, String key, SkinDescriptor value, SkinDescriptor defaultValue) {
-        if (!defaultValue.equals(value)) {
+        if (!value.equals(defaultValue)) {
             nbt.put(key, value.serializeNBT());
         }
     }
@@ -228,7 +249,7 @@ public class AWDataSerializers {
     }
 
     public static void putTextureDescriptor(CompoundNBT nbt, String key, PlayerTextureDescriptor value, PlayerTextureDescriptor defaultValue) {
-        if (!defaultValue.equals(value)) {
+        if (!value.equals(defaultValue)) {
             nbt.put(key, value.serializeNBT());
         }
     }
@@ -244,7 +265,7 @@ public class AWDataSerializers {
     }
 
     public static void putBlockPos(CompoundNBT nbt, String key, BlockPos value, BlockPos defaultValue) {
-        if (!defaultValue.equals(value)) {
+        if (!value.equals(defaultValue)) {
             nbt.putLong(key, value.asLong());
         }
     }
@@ -256,7 +277,7 @@ public class AWDataSerializers {
         return defaultValue;
     }
 
-    public static void putBlockPosList(CompoundNBT nbt, String key, ArrayList<BlockPos> elements) {
+    public static void putBlockPosList(CompoundNBT nbt, String key, Collection<BlockPos> elements) {
         if (elements.isEmpty()) {
             return;
         }
@@ -267,11 +288,32 @@ public class AWDataSerializers {
         nbt.putLongArray(key, list);
     }
 
-    public static ArrayList<BlockPos> getBlockPosList(CompoundNBT nbt, String key) {
+    public static Collection<BlockPos> getBlockPosList(CompoundNBT nbt, String key) {
         ArrayList<BlockPos> elements = new ArrayList<>();
         if (nbt.contains(key, Constants.NBT.TAG_LONG_ARRAY)) {
             for (long value : nbt.getLongArray(key)) {
                 elements.add(BlockPos.of(value));
+            }
+        }
+        return elements;
+    }
+
+    public static void putMarkerList(CompoundNBT nbt, String key, Collection<SkinMarker> elements) {
+        if (elements.isEmpty()) {
+            return;
+        }
+        ArrayList<Long> list = new ArrayList<>(elements.size());
+        for (SkinMarker marker : elements) {
+            list.add(marker.asLong());
+        }
+        nbt.putLongArray(key, list);
+    }
+
+    public static Collection<SkinMarker> getMarkerList(CompoundNBT nbt, String key) {
+        ArrayList<SkinMarker> elements = new ArrayList<>();
+        if (nbt.contains(key, Constants.NBT.TAG_LONG_ARRAY)) {
+            for (long value : nbt.getLongArray(key)) {
+                elements.add(SkinMarker.of(value));
             }
         }
         return elements;

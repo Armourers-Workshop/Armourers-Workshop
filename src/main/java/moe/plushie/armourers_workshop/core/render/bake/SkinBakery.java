@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.DataLoader;
@@ -163,12 +165,17 @@ public final class SkinBakery {
 //                skin.addPaintDataParts();
 //            }
 
+        SkinUsedCounter usedCounter = new SkinUsedCounter();
         ArrayList<BakedSkinPart> bakedParts = new ArrayList<>();
+
+        ColorScheme scheme = new ColorScheme();
         ColorDescriptor colorInfo = new ColorDescriptor();
 
         for (SkinPart part : skin.getParts()) {
-            BakedSkinPart bakedPart = new BakedSkinPart(part, PackedQuad.from(part.getCubeData()));
+            SkinCubeData data = part.getCubeData();
+            BakedSkinPart bakedPart = new BakedSkinPart(part, PackedQuad.from(data));
             bakedParts.add(bakedPart);
+            usedCounter.add(data.getUsedCounter());
             // part.clearCubeData();
         }
 
@@ -185,6 +192,9 @@ public final class SkinBakery {
             colorInfo.add(bakedPart.getColorInfo());
         }
 
+        usedCounter.addPaints(colorInfo.getPaintTypes());
+
+
 //            for (int i = 0; i < skin.getParts().size(); i++) {
 //                SkinPart partData = skin.getParts().get(i);
 //                 partData.getClientSkinPartData().setAverageDyeValues(averageR, averageG,
@@ -200,7 +210,7 @@ public final class SkinBakery {
 //            }
 //            bakeTimes.set(index, (int) totalTime);
 
-        BakedSkin bakedSkin = new BakedSkin(descriptor, skin, new ColorScheme(), colorInfo, bakedParts);
+        BakedSkin bakedSkin = new BakedSkin(descriptor, skin, scheme, usedCounter, colorInfo, bakedParts);
         complete.accept(Optional.of(bakedSkin));
 
         listeners.forEach(listener -> listener.didBake(descriptor, bakedSkin));
