@@ -449,7 +449,7 @@
   "item.armourers_workshop.rollover.radius.sample": "§6Sample Radius:§r %d",
   "item.armourers_workshop.rollover.settingsSaved": "§6Configuración Guardada.",
   "item.armourers_workshop.rollover.skinAuthor": "§6Autor:§r %s",
-  "item.armourers_workshop.rollover.skinDyeCount": "§eCantidad de tinte:§r %d/8",
+  "item.armourers_workshop.rollover.skinDyeCount": "§eCantidad de tinte:§r %d",
   "item.armourers_workshop.rollover.skinGlobalId": "ID Global: %s",
   "item.armourers_workshop.rollover.skinHoldShiftForInfo": "Manten §aShift§r para mas información.",
   "item.armourers_workshop.rollover.skinId": "ID de Aspecto: %s",

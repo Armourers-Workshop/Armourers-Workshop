@@ -449,7 +449,7 @@
   "item.armourers_workshop.rollover.radius.sample": "§6샘플 범위:§r %d",
   "item.armourers_workshop.rollover.settingsSaved": "§6세팅 저장.",
   "item.armourers_workshop.rollover.skinAuthor": "§6제작자:§r %s",
-  "item.armourers_workshop.rollover.skinDyeCount": "§e염색 사용 횟수:§r %d/8",
+  "item.armourers_workshop.rollover.skinDyeCount": "§e염색 사용 횟수:§r %d",
   "item.armourers_workshop.rollover.skinGlobalId": "글로벌 ID: %s",
   "item.armourers_workshop.rollover.skinHoldShiftForInfo": "§r자세한 내용은 §ashift.",
   "item.armourers_workshop.rollover.skinId": "스킨 ID: %s",

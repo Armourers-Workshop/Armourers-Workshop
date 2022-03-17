@@ -2,20 +2,25 @@ package moe.plushie.armourers_workshop.core.handler;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.item.SkinItem;
+import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinUsedCounter;
+import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -23,6 +28,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
+import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +41,96 @@ public class ItemTooltipHandler {
     private int screenHeight = 0;
     private int screenWidth = 0;
 
+    public static ArrayList<ITextComponent> createSkinTooltip(ItemStack itemStack) {
+        boolean isItemOwner = itemStack.getItem() == AWItems.SKIN;
+        ArrayList<ITextComponent> tooltip = new ArrayList<>();
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        if (descriptor.isEmpty()) {
+            if (isItemOwner) {
+                tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinInvalidItem"));
+            }
+            return tooltip;
+        }
+        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        if (bakedSkin == null) {
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skindownloading", descriptor.getIdentifier()));
+            return tooltip;
+        }
+        Skin skin = bakedSkin.getSkin();
+        SkinUsedCounter counter = bakedSkin.getUsedCounter();
+
+        if (!isItemOwner) {
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.hasSkin"));
+            if (AWConfig.tooltipSkinName && Strings.isNotBlank(skin.getCustomName())) {
+                tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinName", skin.getCustomName().trim()));
+            }
+        }
+
+        if (AWConfig.tooltipSkinAuthor && Strings.isNotBlank(skin.getAuthorName())) {
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinAuthor", skin.getAuthorName().trim()));
+        }
+
+        if (AWConfig.tooltipSkinType) {
+            TextComponent textComponent = TranslateUtils.subtitle("skinType." + skin.getType().getRegistryName());
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", textComponent));
+        }
+
+        if (AWConfig.tooltipFlavour && Strings.isNotBlank(skin.getFlavourText())) {
+            tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
+        }
+
+        if (AWConfig.debugTooltip && !Screen.hasShiftDown()) {
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinHoldShiftForInfo"));
+        }
+
+        if (AWConfig.debugTooltip && Screen.hasShiftDown()) {
+
+            String totals = String.format("%d/%d/%d/%d",
+                    counter.getCubeTotal(SkinCubes.SOLID),
+                    counter.getCubeTotal(SkinCubes.GLOWING),
+                    counter.getCubeTotal(SkinCubes.GLASS),
+                    counter.getCubeTotal(SkinCubes.GLASS_GLOWING));
+
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinIdentifier", descriptor.getIdentifier()));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinTotalCubes", totals));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinDyeCount", counter.getDyeTotal()));
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinMarkerCount", counter.getMarkerTotal()));
+
+            if (skin.hasPaintData()) {
+                tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinPaintData", "64x32"));
+            }
+
+            if (AWConfig.tooltipProperties && !skin.getProperties().isEmpty()) {
+                tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinProperties"));
+                for (String prop : skin.getProperties().getPropertiesList()) {
+                    tooltip.add(TranslateUtils.literal(" " + prop));
+                }
+            }
+        }
+
+        // Skin ID error.
+//        if (identifier.hasLocalId()) {
+//            if (identifier.getSkinLocalId() != data.lightHash()) {
+//        tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinIdError1"));
+//        tooltip.add(TranslateUtils.translate("item.armourers_workshop.rollover.skinIdError2"));
+//            }
+//        }
+
+        if (AWConfig.tooltipOpenWardrobe && isItemOwner) {
+            ITextComponent keyName = AWKeyBindings.OPEN_WARDROBE_KEY.getTranslatedKeyMessage();
+            tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinOpenWardrobe", keyName));
+        }
+
+        return tooltip;
+    }
+
     @SubscribeEvent
     public void onItemTooltipEvent(ItemTooltipEvent event) {
         if (event.isCanceled()) {
             return;
         }
         ItemStack itemStack = event.getItemStack();
-        ArrayList<ITextComponent> newTooltips = SkinItem.getTooltip(itemStack);
+        ArrayList<ITextComponent> newTooltips = createSkinTooltip(itemStack);
         if (newTooltips.isEmpty()) {
             return;
         }

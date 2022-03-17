@@ -1,22 +1,36 @@
 package moe.plushie.armourers_workshop.core.block;
 
+import moe.plushie.armourers_workshop.core.base.AWEntities;
+import moe.plushie.armourers_workshop.core.container.SkinnableContainer;
+import moe.plushie.armourers_workshop.core.entity.SeatEntity;
+import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
+import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.SkinItemUseContext;
 import net.minecraft.block.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.AttachFace;
+import net.minecraft.state.properties.BedPart;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
@@ -25,16 +39,22 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
+@SuppressWarnings("NullableProblems")
 public class SkinnableBlock extends HorizontalFaceBlock {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
+
+    public static final EnumProperty<BedPart> PART = BlockStateProperties.BED_PART;
+    public static final BooleanProperty OCCUPIED = BlockStateProperties.OCCUPIED;
 
     public SkinnableBlock(AbstractBlock.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(FACE, AttachFace.WALL)
-                .setValue(LIT, false));
+                .setValue(LIT, false)
+                .setValue(PART, BedPart.HEAD)
+                .setValue(OCCUPIED, false));
     }
 
     @Override
@@ -47,16 +67,10 @@ public class SkinnableBlock extends HorizontalFaceBlock {
         context.getParts().forEach(p -> {
             BlockPos target = pos.offset(p.getOffset());
             world.setBlock(target, state, 11);
-            TileEntity tileEntity1 = world.getBlockEntity(target);
-            if (tileEntity1 instanceof SkinnableTileEntity) {
-                SkinnableTileEntity tileEntity2 = (SkinnableTileEntity) tileEntity1;
-                tileEntity2.setRefer(p.getOffset());
-                tileEntity2.setShape(p.getShape());
-                if (target.equals(pos)) {
-                    tileEntity2.setRefers(context.getBlockPosList());
-                    tileEntity2.setDescriptor(context.getSkin());
-                }
-                tileEntity2.updateBlockStates();
+            SkinnableTileEntity tileEntity = getTileEntity(world, target);
+            if (tileEntity != null) {
+                tileEntity.readFromNBT(p.getEntityTag());
+                tileEntity.updateBlockStates();
             }
         });
         super.setPlacedBy(world, pos, state, entity, itemStack);
@@ -96,32 +110,128 @@ public class SkinnableBlock extends HorizontalFaceBlock {
     }
 
     @Override
+    public boolean isBed(BlockState state, IBlockReader world, BlockPos pos, @Nullable Entity player) {
+        SkinnableTileEntity tileEntity = getTileEntity(world, pos);
+        if (tileEntity != null) {
+            return tileEntity.isBed();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isLadder(BlockState state, IWorldReader world, BlockPos pos, LivingEntity entity) {
+        SkinnableTileEntity tileEntity = getTileEntity(world, pos);
+        if (tileEntity != null) {
+            return tileEntity.isLadder();
+        }
+        return super.isLadder(state, world, pos, entity);
+    }
+
+    @Override
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult traceResult) {
+        SkinnableTileEntity tileEntity = getTileEntity(world, pos);
+        if (tileEntity == null) {
+            return ActionResultType.FAIL;
+        }
+        if (tileEntity.isBed()) {
+            return Blocks.RED_BED.use(state, world, tileEntity.getBedPos(), player, hand, traceResult);
+        }
+        if (tileEntity.isInventory()) {
+            ContainerOpener.open(SkinnableContainer.TYPE, player, IWorldPosCallable.create(world, tileEntity.getParentPos()));
+            return ActionResultType.sidedSuccess(world.isClientSide);
+        }
+        if (tileEntity.isSeat()) {
+            Vector3d seatPos = tileEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
+            SeatEntity seatEntity = getSeatEntity(world, seatPos);
+            if (seatEntity == null) {
+                return ActionResultType.FAIL; // it is using
+            }
+            player.startRiding(seatEntity, true);
+            return ActionResultType.sidedSuccess(world.isClientSide);
+        }
+        return ActionResultType.FAIL;
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        BlockState state = super.getStateForPlacement(context);
+        if (state != null && context instanceof SkinItemUseContext) {
+            SkinItemUseContext context1 = (SkinItemUseContext) context;
+            if (context1.getProperty(SkinProperty.BLOCK_GLOWING)) {
+                state = state.setValue(LIT, true);
+            }
+        }
+        return state;
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, FACE, LIT);
+        builder.add(FACING, FACE, LIT, PART, OCCUPIED);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        TileEntity entity = world.getBlockEntity(pos);
-        if (entity instanceof SkinnableTileEntity) {
-            return ((SkinnableTileEntity) entity).getShape();
+        SkinnableTileEntity tileEntity = getTileEntity(world, pos);
+        if (tileEntity != null) {
+            return tileEntity.getShape();
         }
         return VoxelShapes.empty();
     }
 
-    public void forEach(World world, BlockPos pos, Consumer<BlockPos> consumer) {
-        TileEntity tileEntity = world.getBlockEntity(pos);
-        if (tileEntity instanceof SkinnableTileEntity) {
-            tileEntity = ((SkinnableTileEntity) tileEntity).getParent();
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+        SkinnableTileEntity tileEntity = getTileEntity(world, pos);
+        if (tileEntity != null && tileEntity.noCollision()) {
+            return VoxelShapes.empty();
         }
-        if (tileEntity instanceof SkinnableTileEntity) {
-            BlockPos parentPos = tileEntity.getBlockPos();
-            for (BlockPos offset : ((SkinnableTileEntity) tileEntity).getRefers()) {
-                BlockPos targetPos = parentPos.offset(offset);
-                if (!targetPos.equals(pos)) {
-                    consumer.accept(targetPos);
-                }
+        return super.getCollisionShape(state, world, pos, context);
+    }
+
+    public void forEach(World world, BlockPos pos, Consumer<BlockPos> consumer) {
+        SkinnableTileEntity tileEntity = getParentTileEntity(world, pos);
+        if (tileEntity == null) {
+            return;
+        }
+        BlockPos parentPos = tileEntity.getBlockPos();
+        for (BlockPos offset : tileEntity.getRefers()) {
+            BlockPos targetPos = parentPos.offset(offset);
+            if (!targetPos.equals(pos)) {
+                consumer.accept(targetPos);
             }
         }
+    }
+
+    private SkinnableTileEntity getTileEntity(IBlockReader world, BlockPos pos) {
+        TileEntity tileEntity = world.getBlockEntity(pos);
+        if (tileEntity instanceof SkinnableTileEntity) {
+            return (SkinnableTileEntity) tileEntity;
+        }
+        return null;
+    }
+
+    private SkinnableTileEntity getParentTileEntity(IBlockReader world, BlockPos pos) {
+        SkinnableTileEntity tileEntity = getTileEntity(world, pos);
+        if (tileEntity != null) {
+            return tileEntity.getParent();
+        }
+        return null;
+    }
+
+    @Nullable
+    private SeatEntity getSeatEntity(World world, Vector3d pos) {
+        AxisAlignedBB searchRect = AxisAlignedBB.ofSize(1, 1, 1).move(pos);
+        for (SeatEntity entity : world.getEntitiesOfClass(SeatEntity.class, searchRect)) {
+            if (entity.isAlive()) {
+                if (entity.getPassengers().isEmpty()) {
+                    return entity;
+                }
+                return null;// is using
+            }
+        }
+        SeatEntity entity = new SeatEntity(AWEntities.SEAT, world);
+        entity.setPos(pos.x(), pos.y(), pos.z());
+        world.addFreshEntity(entity);
+        return entity;
     }
 }

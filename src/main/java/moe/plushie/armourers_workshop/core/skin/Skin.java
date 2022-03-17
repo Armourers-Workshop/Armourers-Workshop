@@ -8,16 +8,14 @@ import moe.plushie.armourers_workshop.core.api.common.skin.ISkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinIdentifier;
+import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Skin implements ISkin {
@@ -36,9 +34,6 @@ public class Skin implements ISkin {
     //    public SkinModelTexture skinModelTexture;
     private int[] paintData;
     private int lightHash = 0;
-    private int[] averageR = new int[10];
-    private int[] averageG = new int[10];
-    private int[] averageB = new int[10];
 
     public Skin(SkinProperties properties, ISkinType skinType, int[] paintData, ArrayList<SkinPart> skinParts) {
         this.properties = properties;
@@ -108,15 +103,6 @@ public class Skin implements ISkin {
 //        return new Rectangle3D(x, y, z, width, height, depth);
 //    }
 
-    public void setAverageDyeValues(int[] r, int[] g, int[] b) {
-        this.averageR = r;
-        this.averageG = g;
-        this.averageB = b;
-    }
-
-    public int[] getAverageDyeColour(int dyeNumber) {
-        return new int[]{averageR[dyeNumber], averageG[dyeNumber], averageB[dyeNumber]};
-    }
 //    public VoxelShape getRenderShape() {
 //        if (this.cachedShape != null) {
 //            return this.cachedShape;
@@ -287,12 +273,12 @@ public class Skin implements ISkin {
         return returnString;
     }
 
-    public int getMarkerCount() {
-        int count = 0;
+    public Collection<SkinMarker> getMarkers() {
+        ArrayList<SkinMarker> markers = new ArrayList<>();
         for (SkinPart part : parts) {
-            count += part.getMarkers().size();
+            markers.addAll(part.getMarkers());
         }
-        return count;
+        return markers;
     }
 
 //    public void addPaintDataParts() {

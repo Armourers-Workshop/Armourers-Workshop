@@ -37,12 +37,13 @@ public class AWConfig {
     public static boolean skinPreLocFollowMouse = true;
 
     // Tool-tip
-    public static boolean tooltipHasSkin;
-    public static boolean tooltipSkinName;
-    public static boolean tooltipSkinAuthor;
-    public static boolean tooltipSkinType;
-    public static boolean tooltipFlavour;
-    public static boolean tooltipOpenWardrobe;
+    public static boolean tooltipHasSkin = true;
+    public static boolean tooltipSkinName = true;
+    public static boolean tooltipSkinAuthor = true;
+    public static boolean tooltipSkinType = true;
+    public static boolean tooltipFlavour = true;
+    public static boolean tooltipProperties = false;
+    public static boolean tooltipOpenWardrobe = true;
     public static boolean debugTooltip = false;
 
     // Debug

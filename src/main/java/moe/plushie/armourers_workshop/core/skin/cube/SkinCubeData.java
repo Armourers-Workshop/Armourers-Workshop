@@ -18,7 +18,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.function.Consumer;
 
 public class SkinCubeData {
 
@@ -41,11 +40,14 @@ public class SkinCubeData {
     private byte[][] cubeColourB;
     private byte[][] cubePaintType;
 
+    private SkinUsedCounter usedCounter = new SkinUsedCounter();
+
     public int getCubeCount() {
         return cubeId.length;
     }
 
     public void setCubeCount(int count) {
+        usedCounter.reset();
         cubeId = new byte[count];
         cubeLocX = new byte[count];
         cubeLocY = new byte[count];
@@ -203,6 +205,10 @@ public class SkinCubeData {
     }
 
 
+    public SkinUsedCounter getUsedCounter() {
+        return usedCounter;
+    }
+
     public void setCubePaintType(int index, int side, byte paintType) {
         cubePaintType[index][side] = paintType;
     }
@@ -264,6 +270,7 @@ public class SkinCubeData {
                     cubePaintType[i][side] = (byte) 255;
                 }
             }
+            usedCounter.addCube(cubeId[i]);
         }
     }
 

@@ -7,26 +7,35 @@ import moe.plushie.armourers_workshop.core.base.AWTileEntities;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
+import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
 import net.minecraft.block.BlockState;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.function.Function;
 
 public class SkinnableTileEntity extends RotableTileEntity {
 
@@ -47,30 +56,14 @@ public class SkinnableTileEntity extends RotableTileEntity {
             .put(Pair.of(AttachFace.FLOOR, Direction.NORTH), new Vector3f(0, 180, 0))
             .build();
 
-//            "face=wall,facing=east": {
-//        "model": "armourers_workshop:block/hologram-projector",
-//                "x": 90,
-//                "y": 90
-//    },
-//            "face=wall,facing=north": {
-//        "model": "armourers_workshop:block/hologram-projector",
-//                "x": 90
-//    },
-//            "face=wall,facing=south": {
-//        "model": "armourers_workshop:block/hologram-projector",
-//                "x": 90,
-//                "y": 180
-//    },
-//            "face=wall,facing=west": {
-//        "model": "armourers_workshop:block/hologram-projector",
-//                "x": 90,
-//                "y": 270
-//    }
-
     private BlockPos refer = INVALID;
-    private ArrayList<BlockPos> refers = new ArrayList<>();
-
     private Rectangle3i shape = Rectangle3i.ZERO;
+
+    private NonNullList<ItemStack> items;
+    private Collection<BlockPos> refers;
+    private Collection<SkinMarker> markers;
+
+    private SkinProperties properties;
     private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
 
     private Quaternion renderRotations;
@@ -80,27 +73,44 @@ public class SkinnableTileEntity extends RotableTileEntity {
         super(AWTileEntities.SKINNABLE);
     }
 
-    public static Quaternion getRotations(BlockState state) {
+    public static Vector3f getRotations(BlockState state) {
         AttachFace face = state.getValue(SkinnableBlock.FACE);
         Direction facing = state.getValue(SkinnableBlock.FACING);
-        Vector3f rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), new Vector3f());
-        return new Quaternion(rot.x(), rot.y(), rot.z(), true);
+        return FACING_TO_ROT.getOrDefault(Pair.of(face, facing), new Vector3f());
     }
 
     @Override
     public void readFromNBT(CompoundNBT nbt) {
         refer = AWDataSerializers.getBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_REFER, INVALID);
-        refers = AWDataSerializers.getBlockPosList(nbt, AWConstants.NBT.TILE_ENTITY_REFERS);
-        descriptor = AWDataSerializers.getSkinDescriptor(nbt, AWConstants.NBT.TILE_ENTITY_SKIN, SkinDescriptor.EMPTY);
         shape = AWDataSerializers.getRectangle3i(nbt, AWConstants.NBT.TILE_ENTITY_SHAPE, Rectangle3i.ZERO);
+        if (!isParent()) {
+            return;
+        }
+        SkinProperties oldProperties = properties;
+        refers = AWDataSerializers.getBlockPosList(nbt, AWConstants.NBT.TILE_ENTITY_REFERS);
+        markers = AWDataSerializers.getMarkerList(nbt, AWConstants.NBT.TILE_ENTITY_MARKERS);
+        descriptor = AWDataSerializers.getSkinDescriptor(nbt, AWConstants.NBT.TILE_ENTITY_SKIN, SkinDescriptor.EMPTY);
+        properties = AWDataSerializers.getSkinProperties(nbt, AWConstants.NBT.TILE_ENTITY_SKIN_PROPERTIES);
+        if (oldProperties != null) {
+            oldProperties.copyFrom(properties);
+            properties = oldProperties;
+        }
+        ItemStackHelper.loadAllItems(nbt, getOrCreateItems());
     }
 
     @Override
     public void writeToNBT(CompoundNBT nbt) {
         AWDataSerializers.putBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_REFER, refer, INVALID);
-        AWDataSerializers.putBlockPosList(nbt, AWConstants.NBT.TILE_ENTITY_REFERS, refers);
-        AWDataSerializers.putSkinDescriptor(nbt, AWConstants.NBT.TILE_ENTITY_SKIN, descriptor, SkinDescriptor.EMPTY);
         AWDataSerializers.putRectangle3i(nbt, AWConstants.NBT.TILE_ENTITY_SHAPE, shape, Rectangle3i.ZERO);
+        if (!isParent()) {
+            return;
+        }
+        AWDataSerializers.putBlockPosList(nbt, AWConstants.NBT.TILE_ENTITY_REFERS, refers);
+        AWDataSerializers.putMarkerList(nbt, AWConstants.NBT.TILE_ENTITY_MARKERS, markers);
+        AWDataSerializers.putSkinDescriptor(nbt, AWConstants.NBT.TILE_ENTITY_SKIN, descriptor, SkinDescriptor.EMPTY);
+        AWDataSerializers.putSkinProperties(nbt, AWConstants.NBT.TILE_ENTITY_SKIN_PROPERTIES, properties);
+
+        ItemStackHelper.saveAllItems(nbt, getOrCreateItems());
     }
 
     public void updateBlockStates() {
@@ -110,12 +120,8 @@ public class SkinnableTileEntity extends RotableTileEntity {
         }
     }
 
-    public void setRefer(BlockPos refer) {
-        this.refer = refer;
-    }
-
     public SkinDescriptor getDescriptor() {
-        if (BlockPos.ZERO.equals(refer)) {
+        if (isParent()) {
             return descriptor;
         }
         return SkinDescriptor.EMPTY;
@@ -147,28 +153,141 @@ public class SkinnableTileEntity extends RotableTileEntity {
         if (renderRotations != null) {
             return renderRotations;
         }
-        renderRotations = getRotations(getBlockState());
+        Vector3f r = getRotations(getBlockState());
+        renderRotations = new Quaternion(r.x(), r.y(), r.z(), true);
         return renderRotations;
     }
 
+
+    @Override
+    public NonNullList<ItemStack> getItems() {
+        if (items != null) {
+            return items;
+        }
+        return NonNullList.create();
+    }
+
+    @Override
+    public int getContainerSize() {
+        return 9 * 9;
+    }
+
     @Nullable
-    public TileEntity getParent() {
-        if (BlockPos.ZERO.equals(refer)) {
+    public IInventory getInventory() {
+        return getParent();
+    }
+
+    @Nullable
+    public String getInventoryName() {
+        return getProperty(SkinProperty.ALL_CUSTOM_NAME);
+    }
+
+
+    public Collection<BlockPos> getRefers() {
+        if (refers == null) {
+            refers = getValueFromParent(te -> te.refers);
+        }
+        return refers;
+    }
+
+    public BlockPos getParentPos() {
+        return getBlockPos().subtract(refer);
+    }
+
+    public Vector3d getSeatPos() {
+        float dx = 0, dy = 0, dz = 0;
+        BlockPos parentPos = getParentPos();
+        Collection<SkinMarker> markers = getMarkers();
+        if (markers != null && !markers.isEmpty()) {
+            SkinMarker marker = markers.iterator().next();
+            dx = -marker.x / 16.0f;
+            dy = -marker.y / 16.0f;
+            dz = marker.z / 16.0f;
+        }
+        return new Vector3d(parentPos.getX() + dx, parentPos.getY() + dy, parentPos.getZ() + dz);
+    }
+
+    public BlockPos getBedPos() {
+        BlockPos parentPos = getParentPos();
+        Collection<SkinMarker> markers = getMarkers();
+        if (markers == null || markers.isEmpty()) {
+            return parentPos.relative(getBlockState().getValue(SkinnableBlock.FACING));
+        }
+        SkinMarker marker = markers.iterator().next();
+        return parentPos.offset(marker.x, marker.y, marker.z);
+    }
+
+    public Collection<SkinMarker> getMarkers() {
+        if (markers == null) {
+            markers = getValueFromParent(te -> te.markers);
+        }
+        return markers;
+    }
+
+    @Nullable
+    public SkinProperties getProperties() {
+        if (properties == null) {
+            properties = getValueFromParent(te -> te.properties);
+        }
+        return properties;
+    }
+
+    @Nullable
+    public SkinnableTileEntity getParent() {
+        if (isParent()) {
             return this;
         }
         if (getLevel() != null && refer != INVALID) {
-            return getLevel().getBlockEntity(getBlockPos().subtract(refer));
+            TileEntity tileEntity = getLevel().getBlockEntity(getParentPos());
+            if (tileEntity instanceof SkinnableTileEntity) {
+                return (SkinnableTileEntity) tileEntity;
+            }
         }
         return null;
     }
 
-    public ArrayList<BlockPos> getRefers() {
-        return refers;
+    public boolean isLadder() {
+        return getProperty(SkinProperty.BLOCK_LADDER);
     }
 
-    public void setRefers(ArrayList<BlockPos> refers) {
-        this.refers = refers;
+    public boolean isGrowing() {
+        return getProperty(SkinProperty.BLOCK_GLOWING);
     }
+
+
+    public boolean isSeat() {
+        return getProperty(SkinProperty.BLOCK_SEAT);
+    }
+
+    public boolean isBed() {
+        return getProperty(SkinProperty.BLOCK_BED);
+    }
+
+    public boolean isInventory() {
+        return getProperty(SkinProperty.BLOCK_INVENTORY) || isEnderInventory();
+    }
+
+    public boolean isEnderInventory() {
+        return getProperty(SkinProperty.BLOCK_ENDER_INVENTORY);
+    }
+
+    public boolean isParent() {
+        return BlockPos.ZERO.equals(refer);
+    }
+
+    public boolean noCollision() {
+        return getProperty(SkinProperty.BLOCK_NO_COLLISION);
+    }
+
+
+    public int getInventoryWidth() {
+        return getProperty(SkinProperty.BLOCK_INVENTORY_WIDTH);
+    }
+
+    public int getInventoryHeight() {
+        return getProperty(SkinProperty.BLOCK_INVENTORY_HEIGHT);
+    }
+
 
     @OnlyIn(Dist.CLIENT)
     @Override
@@ -181,5 +300,30 @@ public class SkinnableTileEntity extends RotableTileEntity {
         Rectangle3f box = bakedSkin.getRenderBounds(null, null, null).copy();
         box.mul(Matrix4f.createScaleMatrix(f, -f, f));
         return box;
+    }
+
+
+    private NonNullList<ItemStack> getOrCreateItems() {
+        if (items == null) {
+            items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
+        }
+        return items;
+    }
+
+    @Nullable
+    private <V> V getValueFromParent(Function<SkinnableTileEntity, V> getter) {
+        SkinnableTileEntity tileEntity = getParent();
+        if (tileEntity != null) {
+            return getter.apply(tileEntity);
+        }
+        return null;
+    }
+
+    private <V> V getProperty(SkinProperty<V> property) {
+        SkinProperties properties = getProperties();
+        if (properties != null) {
+            return properties.get(property);
+        }
+        return property.getDefaultValue();
     }
 }

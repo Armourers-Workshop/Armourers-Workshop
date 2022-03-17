@@ -6,6 +6,9 @@ import moe.plushie.armourers_workshop.core.base.AWEntities;
 import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.base.AWTileEntities;
 import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
+import moe.plushie.armourers_workshop.core.container.SkinnableContainer;
+import moe.plushie.armourers_workshop.core.gui.skinnable.SkinnableScreen;
+import moe.plushie.armourers_workshop.core.render.entity.SeatEntityRenderer;
 import moe.plushie.armourers_workshop.core.utils.command.SkinCommands;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.hologramprojector.HologramProjectorScreen;
@@ -54,6 +57,7 @@ public class AWRegistry {
 
     public void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(AWEntities.MANNEQUIN, MannequinEntity.createLivingAttributes().build());
+        event.put(AWEntities.SEAT, MannequinEntity.createLivingAttributes().build());
     }
 
     public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
@@ -63,6 +67,7 @@ public class AWRegistry {
     public void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
         event.getRegistry().registerAll(
                 WardrobeContainer.TYPE,
+                SkinnableContainer.TYPE,
                 HologramProjectorContainer.TYPE
         );
     }
@@ -94,6 +99,7 @@ public class AWRegistry {
 //        modEventBus.addListener(this::handleModelBake);
 
         ScreenManager.register(WardrobeContainer.TYPE, WardrobeScreen::new);
+        ScreenManager.register(SkinnableContainer.TYPE, SkinnableScreen::new);
         ScreenManager.register(HologramProjectorContainer.TYPE, HologramProjectorScreen::new);
 
         ClientRegistry.registerKeyBinding(AWKeyBindings.UNDO_KEY);
@@ -103,5 +109,6 @@ public class AWRegistry {
         ClientRegistry.bindTileEntityRenderer(AWTileEntities.SKINNABLE, SkinnableTileEntityRenderer::new);
 
         RenderingRegistry.registerEntityRenderingHandler(AWEntities.MANNEQUIN, MannequinEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(AWEntities.SEAT, SeatEntityRenderer::new);
     }
 }

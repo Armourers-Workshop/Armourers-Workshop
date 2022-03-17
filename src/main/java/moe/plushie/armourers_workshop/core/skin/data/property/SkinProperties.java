@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.data.property;
 
 import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.core.utils.StreamUtils;
+import net.minecraft.nbt.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -57,7 +58,6 @@ public class SkinProperties implements ISkinProperties {
 //    public static final SkinProperty<Double> WINGS_FLYING_SPEED = new SkinProperty<>("wingsFlyingSpeed", 350D);
 //    public static final SkinProperty<String> WINGS_MOVMENT_TYPE = new SkinProperty<>("wingsMovmentType", MovementType.EASE.toString());
 //
-//    private static final String TAG_SKIN_PROPS = "skinProps";
 //
 //    // Properties for skin parts.
 //    public static final SkinProperty<String> PART_TARGET = new SkinProperty<>("target", "");
@@ -76,10 +76,12 @@ public class SkinProperties implements ISkinProperties {
     }
 
     public SkinProperties(SkinProperties skinProps) {
-
-        properties = (LinkedHashMap<String, Object>) skinProps.properties.clone();
+        properties = new LinkedHashMap<>(skinProps.properties);
     }
 
+    public boolean isEmpty() {
+        return properties.isEmpty();
+    }
 
     @SuppressWarnings("unchecked")
     public <T> T get(SkinProperty<T> property) {
@@ -110,6 +112,10 @@ public class SkinProperties implements ISkinProperties {
             list.add(key + ":" + properties.get(key));
         }
         return list;
+    }
+
+    public void copyFrom(SkinProperties properties) {
+        this.properties = new LinkedHashMap<>(properties.properties);
     }
 
     public void writeToStream(DataOutputStream stream) throws IOException {
@@ -265,40 +271,38 @@ public class SkinProperties implements ISkinProperties {
         return "SkinProperties [properties=" + properties + "]";
     }
 
-    // TODO: IMP
-//    public void readFromNBT(NBTTagCompound compound) {
-//        if (!compound.hasKey(TAG_SKIN_PROPS)) {
-//            return;
-//        }
-//        byte[] data = compound.getByteArray(TAG_SKIN_PROPS);
-//
-//        ByteArrayInputStream bais = new ByteArrayInputStream(data);
-//        DataInputStream dataInputStream = new DataInputStream(bais);
-//        try {
-//            readFromStream(dataInputStream, SkinSerializer.MAX_FILE_VERSION);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            IOUtils.closeQuietly(dataInputStream);
-//            IOUtils.closeQuietly(bais);
-//        }
-//    }
-//
-//    public void writeToNBT(NBTTagCompound compound) {
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        DataOutputStream dataOutputStream = new DataOutputStream(baos);
-//        try {
-//            writeToStream(dataOutputStream);
-//            dataOutputStream.flush();
-//            byte[] data = baos.toByteArray();
-//            compound.setByteArray(TAG_SKIN_PROPS, data);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            IOUtils.closeQuietly(dataOutputStream);
-//            IOUtils.closeQuietly(baos);
-//        }
-//    }
+    public void readFromNBT(CompoundNBT nbt) {
+        for (String key : nbt.getAllKeys()) {
+            INBT value = nbt.get(key);
+            if (value instanceof StringNBT) {
+                properties.put(key, ((StringNBT)value).getAsString());
+            } else if (value instanceof IntNBT) {
+                properties.put(key, ((IntNBT) value).getAsInt());
+            } else if (value instanceof FloatNBT) {
+                properties.put(key, ((FloatNBT) value).getAsFloat());
+            } else if (value instanceof DoubleNBT) {
+                properties.put(key, ((DoubleNBT) value).getAsDouble());
+            } else if (value instanceof ByteNBT) {
+                properties.put(key, ((ByteNBT) value).getAsByte() != 0);
+            }
+        }
+    }
+
+    public void writeToNBT(CompoundNBT nbt) {
+        properties.forEach((key, value) -> {
+            if (value instanceof String) {
+                nbt.putString(key, (String) value);
+            } else if (value instanceof Integer) {
+                nbt.putInt(key, (int) value);
+            } else if (value instanceof Float) {
+                nbt.putDouble(key, (float) value);
+            } else if (value instanceof Double) {
+                nbt.putDouble(key, (double) value);
+            } else if (value instanceof Boolean) {
+                nbt.putBoolean(key, (boolean) value);
+            }
+        });
+    }
 
     enum DataTypes {
         STRING, INT, DOUBLE, BOOLEAN

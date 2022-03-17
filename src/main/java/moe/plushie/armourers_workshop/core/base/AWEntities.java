@@ -20,6 +20,7 @@ package moe.plushie.armourers_workshop.core.base;
 
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -34,13 +35,14 @@ public final class AWEntities {
     private static final HashMap<ResourceLocation, EntityType<?>> REGISTERED_ENTITY_TYPES = new HashMap<>();
 
     public static final EntityType<MannequinEntity> MANNEQUIN = register("mannequin", MannequinEntity::new, EntityClassification.MISC, b -> b.sized(0.6f, 1.88f));
-
-    private static <T extends Entity> EntityType<T> register(String name, EntityType.IFactory<T> entityFactory) {
-        return register(name, entityFactory, EntityClassification.CREATURE, null);
-    }
+    public static final EntityType<SeatEntity> SEAT = register("seat", SeatEntity::new, EntityClassification.MISC, b -> b.sized(0.0f, 0.0f).noSummon());
 
     public static void forEach(Consumer<EntityType<?>> action) {
         REGISTERED_ENTITY_TYPES.values().forEach(action);
+    }
+
+    private static <T extends Entity> EntityType<T> register(String name, EntityType.IFactory<T> entityFactory, EntityClassification classification) {
+        return register(name, entityFactory, classification, null);
     }
 
     private static <T extends Entity> EntityType<T> register(String name, EntityType.IFactory<T> entityFactory, EntityClassification classification, Consumer<EntityType.Builder<T>> customizer) {

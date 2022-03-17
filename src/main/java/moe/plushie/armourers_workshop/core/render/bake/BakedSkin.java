@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.core.render.renderer.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.utils.CustomVoxelShape;
@@ -20,7 +21,6 @@ import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
 import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
-import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.entity.Entity;
@@ -54,16 +54,18 @@ public class BakedSkin implements IBakedSkin {
     private final List<BakedSkinPart> skinParts;
 
     private final ColorDescriptor colorDescriptor;
+    private final SkinUsedCounter usedCounter;
 
     private final ColorScheme preference;
     private final HashMap<Integer, ColorScheme> resolvedColorSchemes = new HashMap<>();
 
-    public BakedSkin(SkinDescriptor descriptor, Skin skin, ColorScheme preference, ColorDescriptor colorDescriptor, ArrayList<BakedSkinPart> bakedParts) {
+    public BakedSkin(SkinDescriptor descriptor, Skin skin, ColorScheme preference, SkinUsedCounter usedCounter, ColorDescriptor colorDescriptor, ArrayList<BakedSkinPart> bakedParts) {
         this.descriptor = descriptor;
         this.skin = skin;
         this.skinParts = bakedParts;
         this.preference = preference;
         this.colorDescriptor = colorDescriptor;
+        this.usedCounter = usedCounter;
         this.maxUseTick = getMaxUseTick(bakedParts);
         this.loadBlockBounds();
     }
@@ -122,6 +124,10 @@ public class BakedSkin implements IBakedSkin {
 
     public SkinDescriptor getDescriptor() {
         return descriptor;
+    }
+
+    public SkinUsedCounter getUsedCounter() {
+        return usedCounter;
     }
 
     public HashMap<BlockPos, Rectangle3i> getBlockBounds() {
