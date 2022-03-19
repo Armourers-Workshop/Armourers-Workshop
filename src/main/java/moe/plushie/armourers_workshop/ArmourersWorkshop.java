@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.client.ClientEventHandler;
 import moe.plushie.armourers_workshop.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.common.ArmourersConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
@@ -135,6 +136,7 @@ public class ArmourersWorkshop {
     private void onCommonSetup(FMLLoadCompleteEvent event) {
         EntityProfiles.init();
         ArmourersConfig.init();
+        SkinningRecipes.init();
         NetworkHandler.init(AWCore.resource("aw2"));
 
         DataSerializers.registerSerializer(AWDataSerializers.PLAYER_TEXTURE);

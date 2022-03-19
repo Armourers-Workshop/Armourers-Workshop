@@ -7,8 +7,11 @@ import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.base.AWTileEntities;
 import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
 import moe.plushie.armourers_workshop.core.container.SkinnableContainer;
-import moe.plushie.armourers_workshop.core.gui.skinnable.SkinnableScreen;
+import moe.plushie.armourers_workshop.core.container.SkinningTableContainer;
+import moe.plushie.armourers_workshop.core.gui.misc.SkinnableScreen;
+import moe.plushie.armourers_workshop.core.gui.misc.SkinningTableScreen;
 import moe.plushie.armourers_workshop.core.render.entity.SeatEntityRenderer;
+import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.command.SkinCommands;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.hologramprojector.HologramProjectorScreen;
@@ -65,11 +68,7 @@ public class AWRegistry {
     }
 
     public void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
-        event.getRegistry().registerAll(
-                WardrobeContainer.TYPE,
-                SkinnableContainer.TYPE,
-                HologramProjectorContainer.TYPE
-        );
+        AWContainerOpener.forEach(event.getRegistry()::register);
     }
 
 
@@ -100,6 +99,7 @@ public class AWRegistry {
 
         ScreenManager.register(WardrobeContainer.TYPE, WardrobeScreen::new);
         ScreenManager.register(SkinnableContainer.TYPE, SkinnableScreen::new);
+        ScreenManager.register(SkinningTableContainer.TYPE, SkinningTableScreen::new);
         ScreenManager.register(HologramProjectorContainer.TYPE, HologramProjectorScreen::new);
 
         ClientRegistry.registerKeyBinding(AWKeyBindings.UNDO_KEY);

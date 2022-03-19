@@ -31,6 +31,7 @@ public final class RenderUtils {
     public static final ResourceLocation TEX_WARDROBE_2 = AWCore.resource("textures/gui/wardrobe/wardrobe-2.png");
 
     public static final ResourceLocation TEX_HOLOGRAM_PROJECTOR = AWCore.resource("textures/gui/hologram_projector/hologram-projector.png");
+    public static final ResourceLocation TEX_SKINNING_TABLE = AWCore.resource("textures/gui/skinning_table/skinning-table.png");
 
     public static final ResourceLocation TEX_TABS = AWCore.resource("textures/gui/controls/tabs.png");
     public static final ResourceLocation TEX_COMMON = AWCore.resource("textures/gui/common.png");

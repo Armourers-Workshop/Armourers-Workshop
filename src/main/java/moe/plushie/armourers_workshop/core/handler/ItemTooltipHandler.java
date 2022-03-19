@@ -66,6 +66,10 @@ public class ItemTooltipHandler {
             }
         }
 
+        if (isItemOwner && AWConfig.tooltipFlavour && Strings.isNotBlank(skin.getFlavourText())) {
+            tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
+        }
+
         if (AWConfig.tooltipSkinAuthor && Strings.isNotBlank(skin.getAuthorName())) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinAuthor", skin.getAuthorName().trim()));
         }
@@ -75,7 +79,7 @@ public class ItemTooltipHandler {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", textComponent));
         }
 
-        if (AWConfig.tooltipFlavour && Strings.isNotBlank(skin.getFlavourText())) {
+        if (!isItemOwner && AWConfig.tooltipFlavour && Strings.isNotBlank(skin.getFlavourText())) {
             tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
         }
 

@@ -2,14 +2,16 @@ package moe.plushie.armourers_workshop.core.entity;
 
 import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.api.ISkinToolType;
+import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.base.AWTags;
+import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
+import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.TrigUtils;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
-import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Pose;
@@ -26,6 +28,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Rotations;
 import net.minecraft.util.math.vector.Vector3d;
@@ -200,9 +203,25 @@ public class MannequinEntity extends ArmorStandEntity {
         }
         Wardrobe wardrobe = Wardrobe.of(this);
         if (wardrobe != null) {
-            ContainerOpener.open(WardrobeContainer.TYPE, player, wardrobe);
+            AWContainerOpener.open(WardrobeContainer.TYPE, player, wardrobe);
         }
         return ActionResultType.SUCCESS;
+    }
+
+    @Override
+    public void brokenByPlayer(DamageSource source) {
+        PlayerEntity player = null;
+        if (source.getEntity() instanceof PlayerEntity) {
+            player = (PlayerEntity) source.getEntity();
+        }
+        if (player != null && !player.abilities.instabuild) {
+            ItemStack itemStack = new ItemStack(AWItems.MANNEQUIN);
+            CompoundNBT entityTag = itemStack.getOrCreateTagElement(AWConstants.NBT.ENTITY);
+            AWDataSerializers.putFloat(entityTag, AWConstants.NBT.ENTITY_SCALE, getScale(), 1.0f);
+            AWDataSerializers.putTextureDescriptor(entityTag, AWConstants.NBT.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);
+            Block.popResource(this.level, this.blockPosition(), itemStack);
+        }
+        this.brokenByAnything(source);
     }
 
     public PlayerTextureDescriptor getTextureDescriptor() {
@@ -213,12 +232,12 @@ public class MannequinEntity extends ArmorStandEntity {
         this.entityData.set(DATA_TEXTURE, descriptor);
     }
 
-    public void setExtraRenderer(boolean value) {
-        this.entityData.set(DATA_EXTRA_RENDERER, value);
-    }
-
     public boolean isExtraRenderer() {
         return this.entityData.get(DATA_EXTRA_RENDERER);
+    }
+
+    public void setExtraRenderer(boolean value) {
+        this.entityData.set(DATA_EXTRA_RENDERER, value);
     }
 
     public IInventory getInventory() {

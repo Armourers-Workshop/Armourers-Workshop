@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.handler.ItemTooltipHandler;
 import moe.plushie.armourers_workshop.core.handler.KeyboardHandler;
 import moe.plushie.armourers_workshop.core.handler.PlacementHighlightHandler;
 import moe.plushie.armourers_workshop.core.handler.PlayerNetworkHandler;
-import moe.plushie.armourers_workshop.core.render.renderer.*;
+import moe.plushie.armourers_workshop.core.render.skin.*;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;

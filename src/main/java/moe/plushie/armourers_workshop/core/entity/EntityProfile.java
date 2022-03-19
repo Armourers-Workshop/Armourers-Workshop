@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.entity;
 
 import moe.plushie.armourers_workshop.core.api.ISkinType;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.HashMap;
 import java.util.function.Function;
@@ -21,6 +23,10 @@ public class EntityProfile {
 
     public boolean canSupport(ISkinType type) {
         return supports.containsKey(type);
+    }
+
+    public boolean isDynamicOverrideArmor(Entity entity) {
+        return !(entity instanceof PlayerEntity);
     }
 
     public int getMaxCount(ISkinType type) {

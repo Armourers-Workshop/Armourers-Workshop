@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings("NullableProblems")
-public class MannequinItem extends Item {
+public class MannequinItem extends FlavouredItem {
 
     public MannequinItem(Item.Properties properties) {
         super(properties);
@@ -56,17 +56,6 @@ public class MannequinItem extends Item {
             return 1.0f;
         }
         return entityTag.getFloat(AWConstants.NBT.ENTITY_SCALE);
-    }
-
-    public static String getNameKey(ItemStack itemStack) {
-        float scale = getScale(itemStack);
-        if (scale <= 0.5f) {
-            return "item.armourers_workshop.mannequin.small";
-        }
-        if (scale >= 2.0f) {
-            return "item.armourers_workshop.mannequin.big";
-        }
-        return "item.armourers_workshop.mannequin";
     }
 
     @Override
@@ -103,13 +92,21 @@ public class MannequinItem extends Item {
 
 
     @Override
-    public ITextComponent getName(ItemStack itemStack) {
-        return TranslateUtils.title(getNameKey(itemStack));
+    public String getDescriptionId(ItemStack itemStack) {
+        float scale = getScale(itemStack);
+        if (scale <= 0.5f) {
+            return super.getDescriptionId(itemStack) + ".small";
+        }
+        if (scale >= 2.0f) {
+            return super.getDescriptionId(itemStack) + ".big";
+        }
+        return super.getDescriptionId(itemStack);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable World world, List<ITextComponent> tooltips, ITooltipFlag flag) {
+        super.appendHoverText(itemStack, world, tooltips, flag);
         PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.of(itemStack);
         if (descriptor.getName() != null) {
             tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.user", descriptor.getName()));
@@ -117,18 +114,5 @@ public class MannequinItem extends Item {
         if (descriptor.getURL() != null) {
             tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.url", descriptor.getURL()));
         }
-        tooltips.add(TranslateUtils.subtitle(getNameKey(itemStack) + ".flavour"));
-    }
-
-    private void randomizePose(MannequinEntity entity, Random random) {
-//        Rotations rotations = entity.getHeadPose();
-//        float f = random.nextFloat() * 5.0F;
-//        float f1 = random.nextFloat() * 20.0F - 10.0F;
-//        Rotations rotations1 = new Rotations(rotations.getX() + f, rotations.getY() + f1, rotations.getZ());
-//        entity.setHeadPose(rotations1);
-//        rotations = entity.getBodyPose();
-//        f = random.nextFloat() * 10.0F - 5.0F;
-//        rotations1 = new Rotations(rotations.getX(), rotations.getY() + f, rotations.getZ());
-//        entity.setBodyPose(rotations1);
     }
 }

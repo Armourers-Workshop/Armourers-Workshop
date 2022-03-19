@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.capability;
 
 import moe.plushie.armourers_workshop.core.api.*;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
@@ -112,6 +113,25 @@ public final class WardrobeState implements SkinBakery.IBakeListener {
     public boolean hasOverriddenPart(ISkinPartType partType) {
         return hasOverriddenParts.contains(partType);
     }
+
+    public boolean shouldRenderEquipment(EquipmentSlotType slotType) {
+        switch (slotType) {
+            case HEAD:
+                return hasOverriddenPart(SkinPartTypes.BIPED_HEAD);
+            case CHEST:
+                return hasOverriddenPart(SkinPartTypes.BIPED_CHEST)
+                        || hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)
+                        ||  hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_ARM);
+            case FEET:
+                return hasOverriddenPart(SkinPartTypes.BIPED_LEFT_FOOT)
+                        || hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_FOOT);
+            case LEGS:
+                return hasOverriddenPart(SkinPartTypes.BIPED_LEFT_LEG)
+                        || hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_LEG);
+        }
+        return false;
+    }
+
 
     private boolean updateEquipmentSlots(Entity entity) {
         int index = 0, changes = 0;

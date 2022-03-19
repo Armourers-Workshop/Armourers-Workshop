@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.core.api.ISkinArmorType;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
@@ -49,8 +50,15 @@ public class SkinType implements ISkinType {
 
 
     public static class Armor extends SkinType implements ISkinArmorType {
-        public Armor(String name, int id, List<? extends ISkinPartType> parts) {
+        protected EquipmentSlotType slotType;
+        public Armor(String name, int id, EquipmentSlotType slotType, List<? extends ISkinPartType> parts) {
             super(name, id, parts);
+            this.slotType = slotType;
+        }
+
+        @Override
+        public EquipmentSlotType getSlotType() {
+            return slotType;
         }
     }
 

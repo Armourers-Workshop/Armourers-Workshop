@@ -1,20 +1,15 @@
 package moe.plushie.armourers_workshop.core.base;
 
 import moe.plushie.armourers_workshop.core.AWCore;
-import moe.plushie.armourers_workshop.core.item.BottleItem;
-import moe.plushie.armourers_workshop.core.item.MannequinItem;
-import moe.plushie.armourers_workshop.core.item.SkinItem;
-import moe.plushie.armourers_workshop.core.item.WandOfStyleItem;
+import moe.plushie.armourers_workshop.core.item.*;
 import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -36,7 +31,12 @@ public class AWItems {
     public static final Item MANNEQUIN = register("mannequin", MannequinItem::new, p -> p.tab(MAIN_GROUP).setISTER(() -> SkinItemRenderer::getItemStackRenderer));
     public static final Item WAND_OF_STYLE = register("wand-of-style", WandOfStyleItem::new, p -> p.tab(MAIN_GROUP));
 
+    public static final Item SOAP = register("soap", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
+    public static final Item SKIN_TEMPLATE = register("skin-template", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));
+    public static final Item ARMOUR_CONTAINER = register("armour-container", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));
+
     public static final Item HOLOGRAM_PROJECTOR = registerBlock("hologram-projector", AWBlocks.HOLOGRAM_PROJECTOR, p -> p.tab(MAIN_GROUP));
+    public static final Item SKINNING_TABLE = registerBlock("skinning-table", AWBlocks.SKINNING_TABLE, p -> p.tab(MAIN_GROUP));
 
     private static <T extends Item> T register(String name, Function<Item.Properties, T> factory) {
         return register(name, factory, null);

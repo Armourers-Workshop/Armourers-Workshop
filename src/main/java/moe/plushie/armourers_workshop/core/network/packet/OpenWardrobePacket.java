@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
-import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
+import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
 import moe.plushie.armourers_workshop.core.capability.Wardrobe;
 import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
 import net.minecraft.entity.Entity;
@@ -30,7 +30,7 @@ public class OpenWardrobePacket extends CustomPacket {
         Entity entity = player.level.getEntity(entityId);
         Wardrobe wardrobe = Wardrobe.of(entity);
         if (wardrobe != null) {
-            ContainerOpener.open(WardrobeContainer.TYPE, player, wardrobe);
+            AWContainerOpener.open(WardrobeContainer.TYPE, player, wardrobe);
         }
     }
 }
