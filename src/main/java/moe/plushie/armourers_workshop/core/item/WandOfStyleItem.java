@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
+import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.core.capability.Wardrobe;
 import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
@@ -22,7 +22,7 @@ import java.util.List;
 
 
 @SuppressWarnings("NullableProblems")
-public class WandOfStyleItem extends Item {
+public class WandOfStyleItem extends FlavouredItem {
 
     public WandOfStyleItem(Item.Properties properties) {
         super(properties);
@@ -44,16 +44,10 @@ public class WandOfStyleItem extends Item {
         return ActionResultType.sidedSuccess(player.level.isClientSide);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable World world, List<ITextComponent> tooltips, ITooltipFlag flag) {
-        tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.wand-of-style.flavour"));
-    }
-
     private void openGUI(PlayerEntity player, Entity entity) {
         Wardrobe wardrobe = Wardrobe.of(entity);
         if (wardrobe != null && wardrobe.getProfile().canCustomize()) {
-            ContainerOpener.open(WardrobeContainer.TYPE, player, wardrobe);
+            AWContainerOpener.open(WardrobeContainer.TYPE, player, wardrobe);
         }
     }
 }

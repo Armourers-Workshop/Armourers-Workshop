@@ -22,6 +22,7 @@ import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.Constants;
 
 @SuppressWarnings("NullableProblems")
 public class HologramProjectorTileEntity extends RotableTileEntity {
@@ -104,9 +105,9 @@ public class HologramProjectorTileEntity extends RotableTileEntity {
         if (level != null && !level.isClientSide) {
             if (state.getValue(HologramProjectorBlock.LIT) != growing) {
                 BlockState newState = state.setValue(HologramProjectorBlock.LIT, growing);
-                level.setBlock(getBlockPos(), newState, 2);
+                level.setBlock(getBlockPos(), newState, Constants.BlockFlags.BLOCK_UPDATE);
             } else {
-                level.sendBlockUpdated(getBlockPos(), state, state, 2);
+                level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.BLOCK_UPDATE);
             }
         }
     }

@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.common.ArmourersConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
-import moe.plushie.armourers_workshop.core.render.renderer.SkinRenderer;
-import moe.plushie.armourers_workshop.core.render.renderer.SkinRendererManager;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.capability.Wardrobe;
@@ -133,8 +133,18 @@ public class ClientWardrobeHandler {
             return;
         }
         Wardrobe wardrobe = Wardrobe.of(entity);
-        if (wardrobe != null && !wardrobe.shouldRenderEquipment(slotType)) {
+        if (wardrobe == null) {
+            return;
+        }
+        if (!wardrobe.shouldRenderEquipment(slotType)) {
             callback.cancel();
+            return;
+        }
+        if (wardrobe.getProfile().isDynamicOverrideArmor(entity)) {
+            WardrobeState snapshot = wardrobe.snapshot();
+            if (snapshot.shouldRenderEquipment(slotType)) {
+                callback.cancel();
+            }
         }
     }
 

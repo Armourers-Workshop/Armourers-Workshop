@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.entity;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.base.AWEntities;
-import moe.plushie.armourers_workshop.core.render.renderer.*;
+import moe.plushie.armourers_workshop.core.render.skin.*;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.entity.Entity;
@@ -124,6 +124,7 @@ public class EntityProfiles {
         register(EntityType.CHICKEN, EntityProfiles.CHICKEN, () -> ChickenSkinRenderer::new);
         register(EntityType.ARROW, EntityProfiles.ARROW, () -> ArrowSkinRenderer::new);
 
+        register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
         register(AWEntities.MANNEQUIN, EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
 
         // TODO: custom register
@@ -152,6 +153,7 @@ public class EntityProfiles {
     public static class Builder<T> {
 
         private boolean isFixed = false;
+        private boolean isOverrideArmorBySkin = false;
         private final HashMap<ISkinType, Function<ISkinType, Integer>> supports = new HashMap<>();
 
         public static <T extends Entity> Builder<T> create() {

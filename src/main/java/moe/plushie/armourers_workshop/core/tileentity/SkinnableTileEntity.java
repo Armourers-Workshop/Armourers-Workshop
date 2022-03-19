@@ -32,6 +32,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -116,7 +117,7 @@ public class SkinnableTileEntity extends RotableTileEntity {
     public void updateBlockStates() {
         setChanged();
         if (level != null && !level.isClientSide) {
-            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2);
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         }
     }
 
@@ -173,15 +174,14 @@ public class SkinnableTileEntity extends RotableTileEntity {
     }
 
     @Nullable
-    public IInventory getInventory() {
-        return getParent();
-    }
-
-    @Nullable
     public String getInventoryName() {
         return getProperty(SkinProperty.ALL_CUSTOM_NAME);
     }
 
+    @Nullable
+    public IInventory getInventory() {
+        return getParent();
+    }
 
     public Collection<BlockPos> getRefers() {
         if (refers == null) {
@@ -214,7 +214,7 @@ public class SkinnableTileEntity extends RotableTileEntity {
             return parentPos.relative(getBlockState().getValue(SkinnableBlock.FACING));
         }
         SkinMarker marker = markers.iterator().next();
-        return parentPos.offset(marker.x, marker.y, marker.z);
+        return parentPos.offset(-marker.x / 16, -marker.y / 16, marker.z / 16);
     }
 
     public Collection<SkinMarker> getMarkers() {
@@ -254,7 +254,6 @@ public class SkinnableTileEntity extends RotableTileEntity {
         return getProperty(SkinProperty.BLOCK_GLOWING);
     }
 
-
     public boolean isSeat() {
         return getProperty(SkinProperty.BLOCK_SEAT);
     }
@@ -279,7 +278,6 @@ public class SkinnableTileEntity extends RotableTileEntity {
         return getProperty(SkinProperty.BLOCK_NO_COLLISION);
     }
 
-
     public int getInventoryWidth() {
         return getProperty(SkinProperty.BLOCK_INVENTORY_WIDTH);
     }
@@ -287,7 +285,6 @@ public class SkinnableTileEntity extends RotableTileEntity {
     public int getInventoryHeight() {
         return getProperty(SkinProperty.BLOCK_INVENTORY_HEIGHT);
     }
-
 
     @OnlyIn(Dist.CLIENT)
     @Override

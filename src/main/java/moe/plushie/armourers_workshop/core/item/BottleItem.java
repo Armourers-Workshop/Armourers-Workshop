@@ -41,9 +41,9 @@ public class BottleItem extends ColoredItem {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable World world, List<ITextComponent> tooltips, ITooltipFlag flag) {
+    public void appendHoverText(ItemStack itemStack, @Nullable World world, List<ITextComponent> tooltips, ITooltipFlag flags) {
+        super.appendHoverText(itemStack, world, tooltips, flags);
         PaintColor paintColor = getColor(itemStack);
-        tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.dye-bottle.flavour"));
         if (paintColor != null) {
             String hexColor = String.format("#%02x%02x%02x", paintColor.getRed(), paintColor.getGreen(), paintColor.getBlue());
             ITextComponent paintName = TranslateUtils.subtitle("paintType." + paintColor.getPaintType().getRegistryName());

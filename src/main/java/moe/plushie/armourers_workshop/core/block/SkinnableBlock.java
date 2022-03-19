@@ -5,12 +5,13 @@ import moe.plushie.armourers_workshop.core.container.SkinnableContainer;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
-import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
+import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.SkinItemUseContext;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
@@ -79,6 +80,7 @@ public class SkinnableBlock extends HorizontalFaceBlock {
     @Override
     public void playerWillDestroy(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         // remove all part from world
+        dropItems(world, pos, player);
         forEach(world, pos, target -> {
             world.setBlock(target, Blocks.AIR.defaultBlockState(), 35);
             world.levelEvent(player, 2001, target, Block.getId(state));
@@ -87,10 +89,38 @@ public class SkinnableBlock extends HorizontalFaceBlock {
     }
 
     @Override
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult traceResult) {
+        SkinnableTileEntity tileEntity = getTileEntity(world, pos);
+        if (tileEntity == null) {
+            return ActionResultType.FAIL;
+        }
+        if (tileEntity.isBed() && !player.isShiftKeyDown()) {
+            return Blocks.RED_BED.use(state, world, tileEntity.getBedPos(), player, hand, traceResult);
+        }
+        if (tileEntity.isSeat() && !player.isShiftKeyDown()) {
+            if (world.isClientSide) {
+                return ActionResultType.CONSUME;
+            }
+            Vector3d seatPos = tileEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
+            SeatEntity seatEntity = getSeatEntity(world, seatPos);
+            if (seatEntity == null) {
+                return ActionResultType.FAIL; // it is using
+            }
+            player.startRiding(seatEntity, true);
+            return ActionResultType.SUCCESS;
+        }
+        if (tileEntity.isInventory()) {
+            AWContainerOpener.open(SkinnableContainer.TYPE, player, IWorldPosCallable.create(world, tileEntity.getParentPos()));
+            return ActionResultType.sidedSuccess(world.isClientSide);
+        }
+        return ActionResultType.FAIL;
+    }
+
+    @Override
     public void onBlockExploded(BlockState state, World world, BlockPos pos, Explosion explosion) {
         // remove all part from world
+        dropItems(world, pos, null);
         forEach(world, pos, target -> super.onBlockExploded(state, world, target, explosion));
-        super.onBlockExploded(state, world, pos, explosion);
     }
 
     @Override
@@ -101,6 +131,19 @@ public class SkinnableBlock extends HorizontalFaceBlock {
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        BlockState state = super.getStateForPlacement(context);
+        if (state != null && context instanceof SkinItemUseContext) {
+            SkinItemUseContext context1 = (SkinItemUseContext) context;
+            if (context1.getProperty(SkinProperty.BLOCK_GLOWING)) {
+                state = state.setValue(LIT, true);
+            }
+        }
+        return state;
     }
 
     @Nullable
@@ -127,43 +170,6 @@ public class SkinnableBlock extends HorizontalFaceBlock {
         return super.isLadder(state, world, pos, entity);
     }
 
-    @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult traceResult) {
-        SkinnableTileEntity tileEntity = getTileEntity(world, pos);
-        if (tileEntity == null) {
-            return ActionResultType.FAIL;
-        }
-        if (tileEntity.isBed()) {
-            return Blocks.RED_BED.use(state, world, tileEntity.getBedPos(), player, hand, traceResult);
-        }
-        if (tileEntity.isInventory()) {
-            ContainerOpener.open(SkinnableContainer.TYPE, player, IWorldPosCallable.create(world, tileEntity.getParentPos()));
-            return ActionResultType.sidedSuccess(world.isClientSide);
-        }
-        if (tileEntity.isSeat()) {
-            Vector3d seatPos = tileEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
-            SeatEntity seatEntity = getSeatEntity(world, seatPos);
-            if (seatEntity == null) {
-                return ActionResultType.FAIL; // it is using
-            }
-            player.startRiding(seatEntity, true);
-            return ActionResultType.sidedSuccess(world.isClientSide);
-        }
-        return ActionResultType.FAIL;
-    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        BlockState state = super.getStateForPlacement(context);
-        if (state != null && context instanceof SkinItemUseContext) {
-            SkinItemUseContext context1 = (SkinItemUseContext) context;
-            if (context1.getProperty(SkinProperty.BLOCK_GLOWING)) {
-                state = state.setValue(LIT, true);
-            }
-        }
-        return state;
-    }
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
@@ -199,6 +205,19 @@ public class SkinnableBlock extends HorizontalFaceBlock {
             if (!targetPos.equals(pos)) {
                 consumer.accept(targetPos);
             }
+        }
+    }
+
+    public void dropItems(World world, BlockPos pos, @Nullable PlayerEntity player) {
+        SkinnableTileEntity tileEntity = getParentTileEntity(world, pos);
+        if (tileEntity == null) {
+            return;
+        }
+        if (player == null || !player.abilities.instabuild) {
+            InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tileEntity.getDescriptor().asItemStack());
+        }
+        if (tileEntity.isInventory()) {
+            InventoryHelper.dropContents(world, pos, tileEntity);
         }
     }
 

@@ -10,8 +10,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 @SuppressWarnings({"unused", "NullableProblems"})
+@OnlyIn(Dist.CLIENT)
 public class HologramProjectorScreen extends ContainerScreen<HologramProjectorContainer> {
 
     private final AWTabController<Integer> tabController = new AWTabController<>(true);

@@ -59,7 +59,7 @@ public final class ContainerTypeBuilder<C extends Container, I> {
     public ContainerType<C> build(String id) {
         ContainerType<C> containerType = IForgeContainerType.create(this::fromNetwork);
         containerType.setRegistryName(AWCore.getModId(), id);
-        ContainerOpener.register(containerType, this::open);
+        AWContainerOpener.register(containerType, this::open);
         return containerType;
     }
 

@@ -2,12 +2,10 @@ package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
-import moe.plushie.armourers_workshop.core.utils.ContainerOpener;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFaceBlock;
+import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.AttachFace;
@@ -69,8 +67,21 @@ public class HologramProjectorBlock extends HorizontalFaceBlock {
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         }
-        ContainerOpener.open(HologramProjectorContainer.TYPE, player, IWorldPosCallable.create(world, pos));
+        AWContainerOpener.open(HologramProjectorContainer.TYPE, player, IWorldPosCallable.create(world, pos));
         return ActionResultType.CONSUME;
+    }
+
+
+    @Override
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean p_196243_5_) {
+        if (state.is(newState.getBlock())) {
+            return;
+        }
+        HologramProjectorTileEntity tileEntity = getTileEntity(world, pos);
+        if (tileEntity != null) {
+            InventoryHelper.dropContents(world, pos, tileEntity);
+        }
+        super.onRemove(state, world, pos, newState, p_196243_5_);
     }
 
     private HologramProjectorTileEntity getTileEntity(IBlockReader world, BlockPos pos) {

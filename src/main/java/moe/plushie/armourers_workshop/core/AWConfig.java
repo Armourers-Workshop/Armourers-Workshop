@@ -13,6 +13,7 @@ public class AWConfig {
     public static boolean multipassSkinRendering = true;
     public static int maxLodLevels = 4;
     public static boolean useClassicBlockModels;
+    public static int prefersSeatHoldingTick = 60;
 
     // Misc
     public static int skinLoadAnimationTime;

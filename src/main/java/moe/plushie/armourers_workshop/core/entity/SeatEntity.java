@@ -1,12 +1,10 @@
 package moe.plushie.armourers_workshop.core.entity;
 
+import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
-import net.minecraft.entity.passive.PigEntity;
-import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
@@ -22,7 +20,7 @@ import java.util.Collections;
 @SuppressWarnings("NullableProblems")
 public class SeatEntity extends LivingEntity {
 
-    private int holdingTick = 0;
+    private int holdingTick;
     private BlockPos blockPos;
 
     public SeatEntity(EntityType<? extends SeatEntity> entityType, World world) {
@@ -30,18 +28,15 @@ public class SeatEntity extends LivingEntity {
         this.yRot = 0.0f;
         this.yHeadRot = this.yRot;
         this.maxUpStep = 0.0f;
+        this.holdingTick = AWConfig.prefersSeatHoldingTick;
     }
 
     @Override
     public void tick() {
-        if (this.holdingTick > 0) {
-            this.holdingTick--;
-        }
-        if (this.holdingTick <= 0 && this.isAlive() && !this.isWorking()) {
-            remove();
-            return;
-        }
         super.tick();
+        if (this.level != null && !this.level.isClientSide()) {
+            this.autoKill();
+        }
     }
 
     @Override
@@ -61,10 +56,19 @@ public class SeatEntity extends LivingEntity {
         this.remove();
     }
 
+    public void autoKill() {
+        if (this.holdingTick > 0) {
+            this.holdingTick--;
+        }
+        if (this.holdingTick <= 0 && this.isAlive() && !this.isWorking()) {
+            kill();
+        }
+    }
+
     @Override
-    protected void removePassenger(Entity p_184225_1_) {
-        super.removePassenger(p_184225_1_);
-        this.holdingTick = 60;
+    protected void removePassenger(Entity entity) {
+        super.removePassenger(entity);
+        this.holdingTick = AWConfig.prefersSeatHoldingTick;
     }
 
     public boolean isWorking() {

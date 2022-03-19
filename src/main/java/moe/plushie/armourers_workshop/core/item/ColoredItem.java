@@ -16,7 +16,7 @@ import net.minecraft.nbt.StringNBT;
 import javax.annotation.Nullable;
 import java.awt.*;
 
-public abstract class ColoredItem extends Item {
+public abstract class ColoredItem extends FlavouredItem {
 
     public ColoredItem(Item.Properties properties) {
         super(properties);

@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.base.AWTags;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.SkinResourceLocation;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
 
@@ -21,12 +22,12 @@ public final class SkinTypes {
 
     public static final ISkinType UNKNOWN = register("unknown", 255, SkinPartTypes.UNKNOWN);
 
-    public static final ISkinType ARMOR_HEAD = registerArmor("head", 1, SkinPartTypes.BIPED_HEAD);
-    public static final ISkinType ARMOR_CHEST = registerArmor("chest", 2, SkinPartTypes.BIPED_CHEST, SkinPartTypes.BIPED_LEFT_ARM, SkinPartTypes.BIPED_RIGHT_ARM);
-    public static final ISkinType ARMOR_LEGS = registerArmor("legs", 3, SkinPartTypes.BIPED_LEFT_LEG, SkinPartTypes.BIPED_RIGHT_LEG, SkinPartTypes.BIPED_SKIRT);
-    public static final ISkinType ARMOR_FEET = registerArmor("feet", 4, SkinPartTypes.BIPED_LEFT_FOOT, SkinPartTypes.BIPED_RIGHT_FOOT);
-    public static final ISkinType ARMOR_WINGS = registerArmor("wings", 5, SkinPartTypes.BIPED_LEFT_WING, SkinPartTypes.BIPED_RIGHT_WING);
-    public static final ISkinType ARMOR_OUTFIT = registerArmor("outfit", 6, SkinTypes.ARMOR_HEAD, SkinTypes.ARMOR_CHEST, SkinTypes.ARMOR_LEGS, SkinTypes.ARMOR_FEET, SkinTypes.ARMOR_WINGS);
+    public static final ISkinType ARMOR_HEAD = registerArmor("head", 1, EquipmentSlotType.HEAD, SkinPartTypes.BIPED_HEAD);
+    public static final ISkinType ARMOR_CHEST = registerArmor("chest", 2, EquipmentSlotType.CHEST, SkinPartTypes.BIPED_CHEST, SkinPartTypes.BIPED_LEFT_ARM, SkinPartTypes.BIPED_RIGHT_ARM);
+    public static final ISkinType ARMOR_LEGS = registerArmor("legs", 3, EquipmentSlotType.LEGS, SkinPartTypes.BIPED_LEFT_LEG, SkinPartTypes.BIPED_RIGHT_LEG, SkinPartTypes.BIPED_SKIRT);
+    public static final ISkinType ARMOR_FEET = registerArmor("feet", 4, EquipmentSlotType.FEET, SkinPartTypes.BIPED_LEFT_FOOT, SkinPartTypes.BIPED_RIGHT_FOOT);
+    public static final ISkinType ARMOR_WINGS = registerArmor("wings", 5, null, SkinPartTypes.BIPED_LEFT_WING, SkinPartTypes.BIPED_RIGHT_WING);
+    public static final ISkinType ARMOR_OUTFIT = registerArmor("outfit", 6, null, SkinTypes.ARMOR_HEAD, SkinTypes.ARMOR_CHEST, SkinTypes.ARMOR_LEGS, SkinTypes.ARMOR_FEET, SkinTypes.ARMOR_WINGS);
 
     public static final ISkinType HORSE = register("horse", 17, SkinPartTypes.BLOCK, SkinPartTypes.BLOCK_MULTI);
 
@@ -61,16 +62,16 @@ public final class SkinTypes {
         return register(name, new SkinType(name, id, Arrays.asList(parts)));
     }
 
-    private static ISkinType registerArmor(String name, int id, ISkinPartType... parts) {
-        return register(name, new SkinType.Armor(name, id, Arrays.asList(parts)));
+    private static ISkinType registerArmor(String name, int id, EquipmentSlotType slotType, ISkinPartType... parts) {
+        return register(name, new SkinType.Armor(name, id, slotType, Arrays.asList(parts)));
     }
 
-    private static ISkinType registerArmor(String name, int id, ISkinType... types) {
+    private static ISkinType registerArmor(String name, int id, EquipmentSlotType slotType, ISkinType... types) {
         List<ISkinPartType> partTypes = new ArrayList<>();
         for (ISkinType type : types) {
             partTypes.addAll(type.getParts());
         }
-        return register(name, new SkinType.Armor(name, id, partTypes));
+        return register(name, new SkinType.Armor(name, id, slotType, partTypes));
     }
 
     private static ISkinType registerItem(String name, int id, ITag<Item> tag, ISkinPartType... parts) {
