@@ -92,6 +92,7 @@ public class ColourMixerContainer extends Container {
             public void setChanged() {
                 ItemStack itemStack = inventory.getItem(0);
                 if (!itemStack.isEmpty() && inventory.getItem(1).isEmpty()) {
+                    itemStack = itemStack.copy();
                     ColourMixerTileEntity tileEntity = getEntity();
                     if (tileEntity != null) {
                         ColoredItem.setColor(itemStack, tileEntity.getColor());

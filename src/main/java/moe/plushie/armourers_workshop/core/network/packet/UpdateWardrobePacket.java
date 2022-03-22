@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.AWDataAccessor;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -47,7 +47,7 @@ public class UpdateWardrobePacket extends CustomPacket {
         }
     }
 
-    public UpdateWardrobePacket(Wardrobe wardrobe, Mode mode, CompoundNBT compoundNBT, Field field, Object fieldValue) {
+    public UpdateWardrobePacket(SkinWardrobe wardrobe, Mode mode, CompoundNBT compoundNBT, Field field, Object fieldValue) {
         this.mode = mode;
         this.entityId = wardrobe.getId();
         this.field = field;
@@ -55,18 +55,18 @@ public class UpdateWardrobePacket extends CustomPacket {
         this.compoundNBT = compoundNBT;
     }
 
-    public static UpdateWardrobePacket sync(Wardrobe wardrobe) {
+    public static UpdateWardrobePacket sync(SkinWardrobe wardrobe) {
         return new UpdateWardrobePacket(wardrobe, Mode.SYNC, wardrobe.serializeNBT(), null, null);
     }
 
-    public static UpdateWardrobePacket pick(Wardrobe wardrobe, int slot, ItemStack itemStack) {
+    public static UpdateWardrobePacket pick(SkinWardrobe wardrobe, int slot, ItemStack itemStack) {
         CompoundNBT compoundNBT = new CompoundNBT();
         compoundNBT.putInt("Slot", slot);
         compoundNBT.put("Item", itemStack.serializeNBT());
         return new UpdateWardrobePacket(wardrobe, Mode.SYNC_ITEM, compoundNBT, null, null);
     }
 
-    public static UpdateWardrobePacket field(Wardrobe wardrobe, Field field, Object value) {
+    public static UpdateWardrobePacket field(SkinWardrobe wardrobe, Field field, Object value) {
         return new UpdateWardrobePacket(wardrobe, Mode.SYNC_OPTION, null, field, value);
     }
 
@@ -86,7 +86,7 @@ public class UpdateWardrobePacket extends CustomPacket {
     @Override
     public void accept(ServerPlayNetHandler netHandler, ServerPlayerEntity player) {
         // TODO: check operator permission
-        Wardrobe wardrobe = apply(player);
+        SkinWardrobe wardrobe = apply(player);
         if (wardrobe != null) {
             NetworkHandler.getInstance().sendToAll(this);
         }
@@ -98,8 +98,8 @@ public class UpdateWardrobePacket extends CustomPacket {
     }
 
     @Nullable
-    private Wardrobe apply(PlayerEntity player) {
-        Wardrobe wardrobe = Wardrobe.of(player.level.getEntity(entityId));
+    private SkinWardrobe apply(PlayerEntity player) {
+        SkinWardrobe wardrobe = SkinWardrobe.of(player.level.getEntity(entityId));
         if (wardrobe == null) {
             return null;
         }
@@ -151,12 +151,12 @@ public class UpdateWardrobePacket extends CustomPacket {
         MANNEQUIN_TEXTURE(MannequinEntity.DATA_TEXTURE);
 
         private final boolean broadcastChanges;
-        private final AWDataAccessor<Wardrobe, ?> dataAccessor;
+        private final AWDataAccessor<SkinWardrobe, ?> dataAccessor;
 
         Field(EquipmentSlotType slotType) {
             this.broadcastChanges = true;
             this.dataAccessor = AWDataAccessor
-                    .withDataSerializer(Wardrobe.class, DataSerializers.BOOLEAN)
+                    .withDataSerializer(SkinWardrobe.class, DataSerializers.BOOLEAN)
                     .withSupplier((wardrobe) -> wardrobe.shouldRenderEquipment(slotType))
                     .withApplier((wardrobe, value) -> wardrobe.setRenderEquipment(slotType, value));
         }
@@ -165,7 +165,7 @@ public class UpdateWardrobePacket extends CustomPacket {
         <S extends Entity, T> Field(IDataSerializer<T> dataSerializer, Function<S, T> supplier, BiConsumer<S, T> applier) {
             this.broadcastChanges = false;
             this.dataAccessor = AWDataAccessor
-                    .withDataSerializer(Wardrobe.class, dataSerializer)
+                    .withDataSerializer(SkinWardrobe.class, dataSerializer)
                     .withSupplier((wardrobe) -> {
                         if (wardrobe.getEntity() != null) {
                             return supplier.apply((S) wardrobe.getEntity());
@@ -183,12 +183,12 @@ public class UpdateWardrobePacket extends CustomPacket {
             this(dataParameter.getSerializer(), e -> e.getEntityData().get(dataParameter), (e, v) -> e.getEntityData().set(dataParameter, v));
         }
 
-        public <T> void set(Wardrobe wardrobe, T value) {
-            AWDataAccessor<Wardrobe, T> dataAccessor = getDataAccessor();
+        public <T> void set(SkinWardrobe wardrobe, T value) {
+            AWDataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
             dataAccessor.set(wardrobe, value);        }
 
-        public <T> T get(Wardrobe wardrobe, T defaultValue) {
-            AWDataAccessor<Wardrobe, T> dataAccessor = getDataAccessor();
+        public <T> T get(SkinWardrobe wardrobe, T defaultValue) {
+            AWDataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
             T value = dataAccessor.get(wardrobe);
             if (value != null) {
                 return value;
@@ -197,12 +197,12 @@ public class UpdateWardrobePacket extends CustomPacket {
         }
 
         @SuppressWarnings("unchecked")
-        public <T> AWDataAccessor<Wardrobe, T> getDataAccessor() {
-            return (AWDataAccessor<Wardrobe, T>) dataAccessor;
+        public <T> AWDataAccessor<SkinWardrobe, T> getDataAccessor() {
+            return (AWDataAccessor<SkinWardrobe, T>) dataAccessor;
         }
 
         public <T> IDataSerializer<T> getDataSerializer() {
-            AWDataAccessor<Wardrobe, T> dataAccessor = getDataAccessor();
+            AWDataAccessor<SkinWardrobe, T> dataAccessor = getDataAccessor();
             return dataAccessor.dataSerializer;
         }
 

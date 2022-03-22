@@ -23,10 +23,9 @@ import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Optional;
 
 @SuppressWarnings("unused")
-public class Wardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
+public class SkinWardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
 
     private final HashSet<EquipmentSlotType> armourFlags = new HashSet<>();
     private final HashMap<SkinSlotType, Integer> skinSlots = new HashMap<>();
@@ -36,10 +35,10 @@ public class Wardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
     private final WeakReference<Entity> entity;
     private final EntityProfile profile;
 
-    private WardrobeState state;
+    private SkinWardrobeState state;
     private int id; // a.k.a entity id
 
-    public Wardrobe(Entity entity, EntityProfile profile) {
+    public SkinWardrobe(Entity entity, EntityProfile profile) {
         this.id = entity.getId();
         this.entity = new WeakReference<>(entity);
         this.profile = profile;
@@ -51,13 +50,13 @@ public class Wardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
     }
 
     @Nullable
-    public static Wardrobe of(@Nullable Entity entity) {
+    public static SkinWardrobe of(@Nullable Entity entity) {
         if (entity == null) {
             return null;
         }
         Object key = entity.getId();
-        Cache<Object, LazyOptional<Wardrobe>> caches = WardrobeStorage.getCaches(entity);
-        LazyOptional<Wardrobe> wardrobe = caches.getIfPresent(key);
+        Cache<Object, LazyOptional<SkinWardrobe>> caches = WardrobeStorage.getCaches(entity);
+        LazyOptional<SkinWardrobe> wardrobe = caches.getIfPresent(key);
         if (wardrobe != null) {
             return wardrobe.resolve().orElse(null);
         }
@@ -182,9 +181,9 @@ public class Wardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public WardrobeState snapshot() {
+    public SkinWardrobeState snapshot() {
         if (state == null) {
-            state = new WardrobeState(inventory);
+            state = new SkinWardrobeState(inventory);
         }
         Entity entity = getEntity();
         if (entity != null) {

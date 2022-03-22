@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
-import moe.plushie.armourers_workshop.core.capability.WardrobeState;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobeState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -18,7 +18,6 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.ArrayList;
 import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
@@ -58,13 +57,13 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
 
     @Override
     public void willRender(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
-        Wardrobe wardrobe = Wardrobe.of(entity);
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             return;
         }
         // Limit the players limbs if they have a skirt equipped.
         // A proper lady should not swing her legs around!
-        WardrobeState snapshot = wardrobe.snapshot();
+        SkinWardrobeState snapshot = wardrobe.snapshot();
         if (snapshot.isLimitLimbs()) {
             if (entity.animationSpeed > 0.25F) {
                 entity.animationSpeed = 0.25F;
@@ -76,7 +75,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         }
     }
 
-    protected void applyOverriders(T entity, M model, Wardrobe wardrobe, WardrobeState snapshot) {
+    protected void applyOverriders(T entity, M model, SkinWardrobe wardrobe, SkinWardrobeState snapshot) {
         if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
             addOverrider(accessor.getLeftArm(model));
         }
@@ -100,11 +99,11 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
 
     @Override
     public void apply(T entity, M model, EquipmentSlotType slotType, float partialTicks, MatrixStack matrixStack) {
-        Wardrobe wardrobe = Wardrobe.of(entity);
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             return;
         }
-        WardrobeState snapshot = wardrobe.snapshot();
+        SkinWardrobeState snapshot = wardrobe.snapshot();
         Function<ISkinPartType, Boolean> shouldRenderEquipment = partType -> snapshot.hasOverriddenEquipmentPart(partType, wardrobe::shouldRenderEquipment);
 
         if (shouldRenderEquipment.apply(SkinPartTypes.BIPED_HEAD)) {

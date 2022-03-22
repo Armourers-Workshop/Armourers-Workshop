@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core;
 
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import net.minecraft.entity.Entity;
@@ -12,7 +12,6 @@ import net.minecraftforge.fml.loading.FMLPaths;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.nio.file.Path;
 
 public class AWCore {
 
@@ -53,7 +52,7 @@ public class AWCore {
         if (descriptor.accept(itemStack)) {
             return itemStack;
         }
-        Wardrobe wardrobe = Wardrobe.of(entity);
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null) {
             ItemStack itemStack1 = wardrobe.getItem(skinSlotType, 0);
             descriptor = SkinDescriptor.of(itemStack1);

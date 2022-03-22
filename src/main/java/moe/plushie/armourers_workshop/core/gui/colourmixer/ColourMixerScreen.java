@@ -1,22 +1,21 @@
-package moe.plushie.armourers_workshop.core.gui.misc;
+package moe.plushie.armourers_workshop.core.gui.colourmixer;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.container.ColourMixerContainer;
-import moe.plushie.armourers_workshop.core.gui.widget.AWComboBox;
-import moe.plushie.armourers_workshop.core.gui.widget.AWHSBSliderBox;
-import moe.plushie.armourers_workshop.core.gui.widget.AWPaletteBox;
+import moe.plushie.armourers_workshop.core.gui.widget.*;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateColourMixerPacket;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.tileentity.ColourMixerTileEntity;
+import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.utils.color.Palette;
 import moe.plushie.armourers_workshop.core.utils.color.PaletteManager;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerInventory;
@@ -31,7 +30,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"unused", "NullableProblems"})
 @OnlyIn(Dist.CLIENT)
-public class ColourMixerScreen extends ContainerScreen<ColourMixerContainer> {
+public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerContainer> {
 
     private final ImmutableList<Label> labels = new ImmutableList.Builder<Label>()
             .add(new Label(5, 21, getDisplayText("label.hue")))
@@ -71,10 +70,13 @@ public class ColourMixerScreen extends ContainerScreen<ColourMixerContainer> {
     protected void init() {
         super.init();
 
-        this.titleLabelX = imageWidth / 2 - font.width(getTitle().getVisualOrderText()) / 2;
-        this.titleLabelY = 8;
         this.inventoryLabelX = 48;
         this.inventoryLabelY = imageHeight - 96;
+
+        this.addIconButton(leftPos + 232, topPos + 126, 208, 176, "button.add_palette", this::showNewPaletteDialog);
+        this.addIconButton(leftPos + 214, topPos + 126, 208, 160, "button.remove_palette", this::showRemovePaletteDialog);
+        this.addIconButton(leftPos + 196, topPos + 126, 208, 192, "button.rename_palette", this::showRenamePaletteDialog);
+        this.addHelpButton(leftPos + 186, topPos + 130);
 
         this.textField = this.addTextField(leftPos + 5, topPos + 105);
         this.paletteBox = this.addPalettePanel(leftPos + 166, topPos + 80);
@@ -96,6 +98,7 @@ public class ColourMixerScreen extends ContainerScreen<ColourMixerContainer> {
         this.sliders[1] = null;
         this.sliders[2] = null;
         this.textField = null;
+        PaletteManager.getInstance().save();
     }
 
     @Override
@@ -106,62 +109,35 @@ public class ColourMixerScreen extends ContainerScreen<ColourMixerContainer> {
         }
         int cx = leftPos + 108;
         int cy = topPos + 102;
-        fill(matrixStack, cx, cy, cx + 13, cy + 13, selectedColor.getRGB() | 0xff000000);
+        int rgb = selectedColor.getRGB();
+        if (selectedPaintType == SkinPaintTypes.RAINBOW) {
+            rgb = ColorUtils.getRainbowRGB();
+        }
+        fill(matrixStack, cx, cy, cx + 13, cy + 13, rgb | 0xff000000);
     }
 
     @Override
-    protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {
-        this.font.draw(matrixStack, this.getTitle(), (float) this.titleLabelX, (float) this.titleLabelY, 0x404040);
-        this.font.draw(matrixStack, this.inventory.getDisplayName(), (float) this.inventoryLabelX, (float) this.inventoryLabelY, 0x404040);
-    }
-
-    @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrixStack, mouseX, mouseY);
+    public void renderContentLayer(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.renderContentLayer(matrixStack, mouseX, mouseY, partialTicks);
         if (this.textField != null) {
             this.textField.render(matrixStack, mouseX, mouseY, partialTicks);
         }
     }
 
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.getFocused() != null && this.getFocused().mouseClicked(mouseX, mouseY, button)) {
-            return true;
-        }
-        return super.mouseClicked(mouseX, mouseY, button);
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double p_231043_5_) {
-        if (this.getFocused() != null && this.getFocused().mouseScrolled(mouseX, mouseY, p_231043_5_)) {
-            return true;
-        }
-        return super.mouseScrolled(mouseX, mouseY, p_231043_5_);
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double p_231045_6_, double p_231045_8_) {
-        if (this.getFocused() != null && this.getFocused().mouseDragged(mouseX, mouseY, button, p_231045_6_, p_231045_8_)) {
-            return true;
-        }
-        return super.mouseDragged(mouseX, mouseY, button, p_231045_6_, p_231045_8_);
-    }
-
     @Override
     public boolean keyPressed(int key, int p_231046_2_, int p_231046_3_) {
-        boolean typed = super.keyPressed(key, p_231046_2_, p_231046_3_);
-        if (!typed && textField != null && textField.isFocused() && key == GLFW.GLFW_KEY_ENTER) {
+        if (super.keyPressed(key, p_231046_2_, p_231046_3_)) {
+            return true;
+        }
+        if (textField != null && textField.isFocused() && key == GLFW.GLFW_KEY_ENTER) {
             String value = textField.getValue();
             if (value.matches("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")) {
                 setSelectedColor(Color.decode(value));
                 onSubmit(null);
-                return true;
             }
+            return true;
         }
-        return typed;
+        return false;
     }
 
 
@@ -174,6 +150,7 @@ public class ColourMixerScreen extends ContainerScreen<ColourMixerContainer> {
         if (selectedPalette != null) {
             if (!selectedPalette.isLocked() && hasShiftDown()) {
                 selectedPalette.setColor(index, selectedColor.getRGB());
+                PaletteManager.getInstance().markDirty();
                 return;
             }
             setSelectedColor(new Color(selectedPalette.getColor(index)));
@@ -193,6 +170,48 @@ public class ColourMixerScreen extends ContainerScreen<ColourMixerContainer> {
         }
         UpdateColourMixerPacket packet = new UpdateColourMixerPacket(tileEntity, field, paintColor);
         NetworkHandler.getInstance().sendToServer(packet);
+    }
+
+    private void showNewPaletteDialog(Button button) {
+        ColourMixerInputDialog dialog = new ColourMixerInputDialog(getDisplayText("add_palette.title"));
+        dialog.setSuggestion(getDisplayText("add_palette.enter_name"));
+        present(dialog, dialog1 -> {
+            if (dialog1.getSelectedIndex() == 1) {
+                selectedPalette = PaletteManager.getInstance().addPalette(dialog1.getText());
+                this.reloadPalettes();
+            }
+        });
+    }
+
+    private void showRenamePaletteDialog(Button button) {
+        if (selectedPalette.isLocked()) {
+            return;
+        }
+        ColourMixerInputDialog dialog = new ColourMixerInputDialog(getDisplayText("rename_palette.title"));
+        dialog.setSuggestion(getDisplayText("rename_palette.enter_name"));
+        dialog.setText(selectedPalette.getName());
+        present(dialog, dialog1 -> {
+            if (dialog1.getSelectedIndex() == 1) {
+                PaletteManager.getInstance().renamePalette(selectedPalette.getName(), dialog.getText());
+                this.reloadPalettes();
+            }
+        });
+    }
+
+    private void showRemovePaletteDialog(Button button) {
+        if (selectedPalette.isLocked()) {
+            return;
+        }
+        ColourMixerConfirmDialog dialog = new ColourMixerConfirmDialog(getDisplayText("remove_palette.title"));
+        dialog.setMessage(getDisplayText("remove_palette.message"));
+        present(dialog, dialog1 -> {
+            if (dialog1.getSelectedIndex() == 1) {
+                PaletteManager.getInstance().deletePalette(selectedPalette.getName());
+                selectedPalette = PaletteManager.getInstance().getPalettes().iterator().next();
+                this.reloadPalettes();
+
+            }
+        });
     }
 
     private AWHSBSliderBox addHSBSlider(int x, int y, AWHSBSliderBox.Type type) {
@@ -246,6 +265,7 @@ public class ColourMixerScreen extends ContainerScreen<ColourMixerContainer> {
             if (button instanceof AWComboBox) {
                 int newValue = ((AWComboBox) button).getSelectedIndex();
                 setSelectedPalette(palettes.get(newValue));
+                setFocused(null);
             }
         });
         setSelectedPalette(palettes.get(selectedIndex));
@@ -266,6 +286,33 @@ public class ColourMixerScreen extends ContainerScreen<ColourMixerContainer> {
         textBox.setMaxLength(7);
         addWidget(textBox);
         return textBox;
+    }
+
+    private AWImageButton addIconButton(int x, int y, int u, int v, String key, Button.IPressable handler) {
+        ITextComponent tooltip = getDisplayText(key);
+        AWImageButton button = new AWImageButton(x, y, 16, 16, u, v, RenderUtils.TEX_BUTTONS, handler, this::renderIconTooltip, tooltip);
+        addButton(button);
+        return button;
+    }
+
+    private AWImageButton addHelpButton(int x, int y) {
+        ITextComponent tooltip = getDisplayText("help.palette");
+        Button.IPressable pressable = b -> {
+        };
+        AWImageButton button = new AWImageButton(x, y, 7, 8, 0, 0, RenderUtils.TEX_HELP, pressable, this::renderIconTooltip, tooltip);
+        addButton(button);
+        return button;
+    }
+
+    private void reloadPalettes() {
+        init(Minecraft.getInstance(), width, height);
+    }
+
+    private void renderIconTooltip(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
+        if (getFocused() != button && getFocused() != null && getFocused().isMouseOver(mouseX, mouseY)) {
+            return;
+        }
+        renderTooltip(matrixStack, button.getMessage(), mouseX, mouseY);
     }
 
     private void setColorComponents(float[] values) {

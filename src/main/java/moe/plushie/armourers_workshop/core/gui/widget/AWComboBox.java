@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.gui.widget;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FocusableGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.button.Button;
@@ -12,6 +13,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.GuiUtils;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -127,6 +129,9 @@ public class AWComboBox extends Button {
         }
     }
 
+    public boolean isPopping() {
+        return popping;
+    }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -162,11 +167,15 @@ public class AWComboBox extends Button {
     }
 
     @Override
-    public boolean keyPressed(int p_231046_1_, int p_231046_2_, int p_231046_3_) {
-        if (popping && list.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_)) {
+    public boolean keyPressed(int key, int p_231046_2_, int p_231046_3_) {
+        if (popping && list.keyPressed(key, p_231046_2_, p_231046_3_)) {
             return true;
         }
-        return super.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_);
+        if (popping && key == GLFW.GLFW_KEY_ENTER) {
+            popping = false;
+            return true;
+        }
+        return super.keyPressed(key, p_231046_2_, p_231046_3_);
     }
 
     @Override

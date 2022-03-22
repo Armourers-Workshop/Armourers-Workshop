@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
@@ -21,7 +20,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -32,7 +30,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
-public final class WardrobeState implements SkinBakery.IBakeListener {
+public final class SkinWardrobeState implements SkinBakery.IBakeListener {
 
     private static final ImmutableMap<ISkinPartType, EquipmentSlotType> PART_TO_EQUIPMENT_SLOTS = new ImmutableMap.Builder<ISkinPartType, EquipmentSlotType>()
             .put(SkinPartTypes.BIPED_HEAD, EquipmentSlotType.HEAD)
@@ -70,7 +68,7 @@ public final class WardrobeState implements SkinBakery.IBakeListener {
     private boolean isLoaded = false;
     private boolean isListening = false;
 
-    public WardrobeState(Inventory inventory) {
+    public SkinWardrobeState(Inventory inventory) {
         this.inventory = inventory;
     }
 

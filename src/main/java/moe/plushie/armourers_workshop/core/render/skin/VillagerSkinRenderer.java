@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.render.layer.ForwardingLayer;
 import moe.plushie.armourers_workshop.core.model.TransformModel;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
-import moe.plushie.armourers_workshop.core.capability.WardrobeState;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobeState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.layers.VillagerLevelPendantLayer;
 import net.minecraft.client.renderer.entity.model.VillagerModel;
@@ -39,7 +39,7 @@ public class VillagerSkinRenderer<T extends LivingEntity, M extends VillagerMode
     }
 
     @Override
-    protected void applyOverriders(T entity, M model, Wardrobe wardrobe, WardrobeState snapshot) {
+    protected void applyOverriders(T entity, M model, SkinWardrobe wardrobe, SkinWardrobeState snapshot) {
         if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
             addOverrider(model.arms);
         }

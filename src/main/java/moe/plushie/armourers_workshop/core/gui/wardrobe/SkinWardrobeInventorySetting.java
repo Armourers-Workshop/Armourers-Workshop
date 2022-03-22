@@ -3,18 +3,18 @@ package moe.plushie.armourers_workshop.core.gui.wardrobe;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
+import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import net.minecraft.inventory.container.Slot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class WardrobeInventorySetting extends AWTabPanel {
+public class SkinWardrobeInventorySetting extends AWTabPanel {
 
-    private final WardrobeContainer container;
+    private final SkinWardrobeContainer container;
 
-    public WardrobeInventorySetting(WardrobeContainer container) {
+    public SkinWardrobeInventorySetting(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.skins");
         this.container = container;
     }

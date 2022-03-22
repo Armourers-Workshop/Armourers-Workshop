@@ -19,13 +19,13 @@ public class WardrobeProvider implements ICapabilityProvider, INBTSerializable<C
 
     public static final ResourceLocation WARDROBE_ID = new ResourceLocation(AWCore.getModId(), "entity-skin-provider");
 
-    @CapabilityInject(Wardrobe.class)
-    public static Capability<Wardrobe> WARDROBE_KEY = null;
+    @CapabilityInject(SkinWardrobe.class)
+    public static Capability<SkinWardrobe> WARDROBE_KEY = null;
 
-    public final Wardrobe wardrobe;
+    public final SkinWardrobe wardrobe;
 
     public WardrobeProvider(Entity entity, EntityProfile profile) {
-        this.wardrobe = new Wardrobe(entity, profile);
+        this.wardrobe = new SkinWardrobe(entity, profile);
     }
 
     @Nonnull

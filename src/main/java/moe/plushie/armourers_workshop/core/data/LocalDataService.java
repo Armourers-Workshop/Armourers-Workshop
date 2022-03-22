@@ -53,6 +53,10 @@ public class LocalDataService {
         }
     }
 
+    public static boolean isRunning() {
+        return RUNNING != null;
+    }
+
     protected void loadConfig() {
         File rootDir = rootPath.toFile();
         if (!rootDir.exists() && !rootDir.mkdirs()) {

@@ -9,8 +9,8 @@ import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
-import moe.plushie.armourers_workshop.core.capability.WardrobeState;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobeState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
@@ -38,7 +38,7 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderArrow(AbstractArrowEntity entity, Model model, float p_225623_2_, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer renderType, CallbackInfo callback) {
-        Wardrobe wardrobe = Wardrobe.of(entity);
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             return;
         }
@@ -57,7 +57,7 @@ public class ClientWardrobeHandler {
         matrixStack.scale(-SCALE, -SCALE, SCALE);
         matrixStack.translate(0, 0, -1);
 
-        int count = render(wardrobe, entity, model, light, matrixStack, ItemCameraTransforms.TransformType.NONE, WardrobeState::getItemSkins);
+        int count = render(wardrobe, entity, model, light, matrixStack, ItemCameraTransforms.TransformType.NONE, SkinWardrobeState::getItemSkins);
         if (count != 0) {
             callback.cancel();
         }
@@ -66,20 +66,20 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderArmor(Entity entity, Model model, int light, MatrixStack matrixStack, IRenderTypeBuffer renderType) {
-        Wardrobe wardrobe = Wardrobe.of(entity);
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             return;
         }
         matrixStack.pushPose();
         matrixStack.scale(SCALE, SCALE, SCALE);
 
-        render(wardrobe, entity, model, light, matrixStack, null, WardrobeState::getArmorSkins);
+        render(wardrobe, entity, model, light, matrixStack, null, SkinWardrobeState::getArmorSkins);
 
         matrixStack.popPose();
     }
 
     public static void onRenderItem(Entity entity, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, MatrixStack matrixStack, IRenderTypeBuffer renderType, CallbackInfo callback) {
-        Wardrobe wardrobe = Wardrobe.of(entity);
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
             return;
         }
@@ -154,7 +154,7 @@ public class ClientWardrobeHandler {
 //        }
     }
 
-    private static int renderItemSkins(Wardrobe wardrobe, Entity entity, Model model, int light, MatrixStack matrixStack, ItemCameraTransforms.TransformType transformType, ItemStack itemStack) {
+    private static int renderItemSkins(SkinWardrobe wardrobe, Entity entity, Model model, int light, MatrixStack matrixStack, ItemCameraTransforms.TransformType transformType, ItemStack itemStack) {
         return render(wardrobe, entity, model, light, matrixStack, transformType, snapshot -> {
             if (entity instanceof MannequinEntity) {
                 SkinDescriptor target = SkinDescriptor.of(itemStack);
@@ -174,10 +174,10 @@ public class ClientWardrobeHandler {
         });
     }
 
-    private static int render(Wardrobe wardrobe, Entity entity, Model model, int light, MatrixStack matrixStack, ItemCameraTransforms.TransformType transformType, Function<WardrobeState, Iterable<BakedSkin>> provider) {
+    private static int render(SkinWardrobe wardrobe, Entity entity, Model model, int light, MatrixStack matrixStack, ItemCameraTransforms.TransformType transformType, Function<SkinWardrobeState, Iterable<BakedSkin>> provider) {
         int r = 0;
         float partialTicks = System.currentTimeMillis() % 100000000;
-        WardrobeState snapshot = wardrobe.snapshot();
+        SkinWardrobeState snapshot = wardrobe.snapshot();
         SkinRenderBuffer buffer = SkinRenderBuffer.getInstance();
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity);
         if (renderer == null) {

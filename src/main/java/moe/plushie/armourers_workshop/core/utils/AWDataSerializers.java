@@ -1,11 +1,10 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.*;
@@ -104,14 +103,14 @@ public class AWDataSerializers {
     }
 
     @Nullable
-    public static Wardrobe readEntityWardrobe(PlayerEntity player, PacketBuffer buffer) {
+    public static SkinWardrobe readEntityWardrobe(PlayerEntity player, PacketBuffer buffer) {
         if (player.level == null) {
             return null;
         }
-        return Wardrobe.of(player.level.getEntity(buffer.readInt()));
+        return SkinWardrobe.of(player.level.getEntity(buffer.readInt()));
     }
 
-    public static void writeEntityWardrobe(Wardrobe wardrobe, PacketBuffer buffer) {
+    public static void writeEntityWardrobe(SkinWardrobe wardrobe, PacketBuffer buffer) {
         buffer.writeInt(wardrobe.getId());
     }
 
@@ -250,6 +249,8 @@ public class AWDataSerializers {
     public static void putPaintColor(CompoundNBT nbt, String key, PaintColor value, PaintColor defaultValue) {
         if (!value.equals(defaultValue)) {
             nbt.putInt(key, value.getValue());
+        } else {
+            nbt.remove(key);
         }
     }
 
