@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.render.skin;
 
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
-import moe.plushie.armourers_workshop.core.capability.WardrobeState;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobeState;
 import net.minecraft.client.renderer.entity.model.IllagerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
@@ -18,7 +18,7 @@ public class IllagerSkinRenderer<T extends AbstractIllagerEntity, M extends Illa
     }
 
     @Override
-    protected void applyOverriders(T entity, M model, Wardrobe wardrobe, WardrobeState snapshot) {
+    protected void applyOverriders(T entity, M model, SkinWardrobe wardrobe, SkinWardrobeState snapshot) {
         super.applyOverriders(entity, model, wardrobe, snapshot);
         if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
             addOverrider(model.arms);

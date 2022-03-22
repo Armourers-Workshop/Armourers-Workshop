@@ -63,11 +63,14 @@ public class PaletteManager {
 
     public void deletePalette(String paletteName) {
         paletteMap.remove(paletteName);
+        markDirty();
     }
 
-    public void addPalette(String paletteName) {
+    public Palette addPalette(String paletteName) {
         Palette palette = new Palette(paletteName);
         paletteMap.put(paletteName, palette);
+        markDirty();
+        return palette;
     }
 
     public void renamePalette(String oldName, String newName) {
@@ -75,6 +78,7 @@ public class PaletteManager {
         palette.setName(newName);
         paletteMap.put(newName, palette);
         paletteMap.remove(oldName);
+        markDirty();
     }
 
     public void save() {

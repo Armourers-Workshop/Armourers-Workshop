@@ -3,20 +3,15 @@ package moe.plushie.armourers_workshop;
 
 import moe.plushie.armourers_workshop.client.ClientEventHandler;
 import moe.plushie.armourers_workshop.client.ClientWardrobeHandler;
-import moe.plushie.armourers_workshop.common.ArmourersConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
-import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
-import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.registry.AWRegistry;
-import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.capability.WardrobeProvider;
-import moe.plushie.armourers_workshop.core.capability.WardrobeStorage;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -26,12 +21,10 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -106,7 +99,7 @@ public class ArmourersWorkshop {
             Entity owner = ((AbstractArrowEntity) entity).getOwner();
             ItemStack itemStack = AWCore.getSkinFromEquipment(owner, SkinSlotType.BOW, EquipmentSlotType.MAINHAND);
             if (!itemStack.isEmpty()) {
-                Wardrobe wardrobe = Wardrobe.of(entity);
+                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe != null) {
                     wardrobe.setItem(SkinSlotType.BOW, 0, itemStack.copy());
                 }
@@ -114,7 +107,7 @@ public class ArmourersWorkshop {
         }
         if (entity instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) entity;
-            Wardrobe wardrobe = Wardrobe.of(player);
+            SkinWardrobe wardrobe = SkinWardrobe.of(player);
             if (wardrobe != null) {
                 wardrobe.broadcast(player);
             }
@@ -129,7 +122,7 @@ public class ArmourersWorkshop {
         if (EntityProfiles.getProfile(event.getTarget()) == null) {
             return;
         }
-        Wardrobe wardrobe = Wardrobe.of(event.getTarget());
+        SkinWardrobe wardrobe = SkinWardrobe.of(event.getTarget());
         if (wardrobe != null) {
             wardrobe.broadcast((ServerPlayerEntity) event.getPlayer());
         }

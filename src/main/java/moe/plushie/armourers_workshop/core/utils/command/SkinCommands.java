@@ -9,13 +9,12 @@ import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
-import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
@@ -51,7 +50,6 @@ public class SkinCommands {
                 .then(Commands.literal("setSkin").then(players().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
                 .then(Commands.literal("giveSkin").then(players().then(skins().executes(Executor::giveSkin))))
                 .then(Commands.literal("clearSkin").then(players().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
-                .then(Commands.literal("clearCache").executes(Executor::clearCache))
                 .then(ReflectArgumentBuilder.literal("config", AWConfig.class));
     }
 
@@ -97,7 +95,7 @@ public class SkinCommands {
             requiredDescriptor = SkinLoader.getInstance().cacheSkin(requiredDescriptor, skin);
             SkinDescriptor descriptor = new SkinDescriptor(requiredDescriptor.getIdentifier(), skin.getType(), ColorScheme.EMPTY);
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {
-                Wardrobe wardrobe = Wardrobe.of(player);
+                SkinWardrobe wardrobe = SkinWardrobe.of(player);
                 SkinSlotType slotType = SkinSlotType.of(skin.getType());
                 if (slotType == null || wardrobe == null) {
                     continue;
@@ -114,7 +112,7 @@ public class SkinCommands {
 
         static int clearSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {
-                Wardrobe wardrobe = Wardrobe.of(player);
+                SkinWardrobe wardrobe = SkinWardrobe.of(player);
                 if (wardrobe == null) {
                     continue;
                 }
@@ -167,10 +165,6 @@ public class SkinCommands {
             return 1;
         }
 
-        static int clearCache(CommandContext<CommandSource> context) throws CommandSyntaxException {
-            SkinCache.INSTANCE.clear();
-            return 0;
-        }
     }
 }
 

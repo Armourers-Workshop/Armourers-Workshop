@@ -7,8 +7,8 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
-import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.Entity;
@@ -19,13 +19,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class WardrobeLocationSetting extends AWTabPanel {
+public class SkinWardrobeLocationSetting extends AWTabPanel {
 
     private final float[] steps = {1.0f, 1.0f / 8.0f, 1.0f / 16.0f};
-    private final Wardrobe wardrobe;
+    private final SkinWardrobe wardrobe;
     private final Entity entity;
 
-    public WardrobeLocationSetting(WardrobeContainer container) {
+    public SkinWardrobeLocationSetting(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.man_offsets");
         this.wardrobe = container.getWardrobe();
         this.entity = container.getEntity();

@@ -9,8 +9,8 @@ import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
-import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -27,9 +27,9 @@ import java.util.HashMap;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class WardrobeTextureSetting extends AWTabPanel {
+public class SkinWardrobeTextureSetting extends AWTabPanel {
 
-    private final Wardrobe wardrobe;
+    private final SkinWardrobe wardrobe;
     private final HashMap<PlayerTextureDescriptor.Source, String> defaultValues = new HashMap<>();
 
     private AWComboBox comboList;
@@ -38,7 +38,7 @@ public class WardrobeTextureSetting extends AWTabPanel {
     private PlayerTextureDescriptor lastDescriptor = PlayerTextureDescriptor.EMPTY;
     private PlayerTextureDescriptor.Source lastSource = PlayerTextureDescriptor.Source.NONE;
 
-    public WardrobeTextureSetting(WardrobeContainer container) {
+    public SkinWardrobeTextureSetting(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.man_texture");
         this.wardrobe = container.getWardrobe();
         this.prepareDefaultValue();

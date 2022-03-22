@@ -42,7 +42,7 @@ public class AWPaletteBox extends Button {
                 int index = j * column + i;
                 int cx = x + i * cellWidth + 1;
                 int cy = y + j * cellHeight + 1;
-                fill(matrixStack, cx, cy, cx + cellWidth, cy + cellHeight, palette.getColor(index));
+                fill(matrixStack, cx, cy, cx + cellWidth, cy + cellHeight, palette.getColor(index) | 0xff000000);
             }
         }
     }

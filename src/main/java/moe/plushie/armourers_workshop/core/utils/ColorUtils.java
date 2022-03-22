@@ -154,12 +154,12 @@ public class ColorUtils {
     0x4F321F, 0x35461B, 0x963430, 0x191616
     */
 
-    private static int getRainbowRGB() {
+    public static int getRainbowRGB() {
         float f = System.currentTimeMillis() % (255L * 25) / 25F;
         return Color.HSBtoRGB(f / 255F, 1F, 1F);
     }
 
-    private static int getPulse1Colour(PaintColor color) {
+    public static int getPulse1Colour(PaintColor color) {
         float f = (float)(System.currentTimeMillis() % (255L * 25D)) / 25F;
         f = f * 2F;
         if (f > 255) {
@@ -170,7 +170,7 @@ public class ColorUtils {
         return Color.HSBtoRGB(hsb[0], hsb[1], f / 255F);
     }
 
-    private static int getPulse2Colour(PaintColor color) {
+    public static int getPulse2Colour(PaintColor color) {
         float f = (float)(System.currentTimeMillis() % (255L * 12.5D)) / 12.5F;
         f = f * 2F;
         if (f > 255) {
@@ -182,7 +182,7 @@ public class ColorUtils {
     }
 
     public static int getDisplayRGB(PaintColor paintColor) {
-        ISkinPaintType paintType = paintColor.getPaintType();;
+        ISkinPaintType paintType = paintColor.getPaintType();
         if (paintType == SkinPaintTypes.RAINBOW) {
             return getRainbowRGB();
         }

@@ -1,12 +1,9 @@
 package moe.plushie.armourers_workshop.core.entity;
 
 import moe.plushie.armourers_workshop.core.AWConstants;
-import moe.plushie.armourers_workshop.core.api.ISkinToolType;
 import moe.plushie.armourers_workshop.core.base.AWItems;
-import moe.plushie.armourers_workshop.core.base.AWTags;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
-import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
@@ -20,7 +17,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -200,9 +196,9 @@ public class MannequinEntity extends ArmorStandEntity {
             setBodyPose(new Rotations(rotations.getX(), (float) ry, rotations.getZ()));
             return ActionResultType.SUCCESS;
         }
-        Wardrobe wardrobe = Wardrobe.of(this);
+        SkinWardrobe wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null) {
-            AWContainerOpener.open(WardrobeContainer.TYPE, player, wardrobe);
+            AWContainerOpener.open(SkinWardrobeContainer.TYPE, player, wardrobe);
         }
         return ActionResultType.SUCCESS;
     }

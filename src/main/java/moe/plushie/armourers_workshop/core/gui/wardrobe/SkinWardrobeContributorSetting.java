@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.gui.widget.AWCheckBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
-import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
+import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.IReorderingProcessor;
@@ -16,11 +16,11 @@ import java.util.List;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class WardrobeContributorSetting extends AWTabPanel {
+public class SkinWardrobeContributorSetting extends AWTabPanel {
 
     private final List<IReorderingProcessor> thanks;
 
-    public WardrobeContributorSetting(WardrobeContainer container) {
+    public SkinWardrobeContributorSetting(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.contributor");
 
         FontRenderer font = Minecraft.getInstance().font;

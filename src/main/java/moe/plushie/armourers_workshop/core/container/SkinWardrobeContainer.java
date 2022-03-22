@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.container;
 
 import moe.plushie.armourers_workshop.core.AWCore;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.ContainerTypeBuilder;
@@ -21,22 +21,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("NullableProblems")
-public class WardrobeContainer extends Container {
+public class SkinWardrobeContainer extends Container {
 
-    public static final ContainerType<WardrobeContainer> TYPE = ContainerTypeBuilder
-            .create(WardrobeContainer::new, Wardrobe.class)
+    public static final ContainerType<SkinWardrobeContainer> TYPE = ContainerTypeBuilder
+            .create(SkinWardrobeContainer::new, SkinWardrobe.class)
             .withTitle(TranslateUtils.title("inventory.armourers_workshop.wardrobe"))
             .withDataProvider(AWDataSerializers::readEntityWardrobe, AWDataSerializers::writeEntityWardrobe)
             .build("wardrobe");
 
-    private final Wardrobe wardrobe;
+    private final SkinWardrobe wardrobe;
     private final ArrayList<Slot> customSlots = new ArrayList<>();
 
     private final int slotsX = 83;
     private final int slotsY = 27;
     private Group group = null;
 
-    public WardrobeContainer(int containerId, PlayerInventory inventory, Wardrobe wardrobe) {
+    public SkinWardrobeContainer(int containerId, PlayerInventory inventory, SkinWardrobe wardrobe) {
         super(TYPE, containerId);
         this.wardrobe = wardrobe;
 
@@ -181,7 +181,7 @@ public class WardrobeContainer extends Container {
         this.group = group;
     }
 
-    public Wardrobe getWardrobe() {
+    public SkinWardrobe getWardrobe() {
         return wardrobe;
     }
 

@@ -24,14 +24,12 @@ public final class TranslateUtils {
 
     public static ArrayList<ITextComponent> subtitles(String key) {
         ArrayList<ITextComponent> results = new ArrayList<>();
-        String value = TranslateUtils.subtitle(key).getContents();
+        TextComponent value1 = TranslateUtils.subtitle(key);
+        String value = value1.getContents();
         if (key.equals(value)) {
             return results;
         }
-        for (String line : value.split("(\r\n)|(%n)")) {
-            StringTextComponent text = new StringTextComponent(line);
-            results.add(text.setStyle(Style.EMPTY.withColor(TextFormatting.GRAY)));
-        }
+        results.add(value1.setStyle(Style.EMPTY.withColor(TextFormatting.GRAY)));
         return results;
     }
 

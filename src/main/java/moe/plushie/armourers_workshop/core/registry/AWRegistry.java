@@ -7,17 +7,17 @@ import moe.plushie.armourers_workshop.core.base.AWEntities;
 import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.base.AWTileEntities;
 import moe.plushie.armourers_workshop.core.block.ColourMixerBlock;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.capability.WardrobeStorage;
 import moe.plushie.armourers_workshop.core.container.*;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.hologramprojector.HologramProjectorScreen;
-import moe.plushie.armourers_workshop.core.gui.misc.ColourMixerScreen;
+import moe.plushie.armourers_workshop.core.gui.colourmixer.ColourMixerScreen;
 import moe.plushie.armourers_workshop.core.gui.misc.SkinnableScreen;
 import moe.plushie.armourers_workshop.core.gui.misc.SkinningTableScreen;
-import moe.plushie.armourers_workshop.core.gui.wardrobe.WardrobeScreen;
+import moe.plushie.armourers_workshop.core.gui.wardrobe.SkinWardrobeScreen;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
@@ -80,7 +80,7 @@ public class AWRegistry {
 
     public void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
         event.getRegistry().registerAll(
-                WardrobeContainer.TYPE,
+                SkinWardrobeContainer.TYPE,
                 SkinningTableContainer.TYPE,
                 HologramProjectorContainer.TYPE,
                 SkinnableContainer.TYPE,
@@ -126,7 +126,7 @@ public class AWRegistry {
         modEventBus.addListener(this::registerBlockColors);
 //        modEventBus.addListener(this::handleModelBake);
 
-        ScreenManager.register(WardrobeContainer.TYPE, WardrobeScreen::new);
+        ScreenManager.register(SkinWardrobeContainer.TYPE, SkinWardrobeScreen::new);
         ScreenManager.register(SkinnableContainer.TYPE, SkinnableScreen::new);
         ScreenManager.register(SkinningTableContainer.TYPE, SkinningTableScreen::new);
         ScreenManager.register(HologramProjectorContainer.TYPE, HologramProjectorScreen::new);
@@ -151,6 +151,6 @@ public class AWRegistry {
         NetworkHandler.init(AWCore.resource("aw2"));
 
         DataSerializers.registerSerializer(AWDataSerializers.PLAYER_TEXTURE);
-        CapabilityManager.INSTANCE.register(Wardrobe.class, new WardrobeStorage(), () -> null);
+        CapabilityManager.INSTANCE.register(SkinWardrobe.class, new WardrobeStorage(), () -> null);
     }
 }

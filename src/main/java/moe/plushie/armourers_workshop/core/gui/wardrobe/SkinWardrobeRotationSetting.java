@@ -7,8 +7,8 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
-import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -28,9 +28,9 @@ import java.util.function.Function;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class WardrobeRotationSetting extends AWTabPanel {
+public class SkinWardrobeRotationSetting extends AWTabPanel {
 
-    private final Wardrobe wardrobe;
+    private final SkinWardrobe wardrobe;
     private final Entity entity;
 
     private int modelLeft = 0;
@@ -42,7 +42,7 @@ public class WardrobeRotationSetting extends AWTabPanel {
     private AWSliderBox sliderZ;
 
 
-    public WardrobeRotationSetting(WardrobeContainer container) {
+    public SkinWardrobeRotationSetting(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.man_rotations");
         this.wardrobe = container.getWardrobe();
         this.entity = container.getEntity();

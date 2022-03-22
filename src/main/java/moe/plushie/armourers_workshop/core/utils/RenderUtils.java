@@ -44,6 +44,7 @@ public final class RenderUtils {
     public static final ResourceLocation TEX_HUE = AWCore.resource("textures/gui/controls/slider-hue.png");
 
     public static final ResourceLocation TEX_BUTTONS = AWCore.resource("textures/gui/controls/buttons.png");
+    public static final ResourceLocation TEX_HELP = AWCore.resource("textures/gui/controls/help.png");
 
     public static final ResourceLocation TEX_PLAYER_INVENTORY = AWCore.resource("textures/gui/player_inventory.png");
 

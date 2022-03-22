@@ -99,7 +99,7 @@ public class SkinLoader {
     }
 
     private void loadSkinFileIfNeeded(SkinDescriptor descriptor, @Nullable Consumer<Optional<Skin>> complete) {
-        if (FMLEnvironment.dist.isClient()) {
+        if (!LocalDataService.isRunning()) {
             addTask(descriptor, complete);
             return;
         }

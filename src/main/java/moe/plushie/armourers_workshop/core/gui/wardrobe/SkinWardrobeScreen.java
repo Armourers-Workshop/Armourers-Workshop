@@ -9,8 +9,8 @@ import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer
 import moe.plushie.armourers_workshop.core.utils.AWContributors;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
-import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
@@ -27,19 +27,19 @@ import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings({"unused", "NullableProblems"})
-public class WardrobeScreen extends ContainerScreen<WardrobeContainer> {
+public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
 
     private final Entity entity;
     private final PlayerEntity operator;
-    private final Wardrobe wardrobe;
-    private final AWTabController<WardrobeContainer.Group> tabController = new AWTabController<>(false);
+    private final SkinWardrobe wardrobe;
+    private final AWTabController<SkinWardrobeContainer.Group> tabController = new AWTabController<>(false);
     private boolean enabledOnClose = true;
     private boolean enabledPlayerRotating = false;
     private float playerRotation = 45.0f;
     private int lastMouseX = 0;
     private int lastMouseY = 0;
 
-    public WardrobeScreen(WardrobeContainer container, PlayerInventory inventory, ITextComponent title) {
+    public SkinWardrobeScreen(SkinWardrobeContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
 
         this.imageWidth = 278;
@@ -79,55 +79,55 @@ public class WardrobeScreen extends ContainerScreen<WardrobeContainer> {
 
         tabController.clear();
 
-        tabController.add(new WardrobeInventorySetting(menu))
+        tabController.add(new SkinWardrobeInventorySetting(menu))
                 .setIcon(192, 0)
-                .setTarget(WardrobeContainer.Group.SKINS)
+                .setTarget(SkinWardrobeContainer.Group.SKINS)
                 .setVisible(!isPlayer || AWConfig.showWardrobeSkins || operator.isCreative());
 
         if (wardrobe.getUnlockedSize(SkinSlotType.OUTFIT) != 0) {
-            tabController.add(new WardrobeOutfitSetting(menu))
+            tabController.add(new SkinWardrobeOutfitSetting(menu))
                     .setIcon(0, 128)
-                    .setTarget(WardrobeContainer.Group.OUTFITS)
+                    .setTarget(SkinWardrobeContainer.Group.OUTFITS)
                     .setVisible(!isPlayer || AWConfig.showWardrobeOutfits || operator.isCreative());
         }
 
-        tabController.add(new WardrobeDisplaySetting(menu))
+        tabController.add(new SkinWardrobeDisplaySetting(menu))
                 .setIcon(208, 0)
                 .setVisible(isPlayer && (AWConfig.showWardrobeDisplaySettings || operator.isCreative()));
 
-        tabController.add(new WardrobeColourSetting(menu))
+        tabController.add(new SkinWardrobeColourSetting(menu))
                 .setIcon(224, 0)
-                .setTarget(WardrobeContainer.Group.COLORS)
+                .setTarget(SkinWardrobeContainer.Group.COLORS)
                 .setVisible(!isPlayer || AWConfig.showWardrobeColourSettings || operator.isCreative());
 
-        tabController.add(new WardrobeDyeSetting(menu))
+        tabController.add(new SkinWardrobeDyeSetting(menu))
                 .setIcon(240, 0)
-                .setTarget(WardrobeContainer.Group.DYES)
+                .setTarget(SkinWardrobeContainer.Group.DYES)
                 .setVisible(!isPlayer || AWConfig.showWardrobeDyeSetting || operator.isCreative());
 
         if (isPlayer && AWContributors.getCurrentContributor() != null) {
-            tabController.add(new WardrobeContributorSetting(menu))
+            tabController.add(new SkinWardrobeContributorSetting(menu))
                     .setIcon(32, 128)
                     .setVisible(AWConfig.showWardrobeContributorSetting || operator.isCreative());
         }
 
         if (isMannequin) {
-            tabController.add(new WardrobeRotationSetting(menu))
+            tabController.add(new SkinWardrobeRotationSetting(menu))
                     .setIcon(80, 0)
                     .setIconAnimation(8, 150)
                     .setAlignment(1);
 
-            tabController.add(new WardrobeTextureSetting(menu))
+            tabController.add(new SkinWardrobeTextureSetting(menu))
                     .setIcon(128, 0)
                     .setIconAnimation(8, 150)
                     .setAlignment(1);
 
-            tabController.add(new WardrobeExtraSetting(menu))
+            tabController.add(new SkinWardrobeExtraSetting(menu))
                     .setIcon(144, 0)
                     .setIconAnimation(8, 150)
                     .setAlignment(1);
 
-            tabController.add(new WardrobeLocationSetting(menu))
+            tabController.add(new SkinWardrobeLocationSetting(menu))
                     .setIcon(96, 0)
                     .setIconAnimation(8, 150)
                     .setAlignment(1);
@@ -204,7 +204,7 @@ public class WardrobeScreen extends ContainerScreen<WardrobeContainer> {
         renderPlayer(matrixStack, mouseX, mouseY, leftPos + 8, topPos + 27, 71, 111);
         renderTooltip(matrixStack, mouseX, mouseY);
 
-        WardrobeColourSetting.ColorPicker colorPicker = getActivatedPicker();
+        SkinWardrobeColourSetting.ColorPicker colorPicker = getActivatedPicker();
         if (colorPicker != null) {
             colorPicker.update(mouseX, mouseY);
         }
@@ -219,7 +219,7 @@ public class WardrobeScreen extends ContainerScreen<WardrobeContainer> {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        WardrobeColourSetting.ColorPicker colorPicker = getActivatedPicker();
+        SkinWardrobeColourSetting.ColorPicker colorPicker = getActivatedPicker();
         if (colorPicker != null) {
             colorPicker.end();
             return false;
@@ -270,12 +270,12 @@ public class WardrobeScreen extends ContainerScreen<WardrobeContainer> {
         return false;
     }
 
-    private void switchTab(AWTabController<WardrobeContainer.Group>.Tab tab) {
+    private void switchTab(AWTabController<SkinWardrobeContainer.Group>.Tab tab) {
         getMenu().setGroup(tab.getTarget());
     }
 
     private int getExtendedHeight() {
-        AWTabController<WardrobeContainer.Group>.Tab tab = tabController.getSelectedTab();
+        AWTabController<SkinWardrobeContainer.Group>.Tab tab = tabController.getSelectedTab();
         if (tab != null && tab.getTarget() != null) {
             return tab.getTarget().getExtendedHeight();
         }
@@ -283,10 +283,10 @@ public class WardrobeScreen extends ContainerScreen<WardrobeContainer> {
     }
 
     @Nullable
-    private WardrobeColourSetting.ColorPicker getActivatedPicker() {
+    private SkinWardrobeColourSetting.ColorPicker getActivatedPicker() {
         Screen screen = tabController.getSelectedScreen();
-        if (screen instanceof WardrobeColourSetting) {
-            return ((WardrobeColourSetting) screen).getActivatedPicker();
+        if (screen instanceof SkinWardrobeColourSetting) {
+            return ((SkinWardrobeColourSetting) screen).getActivatedPicker();
         }
         return null;
     }
