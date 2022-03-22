@@ -86,6 +86,7 @@ public class NetworkHandler {
 //                point.world.getDimensionKey(), pkt);
 //    }
 
+    @OnlyIn(Dist.CLIENT)
     public void sendToServer(final CustomPacket message) {
         ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
         if (connection != null) {
@@ -103,6 +104,7 @@ public class NetworkHandler {
         PACKET_RESPONSE_FILE(ResponseFilePacket.class, ResponseFilePacket::new),
 
         PACKET_UPDATE_HOLOGRAM_PROJECTOR(UpdateHologramProjectorPacket.class, UpdateHologramProjectorPacket::new),
+        PACKET_UPDATE_COLOUR_MIXER(UpdateColourMixerPacket.class, UpdateColourMixerPacket::new),
 
         PACKET_OPEN_WARDROBE(OpenWardrobePacket.class, OpenWardrobePacket::new),
         PACKET_UPDATE_WARDROBE(UpdateWardrobePacket.class, UpdateWardrobePacket::new);

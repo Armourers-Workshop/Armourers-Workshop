@@ -63,11 +63,10 @@ public class AWSliderBox extends Button {
         int contentV = 66 + (leftState | rightState | contentState) * 20;
 
         RenderUtils.bind(WIDGETS_LOCATION);
-        GuiUtils.drawContinuousTexturedBox(matrixStack, contentLeft, y, 0, 46, contentWidth, height, 200, 20, 2, 3, 2, 2, 0);
-
-        GuiUtils.drawContinuousTexturedBox(matrixStack, lefIconX, y, 0, leftV, iconWidth, height, 200, 20, 2, 3, 2, 2, 0);
-        GuiUtils.drawContinuousTexturedBox(matrixStack, rightIconX, y, 0, rightV, iconWidth, height, 200, 20, 2, 3, 2, 2, 0);
-        GuiUtils.drawContinuousTexturedBox(matrixStack, valueX, y, 0, contentV, valueWidth, height, 200, 20, 2, 3, 2, 2, 0);
+        RenderUtils.tile(matrixStack, contentLeft, y, 0, 46, contentWidth, height, 200, 20, 2, 3, 2, 2);
+        RenderUtils.tile(matrixStack, lefIconX, y, 0, leftV, iconWidth, height, 200, 20, 2, 3, 2, 2);
+        RenderUtils.tile(matrixStack, rightIconX, y, 0, rightV, iconWidth, height, 200, 20, 2, 3, 2, 2);
+        RenderUtils.tile(matrixStack, valueX, y, 0, contentV, valueWidth, height, 200, 20, 2, 3, 2, 2);
 
         int color = 0xffffffff;
         if ((leftState | rightState | contentState) != 0) {

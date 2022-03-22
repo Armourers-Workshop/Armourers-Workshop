@@ -96,4 +96,8 @@ public class BakedSkinPart {
     public boolean isModelOverridden() {
         return part.getType().isModelOverridden(part.getProperties());
     }
+
+    public boolean isOverlayOverridden() {
+        return part.getType().isOverlayOverridden(part.getProperties());
+    }
 }

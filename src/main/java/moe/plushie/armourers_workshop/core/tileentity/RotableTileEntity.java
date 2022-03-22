@@ -72,6 +72,7 @@ public abstract class RotableTileEntity extends LockableLootTileEntity {
     public void handleUpdateTag(BlockState state, CompoundNBT tag) {
         super.handleUpdateTag(state, tag);
         this.readFromNBT(tag);
+        this.setChanged();
     }
 
     @Override

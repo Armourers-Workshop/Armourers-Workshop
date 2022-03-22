@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.render.skin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.capability.Wardrobe;
@@ -12,9 +13,13 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.ArrayList;
+import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends EntityModel<T>> extends LivingSkinRenderer<T, M> {
@@ -60,7 +65,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         // Limit the players limbs if they have a skirt equipped.
         // A proper lady should not swing her legs around!
         WardrobeState snapshot = wardrobe.snapshot();
-        if (snapshot.hasPart(SkinPartTypes.BIPED_SKIRT)) {
+        if (snapshot.isLimitLimbs()) {
             if (entity.animationSpeed > 0.25F) {
                 entity.animationSpeed = 0.25F;
                 entity.animationSpeedOld = 0.25F;
@@ -93,6 +98,41 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         }
     }
 
+    @Override
+    public void apply(T entity, M model, EquipmentSlotType slotType, float partialTicks, MatrixStack matrixStack) {
+        Wardrobe wardrobe = Wardrobe.of(entity);
+        if (wardrobe == null) {
+            return;
+        }
+        WardrobeState snapshot = wardrobe.snapshot();
+        Function<ISkinPartType, Boolean> shouldRenderEquipment = partType -> snapshot.hasOverriddenEquipmentPart(partType, wardrobe::shouldRenderEquipment);
+
+        if (shouldRenderEquipment.apply(SkinPartTypes.BIPED_HEAD)) {
+            setHidden(accessor.getHead(model));
+            setHidden(accessor.getHat(model)); // when override the head, the hat needs to override too
+        }
+        if (shouldRenderEquipment.apply(SkinPartTypes.BIPED_CHEST)) {
+            setHidden(accessor.getBody(model));
+        }
+        if (shouldRenderEquipment.apply(SkinPartTypes.BIPED_LEFT_ARM)) {
+            setHidden(accessor.getLeftArm(model));
+        }
+        if (shouldRenderEquipment.apply(SkinPartTypes.BIPED_RIGHT_ARM)) {
+            setHidden(accessor.getRightArm(model));
+        }
+        if (shouldRenderEquipment.apply(SkinPartTypes.BIPED_LEFT_FOOT) || shouldRenderEquipment.apply(SkinPartTypes.BIPED_LEFT_LEG)) {
+            setHidden(accessor.getLeftLeg(model));
+        }
+        if (shouldRenderEquipment.apply(SkinPartTypes.BIPED_RIGHT_FOOT) || shouldRenderEquipment.apply(SkinPartTypes.BIPED_RIGHT_LEG)) {
+            setHidden(accessor.getRightLeg(model));
+        }
+    }
+
+    private void setHidden(ModelRenderer modelRenderer) {
+        if (modelRenderer != null) {
+            modelRenderer.visible = false;
+        }
+    }
 
     public abstract IPartAccessor<M> getAccessor();
 

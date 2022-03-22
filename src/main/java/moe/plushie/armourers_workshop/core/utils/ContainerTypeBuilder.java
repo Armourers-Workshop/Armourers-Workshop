@@ -85,9 +85,7 @@ public final class ContainerTypeBuilder<C extends Container, I> {
             return false;
         }
         INamedContainerProvider container = new SimpleNamedContainerProvider((wnd, p, pl) -> factory.create(wnd, p, object), title.apply(object));
-        NetworkHooks.openGui((ServerPlayerEntity) player, container, buffer -> {
-            serializer.serialize(object, buffer);
-        });
+        NetworkHooks.openGui((ServerPlayerEntity) player, container, buffer -> serializer.serialize(object, buffer));
         return true;
     }
 

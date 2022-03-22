@@ -1,46 +1,57 @@
 package moe.plushie.armourers_workshop.core.registry;
 
+import moe.plushie.armourers_workshop.common.ArmourersConfig;
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.base.AWBlocks;
 import moe.plushie.armourers_workshop.core.base.AWEntities;
 import moe.plushie.armourers_workshop.core.base.AWItems;
 import moe.plushie.armourers_workshop.core.base.AWTileEntities;
-import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
-import moe.plushie.armourers_workshop.core.container.SkinnableContainer;
-import moe.plushie.armourers_workshop.core.container.SkinningTableContainer;
-import moe.plushie.armourers_workshop.core.gui.misc.SkinnableScreen;
-import moe.plushie.armourers_workshop.core.gui.misc.SkinningTableScreen;
-import moe.plushie.armourers_workshop.core.render.entity.SeatEntityRenderer;
-import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
-import moe.plushie.armourers_workshop.core.utils.command.SkinCommands;
+import moe.plushie.armourers_workshop.core.block.ColourMixerBlock;
+import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.capability.WardrobeStorage;
+import moe.plushie.armourers_workshop.core.container.*;
+import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
+import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.hologramprojector.HologramProjectorScreen;
+import moe.plushie.armourers_workshop.core.gui.misc.ColourMixerScreen;
+import moe.plushie.armourers_workshop.core.gui.misc.SkinnableScreen;
+import moe.plushie.armourers_workshop.core.gui.misc.SkinningTableScreen;
 import moe.plushie.armourers_workshop.core.gui.wardrobe.WardrobeScreen;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
-import moe.plushie.armourers_workshop.core.render.tileentities.HologramProjectorTileEntityRenderer;
+import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
+import moe.plushie.armourers_workshop.core.render.entity.SeatEntityRenderer;
+import moe.plushie.armourers_workshop.core.render.tileentities.HologramProjectorTileEntityRenderer;
 import moe.plushie.armourers_workshop.core.render.tileentities.SkinnableTileEntityRenderer;
+import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
-import moe.plushie.armourers_workshop.core.container.WardrobeContainer;
+import moe.plushie.armourers_workshop.core.utils.command.FileArgument;
+import moe.plushie.armourers_workshop.core.utils.command.ListArgument;
+import moe.plushie.armourers_workshop.core.utils.command.SkinCommands;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class AWRegistry {
@@ -68,9 +79,21 @@ public class AWRegistry {
     }
 
     public void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
-        AWContainerOpener.forEach(event.getRegistry()::register);
+        event.getRegistry().registerAll(
+                WardrobeContainer.TYPE,
+                SkinningTableContainer.TYPE,
+                HologramProjectorContainer.TYPE,
+                SkinnableContainer.TYPE,
+                ColourMixerContainer.TYPE
+        );
+//        AWContainerOpener.forEach(event.getRegistry()::register);
     }
 
+
+    public void registerArgumentTypes() {
+        ArgumentTypes.register("armourers_workshop:items", ListArgument.class, new ListArgument.Serializer());
+        ArgumentTypes.register("armourers_workshop:files", FileArgument.class, new FileArgument.Serializer());
+    }
 
     public void registerCommands(RegisterCommandsEvent event) {
         event.getDispatcher().register(SkinCommands.commands());
@@ -88,6 +111,11 @@ public class AWRegistry {
     }
 
     @OnlyIn(Dist.CLIENT)
+    public void registerBlockColors(ColorHandlerEvent.Block event) {
+        event.getBlockColors().register(ColourMixerBlock.getColorProvider(1), AWBlocks.COLOUR_MIXER);
+    }
+
+    @OnlyIn(Dist.CLIENT)
     public void registerClientEvents() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 //
@@ -95,12 +123,14 @@ public class AWRegistry {
 //        modEventBus.addListener(this::registerTextures);
         modEventBus.addListener(this::registerItemColors);
         modEventBus.addListener(this::registerItemModels);
+        modEventBus.addListener(this::registerBlockColors);
 //        modEventBus.addListener(this::handleModelBake);
 
         ScreenManager.register(WardrobeContainer.TYPE, WardrobeScreen::new);
         ScreenManager.register(SkinnableContainer.TYPE, SkinnableScreen::new);
         ScreenManager.register(SkinningTableContainer.TYPE, SkinningTableScreen::new);
         ScreenManager.register(HologramProjectorContainer.TYPE, HologramProjectorScreen::new);
+        ScreenManager.register(ColourMixerContainer.TYPE, ColourMixerScreen::new);
 
         ClientRegistry.registerKeyBinding(AWKeyBindings.UNDO_KEY);
         ClientRegistry.registerKeyBinding(AWKeyBindings.OPEN_WARDROBE_KEY);
@@ -110,5 +140,17 @@ public class AWRegistry {
 
         RenderingRegistry.registerEntityRenderingHandler(AWEntities.MANNEQUIN, MannequinEntityRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(AWEntities.SEAT, SeatEntityRenderer::new);
+    }
+
+    public void registerCommonEvents(FMLLoadCompleteEvent event) {
+        registerArgumentTypes();
+
+        EntityProfiles.init();
+        ArmourersConfig.init();
+        SkinningRecipes.init();
+        NetworkHandler.init(AWCore.resource("aw2"));
+
+        DataSerializers.registerSerializer(AWDataSerializers.PLAYER_TEXTURE);
+        CapabilityManager.INSTANCE.register(Wardrobe.class, new WardrobeStorage(), () -> null);
     }
 }

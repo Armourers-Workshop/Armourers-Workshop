@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.core.container.SkinningTableContainer;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -45,6 +46,7 @@ public class SkinningTableScreen extends ContainerScreen<SkinningTableContainer>
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderTooltip(matrixStack, mouseX, mouseY);
     }

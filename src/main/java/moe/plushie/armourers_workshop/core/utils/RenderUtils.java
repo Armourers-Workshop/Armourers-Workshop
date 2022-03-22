@@ -8,8 +8,11 @@ import moe.plushie.armourers_workshop.core.AWCore;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -17,6 +20,7 @@ import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -32,10 +36,12 @@ public final class RenderUtils {
 
     public static final ResourceLocation TEX_HOLOGRAM_PROJECTOR = AWCore.resource("textures/gui/hologram_projector/hologram-projector.png");
     public static final ResourceLocation TEX_SKINNING_TABLE = AWCore.resource("textures/gui/skinning_table/skinning-table.png");
+    public static final ResourceLocation TEX_COLOUR_MIXER = AWCore.resource("textures/gui/colour_mixer/colour-mixer.png");
 
     public static final ResourceLocation TEX_TABS = AWCore.resource("textures/gui/controls/tabs.png");
     public static final ResourceLocation TEX_COMMON = AWCore.resource("textures/gui/common.png");
     public static final ResourceLocation TEX_TAB_ICONS = AWCore.resource("textures/gui/controls/tab_icons.png");
+    public static final ResourceLocation TEX_HUE = AWCore.resource("textures/gui/controls/slider-hue.png");
 
     public static final ResourceLocation TEX_BUTTONS = AWCore.resource("textures/gui/controls/buttons.png");
 
@@ -74,6 +80,33 @@ public final class RenderUtils {
     public static void blit(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, ResourceLocation texture) {
         RenderUtils.bind(texture);
         Screen.blit(matrixStack, x, y, 0, u, v, width, height, texWidth, texHeight);
+    }
+
+    public static void tile(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, int r0, int r1, int r2, int r3) {
+        GuiUtils.drawContinuousTexturedBox(matrixStack, x, y, u, v, width, height, texWidth, texHeight, r0, r1, r2, r3, 0);
+    }
+
+    public static void tile(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, int r0, int r1, int r2, int r3, ResourceLocation texture) {
+        RenderUtils.bind(texture);
+        GuiUtils.drawContinuousTexturedBox(matrixStack, x, y, u, v, width, height, texWidth, texHeight, r0, r1, r2, r3, 0);
+    }
+
+    public static void resize(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight) {
+        float f = 1.0f / 0x100;
+        float f1 = 1.0f / 0x100;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuilder();
+        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.vertex(x, y + height, 0).uv(u * f, (v + texHeight) * f1).endVertex();
+        bufferbuilder.vertex(x + width, y + height, 0).uv((u + texWidth) * f, (v + texHeight) * f1).endVertex();
+        bufferbuilder.vertex(x + width, y, 0).uv((u + texWidth) * f, v * f1).endVertex();
+        bufferbuilder.vertex(x, y, 0).uv(u * f, v * f1).endVertex();
+        tessellator.end();
+    }
+
+    public static void resize(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, ResourceLocation texture) {
+        RenderUtils.bind(texture);
+        RenderUtils.resize(matrixStack, x, y, u, v, width, height, texWidth, texHeight);
     }
 
     public static int getPixelColour(int x, int y) {

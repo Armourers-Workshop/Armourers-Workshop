@@ -32,6 +32,7 @@ public class SkinnableContainer extends Container {
     private int colum;
 
     private final IWorldPosCallable pos;
+    private IInventory inventory;
 
     public SkinnableContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable worldPos) {
         super(TYPE, containerId);
@@ -45,7 +46,7 @@ public class SkinnableContainer extends Container {
 
         row = 3;
         colum = 9;
-        IInventory inventory = playerInventory.player.getEnderChestInventory();
+        inventory = playerInventory.player.getEnderChestInventory();
 
         if (!tileEntity.isEnderInventory()) {
             row = tileEntity.getInventoryHeight();
@@ -55,6 +56,18 @@ public class SkinnableContainer extends Container {
 
         addPlayerSlots(playerInventory, 8, row * 18 + 41);
         addCustomSlots(inventory, 0, 0, colum, row);
+
+        if (inventory != null) {
+            inventory.startOpen(playerInventory.player);
+        }
+    }
+
+    @Override
+    public void removed(PlayerEntity player) {
+        super.removed(player);
+        if (inventory != null) {
+            inventory.stopOpen(player);
+        }
     }
 
     protected void addCustomSlots(IInventory inventory, int x, int y, int column, int row) {

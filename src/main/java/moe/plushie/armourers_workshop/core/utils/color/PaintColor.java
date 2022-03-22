@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 public class PaintColor {
 
     public final static PaintColor CLEAR = new PaintColor(0, 0, SkinPaintTypes.NONE);
+    public final static PaintColor WHITE = new PaintColor(-1, -1, SkinPaintTypes.NORMAL);
 
     // we need an object pool to reduce color object
     private final static Cache<Integer, PaintColor> POOL = CacheBuilder.newBuilder()
@@ -17,6 +18,10 @@ public class PaintColor {
     private final int value;
     private final int rgb;
     private final ISkinPaintType paintType;
+
+    private PaintColor(int rgb, ISkinPaintType paintType) {
+        this((rgb & 0xffffff) | ((paintType.getId() & 0xff) << 24), rgb, paintType);
+    }
 
     private PaintColor(int value, int rgb, ISkinPaintType paintType) {
         this.value = value;

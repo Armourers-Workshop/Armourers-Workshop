@@ -71,11 +71,4 @@ public class RightLegPartType extends SkinPartType implements ISkinPartTypeTextu
     public boolean isOverlayOverridden(ISkinProperties skinProps) {
         return skinProps.get(SkinProperty.MODEL_HIDE_OVERLAY_LEG_RIGHT);
     }
-//
-//    @Override
-//    public ISkinProperty[] getProperties() {
-//        return Arrays.asList(
-//                SkinProperty.MODEL_OVERRIDE_LEG_RIGHT,
-//                SkinProperty.MODEL_HIDE_OVERLAY_LEG_RIGHT);
-//    }
 }

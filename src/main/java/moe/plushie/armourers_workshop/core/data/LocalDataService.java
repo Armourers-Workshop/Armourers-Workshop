@@ -17,7 +17,6 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LocalDataService {
@@ -25,10 +24,9 @@ public class LocalDataService {
     private static LocalDataService RUNNING;
 
     private final Path rootPath;
+    private final HashMap<String, Node> nodes = new HashMap<>();
     private AtomicInteger counter = new AtomicInteger();
     private String lastGenUUID = "";
-
-    private final HashMap<String, Node> nodes = new HashMap<>();
 
     public LocalDataService(Path rootPath) {
         this.rootPath = rootPath;

@@ -28,7 +28,7 @@ public class DownloadingTextureMixin {
         }
     }
 
-    @Inject(method = "loadCallback", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getInstance()Lnet/minecraft/client/Minecraft;"))
+    @Inject(method = "upload", at = @At(value = "HEAD"))
     private void hooked_loadCallback(NativeImage image, CallbackInfo ci) {
         PlayerTextureLoader.getInstance().bakingTexture(urlString, image, slimModel);
     }

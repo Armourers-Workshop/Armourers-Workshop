@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinDyeType;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.SkinResourceLocation;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public final class SkinPaintTypes {
 
+    private static final ArrayList<SkinPaintType> ALL_SORTED_TYPES = new ArrayList<>();
     private static final SkinPaintType[] ALL_PAINT_MAPPING = new SkinPaintType[256];
     private static final Map<String, SkinPaintType> ALL_PAINT_TYPES = new HashMap<>();
 
@@ -68,6 +70,7 @@ public final class SkinPaintTypes {
             AWLog.warn("A mod tried to register a paint type with an id that is in use.");
             return paintType;
         }
+        ALL_SORTED_TYPES.add(paintType);
         ALL_PAINT_TYPES.put(paintType.getRegistryName().toString(), paintType);
         ALL_PAINT_MAPPING[paintType.getId() & 0xff] = paintType;
         AWLog.debug("Registering Skin Paint '{}'", paintType.getRegistryName());
@@ -75,6 +78,6 @@ public final class SkinPaintTypes {
     }
 
     public static Collection<SkinPaintType> values() {
-        return ALL_PAINT_TYPES.values();
+        return ALL_SORTED_TYPES;
     }
 }

@@ -72,6 +72,6 @@ public class SkinningTableBlock extends HorizontalBlock {
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable IBlockReader world, List<ITextComponent> tooltips, ITooltipFlag flags) {
         super.appendHoverText(itemStack, world, tooltips, flags);
-        tooltips.add(TranslateUtils.subtitle("block.armourers_workshop.skinning-table.flavour"));
+        tooltips.add(TranslateUtils.subtitle(getDescriptionId() + ".flavour"));
     }
 }

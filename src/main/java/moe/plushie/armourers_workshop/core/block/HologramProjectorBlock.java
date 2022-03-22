@@ -44,7 +44,7 @@ public class HologramProjectorBlock extends HorizontalFaceBlock {
     }
 
     @Override
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos targetPos, boolean p_220069_6_) {
         HologramProjectorTileEntity tileEntity = getTileEntity(world, pos);
         if (tileEntity != null) {
             tileEntity.updateBlockStates();

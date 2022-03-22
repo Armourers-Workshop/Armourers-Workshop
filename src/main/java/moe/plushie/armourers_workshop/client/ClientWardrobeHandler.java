@@ -127,25 +127,31 @@ public class ClientWardrobeHandler {
         RenderUtils.disableScissor();
     }
 
-    public static void onRenderEquipment(LivingEntity entity, EquipmentSlotType slotType, MatrixStack matrixStack, IRenderTypeBuffer renderType, CallbackInfo callback) {
-        ItemStack itemStack = entity.getItemBySlot(slotType);
-        if (itemStack.isEmpty()) {
+    public static void onRenderEquipment(LivingEntity entity, Model model, EquipmentSlotType slotType, MatrixStack matrixStack, IRenderTypeBuffer renderType, CallbackInfo callback) {
+        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity);
+        if (renderer == null) {
             return;
         }
-        Wardrobe wardrobe = Wardrobe.of(entity);
-        if (wardrobe == null) {
-            return;
-        }
-        if (!wardrobe.shouldRenderEquipment(slotType)) {
-            callback.cancel();
-            return;
-        }
-        if (wardrobe.getProfile().isDynamicOverrideArmor(entity)) {
-            WardrobeState snapshot = wardrobe.snapshot();
-            if (snapshot.shouldRenderEquipment(slotType)) {
-                callback.cancel();
-            }
-        }
+        renderer.apply(entity, model, slotType, 0, matrixStack);
+//        ItemStack itemStack = entity.getItemBySlot(slotType);
+//        if (itemStack.isEmpty()) {
+//            return;
+//        }
+//        Wardrobe wardrobe = Wardrobe.of(entity);
+//        if (wardrobe == null) {
+//            return;
+//        }
+//        if (!wardrobe.shouldRenderEquipment(slotType)) {
+//            callback.cancel();
+//            return;
+//        }
+//        if (wardrobe.getProfile().isDynamicOverrideArmor(entity)) {
+//            WardrobeState snapshot = wardrobe.snapshot();
+//            if (snapshot.shouldRenderEquipment(slotType)) {
+//                callback.cancel();
+//
+//            }
+//        }
     }
 
     private static int renderItemSkins(Wardrobe wardrobe, Entity entity, Model model, int light, MatrixStack matrixStack, ItemCameraTransforms.TransformType transformType, ItemStack itemStack) {

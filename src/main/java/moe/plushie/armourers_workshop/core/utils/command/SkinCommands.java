@@ -27,6 +27,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -67,7 +68,7 @@ public class SkinCommands {
     }
 
     static ArgumentBuilder<CommandSource, ?> skins() {
-        return Commands.argument("skin", new FileArgument(AWCore.getRootDirectory() + "/skin-library"));
+        return Commands.argument("skin", new FileArgument(new File(AWCore.getRootDirectory(), "skin-library")));
     }
 
     static ArgumentBuilder<CommandSource, ?> dyes() {

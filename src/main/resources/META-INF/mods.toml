@@ -6,29 +6,29 @@
 # The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
 modLoader="javafml"
 loaderVersion="[36,)"
+#updateJSONURL=""
+issueTrackerURL="https://github.com/RiskyKen/Armourers-Workshop/issues"
+displayURL="https://github.com/RiskyKen/Armourers-Workshop"
+logoFile="logo.png"
 license="All rights reserved"
 
 [[mods]]
 	modId="armourers_workshop"
-	version="${file.jarVersion}"
+    version="${version}"
+    authors="RiskyKen, SAGESSE"
 	displayName="Armourer's Workshop"
-	#updateJSONURL="http://plushie.moe/app_update/minecraft_mods/armourers_workshop/update.json"
-	logoFile="assets/armourers_workshop/textures/aw_logo_small.png"
-	authors=["RiskyKen", "SAGESSE"]
-	description='''
-	Minecraft armour customization mod.
-	'''
+	description="Minecraft armour customization mod."
 
-[[dependencies.armourers_workshop]] #optional
+[[dependencies.armourers_workshop]]
     modId="forge"
     mandatory=true
-    versionRange="[36,)"
+    versionRange="${forge_version}"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.armourers_workshop]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.5,1.17)"
+    versionRange="${minecraft_version}"
     ordering="NONE"
     side="BOTH"

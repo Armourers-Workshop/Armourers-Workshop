@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.capability.Wardrobe;
+import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.*;
 import net.minecraft.network.PacketBuffer;
@@ -56,6 +57,21 @@ public class AWDataSerializers {
             return pos;
         }
     };
+
+    public static final IDataSerializer<PaintColor> PAINT_COLOR = new IDataSerializer<PaintColor>() {
+        public void write(PacketBuffer buffer, PaintColor pos) {
+            buffer.writeInt(pos.getValue());
+        }
+
+        public PaintColor read(PacketBuffer buffer) {
+            return PaintColor.of(buffer.readInt());
+        }
+
+        public PaintColor copy(PaintColor value) {
+            return value;
+        }
+    };
+
 
     @SuppressWarnings("NullableProblems")
     public static final IDataSerializer<PlayerTextureDescriptor> PLAYER_TEXTURE = new IDataSerializer<PlayerTextureDescriptor>() {
@@ -229,6 +245,19 @@ public class AWDataSerializers {
             properties.readFromNBT(nbt.getCompound(key));
         }
         return properties;
+    }
+
+    public static void putPaintColor(CompoundNBT nbt, String key, PaintColor value, PaintColor defaultValue) {
+        if (!value.equals(defaultValue)) {
+            nbt.putInt(key, value.getValue());
+        }
+    }
+
+    public static PaintColor getPaintColor(CompoundNBT nbt, String key, PaintColor defaultValue) {
+        if (nbt.contains(key, Constants.NBT.TAG_INT)) {
+            return PaintColor.of(nbt.getInt(key));
+        }
+        return defaultValue;
     }
 
 

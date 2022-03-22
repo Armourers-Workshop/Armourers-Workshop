@@ -33,6 +33,7 @@ public class WardrobeScreen extends ContainerScreen<WardrobeContainer> {
     private final PlayerEntity operator;
     private final Wardrobe wardrobe;
     private final AWTabController<WardrobeContainer.Group> tabController = new AWTabController<>(false);
+    private boolean enabledOnClose = true;
     private boolean enabledPlayerRotating = false;
     private float playerRotation = 45.0f;
     private int lastMouseX = 0;
@@ -191,6 +192,7 @@ public class WardrobeScreen extends ContainerScreen<WardrobeContainer> {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         if (enabledPlayerRotating) {
@@ -205,6 +207,13 @@ public class WardrobeScreen extends ContainerScreen<WardrobeContainer> {
         WardrobeColourSetting.ColorPicker colorPicker = getActivatedPicker();
         if (colorPicker != null) {
             colorPicker.update(mouseX, mouseY);
+        }
+    }
+
+    @Override
+    public void onClose() {
+        if (enabledOnClose) {
+            super.onClose();
         }
     }
 
@@ -239,11 +248,10 @@ public class WardrobeScreen extends ContainerScreen<WardrobeContainer> {
 
     @Override
     public boolean keyPressed(int key, int p_231046_2_, int p_231046_3_) {
-        if (key == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
-            this.onClose();
-            return true;
-        }
-        return this.getFocused() != null && this.getFocused().keyPressed(key, p_231046_2_, p_231046_3_);
+        enabledOnClose = (key == GLFW.GLFW_KEY_ESCAPE);
+        boolean results = super.keyPressed(key, p_231046_2_, p_231046_3_);
+        enabledOnClose = true;
+        return results;
     }
 
     @Override

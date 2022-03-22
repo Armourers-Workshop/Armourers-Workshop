@@ -1,17 +1,18 @@
 package moe.plushie.armourers_workshop.core;
 
+import moe.plushie.armourers_workshop.core.capability.Wardrobe;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.core.capability.Wardrobe;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.nio.file.Path;
 
 public class AWCore {
 
@@ -36,7 +37,7 @@ public class AWCore {
     }
 
     public static File getRootDirectory() {
-        return new File(Minecraft.getInstance().gameDirectory, "armourers_workshop");
+        return new File(FMLPaths.GAMEDIR.get().toFile(), "armourers_workshop");
     }
 
     public static ItemStack getSkinFromEquipment(@Nullable Entity entity, SkinSlotType skinSlotType, EquipmentSlotType equipmentSlotType) {
