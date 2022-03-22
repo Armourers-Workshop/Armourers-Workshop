@@ -18,8 +18,6 @@ import java.util.function.Supplier;
 
 public class EntityProfiles {
 
-    private static final HashMap<EntityType<?>, EntityProfile> PROFILES = new HashMap<>();
-
     public static final EntityProfile PLAYER = Builder.create()
             .add(SkinTypes.ARMOR_HEAD, EntityProfiles::playerSlots)
             .add(SkinTypes.ARMOR_CHEST, EntityProfiles::playerSlots)
@@ -86,6 +84,7 @@ public class EntityProfiles {
             .add(SkinTypes.ITEM_BOW, 1)
             .fixed()
             .build();
+    private static final HashMap<EntityType<?>, EntityProfile> PROFILES = new HashMap<>();
 
     private static int playerSlots(ISkinType type) {
         return AWConfig.prefersWardrobeSlots;
@@ -125,10 +124,10 @@ public class EntityProfiles {
         register(EntityType.ARROW, EntityProfiles.ARROW, () -> ArrowSkinRenderer::new);
 
         register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
-        register(AWEntities.MANNEQUIN, EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
+        register(AWEntities.MANNEQUIN, EntityProfiles.MANNEQUIN, () -> PlayerSkinRenderer::new);
 
         // TODO: custom register
-        // register("minecraft.slime", EntityProfiles.COMMON, () -> BipedSkinRenderer::new)
+        register("customnpcs:customnpc", EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
     }
 
 
@@ -136,6 +135,17 @@ public class EntityProfiles {
         PROFILES.put(entityType, entityProfile);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             SkinRendererManager.getInstance().register(entityType, provider.get());
+        });
+    }
+
+    public static <T extends Entity, M extends Model> void register(String registryName, EntityProfile entityProfile, Supplier<Function<EntityProfile, SkinRenderer<T, M>>> provider) {
+        EntityType<?> entityType = EntityType.byString(registryName).orElse(null);
+        if (entityType == null) {
+            return;
+        }
+        PROFILES.put(entityType, entityProfile);
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+            SkinRendererManager.getInstance().register((EntityType<T>) entityType, provider.get());
         });
     }
 
@@ -152,9 +162,9 @@ public class EntityProfiles {
 
     public static class Builder<T> {
 
+        private final HashMap<ISkinType, Function<ISkinType, Integer>> supports = new HashMap<>();
         private boolean isFixed = false;
         private boolean isOverrideArmorBySkin = false;
-        private final HashMap<ISkinType, Function<ISkinType, Integer>> supports = new HashMap<>();
 
         public static <T extends Entity> Builder<T> create() {
             return new Builder<>();

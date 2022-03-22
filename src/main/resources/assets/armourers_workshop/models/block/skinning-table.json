@@ -1,5 +1,6 @@
 {
   "__comment": "Designed by Thundercat_ with Cubik Studio - https://cubik.studio",
+  "ambientocclusion": false,
   "textures": {
     "stone": "block/stone",
     "clay": "block/terracotta",

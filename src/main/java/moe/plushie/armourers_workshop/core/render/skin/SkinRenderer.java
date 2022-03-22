@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.core.api.ISkinArmorType;
 import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.action.ICanHeld;
-import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
@@ -16,12 +15,14 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinUtils;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -65,7 +66,7 @@ public class SkinRenderer<T extends Entity, M extends Model> {
     }
 
 
-    public void apply(T entity, M model, BakedSkin bakedSkin, BakedSkinPart bakedPart, ItemCameraTransforms.TransformType transformType, float partialTicks, MatrixStack matrixStack) {
+    public void apply(T entity, M model, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart, float partialTicks, MatrixStack matrixStack) {
         ISkinPartType partType = bakedPart.getType();
         if (partType instanceof ICanHeld) {
             ITransform<M> op = transformer.items.get(transformType);
@@ -81,6 +82,10 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             SkinUtils.apply(matrixStack, entity, bakedPart.getPart(), partialTicks);
         }
     }
+
+    public void apply(T entity, M model, EquipmentSlotType slotType, float partialTicks, MatrixStack matrixStack) {
+    }
+
 
     public void willRender(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         overriders.clear();
@@ -105,7 +110,7 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             }
             boolean shouldRenderPart = bakedSkin.shouldRenderPart(bakedPart, entity, transformType);
             matrixStack.pushPose();
-            apply(entity, model, bakedSkin, bakedPart, transformType, partialTicks, matrixStack);
+            apply(entity, model, transformType, bakedPart, partialTicks, matrixStack);
             builder.addPartData(bakedPart, scheme1, light, partialTicks, matrixStack, shouldRenderPart);
             if (shouldRenderPart && AWConfig.debugSkinPartBounds) {
                 builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(index++), matrixStack);

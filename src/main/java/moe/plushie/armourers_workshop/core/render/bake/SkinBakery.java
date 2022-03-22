@@ -71,6 +71,7 @@ public final class SkinBakery {
         listeners.remove(listener);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @FunctionalInterface
     public interface IBakeListener {
         void didBake(SkinDescriptor descriptor, BakedSkin bakedSkin);

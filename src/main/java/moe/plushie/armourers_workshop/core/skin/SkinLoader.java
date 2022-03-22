@@ -9,8 +9,8 @@ import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.RequestFilePacket;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
@@ -99,7 +99,7 @@ public class SkinLoader {
     }
 
     private void loadSkinFileIfNeeded(SkinDescriptor descriptor, @Nullable Consumer<Optional<Skin>> complete) {
-        if (!Minecraft.getInstance().isLocalServer()) {
+        if (FMLEnvironment.dist.isClient()) {
             addTask(descriptor, complete);
             return;
         }

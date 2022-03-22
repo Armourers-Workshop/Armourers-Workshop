@@ -22,6 +22,19 @@ public final class TranslateUtils {
         return new MergedTextComponent(new TranslationTextComponent(key, args));
     }
 
+    public static ArrayList<ITextComponent> subtitles(String key) {
+        ArrayList<ITextComponent> results = new ArrayList<>();
+        String value = TranslateUtils.subtitle(key).getContents();
+        if (key.equals(value)) {
+            return results;
+        }
+        for (String line : value.split("(\r\n)|(%n)")) {
+            StringTextComponent text = new StringTextComponent(line);
+            results.add(text.setStyle(Style.EMPTY.withColor(TextFormatting.GRAY)));
+        }
+        return results;
+    }
+
     public static TextComponent subtitle(String key, Object... args) {
         MergedTextComponent text = new MergedTextComponent(new TranslationTextComponent(key, args));
         text.setStyle(Style.EMPTY.withColor(TextFormatting.GRAY));

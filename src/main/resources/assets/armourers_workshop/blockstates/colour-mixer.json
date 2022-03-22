@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "armourers_workshop:block/colour-mixer",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "armourers_workshop:block/colour-mixer",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "armourers_workshop:block/colour-mixer",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "armourers_workshop:block/colour-mixer",
+      "y": 90
+    }
+  }
+}

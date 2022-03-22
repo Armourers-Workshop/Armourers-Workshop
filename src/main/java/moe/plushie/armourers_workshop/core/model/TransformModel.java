@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.render.model;
+package moe.plushie.armourers_workshop.core.model;
 
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;

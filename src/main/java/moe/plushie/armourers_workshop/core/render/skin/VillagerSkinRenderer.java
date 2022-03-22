@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.render.skin;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.render.layer.ForwardingLayer;
-import moe.plushie.armourers_workshop.core.render.model.TransformModel;
+import moe.plushie.armourers_workshop.core.model.TransformModel;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.capability.Wardrobe;
 import moe.plushie.armourers_workshop.core.capability.WardrobeState;

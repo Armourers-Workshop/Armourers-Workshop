@@ -36,6 +36,9 @@ public class HologramProjectorTileEntityRenderer<T extends HologramProjectorTile
 
     @Override
     public void render(T entity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffers, int light, int overlay) {
+        if (!entity.isPowered()) {
+            return;
+        }
         BakedSkin bakedSkin = BakedSkin.of(entity.getItem(0));
         if (bakedSkin == null) {
             return;

@@ -61,6 +61,8 @@ public class ArmourersWorkshop {
         eventBus.addGenericListener(ContainerType.class, registry::registerContainerTypes);
 
         eventBus.addListener(registry::registerEntityAttributes);
+        eventBus.addListener(registry::registerCommonEvents);
+
         eventBus.addListener(this::onCommonSetup);
 
         // Register client-only events
@@ -134,13 +136,6 @@ public class ArmourersWorkshop {
     }
 
     private void onCommonSetup(FMLLoadCompleteEvent event) {
-        EntityProfiles.init();
-        ArmourersConfig.init();
-        SkinningRecipes.init();
-        NetworkHandler.init(AWCore.resource("aw2"));
-
-        DataSerializers.registerSerializer(AWDataSerializers.PLAYER_TEXTURE);
-        CapabilityManager.INSTANCE.register(Wardrobe.class, new WardrobeStorage(), () -> null);
     }
 
     @OnlyIn(Dist.CLIENT)

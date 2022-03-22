@@ -71,11 +71,4 @@ public class LeftArmPartType extends SkinPartType implements ISkinPartTypeTextur
     public boolean isOverlayOverridden(ISkinProperties skinProps) {
         return skinProps.get(SkinProperty.MODEL_HIDE_OVERLAY_ARM_LEFT);
     }
-
-//    @Override
-//    public ISkinProperty[] getProperties() {
-//        return Arrays.asList(
-//                SkinProperty.MODEL_OVERRIDE_ARM_LEFT,
-//                SkinProperty.MODEL_HIDE_OVERLAY_ARM_LEFT);
-//    }
 }

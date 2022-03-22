@@ -132,9 +132,9 @@ public class SeatEntity extends LivingEntity {
     @Override
     public void setPosRaw(double x, double y, double z) {
         super.setPosRaw(x, y, z);
-        int i = MathHelper.floor(x - 0.5f);
-        int j = MathHelper.floor(y - 0.5f);
-        int k = MathHelper.floor(z - 0.5f);
+        long i = Math.round(x - 0.5f);
+        long j = Math.round(y - 0.5f);
+        long k = Math.round(z - 0.5f);
         if (blockPos == null || i != blockPos.getX() || j != blockPos.getY() || k != blockPos.getZ()) {
             blockPos = new BlockPos(i, j, k);
         }

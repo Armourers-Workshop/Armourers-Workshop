@@ -37,6 +37,7 @@ public class AWItems {
 
     public static final Item HOLOGRAM_PROJECTOR = registerBlock("hologram-projector", AWBlocks.HOLOGRAM_PROJECTOR, p -> p.tab(MAIN_GROUP));
     public static final Item SKINNING_TABLE = registerBlock("skinning-table", AWBlocks.SKINNING_TABLE, p -> p.tab(MAIN_GROUP));
+    public static final Item COLOUR_MIXER = registerBlock("colour-mixer", AWBlocks.COLOUR_MIXER, p -> p.tab(MAIN_GROUP));
 
     private static <T extends Item> T register(String name, Function<Item.Properties, T> factory) {
         return register(name, factory, null);

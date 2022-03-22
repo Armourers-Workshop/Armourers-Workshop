@@ -172,11 +172,9 @@ public class MannequinEntity extends ArmorStandEntity {
 
     @Override
     public void setYBodyRot(float rot) {
-        this.yRotO = this.yRot = 0;
+        this.yRotO = this.yRot = rot;
         this.yBodyRotO = this.yBodyRot = 0;
-        this.yHeadRotO = this.yHeadRot = 0;
-        Rotations rotations = getBodyPose();
-        setBodyPose(new Rotations(rotations.getX(), rot, rotations.getZ()));
+        this.yHeadRotO = this.yHeadRot = rot;
     }
 
     @Override
@@ -197,8 +195,9 @@ public class MannequinEntity extends ArmorStandEntity {
             return ActionResultType.SUCCESS;
         }
         if (player.isShiftKeyDown()) {
-            double angle = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
-            setYBodyRot((float) angle);
+            double ry = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
+            Rotations rotations = getBodyPose();
+            setBodyPose(new Rotations(rotations.getX(), (float) ry, rotations.getZ()));
             return ActionResultType.SUCCESS;
         }
         Wardrobe wardrobe = Wardrobe.of(this);
@@ -246,19 +245,6 @@ public class MannequinEntity extends ArmorStandEntity {
             public void setItem(int index, ItemStack itemStack) {
                 super.setItem(index, itemStack);
                 setItemSlot(EquipmentSlotType.values()[index], itemStack);
-            }
-
-            @Override
-            public boolean canPlaceItem(int index, ItemStack itemStack) {
-                if (itemStack.isEmpty()) {
-                    return true;
-                }
-                SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-                if (descriptor.getType() instanceof ISkinToolType) {
-                    return true;
-                }
-                Item item = itemStack.getItem();
-                return AWTags.isWeaponItem(item) || AWTags.isToolItem(item);
             }
         };
     }

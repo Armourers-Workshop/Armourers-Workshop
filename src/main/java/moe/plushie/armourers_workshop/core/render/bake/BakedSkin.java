@@ -92,6 +92,9 @@ public class BakedSkin implements IBakedSkin {
     }
 
     public boolean accept(ItemStack itemStack) {
+        if (descriptor.getType() == SkinTypes.ITEM) {
+            return !itemStack.isEmpty();
+        }
         return descriptor.accept(itemStack);
     }
 
@@ -177,7 +180,7 @@ public class BakedSkin implements IBakedSkin {
             if (renderer.prepare(entity, model, this, part, transformType)) {
                 CustomVoxelShape shape1 = part.getRenderShape().copy();
                 matrixStack.pushPose();
-                renderer.apply(entity, model, this, part, transformType, 0, matrixStack);
+                renderer.apply(entity, model, transformType, part, 0, matrixStack);
                 shape1.mul(matrixStack.last().pose());
                 matrixStack.popPose();
                 shape.add(shape1);

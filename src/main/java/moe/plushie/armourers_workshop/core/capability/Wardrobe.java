@@ -17,11 +17,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
 
 @SuppressWarnings("unused")
 public class Wardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
@@ -32,17 +34,20 @@ public class Wardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
     private final Inventory inventory = new Inventory(SkinSlotType.getTotalSize());
 
     private final WeakReference<Entity> entity;
-    private final WardrobeState state;
     private final EntityProfile profile;
 
+    private WardrobeState state;
     private int id; // a.k.a entity id
 
     public Wardrobe(Entity entity, EntityProfile profile) {
         this.id = entity.getId();
-        this.state = new WardrobeState(inventory);
         this.entity = new WeakReference<>(entity);
         this.profile = profile;
-        this.inventory.addListener(inventory -> state.invalidateAll());
+        this.inventory.addListener(inventory -> {
+            if (state != null) {
+                state.invalidateAll();
+            }
+        });
     }
 
     @Nullable
@@ -164,11 +169,23 @@ public class Wardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
         WardrobeStorage.loadSkinSlots(skinSlots, nbt);
         WardrobeStorage.loadVisibility(armourFlags, nbt);
         WardrobeStorage.loadInventoryItems(inventory, nbt);
-        state.invalidateAll();
+        invalidateAll();
+    }
+
+    public void invalidateAll() {
+        // apply the client
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+            if (state != null) {
+                state.invalidateAll();
+            }
+        });
     }
 
     @OnlyIn(Dist.CLIENT)
     public WardrobeState snapshot() {
+        if (state == null) {
+            state = new WardrobeState(inventory);
+        }
         Entity entity = getEntity();
         if (entity != null) {
             if (state.tick(entity)) {

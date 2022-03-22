@@ -100,6 +100,7 @@ public class HologramProjectorTileEntity extends RotableTileEntity {
     public void updateBlockStates() {
         BlockState state = getBlockState();
         isPowered = isRunningForState(state);
+        setChanged();
         setRenderChanged();
         boolean growing = isPowered && isGlowing;
         if (level != null && !level.isClientSide) {

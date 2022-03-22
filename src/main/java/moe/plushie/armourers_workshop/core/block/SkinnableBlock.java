@@ -20,6 +20,7 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.state.properties.BedPart;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -111,6 +112,7 @@ public class SkinnableBlock extends HorizontalFaceBlock {
         }
         if (tileEntity.isInventory()) {
             AWContainerOpener.open(SkinnableContainer.TYPE, player, IWorldPosCallable.create(world, tileEntity.getParentPos()));
+            player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
             return ActionResultType.sidedSuccess(world.isClientSide);
         }
         return ActionResultType.FAIL;

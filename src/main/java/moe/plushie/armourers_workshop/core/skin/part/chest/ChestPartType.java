@@ -71,12 +71,4 @@ public class ChestPartType extends SkinPartType implements ISkinPartTypeTextured
     public boolean isOverlayOverridden(ISkinProperties skinProps) {
         return skinProps.get(SkinProperty.MODEL_HIDE_OVERLAY_CHEST);
     }
-
-//    @Override
-//    public Collection<ISkinProperty<?>> getProperties() {
-//        return Arrays.asList(
-//                SkinProperty.MODEL_OVERRIDE_CHEST,
-//                SkinProperty.MODEL_HIDE_OVERLAY_CHEST
-//        );
-//    }
 }

@@ -25,14 +25,6 @@ public class FlavouredItem extends Item {
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable World world, List<ITextComponent> tooltips, ITooltipFlag flags) {
         super.appendHoverText(itemStack, world, tooltips, flags);
-        String key = getDescriptionId(itemStack) + ".flavour";
-        String value = TranslateUtils.subtitle(key).getContents();
-        if (key.equals(value)) {
-            return;
-        }
-        for (String line : value.split("(\r\n)|(%n)")) {
-            StringTextComponent text = new StringTextComponent(line);
-            tooltips.add(text.setStyle(Style.EMPTY.withColor(TextFormatting.GRAY)));
-        }
+        tooltips.addAll(TranslateUtils.subtitles(getDescriptionId(itemStack) + ".flavour"));
     }
 }

@@ -16,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BipedArmorLayer.class)
 public class BipedArmorLayerMixin<T extends LivingEntity, A extends BipedModel<T>> {
 
-    @Inject(method = "renderArmorPiece", at = @At("HEAD"), cancellable = true)
-    private void hooked_renderArmorPiece(MatrixStack matrixStack, IRenderTypeBuffer renderType, T entity, EquipmentSlotType slotType, int p_241739_5_, A p_241739_6_, CallbackInfo callback) {
-        ClientWardrobeHandler.onRenderEquipment(entity, slotType, matrixStack, renderType, callback);
+    @Inject(method = "renderArmorPiece", at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/client/renderer/entity/layers/BipedArmorLayer;setPartVisibility(Lnet/minecraft/client/renderer/entity/model/BipedModel;Lnet/minecraft/inventory/EquipmentSlotType;)V"), cancellable = true)
+    private void hooked_renderArmorPiece(MatrixStack matrixStack, IRenderTypeBuffer renderType, T entity, EquipmentSlotType slotType, int p_241739_5_, A model, CallbackInfo callback) {
+        ClientWardrobeHandler.onRenderEquipment(entity, model, slotType, matrixStack, renderType, callback);
     }
 }

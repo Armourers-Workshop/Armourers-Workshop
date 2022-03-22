@@ -71,12 +71,4 @@ public class RightArmPartType extends SkinPartType implements ISkinPartTypeTextu
     public boolean isOverlayOverridden(ISkinProperties properties) {
         return properties.get(SkinProperty.MODEL_HIDE_OVERLAY_ARM_RIGHT);
     }
-
-//
-//    @Override
-//    public ISkinProperty[] getProperties() {
-//        return Arrays.asList(
-//                SkinProperty.MODEL_OVERRIDE_ARM_RIGHT,
-//                SkinProperty.MODEL_HIDE_OVERLAY_ARM_RIGHT);
-//    }
 }

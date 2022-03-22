@@ -59,7 +59,8 @@ public class DataManager {
         if (!identifier.endsWith(ext)) {
             identifier = identifier + ext;
         }
-        File file = new File(AWCore.getRootDirectory() + "/skin-library/" + identifier);
+        File rootFile = new File(AWCore.getRootDirectory(), "skin-library");
+        File file = new File(rootFile, identifier);
         if (!file.exists()) {
             return null;
         }

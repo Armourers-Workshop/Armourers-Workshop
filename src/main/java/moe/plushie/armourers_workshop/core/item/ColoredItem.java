@@ -2,9 +2,10 @@ package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.core.AWConstants;
 import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
+import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,7 +24,7 @@ public abstract class ColoredItem extends FlavouredItem {
     }
 
     public static void setColor(ItemStack itemStack, PaintColor color) {
-        itemStack.getOrCreateTag().putInt(AWConstants.NBT.COLOR, color.getValue());
+        AWDataSerializers.putPaintColor(itemStack.getOrCreateTag(), AWConstants.NBT.COLOR, color, PaintColor.CLEAR);
     }
 
     @Nullable

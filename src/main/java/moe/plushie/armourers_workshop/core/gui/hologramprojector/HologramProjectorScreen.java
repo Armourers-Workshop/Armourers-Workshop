@@ -107,29 +107,8 @@ public class HologramProjectorScreen extends ContainerScreen<HologramProjectorCo
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        renderTooltip(matrixStack, mouseX, mouseY);
+        this.renderTooltip(matrixStack, mouseX, mouseY);
     }
-
-//    @Override
-//    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-//        ColourSettingPanel.ColorPicker colorPicker = getActivatedPicker();
-//        if (colorPicker != null) {
-//            colorPicker.end();
-//            return false;
-//        }
-//        if (button == 1) {
-//            enabledPlayerRotating = true;
-//        }
-//        return super.mouseClicked(mouseX, mouseY, button);
-//    }
-//
-//    @Override
-//    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-//        if (button == 1) {
-//            enabledPlayerRotating = false;
-//        }
-//        return super.mouseReleased(mouseX, mouseY, button);
-//    }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double p_231045_6_, double p_231045_8_) {
@@ -146,14 +125,6 @@ public class HologramProjectorScreen extends ContainerScreen<HologramProjectorCo
         }
         return super.isMouseOver(mouseX, mouseY);
     }
-
-//    @Override
-//    protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
-//        if (super.hasClickedOutside(mouseX, mouseY, left, top, button)) {
-//            return tabController.get(mouseX, mouseY) == null;
-//        }
-//        return false;
-//    }
 
     private void switchTab(AWTabController<Integer>.Tab tab) {
         menu.setGroup(tab.getTarget() != null ? tab.getTarget() : 0);
