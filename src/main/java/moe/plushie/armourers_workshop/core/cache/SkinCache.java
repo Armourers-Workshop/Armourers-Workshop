@@ -3,8 +3,7 @@ package moe.plushie.armourers_workshop.core.cache;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinVertexBufferBuilder;
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 
 import javax.annotation.Nullable;
@@ -48,7 +47,6 @@ public class SkinCache {
 
     public void clear() {
         bufferBuilders.clear();
-        SkinRenderBuffer.getInstance().clear();
     }
 
     public static class Key {

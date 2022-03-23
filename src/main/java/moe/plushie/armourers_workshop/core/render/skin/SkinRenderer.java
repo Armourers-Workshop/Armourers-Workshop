@@ -9,8 +9,8 @@ import moe.plushie.armourers_workshop.core.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinVertexBufferBuilder;
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder;
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder2;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
@@ -95,7 +95,7 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         overriders.forEach(m -> m.visible = false);
     }
 
-    public void render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, MatrixStack matrixStack, SkinRenderBuffer buffers) {
+    public void render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         ISkinType type = bakedSkin.getType();
         if (type instanceof ISkinArmorType && !profile.canSupport(type)) {
             return;
@@ -103,7 +103,8 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         int index = 0;
         Skin skin = bakedSkin.getSkin();
         ColorScheme scheme1 = bakedSkin.resolve(entity, scheme);
-        SkinVertexBufferBuilder builder = buffers.getBuffer(skin);
+        SkinVertexBufferBuilder2 bufferBuilder = SkinVertexBufferBuilder2.by(buffers);
+        SkinVertexBufferBuilder builder = bufferBuilder.getBuffer(skin);
         for (BakedSkinPart bakedPart : bakedSkin.getSkinParts()) {
             if (!prepare(entity, model, bakedSkin, bakedPart, transformType)) {
                 continue;

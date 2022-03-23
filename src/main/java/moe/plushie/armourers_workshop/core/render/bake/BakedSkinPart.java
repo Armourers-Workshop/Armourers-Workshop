@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.api.ISkinPartType;
 import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderType;
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;

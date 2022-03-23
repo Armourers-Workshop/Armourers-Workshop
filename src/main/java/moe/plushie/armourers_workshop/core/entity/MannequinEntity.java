@@ -193,7 +193,7 @@ public class MannequinEntity extends ArmorStandEntity {
         if (player.isShiftKeyDown()) {
             double ry = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
             Rotations rotations = getBodyPose();
-            setBodyPose(new Rotations(rotations.getX(), (float) ry, rotations.getZ()));
+            setBodyPose(new Rotations(rotations.getX(), (float) ry - yRot, rotations.getZ()));
             return ActionResultType.SUCCESS;
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);

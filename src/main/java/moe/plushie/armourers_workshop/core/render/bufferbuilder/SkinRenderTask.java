@@ -1,9 +1,12 @@
-package moe.plushie.armourers_workshop.core.render.buffer;
+package moe.plushie.armourers_workshop.core.render.bufferbuilder;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public interface SkinRenderTask {
 
     int getLightmap();
@@ -16,11 +19,11 @@ public interface SkinRenderTask {
 
     RenderType getRenderType();
 
-    SkinVertexBuffer getVertexBuffer();
+    SkinVertexBufferObject getVertexBuffer();
 
     default void render(SkinRenderType renderType, int index, int maxVertexCount) {
-        SkinLightBuffer lightBuffer = null;
-        SkinVertexBuffer vertexBuffer = getVertexBuffer();
+        SkinLightBufferObject lightBuffer = null;
+        SkinVertexBufferObject vertexBuffer = getVertexBuffer();
 
         if (index != 0) {
             RenderSystem.enablePolygonOffset();
@@ -28,7 +31,7 @@ public interface SkinRenderTask {
         }
 
         if (renderType.usesLight()) {
-            lightBuffer = SkinLightBuffer.getLightBuffer(getLightmap());
+            lightBuffer = SkinLightBufferObject.getLightBuffer(getLightmap());
             lightBuffer.ensureCapacity(maxVertexCount);
             lightBuffer.bind();
             lightBuffer.getFormat().setupBufferState(0L);

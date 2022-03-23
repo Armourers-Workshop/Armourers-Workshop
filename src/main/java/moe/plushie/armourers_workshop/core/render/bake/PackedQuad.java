@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.core.api.ISkinCube;
 import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderType;
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;

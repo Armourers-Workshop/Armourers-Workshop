@@ -1,8 +1,6 @@
 package moe.plushie.armourers_workshop.core.entity;
 
 import moe.plushie.armourers_workshop.core.api.ISkinType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.HashMap;
 import java.util.function.Function;
@@ -10,23 +8,19 @@ import java.util.function.Function;
 public class EntityProfile {
 
     private final HashMap<ISkinType, Function<ISkinType, Integer>> supports;
-    private final boolean isFixed;
+    private final boolean editable;
 
-    public EntityProfile(HashMap<ISkinType, Function<ISkinType, Integer>> supports, boolean isFixed) {
+    public EntityProfile(HashMap<ISkinType, Function<ISkinType, Integer>> supports, boolean editable) {
         this.supports = supports;
-        this.isFixed = isFixed;
+        this.editable = editable;
     }
 
-    public boolean canCustomize() {
-        return !isFixed;
+    public boolean isEditable() {
+        return editable;
     }
 
     public boolean canSupport(ISkinType type) {
         return supports.containsKey(type);
-    }
-
-    public boolean isDynamicOverrideArmor(Entity entity) {
-        return !(entity instanceof PlayerEntity);
     }
 
     public int getMaxCount(ISkinType type) {
@@ -36,6 +30,4 @@ public class EntityProfile {
         }
         return 0;
     }
-
-
 }

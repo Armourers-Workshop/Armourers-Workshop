@@ -1,0 +1,9 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "armourers_workshop:item/linking-tool-link"
+  },
+  "overrides": [
+    { "predicate": { "armourers_workshop:empty": 1 }, "model": "armourers_workshop:item/linking-tool-empty" }
+  ]
+}

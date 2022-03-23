@@ -2,7 +2,8 @@ package moe.plushie.armourers_workshop.core.base;
 
 import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.item.*;
-import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
+import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
+import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
@@ -22,14 +23,15 @@ public class AWItems {
         @SuppressWarnings("NullableProblems")
         @OnlyIn(Dist.CLIENT)
         public ItemStack makeIcon() {
-            return SkinItemRenderer.getItemStackRenderer().getPlayerMannequinItem();
+            return SkinItemStackRenderer.getInstance().getPlayerMannequinItem();
         }
     };
 
-    public static final Item SKIN = register("skin", SkinItem::new, p -> p.setISTER(() -> SkinItemRenderer::getItemStackRenderer));
+    public static final Item SKIN = register("skin", SkinItem::new, p -> p.setISTER(() -> SkinItemStackRenderer::getInstance));
     public static final Item BOTTLE = register("dye-bottle", BottleItem::new, p -> p.tab(MAIN_GROUP));
-    public static final Item MANNEQUIN = register("mannequin", MannequinItem::new, p -> p.tab(MAIN_GROUP).setISTER(() -> SkinItemRenderer::getItemStackRenderer));
+    public static final Item MANNEQUIN = register("mannequin", MannequinItem::new, p -> p.tab(MAIN_GROUP).setISTER(() -> SkinItemStackRenderer::getInstance));
     public static final Item WAND_OF_STYLE = register("wand-of-style", WandOfStyleItem::new, p -> p.tab(MAIN_GROUP));
+    public static final Item LINKING_TOOL = register("linking-tool", LinkingToolItem::new, p -> p.tab(MAIN_GROUP));
 
     public static final Item SOAP = register("soap", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
     public static final Item SKIN_TEMPLATE = register("skin-template", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));

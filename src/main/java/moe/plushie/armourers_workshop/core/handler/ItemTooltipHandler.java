@@ -3,13 +3,13 @@ package moe.plushie.armourers_workshop.core.handler;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.base.AWItems;
-import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
+import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinUsedCounter;
-import moe.plushie.armourers_workshop.core.utils.AWKeyBindings;
+import moe.plushie.armourers_workshop.core.utils.KeyBindings;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import net.minecraft.client.Minecraft;
@@ -121,7 +121,7 @@ public class ItemTooltipHandler {
 //        }
 
         if (AWConfig.tooltipOpenWardrobe && isItemOwner) {
-            ITextComponent keyName = AWKeyBindings.OPEN_WARDROBE_KEY.getTranslatedKeyMessage();
+            ITextComponent keyName = KeyBindings.OPEN_WARDROBE_KEY.getTranslatedKeyMessage();
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinOpenWardrobe", keyName));
         }
 

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder2;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
@@ -45,6 +46,7 @@ public final class SkinBakery {
     public static void stop() {
         if (RUNNING != null) {
             RUNNING.manager.clear();
+            SkinVertexBufferBuilder2.clearAllCache();
             RUNNING = null;
         }
     }

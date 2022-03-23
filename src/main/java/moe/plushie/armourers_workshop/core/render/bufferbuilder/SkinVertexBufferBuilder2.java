@@ -1,13 +1,16 @@
-package moe.plushie.armourers_workshop.core.render.buffer;
+package moe.plushie.armourers_workshop.core.render.bufferbuilder;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.WorldVertexBufferUploader;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
@@ -18,21 +21,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
-public class SkinRenderBuffer implements IRenderTypeBuffer {
+public class SkinVertexBufferBuilder2 extends BufferBuilder implements IRenderTypeBuffer {
 
-    private static final SkinRenderBuffer INSTANCE = new SkinRenderBuffer();
+    public static final RenderType MERGER = new Merger("skin_merger", DefaultVertexFormats.POSITION, GL11.GL_QUADS, 256);
 
     protected final HashMap<Skin, SkinVertexBufferBuilder> cachingBuilders = new HashMap<>();
 
     protected final HashMap<Skin, SkinVertexBufferBuilder> pendingBuilders = new HashMap<>();
     protected final HashMap<RenderType, BufferBuilder> pendingBuilders2 = new HashMap<>();
 
-    public static SkinRenderBuffer getInstance() {
-        return INSTANCE;
+    public SkinVertexBufferBuilder2() {
+        super(256);
     }
 
-    public void clear() {
-        cachingBuilders.clear();
+    public static SkinVertexBufferBuilder2 by(IRenderTypeBuffer buffers) {
+        IVertexBuilder builder = buffers.getBuffer(MERGER);
+        if (builder instanceof SkinVertexBufferBuilder2) {
+            return (SkinVertexBufferBuilder2) builder;
+        }
+        return new SkinVertexBufferBuilder2();
+    }
+
+    public static void clearAllCache() {
+        SkinVertexBufferBuilder2 builder = by(Minecraft.getInstance().renderBuffers().bufferSource());
+        builder.cachingBuilders.clear();
     }
 
     @Nonnull
@@ -58,8 +70,9 @@ public class SkinRenderBuffer implements IRenderTypeBuffer {
         return bufferBuilder;
     }
 
-
-    public void endBatch() {
+    @Override
+    public void end() {
+        super.end();
         if (pendingBuilders.isEmpty()) {
             return;
         }
@@ -125,7 +138,29 @@ public class SkinRenderBuffer implements IRenderTypeBuffer {
             }
 
             RenderSystem.disableRescaleNormal();
-            SkinVertexBuffer.unbind();
+            SkinVertexBufferObject.unbind();
+        }
+    }
+
+    protected static class Merger extends RenderType {
+
+        protected Merger(String name, VertexFormat format, int mode, int bufferSize) {
+            super(name, format, mode, bufferSize, false, false, Merger::noop, Merger::noop);
+        }
+
+        protected static void noop() {
+        }
+
+        @Override
+        public void end(BufferBuilder builder, int p_228631_2_, int p_228631_3_, int p_228631_4_) {
+            if (builder.building()) {
+                builder.end();
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "RenderType[Merger[Skin]]";
         }
     }
 }

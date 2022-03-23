@@ -84,6 +84,7 @@ public class EntityProfiles {
             .add(SkinTypes.ITEM_BOW, 1)
             .fixed()
             .build();
+
     private static final HashMap<EntityType<?>, EntityProfile> PROFILES = new HashMap<>();
 
     private static int playerSlots(ISkinType type) {
@@ -124,6 +125,8 @@ public class EntityProfiles {
         register(EntityType.ARROW, EntityProfiles.ARROW, () -> ArrowSkinRenderer::new);
 
         register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
+//        register(EntityType.IRON_GOLEM, EntityProfiles.MANNEQUIN, () -> IronGolemSkinRenderer::new);
+
         register(AWEntities.MANNEQUIN, EntityProfiles.MANNEQUIN, () -> PlayerSkinRenderer::new);
 
         // TODO: custom register
@@ -163,8 +166,7 @@ public class EntityProfiles {
     public static class Builder<T> {
 
         private final HashMap<ISkinType, Function<ISkinType, Integer>> supports = new HashMap<>();
-        private boolean isFixed = false;
-        private boolean isOverrideArmorBySkin = false;
+        private boolean editable = true;
 
         public static <T extends Entity> Builder<T> create() {
             return new Builder<>();
@@ -182,12 +184,12 @@ public class EntityProfiles {
         }
 
         private Builder<T> fixed() {
-            isFixed = true;
+            editable = false;
             return this;
         }
 
         public EntityProfile build() {
-            return new EntityProfile(supports, isFixed);
+            return new EntityProfile(supports, editable);
         }
     }
 }

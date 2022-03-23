@@ -12,9 +12,11 @@
     "FirstPersonRendererMixin",
     "InventoryScreenMixin",
     "LivingRendererMixin",
-    "ModelManagerMixin"
+    "ModelManagerMixin",
+    "RenderTypeBuffersMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "minVersion": "0.8"
 }

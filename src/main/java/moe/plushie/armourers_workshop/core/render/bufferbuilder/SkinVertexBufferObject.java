@@ -1,7 +1,6 @@
-package moe.plushie.armourers_workshop.core.render.buffer;
+package moe.plushie.armourers_workshop.core.render.bufferbuilder;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraftforge.api.distmarker.Dist;
@@ -11,14 +10,12 @@ import org.lwjgl.opengl.GL15;
 import java.nio.ByteBuffer;
 
 @OnlyIn(Dist.CLIENT)
-public class SkinVertexBuffer implements AutoCloseable {
+public class SkinVertexBufferObject implements AutoCloseable {
 
     protected int id = -1;
 
-    public SkinVertexBuffer() {
-        RenderSystem.glGenBuffers((id) -> {
-            this.id = id;
-        });
+    public SkinVertexBufferObject() {
+        RenderSystem.glGenBuffers(id -> this.id = id);
     }
 
     public static void unbind() {
@@ -37,8 +34,7 @@ public class SkinVertexBuffer implements AutoCloseable {
         if (this.id < 0) {
             return;
         }
-        Pair<BufferBuilder.DrawState, ByteBuffer> pair = builder.popNextBuffer();
-        upload(pair.getSecond());
+        upload(builder.popNextBuffer().getSecond());
     }
 
     public void upload(ByteBuffer byteBuffer) {

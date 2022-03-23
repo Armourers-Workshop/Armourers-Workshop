@@ -47,6 +47,7 @@ public final class AWConstants {
         public static final String TILE_ENTITY_REFER = "Refer";
         public static final String TILE_ENTITY_REFERS = "Refers";
         public static final String TILE_ENTITY_MARKERS = "Markers";
+        public static final String TILE_ENTITY_LINKED_POS = "LinkedPos";
 
         public static final String TILE_ENTITY_SHAPE = "Shape";
 

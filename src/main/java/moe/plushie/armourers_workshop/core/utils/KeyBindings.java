@@ -6,7 +6,7 @@ import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 
-public class AWKeyBindings {
+public class KeyBindings {
 
 //    public static final String CATEGORY = "keys." + AWCore.getModId().toLowerCase() + ":category";
 //    public static final String WARDROBE = "keys." + AWCore.getModId().toLowerCase() + ".open-wardrobe";

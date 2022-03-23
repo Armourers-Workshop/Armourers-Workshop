@@ -7,7 +7,8 @@ import moe.plushie.armourers_workshop.core.api.ISkinType;
 import moe.plushie.armourers_workshop.core.api.action.ICanUse;
 import moe.plushie.armourers_workshop.core.api.client.render.IBakedSkin;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
-import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
+import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
+import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -139,10 +140,10 @@ public class BakedSkin implements IBakedSkin {
 
     public Rectangle3f getRenderBounds(@Nullable Entity entity, @Nullable Model model, @Nullable Vector3f rotation) {
         if (entity == null) {
-            entity = SkinItemRenderer.getItemStackRenderer().getMannequinEntity();
+            entity = SkinItemStackRenderer.getInstance().getMannequinEntity();
         }
         if (model == null) {
-            model = SkinItemRenderer.getItemStackRenderer().getMannequinModel();
+            model = SkinItemStackRenderer.getInstance().getMannequinModel();
         }
         Object key = SkinCache.borrowKey(model, rotation);
         Rectangle3f bounds = cachedBounds.get(key);

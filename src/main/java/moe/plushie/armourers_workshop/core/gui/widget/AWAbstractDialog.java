@@ -5,9 +5,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("NullableProblems")
+@OnlyIn(Dist.CLIENT)
 public class AWAbstractDialog extends Screen {
 
     protected int leftPos;
