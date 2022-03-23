@@ -17,11 +17,8 @@ import java.util.List;
 @OnlyIn(Dist.CLIENT)
 public class SkinnableScreen extends ContainerScreen<SkinnableContainer> {
 
-    private final SkinnableContainer container;
-
     public SkinnableScreen(SkinnableContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, container.getTitle());
-        this.container = container;
 
         this.imageWidth = 176;
         this.imageHeight = container.getRow() * 18 + 125;
@@ -42,7 +39,7 @@ public class SkinnableScreen extends ContainerScreen<SkinnableContainer> {
         RenderUtils.bind(RenderUtils.TEX_COMMON);
         GuiUtils.drawContinuousTexturedBox(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight, 128, 128, 4, 4, 4, 4, 0);
         RenderUtils.blit(matrixStack, leftPos + 7, topPos + imageHeight - 85, 0, 180, 162, 76);
-        List<Slot> slots = container.slots;
+        List<Slot> slots = menu.slots;
         for (int i = 36; i < slots.size(); ++i) {
             Slot slot = slots.get(i);
             RenderUtils.blit(matrixStack, leftPos + slot.x - 1, topPos + slot.y - 1, 238, 0, 18, 18);

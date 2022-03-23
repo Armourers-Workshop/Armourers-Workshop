@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.render.buffer;
+package moe.plushie.armourers_workshop.core.render.bufferbuilder;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -18,12 +18,15 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+@OnlyIn(Dist.CLIENT)
 public class SkinVertexBufferBuilder {
 
     protected final Skin skin;
@@ -81,7 +84,7 @@ public class SkinVertexBufferBuilder {
         RenderUtils.drawBoundingBox(matrixStack, box, color, buffer);
     }
 
-    public void endBatch(SkinRenderBuffer.Batch batch) {
+    public void endBatch(SkinVertexBufferBuilder2.Batch batch) {
         if (buildingTasks.size() != 0) {
             combineAndUpload();
             buildingTasks.clear();
@@ -94,7 +97,7 @@ public class SkinVertexBufferBuilder {
 
     private void combineAndUpload() {
         int totalRenderedBytes = 0;
-        SkinVertexBuffer vertexBuffer = new SkinVertexBuffer();
+        SkinVertexBufferObject vertexBuffer = new SkinVertexBufferObject();
         ArrayList<ByteBuffer> byteBuffers = new ArrayList<>();
 
         for (CompiledTask compiledTask : buildingTasks) {
@@ -123,7 +126,7 @@ public class SkinVertexBufferBuilder {
         int vertexCount;
         int vertexOffset;
         BufferBuilder bufferBuilder;
-        SkinVertexBuffer vertexBuffer;
+        SkinVertexBufferObject vertexBuffer;
 
         CompiledTask(RenderType renderType, BufferBuilder bufferBuilder) {
             this.renderType = renderType;
@@ -167,7 +170,7 @@ public class SkinVertexBufferBuilder {
         }
 
         @Override
-        public SkinVertexBuffer getVertexBuffer() {
+        public SkinVertexBufferObject getVertexBuffer() {
             return compiledTask.vertexBuffer;
         }
 

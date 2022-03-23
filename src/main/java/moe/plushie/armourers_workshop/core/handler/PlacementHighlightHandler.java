@@ -4,8 +4,9 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.core.AWConfig;
 import moe.plushie.armourers_workshop.core.base.AWItems;
-import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderType;
+import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
+import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.MannequinRayTraceResult;
@@ -31,7 +32,6 @@ import java.awt.*;
 
 @OnlyIn(Dist.CLIENT)
 public class PlacementHighlightHandler {
-
 
     @SubscribeEvent
     public void onDrawBlockHighlightEvent(DrawHighlightEvent.HighlightBlock event) {
@@ -90,7 +90,7 @@ public class PlacementHighlightHandler {
 
 //        RenderUtils.drawPoint(matrixStack, buffers);
 
-        BipedModel<?> model = SkinItemRenderer.getItemStackRenderer().getMannequinModel();
+        BipedModel<?> model = SkinItemStackRenderer.getInstance().getMannequinModel();
         if (model != null) {
             float f = target.getScale() * 0.9375f; // base scale from player model
             IVertexBuilder vertexBuilder = buffers.getBuffer(SkinRenderType.ENTITY_OUTLINE);

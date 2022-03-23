@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.core.render.tileentities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.render.SkinItemRenderer;
+import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderBuffer;
+import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
@@ -38,8 +38,8 @@ public class SkinnableTileEntityRenderer<T extends SkinnableTileEntity> extends 
         if (bakedSkin == null) {
             return;
         }
-        Entity mannequin = SkinItemRenderer.getItemStackRenderer().getMannequinEntity();
-        BipedModel<?> model = SkinItemRenderer.getItemStackRenderer().getMannequinModel();
+        Entity mannequin = SkinItemStackRenderer.getInstance().getMannequinEntity();
+        BipedModel<?> model = SkinItemStackRenderer.getInstance().getMannequinModel();
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(mannequin);
         if (renderer == null || mannequin == null || mannequin.level == null) {
             return;
@@ -56,10 +56,7 @@ public class SkinnableTileEntityRenderer<T extends SkinnableTileEntity> extends 
         matrixStack.scale(f, f, f);
         matrixStack.scale(-1, -1, 1);
 
-        // TODO: performance optimize, merge all tile entity to one batch
-        SkinRenderBuffer buffer1 = SkinRenderBuffer.getInstance();
-        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemCameraTransforms.TransformType.NONE, light, partialTicks1, matrixStack, buffer1);
-        buffer1.endBatch();
+        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemCameraTransforms.TransformType.NONE, light, partialTicks1, matrixStack, buffers);
 
         matrixStack.popPose();
 

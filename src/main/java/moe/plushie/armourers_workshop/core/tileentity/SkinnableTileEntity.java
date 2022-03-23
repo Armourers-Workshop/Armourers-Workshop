@@ -64,6 +64,8 @@ public class SkinnableTileEntity extends RotableTileEntity {
     private Collection<BlockPos> refers;
     private Collection<SkinMarker> markers;
 
+    private BlockPos linkedBlockPos = null;
+
     private SkinProperties properties;
     private SkinDescriptor descriptor = SkinDescriptor.EMPTY;
 
@@ -92,6 +94,7 @@ public class SkinnableTileEntity extends RotableTileEntity {
         markers = AWDataSerializers.getMarkerList(nbt, AWConstants.NBT.TILE_ENTITY_MARKERS);
         descriptor = AWDataSerializers.getSkinDescriptor(nbt, AWConstants.NBT.TILE_ENTITY_SKIN, SkinDescriptor.EMPTY);
         properties = AWDataSerializers.getSkinProperties(nbt, AWConstants.NBT.TILE_ENTITY_SKIN_PROPERTIES);
+        linkedBlockPos = AWDataSerializers.getBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_LINKED_POS, null);
         if (oldProperties != null) {
             oldProperties.copyFrom(properties);
             properties = oldProperties;
@@ -110,6 +113,7 @@ public class SkinnableTileEntity extends RotableTileEntity {
         AWDataSerializers.putMarkerList(nbt, AWConstants.NBT.TILE_ENTITY_MARKERS, markers);
         AWDataSerializers.putSkinDescriptor(nbt, AWConstants.NBT.TILE_ENTITY_SKIN, descriptor, SkinDescriptor.EMPTY);
         AWDataSerializers.putSkinProperties(nbt, AWConstants.NBT.TILE_ENTITY_SKIN_PROPERTIES, properties);
+        AWDataSerializers.putBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_LINKED_POS, linkedBlockPos, null);
 
         ItemStackHelper.saveAllItems(nbt, getOrCreateItems());
     }
@@ -147,6 +151,18 @@ public class SkinnableTileEntity extends RotableTileEntity {
 
     public void setShape(Rectangle3i shape) {
         this.shape = shape;
+    }
+
+    public BlockPos getLinkedBlockPos() {
+        return getValueFromParent(te -> te.linkedBlockPos);
+    }
+
+    public void setLinkedBlockPos(BlockPos linkedBlockPos) {
+        SkinnableTileEntity tileEntity = getParent();
+        if (tileEntity != null) {
+            tileEntity.linkedBlockPos = linkedBlockPos;
+            tileEntity.updateBlockStates();
+        }
     }
 
     @Override
@@ -260,6 +276,10 @@ public class SkinnableTileEntity extends RotableTileEntity {
 
     public boolean isBed() {
         return getProperty(SkinProperty.BLOCK_BED);
+    }
+
+    public boolean isLinked() {
+        return getLinkedBlockPos() != null;
     }
 
     public boolean isInventory() {

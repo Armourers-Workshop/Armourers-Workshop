@@ -43,8 +43,6 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
 
     private final AWHSBSliderBox[] sliders = {null, null, null};
 
-    private final ColourMixerContainer container;
-
     private TextFieldWidget textField;
     private AWPaletteBox paletteBox;
 
@@ -54,7 +52,6 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
 
     public ColourMixerScreen(ColourMixerContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
-        this.container = container;
         this.imageWidth = 256;
         this.imageHeight = 240;
 
@@ -221,7 +218,7 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
         return sliderBox;
     }
 
-    private AWComboBox addPaintList(int x, int y) {
+    private void addPaintList(int x, int y) {
         int selectedIndex = 0;
         ArrayList<ISkinPaintType> paintTypes = new ArrayList<>();
         ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
@@ -245,11 +242,9 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
         });
         comboBox.setMaxRowCount(5);
         addButton(comboBox);
-        return comboBox;
     }
 
-
-    private AWComboBox addPaletteList(int x, int y) {
+    private void addPaletteList(int x, int y) {
         int selectedIndex = 0;
         ArrayList<Palette> palettes = new ArrayList<>();
         ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
@@ -271,7 +266,6 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
         setSelectedPalette(palettes.get(selectedIndex));
         comboBox.setMaxRowCount(5);
         addButton(comboBox);
-        return comboBox;
     }
 
 
@@ -288,20 +282,18 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
         return textBox;
     }
 
-    private AWImageButton addIconButton(int x, int y, int u, int v, String key, Button.IPressable handler) {
+    private void addIconButton(int x, int y, int u, int v, String key, Button.IPressable handler) {
         ITextComponent tooltip = getDisplayText(key);
         AWImageButton button = new AWImageButton(x, y, 16, 16, u, v, RenderUtils.TEX_BUTTONS, handler, this::renderIconTooltip, tooltip);
         addButton(button);
-        return button;
     }
 
-    private AWImageButton addHelpButton(int x, int y) {
+    private void addHelpButton(int x, int y) {
         ITextComponent tooltip = getDisplayText("help.palette");
         Button.IPressable pressable = b -> {
         };
         AWImageButton button = new AWImageButton(x, y, 7, 8, 0, 0, RenderUtils.TEX_HELP, pressable, this::renderIconTooltip, tooltip);
         addButton(button);
-        return button;
     }
 
     private void reloadPalettes() {

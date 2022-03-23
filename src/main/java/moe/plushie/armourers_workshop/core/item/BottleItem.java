@@ -1,12 +1,9 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -24,17 +21,10 @@ public class BottleItem extends ColoredItem {
         super(properties);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static float isEmpty(ItemStack itemStack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
-        ISkinPaintType paintType = BottleItem.getPaintType(itemStack);
-        return paintType == SkinPaintTypes.NONE ? 1 : 0;
-    }
-
     @Override
     public boolean isFoil(ItemStack itemStack) {
-        int color = getColorValue(itemStack);
-        if (color != 0) {
-            return PaintColor.getPaintType(color) != SkinPaintTypes.NORMAL;
+        if (hasColor(itemStack)) {
+            return getPaintType(itemStack) != SkinPaintTypes.NORMAL;
         }
         return false;
     }

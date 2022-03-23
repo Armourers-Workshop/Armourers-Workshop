@@ -21,6 +21,7 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 
 public class AWDataSerializers {
@@ -295,8 +296,10 @@ public class AWDataSerializers {
     }
 
     public static void putBlockPos(CompoundNBT nbt, String key, BlockPos value, BlockPos defaultValue) {
-        if (!value.equals(defaultValue)) {
+        if (!Objects.equals(value, defaultValue)) {
             nbt.putLong(key, value.asLong());
+        } else {
+            nbt.remove(key);
         }
     }
 

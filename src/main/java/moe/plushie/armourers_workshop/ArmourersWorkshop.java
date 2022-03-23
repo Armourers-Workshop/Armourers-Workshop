@@ -1,17 +1,15 @@
 package moe.plushie.armourers_workshop;
 
 
-import moe.plushie.armourers_workshop.client.ClientEventHandler;
-import moe.plushie.armourers_workshop.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.capability.WardrobeProvider;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
 import moe.plushie.armourers_workshop.core.registry.AWRegistry;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.capability.WardrobeProvider;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -54,8 +52,6 @@ public class ArmourersWorkshop {
         eventBus.addGenericListener(ContainerType.class, registry::registerContainerTypes);
 
         eventBus.addListener(registry::registerEntityAttributes);
-        eventBus.addListener(registry::registerCommonEvents);
-
         eventBus.addListener(this::onCommonSetup);
 
         // Register client-only events
@@ -129,13 +125,13 @@ public class ArmourersWorkshop {
     }
 
     private void onCommonSetup(FMLLoadCompleteEvent event) {
+        event.enqueueWork(registry::onCommonSetup);
     }
 
     @OnlyIn(Dist.CLIENT)
     private void onClientSetup(FMLClientSetupEvent event) {
-        ClientEventHandler.init(MinecraftForge.EVENT_BUS);
-        ClientWardrobeHandler.init();
         AWCore.init();
+        registry.onClientSetup(event);
     }
 
     private void onServerStart(FMLServerAboutToStartEvent event) {

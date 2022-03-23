@@ -6,10 +6,14 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("NullableProblems")
+@OnlyIn(Dist.CLIENT)
 public abstract class AWAbstractContainerScreen<T extends Container> extends ContainerScreen<T> {
 
     protected boolean enabledOnClose = true;
@@ -125,7 +129,7 @@ public abstract class AWAbstractContainerScreen<T extends Container> extends Con
         if (getFocused() != null && getFocused().keyPressed(key, p_231046_2_, p_231046_3_)) {
             return true;
         }
-        enabledOnClose = (key == GLFW.GLFW_KEY_ESCAPE);
+        enabledOnClose = closeOnNonEsc() || (key == GLFW.GLFW_KEY_ESCAPE);
         boolean results = super.keyPressed(key, p_231046_2_, p_231046_3_);
         enabledOnClose = true;
         return results;
@@ -163,6 +167,10 @@ public abstract class AWAbstractContainerScreen<T extends Container> extends Con
         if (enabledOnClose) {
             super.onClose();
         }
+    }
+
+    public boolean closeOnNonEsc() {
+        return false;
     }
 
     public boolean isPresenting() {

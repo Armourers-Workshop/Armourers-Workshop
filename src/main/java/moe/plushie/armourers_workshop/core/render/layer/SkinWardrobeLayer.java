@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.render.layer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.client.ClientWardrobeHandler;
-import moe.plushie.armourers_workshop.core.render.buffer.SkinRenderType;
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.utils.AWContributors;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
@@ -16,17 +16,15 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
+@SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class SkinWardrobeArmorLayer<T extends Entity, M extends EntityModel<T>> extends LayerRenderer<T, M> {
+public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> extends LayerRenderer<T, M> {
 
-    public SkinWardrobeArmorLayer(IEntityRenderer<T, M> renderer) {
+    public SkinWardrobeLayer(IEntityRenderer<T, M> renderer) {
         super(renderer);
     }
 
     @Override
-    @ParametersAreNonnullByDefault
     public void render(MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (entity.isInvisible()) {
             return;
@@ -43,11 +41,9 @@ public class SkinWardrobeArmorLayer<T extends Entity, M extends EntityModel<T>> 
         }
 
         // render the contributor
-        if (!entity.isInvisible()) {
-            AWContributors.Contributor contributor = AWContributors.by(entity);
-            if (contributor != null) {
-                renderMagicCircle(matrixStack, renderTypeBuffer, entity.tickCount + entity.getId() * 24, partialTicks, 24, contributor.color);
-            }
+        AWContributors.Contributor contributor = AWContributors.by(entity);
+        if (contributor != null) {
+            renderMagicCircle(matrixStack, renderTypeBuffer, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color);
         }
 
         ClientWardrobeHandler.onRenderArmor(entity, entityModel, packedLightIn, matrixStack, renderTypeBuffer);

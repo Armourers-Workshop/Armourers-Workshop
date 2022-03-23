@@ -14,11 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class SkinningTableScreen extends ContainerScreen<SkinningTableContainer> {
 
-    private final SkinningTableContainer container;
-
     public SkinningTableScreen(SkinningTableContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
-        this.container = container;
         this.imageWidth = 176;
         this.imageHeight = 176;
     }

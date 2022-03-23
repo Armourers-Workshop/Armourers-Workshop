@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.render.buffer;
+package moe.plushie.armourers_workshop.core.render.bufferbuilder;
 
 import com.google.common.collect.ImmutableList;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
@@ -12,23 +12,23 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class SkinLightBuffer extends SkinVertexBuffer {
+public class SkinLightBufferObject extends SkinVertexBufferObject {
 
     public static final VertexFormat FORMAT = new VertexFormat(ImmutableList.of(DefaultVertexFormats.ELEMENT_UV2));
     public static final int PAGE_SIZE = 4096;
-    private static final SkinCache.LRU<Integer, SkinLightBuffer> SHARED_LIGHTS = new SkinCache.LRU<>();
+    private static final SkinCache.LRU<Integer, SkinLightBufferObject> SHARED_LIGHTS = new SkinCache.LRU<>();
     private final int light;
     private int capacity;
 
-    public SkinLightBuffer(int light) {
+    public SkinLightBufferObject(int light) {
         super();
         this.light = light;
         this.capacity = 0;
     }
 
     @Nonnull
-    public static SkinLightBuffer getLightBuffer(int light) {
-        return SHARED_LIGHTS.computeIfAbsent(light, SkinLightBuffer::new);
+    public static SkinLightBufferObject getLightBuffer(int light) {
+        return SHARED_LIGHTS.computeIfAbsent(light, SkinLightBufferObject::new);
     }
 
     public void ensureCapacity(int capacity) {

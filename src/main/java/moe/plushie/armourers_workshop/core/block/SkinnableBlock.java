@@ -95,6 +95,11 @@ public class SkinnableBlock extends HorizontalFaceBlock {
         if (tileEntity == null) {
             return ActionResultType.FAIL;
         }
+        if (tileEntity.isLinked()) {
+            BlockPos linkedPos = tileEntity.getLinkedBlockPos();
+            BlockState linkedState = world.getBlockState(linkedPos);
+            return linkedState.getBlock().use(linkedState, world, linkedPos, player, hand, traceResult);
+        }
         if (tileEntity.isBed() && !player.isShiftKeyDown()) {
             return Blocks.RED_BED.use(state, world, tileEntity.getBedPos(), player, hand, traceResult);
         }
