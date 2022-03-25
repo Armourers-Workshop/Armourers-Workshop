@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.utils;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.api.action.ICanRotation;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDescriptor;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinIdentifier;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.action.ICanRotation;
+import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
+import moe.plushie.armourers_workshop.api.skin.ISkinIdentifier;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;

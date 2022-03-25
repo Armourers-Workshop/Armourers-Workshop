@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.core.AWConstants;
-import moe.plushie.armourers_workshop.core.base.AWBlocks;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.AWBlocks;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -18,6 +18,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector4f;
@@ -59,7 +60,7 @@ public class SkinItemUseContext extends BlockItemUseContext {
     protected void loadElements() {
         ItemStack itemStack = getItemInHand();
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        Skin skin = SkinLoader.getInstance().getSkin(descriptor);
+        Skin skin = SkinLoader.getInstance().getSkin(descriptor.getIdentifier());
         if (skin == null) {
             return;
         }
@@ -200,7 +201,6 @@ public class SkinItemUseContext extends BlockItemUseContext {
         private Collection<BlockPos> blockPosList;
         private Collection<SkinMarker> markerList;
 
-
         public ParentPart(BlockPos offset, Rectangle3i shape, Collection<BlockPos> blockPosList, SkinDescriptor descriptor, Skin skin) {
             super(offset, shape);
             this.descriptor = descriptor;
@@ -217,6 +217,25 @@ public class SkinItemUseContext extends BlockItemUseContext {
             AWDataSerializers.putSkinDescriptor(nbt, AWConstants.NBT.TILE_ENTITY_SKIN, descriptor, SkinDescriptor.EMPTY);
             AWDataSerializers.putSkinProperties(nbt, AWConstants.NBT.TILE_ENTITY_SKIN_PROPERTIES, properties);
             return nbt;
+        }
+
+        @Override
+        public void transform(Vector3f r) {
+            super.transform(r);
+
+            Quaternion q = new Quaternion(r.x(), r.y(), r.z(), true);
+            ArrayList<SkinMarker> newMarkerList = new ArrayList<>();
+            for (SkinMarker marker : markerList) {
+                Vector4f f = new Vector4f(marker.x, marker.y, marker.z, 1.0f);
+                f.transform(Matrix4f.createScaleMatrix(-1, -1, 1));
+                f.transform(q);
+                int x = Math.round(f.x());
+                int y = Math.round(f.y());
+                int z = Math.round(f.z());
+                marker = new SkinMarker((byte) x, (byte) y, (byte) z, marker.meta);
+                newMarkerList.add(marker);
+            }
+            this.markerList = newMarkerList;
         }
     }
 

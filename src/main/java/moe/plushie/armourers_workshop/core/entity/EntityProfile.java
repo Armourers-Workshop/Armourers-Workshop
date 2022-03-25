@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import moe.plushie.armourers_workshop.core.api.ISkinType;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 
 import java.util.HashMap;
 import java.util.function.Function;

@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class SkinLightBufferObject extends SkinVertexBufferObject {
+public class SkinLightBufferObject extends SkinRenderObject {
 
     public static final VertexFormat FORMAT = new VertexFormat(ImmutableList.of(DefaultVertexFormats.ELEMENT_UV2));
     public static final int PAGE_SIZE = 4096;

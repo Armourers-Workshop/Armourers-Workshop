@@ -1,12 +1,10 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
-import moe.plushie.armourers_workshop.core.tileentity.ColourMixerTileEntity;
-import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
+import moe.plushie.armourers_workshop.builder.tileentity.ColourMixerTileEntity;
 import moe.plushie.armourers_workshop.core.utils.AWDataAccessor;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.tileentity.TileEntity;

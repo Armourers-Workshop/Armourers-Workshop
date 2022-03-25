@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.core.base.AWEntities;
+import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
+import moe.plushie.armourers_workshop.init.common.AWEntities;
 import moe.plushie.armourers_workshop.core.container.SkinnableContainer;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
@@ -108,7 +109,7 @@ public class SkinnableBlock extends HorizontalFaceBlock {
                 return ActionResultType.CONSUME;
             }
             Vector3d seatPos = tileEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
-            SeatEntity seatEntity = getSeatEntity(world, seatPos);
+            SeatEntity seatEntity = getSeatEntity(world, tileEntity.getParentPos(), seatPos);
             if (seatEntity == null) {
                 return ActionResultType.FAIL; // it is using
             }
@@ -116,7 +117,7 @@ public class SkinnableBlock extends HorizontalFaceBlock {
             return ActionResultType.SUCCESS;
         }
         if (tileEntity.isInventory()) {
-            AWContainerOpener.open(SkinnableContainer.TYPE, player, IWorldPosCallable.create(world, tileEntity.getParentPos()));
+            AWContainerTypes.open(AWContainerTypes.SKINNABLE, player, IWorldPosCallable.create(world, tileEntity.getParentPos()));
             player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
             return ActionResultType.sidedSuccess(world.isClientSide);
         }
@@ -245,10 +246,10 @@ public class SkinnableBlock extends HorizontalFaceBlock {
     }
 
     @Nullable
-    private SeatEntity getSeatEntity(World world, Vector3d pos) {
+    private SeatEntity getSeatEntity(World world, BlockPos blockPos, Vector3d pos) {
         AxisAlignedBB searchRect = AxisAlignedBB.ofSize(1, 1, 1).move(pos);
         for (SeatEntity entity : world.getEntitiesOfClass(SeatEntity.class, searchRect)) {
-            if (entity.isAlive()) {
+            if (entity.isAlive() && blockPos.equals(entity.getBlockPos())) {
                 if (entity.getPassengers().isEmpty()) {
                     return entity;
                 }
@@ -257,6 +258,7 @@ public class SkinnableBlock extends HorizontalFaceBlock {
         }
         SeatEntity entity = new SeatEntity(AWEntities.SEAT, world);
         entity.setPos(pos.x(), pos.y(), pos.z());
+        entity.setBlockPos(blockPos);
         world.addFreshEntity(entity);
         return entity;
     }

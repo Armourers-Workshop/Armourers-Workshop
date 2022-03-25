@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.data.property;
 
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperty;
+import moe.plushie.armourers_workshop.api.skin.ISkinProperty;
 
 public class SkinProperty<T> implements ISkinProperty<T> {
 

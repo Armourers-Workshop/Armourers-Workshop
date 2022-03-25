@@ -1,16 +1,16 @@
 package moe.plushie.armourers_workshop.core.render.skin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.api.ISkinArmorType;
-import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.api.ISkinType;
-import moe.plushie.armourers_workshop.core.api.action.ICanHeld;
+import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderObjectBuilder;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder;
-import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder2;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
@@ -103,8 +103,8 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         int index = 0;
         Skin skin = bakedSkin.getSkin();
         ColorScheme scheme1 = bakedSkin.resolve(entity, scheme);
-        SkinVertexBufferBuilder2 bufferBuilder = SkinVertexBufferBuilder2.by(buffers);
-        SkinVertexBufferBuilder builder = bufferBuilder.getBuffer(skin);
+        SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(buffers);
+        SkinRenderObjectBuilder builder = bufferBuilder.getBuffer(skin);
         for (BakedSkinPart bakedPart : bakedSkin.getSkinParts()) {
             if (!prepare(entity, model, bakedSkin, bakedPart, transformType)) {
                 continue;

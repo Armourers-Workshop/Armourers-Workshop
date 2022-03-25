@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.core.utils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.AWCore;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -36,6 +36,7 @@ public final class RenderUtils {
 
     public static final ResourceLocation TEX_HOLOGRAM_PROJECTOR = AWCore.resource("textures/gui/hologram_projector/hologram-projector.png");
     public static final ResourceLocation TEX_SKINNING_TABLE = AWCore.resource("textures/gui/skinning_table/skinning-table.png");
+    public static final ResourceLocation TEX_DYE_TABLE = AWCore.resource("textures/gui/dye_table/dye-table.png");
     public static final ResourceLocation TEX_COLOUR_MIXER = AWCore.resource("textures/gui/colour_mixer/colour-mixer.png");
 
     public static final ResourceLocation TEX_TABS = AWCore.resource("textures/gui/controls/tabs.png");

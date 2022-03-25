@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.data.property;
 
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
+import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.core.utils.StreamUtils;
 import net.minecraft.nbt.*;
 

@@ -1,8 +1,7 @@
 package moe.plushie.armourers_workshop.core.capability;
 
-import com.google.common.cache.Cache;
-import moe.plushie.armourers_workshop.core.api.ISkinType;
-import moe.plushie.armourers_workshop.core.api.common.IWardrobe;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.api.skin.ISkinWardrobe;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
@@ -13,11 +12,8 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
@@ -25,7 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 @SuppressWarnings("unused")
-public class SkinWardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
+public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT> {
 
     private final HashSet<EquipmentSlotType> armourFlags = new HashSet<>();
     private final HashMap<SkinSlotType, Integer> skinSlots = new HashMap<>();
@@ -35,35 +31,29 @@ public class SkinWardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
     private final WeakReference<Entity> entity;
     private final EntityProfile profile;
 
-    private SkinWardrobeState state;
     private int id; // a.k.a entity id
 
     public SkinWardrobe(Entity entity, EntityProfile profile) {
         this.id = entity.getId();
         this.entity = new WeakReference<>(entity);
         this.profile = profile;
-        this.inventory.addListener(inventory -> {
-            if (state != null) {
-                state.invalidateAll();
-            }
-        });
     }
 
     @Nullable
     public static SkinWardrobe of(@Nullable Entity entity) {
-        if (entity == null) {
-            return null;
+        if (entity != null) {
+            return SkinDataStorage.getWardrobe(entity);
         }
-        Object key = entity.getId();
-        Cache<Object, LazyOptional<SkinWardrobe>> caches = WardrobeStorage.getCaches(entity);
-        LazyOptional<SkinWardrobe> wardrobe = caches.getIfPresent(key);
-        if (wardrobe != null) {
-            return wardrobe.resolve().orElse(null);
+        return null;
+    }
+
+    @Nullable
+    public static LazyOptional<SkinWardrobe> get(Entity entity) {
+        LazyOptional<SkinWardrobe> wardrobe = entity.getCapability(SkinWardrobeProvider.WARDROBE_KEY);
+        if (wardrobe.isPresent()) {
+            return wardrobe;
         }
-        wardrobe = entity.getCapability(WardrobeProvider.WARDROBE_KEY);
-        wardrobe.addListener(self -> caches.invalidate(key));
-        caches.put(key, wardrobe);
-        return wardrobe.resolve().orElse(null);
+        return null;
     }
 
     public EntityProfile getProfile() {
@@ -122,19 +112,26 @@ public class SkinWardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
         }
     }
 
+    public void setUnlockedSize(SkinSlotType slotType, int size) {
+        if (slotType == SkinSlotType.DYE) {
+            return;
+        }
+        skinSlots.put(slotType, size);
+    }
+
     public int getUnlockedSize(SkinSlotType slotType) {
         if (slotType == SkinSlotType.DYE) {
             return 8;
         }
         Integer modifiedSize = skinSlots.get(slotType);
         if (modifiedSize != null) {
-            return Math.min(slotType.getSize(), modifiedSize);
+            return Math.min(slotType.getMaxSize(), modifiedSize);
         }
         ISkinType type = slotType.getSkinType();
         if (type != null) {
-            return Math.min(slotType.getSize(), profile.getMaxCount(type));
+            return Math.min(slotType.getMaxSize(), profile.getMaxCount(type));
         }
-        return slotType.getSize();
+        return slotType.getMaxSize();
     }
 
     public Inventory getInventory() {
@@ -157,41 +154,17 @@ public class SkinWardrobe implements IWardrobe, INBTSerializable<CompoundNBT> {
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
-        WardrobeStorage.saveSkinSlots(skinSlots, nbt);
-        WardrobeStorage.saveVisibility(armourFlags, nbt);
-        WardrobeStorage.saveInventoryItems(inventory, nbt);
+        SkinWardrobeStorage.saveSkinSlots(skinSlots, nbt);
+        SkinWardrobeStorage.saveVisibility(armourFlags, nbt);
+        SkinWardrobeStorage.saveInventoryItems(inventory, nbt);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        WardrobeStorage.loadSkinSlots(skinSlots, nbt);
-        WardrobeStorage.loadVisibility(armourFlags, nbt);
-        WardrobeStorage.loadInventoryItems(inventory, nbt);
-        invalidateAll();
-    }
-
-    public void invalidateAll() {
-        // apply the client
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            if (state != null) {
-                state.invalidateAll();
-            }
-        });
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public SkinWardrobeState snapshot() {
-        if (state == null) {
-            state = new SkinWardrobeState(inventory);
-        }
-        Entity entity = getEntity();
-        if (entity != null) {
-            if (state.tick(entity)) {
-                state.reload(entity);
-            }
-        }
-        return state;
+        SkinWardrobeStorage.loadSkinSlots(skinSlots, nbt);
+        SkinWardrobeStorage.loadVisibility(armourFlags, nbt);
+        SkinWardrobeStorage.loadInventoryItems(inventory, nbt);
     }
 }
 

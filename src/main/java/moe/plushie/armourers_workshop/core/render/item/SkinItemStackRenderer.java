@@ -2,9 +2,11 @@ package moe.plushie.armourers_workshop.core.render.item;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.AWConstants;
-import moe.plushie.armourers_workshop.core.base.AWEntities;
-import moe.plushie.armourers_workshop.core.base.AWItems;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.AWEntities;
+import moe.plushie.armourers_workshop.init.common.AWItems;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
@@ -57,10 +59,12 @@ public class SkinItemStackRenderer extends ItemStackTileEntityRenderer {
         matrixStack.translate(0.5f, 0.5f, 0.5f); // reset to center
 
         if (item == AWItems.SKIN) {
-            BakedSkin bakedSkin = BakedSkin.of(itemStack);
+            SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+            BakedSkin bakedSkin = BakedSkin.of(descriptor);
             if (bakedSkin != null) {
                 Vector3f rotation = new Vector3f(-transform.rotation.x(), -transform.rotation.y(), transform.rotation.z());
-                SkinItemRenderer.renderSkin(bakedSkin, rotation, transform.scale, 1, 1, 1, 0, light, matrixStack, renderTypeBuffer);
+                ColorScheme scheme = descriptor.getColorScheme();
+                SkinItemRenderer.renderSkin(bakedSkin, scheme, rotation, transform.scale, 1, 1, 1, 0, light, matrixStack, renderTypeBuffer);
             }
         }
 

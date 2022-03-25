@@ -2,10 +2,11 @@ package moe.plushie.armourers_workshop.core.utils.color;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 
-public class PaintColor {
+public class PaintColor implements IPaintColor {
 
     public final static PaintColor CLEAR = new PaintColor(0, 0, SkinPaintTypes.NONE);
     public final static PaintColor WHITE = new PaintColor(-1, -1, SkinPaintTypes.NORMAL);
@@ -44,6 +45,13 @@ public class PaintColor {
             POOL.put(value, paintColor);
         }
         return paintColor;
+    }
+
+    public static PaintColor of(IPaintColor color) {
+        if (color instanceof PaintColor) {
+            return (PaintColor)color;
+        }
+        return of(color.getRGB(), color.getPaintType());
     }
 
     public static ISkinPaintType getPaintType(int value) {

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.data;
 
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinMarker;
+import moe.plushie.armourers_workshop.api.skin.ISkinMarker;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3i;
 

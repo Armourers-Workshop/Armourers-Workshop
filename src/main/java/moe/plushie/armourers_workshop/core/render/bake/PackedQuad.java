@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
-import moe.plushie.armourers_workshop.core.api.ISkinCube;
+import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
@@ -27,7 +27,6 @@ public class PackedQuad {
     private final Rectangle3i bounds;
     private final CustomVoxelShape renderShape;
     private final ColorDescriptor colorInfo = new ColorDescriptor();
-//    private final int[] cubeTotals = new int[SkinCubes.getTotalCubes()];
 
     public PackedQuad(Rectangle3i bounds, CustomVoxelShape renderShape, ArrayList<ColouredFace> faces) {
         this.bounds = bounds;

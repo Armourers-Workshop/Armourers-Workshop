@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
-import moe.plushie.armourers_workshop.core.api.ISkinCube;
+import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 
 import java.util.HashMap;

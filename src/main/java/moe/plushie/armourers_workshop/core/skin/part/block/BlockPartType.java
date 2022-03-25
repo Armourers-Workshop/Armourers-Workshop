@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.part.block;
 
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
+import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
 import net.minecraft.util.math.vector.Vector3i;

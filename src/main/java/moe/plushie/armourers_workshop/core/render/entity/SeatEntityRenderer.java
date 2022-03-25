@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.init.common.AWConfig;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

@@ -1,187 +1,219 @@
 package moe.plushie.armourers_workshop.core.render.bufferbuilder;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.datafixers.util.Pair;
-import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.cache.SkinCache;
-import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import moe.plushie.armourers_workshop.init.common.AWConfig;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.WorldVertexBufferUploader;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
-import java.nio.ByteBuffer;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
-public class SkinVertexBufferBuilder {
+public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTypeBuffer {
 
-    protected final Skin skin;
-    protected final Cache<Object, ArrayList<CompiledTask>> cachingTasks = CacheBuilder.newBuilder()
-            .expireAfterAccess(3, TimeUnit.SECONDS)
-            .build();
+    public static final RenderType MERGER = new Merger("skin_merger", DefaultVertexFormats.POSITION, GL11.GL_QUADS, 256);
 
-    protected final ArrayList<RenderTask> pendingTasks = new ArrayList<>();
-    protected final ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
+    protected final HashMap<Skin, SkinRenderObjectBuilder> cachingBuilders = new HashMap<>();
 
-    public SkinVertexBufferBuilder(Skin skin) {
-        this.skin = skin;
+    protected final HashMap<Skin, SkinRenderObjectBuilder> pendingBuilders = new HashMap<>();
+    protected final HashMap<RenderType, BufferBuilder> pendingBuilders2 = new HashMap<>();
+
+    public SkinVertexBufferBuilder() {
+        super(256);
     }
 
-    public void addPartData(BakedSkinPart part, ColorScheme scheme, int light, float partialTicks, MatrixStack matrixStack, boolean shouldRender) {
-        // ignore part when part is disable
-        if (!AWConfig.shouldRenderPart(part.getPart())) {
+    public static SkinVertexBufferBuilder getBuffer(IRenderTypeBuffer buffers) {
+        IVertexBuilder builder = buffers.getBuffer(MERGER);
+        if (builder instanceof SkinVertexBufferBuilder) {
+            return (SkinVertexBufferBuilder) builder;
+        }
+        return new SkinVertexBufferBuilder();
+    }
+
+    public static void clearAllCache() {
+        SkinVertexBufferBuilder builder = getBuffer(Minecraft.getInstance().renderBuffers().bufferSource());
+        builder.cachingBuilders.clear();
+    }
+
+    @Nonnull
+    @Override
+    public IVertexBuilder getBuffer(@Nonnull RenderType renderType) {
+        BufferBuilder buffer = pendingBuilders2.get(renderType);
+        if (buffer != null) {
+            return buffer;
+        }
+        buffer = new BufferBuilder(renderType.bufferSize());
+        buffer.begin(renderType.mode(), renderType.format());
+        pendingBuilders2.put(renderType, buffer);
+        return buffer;
+    }
+
+    public SkinRenderObjectBuilder getBuffer(@Nonnull Skin skin) {
+        SkinRenderObjectBuilder bufferBuilder = pendingBuilders.get(skin);
+        if (bufferBuilder != null) {
+            return bufferBuilder;
+        }
+        bufferBuilder = cachingBuilders.computeIfAbsent(skin, SkinRenderObjectBuilder::new);
+        pendingBuilders.put(skin, bufferBuilder);
+        return bufferBuilder;
+    }
+
+    @Override
+    public void end() {
+        super.end();
+        if (pendingBuilders.isEmpty()) {
             return;
         }
-        Object key = SkinCache.borrowKey(part.getId(), part.requirements(scheme));
-        ArrayList<CompiledTask> compiledTasks = cachingTasks.getIfPresent(key);
-        if (compiledTasks != null) {
-            SkinCache.returnKey(key);
-            if (shouldRender) {
-                compiledTasks.forEach(compiledTask -> pendingTasks.add(new RenderTask(compiledTask, matrixStack, light, partialTicks)));
-            }
-            return;
+        Pipeline pipeline = new Pipeline();
+        for (SkinRenderObjectBuilder builder : pendingBuilders.values()) {
+            builder.endBatch(pipeline);
         }
-        MatrixStack matrixStack1 = new MatrixStack();
-        ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
-        part.forEach((renderType, quads) -> {
-            BufferBuilder builder = new BufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
-            builder.begin(renderType.mode(), renderType.format());
-            quads.forEach(quad -> quad.render(part, scheme, matrixStack1, builder));
-            builder.end();
-            CompiledTask compiledTask = new CompiledTask(renderType, builder);
-            mergedTasks.add(compiledTask);
-            buildingTasks.add(compiledTask);
-            if (shouldRender) {
-                pendingTasks.add(new RenderTask(compiledTask, matrixStack, light, partialTicks));
-            }
+        pendingBuilders.clear();
+        pipeline.end();
+
+        pendingBuilders2.forEach((key, value) -> {
+            key.setupRenderState();
+            value.end();
+            WorldVertexBufferUploader.end(value);
+            key.clearRenderState();
         });
-        cachingTasks.put(key, mergedTasks);
+        pendingBuilders2.clear();
     }
 
-    public void addShapeData(Vector3f origin, MatrixStack matrixStack) {
-        IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-//        RenderUtils.drawBoundingBox(matrixStack, box, color, SkinRenderBuffer.getInstance());
-        RenderUtils.drawPoint(matrixStack, origin, 2, buffer);
-    }
 
-    public void addShapeData(Rectangle3f box, Color color, MatrixStack matrixStack) {
-        IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderUtils.drawPoint(matrixStack, null, box.getWidth(), box.getHeight(), box.getDepth(), buffer);
-        RenderUtils.drawBoundingBox(matrixStack, box, color, buffer);
-    }
+    public abstract static class Pass {
 
-    public void endBatch(SkinVertexBufferBuilder2.Batch batch) {
-        if (buildingTasks.size() != 0) {
-            combineAndUpload();
-            buildingTasks.clear();
-        }
-        if (pendingTasks.size() != 0) {
-            pendingTasks.forEach(batch::add);
-            pendingTasks.clear();
-        }
-    }
+        public abstract int getLightmap();
 
-    private void combineAndUpload() {
-        int totalRenderedBytes = 0;
-        SkinVertexBufferObject vertexBuffer = new SkinVertexBufferObject();
-        ArrayList<ByteBuffer> byteBuffers = new ArrayList<>();
+        public abstract int getVertexOffset();
 
-        for (CompiledTask compiledTask : buildingTasks) {
-            VertexFormat format = compiledTask.renderType.format();
-            Pair<BufferBuilder.DrawState, ByteBuffer> pair = compiledTask.bufferBuilder.popNextBuffer();
-            ByteBuffer byteBuffer = pair.getSecond();
-            compiledTask.vertexBuffer = vertexBuffer;
-            compiledTask.vertexCount = byteBuffer.remaining() / format.getVertexSize();
-            compiledTask.vertexOffset = totalRenderedBytes;
-            compiledTask.bufferBuilder = null;
-            byteBuffers.add(byteBuffer);
-            totalRenderedBytes += byteBuffer.remaining();
-        }
+        public abstract int getVertexCount();
 
-        ByteBuffer mergedByteBuffer = ByteBuffer.allocateDirect(totalRenderedBytes);
-        for (ByteBuffer byteBuffer : byteBuffers) {
-            mergedByteBuffer.put(byteBuffer);
-        }
-        mergedByteBuffer.rewind();
-        vertexBuffer.upload(mergedByteBuffer);
-    }
+        public abstract Matrix4f getMatrix();
 
-    static class CompiledTask {
+        public abstract RenderType getRenderType();
 
-        final RenderType renderType;
-        int vertexCount;
-        int vertexOffset;
-        BufferBuilder bufferBuilder;
-        SkinVertexBufferObject vertexBuffer;
+        public abstract float getPolygonOffset();
 
-        CompiledTask(RenderType renderType, BufferBuilder bufferBuilder) {
-            this.renderType = renderType;
-            this.bufferBuilder = bufferBuilder;
-        }
+        public abstract SkinRenderObject getVertexBuffer();
 
-        void close() {
-            vertexBuffer.close();
+        public void render(SkinRenderType renderType, int index, int maxVertexCount) {
+            SkinLightBufferObject lightBuffer = null;
+            SkinRenderObject vertexBuffer = getVertexBuffer();
+
+            float polygonOffset = getPolygonOffset();
+            if (AWConfig.enablePolygonOffset && polygonOffset != 0) {
+                RenderSystem.enablePolygonOffset();
+                RenderSystem.polygonOffset(-0.01f + polygonOffset, -0.01f);
+            }
+
+            if (renderType.usesLight()) {
+                lightBuffer = SkinLightBufferObject.getLightBuffer(getLightmap());
+                lightBuffer.ensureCapacity(maxVertexCount);
+                lightBuffer.bind();
+                lightBuffer.getFormat().setupBufferState(0L);
+            }
+
+            vertexBuffer.bind();
+            renderType.format().setupBufferState(getVertexOffset());
+
+            vertexBuffer.draw(getMatrix(), renderType.mode(), getVertexCount());
+
+            renderType.format().clearBufferState();
+
+            if (lightBuffer != null) {
+                lightBuffer.getFormat().clearBufferState();
+            }
+
+            if (AWConfig.enablePolygonOffset && polygonOffset != 0) {
+                RenderSystem.disablePolygonOffset();
+                RenderSystem.polygonOffset(0f, 0f);
+            }
         }
     }
 
-    static class RenderTask implements SkinRenderTask {
+    public static class Pipeline {
 
-        int lightmap;
-        float partialTicks;
+        private final Map<RenderType, ArrayList<Pass>> tasks = new HashMap<>();
+        private int maxVertexCount = 0;
 
-        Matrix4f matrix;
-        CompiledTask compiledTask;
+        public void add(Pass pass) {
+            tasks.computeIfAbsent(pass.getRenderType(), k -> new ArrayList<>()).add(pass);
+            maxVertexCount = Math.max(maxVertexCount, pass.getVertexCount());
+        }
 
-        RenderTask(CompiledTask compiledTask, MatrixStack matrixStack, int lightmap, float partialTicks) {
-            super();
-            this.compiledTask = compiledTask;
-            this.matrix = matrixStack.last().pose().copy();
-            this.lightmap = lightmap;
-            this.partialTicks = partialTicks;
+        public void end() {
+            if (tasks.isEmpty()) {
+                return;
+            }
+            setupRenderState();
+
+            int index = 0;
+            for (SkinRenderType renderType : SkinRenderType.RENDER_ORDERING_FACES) {
+                ArrayList<Pass> pendingPasses = tasks.get(renderType);
+                if (pendingPasses == null || pendingPasses.isEmpty()) {
+                    continue;
+                }
+                renderType.setupRenderState();
+                for (Pass pass : pendingPasses) {
+                    pass.render(renderType, index++, maxVertexCount);
+                }
+                renderType.clearRenderState();
+            }
+
+            clearRenderState();
+        }
+
+        private void setupRenderState() {
+            RenderSystem.enableRescaleNormal();
+
+            if (AWConfig.enableWireframeRender) {
+                RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+            }
+        }
+
+        private void clearRenderState() {
+            if (AWConfig.enableWireframeRender) {
+                RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+            }
+
+            RenderSystem.disableRescaleNormal();
+            SkinRenderObject.unbind();
+        }
+    }
+
+    public static class Merger extends RenderType {
+
+        protected Merger(String name, VertexFormat format, int mode, int bufferSize) {
+            super(name, format, mode, bufferSize, false, false, Merger::noop, Merger::noop);
+        }
+
+        protected static void noop() {
         }
 
         @Override
-        public RenderType getRenderType() {
-            return compiledTask.renderType;
+        public void end(BufferBuilder builder, int p_228631_2_, int p_228631_3_, int p_228631_4_) {
+            if (builder.building()) {
+                builder.end();
+            }
         }
 
         @Override
-        public int getVertexOffset() {
-            return compiledTask.vertexOffset;
-        }
-
-        @Override
-        public int getVertexCount() {
-            return compiledTask.vertexCount;
-        }
-
-        @Override
-        public SkinVertexBufferObject getVertexBuffer() {
-            return compiledTask.vertexBuffer;
-        }
-
-        @Override
-        public Matrix4f getMatrix() {
-            return matrix;
-        }
-
-        @Override
-        public int getLightmap() {
-            return lightmap;
+        public String toString() {
+            return "RenderType[Merger[Skin]]";
         }
     }
 }

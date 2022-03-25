@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
-import moe.plushie.armourers_workshop.core.api.common.skin.ICubeColour;
+import moe.plushie.armourers_workshop.api.skin.ICubeColour;
 
 import java.awt.*;
 import java.util.Arrays;

@@ -1,14 +1,14 @@
 package moe.plushie.armourers_workshop.core.handler;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.base.AWItems;
+import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.AWItems;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinUsedCounter;
+import moe.plushie.armourers_workshop.core.skin.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.utils.KeyBindings;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
@@ -170,13 +170,13 @@ public class ItemTooltipHandler {
         }
         ItemStack itemStack = event.getStack();
         MatrixStack matrixStack = event.getMatrixStack();
-        BakedSkin bakedSkin = BakedSkin.of(itemStack);
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        BakedSkin bakedSkin = BakedSkin.of(descriptor);
         if (bakedSkin == null) {
             return;
         }
 
         int x, y;
-        int t = (int) System.currentTimeMillis();
         int size = AWConfig.skinPreSize;
         if (AWConfig.skinPreLocFollowMouse) {
             x = event.getX() - 28 - size;
@@ -193,7 +193,8 @@ public class ItemTooltipHandler {
         if (AWConfig.skinPreDrawBackground) {
             GuiUtils.drawContinuousTexturedBox(matrixStack, RenderUtils.TEX_GUI_PREVIEW, x, y, 0, 0, size, size, 62, 62, 4, 400);
         }
-        IRenderTypeBuffer.Impl renderTypeBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
+        int t = (int) System.currentTimeMillis();
+        IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         matrixStack.pushPose();
         matrixStack.translate(x + size / 2f, y + size / 2f, 500f);
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(150));
@@ -201,8 +202,8 @@ public class ItemTooltipHandler {
         matrixStack.scale(0.625f, 0.625f, 0.625f);
         matrixStack.scale(size, size, size);
         matrixStack.scale(-1, 1, 1);
-        SkinItemRenderer.renderSkin(bakedSkin, 0, 0xf000f0, matrixStack, renderTypeBuffer);
+        SkinItemRenderer.renderSkin(bakedSkin, descriptor.getColorScheme(), 0, 0xf000f0, matrixStack, buffers);
         matrixStack.popPose();
-        renderTypeBuffer.endBatch();
+        buffers.endBatch();
     }
 }

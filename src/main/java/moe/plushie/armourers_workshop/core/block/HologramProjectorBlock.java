@@ -3,7 +3,11 @@ package moe.plushie.armourers_workshop.core.block;
 import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
-import net.minecraft.block.*;
+import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.state.BooleanProperty;
@@ -67,10 +71,9 @@ public class HologramProjectorBlock extends HorizontalFaceBlock {
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         }
-        AWContainerOpener.open(HologramProjectorContainer.TYPE, player, IWorldPosCallable.create(world, pos));
+        AWContainerTypes.open(AWContainerTypes.HOLOGRAM_PROJECTOR, player, IWorldPosCallable.create(world, pos));
         return ActionResultType.CONSUME;
     }
-
 
     @Override
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean p_196243_5_) {

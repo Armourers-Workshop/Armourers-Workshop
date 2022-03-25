@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.render.layer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import moe.plushie.armourers_workshop.client.ClientWardrobeHandler;
+import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.utils.AWContributors;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -25,28 +25,22 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
     }
 
     @Override
-    public void render(MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffers, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (entity.isInvisible()) {
             return;
         }
         matrixStack.pushPose();
 
-        // apply the model baby scale.
         EntityModel<?> entityModel = getParentModel();
-        if (entityModel.young && entityModel instanceof BipedModel<?>) {
-            BipedModel<?> bipedModel = (BipedModel<?>) entityModel;
-            float scale = 1.0f / bipedModel.babyBodyScale;
-            matrixStack.scale(scale, scale, scale);
-            matrixStack.translate(0.0f, bipedModel.bodyYOffset / 16.0f, 0.0f);
-        }
+        ClientWardrobeHandler.onRenderArmorPre(entity, entityModel, packedLightIn, matrixStack, buffers);
 
         // render the contributor
         AWContributors.Contributor contributor = AWContributors.by(entity);
         if (contributor != null) {
-            renderMagicCircle(matrixStack, renderTypeBuffer, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color);
+            renderMagicCircle(matrixStack, buffers, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color);
         }
 
-        ClientWardrobeHandler.onRenderArmor(entity, entityModel, packedLightIn, matrixStack, renderTypeBuffer);
+        ClientWardrobeHandler.onRenderArmor(entity, entityModel, packedLightIn, matrixStack, buffers);
 
         matrixStack.popPose();
     }

@@ -2,15 +2,15 @@ package moe.plushie.armourers_workshop.core.render.bake;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import moe.plushie.armourers_workshop.core.api.ISkinCube;
-import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
-import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
+import moe.plushie.armourers_workshop.api.skin.ISkinCube;
+import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
+import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
@@ -103,7 +103,11 @@ public class ColouredFace {
         int color = resolvedColor.getRGB();
         byte[][] vertexes = FACE_VERTEXES[direction.get3DDataValue()];
         for (int i = 0; i < 4; ++i) {
-            builder.vertex(x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2]).color(color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff, alpha & 0xff).uv(paintType.getU() / 256.0f, paintType.getV() / 256.0f).normal(vertexes[4][0], vertexes[4][1], vertexes[4][2]).endVertex();
+            builder.vertex(x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
+                    .color(color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff, alpha & 0xff)
+                    .uv(paintType.getU() / 256.0f, paintType.getV() / 256.0f)
+                    .normal(vertexes[4][0], vertexes[4][1], vertexes[4][2])
+                    .endVertex();
         }
     }
 

@@ -1,15 +1,13 @@
 package moe.plushie.armourers_workshop.core.container;
 
-import moe.plushie.armourers_workshop.core.base.AWBlocks;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
-import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.core.utils.ContainerTypeBuilder;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.init.common.AWBlocks;
+import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,21 +19,14 @@ import org.apache.logging.log4j.util.Strings;
 
 public class SkinnableContainer extends Container {
 
-    public static final ContainerType<SkinnableContainer> TYPE = ContainerTypeBuilder
-            .create(SkinnableContainer::new, IWorldPosCallable.class)
-            .withTitle(TranslateUtils.title("inventory.armourers_workshop.skinnable"))
-            .withDataProvider(AWDataSerializers::readWorldPos, AWDataSerializers::writeWorldPos)
-            .build("skinnable");
-
+    private final IWorldPosCallable pos;
     private String title;
     private int row;
     private int colum;
-
-    private final IWorldPosCallable pos;
     private IInventory inventory;
 
     public SkinnableContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable worldPos) {
-        super(TYPE, containerId);
+        super(AWContainerTypes.SKINNABLE, containerId);
         this.pos = worldPos;
         SkinnableTileEntity tileEntity = getEntity();
         if (tileEntity == null) {

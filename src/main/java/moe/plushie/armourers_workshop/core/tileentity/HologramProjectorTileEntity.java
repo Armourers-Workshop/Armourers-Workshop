@@ -2,15 +2,14 @@ package moe.plushie.armourers_workshop.core.tileentity;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
-import moe.plushie.armourers_workshop.core.AWConstants;
-import moe.plushie.armourers_workshop.core.base.AWTileEntities;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.AWTileEntities;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import net.minecraft.block.BlockState;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -25,7 +24,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 
 @SuppressWarnings("NullableProblems")
-public class HologramProjectorTileEntity extends RotableTileEntity {
+public class HologramProjectorTileEntity extends RotableContainerTileEntity {
 
     private static final ImmutableMap<?, Vector3f> FACING_TO_ROT = new ImmutableMap.Builder<Object, Vector3f>()
             .put(Pair.of(AttachFace.CEILING, Direction.EAST), new Vector3f(180, 270, 0))
@@ -224,10 +223,6 @@ public class HologramProjectorTileEntity extends RotableTileEntity {
 
     public float getModelScale() {
         return modelScale;
-    }
-
-    public IInventory getInventory() {
-        return this;
     }
 
     @Override

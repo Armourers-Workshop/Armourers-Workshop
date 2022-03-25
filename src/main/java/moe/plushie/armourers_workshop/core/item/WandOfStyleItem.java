@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.item;
 import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
+import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,7 +39,7 @@ public class WandOfStyleItem extends FlavouredItem {
     private void openGUI(PlayerEntity player, Entity entity) {
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null && wardrobe.getProfile().isEditable()) {
-            AWContainerOpener.open(SkinWardrobeContainer.TYPE, player, wardrobe);
+            AWContainerTypes.open(AWContainerTypes.WARDROBE, player, wardrobe);
         }
     }
 }

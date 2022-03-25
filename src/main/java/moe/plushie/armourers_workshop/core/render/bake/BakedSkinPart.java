@@ -1,7 +1,8 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
-import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.api.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
 import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
@@ -87,6 +88,13 @@ public class BakedSkinPart {
 
     public CustomVoxelShape getRenderShape() {
         return quads.getRenderShape();
+    }
+
+    public float getRenderPolygonOffset() {
+        if (part instanceof TexturePart) {
+            return -0.2f;
+        }
+        return getType().getRenderPolygonOffset();
     }
 
     public SkinProperties getProperties() {

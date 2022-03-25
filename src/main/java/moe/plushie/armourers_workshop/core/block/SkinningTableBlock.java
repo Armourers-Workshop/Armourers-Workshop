@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.block;
 import moe.plushie.armourers_workshop.core.container.SkinningTableContainer;
 import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -29,33 +30,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @SuppressWarnings("NullableProblems")
-public class SkinningTableBlock extends HorizontalBlock {
+public class SkinningTableBlock extends AbstractHorizontalBlock {
 
     public SkinningTableBlock(AbstractBlock.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
-    }
-
-    @Override
-    public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
-        return true;
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
-
-    @Nullable
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        for(Direction direction : context.getNearestLookingDirections()) {
-            if (direction.getAxis() == Direction.Axis.Y) {
-                return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
-            } else {
-                return this.defaultBlockState().setValue(FACING, direction.getOpposite());
-            }
-        }
-        return null;
     }
 
     @Override
@@ -63,15 +41,7 @@ public class SkinningTableBlock extends HorizontalBlock {
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         }
-        AWContainerOpener.open(SkinningTableContainer.TYPE, player, IWorldPosCallable.create(world, pos));
+        AWContainerTypes.open(AWContainerTypes.SKINNING_TABLE, player, IWorldPosCallable.create(world, pos));
         return ActionResultType.CONSUME;
-    }
-
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable IBlockReader world, List<ITextComponent> tooltips, ITooltipFlag flags) {
-        super.appendHoverText(itemStack, world, tooltips, flags);
-        tooltips.add(TranslateUtils.subtitle(getDescriptionId() + ".flavour"));
     }
 }

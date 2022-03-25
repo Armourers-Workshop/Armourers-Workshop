@@ -1,11 +1,22 @@
 package moe.plushie.armourers_workshop.core.render.layer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.render.SkinRenderData;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
+import moe.plushie.armourers_workshop.core.utils.AWContributors;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
+import moe.plushie.armourers_workshop.init.common.AWEntities;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.model.Model;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -24,35 +35,31 @@ public class DelegateBipedArmorLayer<T extends LivingEntity, M extends BipedMode
     @Override
     public void render(MatrixStack matrixStack, IRenderTypeBuffer buffers, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         armorLayer.render(matrixStack, buffers, packedLightIn, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
-//        renderArmorSkin(matrixStack, buffers, packedLightIn, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
+//        renderArmorSkin(entity, innerModel, packedLightIn, matrixStack, buffers);
     }
 
-    protected void renderArmorSkin(MatrixStack matrixStack, IRenderTypeBuffer buffers, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (wardrobeLayer != null || entity.isInvisible()) {
-            return;
-        }
-        matrixStack.pushPose();
-
-//        entity.getArmorSlots().forEach();
-
-        RenderUtils.drawPoint(matrixStack, buffers);
-//        this.renderArmorPiece(p_225628_1_, p_225628_2_, p_225628_4_, EquipmentSlotType.CHEST, p_225628_3_, this.getArmorModel(EquipmentSlotType.CHEST));
-//        this.renderArmorPiece(p_225628_1_, p_225628_2_, p_225628_4_, EquipmentSlotType.LEGS, p_225628_3_, this.getArmorModel(EquipmentSlotType.LEGS));
-//        this.renderArmorPiece(p_225628_1_, p_225628_2_, p_225628_4_, EquipmentSlotType.FEET, p_225628_3_, this.getArmorModel(EquipmentSlotType.FEET));
-//        this.renderArmorPiece(p_225628_1_, p_225628_2_, p_225628_4_, EquipmentSlotType.HEAD, p_225628_3_, this.getArmorModel(EquipmentSlotType.HEAD));
-
-//        // apply the model baby scale.
-//        EntityModel<?> entityModel = getParentModel();
-//        if (entityModel.young && entityModel instanceof BipedModel<?>) {
-//            BipedModel<?> bipedModel = (BipedModel<?>) entityModel;
-//            float scale = 1.0f / bipedModel.babyBodyScale;
-//            matrixStack.scale(scale, scale, scale);
-//            matrixStack.translate(0.0f, bipedModel.bodyYOffset / 16.0f, 0.0f);
+//    protected void renderArmorSkin(T entity, A model, int packedLightIn, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+//        if (wardrobeLayer != null || entity.isInvisible()) {
+//            return;
 //        }
-//        ClientWardrobeHandler.onRenderArmor(entity, entityModel, packedLightIn, matrixStack, renderTypeBuffer);
-
-        matrixStack.popPose();
-    }
+//        float f = 1 / 16f;
+//        SkinRenderData renderData = SkinRenderData.of(entity);
+//        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(EntityType.ZOMBIE); // bip
+//        if (renderData == null || renderer == null) {
+//            return;
+//        }
+//        matrixStack.pushPose();
+//        matrixStack.scale(f, f, f);
+//
+//        ClientWardrobeHandler.onRenderArmorPre(entity, model, packedLightIn, matrixStack, buffers);
+//
+//        float partialTicks = System.currentTimeMillis() % 100000000;
+//        for (BakedSkin bakedSkin : renderData.getArmorSkins()) {
+//            renderer.render(entity, model, bakedSkin, renderData.getColorScheme(), null, packedLightIn, partialTicks, matrixStack, buffers);
+//        }
+//
+//        matrixStack.popPose();
+//    }
 
 
     public SkinWardrobeLayer<T, ?> getWardrobeLayer() {

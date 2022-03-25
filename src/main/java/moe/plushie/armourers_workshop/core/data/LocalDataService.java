@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.data;
 
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
-import moe.plushie.armourers_workshop.core.AWConstants;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
