@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize.v14;
 
-import moe.plushie.armourers_workshop.core.api.ISkinType;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;

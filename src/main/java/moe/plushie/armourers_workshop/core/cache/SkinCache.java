@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.cache;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder;
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderObjectBuilder;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 
 import javax.annotation.Nullable;
@@ -17,7 +17,7 @@ public class SkinCache {
     private final static ArrayDeque<Key> POOL = new ArrayDeque<>();
 
     public static SkinCache INSTANCE = new SkinCache();
-    public Map<Skin, SkinVertexBufferBuilder> bufferBuilders = new HashMap<>();
+    public Map<Skin, SkinRenderObjectBuilder> bufferBuilders = new HashMap<>();
 
     public static Object borrowKey(Object... objects) {
         Key key = POOL.poll();
@@ -36,12 +36,12 @@ public class SkinCache {
         }
     }
 
-    public void cache(Skin key, SkinVertexBufferBuilder buffer) {
+    public void cache(Skin key, SkinRenderObjectBuilder buffer) {
         bufferBuilders.put(key, buffer);
     }
 
     @Nullable
-    public SkinVertexBufferBuilder cache(Skin key) {
+    public SkinRenderObjectBuilder cache(Skin key) {
         return bufferBuilders.get(key);
     }
 

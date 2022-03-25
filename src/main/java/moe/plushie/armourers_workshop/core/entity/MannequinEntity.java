@@ -1,7 +1,8 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import moe.plushie.armourers_workshop.core.AWConstants;
-import moe.plushie.armourers_workshop.core.base.AWItems;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
+import moe.plushie.armourers_workshop.init.common.AWItems;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
@@ -198,7 +199,7 @@ public class MannequinEntity extends ArmorStandEntity {
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null) {
-            AWContainerOpener.open(SkinWardrobeContainer.TYPE, player, wardrobe);
+            AWContainerTypes.open(AWContainerTypes.WARDROBE, player, wardrobe);
         }
         return ActionResultType.SUCCESS;
     }

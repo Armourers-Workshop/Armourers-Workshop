@@ -1,9 +1,10 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.core.AWConstants;
-import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.api.painting.IPaintColorProvider;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.tileentity.ColourMixerTileEntity;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
@@ -111,9 +112,9 @@ public abstract class ColoredItem extends FlavouredItem {
     public boolean pickColor(@Nullable PlayerEntity player, World worldIn, BlockPos pos, ItemStack itemStack) {
         if (player != null && player.isShiftKeyDown()) {
             TileEntity tileEntity = worldIn.getBlockEntity(pos);
-            if (tileEntity instanceof ColourMixerTileEntity) {
-                PaintColor color = ((ColourMixerTileEntity) tileEntity).getColor();
-                ColoredItem.setColor(itemStack, color);
+            if (tileEntity instanceof IPaintColorProvider) {
+                IPaintColor color = ((IPaintColorProvider) tileEntity).getColor();
+                ColoredItem.setColor(itemStack, PaintColor.of(color));
                 return true;
             }
         }

@@ -1,8 +1,9 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
@@ -204,6 +205,9 @@ public class ColorUtils {
 //        return new Color(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, 255);
     }
 
+    public static Color parseColor(INBT nbt) {
+        return Color.BLACK;
+    }
 
     // #[A]RGB or 0x[A]RGB
     public static Color parseColor(String colorString) {

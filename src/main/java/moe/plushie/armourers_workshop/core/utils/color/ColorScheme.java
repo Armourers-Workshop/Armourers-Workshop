@@ -1,9 +1,16 @@
 package moe.plushie.armourers_workshop.core.utils.color;
 
 import com.google.common.collect.Iterables;
-import moe.plushie.armourers_workshop.core.api.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDye;
+import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
+import moe.plushie.armourers_workshop.api.skin.ISkinDye;
+import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintType;
+import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.utils.ColorUtils;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -26,6 +33,21 @@ public class ColorScheme implements ISkinDye {
     public ColorScheme() {
     }
 
+    public ColorScheme(CompoundNBT nbt) {
+        for (String key : nbt.getAllKeys()) {
+            SkinPaintType paintType = SkinPaintTypes.byName(key);
+            if (paintType != SkinPaintTypes.NONE && nbt.contains(key, Constants.NBT.TAG_INT)) {
+                colors.put(paintType, PaintColor.of(nbt.getInt(key)));
+            }
+        }
+    }
+
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = new CompoundNBT();
+        colors.forEach((paintType, paintColor) -> nbt.putInt(paintType.getRegistryName().toString(), paintColor.getValue()));
+        return nbt;
+    }
+
     public ColorScheme copy() {
         ColorScheme scheme = new ColorScheme();
         scheme.colors.putAll(colors);
@@ -35,6 +57,9 @@ public class ColorScheme implements ISkinDye {
     }
 
     public boolean isEmpty() {
+        if (this == EMPTY) {
+            return true;
+        }
         if (reference != null && !reference.isEmpty()) {
             return false;
         }
@@ -82,6 +107,10 @@ public class ColorScheme implements ISkinDye {
     }
 
     public void setReference(ColorScheme reference) {
+        // referring empty scheme not have any effect.
+        if (reference != null && reference.isEmpty()) {
+            reference = null;
+        }
         if (!Objects.equals(this.reference, reference)) {
             this.reference = reference;
             this.resolvedColors = null;
@@ -92,6 +121,10 @@ public class ColorScheme implements ISkinDye {
     private HashMap<ISkinPaintType, PaintColor> getResolvedColors() {
         HashMap<ISkinPaintType, PaintColor> resolvedColors = new HashMap<>();
         HashMap<ISkinPaintType, ArrayList<ISkinPaintType>> dependencies = new HashMap<>();
+        // build all reference dependencies
+        if (reference != null) {
+            resolvedColors.putAll(reference.getResolvedColors());
+        }
         // build all item dependencies
         Iterables.concat(colors.entrySet(), getReference().colors.entrySet()).forEach(e -> {
             ISkinPaintType paintType = e.getKey();
@@ -116,93 +149,6 @@ public class ColorScheme implements ISkinDye {
         return resolvedColors;
     }
 
-
-
-//    @Override
-//    public void writeToBuf(ByteBuf buf) {
-//        for (int i = 0; i < MAX_SKIN_DYES; i++) {
-//            buf.writeBoolean(hasDye[i]);
-//            if (hasDye[i]) {
-//                buf.writeBytes(dyes[i]);
-//                if (!StringUtils.isNullOrEmpty(names[i])) {
-//                    buf.writeBoolean(true);
-////                    ByteBufUtils.writeUTF8String(buf, names[i]);
-//                } else {
-//                    buf.writeBoolean(false);
-//                }
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public void readFromBuf(ByteBuf buf) {
-//        for (int i = 0; i < MAX_SKIN_DYES; i++) {
-//            hasDye[i] = buf.readBoolean();
-//            if (hasDye[i]) {
-//                buf.readBytes(dyes[i]);
-//                if (buf.readBoolean()) {
-////                    names[i] = ByteBufUtils.readUTF8String(buf);
-//                }
-//            }
-//        }
-//    }
-//
-//    // TODO: IMP
-//    public NBTTagCompound writeToCompound(NBTTagCompound compound) {
-//        NBTTagCompound dyeCompound = new NBTTagCompound();
-//        for (int i = 0; i < MAX_SKIN_DYES; i++) {
-//            if (hasDye[i]) {
-//                dyeCompound.setByte(TAG_DYE + i + TAG_RED, dyes[i][0]);
-//                dyeCompound.setByte(TAG_DYE + i + TAG_GREEN, dyes[i][1]);
-//                dyeCompound.setByte(TAG_DYE + i + TAG_BLUE, dyes[i][2]);
-//                dyeCompound.setByte(TAG_DYE + i + TAG_TYPE, dyes[i][3]);
-//                if (!StringUtils.isNullOrEmpty(names[i])) {
-//                    dyeCompound.setString(TAG_NAME + i, names[i]);
-//                }
-//            }
-//        }
-//        compound.setTag(TAG_SKIN_DYE, dyeCompound);
-//        return compound;
-//    }
-//
-//    public void readFromCompound(NBTTagCompound compound) {
-//        NBTTagCompound dyeCompound = compound.getCompoundTag(TAG_SKIN_DYE);
-//        for (int i = 0; i < MAX_SKIN_DYES; i++) {
-//            // Load old dye code.
-//            if (dyeCompound.hasKey(TAG_DYE + i, Constants.NBT.TAG_BYTE_ARRAY)) {
-//                dyes[i] = dyeCompound.getByteArray(TAG_DYE + i);
-//
-//                if (dyes[i].length == 4) {
-//                    hasDye[i] = true;
-//                } else {
-//                    dyes[i] = new byte[] {0,0,0,0};
-//                }
-//                if (dyeCompound.hasKey(TAG_NAME + i, NBT.TAG_STRING)) {
-//                    names[i] = dyeCompound.getString(TAG_NAME + i);
-//                }
-//            }
-//            // End old dye loading code.
-//            if (dyeCompound.hasKey(TAG_DYE + i + TAG_RED, Constants.NBT.TAG_BYTE)) {
-//                if (dyeCompound.hasKey(TAG_DYE + i + TAG_GREEN, Constants.NBT.TAG_BYTE)) {
-//                    if (dyeCompound.hasKey(TAG_DYE + i + TAG_BLUE, Constants.NBT.TAG_BYTE)) {
-//                        if (dyeCompound.hasKey(TAG_DYE + i + TAG_TYPE, Constants.NBT.TAG_BYTE)) {
-//                            dyes[i] = new byte[] {0,0,0,0};
-//                            hasDye[i] = true;
-//                            dyes[i][0] = dyeCompound.getByte(TAG_DYE + i + TAG_RED);
-//                            dyes[i][1] = dyeCompound.getByte(TAG_DYE + i + TAG_GREEN);
-//                            dyes[i][2] = dyeCompound.getByte(TAG_DYE + i + TAG_BLUE);
-//                            dyes[i][3] = dyeCompound.getByte(TAG_DYE + i + TAG_TYPE);
-//                            if (dyeCompound.hasKey(TAG_NAME + i, NBT.TAG_STRING)) {
-//                                names[i] = dyeCompound.getString(TAG_NAME + i);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -225,6 +171,6 @@ public class ColorScheme implements ISkinDye {
 
     @Override
     public String toString() {
-        return "[" + colors + "]";
+        return "[" + getResolvedColors() + "]";
     }
 }

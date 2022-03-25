@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.core.network.packet.RequestFilePacket;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
@@ -31,8 +30,8 @@ public class SkinLoader {
     private int queueCount = 1;
     private final ArrayList<LoadingTask> working = new ArrayList<>();
     private final ArrayList<LoadingTask> pending = new ArrayList<>();
-    private final HashMap<SkinDescriptor, LoadingTask> tasks = new HashMap<>();
-    private final DataLoader<SkinDescriptor, Skin> manager = DataLoader.newBuilder()
+    private final HashMap<String, LoadingTask> tasks = new HashMap<>();
+    private final DataLoader<String, Skin> manager = DataLoader.newBuilder()
             .threadPool(1)
             .build(this::loadSkinFileIfNeeded);
 
@@ -46,12 +45,15 @@ public class SkinLoader {
         if (descriptor.isEmpty()) {
             return null;
         }
-        return getSkin(descriptor);
+        return getSkin(descriptor.getIdentifier());
     }
 
     @Nullable
-    public Skin getSkin(SkinDescriptor descriptor) {
-        Optional<Skin> skin = manager.get(descriptor);
+    public Skin getSkin(String identifier) {
+        if (identifier.isEmpty()) {
+            return null;
+        }
+        Optional<Skin> skin = manager.get(identifier);
         if (skin != null && skin.isPresent()) {
             return skin.get();
         }
@@ -69,62 +71,64 @@ public class SkinLoader {
     }
 
     @Nullable
-    public Skin loadSkin(SkinDescriptor descriptor) {
-        Optional<Skin> skin = manager.getOrLoad(descriptor);
+    public Skin loadSkin(String identifier) {
+        if (identifier.isEmpty()) {
+            return null;
+        }
+        Optional<Skin> skin = manager.getOrLoad(identifier);
         if (skin != null && skin.isPresent()) {
             return skin.get();
         }
         return null;
     }
 
-    public void loadSkin(SkinDescriptor descriptor, @Nullable Consumer<Optional<Skin>> consumer) {
-        manager.load(descriptor, false, consumer);
+    public void loadSkin(String identifier, @Nullable Consumer<Optional<Skin>> consumer) {
+        manager.load(identifier, false, consumer);
     }
 
-    public SkinDescriptor cacheSkin(SkinDescriptor descriptor, Skin skin) {
-        String identifier = descriptor.getIdentifier();
+    public String cacheSkin(String identifier, Skin skin) {
         if (identifier.startsWith("db:")) {
-            return descriptor;
+            return identifier;
         }
-        identifier = LocalDataService.getInstance().addFile(skin);
-        if (identifier != null) {
-            descriptor = new SkinDescriptor("db:" + identifier, descriptor.getType(), descriptor.getColorScheme());
-            manager.put(descriptor, Optional.of(skin));
+        String newIdentifier = LocalDataService.getInstance().addFile(skin);
+        if (newIdentifier != null) {
+            identifier = "db:" + newIdentifier;
+            manager.put(identifier, Optional.of(skin));
         }
-        return descriptor;
+        return identifier;
     }
 
     public void clear() {
         manager.clear();
     }
 
-    private void loadSkinFileIfNeeded(SkinDescriptor descriptor, @Nullable Consumer<Optional<Skin>> complete) {
+    private void loadSkinFileIfNeeded(String identifier, @Nullable Consumer<Optional<Skin>> complete) {
         if (!LocalDataService.isRunning()) {
-            addTask(descriptor, complete);
+            addTask(identifier, complete);
             return;
         }
-        Optional<Skin> skin = loadSkinFile(descriptor, () -> DataManager.getInstance().loadSkinData(descriptor));
+        Optional<Skin> skin = loadSkinFile(identifier, () -> DataManager.getInstance().loadSkinData(identifier));
         if (complete != null) {
             complete.accept(skin);
         }
     }
 
-    private Optional<Skin> loadSkinFile(SkinDescriptor descriptor, Supplier<Optional<ByteBuf>> buffer) {
-        AWLog.debug("Parsing skin from data: {} ", descriptor);
+    private Optional<Skin> loadSkinFile(String identifier, Supplier<Optional<ByteBuf>> buffer) {
+        AWLog.debug("Parsing skin from data: {} ", identifier);
         Optional<Skin> skin = buffer.get().map(buf1 -> SkinIOUtils.loadSkinFromStream(new ByteArrayInputStream(buf1.array())));
-        manager.put(descriptor, skin);
+        manager.put(identifier, skin);
         return skin;
     }
 
-    private void addTask(SkinDescriptor descriptor, @Nullable Consumer<Optional<Skin>> complete) {
-        LoadingTask task = tasks.computeIfAbsent(descriptor, LoadingTask::new);
+    private void addTask(String identifier, @Nullable Consumer<Optional<Skin>> complete) {
+        LoadingTask task = tasks.computeIfAbsent(identifier, LoadingTask::new);
         if (complete != null) {
             task.listeners.add(complete);
         }
         if (!working.contains(task)) {
             int index = pending.indexOf(task);
             if (index < 0) {
-                AWLog.debug("Add loading task: {}", task.descriptor);
+                AWLog.debug("Add loading task: {}", task.resource);
             }
             pending.add(0, task);
 
@@ -133,7 +137,7 @@ public class SkinLoader {
     }
 
     private void finishTask(LoadingTask task) {
-        AWLog.debug("Finish loading task: {}", task.descriptor);
+        AWLog.debug("Finish loading task: {}", task.resource);
         manager.add(() -> {
             ArrayList<Consumer<Optional<Skin>>> listeners = new ArrayList<>(task.listeners);
             ByteBuf buffer = Unpooled.buffer(task.receivedSize);
@@ -143,16 +147,16 @@ public class SkinLoader {
             });
             task.clear();
             removeTask(task);
-            Optional<Skin> skin = loadSkinFile(task.descriptor, () -> Optional.of(buffer));
+            Optional<Skin> skin = loadSkinFile(task.resource, () -> Optional.of(buffer));
             listeners.forEach(t -> t.accept(skin));
         });
     }
 
     private void removeTask(LoadingTask task) {
-        AWLog.debug("Remove loading task: {}", task.descriptor);
+        AWLog.debug("Remove loading task: {}", task.resource);
         working.remove(task);
         pending.remove(task);
-        tasks.remove(task.descriptor);
+        tasks.remove(task.resource);
         task.clear();
         runTask();
     }
@@ -167,13 +171,13 @@ public class SkinLoader {
         LoadingTask task = pending.remove(0);
         working.add(task);
         task.resume();
-        AWLog.debug("Start loading task: {}", task.descriptor);
+        AWLog.debug("Start loading task: {}", task.resource);
     }
 
     public class LoadingTask {
 
         private final int id;
-        private final SkinDescriptor descriptor;
+        private final String resource;
         private final ArrayList<Consumer<Optional<Skin>>> listeners = new ArrayList<>();
 
         private final HashMap<Integer, ByteBuf> receivedBuffers = new HashMap<>();
@@ -182,9 +186,9 @@ public class SkinLoader {
         private boolean isRunning = false;
         private boolean isFinish = false;
 
-        public LoadingTask(SkinDescriptor descriptor) {
+        public LoadingTask(String resource) {
             this.id = COUNTER.incrementAndGet();
-            this.descriptor = descriptor;
+            this.resource = resource;
         }
 
         public void append(int offset, int total, ByteBuf buf) {
@@ -203,7 +207,7 @@ public class SkinLoader {
                 return;
             }
             isRunning = true;
-            NetworkHandler.getInstance().sendToServer(new RequestFilePacket(id, descriptor));
+            NetworkHandler.getInstance().sendToServer(new RequestFilePacket(id, resource));
         }
 
         public void clear() {

@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.skin;
 
-import moe.plushie.armourers_workshop.core.api.ISkinArmorType;
-import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.api.ISkinToolType;
-import moe.plushie.armourers_workshop.core.api.ISkinType;
+import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;

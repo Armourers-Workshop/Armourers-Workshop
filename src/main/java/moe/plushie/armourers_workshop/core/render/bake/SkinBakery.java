@@ -1,18 +1,17 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
-import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder2;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinUsedCounter;
-import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
-import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.DataLoader;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
+import moe.plushie.armourers_workshop.core.skin.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -46,7 +45,7 @@ public final class SkinBakery {
     public static void stop() {
         if (RUNNING != null) {
             RUNNING.manager.clear();
-            SkinVertexBufferBuilder2.clearAllCache();
+            SkinVertexBufferBuilder.clearAllCache();
             RUNNING = null;
         }
     }
@@ -56,7 +55,7 @@ public final class SkinBakery {
 
     private final ArrayList<IBakeListener> listeners = new ArrayList<>();
 
-    private final DataLoader<SkinDescriptor, BakedSkin> manager = DataLoader.newBuilder()
+    private final DataLoader<String, BakedSkin> manager = DataLoader.newBuilder()
             .threadPool(1)
             .build(this::loadAndBakeSkin);
 
@@ -76,7 +75,7 @@ public final class SkinBakery {
     @OnlyIn(Dist.CLIENT)
     @FunctionalInterface
     public interface IBakeListener {
-        void didBake(SkinDescriptor descriptor, BakedSkin bakedSkin);
+        void didBake(String identifier, BakedSkin bakedSkin);
     }
 
 
@@ -95,30 +94,12 @@ public final class SkinBakery {
 //        FMLCommonHandler.instance().bus().register(this);
     }
 
-//    @Nullable
-//    public BakedEntityTexture getEntityTexture(@Nullable ResourceLocation texture) {
-//        if (texture != null) {
-//            Optional<BakedEntityTexture> bakedTexture = textureManager.get(texture);
-//            if (bakedTexture != null && bakedTexture.isPresent()) {
-//                return bakedTexture.get();
-//            }
-//        }
-//        return null;
-//    }
-//
-//    public void loadEntityTexture(@Nullable ResourceLocation texture, Consumer<Optional<BakedEntityTexture>> consumer) {
-//        if (texture != null) {
-//            textureManager.load(texture, false, consumer);
-//        }
-//    }
-
-
     @Nullable
-    public BakedSkin getSkin(SkinDescriptor descriptor) {
-        if (descriptor.isEmpty()) {
+    public BakedSkin getSkin(String identifier) {
+        if (identifier.isEmpty()) {
             return null;
         }
-        Optional<BakedSkin> skin = manager.get(descriptor);
+        Optional<BakedSkin> skin = manager.get(identifier);
         if (skin != null && skin.isPresent()) {
             return skin.get();
         }
@@ -126,34 +107,34 @@ public final class SkinBakery {
     }
 
     @Nullable
-    public BakedSkin loadSkin(SkinDescriptor descriptor) {
-        if (descriptor.isEmpty()) {
+    public BakedSkin loadSkin(String identifier) {
+        if (identifier.isEmpty()) {
             return null;
         }
-        Optional<BakedSkin> skin = manager.getOrLoad(descriptor);
+        Optional<BakedSkin> skin = manager.getOrLoad(identifier);
         if (skin != null && skin.isPresent()) {
             return skin.get();
         }
         return null;
     }
 
-    public void loadSkin(SkinDescriptor descriptor, Consumer<Optional<BakedSkin>> consumer) {
-        manager.load(descriptor, true, consumer);
+    public void loadSkin(String identifier, Consumer<Optional<BakedSkin>> consumer) {
+        manager.load(identifier, true, consumer);
     }
 
-    private void loadAndBakeSkin(SkinDescriptor descriptor, Consumer<Optional<BakedSkin>> complete) {
-        SkinLoader.getInstance().loadSkin(descriptor, skin -> {
+    private void loadAndBakeSkin(String identifier, Consumer<Optional<BakedSkin>> complete) {
+        SkinLoader.getInstance().loadSkin(identifier, skin -> {
             Skin skin1 = skin.orElse(null);
             if (skin1 != null) {
-                manager.add(() -> bakeSkin(skin1, descriptor, complete));
+                manager.add(() -> bakeSkin(identifier, skin1, complete));
             } else {
                 complete.accept(Optional.empty());
             }
         });
     }
 
-    private void bakeSkin(Skin skin, SkinDescriptor descriptor, Consumer<Optional<BakedSkin>> complete) {
-        AWLog.debug("Start baking task: {}", descriptor);
+    private void bakeSkin(String identifier, Skin skin, Consumer<Optional<BakedSkin>> complete) {
+        AWLog.debug("Start baking task: {}", identifier);
         long startTime = System.currentTimeMillis();
 //            skin.lightHash();
 //            int extraDyes = SkinPaintTypes.getInstance().getExtraChannels();
@@ -213,11 +194,11 @@ public final class SkinBakery {
 //            }
 //            bakeTimes.set(index, (int) totalTime);
 
-        BakedSkin bakedSkin = new BakedSkin(descriptor, skin, scheme, usedCounter, colorInfo, bakedParts);
+        BakedSkin bakedSkin = new BakedSkin(identifier, skin, scheme, usedCounter, colorInfo, bakedParts);
         complete.accept(Optional.of(bakedSkin));
 
-        listeners.forEach(listener -> listener.didBake(descriptor, bakedSkin));
-        AWLog.debug("Finish baking task: {}", descriptor);
+        listeners.forEach(listener -> listener.didBake(identifier, bakedSkin));
+        AWLog.debug("Finish baking task: {}", identifier);
     }
 
     public void getModel(ResourceLocation location) {

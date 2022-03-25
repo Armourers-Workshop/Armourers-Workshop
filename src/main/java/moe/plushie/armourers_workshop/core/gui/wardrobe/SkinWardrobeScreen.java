@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.init.common.AWConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabController;
 import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;

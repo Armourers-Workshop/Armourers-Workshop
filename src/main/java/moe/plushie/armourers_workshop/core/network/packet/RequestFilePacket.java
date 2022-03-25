@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.network.packet;
 import io.netty.buffer.ByteBuf;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -18,29 +17,29 @@ public class RequestFilePacket extends CustomPacket {
     public final int MAX_SIZE = 30 * 1024; // 30k
 
     private final int id;
-    private final SkinDescriptor descriptor;
+    private final String resource;
 
-    public RequestFilePacket(int id, SkinDescriptor descriptor) {
+    public RequestFilePacket(int id, String resource) {
         this.id = id;
-        this.descriptor = descriptor;
+        this.resource = resource;
     }
 
     public RequestFilePacket(PacketBuffer buffer) {
         this.id = buffer.readInt();
-        this.descriptor = new SkinDescriptor(buffer.readUtf());
+        this.resource = buffer.readUtf();
     }
 
     @Override
     public void encode(PacketBuffer buffer) {
         buffer.writeInt(id);
-        buffer.writeUtf(descriptor.getIdentifier());
+        buffer.writeUtf(resource);
     }
 
     @Override
     public void accept(ServerPlayNetHandler netHandler, ServerPlayerEntity player) {
-        AWLog.debug("Process skin request: {}", descriptor);
-        DataManager.getInstance().loadSkinData(descriptor, buffer -> {
-            AWLog.debug("Response skin data: {}", descriptor);
+        AWLog.debug("Process skin request: {}", resource);
+        DataManager.getInstance().loadSkinData(resource, buffer -> {
+            AWLog.debug("Response skin data: {}", resource);
             for (CustomPacket packet : buildResponsePacket(buffer.orElse(null))) {
                 NetworkHandler.getInstance().sendTo(packet, player);
             }

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.model;
 
-import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.init.common.AWConfig;
 import moe.plushie.armourers_workshop.core.render.bake.ColouredFace;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;

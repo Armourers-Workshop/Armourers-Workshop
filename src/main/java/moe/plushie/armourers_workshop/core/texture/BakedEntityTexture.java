@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.texture;
 
-import moe.plushie.armourers_workshop.core.api.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;

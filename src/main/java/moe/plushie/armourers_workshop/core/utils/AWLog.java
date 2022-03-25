@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.init.common.AWCore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.part.chest;
 
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPartTypeTextured;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartTypeTextured;
+import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
@@ -58,8 +58,8 @@ public class ChestPartType extends SkinPartType implements ISkinPartTypeTextured
     }
 
     @Override
-    public Rectangle3i getItemRenderTextureBounds() {
-        return new Rectangle3i(-4, 0, -2, 8, 12, 4);
+    public float getRenderPolygonOffset() {
+        return -0.01f;
     }
 
     @Override

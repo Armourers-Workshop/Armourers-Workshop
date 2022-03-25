@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.crafting.recipe;
 
-import moe.plushie.armourers_workshop.core.base.AWItems;
+import moe.plushie.armourers_workshop.init.common.AWItems;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.minecraft.item.ItemStack;
 

@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
+import moe.plushie.armourers_workshop.init.common.AWCore;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -9,6 +11,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.INameable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -16,6 +19,7 @@ import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public final class ContainerTypeBuilder<C extends Container, I> {
 
@@ -55,11 +59,16 @@ public final class ContainerTypeBuilder<C extends Container, I> {
         this.deserializer = deserializer;
         return this;
     }
+    public ContainerTypeBuilder<C, I> withDataSerializer(IDataSerializer<I> serializer) {
+//        this.serializer = serializer;
+//        this.deserializer = deserializer;
+        return this;
+    }
 
     public ContainerType<C> build(String id) {
         ContainerType<C> containerType = IForgeContainerType.create(this::fromNetwork);
         containerType.setRegistryName(AWCore.getModId(), id);
-        AWContainerOpener.register(containerType, this::open);
+//        AWContainerTypes.register(containerType, this::open);
         return containerType;
     }
 

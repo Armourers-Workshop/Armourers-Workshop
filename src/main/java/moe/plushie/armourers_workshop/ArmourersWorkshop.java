@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop;
 
 
-import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.capability.WardrobeProvider;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobeProvider;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
-import moe.plushie.armourers_workshop.core.registry.AWRegistry;
+import moe.plushie.armourers_workshop.init.common.AWRegistry;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import net.minecraft.block.Block;
@@ -81,7 +81,7 @@ public class ArmourersWorkshop {
         Entity entity = event.getObject();
         EntityProfile profile = EntityProfiles.getProfile(entity);
         if (profile != null) {
-            event.addCapability(WardrobeProvider.WARDROBE_ID, new WardrobeProvider(entity, profile));
+            event.addCapability(SkinWardrobeProvider.WARDROBE_ID, new SkinWardrobeProvider(entity, profile));
         }
     }
 

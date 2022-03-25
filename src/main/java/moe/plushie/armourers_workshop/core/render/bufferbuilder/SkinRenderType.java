@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.render.bufferbuilder;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
-import moe.plushie.armourers_workshop.core.api.ISkinCube;
+import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.core.utils.PaintingUtils;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.renderer.RenderState;
@@ -69,6 +69,10 @@ public class SkinRenderType extends RenderType {
         } else {
             return SOLID_FACE;
         }
+    }
+
+    public static RenderState colorOffset() {
+        return COLORS_OFFSET;
     }
 
     private static RenderType createEntityOutline() {

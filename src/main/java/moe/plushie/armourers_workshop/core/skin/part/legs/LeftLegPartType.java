@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.part.legs;
 
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinPartTypeTextured;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartTypeTextured;
+import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
@@ -58,8 +58,8 @@ public class LeftLegPartType extends SkinPartType implements ISkinPartTypeTextur
     }
 
     @Override
-    public Rectangle3i getItemRenderTextureBounds() {
-        return new Rectangle3i(0, 12, -2, 4, 12, 4);
+    public float getRenderPolygonOffset() {
+        return -0.02f;
     }
 
     @Override

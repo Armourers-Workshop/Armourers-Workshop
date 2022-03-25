@@ -1,17 +1,14 @@
 package moe.plushie.armourers_workshop.core.container;
 
-import moe.plushie.armourers_workshop.core.base.AWBlocks;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
-import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.core.utils.ContainerTypeBuilder;
-import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.init.common.AWBlocks;
+import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,19 +18,13 @@ import net.minecraft.world.World;
 @SuppressWarnings("NullableProblems")
 public class SkinningTableContainer extends Container {
 
-    public static final ContainerType<SkinningTableContainer> TYPE = ContainerTypeBuilder
-            .create(SkinningTableContainer::new, IWorldPosCallable.class)
-            .withTitle(TranslateUtils.title("inventory.armourers_workshop.skinning-table"))
-            .withDataProvider(AWDataSerializers::readWorldPos, AWDataSerializers::writeWorldPos)
-            .build("skinning-table");
-
     private final IInventory craftingInventory = new Inventory(2);
     private final IInventory craftingResultInventory = new Inventory(1);
 
     private final IWorldPosCallable access;
 
     public SkinningTableContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
-        super(TYPE, containerId);
+        super(AWContainerTypes.SKINNING_TABLE, containerId);
         this.access = access;
         this.addPlayerSlots(playerInventory, 8, 94);
         this.addInputSlot(craftingInventory, 0, 37, 22);

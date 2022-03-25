@@ -1,9 +1,8 @@
 package moe.plushie.armourers_workshop.core.render.skin;
 
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.core.render.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.capability.SkinWardrobeState;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,21 +17,21 @@ public class PlayerSkinRenderer<T extends LivingEntity, M extends PlayerModel<T>
     }
 
     @Override
-    protected void applyOverriders(T entity, M model, SkinWardrobe wardrobe, SkinWardrobeState snapshot) {
-        super.applyOverriders(entity, model, wardrobe, snapshot);
-        if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
+    protected void applyOverriders(T entity, M model, SkinRenderData renderData) {
+        super.applyOverriders(entity, model, renderData);
+        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
             addOverrider(model.leftSleeve);
         }
-        if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
+        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
             addOverrider(model.rightSleeve);
         }
-        if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_CHEST)) {
+        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_CHEST)) {
             addOverrider(model.jacket);
         }
-        if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_LEG) || snapshot.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
+        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_LEG) || renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
             addOverrider(model.leftPants);
         }
-        if (snapshot.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_LEG) || snapshot.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
+        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_LEG) || renderData.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
             addOverrider(model.rightPants);
         }
     }

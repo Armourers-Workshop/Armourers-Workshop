@@ -2,14 +2,16 @@ package moe.plushie.armourers_workshop.core.skin;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import moe.plushie.armourers_workshop.core.AWConstants;
-import moe.plushie.armourers_workshop.core.api.ISkinToolType;
-import moe.plushie.armourers_workshop.core.api.ISkinType;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinDescriptor;
-import moe.plushie.armourers_workshop.core.base.AWItems;
+import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
+import moe.plushie.armourers_workshop.init.common.AWItems;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +32,12 @@ public class SkinDescriptor implements ISkinDescriptor {
         this(identifier, SkinTypes.UNKNOWN, ColorScheme.EMPTY);
     }
 
+    public SkinDescriptor(SkinDescriptor descriptor, ColorScheme colorScheme) {
+        this.identifier = descriptor.getIdentifier();
+        this.type = descriptor.getType();
+        this.colorScheme = colorScheme;
+    }
+
     public SkinDescriptor(String identifier, ISkinType type, ColorScheme colorScheme) {
         this.identifier = identifier;
         this.type = type;
@@ -39,7 +47,7 @@ public class SkinDescriptor implements ISkinDescriptor {
     public SkinDescriptor(CompoundNBT nbt) {
         this.identifier = nbt.getString(AWConstants.NBT.SKIN_IDENTIFIER);
         this.type = SkinTypes.byName(nbt.getString(AWConstants.NBT.SKIN_TYPE));
-        this.colorScheme = new ColorScheme();
+        this.colorScheme = AWDataSerializers.getColorScheme(nbt, AWConstants.NBT.SKIN_DYE, ColorScheme.EMPTY);
     }
 
     public static SkinDescriptor of(ItemStack itemStack) {
@@ -59,6 +67,12 @@ public class SkinDescriptor implements ISkinDescriptor {
         return descriptor;
     }
 
+    public static void setDescriptor(ItemStack itemStack, SkinDescriptor descriptor) {
+        if (!itemStack.isEmpty()) {
+            itemStack.addTagElement(AWConstants.NBT.SKIN, descriptor.serializeNBT());
+        }
+    }
+
     public boolean accept(ItemStack itemStack) {
         if (itemStack.isEmpty() || isEmpty()) {
             return false;
@@ -74,6 +88,7 @@ public class SkinDescriptor implements ISkinDescriptor {
         CompoundNBT nbt = new CompoundNBT();
         nbt.putString(AWConstants.NBT.SKIN_TYPE, type.getRegistryName().toString());
         nbt.putString(AWConstants.NBT.SKIN_IDENTIFIER, identifier);
+        AWDataSerializers.putColorScheme(nbt, AWConstants.NBT.SKIN_DYE, colorScheme, ColorScheme.EMPTY);
         return nbt;
     }
 
@@ -82,7 +97,7 @@ public class SkinDescriptor implements ISkinDescriptor {
             return ItemStack.EMPTY;
         }
         ItemStack itemStack = new ItemStack(AWItems.SKIN);
-        itemStack.addTagElement(AWConstants.NBT.SKIN, serializeNBT());
+        setDescriptor(itemStack, this);
         return itemStack;
     }
 

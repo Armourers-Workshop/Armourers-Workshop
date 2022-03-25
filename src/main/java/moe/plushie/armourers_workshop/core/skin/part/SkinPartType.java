@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.part;
 
-import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3i;
@@ -62,11 +62,6 @@ public abstract class SkinPartType implements ISkinPartType {
     @Override
     public Vector3i getRenderOffset() {
         return new Vector3i(0, 0, 0);
-    }
-
-    @Override
-    public Rectangle3i getItemRenderTextureBounds() {
-        return null;
     }
 
 

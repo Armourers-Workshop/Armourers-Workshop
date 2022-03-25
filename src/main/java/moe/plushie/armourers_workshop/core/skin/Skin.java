@@ -1,11 +1,9 @@
 package moe.plushie.armourers_workshop.core.skin;
 
-import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.api.ISkinCube;
-import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.api.ISkinType;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkin;
-import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.api.skin.ISkinCube;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
@@ -177,9 +175,6 @@ public class Skin implements ISkin {
     public boolean isModelOverridden(ISkinPartType partType) {
         for (SkinPart part : parts) {
             if (part.getType() == partType) {
-                if (!AWConfig.shouldRenderPart(part)) {
-                    return false;
-                }
                 return part.getType().isModelOverridden(properties);
             }
         }

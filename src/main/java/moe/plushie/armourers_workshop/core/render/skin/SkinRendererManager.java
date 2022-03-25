@@ -84,7 +84,25 @@ public class SkinRendererManager {
         if (lastEntityType != null && lastEntityType.equals(entityType)) {
             return (SkinRenderer<T, M>) lastRenderer;
         }
-        SkinRenderer<?, ?> renderer = renderers.get(entity.getType());
+        SkinRenderer<?, ?> renderer = renderers.get(entityType);
+        if (renderer != null) {
+            lastEntityType = entityType;
+            lastRenderer = renderer;
+            return (SkinRenderer<T, M>) renderer;
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public <T extends Entity, M extends Model> SkinRenderer<T, M> getRenderer(@Nullable EntityType<?> entityType) {
+        if (entityType == null) {
+            return null;
+        }
+        if (lastEntityType != null && lastEntityType.equals(entityType)) {
+            return (SkinRenderer<T, M>) lastRenderer;
+        }
+        SkinRenderer<?, ?> renderer = renderers.get(entityType);
         if (renderer != null) {
             lastEntityType = entityType;
             lastRenderer = renderer;

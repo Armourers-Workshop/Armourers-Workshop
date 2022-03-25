@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.data;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import moe.plushie.armourers_workshop.core.AWCore;
+import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWLog;
 
@@ -25,9 +25,8 @@ public class DataManager {
     private final ExecutorService executorService = Executors.newFixedThreadPool(1);
 
 
-    public Optional<ByteBuf> loadSkinData(SkinDescriptor descriptor) {
-        AWLog.debug("Load skin data: {} ", descriptor);
-        String identifier = descriptor.getIdentifier();
+    public Optional<ByteBuf> loadSkinData(String identifier) {
+        AWLog.debug("Load skin data: {} ", identifier);
         InputStream stream = null;
         if (identifier.startsWith("db:")) {
             stream = LocalDataService.getInstance().getFile(identifier.substring(3));
@@ -49,8 +48,8 @@ public class DataManager {
         return Optional.empty();
     }
 
-    public void loadSkinData(SkinDescriptor descriptor, Consumer<Optional<ByteBuf>> consumer) {
-        executorService.submit(() -> consumer.accept(loadSkinData(descriptor)));
+    public void loadSkinData(String identifier, Consumer<Optional<ByteBuf>> consumer) {
+        executorService.submit(() -> consumer.accept(loadSkinData(identifier)));
     }
 
     @Nullable

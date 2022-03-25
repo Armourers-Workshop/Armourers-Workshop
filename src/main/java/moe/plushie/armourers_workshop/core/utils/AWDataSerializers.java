@@ -1,13 +1,18 @@
 package moe.plushie.armourers_workshop.core.utils;
 
+import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.FloatNBT;
+import net.minecraft.nbt.IntNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.IWorldPosCallable;
@@ -88,32 +93,32 @@ public class AWDataSerializers {
         }
     };
 
-
-    @Nullable
-    public static IWorldPosCallable readWorldPos(PlayerEntity player, PacketBuffer buffer) {
-        if (player.level == null) {
-            return null;
+    public static final IPlayerDataSerializer<SkinWardrobe> ENTITY_WARDROBE = new IPlayerDataSerializer<SkinWardrobe>() {
+        public void write(PacketBuffer buffer, PlayerEntity player, SkinWardrobe wardrobe) {
+            buffer.writeInt(wardrobe.getId());
         }
-        BlockPos pos = buffer.readBlockPos();
-        return IWorldPosCallable.create(player.level, pos);
-    }
 
-    public static void writeWorldPos(IWorldPosCallable callable, PacketBuffer buffer) {
-        Optional<BlockPos> pos1 = callable.evaluate((world, pos) -> pos);
-        buffer.writeBlockPos(pos1.orElse(BlockPos.ZERO));
-    }
-
-    @Nullable
-    public static SkinWardrobe readEntityWardrobe(PlayerEntity player, PacketBuffer buffer) {
-        if (player.level == null) {
-            return null;
+        public SkinWardrobe read(PacketBuffer buffer, PlayerEntity player) {
+            if (player == null || player.level == null) {
+                return null;
+            }
+            return SkinWardrobe.of(player.level.getEntity(buffer.readInt()));
         }
-        return SkinWardrobe.of(player.level.getEntity(buffer.readInt()));
-    }
+    };
 
-    public static void writeEntityWardrobe(SkinWardrobe wardrobe, PacketBuffer buffer) {
-        buffer.writeInt(wardrobe.getId());
-    }
+    public static final IPlayerDataSerializer<IWorldPosCallable> WORLD_POS = new IPlayerDataSerializer<IWorldPosCallable>() {
+        public void write(PacketBuffer buffer, PlayerEntity player, IWorldPosCallable callable) {
+            Optional<BlockPos> pos1 = callable.evaluate((world, pos) -> pos);
+            buffer.writeBlockPos(pos1.orElse(BlockPos.ZERO));
+        }
+
+        public IWorldPosCallable read(PacketBuffer buffer, PlayerEntity player) {
+            if (player == null || player.level == null) {
+                return null;
+            }
+            return IWorldPosCallable.create(player.level, buffer.readBlockPos());
+        }
+    };
 
     public static Vector3i getVector3i(CompoundNBT nbt, String key) {
         ListNBT listNBT = nbt.getList(key, Constants.NBT.TAG_INT);
@@ -262,6 +267,18 @@ public class AWDataSerializers {
         return defaultValue;
     }
 
+    public static ColorScheme getColorScheme(CompoundNBT nbt, String key, ColorScheme defaultValue) {
+        if (nbt.contains(key, Constants.NBT.TAG_COMPOUND)) {
+            return new ColorScheme(nbt.getCompound(key));
+        }
+        return defaultValue;
+    }
+
+    public static void putColorScheme(CompoundNBT nbt, String key, ColorScheme value, ColorScheme defaultValue) {
+        if (!value.equals(defaultValue)) {
+            nbt.put(key, value.serializeNBT());
+        }
+    }
 
     public static void putSkinDescriptor(CompoundNBT nbt, String key, SkinDescriptor value, SkinDescriptor defaultValue) {
         if (!value.equals(defaultValue)) {

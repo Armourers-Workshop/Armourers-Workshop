@@ -1,15 +1,12 @@
 package moe.plushie.armourers_workshop.core.container;
 
-import moe.plushie.armourers_workshop.core.base.AWBlocks;
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
-import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.core.utils.ContainerTypeBuilder;
-import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.init.common.AWBlocks;
+import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -19,12 +16,6 @@ import net.minecraft.world.World;
 @SuppressWarnings("NullableProblems")
 public class HologramProjectorContainer extends Container {
 
-    public static final ContainerType<HologramProjectorContainer> TYPE = ContainerTypeBuilder
-            .create(HologramProjectorContainer::new, IWorldPosCallable.class)
-            .withTitle(TranslateUtils.title("inventory.armourers_workshop.hologram-projector"))
-            .withDataProvider(AWDataSerializers::readWorldPos, AWDataSerializers::writeWorldPos)
-            .build("hologram-projector");
-
     private final IWorldPosCallable pos;
 
     private final PlayerInventory playerInventory;
@@ -32,7 +23,7 @@ public class HologramProjectorContainer extends Container {
     private int group;
 
     public HologramProjectorContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable worldPos) {
-        super(TYPE, containerId);
+        super(AWContainerTypes.HOLOGRAM_PROJECTOR, containerId);
         this.pos = worldPos;
         this.playerInventory = playerInventory;
         this.inventory = getInventory();

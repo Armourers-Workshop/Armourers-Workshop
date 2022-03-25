@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.part.wings;
 
-import moe.plushie.armourers_workshop.core.api.action.ICanRotation;
-import moe.plushie.armourers_workshop.core.api.common.skin.ISkinProperties;
+import moe.plushie.armourers_workshop.api.action.ICanRotation;
+import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
 import net.minecraft.util.math.vector.Vector3i;
@@ -27,6 +27,11 @@ public class RightWingPartType extends SkinPartType implements ICanRotation {
     @Override
     public Vector3i getRenderOffset() {
         return new Vector3i(0, 0, 2);
+    }
+
+    @Override
+    public float getRenderPolygonOffset() {
+        return -0.1f;
     }
 
     @Override

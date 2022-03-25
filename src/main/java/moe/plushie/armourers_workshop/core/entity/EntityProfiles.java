@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import moe.plushie.armourers_workshop.core.AWConfig;
-import moe.plushie.armourers_workshop.core.api.ISkinType;
-import moe.plushie.armourers_workshop.core.base.AWEntities;
+import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.init.common.AWEntities;
 import moe.plushie.armourers_workshop.core.render.skin.*;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import net.minecraft.client.renderer.model.Model;
@@ -124,7 +124,7 @@ public class EntityProfiles {
         register(EntityType.CHICKEN, EntityProfiles.CHICKEN, () -> ChickenSkinRenderer::new);
         register(EntityType.ARROW, EntityProfiles.ARROW, () -> ArrowSkinRenderer::new);
 
-        register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
+//        register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
 //        register(EntityType.IRON_GOLEM, EntityProfiles.MANNEQUIN, () -> IronGolemSkinRenderer::new);
 
         register(AWEntities.MANNEQUIN, EntityProfiles.MANNEQUIN, () -> PlayerSkinRenderer::new);

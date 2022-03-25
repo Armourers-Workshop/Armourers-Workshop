@@ -32,10 +32,10 @@ public class SkinningRecipes {
         recipes.add(new SkinningArmourRecipe(SkinTypes.ARMOR_LEGS));
         recipes.add(new SkinningArmourRecipe(SkinTypes.ARMOR_FEET));
 
-        recipes.add(new SkinningContainerRecipe(SkinTypes.ARMOR_HEAD));
-        recipes.add(new SkinningContainerRecipe(SkinTypes.ARMOR_CHEST));
-        recipes.add(new SkinningContainerRecipe(SkinTypes.ARMOR_LEGS));
-        recipes.add(new SkinningContainerRecipe(SkinTypes.ARMOR_FEET));
+//        recipes.add(new SkinningContainerRecipe(SkinTypes.ARMOR_HEAD));
+//        recipes.add(new SkinningContainerRecipe(SkinTypes.ARMOR_CHEST));
+//        recipes.add(new SkinningContainerRecipe(SkinTypes.ARMOR_LEGS));
+//        recipes.add(new SkinningContainerRecipe(SkinTypes.ARMOR_FEET));
     }
 
     public static ItemStack getRecipeOutput(IInventory inventory) {

@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.tileentity;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
-import moe.plushie.armourers_workshop.core.AWConstants;
-import moe.plushie.armourers_workshop.core.base.AWTileEntities;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.AWTileEntities;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -38,7 +38,8 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.function.Function;
 
-public class SkinnableTileEntity extends RotableTileEntity {
+@SuppressWarnings("NullableProblems")
+public class SkinnableTileEntity extends RotableContainerTileEntity {
 
     private static final BlockPos INVALID = BlockPos.of(-1);
 
@@ -185,6 +186,11 @@ public class SkinnableTileEntity extends RotableTileEntity {
     }
 
     @Override
+    protected void setItems(NonNullList<ItemStack> items) {
+        this.items = items;
+    }
+
+    @Override
     public int getContainerSize() {
         return 9 * 9;
     }
@@ -195,6 +201,7 @@ public class SkinnableTileEntity extends RotableTileEntity {
     }
 
     @Nullable
+    @Override
     public IInventory getInventory() {
         return getParent();
     }
@@ -216,8 +223,8 @@ public class SkinnableTileEntity extends RotableTileEntity {
         Collection<SkinMarker> markers = getMarkers();
         if (markers != null && !markers.isEmpty()) {
             SkinMarker marker = markers.iterator().next();
-            dx = -marker.x / 16.0f;
-            dy = -marker.y / 16.0f;
+            dx = marker.x / 16.0f;
+            dy = marker.y / 16.0f;
             dz = marker.z / 16.0f;
         }
         return new Vector3d(parentPos.getX() + dx, parentPos.getY() + dy, parentPos.getZ() + dz);
@@ -230,7 +237,7 @@ public class SkinnableTileEntity extends RotableTileEntity {
             return parentPos.relative(getBlockState().getValue(SkinnableBlock.FACING));
         }
         SkinMarker marker = markers.iterator().next();
-        return parentPos.offset(-marker.x / 16, -marker.y / 16, marker.z / 16);
+        return parentPos.offset(marker.x / 16, marker.y / 16, marker.z / 16);
     }
 
     public Collection<SkinMarker> getMarkers() {

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.part;
 
-import moe.plushie.armourers_workshop.core.api.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.advanced.AdvancedPartType;
 import moe.plushie.armourers_workshop.core.skin.part.block.BlockPartType;
 import moe.plushie.armourers_workshop.core.skin.part.block.MultiBlockPartType;

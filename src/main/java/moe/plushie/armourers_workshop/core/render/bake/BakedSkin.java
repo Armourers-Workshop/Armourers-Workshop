@@ -2,19 +2,19 @@ package moe.plushie.armourers_workshop.core.render.bake;
 
 import com.google.common.collect.Range;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.api.ISkinPartType;
-import moe.plushie.armourers_workshop.core.api.ISkinType;
-import moe.plushie.armourers_workshop.core.api.action.ICanUse;
-import moe.plushie.armourers_workshop.core.api.client.render.IBakedSkin;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.api.action.ICanUse;
+import moe.plushie.armourers_workshop.api.client.render.IBakedSkin;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
-import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.cube.SkinUsedCounter;
+import moe.plushie.armourers_workshop.core.skin.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.utils.CustomVoxelShape;
@@ -46,8 +46,8 @@ import java.util.Objects;
 @OnlyIn(Dist.CLIENT)
 public class BakedSkin implements IBakedSkin {
 
+    private final String identifier;
     private final Skin skin;
-    private final SkinDescriptor descriptor;
     private final HashMap<Object, Rectangle3f> cachedBounds = new HashMap<>();
     private final HashMap<BlockPos, Rectangle3i> cachedBlockBounds = new HashMap<>();
 
@@ -60,8 +60,8 @@ public class BakedSkin implements IBakedSkin {
     private final ColorScheme preference;
     private final HashMap<Integer, ColorScheme> resolvedColorSchemes = new HashMap<>();
 
-    public BakedSkin(SkinDescriptor descriptor, Skin skin, ColorScheme preference, SkinUsedCounter usedCounter, ColorDescriptor colorDescriptor, ArrayList<BakedSkinPart> bakedParts) {
-        this.descriptor = descriptor;
+    public BakedSkin(String identifier, Skin skin, ColorScheme preference, SkinUsedCounter usedCounter, ColorDescriptor colorDescriptor, ArrayList<BakedSkinPart> bakedParts) {
+        this.identifier = identifier;
         this.skin = skin;
         this.skinParts = bakedParts;
         this.preference = preference;
@@ -82,21 +82,28 @@ public class BakedSkin implements IBakedSkin {
     @Nullable
     public static BakedSkin of(SkinDescriptor descriptor) {
         if (!descriptor.isEmpty()) {
-            return SkinBakery.getInstance().loadSkin(descriptor);
+            return SkinBakery.getInstance().loadSkin(descriptor.getIdentifier());
         }
         return null;
     }
 
 
     public boolean accept(SkinDescriptor other) {
-        return descriptor.equals(other);
+        return identifier.equals(other.getIdentifier());
     }
 
     public boolean accept(ItemStack itemStack) {
-        if (descriptor.getType() == SkinTypes.ITEM) {
-            return !itemStack.isEmpty();
+        if (itemStack.isEmpty()) {
+            return false;
         }
-        return descriptor.accept(itemStack);
+        ISkinType skinType = skin.getType();
+        if (skinType == SkinTypes.ITEM) {
+            return true;
+        }
+        if (skinType instanceof ISkinToolType) {
+            return itemStack.getItem().is(((ISkinToolType) skinType).getTag());
+        }
+        return false;
     }
 
     public ColorScheme resolve(Entity entity, ColorScheme scheme) {
@@ -124,10 +131,6 @@ public class BakedSkin implements IBakedSkin {
 
     public List<BakedSkinPart> getSkinParts() {
         return skinParts;
-    }
-
-    public SkinDescriptor getDescriptor() {
-        return descriptor;
     }
 
     public SkinUsedCounter getUsedCounter() {
@@ -227,5 +230,18 @@ public class BakedSkin implements IBakedSkin {
             }
         }
         return maxUseTick;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BakedSkin bakedSkin = (BakedSkin) o;
+        return identifier.equals(bakedSkin.identifier);
+    }
+
+    @Override
+    public int hashCode() {
+        return identifier.hashCode();
     }
 }

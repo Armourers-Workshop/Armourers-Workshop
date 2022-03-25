@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.render.item;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import moe.plushie.armourers_workshop.core.AWConstants;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
@@ -29,13 +29,11 @@ import javax.annotation.Nullable;
 @OnlyIn(Dist.CLIENT)
 public final class SkinItemRenderer {
 
-    private static ColorScheme entityDye = ColorScheme.EMPTY;
-
-    public static void renderSkin(BakedSkin bakedSkin, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
-        renderSkin(bakedSkin, null, AWConstants.ONE, 1, 1, 1, partialTicks, light, matrixStack, buffers);
+    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+        renderSkin(bakedSkin, scheme, null, AWConstants.ONE, 1, 1, 1, partialTicks, light, matrixStack, buffers);
     }
 
-    public static void renderSkin(BakedSkin bakedSkin, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         Entity entity = SkinItemStackRenderer.getInstance().getMannequinEntity();
         BipedModel<?> model = SkinItemStackRenderer.getInstance().getMannequinModel();
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity);
@@ -53,7 +51,7 @@ public final class SkinItemRenderer {
         matrixStack.scale(newScale / scale.x(), newScale / scale.y(), newScale / scale.z());
         matrixStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
 
-        renderer.render(entity, model, bakedSkin, entityDye, ItemCameraTransforms.TransformType.NONE, light, partialTicks, matrixStack, buffers);
+        renderer.render(entity, model, bakedSkin, scheme, ItemCameraTransforms.TransformType.NONE, light, partialTicks, matrixStack, buffers);
 
         matrixStack.popPose();
     }
@@ -81,9 +79,7 @@ public final class SkinItemRenderer {
         matrixStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
 
         EntityRendererManager rendererManager = Minecraft.getInstance().getEntityRenderDispatcher();
-        IRenderTypeBuffer.Impl renderTypeBufferImp = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderSystem.runAsFancy(() -> rendererManager.render(entity, 0.0d, 0.0d, 0.0d, 0.0f, 1.0f, matrixStack, renderTypeBufferImp, light));
-        renderTypeBufferImp.endBatch();
+        RenderSystem.runAsFancy(() -> rendererManager.render(entity, 0.0d, 0.0d, 0.0d, 0.0f, 1.0f, matrixStack, buffers, light));
 
         matrixStack.popPose();
     }

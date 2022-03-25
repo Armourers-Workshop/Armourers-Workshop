@@ -1,15 +1,17 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import moe.plushie.armourers_workshop.core.AWConfig;
+import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
+import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,6 +31,18 @@ public class SeatEntity extends LivingEntity {
         this.yHeadRot = this.yRot;
         this.maxUpStep = 0.0f;
         this.holdingTick = AWConfig.prefersSeatHoldingTick;
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundNBT nbt) {
+        super.readAdditionalSaveData(nbt);
+        this.blockPos = AWDataSerializers.getBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_REFER, BlockPos.ZERO);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
+        AWDataSerializers.putBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_REFER, blockPos, BlockPos.ZERO);
     }
 
     @Override
@@ -75,7 +89,7 @@ public class SeatEntity extends LivingEntity {
         if (getPassengers().isEmpty()) {
             return false;
         }
-        return level != null && level.getBlockEntity(blockPos) instanceof SkinnableTileEntity;
+        return level != null && blockPos != null && level.getBlockEntity(blockPos) instanceof SkinnableTileEntity;
     }
 
     @Override
@@ -129,14 +143,11 @@ public class SeatEntity extends LivingEntity {
     public void setItemSlot(EquipmentSlotType slotType, ItemStack itemStack) {
     }
 
-    @Override
-    public void setPosRaw(double x, double y, double z) {
-        super.setPosRaw(x, y, z);
-        long i = Math.round(x - 0.5f);
-        long j = Math.round(y - 0.5f);
-        long k = Math.round(z - 0.5f);
-        if (blockPos == null || i != blockPos.getX() || j != blockPos.getY() || k != blockPos.getZ()) {
-            blockPos = new BlockPos(i, j, k);
-        }
+    public void setBlockPos(BlockPos blockPos) {
+        this.blockPos = blockPos;
+    }
+
+    public BlockPos getBlockPos() {
+        return blockPos;
     }
 }

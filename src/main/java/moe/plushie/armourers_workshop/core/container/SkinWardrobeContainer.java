@@ -1,18 +1,15 @@
 package moe.plushie.armourers_workshop.core.container;
 
-import moe.plushie.armourers_workshop.core.AWCore;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.core.utils.ContainerTypeBuilder;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
+import moe.plushie.armourers_workshop.init.common.AWCore;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -23,12 +20,6 @@ import java.util.List;
 @SuppressWarnings("NullableProblems")
 public class SkinWardrobeContainer extends Container {
 
-    public static final ContainerType<SkinWardrobeContainer> TYPE = ContainerTypeBuilder
-            .create(SkinWardrobeContainer::new, SkinWardrobe.class)
-            .withTitle(TranslateUtils.title("inventory.armourers_workshop.wardrobe"))
-            .withDataProvider(AWDataSerializers::readEntityWardrobe, AWDataSerializers::writeEntityWardrobe)
-            .build("wardrobe");
-
     private final SkinWardrobe wardrobe;
     private final ArrayList<Slot> customSlots = new ArrayList<>();
 
@@ -37,7 +28,7 @@ public class SkinWardrobeContainer extends Container {
     private Group group = null;
 
     public SkinWardrobeContainer(int containerId, PlayerInventory inventory, SkinWardrobe wardrobe) {
-        super(TYPE, containerId);
+        super(AWContainerTypes.WARDROBE, containerId);
         this.wardrobe = wardrobe;
 
         addPlayerSlots(inventory);
@@ -145,7 +136,7 @@ public class SkinWardrobeContainer extends Container {
             if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
                 return ItemStack.EMPTY;
             }
-            slot.setChanged();
+            slot.set(ItemStack.EMPTY);
             return itemStack.copy();
         }
         SkinSlotType slotType = SkinSlotType.of(itemStack);
@@ -153,7 +144,7 @@ public class SkinWardrobeContainer extends Container {
         if (!moveItemStackTo(itemStack, startIndex, startIndex + 1, false)) {
             return ItemStack.EMPTY;
         }
-        slot.setChanged();
+        slot.set(ItemStack.EMPTY);
         return ItemStack.EMPTY;
     }
 
