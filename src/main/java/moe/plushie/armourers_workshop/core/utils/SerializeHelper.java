@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.core.utils;
 import com.google.common.base.Charsets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.Level;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -69,8 +69,8 @@ public final class SerializeHelper {
             JsonParser parser = new JsonParser();
             return parser.parse(jsonString);
         } catch (Exception e) {
-            AWLog.error("Error parsing json.");
-            AWLog.error(e.getMessage());
+            ModLog.error("Error parsing json.");
+            ModLog.error(e.getMessage());
             return null;
         }
     }

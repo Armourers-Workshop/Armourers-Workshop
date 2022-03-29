@@ -5,7 +5,7 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 
-public class AWTags {
+public class ModTags {
 
     public static final ITag<Item> SWORDS = forge("swords");
     public static final ITag<Item> SHIELDS = forge("shields");

@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.container;
 
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
-import moe.plushie.armourers_workshop.init.common.AWBlocks;
-import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
+import moe.plushie.armourers_workshop.init.common.ModBlocks;
+import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -24,7 +24,7 @@ public class SkinningTableContainer extends Container {
     private final IWorldPosCallable access;
 
     public SkinningTableContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
-        super(AWContainerTypes.SKINNING_TABLE, containerId);
+        super(ModContainerTypes.SKINNING_TABLE, containerId);
         this.access = access;
         this.addPlayerSlots(playerInventory, 8, 94);
         this.addInputSlot(craftingInventory, 0, 37, 22);
@@ -42,7 +42,7 @@ public class SkinningTableContainer extends Container {
 
     @Override
     public boolean stillValid(PlayerEntity player) {
-        return stillValid(this.access, player, AWBlocks.SKINNING_TABLE);
+        return stillValid(this.access, player, ModBlocks.SKINNING_TABLE);
     }
 
     @Override

@@ -4,11 +4,10 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
-import moe.plushie.armourers_workshop.core.utils.AWContributors;
+import moe.plushie.armourers_workshop.init.common.ModContributors;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.vector.Matrix4f;
@@ -35,7 +34,7 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
         ClientWardrobeHandler.onRenderArmorPre(entity, entityModel, packedLightIn, matrixStack, buffers);
 
         // render the contributor
-        AWContributors.Contributor contributor = AWContributors.by(entity);
+        ModContributors.Contributor contributor = ModContributors.by(entity);
         if (contributor != null) {
             renderMagicCircle(matrixStack, buffers, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color);
         }

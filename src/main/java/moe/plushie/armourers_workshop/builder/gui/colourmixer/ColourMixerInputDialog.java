@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.gui.colourmixer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.gui.widget.AWTextField;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -17,7 +18,7 @@ public class ColourMixerInputDialog extends ColourMixerConfirmDialog {
 
     protected String value;
     protected ITextComponent suggestion;
-    protected TextFieldWidget textField;
+    protected AWTextField textField;
 
     protected ColourMixerInputDialog(ITextComponent title) {
         super(title);
@@ -62,8 +63,8 @@ public class ColourMixerInputDialog extends ColourMixerConfirmDialog {
         super.setFocused(p_231035_1_);
     }
 
-    private TextFieldWidget addTextField(int x, int y, int width, int height) {
-        TextFieldWidget textBox = new TextFieldWidget(font, x, y, width, height, StringTextComponent.EMPTY);
+    private AWTextField addTextField(int x, int y, int width, int height) {
+        AWTextField textBox = new AWTextField(font, x, y, width, height, StringTextComponent.EMPTY);
         textBox.setMaxLength(20);
         if (this.value != null) {
             textBox.setValue(this.value);
@@ -89,10 +90,10 @@ public class ColourMixerInputDialog extends ColourMixerConfirmDialog {
     }
 
     public ITextComponent getSuggestion() {
-        return suggestion;
+        return this.textField.getMessage();
     }
 
     public void setSuggestion(ITextComponent suggestion) {
-        this.suggestion = suggestion;
+        this.textField.setMessage(suggestion);
     }
 }

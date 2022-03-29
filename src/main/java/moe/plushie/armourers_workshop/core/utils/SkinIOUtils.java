@@ -1,14 +1,19 @@
 package moe.plushie.armourers_workshop.core.utils;
 
+import com.mojang.datafixers.util.Pair;
+import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionException;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.StringTextComponent;
+import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -35,11 +40,11 @@ public final class SkinIOUtils {
             saveSkinToStream(fos, skin);
             fos.flush();
         } catch (FileNotFoundException e) {
-            AWLog.warn("Skin file not found.");
+            ModLog.warn("Skin file not found.");
             e.printStackTrace();
             return false;
         } catch (IOException e) {
-            AWLog.error("Skin file save failed.");
+            ModLog.error("Skin file save failed.");
             e.printStackTrace();
             return false;
         }
@@ -52,7 +57,7 @@ public final class SkinIOUtils {
             dos.flush();
             bos.flush();
         } catch (IOException e) {
-            AWLog.error("Skin file save failed.");
+            ModLog.error("Skin file save failed.");
             e.printStackTrace();
             return false;
         }
@@ -79,19 +84,19 @@ public final class SkinIOUtils {
         try (FileInputStream fis = new FileInputStream(file)) {
             skin = loadSkinFromStream(fis);
         } catch (FileNotFoundException e) {
-            AWLog.warn("Skin file not found. {}", file);
+            ModLog.warn("Skin file not found. {}", file);
         } catch (IOException e) {
-            AWLog.error("Skin file load failed.");
+            ModLog.error("Skin file load failed.");
             e.printStackTrace();
         } catch (Exception e) {
-            AWLog.error("Unable to load skin. Unknown error.");
+            ModLog.error("Unable to load skin. Unknown error.");
             e.printStackTrace();
         }
 
         if (skin == null) {
             skin = loadSkinRecovery(file);
             if (skin != null) {
-                AWLog.warn("Loaded skin with recovery system.");
+                ModLog.warn("Loaded skin with recovery system.");
             }
         }
 
@@ -104,16 +109,16 @@ public final class SkinIOUtils {
         try (BufferedInputStream bis = new BufferedInputStream(inputStream); DataInputStream dis = new DataInputStream(bis)) {
             skin = SkinSerializer.readSkinFromStream(dis);
         } catch (IOException e) {
-            AWLog.error("Skin file load failed.");
+            ModLog.error("Skin file load failed.");
             e.printStackTrace();
         } catch (NewerFileVersionException e) {
-            AWLog.error("Can not load skin file it was saved in newer version.");
+            ModLog.error("Can not load skin file it was saved in newer version.");
             e.printStackTrace();
         } catch (InvalidCubeTypeException e) {
-            AWLog.error("Unable to load skin. Unknown cube types found.");
+            ModLog.error("Unable to load skin. Unknown cube types found.");
             e.printStackTrace();
         } catch (Exception e) {
-            AWLog.error("Unable to load skin. Unknown error.");
+            ModLog.error("Unable to load skin. Unknown error.");
             e.printStackTrace();
         }
 
@@ -155,40 +160,40 @@ public final class SkinIOUtils {
         return false;
     }
 
-//    public static ISkinType getTypeNameFromFile(File file) {
-//        DataInputStream stream = null;
-//        ISkinType skinType = null;
-//
-//        try {
-//            stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-//            skinType = SkinSerializer.readSkinTypeNameFromStream(stream);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//            SkinLog.error("File name: " + file.getName());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            SkinLog.error("File name: " + file.getName());
-//        } catch (NewerFileVersionException e) {
-//            e.printStackTrace();
-//            SkinLog.error("File name: " + file.getName());
-//        } catch (Exception e) {
-//            SkinLog.error("Unable to load skin name. Unknown error.");
-//            e.printStackTrace();
-//        } finally {
-//            IOUtils.closeQuietly(stream);
-//        }
-//
-//        if (skinType == null) {
-//            Skin skin = loadSkinRecovery(file);
-//            if (skin != null) {
-//                SkinLog.warn("Loaded skin with recovery system.");
-//                skinType = skin.getType();
-//            }
-//        }
-//
-//        return skinType;
-//    }
-//
+    public static Pair<ISkinType, ISkinProperties>  getTypeNameFromFile(File file) {
+        DataInputStream stream = null;
+        Pair<ISkinType, ISkinProperties> skinType = null;
+
+        try {
+            stream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+            skinType = SkinSerializer.readSkinTypeNameFromStream(stream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            ModLog.error("File name: " + file.getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+            ModLog.error("File name: " + file.getName());
+        } catch (NewerFileVersionException e) {
+            e.printStackTrace();
+            ModLog.error("File name: " + file.getName());
+        } catch (Exception e) {
+            ModLog.error("Unable to load skin name. Unknown error.");
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(stream);
+        }
+
+        if (skinType == null) {
+            Skin skin = loadSkinRecovery(file);
+            if (skin != null) {
+                ModLog.warn("Loaded skin with recovery system.");
+                skinType = Pair.of(skin.getType(), new SkinProperties());
+            }
+        }
+
+        return skinType;
+    }
+
 //    public static void makeDatabaseDirectory() {
 //        File directory = getSkinDatabaseDirectory();
 //        AWLog.debug("Loading skin database at: " + directory.getAbsolutePath());
@@ -340,11 +345,11 @@ public final class SkinIOUtils {
                     if (saveSkinToFile(new File(outputDir, skinFile.getName()), skin)) {
                         successCount++;
                     } else {
-                        AWLog.error("Failed to update skin " + skinFile.getName());
+                        ModLog.error("Failed to update skin " + skinFile.getName());
                         failCount++;
                     }
                 } else {
-                    AWLog.error("Failed to update skin " + skinFile.getName());
+                    ModLog.error("Failed to update skin " + skinFile.getName());
                     failCount++;
                 }
             }

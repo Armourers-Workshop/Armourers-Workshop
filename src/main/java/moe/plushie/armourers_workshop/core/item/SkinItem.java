@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.AWBlocks;
+import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -27,7 +27,7 @@ public class SkinItem extends Item {
 
     public SkinItem(Item.Properties properties) {
         super(properties);
-        this.blockItem = new BlockItem(AWBlocks.SKINNABLE, properties);
+        this.blockItem = new BlockItem(ModBlocks.SKINNABLE, properties);
     }
 
     public static ItemStack replace(ItemStack targetStack, ItemStack sourceStack) {

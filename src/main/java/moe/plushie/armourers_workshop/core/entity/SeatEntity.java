@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
@@ -30,7 +30,7 @@ public class SeatEntity extends LivingEntity {
         this.yRot = 0.0f;
         this.yHeadRot = this.yRot;
         this.maxUpStep = 0.0f;
-        this.holdingTick = AWConfig.prefersSeatHoldingTick;
+        this.holdingTick = ModConfig.prefersSeatHoldingTick;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class SeatEntity extends LivingEntity {
     @Override
     protected void removePassenger(Entity entity) {
         super.removePassenger(entity);
-        this.holdingTick = AWConfig.prefersSeatHoldingTick;
+        this.holdingTick = ModConfig.prefersSeatHoldingTick;
     }
 
     public boolean isWorking() {

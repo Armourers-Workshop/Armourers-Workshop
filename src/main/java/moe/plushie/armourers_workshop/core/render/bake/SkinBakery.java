@@ -9,10 +9,9 @@ import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,26 +28,7 @@ import java.util.function.Consumer;
 @OnlyIn(Dist.CLIENT)
 public final class SkinBakery {
 
-    private static SkinBakery RUNNING;
-
-    @Nonnull
-    public static SkinBakery getInstance() {
-        return Objects.requireNonNull(RUNNING);
-    }
-
-    public static void start() {
-        if (RUNNING == null) {
-            RUNNING = new SkinBakery();
-        }
-    }
-
-    public static void stop() {
-        if (RUNNING != null) {
-            RUNNING.manager.clear();
-            SkinVertexBufferBuilder.clearAllCache();
-            RUNNING = null;
-        }
-    }
+    private static SkinBakery BAKERY;
 
     private final AtomicInteger bakingQueue = new AtomicInteger(0);
     private final AtomicIntegerArray bakeTimes = new AtomicIntegerArray(1000);
@@ -59,9 +39,31 @@ public final class SkinBakery {
             .threadPool(1)
             .build(this::loadAndBakeSkin);
 
-//    private final DataLoader<ResourceLocation, BakedEntityTexture> textureManager = DataLoader.newBuilder()
-//            .threadPool(1)
-//            .build(this::loadAndBakeTexture);
+    public SkinBakery() {
+//        skinBakeExecutor = Executors.newFixedThreadPool(ConfigHandlerClient.modelBakingThreadCount);
+//        skinDownloadExecutor = Executors.newFixedThreadPool(2);
+//        skinCompletion = new ExecutorCompletionService<BakedSkin>(skinBakeExecutor);
+//        FMLCommonHandler.instance().bus().register(this);
+    }
+
+    @Nonnull
+    public static SkinBakery getInstance() {
+        return Objects.requireNonNull(BAKERY);
+    }
+
+    public static void start() {
+        if (BAKERY == null) {
+            BAKERY = new SkinBakery();
+        }
+    }
+
+    public static void stop() {
+        if (BAKERY != null) {
+            BAKERY.manager.clear();
+            BAKERY = null;
+            SkinVertexBufferBuilder.clearAllCache();
+        }
+    }
 
 
     public void addListener(IBakeListener listener) {
@@ -78,21 +80,6 @@ public final class SkinBakery {
         void didBake(String identifier, BakedSkin bakedSkin);
     }
 
-
-    //    @SubscribeEvent
-//    public void onClientTick(TickEvent.ClientTickEvent event) {
-//        if (event.side == Side.CLIENT & event.type == Type.CLIENT & event.phase == Phase.END) {
-//            checkBakery();
-//        }
-//    }
-    private final AtomicInteger bakeTimesIndex = new AtomicInteger(0);
-
-    public SkinBakery() {
-//        skinBakeExecutor = Executors.newFixedThreadPool(ConfigHandlerClient.modelBakingThreadCount);
-//        skinDownloadExecutor = Executors.newFixedThreadPool(2);
-//        skinCompletion = new ExecutorCompletionService<BakedSkin>(skinBakeExecutor);
-//        FMLCommonHandler.instance().bus().register(this);
-    }
 
     @Nullable
     public BakedSkin getSkin(String identifier) {
@@ -134,7 +121,8 @@ public final class SkinBakery {
     }
 
     private void bakeSkin(String identifier, Skin skin, Consumer<Optional<BakedSkin>> complete) {
-        AWLog.debug("Start baking task: {}", identifier);
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+        ModLog.debug("Start baking task: {}", identifier);
         long startTime = System.currentTimeMillis();
 //            skin.lightHash();
 //            int extraDyes = SkinPaintTypes.getInstance().getExtraChannels();
@@ -178,14 +166,6 @@ public final class SkinBakery {
 
         usedCounter.addPaints(colorInfo.getPaintTypes());
 
-
-//            for (int i = 0; i < skin.getParts().size(); i++) {
-//                SkinPart partData = skin.getParts().get(i);
-//                 partData.getClientSkinPartData().setAverageDyeValues(averageR, averageG,
-//                 averageB);
-//            }
-//
-//            skin.setAverageDyeValues(averageR, averageG, averageB);
         long totalTime = System.currentTimeMillis() - startTime;
 //            int index = bakeTimesIndex.getAndIncrement();
 //            if (index > bakeTimes.length() - 1) {
@@ -198,11 +178,7 @@ public final class SkinBakery {
         complete.accept(Optional.of(bakedSkin));
 
         listeners.forEach(listener -> listener.didBake(identifier, bakedSkin));
-        AWLog.debug("Finish baking task: {}", identifier);
-    }
-
-    public void getModel(ResourceLocation location) {
-
+        ModLog.debug("Finish baking task: {}", identifier);
     }
 
 //    public void receivedUnbakedModel(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated, IBakedSkinReceiver skinReceiver) {
@@ -292,10 +268,5 @@ public final class SkinBakery {
 //            }
 
 //            FastCache.INSTANCE.saveSkin(skin);
-
-    public static interface IBakedSkinReceiver {
-        public void onBakedSkin(BakedSkin bakedSkin);
-    }
-
 
 }

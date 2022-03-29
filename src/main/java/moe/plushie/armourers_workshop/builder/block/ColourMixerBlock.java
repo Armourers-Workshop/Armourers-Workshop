@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.builder.block;
 
-import moe.plushie.armourers_workshop.builder.container.ColourMixerContainer;
 import moe.plushie.armourers_workshop.builder.tileentity.ColourMixerTileEntity;
-import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
+import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -91,7 +89,7 @@ public class ColourMixerBlock extends HorizontalBlock {
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         }
-        AWContainerTypes.open(AWContainerTypes.COLOUR_MIXER, player, IWorldPosCallable.create(world, pos));
+        ModContainerTypes.open(ModContainerTypes.COLOUR_MIXER, player, IWorldPosCallable.create(world, pos));
         return ActionResultType.CONSUME;
     }
 

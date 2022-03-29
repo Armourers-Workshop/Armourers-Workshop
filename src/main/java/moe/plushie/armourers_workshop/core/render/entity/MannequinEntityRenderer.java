@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.render.entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.render.layer.SkinWardrobeLayer;
 import moe.plushie.armourers_workshop.core.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
@@ -27,7 +26,12 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
     private final MannequinModel<T> normalModel;
     private final MannequinModel<T> slimModel;
 
-    private ResourceLocation textureLocation;
+    private MannequinEntityRenderer<T> mannequinRenderer;
+
+    private ResourceLocation texture;
+    private BakedEntityTexture bakedTexture;
+
+    private boolean enableChildRenderer = false;
 
     public MannequinEntityRenderer(EntityRendererManager rendererManager) {
         super(rendererManager, new MannequinModel<>(0, false), 0.0f);
@@ -41,19 +45,25 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
     }
 
     @Override
-    public void render(T entity, float p_225623_2_, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int p_225623_6_) {
-        this.textureLocation = PlayerTextureLoader.getInstance().getTextureLocation(entity);
-        this.model = getResolvedModel(entity);
-        this.model.setAllVisible(entity.isModelVisible());
-        super.render(entity, p_225623_2_, p_225623_3_, matrixStack, renderTypeBuffer, p_225623_6_);
+    protected boolean shouldShowName(T entity) {
+        return entity.hasCustomName();
     }
 
-    public MannequinModel<T> getResolvedModel(T entity) {
-        BakedEntityTexture texture = PlayerTextureLoader.getInstance().getTextureModel(getTextureLocation(entity));
-        if (texture != null && texture.isSlim()) {
-            return slimModel;
+    @Override
+    public void render(T entity, float p_225623_2_, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffers, int packedLightIn) {
+        // when mannequin holding mannequin recursive rendering occurs, and we will enable the child renderer.
+        if (this.enableChildRenderer) {
+            this.getChildRenderer().render(entity, p_225623_2_, partialTicks, matrixStack, buffers, packedLightIn);
+            return;
         }
-        return normalModel;
+        PlayerTextureLoader textureLoader = PlayerTextureLoader.getInstance();
+        this.enableChildRenderer = true;
+        this.texture = textureLoader.getTextureLocation(entity);
+        this.bakedTexture = textureLoader.getTextureModel(texture);
+        this.model = getModel();
+        this.model.setAllVisible(entity.isModelVisible());
+        super.render(entity, p_225623_2_, partialTicks, matrixStack, buffers, packedLightIn);
+        this.enableChildRenderer = false;
     }
 
     @Override
@@ -67,11 +77,21 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
 
     @Override
     public ResourceLocation getTextureLocation(T entity) {
-        return textureLocation;
+        return texture;
     }
 
     @Override
-    protected boolean shouldShowName(T entity) {
-        return entity.hasCustomName();
+    public MannequinModel<T> getModel() {
+        if (bakedTexture != null && bakedTexture.isSlim()) {
+            return slimModel;
+        }
+        return normalModel;
+    }
+
+    public MannequinEntityRenderer<T> getChildRenderer() {
+        if (mannequinRenderer == null) {
+            mannequinRenderer = new MannequinEntityRenderer<>(entityRenderDispatcher);
+        }
+        return mannequinRenderer;
     }
 }

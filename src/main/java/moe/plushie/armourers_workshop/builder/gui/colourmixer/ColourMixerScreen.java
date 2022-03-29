@@ -284,7 +284,6 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
         addButton(comboBox);
     }
 
-
     private AWPaletteBox addPalettePanel(int x, int y) {
         AWPaletteBox paletteBox = new AWPaletteBox(x, y, 82, 42, 8, 4, this::onPaletteChange);
         addButton(paletteBox);

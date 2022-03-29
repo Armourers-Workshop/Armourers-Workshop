@@ -4,7 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.AWItems;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -57,7 +57,7 @@ public class PlayerTextureDescriptor {
     }
 
     public static PlayerTextureDescriptor of(ItemStack itemStack) {
-        if (itemStack.getItem() != AWItems.MANNEQUIN) {
+        if (itemStack.getItem() != ModItems.MANNEQUIN) {
             return EMPTY;
         }
         CompoundNBT entityTag = MannequinItem.getEntityTag(itemStack);

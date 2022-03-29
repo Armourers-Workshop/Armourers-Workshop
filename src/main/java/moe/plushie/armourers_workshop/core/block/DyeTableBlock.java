@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.core.tileentity.DyeTableTileEntity;
-import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
+import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -40,7 +40,7 @@ public class DyeTableBlock extends AbstractHorizontalBlock {
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         }
-        AWContainerTypes.open(AWContainerTypes.DYE_TABLE, player, IWorldPosCallable.create(world, pos));
+        ModContainerTypes.open(ModContainerTypes.DYE_TABLE, player, IWorldPosCallable.create(world, pos));
         return ActionResultType.CONSUME;
     }
 

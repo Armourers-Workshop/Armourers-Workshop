@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
-import moe.plushie.armourers_workshop.init.common.AWItems;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
@@ -225,7 +225,7 @@ public class SkinWardrobeColourSetting extends AWTabPanel {
             }
             ItemStack itemStack = ItemStack.EMPTY;
             if (newValue != null) {
-                itemStack = new ItemStack(AWItems.BOTTLE);
+                itemStack = new ItemStack(ModItems.BOTTLE);
                 ColoredItem.setColor(itemStack, newValue);
             }
             NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.pick(wardrobe, slot, itemStack));

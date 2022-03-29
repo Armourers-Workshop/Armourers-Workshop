@@ -56,7 +56,10 @@ public abstract class AWAbstractContainerScreen<T extends Container> extends Con
     public void renderContentLayer(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
+        matrixStack.pushPose();
+        matrixStack.translate(0, 0, 400);
         this.renderTooltip(matrixStack, mouseX, mouseY);
+        matrixStack.popPose();
     }
 
     public void renderPresentLayer(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {

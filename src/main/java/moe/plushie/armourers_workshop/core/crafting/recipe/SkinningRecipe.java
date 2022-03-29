@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.crafting.recipe;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.init.common.AWItems;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.minecraft.inventory.IInventory;
@@ -82,10 +82,10 @@ public abstract class SkinningRecipe {
     }
 
     protected boolean isValidSkin(ItemStack itemStack) {
-        return AWItems.SKIN == itemStack.getItem() && SkinDescriptor.of(itemStack).getType() == skinType;
+        return ModItems.SKIN == itemStack.getItem() && SkinDescriptor.of(itemStack).getType() == skinType;
     }
 
     protected boolean isValidTarget(ItemStack itemStack) {
-        return AWItems.SKIN != itemStack.getItem();
+        return ModItems.SKIN != itemStack.getItem();
     }
 }

@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.init.common.AWCore;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.SerializeHelper;
 
@@ -39,7 +39,7 @@ public class PaletteManager {
     }
 
     public void createDefaultPalettes() {
-        AWLog.debug("Creating default palettes.");
+        ModLog.debug("Creating default palettes.");
         putPaletteInMap(new Palette("\u2606 Minecraft", true, ColorUtils.PALETTE_MINECRAFT));
         putPaletteInMap(new Palette("\u2606 Shades", true, ColorUtils.PALETTE_SHADES));
         putPaletteInMap(new Palette("\u2606 Warm32", true, ColorUtils.PALETTE_WARM32));
@@ -93,7 +93,7 @@ public class PaletteManager {
     }
 
     private void savePalettes() {
-        AWLog.info("Saving palettes.");
+        ModLog.info("Saving palettes.");
         JsonArray json = new JsonArray();
         for (Palette palette : paletteMap.values()) {
             JsonObject jsonPalette = new JsonObject();
@@ -107,7 +107,7 @@ public class PaletteManager {
     }
 
     private void loadPalettes() {
-        AWLog.info("Loading palettes.");
+        ModLog.info("Loading palettes.");
         try {
             paletteMap.clear();
             JsonArray json = SerializeHelper.readJsonFile(paletteFile, StandardCharsets.UTF_8).getAsJsonArray();

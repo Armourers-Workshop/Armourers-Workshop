@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.utils;
 
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.AWBlocks;
+import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -76,7 +76,7 @@ public class SkinItemUseContext extends BlockItemUseContext {
         this.skin = descriptor;
         this.parts = parts;
         this.properties = skin.getProperties();
-        BlockState state = AWBlocks.SKINNABLE.getStateForPlacement(this);
+        BlockState state = ModBlocks.SKINNABLE.getStateForPlacement(this);
         if (state != null) {
             this.rotations = SkinnableTileEntity.getRotations(state);
             this.transform(rotations);

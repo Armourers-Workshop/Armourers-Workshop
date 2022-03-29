@@ -28,7 +28,6 @@ public class ClientEventHandler {
         eventBus.register(new PlacementHighlightHandler());
     }
 
-
     @SubscribeEvent
     public void onRenderLivingPre(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
         if (event.isCanceled()) {
@@ -62,47 +61,4 @@ public class ClientEventHandler {
             renderer.didRender(entity, entityModel, event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
         }
     }
-
-//    @SubscribeEvent
-//    public void onLivingEquipmentChangeEvent(LivingEvent.LivingUpdateEvent event) {
-//        if (event.isCanceled()) {
-//            return;
-//        }
-//        LivingEntity entity = event.getEntityLiving();
-//        ClientPlayerEntity player = Minecraft.getInstance().player;
-//        if (entity instanceof ServerPlayerEntity && player != null && player.getId() == entity.getId()) {
-//            entity = player;
-//        }
-//        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-//        if (wardrobe != null) {
-//            wardrobe.refresh();
-//        }
-//    }
-
-
-//    @SubscribeEvent
-//    public void onRenderLiving(RenderLivingEvent<LivingEntity, EntityModel<LivingEntity>> event) {
-//        if (event.getEntity().getType() != EntityType.ARMOR_STAND) {
-//            return;
-//        }
-////        IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-//        MatrixStack stack = event.getMatrixStack();
-//
-//        SkinRenderBuffer buffer1 = SkinRenderBuffer.getInstance();
-//        SkinItemRenderer.renderSkinAsItem(stack, AWCore.bakery.loadSkin(outfit), event.getLight(), true, false, 32, 32, buffer1);
-//        SkinItemRenderer.renderSkinAsItem(stack, AWCore.bakery.loadSkin(sword), event.getLight(), true, false, 32, 32, buffer1);
-//        buffer1.endBatch();
-//    }
-
-//    @SubscribeEvent
-//    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-//        if (event.isCanceled()) {
-//            return;
-//        }
-//        SkinWardrobe wardrobe = SkinWardrobe.of(event.getEntityLiving());
-//        if (wardrobe != null) {
-//            wardrobe.sync();
-//        }
-//    }
-
 }

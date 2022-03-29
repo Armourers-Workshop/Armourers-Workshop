@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.render.item;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
@@ -29,8 +30,22 @@ import javax.annotation.Nullable;
 @OnlyIn(Dist.CLIENT)
 public final class SkinItemRenderer {
 
-    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
-        renderSkin(bakedSkin, scheme, null, AWConstants.ONE, 1, 1, 1, partialTicks, light, matrixStack, buffers);
+    public static void renderSkin(SkinDescriptor descriptor, int x, int y, int width, int height, int rx, int ry, int rz, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        if (bakedSkin == null) {
+            return;
+        }
+        int t = (int) System.currentTimeMillis();
+        int si = Math.min(width, height);
+        matrixStack.pushPose();
+        matrixStack.translate(x + width / 2f, y + height / 2f, 500f);
+        matrixStack.mulPose(Vector3f.XP.rotationDegrees(rx));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(ry - (float) (t / 10 % 360)));
+        matrixStack.scale(0.625f, 0.625f, 0.625f);
+        matrixStack.scale(si, si, si);
+        matrixStack.scale(-1, 1, 1);
+        renderSkin(bakedSkin, descriptor.getColorScheme(), null, AWConstants.ONE, 1, 1, 1, 0, 0xf000f0, matrixStack, buffers);
+        matrixStack.popPose();
     }
 
     public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {

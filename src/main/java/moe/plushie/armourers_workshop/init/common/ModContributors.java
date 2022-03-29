@@ -1,8 +1,8 @@
-package moe.plushie.armourers_workshop.core.utils;
+package moe.plushie.armourers_workshop.init.common;
 
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import net.minecraft.client.Minecraft;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.UUID;
 
-public class AWContributors {
+public class ModContributors {
 
     public static final ArrayList<Contributor> values = Builder.builder()
             .add("eba64cb1-0d29-4434-8d5e-31004b00488c", "RiskyKen", 0xf9df8c, ContributionFlags.PROGRAMMING)
@@ -74,7 +74,7 @@ public class AWContributors {
             return null;
         }
         if (entity instanceof ClientPlayerEntity) {
-            if (AWConfig.enableMagicWhenContributor) {
+            if (ModConfig.enableMagicWhenContributor) {
                 return getCurrentContributor();
             }
         }

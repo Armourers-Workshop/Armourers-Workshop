@@ -1,8 +1,6 @@
 package moe.plushie.armourers_workshop.core.utils;
 
-import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
 import moe.plushie.armourers_workshop.init.common.AWCore;
-import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -19,7 +17,6 @@ import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public final class ContainerTypeBuilder<C extends Container, I> {
 

@@ -1,12 +1,10 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
-import moe.plushie.armourers_workshop.init.common.AWEntities;
-import moe.plushie.armourers_workshop.core.container.SkinnableContainer;
+import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
+import moe.plushie.armourers_workshop.init.common.ModEntities;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
-import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.SkinItemUseContext;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
@@ -117,7 +115,7 @@ public class SkinnableBlock extends HorizontalFaceBlock {
             return ActionResultType.SUCCESS;
         }
         if (tileEntity.isInventory()) {
-            AWContainerTypes.open(AWContainerTypes.SKINNABLE, player, IWorldPosCallable.create(world, tileEntity.getParentPos()));
+            ModContainerTypes.open(ModContainerTypes.SKINNABLE, player, IWorldPosCallable.create(world, tileEntity.getParentPos()));
             player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
             return ActionResultType.sidedSuccess(world.isClientSide);
         }
@@ -256,7 +254,7 @@ public class SkinnableBlock extends HorizontalFaceBlock {
                 return null;// is using
             }
         }
-        SeatEntity entity = new SeatEntity(AWEntities.SEAT, world);
+        SeatEntity entity = new SeatEntity(ModEntities.SEAT, world);
         entity.setPos(pos.x(), pos.y(), pos.z());
         entity.setBlockPos(blockPos);
         world.addFreshEntity(entity);

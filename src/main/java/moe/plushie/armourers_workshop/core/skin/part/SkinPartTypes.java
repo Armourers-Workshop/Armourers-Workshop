@@ -20,7 +20,7 @@ import moe.plushie.armourers_workshop.core.skin.part.legs.SkirtPartType;
 import moe.plushie.armourers_workshop.core.skin.part.unknown.UnknownPartType;
 import moe.plushie.armourers_workshop.core.skin.part.wings.LeftWingPartType;
 import moe.plushie.armourers_workshop.core.skin.part.wings.RightWingPartType;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.core.utils.SkinResourceLocation;
 
 import java.util.Collection;
@@ -103,11 +103,11 @@ public final class SkinPartTypes {
             return partType;
         }
         if (ALL_PART_TYPES.containsKey(partType.getRegistryName().toString())) {
-            AWLog.warn("A mod tried to register a skin type with a registry name that is in use.");
+            ModLog.warn("A mod tried to register a skin type with a registry name that is in use.");
             return partType;
         }
         ALL_PART_TYPES.put(partType.getRegistryName().toString(), partType);
-        AWLog.debug("Registering Skin Part '{}'", partType.getRegistryName());
+        ModLog.debug("Registering Skin Part '{}'", partType.getRegistryName());
         return partType;
     }
 

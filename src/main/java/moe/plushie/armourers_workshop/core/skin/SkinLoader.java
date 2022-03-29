@@ -4,10 +4,11 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.core.data.DataLoader;
 import moe.plushie.armourers_workshop.core.data.DataManager;
+import moe.plushie.armourers_workshop.core.data.FastCache;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.RequestFilePacket;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
 import net.minecraft.item.ItemStack;
 
@@ -24,16 +25,19 @@ import java.util.function.Supplier;
 public class SkinLoader {
 
     private static final SkinLoader LOADER = new SkinLoader();
-
     private final static AtomicInteger COUNTER = new AtomicInteger();
 
-    private int queueCount = 1;
     private final ArrayList<LoadingTask> working = new ArrayList<>();
     private final ArrayList<LoadingTask> pending = new ArrayList<>();
+
     private final HashMap<String, LoadingTask> tasks = new HashMap<>();
+
+    private final FastCache cache = new FastCache();
     private final DataLoader<String, Skin> manager = DataLoader.newBuilder()
             .threadPool(1)
             .build(this::loadSkinFileIfNeeded);
+
+    private int queueCount = 1;
 
     public static SkinLoader getInstance() {
         return LOADER;
@@ -63,11 +67,23 @@ public class SkinLoader {
     @Nullable
     public LoadingTask getTask(int id) {
         for (LoadingTask task : tasks.values()) {
-            if (task.id == id) {
+            if (task.seq == id) {
                 return task;
             }
         }
         return null;
+    }
+
+    public String saveSkin(String identifier, Skin skin) {
+        if (identifier.startsWith("db:")) {
+            return identifier;
+        }
+        String newIdentifier = LocalDataService.getInstance().addFile(skin);
+        if (newIdentifier != null) {
+            identifier = "db:" + newIdentifier;
+            manager.put(identifier, Optional.of(skin));
+        }
+        return identifier;
     }
 
     @Nullable
@@ -86,25 +102,21 @@ public class SkinLoader {
         manager.load(identifier, false, consumer);
     }
 
-    public String cacheSkin(String identifier, Skin skin) {
-        if (identifier.startsWith("db:")) {
-            return identifier;
-        }
-        String newIdentifier = LocalDataService.getInstance().addFile(skin);
-        if (newIdentifier != null) {
-            identifier = "db:" + newIdentifier;
-            manager.put(identifier, Optional.of(skin));
-        }
-        return identifier;
-    }
-
     public void clear() {
         manager.clear();
     }
 
+    private Optional<Skin> loadSkinFile(String identifier, Supplier<Optional<ByteBuf>> buffer) {
+        ModLog.debug("load skin file: {}", identifier);
+        Optional<Skin> skin = buffer.get().map(buf1 -> SkinIOUtils.loadSkinFromStream(new ByteArrayInputStream(buf1.array())));
+        manager.put(identifier, skin);
+        return skin;
+    }
+
     private void loadSkinFileIfNeeded(String identifier, @Nullable Consumer<Optional<Skin>> complete) {
-        if (!LocalDataService.isRunning()) {
-            addTask(identifier, complete);
+        boolean isClientSide = !LocalDataService.isRunning();
+        if (isClientSide) {
+            loadRemoteSkinFile(identifier, complete);
             return;
         }
         Optional<Skin> skin = loadSkinFile(identifier, () -> DataManager.getInstance().loadSkinData(identifier));
@@ -112,12 +124,9 @@ public class SkinLoader {
             complete.accept(skin);
         }
     }
-
-    private Optional<Skin> loadSkinFile(String identifier, Supplier<Optional<ByteBuf>> buffer) {
-        AWLog.debug("Parsing skin from data: {} ", identifier);
-        Optional<Skin> skin = buffer.get().map(buf1 -> SkinIOUtils.loadSkinFromStream(new ByteArrayInputStream(buf1.array())));
-        manager.put(identifier, skin);
-        return skin;
+    private void loadRemoteSkinFile(String identifier, @Nullable Consumer<Optional<Skin>> complete) {
+        ModLog.debug("load remote skin file: {}", identifier);
+        addTask(identifier, complete);
     }
 
     private void addTask(String identifier, @Nullable Consumer<Optional<Skin>> complete) {
@@ -128,7 +137,7 @@ public class SkinLoader {
         if (!working.contains(task)) {
             int index = pending.indexOf(task);
             if (index < 0) {
-                AWLog.debug("Add loading task: {}", task.resource);
+                ModLog.debug("Add loading task: {}", task.identifier);
             }
             pending.add(0, task);
 
@@ -137,7 +146,7 @@ public class SkinLoader {
     }
 
     private void finishTask(LoadingTask task) {
-        AWLog.debug("Finish loading task: {}", task.resource);
+        ModLog.debug("Finish loading task: {}", task.identifier);
         manager.add(() -> {
             ArrayList<Consumer<Optional<Skin>>> listeners = new ArrayList<>(task.listeners);
             ByteBuf buffer = Unpooled.buffer(task.receivedSize);
@@ -147,16 +156,16 @@ public class SkinLoader {
             });
             task.clear();
             removeTask(task);
-            Optional<Skin> skin = loadSkinFile(task.resource, () -> Optional.of(buffer));
+            Optional<Skin> skin = loadSkinFile(task.identifier, () -> Optional.of(buffer));
             listeners.forEach(t -> t.accept(skin));
         });
     }
 
     private void removeTask(LoadingTask task) {
-        AWLog.debug("Remove loading task: {}", task.resource);
+        ModLog.debug("Remove loading task: {}", task.identifier);
         working.remove(task);
         pending.remove(task);
-        tasks.remove(task.resource);
+        tasks.remove(task.identifier);
         task.clear();
         runTask();
     }
@@ -171,24 +180,25 @@ public class SkinLoader {
         LoadingTask task = pending.remove(0);
         working.add(task);
         task.resume();
-        AWLog.debug("Start loading task: {}", task.resource);
+        ModLog.debug("Start loading task: {}", task.identifier);
     }
 
     public class LoadingTask {
 
-        private final int id;
-        private final String resource;
-        private final ArrayList<Consumer<Optional<Skin>>> listeners = new ArrayList<>();
+        private final int seq;
+        private final String identifier;
 
         private final HashMap<Integer, ByteBuf> receivedBuffers = new HashMap<>();
-        private int receivedSize = 0;
+        private final ArrayList<Consumer<Optional<Skin>>> listeners = new ArrayList<>();
 
         private boolean isRunning = false;
         private boolean isFinish = false;
 
-        public LoadingTask(String resource) {
-            this.id = COUNTER.incrementAndGet();
-            this.resource = resource;
+        private int receivedSize = 0;
+
+        public LoadingTask(String identifier) {
+            this.seq = COUNTER.incrementAndGet();
+            this.identifier = identifier;
         }
 
         public void append(int offset, int total, ByteBuf buf) {
@@ -207,7 +217,8 @@ public class SkinLoader {
                 return;
             }
             isRunning = true;
-            NetworkHandler.getInstance().sendToServer(new RequestFilePacket(id, resource));
+            RequestFilePacket req = new RequestFilePacket(seq, identifier);
+            NetworkHandler.getInstance().sendToServer(req);
         }
 
         public void clear() {
@@ -226,12 +237,12 @@ public class SkinLoader {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             LoadingTask task = (LoadingTask) o;
-            return id == task.id;
+            return seq == task.seq;
         }
 
         @Override
         public int hashCode() {
-            return id;
+            return seq;
         }
     }
 }

@@ -7,11 +7,10 @@ import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
-import moe.plushie.armourers_workshop.init.common.AWItems;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.concurrent.TimeUnit;
 
@@ -78,6 +77,9 @@ public class SkinDescriptor implements ISkinDescriptor {
             return false;
         }
         ISkinType skinType = getType();
+        if (skinType == SkinTypes.ITEM) {
+            return true;
+        }
         if (skinType instanceof ISkinToolType) {
             return itemStack.getItem().is(((ISkinToolType) skinType).getTag());
         }
@@ -96,7 +98,7 @@ public class SkinDescriptor implements ISkinDescriptor {
         if (isEmpty()) {
             return ItemStack.EMPTY;
         }
-        ItemStack itemStack = new ItemStack(AWItems.SKIN);
+        ItemStack itemStack = new ItemStack(ModItems.SKIN);
         setDescriptor(itemStack, this);
         return itemStack;
     }

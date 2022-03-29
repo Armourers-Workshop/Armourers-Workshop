@@ -7,8 +7,10 @@ import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,8 +19,8 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
+import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT> {
@@ -43,15 +45,6 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     public static SkinWardrobe of(@Nullable Entity entity) {
         if (entity != null) {
             return SkinDataStorage.getWardrobe(entity);
-        }
-        return null;
-    }
-
-    @Nullable
-    public static LazyOptional<SkinWardrobe> get(Entity entity) {
-        LazyOptional<SkinWardrobe> wardrobe = entity.getCapability(SkinWardrobeProvider.WARDROBE_KEY);
-        if (wardrobe.isPresent()) {
-            return wardrobe;
         }
         return null;
     }
@@ -82,6 +75,25 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
             return;
         }
         inventory.setItem(slotType.getIndex() + slot, itemStack);
+    }
+
+    public void dropAll(@Nullable Consumer<ItemStack> consumer) {
+        int containerSize = inventory.getContainerSize();
+        int ignoredStart = SkinSlotType.DYE.getIndex() + 8;
+        int ignoredEnd = SkinSlotType.DYE.getIndex() + SkinSlotType.DYE.getMaxSize();
+        for (int i = 0; i < containerSize; ++i) {
+            if (i >= ignoredStart && i < ignoredEnd) {
+                continue;
+            }
+            ItemStack itemStack = inventory.getItem(i);
+            if (itemStack.isEmpty()) {
+                continue;
+            }
+            if (consumer != null) {
+                consumer.accept(itemStack);
+            }
+            inventory.setItem(i, ItemStack.EMPTY);
+        }
     }
 
     public void clear() {

@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.tileentity;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.AWTileEntities;
+import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -74,7 +74,7 @@ public class SkinnableTileEntity extends RotableContainerTileEntity {
     private AxisAlignedBB renderBoundingBox;
 
     public SkinnableTileEntity() {
-        super(AWTileEntities.SKINNABLE);
+        super(ModTileEntities.SKINNABLE);
     }
 
     public static Vector3f getRotations(BlockState state) {

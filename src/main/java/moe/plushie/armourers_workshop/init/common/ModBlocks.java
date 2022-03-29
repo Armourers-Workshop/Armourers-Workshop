@@ -5,6 +5,8 @@ import moe.plushie.armourers_workshop.core.block.DyeTableBlock;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.block.SkinningTableBlock;
+import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
+import moe.plushie.armourers_workshop.library.block.SkinLibraryBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,15 +21,19 @@ import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
 @SuppressWarnings("unused")
-public class AWBlocks {
+public class ModBlocks {
 
     private static final HashMap<ResourceLocation, Block> REGISTERED_BLOCKS = new HashMap<>();
 
-    public static final Block HOLOGRAM_PROJECTOR = register("hologram-projector", HologramProjectorBlock::new, p -> p.requiresCorrectToolForDrops().lightLevel(litBlockEmission(13)).strength(5f, 1200f));
-    public static final Block SKINNABLE = register("skinnable", SkinnableBlock::new, p -> p.requiresCorrectToolForDrops().lightLevel(litBlockEmission(15)).strength(1.5f, 6.f).noOcclusion());
+    public static final Block HOLOGRAM_PROJECTOR = register("hologram-projector", HologramProjectorBlock::new, p -> p.lightLevel(litBlockEmission(13)).strength(5f, 1200f));
+    public static final Block SKINNABLE = register("skinnable", SkinnableBlock::new, p -> p.lightLevel(litBlockEmission(15)).strength(1.5f, 6.f).noOcclusion());
 
-    public static final Block SKINNING_TABLE = register("skinning-table", SkinningTableBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f).noOcclusion());
-    public static final Block DYE_TABLE = register("dye-table", DyeTableBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f).noOcclusion());
+    public static final Block DYE_TABLE = register("dye-table", DyeTableBlock::new, p -> p.strength(1.5f, 6.f).noOcclusion());
+    public static final Block SKINNING_TABLE = register("skinning-table", SkinningTableBlock::new, p -> p.strength(1.5f, 6.f).noOcclusion());
+
+    public static final Block SKIN_LIBRARY_CREATIVE = register("skin-library-creative", SkinLibraryBlock::new, p -> p.strength(1.5f, 6.f).noOcclusion());
+    public static final Block SKIN_LIBRARY = register("skin-library", SkinLibraryBlock::new, p -> p.strength(1.5f, 6.f).noOcclusion());
+    public static final Block SKIN_LIBRARY_GLOBAL = register("skin-library-global", GlobalSkinLibraryBlock::new, p -> p.strength(1.5f, 6.f).noOcclusion());
 
     public static final Block COLOUR_MIXER = register("colour-mixer", ColourMixerBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f));
 

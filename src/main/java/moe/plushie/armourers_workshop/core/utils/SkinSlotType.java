@@ -29,7 +29,7 @@ public enum SkinSlotType {
     SHOVEL("shovel", 1, SkinTypes.TOOL_SHOVEL),
     HOE("hoe", 1, SkinTypes.TOOL_HOE),
 
-    OUTFIT("outfit", 10, SkinTypes.ARMOR_OUTFIT),
+    OUTFIT("outfit", 10, SkinTypes.OUTFIT),
     DYE("dye", 16, null);
 
     private final String name;

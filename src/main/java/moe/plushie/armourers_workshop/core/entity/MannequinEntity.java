@@ -1,20 +1,19 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
-import moe.plushie.armourers_workshop.init.common.AWItems;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.core.utils.AWContainerOpener;
 import moe.plushie.armourers_workshop.core.utils.TrigUtils;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
@@ -31,7 +30,6 @@ import net.minecraft.util.math.Rotations;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-
 
 @SuppressWarnings("NullableProblems")
 public class MannequinEntity extends ArmorStandEntity {
@@ -54,6 +52,8 @@ public class MannequinEntity extends ArmorStandEntity {
     public static final DataParameter<Float> DATA_SCALE = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.FLOAT);
     public static final DataParameter<Boolean> DATA_EXTRA_RENDERER = EntityDataManager.defineId(MannequinEntity.class, DataSerializers.BOOLEAN);
     public static final DataParameter<PlayerTextureDescriptor> DATA_TEXTURE = EntityDataManager.defineId(MannequinEntity.class, AWDataSerializers.PLAYER_TEXTURE);
+
+    private boolean isDropEquipment = false;
 
     public MannequinEntity(EntityType<? extends MannequinEntity> entityType, World world) {
         super(entityType, world);
@@ -175,6 +175,17 @@ public class MannequinEntity extends ArmorStandEntity {
     }
 
     @Override
+    public boolean hurt(DamageSource source, float amount) {
+        isDropEquipment = false;
+        boolean flag = this.isAlive();
+        boolean flag1 = super.hurt(source, amount);
+        if (!isDropEquipment && flag != this.isAlive()) {
+            this.brokenByAnything(source);
+        }
+        return flag1;
+    }
+
+    @Override
     public ActionResultType interactAt(PlayerEntity player, Vector3d pos, Hand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (this.isMarker()) {
@@ -199,7 +210,7 @@ public class MannequinEntity extends ArmorStandEntity {
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null) {
-            AWContainerTypes.open(AWContainerTypes.WARDROBE, player, wardrobe);
+            ModContainerTypes.open(ModContainerTypes.WARDROBE, player, wardrobe);
         }
         return ActionResultType.SUCCESS;
     }
@@ -211,13 +222,24 @@ public class MannequinEntity extends ArmorStandEntity {
             player = (PlayerEntity) source.getEntity();
         }
         if (player != null && !player.abilities.instabuild) {
-            ItemStack itemStack = new ItemStack(AWItems.MANNEQUIN);
+            ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN);
             CompoundNBT entityTag = itemStack.getOrCreateTagElement(AWConstants.NBT.ENTITY);
             AWDataSerializers.putFloat(entityTag, AWConstants.NBT.ENTITY_SCALE, getScale(), 1.0f);
             AWDataSerializers.putTextureDescriptor(entityTag, AWConstants.NBT.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);
             Block.popResource(this.level, this.blockPosition(), itemStack);
         }
         this.brokenByAnything(source);
+    }
+
+    @Override
+    protected void dropEquipment() {
+        super.dropEquipment();
+        this.isDropEquipment = true;
+        // drop all wardrobe items.
+        SkinWardrobe wardrobe = SkinWardrobe.of(this);
+        if (wardrobe != null) {
+            wardrobe.dropAll(this::spawnAtLocation);
+        }
     }
 
     public PlayerTextureDescriptor getTextureDescriptor() {

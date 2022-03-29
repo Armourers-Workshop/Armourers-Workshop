@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.skin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -113,13 +113,13 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             matrixStack.pushPose();
             apply(entity, model, transformType, bakedPart, partialTicks, matrixStack);
             builder.addPartData(bakedPart, scheme1, light, partialTicks, matrixStack, shouldRenderPart);
-            if (shouldRenderPart && AWConfig.debugSkinPartBounds) {
+            if (shouldRenderPart && ModConfig.debugSkinPartBounds) {
                 builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(index++), matrixStack);
             }
             matrixStack.popPose();
         }
 
-        if (AWConfig.debugSkinBounds) {
+        if (ModConfig.debugSkinBounds) {
             builder.addShapeData(bakedSkin.getRenderShape(entity, model, transformType).bounds(), Color.RED, matrixStack);
         }
     }

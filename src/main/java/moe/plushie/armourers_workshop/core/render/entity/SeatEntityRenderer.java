@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -22,10 +22,10 @@ public class SeatEntityRenderer<T extends SeatEntity> extends EntityRenderer<T> 
     }
 
     @Override
-    public void render(T entity, float p_225623_2_, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int p_225623_6_) {
-        if (AWConfig.debugSkinnableBlock) {
-            RenderUtils.drawPoint(matrixStack, renderTypeBuffer);
-            RenderUtils.drawBoundingBox(matrixStack, -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, Color.ORANGE, renderTypeBuffer);
+    public void render(T entity, float p_225623_2_, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffers, int packedLightIn) {
+        if (ModConfig.debugSkinnableBlock) {
+            RenderUtils.drawPoint(matrixStack, buffers);
+            RenderUtils.drawBoundingBox(matrixStack, -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, Color.ORANGE, buffers);
         }
     }
 

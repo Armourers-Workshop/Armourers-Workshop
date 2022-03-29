@@ -13,7 +13,7 @@ package moe.plushie.armourers_workshop.core.model.block;//package moe.plushie.ar
 //
 //public class ModelBlockGlobalSkinLibrary extends ModelBase {
 //
-//    private static final ResourceLocation MODEL_TEXTURE = new ResourceLocation(LibModInfo.ID, "textures/tile-entities/global-skin-library.png");
+//    private static final ResourceLocation MODEL_TEXTURE = new ResourceLocation(LibModInfo.ID, "textures/tile-entities/skin-library-global.png");
 //
 //    public ModelRenderer globe;
 //

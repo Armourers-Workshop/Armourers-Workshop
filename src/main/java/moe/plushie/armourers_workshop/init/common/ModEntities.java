@@ -28,7 +28,7 @@ import net.minecraft.util.ResourceLocation;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public final class AWEntities {
+public final class ModEntities {
 
     private static final HashMap<ResourceLocation, EntityType<?>> REGISTERED_ENTITY_TYPES = new HashMap<>();
 

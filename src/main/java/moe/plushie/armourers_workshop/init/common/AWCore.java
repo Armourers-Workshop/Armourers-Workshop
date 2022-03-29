@@ -38,6 +38,9 @@ public class AWCore {
     public static File getRootDirectory() {
         return new File(FMLPaths.GAMEDIR.get().toFile(), "armourers_workshop");
     }
+    public static File getSkinLibraryDirectory() {
+        return new File(getRootDirectory(), "skin-library");
+    }
 
     public static ItemStack getSkinFromEquipment(@Nullable Entity entity, SkinSlotType skinSlotType, EquipmentSlotType equipmentSlotType) {
         ItemStack itemStack = ItemStack.EMPTY;

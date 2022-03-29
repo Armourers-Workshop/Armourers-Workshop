@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.core.render.skin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
-import moe.plushie.armourers_workshop.core.render.SkinRenderData;
+import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -65,7 +65,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
                 entity.animationSpeedOld = 0.25F;
             }
         }
-        if (AWConfig.enableModelOverridden) {
+        if (ModConfig.enableModelOverridden) {
             applyOverriders(entity, model, renderData);
         }
     }

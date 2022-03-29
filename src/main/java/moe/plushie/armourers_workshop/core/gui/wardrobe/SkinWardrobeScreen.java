@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabController;
 import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
-import moe.plushie.armourers_workshop.core.utils.AWContributors;
+import moe.plushie.armourers_workshop.init.common.ModContributors;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
@@ -82,33 +82,33 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
         tabController.add(new SkinWardrobeInventorySetting(menu))
                 .setIcon(192, 0)
                 .setTarget(SkinWardrobeContainer.Group.SKINS)
-                .setVisible(!isPlayer || AWConfig.showWardrobeSkins || operator.isCreative());
+                .setVisible(!isPlayer || ModConfig.showWardrobeSkins || operator.isCreative());
 
         if (wardrobe.getUnlockedSize(SkinSlotType.OUTFIT) != 0) {
             tabController.add(new SkinWardrobeOutfitSetting(menu))
                     .setIcon(0, 128)
                     .setTarget(SkinWardrobeContainer.Group.OUTFITS)
-                    .setVisible(!isPlayer || AWConfig.showWardrobeOutfits || operator.isCreative());
+                    .setVisible(!isPlayer || ModConfig.showWardrobeOutfits || operator.isCreative());
         }
 
         tabController.add(new SkinWardrobeDisplaySetting(menu))
                 .setIcon(208, 0)
-                .setVisible(isPlayer && (AWConfig.showWardrobeDisplaySettings || operator.isCreative()));
+                .setVisible(isPlayer && (ModConfig.showWardrobeDisplaySettings || operator.isCreative()));
 
         tabController.add(new SkinWardrobeColourSetting(menu))
                 .setIcon(224, 0)
                 .setTarget(SkinWardrobeContainer.Group.COLORS)
-                .setVisible(!isPlayer || AWConfig.showWardrobeColourSettings || operator.isCreative());
+                .setVisible(!isPlayer || ModConfig.showWardrobeColourSettings || operator.isCreative());
 
         tabController.add(new SkinWardrobeDyeSetting(menu))
                 .setIcon(240, 0)
                 .setTarget(SkinWardrobeContainer.Group.DYES)
-                .setVisible(!isPlayer || AWConfig.showWardrobeDyeSetting || operator.isCreative());
+                .setVisible(!isPlayer || ModConfig.showWardrobeDyeSetting || operator.isCreative());
 
-        if (isPlayer && AWContributors.getCurrentContributor() != null) {
+        if (isPlayer && ModContributors.getCurrentContributor() != null) {
             tabController.add(new SkinWardrobeContributorSetting(menu))
                     .setIcon(32, 128)
-                    .setVisible(AWConfig.showWardrobeContributorSetting || operator.isCreative());
+                    .setVisible(ModConfig.showWardrobeContributorSetting || operator.isCreative());
         }
 
         if (isMannequin) {

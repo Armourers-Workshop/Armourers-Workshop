@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.crafting.recipe;
 
-import moe.plushie.armourers_workshop.init.common.AWItems;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import net.minecraft.item.ItemStack;
@@ -18,7 +18,7 @@ public class SkinningClearRecipe extends SkinningRecipe {
 
     @Override
     protected boolean isValidTarget(ItemStack targetStack) {
-        return AWItems.SOAP == targetStack.getItem();
+        return ModItems.SOAP == targetStack.getItem();
     }
 
     @Override

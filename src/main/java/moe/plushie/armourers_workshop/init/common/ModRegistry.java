@@ -1,13 +1,11 @@
 package moe.plushie.armourers_workshop.init.common;
 
-import moe.plushie.armourers_workshop.builder.container.ColourMixerContainer;
 import moe.plushie.armourers_workshop.core.gui.misc.DyeTableScreen;
 import moe.plushie.armourers_workshop.init.client.ClientEventHandler;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.builder.block.ColourMixerBlock;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobeStorage;
-import moe.plushie.armourers_workshop.core.container.*;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
@@ -30,7 +28,9 @@ import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.KeyBindings;
 import moe.plushie.armourers_workshop.init.command.FileArgument;
 import moe.plushie.armourers_workshop.init.command.ListArgument;
-import moe.plushie.armourers_workshop.init.command.AWCommands;
+import moe.plushie.armourers_workshop.init.command.ModCommands;
+import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.gui.SkinLibraryScreen;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
@@ -57,32 +57,32 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-public class AWRegistry {
+public class ModRegistry {
 
 
     public void registerBlocks(RegistryEvent.Register<Block> event) {
-        AWBlocks.forEach(event.getRegistry()::register);
+        ModBlocks.forEach(event.getRegistry()::register);
     }
 
     public void registerItems(RegistryEvent.Register<Item> event) {
-        AWItems.forEach(event.getRegistry()::register);
+        ModItems.forEach(event.getRegistry()::register);
     }
 
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
-        AWEntities.forEach(event.getRegistry()::register);
+        ModEntities.forEach(event.getRegistry()::register);
     }
 
     public void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(AWEntities.MANNEQUIN, MannequinEntity.createLivingAttributes().build());
-        event.put(AWEntities.SEAT, MannequinEntity.createLivingAttributes().build());
+        event.put(ModEntities.MANNEQUIN, MannequinEntity.createLivingAttributes().build());
+        event.put(ModEntities.SEAT, MannequinEntity.createLivingAttributes().build());
     }
 
     public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-        AWTileEntities.forEach(event.getRegistry()::register);
+        ModTileEntities.forEach(event.getRegistry()::register);
     }
 
     public void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
-        AWContainerTypes.forEach(event.getRegistry()::register);
+        ModContainerTypes.forEach(event.getRegistry()::register);
     }
 
 
@@ -92,24 +92,24 @@ public class AWRegistry {
     }
 
     public void registerCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(AWCommands.commands());
+        event.getDispatcher().register(ModCommands.commands());
     }
 
     @OnlyIn(Dist.CLIENT)
     public void registerItemModels(ModelRegistryEvent event) {
-        ItemModelsProperties.register(AWItems.BOTTLE, AWCore.resource("empty"), BottleItem::isEmpty);
-        ItemModelsProperties.register(AWItems.SKIN, AWCore.resource("loading"), SkinItem::getIconIndex);
-        ItemModelsProperties.register(AWItems.LINKING_TOOL, AWCore.resource("empty"), LinkingToolItem::isEmpty);
+        ItemModelsProperties.register(ModItems.BOTTLE, AWCore.resource("empty"), BottleItem::isEmpty);
+        ItemModelsProperties.register(ModItems.SKIN, AWCore.resource("loading"), SkinItem::getIconIndex);
+        ItemModelsProperties.register(ModItems.LINKING_TOOL, AWCore.resource("empty"), LinkingToolItem::isEmpty);
     }
 
     @OnlyIn(Dist.CLIENT)
     public void registerItemColors(ColorHandlerEvent.Item event) {
-        event.getItemColors().register(ColoredItem.getColorProvider(0), AWItems.BOTTLE);
+        event.getItemColors().register(ColoredItem.getColorProvider(0), ModItems.BOTTLE);
     }
 
     @OnlyIn(Dist.CLIENT)
     public void registerBlockColors(ColorHandlerEvent.Block event) {
-        event.getBlockColors().register(ColourMixerBlock.getColorProvider(1), AWBlocks.COLOUR_MIXER);
+        event.getBlockColors().register(ColourMixerBlock.getColorProvider(1), ModBlocks.COLOUR_MIXER);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -128,25 +128,31 @@ public class AWRegistry {
 
     @OnlyIn(Dist.CLIENT)
     public void onClientSetup(FMLClientSetupEvent event) {
-        ScreenManager.register(AWContainerTypes.WARDROBE, SkinWardrobeScreen::new);
-        ScreenManager.register(AWContainerTypes.SKINNABLE, SkinnableScreen::new);
-        ScreenManager.register(AWContainerTypes.DYE_TABLE, DyeTableScreen::new);
-        ScreenManager.register(AWContainerTypes.SKINNING_TABLE, SkinningTableScreen::new);
-        ScreenManager.register(AWContainerTypes.HOLOGRAM_PROJECTOR, HologramProjectorScreen::new);
-        ScreenManager.register(AWContainerTypes.COLOUR_MIXER, ColourMixerScreen::new);
+        ScreenManager.register(ModContainerTypes.WARDROBE, SkinWardrobeScreen::new);
+        ScreenManager.register(ModContainerTypes.SKINNABLE, SkinnableScreen::new);
+        ScreenManager.register(ModContainerTypes.DYE_TABLE, DyeTableScreen::new);
+        ScreenManager.register(ModContainerTypes.SKINNING_TABLE, SkinningTableScreen::new);
+        ScreenManager.register(ModContainerTypes.SKIN_LIBRARY_CREATIVE, SkinLibraryScreen::new);
+        ScreenManager.register(ModContainerTypes.SKIN_LIBRARY, SkinLibraryScreen::new);
+        ScreenManager.register(ModContainerTypes.SKIN_LIBRARY_GLOBAL, GlobalSkinLibraryScreen::new);
+        ScreenManager.register(ModContainerTypes.HOLOGRAM_PROJECTOR, HologramProjectorScreen::new);
+        ScreenManager.register(ModContainerTypes.COLOUR_MIXER, ColourMixerScreen::new);
 
         ClientRegistry.registerKeyBinding(KeyBindings.UNDO_KEY);
         ClientRegistry.registerKeyBinding(KeyBindings.OPEN_WARDROBE_KEY);
 
-        ClientRegistry.bindTileEntityRenderer(AWTileEntities.HOLOGRAM_PROJECTOR, HologramProjectorTileEntityRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(AWTileEntities.SKINNABLE, SkinnableTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModTileEntities.HOLOGRAM_PROJECTOR, HologramProjectorTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKINNABLE, SkinnableTileEntityRenderer::new);
 
-        RenderingRegistry.registerEntityRenderingHandler(AWEntities.MANNEQUIN, MannequinEntityRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(AWEntities.SEAT, SeatEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.MANNEQUIN, MannequinEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.SEAT, SeatEntityRenderer::new);
 
-        RenderTypeLookup.setRenderLayer(AWBlocks.COLOUR_MIXER, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(AWBlocks.SKINNING_TABLE, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(AWBlocks.DYE_TABLE, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.COLOUR_MIXER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKINNING_TABLE, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_LIBRARY_CREATIVE, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_LIBRARY, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_LIBRARY_GLOBAL, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.DYE_TABLE, RenderType.cutout());
 
         event.enqueueWork(SkinRendererManager::init);
         event.enqueueWork(ClientWardrobeHandler::init);

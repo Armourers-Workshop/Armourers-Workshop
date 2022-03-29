@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.tileentity;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.AWTileEntities;
+import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -59,7 +59,7 @@ public class HologramProjectorTileEntity extends RotableContainerTileEntity {
     private Vector3f rotationOffset = new Vector3f();
 
     public HologramProjectorTileEntity() {
-        super(AWTileEntities.HOLOGRAM_PROJECTOR);
+        super(ModTileEntities.HOLOGRAM_PROJECTOR);
     }
 
     @Override

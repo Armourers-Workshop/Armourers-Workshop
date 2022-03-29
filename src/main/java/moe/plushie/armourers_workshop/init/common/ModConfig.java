@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.common;
 
-public class AWConfig {
+public class ModConfig {
 
     // Performance
     public static int renderDistanceSkin;
@@ -84,7 +84,6 @@ public class AWConfig {
     public static boolean debugSkinBounds = false;
     public static boolean debugSkinPartBounds = false;
 
-    public static boolean debugTargetOrigin = false;
     public static boolean debugTargetBounds = false;
 
     public static boolean showDebugTextureBounds = false;
@@ -92,6 +91,11 @@ public class AWConfig {
 
     public static boolean enablePolygonOffset = true;
 
+    // Library
+    public static boolean extractOfficialSkins;
+    public static boolean libraryShowsModelPreviews = true;
+    public static boolean allowDownloadingSkins = false;
+    public static boolean allowUploadingSkins = true;
 
     public static int getNumberOfRenderLayers() {
         if (multipassSkinRendering) {
@@ -102,16 +106,16 @@ public class AWConfig {
     }
 
     public static TexturePaintType getTexturePaintType() {
-        if (AWConfig.texturePaintingType < 0) {
+        if (ModConfig.texturePaintingType < 0) {
             return TexturePaintType.DISABLED;
         }
-        if (AWConfig.texturePaintingType == 0) {
+        if (ModConfig.texturePaintingType == 0) {
 //            if (ModLoader.isModLoaded("tlauncher_custom_cape_skin")) {
 //                return TexturePaintType.MODEL_REPLACE_AW;
 //            }
             return TexturePaintType.TEXTURE_REPLACE;
         }
-        return TexturePaintType.values()[AWConfig.texturePaintingType];
+        return TexturePaintType.values()[ModConfig.texturePaintingType];
     }
 
     public enum TexturePaintType {

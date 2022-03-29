@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.handler;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import moe.plushie.armourers_workshop.init.common.AWConfig;
-import moe.plushie.armourers_workshop.init.common.AWItems;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -39,10 +39,10 @@ public class PlacementHighlightHandler {
             return;
         }
         ItemStack itemStack = player.getMainHandItem();
-        if (AWConfig.enableEntityPlacementHighlight && itemStack.getItem() == AWItems.MANNEQUIN) {
+        if (ModConfig.enableEntityPlacementHighlight && itemStack.getItem() == ModItems.MANNEQUIN) {
             renderEntityPlacement(player, event.getTarget(), event.getInfo(), event.getMatrix(), event.getBuffers());
         }
-        if (AWConfig.enableBlockPlacementHighlight && itemStack.getItem() == AWItems.SKIN) {
+        if (ModConfig.enableBlockPlacementHighlight && itemStack.getItem() == ModItems.SKIN) {
             SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
             if (descriptor.getType() == SkinTypes.BLOCK) {
                 renderBlockPlacement(player, event.getTarget(), event.getInfo(), event.getMatrix(), event.getBuffers());
@@ -86,8 +86,6 @@ public class PlacementHighlightHandler {
 
         matrixStack.translate(location.x() - origin.x(), location.y() - origin.y(), location.z() - origin.z());
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(-target.getRotation()));
-
-//        RenderUtils.drawPoint(matrixStack, buffers);
 
         BipedModel<?> model = SkinItemStackRenderer.getInstance().getMannequinModel();
         if (model != null) {

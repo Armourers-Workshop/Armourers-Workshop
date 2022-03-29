@@ -1,26 +1,15 @@
 package moe.plushie.armourers_workshop.core.render.layer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.render.SkinRenderData;
-import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
-import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
-import moe.plushie.armourers_workshop.core.utils.AWContributors;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
-import moe.plushie.armourers_workshop.init.common.AWEntities;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.Model;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+@SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
 public class DelegateBipedArmorLayer<T extends LivingEntity, M extends BipedModel<T>, A extends BipedModel<T>> extends BipedArmorLayer<T, M, A> {
 

@@ -7,7 +7,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 // /summon armourers_workshop:mannequin ~ ~1 ~ {ForgeCaps:{"armourers_workshop:entity-skin-provider":{Items:[{Slot:57b,id:"armourers_workshop:skin",Count:1b,tag:{ArmourersWorkshop:{SkinType:"armourers:outfit",Identifier:"db:a4df668d-0a2a-4f80-a89a-066f64b7fbd4"}}}]}}}
 
 
-public class AWCommands {
+public class ModCommands {
 
     /// :/armourers setSkin|giveSkin|clearSkin
     public static LiteralArgumentBuilder<CommandSource> commands() {
@@ -50,7 +50,7 @@ public class AWCommands {
                 .then(Commands.literal("setSkin").then(players().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
                 .then(Commands.literal("giveSkin").then(players().then(skins().executes(Executor::giveSkin))))
                 .then(Commands.literal("clearSkin").then(players().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
-                .then(ReflectArgumentBuilder.literal("config", AWConfig.class));
+                .then(ReflectArgumentBuilder.literal("config", ModConfig.class));
     }
 
     static ArgumentBuilder<CommandSource, ?> players() {
@@ -66,7 +66,7 @@ public class AWCommands {
     }
 
     static ArgumentBuilder<CommandSource, ?> skins() {
-        return Commands.argument("skin", new FileArgument(new File(AWCore.getRootDirectory(), "skin-library")));
+        return Commands.argument("skin", new FileArgument(AWCore.getSkinLibraryDirectory()));
     }
 
     static ArgumentBuilder<CommandSource, ?> dyes() {
@@ -91,7 +91,7 @@ public class AWCommands {
             if (skin == null) {
                 return 0;
             }
-            String resolvedIdentifier = SkinLoader.getInstance().cacheSkin(identifier, skin);
+            String resolvedIdentifier = SkinLoader.getInstance().saveSkin(identifier, skin);
             SkinDescriptor descriptor = new SkinDescriptor(resolvedIdentifier, skin.getType(), ColorScheme.EMPTY);
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {
                 SkinWardrobe wardrobe = SkinWardrobe.of(player);
@@ -138,7 +138,7 @@ public class AWCommands {
                 context.getSource().sendSuccess(new StringTextComponent("Can't found identifier " + identifier), true);
                 return 0;
             }
-            String resolvedIdentifier = SkinLoader.getInstance().cacheSkin(identifier, skin);
+            String resolvedIdentifier = SkinLoader.getInstance().saveSkin(identifier, skin);
             SkinDescriptor descriptor = new SkinDescriptor(resolvedIdentifier, skin.getType(), ColorScheme.EMPTY);
             ItemStack itemStack = descriptor.asItemStack();
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {
