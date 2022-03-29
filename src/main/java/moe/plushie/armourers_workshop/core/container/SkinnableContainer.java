@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.container;
 
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.init.common.AWBlocks;
-import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
+import moe.plushie.armourers_workshop.init.common.ModBlocks;
+import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -26,7 +26,7 @@ public class SkinnableContainer extends Container {
     private IInventory inventory;
 
     public SkinnableContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable worldPos) {
-        super(AWContainerTypes.SKINNABLE, containerId);
+        super(ModContainerTypes.SKINNABLE, containerId);
         this.pos = worldPos;
         SkinnableTileEntity tileEntity = getEntity();
         if (tileEntity == null) {
@@ -109,7 +109,7 @@ public class SkinnableContainer extends Container {
 
     @Override
     public boolean stillValid(PlayerEntity player) {
-        return stillValid(this.pos, player, AWBlocks.SKINNABLE);
+        return stillValid(this.pos, player, ModBlocks.SKINNABLE);
     }
 
     @Override

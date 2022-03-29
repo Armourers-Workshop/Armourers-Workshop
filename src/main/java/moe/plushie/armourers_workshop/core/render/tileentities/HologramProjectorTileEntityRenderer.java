@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.tileentities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
@@ -70,7 +70,7 @@ public class HologramProjectorTileEntityRenderer<T extends HologramProjectorTile
 
         matrixStack.popPose();
 
-        if (AWConfig.debugHologramProjectorBlock) {
+        if (ModConfig.debugHologramProjectorBlock) {
             BlockPos pos = entity.getBlockPos();
             matrixStack.pushPose();
             matrixStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
@@ -114,14 +114,14 @@ public class HologramProjectorTileEntityRenderer<T extends HologramProjectorTile
             RenderUtils.drawBoundingBox(matrixStack, -1, -1, -1, 1, 1, 1, Color.MAGENTA, buffers);
         }
 
-        if (AWConfig.debugHologramProjectorBlock) {
+        if (ModConfig.debugHologramProjectorBlock) {
             RenderUtils.drawPoint(matrixStack, null, 128, buffers);
         }
 
         matrixStack.mulPose(new Quaternion(rotX, -rotY, rotZ, true));
         matrixStack.translate(rotationOffset.x(), -rotationOffset.y(), rotationOffset.z());
 
-        if (AWConfig.debugHologramProjectorBlock) {
+        if (ModConfig.debugHologramProjectorBlock) {
             RenderUtils.drawPoint(matrixStack, null, 128, buffers);
         }
     }

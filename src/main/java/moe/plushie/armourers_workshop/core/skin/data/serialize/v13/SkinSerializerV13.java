@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize.v13;
 
+import com.mojang.datafixers.util.Pair;
+import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -8,7 +10,7 @@ import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.core.utils.StreamUtils;
 
 import java.io.DataInputStream;
@@ -79,11 +81,11 @@ public final class SkinSerializerV13 {
 
     public static Skin readSkinFromStream(DataInputStream stream, int fileVersion) throws IOException, InvalidCubeTypeException {
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_HEADER)) {
-            AWLog.error("Error loading skin header.");
+            ModLog.error("Error loading skin header.");
         }
 
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PROPS_HEADER)) {
-            AWLog.error("Error loading skin props header.");
+            ModLog.error("Error loading skin props header.");
         }
 
         SkinProperties properties = new SkinProperties();
@@ -92,17 +94,17 @@ public final class SkinSerializerV13 {
         try {
             properties.readFromStream(stream, fileVersion);
         } catch (IOException propE) {
-            AWLog.error("prop load failed");
+            ModLog.error("prop load failed");
             e = propE;
             loadedProps = false;
         }
 
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PROPS_FOOTER)) {
-            AWLog.error("Error loading skin props footer.");
+            ModLog.error("Error loading skin props footer.");
         }
 
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_TYPE_HEADER)) {
-            AWLog.error("Error loading skin type header.");
+            ModLog.error("Error loading skin type header.");
         }
 
         ISkinType skinType = null;
@@ -118,19 +120,19 @@ public final class SkinSerializerV13 {
                     break;
                 }
             }
-            AWLog.info("Got armourers");
+            ModLog.info("Got armourers");
             sb = new StringBuilder();
             sb.append("armourers:");
             while (SkinTypes.byName(sb.toString()) == null) {
                 sb.append(new String(new byte[]{stream.readByte()}, "UTF-8"));
             }
-            AWLog.info(sb.toString());
+            ModLog.info(sb.toString());
             skinType = SkinTypes.byName(sb.toString());
-            AWLog.info("got failed type " + skinType);
+            ModLog.info("got failed type " + skinType);
         }
 
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_TYPE_FOOTER)) {
-            AWLog.error("Error loading skin type footer.");
+            ModLog.error("Error loading skin type footer.");
         }
 
         if (skinType == null) {
@@ -138,7 +140,7 @@ public final class SkinSerializerV13 {
         }
 
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PAINT_HEADER)) {
-            AWLog.error("Error loading skin paint header.");
+            ModLog.error("Error loading skin paint header.");
         }
 
         int[] paintData = null;
@@ -151,36 +153,36 @@ public final class SkinSerializerV13 {
         }
 
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PAINT_FOOTER)) {
-            AWLog.error("Error loading skin paint footer.");
+            ModLog.error("Error loading skin paint footer.");
         }
 
         int size = stream.readByte();
         ArrayList<SkinPart> parts = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PART_HEADER)) {
-                AWLog.error("Error loading skin part header.");
+                ModLog.error("Error loading skin part header.");
             }
             SkinPart part = SkinPartSerializerV13.loadSkinPart(stream, fileVersion);
             parts.add(part);
             if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PART_FOOTER)) {
-                AWLog.error("Error loading skin part footer.");
+                ModLog.error("Error loading skin part footer.");
             }
         }
 
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_FOOTER)) {
-            AWLog.error("Error loading skin footer.");
+            ModLog.error("Error loading skin footer.");
         }
 
         return SkinSerializer.makeSkin(skinType, properties, paintData, parts);
     }
 
-    public static ISkinType readSkinTypeNameFromStream(DataInputStream stream, int fileVersion) throws IOException {
+    public static Pair<ISkinType, ISkinProperties> readSkinTypeNameFromStream(DataInputStream stream, int fileVersion) throws IOException {
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_HEADER)) {
-            AWLog.error("Error loading skin header.");
+            ModLog.error("Error loading skin header.");
         }
 
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PROPS_HEADER)) {
-            AWLog.error("Error loading skin props header.");
+            ModLog.error("Error loading skin props header.");
         }
 
         SkinProperties properties = new SkinProperties();
@@ -189,17 +191,17 @@ public final class SkinSerializerV13 {
         try {
             properties.readFromStream(stream, fileVersion);
         } catch (IOException propE) {
-            AWLog.error("prop load failed");
+            ModLog.error("prop load failed");
             e = propE;
             loadedProps = false;
         }
 
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PROPS_FOOTER)) {
-            AWLog.error("Error loading skin props footer.");
+            ModLog.error("Error loading skin props footer.");
         }
 
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_TYPE_HEADER)) {
-            AWLog.error("Error loading skin type header.");
+            ModLog.error("Error loading skin type header.");
         }
 
         ISkinType skinType = null;
@@ -215,16 +217,16 @@ public final class SkinSerializerV13 {
                     break;
                 }
             }
-            AWLog.info("Got armourers");
+            ModLog.info("Got armourers");
             sb = new StringBuilder();
             sb.append("armourers:");
             while (SkinTypes.byName(sb.toString()) == null) {
                 sb.append(new String(new byte[]{stream.readByte()}, StandardCharsets.UTF_8));
             }
-            AWLog.info(sb.toString());
+            ModLog.info(sb.toString());
             skinType = SkinTypes.byName(sb.toString());
-            AWLog.info("got failed type " + skinType);
+            ModLog.info("got failed type " + skinType);
         }
-        return skinType;
+        return Pair.of(skinType, properties);
     }
 }

@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -41,7 +41,7 @@ public class LocalDataService {
     public static void start(MinecraftServer server) {
         if (RUNNING == null) {
             RUNNING = new LocalDataService(server.getWorldPath(AWConstants.Folder.LOCAL_DB));
-            AWLog.debug("start service: {}", RUNNING.rootPath);
+            ModLog.debug("start service: {}", RUNNING.rootPath);
         }
     }
 
@@ -49,7 +49,7 @@ public class LocalDataService {
         if (RUNNING != null) {
             RUNNING.saveConfig();
             RUNNING = null;
-            AWLog.debug("stop service");
+            ModLog.debug("stop service");
         }
     }
 
@@ -60,15 +60,15 @@ public class LocalDataService {
     protected void loadConfig() {
         File rootDir = rootPath.toFile();
         if (!rootDir.exists() && !rootDir.mkdirs()) {
-            AWLog.error("Init service config fail {}", rootDir);
+            ModLog.error("Init service config fail {}", rootDir);
             return;
         }
         File indexDB = rootPath.resolve("index.dat").toFile();
         if (!indexDB.exists()) {
-            AWLog.debug("Setup new service with {}", indexDB);
+            ModLog.debug("Setup new service with {}", indexDB);
             return;
         }
-        AWLog.debug("Load service config from {}", indexDB);
+        ModLog.debug("Load service config from {}", indexDB);
         try {
             PushbackInputStream stream = new PushbackInputStream(new FileInputStream(indexDB), 2);
             CompoundNBT nbt = CompressedStreamTools.readCompressed(stream);
@@ -82,13 +82,13 @@ public class LocalDataService {
             counter.set(nbt.getInt("Counter"));
 
         } catch (IOException e) {
-            AWLog.error("Load service config fail {}", indexDB);
+            ModLog.error("Load service config fail {}", indexDB);
         }
     }
 
     protected void saveConfig() {
         File indexDB = rootPath.resolve("index.dat").toFile();
-        AWLog.debug("Save service config into {}", indexDB);
+        ModLog.debug("Save service config into {}", indexDB);
         try {
             CompoundNBT nbt = new CompoundNBT();
             ListNBT listNBT = new ListNBT();
@@ -101,12 +101,12 @@ public class LocalDataService {
             nbt.putInt("Counter", counter.get());
             CompressedStreamTools.writeCompressed(nbt, indexDB);
         } catch (IOException e) {
-            AWLog.error("Save service config fail for {}", indexDB);
+            ModLog.error("Save service config fail for {}", indexDB);
         }
     }
 
     public InputStream getFile(String identifier) {
-        AWLog.debug("Load data from db {}", identifier);
+        ModLog.debug("Load data from db {}", identifier);
         Node node = nodes.get(identifier);
         if (node == null || !node.isValid()) {
             return null;
@@ -159,7 +159,7 @@ public class LocalDataService {
                 return node.uuid;
             }
         }
-        AWLog.debug("Save data from db {}", uuid);
+        ModLog.debug("Save data from db {}", uuid);
         try {
             FileOutputStream fs = new FileOutputStream(rootPath.resolve(uuid).toFile());
             fs.write(stream.array, 0, length);

@@ -3,10 +3,11 @@ package moe.plushie.armourers_workshop.core.utils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import moe.plushie.armourers_workshop.init.common.AWConfig;
 import moe.plushie.armourers_workshop.init.common.AWCore;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -18,6 +19,10 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.LanguageMap;
+import net.minecraft.util.text.Style;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.GuiUtils;
@@ -27,6 +32,7 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 @OnlyIn(Dist.CLIENT)
 public final class RenderUtils {
@@ -37,10 +43,12 @@ public final class RenderUtils {
     public static final ResourceLocation TEX_HOLOGRAM_PROJECTOR = AWCore.resource("textures/gui/hologram_projector/hologram-projector.png");
     public static final ResourceLocation TEX_SKINNING_TABLE = AWCore.resource("textures/gui/skinning_table/skinning-table.png");
     public static final ResourceLocation TEX_DYE_TABLE = AWCore.resource("textures/gui/dye_table/dye-table.png");
+    public static final ResourceLocation TEX_SKIN_LIBRARY = AWCore.resource("textures/gui/skin_library/armour-library.png");
     public static final ResourceLocation TEX_COLOUR_MIXER = AWCore.resource("textures/gui/colour_mixer/colour-mixer.png");
 
     public static final ResourceLocation TEX_TABS = AWCore.resource("textures/gui/controls/tabs.png");
     public static final ResourceLocation TEX_COMMON = AWCore.resource("textures/gui/common.png");
+    public static final ResourceLocation TEX_LIST = AWCore.resource("textures/gui/controls/list.png");
     public static final ResourceLocation TEX_TAB_ICONS = AWCore.resource("textures/gui/controls/tab_icons.png");
     public static final ResourceLocation TEX_HUE = AWCore.resource("textures/gui/controls/slider-hue.png");
 
@@ -140,6 +148,29 @@ public final class RenderUtils {
         RenderSystem.disableScissor();
     }
 
+
+    public static void drawText(MatrixStack matrixStack, FontRenderer font, ArrayList<ITextComponent> textLines, int x, int y, int width, int height, int fontSize, int zLevel, int textColor) {
+        float f = fontSize / 9f;
+        ArrayList<ITextProperties> wrappedTextLines = new ArrayList<>();
+        for (ITextProperties textLine : textLines) {
+            wrappedTextLines.addAll(font.getSplitter().splitLines(textLine, (int) (width / f), Style.EMPTY));
+        }
+        matrixStack.pushPose();
+        matrixStack.translate(x, y, zLevel);
+        matrixStack.scale(f, f, f);
+        Matrix4f mat = matrixStack.last().pose();
+        IRenderTypeBuffer.Impl renderType = IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuilder());
+
+        int dx = 0, dy = 0;
+        for (ITextProperties line : wrappedTextLines) {
+            font.drawInBatch(LanguageMap.getInstance().getVisualOrder(line), dx, dy, -1, true, mat, renderType, false, 0, textColor);
+            dy += 10;
+        }
+
+        renderType.endBatch();
+        matrixStack.popPose();
+    }
+
     private static void drawLine(IVertexBuilder builder, Matrix4f mat, float x0, float y0, float z0, float x1, float y1, float z1, Color color) {
         builder.vertex(mat, x0, y0, z0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
         builder.vertex(mat, x1, y1, z1).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
@@ -189,10 +220,8 @@ public final class RenderUtils {
     }
 
     public static void drawTargetBox(MatrixStack matrixStack, float width, float height, float depth, IRenderTypeBuffer buffers) {
-        if (AWConfig.debugTargetBounds) {
+        if (ModConfig.debugTargetBounds) {
             drawBoundingBox(matrixStack, -width / 2, -height / 2, -depth / 2, width / 2, height / 2, depth / 2, Color.ORANGE, buffers);
-        }
-        if (AWConfig.debugTargetOrigin) {
             drawPoint(matrixStack, null, width, height, depth, buffers);
         }
     }

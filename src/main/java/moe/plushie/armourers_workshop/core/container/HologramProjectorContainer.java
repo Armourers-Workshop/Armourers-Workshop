@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.container;
 
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
-import moe.plushie.armourers_workshop.init.common.AWBlocks;
-import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
+import moe.plushie.armourers_workshop.init.common.ModBlocks;
+import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -23,7 +23,7 @@ public class HologramProjectorContainer extends Container {
     private int group;
 
     public HologramProjectorContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable worldPos) {
-        super(AWContainerTypes.HOLOGRAM_PROJECTOR, containerId);
+        super(ModContainerTypes.HOLOGRAM_PROJECTOR, containerId);
         this.pos = worldPos;
         this.playerInventory = playerInventory;
         this.inventory = getInventory();
@@ -64,7 +64,7 @@ public class HologramProjectorContainer extends Container {
 
     @Override
     public boolean stillValid(PlayerEntity player) {
-        return stillValid(this.pos, player, AWBlocks.HOLOGRAM_PROJECTOR);
+        return stillValid(this.pos, player, ModBlocks.HOLOGRAM_PROJECTOR);
     }
 
     @Override

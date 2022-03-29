@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.container;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
+import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,7 +28,7 @@ public class SkinWardrobeContainer extends Container {
     private Group group = null;
 
     public SkinWardrobeContainer(int containerId, PlayerInventory inventory, SkinWardrobe wardrobe) {
-        super(AWContainerTypes.WARDROBE, containerId);
+        super(ModContainerTypes.WARDROBE, containerId);
         this.wardrobe = wardrobe;
 
         addPlayerSlots(inventory);

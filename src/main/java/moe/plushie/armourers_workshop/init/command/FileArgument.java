@@ -9,7 +9,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.command.arguments.IArgumentSerializer;
@@ -41,7 +41,7 @@ public class FileArgument implements ArgumentType<String> {
         this.rootPath = rootPath.getAbsolutePath();
         this.ext = ".armour";
         this.fileList = null;
-        AWLog.debug("setup root path: " + rootPath);
+        ModLog.debug("setup root path: " + rootPath);
     }
 
     FileArgument(ArrayList<String> fileList) {
@@ -148,7 +148,7 @@ public class FileArgument implements ArgumentType<String> {
     public static class Serializer implements IArgumentSerializer<FileArgument> {
 
         public void serializeToNetwork(FileArgument argument, PacketBuffer buffer) {
-            ArrayList<String> lists = argument.getFileList("/");
+            ArrayList<String> lists = argument.getFileList(SEPARATOR);
             buffer.writeInt(lists.size());
             lists.forEach(buffer::writeUtf);
         }
@@ -164,7 +164,7 @@ public class FileArgument implements ArgumentType<String> {
 
         public void serializeToJson(FileArgument argument, JsonObject json) {
             JsonArray array = new JsonArray();
-            ArrayList<String> lists = argument.getFileList("/");
+            ArrayList<String> lists = argument.getFileList(SEPARATOR);
             lists.forEach(array::add);
             json.add("files", array);
         }

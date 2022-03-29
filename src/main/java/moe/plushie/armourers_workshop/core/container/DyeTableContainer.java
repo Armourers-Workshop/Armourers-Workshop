@@ -8,10 +8,10 @@ import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.tileentity.DyeTableTileEntity;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
-import moe.plushie.armourers_workshop.init.common.AWBlocks;
-import moe.plushie.armourers_workshop.init.common.AWContainerTypes;
+import moe.plushie.armourers_workshop.init.common.ModBlocks;
+import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import moe.plushie.armourers_workshop.init.common.AWCore;
-import moe.plushie.armourers_workshop.init.common.AWItems;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -30,7 +30,7 @@ public class DyeTableContainer extends Container {
     private final IWorldPosCallable access;
 
     public DyeTableContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
-        super(AWContainerTypes.DYE_TABLE, containerId);
+        super(ModContainerTypes.DYE_TABLE, containerId);
         this.access = access;
         this.inventory = getEntity();
         this.addPlayerSlots(playerInventory, 8, 108);
@@ -57,7 +57,7 @@ public class DyeTableContainer extends Container {
 
     @Override
     public boolean stillValid(PlayerEntity player) {
-        return stillValid(this.access, player, AWBlocks.DYE_TABLE);
+        return stillValid(this.access, player, ModBlocks.DYE_TABLE);
     }
 
     @Override
@@ -153,7 +153,7 @@ public class DyeTableContainer extends Container {
             ItemStack colorStack = ItemStack.EMPTY;
             PaintColor paintColor = scheme.getColor(paintTypes[i]);
             if (paintColor != null) {
-                colorStack = new ItemStack(AWItems.BOTTLE);
+                colorStack = new ItemStack(ModItems.BOTTLE);
                 ColoredItem.setColor(colorStack, paintColor);
             }
             inventory.setItem(i, colorStack);

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.init.common.AWEntities;
+import moe.plushie.armourers_workshop.init.common.ModEntities;
 import moe.plushie.armourers_workshop.core.render.skin.*;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import net.minecraft.client.renderer.model.Model;
@@ -24,7 +24,7 @@ public class EntityProfiles {
             .add(SkinTypes.ARMOR_LEGS, EntityProfiles::playerSlots)
             .add(SkinTypes.ARMOR_FEET, EntityProfiles::playerSlots)
             .add(SkinTypes.ARMOR_WINGS, EntityProfiles::playerSlots)
-            .add(SkinTypes.ARMOR_OUTFIT, EntityProfiles::playerSlots)
+            .add(SkinTypes.OUTFIT, EntityProfiles::playerSlots)
             .add(SkinTypes.ITEM_BOW, 1)
             .add(SkinTypes.ITEM_SWORD, 1)
             .add(SkinTypes.ITEM_SHIELD, 1)
@@ -40,7 +40,7 @@ public class EntityProfiles {
             .add(SkinTypes.ARMOR_LEGS, 10)
             .add(SkinTypes.ARMOR_FEET, 10)
             .add(SkinTypes.ARMOR_WINGS, 10)
-            .add(SkinTypes.ARMOR_OUTFIT, 10)
+            .add(SkinTypes.OUTFIT, 10)
             .build();
 
     public static final EntityProfile COMMON = Builder.create()
@@ -49,7 +49,7 @@ public class EntityProfiles {
             .add(SkinTypes.ARMOR_LEGS, EntityProfiles::mobSlots)
             .add(SkinTypes.ARMOR_FEET, EntityProfiles::mobSlots)
             .add(SkinTypes.ARMOR_WINGS, EntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_OUTFIT, EntityProfiles::mobSlots)
+            .add(SkinTypes.OUTFIT, EntityProfiles::mobSlots)
             .add(SkinTypes.ITEM_BOW, 1)
             .add(SkinTypes.ITEM_SWORD, 1)
             .add(SkinTypes.ITEM_SHIELD, 1)
@@ -65,7 +65,7 @@ public class EntityProfiles {
             .add(SkinTypes.ARMOR_LEGS, EntityProfiles::mobSlots)
             .add(SkinTypes.ARMOR_FEET, EntityProfiles::mobSlots)
             .add(SkinTypes.ARMOR_WINGS, EntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_OUTFIT, EntityProfiles::mobSlots)
+            .add(SkinTypes.OUTFIT, EntityProfiles::mobSlots)
             .build();
 
     public static final EntityProfile CHICKEN = Builder.create()
@@ -88,11 +88,11 @@ public class EntityProfiles {
     private static final HashMap<EntityType<?>, EntityProfile> PROFILES = new HashMap<>();
 
     private static int playerSlots(ISkinType type) {
-        return AWConfig.prefersWardrobeSlots;
+        return ModConfig.prefersWardrobeSlots;
     }
 
     private static int mobSlots(ISkinType type) {
-        return AWConfig.prefersWardrobeMobSlots;
+        return ModConfig.prefersWardrobeMobSlots;
     }
 
     public static void init() {
@@ -127,7 +127,7 @@ public class EntityProfiles {
 //        register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
 //        register(EntityType.IRON_GOLEM, EntityProfiles.MANNEQUIN, () -> IronGolemSkinRenderer::new);
 
-        register(AWEntities.MANNEQUIN, EntityProfiles.MANNEQUIN, () -> PlayerSkinRenderer::new);
+        register(ModEntities.MANNEQUIN, EntityProfiles.MANNEQUIN, () -> PlayerSkinRenderer::new);
 
         // TODO: custom register
         register("customnpcs:customnpc", EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);

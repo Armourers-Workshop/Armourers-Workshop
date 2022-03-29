@@ -29,14 +29,14 @@ import net.minecraft.util.ResourceLocation;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public final class AWTileEntities {
+public final class ModTileEntities {
 
     private static final HashMap<ResourceLocation, TileEntityType<?>> REGISTERED_ENTITY_TYPES = new HashMap<>();
 
-    public static final TileEntityType<HologramProjectorTileEntity> HOLOGRAM_PROJECTOR = register("hologram-projector", TileEntityType.Builder.of(HologramProjectorTileEntity::new, AWBlocks.HOLOGRAM_PROJECTOR));
-    public static final TileEntityType<SkinnableTileEntity> SKINNABLE = register("skinnable", TileEntityType.Builder.of(SkinnableTileEntity::new, AWBlocks.SKINNABLE));
-    public static final TileEntityType<ColourMixerTileEntity> COLOUR_MIXER = register("colour-mixer", TileEntityType.Builder.of(ColourMixerTileEntity::new, AWBlocks.COLOUR_MIXER));
-    public static final TileEntityType<DyeTableTileEntity> DYE_TABLE = register("dye-table", TileEntityType.Builder.of(DyeTableTileEntity::new, AWBlocks.DYE_TABLE));
+    public static final TileEntityType<HologramProjectorTileEntity> HOLOGRAM_PROJECTOR = register("hologram-projector", TileEntityType.Builder.of(HologramProjectorTileEntity::new, ModBlocks.HOLOGRAM_PROJECTOR));
+    public static final TileEntityType<SkinnableTileEntity> SKINNABLE = register("skinnable", TileEntityType.Builder.of(SkinnableTileEntity::new, ModBlocks.SKINNABLE));
+    public static final TileEntityType<ColourMixerTileEntity> COLOUR_MIXER = register("colour-mixer", TileEntityType.Builder.of(ColourMixerTileEntity::new, ModBlocks.COLOUR_MIXER));
+    public static final TileEntityType<DyeTableTileEntity> DYE_TABLE = register("dye-table", TileEntityType.Builder.of(DyeTableTileEntity::new, ModBlocks.DYE_TABLE));
 
 
     public static void forEach(Consumer<TileEntityType<?>> action) {

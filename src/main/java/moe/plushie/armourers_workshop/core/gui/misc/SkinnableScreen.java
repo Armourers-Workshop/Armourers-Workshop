@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.gui.misc;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.container.SkinnableContainer;
+import moe.plushie.armourers_workshop.core.gui.widget.AWAbstractContainerScreen;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @SuppressWarnings({"unused", "NullableProblems"})
 @OnlyIn(Dist.CLIENT)
-public class SkinnableScreen extends ContainerScreen<SkinnableContainer> {
+public class SkinnableScreen extends AWAbstractContainerScreen<SkinnableContainer> {
 
     public SkinnableScreen(SkinnableContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, container.getTitle());
@@ -44,12 +45,5 @@ public class SkinnableScreen extends ContainerScreen<SkinnableContainer> {
             Slot slot = slots.get(i);
             RenderUtils.blit(matrixStack, leftPos + slot.x - 1, topPos + slot.y - 1, 238, 0, 18, 18);
         }
-    }
-
-    @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrixStack, mouseX, mouseY);
     }
 }

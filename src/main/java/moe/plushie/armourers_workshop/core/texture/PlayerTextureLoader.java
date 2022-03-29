@@ -5,7 +5,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.texture.DownloadingTexture;
@@ -115,7 +115,7 @@ public class PlayerTextureLoader {
                 loadCustomTexture(url);
                 complete.accept(Optional.of(descriptor));
             } catch (MalformedURLException e) {
-                AWLog.info("input a invalid url '{}'", url);
+                ModLog.info("input a invalid url '{}'", url);
                 complete.accept(Optional.empty());
             }
             return;
@@ -184,7 +184,7 @@ public class PlayerTextureLoader {
             }
             slim = Objects.equals(pendingTexture.getModel(), "slim");
             pendingTexture.setTexture(new BakedEntityTexture(pendingTexture.getLocation(), image, slim));
-            AWLog.debug("Baked a player texture => {}, slim => {}", pendingTexture.getLocation(), slim);
+            ModLog.debug("Baked a player texture => {}, slim => {}", pendingTexture.getLocation(), slim);
         }
     }
 
@@ -216,7 +216,7 @@ public class PlayerTextureLoader {
             if (model == null) {
                 model = "default";
             }
-            AWLog.debug("Receive a player texture => {}", location);
+            ModLog.debug("Receive a player texture => {}", location);
             PlayerTexture resolvedTexture = new PlayerTexture(profileTexture.getUrl(), location, model);
             textures.put(descriptor, Optional.of(resolvedTexture));
             textures2.put(location, Optional.of(resolvedTexture));
@@ -242,7 +242,7 @@ public class PlayerTextureLoader {
         String sub = identifier.length() > 2 ? identifier.substring(0, 2) : "xx";
         File path = new File(AWCore.getRootDirectory() + "/skin-textures/" + sub + "/" + identifier);
         DownloadingTexture downloadingTexture = new DownloadingTexture(path, url, DefaultPlayerSkin.getDefaultSkin(), true, () -> {
-            AWLog.debug("Receive a player texture => {}", location);
+            ModLog.debug("Receive a player texture => {}", location);
             textures.put(descriptor, Optional.of(resolvedTexture));
             textures2.put(location, Optional.of(resolvedTexture));
             loading.remove(descriptor);

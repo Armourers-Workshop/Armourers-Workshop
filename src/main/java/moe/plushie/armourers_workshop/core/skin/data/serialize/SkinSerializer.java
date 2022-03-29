@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.skin.data.serialize;
 
+import com.mojang.datafixers.util.Pair;
 import io.netty.buffer.ByteBuf;
+import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -64,7 +66,7 @@ public class SkinSerializer {
         }
     }
 
-    public static ISkinType readSkinTypeNameFromStream(DataInputStream stream) throws IOException, NewerFileVersionException {
+    public static Pair<ISkinType, ISkinProperties> readSkinTypeNameFromStream(DataInputStream stream) throws IOException, NewerFileVersionException {
         int fileVersion = stream.readInt();
         if (fileVersion > MAX_FILE_VERSION) {
             throw new NewerFileVersionException();

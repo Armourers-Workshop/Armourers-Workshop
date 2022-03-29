@@ -11,7 +11,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class AWImageButton extends Button {
 
-    private final ResourceLocation resourceLocation;
+    private ITextComponent disabledMessage;
+
+    private final ResourceLocation texture;
 
     private final int xTexStart;
     private final int yTexStart;
@@ -30,7 +32,15 @@ public class AWImageButton extends Button {
         this.textureHeight = textureHeight;
         this.xTexStart = u;
         this.yTexStart = v;
-        this.resourceLocation = texture;
+        this.texture = texture;
+    }
+
+    public boolean isEnabled() {
+        return active;
+    }
+
+    public void setEnabled(boolean isEnabled) {
+        this.active = isEnabled;
     }
 
     public void setPosition(int x, int y) {
@@ -46,23 +56,36 @@ public class AWImageButton extends Button {
         this.isSelected = isSelected;
     }
 
+    public void setDisabledMessage(ITextComponent message) {
+        this.disabledMessage = message;
+    }
+
+    @Override
+    public ITextComponent getMessage() {
+        if (!this.active && this.disabledMessage != null) { {
+            return this.disabledMessage;
+        }}
+        return super.getMessage();
+    }
+
+    @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (!visible) {
             return;
         }
-        RenderUtils.bind(resourceLocation);
         int u = xTexStart + width * getState();
-        int v = yTexStart;
-//        RenderSystem.enableDepthTest();
-        blit(matrixStack, x, y, u, v, width, height, textureWidth, textureHeight);
+        RenderUtils.blit(matrixStack, x, y, u, yTexStart, width, height, textureWidth, textureHeight, texture);
         if (this.isHovered()) {
             this.renderToolTip(matrixStack, mouseX, mouseY);
         }
     }
 
-    private int getState() {
+    protected int getState() {
         int state = 0;
-        if (this.isHovered()) {
+        if (!active) {
+            return 2;
+        }
+        if (isHovered()) {
             state += 1;
         }
         if (isSelected) {

@@ -1,15 +1,16 @@
 package moe.plushie.armourers_workshop;
 
 
-import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobeProvider;
-import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
-import moe.plushie.armourers_workshop.init.common.AWRegistry;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
+import moe.plushie.armourers_workshop.init.common.AWCore;
+import moe.plushie.armourers_workshop.core.data.LocalDataService;
+import moe.plushie.armourers_workshop.init.common.ModRegistry;
+import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -40,7 +41,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod("armourers_workshop")
 public class ArmourersWorkshop {
 
-    private final AWRegistry registry = new AWRegistry();
+    private final ModRegistry registry = new ModRegistry();
+    private final SkinLibraryManager libraryManager = DistExecutor.safeRunForDist(() -> SkinLibraryManager.Client::new, () -> SkinLibraryManager.Server::new);
 
     public ArmourersWorkshop() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -75,7 +77,6 @@ public class ArmourersWorkshop {
 //        }
 //    }
 
-
     @SubscribeEvent
     public void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         Entity entity = event.getObject();
@@ -84,6 +85,21 @@ public class ArmourersWorkshop {
             event.addCapability(SkinWardrobeProvider.WARDROBE_ID, new SkinWardrobeProvider(entity, profile));
         }
     }
+
+    @SubscribeEvent
+    public void onStartTracking(PlayerEvent.StartTracking event) {
+        if (event.isCanceled()) {
+            return;
+        }
+        if (EntityProfiles.getProfile(event.getTarget()) == null) {
+            return;
+        }
+        SkinWardrobe wardrobe = SkinWardrobe.of(event.getTarget());
+        if (wardrobe != null) {
+            wardrobe.broadcast((ServerPlayerEntity) event.getPlayer());
+        }
+    }
+
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
@@ -110,21 +126,9 @@ public class ArmourersWorkshop {
         }
     }
 
-    @SubscribeEvent
-    public void onStartTracking(PlayerEvent.StartTracking event) {
-        if (event.isCanceled()) {
-            return;
-        }
-        if (EntityProfiles.getProfile(event.getTarget()) == null) {
-            return;
-        }
-        SkinWardrobe wardrobe = SkinWardrobe.of(event.getTarget());
-        if (wardrobe != null) {
-            wardrobe.broadcast((ServerPlayerEntity) event.getPlayer());
-        }
-    }
 
     private void onCommonSetup(FMLLoadCompleteEvent event) {
+        libraryManager.run();
         event.enqueueWork(registry::onCommonSetup);
     }
 
@@ -135,7 +139,7 @@ public class ArmourersWorkshop {
     }
 
     private void onServerStart(FMLServerAboutToStartEvent event) {
-        AWLog.debug("hello");
+        ModLog.debug("hello");
         LocalDataService.start(event.getServer());
     }
 
@@ -144,6 +148,6 @@ public class ArmourersWorkshop {
     }
 
     private void onServerStop(FMLServerStoppedEvent event) {
-        AWLog.debug("bye");
+        ModLog.debug("bye");
     }
 }

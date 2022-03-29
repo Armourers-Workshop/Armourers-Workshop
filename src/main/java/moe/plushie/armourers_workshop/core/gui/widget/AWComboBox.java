@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.gui.widget;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FocusableGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.button.Button;
@@ -45,7 +44,7 @@ public class AWComboBox extends Button {
         this.fontHeight = font.lineHeight;
         this.list = new ComboItemList(items, width, height, y + height + 1, x, font.lineHeight + 2);
         this.selectedIndex = selectedIndex;
-        this.handWidth = 14;
+        this.handWidth = height;
         this.handHeight = height;
         this.handX = x + width - handWidth;
         this.handY = y;
@@ -106,9 +105,10 @@ public class AWComboBox extends Button {
         int textWidth = font.width(text);
         font.draw(matrixStack, text, handX + (handWidth - textWidth) / 2.0f, textY, 0xffffff);
 
+        int itemY = (handHeight - 14) / 2;
         ComboItem item = getSelectedItem();
         if (item != null) {
-            item.render(matrixStack, x, y, width, height, mouseX, mouseY, partialTicks, true);
+            item.render(matrixStack, x, y + itemY, width, height, mouseX, mouseY, partialTicks, true);
         }
 
         if (popping) {

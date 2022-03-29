@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.core.utils.StreamUtils;
 
 import java.io.DataInputStream;
@@ -27,7 +27,7 @@ public final class SkinPartSerializerV14 {
         String regName = StreamUtils.readString(stream, StandardCharsets.US_ASCII);
         skinPart = SkinPartTypes.byName(regName);
         if (skinPart == null) {
-            AWLog.error("Skin part was null - reg name: " + regName + " version: " + version);
+            ModLog.error("Skin part was null - reg name: " + regName + " version: " + version);
             throw new IOException("Skin part was null - reg name: " + regName + " version: " + version);
         }
 

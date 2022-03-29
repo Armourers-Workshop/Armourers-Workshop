@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.capability;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
-import moe.plushie.armourers_workshop.core.render.SkinRenderData;
+import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -19,15 +19,15 @@ public class SkinDataStorage {
     protected int lastRenderDataTickCount = Integer.MAX_VALUE;
 
     public SkinDataStorage(Entity entity) {
-        this.wardrobe = SkinWardrobe.get(entity);
-        this.renderData = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> SkinRenderData.get(entity));
+        this.wardrobe = getLazyWardrobe(entity);
+        this.renderData = getLazyRenderData(entity);
     }
 
     @Nullable
     public static SkinWardrobe getWardrobe(Entity entity) {
-        SkinDataStorage storage = of(entity);
+        SkinDataStorage storage = getDataStore(entity);
         if (storage.wardrobe != null && !storage.wardrobe.isPresent()) {
-            storage.wardrobe = SkinWardrobe.get(entity);
+            storage.wardrobe = getLazyWardrobe(entity);
         }
         if (storage.wardrobe != null) {
             return storage.wardrobe.resolve().orElse(null);
@@ -38,7 +38,7 @@ public class SkinDataStorage {
     @OnlyIn(Dist.CLIENT)
     @Nullable
     public static SkinRenderData getRenderData(Entity entity) {
-        SkinDataStorage storage = of(entity);
+        SkinDataStorage storage = getDataStore(entity);
         if (storage.renderData == null) {
             return null;
         }
@@ -50,7 +50,7 @@ public class SkinDataStorage {
         return storage.renderData.resolve().orElse(null);
     }
 
-    protected static SkinDataStorage of(Entity entity) {
+    private static SkinDataStorage getDataStore(Entity entity) {
         ISkinDataProvider provider = (ISkinDataProvider) entity;
         SkinDataStorage snapshot = provider.getSkinData();
         if (snapshot == null) {
@@ -58,5 +58,19 @@ public class SkinDataStorage {
             provider.setSkinData(snapshot);
         }
         return snapshot;
+    }
+
+    @Nullable
+    private static LazyOptional<SkinWardrobe> getLazyWardrobe(Entity entity) {
+        LazyOptional<SkinWardrobe> wardrobe = entity.getCapability(SkinWardrobeProvider.WARDROBE_KEY);
+        if (wardrobe.isPresent()) {
+            return wardrobe;
+        }
+        return null;
+    }
+
+    @Nullable
+    private static LazyOptional<SkinRenderData> getLazyRenderData(Entity entity) {
+        return DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> LazyOptional.of(SkinRenderData::new));
     }
 }

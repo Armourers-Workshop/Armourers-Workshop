@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.init.common;
 import moe.plushie.armourers_workshop.core.item.*;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
+import moe.plushie.armourers_workshop.library.block.SkinLibraryBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.*;
 import net.minecraft.util.NonNullList;
@@ -16,7 +17,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
-public class AWItems {
+public class ModItems {
 
     private static final ArrayList<Item> REGISTERED_ITEMS_SORTED = new ArrayList<>();
     private static final HashMap<ResourceLocation, Item> REGISTERED_ITEMS = new HashMap<>();
@@ -40,10 +41,15 @@ public class AWItems {
     public static final Item SKIN = register("skin", SkinItem::new, p -> p.setISTER(() -> SkinItemStackRenderer::getInstance));
     public static final Item MANNEQUIN = register("mannequin", MannequinItem::new, p -> p.tab(MAIN_GROUP).setISTER(() -> SkinItemStackRenderer::getInstance));
 
-    public static final Item HOLOGRAM_PROJECTOR = registerBlock("hologram-projector", AWBlocks.HOLOGRAM_PROJECTOR, p -> p.tab(MAIN_GROUP));
-    public static final Item SKINNING_TABLE = registerBlock("skinning-table", AWBlocks.SKINNING_TABLE, p -> p.tab(MAIN_GROUP));
-    public static final Item DYE_TABLE = registerBlock("dye-table", AWBlocks.DYE_TABLE, p -> p.tab(MAIN_GROUP));
-    public static final Item COLOUR_MIXER = registerBlock("colour-mixer", AWBlocks.COLOUR_MIXER, p -> p.tab(MAIN_GROUP));
+    public static final Item HOLOGRAM_PROJECTOR = registerBlock("hologram-projector", ModBlocks.HOLOGRAM_PROJECTOR, p -> p.tab(MAIN_GROUP));
+    public static final Item SKINNING_TABLE = registerBlock("skinning-table", ModBlocks.SKINNING_TABLE, p -> p.tab(MAIN_GROUP));
+    public static final Item DYE_TABLE = registerBlock("dye-table", ModBlocks.DYE_TABLE, p -> p.tab(MAIN_GROUP));
+
+    public static final Item SKIN_LIBRARY_CREATIVE = registerBlock("skin-library-creative", ModBlocks.SKIN_LIBRARY_CREATIVE, p -> p.tab(MAIN_GROUP));
+    public static final Item SKIN_LIBRARY = registerBlock("skin-library", ModBlocks.SKIN_LIBRARY, p -> p.tab(MAIN_GROUP));
+    public static final Item SKIN_LIBRARY_GLOBAL = registerBlock("skin-library-global", ModBlocks.SKIN_LIBRARY_GLOBAL, p -> p.tab(MAIN_GROUP));
+
+    public static final Item COLOUR_MIXER = registerBlock("colour-mixer", ModBlocks.COLOUR_MIXER, p -> p.tab(MAIN_GROUP));
 
     public static final Item BOTTLE = register("dye-bottle", BottleItem::new, p -> p.tab(MAIN_GROUP));
     public static final Item SOAP = register("soap", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));

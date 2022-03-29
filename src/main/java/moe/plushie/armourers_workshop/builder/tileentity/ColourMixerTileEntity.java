@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.tileentity;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintColorProvider;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.AWTileEntities;
+import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import net.minecraft.block.BlockState;
@@ -19,7 +19,7 @@ public class ColourMixerTileEntity extends TileEntity implements IPaintColorProv
     private PaintColor color = PaintColor.WHITE;
 
     public ColourMixerTileEntity() {
-        super(AWTileEntities.COLOUR_MIXER);
+        super(ModTileEntities.COLOUR_MIXER);
     }
 
     public void readFromNBT(CompoundNBT nbt) {

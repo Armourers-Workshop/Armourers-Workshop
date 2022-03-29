@@ -87,25 +87,6 @@ public class BakedSkin implements IBakedSkin {
         return null;
     }
 
-
-    public boolean accept(SkinDescriptor other) {
-        return identifier.equals(other.getIdentifier());
-    }
-
-    public boolean accept(ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            return false;
-        }
-        ISkinType skinType = skin.getType();
-        if (skinType == SkinTypes.ITEM) {
-            return true;
-        }
-        if (skinType instanceof ISkinToolType) {
-            return itemStack.getItem().is(((ISkinToolType) skinType).getTag());
-        }
-        return false;
-    }
-
     public ColorScheme resolve(Entity entity, ColorScheme scheme) {
         if (colorDescriptor.isEmpty()) {
             return ColorScheme.EMPTY;

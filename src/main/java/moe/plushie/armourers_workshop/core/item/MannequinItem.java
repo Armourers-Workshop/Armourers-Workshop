@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.AWEntities;
+import moe.plushie.armourers_workshop.init.common.ModEntities;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.utils.MannequinRayTraceResult;
@@ -75,7 +75,7 @@ public class MannequinItem extends FlavouredItem {
         ItemStack itemStack = context.getItemInHand();
         if (world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;
-            MannequinEntity entity = AWEntities.MANNEQUIN.create(serverWorld, itemStack.getTag(), null, context.getPlayer(), rayTraceResult.getBlockPos(), SpawnReason.SPAWN_EGG, true, true);
+            MannequinEntity entity = ModEntities.MANNEQUIN.create(serverWorld, itemStack.getTag(), null, context.getPlayer(), rayTraceResult.getBlockPos(), SpawnReason.SPAWN_EGG, true, true);
             if (entity == null) {
                 return ActionResultType.FAIL;
             }

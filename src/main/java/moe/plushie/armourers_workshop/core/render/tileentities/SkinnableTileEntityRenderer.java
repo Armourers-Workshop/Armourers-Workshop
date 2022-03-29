@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.tileentities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.init.common.AWConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
@@ -59,7 +59,7 @@ public class SkinnableTileEntityRenderer<T extends SkinnableTileEntity> extends 
 
         matrixStack.popPose();
 
-        if (AWConfig.debugSkinnableBlock) {
+        if (ModConfig.debugSkinnableBlock) {
             bakedSkin.getBlockBounds().forEach((pos, rect) -> {
                 matrixStack.pushPose();
                 matrixStack.translate(0.5f, 0.5f, 0.5f);

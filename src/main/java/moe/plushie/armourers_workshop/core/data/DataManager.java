@@ -3,8 +3,7 @@ package moe.plushie.armourers_workshop.core.data;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.init.common.AWCore;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -26,7 +25,7 @@ public class DataManager {
 
 
     public Optional<ByteBuf> loadSkinData(String identifier) {
-        AWLog.debug("Load skin data: {} ", identifier);
+        ModLog.debug("Load skin data: {} ", identifier);
         InputStream stream = null;
         if (identifier.startsWith("db:")) {
             stream = LocalDataService.getInstance().getFile(identifier.substring(3));
@@ -58,8 +57,7 @@ public class DataManager {
         if (!identifier.endsWith(ext)) {
             identifier = identifier + ext;
         }
-        File rootFile = new File(AWCore.getRootDirectory(), "skin-library");
-        File file = new File(rootFile, identifier);
+        File file = new File(AWCore.getSkinLibraryDirectory(), identifier);
         if (!file.exists()) {
             return null;
         }

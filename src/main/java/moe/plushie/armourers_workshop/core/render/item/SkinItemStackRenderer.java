@@ -5,12 +5,12 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.AWEntities;
-import moe.plushie.armourers_workshop.init.common.AWItems;
+import moe.plushie.armourers_workshop.init.common.ModEntities;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.core.utils.AWContributors;
+import moe.plushie.armourers_workshop.init.common.ModContributors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -58,7 +58,7 @@ public class SkinItemStackRenderer extends ItemStackTileEntityRenderer {
         matrixStack.pushPose();
         matrixStack.translate(0.5f, 0.5f, 0.5f); // reset to center
 
-        if (item == AWItems.SKIN) {
+        if (item == ModItems.SKIN) {
             SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
             BakedSkin bakedSkin = BakedSkin.of(descriptor);
             if (bakedSkin != null) {
@@ -68,7 +68,7 @@ public class SkinItemStackRenderer extends ItemStackTileEntityRenderer {
             }
         }
 
-        if (item == AWItems.MANNEQUIN) {
+        if (item == ModItems.MANNEQUIN) {
             PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.of(itemStack);
             SkinItemRenderer.renderMannequin(descriptor, transform.rotation, transform.scale, 1, 1, 1, 0, light, matrixStack, renderTypeBuffer);
         }
@@ -79,7 +79,7 @@ public class SkinItemStackRenderer extends ItemStackTileEntityRenderer {
     public MannequinEntity getMannequinEntity() {
         ClientWorld level = Minecraft.getInstance().level;
         if (entity == null) {
-            entity = new MannequinEntity(AWEntities.MANNEQUIN, level);
+            entity = new MannequinEntity(ModEntities.MANNEQUIN, level);
             entity.setExtraRenderer(false); // never magic cir
         }
         if (entity.level != level) {
@@ -108,14 +108,14 @@ public class SkinItemStackRenderer extends ItemStackTileEntityRenderer {
                 return ItemStack.EMPTY;
             }
             GameProfile profile = player.getGameProfile();
-            AWContributors.Contributor contributor = AWContributors.getCurrentContributor();
+            ModContributors.Contributor contributor = ModContributors.getCurrentContributor();
             if (contributor != null) {
                 profile = new GameProfile(contributor.uuid, contributor.username);
             }
             PlayerTextureDescriptor descriptor = new PlayerTextureDescriptor(profile);
             CompoundNBT entityTag = new CompoundNBT();
             entityTag.put(AWConstants.NBT.ENTITY_TEXTURE, descriptor.serializeNBT());
-            playerMannequinItem = new ItemStack(AWItems.MANNEQUIN);
+            playerMannequinItem = new ItemStack(ModItems.MANNEQUIN);
             playerMannequinItem.getOrCreateTag().put(AWConstants.NBT.ENTITY, entityTag);
         }
         return playerMannequinItem;

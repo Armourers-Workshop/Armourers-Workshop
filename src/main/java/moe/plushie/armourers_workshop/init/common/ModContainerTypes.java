@@ -4,9 +4,13 @@ import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.builder.container.ColourMixerContainer;
 import moe.plushie.armourers_workshop.core.container.*;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.core.utils.AWLog;
 import moe.plushie.armourers_workshop.core.utils.ContainerTypeBuilder;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.library.block.SkinLibraryBlock;
+import moe.plushie.armourers_workshop.library.container.CreativeSkinLibraryContainer;
+import moe.plushie.armourers_workshop.library.container.GlobalSkinLibraryContainer;
+import moe.plushie.armourers_workshop.library.container.SkinLibraryContainer;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
@@ -22,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class AWContainerTypes {
+public class ModContainerTypes {
 
     private static final Map<ContainerType<? extends Container>, Opener<?>> CONTAINER_TYPES = new HashMap<>();
 
@@ -31,6 +35,10 @@ public class AWContainerTypes {
 
     public static final ContainerType<DyeTableContainer> DYE_TABLE = create("dye-table", DyeTableContainer::new, AWDataSerializers.WORLD_POS);
     public static final ContainerType<SkinningTableContainer> SKINNING_TABLE = create("skinning-table", SkinningTableContainer::new, AWDataSerializers.WORLD_POS);
+
+    public static final ContainerType<SkinLibraryContainer> SKIN_LIBRARY_CREATIVE = create("skin-library-creative", CreativeSkinLibraryContainer::new, AWDataSerializers.WORLD_POS);
+    public static final ContainerType<SkinLibraryContainer> SKIN_LIBRARY = create("skin-library", SkinLibraryContainer::new, AWDataSerializers.WORLD_POS);
+    public static final ContainerType<GlobalSkinLibraryContainer> SKIN_LIBRARY_GLOBAL = create("skin-library-global", GlobalSkinLibraryContainer::new, AWDataSerializers.WORLD_POS);
 
     public static final ContainerType<HologramProjectorContainer> HOLOGRAM_PROJECTOR = create("hologram-projector", HologramProjectorContainer::new, AWDataSerializers.WORLD_POS);
     public static final ContainerType<ColourMixerContainer> COLOUR_MIXER = create("colour-mixer", ColourMixerContainer::new, AWDataSerializers.WORLD_POS);
@@ -43,7 +51,7 @@ public class AWContainerTypes {
     public static <T> boolean open(ContainerType<?> type, PlayerEntity player, T value) {
         Opener<T> opener = (Opener<T>)CONTAINER_TYPES.get(type);
         if (opener == null) {
-            AWLog.warn("Trying to open container for unknown container type {}", type);
+            ModLog.warn("Trying to open container for unknown container type {}", type);
             return false;
         }
         return opener.open(player, value);

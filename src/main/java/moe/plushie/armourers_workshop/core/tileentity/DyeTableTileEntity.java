@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.tileentity;
 
-import moe.plushie.armourers_workshop.init.common.AWTileEntities;
+import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -12,7 +12,7 @@ public class DyeTableTileEntity extends AbstractContainerTileEntity {
     private NonNullList<ItemStack> items = NonNullList.withSize(10, ItemStack.EMPTY);
 
     public DyeTableTileEntity() {
-        super(AWTileEntities.DYE_TABLE);
+        super(ModTileEntities.DYE_TABLE);
     }
 
     @Override

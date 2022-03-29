@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        maven { url = "https://maven.aliyun.com/repository/apache-snapshots" }
         maven { url = "https://maven.minecraftforge.net" }
         mavenCentral()
     }
@@ -19,9 +20,10 @@ apply plugin: "org.spongepowered.mixin"
 apply plugin: "eclipse"
 
 repositories {
+    maven { url = "https://maven.aliyun.com/repository/apache-snapshots" }
+    maven { url = "https://maven.minecraftforge.net" }
     mavenLocal()
     mavenCentral()
-    maven { url = "https://maven.minecraftforge.net" }
 }
 
 dependencies {
@@ -31,7 +33,13 @@ dependencies {
 
 group = artifact_group
 archivesBaseName = artifact_basename
-version = project.minecraft_version + "-" + version_major + "." + version_minor + "." + version_patch + "-test"
+version = project.minecraft_version + "-" + version_major + "." + version_minor + "." + version_patch 
+
+//release = System.getenv('TEST_VERSION') ?: ""
+//if (release) {
+  version += "-test." + "2"
+//}
+
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 compileJava {

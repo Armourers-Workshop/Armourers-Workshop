@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.gui.misc;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.container.SkinningTableContainer;
+import moe.plushie.armourers_workshop.core.gui.widget.AWAbstractContainerScreen;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,7 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @SuppressWarnings({"unused", "NullableProblems"})
 @OnlyIn(Dist.CLIENT)
-public class SkinningTableScreen extends ContainerScreen<SkinningTableContainer> {
+public class SkinningTableScreen extends AWAbstractContainerScreen<SkinningTableContainer> {
 
     public SkinningTableScreen(SkinningTableContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
@@ -39,12 +40,5 @@ public class SkinningTableScreen extends ContainerScreen<SkinningTableContainer>
     protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {
         this.font.draw(matrixStack, this.getTitle(), (float) this.titleLabelX, (float) this.titleLabelY, 0x282216);
         this.font.draw(matrixStack, this.inventory.getDisplayName(), (float) this.inventoryLabelX, (float) this.inventoryLabelY, 0x282216);
-    }
-
-    @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(matrixStack, mouseX, mouseY);
     }
 }

@@ -1,10 +1,9 @@
-package moe.plushie.armourers_workshop.core.utils;
+package moe.plushie.armourers_workshop.init.common;
 
-import moe.plushie.armourers_workshop.init.common.AWCore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class AWLog {
+public class ModLog {
 
     private static final Logger LOGGER = LogManager.getLogger(AWCore.class);
 
