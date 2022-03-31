@@ -329,6 +329,7 @@
   "inventory.armourers_workshop.skin-library.rollover.refresh": "Refresh library files.",
   "inventory.armourers_workshop.skin-library.rollover.remotePrivateFiles": "View private files on the server.",
   "inventory.armourers_workshop.skin-library.rollover.remotePublicFiles": "View public files on the server.",
+  "inventory.armourers_workshop.skin-library.rollover.unauthorized": "You don't have permissions of the operation.",
   "inventory.armourers_workshop.skin-library.save": "Save",
   "inventory.armourers_workshop.skin-library.trackFile": "Track file?",
   "inventory.armourers_workshop.skin-library": "Skin Library",

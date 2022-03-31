@@ -41,21 +41,19 @@ public class ModItems {
     public static final Item SKIN = register("skin", SkinItem::new, p -> p.setISTER(() -> SkinItemStackRenderer::getInstance));
     public static final Item MANNEQUIN = register("mannequin", MannequinItem::new, p -> p.tab(MAIN_GROUP).setISTER(() -> SkinItemStackRenderer::getInstance));
 
-    public static final Item HOLOGRAM_PROJECTOR = registerBlock("hologram-projector", ModBlocks.HOLOGRAM_PROJECTOR, p -> p.tab(MAIN_GROUP));
-    public static final Item SKINNING_TABLE = registerBlock("skinning-table", ModBlocks.SKINNING_TABLE, p -> p.tab(MAIN_GROUP));
-    public static final Item DYE_TABLE = registerBlock("dye-table", ModBlocks.DYE_TABLE, p -> p.tab(MAIN_GROUP));
-
-    public static final Item SKIN_LIBRARY_CREATIVE = registerBlock("skin-library-creative", ModBlocks.SKIN_LIBRARY_CREATIVE, p -> p.tab(MAIN_GROUP));
     public static final Item SKIN_LIBRARY = registerBlock("skin-library", ModBlocks.SKIN_LIBRARY, p -> p.tab(MAIN_GROUP));
+    public static final Item SKIN_LIBRARY_CREATIVE = registerBlock("skin-library-creative", ModBlocks.SKIN_LIBRARY_CREATIVE, p -> p.tab(MAIN_GROUP));
     public static final Item SKIN_LIBRARY_GLOBAL = registerBlock("skin-library-global", ModBlocks.SKIN_LIBRARY_GLOBAL, p -> p.tab(MAIN_GROUP));
 
-    public static final Item COLOUR_MIXER = registerBlock("colour-mixer", ModBlocks.COLOUR_MIXER, p -> p.tab(MAIN_GROUP));
+    public static final Item SKINNING_TABLE = registerBlock("skinning-table", ModBlocks.SKINNING_TABLE, p -> p.tab(MAIN_GROUP));
+    public static final Item DYE_TABLE = registerBlock("dye-table", ModBlocks.DYE_TABLE, p -> p.tab(MAIN_GROUP));
+    public static final Item HOLOGRAM_PROJECTOR = registerBlock("hologram-projector", ModBlocks.HOLOGRAM_PROJECTOR, p -> p.tab(MAIN_GROUP));
 
-    public static final Item BOTTLE = register("dye-bottle", BottleItem::new, p -> p.tab(MAIN_GROUP));
     public static final Item SOAP = register("soap", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
-
-    public static final Item SKIN_TEMPLATE = register("skin-template", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));
-//    public static final Item ARMOUR_CONTAINER = register("armour-container", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));
+    public static final Item BOTTLE = register("dye-bottle", BottleItem::new, p -> p.tab(MAIN_GROUP));
+    public static final Item MANNEQUIN_TOOL = register("mannequin-tool", MannequinToolItem::new, p -> p.tab(MAIN_GROUP));
+    public static final Item ARMOURERS_HAMMER = register("armourers-hammer", ArmourersHammerItem::new, p -> p.tab(MAIN_GROUP));
+    public static final Item WAND_OF_STYLE = register("wand-of-style", WandOfStyleItem::new, p -> p.tab(MAIN_GROUP));
 
     public static final Item SKIN_UNLOCK_HEAD = register("skin-unlock-head", unlockWithBuilder(SkinSlotType.HEAD), p -> p.stacksTo(8).tab(MAIN_GROUP));
     public static final Item SKIN_UNLOCK_CHEST = register("skin-unlock-chest", unlockWithBuilder(SkinSlotType.CHEST), p -> p.stacksTo(8).tab(MAIN_GROUP));
@@ -64,8 +62,11 @@ public class ModItems {
     public static final Item SKIN_UNLOCK_WINGS = register("skin-unlock-wings", unlockWithBuilder(SkinSlotType.WINGS), p -> p.stacksTo(8).tab(MAIN_GROUP));
     public static final Item SKIN_UNLOCK_OUTFIT = register("skin-unlock-outfit", unlockWithBuilder(SkinSlotType.OUTFIT), p -> p.stacksTo(8).tab(MAIN_GROUP));
 
-    public static final Item WAND_OF_STYLE = register("wand-of-style", WandOfStyleItem::new, p -> p.tab(MAIN_GROUP));
+    public static final Item SKIN_TEMPLATE = register("skin-template", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
+//    public static final Item ARMOUR_CONTAINER = register("armour-container", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));
     public static final Item LINKING_TOOL = register("linking-tool", LinkingToolItem::new, p -> p.tab(MAIN_GROUP));
+
+    public static final Item COLOUR_MIXER = registerBlock("colour-mixer", ModBlocks.COLOUR_MIXER, p -> p.tab(MAIN_GROUP));
 
 
     private static <T extends Item> T register(String name, Function<Item.Properties, T> factory) {

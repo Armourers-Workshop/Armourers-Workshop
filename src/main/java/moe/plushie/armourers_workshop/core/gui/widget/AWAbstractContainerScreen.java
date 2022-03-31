@@ -73,7 +73,7 @@ public abstract class AWAbstractContainerScreen<T extends Container> extends Con
         if (this.isPresenting()) {
             this.renderContentLayer(matrixStack, 0, 0, partialTicks);
             matrixStack.pushPose();
-            matrixStack.translate(0, 0, 400);
+            matrixStack.translate(0, 0, 800);
             this.renderPresentLayer(matrixStack, mouseX, mouseY, partialTicks);
             matrixStack.popPose();
         } else {

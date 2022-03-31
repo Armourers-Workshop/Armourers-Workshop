@@ -75,7 +75,7 @@ public class AWImageButton extends Button {
         }
         int u = xTexStart + width * getState();
         RenderUtils.blit(matrixStack, x, y, u, yTexStart, width, height, textureWidth, textureHeight, texture);
-        if (this.isHovered()) {
+        if (this.isHovered) {
             this.renderToolTip(matrixStack, mouseX, mouseY);
         }
     }

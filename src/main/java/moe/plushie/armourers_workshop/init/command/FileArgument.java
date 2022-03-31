@@ -15,6 +15,8 @@ import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.command.arguments.IArgumentSerializer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.fml.common.Mod;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.*;
@@ -23,14 +25,13 @@ import java.util.concurrent.CompletableFuture;
 // /path/name.armour
 public class FileArgument implements ArgumentType<String> {
 
-    private static final String SEPARATOR = File.separator;
-    private static final Collection<String> EXAMPLES = Arrays.asList(SEPARATOR, SEPARATOR + "name.armour");
+    private static final Collection<String> EXAMPLES = Arrays.asList("/", "/name.armour");
 
-    public static final SimpleCommandExceptionType ERROR_START = new SimpleCommandExceptionType(new StringTextComponent("File must start with " + SEPARATOR));
+    public static final SimpleCommandExceptionType ERROR_START = new SimpleCommandExceptionType(new StringTextComponent("File must start with '/'"));
     public static final SimpleCommandExceptionType ERROR_NOT_FOUND = new SimpleCommandExceptionType(new StringTextComponent("Not found any file"));
 
-    private final String rootPath;
     private final String ext;
+    private final File rootFile;
     private final ArrayList<String> fileList;
 
     private String filteredName;
@@ -38,7 +39,7 @@ public class FileArgument implements ArgumentType<String> {
 
     FileArgument(File rootPath) {
         super();
-        this.rootPath = rootPath.getAbsolutePath();
+        this.rootFile = rootPath;
         this.ext = ".armour";
         this.fileList = null;
         ModLog.debug("setup root path: " + rootPath);
@@ -46,7 +47,7 @@ public class FileArgument implements ArgumentType<String> {
 
     FileArgument(ArrayList<String> fileList) {
         super();
-        this.rootPath = null;
+        this.rootFile = null;
         this.ext = ".armour";
         this.fileList = fileList;
     }
@@ -60,7 +61,7 @@ public class FileArgument implements ArgumentType<String> {
     @Override
     public String parse(final StringReader reader) throws CommandSyntaxException {
         String inputPath = reader.getRemaining();
-        if (inputPath.startsWith(SEPARATOR)) { // file
+        if (inputPath.startsWith("/")) { // file
             ArrayList<String> fileList = getFileList(inputPath);
             if (fileList.isEmpty()) {
                 throw ERROR_NOT_FOUND.createWithContext(reader);
@@ -78,13 +79,13 @@ public class FileArgument implements ArgumentType<String> {
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         String inputPath = builder.getRemaining();
-        if (inputPath.startsWith(SEPARATOR)) {
+        if (inputPath.startsWith("/")) {
             ArrayList<String> fileList = getFileList(inputPath);
             if (!fileList.isEmpty()) {
                 return ISuggestionProvider.suggest(fileList, builder);
             }
         } else {
-            return ISuggestionProvider.suggest(Collections.singletonList(SEPARATOR), builder);
+            return ISuggestionProvider.suggest(Collections.singletonList("/"), builder);
         }
         return Suggestions.empty();
     }
@@ -98,9 +99,9 @@ public class FileArgument implements ArgumentType<String> {
         if (Objects.equals(name, filteredName)) {
             return filteredFileList;
         }
-        if (rootPath != null) {
+        if (rootFile != null) {
             filteredName = name;
-            filteredFileList = getFileList(new File(rootPath), name);
+            filteredFileList = getFileList(rootFile, name);
         } else {
             filteredName = name;
             filteredFileList = getFileList(fileList, name);
@@ -112,10 +113,11 @@ public class FileArgument implements ArgumentType<String> {
         ArrayList<String> results = new ArrayList<>();
         File[] files = root.listFiles();
         if (files == null) {
+            ModLog.error("Load file error at {}", root);
             return results;
         }
         for (File file : files) {
-            String rv = file.getAbsolutePath().substring(rootPath.length());
+            String rv = FilenameUtils.normalize(file.getAbsolutePath().replace(rootFile.getAbsolutePath(), ""), true);
             if (file.isDirectory()) {
                 if (name.startsWith(rv)) {
                     results.addAll(getFileList(file, name));
@@ -148,7 +150,7 @@ public class FileArgument implements ArgumentType<String> {
     public static class Serializer implements IArgumentSerializer<FileArgument> {
 
         public void serializeToNetwork(FileArgument argument, PacketBuffer buffer) {
-            ArrayList<String> lists = argument.getFileList(SEPARATOR);
+            ArrayList<String> lists = argument.getFileList("/");
             buffer.writeInt(lists.size());
             lists.forEach(buffer::writeUtf);
         }
@@ -164,7 +166,7 @@ public class FileArgument implements ArgumentType<String> {
 
         public void serializeToJson(FileArgument argument, JsonObject json) {
             JsonArray array = new JsonArray();
-            ArrayList<String> lists = argument.getFileList(SEPARATOR);
+            ArrayList<String> lists = argument.getFileList("/");
             lists.forEach(array::add);
             json.add("files", array);
         }

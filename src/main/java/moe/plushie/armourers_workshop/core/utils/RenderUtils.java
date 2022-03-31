@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 
 @OnlyIn(Dist.CLIENT)
 public final class RenderUtils {
@@ -149,11 +150,20 @@ public final class RenderUtils {
     }
 
 
-    public static void drawText(MatrixStack matrixStack, FontRenderer font, ArrayList<ITextComponent> textLines, int x, int y, int width, int height, int fontSize, int zLevel, int textColor) {
+    public static void drawText(MatrixStack matrixStack, FontRenderer font, ITextComponent text, int x, int y, int width, int zLevel, int textColor) {
+        drawText(matrixStack, font, Collections.singleton(text), x, y, width, zLevel, false, 9, textColor);
+    }
+
+    public static void drawShadowText(MatrixStack matrixStack, Iterable<ITextComponent> lines, int x, int y, int width, int zLevel, FontRenderer font, int fontSize, int textColor) {
+        drawText(matrixStack, font, lines, x, y, width, zLevel, true, fontSize, textColor);
+    }
+
+    public static void drawText(MatrixStack matrixStack, FontRenderer font, Iterable<ITextComponent> lines, int x, int y, int width, int zLevel, boolean shadow, int fontSize, int textColor) {
         float f = fontSize / 9f;
         ArrayList<ITextProperties> wrappedTextLines = new ArrayList<>();
-        for (ITextProperties textLine : textLines) {
-            wrappedTextLines.addAll(font.getSplitter().splitLines(textLine, (int) (width / f), Style.EMPTY));
+        Style style = Style.EMPTY.withColor(net.minecraft.util.text.Color.fromRgb(textColor));
+        for (ITextProperties line : lines) {
+            wrappedTextLines.addAll(font.getSplitter().splitLines(line, (int) (width / f), style));
         }
         matrixStack.pushPose();
         matrixStack.translate(x, y, zLevel);
@@ -163,7 +173,7 @@ public final class RenderUtils {
 
         int dx = 0, dy = 0;
         for (ITextProperties line : wrappedTextLines) {
-            font.drawInBatch(LanguageMap.getInstance().getVisualOrder(line), dx, dy, -1, true, mat, renderType, false, 0, textColor);
+            font.drawInBatch(LanguageMap.getInstance().getVisualOrder(line), dx, dy, -1, shadow, mat, renderType, false, 0, 15728880);
             dy += 10;
         }
 

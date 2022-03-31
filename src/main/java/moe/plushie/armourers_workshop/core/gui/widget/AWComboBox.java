@@ -64,7 +64,7 @@ public class AWComboBox extends Button {
     }
 
     public int getHandState() {
-        if (isHovered) {
+        if (isHovered()) {
             return 1;
         }
         return 0;

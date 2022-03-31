@@ -34,7 +34,7 @@ public class SkinLoader {
 
     private final FastCache cache = new FastCache();
     private final DataLoader<String, Skin> manager = DataLoader.newBuilder()
-            .threadPool(1)
+            .threadPool("AW-Skin-Loader", Thread.MIN_PRIORITY, 1)
             .build(this::loadSkinFileIfNeeded);
 
     private int queueCount = 1;
@@ -114,8 +114,9 @@ public class SkinLoader {
     }
 
     private void loadSkinFileIfNeeded(String identifier, @Nullable Consumer<Optional<Skin>> complete) {
+        boolean isLocalResource = identifier.startsWith("fs:");
         boolean isClientSide = !LocalDataService.isRunning();
-        if (isClientSide) {
+        if (isClientSide && !isLocalResource) {
             loadRemoteSkinFile(identifier, complete);
             return;
         }

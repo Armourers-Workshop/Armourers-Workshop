@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.handler.ItemTooltipHandler;
 import moe.plushie.armourers_workshop.core.handler.KeyboardHandler;
 import moe.plushie.armourers_workshop.core.handler.PlacementHighlightHandler;
-import moe.plushie.armourers_workshop.core.handler.PlayerNetworkHandler;
 import moe.plushie.armourers_workshop.core.render.skin.*;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -24,7 +23,6 @@ public class ClientEventHandler {
         eventBus.register(new ClientEventHandler());
         eventBus.register(new ItemTooltipHandler());
         eventBus.register(new KeyboardHandler());
-        eventBus.register(new PlayerNetworkHandler());
         eventBus.register(new PlacementHighlightHandler());
     }
 

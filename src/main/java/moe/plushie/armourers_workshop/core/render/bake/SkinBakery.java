@@ -36,7 +36,7 @@ public final class SkinBakery {
     private final ArrayList<IBakeListener> listeners = new ArrayList<>();
 
     private final DataLoader<String, BakedSkin> manager = DataLoader.newBuilder()
-            .threadPool(1)
+            .threadPool("AW-Skin-Bakery", Thread.MIN_PRIORITY, 1)
             .build(this::loadAndBakeSkin);
 
     public SkinBakery() {
@@ -121,7 +121,6 @@ public final class SkinBakery {
     }
 
     private void bakeSkin(String identifier, Skin skin, Consumer<Optional<BakedSkin>> complete) {
-        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
         ModLog.debug("Start baking task: {}", identifier);
         long startTime = System.currentTimeMillis();
 //            skin.lightHash();
