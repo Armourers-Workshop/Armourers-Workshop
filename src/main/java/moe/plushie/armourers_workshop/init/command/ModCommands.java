@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
@@ -26,7 +27,6 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -47,6 +47,7 @@ public class ModCommands {
     public static LiteralArgumentBuilder<CommandSource> commands() {
         return Commands.literal("armourers")
                 .requires(source -> source.hasPermission(2))
+                .then(Commands.literal("library").then(Commands.literal("reload").executes(Executor::reloadLibrary)))
                 .then(Commands.literal("setSkin").then(players().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
                 .then(Commands.literal("giveSkin").then(players().then(skins().executes(Executor::giveSkin))))
                 .then(Commands.literal("clearSkin").then(players().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
@@ -75,6 +76,10 @@ public class ModCommands {
 
     private static class Executor {
 
+        static int reloadLibrary(CommandContext<CommandSource> context) throws CommandSyntaxException {
+            SkinLibraryManager.getServer().start();
+            return 0;
+        }
 
         static boolean containsNode(CommandContext<CommandSource> context, String name) {
             for (ParsedCommandNode<?> node : context.getNodes()) {
@@ -87,7 +92,7 @@ public class ModCommands {
 
         static int setSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
             String identifier = FileArgument.getString(context, "skin");
-            Skin skin = SkinLoader.getInstance().loadSkin(identifier);
+            Skin skin = SkinLoader.getInstance().loadSkin("ws:" + identifier);
             if (skin == null) {
                 return 0;
             }
@@ -133,7 +138,7 @@ public class ModCommands {
 
         static int giveSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
             String identifier = FileArgument.getString(context, "skin");
-            Skin skin = SkinLoader.getInstance().loadSkin(identifier);
+            Skin skin = SkinLoader.getInstance().loadSkin("ws:" + identifier);
             if (skin == null) {
                 context.getSource().sendSuccess(new StringTextComponent("Can't found identifier " + identifier), true);
                 return 0;

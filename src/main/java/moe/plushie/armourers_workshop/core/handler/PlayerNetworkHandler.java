@@ -8,19 +8,16 @@ import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.init.common.AWCore;
-import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
@@ -30,12 +27,19 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.Collection;
 import java.util.Objects;
 
-@OnlyIn(Dist.CLIENT)
 public class PlayerNetworkHandler {
 
+    private static boolean shouldKeepWardrobe(PlayerEntity entity) {
+        if (entity.isSpectator()) {
+            return true;
+        }
+        return entity.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
+    }
+
+
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onPlayerLogin(ClientPlayerNetworkEvent.LoggedInEvent event) {
         if (Objects.equals(event.getPlayer(), Minecraft.getInstance().player)) {
@@ -43,12 +47,21 @@ public class PlayerNetworkHandler {
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onPlayerLogout(ClientPlayerNetworkEvent.LoggedOutEvent event) {
         if (Objects.equals(event.getPlayer(), Minecraft.getInstance().player)) {
             SkinBakery.stop();
             SkinLoader.getInstance().clear();
+            SkinLibraryManager.getClient().getPublicSkinLibrary().reset();
+            SkinLibraryManager.getClient().getPrivateSkinLibrary().reset();
         }
+    }
+
+
+    @SubscribeEvent
+    public void onPlayerLogout2(PlayerEvent.PlayerLoggedOutEvent event) {
+        SkinLibraryManager.getServer().remove(event.getPlayer());
     }
 
     @SubscribeEvent
@@ -81,10 +94,51 @@ public class PlayerNetworkHandler {
         }
     }
 
-    private static boolean shouldKeepWardrobe(PlayerEntity entity) {
-        if (entity.isSpectator()) {
-            return true;
+    @SubscribeEvent
+    public void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
+        Entity entity = event.getObject();
+        EntityProfile profile = EntityProfiles.getProfile(entity);
+        if (profile != null) {
+            event.addCapability(SkinWardrobeProvider.WARDROBE_ID, new SkinWardrobeProvider(entity, profile));
         }
-        return entity.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
+    }
+
+    @SubscribeEvent
+    public void onStartTracking(PlayerEvent.StartTracking event) {
+        if (event.isCanceled()) {
+            return;
+        }
+        if (EntityProfiles.getProfile(event.getTarget()) == null) {
+            return;
+        }
+        SkinWardrobe wardrobe = SkinWardrobe.of(event.getTarget());
+        if (wardrobe != null) {
+            wardrobe.broadcast((ServerPlayerEntity) event.getPlayer());
+        }
+    }
+
+    @SubscribeEvent
+    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+        if (event.isCanceled()) {
+            return;
+        }
+        Entity entity = event.getEntity();
+        if (entity instanceof AbstractArrowEntity && !event.getWorld().isClientSide()) {
+            Entity owner = ((AbstractArrowEntity) entity).getOwner();
+            ItemStack itemStack = AWCore.getSkinFromEquipment(owner, SkinSlotType.BOW, EquipmentSlotType.MAINHAND);
+            if (!itemStack.isEmpty()) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+                if (wardrobe != null) {
+                    wardrobe.setItem(SkinSlotType.BOW, 0, itemStack.copy());
+                }
+            }
+        }
+        if (entity instanceof ServerPlayerEntity) {
+            ServerPlayerEntity player = (ServerPlayerEntity) entity;
+            SkinWardrobe wardrobe = SkinWardrobe.of(player);
+            if (wardrobe != null) {
+                wardrobe.broadcast(player);
+            }
+        }
     }
 }

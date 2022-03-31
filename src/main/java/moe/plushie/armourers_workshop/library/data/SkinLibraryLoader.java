@@ -12,20 +12,21 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.function.Consumer;
 
 public class SkinLibraryLoader implements Runnable {
 
     private final File libraryDirectory = AWCore.getSkinLibraryDirectory();
+    private final File basePath;
     private final SkinLibrary library;
     private final ISkinLibraryCallback completeHandler;
 
-    public SkinLibraryLoader(SkinLibrary library, ISkinLibraryCallback completeHandler) {
+    public SkinLibraryLoader(SkinLibrary library, File basePath, ISkinLibraryCallback completeHandler) {
+        this.basePath = basePath;
         this.library = library;
         this.completeHandler = completeHandler;
     }
 
-    public ArrayList<SkinLibraryFile> getSkinFiles(File directory, boolean recursive) {
+    public ArrayList<SkinLibraryFile> getSkinFiles(String domain, File directory, boolean recursive) {
         ArrayList<SkinLibraryFile> fileList = new ArrayList<>();
         File[] templateFiles;
         try {
@@ -43,7 +44,7 @@ public class SkinLibraryLoader implements Runnable {
             String path = file.getAbsolutePath().replace(libraryDirectory.getAbsolutePath(), "");
             String filename = file.getName();
             if (file.isDirectory()) {
-                fileList.add(new SkinLibraryFile(filename, path));
+                fileList.add(new SkinLibraryFile(domain, filename, path));
                 continue;
             }
             if (filename.toLowerCase().endsWith(".armour")) {
@@ -52,7 +53,7 @@ public class SkinLibraryLoader implements Runnable {
                 if (header == null) {
                     continue; // Armour file load fail.
                 }
-                fileList.add(new SkinLibraryFile(name, path, header));
+                fileList.add(new SkinLibraryFile(domain, name, path, header));
             }
         }
         Collections.sort(fileList);
@@ -60,7 +61,7 @@ public class SkinLibraryLoader implements Runnable {
         if (recursive) {
             for (File file : templateFiles) {
                 if (file.isDirectory()) {
-                    fileList.addAll(getSkinFiles(file, true));
+                    fileList.addAll(getSkinFiles(domain, file, true));
                 }
             }
         }
@@ -72,8 +73,9 @@ public class SkinLibraryLoader implements Runnable {
     public void run() {
         long startTime = System.currentTimeMillis();
         ModLog.debug("Loading library skins");
-        ArrayList<SkinLibraryFile> files = getSkinFiles(library.getPath(), true);
+        ArrayList<SkinLibraryFile> files = getSkinFiles(library.getNamespace(), basePath, true);
         library.reloadFiles(files);
+        library.endLoading();
         ModLog.debug(String.format("Finished loading %d client library skins in %d ms", files.size(), System.currentTimeMillis() - startTime));
         if (completeHandler != null) {
             completeHandler.libraryDidReload(null);

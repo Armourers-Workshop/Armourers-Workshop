@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinLibrary;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
 public class AWFileList extends Button implements INestedGuiEventHandler {
 
@@ -102,6 +104,10 @@ public class AWFileList extends Button implements INestedGuiEventHandler {
         this.focused = focused;
     }
 
+    @Override
+    public boolean changeFocus(boolean p_231049_1_) {
+        return INestedGuiEventHandler.super.changeFocus(p_231049_1_);
+    }
 
     public Button getThis() {
         return this;
@@ -159,7 +165,8 @@ public class AWFileList extends Button implements INestedGuiEventHandler {
             this.font = Minecraft.getInstance().font;
             this.entry = entry;
             if (!entry.isDirectory()) {
-                descriptor = new SkinDescriptor(entry.getPath());
+                String identifier = entry.getNamespace() + ":" + entry.getPath();
+                descriptor = new SkinDescriptor(identifier, entry.getSkinType(), ColorScheme.EMPTY);
             }
         }
 

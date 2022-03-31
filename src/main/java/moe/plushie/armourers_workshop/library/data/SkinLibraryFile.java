@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
+import net.minecraft.network.PacketBuffer;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.util.Strings;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrary.Entry {
 
     protected final String name;
+    protected final String namespace;
     protected final String path;
     protected final Pair<ISkinType, ISkinProperties> header;
     protected final boolean isDirectory;
@@ -23,17 +25,19 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
 
     private Collection<String> searchableContentList;
 
-    public SkinLibraryFile(String name, String path) {
+    public SkinLibraryFile(String namespace, String name, String path) {
         this.name = name;
-        this.path = path.replace('\\', '/');
+        this.namespace = namespace;
+        this.path = FilenameUtils.normalize(path, true);
         this.header = null;
         this.isDirectory = true;
-        this.isPrivateDirectory = path.equals("/private");
+        this.isPrivateDirectory = namespace.equals("ws") && path.startsWith("/private");
     }
 
-    public SkinLibraryFile(String name, String path, Pair<ISkinType, ISkinProperties> header) {
+    public SkinLibraryFile(String namespace, String name, String path, Pair<ISkinType, ISkinProperties> header) {
         this.name = name;
-        this.path = path.replace('\\', '/');
+        this.namespace = namespace;
+        this.path = FilenameUtils.normalize(path, true);
         this.header = header;
         this.isDirectory = false;
         this.isPrivateDirectory = false;
@@ -60,8 +64,17 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
         return path.compareToIgnoreCase(o.path);
     }
 
+    @Override
+    public String toString() {
+        return namespace + ":" + path;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public String getNamespace() {
+        return namespace;
     }
 
     public String getPath() {
@@ -92,8 +105,9 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
     }
 
     public boolean isChildDirectory(String rootPath) {
+        // /xxxx/
         int length = rootPath.length();
-        return length < path.length() && path.startsWith(rootPath) && path.indexOf('/', length + 1) < 0;
+        return length < path.length() && path.startsWith(rootPath) && path.indexOf('/', length) < 0;
     }
 
     private boolean matchesInContentList(String keyword) {

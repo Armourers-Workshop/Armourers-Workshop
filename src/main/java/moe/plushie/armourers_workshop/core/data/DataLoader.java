@@ -113,6 +113,15 @@ public class DataLoader<K, V> {
             return this;
         }
 
+        public Builder<K, V> threadPool(String name, int newPriority, int size) {
+            this.executor = Executors.newFixedThreadPool(size, r -> {
+                Thread thread = new Thread(r, name);
+                thread.setPriority(newPriority);
+                return thread;
+            });
+            return this;
+        }
+
         @Nonnull
         public <K1 extends K, V1 extends V> DataLoader<K1, V1> build(BiConsumer<K1, Consumer<Optional<V1>>> loader) {
             return new DataLoader<>(executor, loader);

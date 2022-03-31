@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.core.network.packet.*;
+import moe.plushie.armourers_workshop.core.network.packet.UpdateLibraryFilesPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -105,6 +106,9 @@ public class NetworkHandler {
 
         PACKET_UPDATE_HOLOGRAM_PROJECTOR(UpdateHologramProjectorPacket.class, UpdateHologramProjectorPacket::new),
         PACKET_UPDATE_COLOUR_MIXER(UpdateColourMixerPacket.class, UpdateColourMixerPacket::new),
+
+        PACKET_UPDATE_LIBRARY_FILE(UpdateLibraryFilePacket.class, UpdateLibraryFilePacket::new),
+        PACKET_UPDATE_LIBRARY_FILES(UpdateLibraryFilesPacket.class, UpdateLibraryFilesPacket::new),
 
         PACKET_OPEN_WARDROBE(OpenWardrobePacket.class, OpenWardrobePacket::new),
         PACKET_UPDATE_WARDROBE(UpdateWardrobePacket.class, UpdateWardrobePacket::new);

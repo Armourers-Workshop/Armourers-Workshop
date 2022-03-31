@@ -1,12 +1,16 @@
 package moe.plushie.armourers_workshop.library.container;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
+import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
@@ -20,6 +24,8 @@ import javax.annotation.Nullable;
 
 @SuppressWarnings("NullableProblems")
 public class SkinLibraryContainer extends Container {
+
+    private int libraryVersion = 0;
 
     public int inventoryWidth = 162;
     public int inventoryHeight = 76;
@@ -56,6 +62,18 @@ public class SkinLibraryContainer extends Container {
     }
 
     @Override
+    public void broadcastChanges() {
+        super.broadcastChanges();
+        if (playerInventory.player instanceof ServerPlayerEntity) {
+            SkinLibraryManager.Server server = SkinLibraryManager.getServer();
+            if (libraryVersion != server.getVersion()) {
+                server.sendTo((ServerPlayerEntity) playerInventory.player);
+                libraryVersion = server.getVersion();
+            }
+        }
+    }
+
+    @Override
     public boolean stillValid(PlayerEntity player) {
         return stillValid(this.access, player, ModBlocks.SKIN_LIBRARY);
     }
@@ -89,7 +107,6 @@ public class SkinLibraryContainer extends Container {
         addSlot(new Slot(inventory, slot, x, y));
     }
 
-
     protected void addPlayerSlots(IInventory inventory, int slotsX, int slotsY) {
         for (int col = 0; col < 9; ++col) {
             this.addSlot(new Slot(inventory, col, slotsX + col * 18, slotsY + 58));
@@ -101,22 +118,7 @@ public class SkinLibraryContainer extends Container {
         }
     }
 
-
-    public class LockableSlot extends Slot {
-
-        public LockableSlot(IInventory inventory, int slot, int x, int y) {
-            super(inventory, slot, x, y);
-        }
-
-        @Override
-        public boolean mayPlace(ItemStack itemStack) {
-            return itemStack.getItem() instanceof BottleItem;
-        }
-
-        @Override
-        public void setChanged() {
-            super.setChanged();
-//            applySkin(getOutputStack());
-        }
+    public PlayerEntity getPlayer() {
+        return playerInventory.player;
     }
 }

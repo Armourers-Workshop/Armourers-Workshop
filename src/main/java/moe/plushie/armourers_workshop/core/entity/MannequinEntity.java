@@ -74,7 +74,16 @@ public class MannequinEntity extends ArmorStandEntity {
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
         super.readAdditionalSaveData(nbt);
+        this.readExtendedData(nbt);
+    }
 
+    @Override
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
+        this.addExtendedData(nbt);
+    }
+
+    public void readExtendedData(CompoundNBT nbt) {
         this.entityData.set(DATA_IS_CHILD, AWDataSerializers.getBoolean(nbt, AWConstants.NBT.ENTITY_IS_SMALL, false));
         this.entityData.set(DATA_IS_FLYING, AWDataSerializers.getBoolean(nbt, AWConstants.NBT.ENTITY_IS_FLYING, false));
         this.entityData.set(DATA_IS_GHOST, AWDataSerializers.getBoolean(nbt, AWConstants.NBT.ENTITY_IS_GHOST, false));
@@ -87,10 +96,7 @@ public class MannequinEntity extends ArmorStandEntity {
         this.readCustomPose(nbt.getCompound(AWConstants.NBT.ENTITY_POSE));
     }
 
-    @Override
-    public void addAdditionalSaveData(CompoundNBT nbt) {
-        super.addAdditionalSaveData(nbt);
-
+    public void addExtendedData(CompoundNBT nbt) {
         AWDataSerializers.putBoolean(nbt, AWConstants.NBT.ENTITY_IS_SMALL, entityData.get(DATA_IS_CHILD), false);
         AWDataSerializers.putBoolean(nbt, AWConstants.NBT.ENTITY_IS_FLYING, entityData.get(DATA_IS_FLYING), false);
         AWDataSerializers.putBoolean(nbt, AWConstants.NBT.ENTITY_IS_GHOST, entityData.get(DATA_IS_GHOST), false);
@@ -187,32 +193,34 @@ public class MannequinEntity extends ArmorStandEntity {
 
     @Override
     public ActionResultType interactAt(PlayerEntity player, Vector3d pos, Hand hand) {
-        ItemStack itemstack = player.getItemInHand(hand);
-        if (this.isMarker()) {
+        if (isMarker()) {
             return ActionResultType.PASS;
         }
-        if (player.level.isClientSide) {
-            return ActionResultType.CONSUME;
+        World world = player.level;
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (itemStack.getItem() == ModItems.MANNEQUIN_TOOL) {
+            return ActionResultType.PASS;
         }
-        if (itemstack.getItem() == Items.NAME_TAG) {
+        if (itemStack.getItem() == Items.NAME_TAG) {
             ITextComponent customName = null;
-            if (itemstack.hasCustomHoverName() && !player.isShiftKeyDown()) {
-                customName = itemstack.getHoverName();
+            if (itemStack.hasCustomHoverName() && !player.isShiftKeyDown()) {
+                customName = itemStack.getHoverName();
             }
             setCustomName(customName);
-            return ActionResultType.SUCCESS;
+            return ActionResultType.sidedSuccess(world.isClientSide);
         }
         if (player.isShiftKeyDown()) {
             double ry = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
             Rotations rotations = getBodyPose();
             setBodyPose(new Rotations(rotations.getX(), (float) ry - yRot, rotations.getZ()));
-            return ActionResultType.SUCCESS;
+            return ActionResultType.sidedSuccess(world.isClientSide);
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null) {
             ModContainerTypes.open(ModContainerTypes.WARDROBE, player, wardrobe);
+            return ActionResultType.sidedSuccess(world.isClientSide);
         }
-        return ActionResultType.SUCCESS;
+        return ActionResultType.PASS;
     }
 
     @Override

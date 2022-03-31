@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import org.apache.commons.io.FilenameUtils;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -26,11 +27,15 @@ public class DataManager {
 
     public Optional<ByteBuf> loadSkinData(String identifier) {
         ModLog.debug("Load skin data: {} ", identifier);
-        InputStream stream = null;
+        InputStream stream;
         if (identifier.startsWith("db:")) {
             stream = LocalDataService.getInstance().getFile(identifier.substring(3));
         } else {
-            stream = loadStreamFromPath(identifier);
+            String path = identifier;
+            if (path.startsWith("ws:") || path.startsWith("fs:")) {
+                path = FilenameUtils.normalize(path.substring(3));
+            }
+            stream = loadStreamFromPath(path);
         }
         if (stream == null) {
             return Optional.empty();
@@ -54,7 +59,7 @@ public class DataManager {
     @Nullable
     private InputStream loadStreamFromPath(String identifier) {
         String ext = ".armour";
-        if (!identifier.endsWith(ext)) {
+        if (!identifier.toLowerCase().endsWith(ext)) {
             identifier = identifier + ext;
         }
         File file = new File(AWCore.getSkinLibraryDirectory(), identifier);

@@ -186,10 +186,10 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
     }
 
     private void showNewPaletteDialog(Button button) {
-        ColourMixerInputDialog dialog = new ColourMixerInputDialog(getDisplayText("add_palette.title"));
-        dialog.setSuggestion(getDisplayText("add_palette.enter_name"));
+        AWInputDialog dialog = new AWInputDialog(getDisplayText("add_palette.title"));
+        dialog.setPlaceholderText(getDisplayText("add_palette.enter_name"));
         present(dialog, dialog1 -> {
-            if (dialog1.getSelectedIndex() == 1) {
+            if (!dialog1.isCancelled()) {
                 selectedPalette = PaletteManager.getInstance().addPalette(dialog1.getText());
                 this.reloadPalettes();
             }
@@ -200,11 +200,11 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
         if (selectedPalette.isLocked()) {
             return;
         }
-        ColourMixerInputDialog dialog = new ColourMixerInputDialog(getDisplayText("rename_palette.title"));
-        dialog.setSuggestion(getDisplayText("rename_palette.enter_name"));
+        AWInputDialog dialog = new AWInputDialog(getDisplayText("rename_palette.title"));
+        dialog.setPlaceholderText(getDisplayText("rename_palette.enter_name"));
         dialog.setText(selectedPalette.getName());
         present(dialog, dialog1 -> {
-            if (dialog1.getSelectedIndex() == 1) {
+            if (!dialog1.isCancelled()) {
                 PaletteManager.getInstance().renamePalette(selectedPalette.getName(), dialog.getText());
                 this.reloadPalettes();
             }
@@ -215,10 +215,10 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
         if (selectedPalette.isLocked()) {
             return;
         }
-        ColourMixerConfirmDialog dialog = new ColourMixerConfirmDialog(getDisplayText("remove_palette.title"));
+        AWConfirmDialog dialog = new AWConfirmDialog(getDisplayText("remove_palette.title"));
         dialog.setMessage(getDisplayText("remove_palette.message"));
         present(dialog, dialog1 -> {
-            if (dialog1.getSelectedIndex() == 1) {
+            if (!dialog1.isCancelled()) {
                 PaletteManager.getInstance().deletePalette(selectedPalette.getName());
                 selectedPalette = PaletteManager.getInstance().getPalettes().iterator().next();
                 this.reloadPalettes();

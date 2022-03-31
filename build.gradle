@@ -37,7 +37,7 @@ version = project.minecraft_version + "-" + version_major + "." + version_minor 
 
 //release = System.getenv('TEST_VERSION') ?: ""
 //if (release) {
-  version += "-test." + "2"
+  version += "-test." + "3"
 //}
 
 

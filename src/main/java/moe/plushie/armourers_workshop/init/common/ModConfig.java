@@ -15,6 +15,7 @@ public class ModConfig {
 
     // Misc
     public static int skinLoadAnimationTime;
+    public static boolean enableLibraryManage = false;
 
     // Cache
     public static int skinCacheExpireTime;
