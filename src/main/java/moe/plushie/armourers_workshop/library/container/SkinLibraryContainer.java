@@ -1,22 +1,21 @@
 package moe.plushie.armourers_workshop.library.container;
 
-import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.core.item.BottleItem;
+import moe.plushie.armourers_workshop.core.item.SkinItem;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
-import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import moe.plushie.armourers_workshop.library.tileentity.SkinLibraryTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.world.World;
 
@@ -25,15 +24,14 @@ import javax.annotation.Nullable;
 @SuppressWarnings("NullableProblems")
 public class SkinLibraryContainer extends Container {
 
-    private int libraryVersion = 0;
+    protected final IInventory inventory;
+    protected final IWorldPosCallable access;
+    protected final PlayerInventory playerInventory;
 
     public int inventoryWidth = 162;
     public int inventoryHeight = 76;
 
-    protected final IInventory inventory = new Inventory(2);
-    protected final IWorldPosCallable access;
-
-    protected final PlayerInventory playerInventory;
+    private int libraryVersion = 0;
 
     public SkinLibraryContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
         this(ModContainerTypes.SKIN_LIBRARY, containerId, playerInventory, access);
@@ -42,8 +40,17 @@ public class SkinLibraryContainer extends Container {
     public SkinLibraryContainer(@Nullable ContainerType<?> containerType, int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
         super(containerType, containerId);
         this.access = access;
+        this.inventory = getInventory();
         this.playerInventory = playerInventory;
         this.reload(0, 0, 240, 240);
+    }
+
+    public IInventory getInventory() {
+        TileEntity tileEntity = access.evaluate(World::getBlockEntity).orElse(null);
+        if (tileEntity instanceof SkinLibraryTileEntity) {
+            return ((SkinLibraryTileEntity) tileEntity).getInventory();
+        }
+        return null;
     }
 
     public void reload(int x, int y, int width, int height) {
@@ -53,12 +60,6 @@ public class SkinLibraryContainer extends Container {
         this.addPlayerSlots(playerInventory, inventoryX, inventoryY);
         this.addInputSlot(inventory, 0, inventoryX, inventoryY - 27);
         this.addOutputSlot(inventory, 1, inventoryX + inventoryWidth - 22, inventoryY - 27);
-    }
-
-    @Override
-    public void removed(PlayerEntity player) {
-        super.removed(player);
-        this.access.execute((world, pos) -> this.clearContainer(player, world, inventory));
     }
 
     @Override
@@ -100,11 +101,21 @@ public class SkinLibraryContainer extends Container {
     }
 
     protected void addInputSlot(IInventory inventory, int slot, int x, int y) {
-        addSlot(new Slot(inventory, slot, x, y));
+        addSlot(new Slot(inventory, slot, x, y) {
+            @Override
+            public boolean mayPlace(ItemStack itemStack) {
+                return itemStack.getItem() == ModItems.SKIN_TEMPLATE || !SkinDescriptor.of(itemStack).isEmpty();
+            }
+        });
     }
 
     protected void addOutputSlot(IInventory inventory, int slot, int x, int y) {
-        addSlot(new Slot(inventory, slot, x, y));
+        addSlot(new Slot(inventory, slot, x, y) {
+            @Override
+            public boolean mayPlace(ItemStack itemStack) {
+                return false;
+            }
+        });
     }
 
     protected void addPlayerSlots(IInventory inventory, int slotsX, int slotsY) {
@@ -118,7 +129,38 @@ public class SkinLibraryContainer extends Container {
         }
     }
 
+    public ItemStack getInputStack() {
+        return inventory.getItem(0);
+    }
+
+    public ItemStack getOutputStack() {
+        return inventory.getItem(1);
+    }
+
     public PlayerEntity getPlayer() {
         return playerInventory.player;
+    }
+
+    public boolean shouldSaveStack() {
+        return getOutputStack().isEmpty();
+    }
+
+    public boolean shouldLoadStack() {
+        return getOutputStack().isEmpty() && !getInputStack().isEmpty() && getInputStack().getItem() == ModItems.SKIN_TEMPLATE;
+    }
+
+    public void crafting(SkinDescriptor descriptor) {
+        boolean consume = true;
+        ItemStack itemStack = getInputStack();
+        ItemStack newItemStack = itemStack.copy();
+        if (descriptor != null) {
+            // only consumes the template
+            newItemStack = SkinItem.replace(itemStack.copy(), descriptor);
+            consume = itemStack.getItem() == ModItems.SKIN_TEMPLATE;
+        }
+        inventory.setItem(1, newItemStack);
+        if (consume) {
+            itemStack.shrink(1);
+        }
     }
 }

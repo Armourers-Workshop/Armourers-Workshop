@@ -38,7 +38,7 @@ public class RequestFilePacket extends CustomPacket {
     @Override
     public void accept(ServerPlayNetHandler netHandler, ServerPlayerEntity player) {
         ModLog.debug("Process skin request: {}", identifier);
-        DataManager.getInstance().loadSkinData(identifier, buffer -> {
+        DataManager.getInstance().loadCompressedSkinData(identifier, buffer -> {
             ModLog.debug("Response skin data: {}", identifier);
             for (CustomPacket packet : buildResponsePacket(buffer.orElse(null))) {
                 NetworkHandler.getInstance().sendTo(packet, player);

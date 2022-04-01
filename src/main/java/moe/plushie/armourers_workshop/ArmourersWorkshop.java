@@ -4,6 +4,7 @@ package moe.plushie.armourers_workshop;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.handler.PlayerNetworkHandler;
 import moe.plushie.armourers_workshop.init.common.AWCore;
+import moe.plushie.armourers_workshop.init.common.ModContext;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.init.common.ModRegistry;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
@@ -21,6 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -48,6 +50,7 @@ public class ArmourersWorkshop {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> eventBus.addListener(this::onClientSetup));
 
         MinecraftForge.EVENT_BUS.addListener(this::onServerStart);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerDidStart);
         MinecraftForge.EVENT_BUS.addListener(this::onServerWillStop);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStop);
         MinecraftForge.EVENT_BUS.addListener(registry::registerCommands);
@@ -80,6 +83,10 @@ public class ArmourersWorkshop {
     private void onServerStart(FMLServerAboutToStartEvent event) {
         ModLog.debug("hello");
         LocalDataService.start(event.getServer());
+    }
+
+    private void onServerDidStart(FMLServerStartedEvent event) {
+        ModContext.init(event.getServer());
     }
 
     private void onServerWillStop(FMLServerStoppingEvent event) {

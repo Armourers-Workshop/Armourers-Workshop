@@ -1,21 +1,25 @@
 package moe.plushie.armourers_workshop.library.data;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinLibrary;
-import moe.plushie.armourers_workshop.api.skin.ISkinLibraryCallback;
+import moe.plushie.armourers_workshop.api.skin.ISkinLibraryListener;
+import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateLibraryFilesPacket;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.AWCore;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public abstract class SkinLibraryManager implements ISkinLibraryCallback {
+public abstract class SkinLibraryManager implements ISkinLibraryListener {
 
-    protected final ArrayList<ISkinLibraryCallback> listeners = new ArrayList<>();
+    protected final ArrayList<ISkinLibraryListener> listeners = new ArrayList<>();
 
     public static Client getClient() {
         return Client.INSTANCE;
@@ -29,12 +33,20 @@ public abstract class SkinLibraryManager implements ISkinLibraryCallback {
 
     public abstract void stop();
 
-    public void addListener(ISkinLibraryCallback listener) {
+    public void addListener(ISkinLibraryListener listener) {
         this.listeners.add(listener);
     }
 
-    public void removeListener(ISkinLibraryCallback listener) {
+    public void removeListener(ISkinLibraryListener listener) {
         this.listeners.remove(listener);
+    }
+
+    public boolean shouldDownloadFile() {
+        return true;
+    }
+
+    public boolean shouldUploadFile() {
+        return true;
     }
 
     @Override
@@ -52,9 +64,9 @@ public abstract class SkinLibraryManager implements ISkinLibraryCallback {
         private final SkinLibrary privateSkinLibrary;
 
         public Client() {
-            this.localSkinLibrary = new SkinLibrary("fs", AWCore.getSkinLibraryDirectory());
-            this.publicSkinLibrary = new SkinLibrary.Proxy("ws");
-            this.privateSkinLibrary = new SkinLibrary.Proxy("ws");
+            this.localSkinLibrary = new SkinLibrary(AWConstants.Namespace.LOCAL, AWCore.getSkinLibraryDirectory());
+            this.publicSkinLibrary = new SkinLibrary.Proxy(AWConstants.Namespace.SERVER);
+            this.privateSkinLibrary = new SkinLibrary.Proxy(AWConstants.Namespace.SERVER);
             this.localSkinLibrary.addListener(this);
             this.publicSkinLibrary.addListener(this);
             this.privateSkinLibrary.addListener(this);
@@ -69,6 +81,22 @@ public abstract class SkinLibraryManager implements ISkinLibraryCallback {
         public void stop() {
             this.publicSkinLibrary.reset();
             this.privateSkinLibrary.reset();
+        }
+
+        @Override
+        public boolean shouldDownloadFile() {
+            if (!LocalDataService.isRunning()) {
+                return ModConfig.allowDownloadingSkins;
+            }
+            return true;
+        }
+
+        @Override
+        public boolean shouldUploadFile() {
+            if (!LocalDataService.isRunning()) {
+                return ModConfig.allowUploadingSkins;
+            }
+            return true;
         }
 
         public SkinLibrary getLocalSkinLibrary() {
@@ -170,6 +198,31 @@ public abstract class SkinLibraryManager implements ISkinLibraryCallback {
 
         public SkinLibrary getLibrary() {
             return skinLibrary;
+        }
+
+        @Override
+        public boolean shouldDownloadFile() {
+            if (FMLEnvironment.dist.isDedicatedServer()) {
+                return ModConfig.allowDownloadingSkins;
+            }
+            return true;
+        }
+
+        @Override
+        public boolean shouldUploadFile() {
+            if (FMLEnvironment.dist.isDedicatedServer()) {
+                return ModConfig.allowUploadingSkins;
+            }
+            return true;
+        }
+
+        public boolean shouldModifierFile(PlayerEntity player) {
+            // super op can manage the public folder.
+            return ModConfig.enableLibraryManage && player.hasPermissions(4);
+        }
+
+        public LocalDataService getDatabaseLibrary() {
+            return LocalDataService.getInstance();
         }
 
         public int getVersion() {

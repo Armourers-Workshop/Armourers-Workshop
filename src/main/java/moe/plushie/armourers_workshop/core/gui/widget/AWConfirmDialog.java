@@ -10,6 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
+@SuppressWarnings("unused")
 @OnlyIn(Dist.CLIENT)
 public class AWConfirmDialog extends AWAbstractDialog {
 
@@ -20,8 +21,8 @@ public class AWConfirmDialog extends AWAbstractDialog {
     protected int messageWidth = 0;
     protected int messageHeight = 0;
 
-    protected Button confirmButton = buildButton(0, 0, 100, 20, "button.ok", this::onConfirm);;
-    protected Button cancelButton = buildButton(0, 0, 100, 20, "button.cancel", this::onCancel);;
+    protected Button confirmButton = buildButton(0, 0, 100, 20, "button.ok", this::onConfirm);
+    protected Button cancelButton = buildButton(0, 0, 100, 20, "button.cancel", this::onCancel);
 
     protected ITextComponent message;
     protected int messageColor = 0xff404040;

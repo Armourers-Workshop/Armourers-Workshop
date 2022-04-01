@@ -4,7 +4,10 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobeProvider;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
+import moe.plushie.armourers_workshop.core.network.NetworkHandler;
+import moe.plushie.armourers_workshop.core.network.packet.UpdateContextPacket;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.init.common.AWCore;
@@ -27,6 +30,7 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class PlayerNetworkHandler {
@@ -38,6 +42,29 @@ public class PlayerNetworkHandler {
         return entity.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
     }
 
+    private static ItemStack getSkinFromEquipment(@Nullable Entity entity, SkinSlotType skinSlotType, EquipmentSlotType equipmentSlotType) {
+        ItemStack itemStack = ItemStack.EMPTY;
+        if (entity instanceof LivingEntity) {
+            itemStack = ((LivingEntity) entity).getItemBySlot(equipmentSlotType);
+        }
+        if (itemStack.isEmpty()) {
+            return itemStack;
+        }
+        // embedded skin is the highest priority
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        if (descriptor.accept(itemStack)) {
+            return itemStack;
+        }
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        if (wardrobe != null) {
+            ItemStack itemStack1 = wardrobe.getItem(skinSlotType, 0);
+            descriptor = SkinDescriptor.of(itemStack1);
+            if (descriptor.accept(itemStack)) {
+                return itemStack1;
+            }
+        }
+        return ItemStack.EMPTY;
+    }
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
@@ -57,7 +84,6 @@ public class PlayerNetworkHandler {
             SkinLibraryManager.getClient().getPrivateSkinLibrary().reset();
         }
     }
-
 
     @SubscribeEvent
     public void onPlayerLogout2(PlayerEvent.PlayerLoggedOutEvent event) {
@@ -125,7 +151,7 @@ public class PlayerNetworkHandler {
         Entity entity = event.getEntity();
         if (entity instanceof AbstractArrowEntity && !event.getWorld().isClientSide()) {
             Entity owner = ((AbstractArrowEntity) entity).getOwner();
-            ItemStack itemStack = AWCore.getSkinFromEquipment(owner, SkinSlotType.BOW, EquipmentSlotType.MAINHAND);
+            ItemStack itemStack = getSkinFromEquipment(owner, SkinSlotType.BOW, EquipmentSlotType.MAINHAND);
             if (!itemStack.isEmpty()) {
                 SkinWardrobe wardrobe = SkinWardrobe.of(entity);
                 if (wardrobe != null) {
@@ -135,6 +161,7 @@ public class PlayerNetworkHandler {
         }
         if (entity instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) entity;
+            NetworkHandler.getInstance().sendTo(new UpdateContextPacket(), player);
             SkinWardrobe wardrobe = SkinWardrobe.of(player);
             if (wardrobe != null) {
                 wardrobe.broadcast(player);

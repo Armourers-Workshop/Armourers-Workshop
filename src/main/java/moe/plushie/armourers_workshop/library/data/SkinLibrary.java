@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.library.data;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinLibrary;
-import moe.plushie.armourers_workshop.api.skin.ISkinLibraryCallback;
+import moe.plushie.armourers_workshop.api.skin.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateLibraryFilePacket;
+import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -21,7 +23,7 @@ public class SkinLibrary implements ISkinLibrary {
 
     protected final File basePath;
     protected final String namespace;
-    protected final ArrayList<ISkinLibraryCallback> listeners = new ArrayList<>();
+    protected final ArrayList<ISkinLibraryListener> listeners = new ArrayList<>();
 
     protected boolean isReady = false;
     protected boolean isLoading = false;
@@ -34,11 +36,11 @@ public class SkinLibrary implements ISkinLibrary {
         this.namespace = namespace;
     }
 
-    public void addListener(ISkinLibraryCallback listener) {
+    public void addListener(ISkinLibraryListener listener) {
         this.listeners.add(listener);
     }
 
-    public void removeListener(ISkinLibraryCallback listener) {
+    public void removeListener(ISkinLibraryListener listener) {
         this.listeners.remove(listener);
     }
 
@@ -70,6 +72,17 @@ public class SkinLibrary implements ISkinLibrary {
             }
         }
         return null;
+    }
+
+    public void save(String path, Skin skin) {
+        File file = new File(basePath, FilenameUtils.normalize(path));
+        if (file.exists() && !FileUtils.deleteQuietly(file)) {
+            ModLog.error("Can't remove file '{}'", file);
+            return;
+        }
+        ModLog.debug("Save file '{}'", file);
+        SkinIOUtils.saveSkinToFile(file, skin);
+        reload();
     }
 
     public void mkdir(String path) {
@@ -121,7 +134,7 @@ public class SkinLibrary implements ISkinLibrary {
     }
 
     public void reloadFiles(ArrayList<SkinLibraryFile> files) {
-        ArrayList<ISkinLibraryCallback> listeners;
+        ArrayList<ISkinLibraryListener> listeners;
         synchronized (this) {
             this.files = files;
             this.isReady = true;

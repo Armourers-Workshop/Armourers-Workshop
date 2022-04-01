@@ -12,6 +12,13 @@ public final class AWConstants {
         public static final FolderName LOCAL_DB = new FolderName("skin-database");
     }
 
+    public final static class Namespace {
+        public static final String LOCAL = "fs";
+        public static final String SERVER = "ws";
+        public static final String DATABASE = "db";
+        public static final String DATABASE_LINK = "db-ln";
+    }
+
     public final static class NBT {
         public static final String SKIN = "ArmourersWorkshop";
         public static final String SKIN_TYPE = "SkinType";
