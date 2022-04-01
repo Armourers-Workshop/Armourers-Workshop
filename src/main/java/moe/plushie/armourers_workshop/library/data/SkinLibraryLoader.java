@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.library.data;
 
 import com.mojang.datafixers.util.Pair;
-import moe.plushie.armourers_workshop.api.skin.ISkinLibraryCallback;
+import moe.plushie.armourers_workshop.api.skin.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
@@ -18,9 +18,9 @@ public class SkinLibraryLoader implements Runnable {
     private final File libraryDirectory = AWCore.getSkinLibraryDirectory();
     private final File basePath;
     private final SkinLibrary library;
-    private final ISkinLibraryCallback completeHandler;
+    private final ISkinLibraryListener completeHandler;
 
-    public SkinLibraryLoader(SkinLibrary library, File basePath, ISkinLibraryCallback completeHandler) {
+    public SkinLibraryLoader(SkinLibrary library, File basePath, ISkinLibraryListener completeHandler) {
         this.basePath = basePath;
         this.library = library;
         this.completeHandler = completeHandler;

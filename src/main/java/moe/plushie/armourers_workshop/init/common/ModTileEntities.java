@@ -22,6 +22,9 @@ import moe.plushie.armourers_workshop.builder.tileentity.ColourMixerTileEntity;
 import moe.plushie.armourers_workshop.core.tileentity.DyeTableTileEntity;
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
+import moe.plushie.armourers_workshop.library.block.SkinLibraryBlock;
+import moe.plushie.armourers_workshop.library.tileentity.SkinLibraryTileEntity;
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +41,8 @@ public final class ModTileEntities {
     public static final TileEntityType<ColourMixerTileEntity> COLOUR_MIXER = register("colour-mixer", TileEntityType.Builder.of(ColourMixerTileEntity::new, ModBlocks.COLOUR_MIXER));
     public static final TileEntityType<DyeTableTileEntity> DYE_TABLE = register("dye-table", TileEntityType.Builder.of(DyeTableTileEntity::new, ModBlocks.DYE_TABLE));
 
+    public static final TileEntityType<SkinLibraryTileEntity> SKIN_LIBRARY_CREATIVE = register("skin-library-creative", TileEntityType.Builder.of(SkinLibraryTileEntity::new, ModBlocks.SKIN_LIBRARY_CREATIVE));
+    public static final TileEntityType<SkinLibraryTileEntity> SKIN_LIBRARY = register("skin-library", TileEntityType.Builder.of(SkinLibraryTileEntity::new, ModBlocks.SKIN_LIBRARY));
 
     public static void forEach(Consumer<TileEntityType<?>> action) {
         REGISTERED_ENTITY_TYPES.values().forEach(action);

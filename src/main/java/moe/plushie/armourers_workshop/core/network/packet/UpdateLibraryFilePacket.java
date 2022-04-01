@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.ServerPlayNetHandler;
+import org.apache.commons.io.FilenameUtils;
 
 import java.util.Optional;
 
@@ -27,12 +28,12 @@ public class UpdateLibraryFilePacket extends CustomPacket {
     public UpdateLibraryFilePacket(PacketBuffer buffer) {
         this.mode = buffer.readEnum(Mode.class);
         if ((mode.flag & 1) != 0) {
-            this.destination = buffer.readUtf();
+            this.destination = decodePath(buffer);
         } else {
             this.destination = "";
         }
         if ((mode.flag & 2) != 0) {
-            this.source = buffer.readUtf();
+            this.source = decodePath(buffer);
         } else {
             this.source = destination;
         }
@@ -76,17 +77,27 @@ public class UpdateLibraryFilePacket extends CustomPacket {
         }
     }
 
+    private String decodePath(PacketBuffer buffer) {
+        String path = FilenameUtils.normalize(buffer.readUtf(), true); // security check
+        if (path != null) {
+            return path;
+        }
+        return "";
+    }
+
     private Optional<SkinLibraryFile> getFile(String path) {
         return Optional.of(SkinLibraryManager.getServer().getLibrary().get(path));
     }
 
     private boolean isAuthorized(PlayerEntity player) {
+        if (destination.isEmpty()) {
+            return false;
+        }
         String key = "/private/" + player.getStringUUID();
         if (destination.startsWith(key) && source.startsWith(key)) {
             return true;
         }
-        // op can manage the public folder.
-        return ModConfig.enableLibraryManage && player.hasPermissions(4);
+        return SkinLibraryManager.getServer().shouldModifierFile(player);
     }
 
     public enum Mode {

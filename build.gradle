@@ -33,13 +33,7 @@ dependencies {
 
 group = artifact_group
 archivesBaseName = artifact_basename
-version = project.minecraft_version + "-" + version_major + "." + version_minor + "." + version_patch 
-
-//release = System.getenv('TEST_VERSION') ?: ""
-//if (release) {
-  version += "-test." + "3"
-//}
-
+version = "${minecraft_version}-${mod_version}." + (System.env.BUILD_NUMBER ?: "homebaked")
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 compileJava {

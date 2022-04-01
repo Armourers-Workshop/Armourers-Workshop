@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.item;
 
+import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
@@ -8,6 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.SkinItemUseContext;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
@@ -36,13 +38,30 @@ public class SkinItem extends Item {
             sourceNBT = sourceStack.getTagElement(AWConstants.NBT.SKIN);
         }
         if (sourceNBT != null && sourceNBT.size() != 0) {
-            CompoundNBT targetNBT = targetStack.getOrCreateTag();
-            targetNBT.put(AWConstants.NBT.SKIN, sourceNBT.copy());
+            targetStack.addTagElement(AWConstants.NBT.SKIN, sourceNBT.copy());
         } else {
             CompoundNBT targetNBT = targetStack.getTag();
             if (targetNBT != null) {
                 targetNBT.remove(AWConstants.NBT.SKIN);
             }
+        }
+        return targetStack;
+    }
+
+    public static ItemStack replace(ItemStack targetStack, SkinDescriptor descriptor) {
+        if (targetStack.isEmpty()) {
+            return descriptor.asItemStack();
+        }
+        if (targetStack.getItem() == ModItems.SKIN_TEMPLATE) {
+            return descriptor.asItemStack();
+        }
+        if (descriptor.isEmpty()) {
+            CompoundNBT targetNBT = targetStack.getTag();
+            if (targetNBT != null) {
+                targetNBT.remove(AWConstants.NBT.SKIN);
+            }
+        } else {
+            targetStack.addTagElement(AWConstants.NBT.SKIN, descriptor.serializeNBT());
         }
         return targetStack;
     }

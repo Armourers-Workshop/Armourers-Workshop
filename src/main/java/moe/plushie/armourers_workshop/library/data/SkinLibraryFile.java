@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import net.minecraft.network.PacketBuffer;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.util.Strings;
@@ -31,7 +32,7 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
         this.path = FilenameUtils.normalize(path, true);
         this.header = null;
         this.isDirectory = true;
-        this.isPrivateDirectory = namespace.equals("ws") && path.startsWith("/private");
+        this.isPrivateDirectory = namespace.equals(AWConstants.Namespace.SERVER) && path.startsWith("/private");
     }
 
     public SkinLibraryFile(String namespace, String name, String path, Pair<ISkinType, ISkinProperties> header) {

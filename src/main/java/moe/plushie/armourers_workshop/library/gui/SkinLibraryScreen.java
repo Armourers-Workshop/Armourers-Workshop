@@ -3,16 +3,20 @@ package moe.plushie.armourers_workshop.library.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.skin.ISkinLibrary;
-import moe.plushie.armourers_workshop.api.skin.ISkinLibraryCallback;
+import moe.plushie.armourers_workshop.api.skin.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.gui.widget.*;
 import moe.plushie.armourers_workshop.core.handler.ItemTooltipHandler;
+import moe.plushie.armourers_workshop.core.network.NetworkHandler;
+import moe.plushie.armourers_workshop.core.network.packet.SaveSkinPacket;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.library.container.SkinLibraryContainer;
@@ -25,6 +29,8 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.ClickType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -41,7 +47,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryContainer> implements ISkinLibraryCallback {
+public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryContainer> implements ISkinLibraryListener {
 
     protected int inventoryTop = 0;
     protected int inventoryLeft = 0;
@@ -122,7 +128,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         this.backButton = addIconButton(inventoryRight - 24, 85, 146, 93, 24, 24, "rollover.back", this::backFolder);
 
         this.checkBox = addOption(inventoryLeft, inventoryTop - 41, "trackFile");
-        this.actionButton = addTextButton(inventoryLeft + 23, inventoryTop - 28, menu.inventoryWidth - 54, 20, "load", this::loadItem);
+        this.actionButton = addTextButton(inventoryLeft + 23, inventoryTop - 28, menu.inventoryWidth - 54, 20, "load", this::loadOrSaveItem);
 
         this.fileList = addFileList(fileListLeft, fileListTop, fileListRight - fileListLeft, height - 5 - fileListTop);
         this.skinTypeList = addComboList(fileListRight - 80, 24, 80, 16);
@@ -137,6 +143,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         this.libraryManager.removeListener(this);
     }
 
+
     @Override
     public void libraryDidReload(ISkinLibrary library) {
         RenderSystem.recordRenderCall(() -> {
@@ -149,14 +156,24 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
 
 
     public void reloadStatus() {
+        if (fileList == null) {
+            return;
+        }
         boolean isFile = selectedFile != null && (!selectedFile.isDirectory() || !selectedFile.getName().equals(".."));
+        boolean isLoadable = isFile && !selectedFile.isDirectory();
         boolean isAuthorized = isAuthorized();
         this.remotePublicButton.setEnabled(libraryManager.getPublicSkinLibrary().isReady());
         this.remotePrivateButton.setEnabled(libraryManager.getPrivateSkinLibrary().isReady());
         this.deleteButton.setEnabled(isAuthorized && isFile);
         this.newFolderButton.setEnabled(isAuthorized);
-        this.actionButton.active = isFile && !selectedFile.isDirectory();
         this.openFolderButton.setEnabled(libraryManager.getLocalSkinLibrary() == selectedLibrary);
+        if (hasInputSkin()) {
+            this.actionButton.active = true;
+            this.actionButton.setMessage(getDisplayText("save"));
+        } else {
+            this.actionButton.active = isLoadable;
+            this.actionButton.setMessage(getDisplayText("load"));
+        }
     }
 
     public void reloadData(Object value) {
@@ -220,6 +237,12 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+    @Override
+    protected void slotClicked(Slot p_184098_1_, int p_184098_2_, int p_184098_3_, ClickType p_184098_4_) {
+        super.slotClicked(p_184098_1_, p_184098_2_, p_184098_3_, p_184098_4_);
+        reloadStatus();
+    }
+
     protected ITextComponent getDisplayText(String key) {
         return TranslateUtils.title("inventory.armourers_workshop.skin-library" + "." + key);
     }
@@ -262,8 +285,8 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         dialog.setValueTester(value -> value.replaceAll("[:\\\\/]|^[.]+$", "_").equals(value));
         present(dialog, dialog1 -> {
             if (!dialog1.isCancelled()) {
-                String path = FilenameUtils.concat(selectedPath, dialog1.getText());
-                selectedLibrary.mkdir(FilenameUtils.normalize(path, true));
+                String newPath = FilenameUtils.normalize(FilenameUtils.concat(selectedPath, dialog1.getText()), true);
+                selectedLibrary.mkdir(newPath);
             }
         });
     }
@@ -280,19 +303,37 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         }
     }
 
-    private void loadItem(Button sender) {
-        // save 1: fs -> ws, upload local skin to server library
-        // save 2: ws -> ws, copy server skin to server library
-        // save 3: ws -> fs, download server skin to local library
-
-        // load 1: fs -> db, upload skin to server library
+    private void loadOrSaveItem(Button button) {
+        if (!menu.getOutputStack().isEmpty()) {
+            return; // output has many items.
+        }
+        SkinDescriptor descriptor = SkinDescriptor.of(menu.getInputStack());
+        if (descriptor.isEmpty()) {
+            loadSkin();
+            return;
+        }
+        String newName = nameTextField.getValue();
+        if (newName.isEmpty()) {
+            toast(getDisplayText("error.noFileName"));
+            return; // must input name
+        }
+        String newPath = FilenameUtils.normalize(FilenameUtils.concat(selectedPath, newName + ".armour"), true);
+        if (selectedLibrary.get(newPath) != null) {
+            if (!isAuthorized()) {
+                toast(getDisplayText("error.illegalOperation"));
+                return;
+            }
+            overwriteItem(newPath, () -> saveSkin(descriptor, newPath));
+            return;
+        }
+        saveSkin(descriptor, newPath);
     }
 
     private void removeItem(Button sender) {
         if (!(selectedFile instanceof SkinLibraryFile) || !isAuthorized()) {
             return;
         }
-        SkinLibraryFile file = (SkinLibraryFile)selectedFile;
+        SkinLibraryFile file = (SkinLibraryFile) selectedFile;
         AWConfirmDialog dialog = new AWConfirmDialog(getDisplayText("dialog.delete.title"));
         dialog.setMessageColor(0xffff5555);
         dialog.setConfirmText(getDisplayText("dialog.delete.delete"));
@@ -312,26 +353,37 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         if (!(selectedFile instanceof SkinLibraryFile) || !isAuthorized()) {
             return;
         }
-        SkinLibraryFile file = (SkinLibraryFile)selectedFile;
+        SkinLibraryFile file = (SkinLibraryFile) selectedFile;
         if (sender.equals(file.getName())) {
             return; // not changes.
         }
         String ext = file.isDirectory() ? "" : ".armour";
         String newPath = FilenameUtils.normalize(file.getPath() + "/../" + sender + ext, true);
         if (selectedLibrary.get(newPath) != null) {
-            AWConfirmDialog dialog = new AWConfirmDialog(getDisplayText("dialog.overwrite.title"));
-            dialog.setMessageColor(0xffff5555);
-            dialog.setConfirmText(getDisplayText("dialog.overwrite.ok"));
-            dialog.setCancelText(getDisplayText("dialog.overwrite.close"));
-            dialog.setMessage(getDisplayText("dialog.overwrite.overwriteFile", sender));
-            present(dialog, r -> {
-                if (!r.isCancelled()) {
-                    selectedLibrary.rename(file, newPath);
-                }
-            });
+            overwriteItem(newPath, () -> selectedLibrary.rename(file, newPath));
             return;
         }
         selectedLibrary.rename(file, newPath);
+    }
+
+    private void toast(ITextComponent message) {
+        AWConfirmDialog dialog = new AWConfirmDialog(TranslateUtils.title("inventory.armourers_workshop.skin-library-global.panel.info"));
+        dialog.setMessageColor(0xffff5555);
+        dialog.setMessage(message);
+        present(dialog, null);
+    }
+
+    private void overwriteItem(String path, Runnable handler) {
+        AWConfirmDialog dialog = new AWConfirmDialog(getDisplayText("dialog.overwrite.title"));
+        dialog.setMessageColor(0xffff5555);
+        dialog.setConfirmText(getDisplayText("dialog.overwrite.ok"));
+        dialog.setCancelText(getDisplayText("dialog.overwrite.close"));
+        dialog.setMessage(getDisplayText("dialog.overwrite.overwriteFile", FilenameUtils.getBaseName(path)));
+        present(dialog, r -> {
+            if (!r.isCancelled()) {
+                handler.run();
+            }
+        });
     }
 
     private void refreshLibrary(Button sender) {
@@ -341,7 +393,14 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
     private void selectFile(Button sender) {
         ISkinLibrary.Entry oldValue = selectedFile;
         ISkinLibrary.Entry newValue = fileList.getSelectedItem();
-        setSelectedFile(newValue);
+        selectedFile = newValue;
+        boolean isFile = newValue != null && (!newValue.isDirectory() || !newValue.getName().equals(".."));
+        if (isFile) {
+            nameTextField.setValue(newValue.getName());
+        } else {
+            nameTextField.setValue("");
+        }
+        reloadStatus();
         if (newValue != null && newValue.isDirectory() && oldValue == newValue) {
             selectedPath = newValue.getPath();
             reloadData(sender);
@@ -358,19 +417,6 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         }
         super.setFocused(item);
     }
-
-    public void setSelectedFile(ISkinLibrary.Entry file) {
-        selectedFile = file;
-        boolean isFile = file != null && (!file.isDirectory() || !file.getName().equals(".."));
-        if (isFile) {
-            nameTextField.setValue(file.getName());
-        } else {
-            nameTextField.setValue("");
-        }
-        reloadStatus();
-    }
-
-
 
     private AWComboBox addComboList(int x, int y, int width, int height) {
         int selectedIndex = 0;
@@ -434,11 +480,58 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
     }
 
     private AWCheckBox addOption(int x, int y, String key) {
-        AWCheckBox checkBox = new AWCheckBox(x, y, 9, 9, getDisplayText(key), false, button -> {
-        });
+        AWCheckBox checkBox = new AWCheckBox(x, y, 9, 9, getDisplayText(key), false, b -> reloadStatus());
         checkBox.setTextColour(0xffffff);
         addButton(checkBox);
         return checkBox;
+    }
+
+    private void saveSkin(SkinDescriptor descriptor, String path) {
+        // check skin load status
+        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        if (bakedSkin == null || !menu.shouldSaveStack()) {
+            return; // skin not ready for using
+        }
+        // save 1: copy local skin to local library
+        // save 2: upload local skin to server library
+        // save 3: copy server skin to server library
+        // save 4: download server skin to local library
+        SaveSkinPacket packet = new SaveSkinPacket(descriptor.getIdentifier(), selectedLibrary.getNamespace() + ":" + path);
+        if (!packet.isReady()) {
+            toast(getDisplayText("error.illegalOperation"));
+            return;
+        }
+        NetworkHandler.getInstance().sendToServer(packet);
+    }
+
+    private void loadSkin() {
+        if (selectedFile == null || selectedFile.isDirectory() || !menu.shouldLoadStack()) {
+            return;
+        }
+        String namespace = AWConstants.Namespace.DATABASE;
+        if (checkBox.isSelected()) {
+            namespace = AWConstants.Namespace.DATABASE_LINK;
+        }
+        // check skin load status
+        String identifier = selectedFile.getNamespace() + ":" + selectedFile.getPath();
+        SkinDescriptor descriptor = new SkinDescriptor(identifier, selectedFile.getSkinType(), ColorScheme.EMPTY);
+        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        if (bakedSkin == null) {
+            return; // skin not ready for using
+        }
+        // load 1: upload local skin to database
+        // load 2: copy server skin to database
+        // load 3: make item stack(db/link)
+        SaveSkinPacket packet = new SaveSkinPacket(descriptor.getIdentifier(), namespace + ":");
+        if (!packet.isReady()) {
+            toast(getDisplayText("error.illegalOperation"));
+            return;
+        }
+        NetworkHandler.getInstance().sendToServer(packet);
+    }
+
+    private boolean hasInputSkin() {
+        return !SkinDescriptor.of(menu.getInputStack()).isEmpty();
     }
 
     private boolean isAuthorized() {

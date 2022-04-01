@@ -41,29 +41,4 @@ public class AWCore {
     public static File getSkinLibraryDirectory() {
         return new File(getRootDirectory(), "skin-library");
     }
-
-    public static ItemStack getSkinFromEquipment(@Nullable Entity entity, SkinSlotType skinSlotType, EquipmentSlotType equipmentSlotType) {
-        ItemStack itemStack = ItemStack.EMPTY;
-        if (entity instanceof LivingEntity) {
-            itemStack = ((LivingEntity) entity).getItemBySlot(equipmentSlotType);
-        }
-        if (itemStack.isEmpty()) {
-            return itemStack;
-        }
-        // embedded skin is the highest priority
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        if (descriptor.accept(itemStack)) {
-            return itemStack;
-        }
-        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-        if (wardrobe != null) {
-            ItemStack itemStack1 = wardrobe.getItem(skinSlotType, 0);
-            descriptor = SkinDescriptor.of(itemStack1);
-            if (descriptor.accept(itemStack)) {
-                return itemStack1;
-            }
-        }
-        return itemStack;
-    }
-
 }

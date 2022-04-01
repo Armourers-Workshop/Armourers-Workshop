@@ -17,4 +17,9 @@ public class CreativeSkinLibraryContainer extends SkinLibraryContainer {
     public boolean stillValid(PlayerEntity player) {
         return stillValid(this.access, player, ModBlocks.SKIN_LIBRARY_CREATIVE);
     }
+
+    @Override
+    public boolean shouldLoadStack() {
+        return getOutputStack().isEmpty();
+    }
 }

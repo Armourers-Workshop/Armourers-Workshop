@@ -1,10 +1,13 @@
 package moe.plushie.armourers_workshop.core.data;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -12,6 +15,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
+import java.util.zip.GZIPOutputStream;
 
 public class DataManager {
 
@@ -28,11 +32,11 @@ public class DataManager {
     public Optional<ByteBuf> loadSkinData(String identifier) {
         ModLog.debug("Load skin data: {} ", identifier);
         InputStream stream;
-        if (identifier.startsWith("db:")) {
+        if (identifier.startsWith(AWConstants.Namespace.DATABASE + ":")) {
             stream = LocalDataService.getInstance().getFile(identifier.substring(3));
         } else {
             String path = identifier;
-            if (path.startsWith("ws:") || path.startsWith("fs:")) {
+            if (path.startsWith(AWConstants.Namespace.SERVER + ":") || path.startsWith(AWConstants.Namespace.LOCAL + ":")) {
                 path = FilenameUtils.normalize(path.substring(3));
             }
             stream = loadStreamFromPath(path);
@@ -52,8 +56,35 @@ public class DataManager {
         return Optional.empty();
     }
 
-    public void loadSkinData(String identifier, Consumer<Optional<ByteBuf>> consumer) {
-        executorService.submit(() -> consumer.accept(loadSkinData(identifier)));
+    public Optional<ByteBuf> loadCompressedSkinData(String identifier) {
+        ModLog.debug("Load skin data: {} ", identifier);
+        InputStream inputStream;
+        if (identifier.startsWith(AWConstants.Namespace.DATABASE + ":")) {
+            inputStream = LocalDataService.getInstance().getFile(identifier.substring(3));
+        } else {
+            String path = identifier;
+            if (path.startsWith(AWConstants.Namespace.SERVER + ":") || path.startsWith(AWConstants.Namespace.LOCAL + ":")) {
+                path = FilenameUtils.normalize(path.substring(3));
+            }
+            inputStream = loadStreamFromPath(path);
+        }
+        if (inputStream == null) {
+            return Optional.empty();
+        }
+        try {
+            ByteBuf buf = Unpooled.buffer(10 * 1024);
+            ByteBufOutputStream bo = new ByteBufOutputStream(buf);
+            GZIPOutputStream outputStream = new GZIPOutputStream(bo);
+            IOUtils.copy(inputStream, outputStream);
+            outputStream.close();
+            return Optional.of(buf);
+        } catch (IOException ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public void loadCompressedSkinData(String identifier, Consumer<Optional<ByteBuf>> consumer) {
+        executorService.submit(() -> consumer.accept(loadCompressedSkinData(identifier)));
     }
 
     @Nullable

@@ -2,6 +2,8 @@ package moe.plushie.armourers_workshop.core.network.packet;
 
 import com.google.common.collect.Iterables;
 import com.mojang.datafixers.util.Pair;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -34,7 +36,7 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
     public UpdateLibraryFilesPacket(PacketBuffer buffer) {
         this.publicFiles = new ArrayList<>();
         this.privateFiles = new ArrayList<>();
-        for (SkinLibraryFile file : readCompressedBuffer(buffer)) {
+        for (SkinLibraryFile file : readCompressedBuffer(new ByteBufInputStream(buffer))) {
             if (file.getPath().startsWith("/private")) {
                 privateFiles.add(file);
             } else {
@@ -45,7 +47,8 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
 
     @Override
     public void encode(PacketBuffer buffer) {
-        writeCompressedBuffer(buffer, Iterables.concat(publicFiles, privateFiles));
+        int totalSize = publicFiles.size() + privateFiles.size();
+        writeCompressedBuffer(new ByteBufOutputStream(buffer), Iterables.concat(publicFiles, privateFiles), totalSize);
     }
 
     @Override
@@ -55,11 +58,10 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
         client.getPrivateSkinLibrary().reloadFiles(privateFiles);
     }
 
-    private void writeCompressedBuffer(PacketBuffer buffer, Iterable<SkinLibraryFile> files) {
+    private void writeCompressedBuffer(ByteBufOutputStream stream, Iterable<SkinLibraryFile> files, int totalSize) {
         try {
-            int totalSize = 0;
-            ByteArrayOutputStream bo = new ByteArrayOutputStream();
-            GZIPOutputStream go = new GZIPOutputStream(bo);
+            stream.writeInt(totalSize);
+            GZIPOutputStream go = new GZIPOutputStream(stream);
             ObjectOutputStream oo = new ObjectOutputStream(go);
             for (SkinLibraryFile file : files) {
                 ArrayList<String> values = new ArrayList<>();
@@ -70,7 +72,6 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
                     values.add(properties.get(SkinProperty.ALL_AUTHOR_NAME));
                     values.add(properties.get(SkinProperty.ALL_FLAVOUR_TEXT));
                 }
-                totalSize += 1;
                 oo.writeUTF(file.getPath());
                 oo.writeByte(values.size());
                 for (String value : values) {
@@ -78,20 +79,16 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
                 }
             }
             oo.close();
-            buffer.writeInt(totalSize);
-            buffer.writeByteArray(bo.toByteArray());
         } catch (Exception e) {
-            buffer.writeInt(0);
             e.printStackTrace();
         }
     }
 
-    private Iterable<SkinLibraryFile> readCompressedBuffer(PacketBuffer buffer) {
+    private Iterable<SkinLibraryFile> readCompressedBuffer(ByteBufInputStream stream) {
         ArrayList<SkinLibraryFile> files = new ArrayList<>();
         try {
-            int totalSize = buffer.readInt();
-            ByteArrayInputStream bi = new ByteArrayInputStream(buffer.readByteArray());
-            GZIPInputStream gi = new GZIPInputStream(bi);
+            int totalSize = stream.readInt();
+            GZIPInputStream gi = new GZIPInputStream(stream);
             ObjectInputStream oi = new ObjectInputStream(gi);
             for (int index = 0; index < totalSize; ++index) {
                 String path = oi.readUTF();

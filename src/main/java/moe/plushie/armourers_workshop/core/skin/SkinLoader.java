@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.core.data.DataLoader;
 import moe.plushie.armourers_workshop.core.data.DataManager;
@@ -8,18 +9,22 @@ import moe.plushie.armourers_workshop.core.data.FastCache;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.RequestFilePacket;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.zip.GZIPInputStream;
 
 
 public class SkinLoader {
@@ -113,10 +118,17 @@ public class SkinLoader {
         return skin;
     }
 
+    private Optional<Skin> loadSkinFileFromStream(String identifier, Supplier<Optional<InputStream>> buffer) {
+        ModLog.debug("load skin file: {}", identifier);
+        Optional<Skin> skin = buffer.get().map(SkinIOUtils::loadSkinFromStream);
+        manager.put(identifier, skin);
+        return skin;
+    }
+
     private void loadSkinFileIfNeeded(String identifier, @Nullable Consumer<Optional<Skin>> complete) {
-        boolean isLocalResource = identifier.startsWith("fs:");
+        boolean isLocalResource = identifier.startsWith(AWConstants.Namespace.LOCAL + ":");
         boolean isClientSide = !LocalDataService.isRunning();
-        if (isClientSide && !isLocalResource) {
+        if (isClientSide && !isLocalResource || true) {
             loadRemoteSkinFile(identifier, complete);
             return;
         }
@@ -147,7 +159,7 @@ public class SkinLoader {
     }
 
     private void finishTask(LoadingTask task) {
-        ModLog.debug("Finish loading task: {}", task.identifier);
+        ModLog.debug("Finish loading task: {}, size: {}", task.identifier, task.receivedSize);
         manager.add(() -> {
             ArrayList<Consumer<Optional<Skin>>> listeners = new ArrayList<>(task.listeners);
             ByteBuf buffer = Unpooled.buffer(task.receivedSize);
@@ -157,8 +169,14 @@ public class SkinLoader {
             });
             task.clear();
             removeTask(task);
-            Optional<Skin> skin = loadSkinFile(task.identifier, () -> Optional.of(buffer));
-            listeners.forEach(t -> t.accept(skin));
+            try {
+                ByteBufInputStream bi = new ByteBufInputStream(buffer);
+                GZIPInputStream gi = new GZIPInputStream(bi);
+                Optional<Skin> skin = loadSkinFileFromStream(task.identifier, () -> Optional.of(gi));
+                listeners.forEach(t -> t.accept(skin));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 

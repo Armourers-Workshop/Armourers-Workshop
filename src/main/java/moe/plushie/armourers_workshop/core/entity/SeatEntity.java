@@ -117,7 +117,6 @@ public class SeatEntity extends LivingEntity {
         return -0.15f;
     }
 
-
     @Override
     public HandSide getMainArm() {
         return null;
@@ -126,7 +125,13 @@ public class SeatEntity extends LivingEntity {
     @OnlyIn(Dist.CLIENT)
     @Override
     public boolean shouldRender(double p_145770_1_, double p_145770_3_, double p_145770_5_) {
-        return true;
+        return false;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public boolean shouldRenderAtSqrDistance(double p_70112_1_) {
+        return false;
     }
 
     @Override

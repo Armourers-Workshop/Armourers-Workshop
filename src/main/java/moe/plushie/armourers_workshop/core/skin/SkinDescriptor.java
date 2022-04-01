@@ -31,10 +31,12 @@ public class SkinDescriptor implements ISkinDescriptor {
         this(identifier, SkinTypes.UNKNOWN, ColorScheme.EMPTY);
     }
 
+    public SkinDescriptor(String identifier, ISkinType type) {
+        this(identifier, type, ColorScheme.EMPTY);
+    }
+
     public SkinDescriptor(SkinDescriptor descriptor, ColorScheme colorScheme) {
-        this.identifier = descriptor.getIdentifier();
-        this.type = descriptor.getType();
-        this.colorScheme = colorScheme;
+        this(descriptor.getIdentifier(), descriptor.getType(), colorScheme);
     }
 
     public SkinDescriptor(String identifier, ISkinType type, ColorScheme colorScheme) {
