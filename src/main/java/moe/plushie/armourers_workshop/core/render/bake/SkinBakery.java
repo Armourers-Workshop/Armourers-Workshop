@@ -110,10 +110,9 @@ public final class SkinBakery {
     }
 
     private void loadAndBakeSkin(String identifier, Consumer<Optional<BakedSkin>> complete) {
-        SkinLoader.getInstance().loadSkin(identifier, skin -> {
-            Skin skin1 = skin.orElse(null);
-            if (skin1 != null) {
-                manager.add(() -> bakeSkin(identifier, skin1, complete));
+        SkinLoader.getInstance().loadSkin(identifier, (skin, exception) -> {
+            if (skin != null) {
+                manager.add(() -> bakeSkin(identifier, skin, complete));
             } else {
                 complete.accept(Optional.empty());
             }
@@ -121,7 +120,7 @@ public final class SkinBakery {
     }
 
     private void bakeSkin(String identifier, Skin skin, Consumer<Optional<BakedSkin>> complete) {
-        ModLog.debug("Start baking task: {}", identifier);
+        ModLog.debug("baking skin of '{}'", identifier);
         long startTime = System.currentTimeMillis();
 //            skin.lightHash();
 //            int extraDyes = SkinPaintTypes.getInstance().getExtraChannels();
@@ -174,10 +173,9 @@ public final class SkinBakery {
 //            bakeTimes.set(index, (int) totalTime);
 
         BakedSkin bakedSkin = new BakedSkin(identifier, skin, scheme, usedCounter, colorInfo, bakedParts);
+        ModLog.debug("accept baked skin of '{}'", identifier);
         complete.accept(Optional.of(bakedSkin));
-
         listeners.forEach(listener -> listener.didBake(identifier, bakedSkin));
-        ModLog.debug("Finish baking task: {}", identifier);
     }
 
 //    public void receivedUnbakedModel(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated, IBakedSkinReceiver skinReceiver) {

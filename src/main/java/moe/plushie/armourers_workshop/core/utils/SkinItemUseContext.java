@@ -164,7 +164,7 @@ public class SkinItemUseContext extends BlockItemUseContext {
         }
 
         public void transform(Vector3f r) {
-            Quaternion q = new Quaternion(r.x(), r.y(), r.z(), true);
+            Quaternion q = TrigUtils.rotate(r.x(), r.y(), r.z(), true);
 
             Vector4f f = new Vector4f(offset.getX(), offset.getY(), offset.getZ(), 1.0f);
             f.transform(q);
@@ -223,7 +223,7 @@ public class SkinItemUseContext extends BlockItemUseContext {
         public void transform(Vector3f r) {
             super.transform(r);
 
-            Quaternion q = new Quaternion(r.x(), r.y(), r.z(), true);
+            Quaternion q = TrigUtils.rotate(r.x(), r.y(), r.z(), true);
             ArrayList<SkinMarker> newMarkerList = new ArrayList<>();
             for (SkinMarker marker : markerList) {
                 Vector4f f = new Vector4f(marker.x, marker.y, marker.z, 1.0f);

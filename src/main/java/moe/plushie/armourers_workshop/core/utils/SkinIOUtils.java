@@ -9,19 +9,18 @@ import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionException;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.StringTextComponent;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 
 public final class SkinIOUtils {
-
-    public static final String SKIN_FILE_EXTENSION = ".armour";
 
 //    public static boolean saveSkinFromFileName(String filePath, String fileName, Skin skin) {
 //        filePath = makeFilePathValid(filePath);
@@ -281,12 +280,12 @@ public final class SkinIOUtils {
                     String customName = properties.get(SkinProperty.ALL_CUSTOM_NAME);
                     if (!StringUtils.isNullOrEmpty(fileName)) {
                         fileName = makeFileNameValid(fileName);
-                        File newSkinFile = new File(recoverDir, fileName + SKIN_FILE_EXTENSION);
+                        File newSkinFile = new File(recoverDir, fileName + AWConstants.EXT);
                         if (newSkinFile.exists()) {
                             int nameCount = 0;
                             do {
                                 nameCount++;
-                                newSkinFile = new File(recoverDir, fileName + "-" + nameCount + SKIN_FILE_EXTENSION);
+                                newSkinFile = new File(recoverDir, fileName + "-" + nameCount + AWConstants.EXT);
                             } while (newSkinFile.exists());
                         }
                         saveSkinToFile(newSkinFile, skin);
@@ -295,12 +294,12 @@ public final class SkinIOUtils {
                     }
                     if (!StringUtils.isNullOrEmpty(customName)) {
                         customName = makeFileNameValid(customName);
-                        File newSkinFile = new File(recoverDir, customName + SKIN_FILE_EXTENSION);
+                        File newSkinFile = new File(recoverDir, customName + AWConstants.EXT);
                         if (newSkinFile.exists()) {
                             int nameCount = 0;
                             do {
                                 nameCount++;
-                                newSkinFile = new File(recoverDir, customName + "-" + nameCount + SKIN_FILE_EXTENSION);
+                                newSkinFile = new File(recoverDir, customName + "-" + nameCount + AWConstants.EXT);
                             } while (newSkinFile.exists());
                         }
                         saveSkinToFile(newSkinFile, skin);
@@ -308,7 +307,7 @@ public final class SkinIOUtils {
                         continue;
                     }
                     unnamedSkinCount++;
-                    saveSkinToFile(new File(recoverDir, "unnamed-skin-" + unnamedSkinCount + SKIN_FILE_EXTENSION), skin);
+                    saveSkinToFile(new File(recoverDir, "unnamed-skin-" + unnamedSkinCount + AWConstants.EXT), skin);
                     successCount++;
                 } else {
                     failCount++;

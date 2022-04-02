@@ -41,7 +41,7 @@ public class CustomPacket {
         buffer.writeInt(getPacketID());
         encode(buffer);
         buffer.capacity(buffer.readableBytes());
-        if (buffer.readableBytes() > 2 * 1024 * 1024) { // 2k walking room :)
+        if (buffer.readableBytes() > 2 * 1024 * 1024) { // 2m walking room :)
             throw new IllegalArgumentException("Sorry AW2 made a " + buffer.readableBytes() + " byte packet by accident!");
         }
         return direction.buildPacket(Pair.of(buffer, 0), NetworkHandler.getInstance().getChannel()).getThis();

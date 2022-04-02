@@ -2,15 +2,16 @@ package moe.plushie.armourers_workshop.core.skin;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
-import moe.plushie.armourers_workshop.init.common.ModItems;
+import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import org.apache.commons.io.FilenameUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -173,4 +174,7 @@ public class SkinDescriptor implements ISkinDescriptor {
     public int hashCode() {
         return identifier.hashCode();
     }
+
+
+
 }

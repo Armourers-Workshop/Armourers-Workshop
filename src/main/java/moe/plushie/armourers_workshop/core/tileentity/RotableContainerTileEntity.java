@@ -33,6 +33,7 @@ public abstract class RotableContainerTileEntity extends AbstractContainerTileEn
         renderBoundingBox = null;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public Quaternion getRenderRotations() {
         return null;
     }

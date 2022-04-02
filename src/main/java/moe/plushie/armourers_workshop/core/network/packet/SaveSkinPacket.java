@@ -6,9 +6,9 @@ import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.container.SkinLibraryContainer;
 import moe.plushie.armourers_workshop.library.data.SkinLibrary;
@@ -36,7 +36,7 @@ public class SaveSkinPacket extends CustomPacket {
         this.source = source;
         this.destination = destination;
         this.mode = Mode.NONE;
-        boolean shouldUpload = isLocalTarget(source) && !isLocalTarget(destination);
+        boolean shouldUpload = DataDomain.isLocal(source) && !DataDomain.isLocal(destination);
         if (shouldUpload) {
             this.mode = Mode.UPLOAD;
             if (SkinLibraryManager.getClient().shouldUploadFile()) {
@@ -51,14 +51,14 @@ public class SaveSkinPacket extends CustomPacket {
         this.mode = buffer.readEnum(Mode.class);
         switch (mode) {
             case UPLOAD: {
-                boolean shouldUpload = isLocalTarget(source) && !isLocalTarget(destination);
+                boolean shouldUpload = DataDomain.isLocal(source) && !DataDomain.isLocal(destination);
                 if (shouldUpload && SkinLibraryManager.getServer().shouldUploadFile()) {
                     this.skin = decodeSkin(buffer);
                 }
                 break;
             }
             case DOWNLOAD: {
-                boolean shouldDownload = !isLocalTarget(source) && isLocalTarget(destination);
+                boolean shouldDownload = !DataDomain.isLocal(source) && DataDomain.isLocal(destination);
                 if (shouldDownload) {
                     this.skin = decodeSkin(buffer);
                 }
@@ -76,12 +76,12 @@ public class SaveSkinPacket extends CustomPacket {
 
     @Override
     public void accept(INetHandler netHandler, PlayerEntity player) {
-        if (!isLocalTarget(destination)) {
+        if (!DataDomain.isLocal(destination)) {
             return; // ignore
         }
         Skin skin = getSkin();
         if (skin == null) {
-            error(player, "load", "missing skin from the loader");
+            error(player, "load", "missing from skin loader");
             return;
         }
         SkinLibrary library = SkinLibraryManager.getClient().getLocalSkinLibrary();
@@ -96,16 +96,16 @@ public class SaveSkinPacket extends CustomPacket {
             return;
         }
         SkinLibraryManager.Server server = SkinLibraryManager.getServer();
-        if (isLocalTarget(source) && !server.shouldUploadFile()) {
-            error(player, "upload", "uploading skin prohibited in the config file");
+        if (DataDomain.isLocal(source) && !server.shouldUploadFile()) {
+            error(player, "upload", "uploading prohibited in the config file");
             return;
         }
         SkinLibraryContainer container = (SkinLibraryContainer) player.containerMenu;
         // load: fs -> db[-link]/ws -> db[-link]
-        if (isDatabaseTarget(destination)) {
+        if (DataDomain.isDatabase(destination)) {
             Skin skin = getSkin();
             if (skin == null) {
-                error(player, "load", "missing skin from the loader");
+                error(player, "load", "missing from skin loader");
                 return;
             }
             if (container.shouldLoadStack()) {
@@ -117,10 +117,10 @@ public class SaveSkinPacket extends CustomPacket {
             return;
         }
         // save: fs -> ws/db -> ws/ws -> ws
-        if (isServerTarget(destination)) {
+        if (DataDomain.isServer(destination)) {
             Skin skin = getSkin();
             if (skin == null) {
-                error(player, "load", "missing skin from the loader");
+                error(player, "load", "missing from skin loader");
                 return;
             }
             if (container.shouldSaveStack()) {
@@ -131,12 +131,12 @@ public class SaveSkinPacket extends CustomPacket {
             return;
         }
         // download: ws -> fs/db -> fs/fs -> fs
-        if (isLocalTarget(destination)) {
-            if (!isLocalTarget(source) && !server.shouldDownloadFile()) {
-                error(player, "download", "downloading skin prohibited in the config file");
+        if (DataDomain.isLocal(destination)) {
+            if (!DataDomain.isLocal(source) && !server.shouldDownloadFile()) {
+                error(player, "download", "downloading prohibited in the config file");
                 return;
             }
-            if (!isLocalTarget(source)) {
+            if (!DataDomain.isLocal(source)) {
                 this.skin = getSkin();
                 this.mode = Mode.DOWNLOAD;
             }
@@ -154,10 +154,10 @@ public class SaveSkinPacket extends CustomPacket {
     public boolean isReady() {
         SkinLibraryManager libraryManager = SkinLibraryManager.getClient();
         // when a remote server, check the config.
-        if (isLocalTarget(source) && !isLocalTarget(destination) && !libraryManager.shouldUploadFile()) {
+        if (DataDomain.isLocal(source) && !DataDomain.isLocal(destination) && !libraryManager.shouldUploadFile()) {
             return false; // can't upload
         }
-        if (!isLocalTarget(source) && isLocalTarget(destination) && !libraryManager.shouldDownloadFile()) {
+        if (!DataDomain.isLocal(source) && DataDomain.isLocal(destination) && !libraryManager.shouldDownloadFile()) {
             return false; // can't download
         }
         return mode == Mode.NONE || skin != null;
@@ -165,12 +165,12 @@ public class SaveSkinPacket extends CustomPacket {
 
     private void accept(PlayerEntity player, String op) {
         String playerName = player.getName().getContents();
-        ModLog.info("'{}' the {} request has been accepted, from: '{}', to: '{}'", playerName, op, source, destination);
+        ModLog.info("the {} request for '{}' accepted, from: '{}', to: '{}'", op, playerName, source, destination);
     }
 
     private void error(PlayerEntity player, String op, String reason) {
         String playerName = player.getName().getContents();
-        ModLog.info("'{}' the {} request was failure, reason: '{}', from: '{}', to: '{}'", playerName, op, reason, source, destination);
+        ModLog.info("the {} request for '{}' rejected, reason: '{}', from: '{}', to: '{}'", playerName, op, reason, source, destination);
     }
 
     private void encodeSkin(PacketBuffer buffer) {
@@ -234,33 +234,21 @@ public class SaveSkinPacket extends CustomPacket {
     }
 
     private boolean isAuthorized(String location, PlayerEntity player) {
-        if (isServerTarget(location)) {
+        if (DataDomain.isServer(location)) {
             String path = getPath(location);
-            if (path.startsWith("/private/" + player.getStringUUID())) {
+            if (path.startsWith(AWConstants.PRIVATE + "/" + player.getStringUUID())) {
                 return true; // any operation has been accepted in the player's own directory.
             }
-            if (path.startsWith("/private")) {
+            if (path.startsWith(AWConstants.PRIVATE)) {
                 return false; // any operation has been rejected in the other player's private directory.
             }
-            if (SkinLibraryManager.getServer().getLibrary().get(path) != null) {
-                // required auth when on files already in public directory
-                return SkinLibraryManager.getServer().shouldModifierFile(player);
-            }
+//            if (SkinLibraryManager.getServer().getLibrary().get(path) != null) {
+//                // required auth when on files already in public directory
+//                return SkinLibraryManager.getServer().shouldModifierFile(player);
+//            }
             return true;
         }
         return !location.isEmpty();
-    }
-
-    private boolean isLocalTarget(String path) {
-        return path.startsWith(AWConstants.Namespace.LOCAL + ":");
-    }
-
-    private boolean isServerTarget(String path) {
-        return path.startsWith(AWConstants.Namespace.SERVER + ":");
-    }
-
-    private boolean isDatabaseTarget(String path) {
-        return path.startsWith(AWConstants.Namespace.DATABASE + ":") || path.startsWith(AWConstants.Namespace.DATABASE_LINK + ":");
     }
 
     public enum Mode {

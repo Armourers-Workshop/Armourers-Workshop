@@ -90,6 +90,7 @@ public class ArmourersWorkshop {
     }
 
     private void onServerWillStop(FMLServerStoppingEvent event) {
+        ModContext.reset();
         LocalDataService.stop();
     }
 

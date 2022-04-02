@@ -4,10 +4,10 @@ import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.skin.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import net.minecraft.network.PacketBuffer;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.util.Strings;
 
@@ -18,27 +18,27 @@ import java.util.stream.Collectors;
 public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrary.Entry {
 
     protected final String name;
-    protected final String namespace;
     protected final String path;
+    protected final DataDomain domain;
     protected final Pair<ISkinType, ISkinProperties> header;
     protected final boolean isDirectory;
     protected final boolean isPrivateDirectory;
 
     private Collection<String> searchableContentList;
 
-    public SkinLibraryFile(String namespace, String name, String path) {
+    public SkinLibraryFile(DataDomain domain, String name, String path) {
         this.name = name;
-        this.namespace = namespace;
         this.path = FilenameUtils.normalize(path, true);
+        this.domain = domain;
         this.header = null;
         this.isDirectory = true;
-        this.isPrivateDirectory = namespace.equals(AWConstants.Namespace.SERVER) && path.startsWith("/private");
+        this.isPrivateDirectory = domain.equals(DataDomain.SERVER) && path.startsWith(AWConstants.PRIVATE);
     }
 
-    public SkinLibraryFile(String namespace, String name, String path, Pair<ISkinType, ISkinProperties> header) {
+    public SkinLibraryFile(DataDomain domain, String name, String path, Pair<ISkinType, ISkinProperties> header) {
         this.name = name;
-        this.namespace = namespace;
         this.path = FilenameUtils.normalize(path, true);
+        this.domain = domain;
         this.header = header;
         this.isDirectory = false;
         this.isPrivateDirectory = false;
@@ -67,7 +67,7 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
 
     @Override
     public String toString() {
-        return namespace + ":" + path;
+        return domain.normalize(path);
     }
 
     public String getName() {
@@ -75,7 +75,7 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
     }
 
     public String getNamespace() {
-        return namespace;
+        return domain.namespace();
     }
 
     public String getPath() {

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.tileentity;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
+import moe.plushie.armourers_workshop.core.utils.TrigUtils;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
@@ -166,13 +167,14 @@ public class SkinnableTileEntity extends RotableContainerTileEntity {
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public Quaternion getRenderRotations() {
         if (renderRotations != null) {
             return renderRotations;
         }
         Vector3f r = getRotations(getBlockState());
-        renderRotations = new Quaternion(r.x(), r.y(), r.z(), true);
+        renderRotations = TrigUtils.rotate(r.x(), r.y(), r.z(), true);
         return renderRotations;
     }
 

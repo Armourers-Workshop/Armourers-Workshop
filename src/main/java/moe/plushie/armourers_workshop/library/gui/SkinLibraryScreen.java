@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.core.network.packet.SaveSkinPacket;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
@@ -317,7 +318,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
             toast(getDisplayText("error.noFileName"));
             return; // must input name
         }
-        String newPath = FilenameUtils.normalize(FilenameUtils.concat(selectedPath, newName + ".armour"), true);
+        String newPath = FilenameUtils.normalize(FilenameUtils.concat(selectedPath, newName + AWConstants.EXT), true);
         if (selectedLibrary.get(newPath) != null) {
             if (!isAuthorized()) {
                 toast(getDisplayText("error.illegalOperation"));
@@ -357,7 +358,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         if (sender.equals(file.getName())) {
             return; // not changes.
         }
-        String ext = file.isDirectory() ? "" : ".armour";
+        String ext = file.isDirectory() ? "" : AWConstants.EXT;
         String newPath = FilenameUtils.normalize(file.getPath() + "/../" + sender + ext, true);
         if (selectedLibrary.get(newPath) != null) {
             overwriteItem(newPath, () -> selectedLibrary.rename(file, newPath));
@@ -508,9 +509,9 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         if (selectedFile == null || selectedFile.isDirectory() || !menu.shouldLoadStack()) {
             return;
         }
-        String namespace = AWConstants.Namespace.DATABASE;
+        DataDomain source = DataDomain.DATABASE;
         if (checkBox.isSelected()) {
-            namespace = AWConstants.Namespace.DATABASE_LINK;
+            source = DataDomain.DATABASE_LINK;
         }
         // check skin load status
         String identifier = selectedFile.getNamespace() + ":" + selectedFile.getPath();
@@ -522,7 +523,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         // load 1: upload local skin to database
         // load 2: copy server skin to database
         // load 3: make item stack(db/link)
-        SaveSkinPacket packet = new SaveSkinPacket(descriptor.getIdentifier(), namespace + ":");
+        SaveSkinPacket packet = new SaveSkinPacket(descriptor.getIdentifier(), source.normalize(""));
         if (!packet.isReady()) {
             toast(getDisplayText("error.illegalOperation"));
             return;

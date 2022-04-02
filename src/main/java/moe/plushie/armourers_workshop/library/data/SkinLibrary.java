@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateLibraryFilePacket;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import org.apache.commons.io.FileUtils;
@@ -22,7 +23,7 @@ public class SkinLibrary implements ISkinLibrary {
     static Executor executor = Executors.newFixedThreadPool(1);
 
     protected final File basePath;
-    protected final String namespace;
+    protected final DataDomain domain;
     protected final ArrayList<ISkinLibraryListener> listeners = new ArrayList<>();
 
     protected boolean isReady = false;
@@ -31,9 +32,9 @@ public class SkinLibrary implements ISkinLibrary {
     protected String rootPath = "/";
     protected ArrayList<SkinLibraryFile> files = new ArrayList<>();
 
-    public SkinLibrary(String namespace, File path) {
+    public SkinLibrary(DataDomain domain, File path) {
+        this.domain = domain;
         this.basePath = path;
-        this.namespace = namespace;
     }
 
     public void addListener(ISkinLibraryListener listener) {
@@ -91,10 +92,10 @@ public class SkinLibrary implements ISkinLibrary {
         }
         File file = new File(basePath, FilenameUtils.normalize(path));
         if (!file.mkdirs()) {
-            ModLog.error("Can't make new folder '{}'", file);
+            ModLog.error("can't make new folder '{}'", file);
             return;
         }
-        ModLog.debug("Create '{}' folder", path);
+        ModLog.debug("create '{}' folder", path);
         reload();
     }
 
@@ -104,13 +105,13 @@ public class SkinLibrary implements ISkinLibrary {
         }
         File file = new File(basePath, FilenameUtils.normalize(libraryFile.getPath()));
         if (!FileUtils.deleteQuietly(file)) {
-            ModLog.error("Can't remove file '{}'", file);
+            ModLog.error("can't remove file '{}'", file);
             return;
         }
         if (libraryFile.isDirectory()) {
-            ModLog.debug("Remove '{}' folder and contents", libraryFile.getPath());
+            ModLog.debug("remove '{}' folder and contents", libraryFile.getPath());
         } else {
-            ModLog.debug("Remove '{}' file", libraryFile.getPath());
+            ModLog.debug("remove '{}' file", libraryFile.getPath());
         }
         reload();
     }
@@ -122,14 +123,14 @@ public class SkinLibrary implements ISkinLibrary {
         File file = new File(basePath, FilenameUtils.normalize(libraryFile.getPath()));
         File targetFile = new File(basePath, FilenameUtils.normalize(path));
         if (targetFile.exists() && !FileUtils.deleteQuietly(targetFile)) {
-            ModLog.error("Can't remove file '{}'", file);
+            ModLog.error("can't remove file '{}'", file);
             return;
         }
         if (!file.renameTo(targetFile)) {
-            ModLog.error("Can't rename file '{}'", file);
+            ModLog.error("can't rename file '{}'", file);
             return;
         }
-        ModLog.debug("Move '{}' to '{}'", libraryFile.getPath(), path);
+        ModLog.debug("move '{}' to '{}'", libraryFile.getPath(), path);
         reload();
     }
 
@@ -174,7 +175,7 @@ public class SkinLibrary implements ISkinLibrary {
         }
         Collections.sort(files);
         if (!rootPath.equals(this.rootPath)) {
-            files.add(0, new SkinLibraryFile(namespace, "..", (new File(rootPath)).getParent()));
+            files.add(0, new SkinLibraryFile(domain, "..", FilenameUtils.normalizeNoEndSeparator(rootPath + "/..", true)));
         }
         return files;
     }
@@ -190,7 +191,7 @@ public class SkinLibrary implements ISkinLibrary {
     }
 
     public String getNamespace() {
-        return namespace;
+        return domain.namespace();
     }
 
     public String getRootPath() {
@@ -204,8 +205,8 @@ public class SkinLibrary implements ISkinLibrary {
 
     public static class Proxy extends SkinLibrary {
 
-        public Proxy(String namespace) {
-            super(namespace, null);
+        public Proxy(DataDomain domain) {
+            super(domain, null);
         }
 
         @Override

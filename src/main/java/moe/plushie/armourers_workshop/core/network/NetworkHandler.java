@@ -22,6 +22,7 @@ import net.minecraftforge.fml.network.event.EventNetworkChannel;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class NetworkHandler {
@@ -55,14 +56,11 @@ public class NetworkHandler {
 
     @SubscribeEvent
     public void onServerEvent(final NetworkEvent.ClientCustomPayloadEvent event) {
-        PacketBuffer payload = event.getPayload();
         NetworkEvent.Context context = event.getSource().get();
-        payload.retain();
-        executor.submit(() -> {
+        optimized(event.getPayload(), payload -> {
             ServerPlayNetHandler netHandler = (ServerPlayNetHandler) context.getNetworkManager().getPacketListener();
             CustomPacket packet = CustomPacket.fromBuffer(payload);
             context.enqueueWork(() -> packet.accept(netHandler, netHandler.player));
-            payload.release();
         });
         context.setPacketHandled(true);
     }
@@ -73,14 +71,11 @@ public class NetworkHandler {
         if (event instanceof NetworkEvent.ServerCustomPayloadLoginEvent) {
             return;
         }
-        PacketBuffer payload = event.getPayload();
         NetworkEvent.Context context = event.getSource().get();
-        payload.retain();
-        executor.submit(() -> {
+        optimized(event.getPayload(), payload -> {
             ClientPlayNetHandler netHandler = (ClientPlayNetHandler) context.getNetworkManager().getPacketListener();
-            CustomPacket packet = CustomPacket.fromBuffer(event.getPayload());
+            CustomPacket packet = CustomPacket.fromBuffer(payload);
             context.enqueueWork(() -> packet.accept(netHandler, Minecraft.getInstance().player));
-            payload.release();
         });
         context.setPacketHandled(true);
     }
@@ -112,11 +107,26 @@ public class NetworkHandler {
 
     @OnlyIn(Dist.CLIENT)
     public void sendToServer(final CustomPacket message) {
+        ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
+        if (connection == null) {
+            return;
+        }
         executor.submit(() -> {
-            ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
-            if (connection != null) {
-                connection.send(message.buildPacket(NetworkDirection.PLAY_TO_SERVER));
-            }
+            IPacket<?> packet = message.buildPacket(NetworkDirection.PLAY_TO_SERVER);
+            connection.send(packet);
+        });
+    }
+
+    private void optimized(PacketBuffer buffer, Consumer<PacketBuffer> consumer) {
+        if (buffer.readableBytes() < 2000) { // 2k
+            consumer.accept(buffer);
+            return;
+        }
+        PacketBuffer newBuffer = new PacketBuffer(buffer.duplicate());
+        buffer.retain();
+        executor.submit(() -> {
+            consumer.accept(newBuffer);
+            buffer.release();
         });
     }
 
@@ -127,8 +137,8 @@ public class NetworkHandler {
     public enum PacketTypes {
         PACKET_UPDATE_CONTEXT(UpdateContextPacket.class, UpdateContextPacket::new),
 
-        PACKET_REQUEST_FILE(RequestFilePacket.class, RequestFilePacket::new),
-        PACKET_RESPONSE_FILE(ResponseFilePacket.class, ResponseFilePacket::new),
+        PACKET_REQUEST_FILE(RequestSkinPacket.class, RequestSkinPacket::new),
+        PACKET_RESPONSE_FILE(ResponseSkinPacket.class, ResponseSkinPacket::new),
         PACKET_UPLOAD_FILE(SaveSkinPacket.class, SaveSkinPacket::new),
 
         PACKET_UPDATE_HOLOGRAM_PROJECTOR(UpdateHologramProjectorPacket.class, UpdateHologramProjectorPacket::new),

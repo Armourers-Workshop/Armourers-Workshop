@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.init.common.AWCore;
+import moe.plushie.armourers_workshop.init.common.ModContext;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -82,6 +83,7 @@ public class PlayerNetworkHandler {
             SkinLoader.getInstance().clear();
             SkinLibraryManager.getClient().getPublicSkinLibrary().reset();
             SkinLibraryManager.getClient().getPrivateSkinLibrary().reset();
+            ModContext.reset();
         }
     }
 

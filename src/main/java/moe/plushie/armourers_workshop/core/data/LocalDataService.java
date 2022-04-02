@@ -105,17 +105,13 @@ public class LocalDataService {
         }
     }
 
-    public InputStream getFile(String identifier) {
+    public InputStream getFile(String identifier) throws IOException {
         ModLog.debug("Load data from db {}", identifier);
         Node node = nodes.get(identifier);
         if (node == null || !node.isValid()) {
-            return null;
+            throw new FileNotFoundException("Invalid file path");
         }
-        try {
-            return new FileInputStream(rootPath.resolve(node.uuid).toFile());
-        } catch (FileNotFoundException ignored) {
-        }
-        return null;
+        return new FileInputStream(rootPath.resolve(node.uuid).toFile());
     }
 
 //    public boolean checkFile(String identifier, byte[] array) {
