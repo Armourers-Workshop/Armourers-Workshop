@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.tileentities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.utils.TrigUtils;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
@@ -118,7 +119,7 @@ public class HologramProjectorTileEntityRenderer<T extends HologramProjectorTile
             RenderUtils.drawPoint(matrixStack, null, 128, buffers);
         }
 
-        matrixStack.mulPose(new Quaternion(rotX, -rotY, rotZ, true));
+        matrixStack.mulPose(TrigUtils.rotate(rotX, -rotY, rotZ, true));
         matrixStack.translate(rotationOffset.x(), -rotationOffset.y(), rotationOffset.z());
 
         if (ModConfig.debugHologramProjectorBlock) {

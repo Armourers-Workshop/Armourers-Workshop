@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.render.item;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.utils.TrigUtils;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
@@ -87,7 +88,7 @@ public final class SkinItemRenderer {
         RenderUtils.drawTargetBox(matrixStack, targetWidth, targetHeight, targetDepth, buffers);
 
         Rectangle3f resolvedRect = rect.offset(rect.getMidX(), rect.getMidY(), rect.getMidZ());
-        resolvedRect.mul(new Matrix4f(new Quaternion(rotation.x(), rotation.y(), rotation.z(), true)));
+        resolvedRect.mul(new Matrix4f(TrigUtils.rotate(rotation.x(), rotation.y(), rotation.z(), true)));
         float newScale = Math.min(targetWidth / resolvedRect.getWidth(), targetHeight / resolvedRect.getHeight());
 
         matrixStack.scale(newScale / scale.x(), newScale / scale.y(), newScale / scale.z());

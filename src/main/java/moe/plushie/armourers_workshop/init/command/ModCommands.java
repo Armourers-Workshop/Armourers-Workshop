@@ -7,6 +7,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
@@ -92,7 +93,7 @@ public class ModCommands {
 
         static int setSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
             String identifier = FileArgument.getString(context, "skin");
-            Skin skin = SkinLoader.getInstance().loadSkin("ws:" + identifier);
+            Skin skin = SkinLoader.getInstance().loadSkin(DataDomain.SERVER.normalize(identifier));
             if (skin == null) {
                 return 0;
             }
@@ -138,7 +139,7 @@ public class ModCommands {
 
         static int giveSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
             String identifier = FileArgument.getString(context, "skin");
-            Skin skin = SkinLoader.getInstance().loadSkin("ws:" + identifier);
+            Skin skin = SkinLoader.getInstance().loadSkin(DataDomain.SERVER.normalize(identifier));
             if (skin == null) {
                 context.getSource().sendSuccess(new StringTextComponent("Can't found identifier " + identifier), true);
                 return 0;

@@ -6,10 +6,11 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
-import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryFile;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +20,6 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -37,7 +37,7 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
         this.publicFiles = new ArrayList<>();
         this.privateFiles = new ArrayList<>();
         for (SkinLibraryFile file : readCompressedBuffer(new ByteBufInputStream(buffer))) {
-            if (file.getPath().startsWith("/private")) {
+            if (file.getPath().startsWith(AWConstants.PRIVATE)) {
                 privateFiles.add(file);
             } else {
                 publicFiles.add(file);
@@ -94,7 +94,7 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
                 String path = oi.readUTF();
                 String basename = FilenameUtils.getBaseName(path);
                 if (oi.readByte() == 0) {
-                    files.add(new SkinLibraryFile("ws", basename, path));
+                    files.add(new SkinLibraryFile(DataDomain.SERVER, basename, path));
                     continue;
                 }
                 ISkinType skinType = SkinTypes.byName(oi.readUTF());
@@ -102,7 +102,7 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
                 properties.put(SkinProperty.ALL_CUSTOM_NAME, oi.readUTF());
                 properties.put(SkinProperty.ALL_AUTHOR_NAME, oi.readUTF());
                 properties.put(SkinProperty.ALL_FLAVOUR_TEXT, oi.readUTF());
-                files.add(new SkinLibraryFile("ws", basename, path, Pair.of(skinType, properties)));
+                files.add(new SkinLibraryFile(DataDomain.SERVER, basename, path, Pair.of(skinType, properties)));
             }
         } catch (Exception e) {
             e.printStackTrace();

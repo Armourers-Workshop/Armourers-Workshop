@@ -8,15 +8,12 @@ public final class AWConstants {
     public final static Vector3f ZERO = new Vector3f();
     public final static Vector3f ONE = new Vector3f(1, 1, 1);
 
-    public final static class Folder {
-        public static final FolderName LOCAL_DB = new FolderName("skin-database");
-    }
+    public static final String EXT = ".armour";
+    public static final String PRIVATE = "/private";
 
-    public final static class Namespace {
-        public static final String LOCAL = "fs";
-        public static final String SERVER = "ws";
-        public static final String DATABASE = "db";
-        public static final String DATABASE_LINK = "db-ln";
+    public final static class Folder {
+
+        public static final FolderName LOCAL_DB = new FolderName("skin-database");
     }
 
     public final static class NBT {

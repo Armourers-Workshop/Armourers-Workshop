@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.tileentity;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
+import moe.plushie.armourers_workshop.core.utils.TrigUtils;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
@@ -225,6 +226,7 @@ public class HologramProjectorTileEntity extends RotableContainerTileEntity {
         return modelScale;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public Quaternion getRenderRotations() {
         if (renderRotations != null) {
@@ -233,7 +235,7 @@ public class HologramProjectorTileEntity extends RotableContainerTileEntity {
         AttachFace face = getBlockState().getValue(HologramProjectorBlock.FACE);
         Direction facing = getBlockState().getValue(HologramProjectorBlock.FACING);
         Vector3f rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), new Vector3f());
-        renderRotations = new Quaternion(rot.x(), rot.y(), rot.z(), true);
+        renderRotations = TrigUtils.rotate(rot.x(), rot.y(), rot.z(), true);
         return renderRotations;
     }
 

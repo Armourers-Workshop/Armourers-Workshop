@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateLibraryFilesPacket;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
@@ -64,9 +65,9 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         private final SkinLibrary privateSkinLibrary;
 
         public Client() {
-            this.localSkinLibrary = new SkinLibrary(AWConstants.Namespace.LOCAL, AWCore.getSkinLibraryDirectory());
-            this.publicSkinLibrary = new SkinLibrary.Proxy(AWConstants.Namespace.SERVER);
-            this.privateSkinLibrary = new SkinLibrary.Proxy(AWConstants.Namespace.SERVER);
+            this.localSkinLibrary = new SkinLibrary(DataDomain.LOCAL, AWCore.getSkinLibraryDirectory());
+            this.publicSkinLibrary = new SkinLibrary.Proxy(DataDomain.SERVER);
+            this.privateSkinLibrary = new SkinLibrary.Proxy(DataDomain.SERVER);
             this.localSkinLibrary.addListener(this);
             this.publicSkinLibrary.addListener(this);
             this.privateSkinLibrary.addListener(this);
@@ -125,7 +126,7 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         private boolean isReady = false;
 
         public Server() {
-            this.skinLibrary = new SkinLibrary("ws", AWCore.getSkinLibraryDirectory());
+            this.skinLibrary = new SkinLibrary(DataDomain.SERVER, AWCore.getSkinLibraryDirectory());
             this.skinLibrary.addListener(this);
         }
 
@@ -151,13 +152,12 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         @Override
         public void libraryDidReload(ISkinLibrary library) {
             // analyze all files
-            String privatePath = "/private";
             ArrayList<SkinLibraryFile> publicFiles = new ArrayList<>();
             HashMap<String, ArrayList<SkinLibraryFile>> privateFiles = new HashMap<>();
             for (SkinLibraryFile file : skinLibrary.getFiles()) {
                 String path = file.getPath();
-                if (path.startsWith(privatePath)) {
-                    int index = path.indexOf('/', privatePath.length() + 1);
+                if (path.startsWith(AWConstants.PRIVATE)) {
+                    int index = path.indexOf('/', AWConstants.PRIVATE.length() + 1);
                     if (index >= 0) {
                         String key = path.substring(0, index);
                         privateFiles.computeIfAbsent(key, k -> new ArrayList<>()).add(file);
@@ -188,12 +188,12 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
                 return;
             }
             syncedPlayers.add(uuid);
-            String key = "/private/" + uuid;
+            String key = AWConstants.PRIVATE + "/" + uuid;
             String name = player.getName().getString();
             ArrayList<SkinLibraryFile> privateFiles = this.privateFiles.getOrDefault(key, new ArrayList<>());
             UpdateLibraryFilesPacket packet = new UpdateLibraryFilesPacket(publicFiles, privateFiles);
             NetworkHandler.getInstance().sendTo(packet, player);
-            ModLog.debug("Syncing library files {}/{} to '{}'.", publicFiles.size(), privateFiles.size(), name);
+            ModLog.debug("syncing library files {}/{} to '{}'.", publicFiles.size(), privateFiles.size(), name);
         }
 
         public SkinLibrary getLibrary() {

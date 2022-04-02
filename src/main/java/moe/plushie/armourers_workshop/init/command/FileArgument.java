@@ -9,6 +9,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
@@ -30,7 +31,6 @@ public class FileArgument implements ArgumentType<String> {
     public static final SimpleCommandExceptionType ERROR_START = new SimpleCommandExceptionType(new StringTextComponent("File must start with '/'"));
     public static final SimpleCommandExceptionType ERROR_NOT_FOUND = new SimpleCommandExceptionType(new StringTextComponent("Not found any file"));
 
-    private final String ext;
     private final File rootFile;
     private final ArrayList<String> fileList;
 
@@ -40,7 +40,6 @@ public class FileArgument implements ArgumentType<String> {
     FileArgument(File rootPath) {
         super();
         this.rootFile = rootPath;
-        this.ext = ".armour";
         this.fileList = null;
         ModLog.debug("setup root path: " + rootPath);
     }
@@ -48,7 +47,6 @@ public class FileArgument implements ArgumentType<String> {
     FileArgument(ArrayList<String> fileList) {
         super();
         this.rootFile = null;
-        this.ext = ".armour";
         this.fileList = fileList;
     }
 
@@ -113,7 +111,7 @@ public class FileArgument implements ArgumentType<String> {
         ArrayList<String> results = new ArrayList<>();
         File[] files = root.listFiles();
         if (files == null) {
-            ModLog.error("Load file error at {}", root);
+            ModLog.error("load file error at {}", root);
             return results;
         }
         for (File file : files) {
@@ -126,7 +124,7 @@ public class FileArgument implements ArgumentType<String> {
                 }
                 continue;
             }
-            if (rv.toLowerCase().endsWith(ext)) {
+            if (rv.toLowerCase().endsWith(AWConstants.EXT)) {
                 if (rv.startsWith(name)) {
                     results.add(rv);
                 } else if (name.startsWith(rv)) {

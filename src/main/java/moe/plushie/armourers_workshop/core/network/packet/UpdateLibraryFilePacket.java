@@ -52,15 +52,17 @@ public class UpdateLibraryFilePacket extends CustomPacket {
 
     @Override
     public void accept(ServerPlayNetHandler netHandler, ServerPlayerEntity player) {
+        String playerName = player.getName().getContents();
         SkinLibrary library = SkinLibraryManager.getServer().getLibrary();
         if (mode == Mode.RELOAD) {
             library.reload();
             return;
         }
-        ModLog.info("Received a operation '{}' for '{}'.", mode, destination);
         if (!isAuthorized(player)) {
+            ModLog.info("the {} operation rejected for '{}', dest: '{}'", mode, playerName, destination);
             return;
         }
+        ModLog.info("the {} operation accepted for '{}', dest: '{}'", mode, playerName, destination);
         switch (mode) {
             case MKDIR: {
                 library.mkdir(destination);

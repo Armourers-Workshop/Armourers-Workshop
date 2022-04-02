@@ -185,7 +185,8 @@ public class ItemTooltipHandler {
         ItemStack itemStack = event.getStack();
         MatrixStack matrixStack = event.getMatrixStack();
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        if (descriptor.isEmpty()) {
+        BakedSkin bakedSkin = BakedSkin.of(descriptor);
+        if (bakedSkin == null) {
             return;
         }
         int x, y;

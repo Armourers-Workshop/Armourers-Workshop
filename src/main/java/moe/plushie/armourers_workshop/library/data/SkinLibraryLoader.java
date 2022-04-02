@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import org.apache.commons.io.FilenameUtils;
@@ -26,7 +27,7 @@ public class SkinLibraryLoader implements Runnable {
         this.completeHandler = completeHandler;
     }
 
-    public ArrayList<SkinLibraryFile> getSkinFiles(String domain, File directory, boolean recursive) {
+    public ArrayList<SkinLibraryFile> getSkinFiles(File directory, boolean recursive) {
         ArrayList<SkinLibraryFile> fileList = new ArrayList<>();
         File[] templateFiles;
         try {
@@ -35,7 +36,7 @@ public class SkinLibraryLoader implements Runnable {
                 return fileList; // Armour file list load failed, not found.
             }
         } catch (Exception e) {
-            ModLog.error("Armour file list load failed.");
+            ModLog.error("armour file list load failed.");
             e.printStackTrace();
             return fileList;
         }
@@ -44,16 +45,16 @@ public class SkinLibraryLoader implements Runnable {
             String path = file.getAbsolutePath().replace(libraryDirectory.getAbsolutePath(), "");
             String filename = file.getName();
             if (file.isDirectory()) {
-                fileList.add(new SkinLibraryFile(domain, filename, path));
+                fileList.add(new SkinLibraryFile(library.domain, filename, path));
                 continue;
             }
-            if (filename.toLowerCase().endsWith(".armour")) {
+            if (filename.toLowerCase().endsWith(AWConstants.EXT)) {
                 String name = FilenameUtils.removeExtension(filename);
                 Pair<ISkinType, ISkinProperties> header = SkinIOUtils.getTypeNameFromFile(file);
                 if (header == null) {
                     continue; // Armour file load fail.
                 }
-                fileList.add(new SkinLibraryFile(domain, name, path, header));
+                fileList.add(new SkinLibraryFile(library.domain, name, path, header));
             }
         }
         Collections.sort(fileList);
@@ -61,7 +62,7 @@ public class SkinLibraryLoader implements Runnable {
         if (recursive) {
             for (File file : templateFiles) {
                 if (file.isDirectory()) {
-                    fileList.addAll(getSkinFiles(domain, file, true));
+                    fileList.addAll(getSkinFiles(file, true));
                 }
             }
         }
@@ -72,11 +73,11 @@ public class SkinLibraryLoader implements Runnable {
     @Override
     public void run() {
         long startTime = System.currentTimeMillis();
-        ModLog.debug("Loading library skins");
-        ArrayList<SkinLibraryFile> files = getSkinFiles(library.getNamespace(), basePath, true);
+        ModLog.debug("loading library skins");
+        ArrayList<SkinLibraryFile> files = getSkinFiles(basePath, true);
         library.reloadFiles(files);
         library.endLoading();
-        ModLog.debug(String.format("Finished loading %d client library skins in %d ms", files.size(), System.currentTimeMillis() - startTime));
+        ModLog.debug(String.format("finished loading %d client library skins in %d ms", files.size(), System.currentTimeMillis() - startTime));
         if (completeHandler != null) {
             completeHandler.libraryDidReload(null);
         }

@@ -38,7 +38,13 @@ public class AWCore {
     public static File getRootDirectory() {
         return new File(FMLPaths.GAMEDIR.get().toFile(), "armourers_workshop");
     }
+
     public static File getSkinLibraryDirectory() {
         return new File(getRootDirectory(), "skin-library");
     }
+
+    public static File getSkinCacheDirectory() {
+        return new File(getRootDirectory(), "skin-cache");
+    }
+
 }

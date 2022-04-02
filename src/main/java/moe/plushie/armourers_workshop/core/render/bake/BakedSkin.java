@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.core.utils.CustomVoxelShape;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
+import moe.plushie.armourers_workshop.core.utils.TrigUtils;
 import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -138,7 +139,7 @@ public class BakedSkin implements IBakedSkin {
         Matrix4f matrix = Matrix4f.createScaleMatrix(1, 1, 1);
         CustomVoxelShape shape = getRenderShape(entity, model, ItemCameraTransforms.TransformType.NONE);
         if (rotation != null) {
-            matrix.multiply(new Quaternion(rotation.x(), rotation.y(), rotation.z(), true));
+            matrix.multiply(TrigUtils.rotate(rotation.x(), rotation.y(), rotation.z(), true));
             shape.mul(matrix);
         }
         bounds = shape.bounds().copy();

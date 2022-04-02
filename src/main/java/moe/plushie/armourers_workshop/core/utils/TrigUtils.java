@@ -1,6 +1,29 @@
 package moe.plushie.armourers_workshop.core.utils;
 
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Quaternion;
+
 public class TrigUtils {
+
+    public static Quaternion rotate(float x, float y, float z, boolean p_i48102_4_) {
+        if (p_i48102_4_) {
+            x *= ((float)Math.PI / 180F);
+            y *= ((float)Math.PI / 180F);
+            z *= ((float)Math.PI / 180F);
+        }
+
+        float f = MathHelper.sin(0.5F * x);
+        float f1 = MathHelper.cos(0.5F * x);
+        float f2 = MathHelper.sin(0.5F * y);
+        float f3 = MathHelper.cos(0.5F * y);
+        float f4 = MathHelper.sin(0.5F * z);
+        float f5 = MathHelper.cos(0.5F * z);
+        float i = f * f3 * f5 + f1 * f2 * f4;
+        float j = f1 * f2 * f5 - f * f3 * f4;
+        float k = f * f2 * f5 + f1 * f3 * f4;
+        float r = f1 * f3 * f5 - f * f2 * f4;
+        return new Quaternion(i, j, k, r);
+    }
 
     public static double getAngleRadians(double x1, double y1, double x2, double y2) {
         double x = x2 - x1;
