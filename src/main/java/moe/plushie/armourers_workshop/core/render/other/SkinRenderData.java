@@ -28,6 +28,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.BiConsumer;
@@ -195,17 +196,17 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     private void loadArmorSlots(Entity entity, BiConsumer<ItemStack, Boolean> consumer) {
         int size = SkinSlotType.DYE.getIndex();
-        entity.getArmorSlots().forEach(itemStack -> consumer.accept(itemStack, true));
+        entity.getArmorSlots().forEach(itemStack -> consumer.accept(itemStack, false));
         if (!isActiveWardrobe) {
             return;
         }
         for (int i = 0; i < size; ++i) {
-            consumer.accept(lastWardrobeSlots.get(i), true);
+            consumer.accept(lastWardrobeSlots.get(i), false);
         }
     }
 
     private void loadHandSlots(Entity entity, BiConsumer<ItemStack, Boolean> consumer) {
-        entity.getHandSlots().forEach(itemStack -> consumer.accept(itemStack, false));
+        entity.getHandSlots().forEach(itemStack -> consumer.accept(itemStack, true));
     }
 
 
@@ -216,7 +217,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         }
     }
 
-    private void updateSkin(ItemStack itemStack, boolean allowsArmor) {
+    private void updateSkin(ItemStack itemStack, boolean isHeld) {
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             return;
@@ -227,12 +228,13 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
             return;
         }
         ISkinType type = bakedSkin.getType();
-        if (type instanceof ISkinArmorType && allowsArmor) {
-            armorSkins.add(new Entry(descriptor, bakedSkin, colorScheme));
+        // If held an skin of armor type, nothing happen
+        if (type instanceof ISkinArmorType && !isHeld) {
+            armorSkins.add(new Entry(descriptor, bakedSkin, colorScheme, false));
             loadSkinPart(bakedSkin);
         }
         if (type instanceof ISkinToolType || type == SkinTypes.ITEM) {
-            itemSkins.add(new Entry(descriptor, bakedSkin, colorScheme));
+            itemSkins.add(new Entry(descriptor, bakedSkin, colorScheme, isHeld));
             loadSkinPart(bakedSkin);
         }
     }
@@ -255,6 +257,27 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
                 isLimitLimbs = properties.get(SkinProperty.MODEL_LEGS_LIMIT_LIMBS);
             }
         }
+    }
+
+    public Iterable<Entry> getItemSkins(ItemStack itemStack) {
+        SkinDescriptor target = SkinDescriptor.of(itemStack);
+        if (target.isEmpty()) {
+            // the item stack is not embedded skin, using matching pattern,
+            // only need to find the first matching skin by item.
+            for (Entry entry : itemSkins) {
+                if (!entry.isHeld && entry.getDescriptor().accept(itemStack)) {
+                    return Collections.singletonList(entry);
+                }
+            }
+        } else {
+            // the item stack is embedded skin, find the baked skin for matched descriptor.
+            for (SkinRenderData.Entry entry : itemSkins) {
+                if (entry.getDescriptor().equals(target)) {
+                    return Collections.singletonList(entry);
+                }
+            }
+        }
+        return Collections.emptyList();
     }
 
     public Iterable<Entry> getArmorSkins() {
@@ -298,11 +321,13 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         protected final SkinDescriptor descriptor;
         protected final BakedSkin bakedSkin;
         protected final ColorScheme bakedScheme;
+        protected final boolean isHeld;
 
-        public Entry(SkinDescriptor descriptor, BakedSkin bakedSkin, ColorScheme entityScheme) {
+        public Entry(SkinDescriptor descriptor, BakedSkin bakedSkin, ColorScheme entityScheme, boolean isHeld) {
             this.descriptor = descriptor;
             this.bakedSkin = bakedSkin;
             this.bakedScheme = baking(descriptor.getColorScheme(), entityScheme);
+            this.isHeld = isHeld;
         }
 
         public static ColorScheme baking(ColorScheme skinScheme, ColorScheme entityScheme) {

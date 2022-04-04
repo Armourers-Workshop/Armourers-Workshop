@@ -22,11 +22,20 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ArmorStandItem;
+import net.minecraft.item.BlockItem;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public final class ModEntities {
 
@@ -34,6 +43,16 @@ public final class ModEntities {
 
     public static final EntityType<MannequinEntity> MANNEQUIN = register("mannequin", MannequinEntity::new, EntityClassification.MISC, b -> b.sized(0.6f, 1.88f));
     public static final EntityType<SeatEntity> SEAT = register("seat", SeatEntity::new, EntityClassification.MISC, b -> b.sized(0.0f, 0.0f).noSummon());
+
+
+    public static boolean noBlockEntitiesAround(Entity entity) {
+        if (entity.level instanceof ServerWorld) {
+            ServerWorld world = (ServerWorld) entity.level;
+            AxisAlignedBB alignedBB = entity.getBoundingBox().inflate(0.0625D).expandTowards(0.0D, -0.55D, 0.0D);
+            return world.getEntityCollisions(entity, alignedBB, e -> e instanceof MannequinEntity).allMatch(VoxelShape::isEmpty);
+        }
+        return true;
+    }
 
     public static void forEach(Consumer<EntityType<?>> action) {
         REGISTERED_ENTITY_TYPES.values().forEach(action);

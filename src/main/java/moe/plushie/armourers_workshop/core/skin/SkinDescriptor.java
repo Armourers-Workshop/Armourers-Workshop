@@ -167,7 +167,7 @@ public class SkinDescriptor implements ISkinDescriptor {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SkinDescriptor that = (SkinDescriptor) o;
-        return identifier.equals(that.identifier);
+        return identifier.equals(that.identifier) && colorScheme.equals(that.colorScheme);
     }
 
     @Override

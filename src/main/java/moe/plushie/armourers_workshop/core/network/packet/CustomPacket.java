@@ -36,18 +36,7 @@ public class CustomPacket {
     public void encode(final PacketBuffer buffer) {
     }
 
-    public IPacket<?> buildPacket(final NetworkDirection direction) {
-        PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
-        buffer.writeInt(getPacketID());
-        encode(buffer);
-        buffer.capacity(buffer.readableBytes());
-        if (buffer.readableBytes() > 2 * 1024 * 1024) { // 2m walking room :)
-            throw new IllegalArgumentException("Sorry AW2 made a " + buffer.readableBytes() + " byte packet by accident!");
-        }
-        return direction.buildPacket(Pair.of(buffer, 0), NetworkHandler.getInstance().getChannel()).getThis();
-    }
-
-    private int getPacketID() {
+    public int getPacketID() {
         return NetworkHandler.PacketTypes.getID(this.getClass()).ordinal();
     }
 }

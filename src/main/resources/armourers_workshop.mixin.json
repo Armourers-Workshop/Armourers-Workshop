@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "armourers_workshop.refmap.json",
   "mixins": [
-    "EntityMixin"
+    "EntityMixin",
+    "ServerPlayNetHandlerMixin"
   ],
   "client": [
     "ArrowRendererMixin",

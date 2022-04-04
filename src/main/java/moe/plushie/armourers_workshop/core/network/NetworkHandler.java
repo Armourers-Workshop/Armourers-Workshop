@@ -1,11 +1,17 @@
 package moe.plushie.armourers_workshop.core.network;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.core.network.packet.*;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.PacketDirection;
+import net.minecraft.network.ProtocolType;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -18,8 +24,13 @@ import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.event.EventNetworkChannel;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -27,15 +38,16 @@ import java.util.function.Function;
 
 public class NetworkHandler {
 
+    private static final byte STATE_FIRST = -2;
+    private static final byte STATE_LAST = -3;
+    private static final int MAX_PART_SIZE = 32000; // 32k
+
     private static final HashMap<Class<? extends CustomPacket>, PacketTypes> REVERSE_LOOKUP = new HashMap<>();
     private static NetworkHandler INSTANCE;
 
     private final ResourceLocation channelName;
-    private final ExecutorService executor = Executors.newFixedThreadPool(1, r -> {
-        Thread thread = new Thread(r, "Network-Data-Coder");
-        thread.setPriority(Thread.MAX_PRIORITY);
-        return thread;
-    });
+    private final HashMap<UUID, ArrayList<ByteBuf>> receivedBuffers = new HashMap<>();
+    private final ExecutorService executor = Executors.newFixedThreadPool(2, r -> new Thread(r, "Network-Data-Coder"));
 
     public NetworkHandler(final ResourceLocation channelName) {
 
@@ -57,7 +69,11 @@ public class NetworkHandler {
     @SubscribeEvent
     public void onServerEvent(final NetworkEvent.ClientCustomPayloadEvent event) {
         NetworkEvent.Context context = event.getSource().get();
-        optimized(event.getPayload(), payload -> {
+        PlayerEntity player = context.getSender();
+        if (player == null) {
+            return;
+        }
+        receiveSplitPacket(player.getUUID(), event.getPayload(), payload -> {
             ServerPlayNetHandler netHandler = (ServerPlayNetHandler) context.getNetworkManager().getPacketListener();
             CustomPacket packet = CustomPacket.fromBuffer(payload);
             context.enqueueWork(() -> packet.accept(netHandler, netHandler.player));
@@ -71,11 +87,15 @@ public class NetworkHandler {
         if (event instanceof NetworkEvent.ServerCustomPayloadLoginEvent) {
             return;
         }
+        PlayerEntity player = Minecraft.getInstance().player;
+        if (player == null) {
+            return;
+        }
         NetworkEvent.Context context = event.getSource().get();
-        optimized(event.getPayload(), payload -> {
+        receiveSplitPacket(player.getUUID(), event.getPayload(), payload -> {
             ClientPlayNetHandler netHandler = (ClientPlayNetHandler) context.getNetworkManager().getPacketListener();
             CustomPacket packet = CustomPacket.fromBuffer(payload);
-            context.enqueueWork(() -> packet.accept(netHandler, Minecraft.getInstance().player));
+            context.enqueueWork(() -> packet.accept(netHandler, player));
         });
         context.setPacketHandled(true);
     }
@@ -85,17 +105,11 @@ public class NetworkHandler {
     }
 
     public void sendToAll(final CustomPacket message) {
-        executor.submit(() -> {
-            IPacket<?> packet = message.buildPacket(NetworkDirection.PLAY_TO_CLIENT);
-            getServer().getPlayerList().broadcastAll(packet);
-        });
+        sendSplitPacket(message, NetworkDirection.PLAY_TO_CLIENT, getServer().getPlayerList()::broadcastAll);
     }
 
     public void sendTo(final CustomPacket message, final ServerPlayerEntity player) {
-        executor.submit(() -> {
-            IPacket<?> packet = message.buildPacket(NetworkDirection.PLAY_TO_CLIENT);
-            player.connection.send(packet);
-        });
+        sendSplitPacket(message, NetworkDirection.PLAY_TO_CLIENT, player.connection::send);
     }
 
 //    public void sendToAllAround(final BasePacket message, final PacketDistributor.TargetPoint point) {
@@ -108,21 +122,71 @@ public class NetworkHandler {
     @OnlyIn(Dist.CLIENT)
     public void sendToServer(final CustomPacket message) {
         ClientPlayNetHandler connection = Minecraft.getInstance().getConnection();
-        if (connection == null) {
-            return;
+        if (connection != null) {
+            sendSplitPacket(message, NetworkDirection.PLAY_TO_SERVER, connection::send);
         }
+    }
+
+    private void sendSplitPacket(final CustomPacket message, final NetworkDirection direction, Consumer<IPacket<?>> consumer) {
         executor.submit(() -> {
-            IPacket<?> packet = message.buildPacket(NetworkDirection.PLAY_TO_SERVER);
-            connection.send(packet);
+            PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
+            buffer.writeInt(message.getPacketID());
+            message.encode(buffer);
+            buffer.capacity(buffer.readableBytes());
+            // when packet exceeds the part size, it will be split automatically
+            int packetSize = buffer.readableBytes();
+            if (direction == NetworkDirection.PLAY_TO_CLIENT || packetSize <= MAX_PART_SIZE) {
+                IPacket<?> packet = direction.buildPacket(Pair.of(buffer, 0), getChannel()).getThis();
+                consumer.accept(packet);
+                return;
+            }
+            for (int index = 0; index < packetSize; index += MAX_PART_SIZE) {
+                ByteBuf partPrefix = Unpooled.buffer(4);
+                if (index == 0) {
+                    partPrefix.writeInt(STATE_FIRST);
+                } else if ((index + MAX_PART_SIZE) >= packetSize) {
+                    partPrefix.writeInt(STATE_LAST);
+                } else {
+                    partPrefix.writeInt(-1);
+                }
+                int partSize = Math.min(MAX_PART_SIZE, packetSize - index);
+                ByteBuf buffer1 = Unpooled.wrappedBuffer(partPrefix, buffer.retainedSlice(buffer.readerIndex(), partSize));
+                buffer.skipBytes(partSize);
+                IPacket<?> packet = direction.buildPacket(Pair.of(new PacketBuffer(buffer1), 0), getChannel()).getThis();
+                consumer.accept(packet);
+            }
+            buffer.release();
         });
     }
 
-    private void optimized(PacketBuffer buffer, Consumer<PacketBuffer> consumer) {
-        if (buffer.readableBytes() < 2000) { // 2k
+    private void receiveSplitPacket(UUID uuid, PacketBuffer buffer, Consumer<PacketBuffer> consumer) {
+        int packetState = buffer.getInt(0);
+        if (packetState < 0) {
+            ArrayList<ByteBuf> playerReceivedBuffers = receivedBuffers.computeIfAbsent(uuid, k -> new ArrayList<>());
+            if (packetState == STATE_FIRST) {
+                if (!playerReceivedBuffers.isEmpty()) {
+                    ModLog.warn("aw2:split received out of order - inbound buffer not empty when receiving first");
+                    playerReceivedBuffers.clear();
+                }
+            }
+            buffer.retain();
+            buffer.skipBytes(4); // skip header
+            playerReceivedBuffers.add(buffer.duplicate()); // fix for loli server
+            if (packetState == STATE_LAST) {
+                executor.submit(() -> {
+                    PacketBuffer full = new PacketBuffer(Unpooled.wrappedBuffer(playerReceivedBuffers.toArray(new ByteBuf[0])));
+                    playerReceivedBuffers.clear();
+                    consumer.accept(full);
+                    full.release();
+                });
+            }
+            return;
+        }
+        if (buffer.readableBytes() < 3000) { // 3k
             consumer.accept(buffer);
             return;
         }
-        PacketBuffer newBuffer = new PacketBuffer(buffer.duplicate());
+        PacketBuffer newBuffer = new PacketBuffer(buffer.duplicate()); // fix for loli server
         buffer.retain();
         executor.submit(() -> {
             consumer.accept(newBuffer);
