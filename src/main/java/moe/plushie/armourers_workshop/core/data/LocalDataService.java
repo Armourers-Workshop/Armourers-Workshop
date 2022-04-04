@@ -65,10 +65,10 @@ public class LocalDataService {
         }
         File indexDB = rootPath.resolve("index.dat").toFile();
         if (!indexDB.exists()) {
-            ModLog.debug("Setup new service with {}", indexDB);
+            ModLog.debug("setup new service with {}", indexDB);
             return;
         }
-        ModLog.debug("Load service config from {}", indexDB);
+        ModLog.debug("load service config from {}", indexDB);
         try {
             PushbackInputStream stream = new PushbackInputStream(new FileInputStream(indexDB), 2);
             CompoundNBT nbt = CompressedStreamTools.readCompressed(stream);
@@ -82,13 +82,13 @@ public class LocalDataService {
             counter.set(nbt.getInt("Counter"));
 
         } catch (IOException e) {
-            ModLog.error("Load service config fail {}", indexDB);
+            ModLog.error("load service config fail {}", indexDB);
         }
     }
 
     protected void saveConfig() {
         File indexDB = rootPath.resolve("index.dat").toFile();
-        ModLog.debug("Save service config into {}", indexDB);
+        ModLog.debug("save service config into {}", indexDB);
         try {
             CompoundNBT nbt = new CompoundNBT();
             ListNBT listNBT = new ListNBT();
@@ -101,15 +101,15 @@ public class LocalDataService {
             nbt.putInt("Counter", counter.get());
             CompressedStreamTools.writeCompressed(nbt, indexDB);
         } catch (IOException e) {
-            ModLog.error("Save service config fail for {}", indexDB);
+            ModLog.error("save service config fail for {}", indexDB);
         }
     }
 
     public InputStream getFile(String identifier) throws IOException {
-        ModLog.debug("Load data from db {}", identifier);
+        ModLog.debug("load database skin of '{}'", identifier);
         Node node = nodes.get(identifier);
         if (node == null || !node.isValid()) {
-            throw new FileNotFoundException("Invalid file path");
+            throw new FileNotFoundException("invalid file path");
         }
         return new FileInputStream(rootPath.resolve(node.uuid).toFile());
     }

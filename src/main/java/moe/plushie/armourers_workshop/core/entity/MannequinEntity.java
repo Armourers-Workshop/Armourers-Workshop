@@ -13,7 +13,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
@@ -26,10 +25,13 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Rotations;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @SuppressWarnings("NullableProblems")
 public class MannequinEntity extends ArmorStandEntity {
@@ -54,6 +56,7 @@ public class MannequinEntity extends ArmorStandEntity {
     public static final DataParameter<PlayerTextureDescriptor> DATA_TEXTURE = EntityDataManager.defineId(MannequinEntity.class, AWDataSerializers.PLAYER_TEXTURE);
 
     private boolean isDropEquipment = false;
+    private AxisAlignedBB boundingBoxForCulling;
 
     public MannequinEntity(EntityType<? extends MannequinEntity> entityType, World world) {
         super(entityType, world);
@@ -111,10 +114,10 @@ public class MannequinEntity extends ArmorStandEntity {
 
     @Override
     public void onSyncedDataUpdated(DataParameter<?> dataParameter) {
-        if (dataParameter == DATA_IS_CHILD) {
+        if (DATA_IS_CHILD.equals(dataParameter)) {
             refreshDimensions();
         }
-        if (dataParameter == DATA_SCALE) {
+        if (DATA_SCALE.equals(dataParameter)) {
             refreshDimensions();
         }
         super.onSyncedDataUpdated(dataParameter);
@@ -178,6 +181,12 @@ public class MannequinEntity extends ArmorStandEntity {
         this.yRotO = this.yRot = rot;
         this.yBodyRotO = this.yBodyRot = 0;
         this.yHeadRotO = this.yHeadRot = rot;
+    }
+
+    @Override
+    public void setBoundingBox(AxisAlignedBB p_174826_1_) {
+        super.setBoundingBox(p_174826_1_);
+        this.boundingBoxForCulling = null;
     }
 
     @Override
@@ -248,6 +257,17 @@ public class MannequinEntity extends ArmorStandEntity {
         if (wardrobe != null) {
             wardrobe.dropAll(this::spawnAtLocation);
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public AxisAlignedBB getBoundingBoxForCulling() {
+        if (boundingBoxForCulling != null) {
+            return boundingBoxForCulling;
+        }
+        float f = 0.8f * getScale();
+        boundingBoxForCulling = this.getBoundingBox().inflate(f, f, f);
+        return boundingBoxForCulling;
     }
 
     public PlayerTextureDescriptor getTextureDescriptor() {

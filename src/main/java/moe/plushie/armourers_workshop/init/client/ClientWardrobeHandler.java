@@ -94,23 +94,7 @@ public class ClientWardrobeHandler {
         matrixStack.pushPose();
         matrixStack.scale(-SCALE, -SCALE, SCALE);
 
-        int count = render(entity, null, light, matrixStack, buffers, transformType, () -> {
-            SkinDescriptor target = SkinDescriptor.of(itemStack);
-            if (target.isEmpty()) {
-                for (SkinRenderData.Entry entry : renderData.getItemSkins()) {
-                    if (entry.getDescriptor().accept(itemStack)) {
-                        return Collections.singletonList(entry);
-                    }
-                }
-            } else {
-                for (SkinRenderData.Entry entry : renderData.getItemSkins()) {
-                    if (entry.getDescriptor().equals(target)) {
-                        return Collections.singletonList(entry);
-                    }
-                }
-            }
-            return Collections.emptyList();
-        });
+        int count = render(entity, null, light, matrixStack, buffers, transformType, () -> renderData.getItemSkins(itemStack));
         if (count != 0) {
             callback.cancel();
         }

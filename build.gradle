@@ -117,7 +117,7 @@ minecraft {
 
 processResources {
     filesMatching("META-INF/mods.toml") {
-        expand 'version': version_major + "." + version_minor + "." + version_patch,
+        expand 'version': version,
                 'minecraft_version': project.minecraft_version_range,
                 'forge_version': project.forge_version_range
     }
