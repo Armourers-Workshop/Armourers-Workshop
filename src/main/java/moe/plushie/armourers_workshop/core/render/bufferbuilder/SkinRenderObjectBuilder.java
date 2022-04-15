@@ -75,7 +75,6 @@ public class SkinRenderObjectBuilder {
 
     public void addShapeData(Rectangle3f box, Color color, MatrixStack matrixStack) {
         IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderUtils.drawPoint(matrixStack, null, box.getWidth(), box.getHeight(), box.getDepth(), buffer);
         RenderUtils.drawBoundingBox(matrixStack, box, color, buffer);
     }
 

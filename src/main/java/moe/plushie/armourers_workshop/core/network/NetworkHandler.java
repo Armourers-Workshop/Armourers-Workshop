@@ -10,8 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.PacketDirection;
-import net.minecraft.network.ProtocolType;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -26,8 +24,6 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.event.EventNetworkChannel;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -35,6 +31,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class NetworkHandler {
 
@@ -46,7 +43,7 @@ public class NetworkHandler {
     private static NetworkHandler INSTANCE;
 
     private final ResourceLocation channelName;
-    private final HashMap<UUID, ArrayList<ByteBuf>> receivedBuffers = new HashMap<>();
+    private final HashMap<UUID, ArrayList<Holder>> receivedBuffers = new HashMap<>();
     private final ExecutorService executor = Executors.newFixedThreadPool(2, r -> new Thread(r, "Network-Data-Coder"));
 
     public NetworkHandler(final ResourceLocation channelName) {
@@ -73,8 +70,8 @@ public class NetworkHandler {
         if (player == null) {
             return;
         }
+        ServerPlayNetHandler netHandler = (ServerPlayNetHandler) context.getNetworkManager().getPacketListener();
         receiveSplitPacket(player.getUUID(), event.getPayload(), payload -> {
-            ServerPlayNetHandler netHandler = (ServerPlayNetHandler) context.getNetworkManager().getPacketListener();
             CustomPacket packet = CustomPacket.fromBuffer(payload);
             context.enqueueWork(() -> packet.accept(netHandler, netHandler.player));
         });
@@ -92,8 +89,8 @@ public class NetworkHandler {
             return;
         }
         NetworkEvent.Context context = event.getSource().get();
+        ClientPlayNetHandler netHandler = (ClientPlayNetHandler) context.getNetworkManager().getPacketListener();
         receiveSplitPacket(player.getUUID(), event.getPayload(), payload -> {
-            ClientPlayNetHandler netHandler = (ClientPlayNetHandler) context.getNetworkManager().getPacketListener();
             CustomPacket packet = CustomPacket.fromBuffer(payload);
             context.enqueueWork(() -> packet.accept(netHandler, player));
         });
@@ -162,19 +159,20 @@ public class NetworkHandler {
     private void receiveSplitPacket(UUID uuid, PacketBuffer buffer, Consumer<PacketBuffer> consumer) {
         int packetState = buffer.getInt(0);
         if (packetState < 0) {
-            ArrayList<ByteBuf> playerReceivedBuffers = receivedBuffers.computeIfAbsent(uuid, k -> new ArrayList<>());
+            ArrayList<Holder> playerReceivedBuffers = receivedBuffers.computeIfAbsent(uuid, k -> new ArrayList<>());
             if (packetState == STATE_FIRST) {
                 if (!playerReceivedBuffers.isEmpty()) {
                     ModLog.warn("aw2:split received out of order - inbound buffer not empty when receiving first");
                     playerReceivedBuffers.clear();
                 }
             }
-            buffer.retain();
             buffer.skipBytes(4); // skip header
-            playerReceivedBuffers.add(buffer.duplicate()); // fix for loli server
+            playerReceivedBuffers.add(new Holder(buffer)); // we need to keep writer/reader index
             if (packetState == STATE_LAST) {
                 executor.submit(() -> {
-                    PacketBuffer full = new PacketBuffer(Unpooled.wrappedBuffer(playerReceivedBuffers.toArray(new ByteBuf[0])));
+                    // ownership will transfer to full buffer, so don't call release again.
+                    Stream<PacketBuffer> stream = playerReceivedBuffers.stream().map(Holder::get);
+                    PacketBuffer full = new PacketBuffer(Unpooled.wrappedBuffer(stream.toArray(ByteBuf[]::new)));
                     playerReceivedBuffers.clear();
                     consumer.accept(full);
                     full.release();
@@ -186,11 +184,10 @@ public class NetworkHandler {
             consumer.accept(buffer);
             return;
         }
-        PacketBuffer newBuffer = new PacketBuffer(buffer.duplicate()); // fix for loli server
-        buffer.retain();
+        Holder holder = new Holder(buffer); // we need to keep writer/reader index
         executor.submit(() -> {
-            consumer.accept(newBuffer);
-            buffer.release();
+            consumer.accept(holder.get());
+            holder.release();
         });
     }
 
@@ -204,6 +201,8 @@ public class NetworkHandler {
         PACKET_REQUEST_FILE(RequestSkinPacket.class, RequestSkinPacket::new),
         PACKET_RESPONSE_FILE(ResponseSkinPacket.class, ResponseSkinPacket::new),
         PACKET_UPLOAD_FILE(SaveSkinPacket.class, SaveSkinPacket::new),
+
+        PACKET_UPLOAD_SKIN_TO_GLOBAL(UploadSkinPacket.class, UploadSkinPacket::new),
 
         PACKET_UPDATE_HOLOGRAM_PROJECTOR(UpdateHologramProjectorPacket.class, UpdateHologramProjectorPacket::new),
         PACKET_UPDATE_COLOUR_MIXER(UpdateColourMixerPacket.class, UpdateColourMixerPacket::new),
@@ -231,6 +230,30 @@ public class NetworkHandler {
 
         public CustomPacket parsePacket(final PacketBuffer in) throws IllegalArgumentException {
             return this.factory.apply(in);
+        }
+    }
+
+    public static class Holder {
+
+        private final PacketBuffer buf;
+        private final int writerIndex;
+        private final int readerIndex;
+
+        public Holder(PacketBuffer buf) {
+            this.buf = buf;
+            this.writerIndex = buf.writerIndex();
+            this.readerIndex = buf.readerIndex();
+            this.buf.retain();
+        }
+
+        public void release() {
+            this.buf.release();
+        }
+
+        public PacketBuffer get() {
+            buf.writerIndex(writerIndex);
+            buf.readerIndex(readerIndex);
+            return buf;
         }
     }
 }

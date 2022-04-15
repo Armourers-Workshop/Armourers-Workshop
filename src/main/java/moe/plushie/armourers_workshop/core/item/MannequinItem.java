@@ -92,7 +92,6 @@ public class MannequinItem extends FlavouredItem {
         return ActionResultType.FAIL;
     }
 
-
     @Override
     public String getDescriptionId(ItemStack itemStack) {
         float scale = getScale(itemStack);

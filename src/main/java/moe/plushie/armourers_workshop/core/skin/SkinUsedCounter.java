@@ -27,8 +27,9 @@ public class SkinUsedCounter {
     }
 
     public void addCube(int cubeId) {
+        ISkinCube cube = SkinCubes.byId(cubeId);
         cubeTotal += 1;
-        cubeTotals[cubeId] += 1;
+        cubeTotals[cube.getId()] += 1;
     }
 
     public void addMarkers(int count) {

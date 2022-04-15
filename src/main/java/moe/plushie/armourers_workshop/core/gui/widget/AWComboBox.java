@@ -1,12 +1,14 @@
 package moe.plushie.armourers_workshop.core.gui.widget;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.list.AbstractOptionList;
+import net.minecraft.client.renderer.RenderState;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -30,6 +32,8 @@ public class AWComboBox extends Button {
     protected int handWidth;
     protected int handHeight;
 
+    protected int popLevel = 400;
+
     protected int listX;
     protected int listY;
     protected int listRowHeight;
@@ -44,15 +48,37 @@ public class AWComboBox extends Button {
         this.fontHeight = font.lineHeight;
         this.list = new ComboItemList(items, width, height, y + height + 1, x, font.lineHeight + 2);
         this.selectedIndex = selectedIndex;
+        this.listRowHeight = fontHeight + 2;
+        this.setFrame(x, y, width, height);
+        this.list.setSelected(getSelectedItem());
+        this.isInited = true;
+    }
+
+    public void setItems(List<ComboItem> items) {
+        this.list = new ComboItemList(items, width, height, y + height + 1, x, font.lineHeight + 2);
+        this.list.setSelected(getSelectedItem());
+    }
+
+    public void setFrame(int x, int y, int width, int height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
         this.handWidth = height;
         this.handHeight = height;
         this.handX = x + width - handWidth;
         this.handY = y;
         this.listY = y + height + 1;
         this.listX = x;
-        this.listRowHeight = fontHeight + 2;
-        this.list.setSelected(getSelectedItem());
-        this.isInited = true;
+        this.list.setFrame(x, y + height + 1, width, height);
+    }
+
+    public int getPopLevel() {
+        return popLevel;
+    }
+
+    public void setPopLevel(int popLevel) {
+        this.popLevel = popLevel;
     }
 
     public int getMaxRowCount() {
@@ -96,11 +122,10 @@ public class AWComboBox extends Button {
         GuiUtils.drawContinuousTexturedBox(matrixStack, x, y, 0, 46, width, height, 200, 20, 2, 3, 2, 2, 0);
         GuiUtils.drawContinuousTexturedBox(matrixStack, handX, handY, 0, 66 + 20 * k, handWidth, handHeight, 200, 20, 2, 3, 2, 2, 0);
 
-        String text = "v";
+        String text = "⋁";
         int textY = handY + (handHeight - fontHeight) / 2;
         if (popping) {
-            text = "^";
-            textY += 2;
+            text = "⋀";
         }
         int textWidth = font.width(text);
         font.draw(matrixStack, text, handX + (handWidth - textWidth) / 2.0f, textY, 0xffffff);
@@ -108,11 +133,16 @@ public class AWComboBox extends Button {
         int itemY = (handHeight - 14) / 2;
         ComboItem item = getSelectedItem();
         if (item != null) {
+            RenderUtils.enableScissor(x, y, handX - x, height);
             item.render(matrixStack, x, y + itemY, width, height, mouseX, mouseY, partialTicks, true);
+            RenderUtils.disableScissor();
         }
 
         if (popping) {
+            matrixStack.pushPose();
+            matrixStack.translate(0, 0, popLevel);
             list.render(matrixStack, mouseX, mouseY, partialTicks);
+            matrixStack.popPose();
         }
     }
 
@@ -244,14 +274,22 @@ public class AWComboBox extends Button {
         public ComboItemList(List<ComboItem> items, int width, int height, int y0, int x0, int itemHeight) {
             super(Minecraft.getInstance(), width, height, y0, y0 + height, itemHeight);
             items.forEach(this::addEntry);
-            this.x0 = x0;
-            this.x1 = x0 + width;
-            this.y0 = y0;
-            this.y1 = y0 + height;
+            this.maxRowCount = items.size();
+            this.setFrame(x0, y0, width, height);
             this.setMaxRowCount(items.size());
             this.setRenderBackground(false);
             this.setRenderTopAndBottom(false);
             this.setRenderSelection(false);
+        }
+
+        public void setFrame(int x, int y, int width, int height) {
+            this.width = width;
+            this.height = height;
+            this.x0 = x;
+            this.x1 = x + width;
+            this.y0 = y;
+            this.y1 = y + height;
+            this.setMaxRowCount(maxRowCount);
         }
 
         @Override

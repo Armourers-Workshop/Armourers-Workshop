@@ -35,6 +35,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -81,8 +82,8 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
     protected ExtendedButton actionButton;
 
     protected ISkinType skinType = SkinTypes.UNKNOWN;
-    protected String selectedPath;
     protected ISkinLibrary.Entry selectedFile = null;
+    protected String selectedPath;
 
     protected SkinLibrary selectedLibrary;
     protected SkinLibraryManager.Client libraryManager = SkinLibraryManager.getClient();
@@ -186,6 +187,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
 
     @Override
     protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        this.renderBackground(matrixStack);
         for (IGuiEventListener widget : children) {
             if (widget instanceof AWTextField) {
                 ((AWTextField) widget).render(matrixStack, mouseX, mouseY, partialTicks);
@@ -221,11 +223,11 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
             int size = 144;
             int dy = MathHelper.clamp(mouseY - 16, 0, height - size);
             int dx = MathHelper.clamp(fileListLeft - size, 0, width - size);
-            ArrayList<ITextComponent> tooltips = ItemTooltipHandler.createSkinInfo(bakedSkin);
+            ArrayList<ITextProperties> tooltips = new ArrayList<>(ItemTooltipHandler.createSkinInfo(bakedSkin));
             GuiUtils.drawContinuousTexturedBox(matrixStack, RenderUtils.TEX_GUI_PREVIEW, dx, dy, 0, 0, size, size, 62, 62, 4, 400);
-            RenderUtils.drawShadowText(matrixStack, tooltips, dx + 4, dy + 4, size - 8, 400, font, 7, 15728880);
+            RenderUtils.drawShadowText(matrixStack, tooltips, dx + 4, dy + 4, size - 8, 400, font, 7, 0xffffff);
             IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            SkinItemRenderer.renderSkin(descriptor, dx, dy, size, size, 150, 45, 0, matrixStack, buffers);
+            SkinItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, dx, dy, 100, size, size, 150, 45, 0, matrixStack, buffers);
             buffers.endBatch();
         }
     }
@@ -426,7 +428,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         for (ISkinType skinType : SkinTypes.values()) {
             ITextComponent title = TranslateUtils.title("skinType." + skinType.getRegistryName());
             if (skinType == SkinTypes.UNKNOWN) {
-                title = new StringTextComponent("*");
+                title = TranslateUtils.title("inventory.armourers_workshop.all");
             }
             AWComboBox.ComboItem item = new AWComboBox.ComboItem(title);
             if (skinType == this.skinType) {

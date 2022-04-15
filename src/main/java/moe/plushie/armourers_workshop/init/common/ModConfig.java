@@ -83,7 +83,10 @@ public class ModConfig {
     public static boolean debugHologramProjectorBlock = false;
 
     public static boolean debugSkinBounds = false;
+    public static boolean debugSkinOrigin = false;
+
     public static boolean debugSkinPartBounds = false;
+    public static boolean debugSkinPartOrigin = false;
 
     public static boolean debugTargetBounds = false;
 

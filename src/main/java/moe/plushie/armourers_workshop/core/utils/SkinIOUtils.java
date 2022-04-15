@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.StringTextComponent;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -30,20 +31,21 @@ public final class SkinIOUtils {
 //    }
 
     public static boolean saveSkinToFile(File file, Skin skin) {
-        File dir = file.getParentFile();
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        try (FileOutputStream fos = new FileOutputStream(file)) {
+        ModLog.debug("save skin into '{}'", file);
+        try {
+            FileUtils.forceMkdirParent(file);
+            if (file.exists()) {
+                FileUtils.forceDelete(file);
+            }
+            FileOutputStream fos = new FileOutputStream(file);
             saveSkinToStream(fos, skin);
-            fos.flush();
+            fos.close();
         } catch (FileNotFoundException e) {
-            ModLog.warn("Skin file not found.");
+            ModLog.warn("skin file not found.");
             e.printStackTrace();
             return false;
         } catch (IOException e) {
-            ModLog.error("Skin file save failed.");
+            ModLog.error("skin file save failed.");
             e.printStackTrace();
             return false;
         }
@@ -104,9 +106,8 @@ public final class SkinIOUtils {
 
     public static Skin loadSkinFromStream(InputStream inputStream) {
         Skin skin = null;
-
-        try (BufferedInputStream bis = new BufferedInputStream(inputStream); DataInputStream dis = new DataInputStream(bis)) {
-            skin = SkinSerializer.readSkinFromStream(dis);
+        try {
+            skin = loadSkinFromStream2(inputStream);
         } catch (IOException e) {
             ModLog.error("Skin file load failed.");
             e.printStackTrace();
@@ -121,6 +122,21 @@ public final class SkinIOUtils {
             e.printStackTrace();
         }
 
+        return skin;
+    }
+
+    public static Skin loadSkinFromStream2(InputStream inputStream) throws Exception {
+        if (inputStream == null) {
+            return null;
+        }
+        Skin skin = null;
+        BufferedInputStream bis = new BufferedInputStream(inputStream);
+        DataInputStream dis = new DataInputStream(bis);
+        try {
+            skin = SkinSerializer.readSkinFromStream(dis);
+        } finally {
+            IOUtils.closeQuietly(dis, bis);
+        }
         return skin;
     }
 

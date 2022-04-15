@@ -25,6 +25,7 @@ import net.minecraft.util.math.vector.Vector4f;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Function;
 
 public class SkinItemUseContext extends BlockItemUseContext {
 
@@ -36,12 +37,12 @@ public class SkinItemUseContext extends BlockItemUseContext {
 
     public SkinItemUseContext(ItemUseContext context) {
         super(context);
-        this.loadElements();
+        this.loadElements(SkinLoader.getInstance()::loadSkin);
     }
 
     public SkinItemUseContext(PlayerEntity player, Hand hand, ItemStack itemStack, BlockRayTraceResult traceResult) {
         super(player.level, player, hand, itemStack, traceResult);
-        this.loadElements();
+        this.loadElements(SkinLoader.getInstance()::getSkin);
     }
 
     public static SkinItemUseContext of(BlockPos pos) {
@@ -57,10 +58,13 @@ public class SkinItemUseContext extends BlockItemUseContext {
         }
     }
 
-    protected void loadElements() {
+    protected void loadElements(Function<String, Skin> provider) {
         ItemStack itemStack = getItemInHand();
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        Skin skin = SkinLoader.getInstance().getSkin(descriptor.getIdentifier());
+        if (descriptor.isEmpty()) {
+            return;
+        }
+        Skin skin = provider.apply(descriptor.getIdentifier());
         if (skin == null) {
             return;
         }
@@ -96,6 +100,9 @@ public class SkinItemUseContext extends BlockItemUseContext {
     }
 
     public boolean canPlace(Part part) {
+        if (skin.isEmpty()) {
+            return false;
+        }
         BlockPos pos = super.getClickedPos().offset(part.getOffset());
         return this.getLevel().getBlockState(pos).canBeReplaced(this);
     }
@@ -227,7 +234,7 @@ public class SkinItemUseContext extends BlockItemUseContext {
             ArrayList<SkinMarker> newMarkerList = new ArrayList<>();
             for (SkinMarker marker : markerList) {
                 Vector4f f = new Vector4f(marker.x, marker.y, marker.z, 1.0f);
-                f.transform(Matrix4f.createScaleMatrix(-1, -1, 1));
+                f.transform(TrigUtils.scale(-1, -1, 1));
                 f.transform(q);
                 int x = Math.round(f.x());
                 int y = Math.round(f.y());

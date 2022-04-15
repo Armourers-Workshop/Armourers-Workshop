@@ -13,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.Executor;
@@ -202,6 +203,16 @@ public class SkinLibrary implements ISkinLibrary {
         this.rootPath = rootPath;
     }
 
+    public void markBaseDir() {
+        if (basePath.exists()) {
+            return;
+        }
+        try {
+            FileUtils.forceMkdir(basePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static class Proxy extends SkinLibrary {
 

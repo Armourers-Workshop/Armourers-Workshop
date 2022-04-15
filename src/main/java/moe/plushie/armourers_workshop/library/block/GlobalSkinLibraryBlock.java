@@ -2,13 +2,17 @@ package moe.plushie.armourers_workshop.library.block;
 
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
+import moe.plushie.armourers_workshop.library.tileentity.GlobalSkinLibraryTileEntity;
+import moe.plushie.armourers_workshop.library.tileentity.SkinLibraryTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 @SuppressWarnings("NullableProblems")
@@ -16,6 +20,16 @@ public class GlobalSkinLibraryBlock extends AbstractHorizontalBlock {
 
     public GlobalSkinLibraryBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new GlobalSkinLibraryTileEntity();
     }
 
     @Override

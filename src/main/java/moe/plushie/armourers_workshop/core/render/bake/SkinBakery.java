@@ -36,7 +36,7 @@ public final class SkinBakery {
     private final ArrayList<IBakeListener> listeners = new ArrayList<>();
 
     private final DataLoader<String, BakedSkin> manager = DataLoader.newBuilder()
-            .threadPool("AW-Skin-Bakery", Thread.MIN_PRIORITY, 1)
+            .threadPool("AW-SKIN-BK", Thread.MIN_PRIORITY, 1)
             .build(this::loadAndBakeSkin);
 
     public SkinBakery() {
@@ -112,15 +112,24 @@ public final class SkinBakery {
     private void loadAndBakeSkin(String identifier, Consumer<Optional<BakedSkin>> complete) {
         SkinLoader.getInstance().loadSkin(identifier, (skin, exception) -> {
             if (skin != null) {
-                manager.add(() -> bakeSkin(identifier, skin, complete));
+                manager.add(() -> safeBakeSkin(identifier, skin, complete));
             } else {
                 complete.accept(Optional.empty());
             }
         });
     }
 
+    private void safeBakeSkin(String identifier, Skin skin, Consumer<Optional<BakedSkin>> complete) {
+        try {
+            bakeSkin(identifier, skin, complete);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            complete.accept(Optional.empty());
+        }
+    }
+
     private void bakeSkin(String identifier, Skin skin, Consumer<Optional<BakedSkin>> complete) {
-        ModLog.debug("baking skin of '{}'", identifier);
+        ModLog.debug("'{}' => start baking skin", identifier);
         long startTime = System.currentTimeMillis();
 //            skin.lightHash();
 //            int extraDyes = SkinPaintTypes.getInstance().getExtraChannels();
@@ -173,7 +182,7 @@ public final class SkinBakery {
 //            bakeTimes.set(index, (int) totalTime);
 
         BakedSkin bakedSkin = new BakedSkin(identifier, skin, scheme, usedCounter, colorInfo, bakedParts);
-        ModLog.debug("accept baked skin of '{}'", identifier);
+        ModLog.debug("'{}' => accept baked skin", identifier);
         complete.accept(Optional.of(bakedSkin));
         listeners.forEach(listener -> listener.didBake(identifier, bakedSkin));
     }

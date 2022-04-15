@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
-import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
+import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -26,10 +26,10 @@ public class RequestSkinPacket extends CustomPacket {
 
     @Override
     public void accept(ServerPlayNetHandler netHandler, ServerPlayerEntity player) {
-        ModLog.debug("accept skin request, identifier: '{}'", identifier);
-        DataManager.getInstance().loadSkinData3(identifier, (stream, exception) -> {
-            ModLog.debug("response skin data, identifier: '{}'/{}", identifier, exception);
-            ResponseSkinPacket packet = new ResponseSkinPacket(identifier, stream, exception);
+        ModLog.debug("'{}' => accept skin request", identifier);
+        SkinLoader.getInstance().loadSkin(identifier, (skin, exception) -> {
+            ModLog.debug("'{}' => response skin data, exception: {}", identifier, exception);
+            ResponseSkinPacket packet = new ResponseSkinPacket(identifier, skin, exception);
             NetworkHandler.getInstance().sendTo(packet, player);
         });
     }

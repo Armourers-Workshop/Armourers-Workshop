@@ -3,16 +3,12 @@ package moe.plushie.armourers_workshop.core.gui.misc;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.container.DyeTableContainer;
 import moe.plushie.armourers_workshop.core.gui.widget.AWAbstractContainerScreen;
-import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,6 +35,8 @@ public class DyeTableScreen extends AWAbstractContainerScreen<DyeTableContainer>
 
     @Override
     protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        this.renderBackground(matrixStack);
+
         RenderUtils.bind(RenderUtils.TEX_DYE_TABLE);
         RenderUtils.blit(matrixStack, leftPos, topPos, 0, 0, 256, imageHeight);
         RenderUtils.blit(matrixStack, leftPos + 174 + 74, topPos, 174, 0, 82, imageHeight);
@@ -55,12 +53,9 @@ public class DyeTableScreen extends AWAbstractContainerScreen<DyeTableContainer>
     private void renderMannequin(MatrixStack matrixStack, int x, int y, int width, int height) {
         SkinDescriptor descriptor = SkinDescriptor.of(menu.getOutputStack());
         if (!descriptor.isEmpty()) {
-            matrixStack.pushPose();
-            matrixStack.translate(0, 0, 100);
             IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            SkinItemRenderer.renderSkin(descriptor, x, y, width, height, 160, 45, 0, matrixStack, buffers);
+            SkinItemRenderer.renderSkin(descriptor, x, y, 500, width, height, 160, 45, 0, matrixStack, buffers);
             buffers.endBatch();
-            matrixStack.popPose();
         }
     }
 }

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop;
 
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.handler.PlayerNetworkHandler;
+import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModContext;
 import moe.plushie.armourers_workshop.init.common.ModLog;
@@ -83,6 +84,7 @@ public class ArmourersWorkshop {
     private void onServerStart(FMLServerAboutToStartEvent event) {
         ModLog.debug("hello");
         LocalDataService.start(event.getServer());
+        SkinLoader.getInstance().setup(event.getServer());
     }
 
     private void onServerDidStart(FMLServerStartedEvent event) {
@@ -92,6 +94,7 @@ public class ArmourersWorkshop {
     private void onServerWillStop(FMLServerStoppingEvent event) {
         ModContext.reset();
         LocalDataService.stop();
+        SkinLoader.getInstance().clear();
     }
 
     private void onServerStop(FMLServerStoppedEvent event) {

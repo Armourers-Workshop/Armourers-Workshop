@@ -35,7 +35,6 @@ public class MannequinToolItem extends FlavouredItem {
         super(properties);
     }
 
-
     @Override
     public ActionResultType interactLivingEntity(ItemStack itemStack, PlayerEntity player, LivingEntity entity, Hand hand) {
         if (entity instanceof MannequinEntity) {

@@ -214,6 +214,14 @@ public class AWTabController<Target> extends Screen {
         }
     }
 
+    @Override
+    public boolean changeFocus(boolean p_231049_1_) {
+        if (selectedTab != null) {
+            return selectedTab.changeFocus(p_231049_1_);
+        }
+        return super.changeFocus(p_231049_1_);
+    }
+
     public class Tab implements IGuiEventListener {
 
         int x = 0;

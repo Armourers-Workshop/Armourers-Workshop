@@ -1,16 +1,14 @@
 package moe.plushie.armourers_workshop.init.common;
 
-import moe.plushie.armourers_workshop.core.gui.misc.DyeTableScreen;
-import moe.plushie.armourers_workshop.init.client.ClientEventHandler;
-import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.builder.block.ColourMixerBlock;
+import moe.plushie.armourers_workshop.builder.gui.colourmixer.ColourMixerScreen;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobeStorage;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.builder.gui.colourmixer.ColourMixerScreen;
 import moe.plushie.armourers_workshop.core.gui.hologramprojector.HologramProjectorScreen;
+import moe.plushie.armourers_workshop.core.gui.misc.DyeTableScreen;
 import moe.plushie.armourers_workshop.core.gui.misc.SkinnableScreen;
 import moe.plushie.armourers_workshop.core.gui.misc.SkinningTableScreen;
 import moe.plushie.armourers_workshop.core.gui.wardrobe.SkinWardrobeScreen;
@@ -26,11 +24,14 @@ import moe.plushie.armourers_workshop.core.render.tileentities.HologramProjector
 import moe.plushie.armourers_workshop.core.render.tileentities.SkinnableTileEntityRenderer;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.KeyBindings;
+import moe.plushie.armourers_workshop.init.client.ClientEventHandler;
+import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.command.FileArgument;
 import moe.plushie.armourers_workshop.init.command.ListArgument;
 import moe.plushie.armourers_workshop.init.command.ModCommands;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
 import moe.plushie.armourers_workshop.library.gui.SkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.render.GlobalSkinLibraryTileEntityRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
@@ -143,6 +144,7 @@ public class ModRegistry {
 
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.HOLOGRAM_PROJECTOR, HologramProjectorTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKINNABLE, SkinnableTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKIN_LIBRARY_GLOBAL, GlobalSkinLibraryTileEntityRenderer::new);
 
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.MANNEQUIN, MannequinEntityRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.SEAT, SeatEntityRenderer::new);

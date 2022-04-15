@@ -3,23 +3,27 @@ package moe.plushie.armourers_workshop.core.utils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.LanguageMap;
 import net.minecraft.util.text.Style;
@@ -45,11 +49,13 @@ public final class RenderUtils {
     public static final ResourceLocation TEX_SKINNING_TABLE = AWCore.resource("textures/gui/skinning_table/skinning-table.png");
     public static final ResourceLocation TEX_DYE_TABLE = AWCore.resource("textures/gui/dye_table/dye-table.png");
     public static final ResourceLocation TEX_SKIN_LIBRARY = AWCore.resource("textures/gui/skin_library/armour-library.png");
+    public static final ResourceLocation TEX_GLOBAL_SKIN_LIBRARY = AWCore.resource("textures/gui/global_library/global-library.png");
     public static final ResourceLocation TEX_COLOUR_MIXER = AWCore.resource("textures/gui/colour_mixer/colour-mixer.png");
 
     public static final ResourceLocation TEX_TABS = AWCore.resource("textures/gui/controls/tabs.png");
     public static final ResourceLocation TEX_COMMON = AWCore.resource("textures/gui/common.png");
     public static final ResourceLocation TEX_LIST = AWCore.resource("textures/gui/controls/list.png");
+    public static final ResourceLocation TEX_RATING = AWCore.resource("textures/gui/controls/rating.png");
     public static final ResourceLocation TEX_TAB_ICONS = AWCore.resource("textures/gui/controls/tab_icons.png");
     public static final ResourceLocation TEX_HUE = AWCore.resource("textures/gui/controls/slider-hue.png");
 
@@ -62,9 +68,14 @@ public final class RenderUtils {
 
     public static final ResourceLocation TEX_CUBE = AWCore.resource("textures/armour/cube.png");
     public static final ResourceLocation TEX_CIRCLE = AWCore.resource("textures/other/nanoha-circle.png");
+    public static final ResourceLocation TEX_EARTH = AWCore.resource("textures/tile-entities/global-skin-library.png");
+
     public static final ResourceLocation TEX_GUI_PREVIEW = AWCore.resource("textures/gui/skin-preview.png");
+    public static final ResourceLocation TEX_SKIN_PANEL = AWCore.resource("textures/gui/controls/skin-panel.png");
 
     private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
+
+    private static final ArrayList<Rectangle> clipBounds = new ArrayList<>();
 
 
     public static void call(Runnable task) {
@@ -102,23 +113,34 @@ public final class RenderUtils {
         GuiUtils.drawContinuousTexturedBox(matrixStack, x, y, u, v, width, height, texWidth, texHeight, r0, r1, r2, r3, 0);
     }
 
-    public static void resize(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight) {
-        float f = 1.0f / 0x100;
-        float f1 = 1.0f / 0x100;
+    public static void resize(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, int targetWidth, int targetHeight) {
+        resize(matrixStack, x, y, u, v, width, height, targetWidth, targetHeight, 256, 256);
+    }
+
+    public static void resize(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight) {
+        float f = 1.0f / texWidth;
+        float f1 = 1.0f / texHeight;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuilder();
         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.vertex(x, y + height, 0).uv(u * f, (v + texHeight) * f1).endVertex();
-        bufferbuilder.vertex(x + width, y + height, 0).uv((u + texWidth) * f, (v + texHeight) * f1).endVertex();
-        bufferbuilder.vertex(x + width, y, 0).uv((u + texWidth) * f, v * f1).endVertex();
+        bufferbuilder.vertex(x, y + height, 0).uv(u * f, (v + sourceHeight) * f1).endVertex();
+        bufferbuilder.vertex(x + width, y + height, 0).uv((u + sourceWidth) * f, (v + sourceHeight) * f1).endVertex();
+        bufferbuilder.vertex(x + width, y, 0).uv((u + sourceWidth) * f, v * f1).endVertex();
         bufferbuilder.vertex(x, y, 0).uv(u * f, v * f1).endVertex();
         tessellator.end();
     }
 
-    public static void resize(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, int texWidth, int texHeight, ResourceLocation texture) {
+
+    public static void resize(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, ResourceLocation texture) {
         RenderUtils.bind(texture);
-        RenderUtils.resize(matrixStack, x, y, u, v, width, height, texWidth, texHeight);
+        RenderUtils.resize(matrixStack, x, y, u, v, width, height, sourceWidth, sourceHeight);
     }
+
+    public static void resize(MatrixStack matrixStack, int x, int y, int u, int v, int width, int height, int sourceWidth, int sourceHeight, int texWidth, int texHeight, ResourceLocation texture) {
+        RenderUtils.bind(texture);
+        RenderUtils.resize(matrixStack, x, y, u, v, width, height, sourceWidth, sourceHeight, texWidth, texHeight);
+    }
+
 
     public static int getPixelColour(int x, int y) {
         MainWindow window = Minecraft.getInstance().getWindow();
@@ -136,49 +158,94 @@ public final class RenderUtils {
 
 
     public static void enableScissor(int x, int y, int width, int height) {
-        MainWindow window = Minecraft.getInstance().getWindow();
-        double guiScale = window.getGuiScale();
-        int sx = (int) (x * guiScale);
-        int sy = (int) ((window.getGuiScaledHeight() - y - height) * guiScale);
-        int sw = (int) (width * guiScale);
-        int sh = (int) (height * guiScale);
-        RenderSystem.enableScissor(sx, sy, sw, sh);
+        Rectangle rect = new Rectangle(x, y, width, height);
+        if (!clipBounds.isEmpty()) {
+            Rectangle rect1 = clipBounds.get(clipBounds.size() - 1);
+            rect = rect.intersection(rect1);
+        }
+        clipBounds.add(rect);
+        applyScissor(rect);
     }
 
     public static void disableScissor() {
-        RenderSystem.disableScissor();
+        if (clipBounds.isEmpty()) {
+            return;
+        }
+        clipBounds.remove(clipBounds.size() - 1);
+        if (!clipBounds.isEmpty()) {
+            applyScissor(clipBounds.get(clipBounds.size() - 1));
+        } else {
+            RenderSystem.disableScissor();
+        }
+    }
+
+    public static void applyScissor(Rectangle rect) {
+        MainWindow window = Minecraft.getInstance().getWindow();
+        double guiScale = window.getGuiScale();
+        int sx = (int) (rect.x * guiScale);
+        int sy = (int) ((window.getGuiScaledHeight() - rect.y - rect.height) * guiScale);
+        int sw = (int) (rect.width * guiScale);
+        int sh = (int) (rect.height * guiScale);
+        RenderSystem.enableScissor(sx, sy, sw, sh);
+    }
+
+    public static boolean inScissorRect(int x, int y, int width, int height) {
+        if (!clipBounds.isEmpty()) {
+            Rectangle rectangle = clipBounds.get(clipBounds.size() - 1);
+            return rectangle.intersects(x, y, width, height);
+        }
+        return true;
     }
 
 
-    public static void drawText(MatrixStack matrixStack, FontRenderer font, ITextComponent text, int x, int y, int width, int zLevel, int textColor) {
+    public static void drawText(MatrixStack matrixStack, FontRenderer font, ITextProperties text, int x, int y, int width, int zLevel, int textColor) {
         drawText(matrixStack, font, Collections.singleton(text), x, y, width, zLevel, false, 9, textColor);
     }
 
-    public static void drawShadowText(MatrixStack matrixStack, Iterable<ITextComponent> lines, int x, int y, int width, int zLevel, FontRenderer font, int fontSize, int textColor) {
+    public static void drawShadowText(MatrixStack matrixStack, Iterable<ITextProperties> lines, int x, int y, int width, int zLevel, FontRenderer font, int fontSize, int textColor) {
         drawText(matrixStack, font, lines, x, y, width, zLevel, true, fontSize, textColor);
     }
 
-    public static void drawText(MatrixStack matrixStack, FontRenderer font, Iterable<ITextComponent> lines, int x, int y, int width, int zLevel, boolean shadow, int fontSize, int textColor) {
+    public static void drawText(MatrixStack matrixStack, FontRenderer font, Iterable<ITextProperties> lines, int x, int y, int width, int zLevel, boolean shadow, int fontSize, int textColor) {
         float f = fontSize / 9f;
         ArrayList<ITextProperties> wrappedTextLines = new ArrayList<>();
-        Style style = Style.EMPTY.withColor(net.minecraft.util.text.Color.fromRgb(textColor));
         for (ITextProperties line : lines) {
-            wrappedTextLines.addAll(font.getSplitter().splitLines(line, (int) (width / f), style));
+            wrappedTextLines.addAll(font.getSplitter().splitLines(line, (int) (width / f), Style.EMPTY));
         }
         matrixStack.pushPose();
         matrixStack.translate(x, y, zLevel);
         matrixStack.scale(f, f, f);
         Matrix4f mat = matrixStack.last().pose();
-        IRenderTypeBuffer.Impl renderType = IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuilder());
+        IRenderTypeBuffer.Impl buffers = IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuilder());
 
         int dx = 0, dy = 0;
         for (ITextProperties line : wrappedTextLines) {
-            font.drawInBatch(LanguageMap.getInstance().getVisualOrder(line), dx, dy, -1, shadow, mat, renderType, false, 0, 15728880);
-            dy += 10;
+            int qx = font.drawInBatch(LanguageMap.getInstance().getVisualOrder(line), dx, dy, textColor, shadow, mat, buffers, false, 0, 15728880);
+            if (qx == dx) {
+                dy += 7;
+            } else {
+                dy += 10;
+            }
         }
 
-        renderType.endBatch();
+        buffers.endBatch();
         matrixStack.popPose();
+
+        // drawing text causes the Alpha test to reset
+        RenderSystem.enableAlphaTest();
+    }
+
+    public static void  drawPlayerHead(MatrixStack matrixStack, int x, int y, int width, int height, PlayerTextureDescriptor descriptor) {
+        ResourceLocation texture = DefaultPlayerSkin.getDefaultSkin();
+        if (!descriptor.isEmpty()) {
+            PlayerTexture texture1 = PlayerTextureLoader.getInstance().loadTexture(descriptor);
+            if (texture1 != null) {
+                texture = texture1.getLocation();
+            }
+        }
+        RenderUtils.bind(texture);
+        RenderUtils.resize(matrixStack, x, y, 8, 8, width, height, 8, 8, 64, 64);
+        RenderUtils.resize(matrixStack, x - 1, y - 1, 40, 8, width + 2, height + 2, 8, 8, 64, 64);
     }
 
     private static void drawLine(IVertexBuilder builder, Matrix4f mat, float x0, float y0, float z0, float x1, float y1, float z1, Color color) {

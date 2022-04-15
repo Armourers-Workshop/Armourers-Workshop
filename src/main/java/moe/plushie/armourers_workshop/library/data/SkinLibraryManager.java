@@ -66,8 +66,8 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
 
         public Client() {
             this.localSkinLibrary = new SkinLibrary(DataDomain.LOCAL, AWCore.getSkinLibraryDirectory());
-            this.publicSkinLibrary = new SkinLibrary.Proxy(DataDomain.SERVER);
-            this.privateSkinLibrary = new SkinLibrary.Proxy(DataDomain.SERVER);
+            this.publicSkinLibrary = new SkinLibrary.Proxy(DataDomain.DEDICATED_SERVER);
+            this.privateSkinLibrary = new SkinLibrary.Proxy(DataDomain.DEDICATED_SERVER);
             this.localSkinLibrary.addListener(this);
             this.publicSkinLibrary.addListener(this);
             this.privateSkinLibrary.addListener(this);
@@ -75,6 +75,7 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
 
         @Override
         public void start() {
+            this.localSkinLibrary.markBaseDir();
             this.localSkinLibrary.reload();
         }
 
@@ -126,12 +127,13 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         private boolean isReady = false;
 
         public Server() {
-            this.skinLibrary = new SkinLibrary(DataDomain.SERVER, AWCore.getSkinLibraryDirectory());
+            this.skinLibrary = new SkinLibrary(DataDomain.DEDICATED_SERVER, AWCore.getSkinLibraryDirectory());
             this.skinLibrary.addListener(this);
         }
 
         @Override
         public void start() {
+            this.skinLibrary.markBaseDir();
             this.skinLibrary.reload();
         }
 
