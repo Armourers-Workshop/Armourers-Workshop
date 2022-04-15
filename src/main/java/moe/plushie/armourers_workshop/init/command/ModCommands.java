@@ -93,7 +93,7 @@ public class ModCommands {
 
         static int setSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
             String identifier = FileArgument.getString(context, "skin");
-            Skin skin = SkinLoader.getInstance().loadSkin(DataDomain.SERVER.normalize(identifier));
+            Skin skin = SkinLoader.getInstance().loadSkin(DataDomain.DEDICATED_SERVER.normalize(identifier));
             if (skin == null) {
                 return 0;
             }
@@ -139,7 +139,7 @@ public class ModCommands {
 
         static int giveSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
             String identifier = FileArgument.getString(context, "skin");
-            Skin skin = SkinLoader.getInstance().loadSkin(DataDomain.SERVER.normalize(identifier));
+            Skin skin = SkinLoader.getInstance().loadSkin(DataDomain.DEDICATED_SERVER.normalize(identifier));
             if (skin == null) {
                 context.getSource().sendSuccess(new StringTextComponent("Can't found identifier " + identifier), true);
                 return 0;

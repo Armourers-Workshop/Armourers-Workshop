@@ -136,7 +136,7 @@ public class BakedSkin implements IBakedSkin {
             SkinCache.returnKey(key);
             return bounds;
         }
-        Matrix4f matrix = Matrix4f.createScaleMatrix(1, 1, 1);
+        Matrix4f matrix = TrigUtils.scale(1, 1, 1);
         CustomVoxelShape shape = getRenderShape(entity, model, ItemCameraTransforms.TransformType.NONE);
         if (rotation != null) {
             matrix.multiply(TrigUtils.rotate(rotation.x(), rotation.y(), rotation.z(), true));

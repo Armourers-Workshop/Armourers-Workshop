@@ -32,7 +32,7 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
         this.domain = domain;
         this.header = null;
         this.isDirectory = true;
-        this.isPrivateDirectory = domain.equals(DataDomain.SERVER) && path.startsWith(AWConstants.PRIVATE);
+        this.isPrivateDirectory = domain.equals(DataDomain.DEDICATED_SERVER) && path.startsWith(AWConstants.PRIVATE);
     }
 
     public SkinLibraryFile(DataDomain domain, String name, String path, Pair<ISkinType, ISkinProperties> header) {

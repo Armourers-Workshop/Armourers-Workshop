@@ -10,41 +10,36 @@ import java.io.IOException;
 public final class LegacyCubeHelper {
 
     // Used by file versions less than 10
-    public static void loadLegacyCubeData(SkinCubeData cubeData, int index, DataInputStream input, int version, ISkinPartType skinPart) throws IOException {
+    public static void loadLegacyCubeData(SkinCubeData cubeData, SkinCubeData.BufferSlice slice, DataInputStream input, int version, ISkinPartType skinPart) throws IOException {
         if (version < 3) {
-            loadLegacyCube(cubeData, index, input, version, skinPart);
+            loadLegacyCube(cubeData, slice, input, version, skinPart);
             return;
         }
-        byte id = input.readByte();
-        byte x = input.readByte();
-        byte y = input.readByte();
-        byte z = input.readByte();
-        byte[] r = new byte[6];
-        byte[] g = new byte[6];
-        byte[] b = new byte[6];
+        slice.setId(input.readByte());
+        slice.setX(input.readByte());
+        slice.setY(input.readByte());
+        slice.setZ(input.readByte());
         if (version < 7) {
             int colour = input.readInt();
+            byte r = (byte) (colour >> 16 & 0xff);
+            byte g = (byte) (colour >> 8 & 0xff);
+            byte b = (byte) (colour & 0xff);
             for (int i = 0; i < 6; i++) {
-                r[i] = (byte) (colour >> 16 & 0xff);
-                g[i] = (byte) (colour >> 8 & 0xff);
-                b[i] = (byte) (colour & 0xff);
+                slice.setR(i, r);
+                slice.setG(i, g);
+                slice.setB(i, b);
             }
         } else {
             for (int i = 0; i < 6; i++) {
-                r[i] = input.readByte();
-                g[i] = input.readByte();
-                b[i] = input.readByte();
+                slice.setR(i, input.readByte());
+                slice.setG(i, input.readByte());
+                slice.setB(i, input.readByte());
             }
-        }
-        cubeData.setCubeId(index, id);
-        cubeData.setCubeLocation(index, x, y, z);
-        for (int i = 0; i < 6; i++) {
-            cubeData.setCubeColour(index, i, r[i], g[i], b[i]);
         }
     }
 
     // Used by file versions less than 3
-    public static void loadLegacyCube(SkinCubeData cubeData, int index, DataInputStream stream, int version, ISkinPartType skinPart) throws IOException {
+    public static void loadLegacyCube(SkinCubeData cubeData, SkinCubeData.BufferSlice slice, DataInputStream stream, int version, ISkinPartType skinPart) throws IOException {
         byte x;
         byte y;
         byte z;
@@ -73,13 +68,17 @@ public final class LegacyCubeHelper {
             }
         }
 
-        cubeData.setCubeId(index, blockType);
-        cubeData.setCubeLocation(index, x, y, z);
+        slice.setId(blockType);
+        slice.setX(x);
+        slice.setY(y);
+        slice.setZ(z);
         byte r = (byte) (colour >> 16 & 0xff);
         byte g = (byte) (colour >> 8 & 0xff);
         byte b = (byte) (colour & 0xff);
         for (int i = 0; i < 6; i++) {
-            cubeData.setCubeColour(index, i, r, g, b);
+            slice.setR(i, r);
+            slice.setG(i, g);
+            slice.setB(i, b);
         }
     }
 }

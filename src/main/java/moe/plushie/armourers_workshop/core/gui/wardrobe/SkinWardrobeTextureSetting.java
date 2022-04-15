@@ -2,17 +2,17 @@ package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWComboBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
+import moe.plushie.armourers_workshop.core.gui.widget.AWTextField;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.StringTextComponent;
@@ -33,7 +33,7 @@ public class SkinWardrobeTextureSetting extends AWTabPanel {
     private final HashMap<PlayerTextureDescriptor.Source, String> defaultValues = new HashMap<>();
 
     private AWComboBox comboList;
-    private TextFieldWidget textBox;
+    private AWTextField textBox;
 
     private PlayerTextureDescriptor lastDescriptor = PlayerTextureDescriptor.EMPTY;
     private PlayerTextureDescriptor.Source lastSource = PlayerTextureDescriptor.Source.NONE;
@@ -155,7 +155,7 @@ public class SkinWardrobeTextureSetting extends AWTabPanel {
     }
 
     private void addTextField(int x, int y, String defaultValue) {
-        textBox = new TextFieldWidget(font, x, y, 165, 16, StringTextComponent.EMPTY);
+        textBox = new AWTextField(font, x, y, 165, 16, StringTextComponent.EMPTY);
         textBox.setMaxLength(1024);
         if (Strings.isNotBlank(defaultValue)) {
             textBox.setValue(defaultValue);

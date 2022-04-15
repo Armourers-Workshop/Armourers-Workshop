@@ -207,7 +207,7 @@ public class ItemTooltipHandler {
             GuiUtils.drawContinuousTexturedBox(matrixStack, RenderUtils.TEX_GUI_PREVIEW, x, y, 0, 0, size, size, 62, 62, 4, 400);
         }
         IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        SkinItemRenderer.renderSkin(descriptor, x, y, size, size, 150, 45, 0, matrixStack, buffers);
+        SkinItemRenderer.renderSkin(descriptor, x, y, 500, size, size, 150, 45, 0, matrixStack, buffers);
         buffers.endBatch();
     }
 

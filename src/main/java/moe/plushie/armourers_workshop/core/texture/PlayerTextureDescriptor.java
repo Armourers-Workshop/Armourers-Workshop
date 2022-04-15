@@ -3,9 +3,9 @@ package moe.plushie.armourers_workshop.core.texture;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModItems;
-import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -54,6 +54,10 @@ public class PlayerTextureDescriptor {
         if (this.url == null && this.profile == null) {
             this.source = Source.NONE;
         }
+    }
+
+    public static PlayerTextureDescriptor by(String userName) {
+        return EMPTY;
     }
 
     public static PlayerTextureDescriptor of(ItemStack itemStack) {

@@ -8,6 +8,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+@SuppressWarnings({"NullableProblems", "unused"})
 @OnlyIn(Dist.CLIENT)
 public class AWImageButton extends Button {
 
@@ -19,6 +20,9 @@ public class AWImageButton extends Button {
     private final int yTexStart;
     private final int textureWidth;
     private final int textureHeight;
+
+    private int iconWidth;
+    private int iconHeight;
 
     private boolean isSelected = false;
 
@@ -33,6 +37,8 @@ public class AWImageButton extends Button {
         this.xTexStart = u;
         this.yTexStart = v;
         this.texture = texture;
+        this.iconWidth = width;
+        this.iconHeight = height;
     }
 
     public boolean isEnabled() {
@@ -60,6 +66,11 @@ public class AWImageButton extends Button {
         this.disabledMessage = message;
     }
 
+    public void setIconSize(int width, int height) {
+        this.iconWidth = width;
+        this.iconHeight = height;
+    }
+
     @Override
     public ITextComponent getMessage() {
         if (!this.active && this.disabledMessage != null) { {
@@ -73,8 +84,12 @@ public class AWImageButton extends Button {
         if (!visible) {
             return;
         }
-        int u = xTexStart + width * getState();
-        RenderUtils.blit(matrixStack, x, y, u, yTexStart, width, height, textureWidth, textureHeight, texture);
+        int u = xTexStart + iconWidth * getState();
+        int dx = (width - iconWidth) / 2;
+        int dy = (height - iconHeight) / 2;
+        if (texture != null) {
+            RenderUtils.blit(matrixStack, x + dx, y + dy, u, yTexStart, iconWidth, iconHeight, textureWidth, textureHeight, texture);
+        }
         if (this.isHovered) {
             this.renderToolTip(matrixStack, mouseX, mouseY);
         }

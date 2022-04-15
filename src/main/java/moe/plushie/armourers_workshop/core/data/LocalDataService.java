@@ -106,7 +106,6 @@ public class LocalDataService {
     }
 
     public InputStream getFile(String identifier) throws IOException {
-        ModLog.debug("load database skin of '{}'", identifier);
         Node node = nodes.get(identifier);
         if (node == null || !node.isValid()) {
             throw new FileNotFoundException("invalid file path");

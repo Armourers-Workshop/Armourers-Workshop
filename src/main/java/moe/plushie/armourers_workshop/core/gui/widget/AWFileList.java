@@ -178,7 +178,7 @@ public class AWFileList extends Button implements INestedGuiEventHandler {
             }
             if (!descriptor.isEmpty()) {
                 IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-                SkinItemRenderer.renderSkin(descriptor, x, y, width, height - 1, 160, 45, 0, matrixStack, buffers);
+                SkinItemRenderer.renderSkin(descriptor, x, y, 100, width, height - 1, 160, 45, 0, matrixStack, buffers);
             }
         }
 

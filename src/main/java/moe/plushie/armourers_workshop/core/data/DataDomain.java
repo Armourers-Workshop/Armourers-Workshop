@@ -1,12 +1,24 @@
 package moe.plushie.armourers_workshop.core.data;
 
+import javax.annotation.Nullable;
+
 public enum DataDomain {
-    LOCAL("fs"), SERVER("ws"), DATABASE("db"), DATABASE_LINK("db-ln");
+    LOCAL("fs"), DEDICATED_SERVER("ws"), DATABASE("db"), DATABASE_LINK("ln"), GLOBAL_SERVER("ks");
 
     private final String namespace;
 
     DataDomain(String namespace) {
         this.namespace = namespace;
+    }
+
+    public static DataDomain byName(String path) {
+        String namespace = getNamespace(path);
+        for (DataDomain domain : values()) {
+            if (domain.namespace.equals(namespace)) {
+                return domain;
+            }
+        }
+        return LOCAL;
     }
 
     public static String getNamespace(String path) {
@@ -31,7 +43,7 @@ public enum DataDomain {
     }
 
     public static boolean isServer(String path) {
-        return DataDomain.SERVER.matches(path);
+        return DataDomain.DEDICATED_SERVER.matches(path);
     }
 
     public static boolean isDatabase(String path) {

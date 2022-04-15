@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.container.SkinnableContainer;
 import moe.plushie.armourers_workshop.core.gui.widget.AWAbstractContainerScreen;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
@@ -37,6 +36,7 @@ public class SkinnableScreen extends AWAbstractContainerScreen<SkinnableContaine
 
     @Override
     protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        this.renderBackground(matrixStack);
         RenderUtils.bind(RenderUtils.TEX_COMMON);
         GuiUtils.drawContinuousTexturedBox(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight, 128, 128, 4, 4, 4, 4, 0);
         RenderUtils.blit(matrixStack, leftPos + 7, topPos + imageHeight - 85, 0, 180, 162, 76);

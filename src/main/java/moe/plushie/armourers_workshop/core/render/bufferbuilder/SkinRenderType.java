@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
@@ -17,7 +18,6 @@ import org.lwjgl.opengl.GL11;
 @OnlyIn(Dist.CLIENT)
 public class SkinRenderType extends RenderType {
 
-    private static final RenderState.TextureState CIRCLE = new TextureState(RenderUtils.TEX_CIRCLE, false, false);
     private static final RenderState.TextureState COLORS = new TextureState(RenderUtils.TEX_CUBE, false, false);
     private static final RenderState.TexturingState COLORS_OFFSET = new TexturingState("offset_texturing", () -> {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
@@ -33,7 +33,8 @@ public class SkinRenderType extends RenderType {
     });
 
 
-    public static final RenderType MAGIC = createMagicType();
+    public static final RenderType MAGIC = createImageType(RenderUtils.TEX_CIRCLE, true);
+    public static final RenderType EARTH = createImageType(RenderUtils.TEX_EARTH, false);
 
     public static final RenderType ENTITY_OUTLINE = createEntityOutline();
 
@@ -92,12 +93,12 @@ public class SkinRenderType extends RenderType {
     }
 
 
-    private static RenderType createMagicType() {
+    private static RenderType createImageType(ResourceLocation texture, boolean mask) {
         RenderType.State states = RenderType.State.builder()
                 .setCullState(NO_CULL)
-                .setTextureState(CIRCLE)
+                .setTextureState(new TextureState(texture, false, false))
                 .setAlphaState(DEFAULT_ALPHA)
-                .setWriteMaskState(COLOR_WRITE)
+                .setWriteMaskState(mask ? COLOR_WRITE : COLOR_DEPTH_WRITE)
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                 .setOutputState(TRANSLUCENT_TARGET)
                 .createCompositeState(false);

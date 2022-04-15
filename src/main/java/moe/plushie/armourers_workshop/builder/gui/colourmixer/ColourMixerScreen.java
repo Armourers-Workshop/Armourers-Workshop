@@ -102,6 +102,7 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
 
     @Override
     protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        this.renderBackground(matrixStack);
         RenderUtils.blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight, RenderUtils.TEX_COLOUR_MIXER);
         for (Label label : labels) {
             this.font.draw(matrixStack, label.title, leftPos + label.x, topPos + label.y, 0x404040);

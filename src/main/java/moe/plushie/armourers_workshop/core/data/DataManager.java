@@ -35,7 +35,7 @@ public class DataManager {
 
     private static final DataManager INSTANCE = new DataManager();
     private final ExecutorService executor = Executors.newFixedThreadPool(1, r -> {
-        Thread thread = new Thread(r, "AW-Data-Manager");
+        Thread thread = new Thread(r, "AW-SKIN-DM");
         thread.setPriority(Thread.MIN_PRIORITY);
         return thread;
     });
@@ -44,86 +44,86 @@ public class DataManager {
         return INSTANCE;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void addCache(String identifier, Skin skin) {
-        File cachedFile = getSkinCacheFile(identifier);
-        byte[] x0 = ModContext.x0();
-        byte[] x1 = ModContext.x1();
-        if (cachedFile == null || x0 == null || x1 == null) {
-            return;
-        }
-        ModLog.debug("add cache of '{}'", identifier);
-        executor.execute(() -> {
-            FileOutputStream fileOutputStream = null;
-            CipherOutputStream cipherOutputStream = null;
-            GZIPOutputStream gzipOutputStream = null;
-            try {
-                FileUtils.forceMkdirParent(cachedFile);
-                if (cachedFile.exists()) {
-                    FileUtils.forceDelete(cachedFile);
-                }
-                fileOutputStream = new FileOutputStream(cachedFile);
-                if (x1.length != 0) {
-                    fileOutputStream.write(x0);
-                    SecretKeySpec key = new SecretKeySpec(x1, "AES");
-                    Cipher aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
-                    aes.init(Cipher.ENCRYPT_MODE, key);
-                    cipherOutputStream = new CipherOutputStream(fileOutputStream, aes);
-                    gzipOutputStream = new GZIPOutputStream(cipherOutputStream);
-                    SkinIOUtils.saveSkinToStream(gzipOutputStream, skin);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            IOUtils.closeQuietly(gzipOutputStream, cipherOutputStream, fileOutputStream);
-        });
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public Skin getCache(String identifier) {
-        File cachedFile = getSkinCacheFile(identifier);
-        if (cachedFile == null || !cachedFile.exists()) {
-            return null;
-        }
-        byte[] x0 = ModContext.x0();
-        byte[] x1 = ModContext.x1();
-        if (x0 == null || x1 == null) {
-            return null;
-        }
-        Skin skin = null;
-        FileInputStream fileInputStream = null;
-        CipherInputStream cipherInputStream = null;
-        GZIPInputStream gzipInputStream = null;
-        try {
-            fileInputStream = new FileInputStream(cachedFile);
-            byte[] target = new byte[x0.length];
-            int targetSize = fileInputStream.read(target, 0, target.length);
-            if (targetSize == x0.length && Arrays.equals(x0, target)) {
-                SecretKeySpec key = new SecretKeySpec(x1, "AES");
-                Cipher aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
-                aes.init(Cipher.DECRYPT_MODE, key);
-                cipherInputStream = new CipherInputStream(fileInputStream, aes);
-                gzipInputStream = new GZIPInputStream(cipherInputStream);
-                skin = SkinIOUtils.loadSkinFromStream(gzipInputStream);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        IOUtils.closeQuietly(gzipInputStream, cipherInputStream, fileInputStream);
-        return skin;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void removeCache(String identifier) {
-        File cachedFile = getSkinCacheFile(identifier);
-        if (cachedFile == null || !cachedFile.exists()) {
-            return;
-        }
-        ModLog.debug("remove cache of '{}'", identifier);
-        executor.execute(() -> {
-            FileUtils.deleteQuietly(cachedFile);
-        });
-    }
+//    @OnlyIn(Dist.CLIENT)
+//    public void addCache(String identifier, Skin skin) {
+//        File cachedFile = getSkinCacheFile(identifier);
+//        byte[] x0 = ModContext.x0();
+//        byte[] x1 = ModContext.x1();
+//        if (cachedFile == null || x0 == null || x1 == null) {
+//            return;
+//        }
+//        ModLog.debug("add cache of '{}'", identifier);
+//        executor.execute(() -> {
+//            FileOutputStream fileOutputStream = null;
+//            CipherOutputStream cipherOutputStream = null;
+//            GZIPOutputStream gzipOutputStream = null;
+//            try {
+//                FileUtils.forceMkdirParent(cachedFile);
+//                if (cachedFile.exists()) {
+//                    FileUtils.forceDelete(cachedFile);
+//                }
+//                fileOutputStream = new FileOutputStream(cachedFile);
+//                if (x1.length != 0) {
+//                    fileOutputStream.write(x0);
+//                    SecretKeySpec key = new SecretKeySpec(x1, "AES");
+//                    Cipher aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
+//                    aes.init(Cipher.ENCRYPT_MODE, key);
+//                    cipherOutputStream = new CipherOutputStream(fileOutputStream, aes);
+//                    gzipOutputStream = new GZIPOutputStream(cipherOutputStream);
+//                    SkinIOUtils.saveSkinToStream(gzipOutputStream, skin);
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            IOUtils.closeQuietly(gzipOutputStream, cipherOutputStream, fileOutputStream);
+//        });
+//    }
+//
+//    @OnlyIn(Dist.CLIENT)
+//    public Skin getCache(String identifier) {
+//        File cachedFile = getSkinCacheFile(identifier);
+//        if (cachedFile == null || !cachedFile.exists()) {
+//            return null;
+//        }
+//        byte[] x0 = ModContext.x0();
+//        byte[] x1 = ModContext.x1();
+//        if (x0 == null || x1 == null) {
+//            return null;
+//        }
+//        Skin skin = null;
+//        FileInputStream fileInputStream = null;
+//        CipherInputStream cipherInputStream = null;
+//        GZIPInputStream gzipInputStream = null;
+//        try {
+//            fileInputStream = new FileInputStream(cachedFile);
+//            byte[] target = new byte[x0.length];
+//            int targetSize = fileInputStream.read(target, 0, target.length);
+//            if (targetSize == x0.length && Arrays.equals(x0, target)) {
+//                SecretKeySpec key = new SecretKeySpec(x1, "AES");
+//                Cipher aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
+//                aes.init(Cipher.DECRYPT_MODE, key);
+//                cipherInputStream = new CipherInputStream(fileInputStream, aes);
+//                gzipInputStream = new GZIPInputStream(cipherInputStream);
+//                skin = SkinIOUtils.loadSkinFromStream(gzipInputStream);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        IOUtils.closeQuietly(gzipInputStream, cipherInputStream, fileInputStream);
+//        return skin;
+//    }
+//
+//    @OnlyIn(Dist.CLIENT)
+//    public void removeCache(String identifier) {
+//        File cachedFile = getSkinCacheFile(identifier);
+//        if (cachedFile == null || !cachedFile.exists()) {
+//            return;
+//        }
+//        ModLog.debug("remove cache of '{}'", identifier);
+//        executor.execute(() -> {
+//            FileUtils.deleteQuietly(cachedFile);
+//        });
+//    }
 
     public Optional<ByteBuf> loadSkinData(String identifier) {
         ModLog.debug("Load skin data: {} ", identifier);
@@ -152,7 +152,7 @@ public class DataManager {
     }
 
     public InputStream loadSkinData3(String identifier) throws IOException {
-        ModLog.debug("load skin data of '{}'", identifier);
+        ModLog.debug("'{}' => get skin input stream from data manager", identifier);
         if (DataDomain.isDatabase(identifier)) {
             String path = DataDomain.getPath(identifier);
             return LocalDataService.getInstance().getFile(path);
@@ -181,26 +181,26 @@ public class DataManager {
         if (file.exists()) {
             return new FileInputStream(file);
         }
-        throw new FileNotFoundException("Invalid file path");
+        throw new FileNotFoundException(identifier);
     }
 
-    private File getSkinCacheFile(String identifier) {
-        File rootPath = getSkinCacheDirectory();
-        if (rootPath != null) {
-            String namespace = DataDomain.getNamespace(identifier);
-            String path = DataDomain.getPath(identifier);
-            return new File(rootPath, namespace + "/" + ModContext.md5(path) + ".dat");
-        }
-        return null;
-    }
-
-    private File getSkinCacheDirectory() {
-        UUID t0 = ModContext.t0();
-        if (t0 != null) {
-            return new File(AWCore.getSkinCacheDirectory(), t0.toString());
-        }
-        return null;
-    }
+//    private File getSkinCacheFile(String identifier) {
+//        File rootPath = getSkinCacheDirectory();
+//        if (rootPath != null) {
+//            String namespace = DataDomain.getNamespace(identifier);
+//            String path = DataDomain.getPath(identifier);
+//            return new File(rootPath, namespace + "/" + ModContext.md5(path) + ".dat");
+//        }
+//        return null;
+//    }
+//
+//    private File getSkinCacheDirectory() {
+//        UUID t0 = ModContext.t0();
+//        if (t0 != null) {
+//            return new File(AWCore.getSkinCacheDirectory(), t0.toString());
+//        }
+//        return null;
+//    }
 }
 
 

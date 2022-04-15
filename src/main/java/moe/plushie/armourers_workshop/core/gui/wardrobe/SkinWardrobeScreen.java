@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import moe.plushie.armourers_workshop.core.gui.widget.AWAbstractContainerScreen;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabController;
@@ -27,13 +28,12 @@ import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings({"unused", "NullableProblems"})
-public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
+public class SkinWardrobeScreen extends AWAbstractContainerScreen<SkinWardrobeContainer> {
 
     private final Entity entity;
     private final PlayerEntity operator;
     private final SkinWardrobe wardrobe;
     private final AWTabController<SkinWardrobeContainer.Group> tabController = new AWTabController<>(false);
-    private boolean enabledOnClose = true;
     private boolean enabledPlayerRotating = false;
     private float playerRotation = 45.0f;
     private int lastMouseX = 0;
@@ -191,9 +191,9 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderContentLayer(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        super.renderSuperLayer(matrixStack, mouseX, mouseY, partialTicks);
 
         if (enabledPlayerRotating) {
             playerRotation = (playerRotation + (mouseX - lastMouseX) + 360) % 360;
@@ -207,13 +207,6 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
         SkinWardrobeColourSetting.ColorPicker colorPicker = getActivatedPicker();
         if (colorPicker != null) {
             colorPicker.update(mouseX, mouseY);
-        }
-    }
-
-    @Override
-    public void onClose() {
-        if (enabledOnClose) {
-            super.onClose();
         }
     }
 
@@ -247,19 +240,16 @@ public class SkinWardrobeScreen extends ContainerScreen<SkinWardrobeContainer> {
     }
 
     @Override
-    public boolean keyPressed(int key, int p_231046_2_, int p_231046_3_) {
-        enabledOnClose = (key == GLFW.GLFW_KEY_ESCAPE);
-        boolean results = super.keyPressed(key, p_231046_2_, p_231046_3_);
-        enabledOnClose = true;
-        return results;
-    }
-
-    @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
         if (tabController.isDragging()) {
             return true;
         }
         return super.isMouseOver(mouseX, mouseY);
+    }
+
+    @Override
+    public boolean changeFocus(boolean p_231049_1_) {
+        return tabController.changeFocus(p_231049_1_);
     }
 
     @Override

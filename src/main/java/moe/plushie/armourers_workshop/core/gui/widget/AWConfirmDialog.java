@@ -43,7 +43,7 @@ public class AWConfirmDialog extends AWAbstractDialog {
         this.cancelButton.y = topPos + imageHeight - 30;
         this.messageX = leftPos + 10;
         this.messageY = topPos + 30;
-        this.messageWidth = imageWidth - 40;
+        this.messageWidth = imageWidth - 20;
         this.messageHeight = 20;
     }
 
@@ -56,7 +56,7 @@ public class AWConfirmDialog extends AWAbstractDialog {
 
     public void renderContentLayer(MatrixStack matrixStack, int mouseX, int mouseY, float p_230430_4_) {
         if (message != null) {
-            RenderUtils.drawText(matrixStack, font, message, messageX, messageY, imageWidth, 0, messageColor);
+            RenderUtils.drawText(matrixStack, font, message, messageX, messageY, messageWidth, 0, messageColor);
         }
     }
 

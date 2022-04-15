@@ -94,7 +94,7 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
                 String path = oi.readUTF();
                 String basename = FilenameUtils.getBaseName(path);
                 if (oi.readByte() == 0) {
-                    files.add(new SkinLibraryFile(DataDomain.SERVER, basename, path));
+                    files.add(new SkinLibraryFile(DataDomain.DEDICATED_SERVER, basename, path));
                     continue;
                 }
                 ISkinType skinType = SkinTypes.byName(oi.readUTF());
@@ -102,7 +102,7 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
                 properties.put(SkinProperty.ALL_CUSTOM_NAME, oi.readUTF());
                 properties.put(SkinProperty.ALL_AUTHOR_NAME, oi.readUTF());
                 properties.put(SkinProperty.ALL_FLAVOUR_TEXT, oi.readUTF());
-                files.add(new SkinLibraryFile(DataDomain.SERVER, basename, path, Pair.of(skinType, properties)));
+                files.add(new SkinLibraryFile(DataDomain.DEDICATED_SERVER, basename, path, Pair.of(skinType, properties)));
             }
         } catch (Exception e) {
             e.printStackTrace();
