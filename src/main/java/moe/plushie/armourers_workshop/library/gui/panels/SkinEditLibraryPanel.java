@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinDelete;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinEdit;
-import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import moe.plushie.armourers_workshop.library.gui.widget.SkinFileList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import org.apache.logging.log4j.util.Strings;
 
 @OnlyIn(Dist.CLIENT)
-public class GlobalLibrarySkinEditPanel extends GlobalLibraryAbstractPanel {
+public class SkinEditLibraryPanel extends AbstractLibraryPanel {
 
     private AWTextField textName;
     private AWTextField textTags;
@@ -29,10 +29,10 @@ public class GlobalLibrarySkinEditPanel extends GlobalLibraryAbstractPanel {
     private ExtendedButton buttonDelete;
 
     private SkinFileList.Entry entry;
-    private GlobalSkinLibraryScreen.Page returnPage;
+    private Page returnPage;
 
-    public GlobalLibrarySkinEditPanel() {
-        super("inventory.armourers_workshop.skin-library-global.edit", GlobalSkinLibraryScreen.Page.SKIN_EDIT::equals);
+    public SkinEditLibraryPanel() {
+        super("inventory.armourers_workshop.skin-library-global.edit", Page.SKIN_EDIT::equals);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class GlobalLibrarySkinEditPanel extends GlobalLibraryAbstractPanel {
         }
     }
 
-    public void reloadData(SkinFileList.Entry entry, GlobalSkinLibraryScreen.Page returnPage) {
+    public void reloadData(SkinFileList.Entry entry, Page returnPage) {
         this.entry = entry;
         this.returnPage = returnPage;
         this.textName.setValue(entry.name);
@@ -161,17 +161,11 @@ public class GlobalLibrarySkinEditPanel extends GlobalLibraryAbstractPanel {
     }
 
     private void backToPage(boolean removed) {
-        // TODO: reload all data
-//       if (returnScreen == Screen.HOME) {
-//            ((GuiGlobalLibrary) parent).panelHome.updateSkinPanels();
-//        }
-//        if (returnScreen == Screen.SEARCH) {
-//            ((GuiGlobalLibrary) parent).panelSearchResults.refresh();
-//        }
-//        if (returnScreen == Screen.USER_SKINS) {
-//            ((GuiGlobalLibrary) parent).panelUserSkins.refresh();
-//        }
-//        ((GuiGlobalLibrary) parent).switchScreen(returnScreen);
+        if (removed) {
+            router.skinDidChange(entry.id, null);
+        } else {
+            router.skinDidChange(entry.id, entry);
+        }
         router.showPage(returnPage);
     }
 

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.library.data.global.task.user;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.exceptions.AuthenticationException;
+import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.library.data.global.MultipartForm;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
@@ -10,6 +11,7 @@ import moe.plushie.armourers_workshop.library.data.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.library.data.global.permission.PermissionSystem;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTask;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskResult;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.Date;
 
@@ -107,7 +109,7 @@ public class GlobalTaskSkinReport extends GlobalTask<GlobalTaskSkinReport.SkinRe
 
         public enum SkinReportType {
             SEXUAL, INAPPROPRIATE, STOLEN, SPAM, OTHER;
-            
+
             public String getLangKey() {
                 return "skin_report_type." + AWCore.getModId() + "." + toString().toLowerCase();
             }

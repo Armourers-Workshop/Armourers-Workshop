@@ -88,11 +88,11 @@ public class EntityProfiles {
     private static final HashMap<EntityType<?>, EntityProfile> PROFILES = new HashMap<>();
 
     private static int playerSlots(ISkinType type) {
-        return ModConfig.prefersWardrobeSlots;
+        return ModConfig.Common.prefersWardrobePlayerSlots;
     }
 
     private static int mobSlots(ISkinType type) {
-        return ModConfig.prefersWardrobeMobSlots;
+        return ModConfig.Common.prefersWardrobeMobSlots;
     }
 
     public static void init() {

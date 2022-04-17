@@ -1,12 +1,13 @@
 package moe.plushie.armourers_workshop.init.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
-import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.init.common.ArmourersConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfigSpec;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -23,7 +24,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Collections;
 import java.util.function.Supplier;
 
 
@@ -94,7 +94,8 @@ public class ClientWardrobeHandler {
         matrixStack.pushPose();
         matrixStack.scale(-SCALE, -SCALE, SCALE);
 
-        int count = render(entity, null, light, matrixStack, buffers, transformType, () -> renderData.getItemSkins(itemStack));
+        boolean replaceSkinItem = entity instanceof MannequinEntity;
+        int count = render(entity, null, light, matrixStack, buffers, transformType, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
         if (count != 0) {
             callback.cancel();
         }
@@ -103,7 +104,7 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderEntityInInventoryPre(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY) {
-        if (!ArmourersConfig.enableEntityInInventoryClip) {
+        if (!ModConfig.Client.enableEntityInInventoryClip) {
             return;
         }
         int left, top, width, height;
@@ -129,7 +130,7 @@ public class ClientWardrobeHandler {
     }
 
     public static void onRenderEntityInInventoryPost(LivingEntity entity) {
-        if (!ArmourersConfig.enableEntityInInventoryClip) {
+        if (!ModConfig.Client.enableEntityInInventoryClip) {
             return;
         }
         RenderUtils.disableScissor();

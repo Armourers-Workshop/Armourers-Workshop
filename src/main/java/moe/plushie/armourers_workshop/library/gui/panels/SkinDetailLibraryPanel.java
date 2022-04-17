@@ -23,7 +23,7 @@ import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskResult;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinReport;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskUserSkinRate;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskUserSkinRating;
-import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import moe.plushie.armourers_workshop.core.gui.widget.AWReportDialog;
 import moe.plushie.armourers_workshop.library.gui.widget.SkinFileList;
 import moe.plushie.armourers_workshop.library.gui.widget.SkinRatingButton;
@@ -42,7 +42,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @OnlyIn(Dist.CLIENT)
-public class GlobalLibrarySkinDetailPanel extends GlobalLibraryAbstractPanel {
+public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
     private ExtendedButton buttonBack;
     private ExtendedButton buttonDownload;
@@ -56,11 +56,11 @@ public class GlobalLibrarySkinDetailPanel extends GlobalLibraryAbstractPanel {
 
     private ITextComponent message;
     private SkinFileList.Entry entry;
-    private GlobalSkinLibraryScreen.Page returnPage;
+    private Page returnPage;
     private PlayerTextureDescriptor playerTexture = PlayerTextureDescriptor.EMPTY;
 
-    public GlobalLibrarySkinDetailPanel() {
-        super("inventory.armourers_workshop.skin-library-global.skinInfo", GlobalSkinLibraryScreen.Page.SKIN_DETAIL::equals);
+    public SkinDetailLibraryPanel() {
+        super("inventory.armourers_workshop.skin-library-global.skinInfo", Page.SKIN_DETAIL::equals);
     }
 
     @Override
@@ -74,6 +74,7 @@ public class GlobalLibrarySkinDetailPanel extends GlobalLibraryAbstractPanel {
         this.buttonUserSkins = addTextButton(minX + 2, topPos + 4, 26, 26, "", this::searchUser);
 
         this.buttonStarRating = new SkinRatingButton(leftPos + 191, topPos + 4, 16, 16, this::updateSkinRating);
+        this.buttonStarRating.setValue(userRating);
         this.addButton(buttonStarRating);
 
         this.buttonDownload = addTextButton(midX + 2, topPos + height - 38, 76, 16, "downloadSkin", this::downloadSkin);
@@ -98,7 +99,7 @@ public class GlobalLibrarySkinDetailPanel extends GlobalLibraryAbstractPanel {
         this.buttonDownload.visible = PlushieAuth.PLUSHIE_SESSION.hasPermission(PermissionSystem.PlushieAction.SKIN_DOWNLOAD);
     }
 
-    public void reloadData(SkinFileList.Entry entry, GlobalSkinLibraryScreen.Page returnPage) {
+    public void reloadData(SkinFileList.Entry entry, Page returnPage) {
         this.returnPage = returnPage;
         this.userRating = 0;
         this.doneRatingCheck = false;

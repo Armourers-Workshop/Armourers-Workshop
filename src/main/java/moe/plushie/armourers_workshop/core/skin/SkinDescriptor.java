@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.skin;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -11,18 +12,12 @@ import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import org.apache.commons.io.FilenameUtils;
 
 import java.util.concurrent.TimeUnit;
 
 public class SkinDescriptor implements ISkinDescriptor {
 
     public static final SkinDescriptor EMPTY = new SkinDescriptor("");
-
-    private final static Cache<ItemStack, SkinDescriptor> DESCRIPTOR_CACHES = CacheBuilder.newBuilder()
-            .maximumSize(32)
-            .expireAfterAccess(15, TimeUnit.SECONDS)
-            .build();
 
     private final String identifier;
     private final ISkinType type;
@@ -56,16 +51,17 @@ public class SkinDescriptor implements ISkinDescriptor {
         if (itemStack.isEmpty()) {
             return EMPTY;
         }
+        ISkinDataProvider dataProvider = (ISkinDataProvider) (Object) itemStack;
+        SkinDescriptor descriptor = dataProvider.getSkinData();
+        if (descriptor != null) {
+            return descriptor;
+        }
         CompoundNBT nbt = itemStack.getTag();
         if (nbt == null || !nbt.contains(AWConstants.NBT.SKIN)) {
             return EMPTY;
         }
-        SkinDescriptor descriptor = DESCRIPTOR_CACHES.getIfPresent(itemStack);
-        if (descriptor != null) {
-            return descriptor;
-        }
         descriptor = new SkinDescriptor(nbt.getCompound(AWConstants.NBT.SKIN));
-        DESCRIPTOR_CACHES.put(itemStack, descriptor);
+        dataProvider.setSkinData(descriptor);
         return descriptor;
     }
 
@@ -174,7 +170,6 @@ public class SkinDescriptor implements ISkinDescriptor {
     public int hashCode() {
         return identifier.hashCode();
     }
-
 
 
 }

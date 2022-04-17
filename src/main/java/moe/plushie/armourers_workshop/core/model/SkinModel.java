@@ -24,7 +24,7 @@ public class SkinModel {
         long time = System.currentTimeMillis();
         if (time < loadedTime + 500) {
             long timePassed = time - loadedTime;
-            return MathHelper.clamp((ModConfig.maxLodLevels + 1) - ((int) (timePassed / 125F) + 1), 0, ModConfig.maxLodLevels + 1);
+            return MathHelper.clamp((ModConfig.Client.maxLodLevels + 1) - ((int) (timePassed / 125F) + 1), 0, ModConfig.Client.maxLodLevels + 1);
         }
         return 0;
     }

@@ -47,12 +47,12 @@ public class ModCommands {
     /// :/armourers setSkin|giveSkin|clearSkin
     public static LiteralArgumentBuilder<CommandSource> commands() {
         return Commands.literal("armourers")
+                .then(ReflectArgumentBuilder.literal("config", ModConfig.Client.class))
                 .requires(source -> source.hasPermission(2))
                 .then(Commands.literal("library").then(Commands.literal("reload").executes(Executor::reloadLibrary)))
                 .then(Commands.literal("setSkin").then(players().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
                 .then(Commands.literal("giveSkin").then(players().then(skins().executes(Executor::giveSkin))))
-                .then(Commands.literal("clearSkin").then(players().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
-                .then(ReflectArgumentBuilder.literal("config", ModConfig.class));
+                .then(Commands.literal("clearSkin").then(players().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)));
     }
 
     static ArgumentBuilder<CommandSource, ?> players() {
@@ -141,7 +141,7 @@ public class ModCommands {
             String identifier = FileArgument.getString(context, "skin");
             Skin skin = SkinLoader.getInstance().loadSkin(DataDomain.DEDICATED_SERVER.normalize(identifier));
             if (skin == null) {
-                context.getSource().sendSuccess(new StringTextComponent("Can't found identifier " + identifier), true);
+                context.getSource().sendFailure(new StringTextComponent("Can't found identifier " + identifier));
                 return 0;
             }
             String resolvedIdentifier = SkinLoader.getInstance().saveSkin(identifier, skin);

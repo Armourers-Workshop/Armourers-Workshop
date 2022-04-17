@@ -88,7 +88,7 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         @Override
         public boolean shouldDownloadFile() {
             if (!LocalDataService.isRunning()) {
-                return ModConfig.allowDownloadingSkins;
+                return ModConfig.Common.allowDownloadingSkins;
             }
             return true;
         }
@@ -96,7 +96,7 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         @Override
         public boolean shouldUploadFile() {
             if (!LocalDataService.isRunning()) {
-                return ModConfig.allowUploadingSkins;
+                return ModConfig.Common.allowUploadingSkins;
             }
             return true;
         }
@@ -205,7 +205,7 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         @Override
         public boolean shouldDownloadFile() {
             if (FMLEnvironment.dist.isDedicatedServer()) {
-                return ModConfig.allowDownloadingSkins;
+                return ModConfig.Common.allowDownloadingSkins;
             }
             return true;
         }
@@ -213,14 +213,14 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         @Override
         public boolean shouldUploadFile() {
             if (FMLEnvironment.dist.isDedicatedServer()) {
-                return ModConfig.allowUploadingSkins;
+                return ModConfig.Common.allowUploadingSkins;
             }
             return true;
         }
 
         public boolean shouldModifierFile(PlayerEntity player) {
             // super op can manage the public folder.
-            return ModConfig.enableLibraryManage && player.hasPermissions(4);
+            return ModConfig.Common.allowLibraryRemoteManage && player.hasPermissions(5);
         }
 
         public LocalDataService getDatabaseLibrary() {

@@ -31,7 +31,6 @@ public class LocalDataService {
     public LocalDataService(Path rootPath) {
         this.rootPath = rootPath;
         this.loadConfig();
-
     }
 
     public static LocalDataService getInstance() {

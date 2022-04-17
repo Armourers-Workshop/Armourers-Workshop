@@ -46,6 +46,7 @@ public class SkinLoader {
     }
 
     public void setup(@Nullable MinecraftServer server) {
+        taskManager.values().forEach(Session::shutdown);
         LocalDataSession local = new LocalDataSession();
         if (server != null) {
             DownloadSession download = new DownloadSession();
@@ -161,8 +162,9 @@ public class SkinLoader {
             entry.abort(new NoSuchElementException("can't found session"));
             return;
         }
-        Request loading = session.request(method, entry.identifier);
-        loading.delegate = entry;
+        Request req = session.request(method, entry.identifier);
+        req.delegate = entry;
+        session.submit(req);
     }
 
     public enum Status {
@@ -286,12 +288,23 @@ public class SkinLoader {
         public Request request(Method method, String identifier) {
             Request task = getRequest(identifier);
             task.elevate(method);
-            if (task.method != Method.ASYNC) {
-                run(task);
-            } else {
-                start();
-            }
             return task;
+        }
+
+        public void submit(Request request) {
+            if (request.method != Method.ASYNC) {
+                run(request);
+                return;
+            }
+            if (!isRunning) {
+                isRunning = true;
+                executor.execute(this::run);
+            }
+        }
+
+        public void shutdown() {
+            requests.clear();
+            executor.shutdownNow();
         }
 
         protected void run() {
@@ -305,13 +318,6 @@ public class SkinLoader {
             }
             synchronized (this) {
                 isRunning = false;
-            }
-        }
-
-        protected synchronized void start() {
-            if (!isRunning) {
-                isRunning = true;
-                executor.execute(this::run);
             }
         }
 
@@ -401,6 +407,12 @@ public class SkinLoader {
         }
 
         @Override
+        public void shutdown() {
+            super.shutdown();
+            this.caching.shutdown();
+        }
+
+        @Override
         public Skin load(Request request) throws Exception {
             try {
                 return caching.load(request);
@@ -467,6 +479,12 @@ public class SkinLoader {
 
         public DownloadSession() {
             super("AW-SKIN-DL");
+        }
+
+        @Override
+        public void shutdown() {
+            super.shutdown();
+            this.caching.shutdown();
         }
 
         @Override

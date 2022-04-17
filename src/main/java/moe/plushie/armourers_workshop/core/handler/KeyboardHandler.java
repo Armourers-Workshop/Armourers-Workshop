@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.core.handler;
 
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.OpenWardrobePacket;
 import moe.plushie.armourers_workshop.core.utils.KeyBindings;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -17,7 +19,7 @@ public class KeyboardHandler {
     public void onKeyInputEvent(InputEvent.KeyInputEvent event) {
         if (KeyBindings.OPEN_WARDROBE_KEY.consumeClick()) {
             PlayerEntity player = Minecraft.getInstance().player;
-            if (player != null) {
+            if (player != null && ModConfig.Common.canOpenWardrobe(player, player)) {
                 NetworkHandler.getInstance().sendToServer(new OpenWardrobePacket(player));
             }
         }

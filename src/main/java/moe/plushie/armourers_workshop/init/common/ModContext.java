@@ -11,6 +11,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 import java.util.UUID;
 
 public class ModContext extends WorldSavedData {
@@ -41,7 +42,7 @@ public class ModContext extends WorldSavedData {
     }
 
     public static void init(UUID t0, UUID t1) {
-        ModLog.debug("init context");
+        ModLog.debug("apply context");
         T0 = t0;
         T1 = t1;
         X0 = null;

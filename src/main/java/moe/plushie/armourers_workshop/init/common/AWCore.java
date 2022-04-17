@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.init.common;
 
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -31,8 +33,11 @@ public class AWCore {
         return AWCore.resource("textures/item/slot/" + name + ".png");
     }
 
-    public static ResourceLocation getItemIcon(String name) {
-        return AWCore.resource("textures/item/template/" + name + ".png");
+    public static ResourceLocation getItemIcon(ISkinType skinType) {
+        if (skinType == SkinTypes.UNKNOWN || skinType.getRegistryName() == null) {
+            return null;
+        }
+        return AWCore.resource("textures/item/template/" + skinType.getRegistryName().getPath() + ".png");
     }
 
     public static File getRootDirectory() {

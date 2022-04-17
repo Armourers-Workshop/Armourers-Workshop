@@ -4,10 +4,12 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.gui.widget.AWAbstractContainerScreen;
 import moe.plushie.armourers_workshop.core.gui.widget.AWAbstractDialog;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.container.GlobalSkinLibraryContainer;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch;
+import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchColumnType;
+import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchOrderType;
 import moe.plushie.armourers_workshop.library.gui.panels.*;
 import moe.plushie.armourers_workshop.library.gui.widget.SkinFileList;
 import net.minecraft.client.Minecraft;
@@ -33,21 +35,21 @@ import java.util.stream.Collectors;
 public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSkinLibraryContainer> {
 
     private final Router router = new Router();
-    private final ArrayList<GlobalLibraryAbstractPanel> panels = new ArrayList<>();
+    private final ArrayList<AbstractLibraryPanel> panels = new ArrayList<>();
 
-    private final GlobalLibraryHeaderPanel headerPanel = addPanel(GlobalLibraryHeaderPanel::new);
-    private final GlobalLibrarySearchBoxPanel searchBoxPanel = addPanel(GlobalLibrarySearchBoxPanel::new);
-    private final GlobalLibraryInfoPanel infoPanel = addPanel(GlobalLibraryInfoPanel::new);
-    private final GlobalLibraryJoinPanel joinPanel = addPanel(GlobalLibraryJoinPanel::new);
-    private final GlobalLibraryUploadPanel uploadPanel = addPanel(GlobalLibraryUploadPanel::new);
-    private final GlobalLibrarySearchResultsPanel searchResultsPanel = addPanel(GlobalLibrarySearchResultsPanel::new);
-    private final GlobalLibraryUserSkinsPanel searchUserResultsPanel = addPanel(GlobalLibraryUserSkinsPanel::new);
-    private final GlobalLibraryHomePanel homePanel = addPanel(GlobalLibraryHomePanel::new);
-    private final GlobalLibrarySkinDetailPanel skinDetailPanel = addPanel(GlobalLibrarySkinDetailPanel::new);
-    private final GlobalLibrarySkinEditPanel skinEditPanel = addPanel(GlobalLibrarySkinEditPanel::new);
+    private final HeaderLibraryPanel headerPanel = addPanel(HeaderLibraryPanel::new);
+    private final SearchBoxLibraryPanel searchBoxPanel = addPanel(SearchBoxLibraryPanel::new);
+    private final InfoLibraryPanel infoPanel = addPanel(InfoLibraryPanel::new);
+    private final JoinLibraryPanel joinPanel = addPanel(JoinLibraryPanel::new);
+    private final UploadLibraryPanel uploadPanel = addPanel(UploadLibraryPanel::new);
+    private final ModerationLibraryPanel moderationPanel = addPanel(ModerationLibraryPanel::new);
+    private final SearchResultsLibraryPanel searchResultsPanel = addPanel(SearchResultsLibraryPanel::new);
+    private final UserSkinsLibraryPanel searchUserResultsPanel = addPanel(UserSkinsLibraryPanel::new);
+    private final HomeLibraryPanel homePanel = addPanel(HomeLibraryPanel::new);
+    private final SkinDetailLibraryPanel skinDetailPanel = addPanel(SkinDetailLibraryPanel::new);
+    private final SkinEditLibraryPanel skinEditPanel = addPanel(SkinEditLibraryPanel::new);
 
     private Page page = Page.HOME;
-
     private boolean isInited = false;
 
     public GlobalSkinLibraryScreen(GlobalSkinLibraryContainer container, PlayerInventory inventory, ITextComponent title) {
@@ -75,6 +77,7 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
         this.infoPanel.init(minecraft, 0, 27, width, height - 27);
         this.joinPanel.init(minecraft, 0, 27, width, height - 27);
         this.uploadPanel.init(minecraft, 0, 27, width, height - 27);
+        this.moderationPanel.init(minecraft, 0, 27, width, height - 27);
         this.homePanel.init(minecraft, 0, 27 + 24, width, height - 27 - 24);
         this.searchResultsPanel.init(minecraft, 0, 27 + 24, width, height - 27 - 24);
         this.searchUserResultsPanel.init(minecraft, 0, 27 + 24, width, height - 27 - 24);
@@ -93,7 +96,7 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
     @Override
     public void removed() {
         super.removed();
-        for (GlobalLibraryAbstractPanel panel : panels) {
+        for (AbstractLibraryPanel panel : panels) {
             panel.setRouter(null);
         }
     }
@@ -105,7 +108,7 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
             return;
         }
         PlushieAuth.updateAccessToken();
-        panels.forEach(GlobalLibraryAbstractPanel::tick);
+        panels.forEach(AbstractLibraryPanel::tick);
     }
 
     @Override
@@ -145,12 +148,12 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
 
     @Override
     public Iterable<IGuiEventListener> nextResponder() {
-        return panels.stream().filter(GlobalLibraryAbstractPanel::isVisible).collect(Collectors.toList());
+        return panels.stream().filter(AbstractLibraryPanel::isVisible).collect(Collectors.toList());
     }
 
     @Override
     public void setFocused(@Nullable IGuiEventListener p_231035_1_) {
-        for (GlobalLibraryAbstractPanel panel : panels) {
+        for (AbstractLibraryPanel panel : panels) {
             panel.setFocused(p_231035_1_);
         }
         super.setFocused(p_231035_1_);
@@ -167,7 +170,7 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
             return true;
         }
         ArrayList<IGuiEventListener> list = new ArrayList<>(this.children());
-        for (GlobalLibraryAbstractPanel panel : panels) {
+        for (AbstractLibraryPanel panel : panels) {
             if (panel.isVisible()) {
                 list.addAll(panel.children());
             }
@@ -201,8 +204,8 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
 
     @Override
     protected void setFocusedWithResponder(FocusableGui responder) {
-        if (responder instanceof GlobalLibraryAbstractPanel) {
-            if (!((GlobalLibraryAbstractPanel) responder).isVisible()) {
+        if (responder instanceof AbstractLibraryPanel) {
+            if (!((AbstractLibraryPanel) responder).isVisible()) {
                 this.setFocused(null);
                 return;
             }
@@ -210,9 +213,7 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
         super.setFocusedWithResponder(responder);
     }
 
-
-
-    private <T extends GlobalLibraryAbstractPanel> T addPanel(Supplier<T> provider) {
+    private <T extends AbstractLibraryPanel> T addPanel(Supplier<T> provider) {
         T value = provider.get();
         value.setRouter(router);
         panels.add(value);
@@ -233,8 +234,8 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
         this.setVisible();
     }
 
-    public void doRender(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks, Function<GlobalLibraryAbstractPanel, IRenderable> supplier) {
-        for (GlobalLibraryAbstractPanel panel : panels) {
+    public void doRender(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks, Function<AbstractLibraryPanel, IRenderable> supplier) {
+        for (AbstractLibraryPanel panel : panels) {
             if (panel.isVisible()) {
                 supplier.apply(panel).render(matrixStack, mouseX, mouseY, partialTicks);
             }
@@ -242,7 +243,7 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
     }
 
     public enum Page {
-        HOME(true), INFO(false), JOIN(false), SKIN_UPLOAD(false), SKIN_EDIT(true), MODERATION(false), RESULTS(true), USER_SKINS(true), SKIN_DETAIL(true);
+        HOME(true), LIBRARY_INFO(false), LIBRARY_JOIN(false), LIBRARY_MODERATION(false), SKIN_UPLOAD(false), SKIN_EDIT(true), SKIN_DETAIL(true), LIST_SEARCH(true), LIST_USER_SKINS(true);
         final boolean hasSearch;
 
         Page(boolean hasSearch) {
@@ -254,19 +255,11 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
         }
     }
 
-//    public static class SearchFilter {
-//        public String keyword = "";
-//        public ISkinType skinType = SkinTypes.UNKNOWN;
-//        public GlobalTaskSkinSearch.SearchOrderType orderType = GlobalTaskSkinSearch.SearchOrderType.ASC;
-//        public GlobalTaskSkinSearch.SearchColumnType columnType = GlobalTaskSkinSearch.SearchColumnType.DATE_CREATED;
-//
-//        @Override
-//        public String toString() {
-//            return String.format("select * from global_library where keyword = '%s' and skinType = %s order by %s %s", keyword, skinType, columnType, orderType);
-//        }
-//    }
+    public interface ISkinListListener {
+        void skinDidChange(int skinId, @Nullable SkinFileList.Entry newValue);
+    }
 
-    public class Router {
+    public class Router implements ISkinListListener {
 
         public void showPage(Page page) {
             setPage(page);
@@ -277,16 +270,17 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
             setPage(Page.HOME);
         }
 
-        public void showSkinList(String keyword, ISkinType skinType, GlobalTaskSkinSearch.SearchColumnType columnType, GlobalTaskSkinSearch.SearchOrderType orderType) {
+        public void showSkinList(String keyword, ISkinType skinType, SearchColumnType columnType, SearchOrderType orderType) {
             ModLog.debug("select * from global_library where keyword = '{}' and skinType = {} order by {} {}", keyword, skinType, columnType, orderType);
             searchBoxPanel.reloadData(keyword, skinType, columnType, orderType);
             searchResultsPanel.reloadData(keyword, skinType, columnType, orderType);
-            setPage(Page.RESULTS);
+            setPage(Page.LIST_SEARCH);
         }
 
         public void showSkinList(int userId) {
+            searchBoxPanel.reloadData("", SkinTypes.UNKNOWN, SearchColumnType.DATE_CREATED, SearchOrderType.DESC);
             searchUserResultsPanel.reloadData(userId);
-            setPage(Page.USER_SKINS);
+            setPage(Page.LIST_USER_SKINS);
         }
 
         public void showSkinDetail(SkinFileList.Entry entry, Page returnPage) {
@@ -301,6 +295,14 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
 
         public <T extends AWAbstractDialog> void showDialog(T dialog, Consumer<T> complete) {
             present(dialog, complete);
+        }
+
+        public void skinDidChange(int skinId, @Nullable SkinFileList.Entry newValue) {
+            for (AbstractLibraryPanel panel : panels) {
+                if (panel instanceof ISkinListListener) {
+                    ((ISkinListListener) panel).skinDidChange(skinId, newValue);
+                }
+            }
         }
     }
 }

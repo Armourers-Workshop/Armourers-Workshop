@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
@@ -162,10 +163,9 @@ public class SkinFileList extends Button {
             RenderUtils.drawText(matrixStack, font, properties, x + 1, iy, width - 2, 0, false, 9, 0xffeeeeee);
         }
 
-        SkinSlotType slotType = SkinSlotType.of(skin.getType());
-        if (slotType != null) {
-            RenderUtils.bind(AWCore.getItemIcon(slotType.getName()));
-            RenderUtils.resize(matrixStack, x + 1, y + 1, 0, 0, width / 4, height / 4, 16, 16, 16, 16);
+        ResourceLocation texture = AWCore.getItemIcon(skin.getType());
+        if (texture != null) {
+            RenderUtils.resize(matrixStack, x + 1, y + 1, 0, 0, width / 4, height / 4, 16, 16, 16, 16, texture);
         }
 
         int dx = x + width / 2, dy = y + height / 2, dw = width, dh = height;

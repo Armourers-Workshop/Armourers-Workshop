@@ -5,6 +5,7 @@
   "refmap": "armourers_workshop.refmap.json",
   "mixins": [
     "EntityMixin",
+    "ItemStackMixin",
     "ServerPlayNetHandlerMixin"
   ],
   "client": [

@@ -33,7 +33,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SuppressWarnings("NullableProblems")
+@SuppressWarnings({"unused", "NullableProblems"})
 public class MannequinEntity extends ArmorStandEntity {
 
     public static final Rotations DEFAULT_HEAD_POSE = new Rotations(0.0f, 0.0f, 0.0f);
@@ -265,7 +265,7 @@ public class MannequinEntity extends ArmorStandEntity {
         if (boundingBoxForCulling != null) {
             return boundingBoxForCulling;
         }
-        float f = 0.8f * getScale();
+        float f = getScale();
         boundingBoxForCulling = this.getBoundingBox().inflate(f, f, f);
         return boundingBoxForCulling;
     }

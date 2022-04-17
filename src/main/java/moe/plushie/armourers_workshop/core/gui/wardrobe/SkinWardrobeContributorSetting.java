@@ -35,9 +35,9 @@ public class SkinWardrobeContributorSetting extends AWTabPanel {
         super.init(minecraft, width, height);
 
         StringTextComponent title = new StringTextComponent("Magic circle test?");
-        addButton(new AWCheckBox(leftPos + 85, topPos + 128, 9, 9, title, ModConfig.enableMagicWhenContributor, button -> {
+        addButton(new AWCheckBox(leftPos + 85, topPos + 128, 9, 9, title, ModConfig.Client.enableMagicWhenContributor, button -> {
             if (button instanceof AWCheckBox) {
-                ModConfig.enableMagicWhenContributor = ((AWCheckBox) button).isSelected();
+                ModConfig.Client.enableMagicWhenContributor = ((AWCheckBox) button).isSelected();
             }
         }));
     }

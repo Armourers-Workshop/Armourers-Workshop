@@ -7,18 +7,22 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWTextField;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.common.AWCore;
-import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch;
-import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
-import net.minecraft.util.text.ITextComponent;
+import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchColumnType;
+import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchOrderType;
+import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
+import moe.plushie.armourers_workshop.library.gui.SkinLibraryScreen;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import java.util.ArrayList;
 
-public class GlobalLibrarySearchBoxPanel extends GlobalLibraryAbstractPanel {
+@OnlyIn(Dist.CLIENT)
+public class SearchBoxLibraryPanel extends AbstractLibraryPanel {
 
-    private final GlobalTaskSkinSearch.SearchOrderType[] orderTypes = {GlobalTaskSkinSearch.SearchOrderType.DESC, GlobalTaskSkinSearch.SearchOrderType.ASC};
-    private final GlobalTaskSkinSearch.SearchColumnType[] columnTypes = {GlobalTaskSkinSearch.SearchColumnType.DATE_CREATED, GlobalTaskSkinSearch.SearchColumnType.DATE_CREATED, GlobalTaskSkinSearch.SearchColumnType.NAME, GlobalTaskSkinSearch.SearchColumnType.NAME, GlobalTaskSkinSearch.SearchColumnType.DOWNLOADS, GlobalTaskSkinSearch.SearchColumnType.DOWNLOADS, GlobalTaskSkinSearch.SearchColumnType.RATING, GlobalTaskSkinSearch.SearchColumnType.RATING};
+    private final SearchOrderType[] orderTypes = {SearchOrderType.DESC, SearchOrderType.ASC};
+    private final SearchColumnType[] columnTypes = {SearchColumnType.DATE_CREATED, SearchColumnType.DATE_CREATED, SearchColumnType.NAME, SearchColumnType.NAME, SearchColumnType.DOWNLOADS, SearchColumnType.DOWNLOADS, SearchColumnType.RATING, SearchColumnType.RATING};
 
     private AWTextField searchText;
     private AWComboBox sortList;
@@ -27,11 +31,11 @@ public class GlobalLibrarySearchBoxPanel extends GlobalLibraryAbstractPanel {
 
     private String keyword = "";
     private ISkinType skinType = SkinTypes.UNKNOWN;
-    private GlobalTaskSkinSearch.SearchOrderType orderType = GlobalTaskSkinSearch.SearchOrderType.DESC;
-    private GlobalTaskSkinSearch.SearchColumnType columnType = GlobalTaskSkinSearch.SearchColumnType.DATE_CREATED;
+    private SearchOrderType orderType = SearchOrderType.DESC;
+    private SearchColumnType columnType = SearchColumnType.DATE_CREATED;
 
-    public GlobalLibrarySearchBoxPanel() {
-        super("inventory.armourers_workshop.skin-library-global.searchBox", GlobalSkinLibraryScreen.Page::hasSearch);
+    public SearchBoxLibraryPanel() {
+        super("inventory.armourers_workshop.skin-library-global.searchBox", Page::hasSearch);
     }
 
     @Override
@@ -48,7 +52,7 @@ public class GlobalLibrarySearchBoxPanel extends GlobalLibraryAbstractPanel {
         this.addButton(searchButton);
     }
 
-    public void reloadData(String keyword, ISkinType skinType, GlobalTaskSkinSearch.SearchColumnType columnType, GlobalTaskSkinSearch.SearchOrderType orderType) {
+    public void reloadData(String keyword, ISkinType skinType, SearchColumnType columnType, SearchOrderType orderType) {
         this.keyword = keyword;
         this.skinType = skinType;
         this.orderType = orderType;
@@ -80,12 +84,12 @@ public class GlobalLibrarySearchBoxPanel extends GlobalLibraryAbstractPanel {
 
     private AWComboBox addSortList(int x, int y, int width, int height) {
         int selectedIndex = 0;
-        ArrayList<GlobalTaskSkinSearch.SearchColumnType> columnTypes1 = new ArrayList<>();
+        ArrayList<SearchColumnType> columnTypes1 = new ArrayList<>();
         ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
-        for (GlobalTaskSkinSearch.SearchColumnType columnType : columnTypes) {
-            GlobalTaskSkinSearch.SearchOrderType orderType = orderTypes[columnTypes1.size() % 2];
+        for (SearchColumnType columnType : columnTypes) {
+            SearchOrderType orderType = orderTypes[columnTypes1.size() % 2];
             StringTextComponent title = new StringTextComponent("");
-            if (orderType == GlobalTaskSkinSearch.SearchOrderType.DESC) {
+            if (orderType == SearchOrderType.DESC) {
                 title.append("\u2191 "); // up
             } else {
                 title.append("\u2193 "); // down
@@ -113,11 +117,7 @@ public class GlobalLibrarySearchBoxPanel extends GlobalLibraryAbstractPanel {
         ArrayList<ISkinType> skinTypes = new ArrayList<>();
         ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
         for (ISkinType skinType : SkinTypes.values()) {
-            ITextComponent title = TranslateUtils.title("skinType." + skinType.getRegistryName());
-            if (skinType == SkinTypes.UNKNOWN) {
-                title = TranslateUtils.title("inventory.armourers_workshop.all");
-            }
-            AWComboBox.ComboItem item = new AWComboBox.ComboItem(title);
+            AWComboBox.ComboItem item = new SkinLibraryScreen.SkinTypeComboItem(skinType);
             if (skinType == this.skinType) {
                 selectedIndex = items.size();
             }
@@ -133,7 +133,7 @@ public class GlobalLibrarySearchBoxPanel extends GlobalLibraryAbstractPanel {
         return comboBox;
     }
 
-    private int getSortIndex(GlobalTaskSkinSearch.SearchColumnType columnType, GlobalTaskSkinSearch.SearchOrderType orderType) {
+    private int getSortIndex(SearchColumnType columnType, SearchOrderType orderType) {
         for (int i = 0; i < columnTypes.length; ++i) {
             if (columnType == columnTypes[i] && orderType == orderTypes[i % 2]) {
                 return i;

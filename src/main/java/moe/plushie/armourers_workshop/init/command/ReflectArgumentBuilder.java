@@ -7,8 +7,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.datafixers.util.Pair;
+import moe.plushie.armourers_workshop.core.network.NetworkHandler;
+import moe.plushie.armourers_workshop.core.network.packet.ExecuteCommandPacket;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 
 import java.lang.reflect.Field;
@@ -42,20 +45,16 @@ public class ReflectArgumentBuilder<S> extends LiteralArgumentBuilder<S> {
     public static <R> ArgumentBuilder<CommandSource, ?> argument(Pair<Object, Field> pair, ArgumentType<R> argumentType, BiFunction<CommandContext<?>, String, R> argumentParser) {
         return Commands.literal(pair.getSecond().getName())
                 .then(Commands.argument("value", argumentType).executes(context -> {
-                    try {
-                        pair.getSecond().set(pair.getFirst(), argumentParser.apply(context, "value"));
-                    } catch (IllegalAccessException e) {
-                        throw new IllegalStateException(e.toString());
-                    }
+                    R value =  argumentParser.apply(context, "value");
+                    String name = pair.getSecond().getName();
+                    ServerPlayerEntity player = context.getSource().getPlayerOrException();
+                    NetworkHandler.getInstance().sendTo(ExecuteCommandPacket.set(name, value), player);
                     return 0;
                 }))
                 .executes(context -> {
-                    try {
-                        String value = pair.getSecond().get(pair.getFirst()).toString();
-                        context.getSource().sendSuccess(new StringTextComponent(pair.getSecond().getName() + " = " + value), true);
-                    } catch (IllegalAccessException e) {
-                        throw new IllegalStateException(e.toString());
-                    }
+                    String name = pair.getSecond().getName();
+                    ServerPlayerEntity player = context.getSource().getPlayerOrException();
+                    NetworkHandler.getInstance().sendTo(ExecuteCommandPacket.get(name), player);
                     return 0;
                 });
     }
