@@ -119,7 +119,7 @@ public class AWFileList extends Button implements INestedGuiEventHandler {
         }
         Entry entry = list.getEntry(mouseX, mouseY);
         if (entry != null) {
-            return entry.descriptor;
+            return entry.getDescriptor();
         }
         return SkinDescriptor.EMPTY;
     }
@@ -176,9 +176,9 @@ public class AWFileList extends Button implements INestedGuiEventHandler {
                 RenderUtils.blit(matrixStack, x + (width - 12) / 2, y + (height - 12) / 2 - 1, u, 0, 12, 12, RenderUtils.TEX_LIST);
                 return;
             }
-            if (!descriptor.isEmpty()) {
+            if (!getDescriptor().isEmpty()) {
                 IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-                SkinItemRenderer.renderSkin(descriptor, x, y, 100, width, height - 1, 160, 45, 0, matrixStack, buffers);
+                SkinItemRenderer.renderSkin(getDescriptor(), x, y, 100, width, height - 1, 160, 45, 0, matrixStack, buffers);
             }
         }
 
@@ -202,7 +202,7 @@ public class AWFileList extends Button implements INestedGuiEventHandler {
                 textColor = 0xff000000;
                 backgroundColor = 0xffffff88;
             }
-            if (entry.isDirectory() || ModConfig.libraryShowsModelPreviews) {
+            if (entry.isDirectory() || !getDescriptor().isEmpty()) {
                 iconOffset = 16;
             }
             if (backgroundColor != 0) {
@@ -221,6 +221,14 @@ public class AWFileList extends Button implements INestedGuiEventHandler {
         public java.util.List<? extends IGuiEventListener> children() {
             return children;
         }
+
+        public SkinDescriptor getDescriptor() {
+            if (ModConfig.Common.allowLibraryPreviews) {
+                return descriptor;
+            }
+            return SkinDescriptor.EMPTY;
+        }
+
     }
 
     public class EntryList<T extends AbstractOptionList.Entry<T>> extends AbstractOptionList<T> {

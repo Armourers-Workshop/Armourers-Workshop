@@ -11,6 +11,8 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.init.common.AWCore;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.common.ModContext;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.client.Minecraft;
@@ -39,6 +41,16 @@ public class PlayerNetworkHandler {
     private static boolean shouldKeepWardrobe(PlayerEntity entity) {
         if (entity.isSpectator()) {
             return true;
+        }
+        // 0 = use keep inventory rule
+        // 1 = never drop
+        // 2 = always drop
+        int keep = ModConfig.Common.prefersWardrobeDropOnDeath;
+        if (keep == 1) {
+            return true;
+        }
+        if (keep == 2) {
+            return false;
         }
         return entity.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
     }
@@ -70,7 +82,7 @@ public class PlayerNetworkHandler {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onPlayerLogin(ClientPlayerNetworkEvent.LoggedInEvent event) {
-        if (Objects.equals(event.getPlayer(), Minecraft.getInstance().player)) {
+        if (event.getPlayer() != null && event.getPlayer().equals(Minecraft.getInstance().player)) {
             SkinBakery.start();
         }
     }
@@ -78,12 +90,13 @@ public class PlayerNetworkHandler {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onPlayerLogout(ClientPlayerNetworkEvent.LoggedOutEvent event) {
-        if (Objects.equals(event.getPlayer(), Minecraft.getInstance().player)) {
+        if (event.getPlayer() != null && event.getPlayer().equals(Minecraft.getInstance().player)) {
             SkinBakery.stop();
             SkinLoader.getInstance().clear();
             SkinLibraryManager.getClient().getPublicSkinLibrary().reset();
             SkinLibraryManager.getClient().getPrivateSkinLibrary().reset();
             ModContext.reset();
+            ModConfigSpec.reloadSpec(null);
         }
     }
 

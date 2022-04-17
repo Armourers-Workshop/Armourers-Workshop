@@ -114,19 +114,19 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             matrixStack.pushPose();
             apply(entity, model, transformType, bakedPart, partialTicks, matrixStack);
             builder.addPartData(bakedPart, scheme1, light, partialTicks, matrixStack, shouldRenderPart);
-            if (shouldRenderPart && ModConfig.debugSkinPartBounds) {
+            if (shouldRenderPart && ModConfig.Client.debugSkinPartBounds) {
                 builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(index++), matrixStack);
             }
-            if (shouldRenderPart && ModConfig.debugSkinPartOrigin) {
+            if (shouldRenderPart && ModConfig.Client.debugSkinPartOrigin) {
                 builder.addShapeData(AWConstants.ZERO, matrixStack);
             }
             matrixStack.popPose();
         }
 
-        if (ModConfig.debugSkinBounds) {
+        if (ModConfig.Client.debugSkinBounds) {
             builder.addShapeData(bakedSkin.getRenderShape(entity, model, transformType).bounds(), Color.RED, matrixStack);
         }
-        if (ModConfig.debugSkinBounds) {
+        if (ModConfig.Client.debugSkinBounds) {
             builder.addShapeData(AWConstants.ZERO, matrixStack);
         }
     }

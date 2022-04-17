@@ -39,10 +39,10 @@ public class PlacementHighlightHandler {
             return;
         }
         ItemStack itemStack = player.getMainHandItem();
-        if (ModConfig.enableEntityPlacementHighlight && itemStack.getItem() == ModItems.MANNEQUIN) {
+        if (ModConfig.Client.enableEntityPlacementHighlight && itemStack.getItem() == ModItems.MANNEQUIN) {
             renderEntityPlacement(player, event.getTarget(), event.getInfo(), event.getMatrix(), event.getBuffers());
         }
-        if (ModConfig.enableBlockPlacementHighlight && itemStack.getItem() == ModItems.SKIN) {
+        if (ModConfig.Client.enableBlockPlacementHighlight && itemStack.getItem() == ModItems.SKIN) {
             SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
             if (descriptor.getType() == SkinTypes.BLOCK) {
                 renderBlockPlacement(player, event.getTarget(), event.getInfo(), event.getMatrix(), event.getBuffers());

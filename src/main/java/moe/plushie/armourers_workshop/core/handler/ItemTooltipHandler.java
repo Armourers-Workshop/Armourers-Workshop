@@ -47,7 +47,7 @@ public class ItemTooltipHandler {
         if (Strings.isNotBlank(skin.getCustomName().trim())){
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinName", skin.getCustomName().trim()));
         }
-        if (ModConfig.tooltipSkinAuthor && Strings.isNotBlank(skin.getAuthorName())) {
+        if (ModConfig.Client.tooltipSkinAuthor && Strings.isNotBlank(skin.getAuthorName())) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinAuthor", skin.getAuthorName().trim()));
         }
         TextComponent textComponent = TranslateUtils.subtitle("skinType." + skin.getType().getRegistryName());
@@ -75,33 +75,33 @@ public class ItemTooltipHandler {
 
         if (!isItemOwner) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.hasSkin"));
-            if (ModConfig.tooltipSkinName && Strings.isNotBlank(skin.getCustomName())) {
+            if (ModConfig.Client.tooltipSkinName && Strings.isNotBlank(skin.getCustomName())) {
                 tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinName", skin.getCustomName().trim()));
             }
         }
 
-        if (isItemOwner && ModConfig.tooltipFlavour && Strings.isNotBlank(skin.getFlavourText())) {
+        if (isItemOwner && ModConfig.Client.tooltipFlavour && Strings.isNotBlank(skin.getFlavourText())) {
             tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
         }
 
-        if (ModConfig.tooltipSkinAuthor && Strings.isNotBlank(skin.getAuthorName())) {
+        if (ModConfig.Client.tooltipSkinAuthor && Strings.isNotBlank(skin.getAuthorName())) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinAuthor", skin.getAuthorName().trim()));
         }
 
-        if (ModConfig.tooltipSkinType) {
+        if (ModConfig.Client.tooltipSkinType) {
             TextComponent textComponent = TranslateUtils.subtitle("skinType." + skin.getType().getRegistryName());
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", textComponent));
         }
 
-        if (!isItemOwner && ModConfig.tooltipFlavour && Strings.isNotBlank(skin.getFlavourText())) {
+        if (!isItemOwner && ModConfig.Client.tooltipFlavour && Strings.isNotBlank(skin.getFlavourText())) {
             tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
         }
 
-        if (ModConfig.debugTooltip && !Screen.hasShiftDown()) {
+        if (ModConfig.Client.debugTooltip && !Screen.hasShiftDown()) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinHoldShiftForInfo"));
         }
 
-        if (ModConfig.debugTooltip && Screen.hasShiftDown()) {
+        if (ModConfig.Client.debugTooltip && Screen.hasShiftDown()) {
 
             String totals = String.format("%d/%d/%d/%d",
                     counter.getCubeTotal(SkinCubes.SOLID),
@@ -118,7 +118,7 @@ public class ItemTooltipHandler {
                 tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinPaintData", "64x32"));
             }
 
-            if (ModConfig.tooltipProperties && !skin.getProperties().isEmpty()) {
+            if (ModConfig.Client.tooltipProperties && !skin.getProperties().isEmpty()) {
                 tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinProperties"));
                 for (String prop : skin.getProperties().getPropertiesList()) {
                     tooltip.add(TranslateUtils.literal(" " + prop));
@@ -134,7 +134,7 @@ public class ItemTooltipHandler {
 //            }
 //        }
 
-        if (ModConfig.tooltipOpenWardrobe && isItemOwner) {
+        if (ModConfig.Client.tooltipOpenWardrobe && isItemOwner) {
             ITextComponent keyName = KeyBindings.OPEN_WARDROBE_KEY.getTranslatedKeyMessage();
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinOpenWardrobe", keyName));
         }
@@ -179,7 +179,7 @@ public class ItemTooltipHandler {
         if (event.isCanceled()) {
             return;
         }
-        if (!ModConfig.skinPreEnabled) {
+        if (!ModConfig.Client.skinPreEnabled) {
             return;
         }
         ItemStack itemStack = event.getStack();
@@ -190,8 +190,8 @@ public class ItemTooltipHandler {
             return;
         }
         int x, y;
-        int size = ModConfig.skinPreSize;
-        if (ModConfig.skinPreLocFollowMouse) {
+        int size = ModConfig.Client.skinPreSize;
+        if (ModConfig.Client.skinPreLocFollowMouse) {
             x = event.getX() - 28 - size;
             y = event.getY() - 4;
             if (event.getX() < mouseX) {
@@ -199,11 +199,11 @@ public class ItemTooltipHandler {
             }
             y = MathHelper.clamp(y, 0, screenHeight - size);
         } else {
-            x = MathHelper.ceil((screenWidth - size) * ModConfig.skinPreLocHorizontal);
-            y = MathHelper.ceil((screenHeight - size) * ModConfig.skinPreLocVertical);
+            x = MathHelper.ceil((screenWidth - size) * ModConfig.Client.skinPreLocHorizontal);
+            y = MathHelper.ceil((screenHeight - size) * ModConfig.Client.skinPreLocVertical);
         }
 
-        if (ModConfig.skinPreDrawBackground) {
+        if (ModConfig.Client.skinPreDrawBackground) {
             GuiUtils.drawContinuousTexturedBox(matrixStack, RenderUtils.TEX_GUI_PREVIEW, x, y, 0, 0, size, size, 62, 62, 4, 400);
         }
         IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();

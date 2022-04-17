@@ -210,6 +210,8 @@ public class NetworkHandler {
         PACKET_UPDATE_LIBRARY_FILE(UpdateLibraryFilePacket.class, UpdateLibraryFilePacket::new),
         PACKET_UPDATE_LIBRARY_FILES(UpdateLibraryFilesPacket.class, UpdateLibraryFilesPacket::new),
 
+        PACKET_EXECUTE_COMMAND(ExecuteCommandPacket.class, ExecuteCommandPacket::new),
+
         PACKET_OPEN_WARDROBE(OpenWardrobePacket.class, OpenWardrobePacket::new),
         PACKET_UPDATE_WARDROBE(UpdateWardrobePacket.class, UpdateWardrobePacket::new);
 

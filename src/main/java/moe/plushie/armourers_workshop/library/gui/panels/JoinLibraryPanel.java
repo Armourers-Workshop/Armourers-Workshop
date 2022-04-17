@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskBetaJoin;
-import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
@@ -21,7 +21,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 @OnlyIn(Dist.CLIENT)
-public class GlobalLibraryJoinPanel extends GlobalLibraryAbstractPanel {
+public class JoinLibraryPanel extends AbstractLibraryPanel {
 
     private static final String URL_DISCORD = "https://discord.gg/5Z3KKvU";
     private static final String URL_WIKI_FAQ = "https://github.com/RiskyKen/Armourers-Workshop/wiki/FAQ";
@@ -40,8 +40,8 @@ public class GlobalLibraryJoinPanel extends GlobalLibraryAbstractPanel {
     private String joinFailMessage = null;
     private boolean joining = false;
 
-    public GlobalLibraryJoinPanel() {
-        super("inventory.armourers_workshop.skin-library-global.join", GlobalSkinLibraryScreen.Page.JOIN::equals);
+    public JoinLibraryPanel() {
+        super("inventory.armourers_workshop.skin-library-global.join", Page.LIBRARY_JOIN::equals);
         this.remake();
     }
 

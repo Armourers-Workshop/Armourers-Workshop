@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.library.data.global.PlushieUser;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinListUser;
-import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import moe.plushie.armourers_workshop.library.gui.widget.SkinFileList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,12 +15,12 @@ import java.util.function.BiConsumer;
 
 
 @OnlyIn(Dist.CLIENT)
-public class GlobalLibraryUserSkinsPanel extends GlobalLibrarySearchResultsPanel {
+public class UserSkinsLibraryPanel extends SearchResultsLibraryPanel {
 
     private int userId;
 
-    public GlobalLibraryUserSkinsPanel() {
-        super("inventory.armourers_workshop.skin-library-global.searchResults", GlobalSkinLibraryScreen.Page.USER_SKINS::equals);
+    public UserSkinsLibraryPanel() {
+        super("inventory.armourers_workshop.skin-library-global.searchResults", Page.LIST_USER_SKINS::equals);
     }
 
     public void reloadData(int userId) {
@@ -30,12 +30,12 @@ public class GlobalLibraryUserSkinsPanel extends GlobalLibrarySearchResultsPanel
     }
 
     protected void showSkinInfo(SkinFileList.Entry sender) {
-        router.showSkinDetail(sender, GlobalSkinLibraryScreen.Page.USER_SKINS);
+        router.showSkinDetail(sender, Page.LIST_USER_SKINS);
     }
 
     @Override
-    protected void doSearch(int pageIndex, String searchTypes, BiConsumer<JsonObject, Throwable> handler) {
-        GlobalTaskSkinListUser taskSkinListUser = new GlobalTaskSkinListUser(userId, searchTypes, pageIndex, skinPanelResults.getTotalCount());
+    protected void doSearch(int pageIndex, int pageSize, String searchTypes, BiConsumer<JsonObject, Throwable> handler) {
+        GlobalTaskSkinListUser taskSkinListUser = new GlobalTaskSkinListUser(userId, searchTypes, pageIndex, pageSize);
         taskSkinListUser.createTaskAndRun(new FutureCallback<JsonObject>() {
 
             @Override

@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.core.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
@@ -36,7 +37,7 @@ public final class SkinBakery {
     private final ArrayList<IBakeListener> listeners = new ArrayList<>();
 
     private final DataLoader<String, BakedSkin> manager = DataLoader.newBuilder()
-            .threadPool("AW-SKIN-BK", Thread.MIN_PRIORITY, 1)
+            .threadPool("AW-SKIN-BK", Thread.MIN_PRIORITY, ModConfig.Client.modelBakingThreadCount)
             .build(this::loadAndBakeSkin);
 
     public SkinBakery() {
@@ -180,6 +181,10 @@ public final class SkinBakery {
 //                bakeTimesIndex.set(0);
 //            }
 //            bakeTimes.set(index, (int) totalTime);
+//        try {
+//            Thread.sleep(10000); // 10s
+//        } catch (Exception e) {
+//        }
 
         BakedSkin bakedSkin = new BakedSkin(identifier, skin, scheme, usedCounter, colorInfo, bakedParts);
         ModLog.debug("'{}' => accept baked skin", identifier);

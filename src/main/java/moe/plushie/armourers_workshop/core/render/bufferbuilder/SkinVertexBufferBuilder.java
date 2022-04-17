@@ -115,7 +115,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
             SkinRenderObject vertexBuffer = getVertexBuffer();
 
             float polygonOffset = getPolygonOffset();
-            if (ModConfig.enablePolygonOffset && polygonOffset != 0) {
+            if (ModConfig.Client.enablePolygonOffset && polygonOffset != 0) {
                 RenderSystem.enablePolygonOffset();
                 RenderSystem.polygonOffset(-0.01f + polygonOffset, -0.01f);
             }
@@ -138,7 +138,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
                 lightBuffer.getFormat().clearBufferState();
             }
 
-            if (ModConfig.enablePolygonOffset && polygonOffset != 0) {
+            if (ModConfig.Client.enablePolygonOffset && polygonOffset != 0) {
                 RenderSystem.disablePolygonOffset();
                 RenderSystem.polygonOffset(0f, 0f);
             }
@@ -180,13 +180,13 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
         private void setupRenderState() {
             RenderSystem.enableRescaleNormal();
 
-            if (ModConfig.enableWireframeRender) {
+            if (ModConfig.Client.enableWireframeRender) {
                 RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
             }
         }
 
         private void clearRenderState() {
-            if (ModConfig.enableWireframeRender) {
+            if (ModConfig.Client.enableWireframeRender) {
                 RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
             }
 

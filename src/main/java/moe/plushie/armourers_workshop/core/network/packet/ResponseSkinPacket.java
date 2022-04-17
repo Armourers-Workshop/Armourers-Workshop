@@ -5,13 +5,16 @@ import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.PacketBuffer;
 import org.apache.commons.io.IOUtils;
 
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -19,6 +22,7 @@ public class ResponseSkinPacket extends CustomPacket {
 
     private final String identifier;
     private final Mode mode;
+    private final boolean compress;
     private final Exception exp;
     private final Skin skin;
 
@@ -27,11 +31,13 @@ public class ResponseSkinPacket extends CustomPacket {
         this.exp = exp;
         this.skin = skin;
         this.mode = skin != null ? Mode.STREAM : Mode.EXCEPTION;
+        this.compress = ModConfig.Common.serverCompressesSkins;
     }
 
     public ResponseSkinPacket(PacketBuffer buffer) {
         this.identifier = buffer.readUtf();
         this.mode = buffer.readEnum(Mode.class);
+        this.compress = buffer.readBoolean();
         this.exp = readException(buffer);
         this.skin = readSkinStream(buffer);
     }
@@ -40,6 +46,7 @@ public class ResponseSkinPacket extends CustomPacket {
     public void encode(PacketBuffer buffer) {
         buffer.writeUtf(identifier);
         buffer.writeEnum(mode);
+        buffer.writeBoolean(compress);
         writeException(buffer, exp);
         writeSkinStream(buffer, skin);
     }
@@ -53,15 +60,33 @@ public class ResponseSkinPacket extends CustomPacket {
         if (mode != Mode.EXCEPTION) {
             return null;
         }
+        InputStream inputStream = null;
+        ObjectInputStream objectInputStream = null;
         try {
-            ByteBufInputStream bi = new ByteBufInputStream(buffer);
-            GZIPInputStream gi = new GZIPInputStream(bi);
-            ObjectInputStream oi = new ObjectInputStream(gi);
-            Exception exception = (Exception) oi.readObject();
-            oi.close();
+            inputStream = createInputStream(buffer);
+            objectInputStream = new ObjectInputStream(inputStream);
+            return (Exception) objectInputStream.readObject();
+        } catch (Exception exception) {
             return exception;
-        } catch (Exception ignored) {
-            return null;
+        } finally {
+            IOUtils.closeQuietly(objectInputStream, inputStream);
+        }
+    }
+
+    private void writeException(PacketBuffer buffer, Exception exception) {
+        if (mode != Mode.EXCEPTION) {
+            return;
+        }
+        OutputStream outputStream = null;
+        ObjectOutputStream objectOutputStream = null;
+        try {
+            outputStream = createOutputStream(buffer);
+            objectOutputStream = new ObjectOutputStream(outputStream);
+            objectOutputStream.writeObject(exception);
+        } catch (Exception exception1) {
+            exception1.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(objectOutputStream, outputStream);
         }
     }
 
@@ -69,49 +94,47 @@ public class ResponseSkinPacket extends CustomPacket {
         if (mode != Mode.STREAM) {
             return null;
         }
-        ByteBufInputStream byteInputStream = null;
-        GZIPInputStream gzipInputStream = null;
+        InputStream inputStream = null;
         try {
-            buffer.retain();
-            byteInputStream = new ByteBufInputStream(buffer, true);
-            gzipInputStream = new GZIPInputStream(byteInputStream);
-            return SkinIOUtils.loadSkinFromStream(gzipInputStream);
-        } catch (Exception ignored) {
+            inputStream = createInputStream(buffer);
+            return SkinIOUtils.loadSkinFromStream(inputStream);
+        } catch (Exception exception) {
+            exception.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(byteInputStream, gzipInputStream);
+            IOUtils.closeQuietly(inputStream);
         }
         return null;
-    }
-
-
-    private void writeException(PacketBuffer buffer, Exception exception) {
-        if (mode != Mode.EXCEPTION) {
-            return;
-        }
-        try {
-            ByteBufOutputStream bo = new ByteBufOutputStream(buffer);
-            GZIPOutputStream go = new GZIPOutputStream(bo);
-            ObjectOutputStream oo = new ObjectOutputStream(go);
-            oo.writeObject(exception);
-            oo.close();
-        } catch (Exception ignored) {
-        }
     }
 
     private void writeSkinStream(PacketBuffer buffer, Skin skin) {
         if (mode != Mode.STREAM) {
             return;
         }
-        ByteBufOutputStream byteOutputStream = null;
-        GZIPOutputStream gzipOutputStream = null;
+        OutputStream outputStream = null;
         try {
-            byteOutputStream = new ByteBufOutputStream(buffer);
-            gzipOutputStream = new GZIPOutputStream(byteOutputStream);
-            SkinIOUtils.saveSkinToStream(gzipOutputStream, skin);
-        } catch (Exception ignored) {
+            outputStream = createOutputStream(buffer);
+            SkinIOUtils.saveSkinToStream(outputStream, skin);
+        } catch (Exception exception) {
+            exception.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(gzipOutputStream, byteOutputStream);
+            IOUtils.closeQuietly(outputStream);
         }
+    }
+
+    private InputStream createInputStream(PacketBuffer buffer) throws Exception {
+        InputStream inputStream = new ByteBufInputStream(buffer);
+        if (this.compress) {
+            return new GZIPInputStream(inputStream);
+        }
+        return inputStream;
+    }
+
+    private OutputStream createOutputStream(PacketBuffer buffer) throws Exception {
+        ByteBufOutputStream outputStream = new ByteBufOutputStream(buffer);
+        if (this.compress) {
+            return new GZIPOutputStream(outputStream);
+        }
+        return outputStream;
     }
 
     public enum Mode {

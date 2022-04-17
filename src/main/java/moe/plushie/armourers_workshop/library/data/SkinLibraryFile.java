@@ -46,7 +46,7 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
 
     public boolean matches(String keywords, ISkinType skinType) {
         // when skin type not matches, ignore.
-        if (!isDirectory && skinType != SkinTypes.UNKNOWN && skinType != getSkinType()) {
+        if (skinType != SkinTypes.UNKNOWN && skinType != getSkinType()) {
             return false;
         }
         if (keywords != null && !keywords.isEmpty()) {

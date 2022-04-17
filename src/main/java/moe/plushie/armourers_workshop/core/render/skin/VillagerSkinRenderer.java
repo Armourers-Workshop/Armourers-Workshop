@@ -38,6 +38,12 @@ public class VillagerSkinRenderer<T extends LivingEntity, M extends VillagerMode
     }
 
     @Override
+    public void willRenderModel(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+        super.willRenderModel(entity, model, light, partialRenderTick, matrixStack, buffers);
+        copyRot(transformModel.head, model.head);
+    }
+
+    @Override
     protected void applyOverriders(T entity, M model, SkinRenderData renderData) {
         if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
             addOverrider(model.arms);
@@ -65,6 +71,12 @@ public class VillagerSkinRenderer<T extends LivingEntity, M extends VillagerMode
 
     private boolean isVisibleHat(T entity, M model) {
         return model.hat.visible;
+    }
+
+    private void copyRot(ModelRenderer model, ModelRenderer fromModel) {
+        model.xRot = fromModel.xRot;
+        model.yRot = fromModel.yRot;
+        model.zRot = fromModel.zRot;
     }
 
     @Override

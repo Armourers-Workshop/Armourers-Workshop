@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.library.container.GlobalSkinLibraryContainer;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
@@ -21,11 +22,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+@SuppressWarnings({"unused", "NullableProblems"})
 @OnlyIn(Dist.CLIENT)
-public abstract class GlobalLibraryAbstractPanel extends Screen {
+public abstract class AbstractLibraryPanel extends Screen {
 
     public final ArrayList<AWLabel> labels = new ArrayList<>();
     public int leftPos = 0;
@@ -35,12 +36,12 @@ public abstract class GlobalLibraryAbstractPanel extends Screen {
     public boolean visible = false;
     public String baseKey;
 
-    public final Predicate<GlobalSkinLibraryScreen.Page> predicate;
+    public final Predicate<Page> predicate;
 
     protected Button lastHoveredButton;
     protected GlobalSkinLibraryScreen.Router router;
 
-    public GlobalLibraryAbstractPanel(String titleKey, Predicate<GlobalSkinLibraryScreen.Page> predicate) {
+    public AbstractLibraryPanel(String titleKey, Predicate<Page> predicate) {
         super(TranslateUtils.title(titleKey));
         this.baseKey = titleKey;
         this.predicate = predicate;

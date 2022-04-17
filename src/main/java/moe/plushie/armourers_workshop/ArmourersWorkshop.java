@@ -4,10 +4,7 @@ package moe.plushie.armourers_workshop;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.handler.PlayerNetworkHandler;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
-import moe.plushie.armourers_workshop.init.common.AWCore;
-import moe.plushie.armourers_workshop.init.common.ModContext;
-import moe.plushie.armourers_workshop.init.common.ModLog;
-import moe.plushie.armourers_workshop.init.common.ModRegistry;
+import moe.plushie.armourers_workshop.init.common.*;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -19,7 +16,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
@@ -44,6 +43,7 @@ public class ArmourersWorkshop {
         eventBus.addGenericListener(ContainerType.class, registry::registerContainerTypes);
 
         eventBus.addListener(registry::registerEntityAttributes);
+        eventBus.addListener(this::onConfigReloaded);
         eventBus.addListener(this::onCommonSetup);
 
         // Register client-only events
@@ -59,6 +59,9 @@ public class ArmourersWorkshop {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new PlayerNetworkHandler());
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ModConfigSpec.CLIENT.getRight());
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModConfigSpec.COMMON.getRight());
     }
 
 //    @SubscribeEvent
@@ -68,7 +71,10 @@ public class ArmourersWorkshop {
 //            PlayerTextureReader reader = new PlayerTextureReader(player);
 //        }
 //    }
-//
+
+    private void onConfigReloaded(ModConfig.ModConfigEvent event) {
+        ModConfigSpec.reload(event.getConfig().getSpec());
+    }
 
     private void onCommonSetup(FMLLoadCompleteEvent event) {
         libraryManager.start();

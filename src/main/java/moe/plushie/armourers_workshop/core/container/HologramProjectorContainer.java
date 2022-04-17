@@ -78,7 +78,7 @@ public class HologramProjectorContainer extends Container {
             if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
                 return ItemStack.EMPTY;
             }
-            slot.setChanged();
+            slot.set(ItemStack.EMPTY);
             return itemStack.copy();
         }
         if (!moveItemStackTo(itemStack, 36, 37, false)) {

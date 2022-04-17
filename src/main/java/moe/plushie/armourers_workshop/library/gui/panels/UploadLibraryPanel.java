@@ -18,7 +18,7 @@ import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskResult;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinUpload;
-import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +35,7 @@ import java.io.ByteArrayOutputStream;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class GlobalLibraryUploadPanel extends GlobalLibraryAbstractPanel {
+public class UploadLibraryPanel extends AbstractLibraryPanel {
 
     private AWLabel warningLabel;
     private AWTextField textName;
@@ -46,8 +46,8 @@ public class GlobalLibraryUploadPanel extends GlobalLibraryAbstractPanel {
     private String error = null;
     private boolean isUploading = false;
 
-    public GlobalLibraryUploadPanel() {
-        super("inventory.armourers_workshop.skin-library-global.upload", GlobalSkinLibraryScreen.Page.SKIN_UPLOAD::equals);
+    public UploadLibraryPanel() {
+        super("inventory.armourers_workshop.skin-library-global.upload", Page.SKIN_UPLOAD::equals);
     }
 
     @Override

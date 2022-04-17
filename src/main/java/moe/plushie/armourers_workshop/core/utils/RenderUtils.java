@@ -297,7 +297,7 @@ public final class RenderUtils {
     }
 
     public static void drawTargetBox(MatrixStack matrixStack, float width, float height, float depth, IRenderTypeBuffer buffers) {
-        if (ModConfig.debugTargetBounds) {
+        if (ModConfig.Client.debugTargetBounds) {
             drawBoundingBox(matrixStack, -width / 2, -height / 2, -depth / 2, width / 2, height / 2, depth / 2, Color.ORANGE, buffers);
             drawPoint(matrixStack, null, width, height, depth, buffers);
         }

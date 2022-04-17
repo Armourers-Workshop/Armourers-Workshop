@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.library.gui.panels;
 
+import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -8,8 +9,12 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch;
+import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchColumnType;
+import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchOrderType;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import moe.plushie.armourers_workshop.library.gui.widget.SkinFileList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -22,11 +27,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Size2i;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+@SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class GlobalLibraryHomePanel extends GlobalLibraryAbstractPanel {
+public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkinLibraryScreen.ISkinListListener {
 
     //    private final GuiScrollbar scrollbar;
     private final SkinFileList skinPanelRecentlyUploaded = buildFileList(0, 0, 300, 307);
@@ -35,11 +42,12 @@ public class GlobalLibraryHomePanel extends GlobalLibraryAbstractPanel {
     private final SkinFileList skinPanelNeedRated = buildFileList(0, 0, 300, 307);
 
     private int contentHeight = 0;
-    private int lastContentOffset = 0;
     private int scrollAmount = 20;
+    private int lastContentOffset = 0;
+    private int lastRequestSize = 0;
 
-    public GlobalLibraryHomePanel() {
-        super("inventory.armourers_workshop.skin-library-global.home", GlobalSkinLibraryScreen.Page.HOME::equals);
+    public HomeLibraryPanel() {
+        super("inventory.armourers_workshop.skin-library-global.home", Page.HOME::equals);
     }
 
     @Override
@@ -74,10 +82,17 @@ public class GlobalLibraryHomePanel extends GlobalLibraryAbstractPanel {
 
         this.lastContentOffset = 0;
         this.contentHeight = listTop - topPos + 4;
+
+        int pageSize = this.skinPanelRecentlyUploaded.getTotalCount();
+        if (lastRequestSize > 0 && lastRequestSize < pageSize) {
+            this.reloadData();
+        }
     }
 
     public void reloadData() {
-        int requestSize = skinPanelRecentlyUploaded.getTotalCount() + 1;
+        int requestSize = skinPanelRecentlyUploaded.getTotalCount();
+        lastRequestSize = requestSize;
+        ModLog.debug("refresh home skin list, page size: {}", lastRequestSize);
         StringBuilder searchTypes = new StringBuilder();
         for (ISkinType skinType : SkinTypes.values()) {
             ResourceLocation registryName = skinType.getRegistryName();
@@ -90,8 +105,8 @@ public class GlobalLibraryHomePanel extends GlobalLibraryAbstractPanel {
         }
 
         GlobalTaskSkinSearch taskGetRecentlyUploaded = new GlobalTaskSkinSearch("", searchTypes.toString(), 0, requestSize);
-        taskGetRecentlyUploaded.setSearchOrderColumn(GlobalTaskSkinSearch.SearchColumnType.DATE_CREATED);
-        taskGetRecentlyUploaded.setSearchOrder(GlobalTaskSkinSearch.SearchOrderType.DESC);
+        taskGetRecentlyUploaded.setSearchOrderColumn(SearchColumnType.DATE_CREATED);
+        taskGetRecentlyUploaded.setSearchOrder(SearchOrderType.DESC);
         taskGetRecentlyUploaded.createTaskAndRun(new FutureCallback<JsonObject>() {
             @Override
             public void onSuccess(JsonObject result) {
@@ -110,8 +125,8 @@ public class GlobalLibraryHomePanel extends GlobalLibraryAbstractPanel {
         });
 
         GlobalTaskSkinSearch taskGetMostDownloaded = new GlobalTaskSkinSearch("", searchTypes.toString(), 0, requestSize);
-        taskGetMostDownloaded.setSearchOrderColumn(GlobalTaskSkinSearch.SearchColumnType.DOWNLOADS);
-        taskGetMostDownloaded.setSearchOrder(GlobalTaskSkinSearch.SearchOrderType.DESC);
+        taskGetMostDownloaded.setSearchOrderColumn(SearchColumnType.DOWNLOADS);
+        taskGetMostDownloaded.setSearchOrder(SearchOrderType.DESC);
         taskGetMostDownloaded.createTaskAndRun(new FutureCallback<JsonObject>() {
             @Override
             public void onSuccess(JsonObject result) {
@@ -130,8 +145,8 @@ public class GlobalLibraryHomePanel extends GlobalLibraryAbstractPanel {
         });
 
         GlobalTaskSkinSearch taskGetTopRated = new GlobalTaskSkinSearch("", searchTypes.toString(), 0, requestSize);
-        taskGetTopRated.setSearchOrderColumn(GlobalTaskSkinSearch.SearchColumnType.RATING);
-        taskGetTopRated.setSearchOrder(GlobalTaskSkinSearch.SearchOrderType.DESC);
+        taskGetTopRated.setSearchOrderColumn(SearchColumnType.RATING);
+        taskGetTopRated.setSearchOrder(SearchOrderType.DESC);
         taskGetTopRated.createTaskAndRun(new FutureCallback<JsonObject>() {
             @Override
             public void onSuccess(JsonObject result) {
@@ -150,8 +165,8 @@ public class GlobalLibraryHomePanel extends GlobalLibraryAbstractPanel {
         });
 
         GlobalTaskSkinSearch taskNeedRated = new GlobalTaskSkinSearch("", searchTypes.toString(), 0, requestSize);
-        taskNeedRated.setSearchOrderColumn(GlobalTaskSkinSearch.SearchColumnType.RATING_COUNT);
-        taskNeedRated.setSearchOrder(GlobalTaskSkinSearch.SearchOrderType.ASC);
+        taskNeedRated.setSearchOrderColumn(SearchColumnType.RATING_COUNT);
+        taskNeedRated.setSearchOrder(SearchOrderType.ASC);
         taskNeedRated.createTaskAndRun(new FutureCallback<JsonObject>() {
             @Override
             public void onSuccess(JsonObject result) {
@@ -168,10 +183,6 @@ public class GlobalLibraryHomePanel extends GlobalLibraryAbstractPanel {
                 // NO-OP
             }
         });
-    }
-
-    private AWLabel addTitle(SkinFileList list, String titleKey) {
-        return addLabel(list.x + 1, list.y - 11, list.getWidth(), 16, getDisplayText(titleKey));
     }
 
     @Override
@@ -194,6 +205,23 @@ public class GlobalLibraryHomePanel extends GlobalLibraryAbstractPanel {
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         // all content will render on the background layer
+    }
+
+    @Override
+    public void skinDidChange(int skinId, @Nullable SkinFileList.Entry newValue) {
+        // only update for remove
+        if (newValue != null) {
+            return;
+        }
+        for (IGuiEventListener listener : children) {
+            if (listener instanceof SkinFileList) {
+                if (indexOf((SkinFileList) listener, skinId) != -1) {
+                    // removed skin in here
+                    reloadData();
+                    return;
+                }
+            }
+        }
     }
 
     public int getMaxScroll() {
@@ -222,11 +250,15 @@ public class GlobalLibraryHomePanel extends GlobalLibraryAbstractPanel {
     }
 
     private void showAll(Button sender) {
-        router.showSkinList("", SkinTypes.UNKNOWN, GlobalTaskSkinSearch.SearchColumnType.DATE_CREATED, GlobalTaskSkinSearch.SearchOrderType.DESC);
+        router.showSkinList("", SkinTypes.UNKNOWN, SearchColumnType.DATE_CREATED, SearchOrderType.DESC);
     }
 
     private void showSkinInfo(SkinFileList.Entry sender) {
-        router.showSkinDetail(sender, GlobalSkinLibraryScreen.Page.HOME);
+        router.showSkinDetail(sender, Page.HOME);
+    }
+
+    private AWLabel addTitle(SkinFileList list, String titleKey) {
+        return addLabel(list.x + 1, list.y - 11, list.getWidth(), 16, getDisplayText(titleKey));
     }
 
     private ArrayList<SkinFileList.Entry> buildEntries(JsonObject result) {
@@ -241,12 +273,16 @@ public class GlobalLibraryHomePanel extends GlobalLibraryAbstractPanel {
         return entries;
     }
 
-    public SkinFileList buildFileList(int x, int y, int width, int height) {
+    private SkinFileList buildFileList(int x, int y, int width, int height) {
         SkinFileList fileList = new SkinFileList(x, y, width, height);
         fileList.setItemSize(new Size2i(50, 50));
         fileList.setBackgroundColor(0);
         fileList.setShowsName(false);
         fileList.setItemSelector(this::showSkinInfo);
         return fileList;
+    }
+
+    private int indexOf(SkinFileList list, int skinId) {
+        return Iterables.indexOf(list.getEntries(), e -> e.id == skinId);
     }
 }

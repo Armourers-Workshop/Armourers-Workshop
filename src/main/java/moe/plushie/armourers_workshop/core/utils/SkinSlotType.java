@@ -14,11 +14,11 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public enum SkinSlotType {
-    HEAD("head", 10, SkinTypes.ARMOR_HEAD),
-    CHEST("chest", 10, SkinTypes.ARMOR_CHEST),
-    LEGS("legs", 10, SkinTypes.ARMOR_LEGS),
-    FEET("feet", 10, SkinTypes.ARMOR_FEET),
-    WINGS("wings", 10, SkinTypes.ARMOR_WINGS),
+    HEAD("head", getMaxSlotSize(), SkinTypes.ARMOR_HEAD),
+    CHEST("chest", getMaxSlotSize(), SkinTypes.ARMOR_CHEST),
+    LEGS("legs", getMaxSlotSize(), SkinTypes.ARMOR_LEGS),
+    FEET("feet", getMaxSlotSize(), SkinTypes.ARMOR_FEET),
+    WINGS("wings", getMaxSlotSize(), SkinTypes.ARMOR_WINGS),
 
     SWORD("sword", 1, SkinTypes.ITEM_SWORD),
     SHIELD("shield", 1, SkinTypes.ITEM_SHIELD),
@@ -70,6 +70,10 @@ public enum SkinSlotType {
             return of(descriptor.getType());
         }
         return null;
+    }
+
+    public static int getMaxSlotSize() {
+        return 10;
     }
 
     public static int getTotalSize() {

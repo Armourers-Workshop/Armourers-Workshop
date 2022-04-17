@@ -65,7 +65,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
                 entity.animationSpeedOld = 0.25F;
             }
         }
-        if (ModConfig.enableModelOverridden) {
+        if (ModConfig.Client.enableModelOverridden) {
             applyOverriders(entity, model, renderData);
         }
     }

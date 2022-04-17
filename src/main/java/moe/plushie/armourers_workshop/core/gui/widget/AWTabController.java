@@ -91,6 +91,15 @@ public class AWTabController<Target> extends Screen {
         this.listeners.forEach(listener -> listener.accept(selectedTab));
     }
 
+    public Tab getFirstVisibleTab() {
+        for (Tab tab : tabs) {
+            if (tab.visible) {
+                return tab;
+            }
+        }
+        return null;
+    }
+
     public Screen getSelectedScreen() {
         if (selectedTab != null) {
             return selectedTab.screen;

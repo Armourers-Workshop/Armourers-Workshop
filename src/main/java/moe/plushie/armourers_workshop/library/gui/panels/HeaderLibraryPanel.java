@@ -8,16 +8,18 @@ import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.library.data.global.permission.PermissionSystem;
-import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 
-public class GlobalLibraryHeaderPanel extends GlobalLibraryAbstractPanel {
+@OnlyIn(Dist.CLIENT)
+public class HeaderLibraryPanel extends AbstractLibraryPanel {
 
     private final ArrayList<Button> rightButtons = new ArrayList<>();
     private PlayerTextureDescriptor playerTexture;
@@ -29,7 +31,7 @@ public class GlobalLibraryHeaderPanel extends GlobalLibraryAbstractPanel {
     private AWImageButton iconButtonInfo;
     private AWImageButton iconButtonModeration;
 
-    public GlobalLibraryHeaderPanel() {
+    public HeaderLibraryPanel() {
         super("inventory.armourers_workshop.skin-library-global.header", p -> true);
     }
 
@@ -38,14 +40,14 @@ public class GlobalLibraryHeaderPanel extends GlobalLibraryAbstractPanel {
         this.rightButtons.clear();
         super.init();
 
-        this.iconButtonHome = addRightButton(0, 0, 18, 18, "home", redirect(GlobalSkinLibraryScreen.Page.HOME));
-        this.iconButtonMyFiles = addRightButton(0, 34, 18, 18, "myFiles", redirect(GlobalSkinLibraryScreen.Page.USER_SKINS));
-        this.iconButtonUploadSkin = addRightButton(0, 51, 18, 18, "uploadSkin", "uploadSkinBan", redirect(GlobalSkinLibraryScreen.Page.SKIN_UPLOAD));
+        this.iconButtonHome = addRightButton(0, 0, "home", redirect(Page.HOME));
+        this.iconButtonMyFiles = addRightButton(0, 34, "myFiles", redirect(Page.LIST_USER_SKINS));
+        this.iconButtonUploadSkin = addRightButton(0, 51, "uploadSkin", "uploadSkinBan", redirect(Page.SKIN_UPLOAD));
 
-        this.iconButtonJoin = addRightButton(0, 68, 18, 18, "join", redirect(GlobalSkinLibraryScreen.Page.JOIN));
-        this.iconButtonInfo = addRightButton(0, 17, 18, 18, "info", redirect(GlobalSkinLibraryScreen.Page.INFO));
+        this.iconButtonJoin = addRightButton(0, 68, "join", redirect(Page.LIBRARY_JOIN));
+        this.iconButtonInfo = addRightButton(0, 17, "info", redirect(Page.LIBRARY_INFO));
 
-        this.iconButtonModeration = addRightButton(0, 119, 18, 18, "moderation", redirect(GlobalSkinLibraryScreen.Page.HOME));
+        this.iconButtonModeration = addRightButton(0, 119, "moderation", redirect(Page.LIBRARY_MODERATION));
 
         this.betaCheckUpdate();
     }
@@ -81,8 +83,6 @@ public class GlobalLibraryHeaderPanel extends GlobalLibraryAbstractPanel {
             }
         }
 
-        rightButtons.forEach(b -> b.visible = true); // test
-
         int x2 = leftPos + width - 4;
         for (Button button : rightButtons) {
             if (!button.visible) {
@@ -94,13 +94,13 @@ public class GlobalLibraryHeaderPanel extends GlobalLibraryAbstractPanel {
         }
     }
 
-    private Button.IPressable redirect(GlobalSkinLibraryScreen.Page page) {
+    private Button.IPressable redirect(Page page) {
         return button -> {
             switch (page) {
                 case HOME:
                     router.showNewHome();
                     break;
-                case USER_SKINS:
+                case LIST_USER_SKINS:
                     if (PlushieAuth.PLUSHIE_SESSION.hasServerId()) {
                         router.showSkinList(PlushieAuth.PLUSHIE_SESSION.getServerId());
                     }
@@ -152,13 +152,13 @@ public class GlobalLibraryHeaderPanel extends GlobalLibraryAbstractPanel {
         font.draw(matrixStack, profile, leftPos + 24, topPos + (height - font.lineHeight) / 2f, colour);
     }
 
-    private AWImageButton addRightButton(int u, int v, int width, int height, String key, Button.IPressable handler) {
-        return addRightButton(u, v, width, height, key, null, handler);
+    private AWImageButton addRightButton(int u, int v, String key, Button.IPressable handler) {
+        return addRightButton(u, v, key, null, handler);
     }
 
-    private AWImageButton addRightButton(int u, int v, int width, int height, String key, String key2, Button.IPressable handler) {
+    private AWImageButton addRightButton(int u, int v, String key, String key2, Button.IPressable handler) {
         ITextComponent tooltip = getDisplayText(key);
-        AWImageButton button = new AWImageExtendedButton(0, 0, width, height, u, v, RenderUtils.TEX_GLOBAL_SKIN_LIBRARY, handler, this::addHoveredButton, tooltip);
+        AWImageButton button = new AWImageExtendedButton(0, 0, 18, 18, u, v, RenderUtils.TEX_GLOBAL_SKIN_LIBRARY, handler, this::addHoveredButton, tooltip);
         if (key2 != null) {
             button.setDisabledMessage(getDisplayText(key2));
         }

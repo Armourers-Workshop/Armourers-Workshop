@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.core.data;
 
-import javax.annotation.Nullable;
-
 public enum DataDomain {
     LOCAL("fs"), DEDICATED_SERVER("ws"), DATABASE("db"), DATABASE_LINK("ln"), GLOBAL_SERVER("ks");
 
@@ -37,7 +35,6 @@ public enum DataDomain {
         return path.substring(index + 1);
     }
 
-
     public static boolean isLocal(String path) {
         return DataDomain.LOCAL.matches(path);
     }
@@ -49,7 +46,6 @@ public enum DataDomain {
     public static boolean isDatabase(String path) {
         return DataDomain.DATABASE.matches(path) || DataDomain.DATABASE_LINK.matches(path);
     }
-
 
     public boolean matches(String s) {
         return s.startsWith(namespace + ":");

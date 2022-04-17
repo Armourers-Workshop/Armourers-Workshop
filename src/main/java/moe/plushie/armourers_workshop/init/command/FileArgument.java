@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -26,13 +27,14 @@ import java.util.concurrent.CompletableFuture;
 // /path/name.armour
 public class FileArgument implements ArgumentType<String> {
 
-    private static final Collection<String> EXAMPLES = Arrays.asList("/", "/name.armour");
+    private static final Collection<String> EXAMPLES = Arrays.asList("/", "/file.armour", "\"<scheme>:<identifier>\"");
 
     public static final SimpleCommandExceptionType ERROR_START = new SimpleCommandExceptionType(new StringTextComponent("File must start with '/'"));
     public static final SimpleCommandExceptionType ERROR_NOT_FOUND = new SimpleCommandExceptionType(new StringTextComponent("Not found any file"));
 
     private final File rootFile;
     private final ArrayList<String> fileList;
+    private final StringArgumentType stringType = StringArgumentType.string();
 
     private String filteredName;
     private ArrayList<String> filteredFileList;
@@ -59,6 +61,9 @@ public class FileArgument implements ArgumentType<String> {
     @Override
     public String parse(final StringReader reader) throws CommandSyntaxException {
         String inputPath = reader.getRemaining();
+        if (inputPath.startsWith("\"")) {
+            return stringType.parse(reader);
+        }
         if (inputPath.startsWith("/")) { // file
             ArrayList<String> fileList = getFileList(inputPath);
             if (fileList.isEmpty()) {
@@ -69,9 +74,8 @@ public class FileArgument implements ArgumentType<String> {
             }
             reader.setCursor(reader.getCursor() + inputPath.length());
             return inputPath;
-        } else {
-            throw ERROR_START.createWithContext(reader);
         }
+        throw ERROR_START.createWithContext(reader);
     }
 
     @Override
@@ -82,10 +86,8 @@ public class FileArgument implements ArgumentType<String> {
             if (!fileList.isEmpty()) {
                 return ISuggestionProvider.suggest(fileList, builder);
             }
-        } else {
-            return ISuggestionProvider.suggest(Collections.singletonList("/"), builder);
         }
-        return Suggestions.empty();
+        return ISuggestionProvider.suggest(Arrays.asList("/", "\""), builder);
     }
 
     @Override

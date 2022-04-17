@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.skin.*;
 import moe.plushie.armourers_workshop.core.capability.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
+import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
@@ -17,6 +18,7 @@ import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
@@ -259,8 +261,16 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         }
     }
 
-    public Iterable<Entry> getItemSkins(ItemStack itemStack) {
-        SkinDescriptor target = SkinDescriptor.of(itemStack);
+    private SkinDescriptor getEmbeddedSkin(ItemStack itemStack, boolean replaceSkinItem) {
+        // for skin item, we don't consider it an embedded skin.
+        if (!replaceSkinItem && itemStack.getItem() == ModItems.SKIN) {
+            return SkinDescriptor.EMPTY;
+        }
+        return SkinDescriptor.of(itemStack);
+    }
+
+    public Iterable<Entry> getItemSkins(ItemStack itemStack, boolean replaceSkinItem) {
+        SkinDescriptor target = getEmbeddedSkin(itemStack, replaceSkinItem);
         if (target.isEmpty()) {
             // the item stack is not embedded skin, using matching pattern,
             // only need to find the first matching skin by item.

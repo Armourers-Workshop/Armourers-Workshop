@@ -1,21 +1,25 @@
 package moe.plushie.armourers_workshop.library.gui.panels;
 
+import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageExtendedButton;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.core.utils.ResultHandler;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch;
+import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchColumnType;
+import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchOrderType;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import moe.plushie.armourers_workshop.library.gui.widget.SkinFileList;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -23,16 +27,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Size2i;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Objects;
+import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @OnlyIn(Dist.CLIENT)
-public class GlobalLibrarySearchResultsPanel extends GlobalLibraryAbstractPanel {
+public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements GlobalSkinLibraryScreen.ISkinListListener {
 
     protected SkinFileList skinPanelResults;
 
@@ -47,6 +51,7 @@ public class GlobalLibrarySearchResultsPanel extends GlobalLibraryAbstractPanel 
     protected final HashMap<Integer, ArrayList<SkinFileList.Entry>> downloadedPageList = new HashMap<>();
 
     protected int itemSize = 48;
+    protected int lastRequestSize = 0;
 
     protected int currentPage = 0;
     protected int totalPages = -1;
@@ -54,14 +59,14 @@ public class GlobalLibrarySearchResultsPanel extends GlobalLibraryAbstractPanel 
 
     private String keyword = "";
     private ISkinType skinType = SkinTypes.UNKNOWN;
-    private GlobalTaskSkinSearch.SearchColumnType columnType = GlobalTaskSkinSearch.SearchColumnType.DATE_CREATED;
-    private GlobalTaskSkinSearch.SearchOrderType orderType = GlobalTaskSkinSearch.SearchOrderType.DESC;
+    private SearchColumnType columnType = SearchColumnType.DATE_CREATED;
+    private SearchOrderType orderType = SearchOrderType.DESC;
 
-    public GlobalLibrarySearchResultsPanel() {
-        this("inventory.armourers_workshop.skin-library-global.searchResults", GlobalSkinLibraryScreen.Page.RESULTS::equals);
+    public SearchResultsLibraryPanel() {
+        this("inventory.armourers_workshop.skin-library-global.searchResults", Page.LIST_SEARCH::equals);
     }
 
-    public GlobalLibrarySearchResultsPanel(String titleKey, Predicate<GlobalSkinLibraryScreen.Page> predicate) {
+    public SearchResultsLibraryPanel(String titleKey, Predicate<Page> predicate) {
         super(titleKey, predicate);
     }
 
@@ -81,15 +86,29 @@ public class GlobalLibrarySearchResultsPanel extends GlobalLibraryAbstractPanel 
 
         this.iconButtonPrevious = addCommonButton(leftPos + 4, topPos + height - 20, 208, 80, 16, 16, "button.previous", buildPageUpdater(-1));
         this.iconButtonNext = addCommonButton(leftPos + width - 20, topPos + height - 20, 208, 96, 16, 16, "button.next", buildPageUpdater(1));
+
+        int pageSize = skinPanelResults.getTotalCount();
+        if (this.lastRequestSize > 0 && this.lastRequestSize != pageSize) {
+            this.resize();
+        } else {
+            this.onPageDidChange();
+        }
     }
 
-    public void reloadData(String keyword, ISkinType skinType, GlobalTaskSkinSearch.SearchColumnType columnType, GlobalTaskSkinSearch.SearchOrderType orderType) {
+    public void reloadData(String keyword, ISkinType skinType, SearchColumnType columnType, SearchOrderType orderType) {
         this.clearResults();
         this.keyword = keyword;
         this.skinType = skinType;
         this.columnType = columnType;
         this.orderType = orderType;
         this.fetchPage(0);
+    }
+
+    @Override
+    protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {
+        RenderUtils.enableScissor(titleLabelX, titleLabelY, width - 64, 16);
+        super.renderLabels(matrixStack, mouseX, mouseY);
+        RenderUtils.disableScissor();
     }
 
     @Override
@@ -103,8 +122,29 @@ public class GlobalLibrarySearchResultsPanel extends GlobalLibraryAbstractPanel 
         // all content will render on the background layer
     }
 
+    @Override
+    public void skinDidChange(int skinId, @Nullable SkinFileList.Entry newValue) {
+        // only update for remove
+        if (newValue != null) {
+            return;
+        }
+        Pair<Integer, Integer> page = getPageBySkin(skinId);
+        if (page != null) {
+            // removed skin in here
+            for (int key : downloadedPageList.keySet()) {
+                if (key >= page.getFirst()) {
+                    downloadedPageList.remove(key);
+                }
+            }
+            if (currentPage >= page.getFirst()) {
+                fetchPage(currentPage);
+                onPageDidChange();
+            }
+        }
+    }
+
     protected void showSkinInfo(SkinFileList.Entry sender) {
-        router.showSkinDetail(sender, GlobalSkinLibraryScreen.Page.RESULTS);
+        router.showSkinDetail(sender, Page.LIST_SEARCH);
     }
 
     @Override
@@ -144,21 +184,25 @@ public class GlobalLibrarySearchResultsPanel extends GlobalLibraryAbstractPanel 
             currentPage = MathHelper.clamp(currentPage + step, 0, totalPages - 1);
             fetchPage(currentPage);
             onPageDidChange();
+            // auto request skin data for the previous/next page
+            int pageIndex = currentPage + step;
+            if (pageIndex > 0 && pageIndex < totalPages) {
+                RenderSystem.recordRenderCall(() -> fetchPage(pageIndex));
+            }
         };
     }
 
     private Button.IPressable buildItemSizeUpdater(int size) {
         return button -> {
-            clearResults();
             setItemSize(size);
-            fetchPage(currentPage);
+            resize();
         };
     }
-//
-//    protected void resize() {
-//        refresh();
-//    }
-//
+
+    protected void resize() {
+        clearResults();
+        fetchPage(currentPage);
+    }
 
     public void clearResults() {
         downloadingPages.clear();
@@ -167,12 +211,14 @@ public class GlobalLibrarySearchResultsPanel extends GlobalLibraryAbstractPanel 
         totalPages = -1;
         totalResults = 0;
         skinPanelResults.setEntries(new ArrayList<>());
+        lastRequestSize = 0;
     }
 
     protected void fetchPage(int pageIndex) {
         if (downloadingPages.contains(pageIndex) || downloadedPageList.containsKey(pageIndex)) {
             return; // downloading or downloaded, ignore
         }
+        lastRequestSize = skinPanelResults.getTotalCount();
         downloadingPages.add(pageIndex);
         String searchTypes = "";
         if (skinType != null && skinType != SkinTypes.UNKNOWN) {
@@ -190,7 +236,8 @@ public class GlobalLibrarySearchResultsPanel extends GlobalLibraryAbstractPanel 
             }
             searchTypes = searchTypesBuilder.toString();
         }
-        doSearch(pageIndex, searchTypes, (result, exception) -> {
+        ModLog.debug("request skin list {} of {}, page size: {}", pageIndex, totalPages, lastRequestSize);
+        doSearch(pageIndex, lastRequestSize, searchTypes, (result, exception) -> {
             if (exception != null) {
                 exception.printStackTrace();
                 downloadingPages.remove(pageIndex);
@@ -201,8 +248,8 @@ public class GlobalLibrarySearchResultsPanel extends GlobalLibraryAbstractPanel 
         });
     }
 
-    protected void doSearch(int pageIndex, String searchTypes, BiConsumer<JsonObject, Throwable> handler) {
-        GlobalTaskSkinSearch taskSkinSearch = new GlobalTaskSkinSearch(keyword, searchTypes, pageIndex, skinPanelResults.getTotalCount());
+    protected void doSearch(int pageIndex, int pageSize, String searchTypes, BiConsumer<JsonObject, Throwable> handler) {
+        GlobalTaskSkinSearch taskSkinSearch = new GlobalTaskSkinSearch(keyword, searchTypes, pageIndex, pageSize);
         taskSkinSearch.setSearchOrderColumn(columnType);
         taskSkinSearch.setSearchOrder(orderType);
         taskSkinSearch.createTaskAndRun(new FutureCallback<JsonObject>() {
@@ -234,20 +281,30 @@ public class GlobalLibrarySearchResultsPanel extends GlobalLibraryAbstractPanel 
         if (result.has("totalResults")) {
             totalResults = result.get("totalResults").getAsInt();
         }
-//        int pageIndex = 0;
-//        if (result.has("currentPageIndex")) {
-//            pageIndex = result.get("currentPageIndex").getAsInt();
-//            if (pageIndex == 0 & totalPages > 1) {
-//                fetchPage(1);
-//            }
-//        }
         downloadedPageList.put(pageIndex, entries);
-        RenderSystem.recordRenderCall(this::onPageDidChange);
+        RenderSystem.recordRenderCall(() -> {
+            ModLog.debug("receive skin list {} of {}", pageIndex, totalPages);
+            this.onPageDidChange();
+        });
+        // auto request skin data for the seconds page
+        if (pageIndex == 0 && totalPages > 1) {
+            RenderSystem.recordRenderCall(() -> fetchPage(1));
+        }
     }
 
     private void onPageDidChange() {
         ArrayList<SkinFileList.Entry> entries = downloadedPageList.getOrDefault(currentPage, new ArrayList<>());
         skinPanelResults.setEntries(entries);
         skinPanelResults.reloadData();
+    }
+
+    private Pair<Integer, Integer> getPageBySkin(int skinId) {
+        for (Map.Entry<Integer, ArrayList<SkinFileList.Entry>> entry : downloadedPageList.entrySet()) {
+            int index = Iterables.indexOf(entry.getValue(), e -> e.id == skinId);
+            if (index != -1) {
+                return Pair.of(entry.getKey(), index);
+            }
+        }
+        return null;
     }
 }

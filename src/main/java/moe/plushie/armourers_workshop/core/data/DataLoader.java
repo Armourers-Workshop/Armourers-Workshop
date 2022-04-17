@@ -131,5 +131,8 @@ public class DataLoader<K, V> {
     public void clear() {
         caches.clear();
         loading.clear();
+        if (executor != null) {
+            executor.shutdownNow();
+        }
     }
 }

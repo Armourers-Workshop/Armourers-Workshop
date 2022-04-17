@@ -30,7 +30,7 @@ public class SeatEntity extends LivingEntity {
         this.yRot = 0.0f;
         this.yHeadRot = this.yRot;
         this.maxUpStep = 0.0f;
-        this.holdingTick = ModConfig.prefersSeatHoldingTick;
+        this.holdingTick = ModConfig.Client.prefersSeatHoldingTick;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class SeatEntity extends LivingEntity {
     @Override
     protected void removePassenger(Entity entity) {
         super.removePassenger(entity);
-        this.holdingTick = ModConfig.prefersSeatHoldingTick;
+        this.holdingTick = ModConfig.Client.prefersSeatHoldingTick;
     }
 
     public boolean isWorking() {

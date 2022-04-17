@@ -74,7 +74,7 @@ public class ModContributors {
             return null;
         }
         if (entity instanceof ClientPlayerEntity) {
-            if (ModConfig.enableMagicWhenContributor) {
+            if (ModConfig.Client.enableMagicWhenContributor) {
                 return getCurrentContributor();
             }
         }

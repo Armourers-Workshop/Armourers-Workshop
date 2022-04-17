@@ -1,11 +1,13 @@
 package moe.plushie.armourers_workshop.library.gui.panels;
 
 import moe.plushie.armourers_workshop.library.data.global.PlushieUser;
-import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
 
-public class GlobalLibraryProfilePanel extends GlobalLibraryAbstractPanel {
+@OnlyIn(Dist.CLIENT)
+public class ProfileLibraryPanel extends AbstractLibraryPanel {
 
 //    private final GuiScrollbar scrollbar;
 
@@ -13,7 +15,7 @@ public class GlobalLibraryProfilePanel extends GlobalLibraryAbstractPanel {
     private Rectangle recBio;
     private Rectangle recStats;
 
-    public GlobalLibraryProfilePanel() {
+    public ProfileLibraryPanel() {
         super("inventory.armourers_workshop.skin-library-global.panel.profile", p -> false);
     }
 

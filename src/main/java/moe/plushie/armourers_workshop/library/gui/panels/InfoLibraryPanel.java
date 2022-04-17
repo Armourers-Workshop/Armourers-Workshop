@@ -5,7 +5,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskInfo;
-import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class GlobalLibraryInfoPanel extends GlobalLibraryAbstractPanel {
+public class InfoLibraryPanel extends AbstractLibraryPanel {
 
     private static final String URL_DISCORD = "https://discord.gg/5Z3KKvU";
     private static final String URL_GITHUB = "https://github.com/RiskyKen/Armourers-Workshop";
@@ -32,8 +32,8 @@ public class GlobalLibraryInfoPanel extends GlobalLibraryAbstractPanel {
     private String failMessage = null;
     private AWLabel label;
 
-    public GlobalLibraryInfoPanel() {
-        super("inventory.armourers_workshop.skin-library-global.panel.info", GlobalSkinLibraryScreen.Page.INFO::equals);
+    public InfoLibraryPanel() {
+        super("inventory.armourers_workshop.skin-library-global.panel.info", Page.LIBRARY_INFO::equals);
     }
 
     @Override

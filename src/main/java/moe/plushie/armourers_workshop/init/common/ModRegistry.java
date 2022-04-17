@@ -53,10 +53,13 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 public class ModRegistry {
 
@@ -127,6 +130,7 @@ public class ModRegistry {
         ClientEventHandler.init(MinecraftForge.EVENT_BUS);
     }
 
+
     @OnlyIn(Dist.CLIENT)
     public void onClientSetup(FMLClientSetupEvent event) {
         ScreenManager.register(ModContainerTypes.WARDROBE, SkinWardrobeScreen::new);
@@ -164,7 +168,6 @@ public class ModRegistry {
         registerArgumentTypes();
 
         EntityProfiles.init();
-        ArmourersConfig.init();
         SkinningRecipes.init();
         NetworkHandler.init(AWCore.resource("aw2"));
 

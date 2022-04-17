@@ -129,6 +129,7 @@ public class AWComboBox extends Button {
         }
         int textWidth = font.width(text);
         font.draw(matrixStack, text, handX + (handWidth - textWidth) / 2.0f, textY, 0xffffff);
+        RenderSystem.enableAlphaTest();
 
         int itemY = (handHeight - 14) / 2;
         ComboItem item = getSelectedItem();
@@ -218,10 +219,10 @@ public class AWComboBox extends Button {
 
     public static class ComboItem extends AbstractOptionList.Entry<ComboItem> {
 
-        final FontRenderer font;
-        final ITextComponent title;
+        protected final FontRenderer font;
+        protected final ITextComponent title;
 
-        boolean isEnabled = true;
+        protected boolean isEnabled = true;
 
         public ComboItem(ITextComponent title) {
             this.title = title;
@@ -236,20 +237,33 @@ public class AWComboBox extends Button {
             return isEnabled;
         }
 
-        public void render(MatrixStack matrixStack, int x, int y, int width, int height, int mouseX, int mouseY, float partialTicks, boolean isTopRender) {
+        public void renderLabels(MatrixStack matrixStack, int x, int y, int width, int height, boolean isHovered, boolean isTopRender) {
             int textColor = 0xffffffff;
             if (!isEnabled) {
                 textColor = 0xffcc0000;
-            } else if (!isTopRender && isHovered(x, y, width, height, mouseX, mouseY)) {
+            } else if (!isTopRender && isHovered) {
                 textColor = 0xffffffa0;
-                fill(matrixStack, x + 1, y - 1, x + width - 1, y + height - 1, 0x44cccccc);
             }
             if (isTopRender) {
-                font.draw(matrixStack, title, x + 3, y + 3, textColor);
+                font.draw(matrixStack, title, x, y, textColor);
             } else {
-                font.draw(matrixStack, title, x + 3, y + 1, textColor);
+                font.draw(matrixStack, title, x, y, textColor);
             }
-//            fill(matrixStack, x, y, x + width, y + height, 0x44ffcccc);
+            RenderSystem.enableAlphaTest();
+        }
+
+        public void renderBackground(MatrixStack matrixStack, int x, int y, int width, int height, boolean isHovered, boolean isTopRender) {
+            if (!isTopRender && isHovered) {
+                fill(matrixStack, x + 1, y - 1, x + width - 1, y + height - 1, 0x44cccccc);
+                RenderSystem.enableAlphaTest();
+            }
+        }
+
+        public void render(MatrixStack matrixStack, int x, int y, int width, int height, int mouseX, int mouseY, float partialTicks, boolean isTopRender) {
+            int titleY = isTopRender ? 3 : 1;
+            boolean isHovered = this.isHovered(x, y, width, height, mouseX, mouseY);
+            renderBackground(matrixStack, x, y, width, height, isHovered, isTopRender);
+            renderLabels(matrixStack, x + 4, y + titleY, width, height, isHovered, isTopRender);
         }
 
         public boolean isHovered(int x, int y, int width, int height, int mouseX, int mouseY) {
