@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.library.gui.panels;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.data.global.task.mod.GlobalTaskGetReportList;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinReport;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
@@ -15,11 +16,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 @OnlyIn(Dist.CLIENT)
-public class ModerationLibraryPanel extends AbstractLibraryPanel {
+public class ModerationLibraryPanel extends AbstractLibraryPanel implements ReportList.IEventListener {
 
     private int pageIndex = 0;
+    private boolean isRequesting = true;
 
-    private ReportList listReports;
+    private final ReportList listReports = buildReportList();
+    private final ArrayList<GlobalTaskSkinReport.SkinReport> skinReports = new ArrayList<>();
+
     private GlobalTaskGetReportList.Filter filter = GlobalTaskGetReportList.Filter.OPEN;
 
     public ModerationLibraryPanel() {
@@ -29,13 +33,7 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel {
     @Override
     protected void init() {
         super.init();
-
-        listReports = new ReportList(leftPos + 5, topPos + 20, width - 10, height - 25);
-        listReports.addColumn("date", 106);
-        listReports.addColumn("userId", 40);
-        listReports.addColumn("skinId", 40);
-        listReports.addColumn("reportType", 72);
-        listReports.addColumn("message", -1);
+        listReports.setFrame(leftPos + 5, topPos + 20, width - 10, height - 25);
         addButton(listReports);
     }
 
@@ -46,20 +44,42 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel {
     }
 
     @Override
+    public void listDidSelect(ReportList reportList, int index) {
+        if (index < 0 || index >= skinReports.size()) {
+            return;
+        }
+        GlobalTaskSkinReport.SkinReport report =skinReports.get(index);
+        ModLog.debug("select report {}, at {}", report, index);
+    }
+
+    @Override
+    public void listDidScroll(ReportList reportList, int contentOffset) {
+        if (isRequesting) {
+            return;
+        }
+        if (contentOffset + reportList.getHeight() * 1.5f >= reportList.getContentHeight()) {
+            pageIndex += getMaxPerPage();
+            loadReportList();
+        }
+    }
+
+    @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
-        if (visible) {
+        if (visible && skinReports.isEmpty()) {
             pageIndex = 0;
             loadReportList();
         }
     }
 
     private void loadReportList() {
+        int pageIndex = this.pageIndex;
+        isRequesting = true;
         new GlobalTaskGetReportList(pageIndex, getMaxPerPage(), filter).createTaskAndRun(new FutureCallback<GlobalTaskGetReportList.Result>() {
 
             @Override
             public void onSuccess(GlobalTaskGetReportList.Result result1) {
-                Minecraft.getInstance().execute(() -> onPageLoad(result1.getSkinReports()));
+                Minecraft.getInstance().execute(() -> onPageLoad(pageIndex, result1.getSkinReports()));
             }
 
             @Override
@@ -69,8 +89,10 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel {
         });
     }
 
-    private void onPageLoad(ArrayList<GlobalTaskSkinReport.SkinReport> reports) {
-        listReports.clearItems();
+    private void onPageLoad(int pageIndex, ArrayList<GlobalTaskSkinReport.SkinReport> reports) {
+        if (pageIndex == 0) {
+            listReports.clearItems();
+        }
         ArrayList<String> names = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd MM:dd:HH");
         for (GlobalTaskSkinReport.SkinReport skinReport : reports) {
@@ -80,10 +102,26 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel {
             names.add(I18n.get(skinReport.getReportType().getLangKey()));
             names.add(skinReport.getMessage());
             listReports.addItem(names.toArray(new String[5]));
+            names.clear();
+        }
+        skinReports.addAll(reports);
+        if (reports.size() == getMaxPerPage()) {
+            isRequesting = false;
         }
     }
 
+    private ReportList buildReportList() {
+        ReportList reportList = new ReportList(0, 0, 240, 120);
+        reportList.addColumn("date", 106);
+        reportList.addColumn("userId", 40);
+        reportList.addColumn("skinId", 40);
+        reportList.addColumn("reportType", 72);
+        reportList.addColumn("message", -1);
+        reportList.setListener(this);
+        return reportList;
+    }
+
     private int getMaxPerPage() {
-        return 20;
+        return 50;
     }
 }

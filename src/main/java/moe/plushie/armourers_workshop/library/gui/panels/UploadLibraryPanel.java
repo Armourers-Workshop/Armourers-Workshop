@@ -21,7 +21,6 @@ import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSk
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -123,10 +122,6 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void upload(Button sender) {
-        PlayerEntity player = Minecraft.getInstance().player;
-        if (player == null) {
-            return;
-        }
         BakedSkin bakedSkin = BakedSkin.of(getInputStack());
         if (bakedSkin == null) {
             onUploadFailed("Skin missing.");
@@ -144,7 +139,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
 
         // upload now
         this.isUploading = true;
-        GameProfile gameProfile = player.getGameProfile();
+        GameProfile gameProfile = Minecraft.getInstance().getUser().getGameProfile();
         Thread thread = new Thread(() -> uploadSkin(gameProfile, bakedSkin.getSkin()));
         thread.start();
     }

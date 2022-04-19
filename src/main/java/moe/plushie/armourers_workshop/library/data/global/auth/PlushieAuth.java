@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.library.data.global.PlushieUser;
 import moe.plushie.armourers_workshop.library.data.global.permission.PermissionSystem;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskBetaCheck;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Session;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -62,16 +63,12 @@ public class PlushieAuth {
             doneRemoteUserCheck = true;
             return;
         }
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null) {
-            return;
-        }
-        GameProfile gameProfile = mc.player.getGameProfile();
+        GameProfile gameProfile = Minecraft.getInstance().getUser().getGameProfile();
         new GlobalTaskBetaCheck(gameProfile.getId()).createTaskAndRun(new FutureCallback<PlushieUser>() {
 
             @Override
             public void onSuccess(PlushieUser result) {
-                mc.execute(() -> {
+                Minecraft.getInstance().execute(() -> {
                     PLUSHIE_SESSION.setServerId(result.getId());
                     PLUSHIE_SESSION.setPermission_group_id(result.getPermissionGroupId());
                     isRemoteUser = true;
@@ -81,7 +78,7 @@ public class PlushieAuth {
 
             @Override
             public void onFailure(Throwable t) {
-                mc.execute(() -> {
+                Minecraft.getInstance().execute(() -> {
                     isRemoteUser = false;
                     doneRemoteUserCheck = true;
                 });
