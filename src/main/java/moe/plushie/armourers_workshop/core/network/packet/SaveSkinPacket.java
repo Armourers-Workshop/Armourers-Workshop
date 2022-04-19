@@ -101,7 +101,7 @@ public class SaveSkinPacket extends CustomPacket {
             return;
         }
         SkinLibraryContainer container = (SkinLibraryContainer) player.containerMenu;
-        // load: fs -> db[-link]/ws -> db[-link]
+        // load: fs -> db/ln/ws -> db/ln
         if (DataDomain.isDatabase(destination)) {
             Skin skin = getSkin();
             if (skin == null) {
@@ -165,12 +165,12 @@ public class SaveSkinPacket extends CustomPacket {
 
     private void accept(PlayerEntity player, String op) {
         String playerName = player.getName().getContents();
-        ModLog.info("the {} request for '{}' accepted, from: '{}', to: '{}'", op, playerName, source, destination);
+        ModLog.info("accept {} request of the '{}', from: '{}', to: '{}'", op, playerName, source, destination);
     }
 
     private void error(PlayerEntity player, String op, String reason) {
         String playerName = player.getName().getContents();
-        ModLog.info("the {} request for '{}' rejected, reason: '{}', from: '{}', to: '{}'", playerName, op, reason, source, destination);
+        ModLog.info("abort {} request of the '{}', reason: '{}', from: '{}', to: '{}'", op, playerName, reason, source, destination);
     }
 
     private void encodeSkin(PacketBuffer buffer) {

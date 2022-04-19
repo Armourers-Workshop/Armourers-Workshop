@@ -27,7 +27,7 @@ public class GlobalTaskBetaJoin extends GlobalTask<GlobalTaskBetaJoin.BetaJoinRe
         if (session.hasServerId()) {
             return new BetaJoinResult(BetaJoinResult.JoinResult.ALREADY_JOINED);
         }
-        GameProfile gameProfile = Minecraft.getInstance().player.getGameProfile();
+        GameProfile gameProfile = Minecraft.getInstance().getUser().getGameProfile();
         String username = URLEncoder.encode(gameProfile.getName(), "UTF-8");
         String uuid = URLEncoder.encode(gameProfile.getId().toString(), "UTF-8");
         String serverId = String.valueOf(getBaseUrl().hashCode());

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.library.gui.panels;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageExtendedButton;
@@ -9,7 +10,7 @@ import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.library.data.global.permission.PermissionSystem;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -119,17 +120,12 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
     @Override
     public void renderBackgroundLayer(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.fillGradient(matrixStack, leftPos, topPos, leftPos + width, topPos + height, 0xC0101010, 0xD0101010);
-        if (minecraft != null) {
-            this.renderPlayerProfile(matrixStack, minecraft.player);
-        }
+        this.renderPlayerProfile(matrixStack, Minecraft.getInstance().getUser().getGameProfile());
     }
 
-    private void renderPlayerProfile(MatrixStack matrixStack, ClientPlayerEntity player) {
-        if (player == null) {
-            return;
-        }
+    private void renderPlayerProfile(MatrixStack matrixStack, GameProfile gameProfile) {
         if (playerTexture == null) {
-            playerTexture = new PlayerTextureDescriptor(player.getGameProfile());
+            playerTexture = new PlayerTextureDescriptor(gameProfile);
         }
         RenderUtils.drawPlayerHead(matrixStack, leftPos + 5, topPos + 5, 16, 16, playerTexture);
 
@@ -138,9 +134,9 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         // Green - Authenticated member.
         // Red - Missing profile info.
         StringTextComponent profile = new StringTextComponent(" - ");
-        profile.append(player.getDisplayName());
+        profile.append(gameProfile.getName());
         int colour = 0xFFFFFF;
-        if (!player.getGameProfile().isLegacy()) {
+        if (!gameProfile.isLegacy()) {
             colour = 0xFFAAAA;
         }
         if (PlushieAuth.PLUSHIE_SESSION.hasServerId()) {

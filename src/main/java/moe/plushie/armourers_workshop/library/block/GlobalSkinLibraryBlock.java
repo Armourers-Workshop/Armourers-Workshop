@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.library.block;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import moe.plushie.armourers_workshop.library.tileentity.GlobalSkinLibraryTileEntity;
-import moe.plushie.armourers_workshop.library.tileentity.SkinLibraryTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;

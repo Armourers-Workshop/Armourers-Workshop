@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.container.SkinLibraryContainer;
 import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryFile;
@@ -488,8 +489,10 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
 
     private void saveSkin(SkinDescriptor descriptor, String path) {
         // check skin load status
+        ModLog.debug("save skin of '{}' to '{}'", descriptor.getIdentifier(), path);
         BakedSkin bakedSkin = BakedSkin.of(descriptor);
         if (bakedSkin == null || !menu.shouldSaveStack()) {
+            ModLog.debug("can't save unbaked skin of '{}'", descriptor);
             return; // skin not ready for using
         }
         // save 1: copy local skin to local library
@@ -498,6 +501,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         // save 4: download server skin to local library
         SaveSkinPacket packet = new SaveSkinPacket(descriptor.getIdentifier(), selectedLibrary.getNamespace() + ":" + path);
         if (!packet.isReady()) {
+            ModLog.debug("can't save skin of '{}'", descriptor);
             toast(getDisplayText("error.illegalOperation"));
             return;
         }
@@ -515,8 +519,10 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         // check skin load status
         String identifier = selectedFile.getNamespace() + ":" + selectedFile.getPath();
         SkinDescriptor descriptor = new SkinDescriptor(identifier, selectedFile.getSkinType(), ColorScheme.EMPTY);
+        ModLog.debug("load skin of '{}'", identifier);
         BakedSkin bakedSkin = BakedSkin.of(descriptor);
         if (bakedSkin == null) {
+            ModLog.debug("can't load unbaked skin of '{}'", identifier);
             return; // skin not ready for using
         }
         // load 1: upload local skin to database
@@ -524,6 +530,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         // load 3: make item stack(db/link)
         SaveSkinPacket packet = new SaveSkinPacket(descriptor.getIdentifier(), source.normalize(""));
         if (!packet.isReady()) {
+            ModLog.debug("can't load skin of '{}'", descriptor);
             toast(getDisplayText("error.illegalOperation"));
             return;
         }
