@@ -1,8 +1,6 @@
 package moe.plushie.armourers_workshop.core.render.skin;
 
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
-import moe.plushie.armourers_workshop.core.render.layer.DelegateBipedArmorLayer;
-import moe.plushie.armourers_workshop.core.render.layer.SkinWardrobeLayer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -43,19 +41,6 @@ public class LivingSkinRenderer<T extends LivingEntity, M extends EntityModel<T>
                 }
             }
         });
-        for (LayerRenderer<T, M> layerRenderer : layers) {
-            if (layerRenderer instanceof SkinWardrobeLayer) {
-                return;
-            }
-        }
-        SkinWardrobeLayer<T, M> wardrobeLayer = new SkinWardrobeLayer<>(entityRenderer);
-        entityRenderer.addLayer(wardrobeLayer);
-        for (LayerRenderer<T, M> layerRenderer : layers) {
-            if (layerRenderer instanceof DelegateBipedArmorLayer) {
-                DelegateBipedArmorLayer<T, ?, ?> armorLayer = (DelegateBipedArmorLayer<T, ?, ?>) layerRenderer;
-                armorLayer.setWardrobeLayer(wardrobeLayer);
-            }
-        }
     }
 }
 

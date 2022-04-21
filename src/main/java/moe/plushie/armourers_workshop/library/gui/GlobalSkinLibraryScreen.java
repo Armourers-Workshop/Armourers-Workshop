@@ -232,6 +232,8 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
     private void setPage(Page page) {
         this.page = page;
         this.setVisible();
+        // old page may still hash focused, so when we change page, assume all focus is lost.
+        this.setFocused(null);
     }
 
     public void doRender(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks, Function<AbstractLibraryPanel, IRenderable> supplier) {

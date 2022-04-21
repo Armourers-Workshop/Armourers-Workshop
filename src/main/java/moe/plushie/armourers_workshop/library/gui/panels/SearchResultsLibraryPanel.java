@@ -13,6 +13,7 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWImageExtendedButton;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchColumnType;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchOrderType;
@@ -224,17 +225,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         if (skinType != null && skinType != SkinTypes.UNKNOWN) {
             searchTypes = skinType.getRegistryName().toString();
         } else {
-            StringBuilder searchTypesBuilder = new StringBuilder();
-            for (ISkinType skinType : SkinTypes.values()) {
-                ResourceLocation registryName = skinType.getRegistryName();
-                if (skinType != SkinTypes.UNKNOWN && registryName != null) {
-                    if (searchTypesBuilder.length() != 0) {
-                        searchTypesBuilder.append(";");
-                    }
-                    searchTypesBuilder.append(registryName);
-                }
-            }
-            searchTypes = searchTypesBuilder.toString();
+            searchTypes = GlobalSkinLibraryUtils.allSearchTypes();
         }
         ModLog.debug("request skin list {} of {}, page size: {}", pageIndex, totalPages, lastRequestSize);
         doSearch(pageIndex, lastRequestSize, searchTypes, (result, exception) -> {

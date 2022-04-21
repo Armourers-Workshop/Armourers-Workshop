@@ -17,6 +17,6 @@ public class BipedArmorLayerMixin<T extends LivingEntity, A extends BipedModel<T
 
     @Inject(method = "renderArmorPiece", at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/client/renderer/entity/layers/BipedArmorLayer;setPartVisibility(Lnet/minecraft/client/renderer/entity/model/BipedModel;Lnet/minecraft/inventory/EquipmentSlotType;)V"), cancellable = true)
     private void hooked_renderArmorPiece(MatrixStack matrixStack, IRenderTypeBuffer renderType, T entity, EquipmentSlotType slotType, int p_241739_5_, A model, CallbackInfo callback) {
-        ClientWardrobeHandler.onRenderEquipment(entity, model, slotType, matrixStack, renderType, callback);
+        ClientWardrobeHandler.onRenderArmorEquipment(entity, model, slotType, matrixStack, renderType, callback);
     }
 }

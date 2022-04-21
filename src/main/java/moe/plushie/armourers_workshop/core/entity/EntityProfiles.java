@@ -96,59 +96,59 @@ public class EntityProfiles {
     }
 
     public static void init() {
-        register(EntityType.PLAYER, EntityProfiles.PLAYER, () -> PlayerSkinRenderer::new);
+        register(EntityType.PLAYER, EntityProfiles.PLAYER);
 
-        register(EntityType.VILLAGER, EntityProfiles.VILLAGER, () -> VillagerSkinRenderer::new);
-        register(EntityType.WITCH, EntityProfiles.VILLAGER, () -> VillagerSkinRenderer::new);
-        register(EntityType.WANDERING_TRADER, EntityProfiles.VILLAGER, () -> VillagerSkinRenderer::new);
+        register(EntityType.VILLAGER, EntityProfiles.VILLAGER);
+        register(EntityType.WITCH, EntityProfiles.VILLAGER);
+        register(EntityType.WANDERING_TRADER, EntityProfiles.VILLAGER);
 
-        register(EntityType.SKELETON, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
-        register(EntityType.STRAY, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
-        register(EntityType.WITHER_SKELETON, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
-        register(EntityType.ZOMBIE, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
-        register(EntityType.HUSK, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
-        register(EntityType.ZOMBIE_VILLAGER, EntityProfiles.COMMON, () -> ZombieVillagerSkinRenderer::new);
-        register(EntityType.DROWNED, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
+        register(EntityType.SKELETON, EntityProfiles.COMMON);
+        register(EntityType.STRAY, EntityProfiles.COMMON);
+        register(EntityType.WITHER_SKELETON, EntityProfiles.COMMON);
+        register(EntityType.ZOMBIE, EntityProfiles.COMMON);
+        register(EntityType.HUSK, EntityProfiles.COMMON);
+        register(EntityType.ZOMBIE_VILLAGER, EntityProfiles.COMMON);
+        register(EntityType.DROWNED, EntityProfiles.COMMON);
 
-        register(EntityType.EVOKER, EntityProfiles.COMMON, () -> IllagerSkinRenderer::new);
-        register(EntityType.ILLUSIONER, EntityProfiles.COMMON, () -> IllagerSkinRenderer::new);
-        register(EntityType.PILLAGER, EntityProfiles.COMMON, () -> IllagerSkinRenderer::new);
-        register(EntityType.VINDICATOR, EntityProfiles.COMMON, () -> IllagerSkinRenderer::new);
+        register(EntityType.EVOKER, EntityProfiles.COMMON);
+        register(EntityType.ILLUSIONER, EntityProfiles.COMMON);
+        register(EntityType.PILLAGER, EntityProfiles.COMMON);
+        register(EntityType.VINDICATOR, EntityProfiles.COMMON);
 
-        register(EntityType.VEX, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
-        register(EntityType.PIGLIN, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
-        register(EntityType.PIGLIN_BRUTE, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
-        register(EntityType.ZOMBIFIED_PIGLIN, EntityProfiles.COMMON, () -> BipedSkinRenderer::new);
+        register(EntityType.VEX, EntityProfiles.COMMON);
+        register(EntityType.PIGLIN, EntityProfiles.COMMON);
+        register(EntityType.PIGLIN_BRUTE, EntityProfiles.COMMON);
+        register(EntityType.ZOMBIFIED_PIGLIN, EntityProfiles.COMMON);
 
-        register(EntityType.SLIME, EntityProfiles.SLIME, () -> SlimeSkinRenderer::new);
-        register(EntityType.CHICKEN, EntityProfiles.CHICKEN, () -> ChickenSkinRenderer::new);
-        register(EntityType.ARROW, EntityProfiles.ARROW, () -> ArrowSkinRenderer::new);
+        register(EntityType.SLIME, EntityProfiles.SLIME);
+        register(EntityType.CHICKEN, EntityProfiles.CHICKEN);
+        register(EntityType.ARROW, EntityProfiles.ARROW);
 
-//        register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
-//        register(EntityType.IRON_GOLEM, EntityProfiles.MANNEQUIN, () -> IronGolemSkinRenderer::new);
+//        register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN);
+//        register(EntityType.IRON_GOLEM, EntityProfiles.MANNEQUIN);
 
-        register(ModEntities.MANNEQUIN, EntityProfiles.MANNEQUIN, () -> PlayerSkinRenderer::new);
+        register(ModEntities.MANNEQUIN, EntityProfiles.MANNEQUIN);
 
         // TODO: custom register
-        register("customnpcs:customnpc", EntityProfiles.MANNEQUIN, () -> BipedSkinRenderer::new);
+        register("customnpcs:customnpc", EntityProfiles.MANNEQUIN);
     }
 
 
-    public static <T extends Entity, M extends Model> void register(EntityType<T> entityType, EntityProfile entityProfile, Supplier<Function<EntityProfile, SkinRenderer<T, M>>> provider) {
+    public static <T extends Entity, M extends Model> void register(EntityType<T> entityType, EntityProfile entityProfile) {
         PROFILES.put(entityType, entityProfile);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            SkinRendererManager.getInstance().register(entityType, provider.get());
+            SkinRendererManager.getInstance().register(entityType, entityProfile);
         });
     }
 
-    public static <T extends Entity, M extends Model> void register(String registryName, EntityProfile entityProfile, Supplier<Function<EntityProfile, SkinRenderer<T, M>>> provider) {
+    public static <T extends Entity, M extends Model> void register(String registryName, EntityProfile entityProfile) {
         EntityType<?> entityType = EntityType.byString(registryName).orElse(null);
         if (entityType == null) {
             return;
         }
         PROFILES.put(entityType, entityProfile);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            SkinRendererManager.getInstance().register((EntityType<T>) entityType, provider.get());
+            SkinRendererManager.getInstance().register((EntityType<T>) entityType, entityProfile);
         });
     }
 

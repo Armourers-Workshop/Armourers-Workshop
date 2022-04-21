@@ -29,7 +29,7 @@ public enum SkinSlotType {
     SHOVEL("shovel", 1, SkinTypes.TOOL_SHOVEL),
     HOE("hoe", 1, SkinTypes.TOOL_HOE),
 
-    OUTFIT("outfit", 10, SkinTypes.OUTFIT),
+    OUTFIT("outfit", getMaxSlotSize(), SkinTypes.OUTFIT),
     DYE("dye", 16, null);
 
     private final String name;
@@ -92,6 +92,10 @@ public enum SkinSlotType {
             }
         }
         return i;
+    }
+
+    public boolean isResizable() {
+        return this != DYE && size > 1;
     }
 
     public boolean isArmor() {

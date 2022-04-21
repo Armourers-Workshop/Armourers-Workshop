@@ -167,7 +167,6 @@ public class PlayerTextureLoader {
         if (image == null) {
             return;
         }
-
         PlayerTexture pendingTexture = null;
         for (Optional<PlayerTexture> texture : textures.values()) {
             if (texture.isPresent() && Objects.equals(texture.get().getURL(), url)) {
@@ -175,17 +174,18 @@ public class PlayerTextureLoader {
                 break;
             }
         }
-        if (pendingTexture != null) {
-            if (pendingTexture.getModel() == null) {
-                pendingTexture.setModel("default");
-                if (slim) {
-                    pendingTexture.setModel("slim");
-                }
-            }
-            slim = Objects.equals(pendingTexture.getModel(), "slim");
-            pendingTexture.setTexture(new BakedEntityTexture(pendingTexture.getLocation(), image, slim));
-            ModLog.debug("Baked a player texture => {}, slim => {}", pendingTexture.getLocation(), slim);
+        if (pendingTexture == null) {
+            return;
         }
+        if (pendingTexture.getModel() == null) {
+            pendingTexture.setModel("default");
+            if (slim) {
+                pendingTexture.setModel("slim");
+            }
+        }
+        slim = Objects.equals(pendingTexture.getModel(), "slim");
+        pendingTexture.setTexture(new BakedEntityTexture(pendingTexture.getLocation(), image, slim));
+        ModLog.debug("Baked a player texture => {}, slim => {}", pendingTexture.getLocation(), slim);
     }
 
     public void loadDefaultTexture(ResourceLocation location) {

@@ -21,7 +21,7 @@ public class ListArgument implements ArgumentType<String> {
 
     private final Collection<String> list;
 
-    ListArgument(Collection<String> list) {
+    public ListArgument(Collection<String> list) {
         super();
         this.list = list;
     }
@@ -33,7 +33,12 @@ public class ListArgument implements ArgumentType<String> {
     @Override
     public String parse(final StringReader reader) throws CommandSyntaxException {
         final String text = reader.getRemaining();
-        reader.setCursor(reader.getTotalLength());
+        for (String value : list) {
+            if (text.startsWith(value)) {
+                reader.setCursor(reader.getCursor() + value.length());
+                return value;
+            }
+        }
         return text;
     }
 

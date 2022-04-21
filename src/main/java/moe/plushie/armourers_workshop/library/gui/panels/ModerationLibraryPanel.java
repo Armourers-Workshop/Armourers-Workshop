@@ -1,12 +1,15 @@
 package moe.plushie.armourers_workshop.library.gui.panels;
 
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskGetSkinInfo;
 import moe.plushie.armourers_workshop.library.data.global.task.mod.GlobalTaskGetReportList;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinReport;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import moe.plushie.armourers_workshop.library.gui.widget.ReportList;
+import moe.plushie.armourers_workshop.library.gui.widget.SkinFileList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.api.distmarker.Dist;
@@ -48,8 +51,22 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
         if (index < 0 || index >= skinReports.size()) {
             return;
         }
-        GlobalTaskSkinReport.SkinReport report =skinReports.get(index);
-        ModLog.debug("select report {}, at {}", report, index);
+        GlobalTaskSkinReport.SkinReport report = skinReports.get(index);
+        new GlobalTaskGetSkinInfo(report.getSkinId()).createTaskAndRun(new FutureCallback<JsonObject>() {
+
+            @Override
+            public void onSuccess(JsonObject result) {
+                if (result != null) {
+                    SkinFileList.Entry entry = new SkinFileList.Entry(result);
+                    Minecraft.getInstance().execute(() -> router.showSkinDetail(entry, Page.LIBRARY_MODERATION));
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     @Override

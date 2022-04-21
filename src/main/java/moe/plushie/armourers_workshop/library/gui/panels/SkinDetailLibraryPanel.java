@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.library.gui.panels;
 
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -19,6 +20,7 @@ import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils
 import moe.plushie.armourers_workshop.library.data.global.PlushieUser;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.library.data.global.permission.PermissionSystem;
+import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskGetSkinInfo;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskResult;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinReport;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskUserSkinRate;
@@ -311,11 +313,14 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
     }
 
     private void updateSkinJson() {
-        // TODO: imp
+//        // TODO: imp
 //        new GlobalTaskGetSkinInfo(entry.id).createTaskAndRun(new FutureCallback<JsonObject>() {
 //
 //            @Override
 //            public void onSuccess(JsonObject result) {
+//                if (result == null) {
+//                    return;
+//                }
 //                entry = new SkinFileList.Entry(result);
 //                Minecraft.getInstance().execute(() -> reloadUI(entry));
 //            }
