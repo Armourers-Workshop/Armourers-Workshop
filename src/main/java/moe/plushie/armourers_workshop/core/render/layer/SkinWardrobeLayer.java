@@ -2,12 +2,14 @@ package moe.plushie.armourers_workshop.core.render.layer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
+import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.init.common.ModContributors;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.vector.Matrix4f;
@@ -19,8 +21,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> extends LayerRenderer<T, M> {
 
-    public SkinWardrobeLayer(IEntityRenderer<T, M> renderer) {
+    protected final SkinRenderer<T, M> skinRenderer;
+    protected final IEntityRenderer<T, M> entityRenderer;
+
+    public SkinWardrobeLayer(SkinRenderer<T, M> skinRenderer, IEntityRenderer<T, M> renderer) {
         super(renderer);
+        this.skinRenderer = skinRenderer;
+        this.entityRenderer = renderer;
     }
 
     @Override
@@ -28,10 +35,15 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
         if (entity.isInvisible()) {
             return;
         }
+        M model = getParentModel();
+        SkinRenderData renderData = SkinRenderData.of(entity);
+        if (renderData == null) {
+            return;
+        }
         matrixStack.pushPose();
 
-        EntityModel<?> entityModel = getParentModel();
-        ClientWardrobeHandler.onRenderArmorPre(entity, entityModel, packedLightIn, matrixStack, buffers);
+        // apply the model baby scale.
+        applyModelScale(matrixStack, model);
 
         // render the contributor
         ModContributors.Contributor contributor = ModContributors.by(entity);
@@ -39,7 +51,13 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
             renderMagicCircle(matrixStack, buffers, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color);
         }
 
-        ClientWardrobeHandler.onRenderArmor(entity, entityModel, packedLightIn, matrixStack, buffers);
+        float f = 1 / 16f;
+        matrixStack.scale(f, f, f);
+
+        float partialTicks2 = System.currentTimeMillis() % 100000000;
+        for (SkinRenderData.Entry entry : renderData.getArmorSkins()) {
+            skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), null, packedLightIn, partialTicks2, matrixStack, buffers);
+        }
 
         matrixStack.popPose();
     }
@@ -63,5 +81,14 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
         builder.vertex(mat, -1, 0, 1).color(red, green, blue, 0xff).uv(1, 1).endVertex();
 
         matrixStack.popPose();
+    }
+
+    protected void applyModelScale(MatrixStack matrixStack, M model) {
+        if (model.young && model instanceof BipedModel) {
+            BipedModel<?> bipedModel = (BipedModel<?>) model;
+            float scale = 1.0f / bipedModel.babyBodyScale;
+            matrixStack.scale(scale, scale, scale);
+            matrixStack.translate(0.0f, bipedModel.bodyYOffset / 16.0f, 0.0f);
+        }
     }
 }

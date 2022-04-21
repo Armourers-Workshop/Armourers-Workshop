@@ -28,7 +28,6 @@ import moe.plushie.armourers_workshop.init.client.ClientEventHandler;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.command.FileArgument;
 import moe.plushie.armourers_workshop.init.command.ListArgument;
-import moe.plushie.armourers_workshop.init.command.ModCommands;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
 import moe.plushie.armourers_workshop.library.gui.SkinLibraryScreen;
 import moe.plushie.armourers_workshop.library.render.GlobalSkinLibraryTileEntityRenderer;
@@ -53,13 +52,10 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
 
 public class ModRegistry {
 

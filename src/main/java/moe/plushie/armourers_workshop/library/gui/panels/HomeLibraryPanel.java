@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchColumnType;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchOrderType;
@@ -93,18 +94,9 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         int requestSize = skinPanelRecentlyUploaded.getTotalCount();
         lastRequestSize = requestSize;
         ModLog.debug("refresh home skin list, page size: {}", lastRequestSize);
-        StringBuilder searchTypes = new StringBuilder();
-        for (ISkinType skinType : SkinTypes.values()) {
-            ResourceLocation registryName = skinType.getRegistryName();
-            if (skinType != SkinTypes.UNKNOWN && registryName != null) {
-                if (searchTypes.length() != 0) {
-                    searchTypes.append(";");
-                }
-                searchTypes.append(registryName);
-            }
-        }
+        String searchTypes = GlobalSkinLibraryUtils.allSearchTypes();
 
-        GlobalTaskSkinSearch taskGetRecentlyUploaded = new GlobalTaskSkinSearch("", searchTypes.toString(), 0, requestSize);
+        GlobalTaskSkinSearch taskGetRecentlyUploaded = new GlobalTaskSkinSearch("", searchTypes, 0, requestSize);
         taskGetRecentlyUploaded.setSearchOrderColumn(SearchColumnType.DATE_CREATED);
         taskGetRecentlyUploaded.setSearchOrder(SearchOrderType.DESC);
         taskGetRecentlyUploaded.createTaskAndRun(new FutureCallback<JsonObject>() {
@@ -124,7 +116,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
             }
         });
 
-        GlobalTaskSkinSearch taskGetMostDownloaded = new GlobalTaskSkinSearch("", searchTypes.toString(), 0, requestSize);
+        GlobalTaskSkinSearch taskGetMostDownloaded = new GlobalTaskSkinSearch("", searchTypes, 0, requestSize);
         taskGetMostDownloaded.setSearchOrderColumn(SearchColumnType.DOWNLOADS);
         taskGetMostDownloaded.setSearchOrder(SearchOrderType.DESC);
         taskGetMostDownloaded.createTaskAndRun(new FutureCallback<JsonObject>() {
@@ -144,7 +136,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
             }
         });
 
-        GlobalTaskSkinSearch taskGetTopRated = new GlobalTaskSkinSearch("", searchTypes.toString(), 0, requestSize);
+        GlobalTaskSkinSearch taskGetTopRated = new GlobalTaskSkinSearch("", searchTypes, 0, requestSize);
         taskGetTopRated.setSearchOrderColumn(SearchColumnType.RATING);
         taskGetTopRated.setSearchOrder(SearchOrderType.DESC);
         taskGetTopRated.createTaskAndRun(new FutureCallback<JsonObject>() {
@@ -164,7 +156,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
             }
         });
 
-        GlobalTaskSkinSearch taskNeedRated = new GlobalTaskSkinSearch("", searchTypes.toString(), 0, requestSize);
+        GlobalTaskSkinSearch taskNeedRated = new GlobalTaskSkinSearch("", searchTypes, 0, requestSize);
         taskNeedRated.setSearchOrderColumn(SearchColumnType.RATING_COUNT);
         taskNeedRated.setSearchOrder(SearchOrderType.ASC);
         taskNeedRated.createTaskAndRun(new FutureCallback<JsonObject>() {

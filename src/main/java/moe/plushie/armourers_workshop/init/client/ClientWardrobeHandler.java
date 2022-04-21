@@ -5,12 +5,11 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
-import moe.plushie.armourers_workshop.init.common.ModConfigSpec;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.entity.Entity;
@@ -20,10 +19,12 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 
@@ -63,45 +64,87 @@ public class ClientWardrobeHandler {
         matrixStack.popPose();
     }
 
-    public static void onRenderArmorPre(Entity entity, EntityModel<?> entityModel, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
-        // apply the model baby scale.
-        if (entityModel.young && entityModel instanceof BipedModel<?>) {
-            BipedModel<?> bipedModel = (BipedModel<?>) entityModel;
-            float scale = 1.0f / bipedModel.babyBodyScale;
-            matrixStack.scale(scale, scale, scale);
-            matrixStack.translate(0.0f, bipedModel.bodyYOffset / 16.0f, 0.0f);
+//    public static void onRenderArmorPre(Entity entity, EntityModel<?> entityModel, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+//        // apply the model baby scale.
+//        if (entityModel.young && entityModel instanceof BipedModel<?>) {
+//            BipedModel<?> bipedModel = (BipedModel<?>) entityModel;
+//            float scale = 1.0f / bipedModel.babyBodyScale;
+//            matrixStack.scale(scale, scale, scale);
+//            matrixStack.translate(0.0f, bipedModel.bodyYOffset / 16.0f, 0.0f);
+//        }
+//    }
+//
+//    public static void onRenderArmor(Entity entity, Model model, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+//        SkinRenderData renderData = SkinRenderData.of(entity);
+//        if (renderData == null) {
+//            return;
+//        }
+//        matrixStack.pushPose();
+//        matrixStack.scale(SCALE, SCALE, SCALE);
+//
+//        render(entity, model, light, matrixStack, buffers, null, renderData::getArmorSkins);
+//
+//        matrixStack.popPose();
+//    }
+
+//    public static void onRenderItem(Entity entity, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers, CallbackInfo callback) {
+//        SkinRenderData renderData = SkinRenderData.of(entity);
+//        if (renderData == null) {
+//            return;
+//        }
+//        matrixStack.pushPose();
+//        matrixStack.scale(-SCALE, -SCALE, SCALE);
+//
+//        boolean replaceSkinItem = entity instanceof MannequinEntity;
+//        int count = render(entity, null, light, matrixStack, buffers, transformType, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
+//        if (count != 0) {
+//            callback.cancel();
+//        }
+//
+//        matrixStack.popPose();
+//    }
+
+    public static ItemStack getRenderSkinStack(ItemStack itemStack, boolean isRenderInGUI) {
+        if (isRenderInGUI && !ModConfig.Client.enableEmbeddedSkinRenderer) {
+            return itemStack;
         }
+        if (itemStack.getItem() == ModItems.SKIN) {
+            return itemStack;
+        }
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        if (!descriptor.isEmpty()) {
+            return descriptor.asItemStack();
+        }
+        return itemStack;
     }
 
-    public static void onRenderArmor(Entity entity, Model model, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
-        SkinRenderData renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
+    public static void onRenderSkinStack(@Nullable LivingEntity entity, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, boolean p_229109_4_, MatrixStack matrixStack, IRenderTypeBuffer buffers, @Nullable World world, int packedLight, int p_229109_9_, CallbackInfo callback) {
+        if (itemStack.isEmpty()) {
             return;
         }
-        matrixStack.pushPose();
-        matrixStack.scale(SCALE, SCALE, SCALE);
+        switch (transformType) {
+            case THIRD_PERSON_LEFT_HAND:
+            case THIRD_PERSON_RIGHT_HAND:
+            case FIRST_PERSON_LEFT_HAND:
+            case FIRST_PERSON_RIGHT_HAND: {
+                int count = 0;
+                SkinRenderData renderData = SkinRenderData.of(entity);
+                if (renderData != null) {
+                    matrixStack.pushPose();
+                    matrixStack.scale(-SCALE, -SCALE, SCALE);
 
-        render(entity, model, light, matrixStack, buffers, null, renderData::getArmorSkins);
-
-        matrixStack.popPose();
+                    boolean replaceSkinItem = entity instanceof MannequinEntity;
+                    count = render(entity, null, packedLight, matrixStack, buffers, transformType, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
+                    if (count != 0) {
+                        callback.cancel();
+                    }
+                    matrixStack.popPose();
+                }
+                break;
+            }
+        }
     }
 
-    public static void onRenderItem(Entity entity, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers, CallbackInfo callback) {
-        SkinRenderData renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-        matrixStack.pushPose();
-        matrixStack.scale(-SCALE, -SCALE, SCALE);
-
-        boolean replaceSkinItem = entity instanceof MannequinEntity;
-        int count = render(entity, null, light, matrixStack, buffers, transformType, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
-        if (count != 0) {
-            callback.cancel();
-        }
-
-        matrixStack.popPose();
-    }
 
     public static void onRenderEntityInInventoryPre(LivingEntity entity, int x, int y, int scale, float mouseX, float mouseY) {
         if (!ModConfig.Client.enableEntityInInventoryClip) {
@@ -136,12 +179,11 @@ public class ClientWardrobeHandler {
         RenderUtils.disableScissor();
     }
 
-    public static void onRenderEquipment(LivingEntity entity, Model model, EquipmentSlotType slotType, MatrixStack matrixStack, IRenderTypeBuffer buffers, CallbackInfo callback) {
+    public static void onRenderArmorEquipment(LivingEntity entity, Model model, EquipmentSlotType slotType, MatrixStack matrixStack, IRenderTypeBuffer buffers, CallbackInfo callback) {
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity);
-        if (renderer == null) {
-            return;
+        if (renderer != null) {
+            renderer.apply(entity, model, slotType, 0, matrixStack);
         }
-        renderer.apply(entity, model, slotType, 0, matrixStack);
     }
 
     private static int render(Entity entity, Model model, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers, ItemCameraTransforms.TransformType transformType, Supplier<Iterable<SkinRenderData.Entry>> provider) {

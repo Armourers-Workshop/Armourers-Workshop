@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.data.DataLoader;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder;
@@ -189,6 +190,10 @@ public final class SkinBakery {
         BakedSkin bakedSkin = new BakedSkin(identifier, skin, scheme, usedCounter, colorInfo, bakedParts);
         ModLog.debug("'{}' => accept baked skin", identifier);
         complete.accept(Optional.of(bakedSkin));
+        RenderSystem.recordRenderCall(() -> notifyBake(identifier, bakedSkin));
+    }
+
+    private void notifyBake(String identifier, BakedSkin bakedSkin) {
         listeners.forEach(listener -> listener.didBake(identifier, bakedSkin));
     }
 

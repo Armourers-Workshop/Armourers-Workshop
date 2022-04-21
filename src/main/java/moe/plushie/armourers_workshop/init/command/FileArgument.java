@@ -39,7 +39,7 @@ public class FileArgument implements ArgumentType<String> {
     private String filteredName;
     private ArrayList<String> filteredFileList;
 
-    FileArgument(File rootPath) {
+    public FileArgument(File rootPath) {
         super();
         this.rootFile = rootPath;
         this.fileList = null;

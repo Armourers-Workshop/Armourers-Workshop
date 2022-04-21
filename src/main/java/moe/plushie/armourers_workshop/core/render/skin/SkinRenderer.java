@@ -1,12 +1,10 @@
 package moe.plushie.armourers_workshop.core.render.skin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.api.skin.ISkinArmorType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
@@ -17,6 +15,8 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinUtils;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -41,7 +41,6 @@ public class SkinRenderer<T extends Entity, M extends Model> {
     protected final Transformer<M> transformer = new Transformer<>();
 
     protected final ArrayList<ModelRenderer> overriders = new ArrayList<>();
-
 
     public SkinRenderer(EntityProfile profile) {
         this.profile = profile;
@@ -97,9 +96,11 @@ public class SkinRenderer<T extends Entity, M extends Model> {
     }
 
     public void render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
-        ISkinType type = bakedSkin.getType();
-        if (type instanceof ISkinArmorType && !profile.canSupport(type)) {
-            return;
+        if (profile != null) {
+            ISkinType type = bakedSkin.getType();
+            if (type instanceof ISkinArmorType && !profile.canSupport(type)) {
+                return;
+            }
         }
         int index = 0;
         Skin skin = bakedSkin.getSkin();

@@ -12,6 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ArrowSkinRenderer<T extends ArrowEntity, M extends Model> extends SkinRenderer<T, M> {
+
     public ArrowSkinRenderer(EntityProfile profile) {
         super(profile);
     }

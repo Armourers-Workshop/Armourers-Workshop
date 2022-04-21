@@ -66,6 +66,8 @@ public class ModConfig {
         public static boolean enableEntityPlacementHighlight = true;
         public static boolean enableBlockPlacementHighlight = true;
 
+        public static boolean enableEmbeddedSkinRenderer = false;
+
         public static boolean enableModelOverridden = true;
         public static boolean enableWireframeRender = false;
         public static boolean enableMagicWhenContributor = false;

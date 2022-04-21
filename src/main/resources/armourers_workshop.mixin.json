@@ -12,8 +12,9 @@
     "ArrowRendererMixin",
     "BipedArmorLayerMixin",
     "DownloadingTextureMixin",
-    "FirstPersonRendererMixin",
+    "EntityRendererMixin",
     "InventoryScreenMixin",
+    "ItemRendererMixin",
     "LivingRendererMixin",
     "ModelManagerMixin",
     "RenderTypeBuffersMixin"

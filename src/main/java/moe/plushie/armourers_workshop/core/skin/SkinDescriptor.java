@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.core.skin;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
@@ -13,8 +11,6 @@ import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
-import java.util.concurrent.TimeUnit;
-
 public class SkinDescriptor implements ISkinDescriptor {
 
     public static final SkinDescriptor EMPTY = new SkinDescriptor("");
@@ -22,6 +18,9 @@ public class SkinDescriptor implements ISkinDescriptor {
     private final String identifier;
     private final ISkinType type;
     private final ColorScheme colorScheme;
+
+    // not a required property, but it can help we reduce memory usage and improve performance.
+    private ItemStack skinItemStack;
 
     public SkinDescriptor(String identifier) {
         this(identifier, SkinTypes.UNKNOWN, ColorScheme.EMPTY);
@@ -97,11 +96,14 @@ public class SkinDescriptor implements ISkinDescriptor {
         if (isEmpty()) {
             return ItemStack.EMPTY;
         }
+        if (skinItemStack != null) {
+            return skinItemStack;
+        }
         ItemStack itemStack = new ItemStack(ModItems.SKIN);
         setDescriptor(itemStack, this);
+        skinItemStack = itemStack;
         return itemStack;
     }
-
 
     public boolean isEmpty() {
         return this == EMPTY;
@@ -118,40 +120,6 @@ public class SkinDescriptor implements ISkinDescriptor {
     public String getIdentifier() {
         return identifier;
     }
-
-
-//    @Override
-//    public ISkinIdentifier getIdentifier() {
-//        return identifier;
-//    }
-//
-//    @Override
-//    public ISkinDye getSkinDye() {
-//        return skinDye;
-//    }
-
-    // TODO: IMP
-//    public void readFromCompound(NBTTagCompound compound) {
-//        readFromCompound(compound, TAG_SKIN_DATA);
-//    }
-//
-//    public void readFromCompound(NBTTagCompound compound, String tag) {
-//        NBTTagCompound skinDataCompound = compound.getCompoundTag(tag);
-//        this.identifier = SkinIdentifierSerializer.readFromCompound(skinDataCompound);
-//        this.skinDye.readFromCompound(skinDataCompound);
-//    }
-//
-//    public void writeToCompound(NBTTagCompound compound) {
-//        writeToCompound(compound, TAG_SKIN_DATA);
-//    }
-//
-//    public void writeToCompound(NBTTagCompound compound, String tag) {
-//        NBTTagCompound skinDataCompound = new NBTTagCompound();
-//        SkinIdentifierSerializer.writeToCompound(identifier, skinDataCompound);
-//        skinDye.writeToCompound(skinDataCompound);
-//        compound.setTag(tag, skinDataCompound);
-//    }
-
 
     @Override
     public String toString() {

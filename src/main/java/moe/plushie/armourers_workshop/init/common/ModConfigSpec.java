@@ -107,6 +107,7 @@ public class ModConfigSpec {
         ForgeConfigSpec.DoubleValue skinPreLocHorizontal;
         ForgeConfigSpec.DoubleValue skinPreLocVertical;
         ForgeConfigSpec.BooleanValue skinPreLocFollowMouse;
+        ForgeConfigSpec.BooleanValue enableEmbeddedSkinRenderer;
 
         // Tool-tip
         ForgeConfigSpec.BooleanValue tooltipHasSkin;
@@ -211,6 +212,9 @@ public class ModConfigSpec {
 
                 skinPreLocFollowMouse = builder.define("skinPreLocFollowMouse", true,
                         "Skin preview will be rendered next to the mouse.");
+
+                enableEmbeddedSkinRenderer = builder.define("enableEmbeddedSkinRenderer", false,
+                        "Using embedded skin renderer to replace the original item renderer.");
             });
             builder.defineCategory("tooltip", "Setting to configure tooltips on skinned items.", () -> {
                 tooltipHasSkin = builder.define("tooltipHasSkin", true, "Show has skin tooltip on skinned items.");
@@ -265,6 +269,7 @@ public class ModConfigSpec {
                 skinPreLocHorizontal = spec.skinPreLocHorizontal.get();
                 skinPreLocVertical = spec.skinPreLocVertical.get();
                 skinPreLocFollowMouse = spec.skinPreLocFollowMouse.get();
+                enableEmbeddedSkinRenderer = spec.enableEmbeddedSkinRenderer.get();
 
                 tooltipHasSkin = spec.tooltipHasSkin.get();
                 tooltipSkinName = spec.tooltipSkinName.get();

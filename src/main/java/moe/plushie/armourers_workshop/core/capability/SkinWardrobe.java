@@ -125,10 +125,9 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     }
 
     public void setUnlockedSize(SkinSlotType slotType, int size) {
-        if (slotType == SkinSlotType.DYE) {
-            return;
+        if (slotType != SkinSlotType.DYE) {
+            skinSlots.put(slotType, size);
         }
-        skinSlots.put(slotType, size);
     }
 
     public int getUnlockedSize(SkinSlotType slotType) {

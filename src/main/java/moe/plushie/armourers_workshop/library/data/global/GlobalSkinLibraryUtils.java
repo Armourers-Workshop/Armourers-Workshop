@@ -3,8 +3,11 @@ package moe.plushie.armourers_workshop.library.data.global;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFutureTask;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskUserInfo;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -82,5 +85,19 @@ public final class GlobalSkinLibraryUtils {
             return false;
         }
         return true;
+    }
+
+    public static String allSearchTypes() {
+        StringBuilder searchTypesBuilder = new StringBuilder();
+        for (ISkinType skinType : SkinTypes.values()) {
+            ResourceLocation registryName = skinType.getRegistryName();
+            if (skinType != SkinTypes.UNKNOWN && registryName != null) {
+                if (searchTypesBuilder.length() != 0) {
+                    searchTypesBuilder.append(";");
+                }
+                searchTypesBuilder.append(registryName);
+            }
+        }
+        return searchTypesBuilder.toString();
     }
 }
