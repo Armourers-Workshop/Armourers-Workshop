@@ -1,5 +1,6 @@
 {
   "__comment": "Designed by Thundercat_ with Cubik Studio - https://cubik.studio",
+  "ambientocclusion": false,
   "textures": {
     "cobblestone": "block/cobblestone",
     "planks": "block/oak_planks",
@@ -7,7 +8,7 @@
     "Clay": "block/terracotta",
     "spruce": "block/spruce_planks",
     "texture": "armourers_workshop:block/skin-library/libraryblock1",
-    "particle": "block/oak_planks"
+    "particle": "#planks"
   },
   "elements": [    
     {

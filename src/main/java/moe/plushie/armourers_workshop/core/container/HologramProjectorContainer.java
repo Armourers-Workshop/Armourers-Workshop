@@ -3,45 +3,33 @@ package moe.plushie.armourers_workshop.core.container;
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.world.World;
 
 @SuppressWarnings("NullableProblems")
-public class HologramProjectorContainer extends Container {
-
-    private final IWorldPosCallable pos;
+public class HologramProjectorContainer extends AbstractBlockContainer<Block> {
 
     private final PlayerInventory playerInventory;
     private final IInventory inventory;
     private int group;
 
     public HologramProjectorContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable worldPos) {
-        super(ModContainerTypes.HOLOGRAM_PROJECTOR, containerId);
-        this.pos = worldPos;
+        super(containerId, ModContainerTypes.HOLOGRAM_PROJECTOR, ModBlocks.HOLOGRAM_PROJECTOR, worldPos);
         this.playerInventory = playerInventory;
-        this.inventory = getInventory();
+        this.inventory = getTileInventory();
         this.reload(0, 0, 240, 240);
     }
 
     public HologramProjectorTileEntity getEntity() {
-        TileEntity tileEntity = pos.evaluate(World::getBlockEntity).orElse(null);
+        TileEntity tileEntity = getTileEntity();
         if (tileEntity instanceof HologramProjectorTileEntity) {
             return (HologramProjectorTileEntity) tileEntity;
-        }
-        return null;
-    }
-
-    public IInventory getInventory() {
-        HologramProjectorTileEntity tileEntity = getEntity();
-        if (tileEntity != null) {
-            return tileEntity.getInventory();
         }
         return null;
     }
@@ -63,29 +51,8 @@ public class HologramProjectorContainer extends Container {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
-        return stillValid(this.pos, player, ModBlocks.HOLOGRAM_PROJECTOR);
-    }
-
-    @Override
     public ItemStack quickMoveStack(PlayerEntity player, int index) {
-        Slot slot = this.slots.get(index);
-        if (slot == null || !slot.hasItem()) {
-            return ItemStack.EMPTY;
-        }
-        ItemStack itemStack = slot.getItem();
-        if (slot instanceof GroupSlot) {
-            if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
-                return ItemStack.EMPTY;
-            }
-            slot.set(ItemStack.EMPTY);
-            return itemStack.copy();
-        }
-        if (!moveItemStackTo(itemStack, 36, 37, false)) {
-            return ItemStack.EMPTY;
-        }
-        slot.setChanged();
-        return ItemStack.EMPTY;
+        return quickMoveStack(player, index, slots.size());
     }
 
     public boolean shouldRenderPlayerInventory() {

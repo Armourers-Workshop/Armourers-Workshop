@@ -1,5 +1,6 @@
 {
   "__comment": "Designed by Thundercat_ with Cubik Studio - https://cubik.studio",
+  "ambientocclusion": false,
   "textures": {
     "cobblestone": "block/cobblestone",
     "planks": "block/oak_planks",
@@ -11,7 +12,7 @@
     "globalskin": "armourers_workshop:block/skin-library-global/globalskinlibrary1",
     "globalskin2": "armourers_workshop:block/skin-library-global/globalskinlibrary2",
     "globalskin3": "armourers_workshop:block/skin-library-global/globalskinlibrary3",
-    "particle": "block/oak_planks"
+    "particle": "#planks"
   },
   "elements": [    
     {

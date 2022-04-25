@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
+@SuppressWarnings("NullableProblems")
 public class AWDataSerializers {
 
     public static final IDataSerializer<Vector3d> VECTOR_3D = new IDataSerializer<Vector3d>() {

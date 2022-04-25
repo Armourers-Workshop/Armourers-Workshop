@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.texture;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
+import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.resources.IResource;
@@ -18,24 +18,30 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
 public class BakedEntityTexture {
 
-    private final boolean slim;
-    private final ResourceLocation location;
-
     private final HashMap<Integer, PaintColor> allColors = new HashMap<>();
     private final HashMap<ISkinPartType, HashMap<Integer, PaintColor>> allParts = new HashMap<>();
-
     private final HashMap<ISkinPartType, Rectangle3i> allBounds = new HashMap<>();
 
-    public BakedEntityTexture(ResourceLocation location, boolean slim) {
-        this.slim = slim;
-        this.location = location;
+    private String model;
+    private ResourceLocation resourceLocation;
+
+    private boolean isSlimModel = false;
+    private boolean isLoaded = false;
+
+    public BakedEntityTexture() {
+    }
+
+    public BakedEntityTexture(ResourceLocation resourceLocation, boolean slim) {
+        this.isSlimModel = slim;
+        this.resourceLocation = resourceLocation;
         BufferedImage bufferedImage;
         try {
-            IResource resource = Minecraft.getInstance().getResourceManager().getResource(location);
+            IResource resource = Minecraft.getInstance().getResourceManager().getResource(resourceLocation);
             bufferedImage = ImageIO.read(resource.getInputStream());
             if (bufferedImage != null) {
 //                slim = (bufferedImage.getRGB(54, 20) & 0xff000000) == 0;
@@ -45,19 +51,13 @@ public class BakedEntityTexture {
         }
     }
 
-    public BakedEntityTexture(ResourceLocation location, NativeImage image, boolean slim) {
-        this.slim = slim;
-        this.location = location;
+    public void loadImage(NativeImage image, boolean slim) {
         this.loadColors(image.getWidth(), image.getHeight(), slim, (x, y) -> {
             int color = image.getPixelRGBA(x, y);
             int red = (color << 16) & 0xff0000;
             int blue = (color >> 16) & 0x0000ff;
             return (color & 0xff00ff00) | red | blue;
         });
-    }
-
-    public boolean isSlim() {
-        return slim;
     }
 
     private void loadColors(int width, int height, boolean slim, IColorAccessor accessor) {
@@ -74,6 +74,7 @@ public class BakedEntityTexture {
                 allColors.put(getUVKey(u, v), paintColor);
             });
         }
+        this.isLoaded = true;
     }
 
 
@@ -93,9 +94,6 @@ public class BakedEntityTexture {
         return part.get(getPosKey(x, y, z, dir));
     }
 
-    public ResourceLocation getLocation() {
-        return location;
-    }
 
     private int getPosKey(int x, int y, int z, Direction dir) {
         return (dir.get3DDataValue() & 0xff) << 24 | (z & 0xff) << 16 | (y & 0xff) << 8 | (x & 0xff);
@@ -103,6 +101,31 @@ public class BakedEntityTexture {
 
     private int getUVKey(int u, int v) {
         return (v & 0xffff) << 16 | (u & 0xffff);
+    }
+
+    public ResourceLocation getResourceLocation() {
+        return resourceLocation;
+    }
+
+    public void setResourceLocation(ResourceLocation location) {
+        this.resourceLocation = location;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+        this.isSlimModel = Objects.equals(model, "slim");
+    }
+
+    public boolean isSlimModel() {
+        return isSlimModel;
+    }
+
+    public boolean isLoaded() {
+        return isLoaded;
     }
 
     interface IColorAccessor {

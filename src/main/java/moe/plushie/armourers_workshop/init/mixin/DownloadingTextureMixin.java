@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(DownloadingTexture.class)
@@ -28,8 +27,8 @@ public class DownloadingTextureMixin {
         }
     }
 
-    @Inject(method = "upload", at = @At(value = "HEAD"))
-    private void hooked_loadCallback(NativeImage image, CallbackInfo ci) {
-        PlayerTextureLoader.getInstance().bakingTexture(urlString, image, slimModel);
+    @Inject(method = "load(Ljava/io/InputStream;)Lnet/minecraft/client/renderer/texture/NativeImage;", at = @At(value = "RETURN"))
+    private void hooked_loadCallback(CallbackInfoReturnable<NativeImage> ci) {
+        PlayerTextureLoader.getInstance().receivePlayerTexture(urlString, ci.getReturnValue(), slimModel);
     }
 }

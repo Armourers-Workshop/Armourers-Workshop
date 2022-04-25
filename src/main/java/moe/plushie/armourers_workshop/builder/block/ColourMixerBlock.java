@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.block;
 
 import moe.plushie.armourers_workshop.builder.tileentity.ColourMixerTileEntity;
+import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import net.minecraft.block.Block;
@@ -30,11 +31,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @SuppressWarnings("NullableProblems")
-public class ColourMixerBlock extends HorizontalBlock {
+public class ColourMixerBlock extends AbstractHorizontalBlock {
 
     public ColourMixerBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -93,11 +93,4 @@ public class ColourMixerBlock extends HorizontalBlock {
         return ActionResultType.CONSUME;
     }
 
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable IBlockReader world, List<ITextComponent> tooltips, ITooltipFlag flags) {
-        super.appendHoverText(itemStack, world, tooltips, flags);
-        tooltips.addAll(TranslateUtils.subtitles(getDescriptionId() + ".flavour"));
-    }
 }

@@ -491,7 +491,7 @@ public class ModConfigSpec {
             });
 
             builder.defineCategory("cache", "Change (memory use/IO access) ratio by category setting in this category.", () -> {
-                skinCacheExpireTime = builder.defineInRange("expireTime", 6000, 0, 3600,
+                skinCacheExpireTime = builder.defineInRange("expireTime", 6000, 0, 36000,
                         "How long in seconds the server will keep skins in it's cache.",
                         "Default 600 seconds is 10 minutes.",
                         "Setting to 0 turns off this option.");

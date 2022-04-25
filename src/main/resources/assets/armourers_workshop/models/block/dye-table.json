@@ -15,7 +15,7 @@
     "yellowfluid": "armourers_workshop:block/dye-table/yellowfluid",
     "redfluid": "armourers_workshop:block/dye-table/redfluid",
     "spruce": "block/spruce_planks",
-    "particle": "block/oak_planks"
+    "particle": "#planks"
   },
   "elements": [    
     {

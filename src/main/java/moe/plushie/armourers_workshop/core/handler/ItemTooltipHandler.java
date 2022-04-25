@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.handler;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
@@ -204,7 +205,9 @@ public class ItemTooltipHandler {
         }
 
         if (ModConfig.Client.skinPreDrawBackground) {
+            RenderSystem.enableDepthTest();
             GuiUtils.drawContinuousTexturedBox(matrixStack, RenderUtils.TEX_GUI_PREVIEW, x, y, 0, 0, size, size, 62, 62, 4, 400);
+            RenderSystem.disableDepthTest();
         }
         IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         SkinItemRenderer.renderSkin(descriptor, x, y, 500, size, size, 150, 45, 0, matrixStack, buffers);

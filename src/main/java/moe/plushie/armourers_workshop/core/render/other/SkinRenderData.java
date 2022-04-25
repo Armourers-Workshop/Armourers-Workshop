@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.render.other;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import moe.plushie.armourers_workshop.api.skin.*;
 import moe.plushie.armourers_workshop.core.capability.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
-import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
@@ -18,21 +18,19 @@ import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
+import moe.plushie.armourers_workshop.init.common.ModCompatible;
 import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 
@@ -124,15 +122,19 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     protected void loadEquipmentSlots(Entity entity) {
         int index = 0;
-        for (ItemStack itemStack : entity.getAllSlots()) {
+        for (ItemStack itemStack : Iterables.concat(ModCompatible.getHandSlots(entity), ModCompatible.getArmorSlots(entity))) {
             if (index >= lastEquipmentSlots.size()) {
-                break;
-            }
-            if (lastVersion != version || lastEquipmentSlots.get(index) != itemStack) {
+                lastEquipmentSlots.add(itemStack);
+                version += 1;
+            } else if (lastVersion != version || lastEquipmentSlots.get(index) != itemStack) {
                 lastEquipmentSlots.set(index, itemStack);
                 version += 1;
             }
             index += 1;
+        }
+        // clear expired item stack
+        while (index < lastEquipmentSlots.size()) {
+            lastEquipmentSlots.remove(index);
         }
     }
 
@@ -197,20 +199,19 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     }
 
     private void loadArmorSlots(Entity entity, BiConsumer<ItemStack, Boolean> consumer) {
-        int size = SkinSlotType.DYE.getIndex();
-        entity.getArmorSlots().forEach(itemStack -> consumer.accept(itemStack, false));
+        ModCompatible.getArmorSlots(entity).forEach(itemStack -> consumer.accept(itemStack, false));
         if (!isActiveWardrobe) {
             return;
         }
+        int size = SkinSlotType.DYE.getIndex();
         for (int i = 0; i < size; ++i) {
             consumer.accept(lastWardrobeSlots.get(i), false);
         }
     }
 
     private void loadHandSlots(Entity entity, BiConsumer<ItemStack, Boolean> consumer) {
-        entity.getHandSlots().forEach(itemStack -> consumer.accept(itemStack, true));
+        ModCompatible.getHandSlots(entity).forEach(itemStack -> consumer.accept(itemStack, true));
     }
-
 
     private void updateDye(ISkinPaintType paintType, ItemStack itemStack) {
         PaintColor paintColor = ColoredItem.getColor(itemStack);
@@ -230,7 +231,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
             return;
         }
         ISkinType type = bakedSkin.getType();
-        // If held an skin of armor type, nothing happen
+        // If held a skin of armor type, nothing happen
         if (type instanceof ISkinArmorType && !isHeld) {
             armorSkins.add(new Entry(descriptor, bakedSkin, colorScheme, false));
             loadSkinPart(bakedSkin);
@@ -324,7 +325,6 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         }
         return false;
     }
-
 
     public static class Entry {
 

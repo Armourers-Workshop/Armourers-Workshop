@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.tileentity;
 
+import moe.plushie.armourers_workshop.api.common.IHasInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -14,7 +15,7 @@ import net.minecraft.util.text.ITextComponent;
 import javax.annotation.Nullable;
 
 @SuppressWarnings("NullableProblems")
-public abstract class AbstractContainerTileEntity extends LockableLootTileEntity {
+public abstract class AbstractContainerTileEntity extends LockableLootTileEntity implements IHasInventory {
 
     public AbstractContainerTileEntity(TileEntityType<?> entityType) {
         super(entityType);

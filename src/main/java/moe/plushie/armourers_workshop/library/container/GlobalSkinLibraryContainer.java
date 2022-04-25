@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.library.container;
 
+import moe.plushie.armourers_workshop.core.container.AbstractBlockContainer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -13,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 
 @SuppressWarnings("NullableProblems")
-public class GlobalSkinLibraryContainer extends Container {
+public class GlobalSkinLibraryContainer extends AbstractBlockContainer<Block> {
 
     private boolean isVisible = false;
 
@@ -22,11 +24,9 @@ public class GlobalSkinLibraryContainer extends Container {
 
     private final IInventory inventory = new Inventory(2);
     private final PlayerInventory playerInventory;
-    private final IWorldPosCallable access;
 
     public GlobalSkinLibraryContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
-        super(ModContainerTypes.SKIN_LIBRARY_GLOBAL, containerId);
-        this.access = access;
+        super(containerId, ModContainerTypes.SKIN_LIBRARY_GLOBAL, ModBlocks.SKIN_LIBRARY_GLOBAL, access);
         this.playerInventory = playerInventory;
         this.reload(0, 0, 240, 240);
     }
@@ -59,30 +59,8 @@ public class GlobalSkinLibraryContainer extends Container {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
-        return stillValid(this.access, player, ModBlocks.SKIN_LIBRARY_GLOBAL);
-    }
-
-
-    @Override
     public ItemStack quickMoveStack(PlayerEntity player, int index) {
-        Slot slot = this.slots.get(index);
-        if (slot == null || !slot.hasItem()) {
-            return ItemStack.EMPTY;
-        }
-        ItemStack itemStack = slot.getItem();
-        if (index >= 36) {
-            if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
-                return ItemStack.EMPTY;
-            }
-            slot.set(ItemStack.EMPTY);
-            return itemStack.copy();
-        }
-        if (!moveItemStackTo(itemStack, 36, slots.size() - 1, false)) {
-            return ItemStack.EMPTY;
-        }
-        slot.setChanged();
-        return ItemStack.EMPTY;
+        return quickMoveStack(player, index, slots.size() - 1);
     }
 
     public void crafting() {

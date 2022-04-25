@@ -8,7 +8,7 @@
     "texture": "armourers_workshop:block/skinning-table/skinning-table-side",
     "skinningtable1": "armourers_workshop:block/skinning-table/skinningtable1",
     "blackclay": "block/black_terracotta",
-    "particle": "block/oak_planks"
+    "particle": "#wood"
   },
   "elements": [    
     {

@@ -1,0 +1,9 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "side": "armourers_workshop:block/armourer/armourer-side",
+    "top": "armourers_workshop:block/armourer/armourer-top",
+    "bottom": "armourers_workshop:block/armourer/armourer-bottom",
+    "particle": "#side"
+  }
+}

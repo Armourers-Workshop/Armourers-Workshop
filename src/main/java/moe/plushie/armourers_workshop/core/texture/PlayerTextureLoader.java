@@ -3,8 +3,8 @@ package moe.plushie.armourers_workshop.core.texture;
 import com.google.common.hash.Hashing;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -41,10 +41,11 @@ public class PlayerTextureLoader {
     private static final PlayerTextureLoader LOADER = new PlayerTextureLoader();
 
     private final HashMap<String, Optional<GameProfile>> profiles = new HashMap<>();
-    private final HashMap<PlayerTextureDescriptor, Optional<PlayerTexture>> textures = new HashMap<>();
-    private final HashSet<PlayerTextureDescriptor> loading = new HashSet<>();
+    private final HashMap<PlayerTextureDescriptor, Optional<PlayerTexture>> resolvedTextures = new HashMap<>();
+    private final HashSet<PlayerTextureDescriptor> loadingTextures = new HashSet<>();
 
-    private final HashMap<ResourceLocation, Optional<PlayerTexture>> textures2 = new HashMap<>();
+    private final HashMap<String, BakedEntityTexture> downloadedTextures = new HashMap<>();
+    private final HashMap<ResourceLocation, Optional<PlayerTexture>> bakedTextures = new HashMap<>();
 
     private final Executor executor = Executors.newFixedThreadPool(1);
 
@@ -54,7 +55,7 @@ public class PlayerTextureLoader {
 
     @Nullable
     public BakedEntityTexture getTextureModel(ResourceLocation location) {
-        Optional<PlayerTexture> texture = textures2.get(location);
+        Optional<PlayerTexture> texture = bakedTextures.get(location);
         if (texture != null) {
             return texture.map(PlayerTexture::getTexture).orElse(null);
         }
@@ -82,7 +83,7 @@ public class PlayerTextureLoader {
         if (descriptor.isEmpty()) {
             return null;
         }
-        Optional<PlayerTexture> texture = textures.get(descriptor);
+        Optional<PlayerTexture> texture = resolvedTextures.get(descriptor);
         if (texture != null) {
             return texture.orElse(null);
         }
@@ -91,12 +92,12 @@ public class PlayerTextureLoader {
     }
 
     public void loadTextureDescriptor(PlayerTextureDescriptor descriptor, Consumer<Optional<PlayerTextureDescriptor>> complete) {
-        Optional<PlayerTexture> texture = textures.get(descriptor);
-        if (texture != null || descriptor.isEmpty() || !loading.add(descriptor)) {
+        Optional<PlayerTexture> texture = resolvedTextures.get(descriptor);
+        if (texture != null || descriptor.isEmpty() || !loadingTextures.add(descriptor)) {
             complete.accept(Optional.of(descriptor));
             return;
         }
-        // from username
+        // load from username
         GameProfile profile = descriptor.getProfile();
         if (profile != null) {
             loadGameProfile(profile, profile1 -> complete.accept(profile1.map(resolvedProfile -> {
@@ -107,7 +108,7 @@ public class PlayerTextureLoader {
             })));
             return;
         }
-        // from url
+        // load from url
         String url = descriptor.getURL();
         if (url != null) {
             try {
@@ -163,50 +164,26 @@ public class PlayerTextureLoader {
         });
     }
 
-    public void bakingTexture(String url, NativeImage image, boolean slim) {
-        if (image == null) {
-            return;
-        }
-        PlayerTexture pendingTexture = null;
-        for (Optional<PlayerTexture> texture : textures.values()) {
-            if (texture.isPresent() && Objects.equals(texture.get().getURL(), url)) {
-                pendingTexture = texture.get();
-                break;
-            }
-        }
-        if (pendingTexture == null) {
-            return;
-        }
-        if (pendingTexture.getModel() == null) {
-            pendingTexture.setModel("default");
-            if (slim) {
-                pendingTexture.setModel("slim");
-            }
-        }
-        slim = Objects.equals(pendingTexture.getModel(), "slim");
-        pendingTexture.setTexture(new BakedEntityTexture(pendingTexture.getLocation(), image, slim));
-        ModLog.debug("Baked a player texture => {}, slim => {}", pendingTexture.getLocation(), slim);
-    }
-
     public void loadDefaultTexture(ResourceLocation location) {
         boolean alex = location.equals(ALEX_SKIN_LOCATION);
         if (!alex && !location.equals(STEVE_SKIN_LOCATION)) {
-            return;
+            return; // not steve and alex
         }
-        textures2.put(location, Optional.empty());
+        bakedTextures.put(location, Optional.empty());
         executor.execute(() -> {
             PlayerTexture resolvedTexture = new PlayerTexture("", location, null);
             resolvedTexture.setTexture(new BakedEntityTexture(location, alex));
-            textures2.put(location, Optional.of(resolvedTexture));
+            bakedTextures.put(location, Optional.of(resolvedTexture));
         });
     }
 
     private void loadVanillaTexture(GameProfile profile) {
         PlayerTextureDescriptor descriptor = new PlayerTextureDescriptor(profile);
-        Optional<PlayerTexture> texture = textures.get(descriptor);
+        Optional<PlayerTexture> texture = resolvedTextures.get(descriptor);
         if (texture != null) {
             return;
         }
+        ModLog.debug("accept player texture load request => {}", profile);
         SkinManager manager = Minecraft.getInstance().getSkinManager();
         manager.registerSkins(profile, (type, location, profileTexture) -> {
             if (type != MinecraftProfileTexture.Type.SKIN) {
@@ -216,37 +193,68 @@ public class PlayerTextureLoader {
             if (model == null) {
                 model = "default";
             }
-            ModLog.debug("Receive a player texture => {}", location);
-            PlayerTexture resolvedTexture = new PlayerTexture(profileTexture.getUrl(), location, model);
-            textures.put(descriptor, Optional.of(resolvedTexture));
-            textures2.put(location, Optional.of(resolvedTexture));
-            loading.remove(descriptor);
+            ModLog.debug("receive player texture from vanilla loader => {}", location);
+            receivePlayerTexture(descriptor, location, profileTexture.getUrl(), model);
         }, true);
     }
 
     @SuppressWarnings("UnstableApiUsage")
     private void loadCustomTexture(String url) {
         PlayerTextureDescriptor descriptor = new PlayerTextureDescriptor(url);
-        Optional<PlayerTexture> texture = textures.get(descriptor);
+        Optional<PlayerTexture> texture = resolvedTextures.get(descriptor);
         if (texture != null) {
             return;
         }
+        ModLog.debug("accept player texture load request => {}", url);
         String identifier = Hashing.sha1().hashUnencodedChars(url).toString();
         ResourceLocation location = new ResourceLocation("skins/aw-" + identifier);
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
         Texture processingTexture = textureManager.getTexture(location);
-        PlayerTexture resolvedTexture = new PlayerTexture(url, location, null);
         if (processingTexture != null) {
             return;
         }
         String sub = identifier.length() > 2 ? identifier.substring(0, 2) : "xx";
         File path = new File(AWCore.getRootDirectory() + "/skin-textures/" + sub + "/" + identifier);
         DownloadingTexture downloadingTexture = new DownloadingTexture(path, url, DefaultPlayerSkin.getDefaultSkin(), true, () -> {
-            ModLog.debug("Receive a player texture => {}", location);
-            textures.put(descriptor, Optional.of(resolvedTexture));
-            textures2.put(location, Optional.of(resolvedTexture));
-            loading.remove(descriptor);
+            ModLog.debug("receive player texture from custom loader => {}", location);
+            receivePlayerTexture(descriptor, location, url, null);
         });
         textureManager.register(location, downloadingTexture);
+    }
+
+    public void receivePlayerTexture(String url, NativeImage image, boolean slim) {
+        if (image == null) {
+            return;
+        }
+        NativeImage newImage = new NativeImage(image.format(), image.getWidth(), image.getHeight(), true);
+        newImage.copyFrom(image);
+        executor.execute(() -> {
+            BakedEntityTexture bakedTexture = getDownloadedTexture(url);
+            if (bakedTexture.getModel() == null) {
+                bakedTexture.setModel("default");
+                if (slim) {
+                    bakedTexture.setModel("slim");
+                }
+            }
+            bakedTexture.loadImage(newImage, Objects.equals(bakedTexture.getModel(), "slim"));
+            ModLog.debug("baked a player texture => {}, slim => {}", bakedTexture.getResourceLocation(), slim);
+        });
+    }
+
+
+    private synchronized void receivePlayerTexture(PlayerTextureDescriptor descriptor, ResourceLocation location, String url, String model) {
+        PlayerTexture resolvedTexture = new PlayerTexture(url, location, model);
+        BakedEntityTexture bakedTexture = getDownloadedTexture(url);
+        bakedTexture.setResourceLocation(location);
+        bakedTexture.setModel(model);
+        resolvedTexture.setTexture(bakedTexture);
+        // setup texture
+        resolvedTextures.put(descriptor, Optional.of(resolvedTexture));
+        bakedTextures.put(location, Optional.of(resolvedTexture));
+        loadingTextures.remove(descriptor);
+    }
+
+    private synchronized BakedEntityTexture getDownloadedTexture(String url) {
+        return downloadedTextures.computeIfAbsent(url, k -> new BakedEntityTexture());
     }
 }

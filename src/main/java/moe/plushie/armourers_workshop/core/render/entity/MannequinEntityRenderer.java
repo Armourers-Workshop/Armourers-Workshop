@@ -82,7 +82,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
 
     @Override
     public MannequinModel<T> getModel() {
-        if (bakedTexture != null && bakedTexture.isSlim()) {
+        if (bakedTexture != null && bakedTexture.isSlimModel()) {
             return slimModel;
         }
         return normalModel;

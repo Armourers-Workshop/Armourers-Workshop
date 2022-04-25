@@ -8,14 +8,14 @@ import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.tileentity.DyeTableTileEntity;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
+import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
-import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModItems;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -23,28 +23,18 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.world.World;
 
 @SuppressWarnings("NullableProblems")
-public class DyeTableContainer extends Container {
+public class DyeTableContainer extends AbstractBlockContainer<Block> {
 
     private final ISkinPaintType[] paintTypes = {SkinPaintTypes.DYE_1, SkinPaintTypes.DYE_2, SkinPaintTypes.DYE_3, SkinPaintTypes.DYE_4, SkinPaintTypes.DYE_5, SkinPaintTypes.DYE_6, SkinPaintTypes.DYE_7, SkinPaintTypes.DYE_8};
     private final IInventory inventory;
-    private final IWorldPosCallable access;
 
     public DyeTableContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
-        super(ModContainerTypes.DYE_TABLE, containerId);
-        this.access = access;
-        this.inventory = getEntity();
+        super(containerId, ModContainerTypes.DYE_TABLE, ModBlocks.DYE_TABLE, access);
+        this.inventory = getTileInventory();
         this.addPlayerSlots(playerInventory, 8, 108);
         this.addCustomSlots(inventory, 68, 36, 22, 22);
         this.addInputSlot(inventory, 8, 26, 23);
         this.addOutputSlot(inventory, 9, 26, 69);
-    }
-
-    public DyeTableTileEntity getEntity() {
-        TileEntity tileEntity = access.evaluate(World::getBlockEntity).orElse(null);
-        if (tileEntity instanceof DyeTableTileEntity) {
-            return (DyeTableTileEntity) tileEntity;
-        }
-        return null;
     }
 
     public void setOutputStack(ItemStack itemStack) {
@@ -56,29 +46,8 @@ public class DyeTableContainer extends Container {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
-        return stillValid(this.access, player, ModBlocks.DYE_TABLE);
-    }
-
-    @Override
     public ItemStack quickMoveStack(PlayerEntity player, int index) {
-        Slot slot = this.slots.get(index);
-        if (slot == null || !slot.hasItem()) {
-            return ItemStack.EMPTY;
-        }
-        ItemStack itemStack = slot.getItem();
-        if (index >= 36) {
-            if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
-                return ItemStack.EMPTY;
-            }
-            slot.set(ItemStack.EMPTY);
-            return itemStack.copy();
-        }
-        if (!moveItemStackTo(itemStack, 36, slots.size() - 1, false)) {
-            return ItemStack.EMPTY;
-        }
-        slot.setChanged();
-        return ItemStack.EMPTY;
+        return quickMoveStack(player, index, slots.size() - 1);
     }
 
     protected void addInputSlot(IInventory inventory, int slot, int x, int y) {

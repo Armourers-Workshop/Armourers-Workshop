@@ -92,7 +92,7 @@ public class SkinDescriptor implements ISkinDescriptor {
         return nbt;
     }
 
-    public ItemStack asItemStack() {
+    public ItemStack sharedItemStack() {
         if (isEmpty()) {
             return ItemStack.EMPTY;
         }
@@ -103,6 +103,10 @@ public class SkinDescriptor implements ISkinDescriptor {
         setDescriptor(itemStack, this);
         skinItemStack = itemStack;
         return itemStack;
+    }
+
+    public ItemStack asItemStack() {
+        return sharedItemStack().copy();
     }
 
     public boolean isEmpty() {

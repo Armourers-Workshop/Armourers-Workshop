@@ -5,7 +5,7 @@
     "top": "armourers_workshop:block/colour-mixer/colour-mixer-top",
     "bottom": "armourers_workshop:block/colour-mixer/colour-mixer-bottom",
     "overlay": "armourers_workshop:block/colour-mixer/colour-mixer-side-overlay",
-    "particle": "armourers_workshop:block/colour-mixer/colour-mixer-top"
+    "particle": "#top"
   },
   "elements": [
     {

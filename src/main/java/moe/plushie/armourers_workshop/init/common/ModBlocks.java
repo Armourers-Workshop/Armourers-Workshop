@@ -1,6 +1,9 @@
 package moe.plushie.armourers_workshop.init.common;
 
+import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.block.ColourMixerBlock;
+import moe.plushie.armourers_workshop.builder.block.OutfitMakerBlock;
+import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.block.DyeTableBlock;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
@@ -35,7 +38,14 @@ public class ModBlocks {
     public static final Block SKIN_LIBRARY = register("skin-library", SkinLibraryBlock::new, p -> p.strength(1.5f, 6.f).noOcclusion());
     public static final Block SKIN_LIBRARY_GLOBAL = register("skin-library-global", GlobalSkinLibraryBlock::new, p -> p.strength(1.5f, 6.f).noOcclusion());
 
+    public static final Block OUTFIT_MAKER = register("outfit-maker", OutfitMakerBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f).noOcclusion());
     public static final Block COLOUR_MIXER = register("colour-mixer", ColourMixerBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f));
+    public static final Block ARMOURER = register("armourer", ArmourerBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f));
+
+    public static final Block SKIN_CUBE = register("skin-cube", SkinCubeBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f));
+    public static final Block SKIN_CUBE_GLASS = registerGlass("skin-cube-glass", SkinCubeBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f).noOcclusion());
+    public static final Block SKIN_CUBE_GLOWING = register("skin-cube-glowing", SkinCubeBlock::new, p -> p.lightLevel(s -> 15).requiresCorrectToolForDrops().strength(1.5f, 6.f));
+    public static final Block SKIN_CUBE_GLASS_GLOWING = registerGlass("skin-cube-glass-glowing", SkinCubeBlock::new, p -> p.lightLevel(s -> 15).requiresCorrectToolForDrops().strength(1.5f, 6.f).noOcclusion());
 
     private static ToIntFunction<BlockState> litBlockEmission(int level) {
         return state -> state.getValue(BlockStateProperties.LIT) ? level : 0;
@@ -47,6 +57,15 @@ public class ModBlocks {
 
     private static <T extends Block> T register(String name, Function<Block.Properties, T> factory, Consumer<Block.Properties> customizer) {
         Block.Properties properties = AbstractBlock.Properties.of(Material.STONE, MaterialColor.COLOR_RED);
+        return register(name, properties, factory, customizer);
+    }
+
+    private static <T extends Block> T registerGlass(String name, Function<Block.Properties, T> factory, Consumer<Block.Properties> customizer) {
+        Block.Properties properties = AbstractBlock.Properties.of(Material.GLASS, MaterialColor.COLOR_RED);
+        return register(name, properties, factory, customizer);
+    }
+
+    private static <T extends Block> T register(String name, Block.Properties properties, Function<Block.Properties, T> factory, Consumer<Block.Properties> customizer) {
         if (customizer != null) {
             customizer.accept(properties);
         }
