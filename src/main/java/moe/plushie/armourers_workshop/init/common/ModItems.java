@@ -1,11 +1,14 @@
 package moe.plushie.armourers_workshop.init.common;
 
+import moe.plushie.armourers_workshop.builder.item.BlockMarkerItem;
 import moe.plushie.armourers_workshop.core.item.*;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.library.block.SkinLibraryBlock;
 import net.minecraft.block.Block;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -66,8 +69,16 @@ public class ModItems {
 //    public static final Item ARMOUR_CONTAINER = register("armour-container", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));
     public static final Item LINKING_TOOL = register("linking-tool", LinkingToolItem::new, p -> p.tab(MAIN_GROUP));
 
+    public static final Item OUTFIT_MAKER = registerBlock("outfit-maker", ModBlocks.OUTFIT_MAKER, p -> p.tab(MAIN_GROUP));
     public static final Item COLOUR_MIXER = registerBlock("colour-mixer", ModBlocks.COLOUR_MIXER, p -> p.tab(MAIN_GROUP));
+    public static final Item ARMOURER = registerBlock("armourer", ModBlocks.ARMOURER, p -> p.tab(MAIN_GROUP));
 
+    public static final Item SKIN_CUBE = registerBlock("skin-cube", ModBlocks.SKIN_CUBE, p -> p.tab(MAIN_GROUP));
+    public static final Item SKIN_CUBE_GLASS = registerBlock("skin-cube-glass", ModBlocks.SKIN_CUBE_GLASS, p -> p.tab(MAIN_GROUP));
+    public static final Item SKIN_CUBE_GLOWING = registerBlock("skin-cube-glowing", ModBlocks.SKIN_CUBE_GLOWING, p -> p.tab(MAIN_GROUP));
+    public static final Item SKIN_CUBE_GLASS_GLOWING = registerBlock("skin-cube-glass-glowing", ModBlocks.SKIN_CUBE_GLASS_GLOWING, p -> p.tab(MAIN_GROUP));
+
+    public static final Item BLOCK_MARKER = register("block-marker", BlockMarkerItem::new, p -> p.tab(MAIN_GROUP));
 
     private static <T extends Item> T register(String name, Function<Item.Properties, T> factory) {
         return register(name, factory, null);

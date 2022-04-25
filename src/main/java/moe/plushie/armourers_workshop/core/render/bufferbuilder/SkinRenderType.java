@@ -5,8 +5,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.core.utils.PaintingUtils;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
@@ -37,6 +39,8 @@ public class SkinRenderType extends RenderType {
     public static final RenderType EARTH = createImageType(RenderUtils.TEX_EARTH, false);
 
     public static final RenderType ENTITY_OUTLINE = createEntityOutline();
+
+    public static final RenderType ITEM_TRANSLUCENT_WITHOUT_SORTED = create("translucent22", DefaultVertexFormats.NEW_ENTITY, 7, 256, false, false, createTranslucentState());
 
     public static final SkinRenderType SOLID_FACE = new SkinRenderType("aw_quad_face", createSolidFace(false), true, false);
     public static final SkinRenderType LIGHTING_FACE = new SkinRenderType("aw_lighting_quad_face", createLightingPart(false), false, false);
@@ -75,6 +79,17 @@ public class SkinRenderType extends RenderType {
     public static RenderState colorOffset() {
         return COLORS_OFFSET;
     }
+
+    private static RenderType.State createTranslucentState() {
+        return RenderType.State.builder()
+                .setTextureState(new RenderState.TextureState(AtlasTexture.LOCATION_BLOCKS, false, false))
+                .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                .setDiffuseLightingState(DIFFUSE_LIGHTING).setAlphaState(DEFAULT_ALPHA)
+                .setLightmapState(LIGHTMAP)
+                .setOverlayState(OVERLAY)
+                .createCompositeState(true);
+    }
+
 
     private static RenderType createEntityOutline() {
 

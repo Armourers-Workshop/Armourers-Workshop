@@ -14,7 +14,6 @@ import java.awt.*;
 @OnlyIn(Dist.CLIENT)
 public class AWHSBSliderBox extends Button {
 
-
     private final Type type;
     private final float[] values = {1, 1, 1};
 
@@ -23,7 +22,6 @@ public class AWHSBSliderBox extends Button {
     private Button.IPressable endHandler;
 
     private boolean dragging = false;
-
 
     public AWHSBSliderBox(int x, int y, int width, int height, Type type, IPressable changeHandler) {
         super(x, y, width, height, StringTextComponent.EMPTY, changeHandler);

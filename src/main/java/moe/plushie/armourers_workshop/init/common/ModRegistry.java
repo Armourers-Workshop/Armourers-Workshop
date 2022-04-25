@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.common;
 
 import moe.plushie.armourers_workshop.builder.block.ColourMixerBlock;
+import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.builder.gui.colourmixer.ColourMixerScreen;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobeStorage;
@@ -110,6 +111,10 @@ public class ModRegistry {
     @OnlyIn(Dist.CLIENT)
     public void registerBlockColors(ColorHandlerEvent.Block event) {
         event.getBlockColors().register(ColourMixerBlock.getColorProvider(1), ModBlocks.COLOUR_MIXER);
+        event.getBlockColors().register(SkinCubeBlock.getColorProvider(), ModBlocks.SKIN_CUBE);
+        event.getBlockColors().register(SkinCubeBlock.getColorProvider(), ModBlocks.SKIN_CUBE_GLASS);
+        event.getBlockColors().register(SkinCubeBlock.getColorProvider(), ModBlocks.SKIN_CUBE_GLASS_GLOWING);
+        event.getBlockColors().register(SkinCubeBlock.getColorProvider(), ModBlocks.SKIN_CUBE_GLOWING);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -139,22 +144,30 @@ public class ModRegistry {
         ScreenManager.register(ModContainerTypes.HOLOGRAM_PROJECTOR, HologramProjectorScreen::new);
         ScreenManager.register(ModContainerTypes.COLOUR_MIXER, ColourMixerScreen::new);
 
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKINNING_TABLE, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.DYE_TABLE, RenderType.cutout());
+
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_LIBRARY_CREATIVE, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_LIBRARY, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_LIBRARY_GLOBAL, RenderType.cutout());
+
+        RenderTypeLookup.setRenderLayer(ModBlocks.COLOUR_MIXER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.OUTFIT_MAKER, RenderType.cutout());
+
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_CUBE, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_CUBE_GLASS, RenderType.tripwire());
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_CUBE_GLASS_GLOWING, RenderType.tripwire());
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_CUBE_GLOWING, RenderType.cutout());
+
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.MANNEQUIN, MannequinEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.SEAT, SeatEntityRenderer::new);
+
         ClientRegistry.registerKeyBinding(KeyBindings.UNDO_KEY);
         ClientRegistry.registerKeyBinding(KeyBindings.OPEN_WARDROBE_KEY);
 
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.HOLOGRAM_PROJECTOR, HologramProjectorTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKINNABLE, SkinnableTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKIN_LIBRARY_GLOBAL, GlobalSkinLibraryTileEntityRenderer::new);
-
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.MANNEQUIN, MannequinEntityRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.SEAT, SeatEntityRenderer::new);
-
-        RenderTypeLookup.setRenderLayer(ModBlocks.COLOUR_MIXER, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.SKINNING_TABLE, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_LIBRARY_CREATIVE, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_LIBRARY, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_LIBRARY_GLOBAL, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.DYE_TABLE, RenderType.cutout());
 
         event.enqueueWork(SkinRendererManager::init);
         event.enqueueWork(ClientWardrobeHandler::init);

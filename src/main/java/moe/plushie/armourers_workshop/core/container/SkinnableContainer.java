@@ -4,30 +4,30 @@ import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
 import org.apache.logging.log4j.util.Strings;
 
-public class SkinnableContainer extends Container {
+import javax.annotation.Nullable;
 
-    private final IWorldPosCallable pos;
+@SuppressWarnings("NullableProblems")
+public class SkinnableContainer extends AbstractBlockContainer<Block> {
+
     private String title;
     private int row;
     private int colum;
     private IInventory inventory;
 
     public SkinnableContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable worldPos) {
-        super(ModContainerTypes.SKINNABLE, containerId);
-        this.pos = worldPos;
+        super(containerId, ModContainerTypes.SKINNABLE, ModBlocks.SKINNABLE, worldPos);
         SkinnableTileEntity tileEntity = getEntity();
         if (tileEntity == null) {
             return;
@@ -51,6 +51,11 @@ public class SkinnableContainer extends Container {
         if (inventory != null) {
             inventory.startOpen(playerInventory.player);
         }
+    }
+
+    @Override
+    public ItemStack quickMoveStack(PlayerEntity player, int index) {
+        return quickMoveStack(player, index, slots.size());
     }
 
     @Override
@@ -85,7 +90,7 @@ public class SkinnableContainer extends Container {
     }
 
     public SkinnableTileEntity getEntity() {
-        TileEntity tileEntity = pos.evaluate(World::getBlockEntity).orElse(null);
+        TileEntity tileEntity = getTileEntity();
         if (tileEntity instanceof SkinnableTileEntity) {
             return (SkinnableTileEntity) tileEntity;
         }
@@ -107,29 +112,4 @@ public class SkinnableContainer extends Container {
         return colum;
     }
 
-    @Override
-    public boolean stillValid(PlayerEntity player) {
-        return stillValid(this.pos, player, ModBlocks.SKINNABLE);
-    }
-
-    @Override
-    public ItemStack quickMoveStack(PlayerEntity player, int index) {
-        Slot slot = this.slots.get(index);
-        if (slot == null || !slot.hasItem()) {
-            return ItemStack.EMPTY;
-        }
-        ItemStack itemStack = slot.getItem();
-        if (index >= 36) {
-            if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
-                return ItemStack.EMPTY;
-            }
-            slot.setChanged();
-            return itemStack.copy();
-        }
-        if (!moveItemStackTo(itemStack, 36, slots.size(), false)) {
-            return ItemStack.EMPTY;
-        }
-        slot.setChanged();
-        return ItemStack.EMPTY;
-    }
 }

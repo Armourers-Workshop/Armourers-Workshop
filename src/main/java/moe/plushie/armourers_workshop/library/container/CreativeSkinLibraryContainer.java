@@ -10,12 +10,7 @@ import net.minecraft.util.IWorldPosCallable;
 public class CreativeSkinLibraryContainer extends SkinLibraryContainer {
 
     public CreativeSkinLibraryContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
-        super(ModContainerTypes.SKIN_LIBRARY_CREATIVE, containerId, playerInventory, access);
-    }
-
-    @Override
-    public boolean stillValid(PlayerEntity player) {
-        return stillValid(this.access, player, ModBlocks.SKIN_LIBRARY_CREATIVE);
+        super(containerId, ModContainerTypes.SKIN_LIBRARY_CREATIVE, ModBlocks.SKIN_LIBRARY_CREATIVE, playerInventory, access);
     }
 
     @Override

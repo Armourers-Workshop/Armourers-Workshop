@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -16,16 +17,13 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.world.World;
 
 @SuppressWarnings("NullableProblems")
-public class SkinningTableContainer extends Container {
+public class SkinningTableContainer extends AbstractBlockContainer<Block> {
 
     private final IInventory craftingInventory = new Inventory(2);
     private final IInventory craftingResultInventory = new Inventory(1);
 
-    private final IWorldPosCallable access;
-
     public SkinningTableContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
-        super(ModContainerTypes.SKINNING_TABLE, containerId);
-        this.access = access;
+        super(containerId, ModContainerTypes.SKINNING_TABLE, ModBlocks.SKINNING_TABLE, access);
         this.addPlayerSlots(playerInventory, 8, 94);
         this.addInputSlot(craftingInventory, 0, 37, 22);
         this.addInputSlot(craftingInventory, 1, 37, 58);
@@ -33,16 +31,11 @@ public class SkinningTableContainer extends Container {
     }
 
     public SkinnableTileEntity getEntity() {
-        TileEntity tileEntity = access.evaluate(World::getBlockEntity).orElse(null);
+        TileEntity tileEntity = getTileEntity();
         if (tileEntity instanceof SkinnableTileEntity) {
             return (SkinnableTileEntity) tileEntity;
         }
         return null;
-    }
-
-    @Override
-    public boolean stillValid(PlayerEntity player) {
-        return stillValid(this.access, player, ModBlocks.SKINNING_TABLE);
     }
 
     @Override
@@ -53,23 +46,7 @@ public class SkinningTableContainer extends Container {
 
     @Override
     public ItemStack quickMoveStack(PlayerEntity player, int index) {
-        Slot slot = this.slots.get(index);
-        if (slot == null || !slot.hasItem()) {
-            return ItemStack.EMPTY;
-        }
-        ItemStack itemStack = slot.getItem();
-        if (index >= 36) {
-            if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
-                return ItemStack.EMPTY;
-            }
-            slot.set(ItemStack.EMPTY);
-            return itemStack.copy();
-        }
-        if (!moveItemStackTo(itemStack, 36, slots.size() - 1, false)) {
-            return ItemStack.EMPTY;
-        }
-        slot.setChanged();
-        return ItemStack.EMPTY;
+        return quickMoveStack(player, index, slots.size() - 1);
     }
 
     protected void addInputSlot(IInventory inventory, int slot, int x, int y) {

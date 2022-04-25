@@ -93,7 +93,7 @@ public class SkinWardrobeScreen extends AWAbstractContainerScreen<SkinWardrobeCo
 
         tabController.add(new SkinWardrobeDisplaySetting(menu))
                 .setIcon(208, 0)
-                .setVisible(isPlayer && (ModConfig.Common.showWardrobeDisplaySettings || operator.isCreative()));
+                .setVisible(!isPlayer || ModConfig.Common.showWardrobeDisplaySettings || operator.isCreative());
 
         tabController.add(new SkinWardrobeColourSetting(menu))
                 .setIcon(224, 0)

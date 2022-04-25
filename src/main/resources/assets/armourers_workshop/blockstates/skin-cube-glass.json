@@ -1,0 +1,62 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "armourers_workshop:block/skin-cube-glass"
+      }
+    },
+    {
+      "when": {
+        "marker": "down"
+      },
+      "apply": {
+        "model": "armourers_workshop:block/skin-cube-marker",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "marker": "up"
+      },
+      "apply": {
+        "model": "armourers_workshop:block/skin-cube-marker",
+        "x": -90
+      }
+    },
+    {
+      "when": {
+        "marker": "north"
+      },
+      "apply": {
+        "model": "armourers_workshop:block/skin-cube-marker"
+      }
+    },
+    {
+      "when": {
+        "marker": "south"
+      },
+      "apply": {
+        "model": "armourers_workshop:block/skin-cube-marker",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "marker": "west"
+      },
+      "apply": {
+        "model": "armourers_workshop:block/skin-cube-marker",
+        "y": -90
+      }
+    },
+    {
+      "when": {
+        "marker": "east"
+      },
+      "apply": {
+        "model": "armourers_workshop:block/skin-cube-marker",
+        "y": 90
+      }
+    }
+  ]
+}

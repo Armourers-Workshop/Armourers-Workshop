@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.library.gui.widget;
 
-
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -21,6 +20,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Size2i;
 
 import java.awt.*;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+@OnlyIn(Dist.CLIENT)
 public class SkinFileList extends Button {
 
     protected Insets contentInset = new Insets(0, 0, 0, 0);

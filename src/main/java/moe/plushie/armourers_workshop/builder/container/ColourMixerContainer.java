@@ -1,9 +1,11 @@
 package moe.plushie.armourers_workshop.builder.container;
 
+import moe.plushie.armourers_workshop.core.container.AbstractBlockContainer;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.builder.tileentity.ColourMixerTileEntity;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -15,15 +17,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.world.World;
 
-public class ColourMixerContainer extends Container {
+public class ColourMixerContainer extends AbstractBlockContainer<Block> {
 
     private final IInventory inventory = new Inventory(2);
 
-    private final IWorldPosCallable access;
-
     public ColourMixerContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
-        super(ModContainerTypes.COLOUR_MIXER, containerId);
-        this.access = access;
+        super(containerId, ModContainerTypes.COLOUR_MIXER, ModBlocks.COLOUR_MIXER, access);
         this.addPlayerSlots(playerInventory, 48, 158);
         this.addCustomSlot(inventory, 0, 83, 101);
         this.addCustomSlot(inventory, 1, 134, 101);
@@ -38,11 +37,6 @@ public class ColourMixerContainer extends Container {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
-        return stillValid(this.access, player, ModBlocks.COLOUR_MIXER);
-    }
-
-    @Override
     public void removed(PlayerEntity player) {
         super.removed(player);
         this.access.execute((world, pos) -> this.clearContainer(player, world, inventory));
@@ -50,23 +44,7 @@ public class ColourMixerContainer extends Container {
 
     @Override
     public ItemStack quickMoveStack(PlayerEntity player, int index) {
-        Slot slot = this.slots.get(index);
-        if (slot == null || !slot.hasItem()) {
-            return ItemStack.EMPTY;
-        }
-        ItemStack itemStack = slot.getItem();
-        if (index >= 36) {
-            if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
-                return ItemStack.EMPTY;
-            }
-            slot.setChanged();
-            return itemStack.copy();
-        }
-        if (!moveItemStackTo(itemStack, 36, slots.size() - 1, false)) {
-            return ItemStack.EMPTY;
-        }
-        slot.setChanged();
-        return ItemStack.EMPTY;
+        return quickMoveStack(player, index, slots.size() - 1);
     }
 
     protected void addCustomSlot(IInventory inventory, int slot, int x, int y) {

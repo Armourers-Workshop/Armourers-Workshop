@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.library.container;
 
+import moe.plushie.armourers_workshop.core.container.AbstractBlockContainer;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
@@ -7,6 +8,7 @@ import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.library.tileentity.SkinLibraryTileEntity;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -22,10 +24,9 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 @SuppressWarnings("NullableProblems")
-public class SkinLibraryContainer extends Container {
+public class SkinLibraryContainer extends AbstractBlockContainer<Block> {
 
     protected final IInventory inventory;
-    protected final IWorldPosCallable access;
     protected final PlayerInventory playerInventory;
 
     public int inventoryWidth = 162;
@@ -34,23 +35,14 @@ public class SkinLibraryContainer extends Container {
     private int libraryVersion = 0;
 
     public SkinLibraryContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
-        this(ModContainerTypes.SKIN_LIBRARY, containerId, playerInventory, access);
+        this(containerId, ModContainerTypes.SKIN_LIBRARY, ModBlocks.SKIN_LIBRARY, playerInventory, access);
     }
 
-    public SkinLibraryContainer(@Nullable ContainerType<?> containerType, int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
-        super(containerType, containerId);
-        this.access = access;
-        this.inventory = getInventory();
+    public SkinLibraryContainer(int containerId, @Nullable ContainerType<?> containerType, Block block, PlayerInventory playerInventory, IWorldPosCallable access) {
+        super(containerId, containerType, block, access);
+        this.inventory = getTileInventory();
         this.playerInventory = playerInventory;
         this.reload(0, 0, 240, 240);
-    }
-
-    public IInventory getInventory() {
-        TileEntity tileEntity = access.evaluate(World::getBlockEntity).orElse(null);
-        if (tileEntity instanceof SkinLibraryTileEntity) {
-            return ((SkinLibraryTileEntity) tileEntity).getInventory();
-        }
-        return null;
     }
 
     public void reload(int x, int y, int width, int height) {
@@ -75,29 +67,8 @@ public class SkinLibraryContainer extends Container {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
-        return stillValid(this.access, player, ModBlocks.SKIN_LIBRARY);
-    }
-
-    @Override
     public ItemStack quickMoveStack(PlayerEntity player, int index) {
-        Slot slot = this.slots.get(index);
-        if (slot == null || !slot.hasItem()) {
-            return ItemStack.EMPTY;
-        }
-        ItemStack itemStack = slot.getItem();
-        if (index >= 36) {
-            if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
-                return ItemStack.EMPTY;
-            }
-            slot.set(ItemStack.EMPTY);
-            return itemStack.copy();
-        }
-        if (!moveItemStackTo(itemStack, 36, slots.size() - 1, false)) {
-            return ItemStack.EMPTY;
-        }
-        slot.setChanged();
-        return ItemStack.EMPTY;
+        return quickMoveStack(player, index, slots.size() - 1);
     }
 
     protected void addInputSlot(IInventory inventory, int slot, int x, int y) {

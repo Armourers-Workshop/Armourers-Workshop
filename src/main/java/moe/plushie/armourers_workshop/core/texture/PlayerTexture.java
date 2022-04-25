@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.core.texture;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import net.minecraft.util.ResourceLocation;
 
 public class PlayerTexture {
@@ -31,7 +29,10 @@ public class PlayerTexture {
     }
 
     public BakedEntityTexture getTexture() {
-        return texture;
+        if (texture != null && texture.isLoaded()) {
+            return texture;
+        }
+        return null;
     }
 
     public void setTexture(BakedEntityTexture texture) {

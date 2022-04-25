@@ -113,7 +113,7 @@ public class ClientWardrobeHandler {
         }
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (!descriptor.isEmpty()) {
-            return descriptor.asItemStack();
+            return descriptor.sharedItemStack();
         }
         return itemStack;
     }

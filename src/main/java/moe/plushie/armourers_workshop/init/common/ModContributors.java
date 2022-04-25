@@ -102,7 +102,7 @@ public class ModContributors {
         SKIN_MAKER,
         MODELER,
         WIKI_EDITOR,
-        OTHER;
+        OTHER
     }
 
     public static class Contributor {

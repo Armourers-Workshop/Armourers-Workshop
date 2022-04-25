@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.render.bufferbuilder;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
@@ -10,7 +11,6 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
-import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -23,21 +23,27 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
 import java.nio.ByteBuffer;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @OnlyIn(Dist.CLIENT)
 public class SkinRenderObjectBuilder {
 
+    private static final ExecutorService executor = Executors.newFixedThreadPool(1, r -> new Thread(r, "AW-SKIN-VB"));
+
     protected final Skin skin;
-    protected final Cache<Object, ArrayList<CompiledTask>> cachingTasks = CacheBuilder.newBuilder()
+    protected final Cache<Object, CachedTask> cachingTasks = CacheBuilder.newBuilder()
             .expireAfterAccess(3, TimeUnit.SECONDS)
             .build();
 
     protected final ArrayList<CompiledPass> pendingTasks = new ArrayList<>();
-    protected final ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
+//    protected final ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
+
+    protected final ArrayList<CachedTask> pendingCacheTasks = new ArrayList<>();
+    protected boolean isSent = false;
+
 
     public SkinRenderObjectBuilder(Skin skin) {
         this.skin = skin;
@@ -45,29 +51,17 @@ public class SkinRenderObjectBuilder {
 
     public void addPartData(BakedSkinPart part, ColorScheme scheme, int light, float partialTicks, MatrixStack matrixStack, boolean shouldRender) {
         Object key = SkinCache.borrowKey(part.getId(), part.requirements(scheme));
-        ArrayList<CompiledTask> compiledTasks = cachingTasks.getIfPresent(key);
-        if (compiledTasks != null) {
+        CachedTask cachedTask = cachingTasks.getIfPresent(key);
+        if (cachedTask != null) {
             SkinCache.returnKey(key);
-            if (shouldRender) {
-                compiledTasks.forEach(compiledTask -> pendingTasks.add(new CompiledPass(compiledTask, matrixStack, light, partialTicks)));
+            if (shouldRender && cachedTask.isCompiled) {
+                cachedTask.mergedTasks.forEach(compiledTask -> pendingTasks.add(new CompiledPass(compiledTask, matrixStack, light, partialTicks)));
             }
             return;
         }
-        MatrixStack matrixStack1 = new MatrixStack();
-        ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
-        part.forEach((renderType, quads) -> {
-            BufferBuilder builder = new BufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
-            builder.begin(renderType.mode(), renderType.format());
-            quads.forEach(quad -> quad.render(part, scheme, matrixStack1, builder));
-            builder.end();
-            CompiledTask compiledTask = new CompiledTask(renderType, builder, part.getRenderPolygonOffset());
-            mergedTasks.add(compiledTask);
-            buildingTasks.add(compiledTask);
-            if (shouldRender) {
-                pendingTasks.add(new CompiledPass(compiledTask, matrixStack, light, partialTicks));
-            }
-        });
-        cachingTasks.put(key, mergedTasks);
+        CachedTask task = new CachedTask(part, scheme);
+        cachingTasks.put(key, task);
+        addCompileTask(task);
     }
 
     public void addShapeData(Vector3f origin, MatrixStack matrixStack) {
@@ -82,17 +76,52 @@ public class SkinRenderObjectBuilder {
     }
 
     public void endBatch(SkinVertexBufferBuilder.Pipeline pipeline) {
-        if (buildingTasks.size() != 0) {
-            combineAndUpload();
-            buildingTasks.clear();
-        }
         if (pendingTasks.size() != 0) {
             pendingTasks.forEach(pipeline::add);
             pendingTasks.clear();
         }
     }
 
-    private void combineAndUpload() {
+    private synchronized void addCompileTask(CachedTask cachedTask) {
+        pendingCacheTasks.add(cachedTask);
+        if (isSent) {
+            return;
+        }
+        isSent = true;
+        executor.execute(this::doCompile);
+    }
+
+    private void doCompile() {
+        ArrayList<CachedTask> tasks;
+        synchronized (this) {
+            tasks = new ArrayList<>(pendingCacheTasks);
+            pendingCacheTasks.clear();
+            isSent = false;
+        }
+        if (tasks.isEmpty()) {
+            return;
+        }
+        MatrixStack matrixStack1 = new MatrixStack();
+        ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
+        for (CachedTask task : tasks) {
+            BakedSkinPart part = task.part;
+            ColorScheme scheme = task.scheme;
+            ArrayList<CompiledTask> mergedTasks = new ArrayList<>();
+            part.forEach((renderType, quads) -> {
+                BufferBuilder builder = new BufferBuilder(quads.size() * 8 * renderType.format().getVertexSize());
+                builder.begin(renderType.mode(), renderType.format());
+                quads.forEach(quad -> quad.render(part, scheme, matrixStack1, builder));
+                builder.end();
+                CompiledTask compiledTask = new CompiledTask(renderType, builder, part.getRenderPolygonOffset());
+                mergedTasks.add(compiledTask);
+                buildingTasks.add(compiledTask);
+            });
+            task.mergedTasks = mergedTasks;
+        }
+        combineAndUpload(tasks, buildingTasks);
+    }
+
+    private void combineAndUpload(ArrayList<CachedTask> qt, ArrayList<CompiledTask> buildingTasks) {
         int totalRenderedBytes = 0;
         SkinRenderObject vertexBuffer = new SkinRenderObject();
         ArrayList<ByteBuffer> byteBuffers = new ArrayList<>();
@@ -115,6 +144,24 @@ public class SkinRenderObjectBuilder {
         }
         mergedByteBuffer.rewind();
         vertexBuffer.upload(mergedByteBuffer);
+        RenderSystem.recordRenderCall(() -> qt.forEach(CachedTask::finish));
+    }
+
+    static class CachedTask {
+
+        boolean isCompiled = false;
+        ArrayList<CompiledTask> mergedTasks;
+        BakedSkinPart part;
+        ColorScheme scheme;
+
+        CachedTask(BakedSkinPart part, ColorScheme scheme) {
+            this.part = part;
+            this.scheme = scheme.copy();
+        }
+
+        void finish() {
+            isCompiled = true;
+        }
     }
 
     static class CompiledTask {

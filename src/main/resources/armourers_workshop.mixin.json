@@ -17,7 +17,8 @@
     "ItemRendererMixin",
     "LivingRendererMixin",
     "ModelManagerMixin",
-    "RenderTypeBuffersMixin"
+    "RenderTypeBuffersMixin",
+    "RenderTypeLookupMixin"
   ],
   "injectors": {
     "defaultRequire": 1

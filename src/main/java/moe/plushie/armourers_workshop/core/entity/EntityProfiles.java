@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.entity;
 
+import moe.plushie.armourers_workshop.init.common.ModCompatible;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.init.common.ModEntities;
@@ -129,8 +130,7 @@ public class EntityProfiles {
 
         register(ModEntities.MANNEQUIN, EntityProfiles.MANNEQUIN);
 
-        // TODO: custom register
-        register("customnpcs:customnpc", EntityProfiles.MANNEQUIN);
+        ModCompatible.registerCustomEntityType();
     }
 
 

@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.handler;
 
-import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.OpenWardrobePacket;
 import moe.plushie.armourers_workshop.core.utils.KeyBindings;
