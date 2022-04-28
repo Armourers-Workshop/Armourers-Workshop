@@ -445,8 +445,8 @@
   "item.armourers_workshop.rollover.nopaint": "§6Sem pintura.",
   "item.armourers_workshop.rollover.openSettings": "Agachar + botão direito para abrir as configurações.",
   "item.armourers_workshop.rollover.paintType": "§6Tipo de Pintura:§r %s",
-  "item.armourers_workshop.rollover.radius.effect": "§6Raio do efeito:§r %d",
-  "item.armourers_workshop.rollover.radius.sample": "§6Raio da amostra:§r %d",
+  "item.armourers_workshop.rollover.effectRadius": "§6Raio do efeito:§r %d",
+  "item.armourers_workshop.rollover.sampleRadius": "§6Raio da amostra:§r %d",
   "item.armourers_workshop.rollover.settingsSaved": "§6Configuração salva.",
   "item.armourers_workshop.rollover.skinAuthor": "§6Autor:§r %s",
   "item.armourers_workshop.rollover.skinDyeCount": "§eContagem de Corantes:§r %d",
@@ -588,6 +588,6 @@
   "tooloption.armourers_workshop.intensity": "Intensidade",
   "tooloption.armourers_workshop.planeRestrict": "Restringir plano",
   "tooloption.armourers_workshop.radius": "Raio",
-  "tooloption.armourers_workshop.radius.effect": "Raio de efeito",
-  "tooloption.armourers_workshop.radius.sample": "Raio de amostra"
+  "tooloption.armourers_workshop.effectRadius": "Raio de efeito",
+  "tooloption.armourers_workshop.sampleRadius": "Raio de amostra"
 }

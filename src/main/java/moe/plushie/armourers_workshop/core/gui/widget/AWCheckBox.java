@@ -39,6 +39,11 @@ public class AWCheckBox extends Button {
         this.height = Math.max(iconHeight, textHeight);
     }
 
+    @Override
+    public void setWidth(int width) {
+        // can't change width
+    }
+
     public boolean isSelected() {
         return this.isSelected;
     }

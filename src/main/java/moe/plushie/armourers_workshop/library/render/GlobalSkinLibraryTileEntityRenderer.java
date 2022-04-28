@@ -65,7 +65,7 @@ public class GlobalSkinLibraryTileEntityRenderer<T extends GlobalSkinLibraryTile
         matrixStack.scale(0.2f, 0.2f, 0.2f);
 
         if (entity.getLevel() != null) {
-            float angle = (entity.getLevel().getDayTime()) % 360 + partialTicks;
+            float angle = (entity.getLevel().getGameTime()) % 360 + partialTicks;
             matrixStack.mulPose(TrigUtils.rotate(angle * 4, angle, angle * 2, true));
         }
 

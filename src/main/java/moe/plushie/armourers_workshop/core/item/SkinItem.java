@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.core.item;
 
+import moe.plushie.armourers_workshop.api.common.IItemModelPropertiesProvider;
+import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -7,6 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.utils.SkinItemUseContext;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.client.world.ClientWorld;
@@ -14,15 +17,17 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.function.BiConsumer;
 
 @SuppressWarnings("NullableProblems")
-public class SkinItem extends Item {
+public class SkinItem extends Item implements IItemModelPropertiesProvider {
 
     private final BlockItem blockItem;
 
@@ -65,16 +70,6 @@ public class SkinItem extends Item {
         return targetStack;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static float getIconIndex(ItemStack itemStack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        BakedSkin bakedSkin = BakedSkin.of(descriptor);
-        if (bakedSkin != null) {
-            return 0;
-        }
-        return descriptor.getType().getId();
-    }
-
     @Override
     public ActionResultType useOn(ItemUseContext context) {
         ItemStack itemStack = context.getItemInHand();
@@ -96,5 +91,17 @@ public class SkinItem extends Item {
             return new StringTextComponent(skin.getCustomName());
         }
         return super.getName(itemStack);
+    }
+
+    @Override
+    public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
+        builder.accept(AWCore.resource("loading"), (itemStack, world, entity) -> {
+            SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+            BakedSkin bakedSkin = BakedSkin.of(descriptor);
+            if (bakedSkin != null) {
+                return 0;
+            }
+            return descriptor.getType().getId();
+        });
     }
 }

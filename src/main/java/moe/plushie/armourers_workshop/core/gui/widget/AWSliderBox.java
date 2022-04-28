@@ -11,7 +11,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import java.util.function.Function;
 
@@ -20,35 +19,61 @@ import java.util.function.Function;
 public class AWSliderBox extends Button {
 
     private final int iconWidth;
-    private final int lefIconX;
-    private final int rightIconX;
-    private final int contentLeft;
-    private final int contentWidth;
     private final int valueWidth;
     private final double minValue;
     private final double maxValue;
     private final Function<Double, ITextComponent> titleProvider;
     private final FontRenderer fontRenderer;
+
+    private int lefIconX;
+    private int rightIconX;
+    private int contentLeft;
+    private int contentWidth;
     private int valueX;
+
     private boolean dragging;
     private double stepValue = 1;
     private double currentValue;
+
+    private boolean usingHands = true;
+
     private Button.IPressable endHandler;
 
     public AWSliderBox(int x, int y, int width, int height, Function<Double, ITextComponent> titleProvider, double minValue, double maxValue, Button.IPressable changeHandler) {
         super(x, y, width, height, StringTextComponent.EMPTY, changeHandler);
         this.titleProvider = titleProvider;
         this.iconWidth = 9;
-        this.lefIconX = x;
-        this.rightIconX = x + width - iconWidth;
-        this.contentLeft = lefIconX + iconWidth + 1;
-        this.contentWidth = (rightIconX - 1) - contentLeft;
         this.valueWidth = 8;
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.fontRenderer = Minecraft.getInstance().font;
+        this.layout();
     }
 
+    public void setHands(boolean hands) {
+        this.usingHands = hands;
+        this.layout();
+    }
+
+    @Override
+    public void setWidth(int p_230991_1_) {
+        super.setWidth(p_230991_1_);
+        this.layout();
+    }
+
+    protected void layout() {
+        int handSpacing = 1;
+        int handWidth = iconWidth;
+        if (!usingHands) {
+            handSpacing = 0;
+            handWidth = 0;
+        }
+        this.lefIconX = x;
+        this.rightIconX = x + width - handWidth;
+        this.contentLeft = lefIconX + handWidth + handSpacing;
+        this.contentWidth = (rightIconX - handSpacing) - contentLeft;
+        this.setValue(currentValue);
+    }
 
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -64,8 +89,10 @@ public class AWSliderBox extends Button {
 
         RenderUtils.bind(WIDGETS_LOCATION);
         RenderUtils.tile(matrixStack, contentLeft, y, 0, 46, contentWidth, height, 200, 20, 2, 3, 2, 2);
-        RenderUtils.tile(matrixStack, lefIconX, y, 0, leftV, iconWidth, height, 200, 20, 2, 3, 2, 2);
-        RenderUtils.tile(matrixStack, rightIconX, y, 0, rightV, iconWidth, height, 200, 20, 2, 3, 2, 2);
+        if (usingHands) {
+            RenderUtils.tile(matrixStack, lefIconX, y, 0, leftV, iconWidth, height, 200, 20, 2, 3, 2, 2);
+            RenderUtils.tile(matrixStack, rightIconX, y, 0, rightV, iconWidth, height, 200, 20, 2, 3, 2, 2);
+        }
         RenderUtils.tile(matrixStack, valueX, y, 0, contentV, valueWidth, height, 200, 20, 2, 3, 2, 2);
 
         int color = 0xffffffff;
@@ -78,14 +105,14 @@ public class AWSliderBox extends Button {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         // click dec button
-        if (getState(lefIconX, iconWidth, mouseX, mouseY) == 1) {
+        if (usingHands && getState(lefIconX, iconWidth, mouseX, mouseY) == 1) {
             updateValue(getResolvedValue(-stepValue));
             playDownSound();
             onPress();
             return true;
         }
         // click add button
-        if (getState(rightIconX, iconWidth, mouseX, mouseY) == 1) {
+        if (usingHands && getState(rightIconX, iconWidth, mouseX, mouseY) == 1) {
             updateValue(getResolvedValue(stepValue));
             playDownSound();
             onPress();

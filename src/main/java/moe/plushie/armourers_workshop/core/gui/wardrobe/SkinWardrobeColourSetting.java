@@ -1,17 +1,18 @@
 package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
-import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.utils.TextureUtils;
@@ -95,7 +96,7 @@ public class SkinWardrobeColourSetting extends AWTabPanel {
         private final ITextComponent title;
 
         private Button pickButton;
-        private PaintColor color;
+        private IPaintColor color;
 
         public ColorPicker(ISkinPaintType paintType, int x, int y, boolean enableAutoPick) {
             String name = paintType.getRegistryName().getPath();
@@ -208,11 +209,11 @@ public class SkinWardrobeColourSetting extends AWTabPanel {
             return PaintColor.of(argb, SkinPaintTypes.NORMAL);
         }
 
-        private PaintColor getColor() {
-            return ColoredItem.getColor(wardrobe.getInventory().getItem(slot));
+        private IPaintColor getColor() {
+            return ColorUtils.getColor(wardrobe.getInventory().getItem(slot));
         }
 
-        private void setColor(PaintColor newValue) {
+        private void setColor(IPaintColor newValue) {
             activatedPicker = null;
             if (pickButton instanceof AWImageButton) {
                 ((AWImageButton) pickButton).setSelected(false);
@@ -225,7 +226,7 @@ public class SkinWardrobeColourSetting extends AWTabPanel {
             ItemStack itemStack = ItemStack.EMPTY;
             if (newValue != null) {
                 itemStack = new ItemStack(ModItems.BOTTLE);
-                ColoredItem.setColor(itemStack, newValue);
+                ColorUtils.setColor(itemStack, newValue);
             }
             NetworkHandler.getInstance().sendToServer(UpdateWardrobePacket.pick(wardrobe, slot, itemStack));
         }

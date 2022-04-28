@@ -1,0 +1,15 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "armourers_workshop:item/paint-roller",
+    "layer1": "armourers_workshop:item/paint-roller-tip"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "armourers_workshop:small": 1
+      },
+      "model": "armourers_workshop:item/paint-roller-small"
+    }
+  ]
+}

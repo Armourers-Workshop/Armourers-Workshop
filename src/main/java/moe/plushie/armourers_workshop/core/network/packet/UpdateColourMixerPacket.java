@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
-import moe.plushie.armourers_workshop.builder.tileentity.ColourMixerTileEntity;
+import moe.plushie.armourers_workshop.builder.tileentity.ColorMixerTileEntity;
 import moe.plushie.armourers_workshop.core.utils.AWDataAccessor;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -25,7 +25,7 @@ public class UpdateColourMixerPacket extends CustomPacket {
         this.fieldValue = field.getDataAccessor().dataSerializer.read(buffer);
     }
 
-    public UpdateColourMixerPacket(ColourMixerTileEntity entity, Field field, Object value) {
+    public UpdateColourMixerPacket(ColorMixerTileEntity entity, Field field, Object value) {
         this.pos = entity.getBlockPos();
         this.field = field;
         this.fieldValue = value;
@@ -42,34 +42,34 @@ public class UpdateColourMixerPacket extends CustomPacket {
     public void accept(ServerPlayNetHandler netHandler, ServerPlayerEntity player) {
         // TODO: check player
         TileEntity entity = player.level.getBlockEntity(pos);
-        if (entity instanceof ColourMixerTileEntity) {
-            field.set((ColourMixerTileEntity) entity, fieldValue);
+        if (entity instanceof ColorMixerTileEntity) {
+            field.set((ColorMixerTileEntity) entity, fieldValue);
         }
     }
 
     public enum Field {
 
-        COLOUR(AWDataSerializers.PAINT_COLOR, ColourMixerTileEntity::getColor, ColourMixerTileEntity::setColor);
+        COLOUR(AWDataSerializers.PAINT_COLOR, ColorMixerTileEntity::getColor, ColorMixerTileEntity::setColor);
 
-        private final AWDataAccessor<ColourMixerTileEntity, ?> dataAccessor;
+        private final AWDataAccessor<ColorMixerTileEntity, ?> dataAccessor;
 
-        <T> Field(IDataSerializer<T> dataSerializer, Function<ColourMixerTileEntity, T> supplier, BiConsumer<ColourMixerTileEntity, T> applier) {
+        <T> Field(IDataSerializer<T> dataSerializer, Function<ColorMixerTileEntity, T> supplier, BiConsumer<ColorMixerTileEntity, T> applier) {
             this.dataAccessor = AWDataAccessor.of(dataSerializer, supplier, applier);
         }
 
-        public <T> T get(ColourMixerTileEntity entity) {
-            AWDataAccessor<ColourMixerTileEntity, T> dataAccessor = getDataAccessor();
+        public <T> T get(ColorMixerTileEntity entity) {
+            AWDataAccessor<ColorMixerTileEntity, T> dataAccessor = getDataAccessor();
             return dataAccessor.get(entity);
         }
 
-        public <T> void set(ColourMixerTileEntity entity, T value) {
-            AWDataAccessor<ColourMixerTileEntity, T> dataAccessor = getDataAccessor();
+        public <T> void set(ColorMixerTileEntity entity, T value) {
+            AWDataAccessor<ColorMixerTileEntity, T> dataAccessor = getDataAccessor();
             dataAccessor.set(entity, value);
         }
 
         @SuppressWarnings("unchecked")
-        public <T> AWDataAccessor<ColourMixerTileEntity, T> getDataAccessor() {
-            return (AWDataAccessor<ColourMixerTileEntity, T>) dataAccessor;
+        public <T> AWDataAccessor<ColorMixerTileEntity, T> getDataAccessor() {
+            return (AWDataAccessor<ColorMixerTileEntity, T>) dataAccessor;
         }
     }
 }

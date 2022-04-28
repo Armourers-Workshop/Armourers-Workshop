@@ -2,10 +2,10 @@ package moe.plushie.armourers_workshop.core.render.other;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.*;
 import moe.plushie.armourers_workshop.core.capability.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
@@ -14,14 +14,13 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.RenderUtils;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.init.common.ModCompatible;
 import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -52,8 +51,8 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     private final ArrayList<Entry> armorSkins = new ArrayList<>();
     private final ArrayList<Entry> itemSkins = new ArrayList<>();
 
-    private final HashMap<ISkinPaintType, PaintColor> dyeColors = new HashMap<>();
-    private final HashMap<ISkinPaintType, PaintColor> lastDyeColors = new HashMap<>();
+    private final HashMap<ISkinPaintType, IPaintColor> dyeColors = new HashMap<>();
+    private final HashMap<ISkinPaintType, IPaintColor> lastDyeColors = new HashMap<>();
 
     private final HashSet<ISkinPartType> hasOverriddenModelParts = new HashSet<>();
     private final HashSet<ISkinPartType> hasOverriddenOverlayParts = new HashSet<>();
@@ -214,7 +213,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     }
 
     private void updateDye(ISkinPaintType paintType, ItemStack itemStack) {
-        PaintColor paintColor = ColoredItem.getColor(itemStack);
+        IPaintColor paintColor = ColorUtils.getColor(itemStack);
         if (paintColor != null) {
             dyeColors.put(paintType, paintColor);
         }

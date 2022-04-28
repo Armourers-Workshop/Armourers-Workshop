@@ -445,8 +445,8 @@
   "item.armourers_workshop.rollover.nopaint": "§6색 없음.",
   "item.armourers_workshop.rollover.openSettings": "shift+우클릭으로 설정창 열기.",
   "item.armourers_workshop.rollover.paintType": "§6색칠 종류:§r %s",
-  "item.armourers_workshop.rollover.radius.effect": "§6효과 범위:§r %d",
-  "item.armourers_workshop.rollover.radius.sample": "§6샘플 범위:§r %d",
+  "item.armourers_workshop.rollover.effectRadius": "§6효과 범위:§r %d",
+  "item.armourers_workshop.rollover.sampleRadius": "§6샘플 범위:§r %d",
   "item.armourers_workshop.rollover.settingsSaved": "§6세팅 저장.",
   "item.armourers_workshop.rollover.skinAuthor": "§6제작자:§r %s",
   "item.armourers_workshop.rollover.skinDyeCount": "§e염색 사용 횟수:§r %d",
@@ -588,6 +588,6 @@
   "tooloption.armourers_workshop.intensity": "강도",
   "tooloption.armourers_workshop.planeRestrict": "기본 블록 한정",
   "tooloption.armourers_workshop.radius": "넓이",
-  "tooloption.armourers_workshop.radius.effect": "효과 반경",
-  "tooloption.armourers_workshop.radius.sample": "샘플 반경"
+  "tooloption.armourers_workshop.effectRadius": "효과 반경",
+  "tooloption.armourers_workshop.sampleRadius": "샘플 반경"
 }

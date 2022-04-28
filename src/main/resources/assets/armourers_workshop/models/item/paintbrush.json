@@ -1,0 +1,15 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "armourers_workshop:item/paintbrush",
+    "layer1": "armourers_workshop:item/paintbrush-tip"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "armourers_workshop:small": 1
+      },
+      "model": "armourers_workshop:item/paintbrush-small"
+    }
+  ]
+}

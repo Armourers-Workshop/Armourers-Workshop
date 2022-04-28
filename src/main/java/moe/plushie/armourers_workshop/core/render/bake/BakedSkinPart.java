@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
@@ -47,7 +48,7 @@ public class BakedSkinPart {
         ArrayList<Object> requirements = new ArrayList<>();
         for (ISkinPaintType paintType : descriptor.getPaintTypes()) {
             if (paintType.getDyeType() != null) {
-                PaintColor resolvedColor = scheme.getResolvedColor(paintType);
+                IPaintColor resolvedColor = scheme.getResolvedColor(paintType);
                 requirements.add(paintType.getId());
                 requirements.add(resolvedColor);
                 // we must know then texture info for the resolved color.

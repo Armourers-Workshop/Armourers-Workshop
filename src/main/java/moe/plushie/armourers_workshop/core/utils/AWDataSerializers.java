@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.utils;
 
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
@@ -23,7 +24,6 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.common.util.Constants;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -64,16 +64,16 @@ public class AWDataSerializers {
         }
     };
 
-    public static final IDataSerializer<PaintColor> PAINT_COLOR = new IDataSerializer<PaintColor>() {
-        public void write(PacketBuffer buffer, PaintColor pos) {
-            buffer.writeInt(pos.getValue());
+    public static final IDataSerializer<IPaintColor> PAINT_COLOR = new IDataSerializer<IPaintColor>() {
+        public void write(PacketBuffer buffer, IPaintColor color) {
+            buffer.writeInt(color.getRawValue());
         }
 
-        public PaintColor read(PacketBuffer buffer) {
+        public IPaintColor read(PacketBuffer buffer) {
             return PaintColor.of(buffer.readInt());
         }
 
-        public PaintColor copy(PaintColor value) {
+        public IPaintColor copy(IPaintColor value) {
             return value;
         }
     };
@@ -253,15 +253,15 @@ public class AWDataSerializers {
         return properties;
     }
 
-    public static void putPaintColor(CompoundNBT nbt, String key, PaintColor value, PaintColor defaultValue) {
+    public static void putPaintColor(CompoundNBT nbt, String key, IPaintColor value, IPaintColor defaultValue) {
         if (!value.equals(defaultValue)) {
-            nbt.putInt(key, value.getValue());
+            nbt.putInt(key, value.getRawValue());
         } else {
             nbt.remove(key);
         }
     }
 
-    public static PaintColor getPaintColor(CompoundNBT nbt, String key, PaintColor defaultValue) {
+    public static IPaintColor getPaintColor(CompoundNBT nbt, String key, IPaintColor defaultValue) {
         if (nbt.contains(key, Constants.NBT.TAG_INT)) {
             return PaintColor.of(nbt.getInt(key));
         }

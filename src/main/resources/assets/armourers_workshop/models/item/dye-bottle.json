@@ -1,10 +1,15 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "armourers_workshop:item/dye-bottle-paint",
-    "layer1": "armourers_workshop:item/dye-bottle"
+    "layer0": "armourers_workshop:item/dye-bottle",
+    "layer1": "armourers_workshop:item/dye-bottle-paint"
   },
   "overrides": [
-    { "predicate": { "armourers_workshop:empty": 1 }, "model": "armourers_workshop:item/dye-bottle-empty" }
+    {
+      "predicate": {
+        "armourers_workshop:empty": 1
+      },
+      "model": "armourers_workshop:item/dye-bottle-empty"
+    }
   ]
 }

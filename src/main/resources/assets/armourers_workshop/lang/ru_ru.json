@@ -445,8 +445,8 @@
   "item.armourers_workshop.rollover.nopaint": "§6Нет краски.",
   "item.armourers_workshop.rollover.openSettings": "Красться+ПКМ, чтобы открыть настройки.",
   "item.armourers_workshop.rollover.paintType": "§6Тип Краски:§r %s",
-  "item.armourers_workshop.rollover.radius.effect": "§6Радиус эффекта:§r %d",
-  "item.armourers_workshop.rollover.radius.sample": "§6Радиус захвата цвета:§r %d",
+  "item.armourers_workshop.rollover.effectRadius": "§6Радиус эффекта:§r %d",
+  "item.armourers_workshop.rollover.sampleRadius": "§6Радиус захвата цвета:§r %d",
   "item.armourers_workshop.rollover.settingsSaved": "§6Настройки сохранены.",
   "item.armourers_workshop.rollover.skinAuthor": "§6Автор:§r %s",
   "item.armourers_workshop.rollover.skinDyeCount": "§eКоличество красителей:§r %d",
@@ -588,6 +588,6 @@
   "tooloption.armourers_workshop.intensity": "Интенсивность",
   "tooloption.armourers_workshop.planeRestrict": "Ограничить плоскость",
   "tooloption.armourers_workshop.radius": "Радиус",
-  "tooloption.armourers_workshop.radius.effect": "Радиус применения эффекта",
-  "tooloption.armourers_workshop.radius.sample": "Радиус захвата цвета"
+  "tooloption.armourers_workshop.effectRadius": "Радиус применения эффекта",
+  "tooloption.armourers_workshop.sampleRadius": "Радиус захвата цвета"
 }

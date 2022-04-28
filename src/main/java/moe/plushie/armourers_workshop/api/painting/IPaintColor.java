@@ -7,4 +7,6 @@ public interface IPaintColor {
     int getRGB();
 
     ISkinPaintType getPaintType();
+
+    int getRawValue();
 }

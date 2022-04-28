@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.common;
 
-import moe.plushie.armourers_workshop.builder.item.BlockMarkerItem;
+import moe.plushie.armourers_workshop.builder.item.*;
 import moe.plushie.armourers_workshop.core.item.*;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
@@ -19,13 +19,12 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"NullableProblems", "unused"})
 public class ModItems {
 
     private static final ArrayList<Item> REGISTERED_ITEMS_SORTED = new ArrayList<>();
     private static final HashMap<ResourceLocation, Item> REGISTERED_ITEMS = new HashMap<>();
 
-    @SuppressWarnings("NullableProblems")
     private static final ItemGroup MAIN_GROUP = new ItemGroup("armourers_workshop_main") {
 
         @OnlyIn(Dist.CLIENT)
@@ -36,7 +35,26 @@ public class ModItems {
         @OnlyIn(Dist.CLIENT)
         public void fillItemList(NonNullList<ItemStack> lists) {
             for (Item item : REGISTERED_ITEMS_SORTED) {
-                item.fillItemCategory(this, lists);
+                if (item.getItemCategory() == this) {
+                    item.fillItemCategory(this, lists);
+                }
+            }
+        }
+    };
+
+    private static final ItemGroup BUILDING_GROUP = new ItemGroup("armourers_workshop_painting_tools") {
+
+        @OnlyIn(Dist.CLIENT)
+        public ItemStack makeIcon() {
+            return new ItemStack(ARMOURER);
+        }
+
+        @OnlyIn(Dist.CLIENT)
+        public void fillItemList(NonNullList<ItemStack> lists) {
+            for (Item item : REGISTERED_ITEMS_SORTED) {
+                if (item.getItemCategory() == this) {
+                    item.fillItemCategory(this, lists);
+                }
             }
         }
     };
@@ -52,7 +70,6 @@ public class ModItems {
     public static final Item DYE_TABLE = registerBlock("dye-table", ModBlocks.DYE_TABLE, p -> p.tab(MAIN_GROUP));
     public static final Item HOLOGRAM_PROJECTOR = registerBlock("hologram-projector", ModBlocks.HOLOGRAM_PROJECTOR, p -> p.tab(MAIN_GROUP));
 
-    public static final Item SOAP = register("soap", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
     public static final Item BOTTLE = register("dye-bottle", BottleItem::new, p -> p.tab(MAIN_GROUP));
     public static final Item MANNEQUIN_TOOL = register("mannequin-tool", MannequinToolItem::new, p -> p.tab(MAIN_GROUP));
     public static final Item ARMOURERS_HAMMER = register("armourers-hammer", ArmourersHammerItem::new, p -> p.tab(MAIN_GROUP));
@@ -65,20 +82,32 @@ public class ModItems {
     public static final Item SKIN_UNLOCK_WINGS = register("skin-unlock-wings", unlockWithBuilder(SkinSlotType.WINGS), p -> p.stacksTo(8).tab(MAIN_GROUP));
     public static final Item SKIN_UNLOCK_OUTFIT = register("skin-unlock-outfit", unlockWithBuilder(SkinSlotType.OUTFIT), p -> p.stacksTo(8).tab(MAIN_GROUP));
 
-    public static final Item SKIN_TEMPLATE = register("skin-template", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
-//    public static final Item ARMOUR_CONTAINER = register("armour-container", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));
     public static final Item LINKING_TOOL = register("linking-tool", LinkingToolItem::new, p -> p.tab(MAIN_GROUP));
+    public static final Item SKIN_TEMPLATE = register("skin-template", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
+    public static final Item SOAP = register("soap", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
+    // book
+    // gift
+    //    public static final Item ARMOUR_CONTAINER = register("armour-container", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));
 
-    public static final Item OUTFIT_MAKER = registerBlock("outfit-maker", ModBlocks.OUTFIT_MAKER, p -> p.tab(MAIN_GROUP));
-    public static final Item COLOUR_MIXER = registerBlock("colour-mixer", ModBlocks.COLOUR_MIXER, p -> p.tab(MAIN_GROUP));
-    public static final Item ARMOURER = registerBlock("armourer", ModBlocks.ARMOURER, p -> p.tab(MAIN_GROUP));
+    public static final Item OUTFIT_MAKER = registerBlock("outfit-maker", ModBlocks.OUTFIT_MAKER, p -> p.tab(BUILDING_GROUP));
+    public static final Item ARMOURER = registerBlock("armourer", ModBlocks.ARMOURER, p -> p.tab(BUILDING_GROUP));
+    public static final Item COLOR_MIXER = registerBlock("colour-mixer", ModBlocks.COLOR_MIXER, p -> p.tab(BUILDING_GROUP));
 
-    public static final Item SKIN_CUBE = registerBlock("skin-cube", ModBlocks.SKIN_CUBE, p -> p.tab(MAIN_GROUP));
-    public static final Item SKIN_CUBE_GLASS = registerBlock("skin-cube-glass", ModBlocks.SKIN_CUBE_GLASS, p -> p.tab(MAIN_GROUP));
-    public static final Item SKIN_CUBE_GLOWING = registerBlock("skin-cube-glowing", ModBlocks.SKIN_CUBE_GLOWING, p -> p.tab(MAIN_GROUP));
-    public static final Item SKIN_CUBE_GLASS_GLOWING = registerBlock("skin-cube-glass-glowing", ModBlocks.SKIN_CUBE_GLASS_GLOWING, p -> p.tab(MAIN_GROUP));
+    public static final Item SKIN_CUBE = registerBlock("skin-cube", ModBlocks.SKIN_CUBE, p -> p.stacksTo(64).tab(BUILDING_GROUP));
+    public static final Item SKIN_CUBE_GLOWING = registerBlock("skin-cube-glowing", ModBlocks.SKIN_CUBE_GLOWING, p -> p.stacksTo(64).tab(BUILDING_GROUP));
+    public static final Item SKIN_CUBE_GLASS = registerBlock("skin-cube-glass", ModBlocks.SKIN_CUBE_GLASS, p -> p.stacksTo(64).tab(BUILDING_GROUP));
+    public static final Item SKIN_CUBE_GLASS_GLOWING = registerBlock("skin-cube-glass-glowing", ModBlocks.SKIN_CUBE_GLASS_GLOWING, p -> p.stacksTo(64).tab(BUILDING_GROUP));
 
-    public static final Item BLOCK_MARKER = register("block-marker", BlockMarkerItem::new, p -> p.tab(MAIN_GROUP));
+    public static final Item PAINT_BRUSH = register("paintbrush", PaintbrushItem::new, p -> p.tab(BUILDING_GROUP));
+    public static final Item PAINT_ROLLER = register("paint-roller", PaintRollerItem::new, p -> p.tab(BUILDING_GROUP));
+    public static final Item BURN_TOOL = register("burn-tool", BurnToolItem::new, p -> p.tab(BUILDING_GROUP));
+    public static final Item DODGE_TOOL = register("dodge-tool", DodgeToolItem::new, p -> p.tab(BUILDING_GROUP));
+    public static final Item SHADE_NOISE_TOOL = register("shade-noise-tool", ShadeNoiseToolItem::new, p -> p.tab(BUILDING_GROUP));
+    public static final Item COLOR_NOISE_TOOL = register("colour-noise-tool", ColourNoiseToolItem::new, p -> p.tab(BUILDING_GROUP));
+    public static final Item BLENDING_TOOL = register("blending-tool", BlendingToolItem::new, p -> p.tab(BUILDING_GROUP));
+    public static final Item HUE_TOOL = register("hue-tool", HueToolItem::new, p -> p.tab(BUILDING_GROUP));
+    public static final Item COLOR_PICKER = register("colour-picker", ColorPickerItem::new, p -> p.tab(BUILDING_GROUP));
+    public static final Item BLOCK_MARKER = register("block-marker", BlockMarkerItem::new, p -> p.tab(BUILDING_GROUP));
 
     private static <T extends Item> T register(String name, Function<Item.Properties, T> factory) {
         return register(name, factory, null);

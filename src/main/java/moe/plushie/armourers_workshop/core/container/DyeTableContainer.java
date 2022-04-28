@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.core.container;
 
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
-import moe.plushie.armourers_workshop.core.item.ColoredItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.tileentity.DyeTableTileEntity;
+import moe.plushie.armourers_workshop.core.utils.ColorUtils;
 import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
-import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
@@ -18,9 +17,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.world.World;
 
 @SuppressWarnings("NullableProblems")
 public class DyeTableContainer extends AbstractBlockContainer<Block> {
@@ -120,10 +117,10 @@ public class DyeTableContainer extends AbstractBlockContainer<Block> {
         ColorScheme scheme = descriptor.getColorScheme();
         for (int i = 0; i < paintTypes.length; ++i) {
             ItemStack colorStack = ItemStack.EMPTY;
-            PaintColor paintColor = scheme.getColor(paintTypes[i]);
+            IPaintColor paintColor = scheme.getColor(paintTypes[i]);
             if (paintColor != null) {
                 colorStack = new ItemStack(ModItems.BOTTLE);
-                ColoredItem.setColor(colorStack, paintColor);
+                ColorUtils.setColor(colorStack, paintColor);
             }
             inventory.setItem(i, colorStack);
         }
@@ -137,7 +134,7 @@ public class DyeTableContainer extends AbstractBlockContainer<Block> {
         ColorScheme newScheme = new ColorScheme();
         for (int i = 0; i < paintTypes.length; ++i) {
             ItemStack colorStack = inventory.getItem(i);
-            PaintColor paintColor = ColoredItem.getColor(colorStack);
+            IPaintColor paintColor = ColorUtils.getColor(colorStack);
             if (paintColor != null) {
                 newScheme.setColor(paintTypes[i], paintColor);
             }

@@ -445,8 +445,8 @@
   "item.armourers_workshop.rollover.nopaint": "§6Keine Farbe.",
   "item.armourers_workshop.rollover.openSettings": "Schleichen und rechts klicken um Einstellungen zu öffnen.",
   "item.armourers_workshop.rollover.paintType": "§6Farbtyp:§r %s",
-  "item.armourers_workshop.rollover.radius.effect": "§6Effect Radius:§r %d",
-  "item.armourers_workshop.rollover.radius.sample": "§6Sample Radius:§r %d",
+  "item.armourers_workshop.rollover.effectRadius": "§6Effect Radius:§r %d",
+  "item.armourers_workshop.rollover.sampleRadius": "§6Sample Radius:§r %d",
   "item.armourers_workshop.rollover.settingsSaved": "§6Einstellungen gespeichert.",
   "item.armourers_workshop.rollover.skinAuthor": "§6Autor:§r %s",
   "item.armourers_workshop.rollover.skinDyeCount": "§eFarbanzahl:§r %d",
@@ -587,6 +587,6 @@
   "tooloption.armourers_workshop.intensity": "Intensität",
   "tooloption.armourers_workshop.planeRestrict": "Einschränkungsbereich",
   "tooloption.armourers_workshop.radius": "Radius",
-  "tooloption.armourers_workshop.radius.effect": "Effekt Radius",
-  "tooloption.armourers_workshop.radius.sample": "Proben Radius"
+  "tooloption.armourers_workshop.effectRadius": "Effekt Radius",
+  "tooloption.armourers_workshop.sampleRadius": "Proben Radius"
 }

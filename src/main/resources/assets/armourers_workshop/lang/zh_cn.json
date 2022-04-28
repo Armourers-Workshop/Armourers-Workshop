@@ -445,8 +445,8 @@
   "item.armourers_workshop.rollover.nopaint": "§6空",
   "item.armourers_workshop.rollover.openSettings": "潜行右键可打开设置界面",
   "item.armourers_workshop.rollover.paintType": "§6染料类型:§r %s",
-  "item.armourers_workshop.rollover.radius.effect": "§6作用半径:§r %d",
-  "item.armourers_workshop.rollover.radius.sample": "§6采样半径:§r %d",
+  "item.armourers_workshop.rollover.effectRadius": "§6作用半径:§r %d",
+  "item.armourers_workshop.rollover.sampleRadius": "§6采样半径:§r %d",
   "item.armourers_workshop.rollover.settingsSaved": "§6设置已保存",
   "item.armourers_workshop.rollover.skinAuthor": "§6作者:§r %s",
   "item.armourers_workshop.rollover.skinDyeCount": "§e染色数量:§r %d/8",
@@ -589,6 +589,6 @@
   "tooloption.armourers_workshop.intensity": "强度",
   "tooloption.armourers_workshop.planeRestrict": "限制于平面",
   "tooloption.armourers_workshop.radius": "半径",
-  "tooloption.armourers_workshop.radius.effect": "作用半径",
-  "tooloption.armourers_workshop.radius.sample": "采样半径"
+  "tooloption.armourers_workshop.effectRadius": "作用半径",
+  "tooloption.armourers_workshop.sampleRadius": "采样半径"
 }

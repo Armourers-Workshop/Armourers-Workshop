@@ -73,6 +73,8 @@ public final class RenderUtils {
     public static final ResourceLocation TEX_GUI_PREVIEW = AWCore.resource("textures/gui/skin-preview.png");
     public static final ResourceLocation TEX_SKIN_PANEL = AWCore.resource("textures/gui/controls/skin-panel.png");
 
+    public static final ResourceLocation TEX_MARKERS = AWCore.resource("textures/tile-entities/markers.png");
+
     private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
 
     private static final ArrayList<Rectangle> clipBounds = new ArrayList<>();

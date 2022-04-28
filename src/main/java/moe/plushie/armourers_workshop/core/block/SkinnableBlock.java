@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import moe.plushie.armourers_workshop.core.utils.SkinItemUseContext;
+import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import moe.plushie.armourers_workshop.init.common.ModEntities;
 import net.minecraft.block.*;
@@ -141,6 +142,12 @@ public class SkinnableBlock extends HorizontalFaceBlock {
 
     @Nullable
     @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new SkinnableTileEntity();
+    }
+
+    @Nullable
+    @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockState state = super.getStateForPlacement(context);
         if (state != null && context instanceof SkinItemUseContext) {
@@ -150,12 +157,6 @@ public class SkinnableBlock extends HorizontalFaceBlock {
             }
         }
         return state;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new SkinnableTileEntity();
     }
 
     @Override

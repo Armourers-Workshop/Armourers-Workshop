@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.tileentity;
 
-import moe.plushie.armourers_workshop.api.painting.IPaintColorProvider;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
@@ -14,12 +15,13 @@ import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 
-public class ColourMixerTileEntity extends TileEntity implements IPaintColorProvider {
+@SuppressWarnings("NullableProblems")
+public class ColorMixerTileEntity extends TileEntity implements IPaintProvider {
 
-    private PaintColor color = PaintColor.WHITE;
+    private IPaintColor color = PaintColor.WHITE;
 
-    public ColourMixerTileEntity() {
-        super(ModTileEntities.COLOUR_MIXER);
+    public ColorMixerTileEntity() {
+        super(ModTileEntities.COLOR_MIXER);
     }
 
     public void readFromNBT(CompoundNBT nbt) {
@@ -71,11 +73,12 @@ public class ColourMixerTileEntity extends TileEntity implements IPaintColorProv
     }
 
     @Override
-    public PaintColor getColor() {
+    public IPaintColor getColor() {
         return color;
     }
 
-    public void setColor(PaintColor color) {
+    @Override
+    public void setColor(IPaintColor color) {
         this.color = color;
         this.setChanged();
         this.sendBlockUpdates();

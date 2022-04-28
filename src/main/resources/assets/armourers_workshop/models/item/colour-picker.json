@@ -1,0 +1,15 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "armourers_workshop:item/colour-picker",
+    "layer1": "armourers_workshop:item/colour-picker-tip"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "armourers_workshop:empty": 1
+      },
+      "model": "armourers_workshop:item/colour-picker-empty"
+    }
+  ]
+}

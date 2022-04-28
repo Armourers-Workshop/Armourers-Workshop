@@ -1,10 +1,11 @@
-package moe.plushie.armourers_workshop.builder.gui.colourmixer;
+package moe.plushie.armourers_workshop.builder.gui;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.builder.container.ColourMixerContainer;
-import moe.plushie.armourers_workshop.builder.tileentity.ColourMixerTileEntity;
+import moe.plushie.armourers_workshop.builder.tileentity.ColorMixerTileEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.*;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateColourMixerPacket;
@@ -20,6 +21,8 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.ClickType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,10 +32,11 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @SuppressWarnings({"unused", "NullableProblems"})
 @OnlyIn(Dist.CLIENT)
-public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerContainer> {
+public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerContainer> {
 
     private final ImmutableList<Label> labels = new ImmutableList.Builder<Label>()
             .add(new Label(5, 21, getDisplayText("label.hue")))
@@ -48,21 +52,19 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
     private TextFieldWidget textField;
     private AWPaletteBox paletteBox;
 
+    private AWComboBox paintComboBox;
+    private ArrayList<ISkinPaintType> paintTypes;
+
+
     private Color selectedColor = Color.white;
     private ISkinPaintType selectedPaintType = SkinPaintTypes.NORMAL;
     private Palette selectedPalette;
 
-    public ColourMixerScreen(ColourMixerContainer container, PlayerInventory inventory, ITextComponent title) {
+    public ColorMixerScreen(ColourMixerContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
         this.imageWidth = 256;
         this.imageHeight = 240;
-
-        ColourMixerTileEntity tileEntity = container.getEntity();
-        if (tileEntity != null) {
-            PaintColor paintColor = tileEntity.getColor();
-            selectedColor = new Color(paintColor.getRGB());
-            selectedPaintType = paintColor.getPaintType();
-        }
+        this.reloadStatus();
     }
 
     @Override
@@ -98,6 +100,12 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
         this.sliders[2] = null;
         this.textField = null;
         PaletteManager.getInstance().save();
+    }
+
+    @Override
+    protected void slotClicked(Slot slot, int p_184098_2_, int p_184098_3_, ClickType clickType) {
+        super.slotClicked(slot, p_184098_2_, p_184098_3_, clickType);
+        this.reloadStatus();
     }
 
     @Override
@@ -173,7 +181,7 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
     }
 
     private void onSubmit(Button button) {
-        ColourMixerTileEntity tileEntity = menu.getEntity();
+        ColorMixerTileEntity tileEntity = menu.getEntity();
         if (tileEntity == null) {
             return;
         }
@@ -237,7 +245,7 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
 
     private void addPaintList(int x, int y) {
         int selectedIndex = 0;
-        ArrayList<ISkinPaintType> paintTypes = new ArrayList<>();
+        paintTypes = new ArrayList<>();
         ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
         for (ISkinPaintType paintType : SkinPaintTypes.values()) {
             AWComboBox.ComboItem item = new AWComboBox.ComboItem(TranslateUtils.title("paintType." + paintType.getRegistryName()));
@@ -258,6 +266,7 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
             }
         });
         comboBox.setMaxRowCount(5);
+        paintComboBox = comboBox;
         addButton(comboBox);
     }
 
@@ -356,6 +365,26 @@ public class ColourMixerScreen extends AWAbstractContainerScreen<ColourMixerCont
 
     protected ITextComponent getDisplayText(String key) {
         return TranslateUtils.title("inventory.armourers_workshop.colour-mixer" + "." + key);
+    }
+
+    protected void reloadStatus() {
+        ColorMixerTileEntity tileEntity = menu.getEntity();
+        if (tileEntity == null) {
+            return;
+        }
+        IPaintColor paintColor = tileEntity.getColor();
+        selectedColor = new Color(paintColor.getRGB());
+        if (Objects.equals(selectedPaintType, paintColor.getPaintType())) {
+            return;
+        }
+        selectedPaintType = paintColor.getPaintType();
+        if (paintComboBox == null || paintTypes == null) {
+            return;
+        }
+        int selectedIndex = paintTypes.indexOf(selectedPaintType);
+        if (selectedIndex >= 0) {
+            paintComboBox.setSelectedIndex(selectedIndex);
+        }
     }
 
     public static class Label {

@@ -1,15 +1,27 @@
 package moe.plushie.armourers_workshop.core.utils;
 
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.NumberNBT;
+import net.minecraft.nbt.StringNBT;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class ColorUtils {
+
+    private static final Random RANDOM = new Random();
 
     public static int[] PALETTE_MINECRAFT = {
             0xFFFFFF, 0xFFFF55, 0xFF55FF, 0xFF5555,
@@ -86,57 +98,54 @@ public class ColorUtils {
         }
     }
 
-    public static Color makeColourBighter(Color c, int amount) {
-        int r = c.getRed() + amount;
-        int g = c.getGreen() + amount;
-        int b = c.getBlue() + amount;
+    public static int makeColourBighter(int rgb, int amount) {
+        int r = getRed(rgb) + amount;
+        int g = getGreen(rgb) + amount;
+        int b = getBlue(rgb) + amount;
 
         r = MathHelper.clamp(r, 0, 255);
         g = MathHelper.clamp(g, 0, 255);
         b = MathHelper.clamp(b, 0, 255);
 
-        return new Color(r, g, b);
+        return getRGB(r, g, b);
     }
 
-    public static Color makeColourDarker(Color c, int amount) {
-        int r = c.getRed() - amount;
-        int g = c.getGreen() - amount;
-        int b = c.getBlue() - amount;
+    public static int makeColourDarker(int rgb, int amount) {
+        int r = getRed(rgb) - amount;
+        int g = getGreen(rgb) - amount;
+        int b = getBlue(rgb) - amount;
 
         r = MathHelper.clamp(r, 0, 255);
         g = MathHelper.clamp(g, 0, 255);
         b = MathHelper.clamp(b, 0, 255);
 
-        return new Color(r, g, b);
+        return getRGB(r, g, b);
     }
 
-    public static Color addColourNoise(Color c, int amount) {
-        Random rnd = new Random();
-        int r = c.getRed() - amount + rnd.nextInt((amount * 2));
-        int g = c.getGreen() - amount + rnd.nextInt((amount * 2));
-        int b = c.getBlue() - amount + rnd.nextInt((amount * 2));
+    public static int addColorNoise(int rgb, int amount) {
+        int r = getRed(rgb) - amount + RANDOM.nextInt((amount * 2));
+        int g = getGreen(rgb) - amount + RANDOM.nextInt((amount * 2));
+        int b = getBlue(rgb) - amount + RANDOM.nextInt((amount * 2));
 
         r = MathHelper.clamp(r, 0, 255);
         g = MathHelper.clamp(g, 0, 255);
         b = MathHelper.clamp(b, 0, 255);
 
-        return new Color(r, g, b);
+        return getRGB(r, g, b);
     }
 
-    public static Color addShadeNoise(Color c, int amount) {
-        Random rnd = new Random();
+    public static int addShadeNoise(int rgb, int amount) {
+        int shadeAmount = RANDOM.nextInt(amount * 2);
 
-        int shadeAmount = rnd.nextInt(amount * 2);
-
-        int r = c.getRed() - amount + shadeAmount;
-        int g = c.getGreen() - amount + shadeAmount;
-        int b = c.getBlue() - amount + shadeAmount;
+        int r = getRed(rgb) - amount + shadeAmount;
+        int g = getGreen(rgb) - amount + shadeAmount;
+        int b = getBlue(rgb) - amount + shadeAmount;
 
         r = MathHelper.clamp(r, 0, 255);
         g = MathHelper.clamp(g, 0, 255);
         b = MathHelper.clamp(b, 0, 255);
 
-        return new Color(r, g, b);
+        return getRGB(r, g, b);
     }
 
     public static Color getPaletteColor(int index) {
@@ -160,38 +169,38 @@ public class ColorUtils {
         return Color.HSBtoRGB(f / 255F, 1F, 1F);
     }
 
-    public static int getPulse1Colour(PaintColor color) {
-        float f = (float)(System.currentTimeMillis() % (255L * 25D)) / 25F;
+    public static int getPulse1Color(int color) {
+        float f = (float) (System.currentTimeMillis() % (255L * 25D)) / 25F;
         f = f * 2F;
         if (f > 255) {
-            f =  255F - (f - 255);
+            f = 255F - (f - 255);
         }
         f = MathHelper.clamp(f, 0, 255);
-        float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        float[] hsb = Color.RGBtoHSB(getRed(color), getGreen(color), getBlue(color), null);
         return Color.HSBtoRGB(hsb[0], hsb[1], f / 255F);
     }
 
-    public static int getPulse2Colour(PaintColor color) {
-        float f = (float)(System.currentTimeMillis() % (255L * 12.5D)) / 12.5F;
+    public static int getPulse2Color(int color) {
+        float f = (float) (System.currentTimeMillis() % (255L * 12.5D)) / 12.5F;
         f = f * 2F;
         if (f > 255) {
-            f =  255F - (f - 255);
+            f = 255F - (f - 255);
         }
         f = MathHelper.clamp(f, 0, 255);
-        float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        float[] hsb = Color.RGBtoHSB(getRed(color), getGreen(color), getBlue(color), null);
         return Color.HSBtoRGB(hsb[0], hsb[1], f / 255F);
     }
 
-    public static int getDisplayRGB(PaintColor paintColor) {
+    public static int getDisplayRGB(IPaintColor paintColor) {
         ISkinPaintType paintType = paintColor.getPaintType();
         if (paintType == SkinPaintTypes.RAINBOW) {
             return getRainbowRGB();
         }
         if (paintType == SkinPaintTypes.PULSE_1) {
-            return getPulse1Colour(paintColor);
+            return getPulse1Color(paintColor.getRGB());
         }
         if (paintType == SkinPaintTypes.PULSE_2) {
-            return getPulse2Colour(paintColor);
+            return getPulse2Color(paintColor.getRGB());
         }
         return paintColor.getRGB();
 //        IPaintType paintType = PaintTypeRegistry.getInstance().getPaintTypeFormByte(rgbt[3]);
@@ -205,8 +214,54 @@ public class ColorUtils {
 //        return new Color(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, 255);
     }
 
-    public static Color parseColor(INBT nbt) {
-        return Color.BLACK;
+    public static int getDisplayRGB(ItemStack itemStack) {
+        IPaintColor paintColor = getColor(itemStack);
+        if (paintColor != null) {
+            return ColorUtils.getDisplayRGB(paintColor) | 0xff000000;
+        }
+        return 0xffffffff;
+    }
+
+    public static boolean hasColor(ItemStack itemStack) {
+        CompoundNBT tag = itemStack.getTag();
+        return tag != null && tag.contains(AWConstants.NBT.COLOR, Constants.NBT.TAG_INT);
+    }
+
+    public static void setColor(ItemStack itemStack, IPaintColor color) {
+        AWDataSerializers.putPaintColor(itemStack.getOrCreateTag(), AWConstants.NBT.COLOR, color, null);
+    }
+
+    @Nullable
+    public static IPaintColor getColor(ItemStack itemStack) {
+        CompoundNBT tag = itemStack.getTag();
+        if (tag != null && tag.contains(AWConstants.NBT.COLOR)) {
+            INBT nbt = tag.get(AWConstants.NBT.COLOR);
+            if (nbt instanceof NumberNBT) {
+                return PaintColor.of(((NumberNBT) nbt).getAsInt());
+            }
+            if (nbt instanceof StringNBT) {
+                Color color = ColorUtils.parseColor(nbt.getAsString());
+                tag.putInt(AWConstants.NBT.COLOR, color.getRGB());
+                return PaintColor.of(color.getRGB());
+            }
+            tag.remove(AWConstants.NBT.COLOR);
+        }
+        return null;
+    }
+
+    public static ArrayList<ITextComponent> getColorTooltips(IPaintColor color, boolean useDisplayColor) {
+        ArrayList<ITextComponent> tooltips = new ArrayList<>();
+        int rgb = color.getRGB();
+        if (useDisplayColor) {
+            rgb = getDisplayRGB(color);
+        }
+        ISkinPaintType paintType = color.getPaintType();
+        String hexColor = String.format("#%06x", rgb & 0xffffff);
+        ITextComponent paintName = TranslateUtils.subtitle("paintType." + paintType.getRegistryName());
+        tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.colour", rgb & 0xffffff));
+        tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.hex", hexColor));
+        tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.paintType", paintName));
+        return tooltips;
     }
 
     // #[A]RGB or 0x[A]RGB
@@ -220,5 +275,31 @@ public class ColorUtils {
         } catch (NumberFormatException e) {
             return Color.black;
         }
+    }
+
+
+    public static int HSBtoRGB(float[] hsb) {
+        return Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
+    }
+
+    public static float[] RGBtoHSB(IPaintColor paintColor) {
+        int rgb = paintColor.getRGB();
+        return Color.RGBtoHSB(getRed(rgb), getGreen(rgb), getBlue(rgb), null);
+    }
+
+    private static int getRed(int rgb) {
+        return (rgb >> 16) & 0xff;
+    }
+
+    private static int getGreen(int rgb) {
+        return (rgb >> 8) & 0xff;
+    }
+
+    private static int getBlue(int rgb) {
+        return rgb & 0xff;
+    }
+
+    private static int getRGB(int red, int green, int blue) {
+        return red << 16 | green << 8 | blue;
     }
 }
