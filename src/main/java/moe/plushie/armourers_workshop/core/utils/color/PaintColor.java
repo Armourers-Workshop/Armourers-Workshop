@@ -78,7 +78,7 @@ public class PaintColor implements IPaintColor {
         return rgb;
     }
 
-    public int getValue() {
+    public int getRawValue() {
         return value;
     }
 

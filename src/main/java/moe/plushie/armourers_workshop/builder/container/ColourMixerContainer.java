@@ -1,37 +1,38 @@
 package moe.plushie.armourers_workshop.builder.container;
 
+import moe.plushie.armourers_workshop.builder.tileentity.ColorMixerTileEntity;
 import moe.plushie.armourers_workshop.core.container.AbstractBlockContainer;
+import moe.plushie.armourers_workshop.core.item.impl.IPaintPicker;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
-import moe.plushie.armourers_workshop.core.item.ColoredItem;
-import moe.plushie.armourers_workshop.builder.tileentity.ColourMixerTileEntity;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.world.World;
 
+@SuppressWarnings("NullableProblems")
 public class ColourMixerContainer extends AbstractBlockContainer<Block> {
 
     private final IInventory inventory = new Inventory(2);
 
     public ColourMixerContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
-        super(containerId, ModContainerTypes.COLOUR_MIXER, ModBlocks.COLOUR_MIXER, access);
+        super(containerId, ModContainerTypes.COLOR_MIXER, ModBlocks.COLOR_MIXER, access);
         this.addPlayerSlots(playerInventory, 48, 158);
         this.addCustomSlot(inventory, 0, 83, 101);
         this.addCustomSlot(inventory, 1, 134, 101);
     }
 
-    public ColourMixerTileEntity getEntity() {
+    public ColorMixerTileEntity getEntity() {
         TileEntity tileEntity = access.evaluate(World::getBlockEntity).orElse(null);
-        if (tileEntity instanceof ColourMixerTileEntity) {
-            return (ColourMixerTileEntity) tileEntity;
+        if (tileEntity instanceof ColorMixerTileEntity) {
+            return (ColorMixerTileEntity) tileEntity;
         }
         return null;
     }
@@ -52,20 +53,18 @@ public class ColourMixerContainer extends AbstractBlockContainer<Block> {
 
             @Override
             public boolean mayPlace(ItemStack itemStack) {
-                return slot == 0 && (itemStack.getItem() instanceof ColoredItem);
+                return slot == 0 && (itemStack.getItem() instanceof IPaintPicker);
             }
 
             @Override
             public void setChanged() {
                 ItemStack itemStack = inventory.getItem(0);
-                if (!itemStack.isEmpty() && inventory.getItem(1).isEmpty()) {
-                    itemStack = itemStack.copy();
-                    ColourMixerTileEntity tileEntity = getEntity();
-                    if (tileEntity != null) {
-                        ColoredItem.setColor(itemStack, tileEntity.getColor());
-                    }
+                Item item = itemStack.getItem();
+                if (item instanceof IPaintPicker && inventory.getItem(1).isEmpty()) {
+                    ItemStack newItemStack = itemStack.copy();
+                    access.execute((world, pos) -> ((IPaintPicker) item).pickColor(world, pos, newItemStack, null));
                     inventory.setItem(0, ItemStack.EMPTY);
-                    inventory.setItem(1, itemStack);
+                    inventory.setItem(1, newItemStack);
                 }
                 super.setChanged();
             }

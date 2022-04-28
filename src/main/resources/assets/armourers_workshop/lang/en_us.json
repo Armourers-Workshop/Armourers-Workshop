@@ -453,8 +453,8 @@
   "item.armourers_workshop.rollover.nopaint": "§6No paint.",
   "item.armourers_workshop.rollover.openSettings": "Sneak right click to open settings.",
   "item.armourers_workshop.rollover.paintType": "§6Paint Type:§r %s",
-  "item.armourers_workshop.rollover.radius.effect": "§6Effect Radius:§r %d",
-  "item.armourers_workshop.rollover.radius.sample": "§6Sample Radius:§r %d",
+  "item.armourers_workshop.rollover.effectRadius": "§6Effect Radius:§r %d",
+  "item.armourers_workshop.rollover.sampleRadius": "§6Sample Radius:§r %d",
   "item.armourers_workshop.rollover.settingsSaved": "§6Settings Saved.",
   "item.armourers_workshop.rollover.skinAuthor": "§6Author:§r %s",
   "item.armourers_workshop.rollover.skinDyeCount": "§eTotal Dyes:§r %d",
@@ -596,6 +596,6 @@
   "tooloption.armourers_workshop.intensity": "Intensity",
   "tooloption.armourers_workshop.planeRestrict": "Restrict Plane",
   "tooloption.armourers_workshop.radius": "Radius",
-  "tooloption.armourers_workshop.radius.effect": "Effect Radius",
-  "tooloption.armourers_workshop.radius.sample": "Sample Radius"
+  "tooloption.armourers_workshop.effectRadius": "Effect Radius",
+  "tooloption.armourers_workshop.sampleRadius": "Sample Radius"
 }

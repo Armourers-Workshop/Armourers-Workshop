@@ -80,14 +80,14 @@ public class SkinWardrobeRotationSetting extends AWTabPanel {
         RenderUtils.blit(matrixStack, modelLeft, modelTop, 22, 0, 24, 40, RenderUtils.TEX_WARDROBE_2);
         for (Part part : Part.values()) {
             Rectangle rect = part.bounds;
-            int colour = 0xccffff00;
+            int color = 0xccffff00;
             if (part.bounds.contains(mouseX - modelLeft, mouseY - modelTop)) {
-                colour = 0xccffffff;
+                color = 0xccffffff;
             }
             if (part == getSelectedPart()) {
-                colour = 0xcc00ff00;
+                color = 0xcc00ff00;
             }
-            fill(matrixStack, modelLeft + rect.x, modelTop + rect.y, modelLeft + rect.x + rect.width, modelTop + rect.y + rect.height, colour);
+            fill(matrixStack, modelLeft + rect.x, modelTop + rect.y, modelLeft + rect.x + rect.width, modelTop + rect.y + rect.height, color);
         }
     }
 

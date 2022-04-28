@@ -1,0 +1,14 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "armourers_workshop:item/shade-noise-tool"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "armourers_workshop:small": 1
+      },
+      "model": "armourers_workshop:item/shade-noise-tool-small"
+    }
+  ]
+}

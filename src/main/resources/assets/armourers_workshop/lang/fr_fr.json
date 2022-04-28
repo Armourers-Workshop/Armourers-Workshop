@@ -445,8 +445,8 @@
   "item.armourers_workshop.rollover.nopaint": "§6Aucune peinture.",
   "item.armourers_workshop.rollover.openSettings": "Sneak click droit pour ouvrir les parametres.",
   "item.armourers_workshop.rollover.paintType": "§6Type de peinture:§r %s",
-  "item.armourers_workshop.rollover.radius.effect": "§6Effect Radius:§r %d",
-  "item.armourers_workshop.rollover.radius.sample": "§6Sample Radius:§r %d",
+  "item.armourers_workshop.rollover.effectRadius": "§6Effect Radius:§r %d",
+  "item.armourers_workshop.rollover.sampleRadius": "§6Sample Radius:§r %d",
   "item.armourers_workshop.rollover.settingsSaved": "§6Parametres sauvegarder.",
   "item.armourers_workshop.rollover.skinAuthor": "§6Auteur:§r %s",
   "item.armourers_workshop.rollover.skinDyeCount": "§eNombre de teinture:§r %d",
@@ -588,6 +588,6 @@
   "tooloption.armourers_workshop.intensity": "Intensitee",
   "tooloption.armourers_workshop.planeRestrict": "Restrict Plane",
   "tooloption.armourers_workshop.radius": "Taille",
-  "tooloption.armourers_workshop.radius.effect": "Taille a effet",
-  "tooloption.armourers_workshop.radius.sample": "Taille simple"
+  "tooloption.armourers_workshop.effectRadius": "Taille a effet",
+  "tooloption.armourers_workshop.sampleRadius": "Taille simple"
 }

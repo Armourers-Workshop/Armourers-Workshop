@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.init.common;
 
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.storage.FolderName;
 
 public final class AWConstants {
@@ -27,6 +29,13 @@ public final class AWConstants {
         public static final String TEXTURE_PROFILE = "User";
 
         public static final String COLOR = "Color";
+
+        public static final String DOWN = "Down";
+        public static final String UP = "Up";
+        public static final String NORTH = "North";
+        public static final String SOUTH = "South";
+        public static final String WEST = "West";
+        public static final String EAST = "East";
 
         public static final String ENTITY = "EntityTag";
 

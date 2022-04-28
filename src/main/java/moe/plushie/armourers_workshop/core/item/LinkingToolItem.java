@@ -1,37 +1,29 @@
 package moe.plushie.armourers_workshop.core.item;
 
+import moe.plushie.armourers_workshop.api.common.IItemModelPropertiesProvider;
+import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
+import moe.plushie.armourers_workshop.init.common.AWCore;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.function.BiConsumer;
 
-public class LinkingToolItem extends FlavouredItem {
+public class LinkingToolItem extends FlavouredItem implements IItemModelPropertiesProvider {
 
     public LinkingToolItem(Properties properties) {
         super(properties);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static float isEmpty(ItemStack itemStack, @Nullable ClientWorld world, @Nullable LivingEntity entity) {
-        CompoundNBT tag = itemStack.getTag();
-        if (tag != null && tag.contains(AWConstants.NBT.TILE_ENTITY_LINKED_POS)) {
-            return 0;
-        }
-        return 1;
     }
 
     public static void setLinkedBlockPos(ItemStack itemStack, BlockPos pos) {
@@ -45,6 +37,17 @@ public class LinkingToolItem extends FlavouredItem {
             return AWDataSerializers.getBlockPos(tag, AWConstants.NBT.TILE_ENTITY_LINKED_POS, null);
         }
         return null;
+    }
+
+    @Override
+    public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
+        builder.accept(AWCore.resource("empty"), (itemStack, world, entity) -> {
+            CompoundNBT tag = itemStack.getTag();
+            if (tag != null && tag.contains(AWConstants.NBT.TILE_ENTITY_LINKED_POS)) {
+                return 0;
+            }
+            return 1;
+        });
     }
 
     @Override

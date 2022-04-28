@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.init.common;
 
-import moe.plushie.armourers_workshop.builder.block.ColourMixerBlock;
-import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
-import moe.plushie.armourers_workshop.builder.gui.colourmixer.ColourMixerScreen;
+import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
+import moe.plushie.armourers_workshop.api.common.IItemModelPropertiesProvider;
+import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
+import moe.plushie.armourers_workshop.builder.gui.ColorMixerScreen;
+import moe.plushie.armourers_workshop.builder.render.SkinCubeTileEntityRenderer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobeStorage;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
@@ -13,10 +15,6 @@ import moe.plushie.armourers_workshop.core.gui.misc.DyeTableScreen;
 import moe.plushie.armourers_workshop.core.gui.misc.SkinnableScreen;
 import moe.plushie.armourers_workshop.core.gui.misc.SkinningTableScreen;
 import moe.plushie.armourers_workshop.core.gui.wardrobe.SkinWardrobeScreen;
-import moe.plushie.armourers_workshop.core.item.BottleItem;
-import moe.plushie.armourers_workshop.core.item.ColoredItem;
-import moe.plushie.armourers_workshop.core.item.LinkingToolItem;
-import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.core.render.entity.SeatEntityRenderer;
@@ -98,23 +96,30 @@ public class ModRegistry {
 
     @OnlyIn(Dist.CLIENT)
     public void registerItemModels(ModelRegistryEvent event) {
-        ItemModelsProperties.register(ModItems.BOTTLE, AWCore.resource("empty"), BottleItem::isEmpty);
-        ItemModelsProperties.register(ModItems.SKIN, AWCore.resource("loading"), SkinItem::getIconIndex);
-        ItemModelsProperties.register(ModItems.LINKING_TOOL, AWCore.resource("empty"), LinkingToolItem::isEmpty);
+        ModItems.forEach(item -> {
+            if (item instanceof IItemModelPropertiesProvider) {
+                ((IItemModelPropertiesProvider) item).createModelProperties((key, property) -> ItemModelsProperties.register(item, key, property::getValue));
+            }
+        });
+
     }
 
     @OnlyIn(Dist.CLIENT)
     public void registerItemColors(ColorHandlerEvent.Item event) {
-        event.getItemColors().register(ColoredItem.getColorProvider(0), ModItems.BOTTLE);
+        ModItems.forEach(item -> {
+            if (item instanceof IItemTintColorProvider) {
+                event.getItemColors().register(((IItemTintColorProvider) item)::getTintColor, item);
+            }
+        });
     }
 
     @OnlyIn(Dist.CLIENT)
     public void registerBlockColors(ColorHandlerEvent.Block event) {
-        event.getBlockColors().register(ColourMixerBlock.getColorProvider(1), ModBlocks.COLOUR_MIXER);
-        event.getBlockColors().register(SkinCubeBlock.getColorProvider(), ModBlocks.SKIN_CUBE);
-        event.getBlockColors().register(SkinCubeBlock.getColorProvider(), ModBlocks.SKIN_CUBE_GLASS);
-        event.getBlockColors().register(SkinCubeBlock.getColorProvider(), ModBlocks.SKIN_CUBE_GLASS_GLOWING);
-        event.getBlockColors().register(SkinCubeBlock.getColorProvider(), ModBlocks.SKIN_CUBE_GLOWING);
+        ModBlocks.forEach(block -> {
+            if (block instanceof IBlockTintColorProvider) {
+                event.getBlockColors().register(((IBlockTintColorProvider) block)::getTintColor, block);
+            }
+        });
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -142,7 +147,7 @@ public class ModRegistry {
         ScreenManager.register(ModContainerTypes.SKIN_LIBRARY, SkinLibraryScreen::new);
         ScreenManager.register(ModContainerTypes.SKIN_LIBRARY_GLOBAL, GlobalSkinLibraryScreen::new);
         ScreenManager.register(ModContainerTypes.HOLOGRAM_PROJECTOR, HologramProjectorScreen::new);
-        ScreenManager.register(ModContainerTypes.COLOUR_MIXER, ColourMixerScreen::new);
+        ScreenManager.register(ModContainerTypes.COLOR_MIXER, ColorMixerScreen::new);
 
         RenderTypeLookup.setRenderLayer(ModBlocks.SKINNING_TABLE, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.DYE_TABLE, RenderType.cutout());
@@ -151,7 +156,7 @@ public class ModRegistry {
         RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_LIBRARY, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_LIBRARY_GLOBAL, RenderType.cutout());
 
-        RenderTypeLookup.setRenderLayer(ModBlocks.COLOUR_MIXER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.COLOR_MIXER, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.OUTFIT_MAKER, RenderType.cutout());
 
         RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_CUBE, RenderType.cutout());
@@ -166,8 +171,10 @@ public class ModRegistry {
         ClientRegistry.registerKeyBinding(KeyBindings.OPEN_WARDROBE_KEY);
 
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.HOLOGRAM_PROJECTOR, HologramProjectorTileEntityRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKINNABLE, SkinnableTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKIN_LIBRARY_GLOBAL, GlobalSkinLibraryTileEntityRenderer::new);
+
+        ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKINNABLE_CUBE_SR, SkinnableTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKIN_CUBE_SR, SkinCubeTileEntityRenderer::new);
 
         event.enqueueWork(SkinRendererManager::init);
         event.enqueueWork(ClientWardrobeHandler::init);

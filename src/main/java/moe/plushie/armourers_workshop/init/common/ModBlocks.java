@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.common;
 
 import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
-import moe.plushie.armourers_workshop.builder.block.ColourMixerBlock;
+import moe.plushie.armourers_workshop.builder.block.ColorMixerBlock;
 import moe.plushie.armourers_workshop.builder.block.OutfitMakerBlock;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.block.DyeTableBlock;
@@ -39,7 +39,7 @@ public class ModBlocks {
     public static final Block SKIN_LIBRARY_GLOBAL = register("skin-library-global", GlobalSkinLibraryBlock::new, p -> p.strength(1.5f, 6.f).noOcclusion());
 
     public static final Block OUTFIT_MAKER = register("outfit-maker", OutfitMakerBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f).noOcclusion());
-    public static final Block COLOUR_MIXER = register("colour-mixer", ColourMixerBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f));
+    public static final Block COLOR_MIXER = register("colour-mixer", ColorMixerBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f));
     public static final Block ARMOURER = register("armourer", ArmourerBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f));
 
     public static final Block SKIN_CUBE = register("skin-cube", SkinCubeBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f));

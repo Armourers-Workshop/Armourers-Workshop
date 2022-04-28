@@ -9,6 +9,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 public class BlockMarkerItem extends FlavouredItem {
 
@@ -26,7 +27,7 @@ public class BlockMarkerItem extends FlavouredItem {
             if (direction.equals(blockState.getValue(SkinCubeBlock.MARKER))) {
                 direction = OptionalDirection.NONE;
             }
-            world.setBlock(blockPos, blockState.setValue(SkinCubeBlock.MARKER, direction), 3);
+            world.setBlock(blockPos, blockState.setValue(SkinCubeBlock.MARKER, direction), Constants.BlockFlags.BLOCK_UPDATE);
             return ActionResultType.sidedSuccess(world.isClientSide);
         }
         return ActionResultType.PASS;

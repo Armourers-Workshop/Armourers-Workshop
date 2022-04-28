@@ -7,6 +7,8 @@ public interface ISkinPaintType {
 
     int getId();
 
+    int getIndex();
+
     float getU();
 
     float getV();

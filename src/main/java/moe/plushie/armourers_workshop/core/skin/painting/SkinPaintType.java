@@ -65,7 +65,7 @@ public class SkinPaintType implements ISkinPaintType {
         return textureV;
     }
 
-
+    @Override
     public int getIndex() {
         return index;
     }

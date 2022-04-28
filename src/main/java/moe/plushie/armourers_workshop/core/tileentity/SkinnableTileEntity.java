@@ -21,13 +21,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
@@ -74,8 +74,10 @@ public class SkinnableTileEntity extends RotableContainerTileEntity {
     private Quaternion renderRotations;
     private AxisAlignedBB renderBoundingBox;
 
+    private boolean isParent = false;
+
     public SkinnableTileEntity() {
-        super(ModTileEntities.SKINNABLE);
+        super(ModTileEntities.SKINNABLE_CUBE);
     }
 
     public static Vector3f getRotations(BlockState state) {
@@ -88,6 +90,7 @@ public class SkinnableTileEntity extends RotableContainerTileEntity {
     public void readFromNBT(CompoundNBT nbt) {
         refer = AWDataSerializers.getBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_REFER, INVALID);
         shape = AWDataSerializers.getRectangle3i(nbt, AWConstants.NBT.TILE_ENTITY_SHAPE, Rectangle3i.ZERO);
+        isParent = BlockPos.ZERO.equals(refer);
         if (!isParent()) {
             return;
         }
@@ -300,7 +303,7 @@ public class SkinnableTileEntity extends RotableContainerTileEntity {
     }
 
     public boolean isParent() {
-        return BlockPos.ZERO.equals(refer);
+        return isParent;
     }
 
     public boolean noCollision() {
@@ -351,5 +354,13 @@ public class SkinnableTileEntity extends RotableContainerTileEntity {
             return properties.get(property);
         }
         return property.getDefaultValue();
+    }
+
+    @Override
+    public TileEntityType<?> getType() {
+        if (isParent()) {
+            return ModTileEntities.SKINNABLE_CUBE_SR;
+        }
+        return ModTileEntities.SKINNABLE_CUBE;
     }
 }

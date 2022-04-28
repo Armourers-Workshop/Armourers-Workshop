@@ -1,6 +1,6 @@
 {
-    "parent": "item/handheld",
-    "textures": {
-        "layer0": "armourers_workshop:item/mannequin-tool"
-    }
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "armourers_workshop:item/mannequin-tool"
+  }
 }
