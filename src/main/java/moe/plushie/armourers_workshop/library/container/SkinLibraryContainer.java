@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 @SuppressWarnings("NullableProblems")
-public class SkinLibraryContainer extends AbstractBlockContainer<Block> {
+public class SkinLibraryContainer extends AbstractBlockContainer {
 
     protected final IInventory inventory;
     protected final PlayerInventory playerInventory;

@@ -203,6 +203,7 @@ public class NetworkHandler {
         PACKET_UPLOAD_FILE(SaveSkinPacket.class, SaveSkinPacket::new),
 
         PACKET_UPLOAD_SKIN_TO_GLOBAL(UploadSkinPacket.class, UploadSkinPacket::new),
+        PACKET_UPDATE_OUTFIT_MAKER(UpdateOutfitMakerPacket.class, UpdateOutfitMakerPacket::new),
 
         PACKET_UPDATE_HOLOGRAM_PROJECTOR(UpdateHologramProjectorPacket.class, UpdateHologramProjectorPacket::new),
         PACKET_UPDATE_COLOUR_MIXER(UpdateColourMixerPacket.class, UpdateColourMixerPacket::new),

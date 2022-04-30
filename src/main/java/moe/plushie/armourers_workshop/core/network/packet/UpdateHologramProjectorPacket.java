@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
-import moe.plushie.armourers_workshop.core.utils.AWDataAccessor;
-import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
+import moe.plushie.armourers_workshop.utils.AWDataAccessor;
+import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializers;

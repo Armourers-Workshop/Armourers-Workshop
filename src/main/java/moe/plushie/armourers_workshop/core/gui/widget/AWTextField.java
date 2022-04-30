@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.gui.widget;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -63,6 +64,9 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
     protected BiFunction<String, Integer, IReorderingProcessor> formatter = (p_195610_0_, p_195610_1_) -> IReorderingProcessor.forward(p_195610_0_, Style.EMPTY);
     protected ArrayList<Line> wrappedTextLines;
 
+    private boolean isEditing = false;
+    private BiConsumer<AWTextField, EditEvent> eventListener;
+
     private int scrollAmount = 0;
 
     private int cursorPosX = 0;
@@ -82,6 +86,10 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
         this.width = width;
         this.height = height;
         this.wrappedTextLines = null;
+    }
+
+    public void setEventListener(BiConsumer<AWTextField, EditEvent> eventListener) {
+        this.eventListener = eventListener;
     }
 
     public void setResponder(Consumer<String> responder) {
@@ -107,6 +115,7 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
 
     public void setValue(String p_146180_1_) {
         if (this.filter.test(p_146180_1_)) {
+            String oldValue = this.value;
             if (p_146180_1_.length() > this.maxLength) {
                 this.value = p_146180_1_.substring(0, this.maxLength);
             } else {
@@ -115,7 +124,7 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
 
             this.moveCursorToEnd();
             this.setHighlightPos(this.cursorPos);
-            this.onValueChange(p_146180_1_);
+            this.onValueChange(oldValue, this.value);
         }
     }
 
@@ -142,16 +151,22 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
 
         String s1 = (new StringBuilder(this.value)).replace(i, j, s).toString();
         if (this.filter.test(s1)) {
+            String oldValue = this.value;
             this.value = s1;
             this.setCursorPosition(i + l);
             this.setHighlightPos(this.cursorPos);
-            this.onValueChange(this.value);
+            this.onValueChange(oldValue, this.value);
         }
     }
 
-    public void onValueChange(String p_212951_1_) {
+    public void onValueChange(String oldValue, String newValue) {
         if (this.responder != null) {
-            this.responder.accept(p_212951_1_);
+            this.responder.accept(newValue);
+        }
+        if (!Objects.equals(oldValue, newValue)) {
+            if (this.eventListener != null) {
+                this.eventListener.accept(this, EditEvent.CHANGE);
+            }
         }
         this.nextNarration = Util.getMillis() + 500L;
     }
@@ -245,8 +260,6 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
         if (!this.shiftPressed) {
             this.setHighlightPos(this.cursorPos);
         }
-
-        this.onValueChange(this.value);
     }
 
     public void moveCursorToStart() {
@@ -432,6 +445,21 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
 
     public void setFocus(boolean p_146195_1_) {
         super.setFocused(p_146195_1_);
+        if (p_146195_1_) {
+            if (!this.isEditing) {
+                this.isEditing = true;
+                if (this.eventListener != null) {
+                    this.eventListener.accept(this, EditEvent.BEGIN);
+                }
+            }
+        } else {
+            if (this.isEditing) {
+                this.isEditing = false;
+                if (this.eventListener != null) {
+                    this.eventListener.accept(this, EditEvent.END);
+                }
+            }
+        }
     }
 
     public int getMaxLength() {
@@ -441,8 +469,9 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
     public void setMaxLength(int p_146203_1_) {
         this.maxLength = p_146203_1_;
         if (this.value.length() > p_146203_1_) {
+            String oldValue = this.value;
             this.value = this.value.substring(0, p_146203_1_);
-            this.onValueChange(this.value);
+            this.onValueChange(oldValue, this.value);
         }
 
     }
@@ -484,7 +513,7 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
         if (p_230995_1_) {
             this.frame = 0;
         }
-
+        setFocus(p_230995_1_);
     }
 
     public boolean isEditable() {
@@ -883,6 +912,10 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
             return SharedConstants.filterText(value);
         }
         return value;
+    }
+
+    public enum EditEvent {
+        BEGIN, CHANGE, END
     }
 
     public static class Line {

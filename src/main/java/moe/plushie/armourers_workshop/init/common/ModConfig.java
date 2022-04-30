@@ -65,6 +65,7 @@ public class ModConfig {
 
         public static boolean enableEntityPlacementHighlight = true;
         public static boolean enableBlockPlacementHighlight = true;
+        public static boolean enablePaintToolPlacementHighlight = true;
 
         public static boolean enableEmbeddedSkinRenderer = false;
 

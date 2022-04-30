@@ -3,7 +3,8 @@ package moe.plushie.armourers_workshop.core.gui.hologramprojector;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -13,7 +14,7 @@ public class HologramProjectorInventorySetting extends AWTabPanel {
     protected int contentWidth = 176;
     protected int contentHeight = 40;
 
-    public HologramProjectorInventorySetting(HologramProjectorContainer container) {
+    public HologramProjectorInventorySetting(HologramProjectorTileEntity entity) {
         super("inventory.armourers_workshop.hologram-projector.inventory");
     }
 

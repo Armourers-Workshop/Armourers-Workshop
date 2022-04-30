@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.init.common;
 import moe.plushie.armourers_workshop.builder.item.*;
 import moe.plushie.armourers_workshop.core.item.*;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
-import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
+import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;

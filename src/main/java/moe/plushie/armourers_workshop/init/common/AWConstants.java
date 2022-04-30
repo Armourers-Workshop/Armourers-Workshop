@@ -49,6 +49,9 @@ public final class AWConstants {
         public static final String ENTITY_TEXTURE = "Texture";
         public static final String ENTITY_POSE = "Pose";
 
+        public static final String TILE_ENTITY_NAME = "Name";
+        public static final String TILE_ENTITY_FLAVOUR = "flavour";
+
         public static final String TILE_ENTITY_ANGLE = "Angle";
         public static final String TILE_ENTITY_OFFSET = "Offset";
         public static final String TILE_ENTITY_ROTATION_SPEED = "RotSpeed";

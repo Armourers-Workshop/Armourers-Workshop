@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.library.data.global;
 
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.util.StringUtils;
 import org.apache.commons.io.IOUtils;

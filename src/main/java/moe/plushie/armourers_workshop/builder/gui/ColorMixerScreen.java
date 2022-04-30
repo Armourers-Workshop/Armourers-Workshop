@@ -11,11 +11,11 @@ import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateColourMixerPacket;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.core.utils.color.PaintColor;
-import moe.plushie.armourers_workshop.core.utils.color.Palette;
-import moe.plushie.armourers_workshop.core.utils.color.PaletteManager;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.utils.color.PaintColor;
+import moe.plushie.armourers_workshop.utils.color.Palette;
+import moe.plushie.armourers_workshop.utils.color.PaletteManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -49,7 +49,7 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
 
     private final AWHSBSliderBox[] sliders = {null, null, null};
 
-    private TextFieldWidget textField;
+    private AWTextField textField;
     private AWPaletteBox paletteBox;
 
     private AWComboBox paintComboBox;
@@ -300,8 +300,8 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
         return paletteBox;
     }
 
-    private TextFieldWidget addTextField(int x, int y) {
-        TextFieldWidget textBox = new TextFieldWidget(font, x, y, 50, 16, StringTextComponent.EMPTY);
+    private AWTextField addTextField(int x, int y) {
+        AWTextField textBox = new AWTextField(font, x, y, 50, 16, StringTextComponent.EMPTY);
         textBox.setMaxLength(7);
         addWidget(textBox);
         return textBox;
@@ -315,9 +315,7 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
 
     private void addHelpButton(int x, int y) {
         ITextComponent tooltip = getDisplayText("help.palette");
-        Button.IPressable pressable = b -> {
-        };
-        AWImageButton button = new AWImageButton(x, y, 7, 8, 0, 0, RenderUtils.TEX_HELP, pressable, this::renderIconTooltip, tooltip);
+        AWImageButton button = new AWImageButton(x, y, 7, 8, 0, 0, RenderUtils.TEX_HELP, Objects::hash, this::renderIconTooltip, tooltip);
         addButton(button);
     }
 

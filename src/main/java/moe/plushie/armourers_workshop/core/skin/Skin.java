@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
-import moe.plushie.armourers_workshop.core.utils.Rectangle3i;
+import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.*;

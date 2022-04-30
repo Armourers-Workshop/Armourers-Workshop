@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.painting;
 
 import moe.plushie.armourers_workshop.core.skin.data.SkinDyeType;
 import moe.plushie.armourers_workshop.init.common.ModLog;
-import moe.plushie.armourers_workshop.core.utils.SkinResourceLocation;
+import moe.plushie.armourers_workshop.utils.SkinResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;

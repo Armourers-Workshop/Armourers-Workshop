@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWSliderBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateHologramProjectorPacket;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.math.vector.Vector3f;
@@ -35,9 +35,9 @@ public class HologramProjectorRotationSpeedSetting extends AWTabPanel {
     private final HologramProjectorTileEntity entity;
     private final UpdateHologramProjectorPacket.Field field = UpdateHologramProjectorPacket.Field.ROTATION_SPEED;
 
-    public HologramProjectorRotationSpeedSetting(HologramProjectorContainer container) {
+    public HologramProjectorRotationSpeedSetting(HologramProjectorTileEntity entity) {
         super("inventory.armourers_workshop.hologram-projector.rotationSpeed");
-        this.entity = container.getEntity();
+        this.entity = entity;
     }
 
     @Override

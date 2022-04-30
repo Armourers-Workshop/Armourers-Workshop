@@ -18,7 +18,7 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.world.World;
 
 @SuppressWarnings("NullableProblems")
-public class ColourMixerContainer extends AbstractBlockContainer<Block> {
+public class ColourMixerContainer extends AbstractBlockContainer {
 
     private final IInventory inventory = new Inventory(2);
 

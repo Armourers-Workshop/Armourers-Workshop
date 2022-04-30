@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.item.FlavouredItem;
-import moe.plushie.armourers_workshop.core.utils.OptionalDirection;
+import moe.plushie.armourers_workshop.utils.OptionalDirection;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;

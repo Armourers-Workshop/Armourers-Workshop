@@ -21,7 +21,7 @@ import moe.plushie.armourers_workshop.core.skin.part.unknown.UnknownPartType;
 import moe.plushie.armourers_workshop.core.skin.part.wings.LeftWingPartType;
 import moe.plushie.armourers_workshop.core.skin.part.wings.RightWingPartType;
 import moe.plushie.armourers_workshop.init.common.ModLog;
-import moe.plushie.armourers_workshop.core.utils.SkinResourceLocation;
+import moe.plushie.armourers_workshop.utils.SkinResourceLocation;
 
 import java.util.Collection;
 import java.util.HashMap;

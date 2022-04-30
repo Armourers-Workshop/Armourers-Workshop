@@ -14,9 +14,9 @@ import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
@@ -60,8 +60,6 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
     protected int fileListTop = 0;
     protected int fileListLeft = 0;
     protected int fileListRight = 0;
-
-    protected Button pendingTooltipButton;
 
     protected AWFileList fileList;
 
@@ -215,10 +213,6 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
     @Override
     protected void renderTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
         super.renderTooltip(matrixStack, mouseX, mouseY);
-        if (pendingTooltipButton != null) {
-            super.renderTooltip(matrixStack, pendingTooltipButton.getMessage(), mouseX, mouseY);
-            pendingTooltipButton = null;
-        }
         SkinDescriptor descriptor = fileList.getHoveredSkin(mouseX, mouseY);
         BakedSkin bakedSkin = BakedSkin.of(descriptor);
         if (bakedSkin != null) {
@@ -471,8 +465,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
 
     private AWImageButton addIconButton(int x, int y, int u, int v, int width, int height, String key, String key2, Button.IPressable handler) {
         ITextComponent tooltip = getDisplayText(key);
-        Button.ITooltip tooltipRenderer = (button, matrixStack, mouseX, mouseY) -> pendingTooltipButton = button;
-        AWImageButton button = new AWImageExtendedButton(x, y, width, height, u, v, RenderUtils.TEX_SKIN_LIBRARY, handler, tooltipRenderer, tooltip);
+        AWImageButton button = new AWImageExtendedButton(x, y, width, height, u, v, RenderUtils.TEX_SKIN_LIBRARY, handler, this::addHoveredButton, tooltip);
         if (key2 != null) {
             button.setDisabledMessage(getDisplayText(key2));
         }

@@ -5,12 +5,14 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.item.BottleItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.utils.ColorUtils;
-import moe.plushie.armourers_workshop.core.utils.color.ColorScheme;
+import moe.plushie.armourers_workshop.utils.ColorUtils;
+import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import moe.plushie.armourers_workshop.init.common.ModItems;
+import moe.plushie.armourers_workshop.utils.slot.SkinSlot;
+import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,7 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 
 @SuppressWarnings("NullableProblems")
-public class DyeTableContainer extends AbstractBlockContainer<Block> {
+public class DyeTableContainer extends AbstractBlockContainer {
 
     private final ISkinPaintType[] paintTypes = {SkinPaintTypes.DYE_1, SkinPaintTypes.DYE_2, SkinPaintTypes.DYE_3, SkinPaintTypes.DYE_4, SkinPaintTypes.DYE_5, SkinPaintTypes.DYE_6, SkinPaintTypes.DYE_7, SkinPaintTypes.DYE_8};
     private final IInventory inventory;
@@ -92,8 +94,7 @@ public class DyeTableContainer extends AbstractBlockContainer<Block> {
         for (int i = 0; i < 8; i++) {
             int ix = x + (i % 4) * itemWidth;
             int iy = y + (i / 4) * itemHeight;
-            Slot slot = addSlot(new LockableSlot(inventory, i, ix, iy));
-            slot.setBackground(AWCore.resource("textures/atlas/items.png"), AWCore.getSlotIcon("dye"));
+            addSlot(new LockableSlot(inventory, i, ix, iy, SkinSlotType.DYE));
         }
     }
 
@@ -149,10 +150,10 @@ public class DyeTableContainer extends AbstractBlockContainer<Block> {
         setOutputStack(newItemStack);
     }
 
-    public class LockableSlot extends Slot {
+    public class LockableSlot extends SkinSlot {
 
-        public LockableSlot(IInventory inventory, int slot, int x, int y) {
-            super(inventory, slot, x, y);
+        public LockableSlot(IInventory inventory, int slot, int x, int y, SkinSlotType... slotTypes) {
+            super(inventory, slot, x, y, slotTypes);
         }
 
         @Override

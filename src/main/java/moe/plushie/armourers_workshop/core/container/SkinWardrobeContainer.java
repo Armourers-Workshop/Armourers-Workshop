@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.core.container;
 
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
-import moe.plushie.armourers_workshop.init.common.AWCore;
+import moe.plushie.armourers_workshop.utils.slot.SkinSlot;
+import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -61,16 +61,7 @@ public class SkinWardrobeContainer extends Container {
     }
 
     protected void addEquipmentSlots(Group group, int column, int row) {
-        SkinSlotType[] slotTypes = {
-                SkinSlotType.SWORD,
-                SkinSlotType.SHIELD,
-                SkinSlotType.BOW,
-                null,
-                SkinSlotType.PICKAXE,
-                SkinSlotType.AXE,
-                SkinSlotType.SHOVEL,
-                SkinSlotType.HOE
-        };
+        SkinSlotType[] slotTypes = {SkinSlotType.SWORD, SkinSlotType.SHIELD, SkinSlotType.BOW, null, SkinSlotType.PICKAXE, SkinSlotType.AXE, SkinSlotType.SHOVEL, SkinSlotType.HOE};
         boolean hasContents = false;
         for (SkinSlotType slotType : slotTypes) {
             if (slotType != null) {
@@ -92,8 +83,7 @@ public class SkinWardrobeContainer extends Container {
             for (int i = 0; i < inventory.getContainerSize(); ++i) {
                 int x = slotsX + (column + i) * 19;
                 int y = slotsY + row * 19;
-                GroupSlot slot = new GroupSlot(null, inventory, group, i, x, y);
-                addSlot(slot);
+                SkinSlot slot = addGroupSlot(inventory, i, x, y, group);
                 customSlots.add(slot);
             }
         }
@@ -106,10 +96,20 @@ public class SkinWardrobeContainer extends Container {
         for (int i = 0; i < size; ++i) {
             int x = slotsX + (column + i) * 19;
             int y = slotsY + row * 19;
-            GroupSlot slot = new GroupSlot(slotType, inventory, group, index + i, x, y);
-            addSlot(slot);
+            SkinSlot slot = addGroupSlot(inventory, index + i, x, y, group, slotType);
             customSlots.add(slot);
         }
+    }
+
+    protected SkinSlot addGroupSlot(IInventory inventory, int index, int x, int y, Group group, SkinSlotType... slotTypes) {
+        SkinSlot slot = new SkinSlot(inventory, index, x, y, slotTypes) {
+            @Override
+            public boolean isActive() {
+                return getGroup() == group;
+            }
+        };
+        addSlot(slot);
+        return slot;
     }
 
     public List<Slot> getCustomSlots() {
@@ -132,7 +132,7 @@ public class SkinWardrobeContainer extends Container {
             return ItemStack.EMPTY;
         }
         ItemStack itemStack = slot.getItem();
-        if (slot instanceof GroupSlot) {
+        if (slot instanceof SkinSlot) {
             if (!(moveItemStackTo(itemStack, 9, 36, false) || moveItemStackTo(itemStack, 0, 9, false))) {
                 return ItemStack.EMPTY;
             }
@@ -154,9 +154,9 @@ public class SkinWardrobeContainer extends Container {
 
     private int getFreeSlot(SkinSlotType slotType) {
         for (Slot slot : slots) {
-            if (slot instanceof GroupSlot && !slot.hasItem()) {
-                GroupSlot slot1 = (GroupSlot) slot;
-                if (slot1.slotType == slotType || slot1.slotType == null) {
+            if (slot instanceof SkinSlot && !slot.hasItem()) {
+                SkinSlot slot1 = (SkinSlot) slot;
+                if (slot1.getSlotTypes().contains(slotType) || slot1.getSlotTypes().isEmpty()) {
                     return slot1.index;
                 }
             }
@@ -182,10 +182,7 @@ public class SkinWardrobeContainer extends Container {
     }
 
     public enum Group {
-        SKINS(true, 99),
-        OUTFITS(true, 99),
-        DYES(true, 99),
-        COLORS(false, 99);
+        SKINS(true, 99), OUTFITS(true, 99), DYES(true, 99), COLORS(false, 99);
 
         private final boolean exchanges;
         private final int extendedHeight;
@@ -212,34 +209,6 @@ public class SkinWardrobeContainer extends Container {
         @Override
         public boolean isActive() {
             return shouldRenderPlayerInventory();
-        }
-    }
-
-    public final class GroupSlot extends Slot {
-
-        private final Group group;
-        private final SkinSlotType slotType;
-
-        public GroupSlot(SkinSlotType slotType, IInventory inventory, Group group, int index, int x, int y) {
-            super(inventory, index, x, y);
-            this.group = group;
-            this.slotType = slotType;
-            if (slotType != null) {
-                this.setBackground(AWCore.resource("textures/atlas/items.png"), AWCore.getSlotIcon(slotType.getName()));
-            }
-        }
-
-        @Override
-        public boolean mayPlace(ItemStack itemStack) {
-            if (slotType != null && !slotType.equals(SkinSlotType.of(itemStack))) {
-                return false;
-            }
-            return container.canPlaceItem(index, itemStack);
-        }
-
-        @Override
-        public boolean isActive() {
-            return getGroup() == group;
         }
     }
 }

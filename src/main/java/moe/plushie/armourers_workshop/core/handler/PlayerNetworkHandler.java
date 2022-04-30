@@ -9,8 +9,7 @@ import moe.plushie.armourers_workshop.core.network.packet.UpdateContextPacket;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
-import moe.plushie.armourers_workshop.core.utils.SkinSlotType;
-import moe.plushie.armourers_workshop.init.common.AWCore;
+import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.common.ModContext;
@@ -34,7 +33,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 public class PlayerNetworkHandler {
 
