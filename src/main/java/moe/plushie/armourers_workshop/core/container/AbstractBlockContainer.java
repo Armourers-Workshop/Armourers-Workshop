@@ -8,19 +8,19 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
-public abstract class AbstractBlockContainer<T extends Block> extends Container {
+public abstract class AbstractBlockContainer extends Container {
 
-    protected final T block;
+    protected final Block block;
     protected final IWorldPosCallable access;
 
-    public AbstractBlockContainer(int containerId, @Nullable ContainerType<?> containerType, T block, IWorldPosCallable access) {
+    public AbstractBlockContainer(int containerId, @Nullable ContainerType<?> containerType, Block block, IWorldPosCallable access) {
         super(containerType, containerId);
         this.access = access;
         this.block = block;
@@ -51,14 +51,20 @@ public abstract class AbstractBlockContainer<T extends Block> extends Container 
         return ItemStack.EMPTY;
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
-    public TileEntity getTileEntity() {
-        return access.evaluate(World::getBlockEntity).orElse(null);
+    public <T extends TileEntity> T getTileEntity(Class<T> clazz) {
+        TileEntity[] tileEntities = {null};
+        access.execute((world, pos) -> tileEntities[0] = world.getBlockEntity(pos));
+        if (clazz.isInstance(tileEntities[0])) {
+            return (T) tileEntities[0];
+        }
+        return null;
     }
 
     @Nullable
     public IInventory getTileInventory() {
-        TileEntity tileEntity = access.evaluate(World::getBlockEntity).orElse(null);
+        TileEntity tileEntity = getTileEntity(TileEntity.class);
         if (tileEntity instanceof IHasInventory) {
             return ((IHasInventory) tileEntity).getInventory();
         }

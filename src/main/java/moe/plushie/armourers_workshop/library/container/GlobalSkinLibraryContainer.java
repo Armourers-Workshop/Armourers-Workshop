@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 
 @SuppressWarnings("NullableProblems")
-public class GlobalSkinLibraryContainer extends AbstractBlockContainer<Block> {
+public class GlobalSkinLibraryContainer extends AbstractBlockContainer {
 
     private boolean isVisible = false;
 

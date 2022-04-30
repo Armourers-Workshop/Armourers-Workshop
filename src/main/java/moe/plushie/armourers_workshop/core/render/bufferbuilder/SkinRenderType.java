@@ -3,9 +3,8 @@ package moe.plushie.armourers_workshop.core.render.bufferbuilder;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
-import moe.plushie.armourers_workshop.core.utils.PaintingUtils;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
-import net.minecraft.client.renderer.Atlases;
+import moe.plushie.armourers_workshop.utils.PaintingUtils;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AtlasTexture;
@@ -16,6 +15,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
+
+import java.util.OptionalDouble;
 
 @OnlyIn(Dist.CLIENT)
 public class SkinRenderType extends RenderType {
@@ -41,6 +42,7 @@ public class SkinRenderType extends RenderType {
     public static final RenderType ENTITY_OUTLINE = createEntityOutline();
 
     public static final RenderType ITEM_TRANSLUCENT_WITHOUT_SORTED = create("aw_item_translucent", DefaultVertexFormats.NEW_ENTITY, GL11.GL_QUADS, 256, false, false, createTranslucentState());
+    public static final RenderType LINES_WITHOUT_TEST = create("aw_box_lines", DefaultVertexFormats.POSITION_COLOR, 1, 256, RenderType.State.builder().setLineState(new RenderState.LineState(OptionalDouble.empty())).setLayeringState(VIEW_OFFSET_Z_LAYERING).setAlphaState(NO_ALPHA).setDepthTestState(NO_DEPTH_TEST).createCompositeState(false));
 
     public static final RenderType MARKER_FACE = createMarkerFace(RenderUtils.TEX_MARKERS);
 

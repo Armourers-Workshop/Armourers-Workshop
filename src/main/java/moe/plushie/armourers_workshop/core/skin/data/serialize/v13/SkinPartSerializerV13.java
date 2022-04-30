@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeExcepti
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.common.ModLog;
-import moe.plushie.armourers_workshop.core.utils.StreamUtils;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

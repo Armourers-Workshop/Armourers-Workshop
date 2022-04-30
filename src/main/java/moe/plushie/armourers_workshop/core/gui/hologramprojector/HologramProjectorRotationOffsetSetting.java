@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWSliderBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateHologramProjectorPacket;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.math.vector.Vector3f;
@@ -39,9 +39,9 @@ public class HologramProjectorRotationOffsetSetting extends AWTabPanel {
     private final UpdateHologramProjectorPacket.Field field = UpdateHologramProjectorPacket.Field.ROTATION_OFFSET;
     private final UpdateHologramProjectorPacket.Field field2 = UpdateHologramProjectorPacket.Field.SHOWS_ROTATION_POINT;
 
-    public HologramProjectorRotationOffsetSetting(HologramProjectorContainer container) {
+    public HologramProjectorRotationOffsetSetting(HologramProjectorTileEntity entity) {
         super("inventory.armourers_workshop.hologram-projector.rotationOffset");
-        this.entity = container.getEntity();
+        this.entity = entity;
     }
 
     @Override

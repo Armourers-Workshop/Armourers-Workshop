@@ -4,7 +4,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskBetaJoin;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;

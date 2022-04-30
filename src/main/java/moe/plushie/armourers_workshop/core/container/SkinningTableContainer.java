@@ -17,7 +17,7 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.world.World;
 
 @SuppressWarnings("NullableProblems")
-public class SkinningTableContainer extends AbstractBlockContainer<Block> {
+public class SkinningTableContainer extends AbstractBlockContainer {
 
     private final IInventory craftingInventory = new Inventory(2);
     private final IInventory craftingResultInventory = new Inventory(1);
@@ -28,14 +28,6 @@ public class SkinningTableContainer extends AbstractBlockContainer<Block> {
         this.addInputSlot(craftingInventory, 0, 37, 22);
         this.addInputSlot(craftingInventory, 1, 37, 58);
         this.addOutputSlot(craftingResultInventory, 0, 119, 40);
-    }
-
-    public SkinnableTileEntity getEntity() {
-        TileEntity tileEntity = getTileEntity();
-        if (tileEntity instanceof SkinnableTileEntity) {
-            return (SkinnableTileEntity) tileEntity;
-        }
-        return null;
     }
 
     @Override

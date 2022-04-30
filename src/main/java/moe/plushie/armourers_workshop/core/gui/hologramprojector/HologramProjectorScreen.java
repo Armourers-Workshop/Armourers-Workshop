@@ -3,7 +3,8 @@ package moe.plushie.armourers_workshop.core.gui.hologramprojector;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabController;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
@@ -15,6 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class HologramProjectorScreen extends ContainerScreen<HologramProjectorContainer> {
 
     private final AWTabController<Integer> tabController = new AWTabController<>(true);
+    private final HologramProjectorTileEntity tileEntity;
 
     protected int inventoryX;
     protected int inventoryY;
@@ -24,6 +26,7 @@ public class HologramProjectorScreen extends ContainerScreen<HologramProjectorCo
 
         this.imageWidth = 176;
         this.imageHeight = 240;
+        this.tileEntity = container.getTileEntity(HologramProjectorTileEntity.class);
 
         this.initTabs();
     }
@@ -53,28 +56,28 @@ public class HologramProjectorScreen extends ContainerScreen<HologramProjectorCo
     protected void initTabs() {
         tabController.clear();
 
-        tabController.add(new HologramProjectorInventorySetting(menu))
+        tabController.add(new HologramProjectorInventorySetting(tileEntity))
                 .setIcon(64, 0)
                 .setIconAnimation(8, 150)
                 .setTarget(1);
 
-        tabController.add(new HologramProjectorOffsetSetting(menu))
+        tabController.add(new HologramProjectorOffsetSetting(tileEntity))
                 .setIcon(96, 0)
                 .setIconAnimation(8, 150);
 
-        tabController.add(new HologramProjectorAngleSetting(menu))
+        tabController.add(new HologramProjectorAngleSetting(tileEntity))
                 .setIcon(176, 0)
                 .setIconAnimation(8, 150);
 
-        tabController.add(new HologramProjectorRotationOffsetSetting(menu))
+        tabController.add(new HologramProjectorRotationOffsetSetting(tileEntity))
                 .setIcon(80, 0)
                 .setIconAnimation(8, 150);
 
-        tabController.add(new HologramProjectorRotationSpeedSetting(menu))
+        tabController.add(new HologramProjectorRotationSpeedSetting(tileEntity))
                 .setIcon(160, 0)
                 .setIconAnimation(4, 150);
 
-        tabController.add(new HologramProjectorExtraSetting(menu))
+        tabController.add(new HologramProjectorExtraSetting(tileEntity))
                 .setIcon(144, 0)
                 .setIconAnimation(8, 150);
 

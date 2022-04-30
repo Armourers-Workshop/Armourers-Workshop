@@ -13,7 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 
 @SuppressWarnings("NullableProblems")
-public class HologramProjectorContainer extends AbstractBlockContainer<Block> {
+public class HologramProjectorContainer extends AbstractBlockContainer {
 
     private final PlayerInventory playerInventory;
     private final IInventory inventory;
@@ -24,14 +24,6 @@ public class HologramProjectorContainer extends AbstractBlockContainer<Block> {
         this.playerInventory = playerInventory;
         this.inventory = getTileInventory();
         this.reload(0, 0, 240, 240);
-    }
-
-    public HologramProjectorTileEntity getEntity() {
-        TileEntity tileEntity = getTileEntity();
-        if (tileEntity instanceof HologramProjectorTileEntity) {
-            return (HologramProjectorTileEntity) tileEntity;
-        }
-        return null;
     }
 
     public void reload(int inventoryX, int inventoryY, int width, int height) {

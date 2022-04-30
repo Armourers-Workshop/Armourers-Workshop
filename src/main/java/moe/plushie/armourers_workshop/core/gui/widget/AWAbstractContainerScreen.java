@@ -7,6 +7,7 @@ import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
@@ -23,6 +24,7 @@ import java.util.function.Predicate;
 public abstract class AWAbstractContainerScreen<T extends Container> extends ContainerScreen<T> {
 
     protected AWAbstractDialog dialog;
+    protected Button lastHoveredButton;
 
     public AWAbstractContainerScreen(T container, PlayerInventory playerInventory, ITextComponent title) {
         super(container, playerInventory, title);
@@ -72,6 +74,15 @@ public abstract class AWAbstractContainerScreen<T extends Container> extends Con
     public void renderPresentLayer(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (this.dialog != null) {
             this.dialog.render(matrixStack, mouseX, mouseY, partialTicks);
+        }
+    }
+
+    @Override
+    protected void renderTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
+        super.renderTooltip(matrixStack, mouseX, mouseY);
+        if (this.lastHoveredButton != null) {
+            this.renderTooltip(matrixStack, lastHoveredButton.getMessage(), mouseX, mouseY);
+            this.lastHoveredButton = null;
         }
     }
 
@@ -215,6 +226,10 @@ public abstract class AWAbstractContainerScreen<T extends Container> extends Con
             }
         }
         return super.isMouseOver(mouseX, mouseY);
+    }
+
+    protected void addHoveredButton(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
+        this.lastHoveredButton = button;
     }
 
     public boolean isPresenting() {

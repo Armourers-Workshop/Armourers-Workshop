@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.gui.misc;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.container.SkinnableContainer;
 import moe.plushie.armourers_workshop.core.gui.widget.AWAbstractContainerScreen;
-import moe.plushie.armourers_workshop.core.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;

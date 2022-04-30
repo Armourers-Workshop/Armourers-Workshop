@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.container;
 
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
-import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import net.minecraft.block.Block;
@@ -16,10 +16,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import org.apache.logging.log4j.util.Strings;
 
-import javax.annotation.Nullable;
-
 @SuppressWarnings("NullableProblems")
-public class SkinnableContainer extends AbstractBlockContainer<Block> {
+public class SkinnableContainer extends AbstractBlockContainer {
 
     private String title;
     private int row;
@@ -28,7 +26,7 @@ public class SkinnableContainer extends AbstractBlockContainer<Block> {
 
     public SkinnableContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable worldPos) {
         super(containerId, ModContainerTypes.SKINNABLE, ModBlocks.SKINNABLE, worldPos);
-        SkinnableTileEntity tileEntity = getEntity();
+        SkinnableTileEntity tileEntity = getTileEntity(SkinnableTileEntity.class);
         if (tileEntity == null) {
             return;
         }
@@ -87,14 +85,6 @@ public class SkinnableContainer extends AbstractBlockContainer<Block> {
                 this.addSlot(new Slot(inventory, col + row * 9 + 9, slotsX + col * 18, slotsY + row * 18));
             }
         }
-    }
-
-    public SkinnableTileEntity getEntity() {
-        TileEntity tileEntity = getTileEntity();
-        if (tileEntity instanceof SkinnableTileEntity) {
-            return (SkinnableTileEntity) tileEntity;
-        }
-        return null;
     }
 
     public ITextComponent getTitle() {

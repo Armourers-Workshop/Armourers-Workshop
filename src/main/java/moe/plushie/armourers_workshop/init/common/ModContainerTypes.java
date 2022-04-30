@@ -2,10 +2,11 @@ package moe.plushie.armourers_workshop.init.common;
 
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.builder.container.ColourMixerContainer;
+import moe.plushie.armourers_workshop.builder.container.OutfitMakerContainer;
 import moe.plushie.armourers_workshop.core.container.*;
-import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.core.utils.ContainerTypeBuilder;
-import moe.plushie.armourers_workshop.core.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.utils.AWDataSerializers;
+import moe.plushie.armourers_workshop.utils.ContainerTypeBuilder;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.library.container.CreativeSkinLibraryContainer;
 import moe.plushie.armourers_workshop.library.container.GlobalSkinLibraryContainer;
 import moe.plushie.armourers_workshop.library.container.SkinLibraryContainer;
@@ -40,6 +41,7 @@ public class ModContainerTypes {
 
     public static final ContainerType<HologramProjectorContainer> HOLOGRAM_PROJECTOR = create("hologram-projector", HologramProjectorContainer::new, AWDataSerializers.WORLD_POS);
     public static final ContainerType<ColourMixerContainer> COLOR_MIXER = create("colour-mixer", ColourMixerContainer::new, AWDataSerializers.WORLD_POS);
+    public static final ContainerType<OutfitMakerContainer> OUTFIT_MAKER = create("outfit-maker", OutfitMakerContainer::new, AWDataSerializers.WORLD_POS);
 
     public static void forEach(Consumer<ContainerType<?>> consumer) {
         CONTAINER_TYPES.keySet().forEach(consumer);

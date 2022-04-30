@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.data.property;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
-import moe.plushie.armourers_workshop.core.utils.StreamUtils;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.nbt.*;
 
 import java.io.DataInputStream;
@@ -9,6 +9,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class SkinProperties implements ISkinProperties {
 
@@ -103,6 +105,15 @@ public class SkinProperties implements ISkinProperties {
 
     public <T> boolean containsValue(SkinProperty<T> property) {
         return properties.containsValue(property.getKey());
+    }
+
+
+    public void put(String key, Object value) {
+        properties.put(key, value);
+    }
+
+    public Set<Map.Entry<String, Object>> entrySet() {
+        return properties.entrySet();
     }
 
     public ArrayList<String> getPropertiesList() {

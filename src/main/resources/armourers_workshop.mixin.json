@@ -16,7 +16,6 @@
     "InventoryScreenMixin",
     "ItemRendererMixin",
     "LivingRendererMixin",
-    "ModelManagerMixin",
     "RenderTypeBuffersMixin",
     "RenderTypeLookupMixin"
   ],

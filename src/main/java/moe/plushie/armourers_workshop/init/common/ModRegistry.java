@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.builder.gui.ColorMixerScreen;
+import moe.plushie.armourers_workshop.builder.gui.OutfitMakerScreen;
 import moe.plushie.armourers_workshop.builder.render.SkinCubeTileEntityRenderer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobeStorage;
@@ -21,8 +22,8 @@ import moe.plushie.armourers_workshop.core.render.entity.SeatEntityRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.render.tileentities.HologramProjectorTileEntityRenderer;
 import moe.plushie.armourers_workshop.core.render.tileentities.SkinnableTileEntityRenderer;
-import moe.plushie.armourers_workshop.core.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.core.utils.KeyBindings;
+import moe.plushie.armourers_workshop.utils.AWDataSerializers;
+import moe.plushie.armourers_workshop.utils.KeyBindings;
 import moe.plushie.armourers_workshop.init.client.ClientEventHandler;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.command.FileArgument;
@@ -30,6 +31,7 @@ import moe.plushie.armourers_workshop.init.command.ListArgument;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
 import moe.plushie.armourers_workshop.library.gui.SkinLibraryScreen;
 import moe.plushie.armourers_workshop.library.render.GlobalSkinLibraryTileEntityRenderer;
+import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
@@ -37,6 +39,7 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.network.datasync.DataSerializers;
@@ -45,6 +48,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -123,6 +127,16 @@ public class ModRegistry {
     }
 
     @OnlyIn(Dist.CLIENT)
+    public void onTextureStitch(TextureStitchEvent.Pre event) {
+        if (event.getMap().location().equals(PlayerContainer.BLOCK_ATLAS)) {
+            for (SkinSlotType slotType : SkinSlotType.values()) {
+                event.addSprite(slotType.getIconSprite());
+            }
+        }
+    }
+
+
+    @OnlyIn(Dist.CLIENT)
     public void registerClientEvents() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 //
@@ -148,6 +162,7 @@ public class ModRegistry {
         ScreenManager.register(ModContainerTypes.SKIN_LIBRARY_GLOBAL, GlobalSkinLibraryScreen::new);
         ScreenManager.register(ModContainerTypes.HOLOGRAM_PROJECTOR, HologramProjectorScreen::new);
         ScreenManager.register(ModContainerTypes.COLOR_MIXER, ColorMixerScreen::new);
+        ScreenManager.register(ModContainerTypes.OUTFIT_MAKER, OutfitMakerScreen::new);
 
         RenderTypeLookup.setRenderLayer(ModBlocks.SKINNING_TABLE, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.DYE_TABLE, RenderType.cutout());
