@@ -44,14 +44,14 @@ public class BlendingToolItem extends AbstractPaintingToolItem implements IBlock
     }
 
     @Override
-    public void appendSettingHoverText(ItemStack itemStack, List<ITextComponent> tooltips, ITooltipFlag flags) {
+    public void appendSettingHoverText(ItemStack itemStack, List<ITextComponent> tooltips) {
         int intensity = ToolOptions.INTENSITY.get(itemStack);
         int radiusSample = ToolOptions.RADIUS_SAMPLE.get(itemStack);
         int radiusEffect = ToolOptions.RADIUS_EFFECT.get(itemStack);
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.intensity", intensity));
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.sampleRadius", radiusSample, radiusSample, 1));
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.effectRadius", radiusEffect, radiusEffect, 1));
-        super.appendSettingHoverText(itemStack, tooltips, flags);
+        super.appendSettingHoverText(itemStack, tooltips);
     }
 
     @Override

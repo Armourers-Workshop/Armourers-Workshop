@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " P ",
+    "WCW",
+    " W "
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:pumpkin"
+    },
+    "W": {
+      "tag": "minecraft:planks"
+    },
+    "C": {
+      "tag": "armourers_workshop:skin_cubes"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:mannequin"
+  }
+}

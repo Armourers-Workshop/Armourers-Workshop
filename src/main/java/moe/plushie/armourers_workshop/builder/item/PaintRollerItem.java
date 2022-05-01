@@ -58,10 +58,10 @@ public class PaintRollerItem extends PaintbrushItem {
     }
 
     @Override
-    public void appendSettingHoverText(ItemStack itemStack, List<ITextComponent> tooltips, ITooltipFlag flags) {
+    public void appendSettingHoverText(ItemStack itemStack, List<ITextComponent> tooltips) {
         int radius = ToolOptions.RADIUS.get(itemStack);
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.area", radius * 2 - 1, radius * 2 - 1, 1));
-        super.appendSettingHoverText(itemStack, tooltips, flags);
+        super.appendSettingHoverText(itemStack, tooltips);
     }
 
 //    @Override

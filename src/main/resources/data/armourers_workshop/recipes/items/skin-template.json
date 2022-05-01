@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CC ",
+    "CC ",
+    "   "
+  ],
+  "key": {
+    "C": {
+      "tag": "armourers_workshop:skin_cubes"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:skin-template"
+  }
+}

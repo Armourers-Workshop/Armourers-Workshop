@@ -29,10 +29,10 @@ public class ColourNoiseToolItem extends AbstractPaintingToolItem implements IBl
     }
 
     @Override
-    public void appendSettingHoverText(ItemStack itemStack, List<ITextComponent> tooltips, ITooltipFlag flags) {
+    public void appendSettingHoverText(ItemStack itemStack, List<ITextComponent> tooltips) {
         int intensity = ToolOptions.INTENSITY.get(itemStack);
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.intensity", intensity));
-        super.appendSettingHoverText(itemStack, tooltips, flags);
+        super.appendSettingHoverText(itemStack, tooltips);
     }
 
     @Override

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#=#",
+    "NXN",
+    "###"
+  ],
+  "key": {
+    "N": {
+      "tag": "forge:gems/diamond"
+    },
+    "X": {
+      "tag": "armourers_workshop:skin_cubes"
+    },
+    "=": {
+      "tag": "forge:ender_pearls"
+    },
+    "#": {
+      "tag": "forge:stone"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:armourer"
+  }
+}

@@ -42,10 +42,10 @@ public class ModBlocks {
     public static final Block COLOR_MIXER = register("colour-mixer", ColorMixerBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f));
     public static final Block ARMOURER = register("armourer", ArmourerBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f));
 
-    public static final Block SKIN_CUBE = register("skin-cube", SkinCubeBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f));
-    public static final Block SKIN_CUBE_GLASS = registerGlass("skin-cube-glass", SkinCubeBlock::new, p -> p.requiresCorrectToolForDrops().strength(1.5f, 6.f).noOcclusion());
-    public static final Block SKIN_CUBE_GLOWING = register("skin-cube-glowing", SkinCubeBlock::new, p -> p.lightLevel(s -> 15).requiresCorrectToolForDrops().strength(1.5f, 6.f));
-    public static final Block SKIN_CUBE_GLASS_GLOWING = registerGlass("skin-cube-glass-glowing", SkinCubeBlock::new, p -> p.lightLevel(s -> 15).requiresCorrectToolForDrops().strength(1.5f, 6.f).noOcclusion());
+    public static final Block SKIN_CUBE = register("skin-cube", SkinCubeBlock::new, p -> p.strength(1.5f, 6.f));
+    public static final Block SKIN_CUBE_GLASS = registerGlass("skin-cube-glass", SkinCubeBlock::new, p -> p.strength(1.5f, 6.f).noOcclusion());
+    public static final Block SKIN_CUBE_GLOWING = register("skin-cube-glowing", SkinCubeBlock::new, p -> p.lightLevel(s -> 15).strength(1.5f, 6.f));
+    public static final Block SKIN_CUBE_GLASS_GLOWING = registerGlass("skin-cube-glass-glowing", SkinCubeBlock::new, p -> p.lightLevel(s -> 15).strength(1.5f, 6.f).noOcclusion());
 
     private static ToIntFunction<BlockState> litBlockEmission(int level) {
         return state -> state.getValue(BlockStateProperties.LIT) ? level : 0;

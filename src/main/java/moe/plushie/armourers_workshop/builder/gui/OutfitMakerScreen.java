@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.gui;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.builder.container.OutfitMakerContainer;
 import moe.plushie.armourers_workshop.builder.tileentity.OutfitMakerTileEntity;
@@ -9,10 +10,14 @@ import moe.plushie.armourers_workshop.core.network.packet.UpdateOutfitMakerPacke
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.Session;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -97,8 +102,10 @@ public class OutfitMakerScreen extends AWAbstractContainerScreen<OutfitMakerCont
         if (!menu.shouldCrafting()) {
             return;
         }
+        GameProfile origin = Minecraft.getInstance().getUser().getGameProfile();
+        CompoundNBT nbt = NBTUtil.writeGameProfile(new CompoundNBT(), origin);
         UpdateOutfitMakerPacket.Field field = UpdateOutfitMakerPacket.Field.ITEM_CRAFTING;
-        UpdateOutfitMakerPacket packet = new UpdateOutfitMakerPacket(tileEntity, field, 0);
+        UpdateOutfitMakerPacket packet = new UpdateOutfitMakerPacket(tileEntity, field, nbt);
         NetworkHandler.getInstance().sendToServer(packet);
     }
 

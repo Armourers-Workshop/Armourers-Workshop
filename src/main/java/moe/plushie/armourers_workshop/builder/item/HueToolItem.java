@@ -35,7 +35,7 @@ public class HueToolItem extends PaintbrushItem {
     }
 
     @Override
-    public void appendColorHoverText(ItemStack itemStack, List<ITextComponent> tooltips, ITooltipFlag flags) {
+    public void appendColorHoverText(ItemStack itemStack, List<ITextComponent> tooltips) {
         IPaintColor paintColor = ObjectUtils.defaultIfNull(ColorUtils.getColor(itemStack), PaintColor.WHITE);
         tooltips.addAll(ColorUtils.getColorTooltips(paintColor, true));
     }
