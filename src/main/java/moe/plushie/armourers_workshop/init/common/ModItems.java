@@ -5,10 +5,7 @@ import moe.plushie.armourers_workshop.core.item.*;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -60,27 +57,27 @@ public class ModItems {
     };
 
     public static final Item SKIN = register("skin", SkinItem::new, p -> p.setISTER(() -> SkinItemStackRenderer::getInstance));
-    public static final Item MANNEQUIN = register("mannequin", MannequinItem::new, p -> p.tab(MAIN_GROUP).setISTER(() -> SkinItemStackRenderer::getInstance));
+    public static final Item MANNEQUIN = register("mannequin", MannequinItem::new, p -> p.tab(MAIN_GROUP).rarity(Rarity.RARE).setISTER(() -> SkinItemStackRenderer::getInstance));
 
-    public static final Item SKIN_LIBRARY = registerBlock("skin-library", ModBlocks.SKIN_LIBRARY, p -> p.tab(MAIN_GROUP));
-    public static final Item SKIN_LIBRARY_CREATIVE = registerBlock("skin-library-creative", ModBlocks.SKIN_LIBRARY_CREATIVE, p -> p.tab(MAIN_GROUP));
-    public static final Item SKIN_LIBRARY_GLOBAL = registerBlock("skin-library-global", ModBlocks.SKIN_LIBRARY_GLOBAL, p -> p.tab(MAIN_GROUP));
+    public static final Item SKIN_LIBRARY = registerBlock("skin-library", ModBlocks.SKIN_LIBRARY, p -> p.rarity(Rarity.RARE).tab(MAIN_GROUP));
+    public static final Item SKIN_LIBRARY_CREATIVE = registerBlock("skin-library-creative", ModBlocks.SKIN_LIBRARY_CREATIVE, p -> p.rarity(Rarity.EPIC).tab(MAIN_GROUP));
+    public static final Item SKIN_LIBRARY_GLOBAL = registerBlock("skin-library-global", ModBlocks.SKIN_LIBRARY_GLOBAL, p -> p.rarity(Rarity.RARE).tab(MAIN_GROUP));
 
-    public static final Item SKINNING_TABLE = registerBlock("skinning-table", ModBlocks.SKINNING_TABLE, p -> p.tab(MAIN_GROUP));
-    public static final Item DYE_TABLE = registerBlock("dye-table", ModBlocks.DYE_TABLE, p -> p.tab(MAIN_GROUP));
-    public static final Item HOLOGRAM_PROJECTOR = registerBlock("hologram-projector", ModBlocks.HOLOGRAM_PROJECTOR, p -> p.tab(MAIN_GROUP));
+    public static final Item SKINNING_TABLE = registerBlock("skinning-table", ModBlocks.SKINNING_TABLE, p -> p.rarity(Rarity.RARE).tab(MAIN_GROUP));
+    public static final Item DYE_TABLE = registerBlock("dye-table", ModBlocks.DYE_TABLE, p -> p.rarity(Rarity.RARE).tab(MAIN_GROUP));
+    public static final Item HOLOGRAM_PROJECTOR = registerBlock("hologram-projector", ModBlocks.HOLOGRAM_PROJECTOR, p -> p.rarity(Rarity.RARE).tab(MAIN_GROUP));
 
     public static final Item BOTTLE = register("dye-bottle", BottleItem::new, p -> p.tab(MAIN_GROUP));
     public static final Item MANNEQUIN_TOOL = register("mannequin-tool", MannequinToolItem::new, p -> p.tab(MAIN_GROUP));
     public static final Item ARMOURERS_HAMMER = register("armourers-hammer", ArmourersHammerItem::new, p -> p.tab(MAIN_GROUP));
     public static final Item WAND_OF_STYLE = register("wand-of-style", WandOfStyleItem::new, p -> p.tab(MAIN_GROUP));
 
-    public static final Item SKIN_UNLOCK_HEAD = register("skin-unlock-head", unlockWithBuilder(SkinSlotType.HEAD), p -> p.stacksTo(8).tab(MAIN_GROUP));
-    public static final Item SKIN_UNLOCK_CHEST = register("skin-unlock-chest", unlockWithBuilder(SkinSlotType.CHEST), p -> p.stacksTo(8).tab(MAIN_GROUP));
-    public static final Item SKIN_UNLOCK_FEET = register("skin-unlock-feet", unlockWithBuilder(SkinSlotType.FEET), p -> p.stacksTo(8).tab(MAIN_GROUP));
-    public static final Item SKIN_UNLOCK_LEGS = register("skin-unlock-legs", unlockWithBuilder(SkinSlotType.LEGS), p -> p.stacksTo(8).tab(MAIN_GROUP));
-    public static final Item SKIN_UNLOCK_WINGS = register("skin-unlock-wings", unlockWithBuilder(SkinSlotType.WINGS), p -> p.stacksTo(8).tab(MAIN_GROUP));
-    public static final Item SKIN_UNLOCK_OUTFIT = register("skin-unlock-outfit", unlockWithBuilder(SkinSlotType.OUTFIT), p -> p.stacksTo(8).tab(MAIN_GROUP));
+    public static final Item SKIN_UNLOCK_HEAD = register("skin-unlock-head", unlockWithBuilder(SkinSlotType.HEAD), p -> p.stacksTo(8).rarity(Rarity.UNCOMMON).tab(MAIN_GROUP));
+    public static final Item SKIN_UNLOCK_CHEST = register("skin-unlock-chest", unlockWithBuilder(SkinSlotType.CHEST), p -> p.stacksTo(8).rarity(Rarity.UNCOMMON).tab(MAIN_GROUP));
+    public static final Item SKIN_UNLOCK_FEET = register("skin-unlock-feet", unlockWithBuilder(SkinSlotType.FEET), p -> p.stacksTo(8).rarity(Rarity.UNCOMMON).tab(MAIN_GROUP));
+    public static final Item SKIN_UNLOCK_LEGS = register("skin-unlock-legs", unlockWithBuilder(SkinSlotType.LEGS), p -> p.stacksTo(8).rarity(Rarity.UNCOMMON).tab(MAIN_GROUP));
+    public static final Item SKIN_UNLOCK_WINGS = register("skin-unlock-wings", unlockWithBuilder(SkinSlotType.WINGS), p -> p.stacksTo(8).rarity(Rarity.UNCOMMON).tab(MAIN_GROUP));
+    public static final Item SKIN_UNLOCK_OUTFIT = register("skin-unlock-outfit", unlockWithBuilder(SkinSlotType.OUTFIT), p -> p.stacksTo(8).rarity(Rarity.UNCOMMON).tab(MAIN_GROUP));
 
     public static final Item LINKING_TOOL = register("linking-tool", LinkingToolItem::new, p -> p.tab(MAIN_GROUP));
     public static final Item SKIN_TEMPLATE = register("skin-template", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
@@ -89,9 +86,9 @@ public class ModItems {
     // gift
     //    public static final Item ARMOUR_CONTAINER = register("armour-container", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));
 
-    public static final Item OUTFIT_MAKER = registerBlock("outfit-maker", ModBlocks.OUTFIT_MAKER, p -> p.tab(BUILDING_GROUP));
-    public static final Item ARMOURER = registerBlock("armourer", ModBlocks.ARMOURER, p -> p.tab(BUILDING_GROUP));
-    public static final Item COLOR_MIXER = registerBlock("colour-mixer", ModBlocks.COLOR_MIXER, p -> p.tab(BUILDING_GROUP));
+    public static final Item OUTFIT_MAKER = registerBlock("outfit-maker", ModBlocks.OUTFIT_MAKER, p -> p.rarity(Rarity.RARE).tab(BUILDING_GROUP));
+    public static final Item ARMOURER = registerBlock("armourer", ModBlocks.ARMOURER, p -> p.rarity(Rarity.RARE).tab(BUILDING_GROUP));
+    public static final Item COLOR_MIXER = registerBlock("colour-mixer", ModBlocks.COLOR_MIXER, p -> p.rarity(Rarity.RARE).tab(BUILDING_GROUP));
 
     public static final Item SKIN_CUBE = registerBlock("skin-cube", ModBlocks.SKIN_CUBE, p -> p.stacksTo(64).tab(BUILDING_GROUP));
     public static final Item SKIN_CUBE_GLOWING = registerBlock("skin-cube-glowing", ModBlocks.SKIN_CUBE_GLOWING, p -> p.stacksTo(64).tab(BUILDING_GROUP));

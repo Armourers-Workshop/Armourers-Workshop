@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  D",
+    " C ",
+    "D  "
+  ],
+  "key": {
+    "D": {
+      "tag": "forge:dyes/black"
+    },
+    "C": {
+      "tag": "armourers_workshop:skin_cubes"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:block-marker"
+  }
+}

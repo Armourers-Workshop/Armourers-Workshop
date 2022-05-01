@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "armourers_workshop:skin-unlock-head"
+    },
+    {
+      "item": "armourers_workshop:skin-unlock-chest"
+    },
+    {
+      "item": "armourers_workshop:skin-unlock-legs"
+    },
+    {
+      "item": "armourers_workshop:skin-unlock-feet"
+    },
+    {
+      "item": "armourers_workshop:skin-unlock-wings"
+    }
+  ],
+  "result": {
+    "item": "armourers_workshop:skin-unlock-outfit"
+  }
+}

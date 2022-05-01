@@ -108,7 +108,7 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
     }
 
     @Override
-    public void appendColorHoverText(ItemStack itemStack, List<ITextComponent> tooltips, ITooltipFlag flags) {
+    public void appendColorHoverText(ItemStack itemStack, List<ITextComponent> tooltips) {
         IPaintColor paintColor = ColorUtils.getColor(itemStack);
         if (paintColor != null) {
             tooltips.addAll(ColorUtils.getColorTooltips(paintColor, false));

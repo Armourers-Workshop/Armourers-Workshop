@@ -55,16 +55,14 @@ public abstract class AbstractPaintingToolItem extends FlavouredItem implements 
         if (properties.isEmpty()) {
             return false;
         }
-        ITextComponent title = getName(itemStack);
-        PaintingToolScreen screen = new PaintingToolScreen(title, properties, itemStack, hand);
-        Minecraft.getInstance().setScreen(screen);
+        openGUI(getName(itemStack), properties, hand, itemStack);
         return true;
     }
 
-    public void appendColorHoverText(ItemStack itemStack, List<ITextComponent> tooltips, ITooltipFlag flags) {
+    public void appendColorHoverText(ItemStack itemStack, List<ITextComponent> tooltips) {
     }
 
-    public void appendSettingHoverText(ItemStack itemStack, List<ITextComponent> tooltips, ITooltipFlag flags) {
+    public void appendSettingHoverText(ItemStack itemStack, List<ITextComponent> tooltips) {
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.openSettings"));
     }
 
@@ -72,8 +70,14 @@ public abstract class AbstractPaintingToolItem extends FlavouredItem implements 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable World world, List<ITextComponent> tooltips, ITooltipFlag flags) {
         super.appendHoverText(itemStack, world, tooltips, flags);
-        appendColorHoverText(itemStack, tooltips, flags);
-        appendSettingHoverText(itemStack, tooltips, flags);
+        appendColorHoverText(itemStack, tooltips);
+        appendSettingHoverText(itemStack, tooltips);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void openGUI(ITextComponent title, ArrayList<IPaintingToolProperty<?>> properties, Hand hand, ItemStack itemStack) {
+        PaintingToolScreen screen = new PaintingToolScreen(title, properties, itemStack, hand);
+        Minecraft.getInstance().setScreen(screen);
     }
 
     @Override

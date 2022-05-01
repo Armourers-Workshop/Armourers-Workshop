@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " CT",
+    " XC",
+    "/  "
+  ],
+  "key": {
+    "T": {
+      "tag": "forge:cobblestone"
+    },
+    "C": {
+      "tag": "armourers_workshop:skin_cubes"
+    },
+    "X": {
+      "tag": "forge:ingots/iron"
+    },
+    "/": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:shade-noise-tool"
+  }
+}

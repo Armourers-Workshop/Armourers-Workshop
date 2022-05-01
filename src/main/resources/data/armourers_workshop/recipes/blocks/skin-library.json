@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#=#",
+    "NXN",
+    "###"
+  ],
+  "key": {
+    "N": {
+      "item": "minecraft:bookshelf"
+    },
+    "=": {
+      "item": "minecraft:red_wool"
+    },
+    "X": {
+      "tag": "armourers_workshop:skin_cubes"
+    },
+    "#": {
+      "tag": "forge:stone"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:skin-library"
+  }
+}

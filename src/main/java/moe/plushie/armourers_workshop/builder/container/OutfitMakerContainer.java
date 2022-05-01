@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.container;
 
 import com.google.common.collect.Iterables;
+import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.skin.*;
 import moe.plushie.armourers_workshop.builder.tileentity.OutfitMakerTileEntity;
 import moe.plushie.armourers_workshop.core.container.AbstractBlockContainer;
@@ -64,7 +65,7 @@ public class OutfitMakerContainer extends AbstractBlockContainer {
         return false;
     }
 
-    public void crafting(PlayerEntity player) {
+    public void crafting(GameProfile profile, PlayerEntity player) {
         // check again before crafting to avoid fake request.
         OutfitMakerTileEntity tileEntity = getTileEntity(OutfitMakerTileEntity.class);
         if (!shouldCrafting() || tileEntity == null) {
@@ -115,11 +116,11 @@ public class OutfitMakerContainer extends AbstractBlockContainer {
         if (!skinParts.isEmpty()) {
             skinProperties.put(SkinProperty.OUTFIT_PART_INDEXS, partIndexs);
             skinProperties.put(SkinProperty.ALL_AUTHOR_NAME, player.getName().getContents());
-            // in the offline server the `player.getUUID()` is not real player uuid.
-            if (player.getGameProfile().getId() != null) {
-                skinProperties.put(SkinProperty.ALL_AUTHOR_UUID, player.getGameProfile().getId().toString());
+            // in the offline server the `player.getStringUUID()` is not real player uuid.
+            if (profile.getId() != null) {
+                skinProperties.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
             }
-            skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, tileEntity.getItemName());
+            skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, profile.getName());
             skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, tileEntity.getItemFlavour());
             // build
             Skin skin = new Skin(skinProperties, SkinTypes.OUTFIT, paintData, skinParts);
