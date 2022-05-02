@@ -17,7 +17,6 @@ import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.color.Palette;
 import moe.plushie.armourers_workshop.utils.color.PaletteManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.entity.player.PlayerInventory;
@@ -372,13 +371,11 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
         }
         IPaintColor paintColor = tileEntity.getColor();
         selectedColor = new Color(paintColor.getRGB());
-        if (Objects.equals(selectedPaintType, paintColor.getPaintType())) {
-            return;
-        }
         selectedPaintType = paintColor.getPaintType();
         if (paintComboBox == null || paintTypes == null) {
             return;
         }
+        this.setSelectedColor(selectedColor);
         int selectedIndex = paintTypes.indexOf(selectedPaintType);
         if (selectedIndex >= 0) {
             paintComboBox.setSelectedIndex(selectedIndex);

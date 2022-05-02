@@ -1,6 +1,8 @@
-package moe.plushie.armourers_workshop.core.capability;
+package moe.plushie.armourers_workshop.core.data;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobeProvider;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;

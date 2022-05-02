@@ -30,6 +30,14 @@ public final class AWConstants {
 
         public static final String COLOR = "Color";
 
+        public static final String COLOR_1 = "Color1";
+        public static final String COLOR_2 = "Color2";
+
+        public static final String GIFT = "Gift";
+        public static final String HOLIDAY = "Holiday";
+        public static final String HOLIDAY_TRACKER = "HolidayTracker";
+        public static final String HOLIDAY_LOGS = "Logs";
+
         public static final String DOWN = "Down";
         public static final String UP = "Up";
         public static final String NORTH = "North";

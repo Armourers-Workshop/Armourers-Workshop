@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModEntities;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.utils.MannequinRayTraceResult;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.util.ITooltipFlag;
@@ -35,25 +36,39 @@ public class MannequinItem extends FlavouredItem {
         super(properties);
     }
 
-    @Nullable
-    public static CompoundNBT getEntityTag(ItemStack itemStack) {
-        CompoundNBT nbt = itemStack.getTag();
-        if (nbt == null || !nbt.contains(AWConstants.NBT.ENTITY, Constants.NBT.TAG_COMPOUND)) {
-            return null;
+    public static ItemStack of(@Nullable PlayerEntity player, float scale) {
+        ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN);
+        CompoundNBT entityTag = new CompoundNBT();
+        if (scale != 1.0f) {
+            entityTag.putFloat(AWConstants.NBT.ENTITY_SCALE, scale);
         }
-        return nbt.getCompound(AWConstants.NBT.ENTITY);
+        if (player != null) {
+            PlayerTextureDescriptor descriptor = new PlayerTextureDescriptor(player.getGameProfile());
+            entityTag.put(AWConstants.NBT.ENTITY_TEXTURE, descriptor.serializeNBT());
+        }
+        if (entityTag.size() != 0) {
+            CompoundNBT nbt = itemStack.getOrCreateTag();
+            nbt.put(AWConstants.NBT.ENTITY, entityTag);
+        }
+        return itemStack;
+
     }
 
     public static boolean isSmall(ItemStack itemStack) {
-        CompoundNBT entityTag = getEntityTag(itemStack);
+        CompoundNBT entityTag = itemStack.getTagElement(AWConstants.NBT.ENTITY);
         if (entityTag != null) {
             return entityTag.getBoolean(AWConstants.NBT.ENTITY_IS_SMALL);
         }
         return false;
     }
 
+    public static void setScale(ItemStack itemStack, float scale) {
+        CompoundNBT entityTag = itemStack.getOrCreateTagElement(AWConstants.NBT.ENTITY);
+        entityTag.putFloat(AWConstants.NBT.ENTITY_SCALE, scale);
+    }
+
     public static float getScale(ItemStack itemStack) {
-        CompoundNBT entityTag = getEntityTag(itemStack);
+        CompoundNBT entityTag = itemStack.getTagElement(AWConstants.NBT.ENTITY);
         if (entityTag == null || !entityTag.contains(AWConstants.NBT.ENTITY_SCALE, Constants.NBT.TAG_FLOAT)) {
             return 1.0f;
         }

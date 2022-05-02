@@ -83,7 +83,7 @@ public class ModItems {
     public static final Item SKIN_TEMPLATE = register("skin-template", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
     public static final Item SOAP = register("soap", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
     // book
-    // gift
+    public static final Item GIFT_SACK = register("gift-sack", GiftSackItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
     //    public static final Item ARMOUR_CONTAINER = register("armour-container", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));
 
     public static final Item OUTFIT_MAKER = registerBlock("outfit-maker", ModBlocks.OUTFIT_MAKER, p -> p.rarity(Rarity.RARE).tab(BUILDING_GROUP));

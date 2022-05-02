@@ -3,11 +3,14 @@
   "pattern": [
     "#=#",
     "#X#",
-    "###"
+    "#H#"
   ],
   "key": {
     "X": {
       "item": "minecraft:beacon"
+    },
+    "H": {
+      "tag": "forge:storage_blocks/iron"
     },
     "=": {
       "tag": "armourers_workshop:skin_cubes"
