@@ -6,6 +6,9 @@
     },
     {
       "item": "minecraft:rotten_flesh"
+    },
+    {
+      "tag": "forge:slimeballs"
     }
   ],
   "result": {

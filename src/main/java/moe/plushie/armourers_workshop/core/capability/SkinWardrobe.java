@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.capability;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.ISkinWardrobe;
+import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;

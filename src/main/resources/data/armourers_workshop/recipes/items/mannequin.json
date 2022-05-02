@@ -1,18 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " P ",
-    "WCW",
-    " W "
+    " T ",
+    "#X#",
+    " H "
   ],
   "key": {
-    "P": {
-      "item": "minecraft:pumpkin"
+    "T": {
+      "item": "minecraft:zombie_head"
     },
-    "W": {
-      "tag": "minecraft:planks"
+    "X": {
+      "item": "minecraft:armor_stand"
     },
-    "C": {
+    "H": {
+      "tag": "forge:chests/ender"
+    },
+    "#": {
       "tag": "armourers_workshop:skin_cubes"
     }
   },

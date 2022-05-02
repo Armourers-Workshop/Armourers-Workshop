@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobeProvider;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
+import moe.plushie.armourers_workshop.core.holiday.Holidays;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateContextPacket;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
@@ -96,6 +97,12 @@ public class PlayerNetworkHandler {
             ModContext.reset();
             ModConfigSpec.reloadSpec(null);
         }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogin2(PlayerEvent.PlayerLoggedInEvent event) {
+        // when the player login, check and give gifts for holiday
+        Holidays.welcome(event.getPlayer());
     }
 
     @SubscribeEvent

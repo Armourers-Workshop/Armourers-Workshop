@@ -64,7 +64,7 @@ public class PlayerTextureDescriptor {
         if (itemStack.getItem() != ModItems.MANNEQUIN) {
             return EMPTY;
         }
-        CompoundNBT entityTag = MannequinItem.getEntityTag(itemStack);
+        CompoundNBT entityTag = itemStack.getTagElement(AWConstants.NBT.ENTITY);
         if (entityTag == null || !entityTag.contains(AWConstants.NBT.ENTITY_TEXTURE, Constants.NBT.TAG_COMPOUND)) {
             return EMPTY;
         }

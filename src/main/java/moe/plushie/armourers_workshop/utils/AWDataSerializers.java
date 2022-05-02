@@ -197,7 +197,7 @@ public class AWDataSerializers {
     }
 
     public static int getInt(CompoundNBT nbt, String key, int defaultValue) {
-        if (nbt.contains(key, Constants.NBT.TAG_INT)) {
+        if (nbt != null && nbt.contains(key, Constants.NBT.TAG_INT)) {
             return nbt.getInt(key);
         }
         return defaultValue;

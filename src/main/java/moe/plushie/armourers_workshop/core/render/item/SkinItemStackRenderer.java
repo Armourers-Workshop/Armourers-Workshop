@@ -1,16 +1,14 @@
 package moe.plushie.armourers_workshop.core.render.item;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
-import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModEntities;
 import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.init.common.ModContributors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -22,7 +20,6 @@ import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -107,16 +104,7 @@ public class SkinItemStackRenderer extends ItemStackTileEntityRenderer {
             if (player == null) {
                 return ItemStack.EMPTY;
             }
-            GameProfile profile = player.getGameProfile();
-            ModContributors.Contributor contributor = ModContributors.getCurrentContributor();
-            if (contributor != null) {
-                profile = new GameProfile(contributor.uuid, contributor.username);
-            }
-            PlayerTextureDescriptor descriptor = new PlayerTextureDescriptor(profile);
-            CompoundNBT entityTag = new CompoundNBT();
-            entityTag.put(AWConstants.NBT.ENTITY_TEXTURE, descriptor.serializeNBT());
-            playerMannequinItem = new ItemStack(ModItems.MANNEQUIN);
-            playerMannequinItem.getOrCreateTag().put(AWConstants.NBT.ENTITY, entityTag);
+            playerMannequinItem = MannequinItem.of(player, 1.0f);
         }
         return playerMannequinItem;
     }
