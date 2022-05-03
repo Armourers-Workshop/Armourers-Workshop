@@ -3,7 +3,9 @@ package moe.plushie.armourers_workshop.library.gui.panels;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.gui.widget.AWComboBox;
+import moe.plushie.armourers_workshop.core.gui.widget.AWSkinTypeComboBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTextField;
+import moe.plushie.armourers_workshop.core.skin.SkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.common.AWCore;
@@ -26,7 +28,7 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel {
 
     private AWTextField searchText;
     private AWComboBox sortList;
-    private AWComboBox skinTypeList;
+    private AWSkinTypeComboBox skinTypeList;
     private ExtendedButton searchButton;
 
     private String keyword = "";
@@ -62,7 +64,7 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel {
         }
         this.searchText.setValue(keyword);
         this.sortList.setSelectedIndex(getSortIndex(columnType, orderType));
-        this.skinTypeList.setSelectedIndex(SkinTypes.values().indexOf(skinType));
+        this.skinTypeList.setSelectedSkin(skinType);
     }
 
     @Override
@@ -112,22 +114,10 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel {
         return comboBox;
     }
 
-    private AWComboBox addSkinTypeList(int x, int y, int width, int height) {
-        int selectedIndex = 0;
-        ArrayList<ISkinType> skinTypes = new ArrayList<>();
-        ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
-        for (ISkinType skinType : SkinTypes.values()) {
-            AWComboBox.ComboItem item = new SkinLibraryScreen.SkinTypeComboItem(skinType);
-            if (skinType == this.skinType) {
-                selectedIndex = items.size();
-            }
-            items.add(item);
-            skinTypes.add(skinType);
-        }
-        AWComboBox comboBox = new AWComboBox(x, y, width, height, items, selectedIndex, button -> {
-            int newValue = ((AWComboBox) button).getSelectedIndex();
-            this.skinType = skinTypes.get(newValue);
-            this.search(button);
+    private AWSkinTypeComboBox addSkinTypeList(int x, int y, int width, int height) {
+        AWSkinTypeComboBox comboBox = new AWSkinTypeComboBox(x, y, width, height, SkinTypes.values(), this.skinType, newValue -> {
+            this.skinType = newValue;
+            this.search(null);
         });
         addButton(comboBox);
         return comboBox;

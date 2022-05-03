@@ -38,6 +38,8 @@ public final class AWConstants {
         public static final String HOLIDAY_TRACKER = "HolidayTracker";
         public static final String HOLIDAY_LOGS = "Logs";
 
+        public static final String FLAGS = "Flags";
+
         public static final String DOWN = "Down";
         public static final String UP = "Up";
         public static final String NORTH = "North";

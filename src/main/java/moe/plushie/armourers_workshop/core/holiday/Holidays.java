@@ -73,7 +73,7 @@ public final class Holidays {
             }
             HolidayTracker storage = HolidayTracker.of(server);
             if (storage.has(player, holiday1)) {
-                continue; // the gift is already give to player
+                continue; // the gift is already give to player in this year.
             }
             ItemStack itemStack = GiftSackItem.of(holiday1);
             if (player.inventory.add(itemStack)) {

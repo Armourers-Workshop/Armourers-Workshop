@@ -3,8 +3,10 @@ package moe.plushie.armourers_workshop.init.common;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
+import moe.plushie.armourers_workshop.builder.gui.armourer.ArmourerScreen;
 import moe.plushie.armourers_workshop.builder.gui.ColorMixerScreen;
 import moe.plushie.armourers_workshop.builder.gui.OutfitMakerScreen;
+import moe.plushie.armourers_workshop.builder.render.ArmourerTileEntityRenderer;
 import moe.plushie.armourers_workshop.builder.render.SkinCubeTileEntityRenderer;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobeStorage;
@@ -12,9 +14,9 @@ import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.hologramprojector.HologramProjectorScreen;
-import moe.plushie.armourers_workshop.core.gui.misc.DyeTableScreen;
-import moe.plushie.armourers_workshop.core.gui.misc.SkinnableScreen;
-import moe.plushie.armourers_workshop.core.gui.misc.SkinningTableScreen;
+import moe.plushie.armourers_workshop.core.gui.DyeTableScreen;
+import moe.plushie.armourers_workshop.core.gui.SkinnableScreen;
+import moe.plushie.armourers_workshop.core.gui.SkinningTableScreen;
 import moe.plushie.armourers_workshop.core.gui.wardrobe.SkinWardrobeScreen;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
@@ -163,6 +165,7 @@ public class ModRegistry {
         ScreenManager.register(ModContainerTypes.HOLOGRAM_PROJECTOR, HologramProjectorScreen::new);
         ScreenManager.register(ModContainerTypes.COLOR_MIXER, ColorMixerScreen::new);
         ScreenManager.register(ModContainerTypes.OUTFIT_MAKER, OutfitMakerScreen::new);
+        ScreenManager.register(ModContainerTypes.ARMOURER, ArmourerScreen::new);
 
         RenderTypeLookup.setRenderLayer(ModBlocks.SKINNING_TABLE, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.DYE_TABLE, RenderType.cutout());
@@ -187,6 +190,7 @@ public class ModRegistry {
 
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.HOLOGRAM_PROJECTOR, HologramProjectorTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKIN_LIBRARY_GLOBAL, GlobalSkinLibraryTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModTileEntities.ARMOURER, ArmourerTileEntityRenderer::new);
 
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKINNABLE_CUBE_SR, SkinnableTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKIN_CUBE_SR, SkinCubeTileEntityRenderer::new);

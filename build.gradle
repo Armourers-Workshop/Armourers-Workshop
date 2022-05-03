@@ -24,16 +24,23 @@ repositories {
     maven { url = "https://maven.minecraftforge.net" }
     mavenLocal()
     mavenCentral()
+    maven {  url "https://modmaven.dev/"  }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    compileOnly "mezz.jei:jei-${jei_minecraft_version}:${jei_version}:api"
+    runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}")
+
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
+String semver = "${mod_version}-" + (System.env.BUILD_NUMBER ?: "homebaked")
+
 group = artifact_group
 archivesBaseName = artifact_basename
-version = "${minecraft_version}-${mod_version}-" + (System.env.BUILD_NUMBER ?: "homebaked")
+version = "${minecraft_version}-${semver}"
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 compileJava {
@@ -117,7 +124,7 @@ minecraft {
 
 processResources {
     filesMatching("META-INF/mods.toml") {
-        expand 'version': version,
+        expand 'version': semver,
                 'minecraft_version': project.minecraft_version_range,
                 'forge_version': project.forge_version_range
     }
@@ -136,7 +143,7 @@ jar {
         attributes([
                 "Specification-Title"     : "Armourer's Workshop",
                 "Specification-Vendor"    : "armourers_workshop",
-                "Specification-Version"   : "${project.version}", // We are version 1 of ourselves
+                "Specification-Version"   : "${semver}", // We are version 1 of ourselves
                 "Implementation-Title"    : "${project.name}",
                 "Implementation-Version"  : "${project.version}",
                 "Implementation-Vendor"   : "armourers_workshop",

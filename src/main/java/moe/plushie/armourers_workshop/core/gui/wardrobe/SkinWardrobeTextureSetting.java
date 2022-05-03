@@ -60,23 +60,6 @@ public class SkinWardrobeTextureSetting extends AWTabPanel {
         this.textBox = null;
     }
 
-    @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        if (this.textBox != null) {
-            this.textBox.render(matrixStack, mouseX, mouseY, partialTicks);
-        }
-    }
-
-    @Override
-    public boolean keyPressed(int key, int p_231046_2_, int p_231046_3_) {
-        boolean typed = super.keyPressed(key, p_231046_2_, p_231046_3_);
-        if (!typed && textBox != null && textBox.isFocused() && key == GLFW.GLFW_KEY_ENTER) {
-            submit(null);
-        }
-        return typed;
-    }
-
     private void prepareDefaultValue() {
         Entity entity = wardrobe.getEntity();
         if (!(entity instanceof MannequinEntity)) {
@@ -93,7 +76,7 @@ public class SkinWardrobeTextureSetting extends AWTabPanel {
         }
     }
 
-    private void submit(Button button) {
+    private void submit(Object button) {
         textBox.setFocus(false);
         int index = comboList.getSelectedIndex();
         PlayerTextureDescriptor.Source source = PlayerTextureDescriptor.Source.values()[index + 1];
@@ -157,6 +140,7 @@ public class SkinWardrobeTextureSetting extends AWTabPanel {
     private void addTextField(int x, int y, String defaultValue) {
         textBox = new AWTextField(font, x, y, 165, 16, StringTextComponent.EMPTY);
         textBox.setMaxLength(1024);
+        textBox.setReturnHandler(this::submit);
         if (Strings.isNotBlank(defaultValue)) {
             textBox.setValue(defaultValue);
         }

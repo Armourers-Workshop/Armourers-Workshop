@@ -33,7 +33,6 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Slot;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -418,21 +417,9 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
     }
 
     private AWComboBox addComboList(int x, int y, int width, int height) {
-        int selectedIndex = 0;
-        ArrayList<ISkinType> skinTypes = new ArrayList<>();
-        ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
-        for (ISkinType skinType : SkinTypes.values()) {
-            AWComboBox.ComboItem item = new SkinTypeComboItem(skinType);
-            if (skinType == this.skinType) {
-                selectedIndex = items.size();
-            }
-            items.add(item);
-            skinTypes.add(skinType);
-        }
-        AWComboBox comboBox = new AWComboBox(x, y, width, height, items, selectedIndex, button -> {
-            int newValue = ((AWComboBox) button).getSelectedIndex();
-            skinType = skinTypes.get(newValue);
-            reloadData(button);
+        AWComboBox comboBox = new AWSkinTypeComboBox(x, y, width, height, SkinTypes.values(), this.skinType, newSkinType -> {
+            skinType = newSkinType;
+            reloadData(null);
         });
         comboBox.setMaxRowCount(17);
         addButton(comboBox);
@@ -540,35 +527,5 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
             return ModConfig.Common.allowLibraryRemoteManage && menu.getPlayer().hasPermissions(5);
         }
         return true;
-    }
-
-    public static class SkinTypeComboItem extends AWComboBox.ComboItem {
-
-        protected final ISkinType skinType;
-
-        public SkinTypeComboItem(ISkinType skinType) {
-            super(getTitleFromSkinType(skinType));
-            this.skinType = skinType;
-        }
-
-        @Override
-        public void renderLabels(MatrixStack matrixStack, int x, int y, int width, int height, boolean isHovered, boolean isTopRender) {
-            if (!isTopRender) {
-                ResourceLocation texture = AWCore.getItemIcon(skinType);
-                if (texture != null) {
-                    RenderSystem.enableAlphaTest();
-                    RenderUtils.resize(matrixStack, x - 2, y - 1, 0, 0, 9, 9, 16, 16, 16, 16, texture);
-                    x += 9;
-                }
-            }
-            super.renderLabels(matrixStack, x, y, width, height, isHovered, isTopRender);
-        }
-
-        private static ITextComponent getTitleFromSkinType(ISkinType skinType) {
-            if (skinType == SkinTypes.UNKNOWN) {
-                return TranslateUtils.title("inventory.armourers_workshop.all");
-            }
-            return TranslateUtils.title("skinType." + skinType.getRegistryName());
-        }
     }
 }

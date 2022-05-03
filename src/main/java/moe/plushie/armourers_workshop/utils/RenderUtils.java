@@ -51,6 +51,7 @@ public final class RenderUtils {
     public static final ResourceLocation TEX_GLOBAL_SKIN_LIBRARY = AWCore.resource("textures/gui/global_library/global-library.png");
     public static final ResourceLocation TEX_COLOUR_MIXER = AWCore.resource("textures/gui/colour_mixer/colour-mixer.png");
     public static final ResourceLocation TEX_OUTFIT_MAKER = AWCore.resource("textures/gui/outfit_maker/outfit-maker.png");
+    public static final ResourceLocation TEX_ARMOURER = AWCore.resource("textures/gui/armourer/armourer.png");
 
     public static final ResourceLocation TEX_TABS = AWCore.resource("textures/gui/controls/tabs.png");
     public static final ResourceLocation TEX_COMMON = AWCore.resource("textures/gui/common.png");

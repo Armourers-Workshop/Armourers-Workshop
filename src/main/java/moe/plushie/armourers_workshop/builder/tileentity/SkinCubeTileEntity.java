@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.tileentity;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.tileentity.AbstractTileEntity;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
@@ -21,7 +22,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 @SuppressWarnings("NullableProblems")
-public class SkinCubeTileEntity extends TileEntity implements IPaintable {
+public class SkinCubeTileEntity extends AbstractTileEntity implements IPaintable {
 
     protected EnumMap<Direction, IPaintColor> colors = new EnumMap<>(Direction.class);
     protected boolean customRenderer = false;
@@ -55,46 +56,6 @@ public class SkinCubeTileEntity extends TileEntity implements IPaintable {
         if (colorNBT.size() != 0) {
             nbt.put(AWConstants.NBT.COLOR, colorNBT);
         }
-    }
-
-    @Override
-    public void load(BlockState state, CompoundNBT nbt) {
-        super.load(state, nbt);
-        this.readFromNBT(nbt);
-    }
-
-    @Override
-    public CompoundNBT save(CompoundNBT nbt) {
-        super.save(nbt);
-        this.writeToNBT(nbt);
-        return nbt;
-    }
-
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT nbt = new CompoundNBT();
-        this.writeToNBT(nbt);
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, nbt);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT nbt = pkt.getTag();
-        this.readFromNBT(nbt);
-        this.sendBlockUpdates();
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = super.getUpdateTag();
-        this.writeToNBT(tag);
-        return tag;
-    }
-
-    @Override
-    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        super.handleUpdateTag(state, tag);
-        this.readFromNBT(tag);
     }
 
     private void sendBlockUpdates() {

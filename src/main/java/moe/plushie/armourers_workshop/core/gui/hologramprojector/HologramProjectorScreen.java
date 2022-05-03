@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.gui.hologramprojector;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
+import moe.plushie.armourers_workshop.core.gui.widget.AWAbstractContainerScreen;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabController;
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
@@ -13,7 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @SuppressWarnings({"unused", "NullableProblems"})
 @OnlyIn(Dist.CLIENT)
-public class HologramProjectorScreen extends ContainerScreen<HologramProjectorContainer> {
+public class HologramProjectorScreen extends AWAbstractContainerScreen<HologramProjectorContainer> {
 
     private final AWTabController<Integer> tabController = new AWTabController<>(true);
     private final HologramProjectorTileEntity tileEntity;
@@ -82,7 +83,7 @@ public class HologramProjectorScreen extends ContainerScreen<HologramProjectorCo
                 .setIconAnimation(8, 150);
 
         tabController.addListener(this::switchTab);
-        tabController.setSelectedTab(tabController.get(0)); // active the first tab
+        tabController.setSelectedTab(tabController.getFirstActiveTab()); // active the first tab
     }
 
     @Override

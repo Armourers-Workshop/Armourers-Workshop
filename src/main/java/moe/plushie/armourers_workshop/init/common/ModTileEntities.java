@@ -18,6 +18,7 @@
 
 package moe.plushie.armourers_workshop.init.common;
 
+import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
 import moe.plushie.armourers_workshop.builder.tileentity.ColorMixerTileEntity;
 import moe.plushie.armourers_workshop.builder.tileentity.OutfitMakerTileEntity;
 import moe.plushie.armourers_workshop.builder.tileentity.SkinCubeTileEntity;
@@ -38,9 +39,11 @@ public final class ModTileEntities {
     private static final HashMap<ResourceLocation, TileEntityType<?>> REGISTERED_ENTITY_TYPES = new HashMap<>();
 
     public static final TileEntityType<HologramProjectorTileEntity> HOLOGRAM_PROJECTOR = register("hologram-projector", TileEntityType.Builder.of(HologramProjectorTileEntity::new, ModBlocks.HOLOGRAM_PROJECTOR));
-    public static final TileEntityType<ColorMixerTileEntity> COLOR_MIXER = register("colour-mixer", TileEntityType.Builder.of(ColorMixerTileEntity::new, ModBlocks.COLOR_MIXER));
     public static final TileEntityType<OutfitMakerTileEntity> OUTFIT_MAKER = register("outfit-maker", TileEntityType.Builder.of(OutfitMakerTileEntity::new, ModBlocks.OUTFIT_MAKER));
     public static final TileEntityType<DyeTableTileEntity> DYE_TABLE = register("dye-table", TileEntityType.Builder.of(DyeTableTileEntity::new, ModBlocks.DYE_TABLE));
+
+    public static final TileEntityType<ColorMixerTileEntity> COLOR_MIXER = register("colour-mixer", TileEntityType.Builder.of(ColorMixerTileEntity::new, ModBlocks.COLOR_MIXER));
+    public static final TileEntityType<ArmourerTileEntity> ARMOURER = register("armourer", TileEntityType.Builder.of(ArmourerTileEntity::new, ModBlocks.COLOR_MIXER));
 
     public static final TileEntityType<SkinLibraryTileEntity> SKIN_LIBRARY = register("skin-library", TileEntityType.Builder.of(SkinLibraryTileEntity::new, ModBlocks.SKIN_LIBRARY));
     public static final TileEntityType<GlobalSkinLibraryTileEntity> SKIN_LIBRARY_GLOBAL = register("skin-library-global", TileEntityType.Builder.of(GlobalSkinLibraryTileEntity::new, ModBlocks.SKIN_LIBRARY_GLOBAL));

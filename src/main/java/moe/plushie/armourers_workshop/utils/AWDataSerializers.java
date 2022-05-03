@@ -2,8 +2,10 @@ package moe.plushie.armourers_workshop.utils;
 
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
@@ -121,6 +123,34 @@ public class AWDataSerializers {
         }
     };
 
+    public static final IPlayerDataSerializer<ISkinType> SKIN_TYPE = new IPlayerDataSerializer<ISkinType>() {
+        public void write(PacketBuffer buffer, PlayerEntity player, ISkinType value) {
+            buffer.writeUtf(value.getRegistryName().toString());
+        }
+
+        public ISkinType read(PacketBuffer buffer, PlayerEntity player) {
+            return SkinTypes.byName(buffer.readUtf());
+        }
+    };
+
+    public static final IPlayerDataSerializer<SkinProperties> SKIN_PROPERTIES = new IPlayerDataSerializer<SkinProperties>() {
+        public void write(PacketBuffer buffer, PlayerEntity player, SkinProperties value) {
+            CompoundNBT nbt = new CompoundNBT();
+            value.writeToNBT(nbt);
+            buffer.writeNbt(nbt);
+        }
+
+        public SkinProperties read(PacketBuffer buffer, PlayerEntity player) {
+            SkinProperties properties = new SkinProperties();
+            CompoundNBT nbt = buffer.readNbt();
+            if (nbt != null) {
+                properties.readFromNBT(nbt);
+            }
+            return properties;
+        }
+    };
+
+
     public static Vector3i getVector3i(CompoundNBT nbt, String key) {
         ListNBT listNBT = nbt.getList(key, Constants.NBT.TAG_INT);
         if (listNBT.size() >= 3) {
@@ -219,6 +249,19 @@ public class AWDataSerializers {
     public static void putFloat(CompoundNBT nbt, String key, float value, float defaultValue) {
         if (defaultValue != value) {
             nbt.putFloat(key, value);
+        }
+    }
+
+    public static String getString(CompoundNBT nbt, String key, String defaultValue) {
+        if (nbt != null && nbt.contains(key, Constants.NBT.TAG_STRING)) {
+            return nbt.getString(key);
+        }
+        return defaultValue;
+    }
+
+    public static void putString(CompoundNBT nbt, String key, String value, String defaultValue) {
+        if (defaultValue != value) {
+            nbt.putString(key, value);
         }
     }
 

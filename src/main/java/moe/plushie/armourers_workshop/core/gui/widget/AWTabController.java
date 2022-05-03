@@ -88,12 +88,14 @@ public class AWTabController<Target> extends Screen {
             this.selectedTab.screen.init(Minecraft.getInstance(), width, height);
             this.children.add(this.selectedTab.screen);
         }
-        this.listeners.forEach(listener -> listener.accept(selectedTab));
+        if (this.listeners != null) {
+            this.listeners.forEach(listener -> listener.accept(selectedTab));
+        }
     }
 
-    public Tab getFirstVisibleTab() {
+    public Tab getFirstActiveTab() {
         for (Tab tab : tabs) {
-            if (tab.visible) {
+            if (tab.active) {
                 return tab;
             }
         }
@@ -129,13 +131,17 @@ public class AWTabController<Target> extends Screen {
 
         if (getSelectedScreen() != null) {
             getSelectedScreen().init(Minecraft.getInstance(), width, height);
+            // auto attach
+            if (!children.contains(getSelectedScreen())) {
+                children.add(getSelectedScreen());
+            }
         }
     }
 
     private void initNormalWidgets(int x, int y, int width, int height) {
         int ly = 5, ry = 5, spacing = -5;
         for (Tab tab : tabs) {
-            if (!tab.visible) {
+            if (!tab.active) {
                 continue;
             }
             if (tab.alignment == 0 && ly + tab.height <= height) { // left
@@ -163,7 +169,7 @@ public class AWTabController<Target> extends Screen {
     private void initFullscreenWidgets(int x, int y, int width, int height) {
         int ly = 0, ry = 0, spacing = -2;
         for (Tab tab : tabs) {
-            if (!tab.visible) {
+            if (!tab.active) {
                 continue;
             }
             if (tab.alignment == 0 && ly + tab.height <= height) { // left
@@ -196,19 +202,15 @@ public class AWTabController<Target> extends Screen {
         }
     }
 
-    @Override
-    public void removed() {
-        if (this.listeners != null) {
-            this.listeners.clear();
-        }
-        super.removed();
-    }
-
     public void renderTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
         for (Tab tab : actives) {
             if (tab.isHovered(mouseX, mouseY)) {
                 renderTooltip(matrixStack, tab.screen.getTitle(), mouseX, mouseY);
             }
+        }
+        Screen screen = getSelectedScreen();
+        if (screen instanceof AWTabPanel) {
+            ((AWTabPanel) screen).renderTooltip(matrixStack, mouseX, mouseY);
         }
     }
 
@@ -226,7 +228,7 @@ public class AWTabController<Target> extends Screen {
     @Override
     public boolean changeFocus(boolean p_231049_1_) {
         if (selectedTab != null) {
-            return selectedTab.changeFocus(p_231049_1_);
+            return selectedTab.screen.changeFocus(p_231049_1_);
         }
         return super.changeFocus(p_231049_1_);
     }
@@ -248,7 +250,7 @@ public class AWTabController<Target> extends Screen {
         int animationSpeed = 0;
 
         Target target;
-        boolean visible = true;
+        boolean active = true;
 
         Screen screen;
 
@@ -273,8 +275,8 @@ public class AWTabController<Target> extends Screen {
             return this;
         }
 
-        public Tab setVisible(boolean visible) {
-            this.visible = visible;
+        public Tab setActive(boolean active) {
+            this.active = active;
             return this;
         }
 

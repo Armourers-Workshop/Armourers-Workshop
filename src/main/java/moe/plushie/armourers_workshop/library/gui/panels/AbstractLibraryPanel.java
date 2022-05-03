@@ -28,7 +28,6 @@ import java.util.function.Predicate;
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractLibraryPanel extends Screen {
 
-    public final ArrayList<AWLabel> labels = new ArrayList<>();
     public int leftPos = 0;
     public int topPos = 0;
     public int titleLabelX = 0;
@@ -59,7 +58,6 @@ public abstract class AbstractLibraryPanel extends Screen {
         super.init();
         this.titleLabelX = leftPos + 5;
         this.titleLabelY = topPos + 5;
-        this.labels.clear();
     }
 
     protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY) {
@@ -110,7 +108,6 @@ public abstract class AbstractLibraryPanel extends Screen {
     protected AWLabel addLabel(int x, int y, int width, int height, ITextComponent message) {
         AWLabel label = new AWLabel(x, y, width, height, message);
         addWidget(label);
-        labels.add(label);
         return label;
     }
 
