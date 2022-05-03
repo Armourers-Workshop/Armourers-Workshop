@@ -65,6 +65,7 @@ public class ModItems {
 
     public static final Item SKINNING_TABLE = registerBlock("skinning-table", ModBlocks.SKINNING_TABLE, p -> p.rarity(Rarity.RARE).tab(MAIN_GROUP));
     public static final Item DYE_TABLE = registerBlock("dye-table", ModBlocks.DYE_TABLE, p -> p.rarity(Rarity.RARE).tab(MAIN_GROUP));
+    public static final Item OUTFIT_MAKER = registerBlock("outfit-maker", ModBlocks.OUTFIT_MAKER, p -> p.rarity(Rarity.RARE).tab(MAIN_GROUP));
     public static final Item HOLOGRAM_PROJECTOR = registerBlock("hologram-projector", ModBlocks.HOLOGRAM_PROJECTOR, p -> p.rarity(Rarity.RARE).tab(MAIN_GROUP));
 
     public static final Item BOTTLE = register("dye-bottle", BottleItem::new, p -> p.tab(MAIN_GROUP));
@@ -86,7 +87,6 @@ public class ModItems {
     public static final Item GIFT_SACK = register("gift-sack", GiftSackItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
     //    public static final Item ARMOUR_CONTAINER = register("armour-container", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));
 
-    public static final Item OUTFIT_MAKER = registerBlock("outfit-maker", ModBlocks.OUTFIT_MAKER, p -> p.rarity(Rarity.RARE).tab(BUILDING_GROUP));
     public static final Item ARMOURER = registerBlock("armourer", ModBlocks.ARMOURER, p -> p.rarity(Rarity.RARE).tab(BUILDING_GROUP));
     public static final Item COLOR_MIXER = registerBlock("colour-mixer", ModBlocks.COLOR_MIXER, p -> p.rarity(Rarity.RARE).tab(BUILDING_GROUP));
 

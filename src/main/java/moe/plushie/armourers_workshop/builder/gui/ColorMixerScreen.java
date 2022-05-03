@@ -180,7 +180,7 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
     }
 
     private void onSubmit(Button button) {
-        ColorMixerTileEntity tileEntity = menu.getEntity();
+        ColorMixerTileEntity tileEntity = menu.getTileEntity(ColorMixerTileEntity.class);
         if (tileEntity == null) {
             return;
         }
@@ -314,7 +314,7 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
 
     private void addHelpButton(int x, int y) {
         ITextComponent tooltip = getDisplayText("help.palette");
-        AWImageButton button = new AWImageButton(x, y, 7, 8, 0, 0, RenderUtils.TEX_HELP, Objects::hash, this::renderIconTooltip, tooltip);
+        AWImageButton button = new AWHelpButton(x, y, 7, 8, Objects::hash, this::renderIconTooltip, tooltip);
         addButton(button);
     }
 
@@ -365,7 +365,7 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
     }
 
     protected void reloadStatus() {
-        ColorMixerTileEntity tileEntity = menu.getEntity();
+        ColorMixerTileEntity tileEntity = menu.getTileEntity(ColorMixerTileEntity.class);
         if (tileEntity == null) {
             return;
         }

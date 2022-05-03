@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.gui.misc;
+package moe.plushie.armourers_workshop.core.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.container.DyeTableContainer;

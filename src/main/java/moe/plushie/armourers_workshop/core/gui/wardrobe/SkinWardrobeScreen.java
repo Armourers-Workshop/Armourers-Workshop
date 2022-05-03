@@ -80,33 +80,33 @@ public class SkinWardrobeScreen extends AWAbstractContainerScreen<SkinWardrobeCo
         tabController.add(new SkinWardrobeInventorySetting(menu))
                 .setIcon(192, 0)
                 .setTarget(SkinWardrobeContainer.Group.SKINS)
-                .setVisible(!isPlayer || ModConfig.Common.showWardrobeSkins || operator.isCreative());
+                .setActive(!isPlayer || ModConfig.Common.showWardrobeSkins || operator.isCreative());
 
         if (wardrobe.getUnlockedSize(SkinSlotType.OUTFIT) != 0) {
             tabController.add(new SkinWardrobeOutfitSetting(menu))
                     .setIcon(0, 128)
                     .setTarget(SkinWardrobeContainer.Group.OUTFITS)
-                    .setVisible(!isPlayer || ModConfig.Common.showWardrobeOutfits || operator.isCreative());
+                    .setActive(!isPlayer || ModConfig.Common.showWardrobeOutfits || operator.isCreative());
         }
 
         tabController.add(new SkinWardrobeDisplaySetting(menu))
                 .setIcon(208, 0)
-                .setVisible(!isPlayer || ModConfig.Common.showWardrobeDisplaySettings || operator.isCreative());
+                .setActive(!isPlayer || ModConfig.Common.showWardrobeDisplaySettings || operator.isCreative());
 
         tabController.add(new SkinWardrobeColourSetting(menu))
                 .setIcon(224, 0)
                 .setTarget(SkinWardrobeContainer.Group.COLORS)
-                .setVisible(!isPlayer || ModConfig.Common.showWardrobeColourSettings || operator.isCreative());
+                .setActive(!isPlayer || ModConfig.Common.showWardrobeColourSettings || operator.isCreative());
 
         tabController.add(new SkinWardrobeDyeSetting(menu))
                 .setIcon(240, 0)
                 .setTarget(SkinWardrobeContainer.Group.DYES)
-                .setVisible(!isPlayer || ModConfig.Common.showWardrobeDyeSetting || operator.isCreative());
+                .setActive(!isPlayer || ModConfig.Common.showWardrobeDyeSetting || operator.isCreative());
 
         if (isPlayer && ModContributors.getCurrentContributor() != null) {
             tabController.add(new SkinWardrobeContributorSetting(menu))
                     .setIcon(32, 128)
-                    .setVisible(ModConfig.Common.showWardrobeContributorSetting || operator.isCreative());
+                    .setActive(ModConfig.Common.showWardrobeContributorSetting || operator.isCreative());
         }
 
         if (isMannequin) {
@@ -132,7 +132,7 @@ public class SkinWardrobeScreen extends AWAbstractContainerScreen<SkinWardrobeCo
         }
 
         tabController.addListener(this::switchTab);
-        tabController.setSelectedTab(tabController.getFirstVisibleTab()); // active the first tab
+        tabController.setSelectedTab(tabController.getFirstActiveTab()); // active the first tab
     }
 
     @Override
@@ -259,7 +259,7 @@ public class SkinWardrobeScreen extends AWAbstractContainerScreen<SkinWardrobeCo
     }
 
     private void switchTab(AWTabController<SkinWardrobeContainer.Group>.Tab tab) {
-        getMenu().setGroup(tab.getTarget());
+        menu.setGroup(tab.getTarget());
     }
 
     private int getExtendedHeight() {

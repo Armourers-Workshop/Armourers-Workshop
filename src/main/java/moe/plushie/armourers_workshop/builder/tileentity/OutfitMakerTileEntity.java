@@ -43,46 +43,6 @@ public class OutfitMakerTileEntity extends AbstractContainerTileEntity {
         }
     }
 
-    @Override
-    public void load(BlockState state, CompoundNBT nbt) {
-        super.load(state, nbt);
-        this.readFromNBT(nbt);
-    }
-
-    @Override
-    public CompoundNBT save(CompoundNBT nbt) {
-        super.save(nbt);
-        this.writeToNBT(nbt);
-        return nbt;
-    }
-
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT nbt = new CompoundNBT();
-        this.writeToNBT(nbt);
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, nbt);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT nbt = pkt.getTag();
-        this.readFromNBT(nbt);
-        this.sendBlockUpdates();
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = super.getUpdateTag();
-        this.writeToNBT(tag);
-        return tag;
-    }
-
-    @Override
-    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        super.handleUpdateTag(state, tag);
-        this.readFromNBT(tag);
-    }
-
     public String getItemName() {
         return itemName;
     }

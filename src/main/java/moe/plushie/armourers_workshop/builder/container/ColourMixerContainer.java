@@ -29,14 +29,6 @@ public class ColourMixerContainer extends AbstractBlockContainer {
         this.addCustomSlot(inventory, 1, 134, 101);
     }
 
-    public ColorMixerTileEntity getEntity() {
-        TileEntity tileEntity = access.evaluate(World::getBlockEntity).orElse(null);
-        if (tileEntity instanceof ColorMixerTileEntity) {
-            return (ColorMixerTileEntity) tileEntity;
-        }
-        return null;
-    }
-
     @Override
     public void removed(PlayerEntity player) {
         super.removed(player);

@@ -115,12 +115,12 @@ public class OutfitMakerContainer extends AbstractBlockContainer {
         }
         if (!skinParts.isEmpty()) {
             skinProperties.put(SkinProperty.OUTFIT_PART_INDEXS, partIndexs);
-            skinProperties.put(SkinProperty.ALL_AUTHOR_NAME, player.getName().getContents());
+            skinProperties.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
             // in the offline server the `player.getStringUUID()` is not real player uuid.
             if (profile.getId() != null) {
                 skinProperties.put(SkinProperty.ALL_AUTHOR_UUID, profile.getId().toString());
             }
-            skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, profile.getName());
+            skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, tileEntity.getItemName());
             skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, tileEntity.getItemFlavour());
             // build
             Skin skin = new Skin(skinProperties, SkinTypes.OUTFIT, paintData, skinParts);

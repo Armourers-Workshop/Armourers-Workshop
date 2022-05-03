@@ -31,7 +31,7 @@ public final class TranslateUtils {
             return results;
         }
         Style style = Style.EMPTY.withColor(TextFormatting.GRAY);
-        for (String line : getFormattedString(value).split("[\n]|%n")) {
+        for (String line : getFormattedString(value).split("[\r\n]+|%n")) {
             results.add(new StringTextComponent(line).setStyle(style));
         }
         return results;

@@ -75,7 +75,6 @@ public class SkinWardrobeLocationSetting extends AWTabPanel {
         ITextComponent tooltip = getDisplayText(key);
         Button.IPressable pressable = b -> updateValue(axis, step);
         addButton(new AWImageButton(x, y, 16, 16, u, v, RenderUtils.TEX_BUTTONS, pressable, this::renderIconTooltip, tooltip));
-
     }
 
     private void renderIconTooltip(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
