@@ -31,24 +31,13 @@ public class AWReportDialog extends AWConfirmDialog {
     protected void init() {
         super.init();
 
-        this.addWidget(comboBox);
-        this.comboBox.setFrame(leftPos + 10, topPos + 25, imageWidth - 20, 16);
-
-        this.addWidget(textField);
+        this.addButton(textField);
         this.textField.setFrame(leftPos + 10, topPos + 45, imageWidth - 20, 80);
 
-        this.messageY = topPos + 130;
-    }
+        this.addButton(comboBox);
+        this.comboBox.setFrame(leftPos + 10, topPos + 25, imageWidth - 20, 16);
 
-    @Override
-    public void renderContentLayer(MatrixStack matrixStack, int mouseX, int mouseY, float p_230430_4_) {
-        super.renderContentLayer(matrixStack, mouseX, mouseY, p_230430_4_);
-        if (this.textField != null) {
-            this.textField.render(matrixStack, mouseX, mouseY, p_230430_4_);
-        }
-        if (this.comboBox != null) {
-            this.comboBox.render(matrixStack, mouseX, mouseY, p_230430_4_);
-        }
+        this.messageY = topPos + 130;
     }
 
     @Override
@@ -95,6 +84,7 @@ public class AWReportDialog extends AWConfirmDialog {
         int selectedIndex = 0;
         ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
         AWComboBox comboBox = new AWComboBox(x, y, width, height, items, selectedIndex, Objects::hash);
+        comboBox.setPopLevel(200);
         addButton(comboBox);
         return comboBox;
     }

@@ -1,25 +1,27 @@
-package moe.plushie.armourers_workshop.core.skin.exporter;//package moe.plushie.armourers_workshop.core.skin.exporter;
-//
+package moe.plushie.armourers_workshop.core.skin.exporter;
+
 //import moe.plushie.armourers_workshop.core.api.common.skin.ISkinExporter;
 //import moe.plushie.armourers_workshop.client.skin.ClientSkinPartData;
+//import moe.plushie.armourers_workshop.core.skin.face.ColouredFace;
+//import moe.plushie.armourers_workshop.core.skin.Skin;
 //import moe.plushie.armourers_workshop.core.skin.model.bake.ColouredFace;
 //import moe.plushie.armourers_workshop.core.skin.data.Skin;
 //import moe.plushie.armourers_workshop.core.skin.data.SkinPart;
+//import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 //import moe.plushie.armourers_workshop.core.utils.SkinLogger;
+//import moe.plushie.armourers_workshop.init.common.ModLog;
 //import org.apache.commons.io.IOUtils;
 //
 //import java.io.*;
 //import java.nio.charset.StandardCharsets;
 //import java.util.ArrayList;
 //
-//public class SkinExporterPolygon implements ISkinExporter {
+//public class SkinExporterPolygon {
 //
-//    @Override
 //    public String[] getFileExtensions() {
 //        return new String[] { "ply" };
 //    }
 //
-//    @Override
 //    public void exportSkin(Skin skin, File filePath, String filename, float scale) {
 //        try {
 //            for (int i = 0; i < skin.getPartCount(); i++) {
@@ -42,8 +44,8 @@ package moe.plushie.armourers_workshop.core.skin.exporter;//package moe.plushie.
 //
 //    private void exportLayer(SkinPart skinPart, Skin skin, File filePath, String filename, float scale, int layer) throws IOException {
 //        String finalName = filename;
-//        finalName += "-" + skin.getType().getName().toLowerCase();
-//        finalName += "-" + skinPart.getType().getPartName().toLowerCase();
+//        finalName += "-" + skin.getType().getRegistryName().toString().toLowerCase();
+//        finalName += "-" + skinPart.getType().getRegistryName().toString().toLowerCase();
 //        finalName += "-" + layer;
 //        finalName += ".ply";
 //
@@ -61,7 +63,7 @@ package moe.plushie.armourers_workshop.core.skin.exporter;//package moe.plushie.
 //            e.printStackTrace();
 //            return;
 //        }
-//        SkinLogger.log("Exporting part " + skinPart);
+//        ModLog.debug("Exporting part " + skinPart);
 //
 //        String CRLF = "\n";
 //

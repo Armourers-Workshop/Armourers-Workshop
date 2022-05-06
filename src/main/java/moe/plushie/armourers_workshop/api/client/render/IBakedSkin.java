@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkin;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public interface IBakedSkin {
 
     <T extends ISkin> T getSkin();

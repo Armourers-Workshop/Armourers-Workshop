@@ -77,14 +77,7 @@ public abstract class AbstractLibraryPanel extends Screen {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        for (IGuiEventListener it : children) {
-            if (it instanceof Widget) {
-                Widget widget = (Widget) it;
-                if (widget.visible) {
-                    widget.render(matrixStack, mouseX, mouseY, partialTicks);
-                }
-            }
-        }
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderLabels(matrixStack, mouseX, mouseY);
     }
 
@@ -107,7 +100,7 @@ public abstract class AbstractLibraryPanel extends Screen {
 
     protected AWLabel addLabel(int x, int y, int width, int height, ITextComponent message) {
         AWLabel label = new AWLabel(x, y, width, height, message);
-        addWidget(label);
+        addButton(label);
         return label;
     }
 

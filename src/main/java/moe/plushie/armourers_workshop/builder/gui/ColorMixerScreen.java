@@ -117,14 +117,6 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
         this.renderPreviewColor(matrixStack, mouseX, mouseY, partialTicks);
     }
 
-    @Override
-    public void renderContentLayer(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.renderContentLayer(matrixStack, mouseX, mouseY, partialTicks);
-        if (this.textField != null) {
-            this.textField.render(matrixStack, mouseX, mouseY, partialTicks);
-        }
-    }
-
     protected void renderPreviewColor(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         int cx = leftPos + 108;
         int cy = topPos + 102;
@@ -144,23 +136,6 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
             GL11.glColor4f(1f, 1f, 1f, 1f);
         }
     }
-
-    @Override
-    public boolean keyPressed(int key, int p_231046_2_, int p_231046_3_) {
-        if (super.keyPressed(key, p_231046_2_, p_231046_3_)) {
-            return true;
-        }
-        if (textField != null && textField.isFocused() && key == GLFW.GLFW_KEY_ENTER) {
-            String value = textField.getValue();
-            if (value.matches("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")) {
-                setSelectedColor(Color.decode(value));
-                onSubmit(null);
-            }
-            return true;
-        }
-        return false;
-    }
-
 
     private void onSliderChange(Button button) {
         setColorComponents(new float[]{sliders[0].getValue(), sliders[1].getValue(), sliders[2].getValue()});
@@ -235,6 +210,14 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
         });
     }
 
+    @Override
+    protected void addHoveredButton(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
+        if (getFocused() != button && getFocused() != null && getFocused().isMouseOver(mouseX, mouseY)) {
+            return;
+        }
+        super.addHoveredButton(button, matrixStack, mouseX, mouseY);
+    }
+
     private AWHSBSliderBox addHSBSlider(int x, int y, AWHSBSliderBox.Type type) {
         AWHSBSliderBox sliderBox = new AWHSBSliderBox(x, y, 150, 10, type, this::onSliderChange);
         sliderBox.setEndListener(this::onSubmit);
@@ -247,7 +230,7 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
         paintTypes = new ArrayList<>();
         ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
         for (ISkinPaintType paintType : SkinPaintTypes.values()) {
-            AWComboBox.ComboItem item = new AWComboBox.ComboItem(TranslateUtils.title("paintType." + paintType.getRegistryName()));
+            AWComboBox.ComboItem item = new AWComboBox.ComboItem(TranslateUtils.Name.of(paintType));
             if (paintType == SkinPaintTypes.TEXTURE) {
                 item.setEnabled(false);
             }
@@ -302,31 +285,30 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
     private AWTextField addTextField(int x, int y) {
         AWTextField textBox = new AWTextField(font, x, y, 50, 16, StringTextComponent.EMPTY);
         textBox.setMaxLength(7);
-        addWidget(textBox);
+        textBox.setReturnHandler(value -> {
+            if (value.matches("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")) {
+                setSelectedColor(Color.decode(value));
+                onSubmit(null);
+            }
+        });
+        addButton(textBox);
         return textBox;
     }
 
     private void addIconButton(int x, int y, int u, int v, String key, Button.IPressable handler) {
         ITextComponent tooltip = getDisplayText(key);
-        AWImageButton button = new AWImageButton(x, y, 16, 16, u, v, RenderUtils.TEX_BUTTONS, handler, this::renderIconTooltip, tooltip);
+        AWImageButton button = new AWImageButton(x, y, 16, 16, u, v, RenderUtils.TEX_BUTTONS, handler, this::addHoveredButton, tooltip);
         addButton(button);
     }
 
     private void addHelpButton(int x, int y) {
         ITextComponent tooltip = getDisplayText("help.palette");
-        AWImageButton button = new AWHelpButton(x, y, 7, 8, Objects::hash, this::renderIconTooltip, tooltip);
+        AWImageButton button = new AWHelpButton(x, y, 7, 8, Objects::hash, this::addHoveredButton, tooltip);
         addButton(button);
     }
 
     private void reloadPalettes() {
         init(Minecraft.getInstance(), width, height);
-    }
-
-    private void renderIconTooltip(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
-        if (getFocused() != button && getFocused() != null && getFocused().isMouseOver(mouseX, mouseY)) {
-            return;
-        }
-        renderTooltip(matrixStack, button.getMessage(), mouseX, mouseY);
     }
 
     private void setColorComponents(float[] values) {

@@ -85,6 +85,8 @@ public class PlayerTextureDescriptor {
         if (profile != null) {
             CompoundNBT nbt1 = new CompoundNBT();
             NBTUtil.writeGameProfile(nbt1, profile);
+            // we not need properties, and the properties so bigger, so remove it.
+            nbt1.remove("Properties");
             nbt.put(AWConstants.NBT.TEXTURE_PROFILE, nbt1);
         }
         return nbt;

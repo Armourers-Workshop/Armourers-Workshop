@@ -2,18 +2,15 @@ package moe.plushie.armourers_workshop.builder.tileentity;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.core.tileentity.AbstractContainerTileEntity;
 import moe.plushie.armourers_workshop.core.tileentity.AbstractTileEntity;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import net.minecraft.block.BlockState;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 
 public class ArmourerTileEntity extends AbstractTileEntity {
@@ -50,6 +47,9 @@ public class ArmourerTileEntity extends AbstractTileEntity {
 
     public void setSkinType(ISkinType skinType) {
         this.skinType = skinType;
+        this.remakeSkinProperties();
+        this.remakeBuildingGuidesIfNeeded();
+        this.setChanged();
         this.sendBlockUpdates();
     }
 
@@ -59,6 +59,7 @@ public class ArmourerTileEntity extends AbstractTileEntity {
 
     public void setSkinProperties(SkinProperties skinProperties) {
         this.skinProperties = skinProperties;
+        this.setChanged();
         this.sendBlockUpdates();
     }
 
@@ -68,6 +69,8 @@ public class ArmourerTileEntity extends AbstractTileEntity {
 
     public void setFlags(int flags) {
         this.flags = flags;
+        this.remakeBuildingGuidesIfNeeded();
+        this.setChanged();
         this.sendBlockUpdates();
     }
 
@@ -82,34 +85,46 @@ public class ArmourerTileEntity extends AbstractTileEntity {
     }
 
     public boolean isShowGuides() {
-        return (flags & 0x01) != 0;
+        return (flags & 0x01) == 0;
     }
 
     public void setShowGuides(boolean value) {
         if (value) {
-            flags |= 0x01;
+            flags &= ~0x01; // -
         } else {
-            flags &= ~0x01;
+            flags |= 0x01; // +
         }
     }
 
     public boolean isShowHelper() {
-        return (flags & 0x02) != 0;
+        return (flags & 0x02) == 0;
     }
 
     public void setShowHelper(boolean value) {
         if (value) {
-            flags |= 0x02;
+            flags &= ~0x02; // -
         } else {
-            flags &= ~0x02;
+            flags |= 0x02; // +
         }
     }
 
-    private void sendBlockUpdates() {
-        this.setChanged();
+    @Override
+    public void sendBlockUpdates() {
         if (level != null) {
             BlockState state = getBlockState();
             level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.BLOCK_UPDATE);
         }
+    }
+
+    private void remakeSkinProperties() {
+        String name = skinProperties.get(SkinProperty.ALL_CUSTOM_NAME);
+        String flavour = skinProperties.get(SkinProperty.ALL_FLAVOUR_TEXT);
+        this.skinProperties = new SkinProperties();
+        this.skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, name);
+        this.skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, flavour);
+    }
+
+    private void remakeBuildingGuidesIfNeeded() {
+
     }
 }

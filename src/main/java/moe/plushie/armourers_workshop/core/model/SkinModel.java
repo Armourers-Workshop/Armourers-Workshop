@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.model;
 
 import moe.plushie.armourers_workshop.init.common.ModConfig;
-import moe.plushie.armourers_workshop.core.render.bake.ColouredFace;
+import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -13,7 +13,7 @@ public class SkinModel {
 
     public long loadedTime;
 
-    public SkinModel(ArrayList<ColouredFace>[] vertexLists) {
+    public SkinModel(ArrayList<SkinCubeFace>[] vertexLists) {
     }
 
     public void setLoaded() {

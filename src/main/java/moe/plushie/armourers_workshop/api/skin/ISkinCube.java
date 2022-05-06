@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.api.skin;
 
-import net.minecraft.block.Block;
+import net.minecraft.util.ResourceLocation;
 
 public interface ISkinCube {
 
@@ -19,7 +19,5 @@ public interface ISkinCube {
      */
     boolean isGlowing();
 
-    Block getMinecraftBlock();
-
-    String getRegistryName();
+    ResourceLocation getRegistryName();
 }

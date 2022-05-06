@@ -8,8 +8,8 @@ import moe.plushie.armourers_workshop.core.gui.widget.*;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateArmourerPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.gui.widget.button.Button;
@@ -35,7 +35,6 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
     protected ExtendedButton btnLoad;
 
     protected ISkinType skinType = SkinTypes.ARMOR_HEAD;
-    protected SkinProperties skinProperties = new SkinProperties();
 
     protected ArmourerMainSetting(ArmourerContainer container) {
         super("inventory.armourers_workshop.armourer.main");
@@ -43,7 +42,6 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
         this.tileEntity = container.getTileEntity(ArmourerTileEntity.class);
         if (this.tileEntity != null) {
             this.skinType = tileEntity.getSkinType();
-            this.skinProperties = tileEntity.getSkinProperties();
         }
     }
 
@@ -60,6 +58,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
     @Override
     protected void init() {
         super.init();
+        SkinProperties skinProperties = tileEntity.getSkinProperties();
 
         // TODO Make button icons for save/load buttons.
         // GuiIconButton buttonSave = new GuiIconButton(parent, 13, 88, 16, 16, 16, GuiHelper.getLocalizedControlName(guiName, "save"), TEXTURE_BUTTONS);
@@ -75,14 +74,14 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
         this.skinName.setMaxLength(40);
         this.skinName.setEventListener(this::updateSkinPropertiesEvent);
         this.skinName.setReturnHandler(this::updateSkinPropertiesReturn);
-        this.addWidget(skinName);
+        this.addButton(skinName);
 
         this.skinFlavor = new AWTextField(font, leftPos + 8, topPos + 90, 158, 16, StringTextComponent.EMPTY);
         this.skinFlavor.setValue(skinProperties.get(SkinProperty.ALL_FLAVOUR_TEXT));
         this.skinFlavor.setMaxLength(40);
         this.skinFlavor.setEventListener(this::updateSkinPropertiesEvent);
         this.skinFlavor.setReturnHandler(this::updateSkinPropertiesReturn);
-        this.addWidget(skinFlavor);
+        this.addButton(skinFlavor);
 
         this.addLabel(leftPos + 14, topPos + 48, width, 10, getDisplayText("label.itemName"));
         this.addLabel(leftPos + 14, topPos + 80, width, 10, getDisplayText("label.flavour"));
@@ -102,12 +101,6 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
         this.skinTypeBox.setMaxRowCount(8);
         this.skinTypeBox.setPopLevel(200);
         this.addButton(skinTypeBox);
-    }
-
-    @Override
-    public void removed() {
-        super.removed();
-        this.updateSkinProperties();
     }
 
     @Override
@@ -152,15 +145,11 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
     }
 
     private void updateSkinProperties() {
-        SkinProperties skinProperties = new SkinProperties(this.skinProperties);
+        SkinProperties skinProperties = new SkinProperties(tileEntity.getSkinProperties());
         skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, skinName.getValue());
         skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, skinFlavor.getValue());
-        if (skinProperties.equals(this.skinProperties)) {
+        if (skinProperties.equals(tileEntity.getSkinProperties())) {
             return; // not any changes.
-        }
-        this.skinProperties = skinProperties;
-        if (this.tileEntity == null) {
-            return;
         }
         this.tileEntity.setSkinProperties(skinProperties);
         UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.SKIN_PROPERTIES;

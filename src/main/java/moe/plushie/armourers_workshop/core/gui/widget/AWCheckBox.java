@@ -52,6 +52,14 @@ public class AWCheckBox extends Button {
         this.isSelected = isSelected;
     }
 
+    public boolean isEnabled() {
+        return active;
+    }
+
+    public void setEnabled(boolean enabled) {
+        active = enabled;
+    }
+
     public void setTextColour(int textColour) {
         this.textColour = textColour;
     }
@@ -75,6 +83,9 @@ public class AWCheckBox extends Button {
             drawCenteredString(matrixStack, font, "x", x + iconWidth / 2 + 1, y, 0xffcccccc);
         }
         int color = this.textColour;
+        if (!active) {
+            color = 0xffa0a0a0;
+        }
         font.draw(matrixStack, getMessage(), x + iconWidth + 2, y + 1, color);
     }
 }

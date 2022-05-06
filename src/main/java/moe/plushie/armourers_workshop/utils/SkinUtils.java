@@ -4,11 +4,10 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.action.ICanRotation;
 import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
-import moe.plushie.armourers_workshop.api.skin.ISkinIdentifier;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -21,11 +20,22 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.math.vector.Vector4f;
 
+import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 public final class SkinUtils {
+
+    public static final byte[][][] FACE_VERTEXES = new byte[][][]{
+            {{1, 1, 1}, {1, 1, 0}, {0, 1, 0}, {0, 1, 1}, {0, 1, 0}},  // -y
+            {{0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {1, 0, 1}, {0, -1, 0}}, // +y
+            {{1, 0, 1}, {1, 1, 1}, {0, 1, 1}, {0, 0, 1}, {0, 0, 1}},  // -z
+            {{0, 0, 0}, {0, 1, 0}, {1, 1, 0}, {1, 0, 0}, {0, 0, -1}}, // +z
+            {{1, 0, 0}, {1, 1, 0}, {1, 1, 1}, {1, 0, 1}, {1, 0, 0}},  // -x
+            {{0, 0, 1}, {0, 1, 1}, {0, 1, 0}, {0, 0, 0}, {-1, 0, 0}}, // +x
+    };
+
 
     //    @SideOnly(Side.CLIENT)
 //    private static Skin getSkinOnClient(ISkinIdentifier skinIdentifier, boolean requestSkin) {
@@ -66,7 +76,7 @@ public final class SkinUtils {
 //        }
 //    }
 
-    public static Skin getSkinDetectSide(ISkinIdentifier skinIdentifier, boolean serverSoftLoad, boolean clientRequestSkin) {
+//    public static Skin getSkinDetectSide(ISkinIdentifier skinIdentifier, boolean serverSoftLoad, boolean clientRequestSkin) {
 //        if (skinIdentifier != null) {
 //            if (ArmourersWorkshop.isDedicated()) {
 //                return getSkinForSide(skinIdentifier, Side.SERVER, serverSoftLoad, clientRequestSkin);
@@ -75,10 +85,10 @@ public final class SkinUtils {
 //                return getSkinForSide(skinIdentifier, side, serverSoftLoad, clientRequestSkin);
 //            }
 //        }
-        return null;
-    }
+//        return null;
+//    }
 
-    public static void apply(MatrixStack matrixStack, Entity entity, SkinPart skinPart, float partialTicks) {
+    public static void apply(MatrixStack matrixStack, SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
         ISkinPartType partType = skinPart.getType();
         if (!(partType instanceof ICanRotation)) {
             return;
@@ -90,18 +100,18 @@ public final class SkinUtils {
         SkinMarker marker = markers.get(0);
         Vector3i point = marker.getPosition();
 
-        float angle = (float) getRotationDegrees(entity, skinPart, partialTicks);
+        float angle = (float) getRotationDegrees(matrixStack, skinPart, partialTicks, entity);
         Vector3f offset = new Vector3f(point.getX() + 0.5f, point.getY() + 0.5f, point.getZ() + 0.5f);
         if (!((ICanRotation) partType).isMirror()) {
             angle = -angle;
         }
 
-        matrixStack.translate(offset.x() * SCALE, offset.y() * SCALE, offset.z() * SCALE);
+        matrixStack.translate(offset.x(), offset.y(), offset.z());
         matrixStack.mulPose(getRotationMatrix(marker).rotationDegrees(angle));
-        matrixStack.translate(-offset.x() * SCALE, -offset.y() * SCALE, -offset.z() * SCALE);
+        matrixStack.translate(-offset.x(), -offset.y(), -offset.z());
     }
 
-    public static double getRotationDegrees(Entity entity, SkinPart skinPart, float partialTicks) {
+    public static double getRotationDegrees(MatrixStack matrixStack, SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
         SkinProperties properties = skinPart.getProperties();
 
         double maxAngle = properties.get(SkinProperty.WINGS_MAX_ANGLE);

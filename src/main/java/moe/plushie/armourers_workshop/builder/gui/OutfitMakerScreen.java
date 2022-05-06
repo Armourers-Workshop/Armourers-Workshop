@@ -61,25 +61,9 @@ public class OutfitMakerScreen extends AWAbstractContainerScreen<OutfitMakerCont
     }
 
     @Override
-    public void removed() {
-        // save it once before leaving
-        saveSkinInfo(textItemName, AWTextField.EditEvent.END);
-        saveSkinInfo(textItemFlavour, AWTextField.EditEvent.END);
-        super.removed();
-    }
-
-    @Override
     protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         this.renderBackground(matrixStack);
         RenderUtils.blit(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight, RenderUtils.TEX_OUTFIT_MAKER);
-        for (IGuiEventListener it : children) {
-            if (it instanceof Widget) {
-                Widget widget = (Widget) it;
-                if (widget.visible) {
-                    widget.render(matrixStack, mouseX, mouseY, partialTicks);
-                }
-            }
-        }
     }
 
     protected void saveSkinInfo(AWTextField textField, AWTextField.EditEvent event) {
@@ -115,7 +99,7 @@ public class OutfitMakerScreen extends AWAbstractContainerScreen<OutfitMakerCont
         textBox.setValue(value);
         textBox.setPlaceholder(getDisplayText(placeholderKey));
         textBox.setEventListener(this::saveSkinInfo);
-        addWidget(textBox);
+        addButton(textBox);
         return textBox;
     }
 

@@ -144,6 +144,6 @@ public class SkinWardrobeTextureSetting extends AWTabPanel {
         if (Strings.isNotBlank(defaultValue)) {
             textBox.setValue(defaultValue);
         }
-        addWidget(textBox);
+        addButton(textBox);
     }
 }

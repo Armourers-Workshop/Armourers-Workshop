@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.render.bake;
+package moe.plushie.armourers_workshop.core.skin.face;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.other.SkinCubeFaceRenderer;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
@@ -14,12 +15,13 @@ import moe.plushie.armourers_workshop.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
-@OnlyIn(Dist.CLIENT)
-public class ColouredFace {
+public class SkinCubeFace {
 
     private static final PaintColor RAINBOW_TARGET = PaintColor.of(0xff7f7f7f, SkinPaintTypes.RAINBOW);
 
@@ -33,7 +35,7 @@ public class ColouredFace {
     private final PaintColor color;
     private final ISkinCube cube;
 
-    public ColouredFace(int x, int y, int z, PaintColor color, int alpha, Direction direction, ISkinCube cube) {
+    public SkinCubeFace(int x, int y, int z, PaintColor color, int alpha, Direction direction, ISkinCube cube) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -68,12 +70,10 @@ public class ColouredFace {
             return dye(paintColor, RAINBOW_TARGET, descriptor.getAverageColor(paintType));
         }
         if (paintType == SkinPaintTypes.TEXTURE) {
-            BakedEntityTexture texture = PlayerTextureLoader.getInstance().getTextureModel(scheme.getTexture());
-            if (texture != null) {
-                PaintColor paintColor1 = texture.getColor(x, y, z, direction, partType);
-                if (paintColor1 != null) {
-                    return paintColor1;
-                }
+            // get textures color only work on the client side.
+            PaintColor paintColor1 = DistExecutor.safeCallWhenOn(Dist.CLIENT, () -> () -> getTextureColor(scheme.getTexture(), partType));
+            if (paintColor1 != null) {
+                return paintColor1;
             }
             return paintColor;
         }
@@ -88,9 +88,19 @@ public class ColouredFace {
         return paintColor;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public void render(BakedSkinPart part, ColorScheme scheme, MatrixStack matrixStack, IVertexBuilder builder) {
         PaintColor resolvedColor = resolve(color, scheme, part.getColorInfo(), part.getType(), 0);
         SkinCubeFaceRenderer.render(x, y, z, direction, resolvedColor, alpha, matrixStack, builder);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public PaintColor getTextureColor(ResourceLocation texture, ISkinPartType partType) {
+        BakedEntityTexture bakedTexture = PlayerTextureLoader.getInstance().getTextureModel(texture);
+        if (bakedTexture != null) {
+            return bakedTexture.getColor(x, y, z, direction, partType);
+        }
+        return null;
     }
 
     public ISkinCube getCube() {
@@ -108,4 +118,5 @@ public class ColouredFace {
     public ISkinPaintType getPaintType() {
         return color.getPaintType();
     }
+
 }

@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.Inventory;
@@ -109,7 +110,6 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     public void broadcast(ServerPlayerEntity player) {
         NetworkHandler.getInstance().sendTo(UpdateWardrobePacket.sync(this), player);
     }
-
     public boolean shouldRenderEquipment(EquipmentSlotType slotType) {
         return !armourFlags.contains(slotType);
     }
@@ -158,6 +158,15 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
             id = entity.getId();
         }
         return id;
+    }
+
+    public boolean isEditable(PlayerEntity player) {
+        // can't edit another player's wardrobe
+        Entity entity = getEntity();
+        if (entity instanceof PlayerEntity && entity.getId() != player.getId()) {
+            return false;
+        }
+        return getProfile().isEditable();
     }
 
     @Override

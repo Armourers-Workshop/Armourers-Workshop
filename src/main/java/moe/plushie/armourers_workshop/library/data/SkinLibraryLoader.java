@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.library.data;
 
 import com.mojang.datafixers.util.Pair;
-import moe.plushie.armourers_workshop.api.skin.ISkinLibraryListener;
-import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
+import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.init.common.AWConstants;

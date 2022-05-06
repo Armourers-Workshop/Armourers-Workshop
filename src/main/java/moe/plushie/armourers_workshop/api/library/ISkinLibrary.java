@@ -1,5 +1,7 @@
-package moe.plushie.armourers_workshop.api.skin;
+package moe.plushie.armourers_workshop.api.library;
 
+
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 
 public interface ISkinLibrary {
 

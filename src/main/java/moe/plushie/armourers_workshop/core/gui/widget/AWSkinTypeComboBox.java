@@ -28,13 +28,6 @@ public class AWSkinTypeComboBox extends AWComboBox {
         this.skinTypes = skinTypes;
     }
 
-    private static ITextComponent getTitleFromSkinType(ISkinType skinType) {
-        if (skinType == SkinTypes.UNKNOWN) {
-            return TranslateUtils.title("inventory.armourers_workshop.all");
-        }
-        return TranslateUtils.title("skinType." + skinType.getRegistryName());
-    }
-
     private static List<AWComboBox.ComboItem> getComboItemsFromSkinTypes(List<ISkinType> skinTypes) {
         ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
         for (ISkinType skinType : skinTypes) {
@@ -65,7 +58,7 @@ public class AWSkinTypeComboBox extends AWComboBox {
         protected final ISkinType skinType;
 
         public ComboItem(ISkinType skinType) {
-            super(getTitleFromSkinType(skinType));
+            super(TranslateUtils.Name.of(skinType));
             this.skinType = skinType;
         }
 

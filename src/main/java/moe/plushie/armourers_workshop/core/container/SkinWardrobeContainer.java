@@ -119,7 +119,7 @@ public class SkinWardrobeContainer extends Container {
     @Override
     public boolean stillValid(PlayerEntity player) {
         Entity entity = getEntity();
-        if (entity == null || !entity.isAlive()) {
+        if (entity == null || !entity.isAlive() || !wardrobe.isEditable(player)) {
             return false;
         }
         return entity.distanceToSqr(player.getX(), player.getY(), player.getZ()) <= 64.0;

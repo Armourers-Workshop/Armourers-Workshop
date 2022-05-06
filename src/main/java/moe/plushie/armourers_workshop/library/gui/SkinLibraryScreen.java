@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.library.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import moe.plushie.armourers_workshop.api.skin.ISkinLibrary;
-import moe.plushie.armourers_workshop.api.skin.ISkinLibraryListener;
+import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
+import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.gui.widget.*;
 import moe.plushie.armourers_workshop.core.handler.ItemTooltipHandler;
@@ -435,7 +435,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
     private AWTextField addTextField(int x, int y, int width, int height, String key) {
         AWTextField textField = new AWTextField(font, x, y, width, height, getDisplayText(key));
         textField.setMaxLength(255);
-        addWidget(textField);
+        addButton(textField);
         return textField;
     }
 

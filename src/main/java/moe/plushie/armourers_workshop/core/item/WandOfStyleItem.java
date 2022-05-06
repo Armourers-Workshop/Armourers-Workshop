@@ -36,7 +36,7 @@ public class WandOfStyleItem extends FlavouredItem {
 
     private void openGUI(PlayerEntity player, Entity entity) {
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-        if (wardrobe != null && wardrobe.getProfile().isEditable()) {
+        if (wardrobe != null && wardrobe.isEditable(player)) {
             ModContainerTypes.open(ModContainerTypes.WARDROBE, player, wardrobe);
         }
     }

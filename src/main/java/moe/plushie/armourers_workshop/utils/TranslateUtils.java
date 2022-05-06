@@ -1,6 +1,11 @@
 package moe.plushie.armourers_workshop.utils;
 
 
+import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.minecraft.util.text.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -31,7 +36,7 @@ public final class TranslateUtils {
             return results;
         }
         Style style = Style.EMPTY.withColor(TextFormatting.GRAY);
-        for (String line : getFormattedString(value).split("[\r\n]+|%n")) {
+        for (String line : getFormattedString(value).split("(\\r?\\n)|(%n)")) {
             results.add(new StringTextComponent(line).setStyle(style));
         }
         return results;
@@ -41,26 +46,6 @@ public final class TranslateUtils {
         TranslationTextComponent text = new ColorFixedTranslationTextComponent(key, args);
         text.setStyle(Style.EMPTY.withColor(TextFormatting.GRAY));
         return text;
-    }
-
-    private static class ColorFixedTranslationTextComponent extends TranslationTextComponent {
-
-        public ColorFixedTranslationTextComponent(String p_i45160_1_, Object... p_i45160_2_) {
-            super(p_i45160_1_, p_i45160_2_);
-        }
-
-        @SuppressWarnings("NullableProblems")
-        @OnlyIn(Dist.CLIENT)
-        @Override
-        public <T> Optional<T> visitSelf(ITextProperties.IStyledTextAcceptor<T> acceptor, Style initStyle) {
-            String[] lastStyle = {""};
-            return super.visitSelf((style1, value) -> {
-                String embeddedStyle = lastStyle[0];
-                lastStyle[0] = embeddedStyle + getEmbeddedStyle(value);
-                return acceptor.accept(style1, embeddedStyle + getFormattedString(value));
-            }, initStyle);
-        }
-
     }
 
     public static String getEmbeddedStyle(String value) {
@@ -107,5 +92,52 @@ public final class TranslateUtils {
         value = value.replace("\n", System.lineSeparator());
         value = value.replace("%n", System.lineSeparator());
         return value;
+    }
+
+
+    private static class ColorFixedTranslationTextComponent extends TranslationTextComponent {
+
+        public ColorFixedTranslationTextComponent(String p_i45160_1_, Object... p_i45160_2_) {
+            super(p_i45160_1_, p_i45160_2_);
+        }
+
+        @SuppressWarnings("NullableProblems")
+        @OnlyIn(Dist.CLIENT)
+        @Override
+        public <T> Optional<T> visitSelf(ITextProperties.IStyledTextAcceptor<T> acceptor, Style initStyle) {
+            String[] lastStyle = {""};
+            return super.visitSelf((style1, value) -> {
+                String embeddedStyle = lastStyle[0];
+                lastStyle[0] = embeddedStyle + getEmbeddedStyle(value);
+                return acceptor.accept(style1, embeddedStyle + getFormattedString(value));
+            }, initStyle);
+        }
+
+    }
+
+    public static class Name {
+
+        public static TranslationTextComponent of(ISkinType skinType) {
+            if (skinType == SkinTypes.UNKNOWN) {
+                return title("skinType.armourers_workshop.all");
+            }
+            String path = skinType.getRegistryName().getPath();
+            return title("skinType.armourers_workshop." + path);
+        }
+
+        public static TranslationTextComponent of(ISkinPartType skinPartType) {
+            String path = skinPartType.getRegistryName().getPath();
+            String key = "skinPartType.armourers_workshop." + path;
+            TranslationTextComponent text = title(key);
+            if (!text.getString().equals(key)) {
+                return text;
+            }
+            return title("skinPartType.armourers_workshop.all.base");
+        }
+
+        public static TranslationTextComponent of(ISkinPaintType paintType) {
+            String path = paintType.getRegistryName().getPath();
+            return title("paintType.armourers_workshop." + path);
+        }
     }
 }

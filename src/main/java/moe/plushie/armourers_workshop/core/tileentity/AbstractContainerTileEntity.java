@@ -25,6 +25,10 @@ public abstract class AbstractContainerTileEntity extends LockableLootTileEntity
 
     public abstract void writeToNBT(CompoundNBT nbt);
 
+    public void sendBlockUpdates() {
+
+    }
+
     @Override
     public void load(BlockState state, CompoundNBT nbt) {
         super.load(state, nbt);
@@ -49,6 +53,7 @@ public abstract class AbstractContainerTileEntity extends LockableLootTileEntity
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         CompoundNBT nbt = pkt.getTag();
         this.readFromNBT(nbt);
+        this.sendBlockUpdates();
     }
 
     @Override

@@ -72,14 +72,14 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             ITransform<M> op = transformer.items.get(transformType);
             if (op != null) {
                 op.apply(matrixStack, model, transformType, bakedPart);
-                SkinUtils.apply(matrixStack, entity, bakedPart.getPart(), partialTicks);
+                SkinUtils.apply(matrixStack, bakedPart.getPart(), partialTicks, entity);
                 return;
             }
         }
         ITransform<M> op = transformer.armors.get(partType);
         if (op != null && model != null) {
             op.apply(matrixStack, model, transformType, bakedPart);
-            SkinUtils.apply(matrixStack, entity, bakedPart.getPart(), partialTicks);
+            SkinUtils.apply(matrixStack, bakedPart.getPart(), partialTicks, entity);
         }
     }
 

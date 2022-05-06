@@ -1,14 +1,13 @@
 package moe.plushie.armourers_workshop.core.skin;
 
+import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
-import moe.plushie.armourers_workshop.core.skin.data.SkinIdentifier;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +25,6 @@ public class Skin implements ISkin {
 
     private final int id = COUNTER.incrementAndGet();
 
-    public SkinIdentifier requestId;
     public int serverId = -1;
     public int paintTextureId;
     //    public SkinModelTexture skinModelTexture;

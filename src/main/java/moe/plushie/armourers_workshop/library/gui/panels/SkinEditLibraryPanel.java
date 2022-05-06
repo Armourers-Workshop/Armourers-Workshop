@@ -172,7 +172,7 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     private AWTextField addTextField(int x, int y, int width, int height, String key) {
         AWTextField textField = new AWTextField(font, x, y, width, height, getDisplayText(key));
         textField.setMaxLength(255);
-        addWidget(textField);
+        addButton(textField);
         return textField;
     }
 

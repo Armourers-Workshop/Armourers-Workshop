@@ -2,7 +2,8 @@ package moe.plushie.armourers_workshop.utils;
 
 import net.minecraft.util.ResourceLocation;
 
-// The path of ResourceLocation does not support uppercase, but there are uppercase in the old data
+// The path of ResourceLocation does not support uppercase,
+// but there are uppercase in the old data
 public class SkinResourceLocation extends ResourceLocation {
 
     private final String realPath;

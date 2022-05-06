@@ -5,19 +5,11 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.utils.SkinUtils;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Matrix4f;
 
 public class SkinCubeFaceRenderer {
-
-    private static final byte[][][] FACE_VERTEXES = new byte[][][]{
-            {{1, 1, 1}, {1, 1, 0}, {0, 1, 0}, {0, 1, 1}, {0, 1, 0}},  // -y
-            {{0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {1, 0, 1}, {0, -1, 0}}, // +y
-            {{1, 0, 1}, {1, 1, 1}, {0, 1, 1}, {0, 0, 1}, {0, 0, 1}},  // -z
-            {{0, 0, 0}, {0, 1, 0}, {1, 1, 0}, {1, 0, 0}, {0, 0, -1}}, // +z
-            {{1, 0, 0}, {1, 1, 0}, {1, 1, 1}, {1, 0, 1}, {1, 0, 0}},  // -x
-            {{0, 0, 1}, {0, 1, 1}, {0, 1, 0}, {0, 0, 0}, {-1, 0, 0}}, // +x
-    };
 
     private static final byte[][] FACE_MARK_TEXTURES = {
             {1, 1}, {1, 0}, {0, 0}, {0, 1}
@@ -39,7 +31,7 @@ public class SkinCubeFaceRenderer {
         Matrix4f mat = matrixStack.last().pose();
         ISkinPaintType paintType = paintColor.getPaintType();
         int color = paintColor.getRGB();
-        byte[][] vertexes = FACE_VERTEXES[direction.get3DDataValue()];
+        byte[][] vertexes = SkinUtils.FACE_VERTEXES[direction.get3DDataValue()];
         for (int i = 0; i < 4; ++i) {
             builder.vertex(mat, x + vertexes[i][0], y + vertexes[i][1], z + vertexes[i][2])
                     .color(color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff, alpha & 0xff)

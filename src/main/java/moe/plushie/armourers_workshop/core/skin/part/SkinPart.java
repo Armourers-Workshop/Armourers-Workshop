@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPart;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.utils.CustomVoxelShape;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import net.minecraft.util.math.BlockPos;

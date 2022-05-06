@@ -3,11 +3,12 @@ package moe.plushie.armourers_workshop.core.render.bake;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
 import moe.plushie.armourers_workshop.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
@@ -34,7 +35,7 @@ public class BakedSkinPart {
         this.descriptor = quads.getColorInfo();
     }
 
-    public void forEach(BiConsumer<SkinRenderType, ArrayList<ColouredFace>> action) {
+    public void forEach(BiConsumer<SkinRenderType, ArrayList<SkinCubeFace>> action) {
         quads.forEach(action);
     }
 
