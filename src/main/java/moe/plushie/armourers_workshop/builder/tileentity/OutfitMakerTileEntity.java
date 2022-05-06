@@ -78,7 +78,8 @@ public class OutfitMakerTileEntity extends AbstractContainerTileEntity {
         return 21;
     }
 
-    private void sendBlockUpdates() {
+    @Override
+    public void sendBlockUpdates() {
         if (level != null) {
             BlockState state = getBlockState();
             level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.BLOCK_UPDATE);

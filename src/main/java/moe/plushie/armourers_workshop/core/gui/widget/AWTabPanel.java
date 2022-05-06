@@ -30,26 +30,12 @@ public class AWTabPanel extends Screen {
         this.baseKey = baseKey;
     }
 
-    @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float p_230430_4_) {
-        for (IGuiEventListener listener : children) {
-            if (listener instanceof Widget) {
-                Widget widget = (Widget)listener;
-                if (widget.visible) {
-                    widget.render(matrixStack, mouseX, mouseY, p_230430_4_);
-                }
-            }
-        }
-    }
-
     protected void renderTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
         if (this.lastHoveredButton != null) {
             this.renderTooltip(matrixStack, lastHoveredButton.getMessage(), mouseX, mouseY);
             this.lastHoveredButton = null;
         }
     }
-
-
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -82,6 +68,14 @@ public class AWTabPanel extends Screen {
         return results;
     }
 
+    @Override
+    public boolean keyPressed(int p_231046_1_, int p_231046_2_, int p_231046_3_) {
+        if (forwardToFocused(s -> s.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_))) {
+            return true;
+        }
+        return super.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_);
+    }
+
     protected void addHoveredButton(Button button, MatrixStack matrixStack, int mouseX, int mouseY) {
         this.lastHoveredButton = button;
     }
@@ -90,7 +84,7 @@ public class AWTabPanel extends Screen {
         AWLabel label = new AWLabel(x, y, width, height, message);
         label.setTextColor(4210752);
         label.active = false;
-        addWidget(label);
+        addButton(label);
         return label;
     }
 
@@ -109,11 +103,11 @@ public class AWTabPanel extends Screen {
         return TranslateUtils.title("inventory.armourers_workshop.common" + "." + key);
     }
 
-    public ITextComponent getDisplayText(String... parts) {
-        StringBuilder key1 = new StringBuilder(baseKey);
-        for (String part : parts) {
-            key1.append(".").append(part);
-        }
-        return TranslateUtils.title(key1.toString());
+    protected ITextComponent getDisplayText(String key) {
+        return TranslateUtils.title(baseKey + "." + key);
+    }
+
+    protected ITextComponent getDisplayText(String key, Object... objects) {
+        return TranslateUtils.title(baseKey + "." + key, objects);
     }
 }

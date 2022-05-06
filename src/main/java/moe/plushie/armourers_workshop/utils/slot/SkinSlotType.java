@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public enum SkinSlotType {
+
     HEAD("head", getMaxSlotSize(), SkinTypes.ARMOR_HEAD),
     CHEST("chest", getMaxSlotSize(), SkinTypes.ARMOR_CHEST),
     LEGS("legs", getMaxSlotSize(), SkinTypes.ARMOR_LEGS),

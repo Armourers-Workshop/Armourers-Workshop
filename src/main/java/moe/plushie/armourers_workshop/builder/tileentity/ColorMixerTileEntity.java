@@ -45,7 +45,8 @@ public class ColorMixerTileEntity extends AbstractTileEntity implements IPaintPr
         this.sendBlockUpdates();
     }
 
-    private void sendBlockUpdates() {
+    @Override
+    public void sendBlockUpdates() {
         if (level != null) {
             BlockState state = getBlockState();
             level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.BLOCK_UPDATE);

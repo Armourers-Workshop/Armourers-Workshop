@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.cube;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.utils.SkinResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,12 +37,12 @@ public final class SkinCubes {
 
     private static SkinCube register(String name, int id, boolean glass, boolean glowing) {
         SkinCube cube = new SkinCube(id, glass, glowing);
-        cube.setRegistryName("armourers:" + name);
-        if (ALL_CUBES.containsKey(cube.getRegistryName())) {
+        cube.setRegistryName(new SkinResourceLocation("armourers", name));
+        if (ALL_CUBES.containsKey(cube.getRegistryName().toString())) {
             ModLog.warn("A mod tried to register a cube with an id that is in use.");
             return cube;
         }
-        ALL_CUBES.put(cube.getRegistryName(), cube);
+        ALL_CUBES.put(cube.getRegistryName().toString(), cube);
         ALL_CUBES_MAPPING[cube.getId() & 0xFF] = cube;
         ModLog.debug("Registering Skin Cube '{}'", cube.getRegistryName());
         return cube;

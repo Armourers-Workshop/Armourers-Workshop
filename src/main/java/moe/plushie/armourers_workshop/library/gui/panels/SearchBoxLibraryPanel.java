@@ -80,7 +80,7 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel {
         AWTextField textField = new AWTextField(font, x, y, width, height, getDisplayText(key));
         textField.setMaxLength(255);
         textField.setReturnHandler(this::search);
-        addWidget(textField);
+        addButton(textField);
         return textField;
     }
 

@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;

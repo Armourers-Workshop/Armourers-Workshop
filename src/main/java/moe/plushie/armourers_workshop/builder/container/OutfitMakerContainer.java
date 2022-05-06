@@ -9,8 +9,8 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
@@ -27,7 +27,6 @@ import net.minecraft.util.IWorldPosCallable;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 
 @SuppressWarnings("NullableProblems")

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import moe.plushie.armourers_workshop.utils.SkinItemUseContext;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;

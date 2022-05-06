@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.core.skin;
+package moe.plushie.armourers_workshop.core.skin.data;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;

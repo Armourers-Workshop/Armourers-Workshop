@@ -105,17 +105,17 @@ public class SkinWardrobeColourSetting extends AWTabPanel {
             this.enableAutoPick = enableAutoPick;
             this.paintType = paintType;
             this.slot = SkinSlotType.DYE.getIndex() + SkinSlotType.getSlotIndex(paintType);
-            this.title = getDisplayText("label", name);
+            this.title = getDisplayText("label." + name);
         }
 
         public void reload() {
             int posX = leftPos + x + 16;
             int posY = topPos + y + 9;
             String name = paintType.getRegistryName().getPath();
-            addIconButton(posX, posY, 144, 192, this::start, getDisplayText("button", name, "select"));
-            addIconButton(posX + 17, posY, 208, 160, this::clear, getDisplayText("button", name, "clear"));
+            addIconButton(posX, posY, 144, 192, this::start, getDisplayText("button." + name + ".select"));
+            addIconButton(posX + 17, posY, 208, 160, this::clear, getDisplayText("button." + name + ".clear"));
             if (enableAutoPick) {
-                addIconButton(posX + 17 * 2, posY, 144, 208, this::autoPick, getDisplayText("button", name, "auto"));
+                addIconButton(posX + 17 * 2, posY, 144, 208, this::autoPick, getDisplayText("button." + name + ".auto"));
             }
             color = getColor();
         }

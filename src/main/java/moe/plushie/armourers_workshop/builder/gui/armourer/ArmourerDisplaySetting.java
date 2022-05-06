@@ -136,6 +136,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting {
             }
             lastSource = PlayerTextureDescriptor.Source.NONE;
             lastDescriptor = newValue;
+            tileEntity.setTextureDescriptor(newValue);
             UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.TEXTURE_DESCRIPTOR;
             UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, newValue);
             NetworkHandler.getInstance().sendToServer(packet);
@@ -184,6 +185,6 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting {
         if (Strings.isNotBlank(defaultValue)) {
             textBox.setValue(defaultValue);
         }
-        addWidget(textBox);
+        addButton(textBox);
     }
 }

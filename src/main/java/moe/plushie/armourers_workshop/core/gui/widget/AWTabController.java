@@ -6,12 +6,14 @@ import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
@@ -227,10 +229,25 @@ public class AWTabController<Target> extends Screen {
 
     @Override
     public boolean changeFocus(boolean p_231049_1_) {
-        if (selectedTab != null) {
-            return selectedTab.screen.changeFocus(p_231049_1_);
+        if (forwardToFocused(s -> s.changeFocus(p_231049_1_))) {
+            return true;
         }
         return super.changeFocus(p_231049_1_);
+    }
+
+    @Override
+    public boolean keyPressed(int p_231046_1_, int p_231046_2_, int p_231046_3_) {
+        if (forwardToFocused(s -> s.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_))) {
+            return true;
+        }
+        return super.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_);
+    }
+
+    private boolean forwardToFocused(Predicate<Screen> consumer) {
+        if (selectedTab != null) {
+            return consumer.test(selectedTab.screen);
+        }
+        return false;
     }
 
     public class Tab implements IGuiEventListener {

@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
-import moe.plushie.armourers_workshop.core.skin.SkinUsedCounter;
+import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.utils.KeyBindings;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -50,7 +50,7 @@ public class ItemTooltipHandler {
         if (ModConfig.Client.tooltipSkinAuthor && Strings.isNotBlank(skin.getAuthorName())) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinAuthor", skin.getAuthorName().trim()));
         }
-        TextComponent textComponent = TranslateUtils.subtitle("skinType." + skin.getType().getRegistryName());
+        TextComponent textComponent = TranslateUtils.Name.of(skin.getType());
         tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", textComponent));
         return tooltip;
     }
@@ -89,7 +89,7 @@ public class ItemTooltipHandler {
         }
 
         if (ModConfig.Client.tooltipSkinType) {
-            TextComponent textComponent = TranslateUtils.subtitle("skinType." + skin.getType().getRegistryName());
+            TextComponent textComponent = TranslateUtils.Name.of(skin.getType());
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinType", textComponent));
         }
 

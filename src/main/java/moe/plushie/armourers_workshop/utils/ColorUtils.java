@@ -257,7 +257,7 @@ public class ColorUtils {
         }
         ISkinPaintType paintType = color.getPaintType();
         String hexColor = String.format("#%06x", rgb & 0xffffff);
-        ITextComponent paintName = TranslateUtils.subtitle("paintType." + paintType.getRegistryName());
+        ITextComponent paintName = TranslateUtils.Name.of(paintType);
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.colour", rgb & 0xffffff));
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.hex", hexColor));
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.paintType", paintName));

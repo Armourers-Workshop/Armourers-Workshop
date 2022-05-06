@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.init.common;
 
+import com.google.common.collect.Lists;
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -8,6 +10,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
+import moe.plushie.armourers_workshop.core.skin.exporter.SkinExportManager;
 import moe.plushie.armourers_workshop.init.command.FileArgument;
 import moe.plushie.armourers_workshop.init.command.ListArgument;
 import moe.plushie.armourers_workshop.init.command.ReflectArgumentBuilder;
@@ -29,6 +32,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -55,6 +60,7 @@ public class ModCommands {
                 .then(Commands.literal("setSkin").then(targets().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
                 .then(Commands.literal("giveSkin").then(targets().then(skins().executes(Executor::giveSkin))))
                 .then(Commands.literal("clearSkin").then(targets().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
+                .then(Commands.literal("exportSkin").then(skinFormats().then(outputFileName().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
                 .then(Commands.literal("resyncWardrobe").then(targets().executes(Executor::resyncWardrobe)))
                 .then(Commands.literal("setUnlockedSlots").then(targets().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
     }
@@ -66,6 +72,19 @@ public class ModCommands {
     static ArgumentBuilder<CommandSource, ?> slots() {
         return Commands.argument("slot", IntegerArgumentType.integer(1, 10));
     }
+
+    static ArgumentBuilder<CommandSource, ?> skinFormats() {
+        return Commands.argument("format", ListArgument.list(SkinExportManager.getExporters()));
+    }
+
+    static ArgumentBuilder<CommandSource, ?> scale() {
+        return Commands.argument("scale", FloatArgumentType.floatArg(0.0001f, 10f));
+    }
+
+    static ArgumentBuilder<CommandSource, ?> outputFileName() {
+        return Commands.argument("name", StringArgumentType.string());
+    }
+
 
     static ArgumentBuilder<CommandSource, ?> resizableSlotAmounts() {
         return Commands.argument("amount", IntegerArgumentType.integer(1, 10));
@@ -177,6 +196,26 @@ public class ModCommands {
             }
             return 0;
         }
+
+
+        static int exportSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
+            String format = ListArgument.getString(context, "format");
+            String filename = StringArgumentType.getString(context, "name");
+            float scale = 1.0f;
+            if (containsNode(context, "scale")) {
+                scale = FloatArgumentType.getFloat(context, "scale");
+            }
+            PlayerEntity player = context.getSource().getPlayerOrException();
+            ItemStack itemStack = player.getMainHandItem();
+            Skin skin = SkinLoader.getInstance().loadSkin(SkinDescriptor.of(itemStack).getIdentifier());
+            if (skin == null) {
+                return 0; // not found
+            }
+            File file = new File(AWCore.getSkinLibraryDirectory(), "model-exports");
+            SkinExportManager.exportSkin(skin, format, file, filename, scale);
+            return 0;
+        }
+
 
         static int resyncWardrobe(CommandContext<CommandSource> context) throws CommandSyntaxException {
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {

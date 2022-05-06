@@ -11,9 +11,6 @@ import java.util.HashSet;
 
 public final class BlockUtils {
 
-    private BlockUtils() {
-    }
-
 //    public static int determineOrientation(BlockPos pos, LivingEntity entity) {
 //        return determineOrientation(pos.getX(), pos.getY(), pos.getZ(), entity);
 //    }

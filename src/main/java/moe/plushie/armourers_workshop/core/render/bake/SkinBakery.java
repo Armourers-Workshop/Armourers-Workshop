@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBuffer
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
-import moe.plushie.armourers_workshop.core.skin.SkinUsedCounter;
+import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
 import moe.plushie.armourers_workshop.init.common.ModConfig;

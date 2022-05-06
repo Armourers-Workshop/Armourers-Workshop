@@ -3,17 +3,15 @@ package moe.plushie.armourers_workshop.core.skin.cube;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.render.bake.ColouredFace;
-import moe.plushie.armourers_workshop.core.skin.SkinUsedCounter;
+import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.LegacyCubeHelper;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
+import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.CustomVoxelShape;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.util.Direction;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -22,7 +20,7 @@ import java.io.IOException;
 public class SkinCubeData {
 
     // 0 = down, 1 = up, 2 = south, 3 = north, 4 = west, 5 = east
-    public final static byte[] DIRECTION_TO_SIDE = {
+    private final static byte[] DIRECTION_TO_SIDE = {
             0, // down(0)
             1, // up(1)
             3, // north(2)
@@ -69,24 +67,25 @@ public class SkinCubeData {
         return bufferSlice.at(index).getZ();
     }
 
-
-    @OnlyIn(Dist.CLIENT)
-    public ColouredFace getCubeFace(int index, Direction dir) {
-        BufferSlice slice = bufferSlice.at(index);
+    public SkinCubeFace getCubeFace(int index, Direction dir) {
+        // in 1.12: 0 = down, 1 = up, 2 = south, 3 = north, 4 = west, 5 = east
+        // in 1.16: 0 = down, 1 = up, 2 = north, 3 = south, 4 = west, 5 = east
+        // so, north is south contents, south is north contents
         byte side = DIRECTION_TO_SIDE[dir.get3DDataValue()];
+        BufferSlice slice = bufferSlice.at(index);
         ISkinCube cube = SkinCubes.byId(slice.getId());
         ISkinPaintType paintType = SkinPaintTypes.byId(slice.getPaintType(side));
 
-        int alpha = 127;
+        int alpha = 255;
         int color = 0xff000000;
         color |= (slice.getR(side) & 0xff) << 16;
         color |= (slice.getG(side) & 0xff) << 8;
         color |= (slice.getB(side) & 0xff);
-        if (!cube.isGlass()) {
-            alpha = 255;
+        if (cube.isGlass()) {
+            alpha = 127;
         }
 
-        return new ColouredFace(slice.getX(), slice.getY(), slice.getZ(), PaintColor.of(color, paintType), alpha, dir, cube);
+        return new SkinCubeFace(slice.getX(), slice.getY(), slice.getZ(), PaintColor.of(color, paintType), alpha, dir, cube);
     }
 
     public CustomVoxelShape getRenderShape() {

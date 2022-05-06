@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.library.data;
 
 import com.mojang.datafixers.util.Pair;
-import moe.plushie.armourers_workshop.api.skin.ISkinLibrary;
-import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
+import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.util.Strings;

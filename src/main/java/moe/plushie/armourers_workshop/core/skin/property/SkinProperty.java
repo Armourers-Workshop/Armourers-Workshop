@@ -1,6 +1,6 @@
-package moe.plushie.armourers_workshop.core.skin.data.property;
+package moe.plushie.armourers_workshop.core.skin.property;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinProperty;
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 
 public class SkinProperty<T> implements ISkinProperty<T> {
 
@@ -50,7 +50,7 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     public static final SkinProperty<Double> WINGS_MIN_ANGLE = new SkinProperty<>("wingsMinAngle", 0D, true);
     public static final SkinProperty<Double> WINGS_IDLE_SPEED = new SkinProperty<>("wingsIdleSpeed", 6000D, true);
     public static final SkinProperty<Double> WINGS_FLYING_SPEED = new SkinProperty<>("wingsFlyingSpeed", 350D, true);
-    public static final SkinProperty<String> WINGS_MOVMENT_TYPE = new SkinProperty<>("wingsMovmentType", MovementType.EASE.toString(), true);
+    public static final SkinProperty<String> WINGS_MOVMENT_TYPE = new SkinProperty<>("wingsMovmentType", MovementType.EASE.name(), true);
 
     private final String key;
     private final T defaultValue;
@@ -78,7 +78,21 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     public boolean isMultipleKey() {
         return multipleKey;
     }
-//    public T getValue(ISkinProperties properties) {
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SkinProperty<?> that = (SkinProperty<?>) o;
+        return key.equals(that.key);
+    }
+
+    @Override
+    public int hashCode() {
+        return key.hashCode();
+    }
+
+    //    public T getValue(ISkinProperties properties) {
 //        return (T) properties.getProperty(key, defaultValue);
 //    }
 //

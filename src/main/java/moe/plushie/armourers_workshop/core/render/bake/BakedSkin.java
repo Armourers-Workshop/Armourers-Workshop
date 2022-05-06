@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.SkinUsedCounter;
+import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.CustomVoxelShape;

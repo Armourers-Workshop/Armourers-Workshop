@@ -298,27 +298,34 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
             return true;
         }
         switch (key) {
-            case 259:
+            case GLFW.GLFW_KEY_ESCAPE:
+                // when text field is editing, must end editing, but we do not intercept events.
+                if (this.isEditing) {
+                    this.setFocus(false);
+                }
+                return false;
+
+            case GLFW.GLFW_KEY_BACKSPACE:
                 if (this.isEditable) {
                     this.shiftPressed = false;
                     this.deleteText(-1);
                     this.shiftPressed = Screen.hasShiftDown();
                 }
                 return true;
-            case 260:
-            case 266:
-            case 267:
-            default:
-                return false;
 
-            case 261:
+            case GLFW.GLFW_KEY_DELETE:
                 if (this.isEditable) {
                     this.shiftPressed = false;
                     this.deleteText(1);
                     this.shiftPressed = Screen.hasShiftDown();
                 }
-
                 return true;
+
+            case 260:
+            case 266:
+            case 267:
+                return false;
+
             case GLFW.GLFW_KEY_RIGHT:
                 if (Screen.hasControlDown()) {
                     this.moveCursorTo(this.getWordPosition(1));

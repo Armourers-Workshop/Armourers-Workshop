@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.api.skin;
 
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3i;

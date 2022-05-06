@@ -2,10 +2,11 @@ package moe.plushie.armourers_workshop.core.skin.cube;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import net.minecraft.block.Block;
+import net.minecraft.util.ResourceLocation;
 
 public class SkinCube implements ISkinCube {
 
-    protected String registryName;
+    protected ResourceLocation registryName;
     protected final int id;
     protected final boolean glass;
     protected final boolean glowing;
@@ -17,11 +18,11 @@ public class SkinCube implements ISkinCube {
     }
 
     @Override
-    public String getRegistryName() {
+    public ResourceLocation getRegistryName() {
         return registryName;
     }
 
-    public void setRegistryName(String registryName) {
+    public void setRegistryName(ResourceLocation registryName) {
         this.registryName = registryName;
     }
 
@@ -38,11 +39,5 @@ public class SkinCube implements ISkinCube {
     @Override
     public int getId() {
         return id;
-    }
-
-    @Override
-    public Block getMinecraftBlock() {
-//        return ModBlocks.SKIN_CUBE;
-        return null;
     }
 }

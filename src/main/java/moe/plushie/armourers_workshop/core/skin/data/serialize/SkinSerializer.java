@@ -2,13 +2,13 @@ package moe.plushie.armourers_workshop.core.skin.data.serialize;
 
 import com.mojang.datafixers.util.Pair;
 import io.netty.buffer.ByteBuf;
-import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.data.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.v12.SkinSerializerV12;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.v13.SkinSerializerV13;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.v14.SkinSerializerV14;

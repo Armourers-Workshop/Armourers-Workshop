@@ -1,16 +1,13 @@
-package moe.plushie.armourers_workshop.core.skin.data.property;
+package moe.plushie.armourers_workshop.core.skin.property;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinProperties;
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.nbt.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SkinProperties implements ISkinProperties {
 
@@ -91,7 +88,11 @@ public class SkinProperties implements ISkinProperties {
     }
 
     public <T> void put(SkinProperty<T> property, T value) {
-        properties.put(property.getKey(), value);
+        if (Objects.equals(value, property.getDefaultValue())) {
+            properties.remove(property.getKey());
+        } else {
+            properties.put(property.getKey(), value);
+        }
     }
 
     public <T> void remove(SkinProperty<T> property) {
@@ -109,7 +110,11 @@ public class SkinProperties implements ISkinProperties {
 
 
     public void put(String key, Object value) {
-        properties.put(key, value);
+        if (value == null) {
+            properties.remove(key);
+        } else {
+            properties.put(key, value);
+        }
     }
 
     public Set<Map.Entry<String, Object>> entrySet() {

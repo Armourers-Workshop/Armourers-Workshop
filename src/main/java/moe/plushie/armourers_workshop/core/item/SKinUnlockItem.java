@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -32,7 +33,7 @@ public class SKinUnlockItem extends FlavouredItem {
         if (wardrobe == null || skinType == null) {
             return ActionResult.fail(itemStack);
         }
-        ITextComponent skinName = new TranslationTextComponent("skinType." + skinType.getRegistryName());
+        ITextComponent skinName = TranslateUtils.Name.of(skinType);
         if (wardrobe.getUnlockedSize(slotType) >= slotType.getMaxSize()) {
             player.sendMessage(new TranslationTextComponent("chat.armourers_workshop.slotUnlockedFailed", skinName), player.getUUID());
             return ActionResult.fail(itemStack);

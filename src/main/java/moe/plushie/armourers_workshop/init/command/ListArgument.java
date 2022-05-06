@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.command;
 
+import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.StringReader;
@@ -15,6 +16,7 @@ import net.minecraft.network.PacketBuffer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
 public class ListArgument implements ArgumentType<String> {
@@ -24,6 +26,10 @@ public class ListArgument implements ArgumentType<String> {
     public ListArgument(Collection<String> list) {
         super();
         this.list = list;
+    }
+
+    public static ListArgument list(Iterable<String> values) {
+        return new ListArgument(Lists.newArrayList(values));
     }
 
     public static String getString(CommandContext<CommandSource> context, String name) {

@@ -1,5 +1,5 @@
-package moe.plushie.armourers_workshop.core.skin.exporter;//package moe.plushie.armourers_workshop.core.skin;
-//
+package moe.plushie.armourers_workshop.core.skin.exporter;
+
 //import java.io.File;
 //import java.io.FileOutputStream;
 //import java.io.IOException;

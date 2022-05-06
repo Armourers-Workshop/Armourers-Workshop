@@ -31,7 +31,7 @@ public class AWInputDialog extends AWConfirmDialog {
     @Override
     protected void init() {
         super.init();
-        addWidget(textField);
+        addButton(textField);
         textField.x = leftPos + 10;
         textField.y = topPos + 30;
         textField.setWidth(imageWidth - 20);
@@ -53,13 +53,10 @@ public class AWInputDialog extends AWConfirmDialog {
     }
 
     @Override
-        public void renderContentLayer(MatrixStack matrixStack, int mouseX, int mouseY, float p_230430_4_) {
-            if (this.textField != null) {
-                this.textField.render(matrixStack, mouseX, mouseY, p_230430_4_);
-            }
-            if (!this.isValidText) {
-                super.renderContentLayer(matrixStack, mouseX, mouseY, p_230430_4_);
-            }
+    public void renderContentLayer(MatrixStack matrixStack, int mouseX, int mouseY, float p_230430_4_) {
+        if (!this.isValidText) {
+            super.renderContentLayer(matrixStack, mouseX, mouseY, p_230430_4_);
+        }
     }
 
     @Override
