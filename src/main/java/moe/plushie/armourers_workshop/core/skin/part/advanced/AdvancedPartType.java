@@ -15,10 +15,6 @@ public class AdvancedPartType extends SkinPartType {
     }
 
     @Override
-    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
-    }
-
-    @Override
     public int getMinimumMarkersNeeded() {
         return 0;
     }

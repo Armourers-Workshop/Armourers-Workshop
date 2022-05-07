@@ -17,6 +17,7 @@ import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.utils.extened.AWMatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -68,18 +69,16 @@ public class SkinRenderer<T extends Entity, M extends Model> {
 
     public void apply(T entity, M model, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart, float partialTicks, MatrixStack matrixStack) {
         ISkinPartType partType = bakedPart.getType();
+        ITransform<M> op = null;
         if (partType instanceof ICanHeld) {
-            ITransform<M> op = transformer.items.get(transformType);
-            if (op != null) {
-                op.apply(matrixStack, model, transformType, bakedPart);
-                SkinUtils.apply(matrixStack, bakedPart.getPart(), partialTicks, entity);
-                return;
-            }
+            op = transformer.items.get(transformType);
         }
-        ITransform<M> op = transformer.armors.get(partType);
+        if (op == null) {
+            op = transformer.armors.get(partType);
+        }
         if (op != null && model != null) {
             op.apply(matrixStack, model, transformType, bakedPart);
-            SkinUtils.apply(matrixStack, bakedPart.getPart(), partialTicks, entity);
+            SkinUtils.apply(AWMatrixStack.wrap(matrixStack), bakedPart.getPart(), partialTicks, entity);
         }
     }
 

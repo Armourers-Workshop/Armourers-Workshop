@@ -3,7 +3,7 @@
   "pattern": [
     " T ",
     "#X#",
-    " H "
+    " W "
   ],
   "key": {
     "T": {
@@ -12,8 +12,8 @@
     "X": {
       "item": "minecraft:armor_stand"
     },
-    "H": {
-      "tag": "forge:chests/ender"
+    "W": {
+      "item": "minecraft:lodestone"
     },
     "#": {
       "tag": "armourers_workshop:skin_cubes"

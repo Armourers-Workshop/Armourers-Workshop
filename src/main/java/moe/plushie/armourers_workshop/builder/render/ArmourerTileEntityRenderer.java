@@ -33,5 +33,38 @@ public class ArmourerTileEntityRenderer<T extends ArmourerTileEntity> extends Ti
     @Override
     public void render(T entity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffers, int light, int overlay) {
 
+
     }
+
+    //        public static void renderBuildingGrid(ISkinType skinType, float scale, boolean showGuides, SkinProperties skinProps, boolean multiblock) {
+//            for (int i = 0; i < skinType.getSkinParts().size(); i++) {
+//                ISkinPartType skinPartType = skinType.getSkinParts().get(i);
+//                IPoint3D partOffset = skinPartType.getOffset();
+//                GlStateManager.translate(partOffset.getX() * scale, partOffset.getY() * scale, partOffset.getZ() * scale);
+//                if (skinType == SkinTypeRegistry.skinBlock) {
+//                    if (skinPartType.getPartName().equals("multiblock") & multiblock) {
+//                        // GL11.glColor4f(1F, 1F, 0.0F, 0.2F);
+//                        renderBuildingGrid(((SkinBlock) SkinTypeRegistry.skinBlock).partBase, scale, showGuides, skinProps, 1F, 1F, 0.0F, 0.2F);
+//                        GL11.glPolygonOffset(6F, 6F);
+//                        // GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
+//                        renderBuildingGrid(skinPartType, scale, showGuides, skinProps, 0.5F, 0.5F, 0.5F, 0.25F);
+//                    } else if (skinPartType.getPartName().equals("base") & !multiblock) {
+//                        // GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
+//                        renderBuildingGrid(skinPartType, scale, showGuides, skinProps, 0.5F, 0.5F, 0.5F, 0.25F);
+//                    }
+//                } else {
+//                    // GL11.glColor4f(0.5F, 0.5F, 0.5F, 0.25F);
+//                    renderBuildingGrid(skinPartType, scale, showGuides, skinProps, 0.5F, 0.5F, 0.5F, 0.25F);
+//                }
+//                GlStateManager.translate(-partOffset.getX() * scale, -partOffset.getY() * scale, -partOffset.getZ() * scale);
+//            }
+//        }
+//
+//        public static void renderBuildingGrid(ISkinPartType skinPartType, float scale, boolean showGuides, SkinProperties skinProps, float r, float g, float b, float a) {
+//            GlStateManager.translate(0, skinPartType.getBuildingSpace().getY() * scale, 0);
+//            GlStateManager.scale(-1, -1, 1);
+//            ArmourerRenderHelper.renderGuidePart(skinPartType, scale, showGuides, skinProps, r, g, b, a);
+//            GlStateManager.scale(-1, -1, 1);
+//            GlStateManager.translate(0, -skinPartType.getBuildingSpace().getY() * scale, 0);
+//        }
 }

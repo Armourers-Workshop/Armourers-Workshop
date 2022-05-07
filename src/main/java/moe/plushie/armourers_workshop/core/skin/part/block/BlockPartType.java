@@ -15,10 +15,6 @@ public class BlockPartType extends SkinPartType {
     }
 
     @Override
-    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
-    }
-
-    @Override
     public int getMaximumMarkersNeeded() {
         return 1;
     }

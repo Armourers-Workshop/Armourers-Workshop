@@ -64,7 +64,6 @@ public abstract class SkinPartType implements ISkinPartType {
         return new Vector3i(0, 0, 0);
     }
 
-
     @Override
     public boolean isModelOverridden(ISkinProperties skinProps) {
         return false;

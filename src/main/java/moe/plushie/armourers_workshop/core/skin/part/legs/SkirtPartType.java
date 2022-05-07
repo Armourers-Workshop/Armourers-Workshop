@@ -16,19 +16,6 @@ public class SkirtPartType extends SkinPartType {
     }
 
     @Override
-    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
-//        GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
-//        GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
-//        GL11.glTranslated(2 * scale, 0, 0);
-//        ModelLegs.MODEL.renderLeftLeft(scale);
-//        GL11.glTranslated(-4 * scale, 0, 0);
-//        ModelLegs.MODEL.renderRightLeg(scale);
-//        GL11.glTranslated(2 * scale, 0, 0);
-//        GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
-//        GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
-    }
-
-    @Override
     public Vector3i getRenderOffset() {
         return new Vector3i(0, 12, 0);
     }

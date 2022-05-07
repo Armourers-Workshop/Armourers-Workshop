@@ -1,13 +1,11 @@
 package moe.plushie.armourers_workshop.api.skin;
 
-import moe.plushie.armourers_workshop.core.skin.Skin;
-
 import java.io.File;
+import java.util.Collection;
 
 public interface ISkinExporter {
-    
-    public String[] getFileExtensions();
-    
-    public void exportSkin(Skin skin, File filePath, String filename, float scale);
-    
+
+    Collection<String> getExtensions();
+
+    void exportSkin(ISkin skin, File filePath, String filename, float scale) throws Exception;
 }
