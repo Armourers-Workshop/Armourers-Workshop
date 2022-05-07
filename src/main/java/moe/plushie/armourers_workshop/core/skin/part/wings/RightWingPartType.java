@@ -16,15 +16,6 @@ public class RightWingPartType extends SkinPartType implements ICanRotation {
     }
 
     @Override
-    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
-        //GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
-        //GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
-        //ModelChest.MODEL.renderChest(scale);
-        //GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
-        //GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
-    }
-
-    @Override
     public Vector3i getRenderOffset() {
         return new Vector3i(0, 0, 2);
     }

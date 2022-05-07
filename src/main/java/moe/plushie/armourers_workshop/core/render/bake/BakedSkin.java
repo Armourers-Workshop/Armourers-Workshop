@@ -16,7 +16,8 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import moe.plushie.armourers_workshop.utils.CustomVoxelShape;
+import moe.plushie.armourers_workshop.utils.extened.AWMatrix4f;
+import moe.plushie.armourers_workshop.utils.extened.AWVoxelShape;
 import moe.plushie.armourers_workshop.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
@@ -134,8 +135,8 @@ public class BakedSkin implements IBakedSkin {
             SkinCache.returnKey(key);
             return bounds;
         }
-        Matrix4f matrix = TrigUtils.scale(1, 1, 1);
-        CustomVoxelShape shape = getRenderShape(entity, model, ItemCameraTransforms.TransformType.NONE);
+        Matrix4f matrix = Matrix4f.createScaleMatrix(1, 1, 1);
+        AWVoxelShape shape = getRenderShape(entity, model, ItemCameraTransforms.TransformType.NONE);
         if (rotation != null) {
             matrix.multiply(TrigUtils.rotate(rotation.x(), rotation.y(), rotation.z(), true));
             shape.mul(matrix);
@@ -153,16 +154,16 @@ public class BakedSkin implements IBakedSkin {
         return bounds;
     }
 
-    public CustomVoxelShape getRenderShape(Entity entity, Model model, ItemCameraTransforms.TransformType transformType) {
+    public AWVoxelShape getRenderShape(Entity entity, Model model, ItemCameraTransforms.TransformType transformType) {
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity);
         if (renderer == null) {
-            return CustomVoxelShape.empty();
+            return AWVoxelShape.empty();
         }
-        CustomVoxelShape shape = CustomVoxelShape.empty();
+        AWVoxelShape shape = AWVoxelShape.empty();
         MatrixStack matrixStack = new MatrixStack();
         for (BakedSkinPart part : skinParts) {
             if (renderer.prepare(entity, model, this, part, transformType)) {
-                CustomVoxelShape shape1 = part.getRenderShape().copy();
+                AWVoxelShape shape1 = part.getRenderShape().copy();
                 matrixStack.pushPose();
                 renderer.apply(entity, model, transformType, part, 0, matrixStack);
                 shape1.mul(matrixStack.last().pose());

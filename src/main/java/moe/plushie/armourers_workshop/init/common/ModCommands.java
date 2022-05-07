@@ -9,11 +9,13 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.skin.exporter.SkinExportManager;
 import moe.plushie.armourers_workshop.init.command.FileArgument;
 import moe.plushie.armourers_workshop.init.command.ListArgument;
 import moe.plushie.armourers_workshop.init.command.ReflectArgumentBuilder;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -29,6 +31,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -50,6 +53,11 @@ import java.util.stream.Stream;
 
 
 public class ModCommands {
+
+    private static final DynamicCommandExceptionType ERROR_MISSING_SKIN = new DynamicCommandExceptionType(ob -> {
+        return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingSkin", ob);
+    });
+
 
     /// :/armourers setSkin|giveSkin|clearSkin
     public static LiteralArgumentBuilder<CommandSource> commands() {
@@ -78,7 +86,7 @@ public class ModCommands {
     }
 
     static ArgumentBuilder<CommandSource, ?> scale() {
-        return Commands.argument("scale", FloatArgumentType.floatArg(0.0001f, 10f));
+        return Commands.argument("scale", FloatArgumentType.floatArg());
     }
 
     static ArgumentBuilder<CommandSource, ?> outputFileName() {
@@ -197,7 +205,6 @@ public class ModCommands {
             return 0;
         }
 
-
         static int exportSkin(CommandContext<CommandSource> context) throws CommandSyntaxException {
             String format = ListArgument.getString(context, "format");
             String filename = StringArgumentType.getString(context, "name");
@@ -207,12 +214,22 @@ public class ModCommands {
             }
             PlayerEntity player = context.getSource().getPlayerOrException();
             ItemStack itemStack = player.getMainHandItem();
-            Skin skin = SkinLoader.getInstance().loadSkin(SkinDescriptor.of(itemStack).getIdentifier());
+            String identifier = SkinDescriptor.of(itemStack).getIdentifier();
+            Skin skin = SkinLoader.getInstance().loadSkin(identifier);
             if (skin == null) {
-                return 0; // not found
+                throw ERROR_MISSING_SKIN.create(identifier);
             }
-            File file = new File(AWCore.getSkinLibraryDirectory(), "model-exports");
-            SkinExportManager.exportSkin(skin, format, file, filename, scale);
+            float resolvedScale = scale;
+            player.sendMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.processing", filename), player.getUUID());
+            Util.backgroundExecutor().execute(() -> {
+                try {
+                    SkinExportManager.exportSkin(skin, format, filename, resolvedScale);
+                    player.sendMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.success", filename), player.getUUID());
+                } catch (Exception e) {
+                    player.sendMessage(TranslateUtils.title("commands.armourers_workshop.armourers.exportSkin.failure", filename), player.getUUID());
+                    e.printStackTrace();
+                }
+            });
             return 0;
         }
 

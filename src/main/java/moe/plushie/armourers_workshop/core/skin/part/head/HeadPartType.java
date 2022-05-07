@@ -19,15 +19,6 @@ public class HeadPartType extends SkinPartType implements ISkinPartTypeTextured 
     }
 
     @Override
-    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
-//        GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
-//        GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
-//        ModelHead.MODEL.render(scale, !SkinProperty.MODEL_HIDE_OVERLAY_HEAD.getValue(skinProps));
-//        GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
-//        GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
-    }
-
-    @Override
     public Point getTextureSkinPos() {
         return new Point(0, 0);
     }

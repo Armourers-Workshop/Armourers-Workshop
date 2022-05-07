@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPart;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
-import moe.plushie.armourers_workshop.utils.CustomVoxelShape;
+import moe.plushie.armourers_workshop.utils.extened.AWVoxelShape;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -20,7 +20,7 @@ public class SkinPart implements ISkinPart {
 
     protected ISkinPartType partType;
 
-    protected CustomVoxelShape renderShape;
+    protected AWVoxelShape renderShape;
     protected Rectangle3i partBounds;
 
     protected SkinProperties properties;
@@ -57,9 +57,9 @@ public class SkinPart implements ISkinPart {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public CustomVoxelShape getRenderShape() {
+    public AWVoxelShape getRenderShape() {
         if (getType() == SkinPartTypes.ITEM_ARROW) {
-            return CustomVoxelShape.empty();
+            return AWVoxelShape.empty();
         }
         return renderShape;
     }

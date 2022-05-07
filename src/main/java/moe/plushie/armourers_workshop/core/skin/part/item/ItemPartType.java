@@ -15,13 +15,4 @@ public class ItemPartType extends SkinPartType implements ICanHeld {
         //Offset -1 to match old skin system.
         this.offset = new Vector3i(0, -1, 0);
     }
-
-    @Override
-    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
-//        GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
-//        GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
-//        ModelHand.MODEL.render(scale);
-//        GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
-//        GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
-    }
 }

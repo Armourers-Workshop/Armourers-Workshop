@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
+import moe.plushie.armourers_workshop.utils.extened.AWMatrix4f;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -327,7 +328,7 @@ public class SkinnableTileEntity extends RotableContainerTileEntity {
         }
         float f = 1 / 16f;
         Rectangle3f box = bakedSkin.getRenderBounds(null, null, null).copy();
-        box.mul(TrigUtils.scale(f, -f, f));
+        box.mul(AWMatrix4f.createScaleMatrix(f, -f, f).unwrap());
         return box;
     }
 

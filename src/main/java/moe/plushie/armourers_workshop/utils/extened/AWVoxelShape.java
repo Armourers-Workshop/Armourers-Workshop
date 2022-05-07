@@ -1,6 +1,7 @@
-package moe.plushie.armourers_workshop.utils;
+package moe.plushie.armourers_workshop.utils.extened;
 
 import com.google.common.collect.Lists;
+import moe.plushie.armourers_workshop.utils.Rectangle3f;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector4f;
 
@@ -9,20 +10,20 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-public class CustomVoxelShape {
+public class AWVoxelShape {
 
     private Rectangle3f box;
     private ArrayList<Vector4f> vertexes;
 
-    public CustomVoxelShape() {
+    public AWVoxelShape() {
     }
 
-    public static CustomVoxelShape empty() {
-        return new CustomVoxelShape();
+    public static AWVoxelShape empty() {
+        return new AWVoxelShape();
     }
 
-    public static CustomVoxelShape box(Rectangle3f bounds) {
-        CustomVoxelShape shape = new CustomVoxelShape();
+    public static AWVoxelShape box(Rectangle3f bounds) {
+        AWVoxelShape shape = new AWVoxelShape();
         shape.box = bounds;
         return shape;
     }
@@ -77,7 +78,7 @@ public class CustomVoxelShape {
         box = null;
     }
 
-    public void add(CustomVoxelShape shape1) {
+    public void add(AWVoxelShape shape1) {
         List<Vector4f> list = getVertexes();
         list.addAll(shape1.getVertexes());
         box = null;
@@ -106,8 +107,8 @@ public class CustomVoxelShape {
         vertexes = Lists.newArrayList(uniquesVertexes);
     }
 
-    public CustomVoxelShape copy() {
-        CustomVoxelShape shape = new CustomVoxelShape();
+    public AWVoxelShape copy() {
+        AWVoxelShape shape = new AWVoxelShape();
         if (box != null) {
             shape.box = box;
         }

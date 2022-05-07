@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.utils.CustomVoxelShape;
+import moe.plushie.armourers_workshop.utils.extened.AWVoxelShape;
 import moe.plushie.armourers_workshop.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import net.minecraftforge.api.distmarker.Dist;
@@ -24,17 +24,17 @@ public class PackedQuad {
     private final HashMap<SkinRenderType, ArrayList<SkinCubeFace>> allFaces = new HashMap<>();
 
     private final Rectangle3i bounds;
-    private final CustomVoxelShape renderShape;
+    private final AWVoxelShape renderShape;
     private final ColorDescriptor colorInfo = new ColorDescriptor();
 
-    public PackedQuad(Rectangle3i bounds, CustomVoxelShape renderShape, ArrayList<SkinCubeFace> faces) {
+    public PackedQuad(Rectangle3i bounds, AWVoxelShape renderShape, ArrayList<SkinCubeFace> faces) {
         this.bounds = bounds;
         this.renderShape = renderShape;
         this.loadFaces(faces);
     }
 
     public static PackedQuad from(SkinCubeData data) {
-        CustomVoxelShape renderShape = data.getRenderShape();
+        AWVoxelShape renderShape = data.getRenderShape();
         Rectangle3i bounds = new Rectangle3i(renderShape.bounds());
         return new PackedQuad(bounds, renderShape, SkinCuller.cullFaces(data, bounds));
     }
@@ -55,7 +55,7 @@ public class PackedQuad {
             });
             if (quads.size() != 0) {
                 Rectangle3i bounds = texturedModel.getBounds();
-                CustomVoxelShape renderShape = CustomVoxelShape.box(new Rectangle3f(bounds));
+                AWVoxelShape renderShape = AWVoxelShape.box(new Rectangle3f(bounds));
                 allQuads.put(texturedModel, new PackedQuad(bounds, renderShape, quads));
             }
         }
@@ -88,7 +88,7 @@ public class PackedQuad {
         return bounds;
     }
 
-    public CustomVoxelShape getRenderShape() {
+    public AWVoxelShape getRenderShape() {
         return renderShape;
     }
 

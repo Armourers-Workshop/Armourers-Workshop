@@ -51,14 +51,6 @@ public interface ISkinPartType {
         return 0;
     }
 
-
-    /**
-     * @param scale           Normally 0.0625F.
-     * @param showSkinOverlay
-     * @param showHelper
-     */
-    void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper);
-
     /**
      * Get the minimum number of markers needed for this skin part.
      *

@@ -16,21 +16,6 @@ public class LeftWingPartType extends SkinPartType implements ICanRotation {
     }
 
     @Override
-    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
-//        GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
-//
-//        GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
-//        GL11.glTranslated(0, 0, -2 * scale);
-//
-//        ModelChest.MODEL.renderChest(scale);
-//
-//        GL11.glTranslated(0, 0, 2 * scale);
-//        GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
-//
-//        GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
-    }
-
-    @Override
     public boolean isMirror() {
         return true;
     }

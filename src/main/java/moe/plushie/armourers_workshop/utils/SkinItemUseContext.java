@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
+import moe.plushie.armourers_workshop.utils.extened.AWMatrix4f;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -233,7 +234,7 @@ public class SkinItemUseContext extends BlockItemUseContext {
             ArrayList<SkinMarker> newMarkerList = new ArrayList<>();
             for (SkinMarker marker : markerList) {
                 Vector4f f = new Vector4f(marker.x, marker.y, marker.z, 1.0f);
-                f.transform(TrigUtils.scale(-1, -1, 1));
+                f.transform(AWMatrix4f.createScaleMatrix(-1, -1, 1).unwrap());
                 f.transform(q);
                 int x = Math.round(f.x());
                 int y = Math.round(f.y());

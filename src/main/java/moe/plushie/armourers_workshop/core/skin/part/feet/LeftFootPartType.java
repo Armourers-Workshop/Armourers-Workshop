@@ -19,15 +19,6 @@ public class LeftFootPartType extends SkinPartType implements ISkinPartTypeTextu
     }
 
     @Override
-    public void renderBuildingGuide(float scale, ISkinProperties skinProps, boolean showHelper) {
-//        GL11.glTranslated(0, this.buildingSpace.getY() * scale, 0);
-//        GL11.glTranslated(0, -this.guideSpace.getY() * scale, 0);
-//        ModelLegs.MODEL.renderLeftLeft(scale);
-//        GL11.glTranslated(0, this.guideSpace.getY() * scale, 0);
-//        GL11.glTranslated(0, -this.buildingSpace.getY() * scale, 0);
-    }
-
-    @Override
     public Point getTextureSkinPos() {
         return new Point(0, 16);
     }
