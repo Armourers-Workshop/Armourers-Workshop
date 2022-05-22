@@ -1,11 +1,9 @@
 package moe.plushie.armourers_workshop.builder.container;
 
-import moe.plushie.armourers_workshop.builder.tileentity.ColorMixerTileEntity;
 import moe.plushie.armourers_workshop.core.container.AbstractBlockContainer;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintPicker;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -13,9 +11,16 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 @SuppressWarnings("NullableProblems")
 public class ColourMixerContainer extends AbstractBlockContainer {
@@ -54,7 +59,7 @@ public class ColourMixerContainer extends AbstractBlockContainer {
                 Item item = itemStack.getItem();
                 if (item instanceof IPaintPicker && inventory.getItem(1).isEmpty()) {
                     ItemStack newItemStack = itemStack.copy();
-                    access.execute((world, pos) -> ((IPaintPicker) item).pickColor(world, pos, newItemStack, null));
+                    access.execute((world, pos) -> ((IPaintPicker) item).pickColor(buildContext(world, pos, newItemStack)));
                     inventory.setItem(0, ItemStack.EMPTY);
                     inventory.setItem(1, newItemStack);
                 }
@@ -72,5 +77,10 @@ public class ColourMixerContainer extends AbstractBlockContainer {
                 this.addSlot(new Slot(inventory, col + row * 9 + 9, slotsX + col * 18, slotsY + row * 18));
             }
         }
+    }
+
+    protected ItemUseContext buildContext(World world, BlockPos pos, ItemStack itemStack) {
+        BlockRayTraceResult traceResult = BlockRayTraceResult.miss(Vector3d.ZERO, Direction.NORTH, pos);
+        return new ItemUseContext(world, null, Hand.OFF_HAND, itemStack, traceResult);
     }
 }

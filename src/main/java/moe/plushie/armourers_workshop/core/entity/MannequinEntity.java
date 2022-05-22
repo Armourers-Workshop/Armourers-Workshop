@@ -26,6 +26,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Rotations;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
@@ -177,6 +178,11 @@ public class MannequinEntity extends ArmorStandEntity {
     }
 
     @Override
+    public ItemStack getPickedResult(RayTraceResult target) {
+        return createMannequinStack();
+    }
+
+    @Override
     public void setYBodyRot(float rot) {
         this.yRotO = this.yRot = rot;
         this.yBodyRotO = this.yBodyRot = 0;
@@ -236,14 +242,10 @@ public class MannequinEntity extends ArmorStandEntity {
     public void brokenByPlayer(DamageSource source) {
         PlayerEntity player = null;
         if (source.getEntity() instanceof PlayerEntity) {
-            player = (PlayerEntity) source.getEntity();
+             player = (PlayerEntity) source.getEntity();
         }
         if (player != null && !player.abilities.instabuild) {
-            ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN);
-            CompoundNBT entityTag = itemStack.getOrCreateTagElement(AWConstants.NBT.ENTITY);
-            AWDataSerializers.putFloat(entityTag, AWConstants.NBT.ENTITY_SCALE, getScale(), 1.0f);
-            AWDataSerializers.putTextureDescriptor(entityTag, AWConstants.NBT.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);
-            Block.popResource(this.level, this.blockPosition(), itemStack);
+            Block.popResource(this.level, this.blockPosition(), createMannequinStack());
         }
         this.brokenByAnything(source);
     }
@@ -257,6 +259,14 @@ public class MannequinEntity extends ArmorStandEntity {
         if (wardrobe != null) {
             wardrobe.dropAll(this::spawnAtLocation);
         }
+    }
+
+    protected ItemStack createMannequinStack() {
+        ItemStack itemStack = new ItemStack(ModItems.MANNEQUIN);
+        CompoundNBT entityTag = itemStack.getOrCreateTagElement(AWConstants.NBT.ENTITY);
+        AWDataSerializers.putFloat(entityTag, AWConstants.NBT.ENTITY_SCALE, getScale(), 1.0f);
+        AWDataSerializers.putTextureDescriptor(entityTag, AWConstants.NBT.ENTITY_TEXTURE, getTextureDescriptor(), PlayerTextureDescriptor.EMPTY);
+        return itemStack;
     }
 
     @OnlyIn(Dist.CLIENT)

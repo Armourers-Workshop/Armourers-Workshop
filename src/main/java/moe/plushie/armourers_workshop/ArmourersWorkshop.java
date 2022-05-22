@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop;
 
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.handler.PlayerNetworkHandler;
+import moe.plushie.armourers_workshop.core.handler.WorldHandler;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.common.*;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
@@ -60,6 +61,7 @@ public class ArmourersWorkshop {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new PlayerNetworkHandler());
+        MinecraftForge.EVENT_BUS.register(new WorldHandler());
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ModConfigSpec.CLIENT.getRight());
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModConfigSpec.COMMON.getRight());

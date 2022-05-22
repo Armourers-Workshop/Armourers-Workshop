@@ -172,7 +172,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
     }
 
     private void setLeftHandPart(MatrixStack matrixStack, M model) {
-        // vanilla: xRot=-90º yRot=180º x=-1/1 y=2 z=-10 xRot=180º
+        // vanilla: xRot=-90º yRot=180º x=-1/1 y=2 z=-10
         matrixStack.translate(0, 2, 2);
         matrixStack.scale(-1, 1, 1);
     }
@@ -181,7 +181,6 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         // vanilla: xRot=-90º yRot=180º x=-1/1 y=2 z=-10 xRot=180º
         matrixStack.translate(0, 2, 2);
     }
-
 
     public interface IPartAccessor<M extends Model> {
 

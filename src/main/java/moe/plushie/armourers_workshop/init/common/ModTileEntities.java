@@ -18,15 +18,14 @@
 
 package moe.plushie.armourers_workshop.init.common;
 
-import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
-import moe.plushie.armourers_workshop.builder.tileentity.ColorMixerTileEntity;
-import moe.plushie.armourers_workshop.builder.tileentity.OutfitMakerTileEntity;
-import moe.plushie.armourers_workshop.builder.tileentity.SkinCubeTileEntity;
+import moe.plushie.armourers_workshop.builder.block.BoundingBoxBlock;
+import moe.plushie.armourers_workshop.builder.tileentity.*;
 import moe.plushie.armourers_workshop.core.tileentity.DyeTableTileEntity;
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import moe.plushie.armourers_workshop.library.tileentity.GlobalSkinLibraryTileEntity;
 import moe.plushie.armourers_workshop.library.tileentity.SkinLibraryTileEntity;
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -43,7 +42,7 @@ public final class ModTileEntities {
     public static final TileEntityType<DyeTableTileEntity> DYE_TABLE = register("dye-table", TileEntityType.Builder.of(DyeTableTileEntity::new, ModBlocks.DYE_TABLE));
 
     public static final TileEntityType<ColorMixerTileEntity> COLOR_MIXER = register("colour-mixer", TileEntityType.Builder.of(ColorMixerTileEntity::new, ModBlocks.COLOR_MIXER));
-    public static final TileEntityType<ArmourerTileEntity> ARMOURER = register("armourer", TileEntityType.Builder.of(ArmourerTileEntity::new, ModBlocks.COLOR_MIXER));
+    public static final TileEntityType<ArmourerTileEntity> ARMOURER = register("armourer", TileEntityType.Builder.of(ArmourerTileEntity::new, ModBlocks.ARMOURER));
 
     public static final TileEntityType<SkinLibraryTileEntity> SKIN_LIBRARY = register("skin-library", TileEntityType.Builder.of(SkinLibraryTileEntity::new, ModBlocks.SKIN_LIBRARY));
     public static final TileEntityType<GlobalSkinLibraryTileEntity> SKIN_LIBRARY_GLOBAL = register("skin-library-global", TileEntityType.Builder.of(GlobalSkinLibraryTileEntity::new, ModBlocks.SKIN_LIBRARY_GLOBAL));
@@ -53,6 +52,8 @@ public final class ModTileEntities {
 
     public static final TileEntityType<SkinCubeTileEntity> SKIN_CUBE = register("skin-cube", TileEntityType.Builder.of(SkinCubeTileEntity::new, ModBlocks.SKIN_CUBE, ModBlocks.SKIN_CUBE_GLASS, ModBlocks.SKIN_CUBE_GLASS_GLOWING, ModBlocks.SKIN_CUBE_GLOWING));
     public static final TileEntityType<SkinCubeTileEntity> SKIN_CUBE_SR = register("skin-cube-sr", TileEntityType.Builder.of(SkinCubeTileEntity::new, ModBlocks.SKIN_CUBE, ModBlocks.SKIN_CUBE_GLASS, ModBlocks.SKIN_CUBE_GLASS_GLOWING, ModBlocks.SKIN_CUBE_GLOWING));
+
+    public static final TileEntityType<BoundingBoxTileEntity> BOUNDING_BOX = register("bounding-box", TileEntityType.Builder.of(BoundingBoxTileEntity::new, ModBlocks.BOUNDING_BOX));
 
     public static void forEach(Consumer<TileEntityType<?>> action) {
         REGISTERED_ENTITY_TYPES.values().forEach(action);

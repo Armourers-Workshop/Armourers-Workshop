@@ -15,7 +15,6 @@ import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.init.common.AWCore;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -27,7 +26,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -51,43 +49,33 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
     }
 
     @Override
-    public boolean pickColor(ItemUseContext context) {
-        return pickColor(context.getLevel(), context.getClickedPos(), context.getItemInHand(), context.getPlayer());
-    }
-
-    @Override
-    public boolean pickColor(World worldIn, BlockPos blockPos, ItemStack itemStack, @Nullable PlayerEntity player) {
+    public boolean pickColor(World worldIn, BlockPos blockPos, Direction direction, ItemUseContext context) {
+        ItemStack itemStack = context.getItemInHand();
         TileEntity tileEntity = worldIn.getBlockEntity(blockPos);
         if (tileEntity instanceof IPaintable) {
-            IPaintColor color = ((IPaintable) tileEntity).getColor(Direction.NORTH);
+            IPaintColor color = ((IPaintable) tileEntity).getColor(direction);
             ColorUtils.setColor(itemStack, color);
             return true;
         }
-        // if trigger not by the player, we check again to try could be applied
-        if (player == null) {
-            return applyColor(worldIn, blockPos, Direction.NORTH, itemStack, null);
+        // we required player must hold shift + right-click to apply the color,
+        // but someone calls this method directly,
+        // we must apply the color to the target.
+        if (context.getPlayer() == null) {
+            return applyColor(context);
         }
         return false;
     }
 
     @Override
-    public boolean applyColor(ItemUseContext context) {
-        PlayerEntity player = context.getPlayer();
-        if (player != null && !player.isShiftKeyDown()) {
-            return false;
-        }
-        return super.applyColor(context);
-    }
-
-    @Override
-    public boolean applyColor(World worldIn, BlockPos blockPos, Direction direction, ItemStack itemStack, @Nullable PlayerEntity player) {
+    public boolean applyColor(World world, BlockPos blockPos, Direction direction, IPaintUpdater updater, ItemUseContext context) {
+        ItemStack itemStack = context.getItemInHand();
         IPaintColor color = ColorUtils.getColor(itemStack);
         if (color == null) {
             return false;
         }
-        TileEntity tileEntity = worldIn.getBlockEntity(blockPos);
+        TileEntity tileEntity = world.getBlockEntity(blockPos);
         if (tileEntity instanceof IPaintProvider) {
-            IPaintProvider provider = (IPaintProvider)tileEntity;
+            IPaintProvider provider = (IPaintProvider) tileEntity;
             if (!ToolOptions.CHANGE_PAINT_TYPE.get(itemStack)) {
                 color = PaintColor.of(color.getRGB(), provider.getColor().getPaintType());
             }
@@ -95,6 +83,16 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean shouldPickColor(ItemUseContext context) {
+        return super.shouldApplyColor(context);
+    }
+
+    @Override
+    public boolean shouldApplyColor(ItemUseContext context) {
+        return IPaintPicker.super.shouldPickColor(context);
     }
 
     @Override

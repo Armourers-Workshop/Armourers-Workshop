@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.api.painting;
 
 import net.minecraft.util.Direction;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public interface IPaintable {
@@ -13,5 +12,9 @@ public interface IPaintable {
 
     default void setColors(Map<Direction, IPaintColor> colors) {
         colors.forEach(this::setColor);
+    }
+
+    default boolean shouldChangeColor(Direction direction) {
+        return true;
     }
 }

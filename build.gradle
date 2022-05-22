@@ -31,7 +31,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     compileOnly "mezz.jei:jei-${jei_minecraft_version}:${jei_version}:api"
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}")
+    //runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }

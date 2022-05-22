@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.builder.gui.PaintingToolScreen;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
 import moe.plushie.armourers_workshop.core.item.FlavouredItem;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintApplier;
+import moe.plushie.armourers_workshop.utils.BlockPaintUpdater;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
@@ -42,9 +43,8 @@ public abstract class AbstractPaintingToolItem extends FlavouredItem implements 
 
     @Override
     public ActionResultType useOn(ItemUseContext context) {
-        World world = context.getLevel();
         if (applyColor(context)) {
-            return ActionResultType.sidedSuccess(world.isClientSide);
+            return ActionResultType.SUCCESS;
         }
         return ActionResultType.PASS;
     }
@@ -81,7 +81,12 @@ public abstract class AbstractPaintingToolItem extends FlavouredItem implements 
     }
 
     @Override
-    public boolean isFullMode(World worldIn, BlockPos blockPos, ItemStack itemStack, @Nullable PlayerEntity player) {
+    public boolean isFullMode(World worldIn, BlockPos blockPos, ItemStack itemStack, ItemUseContext context) {
         return ToolOptions.FULL_BLOCK_MODE.get(itemStack);
+    }
+
+    @Override
+    public IPaintUpdater createPaintUpdater(ItemUseContext context) {
+        return new BlockPaintUpdater(this);
     }
 }

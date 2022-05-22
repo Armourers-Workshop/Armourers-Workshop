@@ -131,6 +131,10 @@ public class Rectangle3f {
         return new Vector3f(getMidX(), getMidY(), getMidZ());
     }
 
+    public Vector3f getOrigin() {
+        return new Vector3f(x, y, z);
+    }
+
     public Rectangle3f getBounds() {
         return new Rectangle3f(-width / 2, -height / 2, -depth / 2, width, height, depth);
     }

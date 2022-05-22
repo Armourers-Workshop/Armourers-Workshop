@@ -79,23 +79,23 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
     @Override
     public void end() {
         super.end();
-        if (pendingBuilders.isEmpty()) {
-            return;
+        if (!pendingBuilders.isEmpty()) {
+            Pipeline pipeline = new Pipeline();
+            for (SkinRenderObjectBuilder builder : pendingBuilders.values()) {
+                builder.endBatch(pipeline);
+            }
+            pendingBuilders.clear();
+            pipeline.end();
         }
-        Pipeline pipeline = new Pipeline();
-        for (SkinRenderObjectBuilder builder : pendingBuilders.values()) {
-            builder.endBatch(pipeline);
+        if (!pendingBuilders2.isEmpty()) {
+            pendingBuilders2.forEach((key, value) -> {
+                key.setupRenderState();
+                value.end();
+                WorldVertexBufferUploader.end(value);
+                key.clearRenderState();
+            });
+            pendingBuilders2.clear();
         }
-        pendingBuilders.clear();
-        pipeline.end();
-
-        pendingBuilders2.forEach((key, value) -> {
-            key.setupRenderState();
-            value.end();
-            WorldVertexBufferUploader.end(value);
-            key.clearRenderState();
-        });
-        pendingBuilders2.clear();
     }
 
 
@@ -121,8 +121,8 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
 
             float polygonOffset = getPolygonOffset();
             if (ModConfig.Client.enablePolygonOffset && polygonOffset != 0) {
-                RenderSystem.enablePolygonOffset();
                 RenderSystem.polygonOffset(-0.01f + polygonOffset, -0.01f);
+                RenderSystem.enablePolygonOffset();
             }
 
             if (renderType.usesLight()) {
@@ -144,8 +144,8 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
             }
 
             if (ModConfig.Client.enablePolygonOffset && polygonOffset != 0) {
-                RenderSystem.disablePolygonOffset();
                 RenderSystem.polygonOffset(0f, 0f);
+                RenderSystem.disablePolygonOffset();
             }
         }
     }
@@ -203,7 +203,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
     public static class Merger extends RenderType {
 
         protected Merger(String name, VertexFormat format, int mode, int bufferSize) {
-            super(name, format, mode, bufferSize, false, false, Merger::noop, Merger::noop);
+            super(name, format, mode, bufferSize, true, false, Merger::noop, Merger::noop);
         }
 
         protected static void noop() {

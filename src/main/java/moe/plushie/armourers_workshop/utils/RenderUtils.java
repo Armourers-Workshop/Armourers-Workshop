@@ -3,6 +3,8 @@ package moe.plushie.armourers_workshop.utils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
+import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
@@ -18,6 +20,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -73,8 +76,30 @@ public final class RenderUtils {
     public static final ResourceLocation TEX_SKIN_PANEL = AWCore.resource("textures/gui/controls/skin-panel.png");
 
     public static final ResourceLocation TEX_MARKERS = AWCore.resource("textures/tile-entities/markers.png");
+    public static final ResourceLocation TEX_GUIDES = AWCore.resource("textures/block/guide.png");
 
     private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
+
+    private static final byte[][][] FACE_MARK_TEXTURES = {
+            // 0, 1(w), 2(h), 3(d)
+            {{1, 3}, {1, 0}, {0, 0}, {0, 3}},
+            {{1, 3}, {1, 0}, {0, 0}, {0, 3}},
+
+            {{1, 2}, {1, 0}, {0, 0}, {0, 2}},
+            {{1, 2}, {1, 0}, {0, 0}, {0, 2}},
+
+            {{3, 2}, {3, 0}, {0, 0}, {0, 2}},
+            {{3, 2}, {3, 0}, {0, 0}, {0, 2}},
+    };
+
+    private static final byte[][][] FACE_MARK_VERTEXES = new byte[][][]{
+            {{0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {1, 0, 1}, {0, -1, 0}}, // -y
+            {{1, 1, 1}, {1, 1, 0}, {0, 1, 0}, {0, 1, 1}, {0, 1, 0}},  // +y
+            {{0, 0, 0}, {0, 1, 0}, {1, 1, 0}, {1, 0, 0}, {0, 0, -1}}, // -z
+            {{1, 0, 1}, {1, 1, 1}, {0, 1, 1}, {0, 0, 1}, {0, 0, 1}},  // +z
+            {{0, 0, 1}, {0, 1, 1}, {0, 1, 0}, {0, 0, 0}, {-1, 0, 0}}, // -x
+            {{1, 0, 0}, {1, 1, 0}, {1, 1, 1}, {1, 0, 1}, {1, 0, 0}},  // +x
+    };
 
     private static final ArrayList<Rectangle> clipBounds = new ArrayList<>();
 
@@ -360,6 +385,51 @@ public final class RenderUtils {
         float y1 = (float) rec.maxY;
         float z1 = (float) rec.maxZ;
         drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
+    }
+
+    public static void drawCube(MatrixStack matrix, Rectangle3i rect, float r, float g, float b, float a, IRenderTypeBuffer buffers) {
+        float x = rect.getMinX();
+        float y = rect.getMinY();
+        float z = rect.getMinZ();
+        float w = rect.getWidth();
+        float h = rect.getHeight();
+        float d = rect.getDepth();
+        drawCube(matrix, x, y, z, w, h, d, r, g, b, a, buffers);
+    }
+
+    public static void drawCube(MatrixStack matrix, Rectangle3f rect, float r, float g, float b, float a, IRenderTypeBuffer buffers) {
+        float x = rect.getMinX();
+        float y = rect.getMinY();
+        float z = rect.getMinZ();
+        float w = rect.getWidth();
+        float h = rect.getHeight();
+        float d = rect.getDepth();
+        drawCube(matrix, x, y, z, w, h, d, r, g, b, a, buffers);
+    }
+
+    public static void drawCube(MatrixStack matrix, float x, float y, float z, float w, float h, float d, float r, float g, float b, float a, IRenderTypeBuffer buffers) {
+        if (w == 0 || h == 0 || d == 0) {
+            return;
+        }
+        Matrix4f mat = matrix.last().pose();
+        SkinVertexBufferBuilder builder1 = SkinVertexBufferBuilder.getBuffer(buffers);
+        IVertexBuilder builder = builder1.getBuffer(SkinRenderType.GUIDES);
+        for (Direction dir : Direction.values()) {
+            drawFace(mat, dir, x, y, z, w, h, d, 0, 0, r, g, b, a, builder);
+        }
+    }
+
+
+    public static void drawFace(Matrix4f mat, Direction dir, float x, float y, float z, float w, float h, float d, float u, float v, float r, float g, float b, float a, IVertexBuilder builder) {
+        byte[][] vertexes = FACE_MARK_VERTEXES[dir.get3DDataValue()];
+        byte[][] textures = FACE_MARK_TEXTURES[dir.get3DDataValue()];
+        float[] values = {0, w, h, d};
+        for (int i = 0; i < 4; ++i) {
+            builder.vertex(mat, x + vertexes[i][0] * w, y + vertexes[i][1] * h, z + vertexes[i][2] * d)
+                    .color(r, g, b, a)
+                    .uv(u + values[textures[i][0]], v + values[textures[i][1]])
+                    .endVertex();
+        }
     }
 
 //    public static void disableLighting() {

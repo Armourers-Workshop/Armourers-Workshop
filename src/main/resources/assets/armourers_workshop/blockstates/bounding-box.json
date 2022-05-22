@@ -1,0 +1,9 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "armourers_workshop:block/skin-cube"
+      }
+    }
+  ]
+}

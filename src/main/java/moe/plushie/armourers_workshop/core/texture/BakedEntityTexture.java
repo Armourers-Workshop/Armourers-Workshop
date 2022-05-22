@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
+import moe.plushie.armourers_workshop.utils.SkyBox;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.NativeImage;
@@ -18,6 +19,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
@@ -61,17 +63,18 @@ public class BakedEntityTexture {
     }
 
     private void loadColors(int width, int height, boolean slim, IColorAccessor accessor) {
-        for (PlayerTextureModel model : PlayerTextureModel.getPlayerModels(width, height, slim)) {
-            HashMap<Integer, PaintColor> part = allParts.computeIfAbsent(model.getPartType(), k -> new HashMap<>());
-            allBounds.put(model.getPartType(), model.getBounds());
-            model.forEach((u, v, x, y, z, dir) -> {
-                int color = accessor.getRGB(u, v);
+        for (Map.Entry<ISkinPartType, SkyBox> entry : PlayerTextureModel.of(width, height, slim).entrySet()) {
+            SkyBox box = entry.getValue();
+            HashMap<Integer, PaintColor> part = allParts.computeIfAbsent(entry.getKey(), k -> new HashMap<>());
+            allBounds.put(entry.getKey(), box.getBounds());
+            box.forEach((texture, x, y, z, dir) -> {
+                int color = accessor.getRGB(texture.x, texture.y);
                 if ((color & 0xff000000) == 0) {
                     return; // ignore transparent color
                 }
                 PaintColor paintColor = PaintColor.of(color, SkinPaintTypes.NORMAL);
                 part.put(getPosKey(x, y, z, dir), paintColor);
-                allColors.put(getUVKey(u, v), paintColor);
+                allColors.put(getUVKey(texture.x, texture.y), paintColor);
             });
         }
         this.isLoaded = true;

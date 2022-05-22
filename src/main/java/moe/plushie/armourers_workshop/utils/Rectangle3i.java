@@ -1,7 +1,11 @@
 package moe.plushie.armourers_workshop.utils;
 
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector3i;
+
+import java.util.Objects;
 
 public class Rectangle3i {
 
@@ -29,6 +33,20 @@ public class Rectangle3i {
 
     public Rectangle3i(AxisAlignedBB box) {
         this((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.getXsize(), (int) box.getYsize(), (int) box.getZsize());
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rectangle3i that = (Rectangle3i) o;
+        return x == that.x && y == that.y && z == that.z && width == that.width && height == that.height && depth == that.depth;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z, width, height, depth);
     }
 
     public int getX() {
@@ -115,6 +133,9 @@ public class Rectangle3i {
         return this.z + this.depth;
     }
 
+    public Vector3i getOrigin() {
+        return new Vector3i(x, y, z);
+    }
 
     public AxisAlignedBB asAxisAlignedBB() {
         return new AxisAlignedBB(x, y, z, x + width, y + height, z + depth);
@@ -145,9 +166,12 @@ public class Rectangle3i {
     }
 
     public Rectangle3i offset(Vector3i point) {
-        return new Rectangle3i(x + point.getX(), y + point.getY(), z + point.getZ(), width, height, depth);
+        return offset(point.getX(), point.getY(), point.getZ());
     }
 
+    public Rectangle3i offset(int tx, int ty, int tz) {
+        return new Rectangle3i(x + tx, y + ty, z + tz, width, height, depth);
+    }
 
     @Override
     public String toString() {

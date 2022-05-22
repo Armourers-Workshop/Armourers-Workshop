@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.utils;
 
+import io.netty.buffer.*;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -8,6 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
@@ -25,11 +27,17 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.common.util.Constants;
+import org.apache.commons.io.IOUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
+import javax.annotation.Nullable;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.LongBuffer;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 @SuppressWarnings("NullableProblems")
 public class AWDataSerializers {
@@ -236,6 +244,48 @@ public class AWDataSerializers {
     public static void putInt(CompoundNBT nbt, String key, int value, int defaultValue) {
         if (defaultValue != value) {
             nbt.putInt(key, value);
+        }
+    }
+
+    @Nullable
+    public static int[] getPaintData(CompoundNBT nbt, String key) {
+        if (nbt != null && nbt.contains(key, Constants.NBT.TAG_BYTE_ARRAY)) {
+            try {
+                ByteBuf buffer = Unpooled.wrappedBuffer(nbt.getByteArray(key));
+                ByteBufInputStream bufferedStream = new ByteBufInputStream(buffer);
+                GZIPInputStream compressedStream = new GZIPInputStream(bufferedStream);
+                DataInputStream dataStream = new DataInputStream(compressedStream);
+                int length = dataStream.readInt();
+                int[] colors = new int[PlayerTexture.TEXTURE_SIZE];
+                for (int i = 0; i < length; ++i) {
+                    if (i < colors.length) {
+                        colors[i] = dataStream.readInt();
+                    }
+                }
+                IOUtils.closeQuietly(dataStream, compressedStream, bufferedStream);
+                return colors;
+            } catch (Exception ignored) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public static void putPaintData(CompoundNBT nbt, String key, int[] colors) {
+        if (colors != null) {
+            try {
+                ByteBuf buffer = Unpooled.buffer();
+                ByteBufOutputStream bufferedStream = new ByteBufOutputStream(buffer);
+                GZIPOutputStream compressedStream = new GZIPOutputStream(bufferedStream);
+                DataOutputStream dataStream = new DataOutputStream(compressedStream);
+                dataStream.writeInt(colors.length);
+                for (int color : colors) {
+                    dataStream.writeInt(color);
+                }
+                IOUtils.closeQuietly(dataStream, compressedStream, bufferedStream);
+                nbt.putByteArray(key, Arrays.copyOf(buffer.array(), buffer.writerIndex()));
+            } catch (Exception ignored) {
+            }
         }
     }
 

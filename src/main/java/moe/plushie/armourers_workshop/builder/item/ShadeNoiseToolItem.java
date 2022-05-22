@@ -5,17 +5,16 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
+import moe.plushie.armourers_workshop.builder.tileentity.BoundingBoxTileEntity;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -39,18 +38,24 @@ public class ShadeNoiseToolItem extends AbstractPaintingToolItem implements IBlo
     }
 
     @Override
-    public IPaintColor getMixedColor(World worldIn, IPaintable paintable, Direction direction, ItemStack itemStack, @Nullable PlayerEntity player) {
+    public IPaintColor getMixedColor(IPaintable target, Direction direction, ItemStack itemStack, ItemUseContext context) {
         int intensity = ToolOptions.INTENSITY.get(itemStack);
-        IPaintColor oldColor = paintable.getColor(direction);
+        IPaintColor oldColor = target.getColor(direction);
         int rgb = ColorUtils.addShadeNoise(oldColor.getRGB(), intensity);
         return PaintColor.of(rgb, oldColor.getPaintType());
     }
 
-    @Override
-    public boolean shouldApplyColor(World worldIn, IPaintable paintable, Direction direction, ItemStack itemStack, @Nullable PlayerEntity player) {
-        // in generate mode, client side generated data is invalided.
-        return !worldIn.isClientSide();
-    }
+//    @Override
+//    public boolean shouldApplyColor(World worldIn, IPaintable target, Direction direction, ItemUseContext context) {
+//        // for bounding box block, we need to apply color on both sides.
+//        if (target instanceof BoundingBoxTileEntity) {
+//            return true;
+//        }
+//        // we need to mix the colors with random.
+//        // random results is diff on the client/server side.
+//        // so we only mix the colors on the server side.
+//        return !worldIn.isClientSide();
+//    }
 }
 
 //public class ItemShadeNoiseTool extends AbstractModItem implements IConfigurableTool, IBlockPainter {

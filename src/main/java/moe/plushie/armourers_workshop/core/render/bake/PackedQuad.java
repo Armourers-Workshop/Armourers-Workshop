@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
+import moe.plushie.armourers_workshop.utils.SkyBox;
 import moe.plushie.armourers_workshop.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
@@ -12,6 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.extened.AWVoxelShape;
 import moe.plushie.armourers_workshop.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
+import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,6 +30,8 @@ public class PackedQuad {
     private final AWVoxelShape renderShape;
     private final ColorDescriptor colorInfo = new ColorDescriptor();
 
+    private int faceTotal = 0;
+
     public PackedQuad(Rectangle3i bounds, AWVoxelShape renderShape, ArrayList<SkinCubeFace> faces) {
         this.bounds = bounds;
         this.renderShape = renderShape;
@@ -39,24 +44,25 @@ public class PackedQuad {
         return new PackedQuad(bounds, renderShape, SkinCuller.cullFaces(data, bounds));
     }
 
-    public static HashMap<PlayerTextureModel, PackedQuad> from(int width, int height, int[] paintData) {
-        HashMap<PlayerTextureModel, PackedQuad> allQuads = new HashMap<>();
+    public static HashMap<ISkinPartType, PackedQuad> from(int width, int height, int[] paintData) {
+        HashMap<ISkinPartType, PackedQuad> allQuads = new HashMap<>();
         if (paintData == null || paintData.length == 0) {
             return allQuads;
         }
-        for (PlayerTextureModel texturedModel : PlayerTextureModel.getPlayerModels(width, height, false)) {
+        for (Map.Entry<ISkinPartType, SkyBox> entry : PlayerTextureModel.of(width, height, false).entrySet()) {
+            SkyBox box = entry.getValue();
             ArrayList<SkinCubeFace> quads = new ArrayList<>();
-            texturedModel.forEach((u, v, x, y, z, dir) -> {
-                PaintColor paintColor = PaintColor.of(paintData[v * width + u]);
+            box.forEach((texture, x, y, z, dir) -> {
+                PaintColor paintColor = PaintColor.of(paintData[texture.y * width + texture.x]);
                 if (paintColor.getPaintType() == SkinPaintTypes.NONE) {
                     return;
                 }
                 quads.add(new SkinCubeFace(x, y, z, paintColor, 255, dir, SkinCubes.SOLID));
             });
             if (quads.size() != 0) {
-                Rectangle3i bounds = texturedModel.getBounds();
+                Rectangle3i bounds = box.getBounds();
                 AWVoxelShape renderShape = AWVoxelShape.box(new Rectangle3f(bounds));
-                allQuads.put(texturedModel, new PackedQuad(bounds, renderShape, quads));
+                allQuads.put(entry.getKey(), new PackedQuad(bounds, renderShape, quads));
             }
         }
         return allQuads;
@@ -74,6 +80,7 @@ public class PackedQuad {
             SkinRenderType renderType = SkinRenderType.by(face.getCube());
             allFaces.computeIfAbsent(renderType, k -> new ArrayList<>()).add(face);
             colorInfo.add(face.getColor());
+            faceTotal += 1;
         }
         for (ArrayList<SkinCubeFace> filteredFaces : allFaces.values()) {
             filteredFaces.sort(Comparator.comparingInt(f -> f.getDirection().get3DDataValue()));
@@ -92,7 +99,7 @@ public class PackedQuad {
         return renderShape;
     }
 
-    static class CubeLoader {
-
+    public int getFaceTotal() {
+        return faceTotal;
     }
 }

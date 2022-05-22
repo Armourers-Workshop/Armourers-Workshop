@@ -1,9 +1,6 @@
 package moe.plushie.armourers_workshop.init.common;
 
-import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
-import moe.plushie.armourers_workshop.builder.block.ColorMixerBlock;
-import moe.plushie.armourers_workshop.builder.block.OutfitMakerBlock;
-import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
+import moe.plushie.armourers_workshop.builder.block.*;
 import moe.plushie.armourers_workshop.core.block.DyeTableBlock;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
@@ -46,6 +43,9 @@ public class ModBlocks {
     public static final Block SKIN_CUBE_GLASS = registerGlass("skin-cube-glass", SkinCubeBlock::new, p -> p.strength(1.5f, 6.f).noOcclusion());
     public static final Block SKIN_CUBE_GLOWING = register("skin-cube-glowing", SkinCubeBlock::new, p -> p.lightLevel(s -> 15).strength(1.5f, 6.f));
     public static final Block SKIN_CUBE_GLASS_GLOWING = registerGlass("skin-cube-glass-glowing", SkinCubeBlock::new, p -> p.lightLevel(s -> 15).strength(1.5f, 6.f).noOcclusion());
+
+    public static final Block BOUNDING_BOX = registerGlass("bounding-box", BoundingBoxBlock::new, p -> p.noDrops().noCollission());
+
 
     private static ToIntFunction<BlockState> litBlockEmission(int level) {
         return state -> state.getValue(BlockStateProperties.LIT) ? level : 0;

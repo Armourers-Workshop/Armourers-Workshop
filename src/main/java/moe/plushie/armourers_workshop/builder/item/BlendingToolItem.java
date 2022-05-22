@@ -9,9 +9,8 @@ import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +18,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -55,8 +53,9 @@ public class BlendingToolItem extends AbstractPaintingToolItem implements IBlock
     }
 
     @Override
-    public boolean applyColor(World worldIn, BlockPos blockPos, Direction direction, ItemStack itemStack, @Nullable PlayerEntity player) {
-        TileEntity tileEntity = worldIn.getBlockEntity(blockPos);
+    public boolean applyColor(World world, BlockPos blockPos, Direction direction, IPaintUpdater updater, ItemUseContext context) {
+        ItemStack itemStack = context.getItemInHand();
+        TileEntity tileEntity = world.getBlockEntity(blockPos);
         if (!(tileEntity instanceof IPaintable)) {
             return false;
         }
@@ -65,8 +64,8 @@ public class BlendingToolItem extends AbstractPaintingToolItem implements IBlock
         int radiusEffect = ToolOptions.RADIUS_EFFECT.get(itemStack);
         boolean restrictPlane = ToolOptions.PLANE_RESTRICT.get(itemStack);
 
-        ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(worldIn, blockPos, direction, radiusSample, restrictPlane);
-        ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(worldIn, blockPos, direction, radiusEffect, restrictPlane);
+        ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(world, blockPos, direction, radiusSample, restrictPlane);
+        ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(world, blockPos, direction, radiusEffect, restrictPlane);
 
         if (blockSamples.size() == 0 | blockEffects.size() == 0) {
             return false;
@@ -79,7 +78,7 @@ public class BlendingToolItem extends AbstractPaintingToolItem implements IBlock
         int validSamples = 0;
 
         for (BlockPos posSample : blockSamples) {
-            TileEntity targetEntity = worldIn.getBlockEntity(posSample);
+            TileEntity targetEntity = world.getBlockEntity(posSample);
             if (targetEntity instanceof IPaintable) {
                 IPaintColor color = ((IPaintable) targetEntity).getColor(direction);
                 int rgb = color.getRGB();
@@ -99,10 +98,10 @@ public class BlendingToolItem extends AbstractPaintingToolItem implements IBlock
         b = b / validSamples;
 
         for (BlockPos posEffect : blockEffects) {
-            TileEntity targetEntity = worldIn.getBlockEntity(posEffect);
+            TileEntity targetEntity = world.getBlockEntity(posEffect);
             if (targetEntity instanceof IPaintable) {
-                IPaintable paintable = (IPaintable) targetEntity;
-                IPaintColor oldColor = paintable.getColor(direction);
+                IPaintable target = (IPaintable) targetEntity;
+                IPaintColor oldColor = target.getColor(direction);
                 int oldRGB = oldColor.getRGB();
                 int oldR = ColorUtils.getRed(oldRGB);
                 int oldG = ColorUtils.getGreen(oldRGB);
@@ -121,8 +120,7 @@ public class BlendingToolItem extends AbstractPaintingToolItem implements IBlock
                 newB = MathHelper.clamp((int) newB, 0, 255);
 
                 PaintColor newColor = PaintColor.of(ColorUtils.getRGB((int) newR, (int) newG, (int) newB), oldColor.getPaintType());
-                paintable.setColor(direction, newColor);
-//                UndoManager.blockPainted(player, world, posEffect, oldColour, oldPaintType, face);
+                updater.add(target, direction, newColor);
             }
         }
         return true;

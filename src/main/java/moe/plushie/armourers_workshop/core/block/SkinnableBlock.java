@@ -28,6 +28,7 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -156,6 +157,15 @@ public class SkinnableBlock extends HorizontalFaceBlock {
             }
         }
         return state;
+    }
+
+    @Override
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+        SkinnableTileEntity tileEntity = getParentTileEntity(world, pos);
+        if (tileEntity != null) {
+            return tileEntity.getDescriptor().asItemStack();
+        }
+        return ItemStack.EMPTY;
     }
 
     @Override

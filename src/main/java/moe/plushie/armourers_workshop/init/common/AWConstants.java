@@ -21,12 +21,15 @@ public final class AWConstants {
     public final static class NBT {
         public static final String SKIN = "ArmourersWorkshop";
         public static final String SKIN_TYPE = "SkinType";
+        public static final String SKIN_PART_TYPE = "PartType";
         public static final String SKIN_IDENTIFIER = "Identifier";
         public static final String SKIN_DYE = "SkinDyes";
         public static final String SKIN_PROPERTIES = "SkinProperties";
 
         public static final String TEXTURE_URL = "URL";
         public static final String TEXTURE_PROFILE = "User";
+
+        public static final String PAINT_DATA = "PaintData";
 
         public static final String COLOR = "Color";
 
@@ -60,7 +63,7 @@ public final class AWConstants {
         public static final String ENTITY_POSE = "Pose";
 
         public static final String TILE_ENTITY_NAME = "Name";
-        public static final String TILE_ENTITY_FLAVOUR = "flavour";
+        public static final String TILE_ENTITY_FLAVOUR = "Flavour";
 
         public static final String TILE_ENTITY_ANGLE = "Angle";
         public static final String TILE_ENTITY_OFFSET = "Offset";

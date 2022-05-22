@@ -6,22 +6,21 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public interface IPaintPicker {
 
     default boolean pickColor(ItemUseContext context) {
-        PlayerEntity player = context.getPlayer();
-        if (player == null || !player.isShiftKeyDown()) {
-            return false;
+        if (shouldPickColor(context)) {
+            return pickColor(context.getLevel(), context.getClickedPos(), context.getClickedFace(), context);
         }
-        return pickColor(context.getLevel(), context.getClickedPos(), context.getItemInHand(), context.getPlayer());
+        return false;
     }
 
-    default boolean pickColor(World worldIn, BlockPos blockPos, ItemStack itemStack, @Nullable PlayerEntity player) {
+    default boolean pickColor(World worldIn, BlockPos blockPos, Direction direction, ItemUseContext context) {
+        ItemStack itemStack = context.getItemInHand();
         TileEntity tileEntity = worldIn.getBlockEntity(blockPos);
         if (tileEntity instanceof IPaintProvider) {
             IPaintColor color = ((IPaintProvider) tileEntity).getColor();
@@ -30,4 +29,10 @@ public interface IPaintPicker {
         }
         return false;
     }
+
+    default boolean shouldPickColor(ItemUseContext context) {
+        PlayerEntity player = context.getPlayer();
+        return player == null || player.isShiftKeyDown();
+    }
+
 }

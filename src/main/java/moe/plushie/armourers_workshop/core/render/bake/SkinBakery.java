@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.data.DataLoader;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder;
@@ -157,10 +158,11 @@ public final class SkinBakery {
             BakedSkinPart bakedPart = new BakedSkinPart(part, PackedQuad.from(data));
             bakedParts.add(bakedPart);
             usedCounter.add(data.getUsedCounter());
+            usedCounter.addFaceTotal(bakedPart.getFaceTotal());
             // part.clearCubeData();
         }
 
-        for (Map.Entry<PlayerTextureModel, PackedQuad> entry : PackedQuad.from(64, 32, skin.getPaintData()).entrySet()) {
+        for (Map.Entry<ISkinPartType, PackedQuad> entry : PackedQuad.from(64, 32, skin.getPaintData()).entrySet()) {
             PackedQuad quads = entry.getValue();
             TexturePart part = new TexturePart(entry.getKey(), quads.getBounds(), quads.getRenderShape());
             BakedSkinPart bakedPart = new BakedSkinPart(part, quads);
