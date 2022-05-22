@@ -2,16 +2,15 @@ package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
+import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -22,7 +21,8 @@ public class PaintRollerItem extends PaintbrushItem {
     }
 
     @Override
-    public boolean applyColor(World worldIn, BlockPos blockPos, Direction direction, ItemStack itemStack, @Nullable PlayerEntity player) {
+    public boolean applyColor(World world, BlockPos blockPos, Direction direction, IPaintUpdater updater, ItemUseContext context) {
+        ItemStack itemStack = context.getItemInHand();
         int changes = 0;
         int radius = ToolOptions.RADIUS.get(itemStack);
         for (int i = -radius + 1; i < radius; i++ ) {
@@ -42,8 +42,11 @@ public class PaintRollerItem extends PaintbrushItem {
                         targetPos = blockPos.offset(0, i, j);
                         break;
                 }
-                // TODO: (targetBlock != ModBlocks.BOUNDING_BOX & block != ModBlocks.BOUNDING_BOX) | (targetBlock == ModBlocks.BOUNDING_BOX & block == ModBlocks.BOUNDING_BOX)
-                if (super.applyColor(worldIn, targetPos, direction, itemStack, player)) {
+                // skin cube is not valid when bounding box is applied.
+                if (isBoundingBox(world, blockPos) != isBoundingBox(world, targetPos)) {
+                    continue;
+                }
+                if (super.applyColor(world, targetPos, direction, updater, context)) {
                     changes += 1;
                 }
             }
@@ -108,4 +111,7 @@ public class PaintRollerItem extends PaintbrushItem {
 //        }
 //    }
 
+    private boolean isBoundingBox(World world, BlockPos pos) {
+        return world.getBlockState(pos).is(ModBlocks.BOUNDING_BOX);
+    }
 }

@@ -31,6 +31,9 @@ public class PaintColor implements IPaintColor {
     }
 
     public static PaintColor of(int value) {
+        if (value == 0) {
+            return CLEAR;
+        }
         return of(value, getPaintType(value));
     }
 

@@ -75,8 +75,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting {
         }
         checkShowGuides.setSelected(tileEntity.isShowGuides());
         checkShowHelper.setSelected(tileEntity.isShowHelper());
-        checkShowGuides.visible = true;
-        checkShowHelper.visible = tileEntity.getSkinType() == SkinTypes.ITEM_BOW;
+        checkShowHelper.visible = tileEntity.usesHelper();
         // update input type
         if (lastSource == PlayerTextureDescriptor.Source.URL) {
             inputType.setMessage(getDisplayText("label.url"));

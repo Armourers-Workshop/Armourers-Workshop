@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -22,7 +23,7 @@ import java.util.OptionalDouble;
 public class SkinRenderType extends RenderType {
 
     private static final RenderState.TextureState COLORS = new TextureState(RenderUtils.TEX_CUBE, false, false);
-    private static final RenderState.TexturingState COLORS_OFFSET = new TexturingState("offset_texturing", () -> {
+    private static final RenderState.TexturingState COLORS_OFFSET = new TexturingState("aw_offset_texturing", () -> {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
         RenderSystem.pushMatrix();
         RenderSystem.loadIdentity();
@@ -35,16 +36,28 @@ public class SkinRenderType extends RenderType {
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
     });
 
+    protected static final RenderState.LayerState POLYGON_OFFSET_LAYERING2 = new RenderState.LayerState("aw_polygon_offset_layering", () -> {
+        RenderSystem.polygonOffset(3.0F, 3.0F);
+        RenderSystem.enablePolygonOffset();
+    }, () -> {
+        RenderSystem.polygonOffset(0.0F, 0.0F);
+        RenderSystem.disablePolygonOffset();
+    });
 
     public static final RenderType MAGIC = createImageType(RenderUtils.TEX_CIRCLE, true, true);
     public static final RenderType EARTH = createImageType(RenderUtils.TEX_EARTH, false, false);
 
     public static final RenderType ENTITY_OUTLINE = createEntityOutline();
 
+    public static final RenderType PLAYER_CUTOUT_NO_CULL = entityCutoutNoCull(DefaultPlayerSkin.getDefaultSkin());
+    public static final RenderType PLAYER_CUTOUT = entityCutout(DefaultPlayerSkin.getDefaultSkin());
+    public static final RenderType PLAYER_TRANSLUCENT = entityTranslucentCull(DefaultPlayerSkin.getDefaultSkin());
+
     public static final RenderType ITEM_TRANSLUCENT_WITHOUT_SORTED = create("aw_item_translucent", DefaultVertexFormats.NEW_ENTITY, GL11.GL_QUADS, 256, false, false, createTranslucentState());
     public static final RenderType LINES_WITHOUT_TEST = create("aw_box_lines", DefaultVertexFormats.POSITION_COLOR, 1, 256, RenderType.State.builder().setLineState(new RenderState.LineState(OptionalDouble.empty())).setLayeringState(VIEW_OFFSET_Z_LAYERING).setAlphaState(NO_ALPHA).setDepthTestState(NO_DEPTH_TEST).createCompositeState(false));
 
     public static final RenderType MARKER_FACE = createMarkerFace(RenderUtils.TEX_MARKERS);
+    public static final RenderType GUIDES = createMarkerFace2(RenderUtils.TEX_GUIDES);
 
     public static final SkinRenderType SOLID_FACE = new SkinRenderType("aw_quad_face", createSolidFace(false), true, false);
     public static final SkinRenderType LIGHTING_FACE = new SkinRenderType("aw_lighting_quad_face", createLightingPart(false), false, false);
@@ -80,6 +93,32 @@ public class SkinRenderType extends RenderType {
         }
     }
 
+    public static RenderType entityCutout(ResourceLocation texture) {
+        RenderType.State state = RenderType.State.builder()
+                .setTextureState(new RenderState.TextureState(texture, false, false))
+                .setTransparencyState(NO_TRANSPARENCY)
+                .setDiffuseLightingState(DIFFUSE_LIGHTING)
+                .setAlphaState(DEFAULT_ALPHA)
+                .setLightmapState(LIGHTMAP)
+                .setLayeringState(POLYGON_OFFSET_LAYERING2)
+                .setOverlayState(OVERLAY)
+                .createCompositeState(true);
+        return create("aw_entity_cutout_cull", DefaultVertexFormats.NEW_ENTITY, 7, 256, true, false, state);
+    }
+
+    public static RenderType entityTranslucentCull(ResourceLocation texture) {
+        RenderType.State state = RenderType.State.builder()
+                .setTextureState(new RenderState.TextureState(texture, false, false))
+                .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                .setDiffuseLightingState(DIFFUSE_LIGHTING)
+                .setAlphaState(DEFAULT_ALPHA)
+                .setLightmapState(LIGHTMAP)
+                .setLayeringState(POLYGON_OFFSET_LAYERING2)
+                .setOverlayState(OVERLAY)
+                .createCompositeState(true);
+        return create("aw_entity_translucent_cull", DefaultVertexFormats.NEW_ENTITY, 7, 256, true, true, state);
+    }
+
     public static RenderState colorOffset() {
         return COLORS_OFFSET;
     }
@@ -108,7 +147,7 @@ public class SkinRenderType extends RenderType {
                 .setCullState(NO_CULL)
                 .setLayeringState(layerState)
                 .createCompositeState(false);
-        return RenderType.create("entity_outline", DefaultVertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, states);
+        return RenderType.create("aw_entity_outline", DefaultVertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, states);
     }
 
 
@@ -121,7 +160,7 @@ public class SkinRenderType extends RenderType {
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                 .setOutputState(TRANSLUCENT_TARGET)
                 .createCompositeState(false);
-        return RenderType.create("magic", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, sort, states);
+        return RenderType.create("aw_magic", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, sort, states);
     }
 
     private static RenderType createMarkerFace(ResourceLocation texture) {
@@ -135,6 +174,18 @@ public class SkinRenderType extends RenderType {
                 .createCompositeState(false);
         return RenderType.create("aw_marker_face", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, true, true, states);
     }
+    private static RenderType createMarkerFace2(ResourceLocation texture) {
+        RenderType.State states = RenderType.State.builder()
+                .setCullState(NO_CULL)
+                .setTextureState(new TextureState(texture, false, false))
+                .setAlphaState(DEFAULT_ALPHA)
+                .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+//                .setOutputState(TRANSLUCENT_TARGET)
+                .setLayeringState(POLYGON_OFFSET_LAYERING)
+                .createCompositeState(false);
+        return RenderType.create("aw_guide_face", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, true, true, states);
+    }
+
 
     private static RenderType createSolidFace(boolean alpha) {
         ImmutableList<VertexFormatElement> elements = ImmutableList.<VertexFormatElement>builder()

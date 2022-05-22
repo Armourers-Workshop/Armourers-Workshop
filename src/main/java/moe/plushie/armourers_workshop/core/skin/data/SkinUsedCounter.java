@@ -13,6 +13,7 @@ public class SkinUsedCounter {
     private int dyeTotal;
 
     private int cubeTotal;
+    private int faceTotal;
     private final int[] cubeTotals = new int[SkinCubes.getTotalCubes()];
 
     public SkinUsedCounter() {
@@ -45,6 +46,10 @@ public class SkinUsedCounter {
                 dyeTotal += 1;
             }
         }
+    }
+
+    public void addFaceTotal(int total) {
+        this.faceTotal += total;
     }
 
     public void reset() {

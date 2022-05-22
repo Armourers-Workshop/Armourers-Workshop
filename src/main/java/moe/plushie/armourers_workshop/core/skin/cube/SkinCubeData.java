@@ -19,15 +19,15 @@ import java.io.IOException;
 
 public class SkinCubeData {
 
-    // 0 = down, 1 = up, 2 = south, 3 = north, 4 = west, 5 = east
-    private final static byte[] DIRECTION_TO_SIDE = {
-            0, // down(0)
-            1, // up(1)
-            3, // north(2)
-            2, // south(3)
-            4, // west(4)
-            5, // east(5)
-    };
+//    // 0 = down, 1 = up, 2 = south, 3 = north, 4 = west, 5 = east
+//    private final static byte[] DIRECTION_TO_SIDE = {
+//            0, // down(0)
+//            1, // up(1)
+//            3, // north(2)
+//            2, // south(3)
+//            4, // west(4)
+//            5, // east(5)
+//    };
 
     private int cubeCount = 0;
     private BufferSlice bufferSlice;
@@ -68,10 +68,7 @@ public class SkinCubeData {
     }
 
     public SkinCubeFace getCubeFace(int index, Direction dir) {
-        // in 1.12: 0 = down, 1 = up, 2 = south, 3 = north, 4 = west, 5 = east
-        // in 1.16: 0 = down, 1 = up, 2 = north, 3 = south, 4 = west, 5 = east
-        // so, north is south contents, south is north contents
-        byte side = DIRECTION_TO_SIDE[dir.get3DDataValue()];
+        int side = dir.get3DDataValue();
         BufferSlice slice = bufferSlice.at(index);
         ISkinCube cube = SkinCubes.byId(slice.getId());
         ISkinPaintType paintType = SkinPaintTypes.byId(slice.getPaintType(side));

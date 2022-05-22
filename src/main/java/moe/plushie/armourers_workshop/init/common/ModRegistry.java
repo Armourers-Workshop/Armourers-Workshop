@@ -178,8 +178,8 @@ public class ModRegistry {
         RenderTypeLookup.setRenderLayer(ModBlocks.OUTFIT_MAKER, RenderType.cutout());
 
         RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_CUBE, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_CUBE_GLASS, RenderType.tripwire());
-        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_CUBE_GLASS_GLOWING, RenderType.tripwire());
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_CUBE_GLASS, RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_CUBE_GLASS_GLOWING, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(ModBlocks.SKIN_CUBE_GLOWING, RenderType.cutout());
 
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.MANNEQUIN, MannequinEntityRenderer::new);

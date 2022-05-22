@@ -22,6 +22,8 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     public static final SkinProperty<Boolean> MODEL_OVERRIDE_LEG_LEFT = new SkinProperty<>("overrideModelLegLeft", false);
     public static final SkinProperty<Boolean> MODEL_OVERRIDE_LEG_RIGHT = new SkinProperty<>("overrideModelLegRight", false);
 
+    public static final SkinProperty<Boolean> MODEL_OVERRIDE_CHEST_OF_WINGS = new SkinProperty<>("overrideModelChestOfWings", false);
+
     @Deprecated
     public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY = new SkinProperty<>("armourHideOverlay", false);
     public static final SkinProperty<Boolean> MODEL_HIDE_OVERLAY_HEAD = new SkinProperty<>("hideOverlayHead", false);

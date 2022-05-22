@@ -8,12 +8,14 @@ import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.MannequinRayTraceResult;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.utils.SkinItemUseContext;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModItems;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -46,6 +48,14 @@ public class PlacementHighlightHandler {
         if (player == null || event.isCanceled()) {
             return;
         }
+        // hidden hit box at inside
+        // if (event.getTarget().isInside()) {
+        //     BlockState state = player.level.getBlockState(event.getTarget().getBlockPos());
+        //     if (state.is(ModBlocks.BOUNDING_BOX)) {
+        //         event.setCanceled(true);
+        //         return;
+        //     }
+        // }
         ItemStack itemStack = player.getMainHandItem();
         if (ModConfig.Client.enableEntityPlacementHighlight && itemStack.getItem() == ModItems.MANNEQUIN) {
             renderEntityPlacement(player, event.getTarget(), event.getInfo(), event.getMatrix(), event.getBuffers());

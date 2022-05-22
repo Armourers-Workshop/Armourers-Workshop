@@ -1,0 +1,132 @@
+package moe.plushie.armourers_workshop.core.render.other;
+
+import java.util.Objects;
+
+import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.*;
+import net.minecraft.util.ResourceLocation;
+
+
+/**
+ * @author RiskyKen
+ */
+public class SkinDynamicTexture extends DynamicTexture {
+
+    private int[] paintData;
+
+    private NativeImage downloadedImage;
+    private ResourceLocation refer;
+
+    private boolean needsUpdate = true;
+    private boolean uploaded = false;
+
+    private int changeTotal = 0;
+
+    private final TextureManager textureManager;
+
+
+    public SkinDynamicTexture() {
+        super(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT, true);
+        this.textureManager = Minecraft.getInstance().getTextureManager();
+    }
+
+    public ResourceLocation getRefer() {
+        return refer;
+    }
+
+    public void setRefer(ResourceLocation refer) {
+        if (!Objects.equals(this.refer, refer)) {
+            this.refer = refer;
+            this.downloadedImage = null;
+            this.needsUpdate = true;
+        }
+    }
+
+    public int[] getPaintData() {
+        return paintData;
+    }
+
+    public void setPaintData(int[] paintData) {
+        if (this.paintData != paintData) {
+            this.paintData = paintData;
+            this.needsUpdate = true;
+            this.changeTotal = 0;
+            if (paintData == null) {
+                return;
+            }
+            for (int value : paintData) {
+                if ((value & 0xff000000) != 0) {
+                    this.changeTotal += 1;
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void upload() {
+        needsUpdate = false;
+        NativeImage downloadedImage = getDownloadedImage();
+        NativeImage mergedImage = getPixels();
+        if (mergedImage == null || downloadedImage == null || paintData == null) {
+            uploaded = false;
+            return;
+        }
+        mergedImage.copyFrom(downloadedImage);
+        for (int iy = 0; iy < PlayerTexture.TEXTURE_HEIGHT; ++iy) {
+            for (int ix = 0; ix < PlayerTexture.TEXTURE_WIDTH; ++ix) {
+                int idx = ix + iy * PlayerTexture.TEXTURE_WIDTH;
+                if (idx < paintData.length) {
+                    int value = paintData[idx];
+                    if ((value & 0xff000000) != 0) {
+                        int r = value >> 16 & 0xff;
+                        int g = value >> 8 & 0xff;
+                        int b = value & 0xff;
+                        int fixed = b << 16 | g << 8 | r;  // ARGB => ABGR
+                        mergedImage.setPixelRGBA(ix, iy, 0xff000000 | fixed);
+                    }
+                }
+            }
+        }
+        super.bind();
+        mergedImage.upload(0, 0, 0, false);
+        uploaded = true;
+    }
+
+    @Override
+    public void bind() {
+        if (changeTotal != 0) {
+            if (needsUpdate) {
+                upload();
+            }
+            if (uploaded) {
+                super.bind();
+                return;
+            }
+        }
+        if (refer != null) {
+            textureManager.bind(refer);
+        }
+    }
+
+    private NativeImage getDownloadedImage() {
+        if (downloadedImage != null) {
+            return downloadedImage;
+        }
+        if (refer != null) {
+            downloadedImage = new NativeImage(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT, true);
+            textureManager.bind(refer);
+            downloadedImage.downloadTexture(0, false);
+        }
+        return downloadedImage;
+    }
+
+
+    //    @Override
+//    protected void finalize() throws Throwable {
+////        DynamicTexture
+////        deleteTexture();
+//        super.finalize();
+//    }
+}

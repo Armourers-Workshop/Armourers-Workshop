@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.block;
 import moe.plushie.armourers_workshop.api.client.render.IHasCustomizeRenderType;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.tileentity.SkinCubeTileEntity;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.OptionalDirection;
@@ -61,6 +62,11 @@ public class SkinCubeBlock extends Block implements IBlockTintColorProvider, IHa
     }
 
     @Override
+    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+        return !material.isSolidBlocking();
+    }
+
+    @Override
     public int getTintColor(BlockState blockState, @Nullable IBlockDisplayReader reader, @Nullable BlockPos blockPos, int index) {
         if (reader == null || blockPos == null) {
             return 0xffffffff;
@@ -70,8 +76,8 @@ public class SkinCubeBlock extends Block implements IBlockTintColorProvider, IHa
             direction = Direction.values()[index - 1];
         }
         TileEntity tileEntity = reader.getBlockEntity(blockPos);
-        if (tileEntity instanceof SkinCubeTileEntity) {
-            IPaintColor paintColor = ((SkinCubeTileEntity) tileEntity).getColor(direction);
+        if (tileEntity instanceof IPaintable) {
+            IPaintColor paintColor = ((IPaintable) tileEntity).getColor(direction);
             return paintColor.getRGB() | 0xff000000;
         }
         return 0xffffffff;

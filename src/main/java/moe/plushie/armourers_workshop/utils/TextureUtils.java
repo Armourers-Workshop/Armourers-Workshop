@@ -2,6 +2,11 @@ package moe.plushie.armourers_workshop.utils;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
+import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.texture.Texture;
@@ -12,7 +17,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.io.IOUtils;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
@@ -176,4 +183,34 @@ public final class TextureUtils {
         WritableRaster raster = bufferedImage.copyData(null);
         return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
+
+    public static ResourceLocation getPlayerTextureLocation(PlayerTextureDescriptor descriptor) {
+        PlayerTexture bakedTexture = PlayerTextureLoader.getInstance().loadTexture(descriptor);
+        if (bakedTexture != null && bakedTexture.isDownloaded()) {
+            return bakedTexture.getLocation();
+        }
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        if (player != null) {
+            return player.getSkinTextureLocation();
+        }
+        return DefaultPlayerSkin.getDefaultSkin();
+    }
+
+    @Nullable
+    public static BakedEntityTexture getPlayerTextureModel(PlayerTextureDescriptor descriptor) {
+        ResourceLocation texture = getPlayerTextureLocation(descriptor);
+        if (texture != null) {
+            return PlayerTextureLoader.getInstance().getTextureModel(texture);
+        }
+        return null;
+    }
+
+    public static IPaintColor getPlayerTextureModelColor(PlayerTextureDescriptor descriptor, Point texturePos) {
+        BakedEntityTexture textureModel = TextureUtils.getPlayerTextureModel(descriptor);
+        if (textureModel != null) {
+            return textureModel.getColor(texturePos.x, texturePos.y);
+        }
+    return null;
+    }
+
 }

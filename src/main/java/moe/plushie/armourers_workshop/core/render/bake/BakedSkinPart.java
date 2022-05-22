@@ -91,6 +91,10 @@ public class BakedSkinPart {
         return quads.getRenderShape();
     }
 
+    public int getFaceTotal() {
+        return quads.getFaceTotal();
+    }
+
     public float getRenderPolygonOffset() {
         if (part instanceof TexturePart) {
             return -0.2f;

@@ -10,6 +10,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashSet;
+import java.util.function.ToIntFunction;
 
 public class SkinCuller {
 
@@ -20,8 +21,7 @@ public class SkinCuller {
             BitSet flag = flags[i];
             for (Direction dir : Direction.values()) {
                 if (flag.get(dir.get3DDataValue())) {
-                    SkinCubeFace face = cubeData.getCubeFace(i, dir);
-                    faces.add(face);
+                    faces.add(cubeData.getCubeFace(i, dir));
                 }
             }
         }
@@ -29,10 +29,11 @@ public class SkinCuller {
     }
 
     static BitSet[] cullFaceFlags(SkinCubeData cubeData, Rectangle3i bounds) {
-        BitSet[] flags = new BitSet[cubeData.getCubeCount()];
+        int total = cubeData.getCubeCount();
+        BitSet[] flags = new BitSet[total];
 
         int[][][] indexes = new int[bounds.getDepth()][bounds.getHeight()][bounds.getWidth()];
-        for (int i = 0; i < cubeData.getCubeCount(); i++) {
+        for (int i = 0; i < total; i++) {
             int x = cubeData.getCubePosX(i) - bounds.getX();
             int y = cubeData.getCubePosY(i) - bounds.getY();
             int z = cubeData.getCubePosZ(i) - bounds.getZ();
@@ -40,10 +41,20 @@ public class SkinCuller {
             indexes[z][y][x] = i + 1;
         }
 
-        ArrayDeque<Vector3i> openList = new ArrayDeque<>();
         HashSet<Vector3i> closedSet = new HashSet<>();
+        ArrayDeque<Vector3i> openList = new ArrayDeque<>();
+        ToIntFunction<Vector3i> converter = (pos) -> {
+            if (pos.getX() >= 0 && pos.getX() < bounds.getWidth()) {
+                if (pos.getY() >= 0 && pos.getY() < bounds.getHeight()) {
+                    if (pos.getZ() >= 0 && pos.getZ() < bounds.getDepth()) {
+                        return indexes[pos.getZ()][pos.getY()][pos.getX()] - 1;
+                    }
+                }
+            }
+            return -1;
+        };
 
-        Rectangle3i searchArea = new Rectangle3i(-1, -1, -1, bounds.getWidth() + 1, bounds.getHeight() + 1, bounds.getDepth() + 1);
+        Rectangle3i searchArea = new Rectangle3i(-1, -1, -1, bounds.getWidth() + 2, bounds.getHeight() + 2, bounds.getDepth() + 2);
         Vector3i startPos = new Vector3i(-1, -1, -1);
         openList.add(startPos);
         closedSet.add(startPos);
@@ -51,9 +62,9 @@ public class SkinCuller {
         while (openList.size() > 0) {
             ArrayList<Vector3i> pendingList = new ArrayList<>();
             Vector3i pos = openList.poll();
-            for (Direction dir : Direction.values()) {
-                Vector3i pos1 = pos.relative(dir, 1);
-                int targetIndex = getCubeIndex(pos1, bounds, indexes);
+            for (Direction advance : Direction.values()) {
+                Vector3i pos1 = pos.relative(advance, 1);
+                int targetIndex = converter.applyAsInt(pos1);
                 if (targetIndex == -1) {
                     pendingList.add(pos1);
                     continue;
@@ -63,33 +74,29 @@ public class SkinCuller {
                 if (targetCube.isGlass()) {
                     pendingList.add(pos1);
                     // when source cube and target cube is linked glass, ignore.
-                    int sourceIndex = getCubeIndex(pos, bounds, indexes);
+                    int sourceIndex = converter.applyAsInt(pos);
                     if (sourceIndex != -1) {
-                        isBlank = cubeData.getCube(targetIndex).isGlass();
+                        isBlank = cubeData.getCube(sourceIndex).isGlass();
                     }
                 }
-                flags[targetIndex].set(dir.get3DDataValue(), !isBlank);
+                // first, when not any rotation of the cube, it's always facing north.
+                // then advance direction always opposite to cube facing direction,
+                // so theory we should always use `advance.getOpposite()` get cube facing direction.
+                // but actually we reset the cube origin in the indexes, which causes the relationship
+                // between the forward direction and the facing is changed.
+                Direction facing = advance;
+                if (advance.getAxis() == Direction.Axis.Z) {
+                    facing = advance.getOpposite();
+                }
+                flags[targetIndex].set(facing.get3DDataValue(), !isBlank);
             }
             for (Vector3i pos1 : pendingList) {
-                if (!closedSet.contains(pos1)) {
+                if (searchArea.contains(pos1) && !closedSet.contains(pos1)) {
                     closedSet.add(pos1);
-                    if (searchArea.contains(pos1)) {
-                        openList.add(pos1);
-                    }
+                    openList.add(pos1);
                 }
             }
         }
         return flags;
-    }
-
-    static int getCubeIndex(Vector3i pos, Rectangle3i bounds, int[][][] indexes) {
-        if (pos.getX() >= 0 && pos.getX() < bounds.getWidth()) {
-            if (pos.getY() >= 0 && pos.getY() < bounds.getHeight()) {
-                if (pos.getZ() >= 0 && pos.getZ() < bounds.getDepth()) {
-                    return indexes[pos.getZ()][pos.getY()][pos.getX()] - 1;
-                }
-            }
-        }
-        return -1;
     }
 }

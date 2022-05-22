@@ -61,7 +61,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     private final HashSet<EquipmentSlotType> hasOverriddenEquipmentSlots = new HashSet<>();
 
     private final NonNullList<ItemStack> lastWardrobeSlots = NonNullList.withSize(SkinSlotType.getTotalSize(), ItemStack.EMPTY);
-    private final NonNullList<ItemStack> lastEquipmentSlots = NonNullList.withSize(EquipmentSlotType.values().length, ItemStack.EMPTY);
+    private final ArrayList<ItemStack> lastEquipmentSlots = new ArrayList<>();
 
     private ColorScheme colorScheme = ColorScheme.EMPTY;
 
