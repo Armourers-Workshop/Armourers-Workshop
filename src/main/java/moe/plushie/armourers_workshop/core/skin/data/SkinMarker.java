@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.data;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinMarker;
+import moe.plushie.armourers_workshop.utils.OptionalDirection;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3i;
 
@@ -10,10 +11,10 @@ import java.io.IOException;
 
 public class SkinMarker implements ISkinMarker {
 
-    public byte x;
-    public byte y;
-    public byte z;
-    public byte meta;
+    public final byte x;
+    public final byte y;
+    public final byte z;
+    public final byte meta;
 
     public SkinMarker(byte x, byte y, byte z, byte meta) {
         this.x = x;
@@ -23,7 +24,10 @@ public class SkinMarker implements ISkinMarker {
     }
 
     public SkinMarker(DataInputStream stream, int version) throws IOException {
-        readFromStream(stream, version);
+        this.x = stream.readByte();
+        this.y = stream.readByte();
+        this.z = stream.readByte();
+        this.meta = stream.readByte();
     }
 
     public static SkinMarker of(long value) {
@@ -45,7 +49,7 @@ public class SkinMarker implements ISkinMarker {
 
     @Override
     public Direction getDirection() {
-        return Direction.values()[meta - 1];
+        return OptionalDirection.values()[meta].getDirection();
     }
 
     public void writeToStream(DataOutputStream stream) throws IOException {
@@ -55,17 +59,9 @@ public class SkinMarker implements ISkinMarker {
         stream.writeByte(meta);
     }
 
-    private void readFromStream(DataInputStream stream, int version) throws IOException {
-        x = stream.readByte();
-        y = stream.readByte();
-        z = stream.readByte();
-        meta = stream.readByte();
-    }
-
     @Override
     public String toString() {
         return "CubeMarkerData [x=" + x + ", y=" + y + ", z=" + z + ", meta=" + meta + "]";
     }
-
 
 }

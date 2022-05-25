@@ -5,10 +5,12 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.builder.block.BoundingBoxBlock;
 import moe.plushie.armourers_workshop.builder.world.WorldBlockUpdateTask;
 import moe.plushie.armourers_workshop.builder.world.WorldUpdater;
+import moe.plushie.armourers_workshop.builder.world.WorldUtils;
+import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
@@ -17,21 +19,21 @@ import moe.plushie.armourers_workshop.core.tileentity.AbstractTileEntity;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModTileEntities;
-import moe.plushie.armourers_workshop.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.utils.BoundingBox;
-import moe.plushie.armourers_workshop.utils.Rectangle3i;
+import moe.plushie.armourers_workshop.utils.*;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -75,6 +77,21 @@ public class ArmourerTileEntity extends AbstractTileEntity {
         AWDataSerializers.putPaintData(nbt, AWConstants.NBT.PAINT_DATA, paintData);
     }
 
+    @Nullable
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        CompoundNBT nbt = new CompoundNBT();
+        this.writeToNBT(nbt);
+        nbt.putInt(AWConstants.NBT.DATA_VERSION, version);
+        return new SUpdateTileEntityPacket(this.worldPosition, 3, nbt);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        super.onDataPacket(net, pkt);
+        CompoundNBT nbt = pkt.getTag();
+        this.version = nbt.getInt(AWConstants.NBT.DATA_VERSION);
+    }
+
     public void onPlace(World world, BlockPos pos, BlockState state) {
         remakeBoundingBoxes(null, getBoundingBoxes(), true);
     }
@@ -93,11 +110,10 @@ public class ArmourerTileEntity extends AbstractTileEntity {
         }
         Collection<BoundingBox> boxes = getBoundingBoxes();
         this.skinType = skinType;
-        this.remakePaintData();
+        this.setPaintData(null);
         this.remakeSkinProperties();
         this.remakeBoundingBoxes(boxes, getBoundingBoxes(), true);
-        this.setChanged();
-        this.sendBlockUpdates();
+        TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
     public SkinProperties getSkinProperties() {
@@ -108,8 +124,7 @@ public class ArmourerTileEntity extends AbstractTileEntity {
         Collection<BoundingBox> boxes = getBoundingBoxes();
         this.skinProperties = skinProperties;
         this.remakeBoundingBoxes(boxes, getBoundingBoxes(), false);
-        this.setChanged();
-        this.sendBlockUpdates();
+        TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
     public int getFlags() {
@@ -120,8 +135,7 @@ public class ArmourerTileEntity extends AbstractTileEntity {
         Collection<BoundingBox> boxes = getBoundingBoxes();
         this.flags = flags;
         this.remakeBoundingBoxes(boxes, getBoundingBoxes(), false);
-        this.setChanged();
-        this.sendBlockUpdates();
+        TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
     public PlayerTextureDescriptor getTextureDescriptor() {
@@ -130,7 +144,20 @@ public class ArmourerTileEntity extends AbstractTileEntity {
 
     public void setTextureDescriptor(PlayerTextureDescriptor textureDescriptor) {
         this.textureDescriptor = textureDescriptor;
-        this.sendBlockUpdates();
+        TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
+    }
+
+    public void setPaintData(int[] paintData) {
+        if (this.paintData == paintData) {
+            return;
+        }
+        if (paintData != null) {
+            this.paintData = new int[PlayerTexture.TEXTURE_SIZE];
+            System.arraycopy(paintData, 0, this.paintData, 0, paintData.length);
+        } else {
+            this.paintData = null;
+        }
+        TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
     public int[] getPaintData() {
@@ -193,18 +220,68 @@ public class ArmourerTileEntity extends AbstractTileEntity {
         return skinType instanceof ISkinToolType;
     }
 
-    @Override
-    public void sendBlockUpdates() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.DEFAULT_AND_RERENDER);
+    public void copyPaintData(ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) {
+        if (paintData == null) {
+            return;
         }
+        PlayerTextureModel textureModel = BoundingBox.MODEL;
+        SkyBox srcBox = textureModel.get(srcPart);
+        SkyBox destBox = textureModel.get(destPart);
+        if (srcBox != null && destBox != null) {
+            WorldUtils.copyPaintData(paintData, srcBox, destBox, mirror);
+            TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
+        }
+    }
+
+    public void clearPaintData(ISkinPartType partType) {
+        if (paintData == null) {
+            return;
+        }
+        // we think the unknown part type is the signal for the clear all.
+        if (partType == SkinPartTypes.UNKNOWN) {
+            setPaintData(null);
+            return;
+        }
+        // we just need to clear the paint data for the current part type.
+        PlayerTextureModel textureModel = BoundingBox.MODEL;
+        SkyBox srcBox = textureModel.get(partType);
+        if (srcBox != null) {
+            WorldUtils.clearPaintData(paintData, srcBox);
+            TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
+        }
+    }
+
+    public void clearCubes(ISkinPartType partType) {
+        // remove all part
+        World world = getLevel();
+        BlockPos pos = getBlockPos().offset(0, 1, 0);
+        Direction direction = Direction.NORTH;
+        WorldUtils.clearCubes(world, pos, getSkinType(), getSkinProperties(), direction, partType);
+        // remake all properties.
+        boolean isMultiBlock = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
+        remakeSkinProperties();
+        skinProperties.put(SkinProperty.BLOCK_MULTIBLOCK, isMultiBlock);
+        TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
+    }
+
+    public void copyCubes(ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws Exception {
+        World world = getLevel();
+        BlockPos pos = getBlockPos().offset(0, 1, 0);
+        Direction direction = Direction.NORTH;
+        WorldUtils.copyCubes(world, pos, getSkinType(), getSkinProperties(), direction, srcPart, destPart, mirror);
+    }
+
+    public void clearMarkers(ISkinPartType partType) {
+        World world = getLevel();
+        BlockPos pos = getBlockPos().offset(0, 1, 0);
+        Direction direction = Direction.NORTH;
+        WorldUtils.clearMarkers(world, pos, getSkinType(), getSkinProperties(), direction, partType);
+        setChanged();
     }
 
     public int getVersion() {
         return version;
     }
-
 
     public Object getRenderData() {
         return renderData;
@@ -228,13 +305,6 @@ public class ArmourerTileEntity extends AbstractTileEntity {
     @Override
     public double getViewDistance() {
         return 128;
-    }
-
-    public void remakePaintData() {
-        this.paintData = null;
-//        if (update) {
-//            dirtySync();
-//        }
     }
 
     private void remakeSkinProperties() {
@@ -283,8 +353,7 @@ public class ArmourerTileEntity extends AbstractTileEntity {
             box.setPartType(partType);
             box.setGuide(offset);
             box.setParent(pos.subtract(getBlockPos()));
-            box.setChanged();
-            box.sendBlockUpdates();
+            TileEntityUpdateCombiner.combine(box, box::sendBlockUpdates);
         }
     }
 

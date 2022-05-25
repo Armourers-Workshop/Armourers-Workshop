@@ -2,10 +2,13 @@ package moe.plushie.armourers_workshop.builder.gui.armourer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.builder.container.ArmourerContainer;
+import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWAbstractContainerScreen;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabController;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -13,12 +16,16 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class ArmourerScreen extends AWAbstractContainerScreen<ArmourerContainer> {
 
+    private final ArmourerTileEntity tileEntity;
     private final AWTabController<ArmourerContainer.Group> tabController = new AWTabController<>(false);
+
+    private int lastVersion = 0;
 
     public ArmourerScreen(ArmourerContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
         this.imageWidth = 176;
         this.imageHeight = 224;
+        this.tileEntity = container.getTileEntity(ArmourerTileEntity.class);
 
         this.initTabs();
     }
@@ -34,12 +41,29 @@ public class ArmourerScreen extends AWAbstractContainerScreen<ArmourerContainer>
 
         tabController.init(leftPos, topPos, 176, 224);
         addWidget(tabController);
+
+        lastVersion = tileEntity.getVersion();
     }
 
     @Override
     public void removed() {
         tabController.removed();
         super.removed();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        int lastVersion = tileEntity.getVersion();
+        if (this.lastVersion != lastVersion) {
+            tabController.getActiveTabs().forEach(tab -> {
+               Screen screen = tab.getScreen();
+               if (screen instanceof ArmourerBaseSetting) {
+                   ((ArmourerBaseSetting) screen).reloadData();
+               }
+            });
+            this.lastVersion = lastVersion;
+        }
     }
 
     protected void initTabs() {
@@ -60,7 +84,7 @@ public class ArmourerScreen extends AWAbstractContainerScreen<ArmourerContainer>
                 .setIcon(32, 0)
                 .setIconAnimation(8, 150);
 
-        tabController.add(new ArmourerBlockSetting(menu))
+        tabController.add(new ArmourerBlockSetting(menu, this))
                 .setTarget(ArmourerContainer.Group.BLOCK)
                 .setIcon(48, 0)
                 .setIconAnimation(8, 150);

@@ -26,12 +26,22 @@ public final class AWConstants {
         public static final String SKIN_DYE = "SkinDyes";
         public static final String SKIN_PROPERTIES = "SkinProperties";
 
+        public static final String SKIN_CUBES = "Cubes";
+        public static final String SKIN_PAINTS = "Paints";
+        public static final String SKIN_MARKERS = "Markers";
+
         public static final String TEXTURE_URL = "URL";
         public static final String TEXTURE_PROFILE = "User";
 
         public static final String PAINT_DATA = "PaintData";
 
+        public static final String MIRROR = "Mirror";
+
+        public static final String SOURCE = "Source";
+        public static final String DESTINATION = "Destination";
+
         public static final String COLOR = "Color";
+        public static final String DATA_VERSION = "DataVersion";
 
         public static final String COLOR_1 = "Color1";
         public static final String COLOR_2 = "Color2";

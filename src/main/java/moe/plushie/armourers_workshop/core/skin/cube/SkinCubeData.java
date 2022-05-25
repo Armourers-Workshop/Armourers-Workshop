@@ -12,22 +12,13 @@ import moe.plushie.armourers_workshop.utils.extened.AWVoxelShape;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3i;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class SkinCubeData {
-
-//    // 0 = down, 1 = up, 2 = south, 3 = north, 4 = west, 5 = east
-//    private final static byte[] DIRECTION_TO_SIDE = {
-//            0, // down(0)
-//            1, // up(1)
-//            3, // north(2)
-//            2, // south(3)
-//            4, // west(4)
-//            5, // east(5)
-//    };
 
     private int cubeCount = 0;
     private BufferSlice bufferSlice;
@@ -73,16 +64,13 @@ public class SkinCubeData {
         ISkinCube cube = SkinCubes.byId(slice.getId());
         ISkinPaintType paintType = SkinPaintTypes.byId(slice.getPaintType(side));
 
+        int rgb = slice.getRGB(side);
         int alpha = 255;
-        int color = 0xff000000;
-        color |= (slice.getR(side) & 0xff) << 16;
-        color |= (slice.getG(side) & 0xff) << 8;
-        color |= (slice.getB(side) & 0xff);
         if (cube.isGlass()) {
             alpha = 127;
         }
 
-        return new SkinCubeFace(slice.getX(), slice.getY(), slice.getZ(), PaintColor.of(color, paintType), alpha, dir, cube);
+        return new SkinCubeFace(slice.getX(), slice.getY(), slice.getZ(), PaintColor.of(rgb, paintType), alpha, dir, cube);
     }
 
     public AWVoxelShape getRenderShape() {
@@ -125,10 +113,6 @@ public class SkinCubeData {
     }
 
 
-    public SkinUsedCounter getUsedCounter() {
-        return usedCounter;
-    }
-
 
     public void writeToStream(DataOutputStream stream) throws IOException {
         stream.writeInt(cubeCount);
@@ -160,6 +144,14 @@ public class SkinCubeData {
                 slice.setPaintType(side, (byte) 255);
             }
         }
+    }
+
+    public BufferSlice at(int index) {
+        return bufferSlice.at(index);
+    }
+
+    public SkinUsedCounter getUsedCounter() {
+        return usedCounter;
     }
 
     public interface ICubeConsumer {
@@ -246,6 +238,33 @@ public class SkinCubeData {
 
         public byte getPaintType(int side) {
             return getByte(7 + side * 4);
+        }
+
+        public int getRGB(int side) {
+            int color = 0;
+            color |= (getR(side) & 0xff) << 16;
+            color |= (getG(side) & 0xff) << 8;
+            color |= (getB(side) & 0xff);
+            return color;
+        }
+
+        public void setRGB(int side, int rgb) {
+            int r = (rgb >> 16) & 0xff;
+            int g = (rgb >> 8) & 0xff;
+            int b = rgb & 0xff;
+            setR(side, (byte)r);
+            setG(side, (byte)g);
+            setB(side, (byte)b);
+        }
+
+        public Vector3i getPos() {
+            return new Vector3i(getX(), getY(), getZ());
+        }
+
+        public void setPos(Vector3i pos) {
+            setX((byte) pos.getX());
+            setY((byte) pos.getY());
+            setZ((byte) pos.getZ());
         }
 
         public void setByte(int offset, byte value) {

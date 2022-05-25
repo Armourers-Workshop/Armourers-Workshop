@@ -201,8 +201,10 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
                 if (j != k) {
                     String s = (new StringBuilder(this.value)).delete(j, k).toString();
                     if (this.filter.test(s)) {
+                        String oldValue = this.value;
                         this.value = s;
                         this.moveCursorTo(j);
+                        this.onValueChange(oldValue, this.value);
                     }
                 }
             }

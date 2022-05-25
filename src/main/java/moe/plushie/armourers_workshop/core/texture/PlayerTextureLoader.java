@@ -237,7 +237,7 @@ public class PlayerTextureLoader {
                 }
             }
             bakedTexture.loadImage(newImage, Objects.equals(bakedTexture.getModel(), "slim"));
-            ModLog.debug("baked a player texture => {}, slim => {}", bakedTexture.getResourceLocation(), slim);
+            ModLog.debug("baked a player texture => {}, url: {}, slim: {}", bakedTexture.getResourceLocation(), url, slim);
         });
     }
 

@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.tileentity;
 
 import moe.plushie.armourers_workshop.api.common.IHasInventory;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -12,6 +13,7 @@ import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 
@@ -27,7 +29,10 @@ public abstract class AbstractTileEntity extends TileEntity {
     public abstract void writeToNBT(CompoundNBT nbt);
 
     public void sendBlockUpdates() {
-
+        if (level != null) {
+            BlockState state = getBlockState();
+            level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.DEFAULT_AND_RERENDER);
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.tileentity;
 import moe.plushie.armourers_workshop.core.tileentity.AbstractContainerTileEntity;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModTileEntities;
+import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
@@ -49,8 +50,7 @@ public class OutfitMakerTileEntity extends AbstractContainerTileEntity {
 
     public void setItemName(String name) {
         this.itemName = name;
-        this.setChanged();
-        this.sendBlockUpdates();
+        TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
     public String getItemFlavour() {
@@ -59,8 +59,7 @@ public class OutfitMakerTileEntity extends AbstractContainerTileEntity {
 
     public void setItemFlavour(String flavour) {
         this.itemFlavour = flavour;
-        this.setChanged();
-        this.sendBlockUpdates();
+        TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
     @Override
@@ -76,14 +75,6 @@ public class OutfitMakerTileEntity extends AbstractContainerTileEntity {
     @Override
     public int getContainerSize() {
         return 21;
-    }
-
-    @Override
-    public void sendBlockUpdates() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.BLOCK_UPDATE);
-        }
     }
 }
 

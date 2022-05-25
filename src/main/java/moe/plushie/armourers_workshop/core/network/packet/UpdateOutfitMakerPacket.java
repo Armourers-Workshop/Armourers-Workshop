@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.builder.container.OutfitMakerContainer;
 import moe.plushie.armourers_workshop.builder.tileentity.OutfitMakerTileEntity;
 import moe.plushie.armourers_workshop.utils.AWDataAccessor;
+import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -46,12 +47,13 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
     @Override
     public void accept(ServerPlayNetHandler netHandler, ServerPlayerEntity player) {
         // TODO: check player
+        TileEntityUpdateCombiner.begin();
         switch (field) {
             case ITEM_CRAFTING: {
                 if (player.containerMenu instanceof OutfitMakerContainer) {
                     CompoundNBT nbt = (CompoundNBT)fieldValue;
                     GameProfile profile = NBTUtil.readGameProfile(nbt);
-                    ((OutfitMakerContainer) player.containerMenu).crafting(profile, player);
+                    ((OutfitMakerContainer) player.containerMenu).saveArmourItem(player, profile);
                 }
                 break;
             }
@@ -64,13 +66,14 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
                 break;
             }
         }
+        TileEntityUpdateCombiner.end();
     }
 
     public enum Field {
 
         ITEM_NAME(DataSerializers.STRING, OutfitMakerTileEntity::getItemName, OutfitMakerTileEntity::setItemName),
         ITEM_FLAVOUR(DataSerializers.STRING, OutfitMakerTileEntity::getItemFlavour, OutfitMakerTileEntity::setItemFlavour),
-        ITEM_CRAFTING(DataSerializers.COMPOUND_TAG, OutfitMakerTileEntity::serializeNBT, OutfitMakerTileEntity::deserializeNBT);
+        ITEM_CRAFTING(DataSerializers.COMPOUND_TAG, null, null);
 
         private final AWDataAccessor<OutfitMakerTileEntity, ?> dataAccessor;
 

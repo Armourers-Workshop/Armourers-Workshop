@@ -13,7 +13,7 @@ public class ChestPartType extends SkinPartType implements ISkinPartTypeTextured
 
     public ChestPartType() {
         super();
-        this.buildingSpace = new Rectangle3i(-6, -24, -30, 12, 38, 60);
+        this.buildingSpace = new Rectangle3i(-12, -24, -32, 24, 38, 64);
         this.guideSpace = new Rectangle3i(-4, -12, -2, 8, 12, 4);
         this.offset = new Vector3i(0, -1, 0);
     }

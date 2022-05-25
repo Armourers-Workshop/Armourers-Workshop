@@ -1,14 +1,39 @@
 package moe.plushie.armourers_workshop.builder.world;
 
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.api.painting.IPaintable;
+import moe.plushie.armourers_workshop.api.skin.*;
+import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
+import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
+import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
+import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
+import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
+import moe.plushie.armourers_workshop.core.skin.exception.SkinSaveException;
+import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.init.common.ModBlocks;
+import moe.plushie.armourers_workshop.utils.OptionalDirection;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
+import moe.plushie.armourers_workshop.utils.SkyBox;
+import moe.plushie.armourers_workshop.utils.color.PaintColor;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-import java.util.function.BiFunction;
-import java.util.function.Predicate;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Helper class for converting back and forth from
@@ -21,253 +46,238 @@ import java.util.function.Predicate;
  */
 public final class WorldUtils {
 
-//    /**
-//     * Converts blocks in the world into a skin class.
-//     * @param world The world.
-//     * @param skinProps The skin properties for this skin.
-//     * @param skinType The type of skin to save.
-//     * @param paintData Paint data for this skin.
-//     * @param xCoord Armourers x location.
-//     * @param yCoord Armourers y location.
-//     * @param zCoord Armourers z location.
-//     * @param directionDirection the armourer is facing.
-//     * @return
-//     * @throws InvalidCubeTypeException
-//     * @throws SkinSaveException
-//     */
-//    public static Skin saveSkinFromWorld(World world, SkinProperties skinProps, ISkinType skinType, int[] paintData, BlockPos pos, EnumFacing direction) throws SkinSaveException {
-//
-//        ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
-//
-//        if (skinType == SkinTypeRegistry.skinBlock) {
-//            ISkinPartType partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partBase;
-//            if (SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps)) {
-//                partType = ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock;
-//            }
-//
-//            SkinPart skinPart = saveArmourPart(world, partType, pos, direction, true);
-//            if (skinPart != null) {
-//                parts.add(skinPart);
-//            }
-//        } else {
-//            for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-//                ISkinPartType partType = skinType.getSkinParts().get(i);
-//                SkinPart skinPart = saveArmourPart(world, partType, pos, direction, true);
-//                if (skinPart != null) {
-//                    parts.add(skinPart);
-//                }
-//            }
-//        }
-//
-//        if (paintData != null) {
-//            paintData = paintData.clone();
-//        }
-//
-//        Skin skin = new Skin(skinProps, skinType, paintData, parts);
-//
-//        //Check if there are any blocks in the build guides.
-//        if (skin.getParts().size() == 0 && !skin.hasPaintData()) {
-//            throw new SkinSaveException("Nothing to save.", SkinSaveExceptionType.NO_DATA);
-//        }
-//
-//        //Check if the skin has all needed parts.
-//        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-//            ISkinPartType partType = skinType.getSkinParts().get(i);
-//            if (partType.isPartRequired()) {
-//                boolean havePart = false;
-//                for (int j = 0; j < skin.getPartCount(); j++) {
-//                    if (partType == skin.getParts().get(j).getPartType()) {
-//                        havePart = true;
-//                        break;
-//                    }
-//                }
-//                if (!havePart) {
-//                    throw new SkinSaveException("Skin is missing part " + partType.getPartName(), SkinSaveExceptionType.MISSING_PARTS);
-//                }
-//            }
-//        }
-//
-//        //Check if the skin is not a seat and a bed.
-//        if (SkinProperties.PROP_BLOCK_BED.getValue(skinProps) & SkinProperties.PROP_BLOCK_SEAT.getValue(skinProps)) {
-//            throw new SkinSaveException("Skin can not be a bed and a seat.", SkinSaveExceptionType.BED_AND_SEAT);
-//        }
-//
-//        //Check if multiblock is valid.
-//        if (skinType == SkinTypeRegistry.skinBlock & SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps)) {
-//            SkinPart testPart = saveArmourPart(world, ((SkinBlock)SkinTypeRegistry.skinBlock).partBase, pos, direction, true);
-//            if (testPart == null) {
-//                throw new SkinSaveException("Multiblock has no blocks in the yellow area.", SkinSaveExceptionType.INVALID_MULTIBLOCK);
-//            }
-//        }
-//
-//        return skin;
-//    }
-//
-//    private static SkinPart saveArmourPart(World world, ISkinPartType skinPart, BlockPos pos, EnumFacing direction, boolean markerCheck) throws SkinSaveException {
-//
-//        int cubeCount = getNumberOfCubesInPart(world, pos, skinPart);
-//        if (cubeCount < 1) {
-//            return null;
-//        }
-//        SkinCubeData cubeData = new SkinCubeData();
-//        cubeData.setCubeCount(cubeCount);
-//
-//        ArrayList<CubeMarkerData> markerBlocks = new ArrayList<CubeMarkerData>();
-//
-//        IRectangle3D buildSpace = skinPart.getBuildingSpace();
-//        IPoint3D offset = skinPart.getOffset();
-//
-//        int i = 0;
-//        for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
-//            for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
-//                for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
-//                    BlockPos target = pos.add(ix + -offset.getX() + buildSpace.getX(), iy + -offset.getY(), iz + offset.getZ() + buildSpace.getZ());
-//
+    /**
+     * Converts blocks in the world into a skin class.
+     *
+     * @param world     The world.
+     * @param skinProps The skin properties for this skin.
+     * @param skinType  The type of skin to save.
+     * @param paintData Paint data for this skin.
+     * @param pos       the armourer location.
+     * @param direction the armourer is facing.
+     * @return
+     * @throws SkinSaveException
+     */
+    public static Skin saveSkinFromWorld(World world, SkinProperties skinProps, ISkinType skinType, int[] paintData, BlockPos pos, Direction direction) throws SkinSaveException {
+
+        ArrayList<SkinPart> parts = new ArrayList<>();
+
+        if (skinType == SkinTypes.BLOCK) {
+            ISkinPartType partType = SkinPartTypes.BLOCK;
+            if (skinProps.get(SkinProperty.BLOCK_MULTIBLOCK)) {
+                partType = SkinPartTypes.BLOCK_MULTI;
+            }
+            SkinPart skinPart = saveArmourPart(world, partType, pos, direction, true);
+            if (skinPart != null) {
+                parts.add(skinPart);
+            }
+        } else {
+            for (ISkinPartType partType : skinType.getParts()) {
+                SkinPart skinPart = saveArmourPart(world, partType, pos, direction, true);
+                if (skinPart != null) {
+                    parts.add(skinPart);
+                }
+            }
+        }
+
+        if (paintData != null) {
+            paintData = paintData.clone();
+        }
+
+        Skin skin = SkinSerializer.makeSkin(skinType, skinProps, paintData, parts);
+
+        // check if there are any blocks in the build guides.
+        if (skin.getParts().size() == 0 && !skin.hasPaintData()) {
+            throw new SkinSaveException("Nothing to save.", SkinSaveException.SkinSaveExceptionType.NO_DATA);
+        }
+
+        // check if the skin has all needed parts.
+        for (ISkinPartType partType : skinType.getParts()) {
+            if (partType.isPartRequired()) {
+                boolean havePart = false;
+                for (ISkinPart part : skin.getParts()) {
+                    if (partType == part.getType()) {
+                        havePart = true;
+                        break;
+                    }
+                }
+                if (!havePart) {
+                    throw new SkinSaveException("Skin is missing part " + partType.getRegistryName(), SkinSaveException.SkinSaveExceptionType.MISSING_PARTS);
+                }
+            }
+        }
+
+        // check if the skin is not a seat and a bed.
+        if (skinProps.get(SkinProperty.BLOCK_BED) && skinProps.get(SkinProperty.BLOCK_SEAT)) {
+            throw new SkinSaveException("Skin can not be a bed and a seat.", SkinSaveException.SkinSaveExceptionType.BED_AND_SEAT);
+        }
+
+        // check if multi-block is valid.
+        if (skinType == SkinTypes.BLOCK && skinProps.get(SkinProperty.BLOCK_MULTIBLOCK)) {
+            SkinPart testPart = saveArmourPart(world, SkinPartTypes.BLOCK, pos, direction, true);
+            if (testPart == null) {
+                throw new SkinSaveException("Multiblock has no blocks in the yellow area.", SkinSaveException.SkinSaveExceptionType.INVALID_MULTIBLOCK);
+            }
+        }
+
+        return skin;
+    }
+
+    private static SkinPart saveArmourPart(World world, ISkinPartType skinPart, BlockPos pos, Direction direction, boolean markerCheck) throws SkinSaveException {
+
+        int cubeCount = getNumberOfCubesInPart(world, pos, skinPart);
+        if (cubeCount < 1) {
+            return null;
+        }
+        SkinCubeData cubeData = new SkinCubeData();
+        cubeData.setCubeCount(cubeCount);
+
+        ArrayList<SkinMarker> markerBlocks = new ArrayList<>();
+
+        Rectangle3i buildSpace = skinPart.getBuildingSpace();
+        Vector3i offset = skinPart.getOffset();
+
+        int i = 0;
+        for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
+            for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
+                for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
+                    BlockPos target = pos.offset(ix + -offset.getX() + buildSpace.getX(), iy + -offset.getY(), iz + offset.getZ() + buildSpace.getZ());
+
 //                    BlockPos origin = new BlockPos(-ix + -buildSpace.getX(), -iy + -buildSpace.getY(), -iz + -buildSpace.getZ());
-//
-//                    int xOrigin = -ix + -buildSpace.getX();
-//                    int yOrigin = -iy + -buildSpace.getY();
-//                    int zOrigin = -iz + -buildSpace.getZ();
-//
-//                    if (!world.isAirBlock(target)) {
-//                        IBlockState blockState = world.getBlockState(target);
-//                        if (CubeRegistry.INSTANCE.isBuildingBlock(blockState.getBlock())) {
-//                            saveArmourBlockToList(world, target,
-//                                    xOrigin - 1,
-//                                    yOrigin - 1,
-//                                    -zOrigin,
-//                                    cubeData, i, markerBlocks, direction);
-//                            i++;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        if (markerCheck) {
-//            if (skinPart.getMinimumMarkersNeeded() > markerBlocks.size()) {
-//                throw new SkinSaveException("Missing marker for part " + skinPart.getPartName(), SkinSaveExceptionType.MARKER_ERROR);
-//            }
-//
-//            if (markerBlocks.size() > skinPart.getMaximumMarkersNeeded()) {
-//                throw new SkinSaveException("Too many markers for part " + skinPart.getPartName(), SkinSaveExceptionType.MARKER_ERROR);
-//            }
-//        }
-//
-//
-//        return new SkinPart(cubeData, skinPart, markerBlocks);
-//    }
-//
-//    private static void saveArmourBlockToList(World world, BlockPos pos, int ix, int iy, int iz, SkinCubeData cubeData, int index, ArrayList<CubeMarkerData> markerBlocks, EnumFacing direction) {
-//        IBlockState blockState = world.getBlockState(pos);
-//        if (!CubeRegistry.INSTANCE.isBuildingBlock(blockState.getBlock())) {
-//            return;
-//        }
-//
-//        int meta = blockState.getBlock().getMetaFromState(blockState);
-//        ICubeColour c = BlockUtils.getColourFromTileEntity(world, pos);
-//        byte cubeType = CubeRegistry.INSTANCE.getCubeFromBlock(blockState.getBlock()).getId();
-//
-//        cubeData.setCubeId(index, cubeType);
-//        cubeData.setCubeLocation(index, (byte) ix, (byte) iy, (byte) iz);
-//        for (int i = 0; i < 6; i++) {
-//            cubeData.setCubeColour(index, i, c.getRed(i), c.getGreen(i), c.getBlue(i));
-//            cubeData.setCubePaintType(index, i, c.getPaintType(i));
-//        }
-//        if (meta > 0) {
-//            markerBlocks.add(new CubeMarkerData((byte)ix, (byte)iy, (byte)iz, (byte)meta));
-//        }
-//    }
-//
-//    /**
-//     * Converts a skin class into blocks in the world.
-//     * @param world The world.
-//     * @param x Armourers x location.
-//     * @param y Armourers y location.
-//     * @param z Armourers z location.
-//     * @param skin The skin to load.
-//     * @param direction The direction the armourer is facing.
-//     */
-//    public static void loadSkinIntoWorld(World world, BlockPos pos, Skin skin, EnumFacing direction) {
-//        ArrayList<SkinPart> parts = skin.getParts();
-//
-//        for (int i = 0; i < parts.size(); i++) {
-//            loadSkinPartIntoWorld(world, parts.get(i), pos, direction, false);
-//        }
-//    }
-//
-//    private static void loadSkinPartIntoWorld(World world, SkinPart partData, BlockPos pos, EnumFacing direction, boolean mirror) {
-//        ISkinPartType skinPart = partData.getPartType();
-//        IRectangle3D buildSpace = skinPart.getBuildingSpace();
-//        IPoint3D offset = skinPart.getOffset();
-//        SkinCubeData cubeData = partData.getCubeData();
-//
-//        for (int i = 0; i < cubeData.getCubeCount(); i++) {
-//            ICube blockData = cubeData.getCube(i);
-//            int meta = 0;
-//            for (int j = 0; j < partData.getMarkerBlocks().size(); j++) {
-//                CubeMarkerData cmd = partData.getMarkerBlocks().get(j);
-//                byte[] loc = cubeData.getCubeLocation(i);
-//                if (cmd.x == loc[0] & cmd.y == loc[1] & cmd.z == loc[2]) {
-//                    meta = cmd.meta;
-//                    break;
-//                }
-//            }
-//            BlockPos origin = new BlockPos(-offset.getX(), -offset.getY() + -buildSpace.getY(), offset.getZ());
-//
-//            loadSkinBlockIntoWorld(world, pos, origin, blockData, direction, meta, cubeData, i, mirror);
-//        }
-//
-//    }
-//
-//    private static void loadSkinBlockIntoWorld(World world, BlockPos pos, BlockPos origin, ICube blockData, EnumFacing direction, int meta, SkinCubeData cubeData, int index, boolean mirror) {
-//        byte[] loc = cubeData.getCubeLocation(index);
-//
-//        int shiftX = -loc[0] - 1;
-//        int shiftY = loc[1] + 1;
-//        int shiftZ = loc[2];
-//        if (mirror) {
-//            shiftX = loc[0];
-//        }
-//
-//        BlockPos target = pos.add(shiftX + origin.getX(), origin.getY() - shiftY, shiftZ + origin.getZ());
-//
-//        if (world.getBlockState(target).getBlock() == ModBlocks.BOUNDING_BOX) {
-//            SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(Blocks.AIR.getDefaultState(), target, world));
-//            //world.setBlockToAir(target);
-//            //world.removeTileEntity(target);
-//        }
-//
-//        Block targetBlock = blockData.getMinecraftBlock();
-//        IBlockState targetState = targetBlock.getStateFromMeta(meta);
-//
-//        ModLogger.log(targetState);
-//
-//        CubeColour cc = new CubeColour();
-//        for (int i = 0; i < 6; i++) {
-//            byte[] c = cubeData.getCubeColour(index, i);
-//            byte paintType = cubeData.getCubePaintType(index, i);
-//            if (mirror) {
-//                if (i == 4) {
-//                    c = cubeData.getCubeColour(index, 5);
-//                    paintType = cubeData.getCubePaintType(index, 5);
-//                }
-//                if (i == 5) {
-//                    c = cubeData.getCubeColour(index, 4);
-//                    paintType = cubeData.getCubePaintType(index, 4);
-//                }
-//            }
-//            cc.setRed(c[0], i);
-//            cc.setGreen(c[1], i);
-//            cc.setBlue(c[2], i);
-//            cc.setPaintType(paintType, i);
-//        }
-//        TileEntityColourable colourable = new TileEntityColourable();
-//        colourable.setColour(cc);
-//
-//        SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(targetState, target, world).setTileEntity(colourable).setOnlyReplaceable(true).setDelay(index / 5));
-//        //world.setBlockState(target, targetState, 2);
-//    }
+
+                    int xOrigin = -ix + -buildSpace.getX();
+                    int yOrigin = -iy + -buildSpace.getY();
+                    int zOrigin = -iz + -buildSpace.getZ();
+
+                    BlockState targetState = world.getBlockState(target);
+                    if (targetState.getBlock() instanceof SkinCubeBlock) {
+                        saveArmourBlockToList(world, target,
+                                xOrigin - 1,
+                                yOrigin - 1,
+                                -zOrigin,
+                                cubeData.at(i), markerBlocks, direction);
+                        i++;
+                    }
+                }
+            }
+        }
+
+        if (markerCheck) {
+            if (skinPart.getMinimumMarkersNeeded() > markerBlocks.size()) {
+                throw new SkinSaveException("Missing marker for part " + skinPart.getRegistryName(), SkinSaveException.SkinSaveExceptionType.MARKER_ERROR);
+            }
+
+            if (markerBlocks.size() > skinPart.getMaximumMarkersNeeded()) {
+                throw new SkinSaveException("Too many markers for part " + skinPart.getRegistryName(), SkinSaveException.SkinSaveExceptionType.MARKER_ERROR);
+            }
+        }
+
+        return new SkinPart(skinPart, markerBlocks, cubeData);
+    }
+
+    private static void saveArmourBlockToList(World world, BlockPos pos, int ix, int iy, int iz, SkinCubeData.BufferSlice slice, ArrayList<SkinMarker> markerBlocks, Direction direction) {
+        TileEntity tileEntity = world.getBlockEntity(pos);
+        if (!(tileEntity instanceof IPaintable)) {
+            return;
+        }
+        BlockState blockState = tileEntity.getBlockState();
+        IPaintable target = (IPaintable) tileEntity;
+        ISkinCube cube = SkinCubes.byBlock(blockState.getBlock());
+
+        OptionalDirection marker = blockState.getValue(SkinCubeBlock.MARKER);
+
+        slice.setId((byte) cube.getId());
+        slice.setX((byte) ix);
+        slice.setY((byte) iy);
+        slice.setZ((byte) iz);
+
+        for (Direction dir : Direction.values()) {
+            IPaintColor color = target.getColor(dir);
+            slice.setRGB(dir.ordinal(), color.getRGB());
+            slice.setPaintType(dir.ordinal(), (byte) color.getPaintType().getId());
+        }
+        if (marker != OptionalDirection.NONE) {
+            markerBlocks.add(new SkinMarker((byte) ix, (byte) iy, (byte) iz, (byte) marker.ordinal()));
+        }
+    }
+
+    /**
+     * Converts a skin class into blocks in the world.
+     *
+     * @param world     The world.
+     * @param pos       the armourer location.
+     * @param skin      The skin to load.
+     * @param direction The direction the armourer is facing.
+     */
+    public static void loadSkinIntoWorld(World world, BlockPos pos, Skin skin, Direction direction) {
+        for (SkinPart part : skin.getParts()) {
+            loadSkinPartIntoWorld(world, part, pos, direction, false);
+        }
+    }
+
+    private static void loadSkinPartIntoWorld(World world, SkinPart partData, BlockPos pos, Direction direction, boolean mirror) {
+        ISkinPartType skinPart = partData.getType();
+        Rectangle3i buildSpace = skinPart.getBuildingSpace();
+        Vector3i offset = skinPart.getOffset();
+        SkinCubeData cubeData = partData.getCubeData();
+
+        for (int i = 0; i < cubeData.getCubeCount(); i++) {
+            SkinCubeData.BufferSlice slice = cubeData.at(i);
+            Vector3i cubePos = slice.getPos();
+            ISkinCube blockData = SkinCubes.byId(slice.getId());
+            OptionalDirection markerFacing = OptionalDirection.NONE;
+            for (ISkinMarker marker : partData.getMarkers()) {
+                if (cubePos.equals(marker.getPosition())) {
+                    markerFacing = OptionalDirection.of(marker.getDirection());
+                    break;
+                }
+            }
+            BlockPos origin = new BlockPos(-offset.getX(), -offset.getY() + -buildSpace.getY(), offset.getZ());
+            loadSkinBlockIntoWorld(world, pos, origin, blockData, cubePos, direction, markerFacing, slice, mirror);
+        }
+    }
+
+    private static void loadSkinBlockIntoWorld(World world, BlockPos pos, BlockPos origin, ISkinCube blockData, Vector3i cubePos, Direction direction, OptionalDirection markerFacing, SkinCubeData.BufferSlice slice, boolean mirror) {
+        int shiftX = -cubePos.getX() - 1;
+        int shiftY = cubePos.getY() + 1;
+        int shiftZ = cubePos.getZ();
+        if (mirror) {
+            shiftX = cubePos.getX();
+        }
+
+        BlockPos target = pos.offset(shiftX + origin.getX(), origin.getY() - shiftY, shiftZ + origin.getZ());
+
+        if (world.getBlockState(target).is(ModBlocks.BOUNDING_BOX)) {
+            WorldUpdater.getInstance().submit(new WorldBlockUpdateTask(world, target, Blocks.AIR.defaultBlockState()));
+            //world.setBlockToAir(target);
+            //world.removeTileEntity(target);
+        }
+
+        Block targetBlock = blockData.getBlock();
+        BlockState targetState = targetBlock.defaultBlockState().setValue(SkinCubeBlock.MARKER, markerFacing);
+
+        HashMap<Direction, IPaintColor> colors = new HashMap<>();
+        for (Direction dir : Direction.values()) {
+            int rgb = slice.getRGB(dir.ordinal());
+            int type = slice.getPaintType(dir.ordinal());
+            PaintColor color = PaintColor.of(rgb, SkinPaintTypes.byId(type));
+            if (color.getPaintType() == SkinPaintTypes.NONE) {
+                continue;
+            }
+            colors.put(dir, color);
+        }
+
+        WorldBlockUpdateTask task = new WorldBlockUpdateTask(world, target, targetState);
+        task.modifier = state -> {
+            TileEntity tileEntity = world.getBlockEntity(target);
+            if (tileEntity instanceof IPaintable) {
+                ((IPaintable) tileEntity).setColors(colors);
+            }
+        };
+//        .setOnlyReplaceable(true)
+//        .setDelay(index / 5)
+        WorldUpdater.getInstance().submit(task);
+    }
 
 
 //    public static void apply(ISkinType skinType, @Nullable Predicate<ISkinPartType> predicate, BiFunction<BlockPos, Vector3i, WorldBlockUpdateTask> transform) {
@@ -371,125 +381,138 @@ public final class WorldUtils {
 //        }
 //    }
 
+    public static void copyPaintData(int[] paintData, SkyBox srcBox, SkyBox destBox, boolean mirror) {
+        // FIXME: has some bug
+        int srcX = srcBox.getBounds().getX();
+        int destX = destBox.getBounds().getX();
+        int destWidth = destBox.getBounds().getWidth();
+        srcBox.forEach((texture, x, y, z, dir) -> {
+            int dx = x;
+            if (mirror) {
+                dx = destX + destWidth - (x - srcX) - 1;
+            }
+            Point newTexture = destBox.get(dx, y, z, dir);
+            if (newTexture == null) {
+                return;
+            }
+            int color = paintData[texture.x + texture.y * PlayerTexture.TEXTURE_WIDTH];
+            paintData[newTexture.x + newTexture.y * PlayerTexture.TEXTURE_WIDTH] = color;
+        });
+    }
 
-//    public static void copySkinCubes(World world, BlockPos pos, ISkinPartType srcPart, ISkinPartType desPart, boolean mirror) throws SkinSaveException {
-//        SkinPart skinPart = saveArmourPart(world, srcPart, pos, null, false);
-//        if (skinPart != null) {
-//            skinPart.setSkinPart(desPart);
-//            loadSkinPartIntoWorld(world, skinPart, pos, null, mirror);
-//        }
-//    }
-//
-//    public static int clearEquipmentCubes(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps) {
-//        return clearEquipmentCubes(world, pos, skinType, skinProps, null);
-//    }
-//
-//    public static int clearMarkers(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
-//        int blockCount = 0;
-//        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-//            ISkinPartType skinPart = skinType.getSkinParts().get(i);
-//            if (partType != null) {
-//                if (partType != skinPart) {
-//                    continue;
-//                }
-//            }
-//            if (skinType == SkinTypeRegistry.skinBlock) {
-//                boolean multiblock = SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps);
-//                if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partBase & !multiblock) {
-//                    blockCount += clearMarkersForSkinPart(world, pos, skinPart);
-//                }
-//                if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock & multiblock) {
-//                    blockCount += clearMarkersForSkinPart(world, pos, skinPart);
-//                }
-//            } else {
-//                blockCount += clearMarkersForSkinPart(world, pos, skinPart);
-//            }
-//        }
-//        return blockCount;
-//    }
-//
-//    private static int clearMarkersForSkinPart(World world, BlockPos pos, ISkinPartType skinPart) {
-//        IRectangle3D buildSpace = skinPart.getBuildingSpace();
-//        IPoint3D offset = skinPart.getOffset();
-//        int blockCount = 0;
-//
-//        for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
-//            for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
-//                for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
-//                    BlockPos target = pos.add(
-//                            ix + -offset.getX() + buildSpace.getX(),
-//                            iy + -offset.getY(),
-//                            iz + offset.getZ() + buildSpace.getZ());
-//
-//                    if (world.isValid(target)) {
-//                        IBlockState state = world.getBlockState(target);
-//                        if (CubeRegistry.INSTANCE.isBuildingBlock(state.getBlock())) {
-//                            IBlockState newState = state.getBlock().getStateFromMeta(0);
-//                            SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(newState, target, world).setOnlyReplaceable(true));
-//                        }
-//                    }
-//
-//                }
-//            }
-//        }
-//        return blockCount;
-//    }
-//
-//    public static int clearEquipmentCubes(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
-//        int blockCount = 0;
-//        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-//            ISkinPartType skinPart = skinType.getSkinParts().get(i);
-//            if (partType != null) {
-//                if (partType != skinPart) {
-//                    continue;
-//                }
-//            }
-//            if (skinType == SkinTypeRegistry.skinBlock) {
-//                boolean multiblock = SkinProperties.PROP_BLOCK_MULTIBLOCK.getValue(skinProps);
-//                if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partBase & !multiblock) {
-//                    blockCount += clearEquipmentCubesForSkinPart(world, pos, skinPart);
-//                }
-//                if (skinPart == ((SkinBlock)SkinTypeRegistry.skinBlock).partMultiblock & multiblock) {
-//                    blockCount += clearEquipmentCubesForSkinPart(world, pos, skinPart);
-//                }
-//            } else {
-//                blockCount += clearEquipmentCubesForSkinPart(world, pos, skinPart);
-//            }
-//        }
-//        return blockCount;
-//    }
-//
-//    private static int clearEquipmentCubesForSkinPart(World world, BlockPos pos, ISkinPartType skinPart) {
-//        IRectangle3D buildSpace = skinPart.getBuildingSpace();
-//        IPoint3D offset = skinPart.getOffset();
-//        int blockCount = 0;
-//
-//        for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
-//            for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
-//                for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
-//                    BlockPos target = pos.add(
-//                            ix + -offset.getX() + buildSpace.getX(),
-//                            iy + -offset.getY(),
-//                            iz + offset.getZ() + buildSpace.getZ());
-//
-//                    if (world.isValid(target)) {
-//                        IBlockState state = world.getBlockState(target);
-//                        Block block = state.getBlock();
-//                        if (CubeRegistry.INSTANCE.isBuildingBlock(block)) {
-//                            SyncWorldUpdater.addWorldUpdate(new AsyncWorldUpdateBlock(Blocks.AIR.getDefaultState(), target, world).setDelay(blockCount / 5));
-//                            //world.setBlockToAir(target);
-//                            //world.removeTileEntity(target);
-//                            blockCount++;
-//                        }
-//                    }
-//
-//                }
-//            }
-//        }
-//        return blockCount;
-//    }
-//
-//    public static ArrayList<BlockPos> getListOfPaintableCubes(World world, BlockPos pos, ISkinType skinType) {
+    public static void clearPaintData(int[] paintData, SkyBox srcBox) {
+        srcBox.forEach((texture, x, y, z, dir) -> {
+            paintData[texture.x + texture.y * PlayerTexture.TEXTURE_WIDTH] = 0;
+        });
+    }
+
+    public static void copyCubes(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps, Direction direction, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws SkinSaveException {
+        SkinPart skinPart = saveArmourPart(world, srcPart, pos, null, false);
+        if (skinPart != null) {
+            skinPart.setSkinPart(destPart);
+            loadSkinPartIntoWorld(world, skinPart, pos, null, mirror);
+        }
+    }
+
+    public static int clearMarkers(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps, Direction direction, ISkinPartType partType) {
+        int blockCount = 0;
+        for (ISkinPartType skinPart : skinType.getParts()) {
+            if (partType != SkinPartTypes.UNKNOWN) {
+                if (partType != skinPart) {
+                    continue;
+                }
+            }
+            if (skinType == SkinTypes.BLOCK) {
+                boolean multiblock = skinProps.get(SkinProperty.BLOCK_MULTIBLOCK);
+                if (skinPart == SkinPartTypes.BLOCK & !multiblock) {
+                    blockCount += clearMarkersForSkinPart(world, pos, skinPart);
+                }
+                if (skinPart == SkinPartTypes.BLOCK_MULTI & multiblock) {
+                    blockCount += clearMarkersForSkinPart(world, pos, skinPart);
+                }
+            } else {
+                blockCount += clearMarkersForSkinPart(world, pos, skinPart);
+            }
+        }
+        return blockCount;
+    }
+
+    private static int clearMarkersForSkinPart(World world, BlockPos pos, ISkinPartType skinPart) {
+        Rectangle3i buildSpace = skinPart.getBuildingSpace();
+        Vector3i offset = skinPart.getOffset();
+        int blockCount = 0;
+
+        for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
+            for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
+                for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
+                    BlockPos target = pos.offset(
+                            ix + -offset.getX() + buildSpace.getX(),
+                            iy + -offset.getY(),
+                            iz + offset.getZ() + buildSpace.getZ());
+
+                    BlockState targetState = world.getBlockState(target);
+                    if (targetState.hasProperty(SkinCubeBlock.MARKER) && targetState.getValue(SkinCubeBlock.MARKER) != OptionalDirection.NONE) {
+                        BlockState newState = targetState.setValue(SkinCubeBlock.MARKER, OptionalDirection.NONE);
+                        WorldUpdater.getInstance().submit(new WorldBlockUpdateTask(world, target, newState));
+                        //        .setOnlyReplaceable(true)
+                        blockCount++;
+                    }
+                }
+            }
+        }
+        return blockCount;
+    }
+
+    public static int clearCubes(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps, Direction direction, ISkinPartType partType) {
+        int blockCount = 0;
+        for (ISkinPartType skinPart : skinType.getParts()) {
+            if (partType != SkinPartTypes.UNKNOWN) {
+                if (partType != skinPart) {
+                    continue;
+                }
+            }
+            if (skinType == SkinTypes.BLOCK) {
+                boolean multiblock = skinProps.get(SkinProperty.BLOCK_MULTIBLOCK);
+                if (skinPart == SkinPartTypes.BLOCK & !multiblock) {
+                    blockCount += clearEquipmentCubesForSkinPart(world, pos, skinPart);
+                }
+                if (skinPart == SkinPartTypes.BLOCK_MULTI & multiblock) {
+                    blockCount += clearEquipmentCubesForSkinPart(world, pos, skinPart);
+                }
+            } else {
+                blockCount += clearEquipmentCubesForSkinPart(world, pos, skinPart);
+            }
+        }
+        return blockCount;
+    }
+
+    private static int clearEquipmentCubesForSkinPart(World world, BlockPos pos, ISkinPartType skinPart) {
+        Rectangle3i buildSpace = skinPart.getBuildingSpace();
+        Vector3i offset = skinPart.getOffset();
+        int blockCount = 0;
+
+        for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
+            for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
+                for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
+                    BlockPos target = pos.offset(
+                            ix + -offset.getX() + buildSpace.getX(),
+                            iy + -offset.getY(),
+                            iz + offset.getZ() + buildSpace.getZ());
+
+                    BlockState targetState = world.getBlockState(target);
+                    if (targetState.getBlock() instanceof SkinCubeBlock) {
+                        WorldUpdater.getInstance().submit(new WorldBlockUpdateTask(world, target, Blocks.AIR.defaultBlockState()));
+                        //world.setBlockToAir(target);
+                        //world.removeTileEntity(target);
+                        blockCount++;
+                    }
+                }
+            }
+        }
+        return blockCount;
+    }
+
+    //    public static ArrayList<BlockPos> getListOfPaintableCubes(World world, BlockPos pos, ISkinType skinType) {
 //        ArrayList<BlockPos> blList = new ArrayList<BlockPos>();
 //        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
 //            ISkinPartType skinPart = skinType.getSkinParts().get(i);
@@ -521,25 +544,21 @@ public final class WorldUtils {
 //        }
 //    }
 //
-//    private static int getNumberOfCubesInPart(World world, BlockPos pos, ISkinPartType skinPart) {
-//        IRectangle3D buildSpace = skinPart.getBuildingSpace();
-//        IPoint3D offset = skinPart.getOffset();
-//        int cubeCount = 0;
-//        for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
-//            for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
-//                for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
-//
-//                    BlockPos target = pos.add(ix + -offset.getX() + buildSpace.getX(), iy + -offset.getY(), iz + offset.getZ() + buildSpace.getZ());
-//
-//                    if (world.isValid(target)) {
-//                        IBlockState blockState = world.getBlockState(target);
-//                        if (CubeRegistry.INSTANCE.isBuildingBlock(blockState.getBlock())) {
-//                            cubeCount++;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        return cubeCount;
-//    }
+    private static int getNumberOfCubesInPart(World world, BlockPos pos, ISkinPartType skinPart) {
+        Rectangle3i buildSpace = skinPart.getBuildingSpace();
+        Vector3i offset = skinPart.getOffset();
+        int cubeCount = 0;
+        for (int ix = 0; ix < buildSpace.getWidth(); ix++) {
+            for (int iy = 0; iy < buildSpace.getHeight(); iy++) {
+                for (int iz = 0; iz < buildSpace.getDepth(); iz++) {
+                    BlockPos target = pos.offset(ix + -offset.getX() + buildSpace.getX(), iy + -offset.getY(), iz + offset.getZ() + buildSpace.getZ());
+                    BlockState blockState = world.getBlockState(target);
+                    if (blockState.getBlock() instanceof SkinCubeBlock) {
+                        cubeCount++;
+                    }
+                }
+            }
+        }
+        return cubeCount;
+    }
 }

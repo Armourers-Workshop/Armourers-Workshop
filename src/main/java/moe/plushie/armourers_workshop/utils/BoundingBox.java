@@ -14,6 +14,8 @@ import java.util.function.Function;
 
 public class BoundingBox extends Rectangle3i {
 
+    public static final PlayerTextureModel MODEL = PlayerTextureModel.STAVE_V2;
+
     private final ISkinPartType partType;
 
     public BoundingBox(ISkinPartType partType, Rectangle3i rect) {
@@ -37,7 +39,7 @@ public class BoundingBox extends Rectangle3i {
     }
 
     public static Point getTexturePos(ISkinPartType partType, Vector3i offset, Direction dir) {
-        SkyBox box = PlayerTextureModel.STAVE_V2.get(partType);
+        SkyBox box = MODEL.get(partType);
         if (box == null) {
             return null;
         }

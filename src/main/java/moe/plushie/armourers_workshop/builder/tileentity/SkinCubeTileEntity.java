@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.tileentity.AbstractTileEntity;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
+import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModTileEntities;
@@ -54,14 +55,6 @@ public class SkinCubeTileEntity extends AbstractTileEntity implements IPaintable
         }
     }
 
-    @Override
-    public void sendBlockUpdates() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.BLOCK_UPDATE);
-        }
-    }
-
     private boolean checkRendererFromColors() {
         for (IPaintColor color : colors.values()) {
             if (color.getPaintType() != SkinPaintTypes.NORMAL) {
@@ -80,16 +73,14 @@ public class SkinCubeTileEntity extends AbstractTileEntity implements IPaintable
     public void setColor(Direction direction, IPaintColor color) {
         this.colors.put(direction, color);
         this.customRenderer = checkRendererFromColors();
-        this.setChanged();
-        this.sendBlockUpdates();
+        TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
     @Override
     public void setColors(Map<Direction, IPaintColor> colors) {
         this.colors.putAll(colors);
         this.customRenderer = checkRendererFromColors();
-        this.setChanged();
-        this.sendBlockUpdates();
+        TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
     @Override

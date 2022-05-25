@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.world;
 
 import moe.plushie.armourers_workshop.api.common.IWorldUpdateTask;
+import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.world.World;
@@ -15,7 +16,7 @@ public class WorldUpdater {
 
     private final HashMap<RegistryKey<World>, ArrayList<IWorldUpdateTask>> allTasks = new HashMap<>();
 
-    private final int perBlocksTick = 20;
+    private final int perBlocksTick = 10;
 
     public static WorldUpdater getInstance() {
         return INSTANCE;
@@ -25,8 +26,8 @@ public class WorldUpdater {
         allTasks.computeIfAbsent(task.getLevel().dimension(), k -> new ArrayList<>()).add(task);
     }
 
-
     public void tick(World world) {
+        TileEntityUpdateCombiner.begin();
         ArrayList<IWorldUpdateTask> failedTasks = new ArrayList<>();
         RegistryKey<World> key = world.dimension();
         for (int count = perBlocksTick; count > 0; /* noop */) {
@@ -42,6 +43,7 @@ public class WorldUpdater {
             }
         }
         failedTasks.forEach(this::submit);
+        TileEntityUpdateCombiner.end();
     }
 
     @Nullable

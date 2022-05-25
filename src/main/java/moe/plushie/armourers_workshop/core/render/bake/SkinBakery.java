@@ -184,62 +184,28 @@ public final class SkinBakery {
 //                bakeTimesIndex.set(0);
 //            }
 //            bakeTimes.set(index, (int) totalTime);
-//        try {
-//            Thread.sleep(10000); // 10s
-//        } catch (Exception e) {
-//        }
 
         BakedSkin bakedSkin = new BakedSkin(identifier, skin, scheme, usedCounter, colorInfo, bakedParts);
-        ModLog.debug("'{}' => accept baked skin", identifier);
+        ModLog.debug("'{}' => accept baked skin, time: {}ms", identifier, totalTime);
         complete.accept(Optional.of(bakedSkin));
         RenderSystem.recordRenderCall(() -> notifyBake(identifier, bakedSkin));
+
+        // if bake speed too fast, cause system I/O too high.
+        if (totalTime < 250) {
+            sleep(100);
+        }
+    }
+
+    private void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (Exception ignored) {
+        }
     }
 
     private void notifyBake(String identifier, BakedSkin bakedSkin) {
         listeners.forEach(listener -> listener.didBake(identifier, bakedSkin));
     }
-
-//    public void receivedUnbakedModel(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated, IBakedSkinReceiver skinReceiver) {
-////        bakingQueue.incrementAndGet();
-////        skinCompletion.submit(new BakingOven(skin, skinIdentifierRequested, skinIdentifierUpdated, skinReceiver));
-//        try {
-//            BakingOven oven = new BakingOven(skin, skinIdentifierRequested, skinIdentifierUpdated, skinReceiver);
-//            oven.call();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    private void loadAndBakeTexture(ResourceLocation texture, Consumer<Optional<BakedEntityTexture>> complete) {
-//        BakedEntityTexture bakedTexture = new BakedEntityTexture(texture);
-//        complete.accept(Optional.of(bakedTexture));
-//    }
-
-//    public BakedSkin backedModel(Skin skin) {
-//        BakingOven oven = new BakingOven(skin, null, null, null);
-//        return oven.call();
-//    }
-
-
-//
-//    private void checkBakery() {
-//        Future<BakedSkin> futureSkin = skinCompletion.poll();
-//        while (futureSkin != null) {
-//            try {
-//                BakedSkin bakedSkin = futureSkin.get();
-//                if (bakedSkin != null) {
-//                    bakingQueue.decrementAndGet();
-//                    if (bakedSkin.skin == null) {
-//                        ModLogger.log(Level.ERROR, "A skin failed to bake.");
-//                    }
-//                    bakedSkin.getSkinReceiver().onBakedSkin(bakedSkin);
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            futureSkin = skinCompletion.poll();
-//        }
-//    }
 
     public int getAverageBakeTime() {
         int totalItems = 0;
@@ -263,28 +229,5 @@ public final class SkinBakery {
         return bakingQueue.get();
     }
 
-//    private class BakingOven implements Callable<BakedSkin> {
-//
-//        private final Skin skin;
-//        private final SkinIdentifier skinIdentifierRequested;
-//        private final SkinIdentifier skinIdentifierUpdated;
-//        private final IBakedSkinReceiver skinReceiver;
-//
-//        public BakingOven(Skin skin, SkinIdentifier skinIdentifierRequested, SkinIdentifier skinIdentifierUpdated, IBakedSkinReceiver skinReceiver) {
-//            this.skin = skin;
-//            this.skinIdentifierRequested = skinIdentifierRequested;
-//            this.skinIdentifierUpdated = skinIdentifierUpdated;
-//            this.skinReceiver = skinReceiver;
-//        }
-//
-//        @Override
-//        public BakedSkin call() {
-////            Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-//            if (skin == null) {
-//                return null;
-////                return new BakedSkin(skin, skinIdentifierRequested, skinIdentifierUpdated, skinReceiver);
-//            }
-
-//            FastCache.INSTANCE.saveSkin(skin);
 
 }

@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.tileentity.AbstractTileEntity;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
+import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -41,15 +42,6 @@ public class ColorMixerTileEntity extends AbstractTileEntity implements IPaintPr
     @Override
     public void setColor(IPaintColor color) {
         this.color = color;
-        this.setChanged();
-        this.sendBlockUpdates();
-    }
-
-    @Override
-    public void sendBlockUpdates() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.BLOCK_UPDATE);
-        }
+        TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 }

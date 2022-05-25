@@ -12,6 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -75,6 +76,10 @@ public class AWTabController<Target> extends Screen {
             }
         }
         return null;
+    }
+
+    public Collection<Tab> getActiveTabs() {
+        return actives;
     }
 
     public Tab getSelectedTab() {

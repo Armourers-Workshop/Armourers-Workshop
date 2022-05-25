@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
@@ -64,7 +65,7 @@ public class OutfitMakerContainer extends AbstractBlockContainer {
         return false;
     }
 
-    public void crafting(GameProfile profile, PlayerEntity player) {
+    public void saveArmourItem(PlayerEntity player, GameProfile profile) {
         // check again before crafting to avoid fake request.
         OutfitMakerTileEntity tileEntity = getTileEntity(OutfitMakerTileEntity.class);
         if (!shouldCrafting() || tileEntity == null) {
@@ -122,12 +123,11 @@ public class OutfitMakerContainer extends AbstractBlockContainer {
             skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, tileEntity.getItemName());
             skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, tileEntity.getItemFlavour());
             // build
-            Skin skin = new Skin(skinProperties, SkinTypes.OUTFIT, paintData, skinParts);
+            Skin skin = SkinSerializer.makeSkin(SkinTypes.OUTFIT, skinProperties, paintData, skinParts);
             String identifier = SkinLoader.getInstance().saveSkin("", skin);
             SkinDescriptor descriptor = new SkinDescriptor(identifier, skin.getType());
             setOutputStack(descriptor.asItemStack());
         }
-
     }
 
     protected void addPlayerSlots(IInventory inventory, int slotsX, int slotsY) {
