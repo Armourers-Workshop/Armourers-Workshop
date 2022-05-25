@@ -63,7 +63,7 @@ public class SkinCubeBlock extends Block implements IBlockTintColorProvider, IHa
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-        return !material.isSolidBlocking();
+        return true;
     }
 
     @Override

@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.util.text.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -132,6 +133,7 @@ public final class TranslateUtils {
             if (!text.getString().equals(key)) {
                 return text;
             }
+            ModLog.debug("missing translation text for key {}", key);
             return title("skinPartType.armourers_workshop.all.base");
         }
 

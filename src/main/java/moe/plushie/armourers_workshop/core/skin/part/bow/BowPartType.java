@@ -14,7 +14,7 @@ public class BowPartType extends SkinPartType implements ICanHeld, ICanUse {
 
     public BowPartType(int frame) {
         super();
-        this.buildingSpace = new Rectangle3i(-10, -20, -46, 20, 62, 64);
+        this.buildingSpace = new Rectangle3i(-12, -32, -46, 24, 64, 64);
         this.guideSpace = new Rectangle3i(-2, -2, 2, 4, 4, 8);
         this.offset = getFrameOffset(frame);
         this.useRange = getFrameUseRange(frame);
@@ -34,11 +34,11 @@ public class BowPartType extends SkinPartType implements ICanHeld, ICanUse {
     public static Vector3i getFrameOffset(int frame) {
         switch (frame) {
             case 0:
-                return new Vector3i(-21, 0, 0);
+                return new Vector3i(-25, 0, 0);
             case 1:
                 return new Vector3i(0, 0, 0);
             case 2:
-                return new Vector3i(21, 0, 0);
+                return new Vector3i(25, 0, 0);
             default:
                 return null;
         }

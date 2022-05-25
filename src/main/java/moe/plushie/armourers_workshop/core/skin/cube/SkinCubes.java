@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
+import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinResourceLocation;
+import net.minecraft.block.Block;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,13 +12,13 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public final class SkinCubes {
 
-    private static final ISkinCube[] ALL_CUBES_MAPPING = new ISkinCube[256];
-    private static final Map<String, ISkinCube> ALL_CUBES = new HashMap<>();
+    private static final SkinCube[] ALL_CUBES_MAPPING = new SkinCube[256];
+    private static final Map<String, SkinCube> ALL_CUBES = new HashMap<>();
 
-    public static final ISkinCube SOLID = register("solid", 0, false, false);
-    public static final ISkinCube GLOWING = register("glowing", 1, false, true);
-    public static final ISkinCube GLASS = register("glass", 2, true, false);
-    public static final ISkinCube GLASS_GLOWING = register("glass_gowing", 3, true, true);
+    public static final ISkinCube SOLID = register("solid", 0, false, false, ModBlocks.SKIN_CUBE);
+    public static final ISkinCube GLOWING = register("glowing", 1, false, true, ModBlocks.SKIN_CUBE_GLOWING);
+    public static final ISkinCube GLASS = register("glass", 2, true, false, ModBlocks.SKIN_CUBE_GLASS);
+    public static final ISkinCube GLASS_GLOWING = register("glass_gowing", 3, true, true, ModBlocks.SKIN_CUBE_GLASS_GLOWING);
 
 
     public static ISkinCube byName(String name) {
@@ -35,8 +37,18 @@ public final class SkinCubes {
         return SOLID;
     }
 
-    private static SkinCube register(String name, int id, boolean glass, boolean glowing) {
-        SkinCube cube = new SkinCube(id, glass, glowing);
+    public static ISkinCube byBlock(Block block) {
+        for (SkinCube cube : ALL_CUBES.values()) {
+            if (cube.getBlock() == block) {
+                return cube;
+            }
+        }
+        return SOLID;
+    }
+
+
+    private static SkinCube register(String name, int id, boolean glass, boolean glowing, Block block) {
+        SkinCube cube = new SkinCube(id, glass, glowing, block);
         cube.setRegistryName(new SkinResourceLocation("armourers", name));
         if (ALL_CUBES.containsKey(cube.getRegistryName().toString())) {
             ModLog.warn("A mod tried to register a cube with an id that is in use.");

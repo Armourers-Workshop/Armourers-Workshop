@@ -13,9 +13,9 @@ public class LeftArmPartType extends SkinPartType implements ISkinPartTypeTextur
 
     public LeftArmPartType() {
         super();
-        this.buildingSpace = new Rectangle3i(-11, -16, -14, 14, 32, 28);
+        this.buildingSpace = new Rectangle3i(-19, -16, -16, 24, 32, 32);
         this.guideSpace = new Rectangle3i(-3, -10, -2, 4, 12, 4);
-        this.offset = new Vector3i(10, -7, 0);
+        this.offset = new Vector3i(18, -7, 0);
     }
 
     @Override

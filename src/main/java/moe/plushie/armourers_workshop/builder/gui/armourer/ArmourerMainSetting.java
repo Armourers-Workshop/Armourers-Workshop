@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.gui.armourer;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.builder.container.ArmourerContainer;
@@ -12,7 +13,11 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
@@ -24,10 +29,11 @@ import java.util.Objects;
 
 public class ArmourerMainSetting extends ArmourerBaseSetting {
 
+    protected final ArmourerContainer container;
     protected final ArmourerTileEntity tileEntity;
     protected final ArtifactVersion modVersion;
 
-    protected AWComboBox skinTypeBox;
+    protected AWSkinTypeComboBox skinTypeBox;
     protected AWTextField skinName;
     protected AWTextField skinFlavor;
 
@@ -39,6 +45,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
     protected ArmourerMainSetting(ArmourerContainer container) {
         super("inventory.armourers_workshop.armourer.main");
         this.modVersion = AWCore.getVersion();
+        this.container = container;
         this.tileEntity = container.getTileEntity(ArmourerTileEntity.class);
         if (this.tileEntity != null) {
             this.skinType = tileEntity.getSkinType();
@@ -58,7 +65,6 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
     @Override
     protected void init() {
         super.init();
-        SkinProperties skinProperties = tileEntity.getSkinProperties();
 
         // TODO Make button icons for save/load buttons.
         // GuiIconButton buttonSave = new GuiIconButton(parent, 13, 88, 16, 16, 16, GuiHelper.getLocalizedControlName(guiName, "save"), TEXTURE_BUTTONS);
@@ -70,14 +76,12 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
         this.addButton(btnLoad);
 
         this.skinName = new AWTextField(font, leftPos + 8, topPos + 58, 158, 16, StringTextComponent.EMPTY);
-        this.skinName.setValue(skinProperties.get(SkinProperty.ALL_CUSTOM_NAME));
         this.skinName.setMaxLength(40);
         this.skinName.setEventListener(this::updateSkinPropertiesEvent);
         this.skinName.setReturnHandler(this::updateSkinPropertiesReturn);
         this.addButton(skinName);
 
         this.skinFlavor = new AWTextField(font, leftPos + 8, topPos + 90, 158, 16, StringTextComponent.EMPTY);
-        this.skinFlavor.setValue(skinProperties.get(SkinProperty.ALL_FLAVOUR_TEXT));
         this.skinFlavor.setMaxLength(40);
         this.skinFlavor.setEventListener(this::updateSkinPropertiesEvent);
         this.skinFlavor.setReturnHandler(this::updateSkinPropertiesReturn);
@@ -101,11 +105,16 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
         this.skinTypeBox.setMaxRowCount(8);
         this.skinTypeBox.setPopLevel(200);
         this.addButton(skinTypeBox);
+
+        this.reloadData();
     }
 
     @Override
-    public void tick() {
-        super.tick();
+    public void reloadData() {
+        SkinProperties skinProperties = tileEntity.getSkinProperties();
+        this.skinName.setValue(skinProperties.get(SkinProperty.ALL_CUSTOM_NAME));
+        this.skinFlavor.setValue(skinProperties.get(SkinProperty.ALL_FLAVOUR_TEXT));
+        this.skinTypeBox.setSelectedSkin(tileEntity.getSkinType());
     }
 
     @Override
@@ -158,11 +167,25 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
     }
 
     private void loadSkin(Button sender) {
-
+        PlayerEntity player = Minecraft.getInstance().player;
+        if (player == null || !container.shouldLoadArmourItem(player)) {
+            return;
+        }
+        UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_LOAD;
+        UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, new CompoundNBT());
+        NetworkHandler.getInstance().sendToServer(packet);
     }
 
     private void saveSkin(Button sender) {
-
+        PlayerEntity player = Minecraft.getInstance().player;
+        if (player == null || !container.shouldSaveArmourItem(player)) {
+            return;
+        }
+        GameProfile origin = Minecraft.getInstance().getUser().getGameProfile();
+        CompoundNBT nbt = NBTUtil.writeGameProfile(new CompoundNBT(), origin);
+        UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_SAVE;
+        UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, nbt);
+        NetworkHandler.getInstance().sendToServer(packet);
     }
 
     private void updateSkinPropertiesReturn(String value) {

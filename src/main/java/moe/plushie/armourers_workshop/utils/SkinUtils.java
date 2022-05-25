@@ -112,6 +112,9 @@ public final class SkinUtils {
 
     public static double getRotationDegrees(SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
         SkinProperties properties = skinPart.getProperties();
+        if (properties == null) {
+            return 0;
+        }
 
         double maxAngle = properties.get(SkinProperty.WINGS_MAX_ANGLE);
         double minAngle = properties.get(SkinProperty.WINGS_MIN_ANGLE);

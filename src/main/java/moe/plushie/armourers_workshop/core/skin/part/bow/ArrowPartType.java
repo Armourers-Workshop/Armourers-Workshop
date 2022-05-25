@@ -8,8 +8,8 @@ public class ArrowPartType extends SkinPartType {
 
     public ArrowPartType() {
         super();
-        this.buildingSpace = new Rectangle3i(-5, -5, -2, 11, 11, 16);
+        this.buildingSpace = new Rectangle3i(-8, -8, -6, 16, 16, 24);
         this.guideSpace = new Rectangle3i(0, 0, 0, 0, 0, 0);
-        this.offset = new Vector3i(0, 0, 21);
+        this.offset = new Vector3i(0, 0, 25);
     }
 }

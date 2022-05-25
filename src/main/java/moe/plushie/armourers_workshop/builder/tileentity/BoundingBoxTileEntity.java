@@ -14,6 +14,7 @@ import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.utils.BoundingBox;
 import moe.plushie.armourers_workshop.utils.TextureUtils;
+import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -83,14 +84,6 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
     }
 
     @Override
-    public void sendBlockUpdates() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.BLOCK_UPDATE);
-        }
-    }
-
-    @Override
     public boolean shouldChangeColor(Direction direction) {
         // we can't change the side color of the face without finding the texture.
         return BoundingBox.getTexturePos(partType, guide, direction) != null;
@@ -116,15 +109,7 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
 
     @Override
     public void setColors(Map<Direction, IPaintColor> colors) {
-        ArmourerTileEntity tileEntity = getParentTileEntity();
-        if (tileEntity == null || level == null) {
-            return;
-        }
-        int oldVersion = tileEntity.getVersion();
         colors.forEach(this::setArmourerTextureColor);
-        if (oldVersion != tileEntity.getVersion()) {
-            this.applyArmourerChanges();
-        }
     }
 
     public void clearArmourerTextureColors() {
@@ -135,7 +120,6 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
         for (Direction dir : Direction.values()) {
             this.setArmourerTextureColor(dir, PaintColor.CLEAR);
         }
-        this.applyArmourerChanges();
     }
 
     public IPaintColor getArmourerTextureColor(Direction direction) {
@@ -155,6 +139,7 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
         Point texture = BoundingBox.getTexturePos(partType, guide, direction);
         if (texture != null && tileEntity != null) {
             tileEntity.setPaintColor(texture, color);
+            TileEntityUpdateCombiner.combine(tileEntity, tileEntity::sendBlockUpdates);
         }
     }
 
@@ -169,23 +154,6 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
             }
         }
         return PaintColor.CLEAR;
-    }
-
-    private void applyArmourerChanges() {
-        ArmourerTileEntity tileEntity = getParentTileEntity();
-        if (tileEntity == null || level == null) {
-            return;
-        }
-        ModLog.debug("apply armourer changes");
-        tileEntity.sendBlockUpdates();
-//        BlockState state = getBlockState();
-//        BlockState newState = BoundingBoxBlock.applyColor(getBlockState(), this::getArmourerTextureColor);
-//        if (state.equals(newState)) {
-//            level.setBlocksDirty(getBlockPos(), state, newState);
-////            level.sendBlockUpdated(getBlockPos(), newState, newState, Constants.BlockFlags.DEFAULT_AND_RERENDER);
-//        } else {
-//            level.setBlock(getBlockPos(), newState, Constants.BlockFlags.DEFAULT_AND_RERENDER);
-//        }
     }
 
     private ArmourerTileEntity getParentTileEntity() {
