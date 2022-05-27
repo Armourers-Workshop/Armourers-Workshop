@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -46,7 +47,6 @@ public class ArmourerCopyDialog extends AWConfirmDialog {
 
         this.mirrorCheckBox = new AWCheckBox(confirmButton.x + 1, bottom - 22, 9, 9, getText("mirror"), false, Objects::hash);
         this.paintCheckBox = new AWCheckBox(confirmButton.x + 1, bottom - 11, 9, 9, getText("copyPaint"), false, Objects::hash);
-
 
         this.sourcePartComboBox = new AWComboBox(confirmButton.x + 1, topPos + 35, 100, 14, getItems(partTypes), 0, Objects::hash);
         this.destinationPartComboBox = new AWComboBox(right - 100 - 1, topPos + 35, 100, 14, getItems(partTypes), 0, Objects::hash);

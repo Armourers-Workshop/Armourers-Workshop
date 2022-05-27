@@ -10,8 +10,10 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
+import moe.plushie.armourers_workshop.utils.SkinPaintData;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,10 +30,10 @@ public class Skin implements ISkin {
     public int serverId = -1;
     public int paintTextureId;
     //    public SkinModelTexture skinModelTexture;
-    private int[] paintData;
+    private SkinPaintData paintData;
     private int lightHash = 0;
 
-    public Skin(SkinProperties properties, ISkinType skinType, int[] paintData, ArrayList<SkinPart> skinParts) {
+    public Skin(SkinProperties properties, ISkinType skinType, SkinPaintData paintData, ArrayList<SkinPart> skinParts) {
         this.properties = properties;
         this.skinType = skinType;
         this.paintData = paintData;
@@ -156,11 +158,8 @@ public class Skin implements ISkin {
         return skinType;
     }
 
-    public boolean hasPaintData() {
-        return paintData != null;
-    }
-
-    public int[] getPaintData() {
+    @Nullable
+    public SkinPaintData getPaintData() {
         return paintData;
     }
 
@@ -260,7 +259,7 @@ public class Skin implements ISkin {
     public String toString() {
         String returnString = "Skin [properties=" + properties + ", type=" + skinType.getRegistryName();
         if (this.paintData != null) {
-            returnString += ", paintData=" + Arrays.hashCode(paintData);
+            returnString += ", paintData=" + paintData;
         }
         returnString += "]";
         return returnString;

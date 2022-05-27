@@ -114,7 +114,7 @@ public class ItemTooltipHandler {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinDyeCount", counter.getDyeTotal()));
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinMarkerCount", counter.getMarkerTotal()));
 
-            if (skin.hasPaintData()) {
+            if (skin.getPaintData() != null) {
                 tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinPaintData", "64x32"));
             }
 

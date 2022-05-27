@@ -50,7 +50,7 @@ public class ArmourerTileEntity extends AbstractTileEntity {
     protected SkinProperties skinProperties = new SkinProperties();
     protected PlayerTextureDescriptor textureDescriptor = PlayerTextureDescriptor.EMPTY;
 
-    protected int[] paintData;
+    protected SkinPaintData paintData;
 
     protected Object renderData;
     protected AxisAlignedBB b;
@@ -147,37 +147,34 @@ public class ArmourerTileEntity extends AbstractTileEntity {
         TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
-    public void setPaintData(int[] paintData) {
+    public void setPaintData(SkinPaintData paintData) {
         if (this.paintData == paintData) {
             return;
         }
         if (paintData != null) {
-            this.paintData = new int[PlayerTexture.TEXTURE_SIZE];
-            System.arraycopy(paintData, 0, this.paintData, 0, paintData.length);
+            this.paintData = paintData.clone();
         } else {
             this.paintData = null;
         }
         TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
-    public int[] getPaintData() {
+    public SkinPaintData getPaintData() {
         return paintData;
     }
 
     public IPaintColor getPaintColor(Point pos) {
-        int index = pos.x + pos.y * PlayerTexture.TEXTURE_WIDTH;
-        if (paintData != null && index < paintData.length) {
-            return PaintColor.of(paintData[index]);
+        if (paintData != null) {
+            return PaintColor.of(paintData.getColor(pos));
         }
         return null;
     }
 
     public void setPaintColor(Point pos, IPaintColor paintColor) {
-        int index = pos.x + pos.y * PlayerTexture.TEXTURE_WIDTH;
         if (this.paintData == null) {
-            this.paintData = new int[PlayerTexture.TEXTURE_SIZE];
+            this.paintData = new SkinPaintData(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT);
         }
-        this.paintData[index] = paintColor.getRawValue();
+        this.paintData.setColor(pos.x, pos.y, paintColor.getRawValue());
         this.setChanged();
     }
 
@@ -257,9 +254,13 @@ public class ArmourerTileEntity extends AbstractTileEntity {
         BlockPos pos = getBlockPos().offset(0, 1, 0);
         Direction direction = Direction.NORTH;
         WorldUtils.clearCubes(world, pos, getSkinType(), getSkinProperties(), direction, partType);
+        // when just clear a part, we don't reset skin properties.
+        if (partType != SkinPartTypes.UNKNOWN) {
+            return;
+        }
         // remake all properties.
         boolean isMultiBlock = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
-        remakeSkinProperties();
+        skinProperties = new SkinProperties();
         skinProperties.put(SkinProperty.BLOCK_MULTIBLOCK, isMultiBlock);
         TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }

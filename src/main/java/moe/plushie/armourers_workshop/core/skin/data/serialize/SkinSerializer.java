@@ -16,6 +16,7 @@ import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeExcepti
 import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.utils.SkinPaintData;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -81,7 +82,7 @@ public class SkinSerializer {
         }
     }
 
-    public static Skin makeSkin(ISkinType skinType, SkinProperties properties, int[] paintData, ArrayList<SkinPart> skinParts) {
+    public static Skin makeSkin(ISkinType skinType, SkinProperties properties, SkinPaintData paintData, ArrayList<SkinPart> skinParts) {
         // Update skin properties.
         if (properties.get(SkinProperty.MODEL_OVERRIDE)) {
             if (skinType == SkinTypes.ARMOR_HEAD) {

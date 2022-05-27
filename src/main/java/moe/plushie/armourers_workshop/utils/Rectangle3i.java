@@ -1,10 +1,9 @@
 package moe.plushie.armourers_workshop.utils;
 
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector3i;
 
+import java.util.Iterator;
 import java.util.Objects;
 
 public class Rectangle3i {
@@ -173,9 +172,42 @@ public class Rectangle3i {
         return new Rectangle3i(x + tx, y + ty, z + tz, width, height, depth);
     }
 
+    public Iterable<Vector3i> enumerateZYX() {
+        // enumerate order is z/y/x
+        return () -> new Iterator<Vector3i>() {
+
+            int ix = 0;
+            int iy = 0;
+            int iz = 0;
+
+            @Override
+            public boolean hasNext() {
+                return ix < width && iy < height && iz < depth;
+            }
+
+            @Override
+            public Vector3i next() {
+                int dx = ix + x;
+                int dy = iy + y;
+                int dz = iz + z;
+                iz += 1;
+                if (iz >= depth) {
+                    iz = 0;
+                    iy += 1;
+                }
+                if (iy >= height) {
+                    iy = 0;
+                    ix += 1;
+                }
+                return new Vector3i(dx, dy, dz);
+            }
+        };
+    }
+
     @Override
     public String toString() {
         return "Rectangle3i [x=" + x + ", y=" + y + ", z=" + z + ", width="
                 + width + ", height=" + height + ", depth=" + depth + "]";
     }
+
 }

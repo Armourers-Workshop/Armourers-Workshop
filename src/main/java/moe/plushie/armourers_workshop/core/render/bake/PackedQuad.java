@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.render.bake;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
+import moe.plushie.armourers_workshop.utils.SkinPaintData;
 import moe.plushie.armourers_workshop.utils.SkyBox;
 import moe.plushie.armourers_workshop.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
@@ -44,16 +45,16 @@ public class PackedQuad {
         return new PackedQuad(bounds, renderShape, SkinCuller.cullFaces(data, bounds));
     }
 
-    public static HashMap<ISkinPartType, PackedQuad> from(int width, int height, int[] paintData) {
+    public static HashMap<ISkinPartType, PackedQuad> from(SkinPaintData paintData) {
         HashMap<ISkinPartType, PackedQuad> allQuads = new HashMap<>();
-        if (paintData == null || paintData.length == 0) {
+        if (paintData == null) {
             return allQuads;
         }
-        for (Map.Entry<ISkinPartType, SkyBox> entry : PlayerTextureModel.of(width, height, false).entrySet()) {
+        for (Map.Entry<ISkinPartType, SkyBox> entry : PlayerTextureModel.of(paintData.getWidth(), paintData.getHeight(), false).entrySet()) {
             SkyBox box = entry.getValue();
             ArrayList<SkinCubeFace> quads = new ArrayList<>();
             box.forEach((texture, x, y, z, dir) -> {
-                PaintColor paintColor = PaintColor.of(paintData[texture.y * width + texture.x]);
+                PaintColor paintColor = PaintColor.of(paintData.getColor(texture));
                 if (paintColor.getPaintType() == SkinPaintTypes.NONE) {
                     return;
                 }

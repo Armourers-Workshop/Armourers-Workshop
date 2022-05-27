@@ -12,6 +12,7 @@ import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.utils.SkinPaintData;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 
 import java.io.DataInputStream;
@@ -81,10 +82,12 @@ public final class SkinSerializerV12 {
         StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_TYPE_FOOTER);
         // Write paint data.
         StreamUtils.writeString(stream, StandardCharsets.US_ASCII, TAG_SKIN_PAINT_HEADER);
-        if (skin.hasPaintData()) {
+        if (skin.getPaintData() != null) {
             stream.writeBoolean(true);
+            // TODO: Support v2 skin
+            int[] colors = skin.getPaintData().getData();
             for (int i = 0; i < PlayerTextureModel.TEXTURE_OLD_SIZE; i++) {
-                stream.writeInt(skin.getPaintData()[i]);
+                stream.writeInt(colors[i]);
             }
         } else {
             stream.writeBoolean(false);
@@ -201,14 +204,15 @@ public final class SkinSerializerV12 {
                 ModLog.error("Error loading skin paint header.");
             }
         }
-        int[] paintData = null;
+        SkinPaintData paintData = null;
         if (fileVersion > 7) {
             boolean hasPaintData = stream.readBoolean();
             if (hasPaintData) {
-                paintData = new int[PlayerTextureModel.TEXTURE_OLD_SIZE];
+                int[] colors = new int[PlayerTextureModel.TEXTURE_OLD_SIZE];
                 for (int i = 0; i < PlayerTextureModel.TEXTURE_OLD_SIZE; i++) {
-                    paintData[i] = stream.readInt();
+                    colors[i] = stream.readInt();
                 }
+                paintData = new SkinPaintData(PlayerTextureModel.TEXTURE_OLD_WIDTH, PlayerTextureModel.TEXTURE_OLD_HEIGHT, colors);
             }
         }
         if (fileVersion > 12) {

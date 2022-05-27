@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.skin.*;
 import moe.plushie.armourers_workshop.builder.tileentity.OutfitMakerTileEntity;
 import moe.plushie.armourers_workshop.core.container.AbstractBlockContainer;
+import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -14,9 +15,11 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
+import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import moe.plushie.armourers_workshop.utils.PaintingUtils;
+import moe.plushie.armourers_workshop.utils.SkinPaintData;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlot;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -74,7 +77,7 @@ public class OutfitMakerContainer extends AbstractBlockContainer {
         ArrayList<SkinPart> skinParts = new ArrayList<>();
         SkinProperties skinProperties = new SkinProperties();
         String partIndexs = "";
-        int[] paintData = null;
+        SkinPaintData paintData = null;
         int skinIndex = 0;
         for (ItemStack itemStack : getInputStacks()) {
             SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
@@ -87,14 +90,14 @@ public class OutfitMakerContainer extends AbstractBlockContainer {
                 skinParts.add(part);
             }
             // TODO: IMP
-            if (skin.hasPaintData()) {
+            if (skin.getPaintData() != null) {
                 if (paintData == null) {
-                    paintData = new int[64 * 32];
+                    paintData = new SkinPaintData(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT);
                 }
                 for (ISkinPartType partType : skin.getType().getParts()) {
                     if (partType instanceof ISkinPartTypeTextured) {
                         ISkinPartTypeTextured texType = ((ISkinPartTypeTextured) partType);
-                        paintPart(texType, paintData, skin.getPaintData());
+                        mergePaintPart(texType, paintData, skin.getPaintData());
                     }
                 }
             }
@@ -176,11 +179,9 @@ public class OutfitMakerContainer extends AbstractBlockContainer {
         return Iterables.transform(Iterables.skip(Iterables.limit(slots, slots.size() - 1), 36), Slot::getItem);
     }
 
-    private int[] paintPart(ISkinPartTypeTextured texType, int[] desPaint, int[] srcPaint) {
-        int textureWidth = 64;
-        int textureHeight = 32;
-
+    private void mergePaintPart(ISkinPartTypeTextured texType, SkinPaintData desPaint, SkinPaintData srcPaint) {
         Point pos = texType.getTextureSkinPos();
+
         int width = (texType.getTextureModelSize().getX() * 2) + (texType.getTextureModelSize().getZ() * 2);
         int height = texType.getTextureModelSize().getY() + texType.getTextureModelSize().getZ();
 
@@ -188,13 +189,11 @@ public class OutfitMakerContainer extends AbstractBlockContainer {
             for (int iy = 0; iy < height; iy++) {
                 int x = pos.x + ix;
                 int y = pos.y + iy;
-                byte[] rgbt = PaintingUtils.intToBytes(srcPaint[x + (y * textureWidth)]);
-                if ((rgbt[3] & 0xFF) != SkinPaintTypes.NONE.getId()) {
-                    desPaint[x + (y * textureWidth)] = srcPaint[x + (y * textureWidth)];
+                int color = srcPaint.getColor(x, y);
+                if ((color & 0xff000000) != 0) {
+                    desPaint.setColor(x, y, color);
                 }
             }
         }
-
-        return desPaint;
     }
 }
