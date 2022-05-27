@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.render.other;
 import java.util.Objects;
 
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.utils.SkinPaintData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.*;
 import net.minecraft.util.ResourceLocation;
@@ -13,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class SkinDynamicTexture extends DynamicTexture {
 
-    private int[] paintData;
+    private SkinPaintData paintData;
 
     private NativeImage downloadedImage;
     private ResourceLocation refer;
@@ -43,11 +44,11 @@ public class SkinDynamicTexture extends DynamicTexture {
         }
     }
 
-    public int[] getPaintData() {
+    public SkinPaintData getPaintData() {
         return paintData;
     }
 
-    public void setPaintData(int[] paintData) {
+    public void setPaintData(SkinPaintData paintData) {
         if (this.paintData != paintData) {
             this.paintData = paintData;
             this.needsUpdate = true;
@@ -55,7 +56,7 @@ public class SkinDynamicTexture extends DynamicTexture {
             if (paintData == null) {
                 return;
             }
-            for (int value : paintData) {
+            for (int value : paintData.getData()) {
                 if ((value & 0xff000000) != 0) {
                     this.changeTotal += 1;
                 }
@@ -74,18 +75,15 @@ public class SkinDynamicTexture extends DynamicTexture {
             return;
         }
         mergedImage.copyFrom(downloadedImage);
-        for (int iy = 0; iy < PlayerTexture.TEXTURE_HEIGHT; ++iy) {
-            for (int ix = 0; ix < PlayerTexture.TEXTURE_WIDTH; ++ix) {
-                int idx = ix + iy * PlayerTexture.TEXTURE_WIDTH;
-                if (idx < paintData.length) {
-                    int value = paintData[idx];
-                    if ((value & 0xff000000) != 0) {
-                        int r = value >> 16 & 0xff;
-                        int g = value >> 8 & 0xff;
-                        int b = value & 0xff;
-                        int fixed = b << 16 | g << 8 | r;  // ARGB => ABGR
-                        mergedImage.setPixelRGBA(ix, iy, 0xff000000 | fixed);
-                    }
+        for (int iy = 0; iy < paintData.getHeight(); ++iy) {
+            for (int ix = 0; ix < paintData.getWidth(); ++ix) {
+                int color = paintData.getColor(ix, iy);
+                if ((color & 0xff000000) != 0) {
+                    int r = color >> 16 & 0xff;
+                    int g = color >> 8 & 0xff;
+                    int b = color & 0xff;
+                    int fixed = b << 16 | g << 8 | r;  // ARGB => ABGR
+                    mergedImage.setPixelRGBA(ix, iy, 0xff000000 | fixed);
                 }
             }
         }

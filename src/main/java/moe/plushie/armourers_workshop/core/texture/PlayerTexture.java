@@ -8,6 +8,7 @@ public class PlayerTexture {
 
     public static final int TEXTURE_WIDTH = 64;
     public static final int TEXTURE_HEIGHT = 64;
+
     public static final int TEXTURE_SIZE = TEXTURE_WIDTH * TEXTURE_HEIGHT;
 
     public static final PlayerTexture DEFAULT = new PlayerTexture(null, null, null);

@@ -1,12 +1,16 @@
 package moe.plushie.armourers_workshop.core.gui.widget;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 @SuppressWarnings("NullableProblems")
@@ -74,5 +78,25 @@ public class AWAbstractDialog extends Screen {
 
     public void whenOnClose(Consumer<AWAbstractDialog> completeHandler) {
         this.completeHandler = completeHandler;
+    }
+
+
+    @Override
+    protected <T extends IGuiEventListener> T addWidget(T widget) {
+        T value = super.addWidget(widget);
+        if (isFirstResponder(value)) {
+            for (int i = 0; i < children.size(); ++i) {
+                if (!isFirstResponder(children.get(i))) {
+                    children.remove(widget);
+                    children.add(i, widget);
+                    break;
+                }
+            }
+        }
+        return value;
+    }
+
+    protected boolean isFirstResponder(IGuiEventListener listener) {
+        return listener instanceof AWComboBox;
     }
 }

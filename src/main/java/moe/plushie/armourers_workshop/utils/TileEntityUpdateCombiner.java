@@ -16,12 +16,12 @@ public class TileEntityUpdateCombiner {
 
     public static void end() {
         started = false;
+        pending.keySet().forEach(TileEntity::setChanged);
         pending.values().forEach(Runnable::run);
         pending.clear();
     }
 
     public static <T extends TileEntity> void combine(T tileEntity, Runnable handler) {
-        tileEntity.setChanged();
         pending.put(tileEntity, handler);
         if (!started) {
             end();

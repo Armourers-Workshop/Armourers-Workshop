@@ -248,7 +248,7 @@ public class AWDataSerializers {
     }
 
     @Nullable
-    public static int[] getPaintData(CompoundNBT nbt, String key) {
+    public static SkinPaintData getPaintData(CompoundNBT nbt, String key) {
         if (nbt != null && nbt.contains(key, Constants.NBT.TAG_BYTE_ARRAY)) {
             try {
                 ByteBuf buffer = Unpooled.wrappedBuffer(nbt.getByteArray(key));
@@ -263,7 +263,7 @@ public class AWDataSerializers {
                     }
                 }
                 IOUtils.closeQuietly(dataStream, compressedStream, bufferedStream);
-                return colors;
+                return new SkinPaintData(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT, colors);
             } catch (Exception ignored) {
                 return null;
             }
@@ -271,9 +271,10 @@ public class AWDataSerializers {
         return null;
     }
 
-    public static void putPaintData(CompoundNBT nbt, String key, int[] colors) {
-        if (colors != null) {
+    public static void putPaintData(CompoundNBT nbt, String key, SkinPaintData paintData) {
+        if (paintData != null) {
             try {
+                int[] colors = paintData.getData();
                 ByteBuf buffer = Unpooled.buffer();
                 ByteBufOutputStream bufferedStream = new ByteBufOutputStream(buffer);
                 GZIPOutputStream compressedStream = new GZIPOutputStream(bufferedStream);

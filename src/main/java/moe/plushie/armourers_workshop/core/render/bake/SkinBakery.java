@@ -162,7 +162,7 @@ public final class SkinBakery {
             // part.clearCubeData();
         }
 
-        for (Map.Entry<ISkinPartType, PackedQuad> entry : PackedQuad.from(64, 32, skin.getPaintData()).entrySet()) {
+        for (Map.Entry<ISkinPartType, PackedQuad> entry : PackedQuad.from(skin.getPaintData()).entrySet()) {
             PackedQuad quads = entry.getValue();
             TexturePart part = new TexturePart(entry.getKey(), quads.getBounds(), quads.getRenderShape());
             BakedSkinPart bakedPart = new BakedSkinPart(part, quads);

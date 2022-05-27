@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.gui.widget;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -87,5 +88,6 @@ public class AWCheckBox extends Button {
             color = 0xffa0a0a0;
         }
         font.draw(matrixStack, getMessage(), x + iconWidth + 2, y + 1, color);
+        RenderSystem.enableAlphaTest();
     }
 }

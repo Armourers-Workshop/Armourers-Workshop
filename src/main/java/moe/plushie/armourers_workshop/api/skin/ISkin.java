@@ -9,5 +9,8 @@ public interface ISkin {
      */
     <T extends ISkinType> T getType();
 
+    /**
+     * Get the part type of this skin.
+     */
     List<? extends ISkinPart> getParts();
 }
