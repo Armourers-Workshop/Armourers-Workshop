@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.core.gui.hologramprojector;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
-import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWCheckBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWSliderBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateHologramProjectorPacket;
+import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
@@ -71,7 +70,6 @@ public class HologramProjectorRotationOffsetSetting extends AWTabPanel {
         super.removed();
     }
 
-
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         int x = (width - contentWidth) / 2;
@@ -101,7 +99,6 @@ public class HologramProjectorRotationOffsetSetting extends AWTabPanel {
         addButton(slider);
         return slider;
     }
-
 
     private void updateValue(Button button) {
         float x = (float) sliderX.getValue();

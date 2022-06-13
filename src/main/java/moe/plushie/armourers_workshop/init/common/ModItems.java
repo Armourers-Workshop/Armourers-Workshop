@@ -82,12 +82,12 @@ public class ModItems {
 
     public static final Item LINKING_TOOL = register("linking-tool", LinkingToolItem::new, p -> p.tab(MAIN_GROUP));
     public static final Item SKIN_TEMPLATE = register("skin-template", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
-    public static final Item SOAP = register("soap", FlavouredItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
+    public static final Item SOAP = register("soap", SoapItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
     // book
     public static final Item GIFT_SACK = register("gift-sack", GiftSackItem::new, p -> p.stacksTo(64).tab(MAIN_GROUP));
     //    public static final Item ARMOUR_CONTAINER = register("armour-container", FlavouredItem::new, p -> p.stacksTo(16).tab(MAIN_GROUP));
 
-    public static final Item ARMOURER = registerBlock("armourer", ModBlocks.ARMOURER, p -> p.rarity(Rarity.RARE).tab(BUILDING_GROUP));
+    public static final Item ARMOURER = registerBlock("armourer", ModBlocks.ARMOURER, p -> p.rarity(Rarity.EPIC).tab(BUILDING_GROUP));
     public static final Item COLOR_MIXER = registerBlock("colour-mixer", ModBlocks.COLOR_MIXER, p -> p.rarity(Rarity.RARE).tab(BUILDING_GROUP));
 
     public static final Item SKIN_CUBE = registerBlock("skin-cube", ModBlocks.SKIN_CUBE, p -> p.stacksTo(64).tab(BUILDING_GROUP));
@@ -128,8 +128,8 @@ public class ModItems {
         return register(name, properties -> new BlockItem(block, properties), customizer);
     }
 
-    private static Function<Item.Properties, SKinUnlockItem> unlockWithBuilder(SkinSlotType slotType) {
-        return properties -> new SKinUnlockItem(slotType, properties);
+    private static Function<Item.Properties, SkinUnlockItem> unlockWithBuilder(SkinSlotType slotType) {
+        return properties -> new SkinUnlockItem(slotType, properties);
     }
 
     public static void forEach(Consumer<Item> action) {

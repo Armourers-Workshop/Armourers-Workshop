@@ -75,9 +75,7 @@ public class BoundingBox extends Rectangle3i {
         return partType;
     }
 
-
     public interface IPixelConsumer {
-
         void accept(int ix, int iy, int iz);
     }
 }

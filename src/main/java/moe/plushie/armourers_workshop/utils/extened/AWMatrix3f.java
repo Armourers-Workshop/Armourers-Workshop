@@ -5,7 +5,8 @@ import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
 
 // copy from `net.minecraft.util.math.vector.Matrix3f`
-// we don't want to do this, but it has too many client side only methods.
+// because `net.minecraft.util.math.vector.Matrix3f` has too many client side only methods.
+
 @SuppressWarnings("unused")
 public class AWMatrix3f {
     

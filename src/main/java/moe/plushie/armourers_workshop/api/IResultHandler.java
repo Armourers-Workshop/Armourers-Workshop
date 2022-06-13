@@ -1,6 +1,6 @@
-package moe.plushie.armourers_workshop.utils;
+package moe.plushie.armourers_workshop.api;
 
-public interface ResultHandler<T> {
+public interface IResultHandler<T> {
 
     void apply(T t, Exception e);
 

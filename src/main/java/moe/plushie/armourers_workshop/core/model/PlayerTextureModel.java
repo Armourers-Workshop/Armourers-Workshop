@@ -9,6 +9,7 @@ import net.minecraft.util.Direction;
 
 import java.awt.*;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class PlayerTextureModel {
@@ -95,6 +96,10 @@ public class PlayerTextureModel {
             return box.get(x, y, z, dir);
         }
         return null;
+    }
+
+    public void forEach(BiConsumer<ISkinPartType, SkyBox> consumer) {
+        skyBoxes.forEach(consumer);
     }
 
     public ImmutableSet<Map.Entry<ISkinPartType, SkyBox>> entrySet() {

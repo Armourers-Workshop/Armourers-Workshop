@@ -39,14 +39,4 @@ public class LeftWingPartType extends SkinPartType implements ICanRotation {
     public int getMinimumMarkersNeeded() {
         return 1;
     }
-
-//    @Override
-//    public Collection<ISkinProperty<?>> getProperties() {
-//        return Arrays.asList(
-//                SkinProperty.WINGS_FLYING_SPEED,
-//                SkinProperty.WINGS_IDLE_SPEED,
-//                SkinProperty.WINGS_MAX_ANGLE,
-//                SkinProperty.WINGS_MIN_ANGLE,
-//                SkinProperty.WINGS_MOVMENT_TYPE);
-//    }
 }

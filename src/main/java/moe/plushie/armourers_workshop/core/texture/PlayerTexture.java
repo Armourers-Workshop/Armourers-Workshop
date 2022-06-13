@@ -36,7 +36,6 @@ public class PlayerTexture {
         return model;
     }
 
-
     public ResourceLocation getLocation() {
         return location;
     }
@@ -44,7 +43,6 @@ public class PlayerTexture {
     public String getURL() {
         return url;
     }
-
 
     @OnlyIn(Dist.CLIENT)
     public boolean isDownloaded() {

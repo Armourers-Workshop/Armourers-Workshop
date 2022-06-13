@@ -77,7 +77,6 @@ public class PlayerTextureLoader {
         return DefaultPlayerSkin.getDefaultSkin();
     }
 
-
     @Nullable
     public PlayerTexture loadTexture(PlayerTextureDescriptor descriptor) {
         if (descriptor.isEmpty()) {
@@ -156,8 +155,15 @@ public class PlayerTextureLoader {
         }
         profiles.put(name, Optional.empty());
         executor.execute(() -> {
-            GameProfile profile1 = SkullTileEntity.updateGameprofile(profile);
-            profiles.put(name, Optional.ofNullable(profile1));
+            GameProfile profile1 = null;
+            try {
+                profile1 = SkullTileEntity.updateGameprofile(profile);
+                profiles.put(name, Optional.ofNullable(profile1));
+            } catch (Exception exception) {
+                // we called mojang API, it will throw `com.mojang.authlib.exceptions.*`.
+                exception.printStackTrace();
+                profiles.remove(name);
+            }
             if (complete != null) {
                 complete.accept(Optional.ofNullable(profile1));
             }

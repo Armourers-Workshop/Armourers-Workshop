@@ -81,7 +81,6 @@ public class ModContributors {
         return null;
     }
 
-
     public static Contributor getCurrentContributor() {
         if (!FMLEnvironment.production) {
             return values.get(1);
@@ -92,7 +91,6 @@ public class ModContributors {
         }
         return null;
     }
-
 
     public enum ContributionFlags {
         NONE,

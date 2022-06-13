@@ -66,9 +66,7 @@ public class SkinProperties implements ISkinProperties {
 //
 //    // Legacy
 
-
     protected LinkedHashMap<String, Object> properties;
-
 
     public SkinProperties() {
         properties = new LinkedHashMap<>();
@@ -99,7 +97,6 @@ public class SkinProperties implements ISkinProperties {
         properties.remove(property.getKey());
     }
 
-
     public <T> boolean containsKey(SkinProperty<T> property) {
         return properties.containsKey(property.getKey());
     }
@@ -107,7 +104,6 @@ public class SkinProperties implements ISkinProperties {
     public <T> boolean containsValue(SkinProperty<T> property) {
         return properties.containsValue(property.getKey());
     }
-
 
     public void put(String key, Object value) {
         if (value == null) {
@@ -199,66 +195,6 @@ public class SkinProperties implements ISkinProperties {
             properties.put(key, value);
         }
     }
-
-//    @Override
-//    public void removeProperty(String key) {
-//        properties.remove(key);
-//    }
-//
-//    @Override
-//    public void setProperty(String key, Object value) {
-//        properties.put(key, value);
-//    }
-//
-//    @Override
-//    public String getPropertyString(String key, String defaultValue) {
-//        Object value = properties.get(key);
-//        if (value instanceof String) {
-//            return (String) value;
-//        }
-//        return defaultValue;
-//    }
-//
-//    @Override
-//    public int getPropertyInt(String key, int defaultValue) {
-//        Object value = properties.get(key);
-//        if (value instanceof Integer) {
-//            return (Integer) value;
-//        }
-//        return defaultValue;
-//    }
-//
-//    @Override
-//    public double getPropertyDouble(String key, double defaultValue) {
-//        Object value = properties.get(key);
-//        if (value instanceof Double) {
-//            return (Double) value;
-//        }
-//        return defaultValue;
-//    }
-//
-//    @Override
-//    public Boolean getPropertyBoolean(String key, Boolean defaultValue) {
-//        Object value = properties.get(key);
-//        if (value instanceof Boolean) {
-//            return (Boolean) value;
-//        }
-//        return defaultValue;
-//    }
-//
-//    @Override
-//    public Object getProperty(String key, Object defaultValue) {
-//        Object value = properties.get(key);
-//        if (value != null) {
-//            return value;
-//        }
-//        return defaultValue;
-//    }
-//
-//    @Override
-//    public boolean haveProperty(String key) {
-//        return properties.containsKey(key);
-//    }
 
     @Override
     public int hashCode() {

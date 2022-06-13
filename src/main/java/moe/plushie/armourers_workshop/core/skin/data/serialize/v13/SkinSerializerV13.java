@@ -148,11 +148,11 @@ public final class SkinSerializerV13 {
         SkinPaintData paintData = null;
         boolean hasPaintData = stream.readBoolean();
         if (hasPaintData) {
-            int[] colors = new int[PlayerTextureModel.TEXTURE_OLD_SIZE];
+            paintData = SkinPaintData.v1();
+            int[] colors = paintData.getData();
             for (int i = 0; i < PlayerTextureModel.TEXTURE_OLD_SIZE; i++) {
                 colors[i] = stream.readInt();
             }
-            paintData = new SkinPaintData(PlayerTextureModel.TEXTURE_OLD_WIDTH, PlayerTextureModel.TEXTURE_OLD_HEIGHT, colors);
         }
 
         if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PAINT_FOOTER)) {

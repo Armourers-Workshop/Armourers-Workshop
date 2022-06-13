@@ -31,7 +31,6 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting {
     private AWCheckBox checkShowGuides;
     private AWCheckBox checkShowHelper;
 
-
     private final HashMap<PlayerTextureDescriptor.Source, String> defaultValues = new HashMap<>();
 
     private PlayerTextureDescriptor lastDescriptor = PlayerTextureDescriptor.EMPTY;

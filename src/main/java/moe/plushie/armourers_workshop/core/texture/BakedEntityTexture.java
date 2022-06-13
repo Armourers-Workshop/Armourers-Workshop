@@ -69,12 +69,11 @@ public class BakedEntityTexture {
             allBounds.put(entry.getKey(), box.getBounds());
             box.forEach((texture, x, y, z, dir) -> {
                 int color = accessor.getRGB(texture.x, texture.y);
-                if ((color & 0xff000000) == 0) {
-                    return; // ignore transparent color
+                if (PaintColor.isOpaque(color)) {
+                    PaintColor paintColor = PaintColor.of(color, SkinPaintTypes.NORMAL);
+                    part.put(getPosKey(x, y, z, dir), paintColor);
+                    allColors.put(getUVKey(texture.x, texture.y), paintColor);
                 }
-                PaintColor paintColor = PaintColor.of(color, SkinPaintTypes.NORMAL);
-                part.put(getPosKey(x, y, z, dir), paintColor);
-                allColors.put(getUVKey(texture.x, texture.y), paintColor);
             });
         }
         this.isLoaded = true;
@@ -96,7 +95,6 @@ public class BakedEntityTexture {
         z = MathHelper.clamp(z, bounds.getMinZ(), bounds.getMaxZ() - 1);
         return part.get(getPosKey(x, y, z, dir));
     }
-
 
     private int getPosKey(int x, int y, int z, Direction dir) {
         return (dir.get3DDataValue() & 0xff) << 24 | (z & 0xff) << 16 | (y & 0xff) << 8 | (x & 0xff);

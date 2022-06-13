@@ -46,7 +46,6 @@ public abstract class AbstractLibraryPanel extends Screen {
         this.predicate = predicate;
     }
 
-
     public void init(Minecraft minecraft, int x, int y, int width, int height) {
         this.leftPos = x;
         this.topPos = y;
@@ -65,7 +64,6 @@ public abstract class AbstractLibraryPanel extends Screen {
     }
 
     public void renderBackgroundLayer(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-
     }
 
     public void renderTooltipLayer(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -88,7 +86,6 @@ public abstract class AbstractLibraryPanel extends Screen {
         }
         return Optional.empty();
     }
-
 
     public boolean isVisible() {
         return visible;

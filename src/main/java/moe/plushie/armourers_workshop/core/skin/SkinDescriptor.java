@@ -142,6 +142,4 @@ public class SkinDescriptor implements ISkinDescriptor {
     public int hashCode() {
         return identifier.hashCode();
     }
-
-
 }

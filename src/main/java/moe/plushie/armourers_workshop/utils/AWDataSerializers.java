@@ -88,7 +88,6 @@ public class AWDataSerializers {
         }
     };
 
-
     @SuppressWarnings("NullableProblems")
     public static final IDataSerializer<PlayerTextureDescriptor> PLAYER_TEXTURE = new IDataSerializer<PlayerTextureDescriptor>() {
         public void write(PacketBuffer buffer, PlayerTextureDescriptor descriptor) {
@@ -157,7 +156,6 @@ public class AWDataSerializers {
             return properties;
         }
     };
-
 
     public static Vector3i getVector3i(CompoundNBT nbt, String key) {
         ListNBT listNBT = nbt.getList(key, Constants.NBT.TAG_INT);
@@ -255,15 +253,16 @@ public class AWDataSerializers {
                 ByteBufInputStream bufferedStream = new ByteBufInputStream(buffer);
                 GZIPInputStream compressedStream = new GZIPInputStream(bufferedStream);
                 DataInputStream dataStream = new DataInputStream(compressedStream);
+                SkinPaintData paintData = SkinPaintData.v2();
                 int length = dataStream.readInt();
-                int[] colors = new int[PlayerTexture.TEXTURE_SIZE];
+                int[] colors = paintData.getData();
                 for (int i = 0; i < length; ++i) {
                     if (i < colors.length) {
                         colors[i] = dataStream.readInt();
                     }
                 }
                 IOUtils.closeQuietly(dataStream, compressedStream, bufferedStream);
-                return new SkinPaintData(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT, colors);
+                return paintData;
             } catch (Exception ignored) {
                 return null;
             }
@@ -463,5 +462,4 @@ public class AWDataSerializers {
         }
         return elements;
     }
-
 }

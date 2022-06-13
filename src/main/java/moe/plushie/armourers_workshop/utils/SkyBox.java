@@ -6,6 +6,7 @@ import net.minecraft.util.math.vector.Vector3i;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.EnumMap;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
@@ -14,6 +15,7 @@ public class SkyBox {
     protected final EnumMap<Direction, ToIntFunction<Vector3i>> validator = new EnumMap<>(Direction.class);
     protected final EnumMap<Direction, Function<Vector3i, Point>> evaluator = new EnumMap<>(Direction.class);
     protected final Rectangle3i rect;
+    protected final Rectangle textureRect;
     protected final boolean mirror;
 
     public SkyBox(int x, int y, int z, int width, int height, int depth, int u, int v) {
@@ -23,6 +25,7 @@ public class SkyBox {
     public SkyBox(int x, int y, int z, int width, int height, int depth, int u, int v, boolean mirror) {
         this.mirror = mirror;
         this.rect = new Rectangle3i(x, y, z, width, height, depth);
+        this.textureRect = new Rectangle(u, v, depth + width + depth + width, depth + height);
         // we are assuming front side always facing north.
         this.put(Direction.UP, positiveX(u + depth), negativeZ(v + depth - 1));
         this.put(Direction.DOWN, positiveX(u + depth + width), negativeZ(v + depth - 1));
@@ -40,13 +43,12 @@ public class SkyBox {
     }
 
     protected void valid(Direction dir, ToIntFunction<Vector3i> diff) {
-        validator.put(dir, diff);
+        validator.put(getMirroredDirection(dir), diff);
     }
 
     protected void put(Direction dir, ToIntFunction<Vector3i> uf, ToIntFunction<Vector3i> vf) {
-        evaluator.put(dir, pos -> new Point(uf.applyAsInt(pos), vf.applyAsInt(pos)));
+        evaluator.put(getMirroredDirection(dir), pos -> new Point(uf.applyAsInt(pos), vf.applyAsInt(pos)));
     }
-
 
     public void forEach(IPixelConsumer consumer) {
         for (Direction dir : Direction.values()) {
@@ -61,6 +63,19 @@ public class SkyBox {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SkyBox)) return false;
+        SkyBox skyBox = (SkyBox) o;
+        return mirror == skyBox.mirror && rect.equals(skyBox.rect) && textureRect.equals(skyBox.textureRect);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(rect, textureRect, mirror);
     }
 
     @Nullable
@@ -79,6 +94,10 @@ public class SkyBox {
         return null;
     }
 
+    public Rectangle getTextureRect() {
+        return textureRect;
+    }
+
     public Rectangle3i getBounds() {
         return rect;
     }
@@ -86,16 +105,19 @@ public class SkyBox {
     private boolean isInside(int x, int y, int z) {
         return (x >= 0 && x < rect.getWidth()) && (y >= 0 && y < rect.getHeight()) && (z >= 0 && z < rect.getDepth());
     }
-//
-//    private boolean isInFace(int x, int y, int z, Direction dir) {
-//        ToIntFunction<Vector3i> predicate = validator.get(dir);
-//        if (predicate != null) {
-//            return predicate.applyAsInt() == 0;
-//        }
-//        return false;
-//    }
+
+    private Direction getMirroredDirection(Direction direction) {
+        // when mirroring occurs, the contents of the WEST and EAST sides will be swapped.
+        if (mirror && direction.getAxis() == Direction.Axis.X) {
+            return direction.getOpposite();
+        }
+        return direction;
+    }
 
     private ToIntFunction<Vector3i> positiveX(int t) {
+        if (mirror) {
+            return pos -> t + (rect.getWidth() - pos.getX() - 1);
+        }
         return pos -> t + pos.getX();
     }
 
@@ -108,6 +130,9 @@ public class SkyBox {
     }
 
     private ToIntFunction<Vector3i> negativeX(int t) {
+        if (mirror) {
+            return pos -> t - (rect.getWidth() - pos.getX() - 1);
+        }
         return pos -> t - pos.getX();
     }
 
@@ -119,52 +144,7 @@ public class SkyBox {
         return pos -> t - pos.getZ();
     }
 
-
     public interface IPixelConsumer {
         void accept(Point texture, int x, int y, int z, Direction dir);
     }
-
-//    public TexturePos apply(int x, int y, int z, Direction direction) {
-//
-//
-//        switch (direction) {
-//            case UP: {
-//                int u = depth;
-//                int v = 0 + depth;
-//                u = u + x;
-//                v = v - z;
-//            }
-//            case DOWN: {
-//                int u = depth + width;
-//                int v = 0 + depth;
-//                u = u + x;
-//                v = v - z;
-//            }
-//            case NORTH: {
-//                int u = depth;
-//                int v = depth;
-//                u = u + x;
-//                v = v + y;
-//            }
-//            case SOUTH: {
-//                int u = depth + width + depth + width;
-//                int v = depth;
-//                u = u - x;
-//                v = v + y;
-//            }
-//            case WEST: {
-//                int u = depth + width;
-//                int v = depth;
-//                u = u + z;
-//                v = v + y;
-//            }
-//            case EAST:
-//                int u = 0 + depth;
-//                int v = depth;
-//                u = u - z;
-//                v = v + y;
-//        }
-//        return new TexturePos(0, 0);
-//    }
-
 }

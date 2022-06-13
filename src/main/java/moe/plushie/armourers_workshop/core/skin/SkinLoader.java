@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.RequestSkinPacket;
-import moe.plushie.armourers_workshop.utils.ResultHandler;
+import moe.plushie.armourers_workshop.api.IResultHandler;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModContext;
@@ -35,7 +35,7 @@ public class SkinLoader {
     private final EnumMap<DataDomain, Session> taskManager = new EnumMap<>(DataDomain.class);
 
     private final HashMap<String, Entry> entries = new HashMap<>();
-    private final HashMap<String, ResultHandler<Skin>> waiting = new HashMap<>();
+    private final HashMap<String, IResultHandler<Skin>> waiting = new HashMap<>();
 
     private SkinLoader() {
         setup(null);
@@ -96,7 +96,7 @@ public class SkinLoader {
         return entry.get();
     }
 
-    public void loadSkin(String identifier, @Nullable ResultHandler<Skin> handler) {
+    public void loadSkin(String identifier, @Nullable IResultHandler<Skin> handler) {
         Entry entry = getOrCreateEntry(identifier);
         entry.notify(handler);
         resumeRequest(entry, Method.ASYNC);
@@ -122,7 +122,7 @@ public class SkinLoader {
 
     public void addSkin(String identifier, Skin skin, Exception exception) {
         ModLog.debug("'{}' => receive server skin, exception: {}", identifier, exception);
-        ResultHandler<Skin> resultHandler = waiting.remove(identifier);
+        IResultHandler<Skin> resultHandler = waiting.remove(identifier);
         if (resultHandler != null) {
             resultHandler.apply(skin, exception);
         }
@@ -187,7 +187,7 @@ public class SkinLoader {
         public Exception exception;
         public Status status = Status.PENDING;
 
-        public ArrayList<ResultHandler<Skin>> handlers = new ArrayList<>();
+        public ArrayList<IResultHandler<Skin>> handlers = new ArrayList<>();
 
         public Entry(String identifier) {
             this.identifier = identifier;
@@ -214,12 +214,12 @@ public class SkinLoader {
         }
 
         public void invoke() {
-            ArrayList<ResultHandler<Skin>> handlers = this.handlers;
+            ArrayList<IResultHandler<Skin>> handlers = this.handlers;
             this.handlers = new ArrayList<>();
             handlers.forEach(handler -> handler.apply(skin, exception));
         }
 
-        public void notify(@Nullable ResultHandler<Skin> handler) {
+        public void notify(@Nullable IResultHandler<Skin> handler) {
             if (status.isCompleted()) {
                 if (handler != null) {
                     handler.apply(skin, exception);

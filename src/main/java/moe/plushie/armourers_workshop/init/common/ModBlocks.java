@@ -46,7 +46,6 @@ public class ModBlocks {
 
     public static final Block BOUNDING_BOX = registerGlass("bounding-box", BoundingBoxBlock::new, p -> p.noDrops().noCollission());
 
-
     private static ToIntFunction<BlockState> litBlockEmission(int level) {
         return state -> state.getValue(BlockStateProperties.LIT) ? level : 0;
     }

@@ -2,11 +2,22 @@ package moe.plushie.armourers_workshop.utils.color;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
+import moe.plushie.armourers_workshop.builder.particle.PaintSplashParticleData;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import net.minecraft.util.Direction;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
+
+import java.util.stream.IntStream;
 
 public class PaintColor implements IPaintColor {
+
+    public static final Codec<IPaintColor> CODEC = Codec.INT.xmap(PaintColor::of, IPaintColor::getRawValue);
 
     public final static PaintColor CLEAR = new PaintColor(0, 0, SkinPaintTypes.NONE);
     public final static PaintColor WHITE = new PaintColor(-1, -1, SkinPaintTypes.NORMAL);
@@ -59,6 +70,10 @@ public class PaintColor implements IPaintColor {
 
     public static ISkinPaintType getPaintType(int value) {
         return SkinPaintTypes.byId(value >> 24 & 0xff);
+    }
+
+    public static boolean isOpaque(int color) {
+        return (color & 0xff000000) != 0;
     }
 
     public boolean isEmpty() {

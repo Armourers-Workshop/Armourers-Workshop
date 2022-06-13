@@ -5,7 +5,6 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.skin.*;
 import moe.plushie.armourers_workshop.builder.tileentity.OutfitMakerTileEntity;
 import moe.plushie.armourers_workshop.core.container.AbstractBlockContainer;
-import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -13,13 +12,12 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
-import moe.plushie.armourers_workshop.utils.PaintingUtils;
 import moe.plushie.armourers_workshop.utils.SkinPaintData;
+import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlot;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -92,7 +90,7 @@ public class OutfitMakerContainer extends AbstractBlockContainer {
             // TODO: IMP
             if (skin.getPaintData() != null) {
                 if (paintData == null) {
-                    paintData = new SkinPaintData(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT);
+                    paintData = SkinPaintData.v2();
                 }
                 for (ISkinPartType partType : skin.getType().getParts()) {
                     if (partType instanceof ISkinPartTypeTextured) {
@@ -190,7 +188,7 @@ public class OutfitMakerContainer extends AbstractBlockContainer {
                 int x = pos.x + ix;
                 int y = pos.y + iy;
                 int color = srcPaint.getColor(x, y);
-                if ((color & 0xff000000) != 0) {
+                if (PaintColor.isOpaque(color)) {
                     desPaint.setColor(x, y, color);
                 }
             }

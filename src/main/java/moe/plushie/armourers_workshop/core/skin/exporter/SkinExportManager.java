@@ -26,7 +26,6 @@ public final class SkinExportManager {
         SKIN_EXPORTERS.add(new SkinExporterPolygon());
     }
 
-
     public static ISkinExporter getSkinExporter(String fileExtension) {
         if (StringUtils.isEmpty(fileExtension)) {
             return null;

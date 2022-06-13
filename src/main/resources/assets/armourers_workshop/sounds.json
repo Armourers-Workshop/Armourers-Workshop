@@ -1,0 +1,111 @@
+{
+	"page-turn": {
+		"sounds": [
+			{
+				"name": "armourers_workshop:book/page-turn1",
+				"stream": false
+			},
+			{
+				"name": "armourers_workshop:book/page-turn2",
+				"stream": false
+			},
+			{
+				"name": "armourers_workshop:book/page-turn3",
+				"stream": false
+			}
+		]
+	},
+	"paint": {
+		"subtitle": "sounds.armourers_workshop.paint",
+		"sounds": [
+			{
+				"name": "armourers_workshop:paint/paint1",
+				"stream": false
+			},
+			{
+				"name": "armourers_workshop:paint/paint2",
+				"stream": false
+			},
+			{
+				"name": "armourers_workshop:paint/paint3",
+				"stream": false
+			}
+		]
+	},
+	"picker": {
+		"subtitle": "sounds.armourers_workshop.picker",
+		"sounds": [
+			{
+				"name": "armourers_workshop:paint/pickerfx1",
+				"stream": false
+			},
+			{
+				"name": "armourers_workshop:paint/pickerfx2",
+				"stream": false
+			},
+			{
+				"name": "armourers_workshop:paint/pickerfx3",
+				"stream": false
+			},
+			{
+				"name": "armourers_workshop:paint/pickerfx4",
+				"stream": false
+			},
+			{
+				"name": "armourers_workshop:paint/pickerfx5",
+				"stream": false
+			}
+		]
+	},
+	"burn": {
+		"subtitle": "sounds.armourers_workshop.burn",
+		"sounds": [
+			{
+				"name": "armourers_workshop:paint/burn",
+				"stream": false
+			}
+		]
+	},
+	"dodge": {
+		"subtitle": "sounds.armourers_workshop.dodge",
+		"sounds": [
+			{
+				"name": "armourers_workshop:paint/dodge",
+				"stream": false
+			}
+		]
+	},
+	"noise": {
+		"subtitle": "sounds.armourers_workshop.noise",
+		"sounds": [
+			{
+				"name": "armourers_workshop:noise/noise_1",
+				"stream": false
+			},
+			{
+				"name": "armourers_workshop:noise/noise_2",
+				"stream": false
+			},
+			{
+				"name": "armourers_workshop:noise/noise_3",
+				"stream": false
+			},
+			{
+				"name": "armourers_workshop:noise/noise_4",
+				"stream": false
+			},
+			{
+				"name": "armourers_workshop:noise/noise_5",
+				"stream": false
+			}
+		]
+	},
+	"boi": {
+		"sounds": [
+			{
+				"name": "armourers_workshop:paint/boi",
+				"stream": false
+			}
+		]
+	}
+}

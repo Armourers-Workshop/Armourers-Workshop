@@ -167,7 +167,6 @@ public final class RenderUtils {
         RenderUtils.resize(matrixStack, x, y, u, v, width, height, sourceWidth, sourceHeight, texWidth, texHeight);
     }
 
-
     public static int getPixelColour(int x, int y) {
         MainWindow window = Minecraft.getInstance().getWindow();
         double guiScale = window.getGuiScale();
@@ -181,7 +180,6 @@ public final class RenderUtils {
         int b = Math.round(BUFFER.get() * 255);
         return 0xff000000 | r << 16 | g << 8 | b;
     }
-
 
     public static void enableScissor(int x, int y, int width, int height) {
         Rectangle rect = new Rectangle(x, y, width, height);
@@ -222,7 +220,6 @@ public final class RenderUtils {
         }
         return true;
     }
-
 
     public static void drawText(MatrixStack matrixStack, FontRenderer font, ITextProperties text, int x, int y, int width, int zLevel, int textColor) {
         drawText(matrixStack, font, Collections.singleton(text), x, y, width, zLevel, false, 9, textColor);
@@ -328,7 +325,6 @@ public final class RenderUtils {
         }
     }
 
-
     public static void drawBoundingBox(MatrixStack matrix, float x0, float y0, float z0, float x1, float y1, float z1, Color color, IRenderTypeBuffer renderTypeBuffer) {
         IVertexBuilder builder = renderTypeBuffer.getBuffer(RenderType.lines());
         Matrix4f mat = matrix.last().pose();
@@ -376,7 +372,6 @@ public final class RenderUtils {
         drawBoundingBox(matrix, x0, y0, z0, x1, y1, z1, color, renderTypeBuffer);
     }
 
-
     public static void drawBoundingBox(MatrixStack matrix, AxisAlignedBB rec, Color color, IRenderTypeBuffer renderTypeBuffer) {
         float x0 = (float) rec.minX;
         float y0 = (float) rec.minY;
@@ -418,7 +413,6 @@ public final class RenderUtils {
             drawFace(mat, dir, x, y, z, w, h, d, 0, 0, r, g, b, a, builder);
         }
     }
-
 
     public static void drawFace(Matrix4f mat, Direction dir, float x, float y, float z, float w, float h, float d, float u, float v, float r, float g, float b, float a, IVertexBuilder builder) {
         byte[][] vertexes = FACE_MARK_VERTEXES[dir.get3DDataValue()];

@@ -95,7 +95,6 @@ public final class TranslateUtils {
         return value;
     }
 
-
     private static class ColorFixedTranslationTextComponent extends TranslationTextComponent {
 
         public ColorFixedTranslationTextComponent(String p_i45160_1_, Object... p_i45160_2_) {
@@ -113,7 +112,6 @@ public final class TranslateUtils {
                 return acceptor.accept(style1, embeddedStyle + getFormattedString(value));
             }, initStyle);
         }
-
     }
 
     public static class Name {

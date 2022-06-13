@@ -152,7 +152,8 @@ public class ArmourerTileEntity extends AbstractTileEntity {
             return;
         }
         if (paintData != null) {
-            this.paintData = paintData.clone();
+            this.paintData = SkinPaintData.v2();
+            this.paintData.copyFrom(paintData);
         } else {
             this.paintData = null;
         }
@@ -172,7 +173,7 @@ public class ArmourerTileEntity extends AbstractTileEntity {
 
     public void setPaintColor(Point pos, IPaintColor paintColor) {
         if (this.paintData == null) {
-            this.paintData = new SkinPaintData(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT);
+            this.paintData = SkinPaintData.v2();
         }
         this.paintData.setColor(pos.x, pos.y, paintColor.getRawValue());
         this.setChanged();

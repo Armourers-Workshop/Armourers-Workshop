@@ -44,79 +44,9 @@ public class Skin implements ISkin {
         return id;
     }
 
-//    public Rectangle3D getSkinBounds() {
-//        int x = 0;
-//        int y = 0;
-//        int z = 0;
-//
-//        int width = 1;
-//        int height = 1;
-//        int depth = 1;
-//
-//        for (int i = 0; i < parts.size(); i++) {
-//            if (!(getType() == SkinTypeRegistry.skinBow && i > 0)) {
-//
-//                SkinPart skinPart = parts.get(i);
-//                Rectangle3D bounds = skinPart.getPartBounds();
-//
-//                width = Math.max(width, bounds.getWidth());
-//                height = Math.max(height, bounds.getHeight());
-//                depth = Math.max(depth, bounds.getDepth());
-//
-//                x = bounds.getX();
-//                y = bounds.getY();
-//                z = bounds.getZ();
-//
-//                if (hasPaintData()) {
-//                    Rectangle3D skinRec = skinPart.getType().getGuideSpace();
-//
-//                    width = Math.max(width, skinRec.getWidth());
-//                    height = Math.max(height, skinRec.getHeight());
-//                    depth = Math.max(depth, skinRec.getDepth());
-//
-//                    x = Math.max(x, skinRec.getX());
-//                    y = Math.max(y, skinRec.getY());
-//                    z = Math.max(z, skinRec.getZ());
-//                }
-//
-//            }
-//        }
-//
-//        if (getPartCount() == 0) {
-//            for (int i = 0; i < getType().getParts().size(); i++) {
-//                ISkinPartType part = getType().getParts().get(i);
-//
-//                Rectangle3D skinRec = part.getGuideSpace();
-//
-//                width = Math.max(width, skinRec.getWidth());
-//                height = Math.max(height, skinRec.getHeight());
-//                depth = Math.max(depth, skinRec.getDepth());
-//
-//                x = Math.min(x, skinRec.getX());
-//                y = Math.max(y, skinRec.getY());
-//                z = Math.min(z, skinRec.getZ());
-//            }
-//        }
-//
-//        return new Rectangle3D(x, y, z, width, height, depth);
-//    }
-
-//    public VoxelShape getRenderShape() {
-//        if (this.cachedShape != null) {
-//            return this.cachedShape;
-//        }
-//        VoxelShape shape = VoxelShapes.empty();
-//        for (SkinPart skinPart : parts) {
-//            shape = VoxelShapes.or(shape, skinPart.getRenderShape());
-//        }
-//        this.cachedShape = shape.optimize();
-//        return this.cachedShape;
-//    }
-
     public SkinProperties getProperties() {
         return properties;
     }
-
 
     public HashMap<BlockPos, Rectangle3i> getBlockBounds() {
         if (skinType != SkinTypes.BLOCK) {
@@ -143,7 +73,6 @@ public class Skin implements ISkin {
     public int getPartCount() {
         return parts.size();
     }
-
 
     public int lightHash() {
         if (lightHash == 0) {
@@ -178,25 +107,6 @@ public class Skin implements ISkin {
         return false;
     }
 
-
-//    public boolean hasPart(String partRegistryName) {
-//        for (SkinPart part : parts) {
-//            if (part.getType().getRegistryName().equals(partRegistryName)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    public SkinPart getPart(String partRegistryName) {
-//        for (SkinPart part : parts) {
-//            if (part.getType().getRegistryName().equals(partRegistryName)) {
-//                return part;
-//            }
-//        }
-//        return null;
-//    }
-
     public String getCustomName() {
         return properties.get(SkinProperty.ALL_CUSTOM_NAME);
     }
@@ -208,7 +118,6 @@ public class Skin implements ISkin {
     public String getFlavourText() {
         return properties.get(SkinProperty.ALL_FLAVOUR_TEXT);
     }
-
 
     public int getTotalCubes() {
         int totalCubes = 0;
@@ -229,32 +138,6 @@ public class Skin implements ISkin {
         return totalOfCube;
     }
 
-//    @Override
-//    public int hashCode() {
-//        if (lightHash == 0) {
-//            String result = this.toString();
-//            for (SkinPart part : parts) {
-//                result += part.toString();
-//            }
-//            lightHash = result.hashCode();
-//        }
-//        return lightHash;
-//    }
-//
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (this == obj)
-//            return true;
-//        if (obj == null)
-//            return false;
-//        if (getClass() != obj.getClass())
-//            return false;
-//        Skin other = (Skin) obj;
-//        if (other.lightHash == lightHash)
-//            return true;
-//        return false;
-//    }
-
     @Override
     public String toString() {
         String returnString = "Skin [properties=" + properties + ", type=" + skinType.getRegistryName();
@@ -272,22 +155,4 @@ public class Skin implements ISkin {
         }
         return markers;
     }
-
-//    public void addPaintDataParts() {
-//        if (hasPaintData()) {
-//            for (ISkinPartType skinPartType : getType().getParts()) {
-//                if (!skinPartType.isModelOverridden(getProperties())) {
-//                    SkinPart dummyPart = (SkinPart) skinPartType.makeDummyPaintPart(paintData);
-//                    if (dummyPart != null) {
-//                        parts.add(0, dummyPart);
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    public AdvancedPart getAdvancedPart(int index) {
-//        // TODO Auto-generated method stub
-//        return new AdvancedPart(0, "");
-//    }
 }

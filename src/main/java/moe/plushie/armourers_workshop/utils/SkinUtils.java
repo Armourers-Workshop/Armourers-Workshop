@@ -36,7 +36,6 @@ public final class SkinUtils {
             {{0, 0, 1}, {0, 1, 1}, {0, 1, 0}, {0, 0, 0}, {-1, 0, 0}}, // +x
     };
 
-    public static float SCALE = 1.0f;//1.0f / 16.0f;
 
     private SkinUtils() {
     }
@@ -220,6 +219,4 @@ public final class SkinUtils {
         }
         return VoxelShapes.box(minX, minY, minZ, maxX, maxY, maxZ);
     }
-
-
 }

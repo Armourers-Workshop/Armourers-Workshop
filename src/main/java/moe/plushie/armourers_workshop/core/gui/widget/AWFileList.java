@@ -150,7 +150,6 @@ public class AWFileList extends Button implements INestedGuiEventHandler {
         return null;
     }
 
-
     public class Entry extends AbstractOptionList.Entry<Entry> {
 
         final FontRenderer font;
