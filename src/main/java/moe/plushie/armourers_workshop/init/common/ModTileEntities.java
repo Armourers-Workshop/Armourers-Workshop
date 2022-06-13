@@ -66,5 +66,4 @@ public final class ModTileEntities {
         REGISTERED_ENTITY_TYPES.put(registryName, entityType);
         return entityType;
     }
-
 }

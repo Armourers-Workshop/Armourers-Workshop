@@ -72,7 +72,6 @@ public final class SkinPartTypes {
 
     public static final ISkinPartType ADVANCED = register("part.advanced_part", new AdvancedPartType());
 
-
     public static ISkinPartType byName(String registryName) {
         if (registryName == null) {
             return UNKNOWN;
@@ -110,6 +109,5 @@ public final class SkinPartTypes {
         ModLog.debug("Registering Skin Part '{}'", partType.getRegistryName());
         return partType;
     }
-
 }
 

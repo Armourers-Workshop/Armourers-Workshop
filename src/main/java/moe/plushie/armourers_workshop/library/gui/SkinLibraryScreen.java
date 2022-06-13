@@ -144,7 +144,6 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         this.libraryManager.removeListener(this);
     }
 
-
     @Override
     public void libraryDidReload(ISkinLibrary library) {
         RenderSystem.recordRenderCall(() -> {
@@ -154,7 +153,6 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
             reloadStatus();
         });
     }
-
 
     public void reloadStatus() {
         if (fileList == null) {
@@ -226,7 +224,6 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
             buffers.endBatch();
         }
     }
-
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {

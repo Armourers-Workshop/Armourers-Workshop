@@ -91,7 +91,6 @@ public class SkinItemUseContext extends BlockItemUseContext {
         }
     }
 
-
     public <V> V getProperty(SkinProperty<V> property) {
         if (properties != null && !properties.isEmpty()) {
             return properties.get(property);

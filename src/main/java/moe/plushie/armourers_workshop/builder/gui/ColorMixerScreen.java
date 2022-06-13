@@ -4,11 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
-import moe.plushie.armourers_workshop.builder.container.ColourMixerContainer;
+import moe.plushie.armourers_workshop.builder.container.ColorMixerContainer;
 import moe.plushie.armourers_workshop.builder.tileentity.ColorMixerTileEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.*;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
-import moe.plushie.armourers_workshop.core.network.packet.UpdateColourMixerPacket;
+import moe.plushie.armourers_workshop.core.network.packet.UpdateColorMixerPacket;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
@@ -26,7 +26,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -35,7 +34,7 @@ import java.util.Objects;
 
 @SuppressWarnings({"unused", "NullableProblems"})
 @OnlyIn(Dist.CLIENT)
-public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerContainer> {
+public class ColorMixerScreen extends AWAbstractContainerScreen<ColorMixerContainer> {
 
     private final ImmutableList<Label> labels = new ImmutableList.Builder<Label>()
             .add(new Label(5, 21, getDisplayText("label.hue")))
@@ -59,7 +58,7 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
     private ISkinPaintType selectedPaintType = SkinPaintTypes.NORMAL;
     private Palette selectedPalette;
 
-    public ColorMixerScreen(ColourMixerContainer container, PlayerInventory inventory, ITextComponent title) {
+    public ColorMixerScreen(ColorMixerContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
         this.imageWidth = 256;
         this.imageHeight = 240;
@@ -160,11 +159,11 @@ public class ColorMixerScreen extends AWAbstractContainerScreen<ColourMixerConta
             return;
         }
         PaintColor paintColor = PaintColor.of(selectedColor.getRGB(), selectedPaintType);
-        UpdateColourMixerPacket.Field field = UpdateColourMixerPacket.Field.COLOUR;
+        UpdateColorMixerPacket.Field field = UpdateColorMixerPacket.Field.COLOUR;
         if (paintColor.equals(field.get(tileEntity))) {
             return;
         }
-        UpdateColourMixerPacket packet = new UpdateColourMixerPacket(tileEntity, field, paintColor);
+        UpdateColorMixerPacket packet = new UpdateColorMixerPacket(tileEntity, field, paintColor);
         NetworkHandler.getInstance().sendToServer(packet);
     }
 

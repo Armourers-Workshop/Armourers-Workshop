@@ -34,7 +34,6 @@ public class Rectangle3i {
         this((int) box.minX, (int) box.minY, (int) box.minZ, (int) box.getXsize(), (int) box.getYsize(), (int) box.getZsize());
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

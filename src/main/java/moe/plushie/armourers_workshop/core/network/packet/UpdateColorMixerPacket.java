@@ -13,19 +13,19 @@ import net.minecraft.util.math.BlockPos;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class UpdateColourMixerPacket extends CustomPacket {
+public class UpdateColorMixerPacket extends CustomPacket {
 
     private final BlockPos pos;
     private final Field field;
     private final Object fieldValue;
 
-    public UpdateColourMixerPacket(PacketBuffer buffer) {
+    public UpdateColorMixerPacket(PacketBuffer buffer) {
         this.pos = buffer.readBlockPos();
         this.field = buffer.readEnum(Field.class);
         this.fieldValue = field.getDataAccessor().dataSerializer.read(buffer);
     }
 
-    public UpdateColourMixerPacket(ColorMixerTileEntity entity, Field field, Object value) {
+    public UpdateColorMixerPacket(ColorMixerTileEntity entity, Field field, Object value) {
         this.pos = entity.getBlockPos();
         this.field = field;
         this.fieldValue = value;

@@ -20,14 +20,12 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
 @SuppressWarnings("NullableProblems")
-public class ColourMixerContainer extends AbstractBlockContainer {
+public class ColorMixerContainer extends AbstractBlockContainer {
 
     private final IInventory inventory = new Inventory(2);
 
-    public ColourMixerContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
+    public ColorMixerContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
         super(containerId, ModContainerTypes.COLOR_MIXER, ModBlocks.COLOR_MIXER, access);
         this.addPlayerSlots(playerInventory, 48, 158);
         this.addCustomSlot(inventory, 0, 83, 101);

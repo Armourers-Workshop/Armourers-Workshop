@@ -329,7 +329,6 @@ public class AWTabController<Target> extends Screen {
             return mouseX >= x && mouseX <= (x + width) && mouseY >= (y + top) && mouseY <= (y + height - bottom);
         }
 
-
         @Override
         public boolean isMouseOver(double mouseX, double mouseY) {
             return false; // reduce conflict with other button.

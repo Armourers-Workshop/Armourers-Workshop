@@ -79,7 +79,6 @@ public class AWReportDialog extends AWConfirmDialog {
         comboBox.setItems(items);
     }
 
-
     private AWComboBox buildComboBox(int x, int y, int width, int height) {
         int selectedIndex = 0;
         ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();

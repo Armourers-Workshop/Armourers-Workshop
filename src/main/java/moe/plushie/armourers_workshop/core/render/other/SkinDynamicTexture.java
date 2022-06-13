@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.utils.SkinPaintData;
+import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.*;
 import net.minecraft.util.ResourceLocation;
@@ -57,13 +58,12 @@ public class SkinDynamicTexture extends DynamicTexture {
                 return;
             }
             for (int value : paintData.getData()) {
-                if ((value & 0xff000000) != 0) {
+                if (PaintColor.isOpaque(value)) {
                     this.changeTotal += 1;
                 }
             }
         }
     }
-
 
     @Override
     public void upload() {
@@ -78,7 +78,7 @@ public class SkinDynamicTexture extends DynamicTexture {
         for (int iy = 0; iy < paintData.getHeight(); ++iy) {
             for (int ix = 0; ix < paintData.getWidth(); ++ix) {
                 int color = paintData.getColor(ix, iy);
-                if ((color & 0xff000000) != 0) {
+                if (PaintColor.isOpaque(color)) {
                     int r = color >> 16 & 0xff;
                     int g = color >> 8 & 0xff;
                     int b = color & 0xff;
@@ -120,11 +120,9 @@ public class SkinDynamicTexture extends DynamicTexture {
         return downloadedImage;
     }
 
-
-    //    @Override
-//    protected void finalize() throws Throwable {
-////        DynamicTexture
-////        deleteTexture();
-//        super.finalize();
-//    }
+    @Override
+    protected void finalize() throws Throwable {
+        releaseId();
+        super.finalize();
+    }
 }

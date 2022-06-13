@@ -2,16 +2,22 @@ package moe.plushie.armourers_workshop;
 
 
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
+import moe.plushie.armourers_workshop.core.handler.BlockHandler;
 import moe.plushie.armourers_workshop.core.handler.PlayerNetworkHandler;
 import moe.plushie.armourers_workshop.core.handler.WorldHandler;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.common.*;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.block.Block;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.SplashParticle;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
+import net.minecraft.particles.ParticleType;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -42,6 +48,8 @@ public class ArmourersWorkshop {
         eventBus.addGenericListener(EntityType.class, registry::registerEntities);
         eventBus.addGenericListener(TileEntityType.class, registry::registerTileEntities);
         eventBus.addGenericListener(ContainerType.class, registry::registerContainerTypes);
+        eventBus.addGenericListener(ParticleType.class, registry::registerParticleTypes);
+        eventBus.addGenericListener(SoundEvent.class, registry::registerSoundEvents);
 
         eventBus.addListener(registry::registerEntityAttributes);
         eventBus.addListener(this::onConfigReloaded);
@@ -62,6 +70,7 @@ public class ArmourersWorkshop {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new PlayerNetworkHandler());
         MinecraftForge.EVENT_BUS.register(new WorldHandler());
+        MinecraftForge.EVENT_BUS.register(new BlockHandler());
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ModConfigSpec.CLIENT.getRight());
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModConfigSpec.COMMON.getRight());
@@ -101,12 +110,12 @@ public class ArmourersWorkshop {
     }
 
     private void onServerWillStop(FMLServerStoppingEvent event) {
-        ModContext.reset();
         LocalDataService.stop();
         SkinLoader.getInstance().clear();
     }
 
     private void onServerStop(FMLServerStoppedEvent event) {
         ModLog.debug("bye");
+        ModContext.reset();
     }
 }

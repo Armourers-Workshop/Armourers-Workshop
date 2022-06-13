@@ -5,7 +5,6 @@ import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.tileentity.SkinCubeTileEntity;
-import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.utils.OptionalDirection;
 import moe.plushie.armourers_workshop.utils.OptionalDirectionProperty;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -24,6 +23,7 @@ import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ForgeRenderTypes;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -93,7 +93,8 @@ public class SkinCubeBlock extends Block implements IBlockTintColorProvider, IHa
     @OnlyIn(Dist.CLIENT)
     @Override
     public RenderType getItemRenderType(boolean flags) {
+        return ForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get();
         //return flags ? Atlases.translucentCullBlockSheet() : Atlases.translucentItemSheet();
-        return SkinRenderType.ITEM_TRANSLUCENT_WITHOUT_SORTED;
+        //return SkinRenderType.ITEM_TRANSLUCENT_WITHOUT_SORTED;
     }
 }

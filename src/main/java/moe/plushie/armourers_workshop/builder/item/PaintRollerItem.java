@@ -3,12 +3,16 @@ package moe.plushie.armourers_workshop.builder.item;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
+import moe.plushie.armourers_workshop.init.common.ModSounds;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -113,5 +117,14 @@ public class PaintRollerItem extends PaintbrushItem {
 
     private boolean isBoundingBox(World world, BlockPos pos) {
         return world.getBlockState(pos).is(ModBlocks.BOUNDING_BOX);
+    }
+
+    @Override
+    public void playParticle(ItemUseContext context) {
+    }
+
+    @Override
+    public SoundEvent getItemSoundEvent(ItemUseContext context) {
+        return ModSounds.PAINT;
     }
 }

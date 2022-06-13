@@ -75,7 +75,6 @@ public class ModConfigSpec {
         }
     }
 
-
     public static class Client {
 
         // Performance
@@ -137,7 +136,6 @@ public class ModConfigSpec {
 
                 renderDistanceMannequinEquipment = builder.defineInRange("renderDistanceMannequinEquipment", 64, 16, 512,
                         "The max distance in blocks that equipment will be rendered on mannequins.");
-
 
                 int cores = Runtime.getRuntime().availableProcessors();
                 int bakingCores = MathHelper.ceil(cores / 2F);
@@ -284,7 +282,6 @@ public class ModConfigSpec {
             }
 
             public static void write(Client spec) {
-
             }
         }
     }
@@ -512,7 +509,6 @@ public class ModConfigSpec {
 //                }
 //            }
 
-
 //            config.setCategoryComment(CATEGORY_OVERRIDES,
 //                    "Custom list of items that can be skinned.\n"
 //                            + "Format [override type:mod id:item name]\n"
@@ -647,11 +643,3 @@ public class ModConfigSpec {
         }
     }
 }
-
-
-//    @SubscribeEvent
-//    public static void onModConfigEvent(final ModConfig.Client.ModConfigEvent configEvent) {
-//        if (configEvent.getConfig().getSpec() == YourConfig.CLIENT_SPEC) {
-//            bakeConfig();
-//        }
-//    }

@@ -48,7 +48,6 @@ public final class SkinTypes {
 
     public static final ISkinType OUTFIT = registerArmor("outfit", 6, null, SkinTypes.ARMOR_HEAD, SkinTypes.ARMOR_CHEST, SkinTypes.ARMOR_LEGS, SkinTypes.ARMOR_FEET, SkinTypes.ARMOR_WINGS);
 
-
     public static ISkinType byName(String registryName) {
         if (registryName == null) {
             return UNKNOWN;

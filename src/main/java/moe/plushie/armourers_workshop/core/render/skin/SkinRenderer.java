@@ -150,7 +150,6 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         return profile;
     }
 
-
     @FunctionalInterface
     public interface ITransform<M> {
         void apply(MatrixStack matrixStack, M model, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart);

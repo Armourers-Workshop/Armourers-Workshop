@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.core.gui.hologramprojector;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
-import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWCheckBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWComboBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateHologramProjectorPacket;
+import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;

@@ -17,7 +17,6 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
-import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.utils.OptionalDirection;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.SkinPaintData;
@@ -82,7 +81,9 @@ public final class WorldUtils {
         }
 
         if (paintData != null) {
-            paintData = paintData.clone();
+            SkinPaintData resolvedPaintData = SkinPaintData.v1();
+            resolvedPaintData.copyFrom(paintData);
+            paintData = resolvedPaintData;
         }
 
         Skin skin = SkinSerializer.makeSkin(skinType, skinProps, paintData, parts);
@@ -393,6 +394,7 @@ public final class WorldUtils {
         int destY = destBox.getBounds().getY();
         int destZ = destBox.getBounds().getZ();
         int destWidth = destBox.getBounds().getWidth();
+        HashMap<Point, Integer> colors = new HashMap<>();
         srcBox.forEach((texture, x, y, z, dir) -> {
             int ix = x - srcX;
             int iy = y - srcY;
@@ -408,8 +410,13 @@ public final class WorldUtils {
                 return;
             }
             int color = paintData.getColor(texture);
-            paintData.setColor(newTexture, color);
+            if (PaintColor.isOpaque(color)) {
+                // a special case is to use the mirror to swap the part texture,
+                // we will copy the color to the map and then applying it when read finish.
+                colors.put(newTexture, color);
+            }
         });
+        colors.forEach(paintData::setColor);
     }
 
     public static void clearPaintData(SkinPaintData paintData, SkyBox srcBox) {

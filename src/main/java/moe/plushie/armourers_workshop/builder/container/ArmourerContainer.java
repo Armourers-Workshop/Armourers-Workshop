@@ -44,7 +44,6 @@ public class ArmourerContainer extends AbstractBlockContainer {
         this.access.execute((world, pos) -> this.clearContainer(player, world, inventory));
     }
 
-
     public boolean shouldLoadArmourItem(PlayerEntity player) {
         ItemStack stackInput = inventory.getItem(0);
         ItemStack stackOuput = inventory.getItem(1);
@@ -195,7 +194,6 @@ public class ArmourerContainer extends AbstractBlockContainer {
     public Group getGroup() {
         return this.group;
     }
-
 
     public void setGroup(Group group) {
         this.group = group;

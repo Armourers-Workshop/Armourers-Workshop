@@ -9,6 +9,5 @@ public class ArmourerBaseSetting extends AWTabPanel {
     }
 
     public void reloadData() {
-
     }
 }

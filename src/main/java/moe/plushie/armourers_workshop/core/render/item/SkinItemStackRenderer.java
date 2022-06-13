@@ -42,7 +42,6 @@ public class SkinItemStackRenderer extends ItemStackTileEntityRenderer {
         return INSTANCE;
     }
 
-
     @Override
     public void renderByItem(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int light, int overlay) {
         if (itemStack.isEmpty()) {

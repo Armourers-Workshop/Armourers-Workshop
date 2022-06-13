@@ -80,7 +80,6 @@ public class AWAbstractDialog extends Screen {
         this.completeHandler = completeHandler;
     }
 
-
     @Override
     protected <T extends IGuiEventListener> T addWidget(T widget) {
         T value = super.addWidget(widget);

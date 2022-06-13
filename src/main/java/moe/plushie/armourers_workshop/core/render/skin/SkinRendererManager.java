@@ -135,7 +135,6 @@ public class SkinRendererManager {
         return null;
     }
 
-
     protected EntityModel<?> getModel(EntityRenderer<?> entityRenderer) {
         if (entityRenderer instanceof IEntityRenderer) {
             return ((IEntityRenderer<?, ?>) entityRenderer).getModel();

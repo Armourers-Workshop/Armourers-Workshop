@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWAbstractContainerScreen;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabController;
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;

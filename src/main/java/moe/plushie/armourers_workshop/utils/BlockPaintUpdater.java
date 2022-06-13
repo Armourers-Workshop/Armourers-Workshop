@@ -6,9 +6,12 @@ import moe.plushie.armourers_workshop.core.item.impl.IPaintApplier;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateBlockColorPacket;
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.init.common.ModSounds;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -43,15 +46,8 @@ public class BlockPaintUpdater implements IPaintApplier.IPaintUpdater {
         if (!world.isClientSide()) {
             return;
         }
-        UpdateBlockColorPacket packet = new UpdateBlockColorPacket(item, changes);
+        UpdateBlockColorPacket packet = new UpdateBlockColorPacket(context, changes);
         NetworkHandler.getInstance().sendToServer(packet);
-
-//        ItemBurnTool
-//        worldIn.playSound(null, pos, ModSounds.BURN, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
-        // ItemDodgeTool
-//        worldIn.playSound(null, pos, ModSounds.DODGE, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
-        // ItemHueTool/ItemBlendingTool
-//        worldIn.playSound(null, pos, ModSounds.PAINT, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
 
         // ItemShadeNoiseTool/ItemShadeNoiseTool
 //        if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
@@ -60,11 +56,12 @@ public class BlockPaintUpdater implements IPaintApplier.IPaintUpdater {
 //            worldIn.playSound(null, pos, ModSounds.NOISE, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 1.5F);
 //        }
 
-
         // ItemPaintbrush/ItemPaintRoller
         //         world.playSound(null, pos, ModSounds.PAINT, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
 //        if (spawnParticles) {
 //            spawnPaintParticles(world, pos, facing, newColour);
+//        ParticleTypes
+//        world.addParticle();
 //        }
 
         // from ItemPaintbrush

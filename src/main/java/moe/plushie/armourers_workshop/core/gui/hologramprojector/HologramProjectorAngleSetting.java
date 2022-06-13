@@ -1,12 +1,11 @@
 package moe.plushie.armourers_workshop.core.gui.hologramprojector;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.core.container.HologramProjectorContainer;
-import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWSliderBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateHologramProjectorPacket;
+import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
@@ -86,14 +85,12 @@ public class HologramProjectorAngleSetting extends AWTabPanel {
         return slider;
     }
 
-
     private void updateValue(Button button) {
         float x = (float) sliderX.getValue();
         float y = (float) sliderY.getValue();
         float z = (float) sliderZ.getValue();
         field.set(entity, new Vector3f(x, y, z));
     }
-
 
     private void didUpdateValue(Button button) {
         float x = (float) sliderX.getValue();

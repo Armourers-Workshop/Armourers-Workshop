@@ -13,11 +13,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 @SuppressWarnings("NullableProblems")
-public class SKinUnlockItem extends FlavouredItem {
+public class SkinUnlockItem extends FlavouredItem {
 
     private final SkinSlotType slotType;
 
-    public SKinUnlockItem(SkinSlotType slotType, Properties properties) {
+    public SkinUnlockItem(SkinSlotType slotType, Properties properties) {
         super(properties);
         this.slotType = slotType;
     }

@@ -1,14 +1,14 @@
 package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWSliderBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
-import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -40,7 +40,6 @@ public class SkinWardrobeRotationSetting extends AWTabPanel {
     private AWSliderBox sliderX;
     private AWSliderBox sliderY;
     private AWSliderBox sliderZ;
-
 
     public SkinWardrobeRotationSetting(SkinWardrobeContainer container) {
         super("inventory.armourers_workshop.wardrobe.man_rotations");

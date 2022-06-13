@@ -10,7 +10,10 @@ import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintPicker;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
+import moe.plushie.armourers_workshop.core.network.NetworkHandler;
+import moe.plushie.armourers_workshop.core.network.packet.UpdateColorPickerPacket;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.init.common.ModSounds;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
@@ -22,10 +25,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -55,6 +61,10 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
         if (tileEntity instanceof IPaintable) {
             IPaintColor color = ((IPaintable) tileEntity).getColor(direction);
             ColorUtils.setColor(itemStack, color);
+            UpdateColorPickerPacket packet = new UpdateColorPickerPacket(context.getHand(), itemStack);
+            NetworkHandler.getInstance().sendToServer(packet);
+            // we only play local sound, color pick not need send to other players.
+            playSound(context);
             return true;
         }
         // we required player must hold shift + right-click to apply the color,
@@ -87,7 +97,9 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
 
     @Override
     public boolean shouldPickColor(ItemUseContext context) {
-        return super.shouldApplyColor(context);
+        // because we have some data that the server side doesn't exist, such as skin texture
+        // so the color pick must work on client side and then sent the color data to the server.
+        return context.getLevel().isClientSide();
     }
 
     @Override
@@ -132,137 +144,8 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
         return false;
     }
 
+    @Override
+    public SoundEvent getItemSoundEvent(ItemUseContext context) {
+        return ModSounds.PICKER;
+    }
 }
-//public class ItemColourPicker extends AbstractModItem implements IPaintingTool, IConfigurableTool {
-//
-//    public ItemColourPicker() {
-//        super(LibItemNames.COLOUR_PICKER);
-//        setCreativeTab(ArmourersWorkshop.TAB_PAINTING_TOOLS);
-//        setSortPriority(12);
-//    }
-//
-//    @SideOnly(Side.CLIENT)
-//    @Override
-//    public boolean hasEffect(ItemStack stack) {
-//        IPaintType paintType = PaintingHelper.getToolPaintType(stack);
-//        if (paintType != PaintTypeRegistry.PAINT_TYPE_NORMAL) {
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    @Override
-//    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-//        IBlockState state = worldIn.getBlockState(pos);
-//        ItemStack stack = player.getHeldItem(hand);
-//        boolean changePaintType = ToolOptions.CHANGE_PAINT_TYPE.getValue(stack);
-//        IPaintType paintType = getToolPaintType(stack);
-//
-//        if (player.isSneaking() & state.getBlock() == ModBlocks.COLOUR_MIXER & getToolHasColour(stack)) {
-//            TileEntity te = worldIn.getTileEntity(pos);
-//            if (te != null && te instanceof IPantable) {
-//                if (!worldIn.isRemote) {
-//                    int colour = getToolColour(stack);;
-//                    ((IPantable)te).setColour(colour);
-//                    ((IPantable)te).setPaintType(paintType, 0);
-//                }
-//            }
-//            return EnumActionResult.SUCCESS;
-//        }
-//
-//        if (state.getBlock() instanceof IPantableBlock) {
-//            IPantableBlock paintable = (IPantableBlock) state.getBlock();
-//            IPaintType targetPaintType = paintable.getPaintType(worldIn, pos, facing);
-//
-//            if (paintable.isRemoteOnly(worldIn, pos, facing) & worldIn.isRemote) {
-//                int colour = paintable.getColour(worldIn, pos, facing);
-//                NBTTagCompound compound = new NBTTagCompound();
-//                byte[] paintData = new byte[4];
-//                Color c = new Color(colour);
-//                paintData[0] = (byte) c.getRed();
-//                paintData[1] = (byte) c.getGreen();
-//                paintData[2] = (byte) c.getBlue();
-//                if (changePaintType) {
-//                    paintData[3] = (byte) targetPaintType.getId();
-//                } else {
-//                    paintData[3] = (byte) paintType.getId();
-//                }
-//
-//                PaintingHelper.setPaintData(compound, paintData);
-//                PacketHandler.networkWrapper.sendToServer(new MessageClientGuiToolOptionUpdate(compound));
-//            } else if (!paintable.isRemoteOnly(worldIn, pos, facing) & !worldIn.isRemote) {
-//                setToolColour(stack, ((IPantableBlock)state.getBlock()).getColour(worldIn, pos, facing));
-//                if (changePaintType) {
-//                    setToolPaintType(stack, targetPaintType);
-//                } else {
-//                    setToolPaintType(stack, paintType);
-//                }
-//            }
-//
-//            if (!worldIn.isRemote) {
-//                worldIn.playSound(null, pos, ModSounds.PICKER, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
-//            }
-//            return EnumActionResult.SUCCESS;
-//        }
-//        return EnumActionResult.PASS;
-//    }
-//
-//    @SideOnly(Side.CLIENT)
-//    @Override
-//    public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-//        super.addInformation(stack, worldIn, tooltip, flagIn);
-//        if (getToolHasColour(stack)) {
-//            Color c = new Color(getToolColour(stack));
-//            IPaintType paintType = getToolPaintType(stack);
-//            String hex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
-//            tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.colour", c.getRGB()));
-//            tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.hex", hex));
-//            tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.paintType", paintType.getLocalizedName()));
-//        } else {
-//            tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.nopaint"));
-//        }
-//        tooltip.add(TranslateUtils.translate("item.armourers_workshop:rollover.openSettings"));
-//    }
-//
-//    @Override
-//    public boolean getToolHasColour(ItemStack stack) {
-//        return PaintingHelper.getToolHasPaint(stack);
-//    }
-//
-//    @Override
-//    public int getToolColour(ItemStack stack) {
-//        return PaintingHelper.getToolPaintColourRGB(stack);
-//    }
-//
-//    @Override
-//    public void setToolColour(ItemStack stack, int colour) {
-//        PaintingHelper.setToolPaintColour(stack, colour);
-//    }
-//
-//    @Override
-//    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-//        if (playerIn.isSneaking()) {
-//            if (worldIn.isRemote) {
-//                playerIn.openGui(ArmourersWorkshop.getInstance(), EnumGuiId.TOOL_OPTIONS.ordinal(), worldIn, 0, 0, 0);
-//            }
-//            return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
-//        }
-//        return super.onItemRightClick(worldIn, playerIn, handIn);
-//    }
-//
-//    @Override
-//    public void getToolOptions(ArrayList<ToolOption<?>> toolOptionList) {
-//        toolOptionList.add();
-//    }
-//
-//    @Override
-//    public void setToolPaintType(ItemStack stack, IPaintType paintType) {
-//        PaintingHelper.setToolPaint(stack, paintType);
-//    }
-//
-//    @Override
-//    public IPaintType getToolPaintType(ItemStack stack) {
-//        return PaintingHelper.getToolPaintType(stack) ;
-//    }
-//
-//}

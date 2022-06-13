@@ -198,6 +198,9 @@ public class NetworkHandler {
     public enum PacketTypes {
         PACKET_UPDATE_CONTEXT(UpdateContextPacket.class, UpdateContextPacket::new),
 
+        PACKET_UNDO_ACTION(UndoActionPacket.class, UndoActionPacket::new),
+        PACKET_UPDATE_COLOR_PICKER(UpdateColorPickerPacket.class, UpdateColorPickerPacket::new),
+
         PACKET_REQUEST_FILE(RequestSkinPacket.class, RequestSkinPacket::new),
         PACKET_RESPONSE_FILE(ResponseSkinPacket.class, ResponseSkinPacket::new),
         PACKET_UPLOAD_FILE(SaveSkinPacket.class, SaveSkinPacket::new),
@@ -207,7 +210,7 @@ public class NetworkHandler {
         PACKET_UPDATE_ARMOURER(UpdateArmourerPacket.class, UpdateArmourerPacket::new),
 
         PACKET_UPDATE_HOLOGRAM_PROJECTOR(UpdateHologramProjectorPacket.class, UpdateHologramProjectorPacket::new),
-        PACKET_UPDATE_COLOUR_MIXER(UpdateColourMixerPacket.class, UpdateColourMixerPacket::new),
+        PACKET_UPDATE_COLOUR_MIXER(UpdateColorMixerPacket.class, UpdateColorMixerPacket::new),
 
         PACKET_UPDATE_PAINTING_TOOL(UpdatePaintingToolPacket.class, UpdatePaintingToolPacket::new),
         PACKET_UPDATE_BLOCK_COLOR(UpdateBlockColorPacket.class, UpdateBlockColorPacket::new),

@@ -7,20 +7,34 @@ import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
+import moe.plushie.armourers_workshop.builder.particle.PaintSplashParticleData;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintPicker;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.common.AWCore;
+import moe.plushie.armourers_workshop.init.common.ModParticleTypes;
+import moe.plushie.armourers_workshop.init.common.ModSounds;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.List;
+import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -72,20 +86,43 @@ public class PaintbrushItem extends AbstractPaintingToolItem implements IItemTin
         return false;
     }
 
-//    @Override
-//    public void playToolSound(EntityPlayer player, World world, BlockPos pos, ItemStack stack) {
-//        SoundEvent soundEvent = ModSounds.PAINT;
-//        if (ModHolidays.APRIL_FOOLS.isHolidayActive()) {
-//            soundEvent = ModSounds.BOI;
+
+    @Override
+    public void playParticle(ItemUseContext context) {
+//        byte[] rtbt = PaintingHelper.intToBytes(colour);
+//        for (int i = 0; i < 3; i++) {
+//            ParticlePaintSplash particle = new ParticlePaintSplash(world, pos, rtbt[0], rtbt[1], rtbt[2], facing);
+//            ModParticleManager.spawnParticle(particle);
 //        }
-//        if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
-//            world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 0.9F);
-//        } else {
-//            world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 1.5F);
-//        }
-//    }
+//        context.getLevel().addParticle();
+//        void addParticle(IParticleData p_195594_1_, double p_195594_2_, double p_195594_4_, double p_195594_6_, double p_195594_8_, double p_195594_10_, double p_195594_12_);
+
+        // tool color
+        IPaintColor paintColor = ColorUtils.getColor(context.getItemInHand());
+        if (paintColor == null) {
+            paintColor = PaintColor.WHITE;
+        }
+        IWorld world = context.getLevel();
+        if (world.isClientSide()) {
+            return;
+        }
+        Direction face = context.getClickedFace();
+        Vector3d pos = Vector3d.atCenterOf(context.getClickedPos());
+        ServerWorld serverWorld = (ServerWorld)world;
+        PaintSplashParticleData data = new PaintSplashParticleData(face, paintColor);
+        serverWorld.sendParticles(data, pos.x(), pos.y(), pos.z(), 3, 0, 0, 0, 1);
+
+//        if (!p_196262_2_.isClientSide) {
+//            ServerWorld serverworld = (ServerWorld)p_196262_2_;
 //
-//    @Override
+//            for(int i = 0; i < 2; ++i) {
+//                serverworld.sendParticles(ParticleTypes.SPLASH, (double)p_196262_3_.getX() + p_196262_2_.random.nextDouble(), (double)(p_196262_3_.getY() + 1), (double)p_196262_3_.getZ() + p_196262_2_.random.nextDouble(), 1, 0.0D, 0.0D, 0.0D, 1.0D);
+//                serverworld.sendParticles(ParticleTypes.BUBBLE, (double)p_196262_3_.getX() + p_196262_2_.random.nextDouble(), (double)(p_196262_3_.getY() + 1), (double)p_196262_3_.getZ() + p_196262_2_.random.nextDouble(), 1, 0.0D, 0.01D, 0.0D, 0.2D);
+//            }
+//        }
+    }
+
+    //    @Override
 //    public void usedOnBlockSide(ItemStack stack, EntityPlayer player, World world, BlockPos pos, Block block, EnumFacing face, boolean spawnParticles) {
 //        int colour = getToolColour(stack);
 //        IPaintType paintType = getToolPaintType(stack);
@@ -102,4 +139,8 @@ public class PaintbrushItem extends AbstractPaintingToolItem implements IItemTin
 //            }
 //        }
 //    }
+    @Override
+    public SoundEvent getItemSoundEvent(ItemUseContext context) {
+        return ModSounds.PAINT;
+    }
 }

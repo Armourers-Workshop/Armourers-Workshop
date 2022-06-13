@@ -34,5 +34,4 @@ public class RightWingPartType extends SkinPartType implements ICanRotation {
     public int getMinimumMarkersNeeded() {
         return 1;
     }
-
 }

@@ -22,10 +22,4 @@ public class SkirtPartType extends SkinPartType {
     public float getRenderPolygonOffset() {
         return -0.06f;
     }
-
-
-//    @Override
-//    public ISkinProperty[] getProperties() {
-//        return Arrays.asList(SkinProperty.MODEL_LEGS_LIMIT_LIMBS);
-//    }
 }

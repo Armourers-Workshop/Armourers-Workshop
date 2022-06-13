@@ -42,22 +42,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-// /give @p armourers_workshop:dye-bottle{Color:0x3ff0000}
-// /give @p armourers_workshop:skin
-
-// /give @p armourers_workshop:mannequin{EntityTag:{Scale:0.5f,Texture:{URL:"http://plushie.moe/skins/maid1.png"}}}
-// /give @p armourers_workshop:mannequin{EntityTag:{Scale:2.0f,Texture:{User:{Name:RiskyKen}}}}
-// /give @p armourers_workshop:mannequin{EntityTag:{Scale:7.0f}}
-
-// /summon armourers_workshop:mannequin ~ ~1 ~ {ForgeCaps:{"armourers_workshop:entity-skin-provider":{Items:[{Slot:57b,id:"armourers_workshop:skin",Count:1b,tag:{ArmourersWorkshop:{SkinType:"armourers:outfit",Identifier:"db:a4df668d-0a2a-4f80-a89a-066f64b7fbd4"}}}]}}}
-
-
 public class ModCommands {
 
     private static final DynamicCommandExceptionType ERROR_MISSING_SKIN = new DynamicCommandExceptionType(ob -> {
         return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingSkin", ob);
     });
-
 
     /// :/armourers setSkin|giveSkin|clearSkin
     public static LiteralArgumentBuilder<CommandSource> commands() {
@@ -92,7 +81,6 @@ public class ModCommands {
     static ArgumentBuilder<CommandSource, ?> outputFileName() {
         return Commands.argument("name", StringArgumentType.string());
     }
-
 
     static ArgumentBuilder<CommandSource, ?> resizableSlotAmounts() {
         return Commands.argument("amount", IntegerArgumentType.integer(1, 10));
@@ -232,7 +220,6 @@ public class ModCommands {
             });
             return 0;
         }
-
 
         static int resyncWardrobe(CommandContext<CommandSource> context) throws CommandSyntaxException {
             for (PlayerEntity player : EntityArgument.getPlayers(context, "targets")) {

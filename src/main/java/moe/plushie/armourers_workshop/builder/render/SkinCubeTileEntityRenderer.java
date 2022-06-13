@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.builder.tileentity.SkinCubeTileEntity;
+import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.render.other.SkinCubeFaceRenderer;
 import moe.plushie.armourers_workshop.init.common.ModItems;
@@ -23,7 +23,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
-public class SkinCubeTileEntityRenderer <T extends SkinCubeTileEntity> extends TileEntityRenderer<T> {
+public class SkinCubeTileEntityRenderer<T extends TileEntity & IPaintable> extends TileEntityRenderer<T> {
 
     private static float markerAlpha = 0F;
     private static long lastWorldTimeUpdate;

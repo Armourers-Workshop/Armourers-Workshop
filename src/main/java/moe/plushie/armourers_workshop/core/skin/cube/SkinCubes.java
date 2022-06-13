@@ -20,7 +20,6 @@ public final class SkinCubes {
     public static final ISkinCube GLASS = register("glass", 2, true, false, ModBlocks.SKIN_CUBE_GLASS);
     public static final ISkinCube GLASS_GLOWING = register("glass_gowing", 3, true, true, ModBlocks.SKIN_CUBE_GLASS_GLOWING);
 
-
     public static ISkinCube byName(String name) {
         ISkinCube cube = ALL_CUBES.get(name);
         if (cube != null) {
@@ -46,7 +45,6 @@ public final class SkinCubes {
         return SOLID;
     }
 
-
     private static SkinCube register(String name, int id, boolean glass, boolean glowing, Block block) {
         SkinCube cube = new SkinCube(id, glass, glowing, block);
         cube.setRegistryName(new SkinResourceLocation("armourers", name));
@@ -63,27 +61,4 @@ public final class SkinCubes {
     public static int getTotalCubes() {
         return ALL_CUBES.size();
     }
-//
-//    private void registerCube(ISkinCube cube) {
-//        cubeList.add(cube);
-//        SkinLog.info("Registering equipment cube - id:" + cube.getId() + " name:" + cube.getClass().getSimpleName());
-//    }
-//
-//    public boolean isBuildingBlock(Block block) {
-//        for (int i = 0; i < cubeList.size(); i++) {
-//            if (cubeList.get(i).getMinecraftBlock() == block) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    public ISkinCube getCubeFromBlock(Block block) {
-//        for (int i = 0; i < cubeList.size(); i++) {
-//            if (cubeList.get(i).getMinecraftBlock() == block) {
-//                return cubeList.get(i);
-//            }
-//        }
-//        return null;
-//    }
 }

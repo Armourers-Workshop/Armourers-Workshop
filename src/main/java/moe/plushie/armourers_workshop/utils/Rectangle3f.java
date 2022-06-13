@@ -143,7 +143,6 @@ public class Rectangle3f {
         return new Rectangle3f(x, y, z, width, height, depth);
     }
 
-
     public Rectangle3f scale(float s) {
         return new Rectangle3f(x * s, y * s, z * s, width * s, height * s, depth * s);
     }

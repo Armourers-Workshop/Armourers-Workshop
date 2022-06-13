@@ -63,13 +63,12 @@ public interface IPaintApplier {
         return context.getLevel().isClientSide();
     }
 
-
     interface IPaintUpdater {
 
         void begin(ItemUseContext context);
 
         void add(IPaintable target, Direction direction, IPaintColor newColor);
 
-         void commit(ItemUseContext context);
+        void commit(ItemUseContext context);
     }
 }

@@ -12,7 +12,6 @@ public class AWDataAccessor<S, T> {
 
     public IDataSerializer<T> dataSerializer;
 
-
     public static <S, T> AWDataAccessor<S, T> of(IDataSerializer<T> dataSerializer, Function<S, T> supplier, BiConsumer<S, T> applier) {
         AWDataAccessor<S, T> dataAccessor = new AWDataAccessor<>();
         dataAccessor.dataSerializer = dataSerializer;

@@ -590,7 +590,6 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
         this.x = p_212952_1_;
     }
 
-
     public void renderLine(MatrixStack matrixStack, Line line, int x, int y, float p_230431_4_, int textColor, IRenderTypeBuffer buffers) {
         int dx = x;
         int dy = y + line.offsetY;
@@ -794,7 +793,6 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
         RenderSystem.enableTexture();
     }
 
-
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float p_230431_4_) {
         if (!isVisible()) {
@@ -914,7 +912,6 @@ public class AWTextField extends Widget implements IRenderable, IGuiEventListene
         }
         return wrappedTextLines.get(wrappedTextLines.size() - 1);
     }
-
 
     public String formattedString(String value) {
         if (this.isSingleLine) {

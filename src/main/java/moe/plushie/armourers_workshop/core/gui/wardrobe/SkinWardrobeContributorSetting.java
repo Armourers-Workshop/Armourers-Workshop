@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.gui.wardrobe;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.core.gui.widget.AWCheckBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
-import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.IReorderingProcessor;

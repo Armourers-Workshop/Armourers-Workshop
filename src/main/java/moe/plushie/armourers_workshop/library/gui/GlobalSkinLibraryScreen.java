@@ -199,7 +199,6 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
 
         this.setFocused(null);
         return false;
-
     }
 
     @Override

@@ -277,7 +277,6 @@ public class ColorUtils {
         }
     }
 
-
     public static int HSBtoRGB(float[] hsb) {
         return Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
     }
