@@ -209,6 +209,7 @@ public class ModRegistry {
 
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKINNABLE_CUBE_SR, SkinnableTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.SKIN_CUBE_SR, SkinCubeTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModTileEntities.BOUNDING_BOX_SR, SkinCubeTileEntityRenderer::new);
 
         event.enqueueWork(SkinRendererManager::init);
         event.enqueueWork(ClientWardrobeHandler::init);

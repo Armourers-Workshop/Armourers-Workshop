@@ -88,6 +88,6 @@ public class SkinCubeTileEntity extends AbstractTileEntity implements IPaintable
         if (customRenderer) {
             return ModTileEntities.SKIN_CUBE_SR;
         }
-        return ModTileEntities.SKIN_CUBE;
+        return super.getType();
     }
 }

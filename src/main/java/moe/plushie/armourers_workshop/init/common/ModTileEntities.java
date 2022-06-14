@@ -54,6 +54,7 @@ public final class ModTileEntities {
     public static final TileEntityType<SkinCubeTileEntity> SKIN_CUBE_SR = register("skin-cube-sr", TileEntityType.Builder.of(SkinCubeTileEntity::new, ModBlocks.SKIN_CUBE, ModBlocks.SKIN_CUBE_GLASS, ModBlocks.SKIN_CUBE_GLASS_GLOWING, ModBlocks.SKIN_CUBE_GLOWING));
 
     public static final TileEntityType<BoundingBoxTileEntity> BOUNDING_BOX = register("bounding-box", TileEntityType.Builder.of(BoundingBoxTileEntity::new, ModBlocks.BOUNDING_BOX));
+    public static final TileEntityType<BoundingBoxTileEntity> BOUNDING_BOX_SR = register("bounding-box-sr", TileEntityType.Builder.of(BoundingBoxTileEntity::new, ModBlocks.BOUNDING_BOX));
 
     public static void forEach(Consumer<TileEntityType<?>> action) {
         REGISTERED_ENTITY_TYPES.values().forEach(action);

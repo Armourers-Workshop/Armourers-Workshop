@@ -8,7 +8,10 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class ChestGuideRenderer implements IGuideRenderer {
 
     private static final ChestGuideRenderer INSTANCE = new ChestGuideRenderer();

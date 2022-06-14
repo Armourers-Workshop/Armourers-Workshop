@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.common;
 
+import com.google.common.collect.Lists;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -21,6 +22,7 @@ import moe.plushie.armourers_workshop.init.command.ReflectArgumentBuilder;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
+import moe.plushie.armourers_workshop.utils.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -28,6 +30,7 @@ import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
@@ -44,6 +47,10 @@ public class ModCommands {
         return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingSkin", ob);
     });
 
+    private static final DynamicCommandExceptionType ERROR_MISSING_ITEM_STACK = new DynamicCommandExceptionType(ob -> {
+        return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingItemStack", ob);
+    });
+
     /// :/armourers setSkin|giveSkin|clearSkin
     public static LiteralArgumentBuilder<CommandSource> commands() {
         return Commands.literal("armourers")
@@ -55,6 +62,7 @@ public class ModCommands {
                 .then(Commands.literal("clearSkin").then(targets().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
                 .then(Commands.literal("exportSkin").then(skinFormats().then(outputFileName().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
                 .then(Commands.literal("resyncWardrobe").then(targets().executes(Executor::resyncWardrobe)))
+                .then(Commands.literal("setItemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
                 .then(Commands.literal("setUnlockedSlots").then(targets().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
     }
 
@@ -91,8 +99,16 @@ public class ModCommands {
         return Commands.argument("slot_name", new ListArgument(Arrays.stream(SkinSlotType.values()).map(SkinSlotType::getName).collect(Collectors.toList())));
     }
 
-    static ArgumentBuilder<CommandSource, ?> skins() {
+    static ArgumentBuilder<CommandSource, ?> overrideTypes() {
+        return Commands.argument("skin_type", new ListArgument(Arrays.stream(ItemOverrideType.values()).map(ItemOverrideType::getName).collect(Collectors.toList())));
+    }
+
+        static ArgumentBuilder<CommandSource, ?> skins() {
         return Commands.argument("skin", new FileArgument(AWCore.getSkinLibraryDirectory()));
+    }
+
+    static ArgumentBuilder<CommandSource, ?> addOrRemote() {
+        return Commands.argument("operator", new ListArgument(Lists.newArrayList("add", "remove")));
     }
 
     static ArgumentBuilder<CommandSource, ?> dyes() {
@@ -215,6 +231,26 @@ public class ModCommands {
                 }
             });
             return 0;
+        }
+
+        static int setItemSkinnable(CommandContext<CommandSource> context) throws CommandSyntaxException {
+
+            PlayerEntity player = context.getSource().getPlayerOrException();
+            String operator = ListArgument.getString(context, "operator");
+            ItemOverrideType overrideType = ItemOverrideType.of(ListArgument.getString(context, "skin_type"));
+            ItemStack itemStack = player.getMainHandItem();
+            if (overrideType == null || itemStack.isEmpty()) {
+                throw ERROR_MISSING_ITEM_STACK.create(player.getDisplayName());
+            }
+            ResourceLocation identifier = itemStack.getItem().getRegistryName();
+            String key = String.format("%s:%s", overrideType.getName(), identifier);
+            // we always remove and then add again
+            ModConfig.Common.overrides.remove(key);
+            if (operator.equals("add")) {
+                ModConfig.Common.overrides.add(key);
+            }
+            ModConfigSpec.Common.save();
+            return 1;
         }
 
         static int resyncWardrobe(CommandContext<CommandSource> context) throws CommandSyntaxException {

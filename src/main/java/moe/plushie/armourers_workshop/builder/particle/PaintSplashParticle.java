@@ -1,13 +1,11 @@
 package moe.plushie.armourers_workshop.builder.particle;
 
-
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 
 @OnlyIn(Dist.CLIENT)
 public class PaintSplashParticle extends RainParticle {
@@ -52,9 +50,9 @@ public class PaintSplashParticle extends RainParticle {
         int fadeTime = 15;
         int lifeLeft = lifetime - age;
         if (lifeLeft <= fadeTime) {
-            this.alpha = ((float)lifeLeft / (float)fadeTime);
+            this.alpha = ((float) lifeLeft / (float) fadeTime);
         }
-        this.yd -= 0.04D * (double)gravity;
+        this.yd -= 0.04D * (double) gravity;
         this.move(xd, yd, zd);
         this.xd *= 0.98F;
         this.yd *= 0.98F;

@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3i;
@@ -28,6 +29,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Map;
 
 public class BoundingBoxTileEntity extends AbstractTileEntity implements IPaintable {
@@ -39,6 +41,8 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
 
     protected ISkinPartType partType = SkinPartTypes.UNKNOWN;
 
+    protected boolean customRenderer = false;
+
     public BoundingBoxTileEntity() {
         super(ModTileEntities.BOUNDING_BOX);
     }
@@ -47,6 +51,7 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
         parent = AWDataSerializers.getBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_REFER, INVALID);
         guide = AWDataSerializers.getVector3i(nbt, AWConstants.NBT.TILE_ENTITY_OFFSET);
         partType = SkinPartTypes.byName(AWDataSerializers.getString(nbt, AWConstants.NBT.SKIN_PART_TYPE, SkinTypes.UNKNOWN.getRegistryName().toString()));
+        customRenderer = Arrays.stream(Direction.values()).anyMatch(this::shouldChangeColor);
     }
 
     public void writeToNBT(CompoundNBT nbt) {
@@ -166,5 +171,13 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
             return (ArmourerTileEntity) tileEntity;
         }
         return null;
+    }
+
+    @Override
+    public TileEntityType<?> getType() {
+        if (customRenderer) {
+            return ModTileEntities.BOUNDING_BOX_SR;
+        }
+        return super.getType();
     }
 }

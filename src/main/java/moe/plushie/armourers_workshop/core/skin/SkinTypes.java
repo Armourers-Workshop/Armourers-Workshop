@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.init.common.ModTags;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinResourceLocation;
+import moe.plushie.armourers_workshop.utils.slot.ItemOverrideType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
@@ -32,14 +33,14 @@ public final class SkinTypes {
 
     //public static final ISkinType HORSE = register("horse", 17, SkinPartTypes.BLOCK, SkinPartTypes.BLOCK_MULTI);
 
-    public static final ISkinType ITEM_SWORD = registerItem("sword", 7, ModTags.SWORDS, SkinPartTypes.ITEM_SWORD);
-    public static final ISkinType ITEM_SHIELD = registerItem("shield", 8, ModTags.SHIELDS, SkinPartTypes.ITEM_SHIELD);
-    public static final ISkinType ITEM_BOW = registerItem("bow", 9, ModTags.BOWS, SkinPartTypes.ITEM_BOW1, SkinPartTypes.ITEM_BOW2, SkinPartTypes.ITEM_BOW3, SkinPartTypes.ITEM_ARROW);
+    public static final ISkinType ITEM_SWORD = registerItem("sword", 7, ItemOverrideType.SWORD, SkinPartTypes.ITEM_SWORD);
+    public static final ISkinType ITEM_SHIELD = registerItem("shield", 8, ItemOverrideType.SHIELD, SkinPartTypes.ITEM_SHIELD);
+    public static final ISkinType ITEM_BOW = registerItem("bow", 9, ItemOverrideType.BOW, SkinPartTypes.ITEM_BOW1, SkinPartTypes.ITEM_BOW2, SkinPartTypes.ITEM_BOW3, SkinPartTypes.ITEM_ARROW);
 
-    public static final ISkinType TOOL_PICKAXE = registerItem("pickaxe", 10, ModTags.PICKAXES, SkinPartTypes.TOOL_PICKAXE);
-    public static final ISkinType TOOL_AXE = registerItem("axe", 11, ModTags.AXES, SkinPartTypes.TOOL_AXE);
-    public static final ISkinType TOOL_SHOVEL = registerItem("shovel", 12, ModTags.SHOVELS, SkinPartTypes.TOOL_SHOVEL);
-    public static final ISkinType TOOL_HOE = registerItem("hoe", 13, ModTags.HOES, SkinPartTypes.TOOL_HOE);
+    public static final ISkinType TOOL_PICKAXE = registerItem("pickaxe", 10, ItemOverrideType.PICKAXE, SkinPartTypes.TOOL_PICKAXE);
+    public static final ISkinType TOOL_AXE = registerItem("axe", 11, ItemOverrideType.AXE, SkinPartTypes.TOOL_AXE);
+    public static final ISkinType TOOL_SHOVEL = registerItem("shovel", 12, ItemOverrideType.SHOVEL, SkinPartTypes.TOOL_SHOVEL);
+    public static final ISkinType TOOL_HOE = registerItem("hoe", 13, ItemOverrideType.HOE, SkinPartTypes.TOOL_HOE);
 
     public static final ISkinType ITEM = register("item", 14, SkinPartTypes.ITEM);
     public static final ISkinType BLOCK = register("block", 15, SkinPartTypes.BLOCK, SkinPartTypes.BLOCK_MULTI);
@@ -81,8 +82,8 @@ public final class SkinTypes {
         return register(name, new SkinType.Armor(name, id, slotType, partTypes));
     }
 
-    private static ISkinType registerItem(String name, int id, ITag<Item> tag, ISkinPartType... parts) {
-        return register(name, new SkinType.Tool(name, id, Arrays.asList(parts), tag));
+    private static ISkinType registerItem(String name, int id, ItemOverrideType overrideType, ISkinPartType... parts) {
+        return register(name, new SkinType.Tool(name, id, Arrays.asList(parts), overrideType::isOverrideItem));
     }
 
     private static ISkinType register(String name, SkinType type) {

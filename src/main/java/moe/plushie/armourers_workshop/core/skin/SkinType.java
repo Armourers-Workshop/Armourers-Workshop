@@ -10,6 +10,7 @@ import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public class SkinType implements ISkinType {
 
@@ -64,16 +65,21 @@ public class SkinType implements ISkinType {
 
     public static class Tool extends SkinType implements ISkinToolType {
 
-        protected ITag<Item> tag;
+        protected Predicate<Item> predicate;
 
-        public Tool(String name, int id, List<? extends ISkinPartType> parts, ITag<Item> tag) {
+        public Tool(String name, int id, List<? extends ISkinPartType> parts, Predicate<Item> predicate) {
             super(name, id, parts);
-            this.tag = tag;
+            this.predicate = predicate;
         }
 
         @Override
-        public ITag<Item> getTag() {
-            return tag;
+        public boolean contains(Item item) {
+            return predicate.test(item);
         }
+
+        //        @Override
+//        public ITag<Item> getTag() {
+//            return tag;
+//        }
     }
 }
