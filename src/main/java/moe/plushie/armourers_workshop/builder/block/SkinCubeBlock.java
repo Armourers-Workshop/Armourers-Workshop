@@ -1,35 +1,43 @@
 package moe.plushie.armourers_workshop.builder.block;
 
-import moe.plushie.armourers_workshop.api.client.render.IHasCustomizeRenderType;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.tileentity.SkinCubeTileEntity;
+import moe.plushie.armourers_workshop.core.item.impl.IPaintPicker;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.OptionalDirection;
 import moe.plushie.armourers_workshop.utils.OptionalDirectionProperty;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ForgeRenderTypes;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 @SuppressWarnings("NullableProblems")
-public class SkinCubeBlock extends Block implements IBlockTintColorProvider, IHasCustomizeRenderType {
+public class SkinCubeBlock extends Block implements IBlockTintColorProvider {
 
     public static final OptionalDirectionProperty MARKER = OptionalDirectionProperty.create("marker", OptionalDirection.values());
 
@@ -62,6 +70,24 @@ public class SkinCubeBlock extends Block implements IBlockTintColorProvider, IHa
     }
 
     @Override
+    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+        ItemStack itemStack = super.getPickBlock(state, target, world, pos, player);
+        if (itemStack.isEmpty()) {
+            return itemStack;
+        }
+        IPaintColor paintColor = null;
+        BlockRayTraceResult traceResult = (BlockRayTraceResult)target;
+        TileEntity tileEntity = world.getBlockEntity(pos);
+        if (tileEntity instanceof IPaintable) {
+            paintColor = ((IPaintable) tileEntity).getColor(traceResult.getDirection());
+        }
+        if (paintColor != null) {
+            ColorUtils.setColor(itemStack, paintColor);
+        }
+        return itemStack;
+    }
+
+    @Override
     public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
         return true;
     }
@@ -88,13 +114,5 @@ public class SkinCubeBlock extends Block implements IBlockTintColorProvider, IHa
     public void appendHoverText(ItemStack itemStack, @Nullable IBlockReader world, List<ITextComponent> tooltips, ITooltipFlag flags) {
         super.appendHoverText(itemStack, world, tooltips, flags);
         tooltips.addAll(TranslateUtils.subtitles(getDescriptionId() + ".flavour"));
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public RenderType getItemRenderType(boolean flags) {
-        return ForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get();
-        //return flags ? Atlases.translucentCullBlockSheet() : Atlases.translucentItemSheet();
-        //return SkinRenderType.ITEM_TRANSLUCENT_WITHOUT_SORTED;
     }
 }

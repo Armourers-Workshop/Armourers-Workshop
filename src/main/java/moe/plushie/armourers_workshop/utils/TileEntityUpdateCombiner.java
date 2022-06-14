@@ -7,24 +7,34 @@ import java.util.Map;
 
 public class TileEntityUpdateCombiner {
 
-    private static boolean started = false;
-    private static final Map<TileEntity, Runnable> pending = new IdentityHashMap<>();
+    private static final ThreadLocal<Map<TileEntity, Runnable>> pending = ThreadLocal.withInitial(() -> null);
 
     public static void begin() {
-        started = true;
+        Map<TileEntity, Runnable> queue = pending.get();
+        if (queue == null) {
+            pending.set(new IdentityHashMap<>());
+        }
     }
 
     public static void end() {
-        started = false;
-        pending.keySet().forEach(TileEntity::setChanged);
-        pending.values().forEach(Runnable::run);
-        pending.clear();
+        Map<TileEntity, Runnable> queue = pending.get();
+        if (queue == null) {
+            return;
+        }
+        queue.forEach((k, v) -> {
+            v.run();
+            k.setChanged();
+        });
+        pending.set(null);
     }
 
     public static <T extends TileEntity> void combine(T tileEntity, Runnable handler) {
-        pending.put(tileEntity, handler);
-        if (!started) {
-            end();
+        Map<TileEntity, Runnable> queue = pending.get();
+        if (queue == null) {
+            handler.run();
+            tileEntity.setChanged();
+            return;
         }
+        queue.put(tileEntity, handler);
     }
 }

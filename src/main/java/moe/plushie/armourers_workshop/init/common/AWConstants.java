@@ -61,6 +61,7 @@ public final class AWConstants {
         public static final String EAST = "East";
 
         public static final String ENTITY = "EntityTag";
+        public static final String BLOCK_ENTITY = "BlockEntityTag";
 
         public static final String ENTITY_SCALE = "Scale";
 

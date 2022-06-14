@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.init.common;
 
 import moe.plushie.armourers_workshop.builder.item.*;
+import moe.plushie.armourers_workshop.builder.render.SkinCubeItemStackRenderer;
 import moe.plushie.armourers_workshop.core.item.*;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
@@ -90,10 +91,10 @@ public class ModItems {
     public static final Item ARMOURER = registerBlock("armourer", ModBlocks.ARMOURER, p -> p.rarity(Rarity.EPIC).tab(BUILDING_GROUP));
     public static final Item COLOR_MIXER = registerBlock("colour-mixer", ModBlocks.COLOR_MIXER, p -> p.rarity(Rarity.RARE).tab(BUILDING_GROUP));
 
-    public static final Item SKIN_CUBE = registerBlock("skin-cube", ModBlocks.SKIN_CUBE, p -> p.stacksTo(64).tab(BUILDING_GROUP));
-    public static final Item SKIN_CUBE_GLOWING = registerBlock("skin-cube-glowing", ModBlocks.SKIN_CUBE_GLOWING, p -> p.stacksTo(64).tab(BUILDING_GROUP));
-    public static final Item SKIN_CUBE_GLASS = registerBlock("skin-cube-glass", ModBlocks.SKIN_CUBE_GLASS, p -> p.stacksTo(64).tab(BUILDING_GROUP));
-    public static final Item SKIN_CUBE_GLASS_GLOWING = registerBlock("skin-cube-glass-glowing", ModBlocks.SKIN_CUBE_GLASS_GLOWING, p -> p.stacksTo(64).tab(BUILDING_GROUP));
+    public static final Item SKIN_CUBE = registerCubeBlock("skin-cube", ModBlocks.SKIN_CUBE, p -> p.stacksTo(64).tab(BUILDING_GROUP));
+    public static final Item SKIN_CUBE_GLOWING = registerCubeBlock("skin-cube-glowing", ModBlocks.SKIN_CUBE_GLOWING, p -> p.stacksTo(64).tab(BUILDING_GROUP));
+    public static final Item SKIN_CUBE_GLASS = registerCubeBlock("skin-cube-glass", ModBlocks.SKIN_CUBE_GLASS, p -> p.stacksTo(64).tab(BUILDING_GROUP));
+    public static final Item SKIN_CUBE_GLASS_GLOWING = registerCubeBlock("skin-cube-glass-glowing", ModBlocks.SKIN_CUBE_GLASS_GLOWING, p -> p.stacksTo(64).tab(BUILDING_GROUP));
 
     public static final Item PAINT_BRUSH = register("paintbrush", PaintbrushItem::new, p -> p.tab(BUILDING_GROUP));
     public static final Item PAINT_ROLLER = register("paint-roller", PaintRollerItem::new, p -> p.tab(BUILDING_GROUP));
@@ -126,6 +127,10 @@ public class ModItems {
 
     private static BlockItem registerBlock(String name, Block block, Consumer<Item.Properties> customizer) {
         return register(name, properties -> new BlockItem(block, properties), customizer);
+    }
+
+    private static BlockItem registerCubeBlock(String name, Block block, Consumer<Item.Properties> customizer) {
+        return register(name, properties -> new SkinCubeItem(block, properties.setISTER(() -> SkinCubeItemStackRenderer::getInstance)), customizer);
     }
 
     private static Function<Item.Properties, SkinUnlockItem> unlockWithBuilder(SkinSlotType slotType) {

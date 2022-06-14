@@ -233,7 +233,29 @@ public class ColorUtils {
 
     @Nullable
     public static IPaintColor getColor(ItemStack itemStack) {
+        return getColor(itemStack, null);
+    }
+
+    public static void setColor(ItemStack itemStack, @Nullable String rootPath, IPaintColor color) {
+        CompoundNBT tag = itemStack.getOrCreateTag();
+        if (rootPath != null) {
+            if (tag.contains(rootPath)) {
+                tag = tag.getCompound(rootPath);
+            } else {
+                CompoundNBT newTag = new CompoundNBT();
+                tag.put(rootPath, newTag);
+                tag = newTag;
+            }
+        }
+        AWDataSerializers.putPaintColor(tag, AWConstants.NBT.COLOR, color, null);
+    }
+
+    @Nullable
+    public static IPaintColor getColor(ItemStack itemStack, @Nullable String rootPath) {
         CompoundNBT tag = itemStack.getTag();
+        if (tag != null && rootPath != null) {
+            tag = tag.getCompound(rootPath);
+        }
         if (tag != null && tag.contains(AWConstants.NBT.COLOR)) {
             INBT nbt = tag.get(AWConstants.NBT.COLOR);
             if (nbt instanceof NumberNBT) {
@@ -248,6 +270,7 @@ public class ColorUtils {
         }
         return null;
     }
+
 
     public static ArrayList<ITextComponent> getColorTooltips(IPaintColor color, boolean useDisplayColor) {
         ArrayList<ITextComponent> tooltips = new ArrayList<>();

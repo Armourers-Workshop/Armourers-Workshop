@@ -55,7 +55,7 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
     }
 
     @Override
-    public boolean pickColor(World worldIn, BlockPos blockPos, Direction direction, ItemUseContext context) {
+    public boolean pickColor(IWorld worldIn, BlockPos blockPos, Direction direction, ItemUseContext context) {
         ItemStack itemStack = context.getItemInHand();
         TileEntity tileEntity = worldIn.getBlockEntity(blockPos);
         if (tileEntity instanceof IPaintable) {

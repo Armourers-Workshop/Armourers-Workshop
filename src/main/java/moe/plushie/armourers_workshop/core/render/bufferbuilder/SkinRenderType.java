@@ -53,7 +53,6 @@ public class SkinRenderType extends RenderType {
     public static final RenderType PLAYER_CUTOUT = entityCutout(DefaultPlayerSkin.getDefaultSkin());
     public static final RenderType PLAYER_TRANSLUCENT = entityTranslucentCull(DefaultPlayerSkin.getDefaultSkin());
 
-    public static final RenderType ITEM_TRANSLUCENT_WITHOUT_SORTED = create("aw_item_translucent", DefaultVertexFormats.NEW_ENTITY, GL11.GL_QUADS, 256, false, false, createTranslucentState());
     public static final RenderType LINES_WITHOUT_TEST = create("aw_box_lines", DefaultVertexFormats.POSITION_COLOR, 1, 256, RenderType.State.builder().setLineState(new RenderState.LineState(OptionalDouble.empty())).setLayeringState(VIEW_OFFSET_Z_LAYERING).setAlphaState(NO_ALPHA).setDepthTestState(NO_DEPTH_TEST).createCompositeState(false));
 
     public static final RenderType MARKER_FACE = createMarkerFace(RenderUtils.TEX_MARKERS);
@@ -165,7 +164,7 @@ public class SkinRenderType extends RenderType {
 
     private static RenderType createMarkerFace(ResourceLocation texture) {
         RenderType.State states = RenderType.State.builder()
-                .setCullState(NO_CULL)
+                .setCullState(CULL)
                 .setTextureState(new TextureState(texture, false, false))
                 .setAlphaState(DEFAULT_ALPHA)
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
