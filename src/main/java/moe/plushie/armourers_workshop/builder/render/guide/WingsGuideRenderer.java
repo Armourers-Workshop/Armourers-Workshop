@@ -4,7 +4,10 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.api.client.render.IGuideProvider;
 import moe.plushie.armourers_workshop.api.client.render.IGuideRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class WingsGuideRenderer implements IGuideRenderer {
 
     private final ChestGuideRenderer chestGuideRenderer = ChestGuideRenderer.getInstance();

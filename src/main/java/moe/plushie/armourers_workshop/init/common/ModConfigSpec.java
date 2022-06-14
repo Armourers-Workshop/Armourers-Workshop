@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init.common;
 
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateContextPacket;
+import moe.plushie.armourers_workshop.utils.slot.ItemOverrideType;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -10,8 +11,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class ModConfigSpec {
 
@@ -61,6 +62,10 @@ public class ModConfigSpec {
 
         default ForgeConfigSpec.IntValue defineInRange(String path, int defaultValue, int min, int max, String... description) {
             return getBuilder().comment(description).defineInRange(path, defaultValue, min, max);
+        }
+
+        default <T> ForgeConfigSpec.ConfigValue<List<? extends T>> defineList(String path, List<? extends T> defaultValue, Predicate<Object> elementValidator, String... description) {
+            return getBuilder().comment(description).defineList(path, defaultValue, elementValidator);
         }
 
         default ForgeConfigSpec.DoubleValue defineInRange(String path, double defaultValue, double min, double max, String... description) {
@@ -284,6 +289,9 @@ public class ModConfigSpec {
             public static void write(Client spec) {
             }
         }
+
+        public void save() {
+        }
     }
 
     public static class Common {
@@ -331,6 +339,9 @@ public class ModConfigSpec {
         // Cache
         ForgeConfigSpec.IntValue skinCacheExpireTime;
         ForgeConfigSpec.IntValue skinCacheMaxSize;
+
+        ForgeConfigSpec.ConfigValue<List<? extends String>> itemOverrides;
+
 
         Common(SpecBuilder builder) {
             builder.defineCategory("general", "General settings.", () -> {
@@ -508,20 +519,16 @@ public class ModConfigSpec {
 //                    modAddon.setItemSkinningSupport(itemSkinningSupport);
 //                }
 //            }
-
-//            config.setCategoryComment(CATEGORY_OVERRIDES,
-//                    "Custom list of items that can be skinned.\n"
-//                            + "Format [override type:mod id:item name]\n"
-//                            + "Valid override types are: sword, shield, bow, pickaxe, axe, shovel, hoe and item\n"
-//                            + "example sword:minecraft:iron_sword");
-//            if (propOverrides == null) {
-//                propOverrides = config.get(CATEGORY_OVERRIDES, "itemOverrides", new String[] {});
-//                propOverrides.setLanguageKey("itemOverrides");
-//                overrides.clear();
-//                for (String override : propOverrides.getStringList()) {
-//                    overrides.add(override);
-//                }
-//            }
+            builder.defineCategory("overrides", "Custom list of items that can be skinned.", () -> {
+                Predicate<Object> elementValidator = item -> {
+                    String value = (String) item;
+                    return Arrays.stream(ItemOverrideType.values()).anyMatch(t -> value.startsWith(t.getName()));
+                };
+                itemOverrides = builder.defineList("itemOverrides", new ArrayList<>(), elementValidator,
+                        "Format [override type:mod id:item name]",
+                        "Valid override types are: sword, shield, bow, pickaxe, axe, shovel, hoe and item",
+                        "example sword:minecraft:iron_sword");
+            });
         }
 
 //        private static void checkIfUpdated() {
@@ -635,11 +642,16 @@ public class ModConfigSpec {
 //                remotePlayerId = spec.skinCacheMaxSize.get();
 //                lastVersion = spec.skinCacheMaxSize.get();
 //                hasUpdated = spec.hasUpdated.get();
+                overrides = new ArrayList<>(spec.itemOverrides.get());
             }
 
-            public static void write(Client spec) {
-
+            public static void write(Common spec) {
+                spec.itemOverrides.set(new ArrayList<>(overrides));
             }
+        }
+
+        public static void save() {
+            Serializer.write(COMMON.getKey());
         }
     }
 }

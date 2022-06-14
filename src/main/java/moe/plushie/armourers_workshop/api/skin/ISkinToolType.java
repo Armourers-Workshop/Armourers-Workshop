@@ -4,5 +4,9 @@ import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
 
 public interface ISkinToolType {
-    ITag<Item> getTag();
+
+    /**
+     * Does tool type contain the specified item?
+     */
+    boolean contains(Item item);
 }

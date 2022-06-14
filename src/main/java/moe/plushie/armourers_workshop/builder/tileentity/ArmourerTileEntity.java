@@ -13,7 +13,6 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.tileentity.AbstractTileEntity;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
@@ -53,7 +52,7 @@ public class ArmourerTileEntity extends AbstractTileEntity {
     protected SkinPaintData paintData;
 
     protected Object renderData;
-    protected AxisAlignedBB b;
+    protected AxisAlignedBB renderBoundingBox;
 
     public ArmourerTileEntity() {
         super(ModTileEntities.ARMOURER);
@@ -296,11 +295,11 @@ public class ArmourerTileEntity extends AbstractTileEntity {
     @OnlyIn(Dist.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        if (b == null) {
-            b = new AxisAlignedBB(-32, -32, -44, 64, 64, 64);
-            b = b.move(getBlockPos());
+        if (renderBoundingBox == null) {
+            renderBoundingBox = new AxisAlignedBB(-32, -32, -44, 64, 64, 64);
+            renderBoundingBox = renderBoundingBox.move(getBlockPos());
         }
-        return b;
+        return renderBoundingBox;
     }
 
     @OnlyIn(Dist.CLIENT)

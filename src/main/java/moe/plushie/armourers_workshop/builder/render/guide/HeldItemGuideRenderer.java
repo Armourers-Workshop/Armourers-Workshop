@@ -8,7 +8,10 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class HeldItemGuideRenderer implements IGuideRenderer {
 
     private final static HeldItemGuideRenderer INSTANCE = new HeldItemGuideRenderer();
