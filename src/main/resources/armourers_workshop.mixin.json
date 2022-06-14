@@ -16,8 +16,7 @@
     "InventoryScreenMixin",
     "ItemRendererMixin",
     "LivingRendererMixin",
-    "RenderTypeBuffersMixin",
-    "RenderTypeLookupMixin"
+    "RenderTypeBuffersMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -8,6 +8,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public interface IPaintPicker {
@@ -19,7 +20,7 @@ public interface IPaintPicker {
         return false;
     }
 
-    default boolean pickColor(World worldIn, BlockPos blockPos, Direction direction, ItemUseContext context) {
+    default boolean pickColor(IWorld worldIn, BlockPos blockPos, Direction direction, ItemUseContext context) {
         ItemStack itemStack = context.getItemInHand();
         TileEntity tileEntity = worldIn.getBlockEntity(blockPos);
         if (tileEntity instanceof IPaintProvider) {
@@ -34,5 +35,4 @@ public interface IPaintPicker {
         PlayerEntity player = context.getPlayer();
         return player == null || player.isShiftKeyDown();
     }
-
 }

@@ -78,6 +78,9 @@ public final class RenderUtils {
     public static final ResourceLocation TEX_MARKERS = AWCore.resource("textures/tile-entities/markers.png");
     public static final ResourceLocation TEX_GUIDES = AWCore.resource("textures/block/guide.png");
 
+    public static final ResourceLocation TEX_BLOCK_CUBE = AWCore.resource("textures/block/colourable/colourable.png");
+    public static final ResourceLocation TEX_BLOCK_CUBE_GLASS = AWCore.resource("textures/block/colourable/colourable-glass.png");
+
     private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
 
     private static final byte[][][] FACE_MARK_TEXTURES = {
