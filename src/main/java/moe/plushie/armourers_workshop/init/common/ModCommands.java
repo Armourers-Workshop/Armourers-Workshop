@@ -35,6 +35,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Arrays;
@@ -48,7 +49,7 @@ public class ModCommands {
     });
 
     private static final DynamicCommandExceptionType ERROR_MISSING_ITEM_STACK = new DynamicCommandExceptionType(ob -> {
-        return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingItemStack", ob);
+        return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingItemSkinnable", ob);
     });
 
     /// :/armourers setSkin|giveSkin|clearSkin
@@ -62,7 +63,7 @@ public class ModCommands {
                 .then(Commands.literal("clearSkin").then(targets().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
                 .then(Commands.literal("exportSkin").then(skinFormats().then(outputFileName().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
                 .then(Commands.literal("resyncWardrobe").then(targets().executes(Executor::resyncWardrobe)))
-                .then(Commands.literal("setItemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
+                .then(Commands.literal("itemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
                 .then(Commands.literal("setUnlockedSlots").then(targets().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
     }
 
@@ -245,11 +246,22 @@ public class ModCommands {
             ResourceLocation identifier = itemStack.getItem().getRegistryName();
             String key = String.format("%s:%s", overrideType.getName(), identifier);
             // we always remove and then add again
-            ModConfig.Common.overrides.remove(key);
             if (operator.equals("add")) {
+                if (ModConfig.Common.overrides.contains(key)) {
+                    return 1; // item already added to the overrides list, ignored.
+                }
                 ModConfig.Common.overrides.add(key);
+            } else {
+                if (!ModConfig.Common.overrides.contains(key)) {
+                    return 1; // item not found in the overrides list, ignored.
+                }
+                ModConfig.Common.overrides.remove(key);
             }
             ModConfigSpec.Common.save();
+            // notify the user of what happened
+            String messageKey = "commands.armourers_workshop.armourers.setItemSkinnable." + operator;
+            ITextComponent overrideTypeName = TranslateUtils.Name.of(overrideType);
+            player.sendMessage(TranslateUtils.title(messageKey, itemStack.getDisplayName(), overrideTypeName), player.getUUID());
             return 1;
         }
 

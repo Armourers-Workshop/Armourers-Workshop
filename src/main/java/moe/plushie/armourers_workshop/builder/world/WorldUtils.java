@@ -189,7 +189,7 @@ public final class WorldUtils {
         IPaintable target = (IPaintable) tileEntity;
         ISkinCube cube = SkinCubes.byBlock(blockState.getBlock());
 
-        OptionalDirection marker = blockState.getValue(SkinCubeBlock.MARKER);
+        OptionalDirection marker = SkinCubeBlock.getMarker(blockState);
 
         slice.setId((byte) cube.getId());
         slice.setX((byte) ix);
@@ -259,7 +259,7 @@ public final class WorldUtils {
         }
 
         Block targetBlock = blockData.getBlock();
-        BlockState targetState = targetBlock.defaultBlockState().setValue(SkinCubeBlock.MARKER, markerFacing);
+        BlockState targetState = SkinCubeBlock.setMarker(targetBlock.defaultBlockState(), markerFacing);
 
         HashMap<Direction, IPaintColor> colors = new HashMap<>();
         for (Direction dir : Direction.values()) {
@@ -459,8 +459,8 @@ public final class WorldUtils {
         for (Vector3i offset : getResolvedBuildingSpace(skinPart)) {
             BlockPos target = pos.offset(offset);
             BlockState targetState = world.getBlockState(target);
-            if (targetState.hasProperty(SkinCubeBlock.MARKER) && targetState.getValue(SkinCubeBlock.MARKER) != OptionalDirection.NONE) {
-                BlockState newState = targetState.setValue(SkinCubeBlock.MARKER, OptionalDirection.NONE);
+            if (targetState.hasProperty(SkinCubeBlock.MARKER) && SkinCubeBlock.getMarker(targetState) != OptionalDirection.NONE) {
+                BlockState newState = SkinCubeBlock.setMarker(targetState, OptionalDirection.NONE);
                 WorldBlockUpdateTask task = new WorldBlockUpdateTask(world, target, newState);
                 // task.setOnlyReplaceable(true)
                 WorldUpdater.getInstance().submit(task);

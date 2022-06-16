@@ -1,15 +1,16 @@
 package moe.plushie.armourers_workshop.core.skin;
 
+import moe.plushie.armourers_workshop.api.IResultHandler;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.DataManager;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.RequestSkinPacket;
-import moe.plushie.armourers_workshop.api.IResultHandler;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModContext;
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.io.FileUtils;
@@ -24,8 +25,6 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 
 public class SkinLoader {
@@ -494,28 +493,10 @@ public class SkinLoader {
                 try {
                     return caching.load(request);
                 } catch (Exception ignored) {
+                    // yes, it's failure, we need to roll back to the download from network.
                 }
             }
-            InputStream inputStream = null;
-            try {
-                FileUtils.forceMkdirParent(cachedFile);
-                if (cachedFile.exists()) {
-                    FileUtils.forceDelete(cachedFile);
-                }
-                // to prevent incorrect stream due to network fluctuation during loading.
-                // we first write skin data into disk and then read it again.
-                inputStream = from(request);
-                GZIPOutputStream outputStream = new GZIPOutputStream(new FileOutputStream(cachedFile));
-                IOUtils.copy(inputStream, outputStream);
-                IOUtils.closeQuietly(outputStream, inputStream);
-                // now we can safely access skin data.
-                inputStream = new GZIPInputStream(new FileInputStream(cachedFile));
-                Skin skin = SkinIOUtils.loadSkinFromStream2(inputStream);
-                loadDidFinish(request, skin);
-                return skin;
-            } finally {
-                IOUtils.closeQuietly(inputStream);
-            }
+            return super.load(request);
         }
 
         @Override
@@ -553,20 +534,19 @@ public class SkinLoader {
             if (DataDomain.GLOBAL_SERVER.matches(identifier)) {
                 ModLog.debug("'{}' => add global skin cache", identifier);
                 executor.execute(() -> {
-                    FileOutputStream fileOutputStream = null;
-                    GZIPOutputStream gzipOutputStream = null;
+                    FileOutputStream outputStream = null;
                     try {
                         FileUtils.forceMkdirParent(cachedFile);
                         if (cachedFile.exists()) {
                             FileUtils.forceDelete(cachedFile);
                         }
-                        fileOutputStream = new FileOutputStream(cachedFile);
-                        gzipOutputStream = new GZIPOutputStream(fileOutputStream);
-                        SkinIOUtils.saveSkinToStream(gzipOutputStream, skin);
+                        outputStream = new FileOutputStream(cachedFile);
+                        SkinIOUtils.saveSkinToStream(outputStream, skin);
+                        outputStream.flush();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    IOUtils.closeQuietly(gzipOutputStream, fileOutputStream);
+                    IOUtils.closeQuietly(outputStream);
                 });
                 return;
             }
@@ -579,7 +559,6 @@ public class SkinLoader {
             executor.execute(() -> {
                 FileOutputStream fileOutputStream = null;
                 CipherOutputStream cipherOutputStream = null;
-                GZIPOutputStream gzipOutputStream = null;
                 try {
                     FileUtils.forceMkdirParent(cachedFile);
                     if (cachedFile.exists()) {
@@ -592,13 +571,12 @@ public class SkinLoader {
                         Cipher aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
                         aes.init(Cipher.ENCRYPT_MODE, key);
                         cipherOutputStream = new CipherOutputStream(fileOutputStream, aes);
-                        gzipOutputStream = new GZIPOutputStream(cipherOutputStream);
-                        SkinIOUtils.saveSkinToStream(gzipOutputStream, skin);
+                        SkinIOUtils.saveSkinToStream(cipherOutputStream, skin);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                IOUtils.closeQuietly(gzipOutputStream, cipherOutputStream, fileOutputStream);
+                IOUtils.closeQuietly(cipherOutputStream, fileOutputStream);
             });
         }
 
@@ -626,7 +604,7 @@ public class SkinLoader {
             }
             // global data no need decrypt/encrypt
             if (DataDomain.GLOBAL_SERVER.matches(request.identifier)) {
-                return new GZIPInputStream(new FileInputStream(cacheFile));
+                return new FileInputStream(cacheFile);
             }
             byte[] x0 = ModContext.x0();
             byte[] x1 = ModContext.x1();
@@ -642,7 +620,7 @@ public class SkinLoader {
             SecretKeySpec key = new SecretKeySpec(x1, "AES");
             Cipher aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
             aes.init(Cipher.DECRYPT_MODE, key);
-            return new GZIPInputStream(new CipherInputStream(inputStream, aes));
+            return new CipherInputStream(inputStream, aes);
         }
 
         public File cachingFile(String identifier) {

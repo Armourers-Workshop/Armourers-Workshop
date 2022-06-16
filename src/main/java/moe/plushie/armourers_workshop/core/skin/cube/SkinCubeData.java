@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.skin.data.serialize.LegacyCubeHelper;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 import moe.plushie.armourers_workshop.utils.extened.AWVoxelShape;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
@@ -124,7 +125,7 @@ public class SkinCubeData {
         setCubeCount(size);
         if (version >= 10) {
             byte[] buffers = bufferSlice.getBuffers();
-            int readSize = stream.read(buffers, 0, size * bufferSlice.lineSize);
+            stream.readFully(buffers, 0, size * bufferSlice.lineSize);
             for (int i = 0; i < size; i++) {
                 BufferSlice slice = bufferSlice.at(i);
                 if (version < 11) {

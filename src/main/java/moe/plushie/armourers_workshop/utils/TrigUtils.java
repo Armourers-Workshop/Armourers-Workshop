@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.utils;
 
+import net.minecraft.util.Direction;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
@@ -58,5 +60,19 @@ public class TrigUtils {
         float f = Float.intBitsToFloat(i);
         f = 0.6666667F * f + 1.0F / (3.0F * f * f * p_226166_0_);
         return 0.6666667F * f + 1.0F / (3.0F * f * f * p_226166_0_);
+    }
+
+    public static Direction rotate(Direction dir, Rotation rotation) {
+        if (dir != null) {
+            return rotation.rotate(dir);
+        }
+        return dir;
+    }
+
+    public static OptionalDirection rotate(OptionalDirection dir, Rotation rotation) {
+        if (dir.getDirection() != null) {
+            return OptionalDirection.of(rotation.rotate(dir.getDirection()));
+        }
+        return dir;
     }
 }

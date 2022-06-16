@@ -24,10 +24,10 @@ public class BlockMarkerItem extends FlavouredItem {
         BlockState blockState = world.getBlockState(blockPos);
         if (blockState.hasProperty(SkinCubeBlock.MARKER)) {
             OptionalDirection direction = OptionalDirection.of(context.getClickedFace());
-            if (direction.equals(blockState.getValue(SkinCubeBlock.MARKER))) {
+            if (direction.equals(SkinCubeBlock.getMarker(blockState))) {
                 direction = OptionalDirection.NONE;
             }
-            world.setBlock(blockPos, blockState.setValue(SkinCubeBlock.MARKER, direction), Constants.BlockFlags.BLOCK_UPDATE);
+            world.setBlock(blockPos, SkinCubeBlock.setMarker(blockState, direction), Constants.BlockFlags.BLOCK_UPDATE);
             return ActionResultType.sidedSuccess(world.isClientSide);
         }
         return ActionResultType.PASS;
