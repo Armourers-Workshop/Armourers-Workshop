@@ -24,7 +24,7 @@ public class ArmourersHammerItem extends FlavouredItem {
         BlockState state = world.getBlockState(pos);
         BlockState newState = state.rotate(world, pos, Rotation.CLOCKWISE_90);
         if (!newState.equals(state)) {
-            world.setBlock(pos, state, Constants.BlockFlags.BLOCK_UPDATE);
+            world.setBlock(pos, newState, Constants.BlockFlags.BLOCK_UPDATE);
             return ActionResultType.sidedSuccess(world.isClientSide);
         }
         return ActionResultType.PASS;

@@ -1,8 +1,6 @@
 package moe.plushie.armourers_workshop.init.common;
 
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.storage.FolderName;
 
 public final class AWConstants {
@@ -53,12 +51,13 @@ public final class AWConstants {
 
         public static final String FLAGS = "Flags";
 
-        public static final String DOWN = "Down";
-        public static final String UP = "Up";
-        public static final String NORTH = "North";
-        public static final String SOUTH = "South";
-        public static final String WEST = "West";
-        public static final String EAST = "East";
+        public static final String SIDE_DOWN = "Down";
+        public static final String SIDE_UP = "Up";
+        public static final String SIDE_FRONT = "Front";
+        public static final String SIDE_BACK = "Back";
+        public static final String SIDE_LEFT = "Left";
+        public static final String SIDE_RIGHT = "Right";
+
 
         public static final String ENTITY = "EntityTag";
         public static final String BLOCK_ENTITY = "BlockEntityTag";

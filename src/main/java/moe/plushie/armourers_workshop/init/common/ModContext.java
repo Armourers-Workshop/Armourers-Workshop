@@ -50,26 +50,27 @@ public class ModContext extends WorldSavedData {
             return;
         }
         try {
+            int v0 = 20220616;
             MessageDigest md = MessageDigest.getInstance("MD5");
             ByteBuffer buffer0 = ByteBuffer.allocate(8 * Long.BYTES);
             ByteBuffer buffer1 = ByteBuffer.allocate(24 * Long.BYTES);
-            buffer0.putLong(0xe08e99f9);
+            buffer0.putLong(v0 + 0xe08e99f7);
             buffer0.putLong(t0.getLeastSignificantBits());
-            buffer0.putLong(0x9ee714d5);
+            buffer0.putLong(v0 + 0x9ee714d5);
             buffer0.putLong(t0.getMostSignificantBits());
-            buffer0.putLong(0x3cf6f6ac);
-            buffer0.putLong(t1.getMostSignificantBits());
-            buffer0.putLong(0x6c8caf3c);
+            buffer0.putLong(v0 + 0x3cf6f6ac);
+            buffer0.putLong(t1.getLeastSignificantBits());
+            buffer0.putLong(v0 + 0x6c8caf3c);
             x0 = md.digest(buffer0.array());
-            buffer1.putLong(0xe08e99f9);
+            buffer1.putLong(v0 + 0xe08e99f9);
             buffer1.putLong(t1.getMostSignificantBits());
             buffer1.putLong(t0.getLeastSignificantBits());
-            buffer1.putLong(0x9ee714d5);
+            buffer1.putLong(v0 + 0x9ee714d5);
             buffer1.put(x0);
-            buffer1.putLong(0x3cf6f6ac);
-            buffer1.putLong(t1.getMostSignificantBits());
-            buffer1.putLong(t0.getLeastSignificantBits());
-            buffer1.putLong(0x6c8caf3c);
+            buffer1.putLong(v0 + 0x3cf6f6ac);
+            buffer1.putLong(t1.getLeastSignificantBits());
+            buffer1.putLong(t0.getMostSignificantBits());
+            buffer1.putLong(v0 + 0x6c8caf3c);
             x1 = md.digest(buffer1.array());
         } catch (Exception e) {
             e.printStackTrace();

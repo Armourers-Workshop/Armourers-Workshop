@@ -7,7 +7,8 @@
     },
     {
       "when": {
-        "marker": "down"
+        "marker": "down",
+        "has_marker": true
       },
       "apply": {
         "model": "armourers_workshop:block/skin-cube-marker",
@@ -16,7 +17,8 @@
     },
     {
       "when": {
-        "marker": "up"
+        "marker": "up",
+        "has_marker": true
       },
       "apply": {
         "model": "armourers_workshop:block/skin-cube-marker",
@@ -25,7 +27,8 @@
     },
     {
       "when": {
-        "marker": "north"
+        "marker": "north",
+        "has_marker": true
       },
       "apply": {
         "model": "armourers_workshop:block/skin-cube-marker"
@@ -33,7 +36,8 @@
     },
     {
       "when": {
-        "marker": "south"
+        "marker": "south",
+        "has_marker": true
       },
       "apply": {
         "model": "armourers_workshop:block/skin-cube-marker",
@@ -42,7 +46,8 @@
     },
     {
       "when": {
-        "marker": "west"
+        "marker": "west",
+        "has_marker": true
       },
       "apply": {
         "model": "armourers_workshop:block/skin-cube-marker",
@@ -51,7 +56,8 @@
     },
     {
       "when": {
-        "marker": "east"
+        "marker": "east",
+        "has_marker": true
       },
       "apply": {
         "model": "armourers_workshop:block/skin-cube-marker",

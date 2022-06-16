@@ -31,7 +31,10 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     compileOnly "mezz.jei:jei-${jei_minecraft_version}:${jei_version}:api"
+    //compileOnly "com.sk89q.worldedit:worldedit-core:7.2.5-SNAPSHOT"
+
     //runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}")
+    //runtimeOnly fg.deobf("com.sk89q.worldedit:worldedit-mod:7.2.5-dist")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
