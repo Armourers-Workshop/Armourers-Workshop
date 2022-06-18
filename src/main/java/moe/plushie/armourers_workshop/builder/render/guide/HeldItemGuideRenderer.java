@@ -16,8 +16,8 @@ public class HeldItemGuideRenderer implements IGuideRenderer {
 
     private final static HeldItemGuideRenderer INSTANCE = new HeldItemGuideRenderer();
 
-    private ModelRenderer armSolid;
-    private ModelRenderer armTransparent;
+    private final ModelRenderer armSolid;
+    private final ModelRenderer armTransparent;
 
     public HeldItemGuideRenderer() {
         armSolid = new ModelRenderer(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT, 40, 16);

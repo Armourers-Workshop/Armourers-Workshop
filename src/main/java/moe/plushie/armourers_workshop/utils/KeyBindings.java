@@ -9,10 +9,6 @@ import net.minecraftforge.client.settings.KeyModifier;
 
 public class KeyBindings {
 
-//    public static final String CATEGORY = "keys." + AWCore.getModId().toLowerCase() + ":category";
-//    public static final String WARDROBE = "keys." + AWCore.getModId().toLowerCase() + ".open-wardrobe";
-//    public static final String UNDO = "keys." + AWCore.getModId().toLowerCase() + ".undo";
-
     public static KeyBinding UNDO_KEY = register("undo", "key.keyboard.z");
     public static KeyBinding OPEN_WARDROBE_KEY = register("open-wardrobe", "key.keyboard.p");
 

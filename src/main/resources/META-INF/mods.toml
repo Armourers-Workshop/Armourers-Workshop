@@ -22,7 +22,7 @@ license="All rights reserved"
 [[dependencies.armourers_workshop]]
     modId="forge"
     mandatory=true
-    versionRange="${forge_version}"
+    versionRange="${forge_version_range}"
     ordering="NONE"
     side="BOTH"
 

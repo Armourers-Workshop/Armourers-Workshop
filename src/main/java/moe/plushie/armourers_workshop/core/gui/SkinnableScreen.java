@@ -18,7 +18,7 @@ import java.util.List;
 public class SkinnableScreen extends AWAbstractContainerScreen<SkinnableContainer> {
 
     public SkinnableScreen(SkinnableContainer container, PlayerInventory inventory, ITextComponent title) {
-        super(container, inventory, container.getTitle());
+        super(container, inventory, container.getInventoryName());
 
         this.imageWidth = 176;
         this.imageHeight = container.getRow() * 18 + 125;

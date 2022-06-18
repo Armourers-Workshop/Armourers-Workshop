@@ -143,11 +143,4 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements IBlockTint
         }
         return 0xffffffff;
     }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable IBlockReader world, List<ITextComponent> tooltips, ITooltipFlag flags) {
-        super.appendHoverText(itemStack, world, tooltips, flags);
-        tooltips.addAll(TranslateUtils.subtitles(getDescriptionId() + ".flavour"));
-    }
 }
