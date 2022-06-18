@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("NullableProblems")
 public class OutfitMakerBlock extends AbstractHorizontalBlock {
 
     public OutfitMakerBlock(AbstractBlock.Properties properties) {

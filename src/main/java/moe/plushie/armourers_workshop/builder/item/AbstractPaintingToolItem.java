@@ -29,6 +29,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("NullableProblems")
 public abstract class AbstractPaintingToolItem extends FlavouredItem implements IItemSoundProvider, IItemParticleProvider, IPaintingTool, IPaintApplier {
 
     public AbstractPaintingToolItem(Properties properties) {

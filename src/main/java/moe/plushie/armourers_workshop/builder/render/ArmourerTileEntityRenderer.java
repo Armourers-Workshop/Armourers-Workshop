@@ -160,7 +160,6 @@ public class ArmourerTileEntityRenderer<T extends ArmourerTileEntity> extends Ti
         matrixStack.popPose();
     }
 
-
     @Override
     public boolean shouldRenderOffScreen(T entity) {
         return true;

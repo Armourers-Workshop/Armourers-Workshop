@@ -19,8 +19,8 @@ import javax.annotation.Nullable;
 @SuppressWarnings("NullableProblems")
 public class OutfitMakerTileEntity extends AbstractContainerTileEntity {
 
-    private String itemName;
-    private String itemFlavour;
+    private String itemName = "";
+    private String itemFlavour = "";
 
     private NonNullList<ItemStack> items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
 
