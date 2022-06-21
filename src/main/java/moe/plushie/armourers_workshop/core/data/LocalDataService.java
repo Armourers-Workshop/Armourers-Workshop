@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.data;
 
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
-import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.nbt.CompoundNBT;
@@ -25,7 +25,7 @@ public class LocalDataService {
 
     private final Path rootPath;
     private final HashMap<String, Node> nodes = new HashMap<>();
-    private AtomicInteger counter = new AtomicInteger();
+    private final AtomicInteger counter = new AtomicInteger();
     private String lastGenUUID = "";
 
     public LocalDataService(Path rootPath) {
@@ -149,7 +149,7 @@ public class LocalDataService {
         String uuid = getFreeUUID();
         Node newNode = new Node(uuid, skin.getType().toString(), name, author, flavour, length, hashCode);
         for (Node node : nodes.values()) {
-            if (node.sameNode(newNode)) {
+            if (node.isValid() && node.sameNode(newNode)) {
                 return node.uuid;
             }
         }

@@ -13,6 +13,7 @@ import net.minecraft.particles.ParticleType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 
+@SuppressWarnings("NullableProblems")
 public class PaintSplashParticleData implements IParticleData {
 
     public static final Codec<Direction> DIRECTION_CODEC = IStringSerializable.fromEnum(Direction::values, Direction::byName);

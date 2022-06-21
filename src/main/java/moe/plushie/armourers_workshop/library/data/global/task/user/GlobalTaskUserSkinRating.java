@@ -46,11 +46,11 @@ public class GlobalTaskUserSkinRating extends GlobalTask<GlobalTaskUserSkinRatin
         return new UserSkinRatingResult(GlobalTaskResult.SUCCESS, jsonObject.toString(), rating);
     }
 
-    public class UserSkinRatingResult {
+    public static class UserSkinRatingResult {
 
-        private GlobalTaskResult result;
-        private String message;
-        private int rating;
+        private final GlobalTaskResult result;
+        private final String message;
+        private final int rating;
 
         public UserSkinRatingResult(GlobalTaskResult result, String message, int rating) {
             this.result = result;

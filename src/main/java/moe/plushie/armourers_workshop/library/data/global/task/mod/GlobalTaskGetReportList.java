@@ -96,11 +96,11 @@ public class GlobalTaskGetReportList extends GlobalTask<GlobalTaskGetReportList.
         OPEN, CLOSED, ALL
     }
 
-    public class Result {
+    public static class Result {
 
-        private GlobalTaskResult result;
-        private String message;
-        private ArrayList<GlobalTaskSkinReport.SkinReport> skinReports;
+        private final GlobalTaskResult result;
+        private final String message;
+        private final ArrayList<GlobalTaskSkinReport.SkinReport> skinReports;
 
         public Result(GlobalTaskResult result, String message, ArrayList<GlobalTaskSkinReport.SkinReport> skinReports) {
             this.result = result;
