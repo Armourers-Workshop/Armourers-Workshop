@@ -43,7 +43,7 @@ public class NetworkHandler {
     private static NetworkHandler INSTANCE;
 
     private final ResourceLocation channelName;
-    private final HashMap<UUID, ArrayList<Holder>> receivedBuffers = new HashMap<>();
+    private final HashMap<UUID, ArrayList<ByteBuf>> receivedBuffers = new HashMap<>();
     private final ExecutorService executor = Executors.newFixedThreadPool(2, r -> new Thread(r, "Network-Data-Coder"));
 
     public NetworkHandler(final ResourceLocation channelName) {
@@ -159,7 +159,7 @@ public class NetworkHandler {
     private void receiveSplitPacket(UUID uuid, PacketBuffer buffer, Consumer<PacketBuffer> consumer) {
         int packetState = buffer.getInt(0);
         if (packetState < 0) {
-            ArrayList<Holder> playerReceivedBuffers = receivedBuffers.computeIfAbsent(uuid, k -> new ArrayList<>());
+            ArrayList<ByteBuf> playerReceivedBuffers = receivedBuffers.computeIfAbsent(uuid, k -> new ArrayList<>());
             if (packetState == STATE_FIRST) {
                 if (!playerReceivedBuffers.isEmpty()) {
                     ModLog.warn("aw2:split received out of order - inbound buffer not empty when receiving first");
@@ -167,12 +167,11 @@ public class NetworkHandler {
                 }
             }
             buffer.skipBytes(4); // skip header
-            playerReceivedBuffers.add(new Holder(buffer)); // we need to keep writer/reader index
+            playerReceivedBuffers.add(buffer.retainedDuplicate()); // we need to keep writer/reader index
             if (packetState == STATE_LAST) {
                 executor.submit(() -> {
                     // ownership will transfer to full buffer, so don't call release again.
-                    Stream<PacketBuffer> stream = playerReceivedBuffers.stream().map(Holder::get);
-                    PacketBuffer full = new PacketBuffer(Unpooled.wrappedBuffer(stream.toArray(ByteBuf[]::new)));
+                    PacketBuffer full = new PacketBuffer(Unpooled.wrappedBuffer(playerReceivedBuffers.toArray(new ByteBuf[0])));
                     playerReceivedBuffers.clear();
                     consumer.accept(full);
                     full.release();
@@ -184,10 +183,10 @@ public class NetworkHandler {
             consumer.accept(buffer);
             return;
         }
-        Holder holder = new Holder(buffer); // we need to keep writer/reader index
+        ByteBuf receivedBuf = buffer.retainedDuplicate(); // we need to keep writer/reader index
         executor.submit(() -> {
-            consumer.accept(holder.get());
-            holder.release();
+            consumer.accept(new PacketBuffer(receivedBuf));
+            receivedBuf.release();
         });
     }
 
@@ -240,30 +239,6 @@ public class NetworkHandler {
 
         public CustomPacket parsePacket(final PacketBuffer in) throws IllegalArgumentException {
             return this.factory.apply(in);
-        }
-    }
-
-    public static class Holder {
-
-        private final PacketBuffer buf;
-        private final int writerIndex;
-        private final int readerIndex;
-
-        public Holder(PacketBuffer buf) {
-            this.buf = buf;
-            this.writerIndex = buf.writerIndex();
-            this.readerIndex = buf.readerIndex();
-            this.buf.retain();
-        }
-
-        public void release() {
-            this.buf.release();
-        }
-
-        public PacketBuffer get() {
-            buf.writerIndex(writerIndex);
-            buf.readerIndex(readerIndex);
-            return buf;
         }
     }
 }

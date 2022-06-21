@@ -1,15 +1,12 @@
 package moe.plushie.armourers_workshop.core.container;
 
-import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 
 @SuppressWarnings("NullableProblems")

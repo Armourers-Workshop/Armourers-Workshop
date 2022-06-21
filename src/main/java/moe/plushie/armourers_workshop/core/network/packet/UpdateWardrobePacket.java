@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
+import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.utils.AWDataAccessor;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import net.minecraft.entity.Entity;
@@ -85,7 +87,13 @@ public class UpdateWardrobePacket extends CustomPacket {
 
     @Override
     public void accept(ServerPlayNetHandler netHandler, ServerPlayerEntity player) {
-        // TODO: check operator permission
+        // We can't allow wardrobe updates without container.
+        String playerName = player.getName().getContents();
+        if (!(player.containerMenu instanceof SkinWardrobeContainer)) {
+            ModLog.info("the wardrobe {} operation rejected for '{}'", field, playerName);
+            return;
+        }
+        ModLog.debug("the wardrobe {} operation accepted for '{}'", field, playerName);
         SkinWardrobe wardrobe = apply(player);
         if (wardrobe != null) {
             NetworkHandler.getInstance().sendToAll(this);
@@ -120,9 +128,7 @@ public class UpdateWardrobePacket extends CustomPacket {
             case SYNC_OPTION:
                 if (field != null) {
                     field.set(wardrobe, fieldValue);
-                    if (field.isBroadcastChanges()) {
-                        return wardrobe;
-                    }
+                    return wardrobe;
                 }
         }
         return null;

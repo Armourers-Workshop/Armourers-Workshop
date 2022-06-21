@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;

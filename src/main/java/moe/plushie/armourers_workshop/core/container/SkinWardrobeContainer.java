@@ -1,8 +1,11 @@
 package moe.plushie.armourers_workshop.core.container;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
+import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlot;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.entity.Entity;
@@ -10,8 +13,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -21,6 +27,7 @@ import java.util.List;
 public class SkinWardrobeContainer extends Container {
 
     private final SkinWardrobe wardrobe;
+    private final ArrayList<ItemStack> lastSyncSlot = new ArrayList<>();
     private final ArrayList<Slot> customSlots = new ArrayList<>();
 
     private final int slotsX = 83;
@@ -146,6 +153,34 @@ public class SkinWardrobeContainer extends Container {
         }
         slot.set(ItemStack.EMPTY);
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void broadcastChanges() {
+        super.broadcastChanges();
+        // in normal, the size is inconsistent this will only happen when the container is first loaded.
+        if (lastSyncSlot.size() != slots.size()) {
+            lastSyncSlot.ensureCapacity(slots.size());
+            slots.forEach(s -> lastSyncSlot.add(s.getItem()));
+            return;
+        }
+        // if slots is ready, we check all slots and fast synchronize changes to all players if changes.
+        int changes = 0;
+        for(int index = 0; index < slots.size(); ++index) {
+            // the first 36 slots we defined as player slots, no synchronize is required.
+            if (index < 36) {
+                continue;
+            }
+            ItemStack newItemStack = slots.get(index).getItem();
+            if (!lastSyncSlot.get(index).equals(newItemStack)) {
+                lastSyncSlot.set(index, newItemStack);
+                changes += 1;
+            }
+        }
+        if (changes != 0) {
+            ModLog.debug("observer slots has {} changes, sync to players", changes);
+            wardrobe.sendToAll();
+        }
     }
 
     public boolean shouldRenderPlayerInventory() {

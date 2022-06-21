@@ -1,11 +1,6 @@
 package moe.plushie.armourers_workshop.builder.block;
 
-import com.google.common.collect.Maps;
-import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
-import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.builder.tileentity.BoundingBoxTileEntity;
-import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -14,23 +9,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
 
 @SuppressWarnings("NullableProblems")
 public class BoundingBoxBlock extends Block {

@@ -10,7 +10,6 @@ import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModContext;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
-import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.io.FileUtils;
