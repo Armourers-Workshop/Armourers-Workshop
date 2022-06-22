@@ -17,7 +17,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
+import java.util.HashMap;
 import java.util.function.Function;
 
 @OnlyIn(Dist.CLIENT)
@@ -25,15 +25,13 @@ public class SkinRendererManager {
 
     private static final SkinRendererManager INSTANCE = new SkinRendererManager();
 
-    private EntityType<?> lastEntityType;
-    private SkinRenderer<?, ?> lastSkinRenderer;
-
     public static void init() {
         SkinRendererManager skinRendererManager = getInstance();
         EntityRendererManager entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         for (PlayerRenderer playerRenderer : entityRenderManager.getSkinMap().values()) {
             skinRendererManager.setupRenderer(EntityType.PLAYER, playerRenderer, true);
         }
+
         entityRenderManager.renderers.forEach((entityType1, entityRenderer) -> {
             if (entityRenderer instanceof LivingRenderer<?, ?>) {
                 skinRendererManager.setupRenderer(entityType1, (LivingRenderer<?, ?>) entityRenderer, true);
@@ -66,42 +64,48 @@ public class SkinRendererManager {
         });
     }
 
-    @SuppressWarnings("unchecked")
     @Nullable
-    public <T extends Entity, M extends Model> SkinRenderer<T, M> getRenderer(@Nullable T entity) {
+    public <T extends Entity, M extends Model> SkinRenderer<T, M> getRenderer(@Nullable T entity, @Nullable Model entityModel, @Nullable  EntityRenderer<?> entityRenderer) {
         if (entity == null) {
             return null;
         }
         EntityType<?> entityType = entity.getType();
-        if (lastEntityType != null && lastEntityType.equals(entityType)) {
-            return (SkinRenderer<T, M>) lastSkinRenderer;
+        // when the caller does not provide the entity renderer we need to query it from managers.
+        if (entityRenderer == null) {
+            entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
         }
-        EntityRenderer<? super T> entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
-        SkinRenderer<T, M> skinRenderer = getRenderer(entity.getType(), entityRenderer);
+        // when the caller does not provide the entity model we need to query it from entity render.
+        if (entityModel == null) {
+            entityModel = getModel(entityRenderer);
+        }
+        return getRenderer(entityType, entityModel, entityRenderer);
+    }
+
+    @Nullable
+    protected <T extends Entity, M extends Model> SkinRenderer<T, M> getRenderer(EntityType<?> entityType, Model entityModel, EntityRenderer<?> entityRenderer) {
+        // in the normal, the entityRenderer only one model type,
+        // but some mods generate dynamically models,
+        // so we need to be compatible with that
+        ISkinDataProvider dataProvider = (ISkinDataProvider) entityRenderer;
+        HashMap<Object, SkinRenderer<T, M>> skinRenderers = dataProvider.getSkinData();
+        if (skinRenderers == null) {
+            skinRenderers = new HashMap<>();
+            dataProvider.setSkinData(skinRenderers);
+        }
+        SkinRenderer<T, M> skinRenderer = skinRenderers.get(entityModel.getClass());
         if (skinRenderer != null) {
-            lastEntityType = entityType;
-            lastSkinRenderer = skinRenderer;
             return skinRenderer;
         }
-        return null;
-    }
-
-    @Nullable
-    protected <T extends Entity, M extends Model> SkinRenderer<T, M> getRenderer(EntityType<?> entityType, EntityRenderer<? super T> entityRenderer) {
-        ISkinDataProvider dataProvider = (ISkinDataProvider) entityRenderer;
-        Optional<SkinRenderer<T, M>> skinRenderer = dataProvider.getSkinData();
-        if (skinRenderer == null) {
-            skinRenderer = Optional.ofNullable(createRenderer(entityType, entityRenderer));
-            skinRenderer.ifPresent(SkinRenderer::initTransformers);
-            dataProvider.setSkinData(skinRenderer);
+        skinRenderer = createRenderer(entityType, entityRenderer);
+        if (skinRenderer != null) {
+            skinRenderers.put(entityModel.getClass(), skinRenderer);
         }
-        return skinRenderer.orElse(null);
+        return skinRenderer;
     }
 
 
     @Nullable
-    protected <T extends Entity, M extends Model> SkinRenderer<T, M> createRenderer(EntityType<?> entityType, EntityRenderer<? super T> entityRenderer) {
-        //
+    protected <T extends Entity, M extends Model> SkinRenderer<T, M> createRenderer(EntityType<?> entityType, EntityRenderer<?> entityRenderer) {
         EntityProfile entityProfile = EntityProfiles.getProfile(entityType);
 
         // using special skin renderer of the arrow.
@@ -158,13 +162,13 @@ public class SkinRendererManager {
                 armorLayer = layerRenderer;
             }
             if (layerRenderer instanceof SkinWardrobeLayer) {
-                break; // ignore, only one.
+                return; // ignore, only one.
             }
         }
         if (autoInject && armorLayer == null) {
             return;
         }
-        SkinRenderer<T, M> skinRenderer = getRenderer(entityType, livingRenderer);
+        SkinRenderer<T, M> skinRenderer = getRenderer(entityType, livingRenderer.getModel(), livingRenderer);
         livingRenderer.addLayer(new SkinWardrobeLayer<>(skinRenderer, livingRenderer));
     }
 }

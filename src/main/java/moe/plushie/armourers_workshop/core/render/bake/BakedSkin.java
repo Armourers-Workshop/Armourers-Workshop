@@ -155,7 +155,7 @@ public class BakedSkin implements IBakedSkin {
     }
 
     public AWVoxelShape getRenderShape(Entity entity, Model model, ItemCameraTransforms.TransformType transformType) {
-        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity);
+        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null) {
             return AWVoxelShape.empty();
         }

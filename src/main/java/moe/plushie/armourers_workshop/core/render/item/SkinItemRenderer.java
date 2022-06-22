@@ -56,7 +56,7 @@ public final class SkinItemRenderer {
     public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         Entity entity = SkinItemStackRenderer.getInstance().getMannequinEntity();
         BipedModel<?> model = SkinItemStackRenderer.getInstance().getMannequinModel();
-        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity);
+        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null || entity == null || entity.level == null) {
             return;
         }
