@@ -39,7 +39,7 @@ public class SkinnableTileEntityRenderer<T extends SkinnableTileEntity> extends 
         }
         Entity mannequin = SkinItemStackRenderer.getInstance().getMannequinEntity();
         BipedModel<?> model = SkinItemStackRenderer.getInstance().getMannequinModel();
-        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(mannequin);
+        SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(mannequin, model, null);
         if (renderer == null || mannequin == null || mannequin.level == null) {
             return;
         }
