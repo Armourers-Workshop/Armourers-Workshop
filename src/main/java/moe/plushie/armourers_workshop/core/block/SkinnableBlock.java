@@ -1,11 +1,12 @@
 package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
+import moe.plushie.armourers_workshop.core.permission.PermissionManager;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
-import moe.plushie.armourers_workshop.utils.SkinItemUseContext;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import moe.plushie.armourers_workshop.init.common.ModEntities;
+import moe.plushie.armourers_workshop.utils.SkinItemUseContext;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -24,7 +25,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -101,24 +101,29 @@ public class SkinnableBlock extends HorizontalFaceBlock {
             return linkedState.getBlock().use(linkedState, world, linkedPos, player, hand, traceResult);
         }
         if (tileEntity.isBed() && !player.isShiftKeyDown()) {
-            return Blocks.RED_BED.use(state, world, tileEntity.getBedPos(), player, hand, traceResult);
+            if (PermissionManager.shouldSleep(tileEntity, player)) {
+                return Blocks.RED_BED.use(state, world, tileEntity.getBedPos(), player, hand, traceResult);
+            }
         }
         if (tileEntity.isSeat() && !player.isShiftKeyDown()) {
-            if (world.isClientSide) {
-                return ActionResultType.CONSUME;
+            if (PermissionManager.shouldSit(tileEntity, player)) {
+                if (world.isClientSide) {
+                    return ActionResultType.CONSUME;
+                }
+                Vector3d seatPos = tileEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
+                SeatEntity seatEntity = getSeatEntity(world, tileEntity.getParentPos(), seatPos);
+                if (seatEntity == null) {
+                    return ActionResultType.FAIL; // it is using
+                }
+                player.startRiding(seatEntity, true);
+                return ActionResultType.SUCCESS;
             }
-            Vector3d seatPos = tileEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
-            SeatEntity seatEntity = getSeatEntity(world, tileEntity.getParentPos(), seatPos);
-            if (seatEntity == null) {
-                return ActionResultType.FAIL; // it is using
-            }
-            player.startRiding(seatEntity, true);
-            return ActionResultType.SUCCESS;
         }
         if (tileEntity.isInventory()) {
-            ModContainerTypes.open(ModContainerTypes.SKINNABLE, player, IWorldPosCallable.create(world, tileEntity.getParentPos()));
-            player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
-            return ActionResultType.sidedSuccess(world.isClientSide);
+            if (ModContainerTypes.open(ModContainerTypes.SKINNABLE, player, world, pos)) {
+                player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
+                return ActionResultType.sidedSuccess(world.isClientSide);
+            }
         }
         return ActionResultType.FAIL;
     }

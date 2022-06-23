@@ -30,7 +30,7 @@ public class OpenWardrobePacket extends CustomPacket {
     public void accept(ServerPlayNetHandler netHandler, ServerPlayerEntity player) {
         Entity entity = player.level.getEntity(entityId);
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-        if (wardrobe != null && ModConfig.Common.canOpenWardrobe(player, player)) {
+        if (wardrobe != null && wardrobe.isEditable(player)) {
             ModContainerTypes.open(ModContainerTypes.WARDROBE, player, wardrobe);
         }
     }

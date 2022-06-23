@@ -9,9 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.Explosion;
@@ -33,8 +31,10 @@ public class ArmourerBlock extends AbstractHorizontalBlock {
         if (world.isClientSide) {
             return ActionResultType.CONSUME;
         }
-        ModContainerTypes.open(ModContainerTypes.ARMOURER, player, IWorldPosCallable.create(world, pos));
-        return ActionResultType.SUCCESS;
+        if (ModContainerTypes.open(ModContainerTypes.ARMOURER, player, world, pos)) {
+            return ActionResultType.CONSUME;
+        }
+        return ActionResultType.FAIL;
     }
 
     @Override

@@ -6,7 +6,8 @@ import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
-import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.core.permission.PermissionManager;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -162,9 +163,15 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     }
 
     public boolean isEditable(PlayerEntity player) {
+        if (!PermissionManager.shouldOpenGui(this, player)) {
+            return false;
+        }
         // can't edit another player's wardrobe
         Entity entity = getEntity();
         if (entity instanceof PlayerEntity && entity.getId() != player.getId()) {
+            return false;
+        }
+        if (!ModConfig.Common.canOpenWardrobe(entity, player)) {
             return false;
         }
         return getProfile().isEditable();

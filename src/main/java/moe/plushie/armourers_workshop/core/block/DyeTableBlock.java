@@ -9,7 +9,6 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -40,8 +39,10 @@ public class DyeTableBlock extends AbstractHorizontalBlock {
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         }
-        ModContainerTypes.open(ModContainerTypes.DYE_TABLE, player, IWorldPosCallable.create(world, pos));
-        return ActionResultType.CONSUME;
+        if (ModContainerTypes.open(ModContainerTypes.DYE_TABLE, player, world, pos)) {
+            return ActionResultType.CONSUME;
+        }
+        return ActionResultType.FAIL;
     }
 
     @Override

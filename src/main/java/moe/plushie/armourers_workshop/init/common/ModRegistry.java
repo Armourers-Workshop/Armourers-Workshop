@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.core.gui.SkinningTableScreen;
 import moe.plushie.armourers_workshop.core.gui.hologramprojector.HologramProjectorScreen;
 import moe.plushie.armourers_workshop.core.gui.wardrobe.SkinWardrobeScreen;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
+import moe.plushie.armourers_workshop.core.permission.PermissionManager;
 import moe.plushie.armourers_workshop.core.render.entity.MannequinEntityRenderer;
 import moe.plushie.armourers_workshop.core.render.entity.SeatEntityRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
@@ -218,6 +219,7 @@ public class ModRegistry {
     public void onCommonSetup() {
         registerArgumentTypes();
 
+        PermissionManager.registerPermissions();
         EntityProfiles.init();
         SkinningRecipes.init();
         NetworkHandler.init(AWCore.resource("aw2"));
