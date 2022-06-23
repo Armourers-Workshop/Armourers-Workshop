@@ -36,7 +36,9 @@ public class GlobalSkinLibraryBlock extends AbstractHorizontalBlock {
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         }
-        ModContainerTypes.open(ModContainerTypes.SKIN_LIBRARY_GLOBAL, player, IWorldPosCallable.create(world, pos));
-        return ActionResultType.CONSUME;
+        if (!ModContainerTypes.open(ModContainerTypes.SKIN_LIBRARY_GLOBAL, player, world, pos)) {
+            return ActionResultType.CONSUME;
+        }
+        return ActionResultType.FAIL;
     }
 }

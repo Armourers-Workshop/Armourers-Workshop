@@ -2,11 +2,11 @@ package moe.plushie.armourers_workshop.core.entity;
 
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.utils.TrigUtils;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import moe.plushie.armourers_workshop.init.common.ModItems;
+import moe.plushie.armourers_workshop.utils.AWDataSerializers;
+import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
@@ -231,7 +231,7 @@ public class MannequinEntity extends ArmorStandEntity {
             return ActionResultType.sidedSuccess(world.isClientSide);
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);
-        if (wardrobe != null) {
+        if (wardrobe != null && wardrobe.isEditable(player)) {
             ModContainerTypes.open(ModContainerTypes.WARDROBE, player, wardrobe);
             return ActionResultType.sidedSuccess(world.isClientSide);
         }

@@ -29,8 +29,10 @@ public class OutfitMakerBlock extends AbstractHorizontalBlock {
         if (world.isClientSide) {
             return ActionResultType.CONSUME;
         }
-        ModContainerTypes.open(ModContainerTypes.OUTFIT_MAKER, player, IWorldPosCallable.create(world, pos));
-        return ActionResultType.SUCCESS;
+        if (ModContainerTypes.open(ModContainerTypes.OUTFIT_MAKER, player, world, pos)) {
+            return ActionResultType.CONSUME;
+        }
+        return ActionResultType.FAIL;
     }
 
     @Override

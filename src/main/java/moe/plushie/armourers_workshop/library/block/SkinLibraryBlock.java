@@ -37,15 +37,15 @@ public class SkinLibraryBlock extends AbstractHorizontalBlock {
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult traceResult) {
         if (world.isClientSide) {
-            return ActionResultType.CONSUME;
+            return ActionResultType.SUCCESS;
         }
         if (this == ModBlocks.SKIN_LIBRARY) {
-            ModContainerTypes.open(ModContainerTypes.SKIN_LIBRARY, player, IWorldPosCallable.create(world, pos));
+            ModContainerTypes.open(ModContainerTypes.SKIN_LIBRARY, player, world, pos);
         }
         if (this == ModBlocks.SKIN_LIBRARY_CREATIVE) {
-            ModContainerTypes.open(ModContainerTypes.SKIN_LIBRARY_CREATIVE, player, IWorldPosCallable.create(world, pos));
+            ModContainerTypes.open(ModContainerTypes.SKIN_LIBRARY_CREATIVE, player, world, pos);
         }
-        return ActionResultType.SUCCESS;
+        return ActionResultType.CONSUME;
     }
 
     @Override

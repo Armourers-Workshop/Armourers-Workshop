@@ -6,7 +6,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
@@ -23,7 +22,9 @@ public class SkinningTableBlock extends AbstractHorizontalBlock {
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         }
-        ModContainerTypes.open(ModContainerTypes.SKINNING_TABLE, player, IWorldPosCallable.create(world, pos));
-        return ActionResultType.CONSUME;
+        if (ModContainerTypes.open(ModContainerTypes.SKINNING_TABLE, player, world, pos)) {
+            return ActionResultType.CONSUME;
+        }
+        return ActionResultType.FAIL;
     }
 }

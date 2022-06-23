@@ -14,14 +14,19 @@ plugins {
     id "maven-publish"
     id "idea"
 }
+
 apply plugin: "net.minecraftforge.gradle"
 apply plugin: "org.spongepowered.mixin"
 apply plugin: "eclipse"
 
-String semver = "${mod_version}-" + (System.env.BUILD_NUMBER ?: "homebaked")
+if (version == "unspecified") {
+    version = "homebaked"
+}
+
+String semver = "${mod_version}-${version}"
 group = artifact_group
-archivesBaseName = artifact_basename
 version = "${minecraft_version}-${semver}"
+archivesBaseName = artifact_basename
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 compileJava {
@@ -42,7 +47,7 @@ minecraft {
     //
     // Use non-default mappings at your own risk. They may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: project.mcp_channel, version: project.mcp_mappings
+    mappings channel: mcp_channel, version: mcp_mappings
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -153,7 +158,7 @@ jar {
                     "Specification-Vendor"    : "armourers_workshop",
                     "Specification-Version"   : "${semver}", // We are version 1 of ourselves
                     "Implementation-Title"    : "${project.name}",
-                    "Implementation-Version"  : "${project.version}",
+                    "Implementation-Version"  : "${semver}",
                     "Implementation-Vendor"   : "armourers_workshop",
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")])
     }

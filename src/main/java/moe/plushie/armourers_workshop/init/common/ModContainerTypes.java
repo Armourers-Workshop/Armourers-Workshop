@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.builder.container.ArmourerContainer;
 import moe.plushie.armourers_workshop.builder.container.ColorMixerContainer;
 import moe.plushie.armourers_workshop.builder.container.OutfitMakerContainer;
 import moe.plushie.armourers_workshop.core.container.*;
+import moe.plushie.armourers_workshop.core.permission.PermissionManager;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.utils.ContainerTypeBuilder;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -18,7 +19,10 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.network.datasync.IDataSerializer;
+import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -57,6 +61,13 @@ public class ModContainerTypes {
             return false;
         }
         return opener.open(player, value);
+    }
+
+    public static boolean open(ContainerType<?> type, PlayerEntity player, World world, BlockPos pos) {
+        if (!PermissionManager.shouldOpenGui(type, player, pos)) {
+            return false;
+        }
+        return open(type, player, IWorldPosCallable.create(world, pos));
     }
 
     private static <C extends Container, T> ContainerType<C> create(String registryName, ContainerTypeBuilder.ContainerFactory<C, T> factory, IPlayerDataSerializer<T> serializer) {
