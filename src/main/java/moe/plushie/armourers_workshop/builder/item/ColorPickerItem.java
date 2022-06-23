@@ -68,8 +68,7 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
             return true;
         }
         // we required player must hold shift + right-click to apply the color,
-        // but someone calls this method directly,
-        // we must apply the color to the target.
+        // a special case where color mixer will call pickColor in the server side.
         if (context.getPlayer() == null) {
             return applyColor(context);
         }
@@ -97,6 +96,11 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
 
     @Override
     public boolean shouldPickColor(ItemUseContext context) {
+        // in normal color picker send the pick event in the client side,
+        // a special case where color mixer will call pickColor in the server side.
+        if (context.getPlayer() == null) {
+            return true;
+        }
         // because we have some data that the server side doesn't exist, such as skin texture
         // so the color pick must work on client side and then sent the color data to the server.
         return context.getLevel().isClientSide();
