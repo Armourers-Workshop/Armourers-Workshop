@@ -92,13 +92,14 @@ public class SkinRendererManager {
             skinRenderers = new HashMap<>();
             dataProvider.setSkinData(skinRenderers);
         }
-        SkinRenderer<T, M> skinRenderer = skinRenderers.get(entityModel.getClass());
+        Class<?> key = getModelClass(entityModel);
+        SkinRenderer<T, M> skinRenderer = skinRenderers.get(key);
         if (skinRenderer != null) {
             return skinRenderer;
         }
         skinRenderer = createRenderer(entityType, entityRenderer);
         if (skinRenderer != null) {
-            skinRenderers.put(entityModel.getClass(), skinRenderer);
+            skinRenderers.put(key, skinRenderer);
         }
         return skinRenderer;
     }
@@ -137,6 +138,13 @@ public class SkinRendererManager {
         }
 
         return null;
+    }
+
+    protected Class<?> getModelClass(Model model) {
+        if (model != null) {
+            return model.getClass();
+        }
+        return Model.class;
     }
 
     protected EntityModel<?> getModel(EntityRenderer<?> entityRenderer) {

@@ -182,7 +182,7 @@ public class SkinRenderType extends RenderType {
 //                .setOutputState(TRANSLUCENT_TARGET)
                 .setLayeringState(POLYGON_OFFSET_LAYERING)
                 .createCompositeState(false);
-        return RenderType.create("aw_guide_face", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, true, true, states);
+        return RenderType.create("aw_guide_face", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, false, false, states);
     }
 
 
