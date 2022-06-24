@@ -104,7 +104,7 @@ public class SkinWardrobeColourSetting extends AWTabPanel {
             this.y = y;
             this.enableAutoPick = enableAutoPick;
             this.paintType = paintType;
-            this.slot = SkinSlotType.DYE.getIndex() + SkinSlotType.getSlotIndex(paintType);
+            this.slot = SkinSlotType.getDyeSlotIndex(paintType);
             this.title = getDisplayText("label." + name);
         }
 

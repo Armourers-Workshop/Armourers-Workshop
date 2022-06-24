@@ -59,6 +59,7 @@ public final class SkinPartTypes {
     public static final ISkinPartType ITEM_ARROW = register("bow.arrow", new ArrowPartType());
     public static final ISkinPartType ITEM_SWORD = register("sword.base", new ItemPartType());
     public static final ISkinPartType ITEM_SHIELD = register("shield.base", new ItemPartType());
+    public static final ISkinPartType ITEM_TRIDENT = register("trident.base", new ItemPartType());
 
     public static final ISkinPartType ITEM = register("item.base", new ItemPartType());
     public static final ISkinPartType BLOCK = register("block.base", new BlockPartType());

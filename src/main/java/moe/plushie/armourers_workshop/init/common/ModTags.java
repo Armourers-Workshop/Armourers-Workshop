@@ -10,6 +10,7 @@ public class ModTags {
     public static final ITag<Item> SWORDS = forge("swords");
     public static final ITag<Item> SHIELDS = forge("shields");
     public static final ITag<Item> BOWS = forge("bows");
+    public static final ITag<Item> TRIDENTS = forge("tridents");
 
     public static final ITag<Item> PICKAXES = forge("pickaxes");
     public static final ITag<Item> AXES = forge("axes");

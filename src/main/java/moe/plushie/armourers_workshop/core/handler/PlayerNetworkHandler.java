@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.network.packet.UpdateContextPacket;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
+import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModConfigSpec;
@@ -21,6 +22,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.GameRules;
@@ -165,19 +167,14 @@ public class PlayerNetworkHandler {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (event.isCanceled()) {
+        if (event.isCanceled() || event.getWorld().isClientSide()) {
             return;
         }
         Entity entity = event.getEntity();
-        if (entity instanceof AbstractArrowEntity && !event.getWorld().isClientSide()) {
-            Entity owner = ((AbstractArrowEntity) entity).getOwner();
-            ItemStack itemStack = getSkinFromEquipment(owner, SkinSlotType.BOW, EquipmentSlotType.MAINHAND);
-            if (!itemStack.isEmpty()) {
-                SkinWardrobe wardrobe = SkinWardrobe.of(entity);
-                if (wardrobe != null) {
-                    wardrobe.setItem(SkinSlotType.BOW, 0, itemStack.copy());
-                }
-            }
+        if (entity instanceof TridentEntity) {
+            SkinUtils.copySkin(((TridentEntity) entity).getOwner(), entity, SkinSlotType.TRIDENT, 0);
+        } else if (entity instanceof AbstractArrowEntity) {
+            SkinUtils.copySkin(((AbstractArrowEntity) entity).getOwner(), entity, SkinSlotType.BOW, 0);
         }
         if (entity instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) entity;

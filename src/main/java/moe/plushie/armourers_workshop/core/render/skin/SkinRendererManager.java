@@ -113,6 +113,9 @@ public class SkinRendererManager {
         if (entityRenderer instanceof ArrowRenderer) {
             return createRenderer(entityProfile, entityRenderer, ArrowSkinRenderer::new);
         }
+        if (entityRenderer instanceof TridentRenderer) {
+            return createRenderer(entityProfile, entityRenderer, TridentSkinRenderer::new);
+        }
 
         EntityModel<?> entityModel = getModel(entityRenderer);
         if (entityModel instanceof IllagerModel) {

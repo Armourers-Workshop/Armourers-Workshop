@@ -3,14 +3,19 @@ package moe.plushie.armourers_workshop.utils;
 import moe.plushie.armourers_workshop.api.action.ICanRotation;
 import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.extened.AWMatrixStack;
+import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -24,6 +29,7 @@ import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Objects;
 
 public final class SkinUtils {
 
@@ -160,12 +166,44 @@ public final class SkinUtils {
         return Vector3f.YP;
     }
 
+    public static void copySkin(Entity src, Entity dest, SkinSlotType slotType, int index) {
+        ItemStack itemStack = getSkin(src, slotType, index);
+        if (itemStack.isEmpty()) {
+            return;
+        }
+        SkinWardrobe wardrobe = SkinWardrobe.of(dest);
+        if (wardrobe != null) {
+            wardrobe.setItem(slotType, index, itemStack.copy());
+        }
+    }
+
     public static Skin copySkin(Skin skin) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         SkinIOUtils.saveSkinToStream(outputStream, skin);
         byte[] skinData = outputStream.toByteArray();
         Skin skinCopy = SkinIOUtils.loadSkinFromStream(new ByteArrayInputStream(skinData));
         return skinCopy;
+    }
+
+    public static ItemStack getSkin(Entity entity, SkinSlotType slotType, int index) {
+        ItemStack itemStack = ItemStack.EMPTY;
+        if (entity instanceof LivingEntity) {
+            itemStack = ((LivingEntity) entity).getMainHandItem();
+        }
+        // embedded skin is the highest priority
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        if (Objects.equals(slotType.getSkinType(), descriptor.getType())) {
+            return itemStack;
+        }
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        if (wardrobe != null) {
+            ItemStack itemStack1 = wardrobe.getItem(slotType, index);
+            descriptor = SkinDescriptor.of(itemStack1);
+            if (Objects.equals(slotType.getSkinType(), descriptor.getType())) {
+                return itemStack1;
+            }
+        }
+        return ItemStack.EMPTY;
     }
 
     private static int getSkinIndex(String partIndexProp, Skin skin, int partIndex) {

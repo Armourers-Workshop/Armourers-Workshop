@@ -12,6 +12,7 @@ public enum ItemOverrideType {
     SWORD("sword", ModTags.SWORDS),
     SHIELD("shield", ModTags.SHIELDS),
     BOW("bow", ModTags.BOWS),
+    TRIDENT("trident", ModTags.TRIDENTS),
 
     PICKAXE("pickaxe", ModTags.PICKAXES),
     AXE("axe", ModTags.AXES),

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.render.skin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
@@ -141,6 +142,19 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         if (modelRenderer != null) {
             modelRenderer.visible = false;
         }
+    }
+
+    @Override
+    public ITransform<M> getPartTransform(T entity, M model, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+        ITransform<M> transform = super.getPartTransform(entity, model, transformType, bakedPart);
+        // for the trident throwing, vanilla will rotate it 180 degrees.
+        if (bakedPart.getType() == SkinPartTypes.ITEM_TRIDENT && entity.getUseItemRemainingTicks() > 0) {
+            return (matrixStack1, model1, transformType1, bakedPart1) -> {
+                matrixStack1.mulPose(Vector3f.ZP.rotationDegrees(180));
+                transform.apply(matrixStack1, model1, transformType1, bakedPart1);
+            };
+        }
+        return transform;
     }
 
     public abstract IPartAccessor<M> getAccessor();

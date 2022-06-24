@@ -15,6 +15,7 @@ public class SkinningRecipes {
         recipes.add(new SkinningItemRecipe(SkinTypes.ITEM_SWORD));
         recipes.add(new SkinningItemRecipe(SkinTypes.ITEM_SHIELD));
         recipes.add(new SkinningItemRecipe(SkinTypes.ITEM_BOW));
+        recipes.add(new SkinningItemRecipe(SkinTypes.ITEM_TRIDENT));
 
         recipes.add(new SkinningItemRecipe(SkinTypes.TOOL_PICKAXE));
         recipes.add(new SkinningItemRecipe(SkinTypes.TOOL_AXE));
