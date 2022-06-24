@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.model.Model;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -34,6 +35,32 @@ public class ClientWardrobeHandler {
     public final static float SCALE = 1 / 16f;
 
     public static void init() {
+    }
+
+    static Vector3f dx = new Vector3f();
+
+    public static void onRenderTrident(TridentEntity entity, Model model, float p_225623_2_, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers, CallbackInfo callback) {
+        SkinRenderData renderData = SkinRenderData.of(entity);
+        if (renderData == null) {
+            return;
+        }
+        matrixStack.pushPose();
+
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, entity.yRotO, entity.yRot) - 90.0F));
+        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, entity.xRotO, entity.xRot) + 90.0F));
+
+        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-90));
+
+        matrixStack.scale(-SCALE, -SCALE, SCALE);
+        matrixStack.translate(0, 11, 0);
+
+        int count = render(entity, model, light, matrixStack, buffers, ItemCameraTransforms.TransformType.NONE, renderData::getItemSkins);
+        if (count != 0) {
+            callback.cancel();
+        }
+
+        matrixStack.popPose();
     }
 
     public static void onRenderArrow(AbstractArrowEntity entity, Model model, float p_225623_2_, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers, CallbackInfo callback) {

@@ -112,6 +112,7 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     public void broadcast(ServerPlayerEntity player) {
         NetworkHandler.getInstance().sendTo(UpdateWardrobePacket.sync(this), player);
     }
+
     public boolean shouldRenderEquipment(EquipmentSlotType slotType) {
         return !armourFlags.contains(slotType);
     }
@@ -183,6 +184,7 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         SkinWardrobeStorage.saveSkinSlots(skinSlots, nbt);
         SkinWardrobeStorage.saveVisibility(armourFlags, nbt);
         SkinWardrobeStorage.saveInventoryItems(inventory, nbt);
+        SkinWardrobeStorage.saveDataFixer(this, nbt);
         return nbt;
     }
 
@@ -191,6 +193,7 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         SkinWardrobeStorage.loadSkinSlots(skinSlots, nbt);
         SkinWardrobeStorage.loadVisibility(armourFlags, nbt);
         SkinWardrobeStorage.loadInventoryItems(inventory, nbt);
+        SkinWardrobeStorage.loadDataFixer(this, nbt);
     }
 }
 

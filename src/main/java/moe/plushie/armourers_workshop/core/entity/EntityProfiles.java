@@ -29,6 +29,7 @@ public class EntityProfiles {
             .add(SkinTypes.ITEM_BOW, 1)
             .add(SkinTypes.ITEM_SWORD, 1)
             .add(SkinTypes.ITEM_SHIELD, 1)
+            .add(SkinTypes.ITEM_TRIDENT, 1)
             .add(SkinTypes.TOOL_AXE, 1)
             .add(SkinTypes.TOOL_HOE, 1)
             .add(SkinTypes.TOOL_PICKAXE, 1)
@@ -54,6 +55,7 @@ public class EntityProfiles {
             .add(SkinTypes.ITEM_BOW, 1)
             .add(SkinTypes.ITEM_SWORD, 1)
             .add(SkinTypes.ITEM_SHIELD, 1)
+            .add(SkinTypes.ITEM_TRIDENT, 1)
             .add(SkinTypes.TOOL_AXE, 1)
             .add(SkinTypes.TOOL_HOE, 1)
             .add(SkinTypes.TOOL_PICKAXE, 1)
@@ -81,8 +83,9 @@ public class EntityProfiles {
             .add(SkinTypes.ARMOR_HEAD, EntityProfiles::mobSlots)
             .build();
 
-    public static final EntityProfile ARROW = Builder.create()
+    public static final EntityProfile PROJECTING = Builder.create()
             .add(SkinTypes.ITEM_BOW, 1)
+            .add(SkinTypes.ITEM_TRIDENT, 1)
             .fixed()
             .build();
 
@@ -123,7 +126,8 @@ public class EntityProfiles {
 
         register(EntityType.SLIME, EntityProfiles.SLIME);
         register(EntityType.CHICKEN, EntityProfiles.CHICKEN);
-        register(EntityType.ARROW, EntityProfiles.ARROW);
+        register(EntityType.ARROW, EntityProfiles.PROJECTING);
+        register(EntityType.TRIDENT, EntityProfiles.PROJECTING);
 
 //        register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN);
 //        register(EntityType.IRON_GOLEM, EntityProfiles.MANNEQUIN);

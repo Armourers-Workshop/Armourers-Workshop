@@ -1,7 +1,10 @@
 package moe.plushie.armourers_workshop.core.capability;
 
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.utils.DataFixerUtils;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
@@ -19,6 +22,19 @@ import java.util.HashSet;
 import java.util.Objects;
 
 public class SkinWardrobeStorage implements Capability.IStorage<SkinWardrobe> {
+
+    public static void saveDataFixer(SkinWardrobe wardrobe, CompoundNBT nbt) {
+        nbt.putByte(AWConstants.NBT.DATA_VERSION, (byte) 1);
+    }
+
+    public static void loadDataFixer(SkinWardrobe wardrobe, CompoundNBT nbt) {
+        int version = nbt.getByte(AWConstants.NBT.DATA_VERSION);
+        if (version <= 0) {
+            IInventory inventory = wardrobe.getInventory();
+            DataFixerUtils.move(inventory, 67, SkinSlotType.DYE.getIndex(), 16, "align dye slots storage");
+            DataFixerUtils.move(inventory, 57, SkinSlotType.OUTFIT.getIndex(), 10, "align outfit slots storage");
+        }
+    }
 
     public static void saveInventoryItems(Inventory inventory, CompoundNBT nbt) {
         NonNullList<ItemStack> itemStacks = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
@@ -68,7 +84,7 @@ public class SkinWardrobeStorage implements Capability.IStorage<SkinWardrobe> {
         }
         ListNBT value = new ListNBT();
         slots.forEach((slotType, count) -> {
-            int index = slotType.ordinal() & 0xff;
+            int index = slotType.getId() & 0xff;
             int encoded = index << 8 | count & 0xff;
             value.add(ShortNBT.valueOf((short) encoded));
         });
@@ -82,12 +98,11 @@ public class SkinWardrobeStorage implements Capability.IStorage<SkinWardrobe> {
         if (value.isEmpty()) {
             return;
         }
-        SkinSlotType[] slotTypes = SkinSlotType.values();
         for (int i = 0; i < value.size(); ++i) {
             short encoded = value.getShort(i);
-            int index = (encoded >> 8) & 0xff;
-            if (index < slotTypes.length) {
-                slots.put(slotTypes[index], encoded & 0xff);
+            SkinSlotType slotType = SkinSlotType.by((encoded >> 8) & 0xff);
+            if (slotType != null) {
+                slots.put(slotType, encoded & 0xff);
             }
         }
     }

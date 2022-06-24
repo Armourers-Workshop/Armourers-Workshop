@@ -12,52 +12,58 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 public enum SkinSlotType {
 
-    HEAD("head", getMaxSlotSize(), SkinTypes.ARMOR_HEAD),
-    CHEST("chest", getMaxSlotSize(), SkinTypes.ARMOR_CHEST),
-    LEGS("legs", getMaxSlotSize(), SkinTypes.ARMOR_LEGS),
-    FEET("feet", getMaxSlotSize(), SkinTypes.ARMOR_FEET),
-    WINGS("wings", getMaxSlotSize(), SkinTypes.ARMOR_WINGS),
+    HEAD(0, 0, 10, "head", SkinTypes.ARMOR_HEAD),
+    CHEST(1, 10, 10, "chest", SkinTypes.ARMOR_CHEST),
+    LEGS(2, 20, 10, "legs", SkinTypes.ARMOR_LEGS),
+    FEET(3, 30, 10, "feet", SkinTypes.ARMOR_FEET),
+    WINGS(4, 40, 10, "wings", SkinTypes.ARMOR_WINGS),
 
-    SWORD("sword", 1, SkinTypes.ITEM_SWORD),
-    SHIELD("shield", 1, SkinTypes.ITEM_SHIELD),
-    BOW("bow", 1, SkinTypes.ITEM_BOW),
+    SWORD(5, 50, 1, "sword", SkinTypes.ITEM_SWORD),
+    SHIELD(6, 51, 1, "shield", SkinTypes.ITEM_SHIELD),
+    BOW(7, 52, 1, "bow", SkinTypes.ITEM_BOW),
+    TRIDENT(14, 57, 1, "trident", SkinTypes.ITEM_TRIDENT),
 
-    PICKAXE("pickaxe", 1, SkinTypes.TOOL_PICKAXE),
-    AXE("axe", 1, SkinTypes.TOOL_AXE),
-    SHOVEL("shovel", 1, SkinTypes.TOOL_SHOVEL),
-    HOE("hoe", 1, SkinTypes.TOOL_HOE),
+    PICKAXE(8, 53, 1, "pickaxe", SkinTypes.TOOL_PICKAXE),
+    AXE(9, 54, 1, "axe", SkinTypes.TOOL_AXE),
+    SHOVEL(10, 55, 1, "shovel", SkinTypes.TOOL_SHOVEL),
+    HOE(11, 56, 1, "hoe", SkinTypes.TOOL_HOE),
 
-    OUTFIT("outfit", getMaxSlotSize(), SkinTypes.OUTFIT),
-    DYE("dye", 16, null);
+    OUTFIT(12, 70, 10, "outfit", SkinTypes.OUTFIT),
+    DYE(13, 80, 16, "dye", null);
 
     private final String name;
+    private final int id;
     private final int index;
     private final int size;
     private final ISkinType skinType;
 
-    SkinSlotType(String name, int size, ISkinType skinType) {
+    SkinSlotType(int id, int index, int size, String name, ISkinType skinType) {
+        this.id = id;
         this.name = name;
-        this.index = Helper.COUNTER.getAndAdd(size);
+        this.index = index;
         this.size = size;
         this.skinType = skinType;
+        Helper.totalSize = Math.max(Helper.totalSize, index + size);
+    }
 
-        Helper.SKIN_TO_SLOT.put(skinType, this);
-        Helper.NAME_TO_SLOT.put(name, this);
+    @Nullable
+    public static SkinSlotType by(int id) {
+        return find(type -> type.id == id);
     }
 
     @Nullable
     public static SkinSlotType of(String name) {
-        return Helper.NAME_TO_SLOT.get(name);
+        return find(type -> Objects.equals(type.name, name));
     }
 
     @Nullable
     public static SkinSlotType of(ISkinType skinType) {
-        return Helper.SKIN_TO_SLOT.get(skinType);
+        return find(type -> Objects.equals(type.skinType, skinType));
     }
 
     @Nullable
@@ -84,21 +90,21 @@ public enum SkinSlotType {
     }
 
     public static int getTotalSize() {
-        return Helper.COUNTER.get();
+        return Helper.totalSize;
     }
 
-    public static ISkinPaintType[] getDyeSlots() {
+    public static ISkinPaintType[] getSupportedPaintTypes() {
         return Helper.SLOT_TO_TYPES;
     }
 
-    public static int getSlotIndex(ISkinPaintType paintType) {
+    public static int getDyeSlotIndex(ISkinPaintType paintType) {
         int i = 0;
         for (; i < Helper.SLOT_TO_TYPES.length; ++i) {
             if (Helper.SLOT_TO_TYPES[i] == paintType) {
                 break;
             }
         }
-        return i;
+        return DYE.getIndex() + i;
     }
 
     public boolean isResizable() {
@@ -107,6 +113,10 @@ public enum SkinSlotType {
 
     public boolean isArmor() {
         return skinType instanceof ISkinArmorType;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getIndex() {
@@ -125,11 +135,17 @@ public enum SkinSlotType {
         return skinType;
     }
 
-    private static class Helper {
-        static final AtomicInteger COUNTER = new AtomicInteger();
+    private static SkinSlotType find(Predicate<SkinSlotType> predicate) {
+        for (SkinSlotType slotType : SkinSlotType.values()) {
+            if (predicate.test(slotType)) {
+                return slotType;
+            }
+        }
+        return null;
+    }
 
-        static final HashMap<ISkinType, SkinSlotType> SKIN_TO_SLOT = new HashMap<>();
-        static final HashMap<String, SkinSlotType> NAME_TO_SLOT = new HashMap<>();
+    private static class Helper {
+        static int totalSize = 0;
 
         static final ISkinPaintType[] SLOT_TO_TYPES = {
                 SkinPaintTypes.DYE_1,

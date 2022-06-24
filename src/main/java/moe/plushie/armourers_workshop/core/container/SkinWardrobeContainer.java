@@ -68,7 +68,7 @@ public class SkinWardrobeContainer extends Container {
     }
 
     protected void addEquipmentSlots(Group group, int column, int row) {
-        SkinSlotType[] slotTypes = {SkinSlotType.SWORD, SkinSlotType.SHIELD, SkinSlotType.BOW, null, SkinSlotType.PICKAXE, SkinSlotType.AXE, SkinSlotType.SHOVEL, SkinSlotType.HOE};
+        SkinSlotType[] slotTypes = {SkinSlotType.SWORD, SkinSlotType.SHIELD, SkinSlotType.BOW, SkinSlotType.TRIDENT, null, SkinSlotType.PICKAXE, SkinSlotType.AXE, SkinSlotType.SHOVEL, SkinSlotType.HOE};
         boolean hasContents = false;
         for (SkinSlotType slotType : slotTypes) {
             if (slotType != null) {

@@ -68,14 +68,7 @@ public class SkinRenderer<T extends Entity, M extends Model> {
 
 
     public void apply(T entity, M model, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart, float partialTicks, MatrixStack matrixStack) {
-        ISkinPartType partType = bakedPart.getType();
-        ITransform<M> op = null;
-        if (partType instanceof ICanHeld) {
-            op = transformer.items.get(transformType);
-        }
-        if (op == null) {
-            op = transformer.armors.get(partType);
-        }
+        ITransform<M> op = getPartTransform(entity, model, transformType, bakedPart);
         if (op != null && model != null) {
             op.apply(matrixStack, model, transformType, bakedPart);
             SkinUtils.apply(AWMatrixStack.wrap(matrixStack), bakedPart.getPart(), partialTicks, entity);
@@ -144,6 +137,18 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         }
         modelRenderer.visible = false;
         overriders.add(modelRenderer);
+    }
+
+    public ITransform<M> getPartTransform(T entity, M model, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+        ISkinPartType partType = bakedPart.getType();
+        ITransform<M> transform = null;
+        if (partType instanceof ICanHeld) {
+            transform = transformer.items.get(transformType);
+        }
+        if (transform == null) {
+            transform = transformer.armors.get(partType);
+        }
+        return transform;
     }
 
     public EntityProfile getProfile() {

@@ -10,6 +10,7 @@
   ],
   "client": [
     "ArrowRendererMixin",
+    "TridentRendererMixin",
     "BipedArmorLayerMixin",
     "DownloadingTextureMixin",
     "EntityRendererMixin",

@@ -182,10 +182,9 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         if (!isActiveWardrobe) {
             return;
         }
-        ISkinPaintType[] dyeSlots = SkinSlotType.getDyeSlots();
-        for (int i = 0; i < dyeSlots.length; ++i) {
-            ItemStack itemStack = lastWardrobeSlots.get(SkinSlotType.DYE.getIndex() + i);
-            consumer.accept(dyeSlots[i], itemStack);
+        for (ISkinPaintType paintType : SkinSlotType.getSupportedPaintTypes()) {
+            ItemStack itemStack = lastWardrobeSlots.get(SkinSlotType.getDyeSlotIndex(paintType));
+            consumer.accept(paintType, itemStack);
         }
         if (!lastDyeColors.equals(dyeColors)) {
             colorScheme = new ColorScheme();
