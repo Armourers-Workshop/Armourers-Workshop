@@ -17,6 +17,7 @@ import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nonnull;
 import java.time.Duration;
@@ -31,9 +32,13 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
 
     public static final RenderType MERGER = new Merger("skin_merger", DefaultVertexFormats.POSITION, GL11.GL_QUADS, 256);
 
+    protected final Pipeline pipeline = new Pipeline();
+
     protected final HashMap<Skin, SkinRenderObjectBuilder> cachingBuilders = new HashMap<>();
+    protected final HashMap<RenderType, BufferBuilder> cachingBuilders2 = new HashMap<>();
 
     protected final HashMap<Skin, SkinRenderObjectBuilder> pendingBuilders = new HashMap<>();
+
     protected final HashMap<RenderType, BufferBuilder> pendingBuilders2 = new HashMap<>();
 
     public SkinVertexBufferBuilder() {
@@ -51,6 +56,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
     public static void clearAllCache() {
         SkinVertexBufferBuilder builder = getBuffer(Minecraft.getInstance().renderBuffers().bufferSource());
         builder.cachingBuilders.clear();
+        builder.cachingBuilders2.clear();
     }
 
     @Nonnull
@@ -60,7 +66,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
         if (buffer != null) {
             return buffer;
         }
-        buffer = new BufferBuilder(renderType.bufferSize());
+        buffer = cachingBuilders2.computeIfAbsent(renderType, k -> new BufferBuilder(k.bufferSize()));
         buffer.begin(renderType.mode(), renderType.format());
         pendingBuilders2.put(renderType, buffer);
         return buffer;
@@ -80,7 +86,6 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
     public void end() {
         super.end();
         if (!pendingBuilders.isEmpty()) {
-            Pipeline pipeline = new Pipeline();
             for (SkinRenderObjectBuilder builder : pendingBuilders.values()) {
                 builder.endBatch(pipeline);
             }
@@ -88,16 +93,10 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
             pipeline.end();
         }
         if (!pendingBuilders2.isEmpty()) {
-            pendingBuilders2.forEach((key, value) -> {
-                key.setupRenderState();
-                value.end();
-                WorldVertexBufferUploader.end(value);
-                key.clearRenderState();
-            });
+            pendingBuilders2.forEach((key, value) -> key.end(value, 0, 0, 0));
             pendingBuilders2.clear();
         }
     }
-
 
     public abstract static class Pass {
 
@@ -180,6 +179,8 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
             }
 
             clearRenderState();
+            tasks.clear();
+            maxVertexCount = 0;
         }
 
         private void setupRenderState() {

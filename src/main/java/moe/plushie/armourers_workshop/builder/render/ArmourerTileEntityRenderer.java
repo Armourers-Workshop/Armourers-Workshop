@@ -43,6 +43,7 @@ import java.util.Objects;
 @OnlyIn(Dist.CLIENT)
 public class ArmourerTileEntityRenderer<T extends ArmourerTileEntity> extends TileEntityRenderer<T> {
 
+    private final PlayerTextureOverride override = new PlayerTextureOverride();
     private final Rectangle3f originBox = new Rectangle3f(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f);
 
     private final ImmutableMap<ISkinPartType, IGuideRenderer> guideRenderers = ImmutableMap.<ISkinPartType, IGuideRenderer>builder()
@@ -83,7 +84,9 @@ public class ArmourerTileEntityRenderer<T extends ArmourerTileEntity> extends Ti
         // when the player has some special texture, we must override to renderer.
         ResourceLocation playerTexture = renderData.displayTextureLocation;
         if (playerTexture != null) {
-            buffers = new PlayerTextureOverride(playerTexture, buffers);
+            override.setTexture(playerTexture);
+            override.setBuffers(buffers);
+            buffers = override;
         }
 
         boolean isMultiBlocks = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
@@ -158,6 +161,7 @@ public class ArmourerTileEntityRenderer<T extends ArmourerTileEntity> extends Ti
             polygonOffset += 0.001f;
         }
         matrixStack.popPose();
+        override.setBuffers(null);
     }
 
     @Override
@@ -167,11 +171,20 @@ public class ArmourerTileEntityRenderer<T extends ArmourerTileEntity> extends Ti
 
     public static class PlayerTextureOverride implements IRenderTypeBuffer {
 
-        protected final IRenderTypeBuffer buffers;
+        protected ResourceLocation texture;
+        protected IRenderTypeBuffer buffers;
+
         protected final HashMap<RenderType, LazyValue<RenderType>> overrides = new HashMap<>();
 
-        public PlayerTextureOverride(ResourceLocation texture, IRenderTypeBuffer buffers) {
+        public void setBuffers(IRenderTypeBuffer buffers) {
             this.buffers = buffers;
+        }
+
+        public void setTexture(ResourceLocation texture) {
+            if (Objects.equals(this.texture, texture)) {
+                return;
+            }
+            this.overrides.clear();
             this.overrides.put(SkinRenderType.PLAYER_CUTOUT_NO_CULL, new LazyValue<>(() -> SkinRenderType.entityCutoutNoCull(texture)));
             this.overrides.put(SkinRenderType.PLAYER_CUTOUT, new LazyValue<>(() -> SkinRenderType.entityCutout(texture)));
             this.overrides.put(SkinRenderType.PLAYER_TRANSLUCENT, new LazyValue<>(() -> SkinRenderType.entityTranslucentCull(texture)));
