@@ -55,7 +55,7 @@ public class SkinnableTileEntityRenderer<T extends SkinnableTileEntity> extends 
         matrixStack.scale(f, f, f);
         matrixStack.scale(-1, -1, 1);
 
-        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemCameraTransforms.TransformType.NONE, light, partialTicks1, matrixStack, buffers);
+        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemCameraTransforms.TransformType.NONE, light, partialTicks1, 0, matrixStack, buffers);
 
         matrixStack.popPose();
 

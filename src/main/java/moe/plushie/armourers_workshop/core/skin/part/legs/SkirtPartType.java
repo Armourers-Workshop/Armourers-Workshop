@@ -20,6 +20,6 @@ public class SkirtPartType extends SkinPartType {
 
     @Override
     public float getRenderPolygonOffset() {
-        return -0.06f;
+        return 6;
     }
 }

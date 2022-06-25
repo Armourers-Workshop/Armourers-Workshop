@@ -94,8 +94,6 @@ public class ModConfig {
         public static boolean showDebugTextureBounds = false;
         public static boolean showDebugSpin = false;
 
-        public static boolean enablePolygonOffset = true;
-
         public static int getNumberOfRenderLayers() {
             if (multipassSkinRendering) {
                 return 4;

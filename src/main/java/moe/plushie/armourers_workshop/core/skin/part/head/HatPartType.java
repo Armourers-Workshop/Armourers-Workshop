@@ -20,7 +20,7 @@ public class HatPartType extends SkinPartType {
 
     @Override
     public float getRenderPolygonOffset() {
-        return -0.08f;
+        return 8;
     }
 
     //    @Override

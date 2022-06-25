@@ -27,9 +27,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.util.ThreeConsumer;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
 
@@ -196,19 +198,31 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         }
     }
 
-    private void loadArmorSlots(Entity entity, BiConsumer<ItemStack, Boolean> consumer) {
-        ModCompatible.getArmorSlots(entity).forEach(itemStack -> consumer.accept(itemStack, false));
+    private void loadArmorSlots(Entity entity, ThreeConsumer<ItemStack, Integer, Boolean> consumer) {
+        int i = 0;
+        for (ItemStack itemStack : ModCompatible.getArmorSlots(entity)) {
+            consumer.accept(itemStack, i, false);
+        }
         if (!isActiveWardrobe) {
             return;
         }
-        int size = SkinSlotType.DYE.getIndex();
-        for (int i = 0; i < size; ++i) {
-            consumer.accept(lastWardrobeSlots.get(i), false);
+        for (SkinSlotType slotType : SkinSlotType.values()) {
+            if (slotType == SkinSlotType.DYE) {
+                continue;
+            }
+            int index = slotType.getIndex();
+            int size = slotType.getMaxSize();
+            for (i = 0; i < size; ++i) {
+                consumer.accept(lastWardrobeSlots.get(index + i), i, false);
+            }
         }
     }
 
-    private void loadHandSlots(Entity entity, BiConsumer<ItemStack, Boolean> consumer) {
-        ModCompatible.getHandSlots(entity).forEach(itemStack -> consumer.accept(itemStack, true));
+    private void loadHandSlots(Entity entity, ThreeConsumer<ItemStack, Integer, Boolean> consumer) {
+        int i = 0;
+        for (ItemStack itemStack : ModCompatible.getHandSlots(entity)) {
+            consumer.accept(itemStack, i, true);
+        }
     }
 
     private void updateDye(ISkinPaintType paintType, ItemStack itemStack) {
@@ -218,7 +232,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         }
     }
 
-    private void updateSkin(ItemStack itemStack, boolean isHeld) {
+    private void updateSkin(ItemStack itemStack, int slotIndex, boolean isHeld) {
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
         if (descriptor.isEmpty()) {
             return;
@@ -231,11 +245,11 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         ISkinType type = bakedSkin.getType();
         // If held a skin of armor type, nothing happen
         if (type instanceof ISkinArmorType && !isHeld) {
-            armorSkins.add(new Entry(descriptor, bakedSkin, colorScheme, false));
+            armorSkins.add(new Entry(descriptor, bakedSkin, colorScheme, slotIndex, false));
             loadSkinPart(bakedSkin);
         }
         if (type instanceof ISkinToolType || type == SkinTypes.ITEM) {
-            itemSkins.add(new Entry(descriptor, bakedSkin, colorScheme, isHeld));
+            itemSkins.add(new Entry(descriptor, bakedSkin, colorScheme, slotIndex, isHeld));
             loadSkinPart(bakedSkin);
         }
     }
@@ -330,11 +344,13 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         protected final BakedSkin bakedSkin;
         protected final ColorScheme bakedScheme;
         protected final boolean isHeld;
+        protected final int slotIndex;
 
-        public Entry(SkinDescriptor descriptor, BakedSkin bakedSkin, ColorScheme entityScheme, boolean isHeld) {
+        public Entry(SkinDescriptor descriptor, BakedSkin bakedSkin, ColorScheme entityScheme, int slotIndex, boolean isHeld) {
             this.descriptor = descriptor;
             this.bakedSkin = bakedSkin;
             this.bakedScheme = baking(descriptor.getColorScheme(), entityScheme);
+            this.slotIndex = slotIndex;
             this.isHeld = isHeld;
         }
 
@@ -348,6 +364,10 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
             ColorScheme bakedScheme = skinScheme.copy();
             bakedScheme.setReference(entityScheme);
             return bakedScheme;
+        }
+
+        public int getSlotIndex() {
+            return slotIndex;
         }
 
         public BakedSkin getBakedSkin() {

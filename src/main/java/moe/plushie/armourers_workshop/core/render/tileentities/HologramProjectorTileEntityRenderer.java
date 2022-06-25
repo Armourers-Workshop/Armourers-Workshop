@@ -66,7 +66,7 @@ public class HologramProjectorTileEntityRenderer<T extends HologramProjectorTile
         Rectangle3f rect = bakedSkin.getRenderBounds(mannequin, model, null);
         apply(entity, rect, partialTicks1, matrixStack, buffers);
 
-        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemCameraTransforms.TransformType.NONE, overLight, partialTicks1, matrixStack, buffers);
+        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemCameraTransforms.TransformType.NONE, overLight, partialTicks1, 0, matrixStack, buffers);
 
         matrixStack.popPose();
 

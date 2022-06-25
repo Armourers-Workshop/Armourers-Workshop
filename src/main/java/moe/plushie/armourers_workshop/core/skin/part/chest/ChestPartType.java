@@ -50,7 +50,7 @@ public class ChestPartType extends SkinPartType implements ISkinPartTypeTextured
 
     @Override
     public float getRenderPolygonOffset() {
-        return -0.01f;
+        return 1;
     }
 
     @Override

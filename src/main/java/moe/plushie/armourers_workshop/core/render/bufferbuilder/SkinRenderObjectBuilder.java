@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 @OnlyIn(Dist.CLIENT)
 public class SkinRenderObjectBuilder {
@@ -38,8 +40,7 @@ public class SkinRenderObjectBuilder {
             .expireAfterAccess(3, TimeUnit.SECONDS)
             .build();
 
-    protected final ArrayList<CompiledPass> pendingTasks = new ArrayList<>();
-//    protected final ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
+    protected final CachedRenderPipeline cachedRenderPipeline = new CachedRenderPipeline();
 
     protected final ArrayList<CachedTask> pendingCacheTasks = new ArrayList<>();
     protected boolean isSent = false;
@@ -49,13 +50,14 @@ public class SkinRenderObjectBuilder {
         this.skin = skin;
     }
 
-    public void addPartData(BakedSkinPart part, ColorScheme scheme, int light, float partialTicks, MatrixStack matrixStack, boolean shouldRender) {
+    public void addPartData(BakedSkinPart part, ColorScheme scheme, int light, float partialTicks, int slotIndex, MatrixStack matrixStack, boolean shouldRender) {
         Object key = SkinCache.borrowKey(part.getId(), part.requirements(scheme));
         CachedTask cachedTask = cachingTasks.getIfPresent(key);
         if (cachedTask != null) {
             SkinCache.returnKey(key);
             if (shouldRender && cachedTask.isCompiled) {
-                cachedTask.mergedTasks.forEach(compiledTask -> pendingTasks.add(new CompiledPass(compiledTask, matrixStack, light, partialTicks)));
+                cachedRenderPipeline.render(cachedTask, matrixStack, light, partialTicks, slotIndex);
+                //cachedTask.mergedTasks.forEach(compiledTask -> pendingTasks.add(new CompiledPass(compiledTask, matrixStack, light, partialTicks)));
             }
             return;
         }
@@ -76,10 +78,7 @@ public class SkinRenderObjectBuilder {
     }
 
     public void endBatch(SkinVertexBufferBuilder.Pipeline pipeline) {
-        if (pendingTasks.size() != 0) {
-            pendingTasks.forEach(pipeline::add);
-            pendingTasks.clear();
-        }
+        cachedRenderPipeline.commit(pipeline::add);
     }
 
     private synchronized void addCompileTask(CachedTask cachedTask) {
@@ -112,7 +111,7 @@ public class SkinRenderObjectBuilder {
                 builder.begin(renderType.mode(), renderType.format());
                 quads.forEach(quad -> quad.render(part, scheme, matrixStack1, builder));
                 builder.end();
-                CompiledTask compiledTask = new CompiledTask(renderType, builder, part.getRenderPolygonOffset());
+                CompiledTask compiledTask = new CompiledTask(renderType, builder, part.getRenderPolygonOffset(), part.getType());
                 mergedTasks.add(compiledTask);
                 buildingTasks.add(compiledTask);
             });
@@ -167,13 +166,15 @@ public class SkinRenderObjectBuilder {
     static class CompiledTask {
 
         final float polygonOffset;
+        final ISkinPartType partType;
         final RenderType renderType;
         int vertexCount;
         int vertexOffset;
         BufferBuilder bufferBuilder;
         SkinRenderObject vertexBuffer;
 
-        CompiledTask(RenderType renderType, BufferBuilder bufferBuilder, float polygonOffset) {
+        CompiledTask(RenderType renderType, BufferBuilder bufferBuilder, float polygonOffset, ISkinPartType partType) {
+            this.partType = partType;
             this.renderType = renderType;
             this.bufferBuilder = bufferBuilder;
             this.polygonOffset = polygonOffset;
@@ -184,20 +185,44 @@ public class SkinRenderObjectBuilder {
         }
     }
 
+    static class CachedRenderPipeline {
+
+        protected final ArrayList<CompiledPass> tasks = new ArrayList<>();
+
+        void render(CachedTask task, MatrixStack matrixStack, int lightmap, float partialTicks, int slotIndex) {
+            Matrix4f matrix = matrixStack.last().pose().copy();
+            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, matrix, lightmap, partialTicks, slotIndex)));
+        }
+
+        void commit(Consumer<SkinVertexBufferBuilder.Pass> consumer) {
+            if (tasks.size() != 0) {
+                tasks.forEach(consumer);
+                tasks.clear();
+            }
+        }
+    }
+
     static class CompiledPass extends SkinVertexBufferBuilder.Pass {
 
         int lightmap;
+        int slotIndex;
         float partialTicks;
 
         Matrix4f matrix;
         CompiledTask compiledTask;
 
-        CompiledPass(CompiledTask compiledTask, MatrixStack matrixStack, int lightmap, float partialTicks) {
+        CompiledPass(CompiledTask compiledTask, Matrix4f matrix, int lightmap, float partialTicks, int slotIndex) {
             super();
             this.compiledTask = compiledTask;
-            this.matrix = matrixStack.last().pose().copy();
+            this.matrix = matrix;
             this.lightmap = lightmap;
             this.partialTicks = partialTicks;
+            this.slotIndex = slotIndex;
+        }
+
+        @Override
+        public ISkinPartType getPartType() {
+            return compiledTask.partType;
         }
 
         @Override
@@ -222,7 +247,7 @@ public class SkinRenderObjectBuilder {
 
         @Override
         public float getPolygonOffset() {
-            return compiledTask.polygonOffset;
+            return compiledTask.polygonOffset + slotIndex * 10;
         }
 
         @Override

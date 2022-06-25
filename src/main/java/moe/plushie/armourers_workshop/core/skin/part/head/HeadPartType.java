@@ -50,7 +50,7 @@ public class HeadPartType extends SkinPartType implements ISkinPartTypeTextured 
 
     @Override
     public float getRenderPolygonOffset() {
-        return -0.06f;
+        return 6;
     }
 
     @Override

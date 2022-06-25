@@ -56,7 +56,7 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
 
         float partialTicks2 = System.currentTimeMillis() % 100000000;
         for (SkinRenderData.Entry entry : renderData.getArmorSkins()) {
-            skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), null, packedLightIn, partialTicks2, matrixStack, buffers);
+            skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), null, packedLightIn, partialTicks2, entry.getSlotIndex(), matrixStack, buffers);
         }
 
         matrixStack.popPose();
