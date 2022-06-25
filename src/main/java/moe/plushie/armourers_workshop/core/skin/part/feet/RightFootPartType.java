@@ -50,7 +50,7 @@ public class RightFootPartType extends SkinPartType implements ISkinPartTypeText
 
     @Override
     public float getRenderPolygonOffset() {
-        return -0.04f;
+        return 4;
     }
 
     @Override

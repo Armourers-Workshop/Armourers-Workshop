@@ -87,7 +87,7 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         overriders.forEach(m -> m.visible = false);
     }
 
-    public void render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+    public void render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, int slotIndex, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         if (profile != null) {
             ISkinType type = bakedSkin.getType();
             if (type instanceof ISkinArmorType && !profile.canSupport(type)) {
@@ -106,7 +106,7 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             boolean shouldRenderPart = bakedSkin.shouldRenderPart(bakedPart, entity, transformType);
             matrixStack.pushPose();
             apply(entity, model, transformType, bakedPart, partialTicks, matrixStack);
-            builder.addPartData(bakedPart, scheme1, light, partialTicks, matrixStack, shouldRenderPart);
+            builder.addPartData(bakedPart, scheme1, light, partialTicks, slotIndex, matrixStack, shouldRenderPart);
             if (shouldRenderPart && ModConfig.Client.debugSkinPartBounds) {
                 builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(index++), matrixStack);
             }

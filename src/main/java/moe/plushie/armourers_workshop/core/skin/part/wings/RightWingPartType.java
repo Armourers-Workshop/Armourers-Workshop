@@ -22,7 +22,7 @@ public class RightWingPartType extends SkinPartType implements ICanRotation {
 
     @Override
     public float getRenderPolygonOffset() {
-        return -0.1f;
+        return 1;
     }
 
     @Override

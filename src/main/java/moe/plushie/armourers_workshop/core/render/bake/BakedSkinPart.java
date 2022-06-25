@@ -97,7 +97,7 @@ public class BakedSkinPart {
 
     public float getRenderPolygonOffset() {
         if (part instanceof TexturePart) {
-            return -0.2f;
+            return 20;
         }
         return getType().getRenderPolygonOffset();
     }

@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.render.bufferbuilder;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.common.ModLog;
@@ -108,6 +109,8 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
 
         public abstract Matrix4f getMatrix();
 
+        public abstract ISkinPartType getPartType();
+
         public abstract RenderType getRenderType();
 
         public abstract float getPolygonOffset();
@@ -119,8 +122,12 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
             SkinRenderObject vertexBuffer = getVertexBuffer();
 
             float polygonOffset = getPolygonOffset();
-            if (ModConfig.Client.enablePolygonOffset && polygonOffset != 0) {
-                RenderSystem.polygonOffset(-0.01f + polygonOffset, -0.01f);
+            if (polygonOffset != 0) {
+                // https://sites.google.com/site/threejstuts/home/polygon_offset
+                // For polygons that are parallel to the near and far clipping planes, the depth slope is zero.
+                // For the polygons in your scene with a depth slope near zero, only a small, constant offset is needed.
+                // To create a small, constant offset, you can pass factor = 0.0 and units = 1.0.
+                RenderSystem.polygonOffset(0, polygonOffset * -1);
                 RenderSystem.enablePolygonOffset();
             }
 
@@ -142,7 +149,7 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
                 lightBuffer.getFormat().clearBufferState();
             }
 
-            if (ModConfig.Client.enablePolygonOffset && polygonOffset != 0) {
+            if (polygonOffset != 0) {
                 RenderSystem.polygonOffset(0f, 0f);
                 RenderSystem.disablePolygonOffset();
             }
@@ -151,12 +158,14 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
 
     public static class Pipeline {
 
-        private final Map<RenderType, ArrayList<Pass>> tasks = new HashMap<>();
+        //        private final HashMap<ISkinPartType, Integer> partIndexes = new HashMap<>();
+        private final HashMap<RenderType, ArrayList<Pass>> tasks = new HashMap<>();
         private int maxVertexCount = 0;
 
         public void add(Pass pass) {
             tasks.computeIfAbsent(pass.getRenderType(), k -> new ArrayList<>()).add(pass);
             maxVertexCount = Math.max(maxVertexCount, pass.getVertexCount());
+//            pass.partIndex = partIndexes.computeIfAbsent(pass.getPartType(), partType -> partIndexes.size());
         }
 
         public void end() {

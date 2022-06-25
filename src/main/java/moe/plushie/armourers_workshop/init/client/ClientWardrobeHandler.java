@@ -221,7 +221,7 @@ public class ClientWardrobeHandler {
             return 0;
         }
         for (SkinRenderData.Entry entry : provider.get()) {
-            renderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), transformType, light, partialTicks, matrixStack, buffers);
+            renderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), transformType, light, partialTicks, entry.getSlotIndex(), matrixStack, buffers);
             r += 1;
         }
         return r;

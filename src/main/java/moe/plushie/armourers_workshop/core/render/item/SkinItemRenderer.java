@@ -71,7 +71,7 @@ public final class SkinItemRenderer {
         matrixStack.scale(newScale / scale.x(), newScale / scale.y(), newScale / scale.z());
         matrixStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
 
-        renderer.render(entity, model, bakedSkin, scheme, ItemCameraTransforms.TransformType.NONE, light, partialTicks, matrixStack, buffers);
+        renderer.render(entity, model, bakedSkin, scheme, ItemCameraTransforms.TransformType.NONE, light, partialTicks, 0, matrixStack, buffers);
 
         matrixStack.popPose();
     }

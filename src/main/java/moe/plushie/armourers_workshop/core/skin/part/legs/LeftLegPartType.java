@@ -50,7 +50,7 @@ public class LeftLegPartType extends SkinPartType implements ISkinPartTypeTextur
 
     @Override
     public float getRenderPolygonOffset() {
-        return -0.02f;
+        return 2;
     }
 
     @Override
