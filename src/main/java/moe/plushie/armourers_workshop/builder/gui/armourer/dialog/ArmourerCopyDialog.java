@@ -83,14 +83,6 @@ public class ArmourerCopyDialog extends AWConfirmDialog {
         return paintCheckBox == null || paintCheckBox.isSelected();
     }
 
-    protected AWLabel addLabel(int x, int y, int width, int height, ITextComponent message) {
-        AWLabel label = new AWLabel(x, y, width, height, message);
-        label.setTextColor(4210752);
-        label.active = false;
-        addButton(label);
-        return label;
-    }
-
     private ArrayList<AWComboBox.ComboItem> getItems(ArrayList<ISkinPartType> partTypes) {
         ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
         for (ISkinPartType partType : partTypes) {

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.world;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.skin.*;
+import moe.plushie.armourers_workshop.builder.block.BoundingBoxBlock;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -25,6 +26,8 @@ import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.Property;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -423,6 +426,61 @@ public final class WorldUtils {
         srcBox.forEach((texture, x, y, z, dir) -> paintData.setColor(texture.x, texture.y, 0));
     }
 
+    public static void replaceCubes(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps, Direction direction, Block sourceBlock, IPaintColor sourceColor, Block destinationBlock, IPaintColor destinationColor, boolean keepColor, boolean keepPaintType) {
+        for (ISkinPartType skinPart : skinType.getParts()) {
+            for (Vector3i offset : getResolvedBuildingSpace(skinPart)) {
+                replaceCube(world, pos.offset(offset), sourceBlock, sourceColor, destinationBlock, destinationColor, keepColor, keepPaintType);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void replaceCube(World world, BlockPos pos, Block sourceBlock, IPaintColor sourceColor, Block destinationBlock, IPaintColor destinationColor, boolean keepColor, boolean keepPaintType) {
+        BlockState targetState = world.getBlockState(pos);
+        if (sourceBlock != null && !targetState.is(sourceBlock)) {
+            return;
+        }
+        TileEntity tileEntity = world.getBlockEntity(pos);
+        if (!(tileEntity instanceof IPaintable)) {
+            return;
+        }
+        IPaintable paintable = (IPaintable) tileEntity;
+        HashMap<Direction, IPaintColor> newColors = new HashMap<>();
+        int changes = 0;
+        for (Direction dir : Direction.values()) {
+            IPaintColor paintColor = paintable.getColor(dir);
+            if (paintColor != null && paintColor.equals(sourceColor) && paintable.shouldChangeColor(dir)) {
+                int color = destinationColor.getRGB();
+                if (keepColor) {
+                    color = paintColor.getRGB();
+                }
+                ISkinPaintType paintType = destinationColor.getPaintType();
+                if (keepPaintType) {
+                    paintType = paintColor.getPaintType();
+                }
+                paintColor = PaintColor.of(color, paintType);
+                changes += 1;
+            }
+            if (paintColor != null) {
+                newColors.put(dir, paintColor);
+            }
+        }
+        if (changes == 0) {
+            return;
+        }
+        paintable.setColors(newColors);
+        if (destinationBlock != null && !targetState.getBlock().equals(destinationBlock)) {
+            CompoundNBT nbt = tileEntity.serializeNBT();
+            BlockState newState = destinationBlock.defaultBlockState();
+            for (Property<?> property : targetState.getProperties()) {
+                if (newState.hasProperty(property)) {
+                    newState = newState.setValue((Property)property, targetState.getValue(property));
+                }
+            }
+            WorldUpdater.getInstance().submit(new WorldBlockUpdateTask(world, pos, newState, nbt));
+        }
+    }
+
     public static void copyCubes(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps, Direction direction, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws SkinSaveException {
         SkinPart skinPart = saveArmourPart(world, srcPart, pos, null, false);
         if (skinPart != null) {
@@ -516,7 +574,6 @@ public final class WorldUtils {
         int dz = origin.getZ() + buildSpace.getZ();
         return new Rectangle3i(dx, dy, dz, buildSpace.getWidth(), buildSpace.getHeight(), buildSpace.getDepth()).enumerateZYX();
     }
-
 
 
     //    public static ArrayList<BlockPos> getListOfPaintableCubes(World world, BlockPos pos, ISkinType skinType) {

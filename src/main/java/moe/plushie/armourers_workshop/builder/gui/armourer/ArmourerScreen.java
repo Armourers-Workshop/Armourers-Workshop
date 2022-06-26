@@ -143,6 +143,9 @@ public class ArmourerScreen extends AWAbstractContainerScreen<ArmourerContainer>
     @Override
     protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
         if (super.hasClickedOutside(mouseX, mouseY, left, top, button)) {
+            if (!inventory.getCarried().isEmpty()) {
+                return true;
+            }
             return tabController.get(mouseX, mouseY) == null;
         }
         return false;

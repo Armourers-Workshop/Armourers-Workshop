@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.builder.item;
 
 import com.google.common.collect.Maps;
+import moe.plushie.armourers_workshop.api.common.IItemBlockSelector;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintPicker;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
+import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -19,13 +21,14 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.commons.lang3.ObjectUtils;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("NullableProblems")
-public class SkinCubeItem extends BlockItem implements IPaintPicker {
+public class SkinCubeItem extends BlockItem implements IItemBlockSelector, IPaintPicker {
 
     public SkinCubeItem(Block p_i48527_1_, Properties p_i48527_2_) {
         super(p_i48527_1_, p_i48527_2_);
@@ -54,5 +57,16 @@ public class SkinCubeItem extends BlockItem implements IPaintPicker {
         if (paintColor != null) {
             tooltips.addAll(ColorUtils.getColorTooltips(paintColor, true));
         }
+    }
+
+    @Nullable
+    @Override
+    public Block getBlock(ItemStack itemStack) {
+        return getBlock();
+    }
+
+    @Override
+    public IPaintColor getItemColor(ItemStack itemStack) {
+        return ObjectUtils.defaultIfNull(ColorUtils.getColor(itemStack), PaintColor.WHITE);
     }
 }

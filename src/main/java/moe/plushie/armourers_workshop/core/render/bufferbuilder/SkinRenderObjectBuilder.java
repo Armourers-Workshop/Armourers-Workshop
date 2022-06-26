@@ -205,8 +205,9 @@ public class SkinRenderObjectBuilder {
     static class CompiledPass extends SkinVertexBufferBuilder.Pass {
 
         int lightmap;
-        int slotIndex;
         float partialTicks;
+
+        float additionalPolygonOffset;
 
         Matrix4f matrix;
         CompiledTask compiledTask;
@@ -217,7 +218,7 @@ public class SkinRenderObjectBuilder {
             this.matrix = matrix;
             this.lightmap = lightmap;
             this.partialTicks = partialTicks;
-            this.slotIndex = slotIndex;
+            this.additionalPolygonOffset = slotIndex * 10;
         }
 
         @Override
@@ -247,7 +248,7 @@ public class SkinRenderObjectBuilder {
 
         @Override
         public float getPolygonOffset() {
-            return compiledTask.polygonOffset + slotIndex * 10;
+            return compiledTask.polygonOffset + additionalPolygonOffset;
         }
 
         @Override

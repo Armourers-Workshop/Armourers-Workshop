@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.utils.*;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
@@ -263,6 +264,13 @@ public class ArmourerTileEntity extends AbstractTileEntity {
         skinProperties = new SkinProperties();
         skinProperties.put(SkinProperty.BLOCK_MULTIBLOCK, isMultiBlock);
         TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
+    }
+
+    public void replaceCubes(Block sourceBlock, IPaintColor sourceColor, Block destinationBlock, IPaintColor destinationColor, boolean keepColor, boolean keepPaintType) throws Exception {
+        World world = getLevel();
+        BlockPos pos = getBlockPos().offset(0, 1, 0);
+        Direction direction = Direction.NORTH;
+        WorldUtils.replaceCubes(world, pos, getSkinType(), getSkinProperties(), direction, sourceBlock, sourceColor, destinationBlock, destinationColor, keepColor, keepPaintType);
     }
 
     public void copyCubes(ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws Exception {

@@ -1,29 +1,21 @@
 package moe.plushie.armourers_workshop.core.item;
 
+import moe.plushie.armourers_workshop.api.common.IItemBlockSelector;
 import moe.plushie.armourers_workshop.api.common.IItemModelPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintPicker;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.common.AWCore;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DrinkHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,7 +26,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 @SuppressWarnings("NullableProblems")
-public class BottleItem extends FlavouredItem implements IItemTintColorProvider, IItemModelPropertiesProvider, IPaintPicker {
+public class BottleItem extends FlavouredItem implements IItemTintColorProvider, IItemModelPropertiesProvider, IItemBlockSelector, IPaintPicker {
 
     public BottleItem(Item.Properties properties) {
         super(properties);
@@ -42,11 +34,16 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
 
     @Override
     public boolean isFoil(ItemStack itemStack) {
-        IPaintColor paintColor = ColorUtils.getColor(itemStack);
+        IPaintColor paintColor = getItemColor(itemStack);
         if (paintColor != null) {
             return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
         }
         return false;
+    }
+
+    @Override
+    public IPaintColor getItemColor(ItemStack itemStack) {
+        return ColorUtils.getColor(itemStack);
     }
 
     @Override
@@ -75,7 +72,7 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable World world, List<ITextComponent> tooltips, ITooltipFlag flags) {
         super.appendHoverText(itemStack, world, tooltips, flags);
-        IPaintColor paintColor = ColorUtils.getColor(itemStack);
+        IPaintColor paintColor = getItemColor(itemStack);
         if (paintColor != null) {
             tooltips.addAll(ColorUtils.getColorTooltips(paintColor, false));
         } else {

@@ -36,9 +36,16 @@ public class SkinRenderType extends RenderType {
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
     });
 
-    protected static final RenderState.LayerState POLYGON_OFFSET_LAYERING2 = new RenderState.LayerState("aw_polygon_offset_layering", () -> {
-        RenderSystem.polygonOffset(3.0F, 3.0F);
+    protected static final RenderState.LayerState POLYGON_OFFSET_LAYERING3 = new RenderState.LayerState("aw_polygon_offset_layering", () -> {
         RenderSystem.enablePolygonOffset();
+        RenderSystem.polygonOffset(0.0F, -1000.0F);
+    }, () -> {
+        RenderSystem.polygonOffset(0.0F, 0.0F);
+        RenderSystem.disablePolygonOffset();
+    });
+    protected static final RenderState.LayerState POLYGON_OFFSET_LAYERING2 = new RenderState.LayerState("aw_polygon_offset_layering", () -> {
+        RenderSystem.enablePolygonOffset();
+        RenderSystem.polygonOffset(0.0F, 10.0F);
     }, () -> {
         RenderSystem.polygonOffset(0.0F, 0.0F);
         RenderSystem.disablePolygonOffset();
@@ -169,7 +176,7 @@ public class SkinRenderType extends RenderType {
                 .setAlphaState(DEFAULT_ALPHA)
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                 .setOutputState(TRANSLUCENT_TARGET)
-                .setLayeringState(POLYGON_OFFSET_LAYERING)
+                .setLayeringState(POLYGON_OFFSET_LAYERING3)
                 .createCompositeState(false);
         return RenderType.create("aw_marker_face", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, true, true, states);
     }

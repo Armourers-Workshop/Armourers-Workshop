@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
 import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.builder.container.ArmourerContainer;
 import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
@@ -10,6 +11,7 @@ import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.utils.AWDataAccessor;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -93,15 +95,35 @@ public class UpdateArmourerPacket extends CustomPacket {
             case ITEM_COPY: {
                 CompoundNBT nbt = (CompoundNBT) fieldValue;
                 ModLog.info("accept copy action of the {}, nbt: {}", playerName, nbt);
-                boolean isMirror = nbt.getBoolean(AWConstants.NBT.MIRROR);
-                boolean isCopyPaintData = nbt.getBoolean(AWConstants.NBT.SKIN_PAINTS);
-                ISkinPartType sourcePartType = SkinPartTypes.byName(nbt.getString(AWConstants.NBT.SOURCE));
-                ISkinPartType destinationPartType = SkinPartTypes.byName(nbt.getString(AWConstants.NBT.DESTINATION));
                 try {
+                    boolean isMirror = nbt.getBoolean(AWConstants.NBT.MIRROR);
+                    boolean isCopyPaintData = nbt.getBoolean(AWConstants.NBT.SKIN_PAINTS);
+                    ISkinPartType sourcePartType = SkinPartTypes.byName(nbt.getString(AWConstants.NBT.SOURCE));
+                    ISkinPartType destinationPartType = SkinPartTypes.byName(nbt.getString(AWConstants.NBT.DESTINATION));
                     tileEntity.copyCubes(sourcePartType, destinationPartType, isMirror);
                     if (isCopyPaintData) {
                         tileEntity.copyPaintData(sourcePartType, destinationPartType, isMirror);
                     }
+                } catch (Exception e) {
+                    player.sendMessage(new StringTextComponent(e.getMessage()), player.getUUID());
+                }
+                break;
+            }
+            case ITEM_REPLACE: {
+                CompoundNBT nbt = (CompoundNBT) fieldValue;
+                ModLog.info("accept replace action of the {}, nbt: {}", playerName, nbt);
+                try {
+                    CompoundNBT source = nbt.getCompound(AWConstants.NBT.SOURCE);
+                    CompoundNBT destination = nbt.getCompound(AWConstants.NBT.DESTINATION);
+                    boolean keepColor = nbt.getBoolean(AWConstants.NBT.KEEP_COLOR);
+                    boolean keepPaintType = nbt.getBoolean(AWConstants.NBT.KEEP_PAINT_TYPE);
+                    Block sourceBlock = AWDataSerializers.getBlock(source, AWConstants.NBT.BLOCK);
+                    Block destinationBlock = AWDataSerializers.getBlock(destination, AWConstants.NBT.BLOCK);
+                    IPaintColor sourceColor = AWDataSerializers.getPaintColor(source, AWConstants.NBT.COLOR, null);
+                    IPaintColor destinationColor = AWDataSerializers.getPaintColor(destination, AWConstants.NBT.COLOR, null);
+                    TileEntityUpdateCombiner.begin();
+                    tileEntity.replaceCubes(sourceBlock, sourceColor, destinationBlock, destinationColor, keepColor, keepPaintType);
+                    TileEntityUpdateCombiner.end();
                 } catch (Exception e) {
                     player.sendMessage(new StringTextComponent(e.getMessage()), player.getUUID());
                 }
