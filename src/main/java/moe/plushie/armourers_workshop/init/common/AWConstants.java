@@ -35,9 +35,13 @@ public final class AWConstants {
 
         public static final String MIRROR = "Mirror";
 
+        public static final String KEEP_COLOR = "KeepColor";
+        public static final String KEEP_PAINT_TYPE = "KeepPaintType";
+
         public static final String SOURCE = "Source";
         public static final String DESTINATION = "Destination";
 
+        public static final String BLOCK = "Block";
         public static final String COLOR = "Color";
         public static final String DATA_VERSION = "DataVersion";
 

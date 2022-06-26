@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.item;
 
+import moe.plushie.armourers_workshop.api.common.IItemBlockSelector;
 import moe.plushie.armourers_workshop.api.common.IItemModelPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
@@ -18,7 +19,6 @@ import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.init.common.AWCore;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
@@ -31,12 +31,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTintColorProvider, IItemModelPropertiesProvider, IPaintPicker, IBlockPaintViewer {
+public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTintColorProvider, IItemModelPropertiesProvider, IItemBlockSelector, IPaintPicker, IBlockPaintViewer {
 
     public ColorPickerItem(Properties properties) {
         super(properties);
@@ -123,12 +122,17 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
 
     @Override
     public void appendColorHoverText(ItemStack itemStack, List<ITextComponent> tooltips) {
-        IPaintColor paintColor = ColorUtils.getColor(itemStack);
+        IPaintColor paintColor = getItemColor(itemStack);
         if (paintColor != null) {
             tooltips.addAll(ColorUtils.getColorTooltips(paintColor, false));
         } else {
             tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.empty"));
         }
+    }
+
+    @Override
+    public IPaintColor getItemColor(ItemStack itemStack) {
+        return ColorUtils.getColor(itemStack);
     }
 
     @Override
@@ -141,7 +145,7 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
 
     @Override
     public boolean isFoil(ItemStack itemStack) {
-        IPaintColor paintColor = ColorUtils.getColor(itemStack);
+        IPaintColor paintColor = getItemColor(itemStack);
         if (paintColor != null) {
             return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
         }

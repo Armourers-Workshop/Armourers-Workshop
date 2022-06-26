@@ -116,7 +116,15 @@ public class AWConfirmDialog extends AWAbstractDialog {
         return selectedIndex;
     }
 
-    private Button buildButton(int x, int y, int width, int height, String key, Button.IPressable pressable) {
+    protected AWLabel addLabel(int x, int y, int width, int height, ITextComponent message) {
+        AWLabel label = new AWLabel(x, y, width, height, message);
+        label.setTextColor(4210752);
+        label.active = false;
+        addButton(label);
+        return label;
+    }
+
+    protected Button buildButton(int x, int y, int width, int height, String key, Button.IPressable pressable) {
         TextComponent title = TranslateUtils.title("inventory.armourers_workshop.common." + key);
         return new ExtendedButton(x, y, width, height, title, pressable);
     }

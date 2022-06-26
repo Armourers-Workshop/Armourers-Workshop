@@ -13,19 +13,19 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.FloatNBT;
-import net.minecraft.nbt.IntNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.*;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Rotations;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.util.Constants;
 import org.apache.commons.io.IOUtils;
 
@@ -347,7 +347,7 @@ public class AWDataSerializers {
     }
 
     public static void putPaintColor(CompoundNBT nbt, String key, IPaintColor value, IPaintColor defaultValue) {
-        if (!value.equals(defaultValue)) {
+        if (value != null && !value.equals(defaultValue)) {
             nbt.putInt(key, value.getRawValue());
         } else {
             nbt.remove(key);
@@ -462,4 +462,20 @@ public class AWDataSerializers {
         }
         return elements;
     }
+
+    public static void putBlock(CompoundNBT nbt, String key, Block value) {
+        if (value != null && value.getRegistryName() != null) {
+            nbt.putString(key, Registry.BLOCK.getKey(value).toString());
+        } else {
+            nbt.remove(key);
+        }
+    }
+
+    public static Block getBlock(CompoundNBT nbt, String key) {
+        if (nbt.contains(key, Constants.NBT.TAG_STRING)) {
+            return Registry.BLOCK.get(new ResourceLocation(nbt.getString(key)));
+        }
+        return null;
+    }
+
 }

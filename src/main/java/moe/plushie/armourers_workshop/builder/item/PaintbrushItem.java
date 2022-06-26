@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.item;
 
+import moe.plushie.armourers_workshop.api.common.IItemBlockSelector;
 import moe.plushie.armourers_workshop.api.common.IItemModelPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
@@ -7,38 +8,26 @@ import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
-import moe.plushie.armourers_workshop.builder.particle.PaintSplashParticleData;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintPicker;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.common.AWCore;
-import moe.plushie.armourers_workshop.init.common.ModParticleTypes;
 import moe.plushie.armourers_workshop.init.common.ModSounds;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class PaintbrushItem extends AbstractPaintingToolItem implements IItemTintColorProvider, IItemModelPropertiesProvider, IPaintPicker, IBlockPaintViewer {
+public class PaintbrushItem extends AbstractPaintingToolItem implements IItemTintColorProvider, IItemModelPropertiesProvider, IItemBlockSelector, IPaintPicker, IBlockPaintViewer {
 
     public PaintbrushItem(Properties properties) {
         super(properties);
@@ -65,8 +54,13 @@ public class PaintbrushItem extends AbstractPaintingToolItem implements IItemTin
 
     @Override
     public void appendColorHoverText(ItemStack itemStack, List<ITextComponent> tooltips) {
-        IPaintColor paintColor = ObjectUtils.defaultIfNull(ColorUtils.getColor(itemStack), PaintColor.WHITE);
+        IPaintColor paintColor = ObjectUtils.defaultIfNull(getItemColor(itemStack), PaintColor.WHITE);
         tooltips.addAll(ColorUtils.getColorTooltips(paintColor, true));
+    }
+
+    @Override
+    public IPaintColor getItemColor(ItemStack itemStack) {
+        return ColorUtils.getColor(itemStack);
     }
 
     @Override
@@ -79,7 +73,7 @@ public class PaintbrushItem extends AbstractPaintingToolItem implements IItemTin
 
     @Override
     public boolean isFoil(ItemStack itemStack) {
-        IPaintColor paintColor = ColorUtils.getColor(itemStack);
+        IPaintColor paintColor = getItemColor(itemStack);
         if (paintColor != null) {
             return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
         }

@@ -28,7 +28,7 @@ import net.minecraft.world.World;
 @SuppressWarnings("NullableProblems")
 public class ArmourerContainer extends AbstractBlockContainer {
 
-    private final IInventory inventory = new Inventory(2);
+    private final IInventory inventory = new Inventory(4);
     private Group group = null;
 
     public ArmourerContainer(int containerId, PlayerInventory playerInventory, IWorldPosCallable access) {
