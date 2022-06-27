@@ -27,7 +27,7 @@ public class OutfitMakerBlock extends AbstractHorizontalBlock {
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult traceResult) {
         if (world.isClientSide) {
-            return ActionResultType.CONSUME;
+            return ActionResultType.SUCCESS;
         }
         if (ModContainerTypes.open(ModContainerTypes.OUTFIT_MAKER, player, world, pos)) {
             return ActionResultType.CONSUME;

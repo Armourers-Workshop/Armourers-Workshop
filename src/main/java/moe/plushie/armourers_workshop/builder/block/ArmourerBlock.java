@@ -31,7 +31,7 @@ public class ArmourerBlock extends AbstractHorizontalBlock {
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult traceResult) {
         if (world.isClientSide) {
-            return ActionResultType.CONSUME;
+            return ActionResultType.SUCCESS;
         }
         if (ModContainerTypes.open(ModContainerTypes.ARMOURER, player, world, pos)) {
             return ActionResultType.CONSUME;

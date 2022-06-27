@@ -28,6 +28,8 @@ public class Permissions {
     public static final BlockPermission ARMOURER_COPY = register(new BlockPermission("copy", ModBlocks.ARMOURER));
     public static final BlockPermission ARMOURER_REPLACE = register(new BlockPermission("replace", ModBlocks.ARMOURER));
 
+    public static final BlockPermission OUTFIT_MAKER_MAKE = register(new BlockPermission("make", ModBlocks.OUTFIT_MAKER));
+
     public static final BlockPermission SKIN_LIBRARY_RELOAD = register(new BlockPermission("reload", ModBlocks.SKIN_LIBRARY));
     public static final BlockPermission SKIN_LIBRARY_MKDIR = register(new BlockPermission("mkdir", ModBlocks.SKIN_LIBRARY));
     public static final BlockPermission SKIN_LIBRARY_RENAME = register(new BlockPermission("rename", ModBlocks.SKIN_LIBRARY));

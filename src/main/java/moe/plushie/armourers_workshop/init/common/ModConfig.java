@@ -91,6 +91,8 @@ public class ModConfig {
 
         public static boolean debugTargetBounds = false;
 
+        public static boolean debugMannequinCulling = false;
+
         public static boolean showDebugTextureBounds = false;
         public static boolean showDebugSpin = false;
 
