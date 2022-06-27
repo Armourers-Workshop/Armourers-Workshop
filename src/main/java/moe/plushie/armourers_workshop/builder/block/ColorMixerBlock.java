@@ -66,7 +66,7 @@ public class ColorMixerBlock extends AbstractHorizontalBlock implements IBlockTi
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult traceResult) {
         if (world.isClientSide) {
-            return ActionResultType.CONSUME;
+            return ActionResultType.SUCCESS;
         }
         if (ModContainerTypes.open(ModContainerTypes.COLOR_MIXER, player, world, pos)) {
             return ActionResultType.CONSUME;

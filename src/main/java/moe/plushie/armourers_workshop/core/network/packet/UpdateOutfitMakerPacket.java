@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.network.packet;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.builder.container.OutfitMakerContainer;
 import moe.plushie.armourers_workshop.builder.tileentity.OutfitMakerTileEntity;
+import moe.plushie.armourers_workshop.core.permission.Permissions;
 import moe.plushie.armourers_workshop.utils.AWDataAccessor;
 import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -50,6 +51,9 @@ public class UpdateOutfitMakerPacket extends CustomPacket {
         TileEntityUpdateCombiner.begin();
         switch (field) {
             case ITEM_CRAFTING: {
+                if (!Permissions.OUTFIT_MAKER_MAKE.accept(player)) {
+                    return;
+                }
                 if (player.containerMenu instanceof OutfitMakerContainer) {
                     CompoundNBT nbt = (CompoundNBT)fieldValue;
                     GameProfile profile = NBTUtil.readGameProfile(nbt);
