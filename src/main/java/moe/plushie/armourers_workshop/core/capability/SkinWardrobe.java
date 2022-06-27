@@ -6,8 +6,9 @@ import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
-import moe.plushie.armourers_workshop.core.permission.PermissionManager;
+import moe.plushie.armourers_workshop.core.permission.Permissions;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,7 +21,8 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
@@ -164,7 +166,7 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     }
 
     public boolean isEditable(PlayerEntity player) {
-        if (!PermissionManager.shouldOpenGui(this, player)) {
+        if (!Permissions.OPEN.accept(ModContainerTypes.WARDROBE, getEntity(), player)) {
             return false;
         }
         // can't edit another player's wardrobe

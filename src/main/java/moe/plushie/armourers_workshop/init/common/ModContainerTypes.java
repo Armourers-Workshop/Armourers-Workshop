@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.builder.container.ArmourerContainer;
 import moe.plushie.armourers_workshop.builder.container.ColorMixerContainer;
 import moe.plushie.armourers_workshop.builder.container.OutfitMakerContainer;
 import moe.plushie.armourers_workshop.core.container.*;
-import moe.plushie.armourers_workshop.core.permission.PermissionManager;
+import moe.plushie.armourers_workshop.core.permission.Permissions;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.utils.ContainerTypeBuilder;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -64,7 +64,7 @@ public class ModContainerTypes {
     }
 
     public static boolean open(ContainerType<?> type, PlayerEntity player, World world, BlockPos pos) {
-        if (!PermissionManager.shouldOpenGui(type, player, pos)) {
+        if (!Permissions.OPEN.accept(type, world, pos, player)) {
             return false;
         }
         return open(type, player, IWorldPosCallable.create(world, pos));

@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -14,8 +15,11 @@ import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HeadLayer;
 import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.awt.*;
 
 @SuppressWarnings("NullableProblems")
 @OnlyIn(Dist.CLIENT)
@@ -64,6 +68,11 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
         this.model.setAllVisible(entity.isModelVisible());
         super.render(entity, p_225623_2_, partialTicks, matrixStack, buffers, packedLightIn);
         this.enableChildRenderer = false;
+//        matrixStack.pushPose();
+//        AxisAlignedBB box = entity.getBoundingBoxForCulling();
+//        matrixStack.translate(-box.minX - (box.maxX - box.minX) / 2, -box.minY, -box.minZ - (box.maxZ - box.minZ) / 2);
+//        RenderUtils.drawBoundingBox(matrixStack, box, Color.YELLOW, buffers);
+//        matrixStack.popPose();
     }
 
     @Override

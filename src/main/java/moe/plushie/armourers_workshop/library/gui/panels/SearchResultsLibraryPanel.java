@@ -84,8 +84,8 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         this.setItemSize(itemSize);
         this.addButton(skinPanelResults);
 
-        this.iconButtonPrevious = addCommonButton(leftPos + 4, topPos + height - 20, 208, 80, 16, 16, "button.previous", buildPageUpdater(-1));
-        this.iconButtonNext = addCommonButton(leftPos + width - 20, topPos + height - 20, 208, 96, 16, 16, "button.next", buildPageUpdater(1));
+        this.iconButtonPrevious = addCommonButton(leftPos + 4, topPos + height - 20, 208, 80, 16, 16, "button.previousPage", buildPageUpdater(-1));
+        this.iconButtonNext = addCommonButton(leftPos + width - 20, topPos + height - 20, 208, 96, 16, 16, "button.nextPage", buildPageUpdater(1));
 
         int pageSize = skinPanelResults.getTotalCount();
         if (this.lastRequestSize > 0 && this.lastRequestSize != pageSize) {

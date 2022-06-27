@@ -56,8 +56,8 @@ public class JoinLibraryPanel extends AbstractLibraryPanel {
         this.label.setTextColor(0x333333);
 
         int buttonBottom = frame.y + frame.height - 16 - 5;
-        this.buttonPrevious = addIconButton(frame.x + 5, buttonBottom, 208, 80, 16, 16, "button.previous", this::previous);
-        this.buttonNext = addIconButton(frame.x + frame.width - 16 - 5, buttonBottom, 208, 96, 16, 16, "button.next", this::next);
+        this.buttonPrevious = addIconButton(frame.x + 5, buttonBottom, 208, 80, 16, 16, "button.previousPagePage", this::previous);
+        this.buttonNext = addIconButton(frame.x + frame.width - 16 - 5, buttonBottom, 208, 96, 16, 16, "button.nextPagePage", this::next);
         this.buttonJoin = addTextButton(frame.x + (frame.width - 140) / 2, buttonBottom, 140, 16, "button.join", this::join);
 
         this.refresh();

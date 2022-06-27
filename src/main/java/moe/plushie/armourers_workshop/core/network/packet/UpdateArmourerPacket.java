@@ -5,6 +5,8 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.builder.container.ArmourerContainer;
 import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
+import moe.plushie.armourers_workshop.core.permission.Permissions;
+import moe.plushie.armourers_workshop.core.permission.impl.BlockPermission;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModLog;
@@ -65,6 +67,9 @@ public class UpdateArmourerPacket extends CustomPacket {
 
     private void acceptFieldUpdate(PlayerEntity player, ArmourerTileEntity tileEntity, ArmourerContainer container) {
         String playerName = player.getName().getContents();
+        if (!field.permission.accept(tileEntity, player)) {
+            return;
+        }
         switch (field) {
             case ITEM_LOAD: {
                 container.loadArmourItem(player);
@@ -136,25 +141,26 @@ public class UpdateArmourerPacket extends CustomPacket {
         }
     }
 
-
     public enum Field {
-        FLAGS(DataSerializers.INT, ArmourerTileEntity::getFlags, ArmourerTileEntity::setFlags),
+        FLAGS(DataSerializers.INT, ArmourerTileEntity::getFlags, ArmourerTileEntity::setFlags, Permissions.ARMOURER_SETTING),
 
-        SKIN_TYPE(AWDataSerializers.SKIN_TYPE, ArmourerTileEntity::getSkinType, ArmourerTileEntity::setSkinType),
-        SKIN_PROPERTIES(AWDataSerializers.SKIN_PROPERTIES, ArmourerTileEntity::getSkinProperties, ArmourerTileEntity::setSkinProperties),
+        SKIN_TYPE(AWDataSerializers.SKIN_TYPE, ArmourerTileEntity::getSkinType, ArmourerTileEntity::setSkinType, Permissions.ARMOURER_SETTING),
+        SKIN_PROPERTIES(AWDataSerializers.SKIN_PROPERTIES, ArmourerTileEntity::getSkinProperties, ArmourerTileEntity::setSkinProperties, Permissions.ARMOURER_SETTING),
 
-        TEXTURE_DESCRIPTOR(AWDataSerializers.PLAYER_TEXTURE, ArmourerTileEntity::getTextureDescriptor, ArmourerTileEntity::setTextureDescriptor),
+        TEXTURE_DESCRIPTOR(AWDataSerializers.PLAYER_TEXTURE, ArmourerTileEntity::getTextureDescriptor, ArmourerTileEntity::setTextureDescriptor, Permissions.ARMOURER_SETTING),
 
-        ITEM_CLEAR(DataSerializers.COMPOUND_TAG, null, null),
-        ITEM_COPY(DataSerializers.COMPOUND_TAG, null, null),
-        ITEM_REPLACE(DataSerializers.COMPOUND_TAG, null, null),
+        ITEM_CLEAR(DataSerializers.COMPOUND_TAG, null, null, Permissions.ARMOURER_CLEAR),
+        ITEM_COPY(DataSerializers.COMPOUND_TAG, null, null, Permissions.ARMOURER_COPY),
+        ITEM_REPLACE(DataSerializers.COMPOUND_TAG, null, null, Permissions.ARMOURER_REPLACE),
 
-        ITEM_LOAD(DataSerializers.COMPOUND_TAG, null, null),
-        ITEM_SAVE(DataSerializers.COMPOUND_TAG, null, null);
+        ITEM_LOAD(DataSerializers.COMPOUND_TAG, null, null, Permissions.ARMOURER_LOAD),
+        ITEM_SAVE(DataSerializers.COMPOUND_TAG, null, null, Permissions.ARMOURER_SAVE);
 
+        public final BlockPermission permission;
         private final AWDataAccessor<ArmourerTileEntity, ?> dataAccessor;
 
-        <T> Field(IDataSerializer<T> dataSerializer, Function<ArmourerTileEntity, T> supplier, BiConsumer<ArmourerTileEntity, T> applier) {
+        <T> Field(IDataSerializer<T> dataSerializer, Function<ArmourerTileEntity, T> supplier, BiConsumer<ArmourerTileEntity, T> applier, BlockPermission permission) {
+            this.permission = permission;
             this.dataAccessor = AWDataAccessor.of(dataSerializer, supplier, applier);
         }
 
@@ -171,6 +177,10 @@ public class UpdateArmourerPacket extends CustomPacket {
         @SuppressWarnings("unchecked")
         public <T> AWDataAccessor<ArmourerTileEntity, T> getDataAccessor() {
             return (AWDataAccessor<ArmourerTileEntity, T>) dataAccessor;
+        }
+
+        public BlockPermission getPermission() {
+            return permission;
         }
     }
 }

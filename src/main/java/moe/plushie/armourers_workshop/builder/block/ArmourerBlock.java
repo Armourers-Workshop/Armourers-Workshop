@@ -40,7 +40,7 @@ public class ArmourerBlock extends AbstractHorizontalBlock {
     @Override
     public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
         super.setPlacedBy(world, pos, state, entity, itemStack);
-        this.applyTitleEntity(world, pos, te -> te.onPlace(world, pos, state));
+        this.applyTitleEntity(world, pos, te -> te.onPlace(world, pos, state, entity));
     }
 
     @Override

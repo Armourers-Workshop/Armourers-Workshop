@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
-import moe.plushie.armourers_workshop.core.permission.PermissionManager;
+import moe.plushie.armourers_workshop.core.permission.Permissions;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
@@ -101,12 +101,12 @@ public class SkinnableBlock extends HorizontalFaceBlock {
             return linkedState.getBlock().use(linkedState, world, linkedPos, player, hand, traceResult);
         }
         if (tileEntity.isBed() && !player.isShiftKeyDown()) {
-            if (PermissionManager.shouldSleep(tileEntity, player)) {
+            if (Permissions.SKINNABLE_SLEEP.accept(tileEntity, player)) {
                 return Blocks.RED_BED.use(state, world, tileEntity.getBedPos(), player, hand, traceResult);
             }
         }
         if (tileEntity.isSeat() && !player.isShiftKeyDown()) {
-            if (PermissionManager.shouldSit(tileEntity, player)) {
+            if (Permissions.SKINNABLE_SIT.accept(tileEntity, player)) {
                 if (world.isClientSide) {
                     return ActionResultType.CONSUME;
                 }

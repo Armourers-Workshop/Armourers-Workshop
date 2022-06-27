@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.network.packet;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
+import moe.plushie.armourers_workshop.core.permission.Permissions;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -13,6 +14,7 @@ import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.container.SkinLibraryContainer;
 import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.INetHandler;
@@ -39,7 +41,7 @@ public class SaveSkinPacket extends CustomPacket {
         boolean shouldUpload = DataDomain.isLocal(source) && !DataDomain.isLocal(destination);
         if (shouldUpload) {
             this.mode = Mode.UPLOAD;
-            if (SkinLibraryManager.getClient().shouldUploadFile()) {
+            if (SkinLibraryManager.getClient().shouldUploadFile(null)) {
                 this.skin = SkinLoader.getInstance().loadSkin(source);
             }
         }
@@ -52,7 +54,7 @@ public class SaveSkinPacket extends CustomPacket {
         switch (mode) {
             case UPLOAD: {
                 boolean shouldUpload = DataDomain.isLocal(source) && !DataDomain.isLocal(destination);
-                if (shouldUpload && SkinLibraryManager.getServer().shouldUploadFile()) {
+                if (shouldUpload && SkinLibraryManager.getServer().shouldUploadFile(null)) {
                     this.skin = decodeSkin(buffer);
                 }
                 break;
@@ -96,13 +98,17 @@ public class SaveSkinPacket extends CustomPacket {
             return;
         }
         SkinLibraryManager.Server server = SkinLibraryManager.getServer();
-        if (DataDomain.isLocal(source) && !server.shouldUploadFile()) {
+        if (DataDomain.isLocal(source) && !server.shouldUploadFile(player)) {
             error(player, "upload", "uploading prohibited in the config file");
             return;
         }
         SkinLibraryContainer container = (SkinLibraryContainer) player.containerMenu;
         // load: fs -> db/ln/ws -> db/ln
         if (DataDomain.isDatabase(destination)) {
+            if (!Permissions.SKIN_LIBRARY_SKIN_LOAD.accept(player)) {
+                error(player, "load", "load prohibited in the config file");
+                return;
+            }
             Skin skin = getSkin();
             if (skin == null) {
                 error(player, "load", "missing from skin loader");
@@ -118,9 +124,13 @@ public class SaveSkinPacket extends CustomPacket {
         }
         // save: fs -> ws/db -> ws/ws -> ws
         if (DataDomain.isServer(destination)) {
+            if (!Permissions.SKIN_LIBRARY_SKIN_SAVE.accept(player)) {
+                error(player, "save", "save prohibited in the config file");
+                return;
+            }
             Skin skin = getSkin();
             if (skin == null) {
-                error(player, "load", "missing from skin loader");
+                error(player, "save", "missing from skin loader");
                 return;
             }
             if (container.shouldSaveStack()) {
@@ -132,7 +142,7 @@ public class SaveSkinPacket extends CustomPacket {
         }
         // download: ws -> fs/db -> fs/fs -> fs
         if (DataDomain.isLocal(destination)) {
-            if (!DataDomain.isLocal(source) && !server.shouldDownloadFile()) {
+            if (!DataDomain.isLocal(source) && !server.shouldDownloadFile(player)) {
                 error(player, "download", "downloading prohibited in the config file");
                 return;
             }
@@ -152,12 +162,13 @@ public class SaveSkinPacket extends CustomPacket {
     }
 
     public boolean isReady() {
+        PlayerEntity player = Minecraft.getInstance().player;
         SkinLibraryManager libraryManager = SkinLibraryManager.getClient();
         // when a remote server, check the config.
-        if (DataDomain.isLocal(source) && !DataDomain.isLocal(destination) && !libraryManager.shouldUploadFile()) {
+        if (DataDomain.isLocal(source) && !DataDomain.isLocal(destination) && !libraryManager.shouldUploadFile(player)) {
             return false; // can't upload
         }
-        if (!DataDomain.isLocal(source) && DataDomain.isLocal(destination) && !libraryManager.shouldDownloadFile()) {
+        if (!DataDomain.isLocal(source) && DataDomain.isLocal(destination) && !libraryManager.shouldDownloadFile(player)) {
             return false; // can't download
         }
         return mode == Mode.NONE || skin != null;

@@ -23,6 +23,8 @@ import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -92,8 +94,11 @@ public class ArmourerTileEntity extends AbstractTileEntity {
         this.version = nbt.getInt(AWConstants.NBT.DATA_VERSION);
     }
 
-    public void onPlace(World world, BlockPos pos, BlockState state) {
+    public void onPlace(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity) {
         remakeBoundingBoxes(null, getBoundingBoxes(), true);
+        if (entity instanceof PlayerEntity) {
+            setTextureDescriptor(new PlayerTextureDescriptor(((PlayerEntity) entity).getGameProfile()));
+        }
     }
 
     public void onRemove(World world, BlockPos pos, BlockState state) {

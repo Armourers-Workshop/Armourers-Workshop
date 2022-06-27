@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
 import moe.plushie.armourers_workshop.api.action.IUndoCommand;
+import moe.plushie.armourers_workshop.core.permission.Permissions;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.undo.UndoManager;
 import moe.plushie.armourers_workshop.utils.undo.UndoStack;
@@ -30,14 +31,19 @@ public class UndoActionPacket extends CustomPacket {
     @Override
     public void accept(ServerPlayNetHandler netHandler, ServerPlayerEntity player) {
         // TODO: check player
-        UndoStack stack = UndoManager.of(player.getUUID());
         try {
             ITextComponent message;
+            UndoStack stack = UndoManager.of(player.getUUID());
             if (isRedo) {
+                if (!Permissions.REDO.accept(player)) {
+                    return;
+                }
                 IUndoCommand command = stack.redo();
                 message = TranslateUtils.title("chat.armourers_workshop.undo.redoing", command.name());
-
             } else {
+                if (!Permissions.UNDO.accept(player)) {
+                    return;
+                }
                 IUndoCommand command = stack.undo();
                 message = TranslateUtils.title("chat.armourers_workshop.undo.undoing", command.name());
             }
