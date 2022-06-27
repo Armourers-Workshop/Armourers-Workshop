@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FocusableGui;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.IRenderable;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -136,7 +137,8 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
 
     @Override
     public boolean keyPressed(int key, int p_231046_2_, int p_231046_3_) {
-        if (key == GLFW.GLFW_KEY_TAB) {
+        // In special case, the player set `TAB` key as the `keyInventory`, we don't have to handle `TAB` first.
+        if (key == GLFW.GLFW_KEY_TAB && !isActiveInventoryKey(key, p_231046_2_)) {
             boolean flag = !hasShiftDown();
             if (!this.changeFocus(flag)) {
                 this.changeFocus(flag);
@@ -210,6 +212,10 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
             }
         }
         super.setFocusedWithResponder(responder);
+    }
+
+    private boolean isActiveInventoryKey(int key, int p_231046_2_) {
+        return Minecraft.getInstance().options.keyInventory.isActiveAndMatches(InputMappings.getKey(key, p_231046_2_)) ;
     }
 
     private <T extends AbstractLibraryPanel> T addPanel(Supplier<T> provider) {

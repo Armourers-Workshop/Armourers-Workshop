@@ -276,7 +276,7 @@ public class MannequinEntity extends ArmorStandEntity {
             return boundingBoxForCulling;
         }
         float f = getScale();
-        boundingBoxForCulling = this.getBoundingBox().inflate(f, f, f);
+        boundingBoxForCulling = this.getBoundingBox().inflate(f * 3f, f * 2f, f * 2.5f);
         return boundingBoxForCulling;
     }
 

@@ -188,10 +188,10 @@ public final class TextureUtils {
         if (bakedTexture != null && bakedTexture.isDownloaded()) {
             return bakedTexture.getLocation();
         }
-        ClientPlayerEntity player = Minecraft.getInstance().player;
-        if (player != null) {
-            return player.getSkinTextureLocation();
-        }
+//        ClientPlayerEntity player = Minecraft.getInstance().player;
+//        if (player != null) {
+//            return player.getSkinTextureLocation();
+//        }
         return DefaultPlayerSkin.getDefaultSkin();
     }
 

@@ -143,14 +143,14 @@ public class ArmourerTileEntityRenderer<T extends ArmourerTileEntity> extends Ti
 
             matrixStack.scale(-1, -1, 1);
 
+            // render building grid
             if (isShowGuides) {
-                // render building grid
                 RenderUtils.drawCube(matrixStack, rect, r, g, b, a, buffers);
                 RenderUtils.drawCube(matrixStack, originBox, 0, 1, 0, 0.5f, buffers);
-                // render guide grid
-                if (isModelOverridden) {
-                    RenderUtils.drawCube(matrixStack, rect2, 0, 0, 1, 0.25f, buffers);
-                }
+            }
+            // render guide grid
+            if (isModelOverridden) {
+                RenderUtils.drawCube(matrixStack, rect2, 0, 0, 1, 0.25f, buffers);
             }
 
             matrixStack.popPose();

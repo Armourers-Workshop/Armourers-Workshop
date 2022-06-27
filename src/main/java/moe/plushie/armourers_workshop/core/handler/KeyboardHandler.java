@@ -3,19 +3,16 @@ package moe.plushie.armourers_workshop.core.handler;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.OpenWardrobePacket;
 import moe.plushie.armourers_workshop.core.network.packet.UndoActionPacket;
-import moe.plushie.armourers_workshop.init.common.ModLog;
-import moe.plushie.armourers_workshop.utils.KeyBindings;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.utils.KeyBindings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(Dist.CLIENT)
 public class KeyboardHandler {

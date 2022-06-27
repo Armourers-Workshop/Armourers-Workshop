@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateLibraryFilesPacket;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
+import moe.plushie.armourers_workshop.core.permission.Permissions;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
@@ -42,11 +43,11 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         this.listeners.remove(listener);
     }
 
-    public boolean shouldDownloadFile() {
+    public boolean shouldDownloadFile(PlayerEntity player) {
         return true;
     }
 
-    public boolean shouldUploadFile() {
+    public boolean shouldUploadFile(PlayerEntity player) {
         return true;
     }
 
@@ -86,7 +87,10 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         }
 
         @Override
-        public boolean shouldDownloadFile() {
+        public boolean shouldDownloadFile(PlayerEntity player) {
+            if (!Permissions.SKIN_LIBRARY_SKIN_DOWNLOAD.accept(player)) {
+                return false;
+            }
             if (!LocalDataService.isRunning()) {
                 return ModConfig.Common.allowDownloadingSkins;
             }
@@ -94,7 +98,10 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         }
 
         @Override
-        public boolean shouldUploadFile() {
+        public boolean shouldUploadFile(PlayerEntity player) {
+            if (!Permissions.SKIN_LIBRARY_SKIN_UPLOAD.accept(player)) {
+                return false;
+            }
             if (!LocalDataService.isRunning()) {
                 return ModConfig.Common.allowUploadingSkins;
             }
@@ -203,7 +210,10 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         }
 
         @Override
-        public boolean shouldDownloadFile() {
+        public boolean shouldDownloadFile(PlayerEntity player) {
+            if (!Permissions.SKIN_LIBRARY_SKIN_DOWNLOAD.accept(player)) {
+                return false;
+            }
             if (FMLEnvironment.dist.isDedicatedServer()) {
                 return ModConfig.Common.allowDownloadingSkins;
             }
@@ -211,7 +221,10 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
         }
 
         @Override
-        public boolean shouldUploadFile() {
+        public boolean shouldUploadFile(PlayerEntity player) {
+            if (!Permissions.SKIN_LIBRARY_SKIN_UPLOAD.accept(player)) {
+                return false;
+            }
             if (FMLEnvironment.dist.isDedicatedServer()) {
                 return ModConfig.Common.allowUploadingSkins;
             }
