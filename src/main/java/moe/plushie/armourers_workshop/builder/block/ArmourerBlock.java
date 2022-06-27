@@ -6,9 +6,11 @@ import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -35,6 +37,12 @@ public class ArmourerBlock extends AbstractHorizontalBlock {
             return ActionResultType.CONSUME;
         }
         return ActionResultType.FAIL;
+    }
+
+    @Nullable
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        // TODO: WIP
+        return this.defaultBlockState();
     }
 
     @Override
