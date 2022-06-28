@@ -4,12 +4,12 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.PacketBuffer;
-import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -69,7 +69,7 @@ public class ResponseSkinPacket extends CustomPacket {
         } catch (Exception exception) {
             return exception;
         } finally {
-            IOUtils.closeQuietly(objectInputStream, inputStream);
+            StreamUtils.closeQuietly(objectInputStream, inputStream);
         }
     }
 
@@ -86,7 +86,7 @@ public class ResponseSkinPacket extends CustomPacket {
         } catch (Exception exception1) {
             exception1.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(objectOutputStream, outputStream);
+            StreamUtils.closeQuietly(objectOutputStream, outputStream);
         }
     }
 
@@ -101,7 +101,7 @@ public class ResponseSkinPacket extends CustomPacket {
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(inputStream);
+            StreamUtils.closeQuietly(inputStream);
         }
         return null;
     }
@@ -117,7 +117,7 @@ public class ResponseSkinPacket extends CustomPacket {
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(outputStream);
+            StreamUtils.closeQuietly(outputStream);
         }
     }
 

@@ -1,6 +1,9 @@
 package moe.plushie.armourers_workshop.utils;
 
-import io.netty.buffer.*;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -9,13 +12,15 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.FloatNBT;
+import net.minecraft.nbt.IntNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.IWorldPosCallable;
@@ -27,17 +32,15 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.util.Constants;
-import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nullable;
-import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.nio.ByteBuffer;
-import java.nio.LongBuffer;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+;
 
 @SuppressWarnings("NullableProblems")
 public class AWDataSerializers {
@@ -261,7 +264,7 @@ public class AWDataSerializers {
                         colors[i] = dataStream.readInt();
                     }
                 }
-                IOUtils.closeQuietly(dataStream, compressedStream, bufferedStream);
+                StreamUtils.closeQuietly(dataStream, compressedStream, bufferedStream);
                 return paintData;
             } catch (Exception ignored) {
                 return null;
@@ -282,7 +285,7 @@ public class AWDataSerializers {
                 for (int color : colors) {
                     dataStream.writeInt(color);
                 }
-                IOUtils.closeQuietly(dataStream, compressedStream, bufferedStream);
+                StreamUtils.closeQuietly(dataStream, compressedStream, bufferedStream);
                 nbt.putByteArray(key, Arrays.copyOf(buffer.array(), buffer.writerIndex()));
             } catch (Exception ignored) {
             }

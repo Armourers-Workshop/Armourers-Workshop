@@ -1,21 +1,19 @@
 package moe.plushie.armourers_workshop.utils;
 
 import com.mojang.datafixers.util.Pair;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.exception.NewerFileVersionException;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.StringTextComponent;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -33,9 +31,9 @@ public final class SkinIOUtils {
     public static boolean saveSkinToFile(File file, Skin skin) {
         ModLog.debug("save skin into '{}'", file);
         try {
-            FileUtils.forceMkdirParent(file);
+            SkinFileUtils.forceMkdirParent(file);
             if (file.exists()) {
-                FileUtils.forceDelete(file);
+                SkinFileUtils.deleteQuietly(file);
             }
             FileOutputStream fos = new FileOutputStream(file);
             saveSkinToStream(fos, skin);
@@ -135,7 +133,7 @@ public final class SkinIOUtils {
         try {
             skin = SkinSerializer.readSkinFromStream(dis);
         } finally {
-            IOUtils.closeQuietly(dis, bis);
+            StreamUtils.closeQuietly(dis, bis);
         }
         return skin;
     }
@@ -195,7 +193,7 @@ public final class SkinIOUtils {
             ModLog.error("Unable to load skin name. Unknown error.");
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(stream);
+            StreamUtils.closeQuietly(stream);
         }
 
         if (skinType == null) {
@@ -227,7 +225,7 @@ public final class SkinIOUtils {
 //                File worldFile = new File(dirWorldDatabase, globalFile.getName());
 //                if (!globalFile.getName().equals("readme.txt") & !worldFile.exists()) {
 //                    try {
-//                        FileUtils.copyFile(globalFile, worldFile);
+//                        FileManager.copyFile(globalFile, worldFile);
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
@@ -254,7 +252,7 @@ public final class SkinIOUtils {
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            } finally {
-//                IOUtils.closeQuietly(outputStream);
+//                StreamUtils.closeQuietly(outputStream);
 //            }
 //        }
 //    }

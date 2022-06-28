@@ -2,25 +2,25 @@ package moe.plushie.armourers_workshop.core.network.packet;
 
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.permission.Permissions;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
-import moe.plushie.armourers_workshop.core.data.DataDomain;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.container.SkinLibraryContainer;
 import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
+import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.ServerPlayNetHandler;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
@@ -217,7 +217,7 @@ public class SaveSkinPacket extends CustomPacket {
         if (index < 0) {
             return "";
         }
-        String path = FilenameUtils.normalize(location.substring(index + 1), true); // security check
+        String path = SkinFileUtils.normalize(location.substring(index + 1), true); // security check
         if (path != null) {
             return location.subSequence(0, index + 1) + path;
         }
@@ -229,7 +229,7 @@ public class SaveSkinPacket extends CustomPacket {
         if (index < 0) {
             return "";
         }
-        String path = FilenameUtils.normalize(location.substring(index + 1), true); // security check
+        String path = SkinFileUtils.normalize(location.substring(index + 1), true); // security check
         if (path != null) {
             return path;
         }

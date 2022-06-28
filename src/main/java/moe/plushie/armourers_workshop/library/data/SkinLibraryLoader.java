@@ -4,11 +4,11 @@ import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModLog;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class SkinLibraryLoader implements Runnable {
                 continue;
             }
             if (filename.toLowerCase().endsWith(AWConstants.EXT)) {
-                String name = FilenameUtils.removeExtension(filename);
+                String name = SkinFileUtils.getBaseName(filename);
                 Pair<ISkinType, ISkinProperties> header = SkinIOUtils.getTypeNameFromFile(file);
                 if (header == null) {
                     continue; // Armour file load fail.

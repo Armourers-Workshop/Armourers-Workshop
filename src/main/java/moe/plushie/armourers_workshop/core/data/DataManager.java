@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.IResultHandler;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModLog;
-import org.apache.commons.io.FilenameUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 
 import java.io.*;
 import java.util.Optional;
@@ -40,9 +40,9 @@ public class DataManager {
 //            CipherOutputStream cipherOutputStream = null;
 //            GZIPOutputStream gzipOutputStream = null;
 //            try {
-//                FileUtils.forceMkdirParent(cachedFile);
+//                FileManager.forceMkdirParent(cachedFile);
 //                if (cachedFile.exists()) {
-//                    FileUtils.forceDelete(cachedFile);
+//                    FileManager.forceDelete(cachedFile);
 //                }
 //                fileOutputStream = new FileOutputStream(cachedFile);
 //                if (x1.length != 0) {
@@ -57,7 +57,7 @@ public class DataManager {
 //            } catch (Exception e) {
 //                e.printStackTrace();
 //            }
-//            IOUtils.closeQuietly(gzipOutputStream, cipherOutputStream, fileOutputStream);
+//            StreamUtils.closeQuietly(gzipOutputStream, cipherOutputStream, fileOutputStream);
 //        });
 //    }
 //
@@ -91,7 +91,7 @@ public class DataManager {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-//        IOUtils.closeQuietly(gzipInputStream, cipherInputStream, fileInputStream);
+//        StreamUtils.closeQuietly(gzipInputStream, cipherInputStream, fileInputStream);
 //        return skin;
 //    }
 //
@@ -103,7 +103,7 @@ public class DataManager {
 //        }
 //        ModLog.debug("remove cache of '{}'", identifier);
 //        executor.execute(() -> {
-//            FileUtils.deleteQuietly(cachedFile);
+//            FileManager.deleteQuietly(cachedFile);
 //        });
 //    }
 
@@ -116,7 +116,7 @@ public class DataManager {
             } else {
                 String path = identifier;
                 if (DataDomain.isServer(path) || DataDomain.isLocal(path)) {
-                    path = FilenameUtils.normalize(path.substring(3));
+                    path = SkinFileUtils.normalize(path.substring(3));
                 }
                 stream = loadStreamFromPath(path);
             }
@@ -139,7 +139,7 @@ public class DataManager {
             String path = DataDomain.getPath(identifier);
             return LocalDataService.getInstance().getFile(path);
         } else {
-            String path = FilenameUtils.normalize(DataDomain.getPath(identifier));
+            String path = SkinFileUtils.normalize(DataDomain.getPath(identifier));
             return loadStreamFromPath(path);
         }
     }

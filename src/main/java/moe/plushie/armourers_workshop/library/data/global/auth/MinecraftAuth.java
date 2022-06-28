@@ -1,9 +1,8 @@
 package moe.plushie.armourers_workshop.library.data.global.auth;
 
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.util.Session;
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 
 import java.io.IOException;
@@ -12,6 +11,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class MinecraftAuth {
 
@@ -56,7 +56,7 @@ public class MinecraftAuth {
         Validate.notNull(post);
         Validate.notNull(contentType);
         HttpURLConnection connection = createUrlConnection(url);
-        byte[] postAsBytes = post.getBytes(Charsets.UTF_8);
+        byte[] postAsBytes = post.getBytes(StandardCharsets.UTF_8);
 
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", contentType + "; charset=utf-8");
@@ -66,28 +66,26 @@ public class MinecraftAuth {
         OutputStream outputStream = null;
         try {
             outputStream = connection.getOutputStream();
-            IOUtils.write(postAsBytes, outputStream);
+            outputStream.write(postAsBytes);
         } finally {
-            IOUtils.closeQuietly(outputStream);
+            StreamUtils.closeQuietly(outputStream);
         }
 
         InputStream inputStream = null;
         try {
             inputStream = connection.getInputStream();
-            String result = IOUtils.toString(inputStream, Charsets.UTF_8);
-            return result;
+            return StreamUtils.toString(inputStream, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            IOUtils.closeQuietly(inputStream);
+            StreamUtils.closeQuietly(inputStream);
             inputStream = connection.getErrorStream();
 
             if (inputStream != null) {
-                String result = IOUtils.toString(inputStream, Charsets.UTF_8);
-                return result;
+                return StreamUtils.toString(inputStream, StandardCharsets.UTF_8);
             } else {
                 throw e;
             }
         } finally {
-            IOUtils.closeQuietly(inputStream);
+            StreamUtils.closeQuietly(inputStream);
         }
     }
 

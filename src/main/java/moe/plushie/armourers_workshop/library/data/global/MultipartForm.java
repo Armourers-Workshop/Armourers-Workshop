@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.library.data.global;
 
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class MultipartForm {
@@ -109,18 +109,18 @@ public class MultipartForm {
             InputStream inputStream = null;
             try {
                 inputStream = connection.getInputStream();
-                result = IOUtils.toString(inputStream, Charsets.UTF_8);
+                result = StreamUtils.toString(inputStream, StandardCharsets.UTF_8);
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                IOUtils.closeQuietly(inputStream);
+                StreamUtils.closeQuietly(inputStream);
             }
             
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(writer);
-            IOUtils.closeQuietly(output);
+            StreamUtils.closeQuietly(writer);
+            StreamUtils.closeQuietly(output);
         }
 
         return result;

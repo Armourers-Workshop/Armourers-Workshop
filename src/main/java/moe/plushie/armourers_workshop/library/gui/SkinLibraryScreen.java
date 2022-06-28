@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.gui.widget.*;
 import moe.plushie.armourers_workshop.core.handler.ItemTooltipHandler;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
@@ -12,11 +13,7 @@ import moe.plushie.armourers_workshop.core.network.packet.SaveSkinPacket;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
@@ -25,6 +22,10 @@ import moe.plushie.armourers_workshop.library.container.SkinLibraryContainer;
 import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryFile;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.Widget;
@@ -42,7 +43,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
-import org.apache.commons.io.FilenameUtils;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -280,7 +280,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         dialog.setValueTester(value -> value.replaceAll("[:\\\\/]|^[.]+$", "_").equals(value));
         present(dialog, dialog1 -> {
             if (!dialog1.isCancelled()) {
-                String newPath = FilenameUtils.normalize(FilenameUtils.concat(selectedPath, dialog1.getText()), true);
+                String newPath = SkinFileUtils.normalize(SkinFileUtils.concat(selectedPath, dialog1.getText()), true);
                 selectedLibrary.mkdir(newPath);
             }
         });
@@ -312,7 +312,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
             toast(getDisplayText("error.noFileName"));
             return; // must input name
         }
-        String newPath = FilenameUtils.normalize(FilenameUtils.concat(selectedPath, newName + AWConstants.EXT), true);
+        String newPath = SkinFileUtils.normalize(SkinFileUtils.concat(selectedPath, newName + AWConstants.EXT), true);
         if (selectedLibrary.get(newPath) != null) {
             if (!isAuthorized()) {
                 toast(getDisplayText("error.illegalOperation"));
@@ -353,7 +353,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
             return; // not changes.
         }
         String ext = file.isDirectory() ? "" : AWConstants.EXT;
-        String newPath = FilenameUtils.normalize(file.getPath() + "/../" + sender + ext, true);
+        String newPath = SkinFileUtils.normalize(file.getPath() + "/../" + sender + ext, true);
         if (selectedLibrary.get(newPath) != null) {
             overwriteItem(newPath, () -> selectedLibrary.rename(file, newPath));
             return;
@@ -373,7 +373,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         dialog.setMessageColor(0xffff5555);
         dialog.setConfirmText(getDisplayText("dialog.overwrite.ok"));
         dialog.setCancelText(getDisplayText("dialog.overwrite.close"));
-        dialog.setMessage(getDisplayText("dialog.overwrite.overwriteFile", FilenameUtils.getBaseName(path)));
+        dialog.setMessage(getDisplayText("dialog.overwrite.overwriteFile", SkinFileUtils.getBaseName(path)));
         present(dialog, r -> {
             if (!r.isCancelled()) {
                 handler.run();

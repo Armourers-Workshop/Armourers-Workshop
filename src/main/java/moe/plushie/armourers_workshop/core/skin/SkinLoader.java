@@ -9,11 +9,11 @@ import moe.plushie.armourers_workshop.core.network.packet.RequestSkinPacket;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModContext;
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nullable;
 import javax.crypto.Cipher;
@@ -368,7 +368,7 @@ public class SkinLoader {
                 loadDidFinish(request, skin);
                 return skin;
             } finally {
-                IOUtils.closeQuietly(inputStream);
+                StreamUtils.closeQuietly(inputStream);
             }
         }
 
@@ -535,9 +535,9 @@ public class SkinLoader {
                 executor.execute(() -> {
                     FileOutputStream outputStream = null;
                     try {
-                        FileUtils.forceMkdirParent(cachedFile);
+                        SkinFileUtils.forceMkdirParent(cachedFile);
                         if (cachedFile.exists()) {
-                            FileUtils.forceDelete(cachedFile);
+                            SkinFileUtils.deleteQuietly(cachedFile);
                         }
                         outputStream = new FileOutputStream(cachedFile);
                         SkinIOUtils.saveSkinToStream(outputStream, skin);
@@ -545,7 +545,7 @@ public class SkinLoader {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    IOUtils.closeQuietly(outputStream);
+                    StreamUtils.closeQuietly(outputStream);
                 });
                 return;
             }
@@ -559,9 +559,9 @@ public class SkinLoader {
                 FileOutputStream fileOutputStream = null;
                 CipherOutputStream cipherOutputStream = null;
                 try {
-                    FileUtils.forceMkdirParent(cachedFile);
+                    SkinFileUtils.forceMkdirParent(cachedFile);
                     if (cachedFile.exists()) {
-                        FileUtils.forceDelete(cachedFile);
+                        SkinFileUtils.deleteQuietly(cachedFile);
                     }
                     fileOutputStream = new FileOutputStream(cachedFile);
                     if (x1.length != 0) {
@@ -575,7 +575,7 @@ public class SkinLoader {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                IOUtils.closeQuietly(cipherOutputStream, fileOutputStream);
+                StreamUtils.closeQuietly(cipherOutputStream, fileOutputStream);
             });
         }
 
@@ -586,7 +586,7 @@ public class SkinLoader {
             }
             ModLog.debug("'{}' => remove skin cache", identifier);
             executor.execute(() -> {
-                FileUtils.deleteQuietly(cachedFile);
+                SkinFileUtils.deleteQuietly(cachedFile);
             });
         }
 

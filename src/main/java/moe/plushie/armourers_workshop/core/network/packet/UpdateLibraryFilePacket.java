@@ -6,11 +6,11 @@ import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryFile;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.ServerPlayNetHandler;
-import org.apache.commons.io.FilenameUtils;
 
 import java.util.Optional;
 
@@ -84,7 +84,7 @@ public class UpdateLibraryFilePacket extends CustomPacket {
     }
 
     private String decodePath(PacketBuffer buffer) {
-        String path = FilenameUtils.normalize(buffer.readUtf(), true); // security check
+        String path = SkinFileUtils.normalize(buffer.readUtf(), true); // security check
         if (path != null) {
             return path;
         }

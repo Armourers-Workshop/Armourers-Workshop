@@ -2,13 +2,13 @@ package moe.plushie.armourers_workshop.library.data;
 
 import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import org.apache.commons.io.FilenameUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
 
     public SkinLibraryFile(DataDomain domain, String name, String path) {
         this.name = name;
-        this.path = FilenameUtils.normalize(path, true);
+        this.path = SkinFileUtils.normalize(path, true);
         this.domain = domain;
         this.header = null;
         this.isDirectory = true;
@@ -37,7 +37,7 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
 
     public SkinLibraryFile(DataDomain domain, String name, String path, Pair<ISkinType, ISkinProperties> header) {
         this.name = name;
-        this.path = FilenameUtils.normalize(path, true);
+        this.path = SkinFileUtils.normalize(path, true);
         this.domain = domain;
         this.header = header;
         this.isDirectory = false;
@@ -148,7 +148,7 @@ public class SkinLibraryFile implements Comparable<SkinLibraryFile>, ISkinLibrar
             return searchableContentList;
         }
         ArrayList<String> values = new ArrayList<>();
-        values.add(FilenameUtils.removeExtension(path));
+        values.add(SkinFileUtils.removeExtension(path));
         ISkinProperties properties = getSkinProperties();
         if (properties != null) {
             values.add(properties.get(SkinProperty.ALL_CUSTOM_NAME));

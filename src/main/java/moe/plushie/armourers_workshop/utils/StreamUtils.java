@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.utils;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -50,6 +52,28 @@ public final class StreamUtils {
         return index;
     }
 
+    public static byte[] toByteArray(final InputStream input) throws IOException {
+        return IOUtils.toByteArray(input);
+    }
+
+    public static String toString(final InputStream input, final Charset encoding) throws IOException {
+        return IOUtils.toString(input, encoding);
+    }
+
+    public static void closeQuietly(final Closeable... closeables) {
+        if (closeables == null) {
+            return;
+        }
+        for (final Closeable closeable : closeables) {
+            try {
+                if (closeable != null) {
+                    closeable.close();
+                }
+            } catch (final IOException ioe) {
+                // ignore
+            }
+        }
+    }
 
     private static void writeUnsignedShort(DataOutputStream stream, int value) throws IOException {
         if (value > 65535) {

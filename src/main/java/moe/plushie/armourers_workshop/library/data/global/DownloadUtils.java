@@ -3,11 +3,13 @@ package moe.plushie.armourers_workshop.library.data.global;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import moe.plushie.armourers_workshop.init.common.ModLog;
-import org.apache.commons.io.IOUtils;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public final class DownloadUtils {
     
@@ -19,11 +21,11 @@ public final class DownloadUtils {
         String data = null;
         try {
             in = new URL(url).openStream();
-            data = IOUtils.toString(in);
+            data = StreamUtils.toString(in, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(in);
+            StreamUtils.closeQuietly(in);
         }
         
         return data;

@@ -6,7 +6,6 @@ package moe.plushie.armourers_workshop.core.skin.exporter;
 //import java.io.InputStream;
 //
 //import moe.plushie.armourers_workshop.core.utils.SkinLogger;
-//import org.apache.commons.io.IOUtils;
 //import org.apache.logging.log4j.Level;
 //
 //import moe.plushie.armourers_workshop.ArmourersWorkshop;
@@ -118,8 +117,8 @@ package moe.plushie.armourers_workshop.core.skin.exporter;
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        } finally {
-//            IOUtils.closeQuietly(input);
-//            IOUtils.closeQuietly(output);
+//            StreamUtils.closeQuietly(input);
+//            StreamUtils.closeQuietly(output);
 //        }
 //    }
 //
