@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.library.data.global.task;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;

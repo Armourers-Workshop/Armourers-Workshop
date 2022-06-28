@@ -56,7 +56,7 @@ public class ClientWardrobeHandler {
         matrixStack.translate(0, 11, 0);
 
         int count = render(entity, model, light, matrixStack, buffers, ItemCameraTransforms.TransformType.NONE, renderData::getItemSkins);
-        if (count != 0) {
+        if (count != 0 && !ModConfig.Client.debugItemOverride) {
             callback.cancel();
         }
 
@@ -84,7 +84,7 @@ public class ClientWardrobeHandler {
         matrixStack.translate(0, 0, -1);
 
         int count = render(entity, model, light, matrixStack, buffers, ItemCameraTransforms.TransformType.NONE, renderData::getItemSkins);
-        if (count != 0) {
+        if (count != 0 &&  !ModConfig.Client.debugItemOverride) {
             callback.cancel();
         }
 
@@ -162,7 +162,7 @@ public class ClientWardrobeHandler {
 
                     boolean replaceSkinItem = entity instanceof MannequinEntity;
                     count = render(entity, null, packedLight, matrixStack, buffers, transformType, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
-                    if (count != 0) {
+                    if (count != 0 && !ModConfig.Client.debugItemOverride) {
                         callback.cancel();
                     }
                     matrixStack.popPose();

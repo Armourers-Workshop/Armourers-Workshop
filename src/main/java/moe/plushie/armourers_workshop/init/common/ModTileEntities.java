@@ -18,14 +18,12 @@
 
 package moe.plushie.armourers_workshop.init.common;
 
-import moe.plushie.armourers_workshop.builder.block.BoundingBoxBlock;
 import moe.plushie.armourers_workshop.builder.tileentity.*;
 import moe.plushie.armourers_workshop.core.tileentity.DyeTableTileEntity;
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import moe.plushie.armourers_workshop.library.tileentity.GlobalSkinLibraryTileEntity;
 import moe.plushie.armourers_workshop.library.tileentity.SkinLibraryTileEntity;
-import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;

@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.init.common;
 
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import net.minecraft.client.Minecraft;

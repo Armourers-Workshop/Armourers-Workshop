@@ -4,10 +4,10 @@ import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.api.skin.ISkinDescriptor;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.utils.AWDataSerializers;
-import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModItems;
+import moe.plushie.armourers_workshop.utils.AWDataSerializers;
+import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 

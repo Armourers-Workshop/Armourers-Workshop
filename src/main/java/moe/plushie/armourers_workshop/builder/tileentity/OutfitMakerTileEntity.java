@@ -4,17 +4,11 @@ import moe.plushie.armourers_workshop.core.tileentity.AbstractContainerTileEntit
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
-import net.minecraft.block.BlockState;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.util.Strings;
-
-import javax.annotation.Nullable;
 
 @SuppressWarnings("NullableProblems")
 public class OutfitMakerTileEntity extends AbstractContainerTileEntity {

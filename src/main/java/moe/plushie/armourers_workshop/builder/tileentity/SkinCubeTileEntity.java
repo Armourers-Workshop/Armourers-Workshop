@@ -3,28 +3,22 @@ package moe.plushie.armourers_workshop.builder.tileentity;
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
-import moe.plushie.armourers_workshop.builder.gui.armourer.panel.*;
-import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.tileentity.AbstractTileEntity;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
-import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 import net.minecraftforge.common.util.Constants;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 @SuppressWarnings("NullableProblems")
 public class SkinCubeTileEntity extends AbstractTileEntity implements IPaintable {

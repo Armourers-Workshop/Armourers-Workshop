@@ -1,9 +1,5 @@
 package moe.plushie.armourers_workshop.api.painting;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.common.util.Constants;
-
 import java.util.function.Consumer;
 
 public interface IPaintingTool {

@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.core.network.packet.ExecuteCommandPacket;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

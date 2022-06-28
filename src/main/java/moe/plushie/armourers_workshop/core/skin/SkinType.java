@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
-import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;

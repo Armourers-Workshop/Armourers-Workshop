@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.gui.widget;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -9,8 +8,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 @SuppressWarnings("NullableProblems")

@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.network.packet;
 
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.common.ModContext;
 import net.minecraft.entity.player.PlayerEntity;

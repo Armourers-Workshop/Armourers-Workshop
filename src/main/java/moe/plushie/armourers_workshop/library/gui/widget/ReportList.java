@@ -22,8 +22,6 @@ import java.util.List;
 @OnlyIn(Dist.CLIENT)
 public class ReportList extends Button {
 
-//    private static final ResourceLocation TEXTURE = new ResourceLocation(LibGuiResources.CONTROL_SKIN_PANEL);
-
     private final ArrayList<GuiDetailListColumn> columns = new ArrayList<>();
     private final ArrayList<GuiDetailListItem> items = new ArrayList<>();
 

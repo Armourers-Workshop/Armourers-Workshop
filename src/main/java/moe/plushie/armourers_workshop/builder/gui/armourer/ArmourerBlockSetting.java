@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.builder.gui.armourer;
 
 import moe.plushie.armourers_workshop.api.common.IItemBlockSelector;
-import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
@@ -18,8 +17,6 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.utils.color.PaintColor;
-import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;

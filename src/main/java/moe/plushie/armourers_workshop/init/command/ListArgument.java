@@ -16,7 +16,6 @@ import net.minecraft.network.PacketBuffer;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
 public class ListArgument implements ArgumentType<String> {

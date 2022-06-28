@@ -15,7 +15,6 @@ import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.INetHandler;
@@ -161,8 +160,7 @@ public class SaveSkinPacket extends CustomPacket {
         error(player, "unknown", "dangerous operation");
     }
 
-    public boolean isReady() {
-        PlayerEntity player = Minecraft.getInstance().player;
+    public boolean isReady(PlayerEntity player) {
         SkinLibraryManager libraryManager = SkinLibraryManager.getClient();
         // when a remote server, check the config.
         if (DataDomain.isLocal(source) && !DataDomain.isLocal(destination) && !libraryManager.shouldUploadFile(player)) {

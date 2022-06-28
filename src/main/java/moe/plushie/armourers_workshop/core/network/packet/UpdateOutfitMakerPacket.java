@@ -16,7 +16,6 @@ import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 

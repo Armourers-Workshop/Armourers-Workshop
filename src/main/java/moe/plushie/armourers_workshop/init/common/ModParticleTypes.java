@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.init.common;
 
 import moe.plushie.armourers_workshop.builder.particle.PaintSplashParticleData;
-import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.util.ResourceLocation;

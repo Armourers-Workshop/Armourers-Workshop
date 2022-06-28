@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.capability;
 
-import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.init.common.AWCore;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;

@@ -1,15 +1,11 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
-import io.netty.buffer.Unpooled;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.INetHandler;
-import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.ServerPlayNetHandler;
-import net.minecraftforge.fml.network.NetworkDirection;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class CustomPacket {
 

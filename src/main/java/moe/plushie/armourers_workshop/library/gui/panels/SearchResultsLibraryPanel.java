@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageExtendedButton;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch;
@@ -20,6 +19,7 @@ import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSea
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import moe.plushie.armourers_workshop.library.gui.widget.SkinFileList;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;

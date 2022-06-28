@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.utils.StreamUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public final class DownloadUtils {

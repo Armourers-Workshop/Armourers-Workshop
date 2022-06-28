@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.library.gui.panels;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskGetSkinInfo;
 import moe.plushie.armourers_workshop.library.data.global.task.mod.GlobalTaskGetReportList;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinReport;

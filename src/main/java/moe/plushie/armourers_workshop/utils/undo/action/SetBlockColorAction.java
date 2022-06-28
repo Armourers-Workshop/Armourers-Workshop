@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.action.IUndoCommand;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.command.CommandException;
 import net.minecraft.tileentity.TileEntity;

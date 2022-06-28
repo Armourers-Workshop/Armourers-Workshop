@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWTabController;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

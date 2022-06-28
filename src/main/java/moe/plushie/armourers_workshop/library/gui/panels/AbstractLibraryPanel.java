@@ -2,10 +2,10 @@ package moe.plushie.armourers_workshop.library.gui.panels;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.library.container.GlobalSkinLibraryContainer;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
@@ -18,10 +18,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Predicate;
 

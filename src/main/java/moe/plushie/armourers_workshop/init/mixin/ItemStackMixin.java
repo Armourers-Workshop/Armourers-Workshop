@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.init.mixin;
 
 
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 

@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch;
@@ -16,6 +15,7 @@ import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSea
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
 import moe.plushie.armourers_workshop.library.gui.widget.SkinFileList;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.Widget;

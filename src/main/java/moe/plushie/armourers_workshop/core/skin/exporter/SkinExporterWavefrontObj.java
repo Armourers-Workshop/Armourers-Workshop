@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.skin.exporter;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.api.skin.ISkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.api.skin.ISkinExporter;
@@ -16,7 +15,9 @@ import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import moe.plushie.armourers_workshop.utils.extened.AWMatrixStack;
-import net.minecraft.util.math.vector.*;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.util.math.vector.Vector4f;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
