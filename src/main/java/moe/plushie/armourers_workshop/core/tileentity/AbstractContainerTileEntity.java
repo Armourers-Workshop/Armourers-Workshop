@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.tileentity;
 
 import moe.plushie.armourers_workshop.api.common.IHasInventory;
-import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;

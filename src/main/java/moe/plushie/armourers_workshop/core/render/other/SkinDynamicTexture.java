@@ -1,13 +1,15 @@
 package moe.plushie.armourers_workshop.core.render.other;
 
-import java.util.Objects;
-
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.utils.SkinPaintData;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.*;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.Objects;
 
 
 /**

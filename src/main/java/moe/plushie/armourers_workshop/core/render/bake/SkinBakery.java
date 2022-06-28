@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.render.bake;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.data.DataLoader;
-import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;

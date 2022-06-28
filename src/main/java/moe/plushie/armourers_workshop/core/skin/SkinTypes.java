@@ -1,16 +1,12 @@
 package moe.plushie.armourers_workshop.core.skin;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.init.common.ModTags;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinResourceLocation;
 import moe.plushie.armourers_workshop.utils.slot.ItemOverrideType;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.tags.ITag;
 
 import java.util.ArrayList;
 import java.util.Arrays;

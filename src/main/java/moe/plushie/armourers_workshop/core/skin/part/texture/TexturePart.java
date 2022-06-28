@@ -1,12 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.part.texture;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
-import moe.plushie.armourers_workshop.utils.extened.AWVoxelShape;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
+import moe.plushie.armourers_workshop.utils.extened.AWVoxelShape;
 
 import java.util.ArrayList;
 

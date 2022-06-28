@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.library.data.global.PlushieUser;
 import moe.plushie.armourers_workshop.library.data.global.permission.PermissionSystem;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskBetaCheck;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.Session;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.utils;
 
-import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -9,6 +7,8 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.utils.extened.AWMatrix4f;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

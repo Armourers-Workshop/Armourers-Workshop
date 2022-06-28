@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.core.container;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
@@ -13,11 +11,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

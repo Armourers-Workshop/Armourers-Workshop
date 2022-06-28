@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.builder.world;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.skin.*;
-import moe.plushie.armourers_workshop.builder.block.BoundingBoxBlock;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;

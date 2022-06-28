@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.ModEntities;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.ModEntities;
 import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.utils.MannequinRayTraceResult;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;

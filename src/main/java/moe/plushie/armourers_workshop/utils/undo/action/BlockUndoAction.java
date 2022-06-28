@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.utils.undo.action;
 
 import moe.plushie.armourers_workshop.api.action.IUndoCommand;
-import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.tileentity.TileEntity;

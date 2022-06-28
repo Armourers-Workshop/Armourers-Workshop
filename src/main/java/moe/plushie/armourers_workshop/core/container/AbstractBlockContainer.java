@@ -4,16 +4,11 @@ import moe.plushie.armourers_workshop.api.common.IHasInventory;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 public abstract class AbstractBlockContainer extends AbstractContainer {
 

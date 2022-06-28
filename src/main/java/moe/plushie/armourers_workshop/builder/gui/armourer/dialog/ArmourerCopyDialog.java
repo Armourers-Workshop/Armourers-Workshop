@@ -1,19 +1,12 @@
 package moe.plushie.armourers_workshop.builder.gui.armourer.dialog;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.gui.widget.AWCheckBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWComboBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWConfirmDialog;
-import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
-import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

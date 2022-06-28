@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.crafting.recipe;
 
-import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.item.ItemStack;
 
 public class SkinningClearRecipe extends SkinningRecipe {

@@ -4,7 +4,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.function.Consumer;
 
 @SuppressWarnings({"unused"})

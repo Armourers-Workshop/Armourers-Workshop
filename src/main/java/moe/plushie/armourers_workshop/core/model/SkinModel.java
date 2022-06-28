@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.model;
 
-import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.part.wings;
 
 import moe.plushie.armourers_workshop.api.action.ICanRotation;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import net.minecraft.util.math.vector.Vector3i;

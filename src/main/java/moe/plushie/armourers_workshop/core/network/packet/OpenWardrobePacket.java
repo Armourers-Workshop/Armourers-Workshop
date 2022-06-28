@@ -1,10 +1,8 @@
 package moe.plushie.armourers_workshop.core.network.packet;
 
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.ServerPlayNetHandler;

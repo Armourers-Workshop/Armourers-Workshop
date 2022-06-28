@@ -8,14 +8,7 @@ import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
-import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.Constants;
-
-import javax.annotation.Nullable;
 
 @SuppressWarnings("NullableProblems")
 public class ColorMixerTileEntity extends AbstractTileEntity implements IPaintProvider {

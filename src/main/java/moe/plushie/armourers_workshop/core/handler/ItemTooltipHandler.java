@@ -2,14 +2,14 @@ package moe.plushie.armourers_workshop.core.handler;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
-import moe.plushie.armourers_workshop.init.common.ModItems;
-import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.utils.KeyBindings;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;

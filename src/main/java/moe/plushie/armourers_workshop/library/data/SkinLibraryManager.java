@@ -2,10 +2,10 @@ package moe.plushie.armourers_workshop.library.data;
 
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
 import moe.plushie.armourers_workshop.api.library.ISkinLibraryListener;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateLibraryFilesPacket;
-import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.permission.Permissions;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.AWCore;
@@ -175,10 +175,11 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
                     publicFiles.add(file);
                 }
             }
-            this.isReady = true;
-            if (this.publicFiles.equals(publicFiles) && this.privateFiles.equals(privateFiles)) {
+            // when the first load action, we must notify the user the skin library is reloaded.
+            if (this.isReady && this.publicFiles.equals(publicFiles) && this.privateFiles.equals(privateFiles)) {
                 return;
             }
+            this.isReady = true;
             this.syncedPlayers.clear();
             this.publicFiles.clear();
             this.publicFiles.addAll(publicFiles);

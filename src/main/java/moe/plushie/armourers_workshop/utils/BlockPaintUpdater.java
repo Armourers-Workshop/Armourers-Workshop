@@ -6,12 +6,9 @@ import moe.plushie.armourers_workshop.core.item.impl.IPaintApplier;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateBlockColorPacket;
 import moe.plushie.armourers_workshop.init.common.ModLog;
-import moe.plushie.armourers_workshop.init.common.ModSounds;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.World;
 
 import java.util.HashMap;

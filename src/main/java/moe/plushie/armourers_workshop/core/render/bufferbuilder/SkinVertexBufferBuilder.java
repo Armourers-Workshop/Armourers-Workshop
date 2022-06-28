@@ -3,30 +3,22 @@ package moe.plushie.armourers_workshop.core.render.bufferbuilder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldVertexBufferUploader;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.profiler.IProfiler;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nonnull;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
 public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTypeBuffer {

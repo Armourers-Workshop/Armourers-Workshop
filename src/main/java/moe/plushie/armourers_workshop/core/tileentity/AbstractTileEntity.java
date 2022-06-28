@@ -1,18 +1,11 @@
 package moe.plushie.armourers_workshop.core.tileentity;
 
-import moe.plushie.armourers_workshop.api.common.IHasInventory;
-import moe.plushie.armourers_workshop.init.common.ModLog;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;

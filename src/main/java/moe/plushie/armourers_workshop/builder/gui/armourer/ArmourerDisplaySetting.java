@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTextField;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateArmourerPacket;
-import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import net.minecraft.client.gui.widget.button.Button;

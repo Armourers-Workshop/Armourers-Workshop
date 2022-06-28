@@ -7,7 +7,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 public class SetBlockAction extends BlockUndoAction {

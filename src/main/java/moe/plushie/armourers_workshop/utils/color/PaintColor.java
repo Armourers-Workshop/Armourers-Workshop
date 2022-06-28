@@ -3,17 +3,9 @@ package moe.plushie.armourers_workshop.utils.color;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.builder.particle.PaintSplashParticleData;
+import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-
-import java.util.stream.IntStream;
 
 public class PaintColor implements IPaintColor {
 

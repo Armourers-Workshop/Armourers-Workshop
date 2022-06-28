@@ -1,25 +1,27 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
-import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
-import moe.plushie.armourers_workshop.utils.SkinPaintData;
-import moe.plushie.armourers_workshop.utils.SkyBox;
-import moe.plushie.armourers_workshop.utils.color.ColorDescriptor;
-import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
+import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
+import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.utils.extened.AWVoxelShape;
 import moe.plushie.armourers_workshop.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
-import net.minecraft.util.Direction;
+import moe.plushie.armourers_workshop.utils.SkinPaintData;
+import moe.plushie.armourers_workshop.utils.SkyBox;
+import moe.plushie.armourers_workshop.utils.color.ColorDescriptor;
+import moe.plushie.armourers_workshop.utils.color.PaintColor;
+import moe.plushie.armourers_workshop.utils.extened.AWVoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 @OnlyIn(Dist.CLIENT)

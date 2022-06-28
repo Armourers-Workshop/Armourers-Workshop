@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.core.entity;
 
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.common.ModCompatible;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
-import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.init.common.ModEntities;
-import moe.plushie.armourers_workshop.core.render.skin.*;
-import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -15,7 +15,6 @@ import net.minecraftforge.fml.DistExecutor;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class EntityProfiles {
 

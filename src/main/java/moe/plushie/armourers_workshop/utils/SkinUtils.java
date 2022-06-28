@@ -14,8 +14,6 @@ import moe.plushie.armourers_workshop.utils.extened.AWMatrixStack;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.shapes.VoxelShape;

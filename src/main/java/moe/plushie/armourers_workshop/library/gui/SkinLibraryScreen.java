@@ -23,8 +23,8 @@ import moe.plushie.armourers_workshop.library.container.SkinLibraryContainer;
 import moe.plushie.armourers_workshop.library.data.SkinLibrary;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryFile;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
-import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import net.minecraft.client.Minecraft;
@@ -495,7 +495,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         // save 3: copy server skin to server library
         // save 4: download server skin to local library
         SaveSkinPacket packet = new SaveSkinPacket(descriptor.getIdentifier(), selectedLibrary.getNamespace() + ":" + path);
-        if (!packet.isReady()) {
+        if (!packet.isReady(inventory.player)) {
             ModLog.debug("can't save skin of '{}'", descriptor);
             toast(getDisplayText("error.illegalOperation"));
             return;
@@ -524,7 +524,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         // load 2: copy server skin to database
         // load 3: make item stack(db/link)
         SaveSkinPacket packet = new SaveSkinPacket(descriptor.getIdentifier(), source.normalize(""));
-        if (!packet.isReady()) {
+        if (!packet.isReady(inventory.player)) {
             ModLog.debug("can't load skin of '{}'", descriptor);
             toast(getDisplayText("error.illegalOperation"));
             return;

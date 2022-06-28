@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import moe.plushie.armourers_workshop.init.common.ModConfig;
-import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;

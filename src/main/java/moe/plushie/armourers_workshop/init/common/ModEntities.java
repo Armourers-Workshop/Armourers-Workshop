@@ -22,20 +22,14 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArmorStandItem;
-import net.minecraft.item.BlockItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 public final class ModEntities {
 

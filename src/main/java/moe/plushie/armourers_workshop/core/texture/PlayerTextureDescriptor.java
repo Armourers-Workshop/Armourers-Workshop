@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.texture;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModItems;
 import net.minecraft.item.ItemStack;

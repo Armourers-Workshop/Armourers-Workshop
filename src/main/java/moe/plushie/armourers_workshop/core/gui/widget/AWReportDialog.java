@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.gui.widget;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;

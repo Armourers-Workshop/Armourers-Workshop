@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.container;
 
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
