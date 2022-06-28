@@ -6,6 +6,10 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * because `commons.io` versions on some servers are too low,
+ * so we can't directly reference `common.io` in the other source code.
+ */
 public class SkinFileUtils {
 
     /**

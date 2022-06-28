@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.library.gui;
 
+import com.google.common.base.Strings;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.library.ISkinLibrary;
@@ -34,6 +35,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -83,6 +85,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
     protected ISkinType skinType = SkinTypes.UNKNOWN;
     protected ISkinLibrary.Entry selectedFile = null;
     protected String selectedPath;
+    protected ItemStack lastInputItem;
 
     protected SkinLibrary selectedLibrary;
     protected SkinLibraryManager.Client libraryManager = SkinLibraryManager.getClient();
@@ -175,6 +178,20 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         }
     }
 
+    public void reloadInputName() {
+        ItemStack itemStack = menu.getInputStack();
+        if (this.lastInputItem == itemStack) {
+            return;
+        }
+        this.lastInputItem = itemStack;
+        String name = null;
+        BakedSkin bakedSkin = BakedSkin.of(itemStack);
+        if (bakedSkin != null) {
+             name = bakedSkin.getSkin().getCustomName();
+        }
+        this.nameTextField.setValue(Strings.nullToEmpty(name));
+    }
+
     public void reloadData(Object value) {
         String keyword = searchTextField.getValue();
         ArrayList<SkinLibraryFile> results = selectedLibrary.search(keyword, skinType, selectedPath);
@@ -236,6 +253,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
     protected void slotClicked(Slot p_184098_1_, int p_184098_2_, int p_184098_3_, ClickType p_184098_4_) {
         super.slotClicked(p_184098_1_, p_184098_2_, p_184098_3_, p_184098_4_);
         reloadStatus();
+        reloadInputName();
     }
 
     protected ITextComponent getDisplayText(String key) {

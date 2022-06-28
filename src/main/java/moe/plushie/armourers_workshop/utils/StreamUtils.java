@@ -6,6 +6,10 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * because `commons.io` versions on some servers are too low,
+ * so we can't directly reference `common.io` in the other source code.
+ */
 public final class StreamUtils {
     
     private StreamUtils() {}
