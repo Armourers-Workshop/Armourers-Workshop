@@ -12,16 +12,18 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ISuggestionProvider;
 import net.minecraft.command.arguments.IArgumentSerializer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.fml.common.Mod;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 // /path/name.armour
@@ -117,7 +119,7 @@ public class FileArgument implements ArgumentType<String> {
             return results;
         }
         for (File file : files) {
-            String rv = FilenameUtils.normalize(file.getAbsolutePath().replace(rootFile.getAbsolutePath(), ""), true);
+            String rv = SkinFileUtils.normalize(file.getAbsolutePath().replace(rootFile.getAbsolutePath(), ""), true);
             if (file.isDirectory()) {
                 if (name.startsWith(rv)) {
                     results.addAll(getFileList(file, name));

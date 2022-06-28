@@ -15,7 +15,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
@@ -61,7 +60,7 @@ public final class TextureUtils {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(inputStream);
+            StreamUtils.closeQuietly(inputStream);
         }
         return bufferedImage;
     }
@@ -82,7 +81,7 @@ public final class TextureUtils {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(inputStream);
+            StreamUtils.closeQuietly(inputStream);
         }
 
         return bufferedImage;
@@ -114,7 +113,7 @@ public final class TextureUtils {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        } finally {
-//            IOUtils.closeQuietly(inputStream);
+//            StreamUtils.closeQuietly(inputStream);
 //        }
 //
         return bufferedImage;
@@ -151,7 +150,7 @@ public final class TextureUtils {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(inputStream);
+            StreamUtils.closeQuietly(inputStream);
         }
         return bi;
     }

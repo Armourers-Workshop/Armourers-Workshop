@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.library.data.global;
 
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.util.StringUtils;
-import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -21,7 +21,7 @@ public final class SkinDownloader {
     
     /**
      * Downloads a fresh skins from the server.
-     * @param name
+     * @param fileName
      * @param serverId
      * @return
      */
@@ -36,13 +36,13 @@ public final class SkinDownloader {
         ByteArrayInputStream byteIn = null;
         try {
             in = new URL(String.format("http://plushie.moe/armourers_workshop/download-skin.php?skinid=%d&skinFileName=%s", serverId, fileName)).openStream();
-            byte[] skinData = IOUtils.toByteArray(in);
+            byte[] skinData = StreamUtils.toByteArray(in);
             byteIn = new ByteArrayInputStream(skinData);
             skin = SkinIOUtils.loadSkinFromStream(byteIn);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(in);
+            StreamUtils.closeQuietly(in);
         }
         
         long waitTime = maxRate - (System.currentTimeMillis() - startTime);
@@ -107,15 +107,15 @@ public final class SkinDownloader {
             String data = null;
             try {
                 in = new URL(downloadUrl).openStream();
-                byte[] skinData = IOUtils.toByteArray(in);
+                byte[] skinData = StreamUtils.toByteArray(in);
                 byteIn = new ByteArrayInputStream(skinData);
                 skin = SkinIOUtils.loadSkinFromStream(byteIn);
                 //skin = SkinIOUtils.loadSkinFromStream(new BufferedInputStream(in));
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                IOUtils.closeQuietly(byteIn);
-                IOUtils.closeQuietly(in);
+                StreamUtils.closeQuietly(byteIn);
+                StreamUtils.closeQuietly(in);
             }
             
             long waitTime = maxRate - (System.currentTimeMillis() - startTime);

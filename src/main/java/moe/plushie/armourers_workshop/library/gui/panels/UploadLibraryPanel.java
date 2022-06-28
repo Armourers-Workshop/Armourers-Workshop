@@ -11,14 +11,15 @@ import moe.plushie.armourers_workshop.core.network.packet.UploadSkinPacket;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
-import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.library.container.GlobalSkinLibraryContainer;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskResult;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinUpload;
 import moe.plushie.armourers_workshop.library.gui.GlobalSkinLibraryScreen.Page;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.item.ItemStack;
@@ -27,7 +28,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.util.Strings;
 
 import java.io.ByteArrayOutputStream;
@@ -158,7 +158,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         SkinIOUtils.saveSkinToStream(outputStream, skin);
         byte[] fileBytes = outputStream.toByteArray();
-        IOUtils.closeQuietly(outputStream);
+        StreamUtils.closeQuietly(outputStream);
         new GlobalTaskSkinUpload(fileBytes, textName.getValue().trim(), textDescription.getValue().trim()).createTaskAndRun(new FutureCallback<GlobalTaskSkinUpload.Result>() {
 
             @Override

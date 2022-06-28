@@ -3,12 +3,11 @@ package moe.plushie.armourers_workshop.core.network.packet;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.fml.common.Mod;
-import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -88,7 +87,7 @@ public class ExecuteCommandPacket extends CustomPacket {
         } catch (Exception exception) {
             return exception;
         } finally {
-            IOUtils.closeQuietly(objectInputStream, inputStream);
+            StreamUtils.closeQuietly(objectInputStream, inputStream);
         }
     }
 
@@ -105,7 +104,7 @@ public class ExecuteCommandPacket extends CustomPacket {
         } catch (Exception exception1) {
             exception1.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(objectOutputStream, outputStream);
+            StreamUtils.closeQuietly(objectOutputStream, outputStream);
         }
     }
 

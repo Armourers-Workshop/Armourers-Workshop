@@ -4,7 +4,6 @@ import com.google.common.base.Charsets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import moe.plushie.armourers_workshop.init.common.ModLog;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -19,21 +18,19 @@ public final class SerializeHelper {
         String text = null;
         try {
             inputStream = new FileInputStream(file);
-            char[] data = IOUtils.toCharArray(inputStream, encoding);
-            text = new String(data);
+            text = StreamUtils.toString(inputStream, encoding);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(inputStream);
+            StreamUtils.closeQuietly(inputStream);
         }
         return text;
     }
-    
+
     public static String readFile(InputStream inputStream, Charset encoding) throws IOException {
-        char[] data = IOUtils.toCharArray(inputStream, encoding);
-        return new String(data);
+        return StreamUtils.toString(inputStream, encoding);
     }
-    
+
     public static JsonElement readJsonFile(File file) {
         return readJsonFile(file, Charsets.UTF_8);
     }
@@ -52,7 +49,7 @@ public final class SerializeHelper {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(outputStream);
+            StreamUtils.closeQuietly(outputStream);
         }
     }
 

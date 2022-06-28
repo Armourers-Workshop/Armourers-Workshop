@@ -4,8 +4,8 @@ import com.google.common.collect.Iterables;
 import com.mojang.datafixers.util.Pair;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
-import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
@@ -13,12 +13,13 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryFile;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.PacketBuffer;
-import org.apache.commons.io.FilenameUtils;
 
-import java.io.*;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -92,7 +93,7 @@ public class UpdateLibraryFilesPacket extends CustomPacket {
             ObjectInputStream oi = new ObjectInputStream(gi);
             for (int index = 0; index < totalSize; ++index) {
                 String path = oi.readUTF();
-                String basename = FilenameUtils.getBaseName(path);
+                String basename = SkinFileUtils.getBaseName(path);
                 if (oi.readByte() == 0) {
                     files.add(new SkinLibraryFile(DataDomain.DEDICATED_SERVER, basename, path));
                     continue;

@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.library.data.global.task;
 
-import com.google.common.base.Charsets;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFutureTask;
@@ -12,11 +11,12 @@ import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.library.data.global.permission.PermissionSystem;
+import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.client.Minecraft;
-import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -84,9 +84,9 @@ public abstract class GlobalTask<V> implements Callable<V> {
         String data = null;
         try {
             in = new URL(url).openStream();
-            data = IOUtils.toString(in, Charsets.UTF_8);
+            data = StreamUtils.toString(in, StandardCharsets.UTF_8);
         } finally {
-            IOUtils.closeQuietly(in);
+            StreamUtils.closeQuietly(in);
         }
         return data;
     }

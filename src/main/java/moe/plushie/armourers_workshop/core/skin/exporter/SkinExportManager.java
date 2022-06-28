@@ -4,8 +4,8 @@ import moe.plushie.armourers_workshop.api.skin.ISkinExporter;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModLog;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
+import org.apache.logging.log4j.util.Strings;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -27,7 +27,7 @@ public final class SkinExportManager {
     }
 
     public static ISkinExporter getSkinExporter(String fileExtension) {
-        if (StringUtils.isEmpty(fileExtension)) {
+        if (Strings.isEmpty(fileExtension)) {
             return null;
         }
         for (ISkinExporter skinExporter : SKIN_EXPORTERS) {
@@ -51,7 +51,7 @@ public final class SkinExportManager {
 
     public static void exportSkin(Skin skin, ISkinExporter skinExporter, String filename, float scale) throws Exception {
         File filePath = new File(AWCore.getRootDirectory(), "model-exports");
-        FileUtils.forceMkdir(filePath);
+        SkinFileUtils.forceMkdir(filePath);
         skinExporter.exportSkin(skin, filePath, filename, scale);
     }
 
