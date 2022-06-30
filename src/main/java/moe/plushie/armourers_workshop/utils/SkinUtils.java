@@ -186,7 +186,7 @@ public final class SkinUtils {
     public static ItemStack getSkin(Entity entity, SkinSlotType slotType, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         if (entity instanceof LivingEntity) {
-            itemStack = ((LivingEntity) entity).getMainHandItem();
+            itemStack = ((LivingEntity) entity).getUseItem();
         }
         // embedded skin is the highest priority
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
