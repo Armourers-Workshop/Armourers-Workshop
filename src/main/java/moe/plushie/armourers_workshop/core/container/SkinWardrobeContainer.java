@@ -82,8 +82,9 @@ public class SkinWardrobeContainer extends Container {
     protected void addMannequinSlots(Group group, int column, int row) {
         if (wardrobe.getEntity() instanceof MannequinEntity) {
             IInventory inventory = ((MannequinEntity) wardrobe.getEntity()).getInventory();
+            int size = inventory.getContainerSize();
             for (int i = 0; i < inventory.getContainerSize(); ++i) {
-                int x = slotsX + (column + i) * 19;
+                int x = slotsX + (column + (size - i - 1)) * 19; // reverse: slot 1 => left, slot 2 => right
                 int y = slotsY + row * 19;
                 SkinSlot slot = addGroupSlot(inventory, i, x, y, group);
                 customSlots.add(slot);
