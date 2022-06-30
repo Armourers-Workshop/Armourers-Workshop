@@ -464,10 +464,9 @@ public final class WorldUtils {
                 newColors.put(dir, paintColor);
             }
         }
-        if (changes == 0) {
-            return;
+        if (changes != 0) {
+            paintable.setColors(newColors);
         }
-        paintable.setColors(newColors);
         if (destinationBlock != null && !targetState.getBlock().equals(destinationBlock)) {
             CompoundNBT nbt = tileEntity.serializeNBT();
             BlockState newState = destinationBlock.defaultBlockState();

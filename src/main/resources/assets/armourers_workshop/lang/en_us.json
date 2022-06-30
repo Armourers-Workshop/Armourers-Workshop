@@ -123,7 +123,7 @@
   "inventory.armourers_workshop.armourer.dialog.copy.title": "Copy",
   "inventory.armourers_workshop.armourer.dialog.replace.desBlock": "Destination Block:",
   "inventory.armourers_workshop.armourer.dialog.replace.help.applier": "Place a colored item will apply the color into replaced block. \n\nPlace a colored block item will apply the color and block type into replaced block.",
-  "inventory.armourers_workshop.armourer.dialog.replace.help.selector": "Place a colored item will matching the color of the to be replaced block. \n\nPlace a colored block item will matching the color and block type of the replaced block.",
+  "inventory.armourers_workshop.armourer.dialog.replace.help.selector": "Place a colored item will matching the color of the to be replaced block. \n\nPlace a colored block item will matching the color and block type of the replaced block.\n\nNot item will matching all blocks.",
   "inventory.armourers_workshop.armourer.dialog.replace.keepColor": "Keep block color?",
   "inventory.armourers_workshop.armourer.dialog.replace.keepPaint": "Keep block paint type?",
   "inventory.armourers_workshop.armourer.dialog.replace.keepType": "Keep block type?",

@@ -27,6 +27,7 @@ public class SkinWardrobeContainer extends Container {
 
     private final int slotsX = 83;
     private final int slotsY = 27;
+
     private Group group = null;
 
     public SkinWardrobeContainer(int containerId, PlayerInventory inventory, SkinWardrobe wardrobe) {
