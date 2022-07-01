@@ -327,7 +327,7 @@ public class SkinnableTileEntity extends RotableContainerTileEntity {
             return null;
         }
         float f = 1 / 16f;
-        Rectangle3f box = bakedSkin.getRenderBounds(null, null, null).copy();
+        Rectangle3f box = bakedSkin.getRenderBounds(null, null, null, null).copy();
         box.mul(AWMatrix4f.createScaleMatrix(f, -f, f).unwrap());
         return box;
     }

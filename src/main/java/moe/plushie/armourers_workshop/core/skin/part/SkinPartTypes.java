@@ -99,9 +99,6 @@ public final class SkinPartTypes {
 
     private static ISkinPartType register(String name, SkinPartType partType) {
         partType.setRegistryName(new SkinResourceLocation("armourers", name));
-        if (partType instanceof UnknownPartType) {
-            return partType;
-        }
         if (ALL_PART_TYPES.containsKey(partType.getRegistryName().toString())) {
             ModLog.warn("A mod tried to register a skin type with a registry name that is in use.");
             return partType;

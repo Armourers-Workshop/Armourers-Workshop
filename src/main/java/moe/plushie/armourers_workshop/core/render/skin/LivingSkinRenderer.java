@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -52,12 +53,12 @@ public class LivingSkinRenderer<T extends LivingEntity, M extends EntityModel<T>
     }
 
     @Override
-    public void render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, int slotIndex, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+    public void render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, int slotIndex, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         //
         if (model == null) {
             model = getModel();
         }
-        super.render(entity, model, bakedSkin, scheme, transformType, light, partialTicks, slotIndex, matrixStack, buffers);
+        super.render(entity, model, bakedSkin, scheme, itemStack, transformType, light, partialTicks, slotIndex, matrixStack, buffers);
     }
 
     public M getModel() {

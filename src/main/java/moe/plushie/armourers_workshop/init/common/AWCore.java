@@ -31,6 +31,13 @@ public class AWCore {
         return AWCore.resource("textures/item/template/" + skinType.getRegistryName().getPath() + ".png");
     }
 
+    public static ResourceLocation getCustomModel(ResourceLocation resourceLocation) {
+        String name = resourceLocation.getPath().toLowerCase();
+        name = name.replaceAll("\\.base", "");
+        name = name.replaceAll("\\.", "_");
+        return AWCore.resource("skin/" + name);
+    }
+
     public static File getRootDirectory() {
         return new File(FMLPaths.GAMEDIR.get().toFile(), "armourers_workshop");
     }

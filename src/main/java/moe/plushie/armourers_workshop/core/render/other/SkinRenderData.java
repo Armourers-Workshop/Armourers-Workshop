@@ -247,11 +247,11 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         ISkinType type = bakedSkin.getType();
         // If held a skin of armor type, nothing happen
         if (type instanceof ISkinArmorType && !isHeld) {
-            armorSkins.add(new Entry(descriptor, bakedSkin, colorScheme, slotIndex, false));
+            armorSkins.add(new Entry(itemStack, descriptor, bakedSkin, colorScheme, slotIndex, false));
             loadSkinPart(bakedSkin);
         }
         if (type instanceof ISkinToolType || type == SkinTypes.ITEM) {
-            itemSkins.add(new Entry(descriptor, bakedSkin, colorScheme, slotIndex, isHeld));
+            itemSkins.add(new Entry(itemStack, descriptor, bakedSkin, colorScheme, slotIndex, isHeld));
             loadSkinPart(bakedSkin);
         }
     }
@@ -342,13 +342,15 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     public static class Entry {
 
+        protected final ItemStack itemStack;
         protected final SkinDescriptor descriptor;
         protected final BakedSkin bakedSkin;
         protected final ColorScheme bakedScheme;
         protected final boolean isHeld;
         protected final int slotIndex;
 
-        public Entry(SkinDescriptor descriptor, BakedSkin bakedSkin, ColorScheme entityScheme, int slotIndex, boolean isHeld) {
+        public Entry(ItemStack itemStack, SkinDescriptor descriptor, BakedSkin bakedSkin, ColorScheme entityScheme, int slotIndex, boolean isHeld) {
+            this.itemStack = itemStack;
             this.descriptor = descriptor;
             this.bakedSkin = bakedSkin;
             this.bakedScheme = baking(descriptor.getColorScheme(), entityScheme);
@@ -382,6 +384,10 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
         public SkinDescriptor getDescriptor() {
             return descriptor;
+        }
+
+        public ItemStack getItemStack() {
+            return itemStack;
         }
     }
 }

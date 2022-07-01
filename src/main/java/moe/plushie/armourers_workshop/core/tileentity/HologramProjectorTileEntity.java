@@ -249,7 +249,7 @@ public class HologramProjectorTileEntity extends RotableContainerTileEntity {
         if (bakedSkin == null) {
             return null;
         }
-        Rectangle3f rect = bakedSkin.getRenderBounds(null, null, null);
+        Rectangle3f rect = bakedSkin.getRenderBounds(null, null, null, null);
         float f = 1 / 16f;
         float scale = getModelScale() * f;
         float modelRadius = 0.0f;

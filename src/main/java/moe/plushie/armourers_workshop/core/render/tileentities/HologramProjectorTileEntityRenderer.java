@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import moe.plushie.armourers_workshop.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
@@ -18,6 +19,7 @@ import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
@@ -38,7 +40,8 @@ public class HologramProjectorTileEntityRenderer<T extends HologramProjectorTile
         if (!entity.isPowered()) {
             return;
         }
-        BakedSkin bakedSkin = BakedSkin.of(entity.getItem(0));
+        ItemStack itemStack = entity.getItem(0);
+        BakedSkin bakedSkin = BakedSkin.of(itemStack);
         if (bakedSkin == null) {
             return;
         }
@@ -63,14 +66,14 @@ public class HologramProjectorTileEntityRenderer<T extends HologramProjectorTile
         matrixStack.scale(f, f, f);
         matrixStack.scale(-1, -1, 1);
 
-        Rectangle3f rect = bakedSkin.getRenderBounds(mannequin, model, null);
+        Rectangle3f rect = bakedSkin.getRenderBounds(mannequin, model, null, itemStack);
         apply(entity, rect, partialTicks1, matrixStack, buffers);
 
-        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemCameraTransforms.TransformType.NONE, overLight, partialTicks1, 0, matrixStack, buffers);
+        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, itemStack, ItemCameraTransforms.TransformType.NONE, overLight, partialTicks1, 0, matrixStack, buffers);
 
         matrixStack.popPose();
 
-        if (ModConfig.Client.debugHologramProjectorBlock) {
+        if (ModDebugger.debugHologramProjectorBlock) {
             BlockPos pos = entity.getBlockPos();
             matrixStack.pushPose();
             matrixStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
@@ -114,14 +117,14 @@ public class HologramProjectorTileEntityRenderer<T extends HologramProjectorTile
             RenderUtils.drawBoundingBox(matrixStack, -1, -1, -1, 1, 1, 1, Color.MAGENTA, buffers);
         }
 
-        if (ModConfig.Client.debugHologramProjectorBlock) {
+        if (ModDebugger.debugHologramProjectorBlock) {
             RenderUtils.drawPoint(matrixStack, null, 128, buffers);
         }
 
         matrixStack.mulPose(TrigUtils.rotate(rotX, -rotY, rotZ, true));
         matrixStack.translate(rotationOffset.x(), -rotationOffset.y(), rotationOffset.z());
 
-        if (ModConfig.Client.debugHologramProjectorBlock) {
+        if (ModDebugger.debugHologramProjectorBlock) {
             RenderUtils.drawPoint(matrixStack, null, 128, buffers);
         }
     }

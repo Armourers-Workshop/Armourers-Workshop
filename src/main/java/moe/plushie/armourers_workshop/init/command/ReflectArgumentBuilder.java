@@ -44,16 +44,18 @@ public class ReflectArgumentBuilder<S> extends LiteralArgumentBuilder<S> {
     public static <R> ArgumentBuilder<CommandSource, ?> argument(Pair<Object, Field> pair, ArgumentType<R> argumentType, BiFunction<CommandContext<?>, String, R> argumentParser) {
         return Commands.literal(pair.getSecond().getName())
                 .then(Commands.argument("value", argumentType).executes(context -> {
-                    R value =  argumentParser.apply(context, "value");
+                    R value = argumentParser.apply(context, "value");
                     String name = pair.getSecond().getName();
+                    Class<?> object = (Class<?>) pair.getFirst();
                     ServerPlayerEntity player = context.getSource().getPlayerOrException();
-                    NetworkHandler.getInstance().sendTo(ExecuteCommandPacket.set(name, value), player);
+                    NetworkHandler.getInstance().sendTo(ExecuteCommandPacket.set(object, name, value), player);
                     return 0;
                 }))
                 .executes(context -> {
                     String name = pair.getSecond().getName();
+                    Class<?> object = (Class<?>) pair.getFirst();
                     ServerPlayerEntity player = context.getSource().getPlayerOrException();
-                    NetworkHandler.getInstance().sendTo(ExecuteCommandPacket.get(name), player);
+                    NetworkHandler.getInstance().sendTo(ExecuteCommandPacket.get(object, name), player);
                     return 0;
                 });
     }

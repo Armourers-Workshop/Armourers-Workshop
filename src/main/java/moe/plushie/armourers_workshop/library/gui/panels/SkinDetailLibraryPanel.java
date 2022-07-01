@@ -30,6 +30,7 @@ import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -167,7 +168,7 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         BakedSkin bakedSkin = BakedSkin.of(entry.descriptor);
         if (bakedSkin != null) {
             IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            SkinItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, boxX, boxY, 100, boxWidth, boxHeight, 160, 45, 0, matrixStack, buffers);
+            SkinItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, boxX, boxY, 100, boxWidth, boxHeight, 160, 45, 0, matrixStack, buffers);
             buffers.endBatch();
         }
     }

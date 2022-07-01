@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
@@ -30,14 +31,14 @@ import javax.annotation.Nullable;
 @OnlyIn(Dist.CLIENT)
 public final class SkinItemRenderer {
 
-    public static void renderSkin(SkinDescriptor descriptor, int x, int y, int z, int width, int height, int rx, int ry, int rz, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+    public static void renderSkin(SkinDescriptor descriptor, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         BakedSkin bakedSkin = BakedSkin.of(descriptor);
         if (bakedSkin != null) {
-            renderSkin(bakedSkin, descriptor.getColorScheme(), x, y, z, width, height, rx, ry, rz, matrixStack, buffers);
+            renderSkin(bakedSkin, descriptor.getColorScheme(), itemStack, x, y, z, width, height, rx, ry, rz, matrixStack, buffers);
         }
     }
 
-    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, int x, int y, int z, int width, int height, int rx, int ry, int rz, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         if (bakedSkin != null) {
             int t = (int) System.currentTimeMillis();
             int si = Math.min(width, height);
@@ -48,12 +49,12 @@ public final class SkinItemRenderer {
             matrixStack.scale(0.625f, 0.625f, 0.625f);
             matrixStack.scale(si, si, si);
             matrixStack.scale(-1, 1, 1);
-            renderSkin(bakedSkin, scheme, null, AWConstants.ONE, 1, 1, 1, 0, 0xf000f0, matrixStack, buffers);
+            renderSkin(bakedSkin, scheme, itemStack, null, AWConstants.ONE, 1, 1, 1, 0, 0xf000f0, matrixStack, buffers);
             matrixStack.popPose();
         }
     }
 
-    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+    public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, @Nullable Vector3f rotation, Vector3f scale, float targetWidth, float targetHeight, float targetDepth, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         Entity entity = SkinItemStackRenderer.getInstance().getMannequinEntity();
         BipedModel<?> model = SkinItemStackRenderer.getInstance().getMannequinModel();
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
@@ -63,7 +64,7 @@ public final class SkinItemRenderer {
         matrixStack.pushPose();
         matrixStack.scale(-1, -1, 1);
 
-        Rectangle3f rect = bakedSkin.getRenderBounds(entity, model, rotation);
+        Rectangle3f rect = bakedSkin.getRenderBounds(entity, model, rotation, itemStack);
         float newScale = Math.min(targetWidth / rect.getWidth(), targetHeight / rect.getHeight());
         newScale = Math.min(newScale, targetDepth / rect.getDepth());
         RenderUtils.drawTargetBox(matrixStack, targetWidth, targetHeight, targetDepth, buffers);
@@ -71,7 +72,7 @@ public final class SkinItemRenderer {
         matrixStack.scale(newScale / scale.x(), newScale / scale.y(), newScale / scale.z());
         matrixStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
 
-        renderer.render(entity, model, bakedSkin, scheme, ItemCameraTransforms.TransformType.NONE, light, partialTicks, 0, matrixStack, buffers);
+        renderer.render(entity, model, bakedSkin, scheme, itemStack, ItemCameraTransforms.TransformType.NONE, light, partialTicks, 0, matrixStack, buffers);
 
         matrixStack.popPose();
     }

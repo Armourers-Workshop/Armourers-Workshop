@@ -237,7 +237,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
             GuiUtils.drawContinuousTexturedBox(matrixStack, RenderUtils.TEX_GUI_PREVIEW, dx, dy, 0, 0, size, size, 62, 62, 4, 400);
             RenderUtils.drawShadowText(matrixStack, tooltips, dx + 4, dy + 4, size - 8, 400, font, 7, 0xffffff);
             IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            SkinItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, dx, dy, 500, size, size, 150, 45, 0, matrixStack, buffers);
+            SkinItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx, dy, 500, size, size, 150, 45, 0, matrixStack, buffers);
             buffers.endBatch();
         }
     }

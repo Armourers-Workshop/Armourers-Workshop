@@ -118,7 +118,6 @@ public class ModConfigSpec {
         ForgeConfigSpec.BooleanValue tooltipSkinName;
         ForgeConfigSpec.BooleanValue tooltipSkinAuthor;
         ForgeConfigSpec.BooleanValue tooltipSkinType;
-        ForgeConfigSpec.BooleanValue tooltipDebug;
         ForgeConfigSpec.BooleanValue tooltipFlavour;
         ForgeConfigSpec.BooleanValue tooltipOpenWardrobe;
 
@@ -224,7 +223,6 @@ public class ModConfigSpec {
                 tooltipSkinName = builder.define("tooltipSkinName", true, "Show skin name tooltip on items.");
                 tooltipSkinAuthor = builder.define("tooltipSkinAuthor", true, "Show skin author tooltip on items.");
                 tooltipSkinType = builder.define("tooltipSkinType", true, "Show skin type tooltip on items.");
-                tooltipDebug = builder.define("tooltipDebug", false, "Show skin debug info on items.");
                 tooltipFlavour = builder.define("tooltipFlavour", true, "Show skin flavoue text tooltip on items.");
                 tooltipOpenWardrobe = builder.define("tooltipOpenWardrobe", true, "Show open wardrobe message on skins.");
             });
@@ -278,7 +276,6 @@ public class ModConfigSpec {
                 tooltipSkinName = spec.tooltipSkinName.get();
                 tooltipSkinAuthor = spec.tooltipSkinAuthor.get();
                 tooltipSkinType = spec.tooltipSkinType.get();
-                debugTooltip = spec.tooltipDebug.get();
                 tooltipFlavour = spec.tooltipFlavour.get();
                 tooltipOpenWardrobe = spec.tooltipOpenWardrobe.get();
 

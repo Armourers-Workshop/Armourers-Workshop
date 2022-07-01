@@ -56,7 +56,6 @@ public class ModConfig {
         public static boolean tooltipFlavour = true;
         public static boolean tooltipProperties = false;
         public static boolean tooltipOpenWardrobe = true;
-        public static boolean debugTooltip = false;
 
         // Debug
         public static int texturePaintingType;
@@ -73,29 +72,6 @@ public class ModConfig {
         public static boolean enableWireframeRender = false;
         public static boolean enableMagicWhenContributor = false;
 
-        // Debug tool
-        public static boolean showArmourerDebugRender;
-        public static boolean showLodLevels;
-        public static boolean showSkinBlockBounds;
-        public static boolean showSkinRenderBounds;
-        public static boolean showSortOrderToolTip;
-
-        public static boolean debugSkinnableBlock = false;
-        public static boolean debugHologramProjectorBlock = false;
-
-        public static boolean debugSkinBounds = false;
-        public static boolean debugSkinOrigin = false;
-
-        public static boolean debugSkinPartBounds = false;
-        public static boolean debugSkinPartOrigin = false;
-
-        public static boolean debugTargetBounds = false;
-
-        public static boolean debugMannequinCulling = false;
-        public static boolean debugItemOverride = false;
-
-        public static boolean showDebugTextureBounds = false;
-        public static boolean showDebugSpin = false;
 
         public static int getNumberOfRenderLayers() {
             if (multipassSkinRendering) {

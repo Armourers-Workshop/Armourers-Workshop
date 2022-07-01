@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextProperties;
@@ -175,7 +176,7 @@ public class SkinFileList extends Button {
             dh *= 1.5f;
         }
 
-        SkinItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, dx - dw / 2, dy - dw / 2, 100, dw, dh, 160, 45, 0, matrixStack, buffers);
+        SkinItemRenderer.renderSkin(bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, dx - dw / 2, dy - dw / 2, 100, dw, dh, 160, 45, 0, matrixStack, buffers);
     }
 
     public void renderItemBackground(MatrixStack matrixStack, int x, int y, int width, int height, boolean isHovered, Entry entry) {

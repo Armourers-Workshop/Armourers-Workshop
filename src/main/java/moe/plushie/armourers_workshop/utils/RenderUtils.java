@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -322,7 +323,7 @@ public final class RenderUtils {
     }
 
     public static void drawTargetBox(MatrixStack matrixStack, float width, float height, float depth, IRenderTypeBuffer buffers) {
-        if (ModConfig.Client.debugTargetBounds) {
+        if (ModDebugger.debugTargetBounds) {
             drawBoundingBox(matrixStack, -width / 2, -height / 2, -depth / 2, width / 2, height / 2, depth / 2, Color.ORANGE, buffers);
             drawPoint(matrixStack, null, width, height, depth, buffers);
         }

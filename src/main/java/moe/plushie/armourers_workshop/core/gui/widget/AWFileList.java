@@ -14,6 +14,7 @@ import net.minecraft.client.gui.INestedGuiEventHandler;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.list.AbstractOptionList;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -177,7 +178,7 @@ public class AWFileList extends Button implements INestedGuiEventHandler {
             }
             if (!getDescriptor().isEmpty()) {
                 IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-                SkinItemRenderer.renderSkin(getDescriptor(), x, y, 100, width, height - 1, 160, 45, 0, matrixStack, buffers);
+                SkinItemRenderer.renderSkin(getDescriptor(), ItemStack.EMPTY, x, y, 100, width, height - 1, 160, 45, 0, matrixStack, buffers);
             }
         }
 

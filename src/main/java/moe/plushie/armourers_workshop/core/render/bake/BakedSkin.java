@@ -121,7 +121,7 @@ public class BakedSkin implements IBakedSkin {
         return cachedBlockBounds;
     }
 
-    public Rectangle3f getRenderBounds(@Nullable Entity entity, @Nullable Model model, @Nullable Vector3f rotation) {
+    public Rectangle3f getRenderBounds(@Nullable Entity entity, @Nullable Model model, @Nullable Vector3f rotation, @Nullable ItemStack itemStack) {
         if (entity == null) {
             entity = SkinItemStackRenderer.getInstance().getMannequinEntity();
         }
@@ -135,7 +135,7 @@ public class BakedSkin implements IBakedSkin {
             return bounds;
         }
         Matrix4f matrix = Matrix4f.createScaleMatrix(1, 1, 1);
-        AWVoxelShape shape = getRenderShape(entity, model, ItemCameraTransforms.TransformType.NONE);
+        AWVoxelShape shape = getRenderShape(entity, model, itemStack, ItemCameraTransforms.TransformType.NONE);
         if (rotation != null) {
             matrix.multiply(TrigUtils.rotate(rotation.x(), rotation.y(), rotation.z(), true));
             shape.mul(matrix);
@@ -153,7 +153,7 @@ public class BakedSkin implements IBakedSkin {
         return bounds;
     }
 
-    public AWVoxelShape getRenderShape(Entity entity, Model model, ItemCameraTransforms.TransformType transformType) {
+    public AWVoxelShape getRenderShape(Entity entity, Model model, @Nullable ItemStack itemStack, ItemCameraTransforms.TransformType transformType) {
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null) {
             return AWVoxelShape.empty();
@@ -161,10 +161,10 @@ public class BakedSkin implements IBakedSkin {
         AWVoxelShape shape = AWVoxelShape.empty();
         MatrixStack matrixStack = new MatrixStack();
         for (BakedSkinPart part : skinParts) {
-            if (renderer.prepare(entity, model, this, part, transformType)) {
+            if (renderer.prepare(entity, model, this, part, itemStack, transformType)) {
                 AWVoxelShape shape1 = part.getRenderShape().copy();
                 matrixStack.pushPose();
-                renderer.apply(entity, model, transformType, part, 0, matrixStack);
+                renderer.apply(entity, model, itemStack, transformType, part, this, 0, matrixStack);
                 shape1.mul(matrixStack.last().pose());
                 matrixStack.popPose();
                 shape.add(shape1);

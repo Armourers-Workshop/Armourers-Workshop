@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.entity.projectile.TridentEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -18,7 +19,7 @@ public class TridentSkinRenderer<T extends TridentEntity, M extends Model> exten
     }
 
     @Override
-    public boolean prepare(T entity, M model, BakedSkin bakedSkin, BakedSkinPart bakedPart, ItemCameraTransforms.TransformType transformType) {
+    public boolean prepare(T entity, M model, BakedSkin bakedSkin, BakedSkinPart bakedPart, ItemStack itemStack, ItemCameraTransforms.TransformType transformType) {
         return bakedPart.getType() == SkinPartTypes.ITEM_TRIDENT;
     }
 }

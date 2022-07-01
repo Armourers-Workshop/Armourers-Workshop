@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init.common;
 
+import com.google.common.collect.Iterators;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
@@ -26,6 +27,7 @@ import moe.plushie.armourers_workshop.core.render.entity.SeatEntityRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.render.tileentities.HologramProjectorTileEntityRenderer;
 import moe.plushie.armourers_workshop.core.render.tileentities.SkinnableTileEntityRenderer;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.client.ClientEventHandler;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.command.FileArgument;
@@ -49,7 +51,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.particles.ParticleType;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -57,6 +61,7 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -152,6 +157,17 @@ public class ModRegistry {
                 event.addSprite(slotType.getIconSprite());
             }
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void onModelRegistry(ModelRegistryEvent event) {
+        IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+        SkinPartTypes.registeredTypes().forEach(partType -> {
+            ResourceLocation location = AWCore.getCustomModel(partType.getRegistryName());
+            if (resourceManager.hasResource(new ResourceLocation(location.getNamespace(), "models/" + location.getPath() + ".json"))) {
+                ModelLoader.addSpecialModel(location);
+            }
+        });
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -54,7 +55,7 @@ public class DyeTableScreen extends AWAbstractContainerScreen<DyeTableContainer>
         SkinDescriptor descriptor = SkinDescriptor.of(menu.getOutputStack());
         if (!descriptor.isEmpty()) {
             IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-            SkinItemRenderer.renderSkin(descriptor, x, y, 500, width, height, 160, 45, 0, matrixStack, buffers);
+            SkinItemRenderer.renderSkin(descriptor, ItemStack.EMPTY, x, y, 500, width, height, 160, 45, 0, matrixStack, buffers);
             buffers.endBatch();
         }
     }

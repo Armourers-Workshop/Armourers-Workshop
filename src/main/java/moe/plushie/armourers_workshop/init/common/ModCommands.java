@@ -56,6 +56,7 @@ public class ModCommands {
     public static LiteralArgumentBuilder<CommandSource> commands() {
         return Commands.literal("armourers")
                 .then(ReflectArgumentBuilder.literal("config", ModConfig.Client.class))
+                .then(ReflectArgumentBuilder.literal("debug", ModDebugger.class))
                 .requires(source -> source.hasPermission(2))
                 .then(Commands.literal("library").then(Commands.literal("reload").executes(Executor::reloadLibrary)))
                 .then(Commands.literal("setSkin").then(targets().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))

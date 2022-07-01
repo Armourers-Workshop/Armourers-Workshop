@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.utils.KeyBindings;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
@@ -97,11 +98,11 @@ public class ItemTooltipHandler {
             tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
         }
 
-        if (ModConfig.Client.debugTooltip && !Screen.hasShiftDown()) {
+        if (ModDebugger.debugTooltip && !Screen.hasShiftDown()) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinHoldShiftForInfo"));
         }
 
-        if (ModConfig.Client.debugTooltip && Screen.hasShiftDown()) {
+        if (ModDebugger.debugTooltip && Screen.hasShiftDown()) {
 
             String totals = String.format("%d/%d/%d/%d",
                     counter.getCubeTotal(SkinCubes.SOLID),
@@ -209,7 +210,7 @@ public class ItemTooltipHandler {
             RenderSystem.disableDepthTest();
         }
         IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        SkinItemRenderer.renderSkin(descriptor, x, y, 500, size, size, 150, 45, 0, matrixStack, buffers);
+        SkinItemRenderer.renderSkin(descriptor, itemStack, x, y, 500, size, size, 150, 45, 0, matrixStack, buffers);
         buffers.endBatch();
     }
 

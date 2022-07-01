@@ -1,21 +1,35 @@
 package moe.plushie.armourers_workshop.core.render.skin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.api.action.ICanHeld;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
+import moe.plushie.armourers_workshop.core.render.other.SkinModelManager;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModDebugger;
+import moe.plushie.armourers_workshop.utils.SkinUtils;
+import moe.plushie.armourers_workshop.utils.extened.AWMatrixStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.Model;
-import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.client.renderer.model.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ForgeHooksClient;
+
+import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends EntityModel<T>> extends LivingSkinRenderer<T, M> {
@@ -42,14 +56,14 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         transformer.registerArmor(SkinPartTypes.BIPED_RIGHT_WING, this::setWings);
         transformer.registerArmor(SkinPartTypes.BIPED_LEFT_WING, this::setWings);
 
-        transformer.registerItem(ItemCameraTransforms.TransformType.NONE, Transformer::none);
-        transformer.registerItem(ItemCameraTransforms.TransformType.GUI, Transformer::none);
-        transformer.registerItem(ItemCameraTransforms.TransformType.FIXED, Transformer::none);
-        transformer.registerItem(ItemCameraTransforms.TransformType.GROUND, Transformer::none);
-        transformer.registerItem(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, this::setLeftHandPart);
-        transformer.registerItem(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, this::setRightHandPart);
-        transformer.registerItem(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, this::setLeftHandPart);
-        transformer.registerItem(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, this::setRightHandPart);
+        transformer.registerItem(ItemCameraTransforms.TransformType.NONE, Transformer::withModel);
+        transformer.registerItem(ItemCameraTransforms.TransformType.GUI, Transformer::withModel);
+        transformer.registerItem(ItemCameraTransforms.TransformType.FIXED, Transformer::withModel);
+        transformer.registerItem(ItemCameraTransforms.TransformType.GROUND, Transformer::withModel);
+        transformer.registerItem(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, Transformer::withModel);
+        transformer.registerItem(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, Transformer::withModel);
+        transformer.registerItem(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, Transformer::withModel);
+        transformer.registerItem(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, Transformer::withModel);
     }
 
     @Override
@@ -144,21 +158,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         }
     }
 
-    @Override
-    public ITransform<M> getPartTransform(T entity, M model, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart) {
-        ITransform<M> transform = super.getPartTransform(entity, model, transformType, bakedPart);
-        // for the trident throwing, vanilla will rotate it 180 degrees.
-        if (bakedPart.getType() == SkinPartTypes.ITEM_TRIDENT && entity.getUseItemRemainingTicks() > 0) {
-            return (matrixStack1, model1, transformType1, bakedPart1) -> {
-                matrixStack1.mulPose(Vector3f.ZP.rotationDegrees(180));
-                transform.apply(matrixStack1, model1, transformType1, bakedPart1);
-            };
-        }
-        return transform;
-    }
-
     public abstract IPartAccessor<M> getAccessor();
-
 
     protected void setHeadPart(MatrixStack matrixStack, M model) {
         transformer.apply(matrixStack, accessor.getHead(model));
@@ -183,17 +183,6 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
     private void setWings(MatrixStack matrixStack, M model) {
         transformer.apply(matrixStack, accessor.getBody(model));
         matrixStack.translate(0, 0, 2);
-    }
-
-    private void setLeftHandPart(MatrixStack matrixStack, M model) {
-        // vanilla: xRot=-90º yRot=180º x=-1/1 y=2 z=-10
-        matrixStack.translate(0, 2, 2);
-        matrixStack.scale(-1, 1, 1);
-    }
-
-    private void setRightHandPart(MatrixStack matrixStack, M model) {
-        // vanilla: xRot=-90º yRot=180º x=-1/1 y=2 z=-10 xRot=180º
-        matrixStack.translate(0, 2, 2);
     }
 
     public interface IPartAccessor<M extends Model> {

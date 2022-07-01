@@ -17,35 +17,39 @@ import java.lang.reflect.Field;
 
 public class ExecuteCommandPacket extends CustomPacket {
 
+    private final Class<?> object;
     private final Mode mode;
     private final String key;
     private final Object value;
 
 
-    public ExecuteCommandPacket(Mode mode, String key, Object value) {
+    public ExecuteCommandPacket(Class<?> object, String key, Object value, Mode mode) {
+        this.object = object;
         this.mode = mode;
         this.key = key;
         this.value = value;
     }
 
     public ExecuteCommandPacket(PacketBuffer buffer) {
+        this.object = readClass(buffer);
         this.mode = buffer.readEnum(Mode.class);
         this.key = buffer.readUtf();
         this.value = readObject(buffer);
     }
 
 
-    public static ExecuteCommandPacket set(String key, Object value) {
-        return new ExecuteCommandPacket(Mode.SET, key, value);
+    public static ExecuteCommandPacket set(Class<?> obj, String key, Object value) {
+        return new ExecuteCommandPacket(obj, key, value, Mode.SET);
     }
 
-    public static ExecuteCommandPacket get(String key) {
-        return new ExecuteCommandPacket(Mode.GET, key, null);
+    public static ExecuteCommandPacket get(Class<?> obj, String key) {
+        return new ExecuteCommandPacket(obj, key, null, Mode.GET);
     }
 
 
     @Override
     public void encode(PacketBuffer buffer) {
+        buffer.writeUtf(object.getName());
         buffer.writeEnum(mode);
         buffer.writeUtf(key);
         writeObject(buffer, value);
@@ -54,7 +58,6 @@ public class ExecuteCommandPacket extends CustomPacket {
     @Override
     public void accept(INetHandler netHandler, PlayerEntity player) {
         try {
-            Class<?> object = ModConfig.Client.class;
             Object data = value;
             switch (mode) {
                 case GET: {
@@ -105,6 +108,14 @@ public class ExecuteCommandPacket extends CustomPacket {
             exception1.printStackTrace();
         } finally {
             StreamUtils.closeQuietly(objectOutputStream, outputStream);
+        }
+    }
+
+    private Class<?> readClass(PacketBuffer buffer) {
+        try {
+            return Class.forName(buffer.readUtf());
+        } catch (ClassNotFoundException e) {
+            return null;
         }
     }
 

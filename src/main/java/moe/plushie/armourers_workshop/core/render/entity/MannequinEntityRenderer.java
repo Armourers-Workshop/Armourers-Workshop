@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -69,7 +70,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
         this.model.setAllVisible(entity.isModelVisible());
         super.render(entity, p_225623_2_, partialTicks, matrixStack, buffers, packedLightIn);
         this.enableChildRenderer = false;
-        if (ModConfig.Client.debugMannequinCulling) {
+        if (ModDebugger.debugMannequinCulling) {
             matrixStack.pushPose();
             AxisAlignedBB box = entity.getBoundingBoxForCulling();
             matrixStack.translate(-box.minX - (box.maxX - box.minX) / 2, -box.minY, -box.minZ - (box.maxZ - box.minZ) / 2);

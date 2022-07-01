@@ -60,7 +60,7 @@ public class SkinItemStackRenderer extends ItemStackTileEntityRenderer {
             if (bakedSkin != null) {
                 Vector3f rotation = new Vector3f(-transform.rotation.x(), -transform.rotation.y(), transform.rotation.z());
                 ColorScheme scheme = descriptor.getColorScheme();
-                SkinItemRenderer.renderSkin(bakedSkin, scheme, rotation, transform.scale, 1, 1, 1, 0, light, matrixStack, renderTypeBuffer);
+                SkinItemRenderer.renderSkin(bakedSkin, scheme, itemStack, rotation, transform.scale, 1, 1, 1, 0, light, matrixStack, renderTypeBuffer);
             }
         }
         if (item == ModItems.MANNEQUIN) {

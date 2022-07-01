@@ -55,6 +55,7 @@ public class ArmourersWorkshop {
         // Register client-only events
         DistExecutor.runWhenOn(Dist.CLIENT, () -> registry::registerClientEvents);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> eventBus.addListener(registry::onTextureStitch));
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> eventBus.addListener(registry::onModelRegistry));
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> eventBus.addListener(this::onClientSetup));
 
         MinecraftForge.EVENT_BUS.addListener(this::onServerStart);

@@ -10,24 +10,30 @@ import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderObjectBuilder;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder;
+import moe.plushie.armourers_workshop.core.render.other.SkinModelManager;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
+import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.extened.AWMatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ForgeHooksClient;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -39,7 +45,7 @@ import java.util.function.Function;
 public class SkinRenderer<T extends Entity, M extends Model> {
 
     protected final EntityProfile profile;
-    protected final Transformer<M> transformer = new Transformer<>();
+    protected final Transformer<T, M> transformer = new Transformer<>();
 
     protected final ArrayList<ModelRenderer> overriders = new ArrayList<>();
 
@@ -53,7 +59,7 @@ public class SkinRenderer<T extends Entity, M extends Model> {
     public void initTransformers() {
     }
 
-    public boolean prepare(T entity, M model, BakedSkin bakedSkin, BakedSkinPart bakedPart, ItemCameraTransforms.TransformType transformType) {
+    public boolean prepare(T entity, M model, BakedSkin bakedSkin, BakedSkinPart bakedPart, ItemStack itemStack, ItemCameraTransforms.TransformType transformType) {
         ISkinPartType partType = bakedPart.getType();
         if (partType == SkinPartTypes.BLOCK || partType == SkinPartTypes.BLOCK_MULTI) {
             return true;
@@ -67,17 +73,16 @@ public class SkinRenderer<T extends Entity, M extends Model> {
     }
 
 
-    public void apply(T entity, M model, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart, float partialTicks, MatrixStack matrixStack) {
-        ITransform<M> op = getPartTransform(entity, model, transformType, bakedPart);
+    public void apply(T entity, M model, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart, BakedSkin bakedSkin, float partialTicks, MatrixStack matrixStack) {
+        ITransform<T, M> op = getPartTransform(entity, model, itemStack, transformType, bakedPart);
         if (op != null && model != null) {
-            op.apply(matrixStack, model, transformType, bakedPart);
+            op.apply(matrixStack, entity, model, itemStack, transformType, bakedPart);
             SkinUtils.apply(AWMatrixStack.wrap(matrixStack), bakedPart.getPart(), partialTicks, entity);
         }
     }
 
     public void apply(T entity, M model, EquipmentSlotType slotType, float partialTicks, MatrixStack matrixStack) {
     }
-
 
     public void willRender(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         overriders.clear();
@@ -87,7 +92,7 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         overriders.forEach(m -> m.visible = false);
     }
 
-    public void render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, int slotIndex, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+    public void render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, int slotIndex, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         if (profile != null) {
             ISkinType type = bakedSkin.getType();
             if (type instanceof ISkinArmorType && !profile.canSupport(type)) {
@@ -100,26 +105,27 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(buffers);
         SkinRenderObjectBuilder builder = bufferBuilder.getBuffer(skin);
         for (BakedSkinPart bakedPart : bakedSkin.getSkinParts()) {
-            if (!prepare(entity, model, bakedSkin, bakedPart, transformType)) {
+            if (!prepare(entity, model, bakedSkin, bakedPart, itemStack, transformType)) {
                 continue;
             }
             boolean shouldRenderPart = bakedSkin.shouldRenderPart(bakedPart, entity, transformType);
             matrixStack.pushPose();
-            apply(entity, model, transformType, bakedPart, partialTicks, matrixStack);
+            apply(entity, model, itemStack, transformType, bakedPart, bakedSkin, partialTicks, matrixStack);
             builder.addPartData(bakedPart, scheme1, light, partialTicks, slotIndex, matrixStack, shouldRenderPart);
-            if (shouldRenderPart && ModConfig.Client.debugSkinPartBounds) {
+            if (shouldRenderPart && ModDebugger.debugSkinPartBounds) {
                 builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(index++), matrixStack);
             }
-            if (shouldRenderPart && ModConfig.Client.debugSkinPartOrigin) {
+            if (shouldRenderPart && ModDebugger.debugSkinPartOrigin) {
                 builder.addShapeData(AWConstants.ZERO, matrixStack);
             }
+//            RenderUtils.drawPoint(matrixStack, null, 32, buffers);
             matrixStack.popPose();
         }
 
-        if (ModConfig.Client.debugSkinBounds) {
-            builder.addShapeData(bakedSkin.getRenderShape(entity, model, transformType).bounds(), Color.RED, matrixStack);
+        if (ModDebugger.debugSkinBounds) {
+            builder.addShapeData(bakedSkin.getRenderShape(entity, model, itemStack, transformType).bounds(), Color.RED, matrixStack);
         }
-        if (ModConfig.Client.debugSkinBounds) {
+        if (ModDebugger.debugSkinBounds) {
             builder.addShapeData(AWConstants.ZERO, matrixStack);
         }
     }
@@ -139,9 +145,9 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         overriders.add(modelRenderer);
     }
 
-    public ITransform<M> getPartTransform(T entity, M model, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+    public ITransform<T, M> getPartTransform(T entity, M model, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart) {
         ISkinPartType partType = bakedPart.getType();
-        ITransform<M> transform = null;
+        ITransform<T, M> transform = null;
         if (partType instanceof ICanHeld) {
             transform = transformer.items.get(transformType);
         }
@@ -156,35 +162,51 @@ public class SkinRenderer<T extends Entity, M extends Model> {
     }
 
     @FunctionalInterface
-    public interface ITransform<M> {
-        void apply(MatrixStack matrixStack, M model, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart);
+    public interface ITransform<T, M> {
+        void apply(MatrixStack matrixStack, T entity, M model, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart);
     }
 
-    public static class Transformer<M> {
+    public static class Transformer<T, M> {
 
-        final HashMap<ISkinPartType, ITransform<M>> armors = new HashMap<>();
-        final HashMap<ItemCameraTransforms.TransformType, ITransform<M>> items = new HashMap<>();
+        final HashMap<ISkinPartType, ITransform<T, M>> armors = new HashMap<>();
+        final HashMap<ItemCameraTransforms.TransformType, ITransform<T, M>> items = new HashMap<>();
 
         public static <M> void none(MatrixStack matrixStack, M model) {
         }
 
+        public static <T extends Entity, M extends Model> void withModel(MatrixStack matrixStack, T entity, M model, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+            final float f1 = 16f;
+            final float f2 = 1 / 16f;
+            final boolean flag = (transformType == ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND || transformType == ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND);
+//            ModDebugger.translate(matrixStack);
+            matrixStack.scale(f1, f1, f1);
+            IBakedModel bakedModel = SkinModelManager.getInstance().getModel(bakedPart.getType(), itemStack, entity.level, entity);
+            ForgeHooksClient.handleCameraTransforms(matrixStack, bakedModel, transformType, flag);
+            matrixStack.scale(f2, f2, f2);
+//            ModDebugger.rotate(matrixStack);
+//            ModDebugger.scale(matrixStack);
+            if (flag) {
+                matrixStack.scale(-1, 1, 1);
+            }
+        }
+
         public void registerArmor(ISkinPartType partType, Function<M, ModelRenderer> transformer) {
-            registerArmor(partType, (matrixStack, model, transformType, bakedPart) -> apply(matrixStack, transformer.apply(model)));
+            registerArmor(partType, (matrixStack, entity, model, itemStack, transformType, bakedPart) -> apply(matrixStack, transformer.apply(model)));
         }
 
         public void registerArmor(ISkinPartType partType, BiConsumer<MatrixStack, M> transformer) {
-            registerArmor(partType, (matrixStack, model, transformType, bakedPart) -> transformer.accept(matrixStack, model));
+            registerArmor(partType, (matrixStack, entity, model, itemStack, transformType, bakedPart) -> transformer.accept(matrixStack, model));
         }
 
-        public void registerArmor(ISkinPartType partType, ITransform<M> transformer) {
+        public void registerArmor(ISkinPartType partType, ITransform<T, M> transformer) {
             armors.put(partType, transformer);
         }
 
         public void registerItem(ItemCameraTransforms.TransformType transformType, BiConsumer<MatrixStack, M> transformer) {
-            registerItem(transformType, (matrixStack, model, transformType1, bakedPart) -> transformer.accept(matrixStack, model));
+            registerItem(transformType, (matrixStack, entity, model, itemStack, transformType1, bakedPart) -> transformer.accept(matrixStack, model));
         }
 
-        public void registerItem(ItemCameraTransforms.TransformType transformType, ITransform<M> transformer) {
+        public void registerItem(ItemCameraTransforms.TransformType transformType, ITransform<T, M> transformer) {
             items.put(transformType, transformer);
         }
 

@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.tileentity.SkinnableTileEntity;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -16,6 +17,7 @@ import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraftforge.api.distmarker.Dist;
@@ -55,11 +57,11 @@ public class SkinnableTileEntityRenderer<T extends SkinnableTileEntity> extends 
         matrixStack.scale(f, f, f);
         matrixStack.scale(-1, -1, 1);
 
-        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemCameraTransforms.TransformType.NONE, light, partialTicks1, 0, matrixStack, buffers);
+        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, ItemCameraTransforms.TransformType.NONE, light, partialTicks1, 0, matrixStack, buffers);
 
         matrixStack.popPose();
 
-        if (ModConfig.Client.debugSkinnableBlock) {
+        if (ModDebugger.debugSkinnableBlock) {
             bakedSkin.getBlockBounds().forEach((pos, rect) -> {
                 matrixStack.pushPose();
                 matrixStack.translate(0.5f, 0.5f, 0.5f);
