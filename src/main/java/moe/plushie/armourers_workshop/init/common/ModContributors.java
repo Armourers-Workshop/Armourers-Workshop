@@ -9,13 +9,12 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.UUID;
+import java.util.*;
 
 public class ModContributors {
 
-    public static final ArrayList<Contributor> values = Builder.builder()
+    public static Contributor dev;
+    public static final HashMap<UUID, Contributor> values = Builder.builder()
             .add("eba64cb1-0d29-4434-8d5e-31004b00488c", "RiskyKen", 0xf9df8c, ContributionFlags.PROGRAMMING)
             .add("889bebd9-9ebc-4dec-97ee-de9907cbbc85", "SAGESSE_90", 0x00a3a3, ContributionFlags.PROGRAMMING)
             .add("3e6a5f19-bb37-4f9a-94e0-7ccd67ef1d61", "Flummie2000", 0x5c2066, ContributionFlags.SKIN_MAKER, ContributionFlags.TRANSLATOR)
@@ -42,6 +41,9 @@ public class ModContributors {
             .add("3da3958f-f22c-4064-bddb-148dcfc101ec", "SQwatermark", 0xff0000, ContributionFlags.TRANSLATOR)
             .add("c1a62d17-65bc-4256-9f54-af38270f9559", "DoomRater", 0x9e1902, ContributionFlags.WIKI_EDITOR)
             .add("f9a9c7bc-c73a-4f0e-af73-133468513bb9", "Duvain_Feynorim", 0x7909db, ContributionFlags.MODELER)
+            .add("448150f9-ee48-4ce9-a3de-141a57c2857b", "KokonoMiyako", 0Xb1cfeb, ContributionFlags.TESTER)
+            .add("c36bf010-3fc8-4def-bba2-ab80527631af", "Shmanit", 0xc98a4b, ContributionFlags.TESTER)
+            .add("293c894b-07cc-4115-ab99-2692d63abb7e", "Deep_1mpact", 0xf7dc91, ContributionFlags.TESTER)
             .add("b027a4f4-d480-426c-84a3-a9cb029f4b72", "Vic", 0xd0d4f8, ContributionFlags.OTHER)
             .add("4fda0709-ada7-48a6-b4bf-0bbce8c40dfa", "Nanoha", 0xffadff, ContributionFlags.NONE)
             .add("31873a23-125e-4752-8607-0f1c3cb22c84", "Garoam", 0x601995, ContributionFlags.NONE)
@@ -53,13 +55,8 @@ public class ModContributors {
         }
         gameProfile = PlayerTextureLoader.getInstance().loadGameProfile(gameProfile);
         UUID uuid = gameProfile.getId();
-        if (uuid == null) {
-            return null;
-        }
-        for (Contributor value : values) {
-            if (uuid.equals(value.uuid)) {
-                return value;
-            }
+        if (uuid != null) {
+            return values.get(uuid);
         }
         return null;
     }
@@ -73,16 +70,14 @@ public class ModContributors {
             return null;
         }
         if (entity instanceof ClientPlayerEntity) {
-            if (ModConfig.Client.enableMagicWhenContributor) {
-                return getCurrentContributor();
-            }
+            return getCurrentContributor();
         }
         return null;
     }
 
     public static Contributor getCurrentContributor() {
         if (!FMLEnvironment.production) {
-            return values.get(1);
+            return dev;
         }
         ClientPlayerEntity playerEntity = Minecraft.getInstance().player;
         if (playerEntity != null) {
@@ -99,7 +94,8 @@ public class ModContributors {
         SKIN_MAKER,
         MODELER,
         WIKI_EDITOR,
-        OTHER
+        OTHER,
+        TESTER
     }
 
     public static class Contributor {
@@ -118,7 +114,7 @@ public class ModContributors {
     }
 
     public static class Builder {
-        ArrayList<Contributor> contributors = new ArrayList<>();
+        HashMap<UUID, Contributor> contributors = new HashMap<>();
 
         static Builder builder() {
             return new Builder();
@@ -126,11 +122,15 @@ public class ModContributors {
 
         Builder add(String uuid, String username, int color, ContributionFlags... flags) {
             EnumSet<ContributionFlags> set = EnumSet.copyOf(Lists.newArrayList(flags));
-            contributors.add(new Contributor(uuid, username, set, color));
+            Contributor contributor = new Contributor(uuid, username, set, color);
+            contributors.put(contributor.uuid, contributor);
+            if (contributor.contributions.contains(ContributionFlags.PROGRAMMING)) {
+                dev = contributor;
+            }
             return this;
         }
 
-        ArrayList<Contributor> build() {
+        HashMap<UUID, Contributor> build() {
             return contributors;
         }
     }

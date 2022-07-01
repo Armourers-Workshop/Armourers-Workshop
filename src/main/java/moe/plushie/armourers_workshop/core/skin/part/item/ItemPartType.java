@@ -14,4 +14,9 @@ public class ItemPartType extends SkinPartType implements ICanHeld {
         //Offset -1 to match old skin system.
         this.offset = new Vector3i(0, -1, 0);
     }
+
+    @Override
+    public float getRenderPolygonOffset() {
+        return 10;
+    }
 }

@@ -140,10 +140,12 @@ public class UpdateWardrobePacket extends CustomPacket {
 
     public enum Field {
 
-        ARMOUR_HEAD(EquipmentSlotType.HEAD),
-        ARMOUR_CHEST(EquipmentSlotType.CHEST),
-        ARMOUR_LEGS(EquipmentSlotType.LEGS),
-        ARMOUR_FEET(EquipmentSlotType.FEET),
+        WARDROBE_ARMOUR_HEAD(EquipmentSlotType.HEAD),
+        WARDROBE_ARMOUR_CHEST(EquipmentSlotType.CHEST),
+        WARDROBE_ARMOUR_LEGS(EquipmentSlotType.LEGS),
+        WARDROBE_ARMOUR_FEET(EquipmentSlotType.FEET),
+
+        WARDROBE_EXTRA_RENDER(SkinWardrobe::shouldRenderExtra, SkinWardrobe::setRenderExtra),
 
         MANNEQUIN_IS_CHILD(MannequinEntity.DATA_IS_CHILD),
         MANNEQUIN_IS_FLYING(MannequinEntity.DATA_IS_FLYING),
@@ -160,11 +162,15 @@ public class UpdateWardrobePacket extends CustomPacket {
         private final AWDataAccessor<SkinWardrobe, ?> dataAccessor;
 
         Field(EquipmentSlotType slotType) {
+            this(w -> w.shouldRenderEquipment(slotType), (w, v) -> w.setRenderEquipment(slotType, v));
+        }
+
+        Field(Function<SkinWardrobe, Boolean> supplier, BiConsumer<SkinWardrobe, Boolean> applier) {
             this.broadcastChanges = true;
             this.dataAccessor = AWDataAccessor
                     .withDataSerializer(SkinWardrobe.class, DataSerializers.BOOLEAN)
-                    .withSupplier((wardrobe) -> wardrobe.shouldRenderEquipment(slotType))
-                    .withApplier((wardrobe, value) -> wardrobe.setRenderEquipment(slotType, value));
+                    .withSupplier(supplier)
+                    .withApplier(applier);
         }
 
         @SuppressWarnings("unchecked")

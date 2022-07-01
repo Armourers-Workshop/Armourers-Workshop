@@ -21,6 +21,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.Consumer;
@@ -28,7 +29,9 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT> {
 
-    private final HashSet<EquipmentSlotType> armourFlags = new HashSet<>();
+    private final BitSet flags = new BitSet(6);
+
+//    private final HashSet<EquipmentSlotType> armourFlags = new HashSet<>();
     private final HashMap<SkinSlotType, Integer> skinSlots = new HashMap<>();
 
     private final Inventory inventory = new Inventory(SkinSlotType.getTotalSize());
@@ -116,14 +119,26 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     }
 
     public boolean shouldRenderEquipment(EquipmentSlotType slotType) {
-        return !armourFlags.contains(slotType);
+        return !flags.get(slotType.getFilterFlag());
     }
 
     public void setRenderEquipment(EquipmentSlotType slotType, boolean enable) {
         if (enable) {
-            armourFlags.remove(slotType);
+            flags.clear(slotType.getFilterFlag());
         } else {
-            armourFlags.add(slotType);
+            flags.set(slotType.getFilterFlag());
+        }
+    }
+
+    public boolean shouldRenderExtra() {
+        return !flags.get(6);
+    }
+
+    public void setRenderExtra(boolean value) {
+        if (value) {
+            flags.clear(6);
+        } else {
+            flags.set(6);
         }
     }
 
@@ -147,6 +162,13 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         }
         return slotType.getMaxSize();
     }
+
+//    public int getFlags(int bits) {
+//        return 0;
+//    }
+//
+//    public void setFlags(int bits, int value) {
+//    }
 
     public Inventory getInventory() {
         return inventory;
@@ -184,7 +206,8 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
         SkinWardrobeStorage.saveSkinSlots(skinSlots, nbt);
-        SkinWardrobeStorage.saveVisibility(armourFlags, nbt);
+//        SkinWardrobeStorage.saveVisibility(armourFlags, nbt);
+        SkinWardrobeStorage.saveFlags(flags, nbt);
         SkinWardrobeStorage.saveInventoryItems(inventory, nbt);
         SkinWardrobeStorage.saveDataFixer(this, nbt);
         return nbt;
@@ -193,7 +216,8 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         SkinWardrobeStorage.loadSkinSlots(skinSlots, nbt);
-        SkinWardrobeStorage.loadVisibility(armourFlags, nbt);
+//        SkinWardrobeStorage.loadVisibility(armourFlags, nbt);
+        SkinWardrobeStorage.loadFlags(flags, nbt);
         SkinWardrobeStorage.loadInventoryItems(inventory, nbt);
         SkinWardrobeStorage.loadDataFixer(this, nbt);
     }

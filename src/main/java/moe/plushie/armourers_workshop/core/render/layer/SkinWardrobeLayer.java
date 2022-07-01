@@ -47,7 +47,7 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
 
         // render the contributor
         ModContributors.Contributor contributor = ModContributors.by(entity);
-        if (contributor != null) {
+        if (contributor != null && renderData.shouldRenderExtra()) {
             renderMagicCircle(matrixStack, buffers, entity.tickCount + entity.getId() * 31, partialTicks, 24, contributor.color);
         }
 

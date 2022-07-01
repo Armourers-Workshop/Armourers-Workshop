@@ -17,6 +17,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
@@ -56,27 +57,52 @@ public class SkinWardrobeStorage implements Capability.IStorage<SkinWardrobe> {
         }
     }
 
-    public static void saveVisibility(HashSet<EquipmentSlotType> visibility, CompoundNBT nbt) {
-        if (visibility.isEmpty()) {
-            return;
+    public static void saveFlags(BitSet flags, CompoundNBT nbt) {
+        int value = 0;
+        int size = flags.size();
+        for (int i = 0; i < size; ++i) {
+            if (flags.get(i)) {
+                value |= 1 << i;
+            }
         }
-        short value = 0;
-        for (EquipmentSlotType slotType : visibility) {
-            value |= 1 << slotType.getFilterFlag();
+        if (value != 0) {
+            nbt.putInt("Visibility", value);
         }
-        nbt.putShort("Visibility", value);
     }
 
-    public static void loadVisibility(HashSet<EquipmentSlotType> visibility, CompoundNBT nbt) {
-        short value = nbt.getShort("Visibility");
-        visibility.clear();
-        for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
-            int mask = 1 << slotType.getFilterFlag();
+    public static void loadFlags(BitSet flags, CompoundNBT nbt) {
+        int value = nbt.getInt("Visibility");
+        flags.clear();
+        int size = flags.size();
+        for (int i = 0; i < size; ++i) {
+            int mask = 1 << i;
             if ((value & mask) != 0) {
-                visibility.add(slotType);
+                flags.set(i);
             }
         }
     }
+
+//    public static void saveVisibility(HashSet<EquipmentSlotType> visibility, CompoundNBT nbt) {
+//        if (visibility.isEmpty()) {
+//            return;
+//        }
+//        short value = 0;
+//        for (EquipmentSlotType slotType : visibility) {
+//            value |= 1 << slotType.getFilterFlag();
+//        }
+//        nbt.putShort("Visibility", value);
+//    }
+//
+//    public static void loadVisibility(HashSet<EquipmentSlotType> visibility, CompoundNBT nbt) {
+//        short value = nbt.getShort("Visibility");
+//        visibility.clear();
+//        for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
+//            int mask = 1 << slotType.getFilterFlag();
+//            if ((value & mask) != 0) {
+//                visibility.add(slotType);
+//            }
+//        }
+//    }
 
     public static void saveSkinSlots(HashMap<SkinSlotType, Integer> slots, CompoundNBT nbt) {
         if (slots.isEmpty()) {

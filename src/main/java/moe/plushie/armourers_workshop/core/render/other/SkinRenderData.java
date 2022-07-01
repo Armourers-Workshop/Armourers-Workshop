@@ -69,6 +69,8 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     private ColorScheme colorScheme = ColorScheme.EMPTY;
 
+    private boolean isRenderExtra = false;
+
     private boolean isActiveWardrobe = false;
     private boolean isLimitLimbs = false;
     private boolean isListening = false;
@@ -144,6 +146,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     protected void loadWardrobeSlots(Entity entity) {
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe == null) {
+            this.isRenderExtra = false;
             this.isActiveWardrobe = false;
             return;
         }
@@ -166,6 +169,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
                 }
             }
         }
+        this.isRenderExtra = wardrobe.shouldRenderExtra();
         this.isActiveWardrobe = true;
     }
 
@@ -338,6 +342,10 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
             return hasOverriddenEquipmentSlots.contains(slotType);
         }
         return false;
+    }
+
+    public boolean shouldRenderExtra() {
+        return isRenderExtra;
     }
 
     public static class Entry {

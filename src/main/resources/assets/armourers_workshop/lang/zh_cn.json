@@ -391,6 +391,7 @@
   "inventory.armourers_workshop.wardrobe.colour_settings.label.skin": "皮肤颜色:",
   "inventory.armourers_workshop.wardrobe.contributor": "贡献者",
   "inventory.armourers_workshop.wardrobe.contributor.label.contributor": "感谢帮助时装工坊的发展\n\n来自RiskyKen的爱心: ❤❤❤",
+  "inventory.armourers_workshop.wardrobe.contributor.label.enableContributorMagic": "开启魔法光环",
   "inventory.armourers_workshop.wardrobe.display_settings": "显示设置",
   "inventory.armourers_workshop.wardrobe.display_settings.renderChestArmour": "渲染胸甲？",
   "inventory.armourers_workshop.wardrobe.display_settings.renderFootArmour": "渲染靴子？",

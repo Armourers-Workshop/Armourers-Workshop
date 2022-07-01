@@ -152,11 +152,14 @@ public class ClientWardrobeHandler {
     public static boolean shouldRenderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable World world, ItemStack itemStack, boolean isRenderInGUI) {
         //
         if (world == null) {
+            if (itemStack.getItem() == ModItems.SKIN) {
+                return true;
+            }
             return !SkinDescriptor.of(itemStack).isEmpty();
         }
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData != null) {
-            return !Iterables.isEmpty(renderData.getItemSkins(itemStack, false));
+            return !Iterables.isEmpty(renderData.getItemSkins(itemStack, entity instanceof MannequinEntity));
         }
         return false;
     }
