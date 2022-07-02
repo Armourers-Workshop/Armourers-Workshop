@@ -152,6 +152,9 @@ public class ClientWardrobeHandler {
     public static boolean shouldRenderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable World world, ItemStack itemStack, boolean isRenderInGUI) {
         //
         if (world == null) {
+            if (!ModConfig.Client.enableEmbeddedSkinRenderer) {
+                return false;
+            }
             if (itemStack.getItem() == ModItems.SKIN) {
                 return true;
             }
