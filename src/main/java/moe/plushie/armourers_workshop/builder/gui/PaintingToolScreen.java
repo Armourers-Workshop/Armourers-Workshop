@@ -11,8 +11,10 @@ import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdatePaintingToolPacket;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
@@ -82,6 +84,17 @@ public class PaintingToolScreen extends Screen {
         GuiUtils.drawContinuousTexturedBox(matrixStack, leftPos, topPos, 0, 0, imageWidth, imageHeight, 128, 128, 4, 4, 4, 4, 0);
         this.renderLabels(matrixStack, mouseX, mouseY);
         super.render(matrixStack, mouseX, mouseY, p_230430_4_);
+    }
+
+    public boolean keyPressed(int p_231046_1_, int p_231046_2_, int p_231046_3_) {
+        InputMappings.Input mouseKey = InputMappings.getKey(p_231046_1_, p_231046_2_);
+        if (super.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_)) {
+            return true;
+        } else if (Minecraft.getInstance().options.keyInventory.isActiveAndMatches(mouseKey)) {
+            this.onClose();
+            return true;
+        }
+        return false;
     }
 
     @Override
