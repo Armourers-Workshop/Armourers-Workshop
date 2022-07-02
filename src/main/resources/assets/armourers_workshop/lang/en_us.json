@@ -129,6 +129,7 @@
   "inventory.armourers_workshop.armourer.dialog.replace.keepType": "Keep block type?",
   "inventory.armourers_workshop.armourer.dialog.replace.srcBlock": "Source Block:",
   "inventory.armourers_workshop.armourer.dialog.replace.title": "Replace",
+  "inventory.armourers_workshop.armourer.dialog.replace.success": "Replaced %d blocks.",
   "inventory.armourers_workshop.armourer.displaySettings": "Display Settings",
   "inventory.armourers_workshop.armourer.displaySettings.dropdown.url": "URL",
   "inventory.armourers_workshop.armourer.displaySettings.dropdown.user": "User",

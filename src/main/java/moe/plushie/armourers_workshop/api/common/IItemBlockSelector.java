@@ -8,10 +8,5 @@ import javax.annotation.Nullable;
 
 public interface IItemBlockSelector {
 
-    @Nullable
-    default Block getBlock(ItemStack itemStack) {
-        return null;
-    }
-
     IPaintColor getItemColor(ItemStack itemStack);
 }

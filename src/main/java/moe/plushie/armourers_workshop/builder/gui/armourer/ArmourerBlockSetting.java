@@ -29,9 +29,9 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
 
     protected final ArmourerTileEntity tileEntity;
 
-    private ExtendedButton buttonClear;
-    private ExtendedButton buttonCopy;
-    private ExtendedButton buttonReplace;
+    protected ExtendedButton buttonClear;
+    protected ExtendedButton buttonCopy;
+    protected ExtendedButton buttonReplace;
 
     protected ArmourerScreen screen;
 
@@ -100,16 +100,12 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             CompoundNBT source = new CompoundNBT();
             ItemStack selector = dialog1.getSelector();
             if (selector.getItem() instanceof IItemBlockSelector) {
-                IItemBlockSelector value = (IItemBlockSelector) selector.getItem();
-                AWDataSerializers.putBlock(source, AWConstants.NBT.BLOCK, value.getBlock(selector));
-                AWDataSerializers.putPaintColor(source, AWConstants.NBT.COLOR, value.getItemColor(selector), null);
+                selector.save(source);
             }
             CompoundNBT destination = new CompoundNBT();
             ItemStack applier = dialog1.getApplier();
             if (applier.getItem() instanceof IItemBlockSelector) {
-                IItemBlockSelector value = (IItemBlockSelector) applier.getItem();
-                AWDataSerializers.putBlock(destination, AWConstants.NBT.BLOCK, value.getBlock(applier));
-                AWDataSerializers.putPaintColor(destination, AWConstants.NBT.COLOR, value.getItemColor(applier), null);
+                applier.save(destination);
             }
             if (source.isEmpty() && destination.isEmpty()) {
                 return;

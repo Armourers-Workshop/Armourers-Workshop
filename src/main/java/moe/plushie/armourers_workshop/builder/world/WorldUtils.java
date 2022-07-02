@@ -25,15 +25,12 @@ import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.Property;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -426,62 +423,19 @@ public final class WorldUtils {
         srcBox.forEach((texture, x, y, z, dir) -> paintData.setColor(texture.x, texture.y, 0));
     }
 
-    public static void replaceCubes(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps, Direction direction, Block sourceBlock, IPaintColor sourceColor, Block destinationBlock, IPaintColor destinationColor, boolean keepColor, boolean keepPaintType) {
+    public static void replaceCubes(World world, BlockPos pos, ISkinType skinType, SkinProperties skinProps, Direction direction, SkinCubeReplaceApplier applier) {
         for (ISkinPartType skinPart : skinType.getParts()) {
             for (Vector3i offset : getResolvedBuildingSpace(skinPart)) {
-                replaceCube(world, pos.offset(offset), sourceBlock, sourceColor, destinationBlock, destinationColor, keepColor, keepPaintType);
+                replaceCube(world, pos.offset(offset), applier);
             }
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static void replaceCube(World world, BlockPos pos, @Nullable Block sourceBlock, @Nullable IPaintColor sourceColor, @Nullable Block destinationBlock, @Nullable IPaintColor destinationColor, boolean keepColor, boolean keepPaintType) {
+    public static void replaceCube(World world, BlockPos pos, SkinCubeReplaceApplier applier) {
         TileEntity tileEntity = world.getBlockEntity(pos);
-        if (!(tileEntity instanceof IPaintable)) {
-            return;
-        }
-        BlockState targetState = world.getBlockState(pos);
-        if (sourceBlock != null && !targetState.is(sourceBlock)) {
-            return;
-        }
-        IPaintable paintable = (IPaintable) tileEntity;
-        HashMap<Direction, IPaintColor> newColors = new HashMap<>();
-        if (destinationColor != null) {
-            int changes = 0;
-            for (Direction dir : Direction.values()) {
-                IPaintColor paintColor = paintable.getColor(dir);
-                if (paintColor != null && paintColor.equals(sourceColor) && paintable.shouldChangeColor(dir)) {
-                    int color = destinationColor.getRGB();
-                    if (keepColor) {
-                        color = paintColor.getRGB();
-                    }
-                    ISkinPaintType paintType = destinationColor.getPaintType();
-                    if (keepPaintType) {
-                        paintType = paintColor.getPaintType();
-                    }
-                    paintColor = PaintColor.of(color, paintType);
-                    changes += 1;
-                }
-                if (paintColor != null) {
-                    newColors.put(dir, paintColor);
-                }
-            }
-            if (changes != 0) {
-                paintable.setColors(newColors);
-            }
-        }
-        if (destinationBlock != null && !targetState.getBlock().equals(destinationBlock)) {
-            CompoundNBT nbt = tileEntity.serializeNBT();
-            BlockState newState = destinationBlock.defaultBlockState();
-            for (Property<?> property : targetState.getProperties()) {
-                if (newState.hasProperty(property)) {
-                    newState = newState.setValue((Property) property, targetState.getValue(property));
-                }
-            }
-            WorldUpdater.getInstance().submit(new WorldBlockUpdateTask(world, pos, newState, nbt));
-        }
-        if (sourceBlock != null && destinationBlock == null && destinationBlock == null) {
-
+        if (applier.accept(tileEntity)) {
+            applier.apply(tileEntity);
         }
     }
 
@@ -600,4 +554,6 @@ public final class WorldUtils {
         }
         return cubeCount;
     }
+
+
 }

@@ -28,9 +28,6 @@ public class SkinCubeItemStackRenderer extends ItemStackTileEntityRenderer {
 
     private static SkinCubeItemStackRenderer INSTANCE;
 
-//    private final ModelRenderer box = new ModelRenderer(16, 16, 0, 0);
-//    private final ModelRenderer insideBox = new ModelRenderer(16, 16, 0, 0);
-
     private final RenderType normalRenderType = ForgeRenderTypes.getItemLayeredSolid(RenderUtils.TEX_BLOCK_CUBE);
     private final RenderType translucentRenderType = ForgeRenderTypes.getItemLayeredTranslucent(RenderUtils.TEX_BLOCK_CUBE_GLASS);
     private final RenderType unsortedTranslucentRenderType = ForgeRenderTypes.getUnsortedTranslucent(RenderUtils.TEX_BLOCK_CUBE_GLASS);
@@ -38,8 +35,6 @@ public class SkinCubeItemStackRenderer extends ItemStackTileEntityRenderer {
     public static SkinCubeItemStackRenderer getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new SkinCubeItemStackRenderer();
-//            INSTANCE.box.addBox(0, 0, 0, 16, 16, 16);
-//            INSTANCE.insideBox.addBox(1, 1, 1, 14, 14, 14);
         }
         return INSTANCE;
     }
@@ -55,14 +50,6 @@ public class SkinCubeItemStackRenderer extends ItemStackTileEntityRenderer {
             blockPaintColor = BlockPaintColor.WHITE;
         }
         Block block = item.getBlock();
-//        IPaintColor paintColor = ColorUtils.getColor(itemStack);
-//        if (paintColor == null) {
-//            paintColor = PaintColor.WHITE;
-//        }
-//        int color = paintColor.getRGB();
-//        float red = ((color >> 16) & 0xff) / 255f;
-//        float green = ((color >> 8) & 0xff) / 255f;
-//        float blue = (color & 0xff) / 255f;
 
         boolean isGlowing = block.is(ModBlocks.SKIN_CUBE_GLOWING) || block.is(ModBlocks.SKIN_CUBE_GLASS_GLOWING);
         boolean isGlass = block.is(ModBlocks.SKIN_CUBE_GLASS) || block.is(ModBlocks.SKIN_CUBE_GLASS_GLOWING);
@@ -72,8 +59,8 @@ public class SkinCubeItemStackRenderer extends ItemStackTileEntityRenderer {
             renderType = translucentRenderType;
         }
         if (isGlowing) {
-            float f = 14 / 16.0f;
             float f1 = 1 / 16.0f;
+            float f = 14 / 16.0f;
             IVertexBuilder builder2 = renderTypeBuffer.getBuffer(renderType);
             matrixStack.pushPose();
             matrixStack.translate(f1, f1, f1);

@@ -16,6 +16,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.IntNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -68,11 +69,7 @@ public class SkinCubeItem extends BlockItem implements IItemBlockSelector, IPain
         CompoundNBT nbt = itemStack.getOrCreateTagElement(AWConstants.NBT.BLOCK_ENTITY);
         BlockPaintColor color = new BlockPaintColor(paintColor);
         AWDataSerializers.putBlockPaintColor(nbt, AWConstants.NBT.COLOR, color, null);
-    }
-
-    @Override
-    public Block getBlock(ItemStack itemStack) {
-        return getBlock();
+        itemStack.addTagElement(AWConstants.NBT.FLAGS, IntNBT.valueOf(1));
     }
 
     @Override

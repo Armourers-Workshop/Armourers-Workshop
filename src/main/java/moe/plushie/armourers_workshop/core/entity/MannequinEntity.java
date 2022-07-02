@@ -179,7 +179,7 @@ public class MannequinEntity extends ArmorStandEntity {
 
     @Override
     public ItemStack getPickedResult(RayTraceResult target) {
-        return createMannequinStack();
+        return new ItemStack(ModItems.MANNEQUIN);
     }
 
     @Override

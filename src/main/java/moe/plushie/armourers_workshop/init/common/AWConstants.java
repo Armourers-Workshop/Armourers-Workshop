@@ -55,14 +55,6 @@ public final class AWConstants {
 
         public static final String FLAGS = "Flags";
 
-        public static final String SIDE_DOWN = "Down";
-        public static final String SIDE_UP = "Up";
-        public static final String SIDE_FRONT = "Front";
-        public static final String SIDE_BACK = "Back";
-        public static final String SIDE_LEFT = "Left";
-        public static final String SIDE_RIGHT = "Right";
-
-
         public static final String ENTITY = "EntityTag";
         public static final String BLOCK_ENTITY = "BlockEntityTag";
 

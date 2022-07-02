@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeReplaceApplier;
 import moe.plushie.armourers_workshop.builder.world.WorldBlockUpdateTask;
 import moe.plushie.armourers_workshop.builder.world.WorldUpdater;
 import moe.plushie.armourers_workshop.builder.world.WorldUtils;
@@ -20,7 +21,6 @@ import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModTileEntities;
 import moe.plushie.armourers_workshop.utils.*;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
@@ -271,11 +271,11 @@ public class ArmourerTileEntity extends AbstractTileEntity {
         TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
-    public void replaceCubes(Block sourceBlock, IPaintColor sourceColor, Block destinationBlock, IPaintColor destinationColor, boolean keepColor, boolean keepPaintType) throws Exception {
+    public void replaceCubes(SkinCubeReplaceApplier applier) throws Exception {
         World world = getLevel();
         BlockPos pos = getBlockPos().offset(0, 1, 0);
         Direction direction = Direction.NORTH;
-        WorldUtils.replaceCubes(world, pos, getSkinType(), getSkinProperties(), direction, sourceBlock, sourceColor, destinationBlock, destinationColor, keepColor, keepPaintType);
+        WorldUtils.replaceCubes(world, pos, getSkinType(), getSkinProperties(), direction, applier);
     }
 
     public void copyCubes(ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws Exception {

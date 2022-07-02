@@ -291,7 +291,7 @@ public class ColorUtils {
         if (storage.blockPaintColor != null) {
             return storage.blockPaintColor.orElse(null);
         }
-        BlockPaintColor color = BlockPaintColor.EMPTY;
+        BlockPaintColor color = null;
         CompoundNBT nbt = itemStack.getTagElement(AWConstants.NBT.BLOCK_ENTITY);
         if (nbt != null) {
             color = AWDataSerializers.getBlockPaintColor(nbt, AWConstants.NBT.COLOR, null);
