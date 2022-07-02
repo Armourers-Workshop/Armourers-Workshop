@@ -1,15 +1,21 @@
 package moe.plushie.armourers_workshop.utils;
 
+import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
+import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.utils.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.NumberNBT;
 import net.minecraft.nbt.StringNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
@@ -17,6 +23,8 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.Random;
 
 public class ColorUtils {
@@ -233,7 +241,13 @@ public class ColorUtils {
 
     @Nullable
     public static IPaintColor getColor(ItemStack itemStack) {
-        return getColor(itemStack, null);
+        ItemStackStorage storage = ItemStackStorage.of(itemStack);
+        if (storage.paintColor != null) {
+            return storage.paintColor.orElse(null);
+        }
+        IPaintColor paintColor = getColor(itemStack, null);
+        storage.paintColor = Optional.ofNullable(paintColor);
+        return paintColor;
     }
 
     public static void setColor(ItemStack itemStack, @Nullable String rootPath, IPaintColor color) {
@@ -271,6 +285,20 @@ public class ColorUtils {
         return null;
     }
 
+    @Nullable
+    public static BlockPaintColor getBlockColor(ItemStack itemStack) {
+        ItemStackStorage storage = ItemStackStorage.of(itemStack);
+        if (storage.blockPaintColor != null) {
+            return storage.blockPaintColor.orElse(null);
+        }
+        BlockPaintColor color = BlockPaintColor.EMPTY;
+        CompoundNBT nbt = itemStack.getTagElement(AWConstants.NBT.BLOCK_ENTITY);
+        if (nbt != null) {
+            color = AWDataSerializers.getBlockPaintColor(nbt, AWConstants.NBT.COLOR, null);
+        }
+        storage.blockPaintColor = Optional.ofNullable(color);
+        return color;
+    }
 
     public static ArrayList<ITextComponent> getColorTooltips(IPaintColor color, boolean useDisplayColor) {
         ArrayList<ITextComponent> tooltips = new ArrayList<>();

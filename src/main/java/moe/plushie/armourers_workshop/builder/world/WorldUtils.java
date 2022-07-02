@@ -33,6 +33,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -434,48 +435,53 @@ public final class WorldUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static void replaceCube(World world, BlockPos pos, Block sourceBlock, IPaintColor sourceColor, Block destinationBlock, IPaintColor destinationColor, boolean keepColor, boolean keepPaintType) {
-        BlockState targetState = world.getBlockState(pos);
-        if (sourceBlock != null && !targetState.is(sourceBlock)) {
-            return;
-        }
+    public static void replaceCube(World world, BlockPos pos, @Nullable Block sourceBlock, @Nullable IPaintColor sourceColor, @Nullable Block destinationBlock, @Nullable IPaintColor destinationColor, boolean keepColor, boolean keepPaintType) {
         TileEntity tileEntity = world.getBlockEntity(pos);
         if (!(tileEntity instanceof IPaintable)) {
             return;
         }
+        BlockState targetState = world.getBlockState(pos);
+        if (sourceBlock != null && !targetState.is(sourceBlock)) {
+            return;
+        }
         IPaintable paintable = (IPaintable) tileEntity;
         HashMap<Direction, IPaintColor> newColors = new HashMap<>();
-        int changes = 0;
-        for (Direction dir : Direction.values()) {
-            IPaintColor paintColor = paintable.getColor(dir);
-            if (paintColor != null && paintColor.equals(sourceColor) && paintable.shouldChangeColor(dir)) {
-                int color = destinationColor.getRGB();
-                if (keepColor) {
-                    color = paintColor.getRGB();
+        if (destinationColor != null) {
+            int changes = 0;
+            for (Direction dir : Direction.values()) {
+                IPaintColor paintColor = paintable.getColor(dir);
+                if (paintColor != null && paintColor.equals(sourceColor) && paintable.shouldChangeColor(dir)) {
+                    int color = destinationColor.getRGB();
+                    if (keepColor) {
+                        color = paintColor.getRGB();
+                    }
+                    ISkinPaintType paintType = destinationColor.getPaintType();
+                    if (keepPaintType) {
+                        paintType = paintColor.getPaintType();
+                    }
+                    paintColor = PaintColor.of(color, paintType);
+                    changes += 1;
                 }
-                ISkinPaintType paintType = destinationColor.getPaintType();
-                if (keepPaintType) {
-                    paintType = paintColor.getPaintType();
+                if (paintColor != null) {
+                    newColors.put(dir, paintColor);
                 }
-                paintColor = PaintColor.of(color, paintType);
-                changes += 1;
             }
-            if (paintColor != null) {
-                newColors.put(dir, paintColor);
+            if (changes != 0) {
+                paintable.setColors(newColors);
             }
-        }
-        if (changes != 0) {
-            paintable.setColors(newColors);
         }
         if (destinationBlock != null && !targetState.getBlock().equals(destinationBlock)) {
             CompoundNBT nbt = tileEntity.serializeNBT();
             BlockState newState = destinationBlock.defaultBlockState();
             for (Property<?> property : targetState.getProperties()) {
                 if (newState.hasProperty(property)) {
-                    newState = newState.setValue((Property)property, targetState.getValue(property));
+                    newState = newState.setValue((Property) property, targetState.getValue(property));
                 }
             }
             WorldUpdater.getInstance().submit(new WorldBlockUpdateTask(world, pos, newState, nbt));
+        }
+        if (sourceBlock != null && destinationBlock == null && destinationBlock == null) {
+
         }
     }
 

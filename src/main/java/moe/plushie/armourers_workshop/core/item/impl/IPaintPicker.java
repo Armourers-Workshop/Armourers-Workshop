@@ -24,10 +24,14 @@ public interface IPaintPicker {
         TileEntity tileEntity = worldIn.getBlockEntity(blockPos);
         if (tileEntity instanceof IPaintProvider) {
             IPaintColor color = ((IPaintProvider) tileEntity).getColor();
-            ColorUtils.setColor(itemStack, color);
+            setPickedColor(itemStack, color, context);
             return true;
         }
         return false;
+    }
+
+    default void setPickedColor(ItemStack itemStack, IPaintColor paintColor, ItemUseContext context) {
+        ColorUtils.setColor(itemStack, paintColor);
     }
 
     default boolean shouldPickColor(ItemUseContext context) {

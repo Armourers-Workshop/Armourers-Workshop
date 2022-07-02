@@ -111,7 +111,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
                 AWDataSerializers.putBlock(destination, AWConstants.NBT.BLOCK, value.getBlock(applier));
                 AWDataSerializers.putPaintColor(destination, AWConstants.NBT.COLOR, value.getItemColor(applier), null);
             }
-            if (destination.isEmpty()) {
+            if (source.isEmpty() && destination.isEmpty()) {
                 return;
             }
             CompoundNBT nbt = new CompoundNBT();

@@ -45,34 +45,5 @@ public class BlockPaintUpdater implements IPaintApplier.IPaintUpdater {
         }
         UpdateBlockColorPacket packet = new UpdateBlockColorPacket(context, changes);
         NetworkHandler.getInstance().sendToServer(packet);
-
-        // ItemShadeNoiseTool/ItemShadeNoiseTool
-//        if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
-//            worldIn.playSound(null, pos, ModSounds.NOISE, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 0.9F);
-//        } else {
-//            worldIn.playSound(null, pos, ModSounds.NOISE, SoundCategory.BLOCKS, 1.0F, worldIn.rand.nextFloat() * 0.2F + 1.5F);
-//        }
-
-        // ItemPaintbrush/ItemPaintRoller
-        //         world.playSound(null, pos, ModSounds.PAINT, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.1F + 0.9F);
-//        if (spawnParticles) {
-//            spawnPaintParticles(world, pos, facing, newColour);
-//        ParticleTypes
-//        world.addParticle();
-//        }
-
-        // from ItemPaintbrush
-//        SoundEvent soundEvent = ModSounds.PAINT;
-//        if (ModHolidays.APRIL_FOOLS.isHolidayActive()) {
-//            soundEvent = ModSounds.BOI;
-//        }
-//        if (ToolOptions.FULL_BLOCK_MODE.getValue(stack)) {
-//            world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 0.9F);
-//        } else {
-//            world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0F, world.rand.nextFloat() * 0.2F + 1.5F);
-//        }
-        //        if (spawnParticles) {
-//            spawnPaintParticles(world, pos, facing, newColour);
-//        }
     }
 }

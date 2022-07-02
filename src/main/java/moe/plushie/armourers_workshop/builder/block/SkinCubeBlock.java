@@ -96,24 +96,6 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements IBlockTint
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
-        ItemStack itemStack = super.getPickBlock(state, target, world, pos, player);
-        if (itemStack.isEmpty()) {
-            return itemStack;
-        }
-        IPaintColor paintColor = null;
-        BlockRayTraceResult traceResult = (BlockRayTraceResult)target;
-        TileEntity tileEntity = world.getBlockEntity(pos);
-        if (tileEntity instanceof IPaintable) {
-            paintColor = ((IPaintable) tileEntity).getColor(traceResult.getDirection());
-        }
-        if (paintColor != null) {
-            ColorUtils.setColor(itemStack, paintColor);
-        }
-        return itemStack;
-    }
-
-    @Override
     public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
         return true;
     }

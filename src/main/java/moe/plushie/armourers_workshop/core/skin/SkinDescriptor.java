@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
+import moe.plushie.armourers_workshop.utils.ItemStackStorage;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -50,17 +51,18 @@ public class SkinDescriptor implements ISkinDescriptor {
         if (itemStack.isEmpty()) {
             return EMPTY;
         }
-        ISkinDataProvider dataProvider = (ISkinDataProvider) (Object) itemStack;
-        SkinDescriptor descriptor = dataProvider.getSkinData();
+        ItemStackStorage storage = ItemStackStorage.of(itemStack);
+        SkinDescriptor descriptor = storage.skinDescriptor;
         if (descriptor != null) {
             return descriptor;
         }
         CompoundNBT nbt = itemStack.getTag();
         if (nbt == null || !nbt.contains(AWConstants.NBT.SKIN)) {
+            storage.skinDescriptor = EMPTY;
             return EMPTY;
         }
         descriptor = new SkinDescriptor(nbt.getCompound(AWConstants.NBT.SKIN));
-        dataProvider.setSkinData(descriptor);
+        storage.skinDescriptor = descriptor;
         return descriptor;
     }
 

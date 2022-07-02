@@ -13,6 +13,8 @@ import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
+import moe.plushie.armourers_workshop.init.common.AWConstants;
+import moe.plushie.armourers_workshop.utils.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.block.Block;
@@ -159,6 +161,8 @@ public class AWDataSerializers {
             return properties;
         }
     };
+
+    public static final HashMap<String, IPaintColor> EMPTY_SIDE_COLORS = new HashMap<>();
 
     public static Vector3i getVector3i(CompoundNBT nbt, String key) {
         ListNBT listNBT = nbt.getList(key, Constants.NBT.TAG_INT);
@@ -362,6 +366,27 @@ public class AWDataSerializers {
             return PaintColor.of(nbt.getInt(key));
         }
         return defaultValue;
+    }
+
+    public static void putBlockPaintColor(CompoundNBT nbt, String key, BlockPaintColor value, BlockPaintColor defaultValue) {
+        if (value != null && !value.equals(defaultValue)) {
+            nbt.put(key, value.serializeNBT());
+        } else {
+            nbt.remove(key);
+        }
+    }
+
+    public static BlockPaintColor getBlockPaintColor(CompoundNBT nbt, String key, BlockPaintColor defaultValue) {
+        if (!nbt.contains(key, Constants.NBT.TAG_COMPOUND)) {
+            return defaultValue;
+        }
+        CompoundNBT colorNBT = nbt.getCompound(key);
+        if (colorNBT.isEmpty()) {
+            return defaultValue;
+        }
+        BlockPaintColor color = new BlockPaintColor();
+        color.deserializeNBT(colorNBT);
+        return color;
     }
 
     public static ColorScheme getColorScheme(CompoundNBT nbt, String key, ColorScheme defaultValue) {

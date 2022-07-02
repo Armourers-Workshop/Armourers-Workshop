@@ -91,6 +91,9 @@ public class SkinCubeFace {
     @OnlyIn(Dist.CLIENT)
     public void render(BakedSkinPart part, ColorScheme scheme, MatrixStack matrixStack, IVertexBuilder builder) {
         PaintColor resolvedColor = resolve(color, scheme, part.getColorInfo(), part.getType(), 0);
+        if (resolvedColor.getPaintType() == SkinPaintTypes.NONE) {
+            return;
+        }
         SkinCubeFaceRenderer.render(x, y, z, direction, resolvedColor, alpha, matrixStack, builder);
     }
 
