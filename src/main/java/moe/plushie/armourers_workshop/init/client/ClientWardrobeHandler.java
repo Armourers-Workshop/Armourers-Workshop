@@ -2,12 +2,16 @@ package moe.plushie.armourers_workshop.init.client;
 
 import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.api.skin.ISkinPart;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
+import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import moe.plushie.armourers_workshop.init.common.ModItems;
@@ -30,7 +34,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 @OnlyIn(Dist.CLIENT)
@@ -72,6 +80,11 @@ public class ClientWardrobeHandler {
         if (renderData == null) {
             return;
         }
+        SkinRenderData.Entry entry = getEntry(renderData.getItemSkins(), part -> part.getType() == SkinPartTypes.ITEM_ARROW);
+        if (entry == null) {
+            return; // we just need to render with the arrows.
+        }
+
         matrixStack.pushPose();
 
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, entity.yRotO, entity.yRot) - 90.0F));
@@ -87,8 +100,8 @@ public class ClientWardrobeHandler {
         matrixStack.scale(-SCALE, -SCALE, SCALE);
         matrixStack.translate(0, 0, -1);
 
-        int count = render(entity, null, model, light, matrixStack, buffers, ItemCameraTransforms.TransformType.NONE, renderData::getItemSkins);
-        if (count != 0 &&  !ModDebugger.debugItemOverride) {
+        int count = render(entity, null, model, light, matrixStack, buffers, ItemCameraTransforms.TransformType.NONE, () -> Collections.singletonList(entry));
+        if (count != 0 && !ModDebugger.debugItemOverride) {
             callback.cancel();
         }
 
@@ -266,5 +279,16 @@ public class ClientWardrobeHandler {
             r += 1;
         }
         return r;
+    }
+
+    private static SkinRenderData.Entry getEntry(Iterable<SkinRenderData.Entry> entries, Predicate<BakedSkinPart> predicate) {
+        for (SkinRenderData.Entry entry1 : entries) {
+            for (BakedSkinPart part : entry1.getBakedSkin().getSkinParts()) {
+                if (predicate.test(part)) {
+                    return entry1;
+                }
+            }
+        }
+        return null;
     }
 }
