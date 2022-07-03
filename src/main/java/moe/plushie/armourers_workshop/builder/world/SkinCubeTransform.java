@@ -41,7 +41,14 @@ public class SkinCubeTransform {
     }
 
     public BlockPos mul(int x, int y, int z) {
-        return pos.offset(x, y, z);
+        // in this case not need to apply matrix transform.
+        if (rotation == Quaternion.ONE) {
+            return pos.offset(x, y, z);
+        }
+        // we increase 0.5 offset to avoid down-cast incorrect by float accuracy problems.
+        Vector4f off = new Vector4f(x + 0.5f, y + 0.5f, z + 0.5f, 1);
+        off.transform(rotation);
+        return pos.offset(off.x(), off.y(), off.z());
     }
 
 }
