@@ -11,6 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.Explosion;
@@ -38,10 +40,14 @@ public class ArmourerBlock extends AbstractHorizontalBlock {
         return ActionResultType.FAIL;
     }
 
-    @Nullable
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        // TODO: WIP
-        return this.defaultBlockState();
+    @Override
+    public BlockState rotate(BlockState state, Rotation p_185499_2_) {
+        return state; // can't rotate
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror p_185471_2_) {
+        return state; // can't mirror
     }
 
     @Override

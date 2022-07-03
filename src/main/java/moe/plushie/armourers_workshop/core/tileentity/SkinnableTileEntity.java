@@ -25,6 +25,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -46,18 +47,18 @@ public class SkinnableTileEntity extends RotableContainerTileEntity {
     private static final BlockPos INVALID = BlockPos.of(-1);
 
     private static final ImmutableMap<?, Vector3f> FACING_TO_ROT = new ImmutableMap.Builder<Object, Vector3f>()
-            .put(Pair.of(AttachFace.CEILING, Direction.EAST), new Vector3f(180, 90, 0))
-            .put(Pair.of(AttachFace.CEILING, Direction.NORTH), new Vector3f(180, 0, 0))
-            .put(Pair.of(AttachFace.CEILING, Direction.WEST), new Vector3f(180, 270, 0))
-            .put(Pair.of(AttachFace.CEILING, Direction.SOUTH), new Vector3f(180, 180, 0))
+            .put(Pair.of(AttachFace.CEILING, Direction.EAST), new Vector3f(180, 270, 0))
+            .put(Pair.of(AttachFace.CEILING, Direction.NORTH), new Vector3f(180, 180, 0))
+            .put(Pair.of(AttachFace.CEILING, Direction.WEST), new Vector3f(180, 90, 0))
+            .put(Pair.of(AttachFace.CEILING, Direction.SOUTH), new Vector3f(180, 0, 0))
             .put(Pair.of(AttachFace.WALL, Direction.EAST), new Vector3f(0, 270, 0))
             .put(Pair.of(AttachFace.WALL, Direction.SOUTH), new Vector3f(0, 180, 0))
             .put(Pair.of(AttachFace.WALL, Direction.WEST), new Vector3f(0, 90, 0))
             .put(Pair.of(AttachFace.WALL, Direction.NORTH), new Vector3f(0, 0, 0))
-            .put(Pair.of(AttachFace.FLOOR, Direction.EAST), new Vector3f(0, 90, 0))
-            .put(Pair.of(AttachFace.FLOOR, Direction.SOUTH), new Vector3f(0, 0, 0))
-            .put(Pair.of(AttachFace.FLOOR, Direction.WEST), new Vector3f(0, 270, 0))
-            .put(Pair.of(AttachFace.FLOOR, Direction.NORTH), new Vector3f(0, 180, 0))
+            .put(Pair.of(AttachFace.FLOOR, Direction.EAST), new Vector3f(0, 270, 0))
+            .put(Pair.of(AttachFace.FLOOR, Direction.SOUTH), new Vector3f(0, 180, 0))
+            .put(Pair.of(AttachFace.FLOOR, Direction.WEST), new Vector3f(0, 90, 0))
+            .put(Pair.of(AttachFace.FLOOR, Direction.NORTH), new Vector3f(0, 0, 0))
             .build();
 
     private BlockPos refer = INVALID;
@@ -240,7 +241,8 @@ public class SkinnableTileEntity extends RotableContainerTileEntity {
         BlockPos parentPos = getParentPos();
         Collection<SkinMarker> markers = getMarkers();
         if (markers == null || markers.isEmpty()) {
-            return parentPos.relative(getBlockState().getValue(SkinnableBlock.FACING));
+            Direction facing = getBlockState().getValue(SkinnableBlock.FACING);
+            return parentPos.relative(Rotation.CLOCKWISE_180.rotate(facing));
         }
         SkinMarker marker = markers.iterator().next();
         return parentPos.offset(marker.x / 16, marker.y / 16, marker.z / 16);

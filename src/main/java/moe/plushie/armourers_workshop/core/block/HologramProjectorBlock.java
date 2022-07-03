@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.AttachFace;
@@ -25,7 +26,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 @SuppressWarnings("NullableProblems")
-public class HologramProjectorBlock extends HorizontalFaceBlock {
+public class HologramProjectorBlock extends AbstractHorizontalFaceBlock {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
@@ -36,11 +37,6 @@ public class HologramProjectorBlock extends HorizontalFaceBlock {
 
     @Override
     public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
         return true;
     }
 

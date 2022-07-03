@@ -2,7 +2,7 @@
   "variants": {
     "facing=east": {
       "model": "armourers_workshop:block/armourer",
-      "y": 270
+      "y": 90
     },
     "facing=north": {
       "model": "armourers_workshop:block/armourer",
@@ -14,7 +14,7 @@
     },
     "facing=west": {
       "model": "armourers_workshop:block/armourer",
-      "y": 90
+      "y": 270
     }
   }
 }

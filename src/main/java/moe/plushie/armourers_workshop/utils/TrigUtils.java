@@ -12,8 +12,9 @@ public class TrigUtils {
         return new Quaternion(p_i48101_1_, p_i48101_2_, p_i48101_3_);
     }
 
-    public static Quaternion rotate(float x, float y, float z, boolean p_i48102_4_) {
-        if (p_i48102_4_) {
+    // Same to Quaternion(float x, float y, float z, boolean degrees)
+    public static Quaternion rotate(float x, float y, float z, boolean degrees) {
+        if (degrees) {
             x *= ((float) Math.PI / 180F);
             y *= ((float) Math.PI / 180F);
             z *= ((float) Math.PI / 180F);

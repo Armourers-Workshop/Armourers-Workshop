@@ -28,6 +28,8 @@ public class ModDebugger {
 
     public static boolean debugTargetBounds = false;
 
+    public static boolean debugBoundingBox = false;
+
     public static boolean debugMannequinCulling = false;
     public static boolean debugItemOverride = false;
 

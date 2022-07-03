@@ -8,8 +8,10 @@ import moe.plushie.armourers_workshop.api.client.render.IGuideRenderer;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
+import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.render.guide.*;
 import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeTransform;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.render.other.SkinDynamicTexture;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -18,15 +20,20 @@ import moe.plushie.armourers_workshop.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.utils.TextureUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.util.Direction;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -41,29 +48,7 @@ public class ArmourerTileEntityRenderer<T extends ArmourerTileEntity> extends Ti
     private final PlayerTextureOverride override = new PlayerTextureOverride();
     private final Rectangle3f originBox = new Rectangle3f(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f);
 
-    private final ImmutableMap<ISkinPartType, IGuideRenderer> guideRenderers = ImmutableMap.<ISkinPartType, IGuideRenderer>builder()
-            .put(SkinPartTypes.BIPED_HEAD, HeadGuideRenderer.getInstance())
-            .put(SkinPartTypes.BIPED_CHEST, ChestGuideRenderer.getInstance())
-            .put(SkinPartTypes.BIPED_LEFT_ARM, ChestGuideRenderer.getInstance()::renderLeftArm)
-            .put(SkinPartTypes.BIPED_RIGHT_ARM, ChestGuideRenderer.getInstance()::renderRightArm)
-            .put(SkinPartTypes.BIPED_SKIRT, FeetGuideRenderer.getInstance())
-            .put(SkinPartTypes.BIPED_LEFT_LEG, FeetGuideRenderer.getInstance()::renderLeftLeg)
-            .put(SkinPartTypes.BIPED_RIGHT_LEG, FeetGuideRenderer.getInstance()::renderRightLeg)
-            .put(SkinPartTypes.BIPED_LEFT_FOOT, FeetGuideRenderer.getInstance()::renderLeftLeg)
-            .put(SkinPartTypes.BIPED_RIGHT_FOOT, FeetGuideRenderer.getInstance()::renderRightLeg)
-            .put(SkinPartTypes.BIPED_LEFT_WING, WingsGuideRenderer.getInstance())
-            .put(SkinPartTypes.TOOL_AXE, HeldItemGuideRenderer.getInstance())
-            .put(SkinPartTypes.TOOL_HOE, HeldItemGuideRenderer.getInstance())
-            .put(SkinPartTypes.TOOL_PICKAXE, HeldItemGuideRenderer.getInstance())
-            .put(SkinPartTypes.TOOL_SHOVEL, HeldItemGuideRenderer.getInstance())
-            .put(SkinPartTypes.ITEM_SHIELD, HeldItemGuideRenderer.getInstance())
-            .put(SkinPartTypes.ITEM_SWORD, HeldItemGuideRenderer.getInstance())
-            .put(SkinPartTypes.ITEM_TRIDENT, HeldItemGuideRenderer.getInstance())
-            .put(SkinPartTypes.ITEM_BOW1, HeldItemGuideRenderer.getInstance())
-            .put(SkinPartTypes.ITEM_BOW2, HeldItemGuideRenderer.getInstance())
-            .put(SkinPartTypes.ITEM_BOW3, HeldItemGuideRenderer.getInstance())
-            .put(SkinPartTypes.ITEM, HeldItemGuideRenderer.getInstance())
-            .build();
+    private final ImmutableMap<ISkinPartType, IGuideRenderer> guideRenderers = ImmutableMap.<ISkinPartType, IGuideRenderer>builder().put(SkinPartTypes.BIPED_HEAD, HeadGuideRenderer.getInstance()).put(SkinPartTypes.BIPED_CHEST, ChestGuideRenderer.getInstance()).put(SkinPartTypes.BIPED_LEFT_ARM, ChestGuideRenderer.getInstance()::renderLeftArm).put(SkinPartTypes.BIPED_RIGHT_ARM, ChestGuideRenderer.getInstance()::renderRightArm).put(SkinPartTypes.BIPED_SKIRT, FeetGuideRenderer.getInstance()).put(SkinPartTypes.BIPED_LEFT_LEG, FeetGuideRenderer.getInstance()::renderLeftLeg).put(SkinPartTypes.BIPED_RIGHT_LEG, FeetGuideRenderer.getInstance()::renderRightLeg).put(SkinPartTypes.BIPED_LEFT_FOOT, FeetGuideRenderer.getInstance()::renderLeftLeg).put(SkinPartTypes.BIPED_RIGHT_FOOT, FeetGuideRenderer.getInstance()::renderRightLeg).put(SkinPartTypes.BIPED_LEFT_WING, WingsGuideRenderer.getInstance()).put(SkinPartTypes.TOOL_AXE, HeldItemGuideRenderer.getInstance()).put(SkinPartTypes.TOOL_HOE, HeldItemGuideRenderer.getInstance()).put(SkinPartTypes.TOOL_PICKAXE, HeldItemGuideRenderer.getInstance()).put(SkinPartTypes.TOOL_SHOVEL, HeldItemGuideRenderer.getInstance()).put(SkinPartTypes.ITEM_SHIELD, HeldItemGuideRenderer.getInstance()).put(SkinPartTypes.ITEM_SWORD, HeldItemGuideRenderer.getInstance()).put(SkinPartTypes.ITEM_TRIDENT, HeldItemGuideRenderer.getInstance()).put(SkinPartTypes.ITEM_BOW1, HeldItemGuideRenderer.getInstance()).put(SkinPartTypes.ITEM_BOW2, HeldItemGuideRenderer.getInstance()).put(SkinPartTypes.ITEM_BOW3, HeldItemGuideRenderer.getInstance()).put(SkinPartTypes.ITEM, HeldItemGuideRenderer.getInstance()).build();
 
     public ArmourerTileEntityRenderer(TileEntityRendererDispatcher rendererManager) {
         super(rendererManager);
@@ -91,7 +76,7 @@ public class ArmourerTileEntityRenderer<T extends ArmourerTileEntity> extends Ti
         boolean isUsesHelper = entity.usesHelper();
 
         matrixStack.pushPose();
-        matrixStack.translate(0, 1, 0); // apply height offset
+        transform(matrixStack, entity.getBlockState());
         matrixStack.scale(-1, -1, 1);
 
         float polygonOffset = 0f;
@@ -160,10 +145,16 @@ public class ArmourerTileEntityRenderer<T extends ArmourerTileEntity> extends Ti
         override.setBuffers(null);
     }
 
+    public void transform(MatrixStack matrixStack, BlockState state) {
+        matrixStack.translate(0, 1, 0); // apply height offset
+        matrixStack.mulPose(SkinCubeTransform.getRotation(state.getValue(ArmourerBlock.FACING))); // apply facing rotation
+    }
+
     @Override
     public boolean shouldRenderOffScreen(T entity) {
         return true;
     }
+
 
     public static class PlayerTextureOverride implements IRenderTypeBuffer {
 

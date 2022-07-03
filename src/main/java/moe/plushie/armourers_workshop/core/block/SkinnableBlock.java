@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 @SuppressWarnings("NullableProblems")
-public class SkinnableBlock extends HorizontalFaceBlock {
+public class SkinnableBlock extends AbstractHorizontalFaceBlock {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 

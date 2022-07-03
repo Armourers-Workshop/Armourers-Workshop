@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.block;
 
 import moe.plushie.armourers_workshop.builder.tileentity.BoundingBoxTileEntity;
+import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -68,6 +69,9 @@ public class BoundingBoxBlock extends Block {
 
     @Override
     public BlockRenderType getRenderShape(BlockState state) {
+        if (ModDebugger.debugBoundingBox) {
+            return BlockRenderType.MODEL;
+        }
         return BlockRenderType.INVISIBLE;
     }
 }

@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.builder.container;
 
 import com.mojang.authlib.GameProfile;
+import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeTransform;
 import moe.plushie.armourers_workshop.builder.world.WorldUtils;
 import moe.plushie.armourers_workshop.core.container.AbstractBlockContainer;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -110,8 +112,9 @@ public class ArmourerContainer extends AbstractBlockContainer {
         try {
             World world = tileEntity.getLevel();
             BlockPos pos = tileEntity.getBlockPos().offset(0, 1, 0);
-            Direction direction = Direction.NORTH;
-            skin = WorldUtils.saveSkinFromWorld(world, skinProps, tileEntity.getSkinType(), tileEntity.getPaintData(), pos, direction);
+            Direction facing = tileEntity.getBlockState().getValue(ArmourerBlock.FACING);
+            SkinCubeTransform transform = new SkinCubeTransform(world, pos, facing);
+            skin = WorldUtils.saveSkinFromWorld(world, transform, skinProps, tileEntity.getSkinType(), tileEntity.getPaintData());
         } catch (SkinSaveException e) {
             player.sendMessage(new StringTextComponent(e.getMessage()), player.getUUID());
         }
@@ -155,8 +158,9 @@ public class ArmourerContainer extends AbstractBlockContainer {
         try {
             World world = tileEntity.getLevel();
             BlockPos pos = tileEntity.getBlockPos().offset(0, 1, 0);
-            Direction direction = Direction.NORTH;
-            WorldUtils.loadSkinIntoWorld(world, pos, skin, direction);
+            Direction facing = tileEntity.getBlockState().getValue(ArmourerBlock.FACING);
+            SkinCubeTransform transform = new SkinCubeTransform(world, pos, facing);
+            WorldUtils.loadSkinIntoWorld(world, transform, skin);
         } catch (Exception e) {
             e.printStackTrace();
         }

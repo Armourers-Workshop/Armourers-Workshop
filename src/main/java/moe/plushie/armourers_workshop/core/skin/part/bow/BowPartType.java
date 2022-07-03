@@ -20,6 +20,10 @@ public class BowPartType extends SkinPartType implements ICanHeld, ICanUse {
     }
 
     public static Range<Integer> getFrameUseRange(int frame) {
+        // (float)(p_239429_0_.getUseDuration() - p_239429_2_.getUseItemRemainingTicks()) / 20.0F;
+        // pulling: 1, 0
+        // pulling: 1, 0.65
+        // pulling: 1, 0.9
         switch (frame) {
             case 0:
                 return Range.closed(0, 12);

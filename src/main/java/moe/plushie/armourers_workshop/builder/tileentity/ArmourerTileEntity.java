@@ -5,10 +5,8 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.builder.world.SkinCubeReplaceApplier;
-import moe.plushie.armourers_workshop.builder.world.WorldBlockUpdateTask;
-import moe.plushie.armourers_workshop.builder.world.WorldUpdater;
-import moe.plushie.armourers_workshop.builder.world.WorldUtils;
+import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
+import moe.plushie.armourers_workshop.builder.world.*;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -256,10 +254,7 @@ public class ArmourerTileEntity extends AbstractTileEntity {
 
     public void clearCubes(ISkinPartType partType) {
         // remove all part
-        World world = getLevel();
-        BlockPos pos = getBlockPos().offset(0, 1, 0);
-        Direction direction = Direction.NORTH;
-        WorldUtils.clearCubes(world, pos, getSkinType(), getSkinProperties(), direction, partType);
+        WorldUtils.clearCubes(getLevel(), getTransform(), getSkinType(), getSkinProperties(), partType);
         // when just clear a part, we don't reset skin properties.
         if (partType != SkinPartTypes.UNKNOWN) {
             return;
@@ -272,24 +267,15 @@ public class ArmourerTileEntity extends AbstractTileEntity {
     }
 
     public void replaceCubes(SkinCubeReplaceApplier applier) throws Exception {
-        World world = getLevel();
-        BlockPos pos = getBlockPos().offset(0, 1, 0);
-        Direction direction = Direction.NORTH;
-        WorldUtils.replaceCubes(world, pos, getSkinType(), getSkinProperties(), direction, applier);
+        WorldUtils.replaceCubes(getLevel(), getTransform(), getSkinType(), getSkinProperties(), applier);
     }
 
     public void copyCubes(ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws Exception {
-        World world = getLevel();
-        BlockPos pos = getBlockPos().offset(0, 1, 0);
-        Direction direction = Direction.NORTH;
-        WorldUtils.copyCubes(world, pos, getSkinType(), getSkinProperties(), direction, srcPart, destPart, mirror);
+        WorldUtils.copyCubes(getLevel(), getTransform(), getSkinType(), getSkinProperties(), srcPart, destPart, mirror);
     }
 
     public void clearMarkers(ISkinPartType partType) {
-        World world = getLevel();
-        BlockPos pos = getBlockPos().offset(0, 1, 0);
-        Direction direction = Direction.NORTH;
-        WorldUtils.clearMarkers(world, pos, getSkinType(), getSkinProperties(), direction, partType);
+        WorldUtils.clearMarkers(getLevel(), getTransform(), getSkinType(), getSkinProperties(), partType);
         setChanged();
     }
 
@@ -375,15 +361,13 @@ public class ArmourerTileEntity extends AbstractTileEntity {
         if (boxes == null || boxes.isEmpty()) {
             return;
         }
-        BlockPos pos = getBlockPos();
+        SkinCubeTransform transform = getTransform();
         boxes.forEach(box -> box.forEach((ix, iy, iz) -> {
-            int tx = ix + box.getX() + pos.getX();
-            int ty = iy + box.getY() + pos.getY() + 1;
-            int tz = iz + box.getZ() + pos.getZ();
+            BlockPos target = transform.mul(ix + box.getX(), iy + box.getY(), iz + box.getZ());
             ix = box.getWidth() - ix - 1;
             iy = box.getHeight() - iy - 1;
             ISkinPartType partType = box.getPartType();
-            IWorldUpdateTask task = builder.build(partType, new BlockPos(tx, ty, tz), new Vector3i(ix, iy, iz));
+            IWorldUpdateTask task = builder.build(partType, target, new Vector3i(ix, iy, iz));
             if (task != null) {
                 WorldUpdater.getInstance().submit(task);
             }
@@ -402,6 +386,12 @@ public class ArmourerTileEntity extends AbstractTileEntity {
             }
         }
         return boxes;
+    }
+
+    private SkinCubeTransform getTransform() {
+        BlockPos pos = getBlockPos().offset(0, 1, 0);
+        Direction facing = getBlockState().getValue(ArmourerBlock.FACING);
+        return new SkinCubeTransform(getLevel(), pos, facing);
     }
 
     public interface IUpdateTaskBuilder {
