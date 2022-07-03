@@ -329,12 +329,16 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         return hasParts.contains(partType);
     }
 
-    public boolean hasOverriddenPart(ISkinPartType partType) {
+    public boolean hasOverriddenModelPart(ISkinPartType partType) {
         return hasOverriddenModelParts.contains(partType);
     }
 
+    public boolean hasOverriddenOverlayPart(ISkinPartType partType) {
+        return hasOverriddenOverlayParts.contains(partType) || hasOverriddenModelPart(partType);
+    }
+
     public boolean hasOverriddenEquipmentPart(ISkinPartType partType) {
-        if (hasOverriddenOverlayParts.contains(partType)) {
+        if (hasOverriddenOverlayPart(partType)) {
             return true;
         }
         EquipmentSlotType slotType = PART_TO_EQUIPMENT_SLOTS.get(partType);

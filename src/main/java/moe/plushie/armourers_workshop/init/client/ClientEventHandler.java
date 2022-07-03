@@ -16,7 +16,6 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
 

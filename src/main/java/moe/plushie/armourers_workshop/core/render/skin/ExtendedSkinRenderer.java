@@ -1,35 +1,18 @@
 package moe.plushie.armourers_workshop.core.render.skin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.api.action.ICanHeld;
-import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
-import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.render.other.SkinModelManager;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
-import moe.plushie.armourers_workshop.init.common.ModDebugger;
-import moe.plushie.armourers_workshop.utils.SkinUtils;
-import moe.plushie.armourers_workshop.utils.extened.AWMatrixStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ForgeHooksClient;
-
-import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends EntityModel<T>> extends LivingSkinRenderer<T, M> {
@@ -86,24 +69,28 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
     }
 
     protected void applyOverriders(T entity, M model, SkinRenderData renderData) {
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
+        // model
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_ARM)) {
             addOverrider(accessor.getLeftArm(model));
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
             addOverrider(accessor.getRightArm(model));
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_HEAD)) {
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_HEAD)) {
             addOverrider(accessor.getHead(model));
-            addOverrider(accessor.getHat(model)); // when override the head, the hat needs to override too
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_CHEST)) {
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_CHEST)) {
             addOverrider(accessor.getBody(model));
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_LEG) || renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_LEG) || renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
             addOverrider(accessor.getLeftLeg(model));
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_LEG) || renderData.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_LEG) || renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
             addOverrider(accessor.getRightLeg(model));
+        }
+        // overlay
+        if (renderData.hasOverriddenOverlayPart(SkinPartTypes.BIPED_HEAD)) {
+            addOverrider(accessor.getHat(model));
         }
     }
 

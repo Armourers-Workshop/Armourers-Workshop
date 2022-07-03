@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.render.skin;
 
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -19,19 +20,22 @@ public class PlayerSkinRenderer<T extends LivingEntity, M extends PlayerModel<T>
     @Override
     protected void applyOverriders(T entity, M model, SkinRenderData renderData) {
         super.applyOverriders(entity, model, renderData);
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
+        if (renderData.hasOverriddenOverlayPart(SkinPartTypes.BIPED_HEAD)) {
+            addOverrider(model.hat);
+        }
+        if (renderData.hasOverriddenOverlayPart(SkinPartTypes.BIPED_LEFT_ARM)) {
             addOverrider(model.leftSleeve);
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
+        if (renderData.hasOverriddenOverlayPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
             addOverrider(model.rightSleeve);
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_CHEST)) {
+        if (renderData.hasOverriddenOverlayPart(SkinPartTypes.BIPED_CHEST)) {
             addOverrider(model.jacket);
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_LEG) || renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
+        if (renderData.hasOverriddenOverlayPart(SkinPartTypes.BIPED_LEFT_LEG) || renderData.hasOverriddenOverlayPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
             addOverrider(model.leftPants);
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_LEG) || renderData.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
+        if (renderData.hasOverriddenOverlayPart(SkinPartTypes.BIPED_RIGHT_LEG) || renderData.hasOverriddenOverlayPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
             addOverrider(model.rightPants);
         }
     }

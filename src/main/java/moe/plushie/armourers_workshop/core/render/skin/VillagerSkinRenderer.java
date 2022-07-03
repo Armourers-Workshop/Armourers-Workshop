@@ -45,26 +45,26 @@ public class VillagerSkinRenderer<T extends LivingEntity, M extends VillagerMode
 
     @Override
     protected void applyOverriders(T entity, M model, SkinRenderData renderData) {
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_ARM)) {
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_ARM)) {
             addOverrider(model.arms);
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
             addOverrider(model.arms);
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_HEAD)) {
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_HEAD)) {
             addOverrider(model.head);
             addOverrider(model.hat); // when override the head, the hat needs to override too
             addOverrider(model.hatRim);
             addOverrider(model.nose);
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_CHEST)) {
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_CHEST)) {
             addOverrider(model.body);
             addOverrider(model.jacket);
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_LEG) || renderData.hasOverriddenPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_LEG) || renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
             addOverrider(model.leg0);
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_LEG) || renderData.hasOverriddenPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_LEG) || renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
             addOverrider(model.leg1);
         }
     }

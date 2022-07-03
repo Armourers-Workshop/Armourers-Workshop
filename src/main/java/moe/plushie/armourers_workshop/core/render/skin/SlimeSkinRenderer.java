@@ -32,7 +32,7 @@ public class SlimeSkinRenderer<T extends SlimeEntity, M extends SlimeModel<T>> e
         if (renderData == null) {
             return;
         }
-        if (renderData.hasOverriddenPart(SkinPartTypes.BIPED_HEAD)) {
+        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_HEAD)) {
             for (ModelRenderer modelRenderer : model.parts()) {
                 addOverrider(modelRenderer);
             }
