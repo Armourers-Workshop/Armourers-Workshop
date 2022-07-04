@@ -173,7 +173,7 @@ public class BakedSkin implements IBakedSkin {
         return shape;
     }
 
-    public boolean shouldRenderPart(BakedSkinPart bakedPart, Entity entity, ItemCameraTransforms.TransformType transformType) {
+    public boolean shouldRenderPart(BakedSkinPart bakedPart, Entity entity, ItemStack itemStack, ItemCameraTransforms.TransformType transformType) {
         ISkinPartType partType = bakedPart.getType();
         if (partType == SkinPartTypes.ITEM_ARROW) {
             // arrow part only render in arrow entity
@@ -192,7 +192,7 @@ public class BakedSkin implements IBakedSkin {
             return false; // arrow entity only render arrow part
         }
         if (partType instanceof ICanUse && entity instanceof LivingEntity) {
-            int useTick = ((LivingEntity) entity).getTicksUsingItem();
+            int useTick = getUseTick((LivingEntity) entity, itemStack);
             Range<Integer> useRange = ((ICanUse) partType).getUseRange();
             return useRange.contains(Math.min(useTick, maxUseTick));
         }
@@ -209,6 +209,13 @@ public class BakedSkin implements IBakedSkin {
                 cachedBlockBounds.putAll(bm);
             }
         }
+    }
+
+    private int getUseTick(LivingEntity entity, ItemStack itemStack) {
+        if (entity.getUseItem() == itemStack) {
+            return entity.getTicksUsingItem();
+        }
+        return 0;
     }
 
     private int getMaxUseTick(ArrayList<BakedSkinPart> bakedParts) {

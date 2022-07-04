@@ -108,7 +108,7 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             if (!prepare(entity, model, bakedSkin, bakedPart, itemStack, transformType)) {
                 continue;
             }
-            boolean shouldRenderPart = bakedSkin.shouldRenderPart(bakedPart, entity, transformType);
+            boolean shouldRenderPart = bakedSkin.shouldRenderPart(bakedPart, entity, itemStack, transformType);
             matrixStack.pushPose();
             apply(entity, model, itemStack, transformType, bakedPart, bakedSkin, partialTicks, matrixStack);
             builder.addPartData(bakedPart, scheme1, light, partialTicks, slotIndex, matrixStack, shouldRenderPart);
@@ -185,13 +185,13 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             final float f1 = 16f;
             final float f2 = 1 / 16f;
             final boolean flag = (transformType == ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND || transformType == ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND);
-            ModDebugger.translate(matrixStack);
+//            ModDebugger.translate(matrixStack);
             matrixStack.scale(f1, f1, f1);
             IBakedModel bakedModel = SkinModelManager.getInstance().getModel(bakedPart.getType(), itemStack, entity.level, entity);
             ForgeHooksClient.handleCameraTransforms(matrixStack, bakedModel, transformType, flag);
             matrixStack.scale(f2, f2, f2);
-            ModDebugger.rotate(matrixStack);
-            ModDebugger.scale(matrixStack);
+//            ModDebugger.rotate(matrixStack);
+//            ModDebugger.scale(matrixStack);
             if (flag) {
                 matrixStack.scale(-1, 1, 1);
             }
