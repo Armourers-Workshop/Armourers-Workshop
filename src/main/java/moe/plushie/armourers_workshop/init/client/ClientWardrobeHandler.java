@@ -169,7 +169,7 @@ public class ClientWardrobeHandler {
                 return false;
             }
             if (itemStack.getItem() == ModItems.SKIN) {
-                return true;
+                return false;
             }
             return !SkinDescriptor.of(itemStack).isEmpty();
         }
@@ -184,12 +184,9 @@ public class ClientWardrobeHandler {
         if (itemStack.isEmpty()) {
             return;
         }
-        int count = 0;
+        int counter = 0;
         switch (transformType) {
             case GUI:
-                if (!ModConfig.Client.enableEmbeddedSkinRenderer) {
-                    return;
-                }
                 SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
                 if (descriptor.isEmpty()) {
                     return;
@@ -212,8 +209,8 @@ public class ClientWardrobeHandler {
                     matrixStack.scale(-SCALE, -SCALE, SCALE);
 
                     boolean replaceSkinItem = entity instanceof MannequinEntity;
-                    count = render(entity, itemStack, null, packedLight, matrixStack, buffers, transformType, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
-                    if (count != 0 && !ModDebugger.debugItemOverride) {
+                    counter = render(entity, itemStack, null, packedLight, matrixStack, buffers, transformType, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
+                    if (counter != 0 && !ModDebugger.debugItemOverride) {
                         callback.cancel();
                     }
                     matrixStack.popPose();
@@ -275,8 +272,7 @@ public class ClientWardrobeHandler {
             if (itemStack == null) {
                 itemStack = entry.getItemStack();
             }
-            renderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), itemStack, transformType, light, partialTicks, entry.getSlotIndex(), matrixStack, buffers);
-            r += 1;
+            r += renderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), itemStack, transformType, light, partialTicks, entry.getSlotIndex(), matrixStack, buffers);
         }
         return r;
     }

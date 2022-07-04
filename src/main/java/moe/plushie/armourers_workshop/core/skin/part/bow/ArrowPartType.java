@@ -1,10 +1,11 @@
 package moe.plushie.armourers_workshop.core.skin.part.bow;
 
+import moe.plushie.armourers_workshop.api.action.ICanHeld;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartType;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import net.minecraft.util.math.vector.Vector3i;
 
-public class ArrowPartType extends SkinPartType {
+public class ArrowPartType extends SkinPartType implements ICanHeld {
 
     public ArrowPartType() {
         super();

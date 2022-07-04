@@ -176,7 +176,17 @@ public class BakedSkin implements IBakedSkin {
     public boolean shouldRenderPart(BakedSkinPart bakedPart, Entity entity, ItemCameraTransforms.TransformType transformType) {
         ISkinPartType partType = bakedPart.getType();
         if (partType == SkinPartTypes.ITEM_ARROW) {
-            return entity instanceof ArrowEntity; // arrow part only render in arrow entity
+            // arrow part only render in arrow entity
+            if (entity instanceof ArrowEntity) {
+                return true;
+            }
+            // we have some old skin that only contain arrow part,
+            // so we need to be compatible rendering it.
+            // we use `NONE` to rendering the GUI/Ground/ItemFrame.
+            if (transformType == ItemCameraTransforms.TransformType.NONE) {
+                return skinParts.size() == 1;
+            }
+            return false;
         }
         if (entity instanceof ArrowEntity) {
             return false; // arrow entity only render arrow part

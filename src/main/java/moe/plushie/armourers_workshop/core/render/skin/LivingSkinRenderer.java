@@ -53,12 +53,12 @@ public class LivingSkinRenderer<T extends LivingEntity, M extends EntityModel<T>
     }
 
     @Override
-    public void render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, int slotIndex, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
-        //
+    public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, int slotIndex, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+        // we don't know how to draw without a model, right?
         if (model == null) {
             model = getModel();
         }
-        super.render(entity, model, bakedSkin, scheme, itemStack, transformType, light, partialTicks, slotIndex, matrixStack, buffers);
+        return super.render(entity, model, bakedSkin, scheme, itemStack, transformType, light, partialTicks, slotIndex, matrixStack, buffers);
     }
 
     public M getModel() {

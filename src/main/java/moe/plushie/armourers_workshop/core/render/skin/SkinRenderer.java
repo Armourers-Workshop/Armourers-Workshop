@@ -92,14 +92,14 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         overriders.forEach(m -> m.visible = false);
     }
 
-    public void render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, int slotIndex, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+    public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, int light, float partialTicks, int slotIndex, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         if (profile != null) {
             ISkinType type = bakedSkin.getType();
             if (type instanceof ISkinArmorType && !profile.canSupport(type)) {
-                return;
+                return 0;
             }
         }
-        int index = 0;
+        int counter = 0;
         Skin skin = bakedSkin.getSkin();
         ColorScheme scheme1 = bakedSkin.resolve(entity, scheme);
         SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(buffers);
@@ -113,10 +113,15 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             apply(entity, model, itemStack, transformType, bakedPart, bakedSkin, partialTicks, matrixStack);
             builder.addPartData(bakedPart, scheme1, light, partialTicks, slotIndex, matrixStack, shouldRenderPart);
             if (shouldRenderPart && ModDebugger.debugSkinPartBounds) {
-                builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(index++), matrixStack);
+                builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(counter), matrixStack);
             }
             if (shouldRenderPart && ModDebugger.debugSkinPartOrigin) {
                 builder.addShapeData(AWConstants.ZERO, matrixStack);
+            }
+            // we have some cases where we need to pre-render,
+            // this is not a real render where we should not increase the number.
+            if (shouldRenderPart) {
+                counter += 1;
             }
 //            RenderUtils.drawPoint(matrixStack, null, 32, buffers);
             matrixStack.popPose();
@@ -128,6 +133,8 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         if (ModDebugger.debugSkinBounds) {
             builder.addShapeData(AWConstants.ZERO, matrixStack);
         }
+
+        return counter;
     }
 
     public void didRender(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
