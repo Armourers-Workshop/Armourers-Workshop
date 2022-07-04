@@ -81,18 +81,18 @@ public class SkinItem extends Item implements IItemModelPropertiesProvider {
     @Override
     public ActionResultType onItemUseFirst(ItemStack itemStack, ItemUseContext context) {
         SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        if (descriptor.isEmpty()) {
+        SkinSlotType slotType = SkinSlotType.of(descriptor.getType());
+        if (descriptor.isEmpty() || slotType == null) {
             return ActionResultType.PASS;
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(context.getPlayer());
         if (wardrobe == null || !wardrobe.isEditable(context.getPlayer())) {
-            return ActionResultType.FAIL;
+            return ActionResultType.PASS;
         }
         World world = context.getLevel();
-        SkinSlotType slotType = SkinSlotType.of(descriptor.getType());
         int slot = wardrobe.getFreeSlot(slotType);
         if (!wardrobe.getItem(slotType, slot).isEmpty()) {
-            return ActionResultType.FAIL;
+            return ActionResultType.PASS;
         }
         wardrobe.setItem(slotType, slot, itemStack.copy());
         itemStack.shrink(1);

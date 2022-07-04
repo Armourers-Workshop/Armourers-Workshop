@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.builder.tileentity;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
+import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.tileentity.AbstractTileEntity;
@@ -34,6 +35,10 @@ public class SkinCubeTileEntity extends AbstractTileEntity implements IPaintable
 
     public void writeToNBT(CompoundNBT nbt) {
         nbt.put(AWConstants.NBT.COLOR, colors.serializeNBT());
+//        // we must need to tracking the facing at the save it,
+//        // because we need to get the colors based facing from copied NBT.
+//        // we can know the direction has been changed when the load copied NBT.
+//        nbt.putString(AWConstants.NBT.FACING, getDirection().name());
     }
 
     private boolean checkRendererFromColors() {
@@ -46,7 +51,7 @@ public class SkinCubeTileEntity extends AbstractTileEntity implements IPaintable
     }
 
     private BlockPaintColor.Side getSide(Direction dir) {
-        switch (getBlockState().getValue(SkinCubeBlock.FACING)) {
+        switch (getDirection()) {
             case SOUTH: {
                 // when block facing to south, we need to rotate 180° get facing north direction.
                 return BlockPaintColor.Side.of(Rotation.CLOCKWISE_180.rotate(dir));
@@ -82,6 +87,10 @@ public class SkinCubeTileEntity extends AbstractTileEntity implements IPaintable
         colors.forEach((direction, color) -> this.colors.put(getSide(direction), color));
         this.customRenderer = checkRendererFromColors();
         TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
+    }
+
+    public Direction getDirection() {
+        return getBlockState().getValue(ArmourerBlock.FACING);
     }
 
     @Override

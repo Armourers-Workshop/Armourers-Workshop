@@ -45,6 +45,8 @@ public final class AWConstants {
         public static final String COLOR = "Color";
         public static final String DATA_VERSION = "DataVersion";
 
+        public static final String FACING = "Facing";
+
         public static final String COLOR_1 = "Color1";
         public static final String COLOR_2 = "Color2";
 
