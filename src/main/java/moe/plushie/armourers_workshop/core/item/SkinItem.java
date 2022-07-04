@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.api.common.IItemModelPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
+import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -12,12 +13,14 @@ import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModItems;
 import moe.plushie.armourers_workshop.utils.SkinItemUseContext;
+import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.World;
 
 import java.util.function.BiConsumer;
 
@@ -72,7 +75,31 @@ public class SkinItem extends Item implements IItemModelPropertiesProvider {
         if (descriptor.getType() == SkinTypes.BLOCK) {
             return place(new BlockItemUseContext(context));
         }
-        return ActionResultType.PASS;
+        return ActionResultType.FAIL;
+    }
+
+    @Override
+    public ActionResultType onItemUseFirst(ItemStack itemStack, ItemUseContext context) {
+        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+        if (descriptor.isEmpty()) {
+            return ActionResultType.PASS;
+        }
+        SkinWardrobe wardrobe = SkinWardrobe.of(context.getPlayer());
+        if (wardrobe == null || !wardrobe.isEditable(context.getPlayer())) {
+            return ActionResultType.FAIL;
+        }
+        World world = context.getLevel();
+        SkinSlotType slotType = SkinSlotType.of(descriptor.getType());
+        int slot = wardrobe.getFreeSlot(slotType);
+        if (!wardrobe.getItem(slotType, slot).isEmpty()) {
+            return ActionResultType.FAIL;
+        }
+        wardrobe.setItem(slotType, slot, itemStack.copy());
+        itemStack.shrink(1);
+        if (!world.isClientSide()) {
+            wardrobe.sendToAll();
+        }
+        return ActionResultType.sidedSuccess(world.isClientSide());
     }
 
     public ActionResultType place(BlockItemUseContext context) {

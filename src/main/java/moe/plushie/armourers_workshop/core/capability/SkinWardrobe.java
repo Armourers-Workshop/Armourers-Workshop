@@ -63,7 +63,7 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         int unlockedSize = getUnlockedSize(slotType);
         for (int i = 0; i < unlockedSize; ++i) {
             if (inventory.getItem(slotType.getIndex() + i).isEmpty()) {
-                return i + 1;
+                return i;
             }
         }
         return Integer.MAX_VALUE;

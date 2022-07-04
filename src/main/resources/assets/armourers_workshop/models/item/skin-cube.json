@@ -1,6 +1,5 @@
 {
   "parent": "builtin/entity",
-  "gui_light": "side",
   "display": {
     "gui": {
       "rotation": [ 30, 45, 0 ],

@@ -181,7 +181,7 @@ public class BakedSkin implements IBakedSkin {
                 return true;
             }
             // we have some old skin that only contain arrow part,
-            // so we need to be compatible rendering it.
+            // so when it happens, we need to be compatible rendering it.
             // we use `NONE` to rendering the GUI/Ground/ItemFrame.
             if (transformType == ItemCameraTransforms.TransformType.NONE) {
                 return skinParts.size() == 1;
