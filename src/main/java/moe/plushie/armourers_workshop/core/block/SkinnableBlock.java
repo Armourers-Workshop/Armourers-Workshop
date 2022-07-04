@@ -10,6 +10,7 @@ import moe.plushie.armourers_workshop.utils.SkinItemUseContext;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
@@ -122,8 +123,9 @@ public class SkinnableBlock extends AbstractHorizontalFaceBlock {
         if (tileEntity.isInventory()) {
             if (ModContainerTypes.open(ModContainerTypes.SKINNABLE, player, world, pos)) {
                 player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
-                return ActionResultType.sidedSuccess(world.isClientSide);
+                PiglinTasks.angerNearbyPiglins(player, true);
             }
+            return ActionResultType.sidedSuccess(world.isClientSide);
         }
         return ActionResultType.FAIL;
     }
