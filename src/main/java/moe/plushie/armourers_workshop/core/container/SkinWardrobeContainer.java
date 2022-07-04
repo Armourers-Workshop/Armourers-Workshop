@@ -21,6 +21,7 @@ import java.util.List;
 @SuppressWarnings("NullableProblems")
 public class SkinWardrobeContainer extends Container {
 
+    private final PlayerEntity player;
     private final SkinWardrobe wardrobe;
     private final ArrayList<ItemStack> lastSyncSlot = new ArrayList<>();
     private final ArrayList<Slot> customSlots = new ArrayList<>();
@@ -33,6 +34,7 @@ public class SkinWardrobeContainer extends Container {
     public SkinWardrobeContainer(int containerId, PlayerInventory inventory, SkinWardrobe wardrobe) {
         super(ModContainerTypes.WARDROBE, containerId);
         this.wardrobe = wardrobe;
+        this.player = inventory.player;
 
         addPlayerSlots(inventory);
 
@@ -155,6 +157,10 @@ public class SkinWardrobeContainer extends Container {
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
+        // no need listen slot changes for client side.
+        if (player.level == null || player.level.isClientSide()) {
+            return;
+        }
         // in normal, the size is inconsistent this will only happen when the container is first loaded.
         if (lastSyncSlot.size() != slots.size()) {
             lastSyncSlot.ensureCapacity(slots.size());
