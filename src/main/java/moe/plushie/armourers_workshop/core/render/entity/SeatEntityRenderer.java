@@ -24,7 +24,7 @@ public class SeatEntityRenderer<T extends SeatEntity> extends EntityRenderer<T> 
 
     @Override
     public void render(T entity, float p_225623_2_, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffers, int packedLightIn) {
-        if (ModDebugger.debugSkinnableBlock) {
+        if (ModDebugger.skinnableBlock) {
             RenderUtils.drawPoint(matrixStack, buffers);
             RenderUtils.drawBoundingBox(matrixStack, -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, Color.ORANGE, buffers);
         }

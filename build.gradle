@@ -1,3 +1,5 @@
+import net.minecraftforge.gradle.common.tasks.SignJar
+
 buildscript {
     repositories {
         maven { url = "https://maven.minecraftforge.net" }
@@ -151,6 +153,15 @@ mixin {
     debug.export = true
 }
 
+processResources {
+    inputs.property('version', version)
+    filesMatching("META-INF/mods.toml") {
+        expand 'version': semver,
+                'minecraft_version': project.minecraft_version_range,
+                'forge_version_range': project.forge_version_range
+    }
+}
+
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
     manifest {
@@ -164,12 +175,6 @@ jar {
     }
 }
 
-// Example configuration to allow publishing using the maven-publish plugin
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar')
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-// publish.dependsOn('reobfJar')
-
 task apiJar(type: Jar) {
     classifier = "api"
     from(sourceSets.main.allJava) {
@@ -181,6 +186,33 @@ task sourcesJar(type: Jar) {
     classifier = "sources"
     from(sourceSets.main.allJava)
 }
+
+task signJar(type: SignJar, dependsOn: "reobfJar") {
+    def encodedKeyStore = System.getenv('AW_SIGN_KEYSTORE');
+    onlyIf {
+        encodedKeyStore != null
+    }
+    if (encodedKeyStore != null) {
+        keyStore = new File(getTemporaryDir(), "aw.jks").toString();
+        alias = System.getenv("AW_SIGN_ALIAS")
+        storePass = System.getenv("AW_SIGN_STOREPASS")
+        keyPass = System.getenv("AW_SIGN_KEYPASS")
+        inputFile = jar.archivePath
+        outputFile = jar.archivePath
+        file(keyStore).withOutputStream { output ->
+            output.write(Base64.getDecoder().decode(encodedKeyStore))
+        }
+    }
+    doLast {
+        delete keyStore
+    }
+}
+
+// Example configuration to allow publishing using the maven-publish plugin
+// This is the preferred method to reobfuscate your jar file
+jar.finalizedBy("signJar")
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+// publish.dependsOn('reobfJar')
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
@@ -201,13 +233,5 @@ publishing {
         maven {
             url "file://${project.projectDir}/mcmodsrepo"
         }
-    }
-}
-
-processResources {
-    filesMatching("META-INF/mods.toml") {
-        expand 'version': semver,
-                'minecraft_version': project.minecraft_version_range,
-                'forge_version_range': project.forge_version_range
     }
 }

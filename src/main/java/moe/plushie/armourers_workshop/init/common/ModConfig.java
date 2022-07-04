@@ -66,8 +66,6 @@ public class ModConfig {
         public static boolean enableBlockPlacementHighlight = true;
         public static boolean enablePaintToolPlacementHighlight = true;
 
-        public static boolean enableEmbeddedSkinRenderer = false;
-
         public static boolean enableModelOverridden = true;
         public static boolean enableWireframeRender = false;
         public static boolean enableMagicWhenContributor = false;
@@ -139,6 +137,9 @@ public class ModConfig {
         public static int enitiySpawnWithSkinsChance = 75;
         public static int entityDropSkinChance = 10;
         public static String enitiySpawnSkinTargetPath = "/";
+
+        public static boolean enableEmbeddedSkinRenderer = false;
+
 
         // Cache
         public static int skinCacheExpireTime;

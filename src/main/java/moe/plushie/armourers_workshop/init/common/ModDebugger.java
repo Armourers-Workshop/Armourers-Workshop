@@ -17,33 +17,33 @@ public class ModDebugger {
     public static int sy = 1;
     public static int sz = 1;
 
-    public static boolean debugSkinnableBlock = false;
-    public static boolean debugHologramProjectorBlock = false;
+    public static boolean skinnableBlock = false;
+    public static boolean hologramProjectorBlock = false;
 
-    public static boolean debugSkinBounds = false;
-    public static boolean debugSkinOrigin = false;
+    public static boolean skinBounds = false;
+    public static boolean skinOrigin = false;
 
-    public static boolean debugSkinPartBounds = false;
-    public static boolean debugSkinPartOrigin = false;
+    public static boolean skinPartBounds = false;
+    public static boolean skinPartOrigin = false;
 
-    public static boolean debugTargetBounds = false;
+    public static boolean targetBounds = false;
 
-    public static boolean debugBoundingBox = false;
+    public static boolean boundingBox = false;
 
-    public static boolean debugMannequinCulling = false;
-    public static boolean debugItemOverride = false;
+    public static boolean mannequinCulling = false;
+    public static boolean itemOverride = false;
 
-    public static boolean showDebugTextureBounds = false;
-    public static boolean showDebugSpin = false;
+    public static boolean textureBounds = false;
+    public static boolean spin = false;
 
-    public static boolean debugTooltip = false;
+    public static boolean tooltip = false;
 
     // Debug tool
-    public static boolean showArmourerDebugRender;
-    public static boolean showLodLevels;
-    public static boolean showSkinBlockBounds;
-    public static boolean showSkinRenderBounds;
-    public static boolean showSortOrderToolTip;
+    public static boolean armourerDebugRender;
+    public static boolean lodLevels;
+    public static boolean skinBlockBounds;
+    public static boolean skinRenderBounds;
+    public static boolean sortOrderToolTip;
 
     @OnlyIn(Dist.CLIENT)
     public static void rotate(MatrixStack matrixStack) {

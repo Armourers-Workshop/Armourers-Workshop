@@ -69,7 +69,7 @@ public class BoundingBoxBlock extends Block {
 
     @Override
     public BlockRenderType getRenderShape(BlockState state) {
-        if (ModDebugger.debugBoundingBox) {
+        if (ModDebugger.boundingBox) {
             return BlockRenderType.MODEL;
         }
         return BlockRenderType.INVISIBLE;

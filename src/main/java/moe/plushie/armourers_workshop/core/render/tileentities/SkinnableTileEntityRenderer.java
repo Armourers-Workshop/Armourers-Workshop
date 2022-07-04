@@ -61,7 +61,7 @@ public class SkinnableTileEntityRenderer<T extends SkinnableTileEntity> extends 
 
         matrixStack.popPose();
 
-        if (ModDebugger.debugSkinnableBlock) {
+        if (ModDebugger.skinnableBlock) {
             bakedSkin.getBlockBounds().forEach((pos, rect) -> {
                 matrixStack.pushPose();
                 matrixStack.translate(0.5f, 0.5f, 0.5f);

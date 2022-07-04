@@ -98,11 +98,11 @@ public class ItemTooltipHandler {
             tooltip.add(TranslateUtils.title("item.armourers_workshop.rollover.flavour", skin.getFlavourText().trim()));
         }
 
-        if (ModDebugger.debugTooltip && !Screen.hasShiftDown()) {
+        if (ModDebugger.tooltip && !Screen.hasShiftDown()) {
             tooltip.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.skinHoldShiftForInfo"));
         }
 
-        if (ModDebugger.debugTooltip && Screen.hasShiftDown()) {
+        if (ModDebugger.tooltip && Screen.hasShiftDown()) {
 
             String totals = String.format("%d/%d/%d/%d",
                     counter.getCubeTotal(SkinCubes.SOLID),

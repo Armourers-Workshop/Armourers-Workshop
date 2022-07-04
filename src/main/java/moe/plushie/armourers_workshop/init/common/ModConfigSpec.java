@@ -111,7 +111,6 @@ public class ModConfigSpec {
         ForgeConfigSpec.DoubleValue skinPreLocHorizontal;
         ForgeConfigSpec.DoubleValue skinPreLocVertical;
         ForgeConfigSpec.BooleanValue skinPreLocFollowMouse;
-        ForgeConfigSpec.BooleanValue enableEmbeddedSkinRenderer;
 
         // Tool-tip
         ForgeConfigSpec.BooleanValue tooltipHasSkin;
@@ -214,9 +213,6 @@ public class ModConfigSpec {
 
                 skinPreLocFollowMouse = builder.define("skinPreLocFollowMouse", true,
                         "Skin preview will be rendered next to the mouse.");
-
-                enableEmbeddedSkinRenderer = builder.define("enableEmbeddedSkinRenderer", false,
-                        "Using embedded skin renderer to replace the original item renderer.");
             });
             builder.defineCategory("tooltip", "Setting to configure tooltips on skinned items.", () -> {
                 tooltipHasSkin = builder.define("tooltipHasSkin", true, "Show has skin tooltip on skinned items.");
@@ -270,7 +266,6 @@ public class ModConfigSpec {
                 skinPreLocHorizontal = spec.skinPreLocHorizontal.get();
                 skinPreLocVertical = spec.skinPreLocVertical.get();
                 skinPreLocFollowMouse = spec.skinPreLocFollowMouse.get();
-                enableEmbeddedSkinRenderer = spec.enableEmbeddedSkinRenderer.get();
 
                 tooltipHasSkin = spec.tooltipHasSkin.get();
                 tooltipSkinName = spec.tooltipSkinName.get();
@@ -332,6 +327,7 @@ public class ModConfigSpec {
         // Entity skins
         ForgeConfigSpec.IntValue enitiySpawnWithSkinsChance;
         ForgeConfigSpec.IntValue entityDropSkinChance;
+        ForgeConfigSpec.BooleanValue enableEmbeddedSkinRenderer;
 
         // Cache
         ForgeConfigSpec.IntValue skinCacheExpireTime;
@@ -493,6 +489,9 @@ public class ModConfigSpec {
 //                    "Target library path for skin spawned on entities.\n"
 //                            + "Examples: 'official/' for only skins in the official folder or 'downloads/' for skins in the downloads folder.\n"
 //                            + "Leave black for all skins.");
+
+                enableEmbeddedSkinRenderer = builder.define("enableEmbeddedSkinRenderer", false,
+                        "Using embedded skin renderer to replace the original item renderer.");
             });
 
             builder.defineCategory("cache", "Change (memory use/IO access) ratio by category setting in this category.", () -> {
@@ -632,6 +631,7 @@ public class ModConfigSpec {
                 enitiySpawnWithSkinsChance = spec.enitiySpawnWithSkinsChance.get();
                 entityDropSkinChance = spec.entityDropSkinChance.get();
                 enitiySpawnSkinTargetPath = "/"; //spec.enitiySpawnSkinTargetPath.get();
+                enableEmbeddedSkinRenderer = spec.enableEmbeddedSkinRenderer.get();
 
                 skinCacheExpireTime = spec.skinCacheExpireTime.get();
                 skinCacheMaxSize = spec.skinCacheMaxSize.get();

@@ -70,7 +70,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingRe
         this.model.setAllVisible(entity.isModelVisible());
         super.render(entity, p_225623_2_, partialTicks, matrixStack, buffers, packedLightIn);
         this.enableChildRenderer = false;
-        if (ModDebugger.debugMannequinCulling) {
+        if (ModDebugger.mannequinCulling) {
             matrixStack.pushPose();
             AxisAlignedBB box = entity.getBoundingBoxForCulling();
             matrixStack.translate(-box.minX - (box.maxX - box.minX) / 2, -box.minY, -box.minZ - (box.maxZ - box.minZ) / 2);

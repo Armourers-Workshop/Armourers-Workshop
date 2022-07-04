@@ -66,7 +66,7 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
                 return i;
             }
         }
-        return Integer.MAX_VALUE;
+        return unlockedSize - 1;
     }
 
     public ItemStack getItem(SkinSlotType slotType, int slot) {

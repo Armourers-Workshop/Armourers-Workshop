@@ -73,7 +73,7 @@ public class HologramProjectorTileEntityRenderer<T extends HologramProjectorTile
 
         matrixStack.popPose();
 
-        if (ModDebugger.debugHologramProjectorBlock) {
+        if (ModDebugger.hologramProjectorBlock) {
             BlockPos pos = entity.getBlockPos();
             matrixStack.pushPose();
             matrixStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
@@ -117,14 +117,14 @@ public class HologramProjectorTileEntityRenderer<T extends HologramProjectorTile
             RenderUtils.drawBoundingBox(matrixStack, -1, -1, -1, 1, 1, 1, Color.MAGENTA, buffers);
         }
 
-        if (ModDebugger.debugHologramProjectorBlock) {
+        if (ModDebugger.hologramProjectorBlock) {
             RenderUtils.drawPoint(matrixStack, null, 128, buffers);
         }
 
         matrixStack.mulPose(TrigUtils.rotate(rotX, -rotY, rotZ, true));
         matrixStack.translate(rotationOffset.x(), -rotationOffset.y(), rotationOffset.z());
 
-        if (ModDebugger.debugHologramProjectorBlock) {
+        if (ModDebugger.hologramProjectorBlock) {
             RenderUtils.drawPoint(matrixStack, null, 128, buffers);
         }
     }

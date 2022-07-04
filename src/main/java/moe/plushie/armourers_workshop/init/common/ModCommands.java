@@ -177,9 +177,9 @@ public class ModCommands {
                 }
                 int slot = wardrobe.getFreeSlot(slotType);
                 if (containsNode(context, "slot")) {
-                    slot = IntegerArgumentType.getInteger(context, "slot");
+                    slot = IntegerArgumentType.getInteger(context, "slot") - 1;
                 }
-                wardrobe.setItem(slotType, slot - 1, itemStack);
+                wardrobe.setItem(slotType, slot, itemStack);
                 wardrobe.sendToAll();
             }
             return 0;

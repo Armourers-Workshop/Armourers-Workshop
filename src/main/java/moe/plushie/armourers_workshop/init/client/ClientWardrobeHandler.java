@@ -68,7 +68,7 @@ public class ClientWardrobeHandler {
         matrixStack.translate(0, 11, 0);
 
         int count = render(entity, null, model, light, matrixStack, buffers, ItemCameraTransforms.TransformType.NONE, renderData::getItemSkins);
-        if (count != 0 && !ModDebugger.debugItemOverride) {
+        if (count != 0 && !ModDebugger.itemOverride) {
             callback.cancel();
         }
 
@@ -101,7 +101,7 @@ public class ClientWardrobeHandler {
         matrixStack.translate(0, 0, -1);
 
         int count = render(entity, null, model, light, matrixStack, buffers, ItemCameraTransforms.TransformType.NONE, () -> Collections.singletonList(entry));
-        if (count != 0 && !ModDebugger.debugItemOverride) {
+        if (count != 0 && !ModDebugger.itemOverride) {
             callback.cancel();
         }
 
@@ -147,25 +147,25 @@ public class ClientWardrobeHandler {
 //
 //        matrixStack.popPose();
 //    }
-
-    public static ItemStack getRenderSkinStack(ItemStack itemStack, boolean isRenderInGUI) {
-        if (isRenderInGUI && !ModConfig.Client.enableEmbeddedSkinRenderer) {
-            return itemStack;
-        }
-        if (itemStack.getItem() == ModItems.SKIN) {
-            return itemStack;
-        }
-        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
-        if (!descriptor.isEmpty()) {
-            return descriptor.sharedItemStack();
-        }
-        return itemStack;
-    }
+//
+//    public static ItemStack getRenderSkinStack(ItemStack itemStack, boolean isRenderInGUI) {
+//        if (isRenderInGUI && !ModConfig.Common.enableEmbeddedSkinRenderer) {
+//            return itemStack;
+//        }
+//        if (itemStack.getItem() == ModItems.SKIN) {
+//            return itemStack;
+//        }
+//        SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
+//        if (!descriptor.isEmpty()) {
+//            return descriptor.sharedItemStack();
+//        }
+//        return itemStack;
+//    }
 
     public static boolean shouldRenderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable World world, ItemStack itemStack, boolean isRenderInGUI) {
         //
         if (world == null) {
-            if (!ModConfig.Client.enableEmbeddedSkinRenderer) {
+            if (!ModConfig.Common.enableEmbeddedSkinRenderer) {
                 return false;
             }
             if (itemStack.getItem() == ModItems.SKIN) {
@@ -210,7 +210,7 @@ public class ClientWardrobeHandler {
 
                     boolean replaceSkinItem = entity instanceof MannequinEntity;
                     counter = render(entity, itemStack, null, packedLight, matrixStack, buffers, transformType, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
-                    if (counter != 0 && !ModDebugger.debugItemOverride) {
+                    if (counter != 0 && !ModDebugger.itemOverride) {
                         callback.cancel();
                     }
                     matrixStack.popPose();
