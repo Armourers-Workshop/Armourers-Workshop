@@ -1,23 +1,25 @@
 package moe.plushie.armourers_workshop.core.data;
 
+import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
+import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.core.skin.SkinTypes;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModLog;
+import moe.plushie.armourers_workshop.utils.SkinFileUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
+import moe.plushie.armourers_workshop.utils.SkinUUID;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.common.util.Constants;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class LocalDataService {
 
@@ -25,12 +27,13 @@ public class LocalDataService {
 
     private final Path rootPath;
     private final HashMap<String, Node> nodes = new HashMap<>();
-    private final AtomicInteger counter = new AtomicInteger();
     private String lastGenUUID = "";
 
     public LocalDataService(Path rootPath) {
         this.rootPath = rootPath;
-        this.loadConfig();
+        // data migration for the internal-test version, and will be removed in later versions.
+        this.loadLegacyNodes();
+        this.loadNodes();
     }
 
     public static LocalDataService getInstance() {
@@ -46,7 +49,6 @@ public class LocalDataService {
 
     public static void stop() {
         if (RUNNING != null) {
-            RUNNING.saveConfig();
             RUNNING = null;
             ModLog.debug("stop service");
         }
@@ -56,181 +58,223 @@ public class LocalDataService {
         return RUNNING != null;
     }
 
-    protected void loadConfig() {
-        File rootDir = rootPath.toFile();
-        if (!rootDir.exists() && !rootDir.mkdirs()) {
-            ModLog.error("Init service config fail {}", rootDir);
-            return;
-        }
+    protected void loadLegacyNodes() {
         File indexDB = rootPath.resolve("index.dat").toFile();
         if (!indexDB.exists()) {
-            ModLog.debug("setup new service with {}", indexDB);
             return;
         }
-        ModLog.debug("load service config from {}", indexDB);
-        try {
-            PushbackInputStream stream = new PushbackInputStream(new FileInputStream(indexDB), 2);
-            CompoundNBT nbt = CompressedStreamTools.readCompressed(stream);
-            ListNBT listNBT = nbt.getList("Nodes", Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < listNBT.size(); ++i) {
-                Node node = new Node(listNBT.getCompound(i));
-                if (node.isValid()) {
-                    nodes.put(node.uuid, node);
-                }
-            }
-            counter.set(nbt.getInt("Counter"));
-
-        } catch (IOException e) {
-            ModLog.error("load service config fail {}", indexDB);
+        File[] files = SkinFileUtils.listFiles(rootPath.toFile());
+        if (files == null) {
+            return;
         }
+        ModLog.info("data fixer for db {} started", indexDB);
+        for (File file : files) {
+            String name = file.getName();
+            if (name.equals("objects") || name.equals("index.dat")) {
+                continue;
+            }
+            try {
+                byte[] bytes = SkinFileUtils.readFileToByteArray(file);
+                FastByteArrayInputStream stream = new FastByteArrayInputStream(bytes);
+                Skin skin = SkinIOUtils.loadSkinFromStream2(stream);
+                if (skin == null) {
+                    continue;
+                }
+                ModLog.info("data fixer -> upgrade {} node to new db", name);
+                Node node = new Node(name, skin.getType(), bytes, skin.getProperties());
+                node.save(bytes);
+                SkinFileUtils.deleteQuietly(file);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        SkinFileUtils.deleteQuietly(indexDB);
+        ModLog.info("data fixer for db {} completed", indexDB);
     }
 
-    protected void saveConfig() {
-        File indexDB = rootPath.resolve("index.dat").toFile();
-        ModLog.debug("save service config into {}", indexDB);
-        try {
-            CompoundNBT nbt = new CompoundNBT();
-            ListNBT listNBT = new ListNBT();
-            for (Node node : nodes.values()) {
-                if (node.isValid()) {
-                    listNBT.add(node.serializeNBT());
+    protected void loadNodes() {
+        File[] files = SkinFileUtils.listFiles(rootPath.resolve("objects").toFile());
+        if (files == null) {
+            return;
+        }
+        for (File file : files) {
+            File indexFile = new File(file, "0");
+            try {
+                CompoundNBT nbt = CompressedStreamTools.read(indexFile);
+                if (nbt != null) {
+                    Node node = new Node(nbt);
+                    nodes.put(node.id, node);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            nbt.put("Nodes", listNBT);
-            nbt.putInt("Counter", counter.get());
-            CompressedStreamTools.writeCompressed(nbt, indexDB);
-        } catch (IOException e) {
-            ModLog.error("save service config fail for {}", indexDB);
         }
     }
 
     public InputStream getFile(String identifier) throws IOException {
         Node node = nodes.get(identifier);
-        if (node == null || !node.isValid()) {
-            throw new FileNotFoundException("invalid file path");
+        if (node != null && node.isValid()) {
+            return new FileInputStream(node.getFile());
         }
-        return new FileInputStream(rootPath.resolve(node.uuid).toFile());
+        throw new FileNotFoundException("invalid file path");
     }
 
-//    public boolean checkFile(String identifier, byte[] array) {
-//        try {
-//            FileInputStream fi = new FileInputStream(rootPath.resolve(identifier).toFile());
-//            int index = 0;
-//            byte[] buff = new byte[1024];
-//            while (index < array.length) {
-//                int rl = fi.read(buff);
-//                if (rl == -1) {
-//                    return false;
-//                }
-//                for (int i = 0; i < rl; ++i) {
-//                    if (array[index + i] != buff[i]) {
-//                        return false;
-//                    }
-//                }
-//                index += rl;
-//            }
-//            return true;
-//
-//        } catch (FileNotFoundException ignored) {
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
-
     public String addFile(Skin skin) {
-        String name = skin.getCustomName();
-        String flavour = skin.getFlavourText();
-        String author = skin.getProperties().get(SkinProperty.ALL_AUTHOR_UUID);
+        // save file first.
         FastByteArrayOutputStream stream = new FastByteArrayOutputStream(5 * 1024);
         SkinIOUtils.saveSkinToStream(stream, skin);
-        int length = stream.length;
-        int hashCode = Arrays.hashCode(stream.array);
-        String uuid = getFreeUUID();
-        Node newNode = new Node(uuid, skin.getType().toString(), name, author, flavour, length, hashCode);
+        // check whether the files are the same as those in the db.
+        Node tmp = new Node(getFreeUUID(), skin.getType(), stream.array, skin.getProperties());
         for (Node node : nodes.values()) {
-            if (node.isValid() && node.sameNode(newNode)) {
-                return node.uuid;
+            if (node.isValid() && node.equals(tmp) && node.equalContents(stream.array)) {
+                return node.id;
             }
         }
-        ModLog.debug("Save data from db {}", uuid);
+        ModLog.debug("Save skin into db {}", tmp.id);
         try {
-            FileOutputStream fs = new FileOutputStream(rootPath.resolve(uuid).toFile());
-            fs.write(stream.array, 0, length);
-            nodes.put(uuid, newNode);
-            saveConfig();
-            return uuid;
-        } catch (IOException ignored) {
+            tmp.save(stream.array);
+            nodes.put(tmp.id, tmp);
+            return tmp.id;
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
         return null;
     }
 
     public void removeFile(String identifier) {
-
+        Node node = nodes.get(identifier);
+        if (node != null) {
+            node.remove();
+            nodes.remove(node.id);
+        }
     }
 
     private String getFreeUUID() {
         String uuid = lastGenUUID;
         while (uuid.isEmpty() || nodes.containsKey(uuid)) {
-            uuid = String.format("%08x", counter.incrementAndGet());
+            uuid = SkinUUID.randomUUID().toString();
         }
         lastGenUUID = uuid;
         return uuid;
     }
 
     public class Node {
-        final String uuid;
-        final String type;
-        final String name;
-        final String flavour;
-        final String author;
 
-        int length;
-        int hashCode;
+        final String id;
+        final ISkinType type;
+        final int version;
 
-        Node(String uuid, String type, String name, String author, String flavour, int length, int hashCode) {
-            this.uuid = uuid;
+        final int fileSize;
+        final int fileHash;
+
+        final SkinProperties properties;
+        final int propertiesHash;
+
+        Node(String id, ISkinType type, byte[] bytes, SkinProperties properties) {
+            this.id = id;
             this.type = type;
-            this.name = name;
-            this.author = author;
-            this.flavour = flavour;
-            this.length = length;
-            this.hashCode = hashCode;
+            this.version = 2;
+            // file
+            this.fileSize = bytes.length;
+            this.fileHash = Arrays.hashCode(bytes);
+            // properties
+            this.properties = properties;
+            this.propertiesHash = properties.hashCode();
         }
 
         Node(CompoundNBT nbt) {
-            this.uuid = nbt.getString("UUID");
-            this.type = nbt.getString("Type");
-            this.name = nbt.getString("Name");
-            this.author = nbt.getString("Author");
-            this.flavour = nbt.getString("Flavour");
-            this.length = nbt.getInt("Length");
-            this.hashCode = nbt.getInt("HashCode");
+            this.id = nbt.getString("UUID");
+            this.type = SkinTypes.byName(nbt.getString("Type"));
+            this.version = nbt.getInt("Version");
+            // file
+            this.fileSize = nbt.getInt("FileSize");
+            this.fileHash = nbt.getInt("FileHash");
+            // properties
+            this.properties = new SkinProperties();
+            this.properties.readFromNBT(nbt.getCompound("Properties"));
+            this.propertiesHash = nbt.getInt("PropertiesHash");
         }
 
         public CompoundNBT serializeNBT() {
             CompoundNBT nbt = new CompoundNBT();
-            nbt.putString("UUID", uuid);
-            nbt.putString("Type", type);
-            nbt.putString("Name", name);
-            nbt.putString("Author", author);
-            nbt.putString("Flavour", flavour);
-            nbt.putInt("Length", length);
-            nbt.putInt("HashCode", hashCode);
+            nbt.putString("UUID", id);
+            nbt.putString("Type", type.toString());
+            nbt.putInt("Version", version);
+            // file
+            nbt.putInt("FileSize", fileSize);
+            nbt.putInt("FileHash", fileHash);
+            // properties
+            CompoundNBT props = new CompoundNBT();
+            properties.writeToNBT(props);
+            nbt.put("Properties", props);
+            nbt.putInt("PropertiesHash", propertiesHash);
             return nbt;
         }
 
-        public boolean isValid() {
-            return rootPath.resolve(uuid).toFile().exists();
+        public void save(byte[] bytes) throws IOException {
+            SkinFileUtils.forceMkdirParent(getFile());
+            FileOutputStream fs = new FileOutputStream(getFile());
+            fs.write(bytes);
+            CompressedStreamTools.write(serializeNBT(), getIndexFile());
         }
 
-        public boolean sameNode(Node node) {
-            return node.length == length
-                    && node.hashCode == hashCode
-                    && node.author.equals(author)
-                    && node.flavour.equals(flavour)
-                    && node.name.equals(name)
-                    && node.type.equals(type);
+        public void remove() {
+            SkinFileUtils.deleteQuietly(getFile().getParentFile());
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Node)) return false;
+            Node node = (Node) o;
+            return fileSize == node.fileSize && fileHash == node.fileHash && propertiesHash == node.propertiesHash && type.equals(node.type) && properties.equals(node.properties);
+        }
+
+        public boolean equalContents(byte[] bytes) {
+            int index = 0;
+            try (FileInputStream stream = new FileInputStream(getFile())) {
+                byte[] buff = new byte[1024];
+                while (index < bytes.length) {
+                    // when the readable content is smaller than the chunk size,
+                    // this call should return actual size or -1.
+                    int readSize = stream.read(buff);
+                    if (readSize <= 0) {
+                        break;
+                    }
+                    // prevents target files different from declaring file size in the index file.
+                    if (index + readSize > bytes.length) {
+                        return false;
+                    }
+                    // we maybe need a higher efficient method of comparison, not this.
+                    for (int i = 0; i < readSize; ++i) {
+                        if (bytes[index + i] != buff[i]) {
+                            return false;
+                        }
+                    }
+                    index += readSize;
+                }
+            } catch (Exception ignored) {
+            }
+            // the index and length should be exactly the same after we finish comparing,
+            // if not, it means that the target file is too small.
+            return index == bytes.length;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(type, fileSize, fileHash, propertiesHash);
+        }
+
+        public File getFile() {
+            return rootPath.resolve("objects/" + id + "/1").toFile();
+        }
+
+        public File getIndexFile() {
+            return rootPath.resolve("objects/" + id + "/0").toFile();
+        }
+
+        public boolean isValid() {
+            return getFile().exists();
         }
     }
 }

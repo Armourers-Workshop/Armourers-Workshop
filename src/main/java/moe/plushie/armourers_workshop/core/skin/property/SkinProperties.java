@@ -196,26 +196,18 @@ public class SkinProperties implements ISkinProperties {
         }
     }
 
+
     @Override
-    public int hashCode() {
-        return toString().hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SkinProperties)) return false;
+        SkinProperties that = (SkinProperties) o;
+        return properties.equals(that.properties);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        SkinProperties other = (SkinProperties) obj;
-        if (properties == null) {
-            if (other.properties != null)
-                return false;
-        } else if (!properties.equals(other.properties))
-            return false;
-        return true;
+    public int hashCode() {
+        return Objects.hash(properties);
     }
 
     @Override

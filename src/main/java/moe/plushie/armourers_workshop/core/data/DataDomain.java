@@ -27,7 +27,7 @@ public enum DataDomain {
         return path.substring(0, index);
     }
 
-        public static String getPath(String path) {
+    public static String getPath(String path) {
         int index = path.indexOf(":");
         if (index < 0) {
             return path;

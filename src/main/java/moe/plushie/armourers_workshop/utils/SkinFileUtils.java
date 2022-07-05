@@ -5,6 +5,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * because `commons.io` versions on some servers are too low,
@@ -39,6 +40,14 @@ public class SkinFileUtils {
      */
     public static String concat(final String basePath, final String fullFilenameToAdd) {
         return FilenameUtils.concat(basePath, fullFilenameToAdd);
+    }
+
+    public static File[] listFiles(final File directory) {
+        try {
+            return directory.listFiles();
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     /**
@@ -82,5 +91,13 @@ public class SkinFileUtils {
      */
     public static boolean deleteQuietly(final File file) {
         return FileUtils.deleteQuietly(file);
+    }
+
+    /**
+     * Reads the contents of a file into a byte array.
+     * The file is always closed.
+     */
+    public static byte[] readFileToByteArray(final File file) throws IOException {
+        return FileUtils.readFileToByteArray(file);
     }
 }

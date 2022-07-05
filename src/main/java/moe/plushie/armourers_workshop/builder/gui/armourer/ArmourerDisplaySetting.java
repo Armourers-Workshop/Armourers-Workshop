@@ -13,12 +13,15 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@OnlyIn(Dist.CLIENT)
 public class ArmourerDisplaySetting extends ArmourerBaseSetting {
 
     protected final ArmourerTileEntity tileEntity;

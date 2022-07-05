@@ -27,6 +27,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
+import java.util.UUID;
+
 @SuppressWarnings("NullableProblems")
 public class ArmourerContainer extends AbstractBlockContainer {
 

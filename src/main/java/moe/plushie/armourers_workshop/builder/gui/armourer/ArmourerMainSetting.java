@@ -23,6 +23,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@OnlyIn(Dist.CLIENT)
 public class ArmourerMainSetting extends ArmourerBaseSetting {
 
     protected final ArmourerContainer container;

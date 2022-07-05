@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.library.gui.widget;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import moe.plushie.armourers_workshop.core.data.DataDomain;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -267,7 +268,7 @@ public class SkinFileList extends Button {
         public Entry(JsonObject object) {
             this.id = object.get("id").getAsInt();
             this.name = object.get("name").getAsString();
-            this.descriptor = new SkinDescriptor("ks:" + id);
+            this.descriptor = new SkinDescriptor(DataDomain.GLOBAL_SERVER.namespace() + ":" + id);
             if (object.has("description")) {
                 this.description = object.get("description").getAsString();
             }
