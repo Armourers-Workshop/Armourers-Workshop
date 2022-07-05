@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.library.gui.panels;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.gui.widget.AWExtendedButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWImageButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
 import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
@@ -14,7 +15,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import org.apache.logging.log4j.util.Strings;
 
 import java.awt.*;
@@ -34,7 +34,7 @@ public class JoinLibraryPanel extends AbstractLibraryPanel {
 
     private AWImageButton buttonPrevious;
     private AWImageButton buttonNext;
-    private ExtendedButton buttonJoin;
+    private AWExtendedButton buttonJoin;
 
     private int page = 0;
     private String joinFailMessage = null;
@@ -56,8 +56,8 @@ public class JoinLibraryPanel extends AbstractLibraryPanel {
         this.label.setTextColor(0x333333);
 
         int buttonBottom = frame.y + frame.height - 16 - 5;
-        this.buttonPrevious = addIconButton(frame.x + 5, buttonBottom, 208, 80, 16, 16, "button.previousPagePage", this::previous);
-        this.buttonNext = addIconButton(frame.x + frame.width - 16 - 5, buttonBottom, 208, 96, 16, 16, "button.nextPagePage", this::next);
+        this.buttonPrevious = addIconButton(frame.x + 5, buttonBottom, 208, 80, 16, 16, "button.previousPage", this::previous);
+        this.buttonNext = addIconButton(frame.x + frame.width - 16 - 5, buttonBottom, 208, 96, 16, 16, "button.nextPage", this::next);
         this.buttonJoin = addTextButton(frame.x + (frame.width - 140) / 2, buttonBottom, 140, 16, "button.join", this::join);
 
         this.refresh();
@@ -86,9 +86,9 @@ public class JoinLibraryPanel extends AbstractLibraryPanel {
         return button;
     }
 
-    private ExtendedButton addTextButton(int x, int y, int width, int height, String key, Button.IPressable handler) {
+    private AWExtendedButton addTextButton(int x, int y, int width, int height, String key, Button.IPressable handler) {
         ITextComponent title = getDisplayText(key);
-        ExtendedButton button = new ExtendedButton(x, y, width, height, title, handler);
+        AWExtendedButton button = new AWExtendedButton(x, y, width, height, title, handler);
         addButton(button);
         return button;
     }

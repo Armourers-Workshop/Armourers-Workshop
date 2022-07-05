@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import moe.plushie.armourers_workshop.core.gui.widget.AWExtendedButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWReportDialog;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemRenderer;
@@ -35,7 +36,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import org.apache.logging.log4j.util.Strings;
 
 import java.io.File;
@@ -45,11 +45,12 @@ import java.util.stream.Collectors;
 @OnlyIn(Dist.CLIENT)
 public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
 
-    private ExtendedButton buttonBack;
-    private ExtendedButton buttonDownload;
-    private ExtendedButton buttonUserSkins;
-    private ExtendedButton buttonEditSkin;
-    private ExtendedButton buttonReportSkin;
+    private AWExtendedButton buttonBack;
+    private AWExtendedButton buttonDownload;
+    private AWExtendedButton buttonUserSkins;
+    private AWExtendedButton buttonEditSkin;
+    private AWExtendedButton buttonReportSkin;
+
     private SkinRatingButton buttonStarRating;
 
     private int userRating = 0;
@@ -173,12 +174,12 @@ public class SkinDetailLibraryPanel extends AbstractLibraryPanel {
         }
     }
 
-    private ExtendedButton addTextButton(int x, int y, int width, int height, String key, Button.IPressable handler) {
+    private AWExtendedButton addTextButton(int x, int y, int width, int height, String key, Button.IPressable handler) {
         ITextComponent title = StringTextComponent.EMPTY;
         if (!key.isEmpty()) {
             title = getDisplayText(key);
         }
-        ExtendedButton button = new ExtendedButton(x, y, width, height, title, handler);
+        AWExtendedButton button = new AWExtendedButton(x, y, width, height, title, handler);
         addButton(button);
         return button;
     }

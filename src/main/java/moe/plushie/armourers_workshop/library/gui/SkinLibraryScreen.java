@@ -44,7 +44,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.gui.GuiUtils;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -80,7 +79,7 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
     protected AWCheckBox checkBox;
     protected AWComboBox skinTypeList;
 
-    protected ExtendedButton actionButton;
+    protected AWExtendedButton actionButton;
 
     protected ISkinType skinType = SkinTypes.UNKNOWN;
     protected ISkinLibrary.Entry selectedFile = null;
@@ -454,9 +453,9 @@ public class SkinLibraryScreen extends AWAbstractContainerScreen<SkinLibraryCont
         return textField;
     }
 
-    private ExtendedButton addTextButton(int x, int y, int width, int height, String key, Button.IPressable handler) {
+    private AWExtendedButton addTextButton(int x, int y, int width, int height, String key, Button.IPressable handler) {
         ITextComponent title = getDisplayText(key);
-        ExtendedButton button = new ExtendedButton(x, y, width, height, title, handler);
+        AWExtendedButton button = new AWExtendedButton(x, y, width, height, title, handler);
         addButton(button);
         return button;
     }

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.library.gui.panels;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.gui.widget.AWComboBox;
+import moe.plushie.armourers_workshop.core.gui.widget.AWExtendedButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWSkinTypeComboBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTextField;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -14,7 +15,6 @@ import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel {
     private AWTextField searchText;
     private AWComboBox sortList;
     private AWSkinTypeComboBox skinTypeList;
-    private ExtendedButton searchButton;
+    private AWExtendedButton searchButton;
 
     private String keyword = "";
     private ISkinType skinType = SkinTypes.UNKNOWN;
@@ -48,7 +48,7 @@ public class SearchBoxLibraryPanel extends AbstractLibraryPanel {
         this.sortList = addSortList(leftPos + width - 180 - 70 - 5, topPos + 3, 90, 16);
         this.skinTypeList = addSkinTypeList(leftPos + width - 160, topPos + 3, 70, 16);
 
-        this.searchButton = new ExtendedButton(leftPos + width - 84, topPos + 3, 80, 16, getDisplayText("search"), this::search);
+        this.searchButton = new AWExtendedButton(leftPos + width - 84, topPos + 3, 80, 16, getDisplayText("search"), this::search);
         this.addButton(searchButton);
     }
 

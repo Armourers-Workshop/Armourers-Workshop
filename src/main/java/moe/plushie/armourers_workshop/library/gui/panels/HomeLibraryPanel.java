@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.gui.widget.AWExtendedButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.common.ModLog;
@@ -24,7 +25,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Size2i;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class HomeLibraryPanel extends AbstractLibraryPanel implements GlobalSkin
         this.addTitle(skinPanelTopRated, "topRated");
         this.addTitle(skinPanelNeedRated, "needRated");
 
-        this.addButton(new ExtendedButton(leftPos + 4, topPos + 6, 80, 16, getDisplayText("showAllSkins"), this::showAll));
+        this.addButton(new AWExtendedButton(leftPos + 4, topPos + 6, 80, 16, getDisplayText("showAllSkins"), this::showAll));
 
         this.lastContentOffset = 0;
         this.contentHeight = listTop - topPos + 4;

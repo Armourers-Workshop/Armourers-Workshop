@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.gui.widget.AWConfirmDialog;
+import moe.plushie.armourers_workshop.core.gui.widget.AWExtendedButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTextField;
 import moe.plushie.armourers_workshop.init.common.ModLog;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
@@ -15,7 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import org.apache.logging.log4j.util.Strings;
 
 @OnlyIn(Dist.CLIENT)
@@ -25,8 +25,8 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
     private AWTextField textTags;
     private AWTextField textDescription;
 
-    private ExtendedButton buttonUpdate;
-    private ExtendedButton buttonDelete;
+    private AWExtendedButton buttonUpdate;
+    private AWExtendedButton buttonDelete;
 
     private SkinFileList.Entry entry;
     private Page returnPage;
@@ -54,8 +54,8 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
         this.addLabel(leftPos + 5, topPos + 55, inputWidth, 10, getDisplayText("skinTags"));
         this.addLabel(leftPos + 5, topPos + 85, inputWidth, 10, getDisplayText("skinDescription"));
 
-        this.buttonUpdate = addButton(new ExtendedButton(leftPos + 5, topPos + height - 25, 100, 20, getDisplayText("buttonUpdate"), this::updateSkin));
-        this.buttonDelete = addButton(new ExtendedButton(leftPos + width - 105, topPos + height - 25, 100, 20, getDisplayText("buttonDelete"), this::removeSkinPre));
+        this.buttonUpdate = addButton(new AWExtendedButton(leftPos + 5, topPos + height - 25, 100, 20, getDisplayText("buttonUpdate"), this::updateSkin));
+        this.buttonDelete = addButton(new AWExtendedButton(leftPos + width - 105, topPos + height - 25, 100, 20, getDisplayText("buttonDelete"), this::removeSkinPre));
     }
 
     @Override

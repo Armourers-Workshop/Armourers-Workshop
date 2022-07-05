@@ -15,7 +15,7 @@ public class SkinUUID {
 
     private static final AtomicInteger COUNTER = new AtomicInteger();
 
-    private static final byte[] ALPHABET = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890".getBytes();
+    private static final char[] ALPHABET = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890".toCharArray();
 
     /**
      * we designed skin uuid has 10 base62-encoded characters,
@@ -52,7 +52,7 @@ public class SkinUUID {
         StringBuilder builder = new StringBuilder(10);
         long number = value;
         for (int i = 0; i < 10; ++i) { //
-            builder.append((char) ALPHABET[(int) (number % 62)]);
+            builder.append(ALPHABET[(int) (number % 62)]);
             number /= 62;
         }
         return builder.reverse().toString();

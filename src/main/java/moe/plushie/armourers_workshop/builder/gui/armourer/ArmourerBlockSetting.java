@@ -9,13 +9,13 @@ import moe.plushie.armourers_workshop.builder.gui.armourer.dialog.ArmourerClearD
 import moe.plushie.armourers_workshop.builder.gui.armourer.dialog.ArmourerCopyDialog;
 import moe.plushie.armourers_workshop.builder.gui.armourer.dialog.ArmourerReplaceDialog;
 import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
+import moe.plushie.armourers_workshop.core.gui.widget.AWExtendedButton;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateArmourerPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.item.ItemStack;
@@ -23,7 +23,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import java.util.ArrayList;
 
@@ -32,9 +31,9 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
 
     protected final ArmourerTileEntity tileEntity;
 
-    protected ExtendedButton buttonClear;
-    protected ExtendedButton buttonCopy;
-    protected ExtendedButton buttonReplace;
+    protected AWExtendedButton buttonClear;
+    protected AWExtendedButton buttonCopy;
+    protected AWExtendedButton buttonReplace;
 
     protected ArmourerScreen screen;
 
@@ -48,9 +47,9 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
     protected void init() {
         super.init();
 
-        this.buttonClear = new ExtendedButton(leftPos + 10, topPos + 20, 70, 20, getDisplayText("clear"), this::clearAction);
-        this.buttonCopy = new ExtendedButton(leftPos + 10, topPos + 45, 70, 20, getDisplayText("copy"), this::copyAction);
-        this.buttonReplace = new ExtendedButton(leftPos + 10, topPos + 70, 70, 20, getDisplayText("replace"), this::replaceAction);
+        this.buttonClear = new AWExtendedButton(leftPos + 10, topPos + 20, 70, 20, getDisplayText("clear"), this::clearAction);
+        this.buttonCopy = new AWExtendedButton(leftPos + 10, topPos + 45, 70, 20, getDisplayText("copy"), this::copyAction);
+        this.buttonReplace = new AWExtendedButton(leftPos + 10, topPos + 70, 70, 20, getDisplayText("replace"), this::replaceAction);
 
         this.addButton(buttonClear);
         this.addButton(buttonCopy);

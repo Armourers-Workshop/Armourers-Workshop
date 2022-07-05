@@ -8,7 +8,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 @SuppressWarnings("unused")
 @OnlyIn(Dist.CLIENT)
@@ -126,6 +125,6 @@ public class AWConfirmDialog extends AWAbstractDialog {
 
     protected Button buildButton(int x, int y, int width, int height, String key, Button.IPressable pressable) {
         TextComponent title = TranslateUtils.title("inventory.armourers_workshop.common." + key);
-        return new ExtendedButton(x, y, width, height, title, pressable);
+        return new AWExtendedButton(x, y, width, height, title, pressable);
     }
 }

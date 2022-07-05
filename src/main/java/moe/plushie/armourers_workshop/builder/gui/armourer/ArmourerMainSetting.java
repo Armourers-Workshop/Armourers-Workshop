@@ -5,10 +5,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.builder.container.ArmourerContainer;
 import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
-import moe.plushie.armourers_workshop.core.gui.widget.AWHelpButton;
-import moe.plushie.armourers_workshop.core.gui.widget.AWImageButton;
-import moe.plushie.armourers_workshop.core.gui.widget.AWSkinTypeComboBox;
-import moe.plushie.armourers_workshop.core.gui.widget.AWTextField;
+import moe.plushie.armourers_workshop.core.gui.widget.*;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateArmourerPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -25,7 +22,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 
 import java.util.ArrayList;
@@ -43,8 +39,8 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
     protected AWTextField skinName;
     protected AWTextField skinFlavor;
 
-    protected ExtendedButton btnSave;
-    protected ExtendedButton btnLoad;
+    protected AWExtendedButton btnSave;
+    protected AWExtendedButton btnLoad;
 
     protected ISkinType skinType = SkinTypes.ARMOR_HEAD;
 
@@ -76,8 +72,8 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
         // GuiIconButton buttonSave = new GuiIconButton(parent, 13, 88, 16, 16, 16, GuiHelper.getLocalizedControlName(guiName, "save"), TEXTURE_BUTTONS);
         // GuiIconButton buttonLoad = new GuiIconButton(parent, 14, 88, 16 + 13, 16, 16, GuiHelper.getLocalizedControlName(guiName, "load"), TEXTURE_BUTTONS);
 
-        this.btnSave = new ExtendedButton(leftPos + 88, topPos + 16, 50, 12, getDisplayText("save"), this::saveSkin);
-        this.btnLoad = new ExtendedButton(leftPos + 88, topPos + 29, 50, 12, getDisplayText("load"), this::loadSkin);
+        this.btnSave = new AWExtendedButton(leftPos + 88, topPos + 16, 50, 12, getDisplayText("save"), this::saveSkin);
+        this.btnLoad = new AWExtendedButton(leftPos + 88, topPos + 29, 50, 12, getDisplayText("load"), this::loadSkin);
         this.addButton(btnSave);
         this.addButton(btnLoad);
 

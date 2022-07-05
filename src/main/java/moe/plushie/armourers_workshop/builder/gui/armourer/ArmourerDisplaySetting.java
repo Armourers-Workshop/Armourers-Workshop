@@ -3,10 +3,7 @@ package moe.plushie.armourers_workshop.builder.gui.armourer;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.builder.container.ArmourerContainer;
 import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
-import moe.plushie.armourers_workshop.core.gui.widget.AWCheckBox;
-import moe.plushie.armourers_workshop.core.gui.widget.AWComboBox;
-import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
-import moe.plushie.armourers_workshop.core.gui.widget.AWTextField;
+import moe.plushie.armourers_workshop.core.gui.widget.*;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateArmourerPacket;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
@@ -15,7 +12,6 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
@@ -58,7 +54,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting {
         this.inputType = addLabel(leftPos + 10, topPos + 55, width, 10, getDisplayText("label.username"));
 
         this.addTextField(leftPos + 10, topPos + 65, defaultValues.get(lastSource));
-        this.addButton(new ExtendedButton(leftPos + 10, topPos + 90, 100, 20, getDisplayText("set"), this::submit));
+        this.addButton(new AWExtendedButton(leftPos + 10, topPos + 90, 100, 20, getDisplayText("set"), this::submit));
 
         this.addComboList(leftPos + 10, topPos + 30, lastSource);
         this.reloadStatus();

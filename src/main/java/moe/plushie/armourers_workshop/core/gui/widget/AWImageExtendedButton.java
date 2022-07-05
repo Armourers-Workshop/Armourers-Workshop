@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.gui.widget;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.sun.org.apache.regexp.internal.RE;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -24,12 +25,7 @@ public class AWImageExtendedButton extends AWImageButton {
             return;
         }
         int k = getYImage(isHovered());
-        RenderUtils.tile(matrixStack, x, y, 0, 46 + k * 20, width, height, 200, 20, 2, 3, 2, 2, WIDGETS_LOCATION);
+        RenderUtils.tile(matrixStack, x, y, 0, 46 + k * 20, width, height, 200, 20, 2, 3, 2, 2, RenderUtils.TEX_WIDGETS);
         super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
-    }
-
-    @Override
-    protected int getYImage(boolean hovered) {
-        return super.getYImage(hovered);
     }
 }

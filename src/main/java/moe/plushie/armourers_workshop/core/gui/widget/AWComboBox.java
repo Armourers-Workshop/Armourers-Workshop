@@ -117,7 +117,7 @@ public class AWComboBox extends Button {
             return;
         }
         int k = getHandState();
-        RenderUtils.bind(WIDGETS_LOCATION);
+        RenderUtils.bind(RenderUtils.TEX_WIDGETS);
         GuiUtils.drawContinuousTexturedBox(matrixStack, x, y, 0, 46, width, height, 200, 20, 2, 3, 2, 2, 0);
         GuiUtils.drawContinuousTexturedBox(matrixStack, handX, handY, 0, 66 + 20 * k, handWidth, handHeight, 200, 20, 2, 3, 2, 2, 0);
 
@@ -307,7 +307,7 @@ public class AWComboBox extends Button {
 
         @Override
         public void render(MatrixStack matrixStack, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
-            RenderUtils.tile(matrixStack, x0, y0, 0, 46, width, height, 200, 20, 2, 3, 2, 2, WIDGETS_LOCATION);
+            RenderUtils.tile(matrixStack, x0, y0, 0, 46, width, height, 200, 20, 2, 3, 2, 2, RenderUtils.TEX_WIDGETS);
             RenderUtils.enableScissor(x0, y0, width, height);
             super.render(matrixStack, p_230430_2_, p_230430_3_, p_230430_4_);
             RenderUtils.disableScissor();

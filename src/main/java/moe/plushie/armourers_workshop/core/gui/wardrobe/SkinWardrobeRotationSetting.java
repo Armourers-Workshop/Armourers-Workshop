@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.core.gui.widget.AWExtendedButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWSliderBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
@@ -20,7 +21,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 
 import java.awt.*;
 import java.util.Random;
@@ -58,8 +58,8 @@ public class SkinWardrobeRotationSetting extends AWTabPanel {
         this.sliderY = addSlider(leftPos + 110, topPos + 36, 160, 10, "Y: ");
         this.sliderZ = addSlider(leftPos + 110, topPos + 47, 160, 10, "Z: ");
 
-        this.addButton(new ExtendedButton(leftPos + 83, topPos + 70, 100, 16, getDisplayText("reset"), this::resetRotation));
-        this.addButton(new ExtendedButton(leftPos + 83, topPos + 90, 100, 16, getDisplayText("random"), this::randomRotation));
+        this.addButton(new AWExtendedButton(leftPos + 83, topPos + 70, 100, 16, getDisplayText("reset"), this::resetRotation));
+        this.addButton(new AWExtendedButton(leftPos + 83, topPos + 90, 100, 16, getDisplayText("random"), this::randomRotation));
 
         this.setSelectedIndex(selectedIndex);
     }

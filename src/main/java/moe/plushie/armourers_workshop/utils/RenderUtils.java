@@ -59,6 +59,7 @@ public final class RenderUtils {
 
     public static final ResourceLocation TEX_TABS = AWCore.resource("textures/gui/controls/tabs.png");
     public static final ResourceLocation TEX_COMMON = AWCore.resource("textures/gui/common.png");
+    public static final ResourceLocation TEX_WIDGETS = AWCore.resource("textures/gui/widgets.png");
     public static final ResourceLocation TEX_LIST = AWCore.resource("textures/gui/controls/list.png");
     public static final ResourceLocation TEX_RATING = AWCore.resource("textures/gui/controls/rating.png");
     public static final ResourceLocation TEX_TAB_ICONS = AWCore.resource("textures/gui/controls/tab_icons.png");

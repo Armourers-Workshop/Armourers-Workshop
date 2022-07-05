@@ -78,7 +78,7 @@ public class AWCheckBox extends Button {
         if (!visible) {
             return;
         }
-        RenderUtils.bind(WIDGETS_LOCATION);
+        RenderUtils.bind(RenderUtils.TEX_WIDGETS);
         GuiUtils.drawContinuousTexturedBox(matrixStack, x, y, 0, 46, iconWidth, iconHeight, 200, 20, 2, 3, 2, 2, 0);
         if (this.isSelected()) {
             drawCenteredString(matrixStack, font, "x", x + iconWidth / 2 + 1, y, 0xffcccccc);

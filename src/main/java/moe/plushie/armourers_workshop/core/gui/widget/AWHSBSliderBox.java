@@ -35,7 +35,7 @@ public class AWHSBSliderBox extends Button {
 
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float p_230431_4_) {
-        RenderUtils.tile(matrixStack, x, y, 0, 46, width, height, 200, 20, 2, 3, 2, 2, WIDGETS_LOCATION);
+        RenderUtils.tile(matrixStack, x, y, 0, 46, width, height, 200, 20, 2, 3, 2, 2, RenderUtils.TEX_WIDGETS);
 
         int cx = x + 1;
         int cy = y + 1;

@@ -5,6 +5,7 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.container.SkinWardrobeContainer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.gui.widget.AWComboBox;
+import moe.plushie.armourers_workshop.core.gui.widget.AWExtendedButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTextField;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
@@ -16,7 +17,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class SkinWardrobeTextureSetting extends AWTabPanel {
 
         this.addTextField(leftPos + 83 + 1, topPos + 70, defaultValues.get(lastSource));
         this.addComboList(leftPos + 83, topPos + 27, lastSource);
-        this.addButton(new ExtendedButton(leftPos + 83, topPos + 90, 100, 20, getDisplayText("set"), this::submit));
+        this.addButton(new AWExtendedButton(leftPos + 83, topPos + 90, 100, 20, getDisplayText("set"), this::submit));
     }
 
     @Override

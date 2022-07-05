@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.core.gui.widget.AWExtendedButton;
 import moe.plushie.armourers_workshop.core.gui.widget.AWLabel;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTextField;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
@@ -27,7 +28,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.client.gui.widget.ExtendedButton;
 import org.apache.logging.log4j.util.Strings;
 
 import java.io.ByteArrayOutputStream;
@@ -40,7 +40,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
     private AWTextField textName;
     private AWTextField textTags;
     private AWTextField textDescription;
-    private ExtendedButton buttonUpload;
+    private AWExtendedButton buttonUpload;
 
     private String error = null;
     private boolean isUploading = false;
@@ -64,7 +64,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
         this.textDescription.setMaxLength(255);
         this.textDescription.setSingleLine(false);
 
-        this.buttonUpload = new ExtendedButton(leftPos + 28, topPos + height - 28, 96, 18, getDisplayText("buttonUpload"), this::upload);
+        this.buttonUpload = new AWExtendedButton(leftPos + 28, topPos + height - 28, 96, 18, getDisplayText("buttonUpload"), this::upload);
         this.buttonUpload.active = false;
         this.addButton(buttonUpload);
 

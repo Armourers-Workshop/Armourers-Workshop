@@ -87,7 +87,7 @@ public class AWSliderBox extends Button {
         int rightV = 66 + rightState * 20;
         int contentV = 66 + (leftState | rightState | contentState) * 20;
 
-        RenderUtils.bind(WIDGETS_LOCATION);
+        RenderUtils.bind(RenderUtils.TEX_WIDGETS);
         RenderUtils.tile(matrixStack, contentLeft, y, 0, 46, contentWidth, height, 200, 20, 2, 3, 2, 2);
         if (usingHands) {
             RenderUtils.tile(matrixStack, lefIconX, y, 0, leftV, iconWidth, height, 200, 20, 2, 3, 2, 2);
