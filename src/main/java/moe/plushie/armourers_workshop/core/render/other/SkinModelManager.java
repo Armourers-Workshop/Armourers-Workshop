@@ -51,12 +51,14 @@ public class SkinModelManager {
     }
 
     private IBakedModel loadModel(ISkinPartType partType) {
-        return cachedModels.computeIfAbsent(partType, key -> {
-            IBakedModel bakedModel = modelManager.getModel(AWCore.getCustomModel(key.getRegistryName()));
-            if (partType != SkinPartTypes.UNKNOWN && bakedModel == modelManager.getMissingModel()) {
-                bakedModel = loadModel(SkinPartTypes.UNKNOWN);
-            }
+        IBakedModel bakedModel = cachedModels.get(partType);
+        if (bakedModel != null) {
             return bakedModel;
-        });
+        }
+        bakedModel = modelManager.getModel(AWCore.getCustomModel(partType.getRegistryName()));
+        if (partType != SkinPartTypes.UNKNOWN && bakedModel == modelManager.getMissingModel()) {
+            bakedModel = loadModel(SkinPartTypes.UNKNOWN);
+        }
+        return bakedModel;
     }
 }
