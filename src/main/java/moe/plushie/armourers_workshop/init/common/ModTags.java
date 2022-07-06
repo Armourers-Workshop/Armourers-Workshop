@@ -18,7 +18,7 @@ public class ModTags {
     public static final ITag<Item> HOES = forge("hoes");
 
     private static ITag<Item> forge(String name) {
-        return ItemTags.createOptional(new ResourceLocation("forge", name));
+        return ItemTags.createOptional(AWCore.resource("skinnable/" + name));
     }
 
 //    public static boolean isToolItem(Item item) {

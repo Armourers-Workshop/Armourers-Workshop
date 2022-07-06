@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.core.render.skin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.core.render.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.*;
@@ -50,11 +50,10 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
     }
 
     @Override
-    public void willRender(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
-        SkinRenderData renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
+    public void willRender(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+        super.willRender(entity, model, renderData, light, partialRenderTick, matrixStack, buffers);
+        renderData.getOverriddenManager().willRender(entity);
+
         // Limit the players limbs if they have a skirt equipped.
         // A proper lady should not swing her legs around!
         if (renderData.isLimitLimbs()) {
@@ -63,85 +62,45 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
                 entity.animationSpeedOld = 0.25F;
             }
         }
-        if (ModConfig.Client.enableModelOverridden) {
-            applyOverriders(entity, model, renderData);
-        }
-    }
-
-    protected void applyOverriders(T entity, M model, SkinRenderData renderData) {
-        // model
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_ARM)) {
-            addOverrider(accessor.getLeftArm(model));
-        }
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
-            addOverrider(accessor.getRightArm(model));
-        }
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_HEAD)) {
-            addOverrider(accessor.getHead(model));
-        }
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_CHEST)) {
-            addOverrider(accessor.getBody(model));
-        }
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_LEG) || renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
-            addOverrider(accessor.getLeftLeg(model));
-        }
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_LEG) || renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
-            addOverrider(accessor.getRightLeg(model));
-        }
-        // overlay
-        if (renderData.hasOverriddenOverlayPart(SkinPartTypes.BIPED_HEAD)) {
-            addOverrider(accessor.getHat(model));
-        }
     }
 
     @Override
-    public void apply(T entity, M model, EquipmentSlotType slotType, float partialTicks, MatrixStack matrixStack) {
-        SkinRenderData renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-        switch (slotType) {
-            case HEAD:
-                if (renderData.hasOverriddenEquipmentPart(SkinPartTypes.BIPED_HEAD)) {
-                    setHidden(accessor.getHead(model));
-                    setHidden(accessor.getHat(model)); // when override the head, the hat needs to override too
-                }
-                break;
-            case CHEST:
-                if (renderData.hasOverriddenEquipmentPart(SkinPartTypes.BIPED_CHEST)) {
-                    setHidden(accessor.getBody(model));
-                }
-                if (renderData.hasOverriddenEquipmentPart(SkinPartTypes.BIPED_LEFT_ARM)) {
-                    setHidden(accessor.getLeftArm(model));
-                }
-                if (renderData.hasOverriddenEquipmentPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
-                    setHidden(accessor.getRightArm(model));
-                }
-                break;
-            case LEGS:
-                if (renderData.hasOverriddenEquipmentPart(SkinPartTypes.BIPED_LEFT_LEG)) {
-                    setHidden(accessor.getLeftLeg(model));
-                    setHidden(accessor.getBody(model));
-                }
-                if (renderData.hasOverriddenEquipmentPart(SkinPartTypes.BIPED_RIGHT_LEG)) {
-                    setHidden(accessor.getRightLeg(model));
-                    setHidden(accessor.getBody(model));
-                }
-                break;
-            case FEET:
-                if (renderData.hasOverriddenEquipmentPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
-                    setHidden(accessor.getLeftLeg(model));
-                }
-                if (renderData.hasOverriddenEquipmentPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
-                    setHidden(accessor.getRightLeg(model));
-                }
-                break;
-        }
+    public void didRender(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+        super.didRender(entity, model, renderData, light, partialRenderTick, matrixStack, buffers);
+        renderData.getOverriddenManager().didRender(entity);
     }
 
-    private void setHidden(ModelRenderer modelRenderer) {
-        if (modelRenderer != null) {
-            modelRenderer.visible = false;
+    @Override
+    protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
+        super.apply(entity, model, overriddenManager, renderData);
+        // model
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_HEAD)) {
+            addModelOverride(accessor.getHead(model));
+        }
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_CHEST)) {
+            addModelOverride(accessor.getBody(model));
+        }
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_LEFT_ARM)) {
+            addModelOverride(accessor.getLeftArm(model));
+        }
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_RIGHT_ARM)) {
+            addModelOverride(accessor.getRightArm(model));
+        }
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_LEFT_LEG)) {
+            addModelOverride(accessor.getLeftLeg(model));
+        }
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_RIGHT_LEG)) {
+            addModelOverride(accessor.getRightLeg(model));
+        }
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_LEFT_FOOT)) {
+            addModelOverride(accessor.getLeftLeg(model));
+        }
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_RIGHT_FOOT)) {
+            addModelOverride(accessor.getRightLeg(model));
+        }
+        // overlay
+        if (overriddenManager.hasOverlay(SkinPartTypes.BIPED_HEAD)) {
+            addModelOverride(accessor.getHat(model));
         }
     }
 

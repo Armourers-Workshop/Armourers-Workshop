@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.render.skin;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.render.layer.ForwardingLayer;
+import moe.plushie.armourers_workshop.core.render.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -27,14 +28,11 @@ public class SlimeSkinRenderer<T extends SlimeEntity, M extends SlimeModel<T>> e
     }
 
     @Override
-    public void willRender(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
-        SkinRenderData renderData = SkinRenderData.of(entity);
-        if (renderData == null) {
-            return;
-        }
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_HEAD)) {
+    protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
+        super.apply(entity, model, overriddenManager, renderData);
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_HEAD)) {
             for (ModelRenderer modelRenderer : model.parts()) {
-                addOverrider(modelRenderer);
+                addModelOverride(modelRenderer);
             }
         }
     }

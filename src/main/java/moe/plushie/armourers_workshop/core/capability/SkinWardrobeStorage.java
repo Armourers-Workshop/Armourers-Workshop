@@ -59,8 +59,7 @@ public class SkinWardrobeStorage implements Capability.IStorage<SkinWardrobe> {
 
     public static void saveFlags(BitSet flags, CompoundNBT nbt) {
         int value = 0;
-        int size = flags.size();
-        for (int i = 0; i < size; ++i) {
+        for (int i = 0; i < 32; ++i) {
             if (flags.get(i)) {
                 value |= 1 << i;
             }
@@ -73,8 +72,7 @@ public class SkinWardrobeStorage implements Capability.IStorage<SkinWardrobe> {
     public static void loadFlags(BitSet flags, CompoundNBT nbt) {
         int value = nbt.getInt("Visibility");
         flags.clear();
-        int size = flags.size();
-        for (int i = 0; i < size; ++i) {
+        for (int i = 0; i < 32; ++i) {
             int mask = 1 << i;
             if ((value & mask) != 0) {
                 flags.set(i);

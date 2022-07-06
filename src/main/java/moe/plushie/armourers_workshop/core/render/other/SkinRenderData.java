@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.api.skin.*;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -33,7 +32,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.function.BiConsumer;
 
 
@@ -58,14 +56,10 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     private final HashMap<ISkinPaintType, IPaintColor> dyeColors = new HashMap<>();
     private final HashMap<ISkinPaintType, IPaintColor> lastDyeColors = new HashMap<>();
 
-    private final HashSet<ISkinPartType> hasOverriddenModelParts = new HashSet<>();
-    private final HashSet<ISkinPartType> hasOverriddenOverlayParts = new HashSet<>();
-    private final HashSet<ISkinPartType> hasParts = new HashSet<>();
-
-    private final HashSet<EquipmentSlotType> hasOverriddenEquipmentSlots = new HashSet<>();
-
     private final NonNullList<ItemStack> lastWardrobeSlots = NonNullList.withSize(SkinSlotType.getTotalSize(), ItemStack.EMPTY);
     private final ArrayList<ItemStack> lastEquipmentSlots = new ArrayList<>();
+
+    private final SkinOverriddenManager overriddenManager = new SkinOverriddenManager();
 
     private ColorScheme colorScheme = ColorScheme.EMPTY;
 
@@ -160,13 +154,10 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
             }
         }
         for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
-            boolean shows = wardrobe.shouldRenderEquipment(slotType);
-            if (shows == hasOverriddenEquipmentSlots.contains(slotType)) {
-                if (shows) {
-                    hasOverriddenEquipmentSlots.remove(slotType);
-                } else {
-                    hasOverriddenEquipmentSlots.add(slotType);
-                }
+            if (wardrobe.shouldRenderEquipment(slotType)) {
+                overriddenManager.removeEquipment(slotType);
+            } else {
+                overriddenManager.addEquipment(slotType);
             }
         }
         this.isRenderExtra = wardrobe.shouldRenderExtra();
@@ -181,9 +172,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         missingSkins.clear();
         armorSkins.clear();
         itemSkins.clear();
-        hasParts.clear();
-        hasOverriddenModelParts.clear();
-        hasOverriddenOverlayParts.clear();
+        overriddenManager.clear();
     }
 
     private void loadDyeSlots(Entity entity, BiConsumer<ISkinPaintType, ItemStack> consumer) {
@@ -261,18 +250,14 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     }
 
     private void loadSkinPart(BakedSkin skin) {
-        // check exists part
-        for (BakedSkinPart part : skin.getSkinParts()) {
-            hasParts.add(part.getType());
-        }
         // check all part status, some skin only one part, but overridden all the models/overlays
         SkinProperties properties = skin.getSkin().getProperties();
         for (ISkinPartType partType : skin.getType().getParts()) {
             if (partType.isModelOverridden(properties)) {
-                hasOverriddenModelParts.add(partType);
+                overriddenManager.addModel(partType);
             }
             if (partType.isOverlayOverridden(properties)) {
-                hasOverriddenOverlayParts.add(partType);
+                overriddenManager.addOverlay(partType);
             }
             if (partType == SkinPartTypes.BIPED_SKIRT && !isLimitLimbs) {
                 isLimitLimbs = properties.get(SkinProperty.MODEL_LEGS_LIMIT_LIMBS);
@@ -325,27 +310,8 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         return isLimitLimbs;
     }
 
-    public boolean hasPart(ISkinPartType partType) {
-        return hasParts.contains(partType);
-    }
-
-    public boolean hasOverriddenModelPart(ISkinPartType partType) {
-        return hasOverriddenModelParts.contains(partType);
-    }
-
-    public boolean hasOverriddenOverlayPart(ISkinPartType partType) {
-        return hasOverriddenOverlayParts.contains(partType) || hasOverriddenModelPart(partType);
-    }
-
-    public boolean hasOverriddenEquipmentPart(ISkinPartType partType) {
-        if (hasOverriddenOverlayPart(partType)) {
-            return true;
-        }
-        EquipmentSlotType slotType = PART_TO_EQUIPMENT_SLOTS.get(partType);
-        if (slotType != null) {
-            return hasOverriddenEquipmentSlots.contains(slotType);
-        }
-        return false;
+    public SkinOverriddenManager getOverriddenManager() {
+        return overriddenManager;
     }
 
     public boolean shouldRenderExtra() {

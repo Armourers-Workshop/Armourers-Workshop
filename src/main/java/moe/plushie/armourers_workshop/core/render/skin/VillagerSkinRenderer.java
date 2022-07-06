@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.model.TransformModel;
 import moe.plushie.armourers_workshop.core.render.layer.ForwardingLayer;
+import moe.plushie.armourers_workshop.core.render.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -32,40 +33,40 @@ public class VillagerSkinRenderer<T extends LivingEntity, M extends VillagerMode
     }
 
     @Override
-    public void willRender(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
-        super.willRender(entity, model, light, partialRenderTick, matrixStack, buffers);
+    public void willRender(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+        super.willRender(entity, model, renderData, light, partialRenderTick, matrixStack, buffers);
         transformModel.setup(entity, light, partialRenderTick);
     }
 
     @Override
-    public void willRenderModel(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
-        super.willRenderModel(entity, model, light, partialRenderTick, matrixStack, buffers);
+    public void willRenderModel(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+        super.willRenderModel(entity, model, renderData, light, partialRenderTick, matrixStack, buffers);
         copyRot(transformModel.head, model.head);
     }
 
     @Override
-    protected void applyOverriders(T entity, M model, SkinRenderData renderData) {
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_ARM)) {
-            addOverrider(model.arms);
+    protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_LEFT_ARM)) {
+            addModelOverride(model.arms);
         }
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
-            addOverrider(model.arms);
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_RIGHT_ARM)) {
+            addModelOverride(model.arms);
         }
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_HEAD)) {
-            addOverrider(model.head);
-            addOverrider(model.hat); // when override the head, the hat needs to override too
-            addOverrider(model.hatRim);
-            addOverrider(model.nose);
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_HEAD)) {
+            addModelOverride(model.head);
+            addModelOverride(model.hat); // when override the head, the hat needs to override too
+            addModelOverride(model.hatRim);
+            addModelOverride(model.nose);
         }
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_CHEST)) {
-            addOverrider(model.body);
-            addOverrider(model.jacket);
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_CHEST)) {
+            addModelOverride(model.body);
+            addModelOverride(model.jacket);
         }
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_LEG) || renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_FOOT)) {
-            addOverrider(model.leg0);
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_LEFT_LEG) || overriddenManager.hasModel(SkinPartTypes.BIPED_LEFT_FOOT)) {
+            addModelOverride(model.leg0);
         }
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_LEG) || renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_FOOT)) {
-            addOverrider(model.leg1);
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_RIGHT_LEG) || overriddenManager.hasModel(SkinPartTypes.BIPED_RIGHT_FOOT)) {
+            addModelOverride(model.leg1);
         }
     }
 

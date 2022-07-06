@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.handler.ItemTooltipHandler;
 import moe.plushie.armourers_workshop.core.handler.KeyboardHandler;
 import moe.plushie.armourers_workshop.core.handler.PlacementHighlightHandler;
+import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -32,18 +33,26 @@ public class ClientEventHandler {
             return;
         }
         LivingEntity entity = event.getEntity();
+        SkinRenderData renderData = SkinRenderData.of(entity);
+        if (renderData == null) {
+            return;
+        }
         EntityModel<?> entityModel = event.getRenderer().getModel();
         SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
         if (renderer != null) {
-            renderer.willRender(entity, entityModel, event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
+            renderer.willRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
         }
     }
 
     public static void onRenderLiving(LivingRenderer<LivingEntity, EntityModel<LivingEntity>> livingRenderer, LivingEntity entity, float p_225623_2_, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer buffers, int p_225623_6_) {
+        SkinRenderData renderData = SkinRenderData.of(entity);
+        if (renderData == null) {
+            return;
+        }
         EntityModel<?> entityModel = livingRenderer.getModel();
         SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, livingRenderer);
         if (renderer != null) {
-            renderer.willRenderModel(entity, entityModel, p_225623_6_, p_225623_3_, matrixStack, buffers);
+            renderer.willRenderModel(entity, entityModel, renderData, p_225623_6_, p_225623_3_, matrixStack, buffers);
         }
     }
 
@@ -53,10 +62,14 @@ public class ClientEventHandler {
             return;
         }
         LivingEntity entity = event.getEntity();
+        SkinRenderData renderData = SkinRenderData.of(entity);
+        if (renderData == null) {
+            return;
+        }
         EntityModel<?> entityModel = event.getRenderer().getModel();
         SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
         if (renderer != null) {
-            renderer.didRender(entity, entityModel, event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
+            renderer.didRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
         }
     }
 }

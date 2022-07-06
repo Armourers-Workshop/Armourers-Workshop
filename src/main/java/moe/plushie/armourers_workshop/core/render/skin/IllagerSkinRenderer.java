@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.skin;
 
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.core.render.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import net.minecraft.client.renderer.entity.model.IllagerModel;
@@ -17,13 +18,13 @@ public class IllagerSkinRenderer<T extends AbstractIllagerEntity, M extends Illa
     }
 
     @Override
-    protected void applyOverriders(T entity, M model, SkinRenderData renderData) {
-        super.applyOverriders(entity, model, renderData);
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_LEFT_ARM)) {
-            addOverrider(model.arms);
+    protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
+        super.apply(entity, model, overriddenManager, renderData);
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_LEFT_ARM)) {
+            addModelOverride(model.arms);
         }
-        if (renderData.hasOverriddenModelPart(SkinPartTypes.BIPED_RIGHT_ARM)) {
-            addOverrider(model.arms);
+        if (overriddenManager.hasModel(SkinPartTypes.BIPED_RIGHT_ARM)) {
+            addModelOverride(model.arms);
         }
     }
 

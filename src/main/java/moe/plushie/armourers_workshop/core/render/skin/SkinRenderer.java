@@ -11,13 +11,13 @@ import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderObjectBuilder;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.render.other.SkinModelManager;
+import moe.plushie.armourers_workshop.core.render.other.SkinOverriddenManager;
+import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.color.ColorScheme;
 import moe.plushie.armourers_workshop.utils.extened.AWMatrixStack;
@@ -81,14 +81,15 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         }
     }
 
-    public void apply(T entity, M model, EquipmentSlotType slotType, float partialTicks, MatrixStack matrixStack) {
+    protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
     }
 
-    public void willRender(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+    public void willRender(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         overriders.clear();
+        apply(entity, model, renderData.getOverriddenManager(), renderData);
     }
 
-    public void willRenderModel(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+    public void willRenderModel(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         overriders.forEach(m -> m.visible = false);
     }
 
@@ -137,14 +138,14 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         return counter;
     }
 
-    public void didRender(T entity, M model, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
+    public void didRender(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         for (ModelRenderer modelRenderer : overriders) {
             modelRenderer.visible = true;
         }
         overriders.clear();
     }
 
-    protected void addOverrider(ModelRenderer modelRenderer) {
+    protected void addModelOverride(ModelRenderer modelRenderer) {
         if (!modelRenderer.visible) {
             return;
         }
