@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.api.common.IItemBlockSelector;
+import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 @SuppressWarnings("NullableProblems")
-public class BottleItem extends FlavouredItem implements IItemTintColorProvider, IItemModelPropertiesProvider, IItemBlockSelector, IPaintPicker {
+public class BottleItem extends FlavouredItem implements IItemTintColorProvider, IItemModelPropertiesProvider, IItemColorProvider, IPaintPicker {
 
     public BottleItem(Item.Properties properties) {
         super(properties);

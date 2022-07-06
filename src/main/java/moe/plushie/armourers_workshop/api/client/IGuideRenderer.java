@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.api.client.render;
+package moe.plushie.armourers_workshop.api.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

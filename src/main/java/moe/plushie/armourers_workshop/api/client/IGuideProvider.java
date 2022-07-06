@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.api.client.render;
+package moe.plushie.armourers_workshop.api.client;
 
 public interface IGuideProvider {
 

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.builder.render.guide;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.api.client.render.IGuideProvider;
-import moe.plushie.armourers_workshop.api.client.render.IGuideRenderer;
+import moe.plushie.armourers_workshop.api.client.IGuideProvider;
+import moe.plushie.armourers_workshop.api.client.IGuideRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

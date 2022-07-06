@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.gui.armourer;
 
-import moe.plushie.armourers_workshop.api.common.IItemBlockSelector;
+import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
@@ -101,12 +101,12 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             }
             CompoundNBT source = new CompoundNBT();
             ItemStack selector = dialog1.getSelector();
-            if (selector.getItem() instanceof IItemBlockSelector) {
+            if (selector.getItem() instanceof IItemColorProvider) {
                 selector.save(source);
             }
             CompoundNBT destination = new CompoundNBT();
             ItemStack applier = dialog1.getApplier();
-            if (applier.getItem() instanceof IItemBlockSelector) {
+            if (applier.getItem() instanceof IItemColorProvider) {
                 applier.save(destination);
             }
             if (source.isEmpty() && destination.isEmpty()) {

@@ -74,10 +74,9 @@ public class SkinCubeItemStackRenderer extends ItemStackTileEntityRenderer {
     }
 
     public void renderCube(BlockPaintColor blockPaintColor, int light, int overlay, MatrixStack matrixStack, IVertexBuilder builder) {
-        for (BlockPaintColor.Side side : BlockPaintColor.Side.values()) {
-            Direction direction = side.getDirection();
-            IPaintColor paintColor = blockPaintColor.getOrDefault(side, PaintColor.WHITE);
-            SkinCubeFaceRenderer.render2(0, 0, 0, direction, paintColor, 255, light, overlay, matrixStack, builder);
+        for (Direction dir : Direction.values()) {
+            IPaintColor paintColor = blockPaintColor.getOrDefault(dir, PaintColor.WHITE);
+            SkinCubeFaceRenderer.render2(0, 0, 0, dir, paintColor, 255, light, overlay, matrixStack, builder);
         }
     }
 }

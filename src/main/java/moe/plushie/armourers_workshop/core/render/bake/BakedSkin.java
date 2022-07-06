@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.render.bake;
 import com.google.common.collect.Range;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.api.action.ICanUse;
-import moe.plushie.armourers_workshop.api.client.render.IBakedSkin;
+import moe.plushie.armourers_workshop.api.client.IBakedSkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;

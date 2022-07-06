@@ -50,41 +50,41 @@ public class SkinCubeTileEntity extends AbstractTileEntity implements IPaintable
         return false;
     }
 
-    private BlockPaintColor.Side getSide(Direction dir) {
+    private Direction getResolvedDirection(Direction dir) {
         switch (getDirection()) {
             case SOUTH: {
                 // when block facing to south, we need to rotate 180° get facing north direction.
-                return BlockPaintColor.Side.of(Rotation.CLOCKWISE_180.rotate(dir));
+                return Rotation.CLOCKWISE_180.rotate(dir);
             }
             case WEST: {
                 // when block facing to west, we need to rotate 90° get facing north direction.
-                return BlockPaintColor.Side.of(Rotation.CLOCKWISE_90.rotate(dir));
+                return Rotation.CLOCKWISE_90.rotate(dir);
             }
             case EAST: {
                 // when block facing to east, we need to rotate -90° get facing north direction.
-                return BlockPaintColor.Side.of(Rotation.COUNTERCLOCKWISE_90.rotate(dir));
+                return Rotation.COUNTERCLOCKWISE_90.rotate(dir);
             }
             default: {
-                return BlockPaintColor.Side.of(dir);
+                return dir;
             }
         }
     }
 
     @Override
     public IPaintColor getColor(Direction direction) {
-        return colors.getOrDefault(getSide(direction), PaintColor.WHITE);
+        return colors.getOrDefault(getResolvedDirection(direction), PaintColor.WHITE);
     }
 
     @Override
     public void setColor(Direction direction, IPaintColor color) {
-        this.colors.put(getSide(direction), color);
+        this.colors.put(getResolvedDirection(direction), color);
         this.customRenderer = checkRendererFromColors();
         TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
     @Override
     public void setColors(Map<Direction, IPaintColor> colors) {
-        colors.forEach((direction, color) -> this.colors.put(getSide(direction), color));
+        colors.forEach((direction, color) -> this.colors.put(getResolvedDirection(direction), color));
         this.customRenderer = checkRendererFromColors();
         TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }

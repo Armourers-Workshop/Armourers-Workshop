@@ -37,20 +37,16 @@ public class WrappedBakedModel implements IBakedModel {
         this.itemStack = itemStack;
         this.world = world;
         this.entity = entity;
-        if (world != null) {
-            this.bakedModel = bakedModel;
-        } else {
-            this.bakedModel = getSkinBakedModel();
-        }
+        this.bakedModel = bakedModel;
     }
 
-//    public static IBakedModel wrap(ItemStack itemStack, LivingEntity entity, @Nullable World world, IBakedModel bakedModel) {
-//        return (IBakedModel) Proxy.newProxyInstance(bakedModel.getClass().getClassLoader(), new Class[]{IBakedModel.class}, (proxy, method, args) -> {
-//            String name = method.getName();
-//
-//            return method.invoke(proxy, args);
-//        });
-//    }
+    public static IBakedModel wrap(IBakedModel bakedModel, ItemStack itemStack, LivingEntity entity, @Nullable World world) {
+        // when the world is empty, this means the model is rendering on the GUI.
+        if (world == null) {
+            bakedModel = getSkinBakedModel();
+        }
+        return new WrappedBakedModel(itemStack, entity, world, bakedModel);
+    }
 
     public static IBakedModel getSkinBakedModel() {
         if (skinBakedModel == null) {

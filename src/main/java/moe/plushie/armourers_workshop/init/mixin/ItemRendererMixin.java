@@ -23,7 +23,7 @@ public class ItemRendererMixin {
     private void hooked_getModel(ItemStack itemStack, World world, LivingEntity entity, CallbackInfoReturnable<IBakedModel> cir) {
         IBakedModel bakedModel = cir.getReturnValue();
         if (ClientWardrobeHandler.shouldRenderEmbeddedSkin(entity, world, itemStack, false)) {
-            cir.setReturnValue(new WrappedBakedModel(itemStack, entity, world, bakedModel));
+            cir.setReturnValue(WrappedBakedModel.wrap(bakedModel, itemStack, entity, world));
         }
     }
 

@@ -142,6 +142,10 @@ public class SkinWardrobe implements ISkinWardrobe, INBTSerializable<CompoundNBT
         }
     }
 
+    public BitSet getFlags() {
+        return flags;
+    }
+
     public void setUnlockedSize(SkinSlotType slotType, int size) {
         if (slotType != SkinSlotType.DYE) {
             skinSlots.put(slotType, size);

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.utils.color;
 
-import com.google.common.collect.ImmutableMap;
+import moe.plushie.armourers_workshop.api.painting.IBlockPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import net.minecraft.nbt.CompoundNBT;
@@ -11,21 +11,11 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Objects;
 
-public class BlockPaintColor {
+public class BlockPaintColor implements IBlockPaintColor {
 
     public static final BlockPaintColor WHITE = new BlockPaintColor(PaintColor.WHITE);
 
     public static final BlockPaintColor EMPTY = new BlockPaintColor();
-
-    // Assume the mapping for facing to the north.
-    private static final ImmutableMap<Direction, Side> SIDES = ImmutableMap.<Direction, Side>builder()
-            .put(Direction.DOWN, Side.DOWN)
-            .put(Direction.UP, Side.UP)
-            .put(Direction.NORTH, Side.FRONT)
-            .put(Direction.SOUTH, Side.BACK)
-            .put(Direction.WEST, Side.LEFT)
-            .put(Direction.EAST, Side.RIGHT)
-            .build();
 
     protected IPaintColor paintColor;
     protected EnumMap<Side, IPaintColor> paintColors;
@@ -35,11 +25,6 @@ public class BlockPaintColor {
 
     public BlockPaintColor(IPaintColor paintColor) {
         this.paintColor = paintColor;
-    }
-
-    public BlockPaintColor(EnumMap<Side, IPaintColor> paintColors) {
-        this.paintColors = paintColors;
-        this.mergePaintColorIfNeeded();
     }
 
     public void deserializeNBT(CompoundNBT nbt) {
@@ -73,7 +58,8 @@ public class BlockPaintColor {
         this.paintColors = null;
     }
 
-    public void put(Side side, IPaintColor paintColor) {
+    @Override
+    public void put(Direction dir, IPaintColor paintColor) {
         if (this.paintColors == null) {
             if (Objects.equals(this.paintColor, paintColor)) {
                 return; // not any changes.
@@ -81,6 +67,7 @@ public class BlockPaintColor {
             this.paintColors = getPaintColors(this.paintColor);
             this.paintColor = null;
         }
+        Side side = Side.of(dir);
         if (paintColor != null) {
             this.paintColors.put(side, paintColor);
         } else {
@@ -89,16 +76,19 @@ public class BlockPaintColor {
         this.mergePaintColorIfNeeded();
     }
 
-    public IPaintColor get(Side side) {
-        return getOrDefault(side, null);
+
+    @Override
+    public IPaintColor get(Direction dir) {
+        return getOrDefault(dir, null);
     }
 
-    public IPaintColor getOrDefault(Side side, IPaintColor defaultValue) {
+    @Override
+    public IPaintColor getOrDefault(Direction dir, IPaintColor defaultValue) {
         if (paintColor != null) {
             return paintColor;
         }
         if (paintColors != null) {
-            return paintColors.getOrDefault(side, defaultValue);
+            return paintColors.getOrDefault(Side.of(dir), defaultValue);
         }
         return defaultValue;
     }
@@ -126,6 +116,7 @@ public class BlockPaintColor {
         return Objects.hash(paintColor, paintColors);
     }
 
+    @Override
     public boolean isEmpty() {
         if (paintColors != null) {
             return paintColors.isEmpty();
@@ -133,6 +124,7 @@ public class BlockPaintColor {
         return paintColor == null;
     }
 
+    @Override
     public boolean isPureColor() {
         return paintColor != null;
     }
@@ -184,7 +176,7 @@ public class BlockPaintColor {
         }
 
         public static Side of(Direction direction) {
-            return SIDES.getOrDefault(direction, FRONT);
+            return values()[direction.ordinal()];
         }
 
         public String getName() {
@@ -195,7 +187,4 @@ public class BlockPaintColor {
             return direction;
         }
     }
-
-
-
 }

@@ -29,9 +29,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.util.ThreeConsumer;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 
@@ -58,6 +56,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     private final NonNullList<ItemStack> lastWardrobeSlots = NonNullList.withSize(SkinSlotType.getTotalSize(), ItemStack.EMPTY);
     private final ArrayList<ItemStack> lastEquipmentSlots = new ArrayList<>();
+    private final BitSet lastWardrobeFlags = new BitSet();
 
     private final SkinOverriddenManager overriddenManager = new SkinOverriddenManager();
 
@@ -106,6 +105,8 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         loadHandSlots(entity, this::updateSkin);
         loadArmorSlots(entity, this::updateSkin);
 
+        loadWardrobeFlags(entity);
+
         if (missingSkins.isEmpty()) {
             if (isListening) {
                 SkinBakery.getInstance().removeListener(this);
@@ -153,14 +154,12 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
                 version += 1;
             }
         }
-        for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
-            if (wardrobe.shouldRenderEquipment(slotType)) {
-                overriddenManager.removeEquipment(slotType);
-            } else {
-                overriddenManager.addEquipment(slotType);
-            }
+        BitSet flags = wardrobe.getFlags();
+        if (!lastWardrobeFlags.equals(flags)) {
+            lastWardrobeFlags.clear();
+            lastWardrobeFlags.or(flags);
+            version += 1;
         }
-        this.isRenderExtra = wardrobe.shouldRenderExtra();
         this.isActiveWardrobe = true;
     }
 
@@ -218,6 +217,21 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
         for (ItemStack itemStack : ModCompatible.getHandSlots(entity)) {
             consumer.accept(itemStack, i, true);
         }
+    }
+
+    private void loadWardrobeFlags(Entity entity) {
+        SkinWardrobe wardrobe = SkinWardrobe.of(entity);
+        if (wardrobe == null) {
+            return;
+        }
+        for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
+            if (wardrobe.shouldRenderEquipment(slotType)) {
+                overriddenManager.removeEquipment(slotType);
+            } else {
+                overriddenManager.addEquipment(slotType);
+            }
+        }
+        this.isRenderExtra = wardrobe.shouldRenderExtra();
     }
 
     private void updateDye(ISkinPaintType paintType, ItemStack itemStack) {

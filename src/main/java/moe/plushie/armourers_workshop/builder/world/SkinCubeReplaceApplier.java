@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.world;
 
-import moe.plushie.armourers_workshop.api.common.IItemBlockSelector;
+import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
@@ -73,9 +73,9 @@ public class SkinCubeReplaceApplier {
         if (sourceBlockColor != null) {
             int diff = 0;
             IPaintable provider = (IPaintable) tileEntity;
-            for (BlockPaintColor.Side side : BlockPaintColor.Side.values()) {
-                IPaintColor s = sourceBlockColor.getOrDefault(side, PaintColor.WHITE);
-                IPaintColor t = provider.getColor(side.getDirection());
+            for (Direction dir : Direction.values()) {
+                IPaintColor s = sourceBlockColor.getOrDefault(dir, PaintColor.WHITE);
+                IPaintColor t = provider.getColor(dir);
                 if (!Objects.equals(s, t)) {
                     diff += 1;
                 }
@@ -117,16 +117,16 @@ public class SkinCubeReplaceApplier {
         }
         // we just need to replace the matching block colors.
         HashMap<Direction, IPaintColor> newColors = new HashMap<>();
-        for (BlockPaintColor.Side side : BlockPaintColor.Side.values()) {
-            IPaintColor targetColor = tileEntity.getColor(side.getDirection());
+        for (Direction dir : Direction.values()) {
+            IPaintColor targetColor = tileEntity.getColor(dir);
             if (sourceBlockColor != null) {
-                IPaintColor sourceColor = sourceBlockColor.getOrDefault(side, PaintColor.WHITE);
+                IPaintColor sourceColor = sourceBlockColor.getOrDefault(dir, PaintColor.WHITE);
                 if (!Objects.equals(sourceColor, targetColor)) {
-                    newColors.put(side.getDirection(), targetColor);
+                    newColors.put(dir, targetColor);
                     continue;
                 }
             }
-            IPaintColor newColor = destinationBlockColor.getOrDefault(side, PaintColor.WHITE);
+            IPaintColor newColor = destinationBlockColor.getOrDefault(dir, PaintColor.WHITE);
             int color = newColor.getRGB();
             if (keepColor) {
                 color = targetColor.getRGB();
@@ -136,7 +136,7 @@ public class SkinCubeReplaceApplier {
                 paintType = targetColor.getPaintType();
             }
             newColor = PaintColor.of(color, paintType);
-            newColors.put(side.getDirection(), newColor);
+            newColors.put(dir, newColor);
         }
         // apply all block color changes into tile entity.
         tileEntity.setColors(newColors);
@@ -184,8 +184,8 @@ public class SkinCubeReplaceApplier {
         if (item instanceof SkinCubeItem) {
             return ((SkinCubeItem) item).getItemColors(itemStack);
         }
-        if (item instanceof IItemBlockSelector) {
-            IPaintColor paintColor = ((IItemBlockSelector) item).getItemColor(itemStack);
+        if (item instanceof IItemColorProvider) {
+            IPaintColor paintColor = ((IItemColorProvider) item).getItemColor(itemStack);
             if (paintColor != null) {
                 return new BlockPaintColor(paintColor);
             }

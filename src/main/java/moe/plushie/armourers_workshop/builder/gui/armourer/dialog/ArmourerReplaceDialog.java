@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.gui.armourer.dialog;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.api.common.IItemBlockSelector;
+import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.core.container.AbstractContainer;
 import moe.plushie.armourers_workshop.core.gui.widget.AWCheckBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWConfirmDialog;
@@ -182,7 +182,7 @@ public class ArmourerReplaceDialog extends AWConfirmDialog {
                 addSlot(new Slot(inventory, offset + i, placeholderX + i * 110, placeholderY) {
                     @Override
                     public boolean mayPlace(ItemStack itemStack) {
-                        return itemStack.getItem() instanceof IItemBlockSelector;
+                        return itemStack.getItem() instanceof IItemColorProvider;
                     }
                 });
             }
