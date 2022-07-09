@@ -111,9 +111,7 @@ public class ArmourerContainer extends AbstractBlockContainer {
 
         try {
             World world = tileEntity.getLevel();
-            BlockPos pos = tileEntity.getBlockPos().offset(0, 1, 0);
-            Direction facing = tileEntity.getBlockState().getValue(ArmourerBlock.FACING);
-            SkinCubeTransform transform = new SkinCubeTransform(world, pos, facing);
+            SkinCubeTransform transform = tileEntity.getTransform();
             skin = WorldUtils.saveSkinFromWorld(world, transform, skinProps, tileEntity.getSkinType(), tileEntity.getPaintData());
         } catch (SkinSaveException e) {
             player.sendMessage(new StringTextComponent(e.getMessage()), player.getUUID());
@@ -157,9 +155,7 @@ public class ArmourerContainer extends AbstractBlockContainer {
 
         try {
             World world = tileEntity.getLevel();
-            BlockPos pos = tileEntity.getBlockPos().offset(0, 1, 0);
-            Direction facing = tileEntity.getBlockState().getValue(ArmourerBlock.FACING);
-            SkinCubeTransform transform = new SkinCubeTransform(world, pos, facing);
+            SkinCubeTransform transform = tileEntity.getTransform();
             WorldUtils.loadSkinIntoWorld(world, transform, skin);
         } catch (Exception e) {
             e.printStackTrace();

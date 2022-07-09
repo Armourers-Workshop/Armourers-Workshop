@@ -412,7 +412,7 @@ public class ArmourerTileEntity extends AbstractTileEntity implements IPaintTool
         return boxes;
     }
 
-    private SkinCubeTransform getTransform() {
+    public SkinCubeTransform getTransform() {
         BlockPos pos = getBlockPos().offset(0, 1, 0);
         Direction facing = getBlockState().getValue(ArmourerBlock.FACING);
         return new SkinCubeTransform(getLevel(), pos, facing);

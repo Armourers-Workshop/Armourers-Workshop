@@ -262,11 +262,7 @@ public final class WorldUtils {
         for (Direction dir : Direction.values()) {
             int rgb = slice.getRGB(dir.ordinal());
             int type = slice.getPaintType(dir.ordinal());
-            PaintColor color = PaintColor.of(rgb, SkinPaintTypes.byId(type));
-            if (color.getPaintType() == SkinPaintTypes.NONE) {
-                continue;
-            }
-            colors.put(dir, color);
+            colors.put(dir, PaintColor.of(rgb, SkinPaintTypes.byId(type)));
         }
 
         WorldBlockUpdateTask task = new WorldBlockUpdateTask(world, target, targetState);

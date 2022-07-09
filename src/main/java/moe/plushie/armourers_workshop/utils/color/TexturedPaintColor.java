@@ -24,9 +24,6 @@ public class TexturedPaintColor extends PaintColor {
     }
 
     public static PaintColor of(int rgb, ISkinPaintType paintType) {
-        if (paintType == SkinPaintTypes.NONE && rgb == 0) {
-            return CLEAR;
-        }
         int value = (rgb & 0xffffff) | ((paintType.getId() & 0xff) << 24);
         TexturedPaintColor paintColor = POOL.getIfPresent(value);
         if (paintColor == null) {
