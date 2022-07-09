@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.builder.tileentity;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -34,6 +35,7 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
 
     protected Vector3i guide = Vector3i.ZERO;
     protected BlockPos parent = INVALID;
+    protected Direction parentFacing;
 
     protected ISkinPartType partType = SkinPartTypes.UNKNOWN;
 
@@ -48,6 +50,7 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
         guide = AWDataSerializers.getVector3i(nbt, AWConstants.NBT.TILE_ENTITY_OFFSET);
         partType = SkinPartTypes.byName(AWDataSerializers.getString(nbt, AWConstants.NBT.SKIN_PART_TYPE, SkinTypes.UNKNOWN.getRegistryName().toString()));
         customRenderer = Arrays.stream(Direction.values()).anyMatch(this::shouldChangeColor);
+        parentFacing = null;
     }
 
     public void writeToNBT(CompoundNBT nbt) {
@@ -155,6 +158,18 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
             }
         }
         return PaintColor.CLEAR;
+    }
+
+    public Direction getParentFacing() {
+        if (parentFacing != null) {
+            return parentFacing;
+        }
+        parentFacing = Direction.NORTH;
+        TileEntity tileEntity = getParentTileEntity();
+        if (tileEntity != null) {
+            parentFacing = tileEntity.getBlockState().getValue(ArmourerBlock.FACING);
+        }
+        return parentFacing;
     }
 
     private ArmourerTileEntity getParentTileEntity() {
