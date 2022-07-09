@@ -178,6 +178,7 @@
   "inventory.armourers_workshop.armourer.skinSettings.overrideModelHead": "Head Override?",
   "inventory.armourers_workshop.armourer.skinSettings.overrideModelLegLeft": "Left Leg Override?",
   "inventory.armourers_workshop.armourer.skinSettings.overrideModelLegRight": "Right Leg Override?",
+  "inventory.armourers_workshop.armourer.skinSettings.wingsMatchingPose": "Matching the body pose?",
   "inventory.armourers_workshop.armourer.skinSettings.showOverlay": "Show head overlay?",
   "inventory.armourers_workshop.colour-mixer": "Color Mixer",
   "inventory.armourers_workshop.colour-mixer.add_palette.enter_name": "Enter name...",

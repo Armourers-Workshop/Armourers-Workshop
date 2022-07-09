@@ -53,6 +53,7 @@ public class SkinProperty<T> implements ISkinProperty<T> {
     public static final SkinProperty<Double> WINGS_IDLE_SPEED = new SkinProperty<>("wingsIdleSpeed", 6000D, true);
     public static final SkinProperty<Double> WINGS_FLYING_SPEED = new SkinProperty<>("wingsFlyingSpeed", 350D, true);
     public static final SkinProperty<String> WINGS_MOVMENT_TYPE = new SkinProperty<>("wingsMovmentType", MovementType.EASE.name(), true);
+    public static final SkinProperty<Boolean> WINGS_MATCHING_POSE = new SkinProperty<>("wingsMatchingPose", true);
 
     private final String key;
     private final T defaultValue;

@@ -27,6 +27,7 @@ public class ArmourerWingsSkinPanel extends ArmourerBaseSkinPanel {
         this.addSliderBox(0, 0, 154, 10, -180, 180, "\u00b0", SkinProperty.WINGS_MAX_ANGLE);
         this.addLabel(0, 0, width, 9, getDisplayText("label.minAngle"));
         this.addSliderBox(0, 0, 154, 10, -180, 180, "\u00b0", SkinProperty.WINGS_MIN_ANGLE);
+        this.addCheckBox(0, 2, 9, 9, SkinProperty.WINGS_MATCHING_POSE);
 
         this.addMovementList(0, 2, 50, 16, SkinProperty.WINGS_MOVMENT_TYPE);
     }

@@ -2,15 +2,18 @@ package moe.plushie.armourers_workshop.core.render.skin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.other.SkinOverriddenManager;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -127,8 +130,10 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         }
     }
 
-    private void setWings(MatrixStack matrixStack, M model) {
-        transformer.apply(matrixStack, accessor.getBody(model));
+    private void setWings(MatrixStack matrixStack, T entity, M model, ItemStack itemStack, ItemCameraTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+        if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
+            transformer.apply(matrixStack, accessor.getBody(model));
+        }
         matrixStack.translate(0, 0, 2);
     }
 

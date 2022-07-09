@@ -179,6 +179,7 @@
   "inventory.armourers_workshop.armourer.skinSettings.overrideModelLegLeft": "用时装取代左腿?",
   "inventory.armourers_workshop.armourer.skinSettings.overrideModelLegRight": "用时装取代右腿?",
   "inventory.armourers_workshop.armourer.skinSettings.showOverlay": "显示双层皮肤?",
+  "inventory.armourers_workshop.armourer.skinSettings.wingsMatchingPose": "匹配身体的倾斜姿势?",
   "inventory.armourers_workshop.colour-mixer": "调色器",
   "inventory.armourers_workshop.colour-mixer.add_palette.enter_name": "输入名字...",
   "inventory.armourers_workshop.colour-mixer.add_palette.title": "添加调色板",
