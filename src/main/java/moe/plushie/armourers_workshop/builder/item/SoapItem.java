@@ -1,20 +1,16 @@
 package moe.plushie.armourers_workshop.builder.item;
 
-import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.builder.tileentity.BoundingBoxTileEntity;
+import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
+import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolApplier;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeColorApplier;
 import moe.plushie.armourers_workshop.core.item.FlavouredItem;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintApplier;
-import moe.plushie.armourers_workshop.utils.BlockPaintUpdater;
-import moe.plushie.armourers_workshop.utils.color.PaintColor;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class SoapItem extends FlavouredItem implements IPaintApplier {
+import javax.annotation.Nullable;
+
+public class SoapItem extends FlavouredItem implements IPaintToolApplier {
 
     public SoapItem(Properties properties) {
         super(properties);
@@ -22,29 +18,28 @@ public class SoapItem extends FlavouredItem implements IPaintApplier {
 
     @Override
     public ActionResultType useOn(ItemUseContext context) {
-        World world = context.getLevel();
-        if (applyColor(context)) {
-            return ActionResultType.sidedSuccess(world.isClientSide);
+        ActionResultType resultType = usePaintTool(context);
+        if (resultType.consumesAction()) {
+            return resultType;
         }
         return super.useOn(context);
     }
 
-
+    @Nullable
     @Override
-    public IPaintUpdater createPaintUpdater(ItemUseContext context) {
-        return new BlockPaintUpdater(this);
+    public IPaintToolAction createPaintToolAction(ItemUseContext context) {
+        return new SkinCubeColorApplier.ClearAction();
     }
 
     @Override
-    public IPaintColor getMixedColor(IPaintable target, Direction direction, ItemStack itemStack, ItemUseContext context) {
-        if (target instanceof BoundingBoxTileEntity) {
-            return PaintColor.CLEAR;
-        }
-        return PaintColor.WHITE;
+    public boolean shouldUseTool(ItemUseContext context) {
+        // by default, applying colors only execute on the client side,
+        // and then send the final color to the server side.
+        return context.getLevel().isClientSide();
     }
 
     @Override
-    public boolean isFullMode(World worldIn, BlockPos blockPos, ItemStack itemStack, ItemUseContext context) {
+    public boolean shouldUseFullMode(ItemUseContext context) {
         return false;
     }
 }

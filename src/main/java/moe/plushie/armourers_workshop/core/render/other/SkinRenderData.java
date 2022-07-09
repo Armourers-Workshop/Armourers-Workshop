@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.render.other;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.*;
@@ -29,23 +28,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.util.ThreeConsumer;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.function.BiConsumer;
 
 
 @OnlyIn(Dist.CLIENT)
 public class SkinRenderData implements SkinBakery.IBakeListener {
-
-    private static final ImmutableMap<ISkinPartType, EquipmentSlotType> PART_TO_EQUIPMENT_SLOTS = new ImmutableMap.Builder<ISkinPartType, EquipmentSlotType>()
-            .put(SkinPartTypes.BIPED_HEAD, EquipmentSlotType.HEAD)
-            .put(SkinPartTypes.BIPED_CHEST, EquipmentSlotType.CHEST)
-            .put(SkinPartTypes.BIPED_LEFT_ARM, EquipmentSlotType.CHEST)
-            .put(SkinPartTypes.BIPED_RIGHT_ARM, EquipmentSlotType.CHEST)
-            .put(SkinPartTypes.BIPED_LEFT_FOOT, EquipmentSlotType.FEET)
-            .put(SkinPartTypes.BIPED_RIGHT_FOOT, EquipmentSlotType.FEET)
-            .put(SkinPartTypes.BIPED_LEFT_LEG, EquipmentSlotType.LEGS)
-            .put(SkinPartTypes.BIPED_RIGHT_LEG, EquipmentSlotType.LEGS)
-            .build();
 
     private final ArrayList<String> missingSkins = new ArrayList<>();
     private final ArrayList<Entry> armorSkins = new ArrayList<>();
@@ -56,6 +47,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
 
     private final NonNullList<ItemStack> lastWardrobeSlots = NonNullList.withSize(SkinSlotType.getTotalSize(), ItemStack.EMPTY);
     private final ArrayList<ItemStack> lastEquipmentSlots = new ArrayList<>();
+
     private final BitSet lastWardrobeFlags = new BitSet();
 
     private final SkinOverriddenManager overriddenManager = new SkinOverriddenManager();

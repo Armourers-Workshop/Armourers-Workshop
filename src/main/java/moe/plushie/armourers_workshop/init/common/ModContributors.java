@@ -9,7 +9,9 @@ import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class ModContributors {
 

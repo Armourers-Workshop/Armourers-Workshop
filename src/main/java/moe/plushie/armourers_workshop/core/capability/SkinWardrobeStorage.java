@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.capability;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.utils.DataFixerUtils;
 import moe.plushie.armourers_workshop.utils.slot.SkinSlotType;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -19,7 +18,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import javax.annotation.Nullable;
 import java.util.BitSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Objects;
 
 public class SkinWardrobeStorage implements Capability.IStorage<SkinWardrobe> {

@@ -422,7 +422,7 @@ public final class WorldUtils {
 
     public static void replaceCubes(World world, SkinCubeTransform transform, ISkinType skinType, SkinProperties skinProps, SkinCubeReplaceApplier applier) {
         for (ISkinPartType skinPart : skinType.getParts()) {
-            for (Vector3i offset : getResolvedBuildingSpace(skinPart)) {
+            for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
                 replaceCube(world, transform.mul(offset), applier);
             }
         }
@@ -468,7 +468,7 @@ public final class WorldUtils {
 
     private static int clearMarkersForSkinPart(World world, SkinCubeTransform transform, ISkinPartType skinPart) {
         int blockCount = 0;
-        for (Vector3i offset : getResolvedBuildingSpace(skinPart)) {
+        for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
             BlockPos target = transform.mul(offset);
             BlockState targetState = world.getBlockState(target);
             if (targetState.hasProperty(SkinCubeBlock.MARKER) && SkinCubeBlock.getMarker(targetState) != OptionalDirection.NONE) {
@@ -506,7 +506,7 @@ public final class WorldUtils {
 
     private static int clearEquipmentCubesForSkinPart(World world, SkinCubeTransform transform, ISkinPartType skinPart) {
         int blockCount = 0;
-        for (Vector3i offset : getResolvedBuildingSpace(skinPart)) {
+        for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
             BlockPos target = transform.mul(offset);
             BlockState targetState = world.getBlockState(target);
             if (targetState.getBlock() instanceof SkinCubeBlock) {
@@ -519,28 +519,22 @@ public final class WorldUtils {
         return blockCount;
     }
 
-    private static Iterable<Vector3i> getResolvedBuildingSpace(ISkinPartType skinPart) {
+    public static Rectangle3i getResolvedBuildingSpace(ISkinPartType skinPart) {
         Vector3i origin = skinPart.getOffset();
         Rectangle3i buildSpace = skinPart.getBuildingSpace();
         int dx = -origin.getX() + buildSpace.getX();
         int dy = -origin.getY();
         int dz = origin.getZ() + buildSpace.getZ();
-        return new Rectangle3i(dx, dy, dz, buildSpace.getWidth(), buildSpace.getHeight(), buildSpace.getDepth()).enumerateZYX();
+        return new Rectangle3i(dx, dy, dz, buildSpace.getWidth(), buildSpace.getHeight(), buildSpace.getDepth());
     }
 
-
-    //    public static ArrayList<BlockPos> getListOfPaintableCubes(World world, BlockPos pos, ISkinType skinType) {
-//        ArrayList<BlockPos> blList = new ArrayList<BlockPos>();
-//        for (int i = 0; i < skinType.getSkinParts().size(); i++) {
-//            ISkinPartType skinPart = skinType.getSkinParts().get(i);
-//            getBuildingCubesForPart(world, pos, skinPart, blList);
-//        }
-//        return blList;
-//    }
+    private static Iterable<Vector3i> getResolvedBuildingSpace2(ISkinPartType skinPart) {
+        return getResolvedBuildingSpace(skinPart).enumerateZYX();
+    }
 
     private static int getNumberOfCubesInPart(World world, SkinCubeTransform transform, ISkinPartType skinPart) {
         int cubeCount = 0;
-        for (Vector3i offset : getResolvedBuildingSpace(skinPart)) {
+        for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
             BlockState blockState = world.getBlockState(transform.mul(offset));
             if (blockState.getBlock() instanceof SkinCubeBlock) {
                 cubeCount++;

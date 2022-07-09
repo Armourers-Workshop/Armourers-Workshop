@@ -5,12 +5,9 @@ import moe.plushie.armourers_workshop.api.common.IItemSoundProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintingTool;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.gui.PaintingToolScreen;
-import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
 import moe.plushie.armourers_workshop.core.holiday.Holidays;
 import moe.plushie.armourers_workshop.core.item.FlavouredItem;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintApplier;
 import moe.plushie.armourers_workshop.init.common.ModSounds;
-import moe.plushie.armourers_workshop.utils.BlockPaintUpdater;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
@@ -30,9 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("NullableProblems")
-public abstract class AbstractPaintingToolItem extends FlavouredItem implements IItemSoundProvider, IItemParticleProvider, IPaintingTool, IPaintApplier {
+public abstract class AbstractConfigurableToolItem extends FlavouredItem implements IItemSoundProvider, IItemParticleProvider, IPaintingTool {
 
-    public AbstractPaintingToolItem(Properties properties) {
+    public AbstractConfigurableToolItem(Properties properties) {
         super(properties);
     }
 
@@ -43,14 +40,6 @@ public abstract class AbstractPaintingToolItem extends FlavouredItem implements 
             return ActionResult.success(itemStack);
         }
         return super.use(world, player, hand);
-    }
-
-    @Override
-    public ActionResultType useOn(ItemUseContext context) {
-        if (applyColor(context)) {
-            return ActionResultType.SUCCESS;
-        }
-        return ActionResultType.PASS;
     }
 
     @Override
@@ -105,16 +94,6 @@ public abstract class AbstractPaintingToolItem extends FlavouredItem implements 
     public void openGUI(ITextComponent title, ArrayList<IPaintingToolProperty<?>> properties, Hand hand, ItemStack itemStack) {
         PaintingToolScreen screen = new PaintingToolScreen(title, properties, itemStack, hand);
         Minecraft.getInstance().setScreen(screen);
-    }
-
-    @Override
-    public boolean isFullMode(World worldIn, BlockPos blockPos, ItemStack itemStack, ItemUseContext context) {
-        return ToolOptions.FULL_BLOCK_MODE.get(itemStack);
-    }
-
-    @Override
-    public IPaintUpdater createPaintUpdater(ItemUseContext context) {
-        return new BlockPaintUpdater(this);
     }
 
     public float getItemSoundPitch(ItemUseContext context) {

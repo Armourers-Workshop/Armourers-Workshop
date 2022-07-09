@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init.common;
 
-import com.google.common.collect.Iterators;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemModelPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;

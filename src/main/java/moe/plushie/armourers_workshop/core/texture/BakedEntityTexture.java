@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.SkyBox;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
+import moe.plushie.armourers_workshop.utils.color.TexturedPaintColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.resources.IResource;
@@ -70,7 +71,7 @@ public class BakedEntityTexture {
             box.forEach((texture, x, y, z, dir) -> {
                 int color = accessor.getRGB(texture.x, texture.y);
                 if (PaintColor.isOpaque(color)) {
-                    PaintColor paintColor = PaintColor.of(color, SkinPaintTypes.NORMAL);
+                    PaintColor paintColor = TexturedPaintColor.of(color, SkinPaintTypes.NORMAL);
                     part.put(getPosKey(x, y, z, dir), paintColor);
                     allColors.put(getUVKey(texture.x, texture.y), paintColor);
                 }

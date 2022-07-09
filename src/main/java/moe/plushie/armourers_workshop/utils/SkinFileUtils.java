@@ -5,7 +5,6 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * because `commons.io` versions on some servers are too low,

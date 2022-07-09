@@ -1,7 +1,8 @@
 package moe.plushie.armourers_workshop.builder.container;
 
+import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
+import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.container.AbstractBlockContainer;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintPicker;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,16 +49,16 @@ public class ColorMixerContainer extends AbstractBlockContainer {
 
             @Override
             public boolean mayPlace(ItemStack itemStack) {
-                return slot == 0 && (itemStack.getItem() instanceof IPaintPicker);
+                return slot == 0 && (itemStack.getItem() instanceof IItemColorProvider);
             }
 
             @Override
             public void setChanged() {
                 ItemStack itemStack = inventory.getItem(0);
                 Item item = itemStack.getItem();
-                if (item instanceof IPaintPicker && inventory.getItem(1).isEmpty()) {
+                if (item instanceof IPaintToolPicker && inventory.getItem(1).isEmpty()) {
                     ItemStack newItemStack = itemStack.copy();
-                    access.execute((world, pos) -> ((IPaintPicker) item).pickColor(buildContext(world, pos, newItemStack)));
+                    access.execute((world, pos) -> ((IPaintToolPicker) item).usePickTool(buildContext(world, pos, newItemStack)));
                     inventory.setItem(0, ItemStack.EMPTY);
                     inventory.setItem(1, newItemStack);
                 }

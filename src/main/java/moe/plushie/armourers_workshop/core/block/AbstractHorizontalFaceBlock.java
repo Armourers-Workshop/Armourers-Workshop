@@ -1,14 +1,11 @@
 package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;

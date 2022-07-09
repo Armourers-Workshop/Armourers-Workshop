@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.gui.widget;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.sun.org.apache.regexp.internal.RE;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;

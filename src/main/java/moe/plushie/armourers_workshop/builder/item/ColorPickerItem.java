@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintPicker;
+import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateColorPickerPacket;
@@ -19,6 +19,7 @@ import moe.plushie.armourers_workshop.init.common.ModSounds;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
@@ -28,14 +29,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTintColorProvider, IItemModelPropertiesProvider, IItemColorProvider, IPaintPicker, IBlockPaintViewer {
+public class ColorPickerItem extends AbstractConfigurableToolItem implements IItemTintColorProvider, IItemModelPropertiesProvider, IItemColorProvider, IPaintToolPicker, IBlockPaintViewer {
 
     public ColorPickerItem(Properties properties) {
         super(properties);
@@ -43,71 +43,38 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
 
     @Override
     public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
-        World world = context.getLevel();
-        if (pickColor(context)) {
-            return ActionResultType.sidedSuccess(world.isClientSide);
-        }
-        if (applyColor(context)) {
-            return ActionResultType.sidedSuccess(world.isClientSide);
-        }
-        return ActionResultType.PASS;
+        return usePickTool(context);
     }
 
     @Override
-    public boolean pickColor(IWorld worldIn, BlockPos blockPos, Direction direction, ItemUseContext context) {
+    public ActionResultType usePickTool(World world, BlockPos pos, Direction dir, TileEntity tileEntity, ItemUseContext context) {
         ItemStack itemStack = context.getItemInHand();
-        TileEntity tileEntity = worldIn.getBlockEntity(blockPos);
         if (tileEntity instanceof IPaintable) {
-            IPaintColor color = ((IPaintable) tileEntity).getColor(direction);
+            IPaintColor color = ((IPaintable) tileEntity).getColor(dir);
             ColorUtils.setColor(itemStack, color);
             UpdateColorPickerPacket packet = new UpdateColorPickerPacket(context.getHand(), itemStack);
             NetworkHandler.getInstance().sendToServer(packet);
             // we only play local sound, color pick not need send to other players.
             playSound(context);
-            return true;
+            return ActionResultType.SUCCESS;
         }
-        // we required player must hold shift + right-click to apply the color,
-        // a special case where color mixer will call pickColor in the server side.
-        if (context.getPlayer() == null) {
-            return applyColor(context);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean applyColor(World world, BlockPos blockPos, Direction direction, IPaintUpdater updater, ItemUseContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        IPaintColor color = ColorUtils.getColor(itemStack);
-        if (color == null) {
-            return false;
-        }
-        TileEntity tileEntity = world.getBlockEntity(blockPos);
         if (tileEntity instanceof IPaintProvider) {
-            IPaintProvider provider = (IPaintProvider) tileEntity;
-            if (!ToolOptions.CHANGE_PAINT_TYPE.get(itemStack)) {
-                color = PaintColor.of(color.getRGB(), provider.getColor().getPaintType());
+            PlayerEntity player = context.getPlayer();
+            if (player != null && !player.isShiftKeyDown()) {
+                return ActionResultType.PASS;
             }
-            provider.setColor(color);
-            return true;
+            IPaintProvider provider = (IPaintProvider)tileEntity;
+            IPaintColor newColor = getItemColor(itemStack);
+            if (newColor == null) {
+                return ActionResultType.PASS;
+            }
+            if (!ToolOptions.CHANGE_PAINT_TYPE.get(itemStack)) {
+                newColor = PaintColor.of(newColor.getRGB(), provider.getColor().getPaintType());
+            }
+            provider.setColor(newColor);
+            return ActionResultType.sidedSuccess(world.isClientSide);
         }
-        return false;
-    }
-
-    @Override
-    public boolean shouldPickColor(ItemUseContext context) {
-        // in normal color picker send the pick event in the client side,
-        // a special case where color mixer will call pickColor in the server side.
-        if (context.getPlayer() == null) {
-            return true;
-        }
-        // because we have some data that the server side doesn't exist, such as skin texture
-        // so the color pick must work on client side and then sent the color data to the server.
-        return context.getLevel().isClientSide();
-    }
-
-    @Override
-    public boolean shouldApplyColor(ItemUseContext context) {
-        return IPaintPicker.super.shouldPickColor(context);
+        return ActionResultType.PASS;
     }
 
     @Override
@@ -131,6 +98,11 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
     }
 
     @Override
+    public void setItemColor(ItemStack itemStack, IPaintColor paintColor) {
+        ColorUtils.setColor(itemStack, paintColor);
+    }
+
+    @Override
     public IPaintColor getItemColor(ItemStack itemStack) {
         return ColorUtils.getColor(itemStack);
     }
@@ -145,11 +117,8 @@ public class ColorPickerItem extends AbstractPaintingToolItem implements IItemTi
 
     @Override
     public boolean isFoil(ItemStack itemStack) {
-        IPaintColor paintColor = getItemColor(itemStack);
-        if (paintColor != null) {
-            return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
-        }
-        return false;
+        IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
+        return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
     }
 
     @Override

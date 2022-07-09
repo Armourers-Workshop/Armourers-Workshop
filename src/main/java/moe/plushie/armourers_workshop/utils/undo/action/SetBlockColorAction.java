@@ -8,6 +8,8 @@ import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.command.CommandException;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 
 import java.util.HashMap;
 
@@ -15,8 +17,8 @@ public class SetBlockColorAction extends BlockUndoAction {
 
     private final ImmutableMap<Direction, IPaintColor> newValue;
 
-    public SetBlockColorAction(TileEntity tileEntity, HashMap<Direction, IPaintColor> newValue) {
-        super(tileEntity.getLevel(), tileEntity.getBlockPos());
+    public SetBlockColorAction(IWorld world, BlockPos pos, HashMap<Direction, IPaintColor> newValue) {
+        super(world, pos);
         this.newValue = ImmutableMap.copyOf(newValue);
     }
 
@@ -31,7 +33,7 @@ public class SetBlockColorAction extends BlockUndoAction {
             }
             oldValue.put(direction, paintColor);
         }
-        IUndoCommand revertAction = new SetBlockColorAction(getTileEntity(), oldValue);
+        IUndoCommand revertAction = new SetBlockColorAction(world, blockPos, oldValue);
         target.setColors(newValue);
         return revertAction;
     }

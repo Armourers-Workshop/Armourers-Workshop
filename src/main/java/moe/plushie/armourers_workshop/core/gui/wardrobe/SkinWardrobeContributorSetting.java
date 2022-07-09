@@ -7,7 +7,6 @@ import moe.plushie.armourers_workshop.core.gui.widget.AWCheckBox;
 import moe.plushie.armourers_workshop.core.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateWardrobePacket;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.IReorderingProcessor;

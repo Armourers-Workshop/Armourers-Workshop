@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinToolType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
+import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.world.*;
 import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
@@ -23,6 +24,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -41,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-public class ArmourerTileEntity extends AbstractTileEntity {
+public class ArmourerTileEntity extends AbstractTileEntity implements IPaintToolSelector.Provider {
 
     protected int flags = 0;
     protected int version = 0;
@@ -219,6 +221,28 @@ public class ArmourerTileEntity extends AbstractTileEntity {
             return true;
         }
         return skinType instanceof ISkinToolType;
+    }
+
+    public IPaintToolSelector createPaintToolSelector(ItemUseContext context) {
+        PlayerEntity player = context.getPlayer();
+        if (player == null || !player.isShiftKeyDown()) {
+            return null;
+        }
+        ArrayList<Rectangle3i> rects = new ArrayList<>();
+        SkinCubeTransform transform = getTransform();
+        for (ISkinPartType partType : getSkinType().getParts()) {
+            Rectangle3i box = WorldUtils.getResolvedBuildingSpace(partType);
+            BlockPos p1 = transform.mul(box.getMinX(), box.getMinY(), box.getMinZ());
+            BlockPos p2 = transform.mul(box.getMaxX(), box.getMaxY(), box.getMaxZ());
+            int minX = Math.min(p1.getX(), p2.getX());
+            int minY = Math.min(p1.getY(), p2.getY());
+            int minZ = Math.min(p1.getZ(), p2.getZ());
+            int maxX = Math.max(p1.getX(), p2.getX());
+            int maxY = Math.max(p1.getY(), p2.getY());
+            int maxZ = Math.max(p1.getZ(), p2.getZ());
+            rects.add(new Rectangle3i(minX, minY, minZ, maxX - minX, maxY - minY, maxZ - minZ));
+        }
+        return SkinCubeSelector.all(rects);
     }
 
     public void copyPaintData(ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) {

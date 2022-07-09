@@ -23,11 +23,11 @@ public class PaintColor implements IPaintColor {
     private final int rgb;
     private final ISkinPaintType paintType;
 
-    private PaintColor(int rgb, ISkinPaintType paintType) {
-        this((rgb & 0xffffff) | ((paintType.getId() & 0xff) << 24), rgb, paintType);
-    }
+//    private PaintColor(int rgb, ISkinPaintType paintType) {
+//        this((rgb & 0xffffff) | ((paintType.getId() & 0xff) << 24), rgb, paintType);
+//    }
 
-    private PaintColor(int value, int rgb, ISkinPaintType paintType) {
+    protected PaintColor(int value, int rgb, ISkinPaintType paintType) {
         this.value = value;
         this.paintType = paintType;
         this.rgb = rgb;

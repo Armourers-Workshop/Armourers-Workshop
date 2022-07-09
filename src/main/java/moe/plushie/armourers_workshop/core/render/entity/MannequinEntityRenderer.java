@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.core.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

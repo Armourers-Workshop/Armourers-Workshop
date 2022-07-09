@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.gui.widget;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.sun.org.apache.regexp.internal.RE;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.utils.color.Palette;
 import net.minecraft.client.gui.widget.button.Button;

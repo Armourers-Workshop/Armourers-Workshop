@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.init.client;
 
 import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.api.skin.ISkinPart;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
@@ -10,7 +9,6 @@ import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModDebugger;
@@ -24,7 +22,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.TridentEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
@@ -37,8 +34,6 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 
 @OnlyIn(Dist.CLIENT)

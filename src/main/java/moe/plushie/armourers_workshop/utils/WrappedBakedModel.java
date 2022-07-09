@@ -19,7 +19,6 @@ import net.minecraftforge.client.model.data.IModelData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.Random;
 

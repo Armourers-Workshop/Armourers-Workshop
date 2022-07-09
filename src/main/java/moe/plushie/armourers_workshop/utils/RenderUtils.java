@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.common.AWCore;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;

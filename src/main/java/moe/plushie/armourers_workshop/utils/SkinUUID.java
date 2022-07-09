@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.utils;
 
 
+import java.security.SecureRandom;
 import java.util.Objects;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SkinUUID {
@@ -11,7 +11,7 @@ public class SkinUUID {
      * Random object used by random method. This has to be not local to the
      * random method so as to not return the same value in the same millisecond.
      */
-    private static final Random RANDOM = new Random();
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     private static final AtomicInteger COUNTER = new AtomicInteger();
 

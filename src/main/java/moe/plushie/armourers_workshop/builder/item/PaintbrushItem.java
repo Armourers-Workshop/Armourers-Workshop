@@ -7,8 +7,11 @@ import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
+import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintPicker;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeColorApplier;
+import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
+import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModSounds;
@@ -16,18 +19,20 @@ import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class PaintbrushItem extends AbstractPaintingToolItem implements IItemTintColorProvider, IItemModelPropertiesProvider, IItemColorProvider, IPaintPicker, IBlockPaintViewer {
+public class PaintbrushItem extends AbstractPaintToolItem implements IItemTintColorProvider, IItemModelPropertiesProvider, IItemColorProvider, IBlockPaintViewer, IPaintToolPicker {
 
     public PaintbrushItem(Properties properties) {
         super(properties);
@@ -35,16 +40,31 @@ public class PaintbrushItem extends AbstractPaintingToolItem implements IItemTin
 
     @Override
     public ActionResultType useOn(ItemUseContext context) {
-        World world = context.getLevel();
-        if (pickColor(context)) {
-            return ActionResultType.sidedSuccess(world.isClientSide);
+        ActionResultType resultType = usePickTool(context);
+        if (resultType.consumesAction()) {
+            return resultType;
         }
         return super.useOn(context);
     }
 
     @Override
+    public ActionResultType usePickTool(World world, BlockPos pos, Direction dir, TileEntity tileEntity, ItemUseContext context) {
+        if (tileEntity instanceof IPaintProvider) {
+            setItemColor(context.getItemInHand(), ((IPaintProvider) tileEntity).getColor());
+            return ActionResultType.sidedSuccess(world.isClientSide);
+        }
+        return ActionResultType.PASS;
+    }
+
+    @Override
     public void createToolProperties(Consumer<IPaintingToolProperty<?>> builder) {
         builder.accept(ToolOptions.FULL_BLOCK_MODE);
+    }
+
+    @Override
+    public IPaintToolAction createPaintToolAction(ItemUseContext context) {
+        IPaintColor paintColor = getItemColor(context.getItemInHand(), PaintColor.WHITE);
+        return new SkinCubeColorApplier.SetAction(paintColor);
     }
 
     @Override
@@ -54,8 +74,13 @@ public class PaintbrushItem extends AbstractPaintingToolItem implements IItemTin
 
     @Override
     public void appendColorHoverText(ItemStack itemStack, List<ITextComponent> tooltips) {
-        IPaintColor paintColor = ObjectUtils.defaultIfNull(getItemColor(itemStack), PaintColor.WHITE);
+        IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
         tooltips.addAll(ColorUtils.getColorTooltips(paintColor, true));
+    }
+
+    @Override
+    public void setItemColor(ItemStack itemStack, IPaintColor paintColor) {
+        ColorUtils.setColor(itemStack, paintColor);
     }
 
     @Override
@@ -73,14 +98,11 @@ public class PaintbrushItem extends AbstractPaintingToolItem implements IItemTin
 
     @Override
     public boolean isFoil(ItemStack itemStack) {
-        IPaintColor paintColor = getItemColor(itemStack);
-        if (paintColor != null) {
-            return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
-        }
-        return false;
+        IPaintColor paintColor = getItemColor(itemStack, PaintColor.WHITE);
+        return paintColor.getPaintType() != SkinPaintTypes.NORMAL;
     }
 
-//    @Override
+    //    @Override
 //    public void playParticle(ItemUseContext context) {
 ////        byte[] rtbt = PaintingHelper.intToBytes(colour);
 ////        for (int i = 0; i < 3; i++) {

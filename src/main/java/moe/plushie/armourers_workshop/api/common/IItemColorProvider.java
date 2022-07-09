@@ -5,5 +5,15 @@ import net.minecraft.item.ItemStack;
 
 public interface IItemColorProvider {
 
+    void setItemColor(ItemStack itemStack, IPaintColor paintColor);
+
     IPaintColor getItemColor(ItemStack itemStack);
+
+    default IPaintColor getItemColor(ItemStack itemStack, IPaintColor defaultValue) {
+        IPaintColor paintColor = getItemColor(itemStack);
+        if (paintColor != null) {
+            return paintColor;
+        }
+        return defaultValue;
+    }
 }

@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.init.common;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
 
 public class ModTags {
 

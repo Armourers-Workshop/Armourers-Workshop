@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.utils;
 
+import com.mojang.serialization.Codec;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
@@ -9,6 +11,7 @@ import net.minecraft.util.math.vector.Vector4f;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Rectangle3f {
 

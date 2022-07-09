@@ -1,21 +1,16 @@
 package moe.plushie.armourers_workshop.utils;
 
-import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
-import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.utils.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
-import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.NumberNBT;
 import net.minecraft.nbt.StringNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
@@ -23,13 +18,11 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Optional;
 import java.util.Random;
 
 public class ColorUtils {
 
-    private static final Random RANDOM = new Random();
 
     public static int[] PALETTE_MINECRAFT = {
             0xFFFFFF, 0xFFFF55, 0xFF55FF, 0xFF5555,
@@ -118,10 +111,22 @@ public class ColorUtils {
         return getRGB(r, g, b);
     }
 
-    public static int makeColourDarker(int rgb, int amount) {
-        int r = getRed(rgb) - amount;
-        int g = getGreen(rgb) - amount;
-        int b = getBlue(rgb) - amount;
+//    public static int makeColourDarker(int rgb, int amount) {
+//        int r = getRed(rgb) - amount;
+//        int g = getGreen(rgb) - amount;
+//        int b = getBlue(rgb) - amount;
+//
+//        r = MathHelper.clamp(r, 0, 255);
+//        g = MathHelper.clamp(g, 0, 255);
+//        b = MathHelper.clamp(b, 0, 255);
+//
+//        return getRGB(r, g, b);
+//    }
+
+    public static int addColorNoise(int rgb, int amount, Random random) {
+        int r = getRed(rgb) - amount + random.nextInt((amount * 2));
+        int g = getGreen(rgb) - amount + random.nextInt((amount * 2));
+        int b = getBlue(rgb) - amount + random.nextInt((amount * 2));
 
         r = MathHelper.clamp(r, 0, 255);
         g = MathHelper.clamp(g, 0, 255);
@@ -130,20 +135,8 @@ public class ColorUtils {
         return getRGB(r, g, b);
     }
 
-    public static int addColorNoise(int rgb, int amount) {
-        int r = getRed(rgb) - amount + RANDOM.nextInt((amount * 2));
-        int g = getGreen(rgb) - amount + RANDOM.nextInt((amount * 2));
-        int b = getBlue(rgb) - amount + RANDOM.nextInt((amount * 2));
-
-        r = MathHelper.clamp(r, 0, 255);
-        g = MathHelper.clamp(g, 0, 255);
-        b = MathHelper.clamp(b, 0, 255);
-
-        return getRGB(r, g, b);
-    }
-
-    public static int addShadeNoise(int rgb, int amount) {
-        int shadeAmount = RANDOM.nextInt(amount * 2);
+    public static int addShadeNoise(int rgb, int amount, Random random) {
+        int shadeAmount = random.nextInt(amount * 2);
 
         int r = getRed(rgb) - amount + shadeAmount;
         int g = getGreen(rgb) - amount + shadeAmount;
@@ -154,6 +147,23 @@ public class ColorUtils {
         b = MathHelper.clamp(b, 0, 255);
 
         return getRGB(r, g, b);
+    }
+
+    public static int getAverageColor(Iterable<Integer> colors) {
+        int red = 0;
+        int green = 0;
+        int blue = 0;
+        int count = 0;
+        for (int rgb : colors) {
+            red += ColorUtils.getRed(rgb);
+            green += ColorUtils.getGreen(rgb);
+            blue += ColorUtils.getBlue(rgb);
+            count++;
+        }
+        if (count == 0) {
+            return 0;
+        }
+        return getRGB(red / count, green / count, blue / count);
     }
 
     public static Color getPaletteColor(int index) {

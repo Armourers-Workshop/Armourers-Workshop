@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.builder.tileentity;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
-import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.tileentity.AbstractTileEntity;
 import moe.plushie.armourers_workshop.init.common.AWConstants;

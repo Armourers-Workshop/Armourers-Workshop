@@ -2,29 +2,31 @@ package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
+import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
+import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
+import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeColorApplier;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeOptimizer;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeSelector;
+import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.common.ModSounds;
-import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class BlendingToolItem extends AbstractPaintingToolItem implements IBlockPaintViewer {
+public class BlendingToolItem extends AbstractPaintToolItem implements IBlockPaintViewer {
 
 
     public BlendingToolItem(Properties properties) {
@@ -40,7 +42,50 @@ public class BlendingToolItem extends AbstractPaintingToolItem implements IBlock
         //toolOptionList.add(ToolOptions.CHANGE_SATURATION);
         //toolOptionList.add(ToolOptions.CHANGE_BRIGHTNESS);
         builder.accept(ToolOptions.PLANE_RESTRICT);
-        //toolOptionList.add(ToolOptions.FULL_BLOCK_MODE);
+        builder.accept(ToolOptions.FULL_BLOCK_MODE);
+    }
+
+    protected SkinCubeSelector createColorApplierSelector(int radius, ItemUseContext context) {
+        ItemStack itemStack = context.getItemInHand();
+        boolean restrictPlane = ToolOptions.PLANE_RESTRICT.get(itemStack);
+        boolean isFullMode = shouldUseFullMode(context);
+        return SkinCubeSelector.touching(context.getClickedPos(), radius, isFullMode, restrictPlane);
+    }
+
+    @Override
+    public IPaintToolSelector createPaintToolSelector(TileEntity tileEntity, ItemUseContext context) {
+        if (tileEntity instanceof ArmourerTileEntity) {
+            return null;
+        }
+        return super.createPaintToolSelector(tileEntity, context);
+    }
+
+    @Override
+    public IPaintToolSelector createPaintToolSelector(ItemUseContext context) {
+        ItemStack itemStack = context.getItemInHand();
+        int radiusEffect = ToolOptions.RADIUS_EFFECT.get(itemStack);
+        return createColorApplierSelector(radiusEffect, context);
+    }
+
+    @Override
+    public IPaintToolAction createPaintToolAction(ItemUseContext context) {
+        ItemStack itemStack = context.getItemInHand();
+        int intensity = ToolOptions.INTENSITY.get(itemStack);
+        int radiusSample = ToolOptions.RADIUS_SAMPLE.get(itemStack);
+        // we need to complete sampling before we can use blending tool.
+        ArrayList<Integer> colors = new ArrayList<>();
+        SkinCubeOptimizer optimizer = new SkinCubeOptimizer(context.getLevel());
+        createColorApplierSelector(radiusSample, context).forEach(context, (targetPos, dir) -> {
+            optimizer.setLocation(targetPos);
+            if (optimizer.shouldChangeColor(dir)) {
+                IPaintColor paintColor = optimizer.getColor(dir);
+                if (paintColor != null) {
+                    colors.add(paintColor.getRGB());
+                }
+            }
+        });
+        IPaintColor paintColor = PaintColor.of(ColorUtils.getAverageColor(colors), SkinPaintTypes.NORMAL);
+        return new SkinCubeColorApplier.BlendingAction(paintColor, intensity);
     }
 
     @Override
@@ -52,80 +97,6 @@ public class BlendingToolItem extends AbstractPaintingToolItem implements IBlock
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.sampleRadius", radiusSample, radiusSample, 1));
         tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.effectRadius", radiusEffect, radiusEffect, 1));
         super.appendSettingHoverText(itemStack, tooltips);
-    }
-
-    @Override
-    public boolean applyColor(World world, BlockPos blockPos, Direction direction, IPaintUpdater updater, ItemUseContext context) {
-        ItemStack itemStack = context.getItemInHand();
-        TileEntity tileEntity = world.getBlockEntity(blockPos);
-        if (!(tileEntity instanceof IPaintable)) {
-            return false;
-        }
-        int intensity = ToolOptions.INTENSITY.get(itemStack);
-        int radiusSample = ToolOptions.RADIUS_SAMPLE.get(itemStack);
-        int radiusEffect = ToolOptions.RADIUS_EFFECT.get(itemStack);
-        boolean restrictPlane = ToolOptions.PLANE_RESTRICT.get(itemStack);
-
-        ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(world, blockPos, direction, radiusSample, restrictPlane);
-        ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(world, blockPos, direction, radiusEffect, restrictPlane);
-
-        if (blockSamples.size() == 0 | blockEffects.size() == 0) {
-            return false;
-        }
-
-        int r = 0;
-        int g = 0;
-        int b = 0;
-
-        int validSamples = 0;
-
-        for (BlockPos posSample : blockSamples) {
-            TileEntity targetEntity = world.getBlockEntity(posSample);
-            if (targetEntity instanceof IPaintable) {
-                IPaintColor color = ((IPaintable) targetEntity).getColor(direction);
-                int rgb = color.getRGB();
-                r += ColorUtils.getRed(rgb);
-                g += ColorUtils.getGreen(rgb);
-                b += ColorUtils.getBlue(rgb);
-                validSamples++;
-            }
-        }
-
-        if (validSamples == 0) {
-            return false;
-        }
-
-        r = r / validSamples;
-        g = g / validSamples;
-        b = b / validSamples;
-
-        for (BlockPos posEffect : blockEffects) {
-            TileEntity targetEntity = world.getBlockEntity(posEffect);
-            if (targetEntity instanceof IPaintable) {
-                IPaintable target = (IPaintable) targetEntity;
-                IPaintColor oldColor = target.getColor(direction);
-                int oldRGB = oldColor.getRGB();
-                int oldR = ColorUtils.getRed(oldRGB);
-                int oldG = ColorUtils.getGreen(oldRGB);
-                int oldB = ColorUtils.getBlue(oldRGB);
-
-                float newR = r / 100F * intensity;
-                newR += oldR / 100F * (100 - intensity);
-                newR = MathHelper.clamp((int) newR, 0, 255);
-
-                float newG = g / 100F * intensity;
-                newG += oldG / 100F * (100 - intensity);
-                newG = MathHelper.clamp((int) newG, 0, 255);
-
-                float newB = b / 100F * intensity;
-                newB += oldB / 100F * (100 - intensity);
-                newB = MathHelper.clamp((int) newB, 0, 255);
-
-                PaintColor newColor = PaintColor.of(ColorUtils.getRGB((int) newR, (int) newG, (int) newB), oldColor.getPaintType());
-                updater.add(target, direction, newColor);
-            }
-        }
-        return true;
     }
 
     @Override

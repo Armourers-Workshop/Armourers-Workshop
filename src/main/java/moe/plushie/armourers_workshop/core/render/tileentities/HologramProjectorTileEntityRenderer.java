@@ -6,7 +6,6 @@ import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
-import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import moe.plushie.armourers_workshop.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
