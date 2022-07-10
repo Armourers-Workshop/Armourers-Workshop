@@ -50,6 +50,9 @@ public class ColorPickerItem extends AbstractConfigurableToolItem implements IIt
     public ActionResultType usePickTool(World world, BlockPos pos, Direction dir, TileEntity tileEntity, ItemUseContext context) {
         ItemStack itemStack = context.getItemInHand();
         if (tileEntity instanceof IPaintable) {
+            if (!world.isClientSide()) {
+                return ActionResultType.CONSUME;
+            }
             IPaintColor color = ((IPaintable) tileEntity).getColor(dir);
             ColorUtils.setColor(itemStack, color);
             UpdateColorPickerPacket packet = new UpdateColorPickerPacket(context.getHand(), itemStack);
