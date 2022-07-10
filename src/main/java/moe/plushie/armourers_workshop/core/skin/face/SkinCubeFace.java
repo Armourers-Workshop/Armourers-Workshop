@@ -71,7 +71,7 @@ public class SkinCubeFace {
         }
         if (paintType == SkinPaintTypes.TEXTURE) {
             // get textures color only work on the client side.
-            PaintColor paintColor1 = DistExecutor.safeCallWhenOn(Dist.CLIENT, () -> () -> getTextureColor(scheme.getTexture(), partType));
+            PaintColor paintColor1 = DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> getTextureColor(scheme.getTexture(), partType));
             if (paintColor1 != null) {
                 return paintColor1;
             }

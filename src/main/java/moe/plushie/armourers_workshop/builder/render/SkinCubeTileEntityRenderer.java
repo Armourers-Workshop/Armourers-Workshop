@@ -5,8 +5,6 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.builder.tileentity.BoundingBoxTileEntity;
-import moe.plushie.armourers_workshop.builder.world.SkinCubeTransform;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.render.other.SkinCubeFaceRenderer;
 import moe.plushie.armourers_workshop.init.common.ModItems;
@@ -41,12 +39,6 @@ public class SkinCubeTileEntityRenderer<T extends TileEntity & IPaintable> exten
             return;
         }
         int alpha = (int)(markerAlpha * 255);
-        if (entity instanceof BoundingBoxTileEntity) {
-            Direction facing = ((BoundingBoxTileEntity) entity).getParentFacing();
-            matrixStack.translate(0.5f, 0.5f, 0.5f);
-            matrixStack.mulPose(SkinCubeTransform.getRotation(facing)); // apply facing rotation
-            matrixStack.translate(-0.5f, -0.5f, -0.5f);
-        }
         IVertexBuilder builder = buffers.getBuffer(SkinRenderType.MARKER_FACE);
         for (Direction direction : Direction.values()) {
             if (!entity.shouldChangeColor(direction)) {

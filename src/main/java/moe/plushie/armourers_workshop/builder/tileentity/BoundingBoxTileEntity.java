@@ -19,6 +19,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
@@ -35,7 +36,6 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
 
     protected Vector3i guide = Vector3i.ZERO;
     protected BlockPos parent = INVALID;
-    protected Direction parentFacing;
 
     protected ISkinPartType partType = SkinPartTypes.UNKNOWN;
 
@@ -50,7 +50,6 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
         guide = AWDataSerializers.getVector3i(nbt, AWConstants.NBT.TILE_ENTITY_OFFSET);
         partType = SkinPartTypes.byName(AWDataSerializers.getString(nbt, AWConstants.NBT.SKIN_PART_TYPE, SkinTypes.UNKNOWN.getRegistryName().toString()));
         customRenderer = Arrays.stream(Direction.values()).anyMatch(this::shouldChangeColor);
-        parentFacing = null;
     }
 
     public void writeToNBT(CompoundNBT nbt) {
@@ -90,18 +89,20 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
     @Override
     public boolean shouldChangeColor(Direction direction) {
         // we can't change the side color of the face without finding the texture.
-        return BoundingBox.getTexturePos(partType, guide, direction) != null;
+        return getTexturePos(getParentTileEntity(), direction) != null;
     }
 
     @Override
     public IPaintColor getColor(Direction direction) {
-        IPaintColor color = getArmourerTextureColor(direction);
+        ArmourerTileEntity tileEntity = getParentTileEntity();
+        Point texturePos = getTexturePos(tileEntity, direction);
+        IPaintColor color = getArmourerTextureColor(tileEntity, texturePos);
         if (color != null && color.getPaintType() != SkinPaintTypes.NONE) {
             return color;
         }
         // when work in the client side, we try to get the texture color from the loaded texture.
         if (level != null && level.isClientSide()) {
-            return getTextureColor(direction);
+            return getTextureColor(tileEntity, texturePos);
         }
         return PaintColor.CLEAR;
     }
@@ -113,7 +114,8 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
 
     @Override
     public void setColors(Map<Direction, IPaintColor> colors) {
-        colors.forEach(this::setArmourerTextureColor);
+        ArmourerTileEntity tileEntity = getParentTileEntity();
+        colors.forEach((dir, color) -> setArmourerTextureColor(tileEntity, getTexturePos(tileEntity, dir), color));
     }
 
     public void clearArmourerTextureColors() {
@@ -122,15 +124,13 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
             return;
         }
         for (Direction dir : Direction.values()) {
-            this.setArmourerTextureColor(dir, PaintColor.CLEAR);
+            this.setArmourerTextureColor(tileEntity, getTexturePos(tileEntity, dir), PaintColor.CLEAR);
         }
     }
 
-    public IPaintColor getArmourerTextureColor(Direction direction) {
-        ArmourerTileEntity tileEntity = getParentTileEntity();
-        Point texture = BoundingBox.getTexturePos(partType, guide, direction);
-        if (texture != null && tileEntity != null) {
-            IPaintColor color = tileEntity.getPaintColor(texture);
+    public IPaintColor getArmourerTextureColor(ArmourerTileEntity tileEntity, Point texturePos) {
+        if (texturePos != null && tileEntity != null) {
+            IPaintColor color = tileEntity.getPaintColor(texturePos);
             if (color != null) {
                 return color;
             }
@@ -138,21 +138,17 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
         return PaintColor.CLEAR;
     }
 
-    public void setArmourerTextureColor(Direction direction, IPaintColor color) {
-        ArmourerTileEntity tileEntity = getParentTileEntity();
-        Point texture = BoundingBox.getTexturePos(partType, guide, direction);
-        if (texture != null && tileEntity != null) {
-            tileEntity.setPaintColor(texture, color);
+    public void setArmourerTextureColor(ArmourerTileEntity tileEntity, Point texturePos, IPaintColor color) {
+        if (texturePos != null && tileEntity != null) {
+            tileEntity.setPaintColor(texturePos, color);
             TileEntityUpdateCombiner.combine(tileEntity, tileEntity::sendBlockUpdates);
         }
     }
 
     @OnlyIn(Dist.CLIENT)
-    private IPaintColor getTextureColor(Direction direction) {
-        ArmourerTileEntity tileEntity = getParentTileEntity();
-        Point texture = BoundingBox.getTexturePos(partType, guide, direction);
-        if (texture != null && tileEntity != null) {
-            IPaintColor color = TextureUtils.getPlayerTextureModelColor(tileEntity.getTextureDescriptor(), texture);
+    private IPaintColor getTextureColor(ArmourerTileEntity tileEntity, Point texturePos) {
+        if (texturePos != null && tileEntity != null) {
+            IPaintColor color = TextureUtils.getPlayerTextureModelColor(tileEntity.getTextureDescriptor(), texturePos);
             if (color != null) {
                 return color;
             }
@@ -160,16 +156,31 @@ public class BoundingBoxTileEntity extends AbstractTileEntity implements IPainta
         return PaintColor.CLEAR;
     }
 
-    public Direction getParentFacing() {
-        if (parentFacing != null) {
-            return parentFacing;
+    private Point getTexturePos(ArmourerTileEntity tileEntity, Direction direction) {
+        return BoundingBox.getTexturePos(partType, guide, getResolvedDirection(tileEntity, direction));
+    }
+
+    private Direction getResolvedDirection(ArmourerTileEntity tileEntity, Direction dir) {
+        if (tileEntity == null) {
+            return dir;
         }
-        parentFacing = Direction.NORTH;
-        TileEntity tileEntity = getParentTileEntity();
-        if (tileEntity != null) {
-            parentFacing = tileEntity.getBlockState().getValue(ArmourerBlock.FACING);
+        switch (tileEntity.getBlockState().getValue(ArmourerBlock.FACING)) {
+            case SOUTH: {
+                // when block facing to south, we need to rotate 180° get facing north direction.
+                return Rotation.CLOCKWISE_180.rotate(dir);
+            }
+            case WEST: {
+                // when block facing to west, we need to rotate 90° get facing north direction.
+                return Rotation.CLOCKWISE_90.rotate(dir);
+            }
+            case EAST: {
+                // when block facing to east, we need to rotate -90° get facing north direction.
+                return Rotation.COUNTERCLOCKWISE_90.rotate(dir);
+            }
+            default: {
+                return dir;
+            }
         }
-        return parentFacing;
     }
 
     private ArmourerTileEntity getParentTileEntity() {

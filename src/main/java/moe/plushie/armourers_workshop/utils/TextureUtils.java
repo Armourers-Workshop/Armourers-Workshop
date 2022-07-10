@@ -87,11 +87,11 @@ public final class TextureUtils {
         return bufferedImage;
     }
 
-    public static BufferedImage getBufferedImageSkin(GameProfile gameProfile) {
-        BufferedImage bufferedImage = null;
-        ResourceLocation skinloc = DefaultPlayerSkin.getDefaultSkin();
-        InputStream inputStream = null;
-        Minecraft mc = Minecraft.getInstance();
+//    public static BufferedImage getBufferedImageSkin(GameProfile gameProfile) {
+//        BufferedImage bufferedImage = null;
+//        ResourceLocation skinloc = DefaultPlayerSkin.getDefaultSkin();
+//        InputStream inputStream = null;
+//        Minecraft mc = Minecraft.getInstance();
 //        Map map = mc.getSkinManager().loadSkinFromCache(gameProfile);
 //
 //        try {
@@ -116,8 +116,8 @@ public final class TextureUtils {
 //            StreamUtils.closeQuietly(inputStream);
 //        }
 //
-        return bufferedImage;
-    }
+//        return bufferedImage;
+//    }
 
     public static BufferedImage getBufferedImageSkinNew(GameProfile gameProfile) {
         BufferedImage bufferedImage = null;
