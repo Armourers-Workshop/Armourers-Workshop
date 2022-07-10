@@ -129,17 +129,6 @@ public class SkinRenderType extends RenderType {
         return COLORS_OFFSET;
     }
 
-    private static RenderType.State createTranslucentState() {
-        return RenderType.State.builder()
-                .setTextureState(new RenderState.TextureState(AtlasTexture.LOCATION_BLOCKS, false, false))
-                .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                .setDiffuseLightingState(DIFFUSE_LIGHTING).setAlphaState(DEFAULT_ALPHA)
-                .setLightmapState(LIGHTMAP)
-                .setOverlayState(OVERLAY)
-                .createCompositeState(true);
-    }
-
-
     private static RenderType createEntityOutline() {
 
         RenderState.LayerState layerState = new RenderState.LayerState("custom_polygon_line_layering", () -> {

@@ -55,6 +55,9 @@ public class PlayerTextureLoader {
 
     @Nullable
     public BakedEntityTexture getTextureModel(ResourceLocation location) {
+        if (location == null) {
+            return null;
+        }
         Optional<PlayerTexture> texture = bakedTextures.get(location);
         if (texture != null) {
             return texture.map(PlayerTexture::getTexture).orElse(null);

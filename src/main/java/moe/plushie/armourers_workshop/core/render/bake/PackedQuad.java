@@ -60,6 +60,7 @@ public class PackedQuad {
                 if (paintColor.getPaintType() == SkinPaintTypes.NONE) {
                     return;
                 }
+                // in the vanilla's player textures are rendering without diffuse lighting.
                 quads.add(new SkinCubeFace(x, y, z, paintColor, 255, dir, SkinCubes.SOLID));
             });
             if (quads.size() != 0) {

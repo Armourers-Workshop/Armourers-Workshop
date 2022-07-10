@@ -61,6 +61,9 @@ public class ColorScheme implements ISkinDye {
         if (reference != null && !reference.isEmpty()) {
             return false;
         }
+        if (texture != null) {
+            return false;
+        }
         return colors.isEmpty();
     }
 

@@ -75,6 +75,7 @@ public class SkinItemStackRenderer extends ItemStackTileEntityRenderer {
         ClientWorld level = Minecraft.getInstance().level;
         if (entity == null) {
             entity = new MannequinEntity(ModEntities.MANNEQUIN, level);
+            entity.setId(MannequinEntity.PLACEHOLDER_ENTITY_ID);
             entity.setExtraRenderer(false); // never magic cir
         }
         if (entity.level != level) {

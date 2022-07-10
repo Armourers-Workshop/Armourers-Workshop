@@ -430,7 +430,7 @@
   "item.armourers_workshop.armour-container-legs": "腿部时装容器",
   "item.armourers_workshop.armourers-hammer": "时装旋转锤",
   "item.armourers_workshop.armourers-hammer.flavour": "右击旋转时装方块",
-  "item.armourers_workshop.blending-tool": "混合工具 - (开发中)",
+  "item.armourers_workshop.blending-tool": "混合工具",
   "item.armourers_workshop.block-marker": "标记工具",
   "item.armourers_workshop.block-marker.flavour": "在弓, 翅膀, 坐垫的制作时需要用到\n注: 制作弓时标记箭尾的位置, 每个阶段有且只有一个标记\n注: 制作翅膀时分别标记两个翅膀的旋转轴\n注: 制作坐垫时标记坐在哪个位置.",
   "item.armourers_workshop.burn-tool": "加深工具",

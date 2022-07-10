@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.client.IBakedSkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.cache.SkinCache;
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
@@ -91,9 +92,12 @@ public class BakedSkin implements IBakedSkin {
             return ColorScheme.EMPTY;
         }
         ColorScheme resolvedColorScheme = resolvedColorSchemes.computeIfAbsent(entity.getId(), k -> preference.copy());
-        ResourceLocation resolvedTexture = PlayerTextureLoader.getInstance().getTextureLocation(entity);
-        if (!Objects.equals(resolvedColorScheme.getTexture(), resolvedTexture)) {
-            resolvedColorScheme.setTexture(resolvedTexture);
+        // we can't bind textures to skin when the item stack rendering.
+        if (entity.getId() != MannequinEntity.PLACEHOLDER_ENTITY_ID) {
+            ResourceLocation resolvedTexture = PlayerTextureLoader.getInstance().getTextureLocation(entity);
+            if (!Objects.equals(resolvedColorScheme.getTexture(), resolvedTexture)) {
+                resolvedColorScheme.setTexture(resolvedTexture);
+            }
         }
         resolvedColorScheme.setReference(scheme);
         return resolvedColorScheme;

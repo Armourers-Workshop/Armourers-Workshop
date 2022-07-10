@@ -12,15 +12,14 @@ public class ColorDescriptor {
 
     public void add(PaintColor color) {
         ISkinPaintType paintType = color.getPaintType();
-        if (paintType.getDyeType() == null && paintType != SkinPaintTypes.RAINBOW) {
-            return;
+        if (shouldRecordChannel(paintType)) {
+            Channel ch = channels.computeIfAbsent(paintType, k -> new Channel());
+            ch.red += color.getRed();
+            ch.green += color.getGreen();
+            ch.blue += color.getBlue();
+            ch.total += 1;
+            ch.setChanged();
         }
-        Channel ch = channels.computeIfAbsent(paintType, k -> new Channel());
-        ch.red += color.getRed();
-        ch.green += color.getGreen();
-        ch.blue += color.getBlue();
-        ch.total += 1;
-        ch.setChanged();
     }
 
     public void add(ColorDescriptor descriptor) {
@@ -48,6 +47,16 @@ public class ColorDescriptor {
 
     public Set<ISkinPaintType> getPaintTypes() {
         return channels.keySet();
+    }
+
+    private boolean shouldRecordChannel(ISkinPaintType paintType) {
+        if (paintType == SkinPaintTypes.RAINBOW) {
+            return true;
+        }
+        if (paintType == SkinPaintTypes.TEXTURE) {
+            return true;
+        }
+        return paintType.getDyeType() != null;
     }
 
     private static class Channel {

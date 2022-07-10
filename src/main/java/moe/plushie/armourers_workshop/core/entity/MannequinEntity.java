@@ -37,6 +37,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @SuppressWarnings({"unused", "NullableProblems"})
 public class MannequinEntity extends ArmorStandEntity {
 
+    public static final int PLACEHOLDER_ENTITY_ID = -1;
+
     public static final Rotations DEFAULT_HEAD_POSE = new Rotations(0.0f, 0.0f, 0.0f);
     public static final Rotations DEFAULT_BODY_POSE = new Rotations(0.0f, 0.0f, 0.0f);
     public static final Rotations DEFAULT_LEFT_ARM_POSE = new Rotations(-10.0f, 0.0f, -10.0f);
