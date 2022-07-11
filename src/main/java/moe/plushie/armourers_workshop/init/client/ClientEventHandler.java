@@ -7,6 +7,8 @@ import moe.plushie.armourers_workshop.core.handler.PlacementHighlightHandler;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
+import moe.plushie.armourers_workshop.utils.TickHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -14,17 +16,36 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
 
+    private boolean isPaused;
+
     public static void init(IEventBus eventBus) {
         eventBus.register(new ClientEventHandler());
         eventBus.register(new ItemTooltipHandler());
         eventBus.register(new KeyboardHandler());
         eventBus.register(new PlacementHighlightHandler());
+    }
+
+    @SubscribeEvent
+    public void onRenderTick(TickEvent.RenderTickEvent event) {
+        if (event.phase != TickEvent.Phase.START) {
+            return;
+        }
+        boolean isPaused = Minecraft.getInstance().isPaused();
+        if (this.isPaused != isPaused) {
+            this.isPaused = isPaused;
+            if (isPaused) {
+                TickHandler.pause();
+            } else {
+                TickHandler.resume();
+            }
+        }
     }
 
     @SubscribeEvent

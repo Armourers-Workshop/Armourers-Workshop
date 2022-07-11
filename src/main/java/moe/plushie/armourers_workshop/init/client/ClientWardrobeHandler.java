@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
+import moe.plushie.armourers_workshop.utils.TickHandler;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -43,8 +44,6 @@ public class ClientWardrobeHandler {
 
     public static void init() {
     }
-
-    static Vector3f dx = new Vector3f();
 
     public static void onRenderTrident(TridentEntity entity, Model model, float p_225623_2_, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers, CallbackInfo callback) {
         SkinRenderData renderData = SkinRenderData.of(entity);
@@ -251,7 +250,7 @@ public class ClientWardrobeHandler {
 
     private static int render(Entity entity, ItemStack itemStack, Model model, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers, ItemCameraTransforms.TransformType transformType, Supplier<Iterable<SkinRenderData.Entry>> provider) {
         int r = 0;
-        float partialTicks = System.currentTimeMillis() % 100000000;
+        float partialTicks = TickHandler.ticks();
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null) {
             return 0;

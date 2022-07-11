@@ -88,22 +88,18 @@ public final class PaintingUtils {
         return new Color(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, 255);
     }
 
-    public static int getToolDisplayColourRGB(ItemStack stack) {
-        return getToolDisplayColour(stack).getRGB();
-    }
-
-    public static Color getToolDisplayColour(ItemStack stack) {
-        byte[] rgbt = getToolPaintData(stack);
-        ISkinPaintType paintType = SkinPaintTypes.byId(rgbt[3]);
-        if (paintType == SkinPaintTypes.RAINBOW) {
-            return getRainbowColour();
-        } else if (paintType == SkinPaintTypes.PULSE_1) {
-            return getPulse1Colour(rgbt);
-        } else if (paintType == SkinPaintTypes.PULSE_2) {
-            return getPulse2Colour(rgbt);
-        }
-        return new Color(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, 255);
-    }
+//    public static Color getToolDisplayColour(ItemStack stack, int ticks) {
+//        byte[] rgbt = getToolPaintData(stack);
+//        ISkinPaintType paintType = SkinPaintTypes.byId(rgbt[3]);
+//        if (paintType == SkinPaintTypes.RAINBOW) {
+//            return getRainbowColour(ticks);
+//        } else if (paintType == SkinPaintTypes.PULSE_1) {
+//            return getPulse1Colour(rgbt, ticks);
+//        } else if (paintType == SkinPaintTypes.PULSE_2) {
+//            return getPulse2Colour(rgbt, ticks);
+//        }
+//        return new Color(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, 255);
+//    }
 
     /**
      * Set a paint type on an item stack.
@@ -156,51 +152,51 @@ public final class PaintingUtils {
     public static byte[] getBlankPaintData() {
         return new byte[]{(byte) 255, (byte) 255, (byte) 255, (byte) 255};
     }
+//
+//    public static byte[] intToBytes(int trgb) {
+//        int t = 0xFF & (trgb >> 24);
+//        int r = 0xFF & (trgb >> 16);
+//        int g = 0xFF & (trgb >> 8);
+//        int b = 0xFF & (trgb >> 0);
+//
+//        return new byte[]{(byte) r, (byte) g, (byte) b, (byte) t};
+//    }
+//
+//    public static int bytesToInt(byte[] rgbt) {
+//        return ((rgbt[3] & 0xFF) << 24) | ((rgbt[0] & 0xFF) << 16) | ((rgbt[1] & 0xFF) << 8) | (rgbt[2] & 0xFF);
+//    }
 
-    public static byte[] intToBytes(int trgb) {
-        int t = 0xFF & (trgb >> 24);
-        int r = 0xFF & (trgb >> 16);
-        int g = 0xFF & (trgb >> 8);
-        int b = 0xFF & (trgb >> 0);
-
-        return new byte[]{(byte) r, (byte) g, (byte) b, (byte) t};
-    }
-
-    public static int bytesToInt(byte[] rgbt) {
-        return ((rgbt[3] & 0xFF) << 24) | ((rgbt[0] & 0xFF) << 16) | ((rgbt[1] & 0xFF) << 8) | (rgbt[2] & 0xFF);
-    }
-
-    public static float getPaintTextureOffset() {
-        double f = System.currentTimeMillis() % (255L * 25) / 25f;
+    public static float getPaintTextureOffset(int ticks) {
+        double f = ticks % (255L * 25) / 25f;
         return Math.round(f);
     }
 
-    private static Color getRainbowColour() {
-        float f = System.currentTimeMillis() % (255L * 25) / 25F;
-        return new Color(Color.HSBtoRGB(f / 255F, 1F, 1F));
-    }
-
-    private static Color getPulse1Colour(byte[] rgbt) {
-        float f = (float) (System.currentTimeMillis() % (255L * 25D)) / 25F;
-        f = f * 2F;
-        if (f > 255) {
-            f = 255F - (f - 255);
-        }
-        f = MathHelper.clamp(f, 0, 255);
-        float[] hsb = Color.RGBtoHSB(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, null);
-        return new Color(Color.HSBtoRGB(hsb[0], hsb[1], f / 255F));
-    }
-
-    private static Color getPulse2Colour(byte[] rgbt) {
-        float f = (float) (System.currentTimeMillis() % (255L * 12.5D)) / 12.5F;
-        f = f * 2F;
-        if (f > 255) {
-            f = 255F - (f - 255);
-        }
-        f = MathHelper.clamp(f, 0, 255);
-        float[] hsb = Color.RGBtoHSB(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, null);
-        return new Color(Color.HSBtoRGB(hsb[0], hsb[1], f / 255F));
-    }
+//    private static Color getRainbowColour(int ticks) {
+//        float f = ticks % (255L * 25) / 25F;
+//        return new Color(Color.HSBtoRGB(f / 255F, 1F, 1F));
+//    }
+//
+//    private static Color getPulse1Colour(byte[] rgbt, int ticks) {
+//        float f = (float) (ticks % (255L * 25D)) / 25F;
+//        f = f * 2F;
+//        if (f > 255) {
+//            f = 255F - (f - 255);
+//        }
+//        f = MathHelper.clamp(f, 0, 255);
+//        float[] hsb = Color.RGBtoHSB(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, null);
+//        return new Color(Color.HSBtoRGB(hsb[0], hsb[1], f / 255F));
+//    }
+//
+//    private static Color getPulse2Colour(byte[] rgbt, int ticks) {
+//        float f = (float) (ticks % (255L * 12.5D)) / 12.5F;
+//        f = f * 2F;
+//        if (f > 255) {
+//            f = 255F - (f - 255);
+//        }
+//        f = MathHelper.clamp(f, 0, 255);
+//        float[] hsb = Color.RGBtoHSB(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, null);
+//        return new Color(Color.HSBtoRGB(hsb[0], hsb[1], f / 255F));
+//    }
 
 //    @SideOnly(Side.CLIENT)
 //    public static IExtraColours getLocalPlayerExtraColours() {

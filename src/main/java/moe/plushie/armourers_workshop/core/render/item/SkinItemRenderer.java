@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
+import moe.plushie.armourers_workshop.utils.TickHandler;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -40,7 +41,7 @@ public final class SkinItemRenderer {
 
     public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, MatrixStack matrixStack, IRenderTypeBuffer buffers) {
         if (bakedSkin != null) {
-            int t = (int) System.currentTimeMillis();
+            int t = TickHandler.ticks();
             int si = Math.min(width, height);
             matrixStack.pushPose();
             matrixStack.translate(x + width / 2f, y + height / 2f, z);

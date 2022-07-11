@@ -221,15 +221,6 @@ public class ColorUtils {
             return getPulse2Color(paintColor.getRGB());
         }
         return paintColor.getRGB();
-//        IPaintType paintType = PaintTypeRegistry.getInstance().getPaintTypeFormByte(rgbt[3]);
-//        if (paintType == PaintTypeRegistry.PAINT_TYPE_RAINBOW) {
-//            return getRainbowColour();
-//        } else if (paintType == PaintTypeRegistry.PAINT_TYPE_PULSE_1) {
-//            return getPulse1Colour(rgbt);
-//        } else if (paintType == PaintTypeRegistry.PAINT_TYPE_PULSE_2) {
-//            return getPulse2Colour(rgbt);
-//        }
-//        return new Color(rgbt[0] & 0xFF, rgbt[1] & 0xFF, rgbt[2] & 0xFF, 255);
     }
 
     public static int getDisplayRGB(ItemStack itemStack) {

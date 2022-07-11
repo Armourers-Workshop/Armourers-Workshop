@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
+import moe.plushie.armourers_workshop.utils.TickHandler;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.init.common.ModContributors;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -54,7 +55,7 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
         float f = 1 / 16f;
         matrixStack.scale(f, f, f);
 
-        float partialTicks2 = System.currentTimeMillis() % 100000000;
+        float partialTicks2 = TickHandler.ticks();
         for (SkinRenderData.Entry entry : renderData.getArmorSkins()) {
             skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), entry.getItemStack(), null, packedLightIn, partialTicks2, entry.getSlotIndex(), matrixStack, buffers);
         }

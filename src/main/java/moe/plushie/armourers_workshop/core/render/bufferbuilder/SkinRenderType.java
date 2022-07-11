@@ -3,11 +3,11 @@ package moe.plushie.armourers_workshop.core.render.bufferbuilder;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
+import moe.plushie.armourers_workshop.utils.TickHandler;
 import moe.plushie.armourers_workshop.utils.PaintingUtils;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
@@ -27,7 +27,7 @@ public class SkinRenderType extends RenderType {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
         RenderSystem.pushMatrix();
         RenderSystem.loadIdentity();
-        float f = PaintingUtils.getPaintTextureOffset() / 256.0f;
+        float f = PaintingUtils.getPaintTextureOffset(TickHandler.ticks()) / 256.0f;
         RenderSystem.translatef(0, f, 0.0F);
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
     }, () -> {

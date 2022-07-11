@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.render.tileentities;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
+import moe.plushie.armourers_workshop.utils.TickHandler;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.tileentity.HologramProjectorTileEntity;
@@ -51,7 +52,7 @@ public class HologramProjectorTileEntityRenderer<T extends HologramProjectorTile
             return;
         }
         float f = 1 / 16f;
-        float partialTicks1 = System.currentTimeMillis() % 100000000;
+        float partialTicks1 = TickHandler.ticks();
         int overLight = light;
         if (entity.isOverrideLight()) {
             overLight = 0xf000f0;
