@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
@@ -100,7 +101,11 @@ public class SkinRenderObjectBuilder {
         if (tasks.isEmpty()) {
             return;
         }
+        // because the skin top side brightness is too highly,
+        // this leads to some color exposed for pure white,
+        // so we need to reduce (30%) the reflection color of all faces.
         MatrixStack matrixStack1 = new MatrixStack();
+        matrixStack1.last().normal().mul(Matrix3f.createScaleMatrix(0.7f, 0.7f, 0.7f));
         ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
         for (CachedTask task : tasks) {
             BakedSkinPart part = task.part;
