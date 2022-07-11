@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.utils;
+package moe.plushie.armourers_workshop.core.render.model;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.util.Pair;

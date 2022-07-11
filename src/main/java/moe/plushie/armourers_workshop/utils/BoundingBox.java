@@ -2,8 +2,9 @@ package moe.plushie.armourers_workshop.utils;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
+import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
+import moe.plushie.armourers_workshop.utils.texture.SkyBox;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3i;
 

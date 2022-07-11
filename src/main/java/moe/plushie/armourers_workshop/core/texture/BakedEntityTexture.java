@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.texture;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
+import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
-import moe.plushie.armourers_workshop.utils.SkyBox;
+import moe.plushie.armourers_workshop.utils.texture.SkyBox;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.color.TexturedPaintColor;
 import net.minecraft.client.Minecraft;

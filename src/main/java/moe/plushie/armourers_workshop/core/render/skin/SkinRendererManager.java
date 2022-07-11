@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
 import moe.plushie.armourers_workshop.core.render.layer.SkinWardrobeLayer;
+import moe.plushie.armourers_workshop.core.render.model.SpecificPlayerModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
@@ -97,7 +98,7 @@ public class SkinRendererManager {
         if (skinRenderer != null) {
             return skinRenderer;
         }
-        skinRenderer = createRenderer(entityType, entityRenderer);
+        skinRenderer = createRenderer(entityType, entityRenderer, entityModel);
         if (skinRenderer != null) {
             skinRenderers.put(key, skinRenderer);
         }
@@ -106,7 +107,7 @@ public class SkinRendererManager {
 
 
     @Nullable
-    protected <T extends Entity, M extends Model> SkinRenderer<T, M> createRenderer(EntityType<?> entityType, EntityRenderer<?> entityRenderer) {
+    protected <T extends Entity, M extends Model> SkinRenderer<T, M> createRenderer(EntityType<?> entityType, EntityRenderer<?> entityRenderer, Model entityModel) {
         EntityProfile entityProfile = EntityProfiles.getProfile(entityType);
 
         // using special skin renderer of the arrow.
@@ -117,7 +118,6 @@ public class SkinRendererManager {
             return createRenderer(entityProfile, entityRenderer, TridentSkinRenderer::new);
         }
 
-        EntityModel<?> entityModel = getModel(entityRenderer);
         if (entityModel instanceof IllagerModel) {
             return createRenderer(entityProfile, entityRenderer, IllagerSkinRenderer::new);
         }
@@ -127,6 +127,10 @@ public class SkinRendererManager {
         }
         if (entityModel instanceof VillagerModel) {
             return createRenderer(entityProfile, entityRenderer, VillagerSkinRenderer::new);
+        }
+
+        if (entityModel instanceof SpecificPlayerModel) {
+            return createRenderer(entityProfile, entityRenderer, SpecificPlayerSkinRenderer::new);
         }
 
         if (entityModel instanceof PlayerModel) {

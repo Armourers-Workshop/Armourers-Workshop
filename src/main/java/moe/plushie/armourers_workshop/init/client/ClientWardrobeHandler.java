@@ -2,9 +2,11 @@ package moe.plushie.armourers_workshop.init.client;
 
 import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.render.item.SkinItemStackRenderer;
+import moe.plushie.armourers_workshop.core.render.model.SpecificPlayerModel;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.utils.TickHandler;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
@@ -24,6 +26,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.TridentEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
@@ -156,10 +160,33 @@ public class ClientWardrobeHandler {
 //        return itemStack;
 //    }
 
+    public static void onRenderSpecificHand(LivingEntity entity, HandSide hand, float p_225623_2_, float partialTicks, int light, MatrixStack matrixStack, IRenderTypeBuffer buffers, CallbackInfo callback) {
+        SpecificPlayerModel<?> model = SpecificPlayerModel.getInstance();
+        SkinRenderData renderData = SkinRenderData.of(entity);
+        if (renderData == null) {
+            return;
+        }
+        ISkinPartType partType = hand == HandSide.LEFT ? SkinPartTypes.BIPED_LEFT_ARM : SkinPartTypes.BIPED_RIGHT_ARM;
+        ItemCameraTransforms.TransformType transformType = hand == HandSide.LEFT ? ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND : ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
+        SkinRenderData.Entry entry = getEntry(renderData.getArmorSkins(), part -> part.getType() == partType);
+        if (entry == null) {
+            return; // we just need to render with the arrows.
+        }
+        matrixStack.pushPose();
+        matrixStack.scale(-SCALE, -SCALE, SCALE);
+
+        int count = render(entity, null, model, light, matrixStack, buffers, transformType, () -> Collections.singletonList(entry));
+        if (count != 0 && !ModDebugger.handOverride) {
+            callback.cancel();
+        }
+
+        matrixStack.popPose();
+    }
+
     public static boolean shouldRenderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable World world, ItemStack itemStack, boolean isRenderInGUI) {
         //
         if (world == null) {
-            if (!ModConfig.Common.enableEmbeddedSkinRenderer) {
+            if (!ModConfig.enableEmbeddedSkinRenderer()) {
                 return false;
             }
             if (itemStack.getItem() == ModItems.SKIN) {

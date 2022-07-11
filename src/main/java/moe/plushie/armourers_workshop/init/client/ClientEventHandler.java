@@ -7,18 +7,26 @@ import moe.plushie.armourers_workshop.core.handler.PlacementHighlightHandler;
 import moe.plushie.armourers_workshop.core.render.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRenderer;
 import moe.plushie.armourers_workshop.core.render.skin.SkinRendererManager;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.utils.TickHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderArmEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
@@ -91,6 +99,19 @@ public class ClientEventHandler {
         SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
         if (renderer != null) {
             renderer.didRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
+        }
+    }
+
+    @SubscribeEvent
+    public void renderSpecificFirstPersonHand(RenderArmEvent event) {
+        if (!ModConfig.enableFirstPersonSkinRenderer()) {
+            return;
+        }
+        PlayerEntity player = Minecraft.getInstance().player;
+        CallbackInfo callbackInfo = new CallbackInfo("RenderHandEvent", true);
+        ClientWardrobeHandler.onRenderSpecificHand(player, event.getArm(), 0, 0, event.getPackedLight(), event.getPoseStack(), event.getMultiBufferSource(), callbackInfo);
+        if (callbackInfo.isCancelled()) {
+            event.setCanceled(true);
         }
     }
 }

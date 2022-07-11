@@ -1,10 +1,9 @@
-package moe.plushie.armourers_workshop.core.model;
+package moe.plushie.armourers_workshop.utils.texture;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.utils.SkyBox;
 import net.minecraft.util.Direction;
 
 import java.awt.*;

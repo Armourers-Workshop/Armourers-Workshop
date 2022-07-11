@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.render.bake;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
+import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.render.bufferbuilder.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
@@ -10,8 +10,8 @@ import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
-import moe.plushie.armourers_workshop.utils.SkinPaintData;
-import moe.plushie.armourers_workshop.utils.SkyBox;
+import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
+import moe.plushie.armourers_workshop.utils.texture.SkyBox;
 import moe.plushie.armourers_workshop.utils.color.ColorDescriptor;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.extened.AWVoxelShape;

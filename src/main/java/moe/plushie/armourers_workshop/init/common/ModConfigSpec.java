@@ -82,6 +82,10 @@ public class ModConfigSpec {
 
     public static class Client {
 
+        // General
+        ForgeConfigSpec.IntValue enableEmbeddedSkinRenderer;
+        ForgeConfigSpec.IntValue enableFirstPersonSkinRenderer;
+
         // Performance
         ForgeConfigSpec.IntValue renderDistanceSkin;
         ForgeConfigSpec.IntValue renderDistanceBlockSkin;
@@ -125,6 +129,20 @@ public class ModConfigSpec {
         ForgeConfigSpec.BooleanValue showF3DebugInfo;
 
         Client(SpecBuilder builder) {
+            builder.defineCategory("general", "General settings.", () -> {
+
+                enableEmbeddedSkinRenderer = builder.defineInRange("enableEmbeddedSkinRenderer", 0, 0, 2,
+                        "Using embedded skin renderer to replace the original item renderer.",
+                        "0 = auto",
+                        "1 = always disable",
+                        "2 = always enable");
+
+                enableFirstPersonSkinRenderer = builder.defineInRange("enableFirstPersonSkinRenderer", 0, 0, 2,
+                        "Using skin renderer to replace the original first person hands renderer.",
+                        "0 = auto",
+                        "1 = always disable",
+                        "2 = always enable");
+            });
             builder.defineCategory("misc", "Miscellaneous settings.", () -> {
                 skinLoadAnimationTime = builder.defineInRange("skinLoadAnimationTime", 200, 0, 10000,
                         "How long skins will display their loading animation for in milliseconds",
@@ -240,6 +258,9 @@ public class ModConfigSpec {
         public static class Serializer extends ModConfig.Client {
 
             public static void apply(Client spec) {
+                enableEmbeddedSkinRenderer = spec.enableEmbeddedSkinRenderer.get();
+                enableFirstPersonSkinRenderer = spec.enableFirstPersonSkinRenderer.get();
+
                 skinLoadAnimationTime = spec.skinLoadAnimationTime.get();
 
                 renderDistanceSkin = spec.renderDistanceSkin.get();
@@ -327,7 +348,9 @@ public class ModConfigSpec {
         // Entity skins
         ForgeConfigSpec.IntValue enitiySpawnWithSkinsChance;
         ForgeConfigSpec.IntValue entityDropSkinChance;
-        ForgeConfigSpec.BooleanValue enableEmbeddedSkinRenderer;
+
+        ForgeConfigSpec.IntValue enableEmbeddedSkinRenderer;
+        ForgeConfigSpec.IntValue enableFirstPersonSkinRenderer;
 
         // Cache
         ForgeConfigSpec.IntValue skinCacheExpireTime;
@@ -354,6 +377,18 @@ public class ModConfigSpec {
                 serverCompressesSkins = builder.define("serverCompressesSkins", true,
                         "If enabled the server will compress skins before sending them to clients.",
                         "Highly recommended unless the server has a very slow CPU.");
+
+                enableEmbeddedSkinRenderer = builder.defineInRange("enableEmbeddedSkinRenderer", 0, 0, 2,
+                        "Using embedded skin renderer to replace the original item renderer.",
+                        "0 = use client config",
+                        "1 = always disable",
+                        "2 = always enable");
+
+                enableFirstPersonSkinRenderer = builder.defineInRange("enableFirstPersonSkinRenderer", 0, 0, 2,
+                        "Using skin renderer to replace the original first person hands renderer.",
+                        "0 = use client config",
+                        "1 = always disable",
+                        "2 = always enable");
 
 //                if (!LibModInfo.MOD_VERSION.startsWith("@VER")) {
 //                    lastVersion = config.getString("lastVersion", CATEGORY_GENERAL, "0.0",
@@ -489,9 +524,6 @@ public class ModConfigSpec {
 //                    "Target library path for skin spawned on entities.\n"
 //                            + "Examples: 'official/' for only skins in the official folder or 'downloads/' for skins in the downloads folder.\n"
 //                            + "Leave black for all skins.");
-
-                enableEmbeddedSkinRenderer = builder.define("enableEmbeddedSkinRenderer", false,
-                        "Using embedded skin renderer to replace the original item renderer.");
             });
 
             builder.defineCategory("cache", "Change (memory use/IO access) ratio by category setting in this category.", () -> {
@@ -632,6 +664,7 @@ public class ModConfigSpec {
                 entityDropSkinChance = spec.entityDropSkinChance.get();
                 enitiySpawnSkinTargetPath = "/"; //spec.enitiySpawnSkinTargetPath.get();
                 enableEmbeddedSkinRenderer = spec.enableEmbeddedSkinRenderer.get();
+                enableFirstPersonSkinRenderer = spec.enableFirstPersonSkinRenderer.get();
 
                 skinCacheExpireTime = spec.skinCacheExpireTime.get();
                 skinCacheMaxSize = spec.skinCacheMaxSize.get();

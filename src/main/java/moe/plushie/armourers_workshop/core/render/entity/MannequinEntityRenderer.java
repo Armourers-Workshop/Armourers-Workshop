@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.core.render.entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.model.MannequinArmorModel;
-import moe.plushie.armourers_workshop.core.model.MannequinModel;
+import moe.plushie.armourers_workshop.core.render.model.MannequinArmorModel;
+import moe.plushie.armourers_workshop.core.render.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.common.ModDebugger;

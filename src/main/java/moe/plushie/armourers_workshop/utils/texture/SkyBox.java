@@ -1,5 +1,6 @@
-package moe.plushie.armourers_workshop.utils;
+package moe.plushie.armourers_workshop.utils.texture;
 
+import moe.plushie.armourers_workshop.utils.Rectangle3i;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3i;
 

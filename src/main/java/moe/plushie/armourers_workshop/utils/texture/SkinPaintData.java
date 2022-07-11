@@ -1,6 +1,4 @@
-package moe.plushie.armourers_workshop.utils;
-
-import moe.plushie.armourers_workshop.core.model.PlayerTextureModel;
+package moe.plushie.armourers_workshop.utils.texture;
 
 import java.awt.*;
 import java.util.ArrayList;

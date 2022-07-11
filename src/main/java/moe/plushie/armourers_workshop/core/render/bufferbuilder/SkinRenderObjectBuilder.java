@@ -101,11 +101,7 @@ public class SkinRenderObjectBuilder {
         if (tasks.isEmpty()) {
             return;
         }
-        // because the skin top side brightness is too highly,
-        // this leads to some color exposed for pure white,
-        // so we need to reduce (30%) the reflection color of all faces.
         MatrixStack matrixStack1 = new MatrixStack();
-        matrixStack1.last().normal().mul(Matrix3f.createScaleMatrix(0.7f, 0.7f, 0.7f));
         ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
         for (CachedTask task : tasks) {
             BakedSkinPart part = task.part;

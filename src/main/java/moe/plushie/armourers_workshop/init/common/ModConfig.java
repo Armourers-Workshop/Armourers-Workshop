@@ -15,6 +15,10 @@ public class ModConfig {
 
     public static class Client {
 
+        // General
+        public static int enableEmbeddedSkinRenderer = 0;
+        public static int enableFirstPersonSkinRenderer = 0;
+
         // Performance
         public static int renderDistanceSkin;
         public static int renderDistanceBlockSkin;
@@ -69,7 +73,6 @@ public class ModConfig {
         public static boolean enableWireframeRender = false;
         public static boolean enableMagicWhenContributor = false;
 
-
         public static int getNumberOfRenderLayers() {
             if (multipassSkinRendering) {
                 return 4;
@@ -100,6 +103,8 @@ public class ModConfig {
         public static boolean instancedDyeTable = false;
         public static int serverSkinSendRate = 4000;
         public static boolean serverCompressesSkins = true;
+        public static int enableEmbeddedSkinRenderer = 0;
+        public static int enableFirstPersonSkinRenderer = 0;
 
         // Wardrobe
         public static boolean wardrobeAllowOpening = true;
@@ -137,8 +142,6 @@ public class ModConfig {
         public static int entityDropSkinChance = 10;
         public static String enitiySpawnSkinTargetPath = "/";
 
-        public static boolean enableEmbeddedSkinRenderer = false;
-
 
         // Cache
         public static int skinCacheExpireTime;
@@ -158,5 +161,22 @@ public class ModConfig {
             // No wardrobe tabs are active.
             return showWardrobeSkins || showWardrobeOutfits || showWardrobeDisplaySettings || showWardrobeColourSettings || showWardrobeDyeSetting;
         }
+    }
+
+    public static boolean enableEmbeddedSkinRenderer() {
+        int flags = Common.enableEmbeddedSkinRenderer;
+        if (flags == 0) {
+            flags = Client.enableEmbeddedSkinRenderer;
+        }
+        // 0 auto(reserve), 1 disable, 2 enable
+        return flags == 2;
+    }
+    public static boolean enableFirstPersonSkinRenderer() {
+        int flags = Common.enableFirstPersonSkinRenderer;
+        if (flags == 0) {
+            flags = Client.enableFirstPersonSkinRenderer;
+        }
+        // 0 auto(reserve), 1 disable, 2 enable
+        return flags == 2;
     }
 }
