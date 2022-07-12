@@ -46,8 +46,13 @@ public class NetworkHandler {
     private final ExecutorService executor = Executors.newFixedThreadPool(2, r -> new Thread(r, "Network-Data-Coder"));
 
     public NetworkHandler(final ResourceLocation channelName) {
-
-        EventNetworkChannel channel = NetworkRegistry.ChannelBuilder.named(channelName).networkProtocolVersion(() -> "1").clientAcceptedVersions(s -> true).serverAcceptedVersions(s -> true).eventNetworkChannel();
+        String version = "2";
+        EventNetworkChannel channel = NetworkRegistry.ChannelBuilder
+                .named(channelName)
+                .networkProtocolVersion(() -> version)
+                .clientAcceptedVersions(version::equals)
+                .serverAcceptedVersions(version::equals)
+                .eventNetworkChannel();
 
         channel.registerObject(this);
 

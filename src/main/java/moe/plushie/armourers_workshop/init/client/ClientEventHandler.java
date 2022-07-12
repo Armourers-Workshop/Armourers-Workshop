@@ -58,9 +58,6 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onRenderLivingPre(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
-        if (event.isCanceled()) {
-            return;
-        }
         LivingEntity entity = event.getEntity();
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {
@@ -87,9 +84,6 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onRenderLivingPost(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
-        if (event.isCanceled()) {
-            return;
-        }
         LivingEntity entity = event.getEntity();
         SkinRenderData renderData = SkinRenderData.of(entity);
         if (renderData == null) {

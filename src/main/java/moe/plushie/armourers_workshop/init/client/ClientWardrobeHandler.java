@@ -166,16 +166,15 @@ public class ClientWardrobeHandler {
         if (renderData == null) {
             return;
         }
-        ISkinPartType partType = hand == HandSide.LEFT ? SkinPartTypes.BIPED_LEFT_ARM : SkinPartTypes.BIPED_RIGHT_ARM;
-        ItemCameraTransforms.TransformType transformType = hand == HandSide.LEFT ? ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND : ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
-        SkinRenderData.Entry entry = getEntry(renderData.getArmorSkins(), part -> part.getType() == partType);
-        if (entry == null) {
-            return; // we just need to render with the arrows.
+        ItemCameraTransforms.TransformType transformType = ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND;
+        if (hand != HandSide.LEFT) {
+            transformType = ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
         }
+
         matrixStack.pushPose();
         matrixStack.scale(-SCALE, -SCALE, SCALE);
 
-        int count = render(entity, null, model, light, matrixStack, buffers, transformType, () -> Collections.singletonList(entry));
+        int count = render(entity, null, model, light, matrixStack, buffers, transformType, renderData::getArmorSkins);
         if (count != 0 && !ModDebugger.handOverride) {
             callback.cancel();
         }
