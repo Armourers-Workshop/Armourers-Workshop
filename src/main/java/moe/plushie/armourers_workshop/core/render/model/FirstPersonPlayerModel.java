@@ -8,13 +8,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SpecificPlayerModel<T extends LivingEntity> extends EntityModel<T> {
+public class FirstPersonPlayerModel<T extends LivingEntity> extends EntityModel<T> {
 
-    private static SpecificPlayerModel<?> INSTANCE;
+    private static FirstPersonPlayerModel<?> INSTANCE;
 
-    public static SpecificPlayerModel<?> getInstance() {
+    public static FirstPersonPlayerModel<?> getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new SpecificPlayerModel<>();
+            INSTANCE = new FirstPersonPlayerModel<>();
         }
         return INSTANCE;
     }

@@ -4,9 +4,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.render.bake.BakedSkinPart;
-import moe.plushie.armourers_workshop.core.render.model.SpecificPlayerModel;
+import moe.plushie.armourers_workshop.core.render.model.FirstPersonPlayerModel;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -15,9 +14,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SpecificPlayerSkinRenderer<T extends LivingEntity, M extends SpecificPlayerModel<T>> extends SkinRenderer<T, M> {
+public class FirstPersonSkinRenderer<T extends LivingEntity, M extends FirstPersonPlayerModel<T>> extends SkinRenderer<T, M> {
 
-    public SpecificPlayerSkinRenderer(EntityProfile profile) {
+    public FirstPersonSkinRenderer(EntityProfile profile) {
         super(profile);
     }
 

@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.EntityProfiles;
 import moe.plushie.armourers_workshop.core.render.layer.SkinWardrobeLayer;
-import moe.plushie.armourers_workshop.core.render.model.SpecificPlayerModel;
+import moe.plushie.armourers_workshop.core.render.model.FirstPersonPlayerModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
@@ -129,8 +129,8 @@ public class SkinRendererManager {
             return createRenderer(entityProfile, entityRenderer, VillagerSkinRenderer::new);
         }
 
-        if (entityModel instanceof SpecificPlayerModel) {
-            return createRenderer(entityProfile, entityRenderer, SpecificPlayerSkinRenderer::new);
+        if (entityModel instanceof FirstPersonPlayerModel) {
+            return createRenderer(entityProfile, entityRenderer, FirstPersonSkinRenderer::new);
         }
 
         if (entityModel instanceof PlayerModel) {

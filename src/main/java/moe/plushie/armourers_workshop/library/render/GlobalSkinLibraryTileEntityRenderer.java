@@ -37,7 +37,7 @@ public class GlobalSkinLibraryTileEntityRenderer<T extends GlobalSkinLibraryTile
         float zPos = 4.6f;
         float yPos = 4.0f;
         BlockState state = entity.getBlockState();
-        Direction direction = state.getValue(GlobalSkinLibraryBlock.FACING);
+        Direction direction = state.getValue(GlobalSkinLibraryBlock.FACING).getOpposite();
         matrixStack.translate(
                 (xPos * -direction.getStepZ() + zPos * direction.getStepX()) * f,
                 yPos * f,
