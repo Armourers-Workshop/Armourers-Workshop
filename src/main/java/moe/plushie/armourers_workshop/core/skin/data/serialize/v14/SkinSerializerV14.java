@@ -128,6 +128,7 @@ public final class SkinSerializerV14 {
             ModLog.error("Error loading skin paint header.");
         }
 
+        // TODO: support v2 texture
         SkinPaintData paintData = null;
         boolean hasPaintData = stream.readBoolean();
         if (hasPaintData) {

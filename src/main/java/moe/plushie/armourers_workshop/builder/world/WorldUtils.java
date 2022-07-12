@@ -78,7 +78,9 @@ public final class WorldUtils {
                 }
             }
         }
-
+        // TODO: support v2 texture
+        // because old skin not support v2 texture format,
+        // so downgrade v2 to v1 texture format.
         if (paintData != null) {
             SkinPaintData resolvedPaintData = SkinPaintData.v1();
             resolvedPaintData.copyFrom(paintData);

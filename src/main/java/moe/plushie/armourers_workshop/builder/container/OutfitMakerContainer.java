@@ -114,6 +114,14 @@ public class OutfitMakerContainer extends AbstractBlockContainer {
             }
             skinIndex++;
         }
+        // TODO: support v2 texture
+        // because old skin not support v2 texture format,
+        // so downgrade v2 to v1 texture format.
+        if (paintData != null) {
+            SkinPaintData resolvedPaintData = SkinPaintData.v1();
+            resolvedPaintData.copyFrom(paintData);
+            paintData = resolvedPaintData;
+        }
         if (!skinParts.isEmpty()) {
             skinProperties.put(SkinProperty.OUTFIT_PART_INDEXS, partIndexs);
             skinProperties.put(SkinProperty.ALL_AUTHOR_NAME, profile.getName());
