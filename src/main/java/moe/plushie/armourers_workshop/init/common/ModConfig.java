@@ -99,6 +99,7 @@ public class ModConfig {
 
         // General
         public static int maxUndos = 100;
+        public static int blockTaskRate = 8; // 8 Blocks/t
         public static boolean lockDyesOnSkins = false;
         public static boolean instancedDyeTable = false;
         public static int serverSkinSendRate = 4000;

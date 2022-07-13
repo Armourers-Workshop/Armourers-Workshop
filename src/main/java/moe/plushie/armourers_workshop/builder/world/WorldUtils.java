@@ -19,12 +19,13 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.utils.OptionalDirection;
 import moe.plushie.armourers_workshop.utils.Rectangle3i;
+import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.utils.texture.SkyBox;
-import moe.plushie.armourers_workshop.utils.color.PaintColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -209,17 +210,17 @@ public final class WorldUtils {
 
     /**
      * Converts a skin class into blocks in the world.
-     * @param world     The world.
+     * @param applier   The world applier.
      * @param transform The armourer transform.
      * @param skin      The skin to load.
      */
-    public static void loadSkinIntoWorld(World world, SkinCubeTransform transform, Skin skin) {
+    public static void loadSkinIntoWorld(SkinCubeApplier applier, SkinCubeTransform transform, Skin skin) {
         for (SkinPart part : skin.getParts()) {
-            loadSkinPartIntoWorld(world, transform, part, false);
+            loadSkinPartIntoWorld(applier, transform, part, false);
         }
     }
 
-    private static void loadSkinPartIntoWorld(World world, SkinCubeTransform transform, SkinPart partData, boolean mirror) {
+    private static void loadSkinPartIntoWorld(SkinCubeApplier applier, SkinCubeTransform transform, SkinPart partData, boolean mirror) {
         ISkinPartType skinPart = partData.getType();
         Rectangle3i buildSpace = skinPart.getBuildingSpace();
         Vector3i offset = skinPart.getOffset();
@@ -237,11 +238,11 @@ public final class WorldUtils {
                 }
             }
             BlockPos origin = new BlockPos(-offset.getX(), -offset.getY() + -buildSpace.getY(), offset.getZ());
-            loadSkinBlockIntoWorld(world, transform, origin, blockData, cubePos, markerFacing, slice, mirror);
+            loadSkinBlockIntoWorld(applier, transform, origin, blockData, cubePos, markerFacing, slice, mirror);
         }
     }
 
-    private static void loadSkinBlockIntoWorld(World world, SkinCubeTransform transform, BlockPos origin, ISkinCube blockData, Vector3i cubePos, OptionalDirection markerFacing, SkinCubeData.BufferSlice slice, boolean mirror) {
+    private static void loadSkinBlockIntoWorld(SkinCubeApplier applier, SkinCubeTransform transform, BlockPos origin, ISkinCube blockData, Vector3i cubePos, OptionalDirection markerFacing, SkinCubeData.BufferSlice slice, boolean mirror) {
         int shiftX = -cubePos.getX() - 1;
         int shiftY = cubePos.getY() + 1;
         int shiftZ = cubePos.getZ();
@@ -250,11 +251,10 @@ public final class WorldUtils {
         }
 
         BlockPos target = transform.mul(shiftX + origin.getX(), origin.getY() - shiftY, shiftZ + origin.getZ());
+        SkinCubeWrapper wrapper = applier.wrap(target);
 
-        if (world.getBlockState(target).is(ModBlocks.BOUNDING_BOX)) {
-            WorldUpdater.getInstance().submit(new WorldBlockUpdateTask(world, target, Blocks.AIR.defaultBlockState()));
-            //world.setBlockToAir(target);
-            //world.removeTileEntity(target);
+        if (wrapper.is(ModBlocks.BOUNDING_BOX)) {
+            wrapper.setBlockState(Blocks.AIR.defaultBlockState(), (CompoundNBT) null);
         }
 
         Block targetBlock = blockData.getBlock();
@@ -267,16 +267,7 @@ public final class WorldUtils {
             colors.put(dir, PaintColor.of(rgb, SkinPaintTypes.byId(type)));
         }
 
-        WorldBlockUpdateTask task = new WorldBlockUpdateTask(world, target, targetState);
-        task.modifier = state -> {
-            TileEntity tileEntity = world.getBlockEntity(target);
-            if (tileEntity instanceof IPaintable) {
-                ((IPaintable) tileEntity).setColors(colors);
-            }
-        };
-//        .setOnlyReplaceable(true)
-//        .setDelay(index / 5)
-        WorldUpdater.getInstance().submit(task);
+        wrapper.setBlockState(targetState, colors);
     }
 
 
@@ -418,30 +409,30 @@ public final class WorldUtils {
         srcBox.forEach((texture, x, y, z, dir) -> paintData.setColor(texture.x, texture.y, 0));
     }
 
-    public static void replaceCubes(World world, SkinCubeTransform transform, ISkinType skinType, SkinProperties skinProps, SkinCubeReplaceApplier applier) {
+    public static void replaceCubes(SkinCubeApplier applier, SkinCubeTransform transform, ISkinType skinType, SkinProperties skinProps, SkinCubeReplacingEvent event) {
         for (ISkinPartType skinPart : skinType.getParts()) {
             for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
-                replaceCube(world, transform.mul(offset), applier);
+                replaceCube(applier, transform.mul(offset), event);
             }
         }
     }
 
-    public static void replaceCube(World world, BlockPos pos, SkinCubeReplaceApplier applier) {
-        TileEntity tileEntity = world.getBlockEntity(pos);
-        if (applier.accept(tileEntity)) {
-            applier.apply(tileEntity);
+    public static void replaceCube(SkinCubeApplier applier, BlockPos pos, SkinCubeReplacingEvent event) {
+        SkinCubeWrapper wrapper = applier.wrap(pos);
+        if (event.accept(wrapper)) {
+            event.apply(wrapper);
         }
     }
 
-    public static void copyCubes(World world, SkinCubeTransform transform, ISkinType skinType, SkinProperties skinProps, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws SkinSaveException {
-        SkinPart skinPart = saveArmourPart(world, transform, srcPart, false);
+    public static void copyCubes(SkinCubeApplier applier, SkinCubeTransform transform, ISkinType skinType, SkinProperties skinProps, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws SkinSaveException {
+        SkinPart skinPart = saveArmourPart(applier.getWorld(), transform, srcPart, false);
         if (skinPart != null) {
             skinPart.setSkinPart(destPart);
-            loadSkinPartIntoWorld(world, transform, skinPart, mirror);
+            loadSkinPartIntoWorld(applier, transform, skinPart, mirror);
         }
     }
 
-    public static int clearMarkers(World world, SkinCubeTransform transform, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
+    public static int clearMarkers(SkinCubeApplier applier, SkinCubeTransform transform, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
         int blockCount = 0;
         for (ISkinPartType skinPart : skinType.getParts()) {
             if (partType != SkinPartTypes.UNKNOWN) {
@@ -452,35 +443,33 @@ public final class WorldUtils {
             if (skinType == SkinTypes.BLOCK) {
                 boolean multiblock = skinProps.get(SkinProperty.BLOCK_MULTIBLOCK);
                 if (skinPart == SkinPartTypes.BLOCK && !multiblock) {
-                    blockCount += clearMarkersForSkinPart(world, transform, skinPart);
+                    blockCount += clearMarkersForSkinPart(applier, transform, skinPart);
                 }
                 if (skinPart == SkinPartTypes.BLOCK_MULTI && multiblock) {
-                    blockCount += clearMarkersForSkinPart(world, transform, skinPart);
+                    blockCount += clearMarkersForSkinPart(applier, transform, skinPart);
                 }
             } else {
-                blockCount += clearMarkersForSkinPart(world, transform, skinPart);
+                blockCount += clearMarkersForSkinPart(applier, transform, skinPart);
             }
         }
         return blockCount;
     }
 
-    private static int clearMarkersForSkinPart(World world, SkinCubeTransform transform, ISkinPartType skinPart) {
+    private static int clearMarkersForSkinPart(SkinCubeApplier applier, SkinCubeTransform transform, ISkinPartType skinPart) {
         int blockCount = 0;
         for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
             BlockPos target = transform.mul(offset);
-            BlockState targetState = world.getBlockState(target);
+            SkinCubeWrapper wrapper = applier.wrap(target);
+            BlockState targetState = wrapper.getBlockState();
             if (targetState.hasProperty(SkinCubeBlock.MARKER) && SkinCubeBlock.getMarker(targetState) != OptionalDirection.NONE) {
-                BlockState newState = SkinCubeBlock.setMarker(targetState, OptionalDirection.NONE);
-                WorldBlockUpdateTask task = new WorldBlockUpdateTask(world, target, newState);
-                // task.setOnlyReplaceable(true)
-                WorldUpdater.getInstance().submit(task);
+                wrapper.setBlockState(SkinCubeBlock.setMarker(targetState, OptionalDirection.NONE));
                 blockCount++;
             }
         }
         return blockCount;
     }
 
-    public static void clearCubes(World world, SkinCubeTransform transform, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
+    public static int clearCubes(SkinCubeApplier applier, SkinCubeTransform transform, ISkinType skinType, SkinProperties skinProps, ISkinPartType partType) {
         int blockCount = 0;
         for (ISkinPartType skinPart : skinType.getParts()) {
             if (partType != SkinPartTypes.UNKNOWN) {
@@ -491,26 +480,25 @@ public final class WorldUtils {
             if (skinType == SkinTypes.BLOCK) {
                 boolean multiblock = skinProps.get(SkinProperty.BLOCK_MULTIBLOCK);
                 if (skinPart == SkinPartTypes.BLOCK && !multiblock) {
-                    blockCount += clearEquipmentCubesForSkinPart(world, transform, skinPart);
+                    blockCount += clearEquipmentCubesForSkinPart(applier, transform, skinPart);
                 }
                 if (skinPart == SkinPartTypes.BLOCK_MULTI && multiblock) {
-                    blockCount += clearEquipmentCubesForSkinPart(world, transform, skinPart);
+                    blockCount += clearEquipmentCubesForSkinPart(applier, transform, skinPart);
                 }
             } else {
-                blockCount += clearEquipmentCubesForSkinPart(world, transform, skinPart);
+                blockCount += clearEquipmentCubesForSkinPart(applier, transform, skinPart);
             }
         }
+        return blockCount;
     }
 
-    private static int clearEquipmentCubesForSkinPart(World world, SkinCubeTransform transform, ISkinPartType skinPart) {
+    private static int clearEquipmentCubesForSkinPart(SkinCubeApplier applier, SkinCubeTransform transform, ISkinPartType skinPart) {
         int blockCount = 0;
         for (Vector3i offset : getResolvedBuildingSpace2(skinPart)) {
             BlockPos target = transform.mul(offset);
-            BlockState targetState = world.getBlockState(target);
-            if (targetState.getBlock() instanceof SkinCubeBlock) {
-                WorldUpdater.getInstance().submit(new WorldBlockUpdateTask(world, target, Blocks.AIR.defaultBlockState()));
-                //world.setBlockToAir(target);
-                //world.removeTileEntity(target);
+            SkinCubeWrapper wrapper = applier.wrap(target);
+            if (wrapper.is(SkinCubeBlock.class)) {
+                wrapper.setBlockState(Blocks.AIR.defaultBlockState(), (CompoundNBT) null);
                 blockCount++;
             }
         }

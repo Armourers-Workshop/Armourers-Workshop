@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.utils.color;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
-import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 
 public class TexturedPaintColor extends PaintColor {
 

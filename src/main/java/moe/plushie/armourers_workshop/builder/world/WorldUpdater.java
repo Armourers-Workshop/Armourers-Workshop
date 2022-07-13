@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop.builder.world;
 
 import moe.plushie.armourers_workshop.api.common.IWorldUpdateTask;
+import moe.plushie.armourers_workshop.init.common.ModConfig;
 import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.RegistryKey;
@@ -16,8 +17,6 @@ public class WorldUpdater {
 
     private final HashMap<RegistryKey<World>, ArrayList<IWorldUpdateTask>> allTasks = new HashMap<>();
 
-    private final int perBlocksTick = 10;
-
     public static WorldUpdater getInstance() {
         return INSTANCE;
     }
@@ -27,10 +26,13 @@ public class WorldUpdater {
     }
 
     public void tick(World world) {
+        RegistryKey<World> key = world.dimension();
+        if (isEmpty(key)) {
+            return;
+        }
         TileEntityUpdateCombiner.begin();
         ArrayList<IWorldUpdateTask> failedTasks = new ArrayList<>();
-        RegistryKey<World> key = world.dimension();
-        for (int count = perBlocksTick; count > 0; /* noop */) {
+        for (int count = ModConfig.Common.blockTaskRate; count > 0; /* noop */) {
             IWorldUpdateTask task = poll(key);
             if (task == null) {
                 break; // no more tasks to run
@@ -44,6 +46,11 @@ public class WorldUpdater {
         }
         failedTasks.forEach(this::submit);
         TileEntityUpdateCombiner.end();
+    }
+
+    public synchronized boolean isEmpty(RegistryKey<World> key) {
+        ArrayList<IWorldUpdateTask> m = allTasks.get(key);
+        return m == null || m.isEmpty();
     }
 
     @Nullable

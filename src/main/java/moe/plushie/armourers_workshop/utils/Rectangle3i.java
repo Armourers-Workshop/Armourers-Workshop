@@ -1,13 +1,10 @@
 package moe.plushie.armourers_workshop.utils;
 
-import com.mojang.serialization.Codec;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3i;
 
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.stream.IntStream;
 
 public class Rectangle3i {
 

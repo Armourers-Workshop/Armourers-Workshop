@@ -7,9 +7,10 @@ import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
 import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
-import moe.plushie.armourers_workshop.builder.world.SkinCubeColorApplier;
-import moe.plushie.armourers_workshop.builder.world.SkinCubeOptimizer;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeApplier;
+import moe.plushie.armourers_workshop.builder.world.SkinCubePaintingEvent;
 import moe.plushie.armourers_workshop.builder.world.SkinCubeSelector;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeWrapper;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.common.ModSounds;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
@@ -21,7 +22,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -74,18 +74,18 @@ public class BlendingToolItem extends AbstractPaintToolItem implements IBlockPai
         int radiusSample = ToolOptions.RADIUS_SAMPLE.get(itemStack);
         // we need to complete sampling before we can use blending tool.
         ArrayList<Integer> colors = new ArrayList<>();
-        SkinCubeOptimizer optimizer = new SkinCubeOptimizer(context.getLevel());
+        SkinCubeApplier applier = new SkinCubeApplier(context.getLevel());
         createColorApplierSelector(radiusSample, context).forEach(context, (targetPos, dir) -> {
-            optimizer.setLocation(targetPos);
-            if (optimizer.shouldChangeColor(dir)) {
-                IPaintColor paintColor = optimizer.getColor(dir);
+            SkinCubeWrapper wrapper = applier.wrap(targetPos);
+            if (wrapper.shouldChangeColor(dir)) {
+                IPaintColor paintColor = wrapper.getColor(dir);
                 if (paintColor != null) {
                     colors.add(paintColor.getRGB());
                 }
             }
         });
         IPaintColor paintColor = PaintColor.of(ColorUtils.getAverageColor(colors), SkinPaintTypes.NORMAL);
-        return new SkinCubeColorApplier.BlendingAction(paintColor, intensity);
+        return new SkinCubePaintingEvent.BlendingAction(paintColor, intensity);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.builder.container;
 
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.container.AbstractBlockContainer;
+import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import net.minecraft.entity.player.PlayerEntity;

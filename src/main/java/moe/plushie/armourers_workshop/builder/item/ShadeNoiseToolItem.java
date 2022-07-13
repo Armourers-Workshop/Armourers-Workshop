@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
-import moe.plushie.armourers_workshop.builder.world.SkinCubeColorApplier;
+import moe.plushie.armourers_workshop.builder.world.SkinCubePaintingEvent;
 import moe.plushie.armourers_workshop.init.common.ModSounds;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.item.ItemStack;
@@ -30,7 +30,7 @@ public class ShadeNoiseToolItem extends AbstractPaintToolItem implements IBlockP
     @Override
     public IPaintToolAction createPaintToolAction(ItemUseContext context) {
         int intensity = ToolOptions.INTENSITY.get(context.getItemInHand());
-        return new SkinCubeColorApplier.NoiseAction(intensity, true);
+        return new SkinCubePaintingEvent.NoiseAction(intensity, true);
     }
 
     @Override

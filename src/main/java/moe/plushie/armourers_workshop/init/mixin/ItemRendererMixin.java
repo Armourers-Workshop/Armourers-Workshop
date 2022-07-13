@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.mixin;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.core.render.model.WrappedBakedModel;
+import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.model.IBakedModel;

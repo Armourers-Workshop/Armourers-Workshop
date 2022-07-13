@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
+import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.utils.AWDataSerializers;
 import moe.plushie.armourers_workshop.utils.ColorUtils;

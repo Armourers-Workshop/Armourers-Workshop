@@ -3,12 +3,8 @@ package moe.plushie.armourers_workshop.core.network.packet;
 import moe.plushie.armourers_workshop.api.common.IItemParticleProvider;
 import moe.plushie.armourers_workshop.api.common.IItemSoundProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.builder.world.SkinCubeColorApplier;
-import moe.plushie.armourers_workshop.builder.world.SkinCubeOptimizer;
-import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
-import moe.plushie.armourers_workshop.utils.undo.UndoManager;
-import moe.plushie.armourers_workshop.utils.undo.action.SetBlockColorAction;
-import moe.plushie.armourers_workshop.utils.undo.action.UndoNamedGroupAction;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeApplier;
+import moe.plushie.armourers_workshop.builder.world.SkinCubePaintingEvent;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,41 +23,20 @@ public class UpdateBlockColorPacket extends CustomPacket {
     final Hand hand;
     final GlobalPos clickedPos;
     final BlockRayTraceResult traceResult;
-    final SkinCubeColorApplier applier;
-//    final HashMap<BlockPos, HashMap<Direction, IPaintColor>> changes;
+    final SkinCubePaintingEvent paintingEvent;
 
     public UpdateBlockColorPacket(PacketBuffer buffer) {
         this.hand = buffer.readEnum(Hand.class);
         this.clickedPos = readGlobalPos(buffer);
         this.traceResult = buffer.readBlockHitResult();
-        this.applier = new SkinCubeColorApplier(buffer);
-//        this.changes = new HashMap<>();
-//        int size = buffer.readInt();
-//        for (int i = 0; i < size; ++i) {
-//            BlockPos pos = buffer.readBlockPos();
-//            HashMap<Direction, IPaintColor> colors = new HashMap<>();
-//            int colorTotal = buffer.readByte();
-//            for (int j = 0; j < colorTotal; ++j) {
-//                Direction dir = buffer.readEnum(Direction.class);
-//                IPaintColor color = PaintColor.of(buffer.readInt());
-//                colors.put(dir, color);
-//            }
-//            changes.put(pos, colors);
-//        }
+        this.paintingEvent = new SkinCubePaintingEvent(buffer);
     }
 
-    public UpdateBlockColorPacket(ItemUseContext context, SkinCubeColorApplier applier) {
+    public UpdateBlockColorPacket(ItemUseContext context, SkinCubePaintingEvent paintingEvent) {
         this.hand = context.getHand();
         this.clickedPos = GlobalPos.of(context.getLevel().dimension(), context.getClickedPos());
         this.traceResult = new BlockRayTraceResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside());
-        this.applier = applier;
-//        this.changes = new HashMap<>();
-//        changes.forEach((target, colors) -> {
-//            BlockPos pos = by(target);
-//            if (pos != null) {
-//                this.changes.put(pos, colors);
-//            }
-//        });
+        this.paintingEvent = paintingEvent;
     }
 
     @Override
@@ -70,16 +45,7 @@ public class UpdateBlockColorPacket extends CustomPacket {
             buffer.writeEnum(hand);
             buffer.writeWithCodec(GlobalPos.CODEC, clickedPos);
             buffer.writeBlockHitResult(traceResult);
-            applier.encode(buffer);
-//            buffer.writeInt(changes.size());
-//            changes.forEach((pos, colors) -> {
-//                buffer.writeBlockPos(pos);
-//                buffer.writeByte(colors.size());
-//                colors.forEach((dir, color) -> {
-//                    buffer.writeEnum(dir);
-//                    buffer.writeInt(color.getRawValue());
-//                });
-//            });
+            paintingEvent.encode(buffer);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,24 +59,17 @@ public class UpdateBlockColorPacket extends CustomPacket {
         if (world == null) {
             return;
         }
-        TileEntityUpdateCombiner.begin();
         try {
             ItemStack itemStack = player.getItemInHand(hand);
             ItemUseContext context = new ItemUseContext(world, player, hand, itemStack, traceResult);
-            UndoNamedGroupAction group = new UndoNamedGroupAction(itemStack.getHoverName());
-            applier.apply(context, new SkinCubeOptimizer(world) {
-                @Override
-                public void submit(IPaintable target) {
-                    group.push(new SetBlockColorAction(world, targetPos, changes));
-                }
-            });
-            UndoManager.of(player.getUUID()).push(group.apply());
+            SkinCubeApplier applier = new SkinCubeApplier(world);
+            paintingEvent.apply(applier, context);
+            applier.submit(itemStack.getHoverName(), player);
             applyUseEffects(itemStack, context);
         } catch (Exception exception) {
             // ignore any exception.
             exception.printStackTrace();
         }
-        TileEntityUpdateCombiner.end();
     }
 
     public BlockPos by(IPaintable target) {

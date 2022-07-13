@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
-import moe.plushie.armourers_workshop.builder.world.SkinCubeColorApplier;
+import moe.plushie.armourers_workshop.builder.world.SkinCubePaintingEvent;
 import moe.plushie.armourers_workshop.init.common.ModSounds;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
@@ -39,7 +39,7 @@ public class HueToolItem extends PaintbrushItem {
         boolean saturation = ToolOptions.CHANGE_SATURATION.get(itemStack);
         boolean brightness = ToolOptions.CHANGE_BRIGHTNESS.get(itemStack);
         boolean paintType = ToolOptions.CHANGE_PAINT_TYPE.get(itemStack);
-        return new SkinCubeColorApplier.HueActoin(paintColor, hue, saturation, brightness, paintType);
+        return new SkinCubePaintingEvent.HueAction(paintColor, hue, saturation, brightness, paintType);
     }
 
     @Override

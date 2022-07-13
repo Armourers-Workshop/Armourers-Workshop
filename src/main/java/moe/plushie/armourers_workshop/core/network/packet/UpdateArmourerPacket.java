@@ -4,7 +4,8 @@ import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.builder.container.ArmourerContainer;
 import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
-import moe.plushie.armourers_workshop.builder.world.SkinCubeReplaceApplier;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeApplier;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeReplacingEvent;
 import moe.plushie.armourers_workshop.core.permission.Permissions;
 import moe.plushie.armourers_workshop.core.permission.impl.BlockPermission;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -25,7 +26,6 @@ import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -86,16 +86,18 @@ public class UpdateArmourerPacket extends CustomPacket {
             case ITEM_CLEAR: {
                 CompoundNBT nbt = (CompoundNBT) fieldValue;
                 ModLog.info("accept clear action of the {}, nbt: {}", playerName, nbt);
+                SkinCubeApplier applier = new SkinCubeApplier(tileEntity.getLevel());
                 ISkinPartType partType = SkinPartTypes.byName(nbt.getString(AWConstants.NBT.SKIN_PART_TYPE));
                 if (nbt.getBoolean(AWConstants.NBT.SKIN_CUBES)) {
-                    tileEntity.clearCubes(partType);
+                    tileEntity.clearCubes(applier, partType);
                 }
                 if (nbt.getBoolean(AWConstants.NBT.SKIN_PAINTS)) {
-                    tileEntity.clearPaintData(partType);
+                    tileEntity.clearPaintData(applier, partType);
                 }
                 if (nbt.getBoolean(AWConstants.NBT.SKIN_MARKERS) && !nbt.getBoolean(AWConstants.NBT.SKIN_CUBES)) {
-                    tileEntity.clearMarkers(partType);
+                    tileEntity.clearMarkers(applier, partType);
                 }
+                applier.submit(TranslateUtils.title("action.armourers_workshop.block.clear"), player);
                 break;
             }
             case ITEM_COPY: {
@@ -106,12 +108,14 @@ public class UpdateArmourerPacket extends CustomPacket {
                     boolean isCopyPaintData = nbt.getBoolean(AWConstants.NBT.SKIN_PAINTS);
                     ISkinPartType sourcePartType = SkinPartTypes.byName(nbt.getString(AWConstants.NBT.SOURCE));
                     ISkinPartType destinationPartType = SkinPartTypes.byName(nbt.getString(AWConstants.NBT.DESTINATION));
-                    tileEntity.copyCubes(sourcePartType, destinationPartType, isMirror);
+                    SkinCubeApplier applier = new SkinCubeApplier(tileEntity.getLevel());
+                    tileEntity.copyCubes(applier, sourcePartType, destinationPartType, isMirror);
                     if (isCopyPaintData) {
-                        tileEntity.copyPaintData(sourcePartType, destinationPartType, isMirror);
+                        tileEntity.copyPaintData(applier, sourcePartType, destinationPartType, isMirror);
                     }
+                    applier.submit(TranslateUtils.title("action.armourers_workshop.block.copy"), player);
                 } catch (Exception e) {
-                    player.sendMessage(new StringTextComponent(e.getMessage()), player.getUUID());
+                    e.printStackTrace();
                 }
                 break;
             }
@@ -121,19 +125,18 @@ public class UpdateArmourerPacket extends CustomPacket {
                 try {
                     ItemStack source = ItemStack.of(nbt.getCompound(AWConstants.NBT.SOURCE));
                     ItemStack destination = ItemStack.of(nbt.getCompound(AWConstants.NBT.DESTINATION));
-                    SkinCubeReplaceApplier applier = new SkinCubeReplaceApplier(source, destination);
-                    applier.keepColor = nbt.getBoolean(AWConstants.NBT.KEEP_COLOR);
-                    applier.keepPaintType = nbt.getBoolean(AWConstants.NBT.KEEP_PAINT_TYPE);
-                    if (applier.isEmptySource && applier.isEmptyDestination) {
+                    SkinCubeReplacingEvent event = new SkinCubeReplacingEvent(source, destination);
+                    event.keepColor = nbt.getBoolean(AWConstants.NBT.KEEP_COLOR);
+                    event.keepPaintType = nbt.getBoolean(AWConstants.NBT.KEEP_PAINT_TYPE);
+                    if (event.isEmptySource && event.isEmptyDestination) {
                         return;
                     }
-                    TileEntityUpdateCombiner.begin();
-                    tileEntity.replaceCubes(applier);
-                    TileEntityUpdateCombiner.end();
-                    player.sendMessage(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.replace.success", applier.changes), player.getUUID());
-
+                    SkinCubeApplier applier = new SkinCubeApplier(tileEntity.getLevel());
+                    tileEntity.replaceCubes(applier, SkinPartTypes.UNKNOWN, event);
+                    applier.submit(TranslateUtils.title("action.armourers_workshop.block.replace"), player);
+                    player.sendMessage(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.replace.success", applier.getChanges()), player.getUUID());
                 } catch (Exception e) {
-                    player.sendMessage(new StringTextComponent(e.getMessage()), player.getUUID());
+                    e.printStackTrace();
                 }
                 break;
             }

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.builder.item.impl;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.builder.world.SkinCubeColorApplier;
-import moe.plushie.armourers_workshop.builder.world.SkinCubeSelector;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeApplier;
+import moe.plushie.armourers_workshop.builder.world.SkinCubePaintingEvent;
 import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.network.packet.UpdateBlockColorPacket;
 import net.minecraft.item.ItemUseContext;
@@ -29,10 +29,11 @@ public interface IPaintToolApplier {
         if (selector == null || action == null) {
             return ActionResultType.PASS;
         }
-        SkinCubeColorApplier applier = new SkinCubeColorApplier(selector, action);
-        if (applier.prepare(context)) {
-            applier.apply(context);
-            UpdateBlockColorPacket packet = new UpdateBlockColorPacket(context, applier);
+        SkinCubeApplier applier = new SkinCubeApplier(context.getLevel());
+        SkinCubePaintingEvent event = new SkinCubePaintingEvent(selector, action);
+        if (event.prepare(applier, context)) {
+            event.apply(applier, context);
+            UpdateBlockColorPacket packet = new UpdateBlockColorPacket(context, event);
             NetworkHandler.getInstance().sendToServer(packet);
             return ActionResultType.SUCCESS;
         }
@@ -43,10 +44,7 @@ public interface IPaintToolApplier {
     IPaintToolAction createPaintToolAction(ItemUseContext context);
 
     @Nullable
-    default IPaintToolSelector createPaintToolSelector(ItemUseContext context) {
-        boolean isFullMode = shouldUseFullMode(context);
-        return SkinCubeSelector.box(context.getClickedPos(), isFullMode);
-    }
+    IPaintToolSelector createPaintToolSelector(ItemUseContext context);
 
     @Nullable
     default IPaintToolSelector createPaintToolSelector(TileEntity tileEntity, ItemUseContext context) {
@@ -60,6 +58,4 @@ public interface IPaintToolApplier {
     }
 
     boolean shouldUseTool(ItemUseContext context);
-
-    boolean shouldUseFullMode(ItemUseContext context);
 }

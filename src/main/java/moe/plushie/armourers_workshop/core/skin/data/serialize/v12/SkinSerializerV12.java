@@ -3,7 +3,6 @@ package moe.plushie.armourers_workshop.core.skin.data.serialize.v12;
 import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
-import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.serialize.SkinSerializer;
@@ -12,8 +11,9 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.ModLog;
-import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
+import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
+import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

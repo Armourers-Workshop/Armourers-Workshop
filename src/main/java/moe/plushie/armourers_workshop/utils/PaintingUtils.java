@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinPaintType;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants.NBT;
 
 import java.awt.*;

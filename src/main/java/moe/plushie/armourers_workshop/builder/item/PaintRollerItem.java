@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.builder.item;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
-import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
 import moe.plushie.armourers_workshop.builder.world.SkinCubeSelector;
@@ -13,7 +12,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 

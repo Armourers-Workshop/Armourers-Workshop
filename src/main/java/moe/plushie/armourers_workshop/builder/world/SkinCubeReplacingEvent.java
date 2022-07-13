@@ -15,15 +15,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.Property;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import java.util.HashMap;
 import java.util.Objects;
 
-public class SkinCubeReplaceApplier {
+public class SkinCubeReplacingEvent {
 
     public boolean keepColor = true;
     public boolean keepPaintType = true;
@@ -44,7 +41,7 @@ public class SkinCubeReplaceApplier {
     public final boolean isEmptyDestination;
     public final boolean isChangedBlock;
 
-    public SkinCubeReplaceApplier(ItemStack source, ItemStack destination) {
+    public SkinCubeReplacingEvent(ItemStack source, ItemStack destination) {
         this.source = source;
         this.sourceBlock = getBlock(source);
         this.sourceBlockColor = getBlockColor(source);
@@ -56,9 +53,9 @@ public class SkinCubeReplaceApplier {
         this.isChangedBlock = isChangedBlock();
     }
 
-    public boolean accept(TileEntity tileEntity) {
+    public boolean accept(SkinCubeWrapper wrapper) {
         // security check, we only can modify the paintable block.
-        if (!(tileEntity instanceof IPaintable)) {
+        if (!wrapper.is(IPaintable.class)) {
             return false;
         }
         // replace all block's to target block.
@@ -66,16 +63,15 @@ public class SkinCubeReplaceApplier {
             return true;
         }
         // when specified block type we need to check matching.
-        if (sourceBlock != null && !tileEntity.getBlockState().is(sourceBlock)) {
+        if (sourceBlock != null && !wrapper.is(sourceBlock)) {
             return false;
         }
         // when specified block color we need to check matching.
         if (sourceBlockColor != null) {
             int diff = 0;
-            IPaintable provider = (IPaintable) tileEntity;
             for (Direction dir : Direction.values()) {
                 IPaintColor s = sourceBlockColor.getOrDefault(dir, PaintColor.WHITE);
-                IPaintColor t = provider.getColor(dir);
+                IPaintColor t = wrapper.getColor(dir);
                 if (!Objects.equals(s, t)) {
                     diff += 1;
                 }
@@ -89,20 +85,20 @@ public class SkinCubeReplaceApplier {
         return true;
     }
 
-    public void apply(TileEntity tileEntity) {
+    public void apply(SkinCubeWrapper wrapper) {
         // security check, we only can modify the paintable block.
-        if (!(tileEntity instanceof IPaintable)) {
+        if (!wrapper.is(IPaintable.class)) {
             return;
         }
         int oldBlockChanges = blockChanges;
         int oldBlockColorChanges = blockColorChanges;
         // when specified new block color, we need to apply it first.
         if (!destination.isEmpty() && destinationBlockColor != null) {
-            applyColor((IPaintable) tileEntity);
+            applyColor(wrapper);
         }
         // when specified new block type, we need to apply it.
         if (isChangedBlock) {
-            applyBlock(tileEntity);
+            applyBlock(wrapper);
         }
         // statistical change data.
         if (oldBlockChanges != blockChanges || oldBlockColorChanges != blockColorChanges) {
@@ -110,15 +106,15 @@ public class SkinCubeReplaceApplier {
         }
     }
 
-    private void applyColor(IPaintable tileEntity) {
-        // when both  keep color and keep paint type, we not need to color mix.
+    private void applyColor(SkinCubeWrapper wrapper) {
+        // when both keep color and keep paint type, we not need to color mix.
         if (keepColor && keepPaintType) {
             return;
         }
         // we just need to replace the matching block colors.
         HashMap<Direction, IPaintColor> newColors = new HashMap<>();
         for (Direction dir : Direction.values()) {
-            IPaintColor targetColor = tileEntity.getColor(dir);
+            IPaintColor targetColor = wrapper.getColor(dir);
             if (sourceBlockColor != null) {
                 IPaintColor sourceColor = sourceBlockColor.getOrDefault(dir, PaintColor.WHITE);
                 if (!Objects.equals(sourceColor, targetColor)) {
@@ -139,32 +135,30 @@ public class SkinCubeReplaceApplier {
             newColors.put(dir, newColor);
         }
         // apply all block color changes into tile entity.
-        tileEntity.setColors(newColors);
+        wrapper.setColors(newColors);
         blockColorChanges += 1;
     }
 
-    private void applyBlock(TileEntity tileEntity) {
+    private void applyBlock(SkinCubeWrapper wrapper) {
         // security check, we only can modify the skin cube block.
-        BlockState oldState = tileEntity.getBlockState();
-        if (!(oldState.getBlock() instanceof SkinCubeBlock)) {
+        if (!wrapper.is(SkinCubeBlock.class)) {
             return;
         }
         CompoundNBT newNBT = null;
-        World world = tileEntity.getLevel();
-        BlockPos pos = tileEntity.getBlockPos();
+        BlockState oldState = wrapper.getBlockState();
         BlockState newState = Blocks.AIR.defaultBlockState();
         if (destinationBlock != null) {
-            newNBT = tileEntity.serializeNBT();
+            newNBT = wrapper.getBlockEntityNBT();
             newState = destinationBlock.defaultBlockState();
             for (Property<?> property : oldState.getProperties()) {
                 newState = applyBlockState(newState, oldState, property);
             }
         }
-        WorldUpdater.getInstance().submit(new WorldBlockUpdateTask(world, pos, newState, newNBT));
+        wrapper.setBlockState(newState, newNBT);
         blockChanges += 1;
     }
 
-    private <T extends Comparable<T>> BlockState applyBlockState(BlockState newState, BlockState oldState, Property<T> property)  {
+    private <T extends Comparable<T>> BlockState applyBlockState(BlockState newState, BlockState oldState, Property<T> property) {
         if (newState.hasProperty(property)) {
             return newState.setValue(property, oldState.getValue(property));
         }

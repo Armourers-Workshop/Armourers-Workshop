@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.function.Function;
 
-public class SkinCubeColorApplier {
+public class SkinCubePaintingEvent {
 
     private static final HashMap<Class<? extends Action>, ActionTypes> REVERSE_LOOKUP = new HashMap<>();
 
@@ -32,12 +32,12 @@ public class SkinCubeColorApplier {
 
     private int targetCount = 0;
 
-    public SkinCubeColorApplier(IPaintToolSelector selector, IPaintToolAction action) {
+    public SkinCubePaintingEvent(IPaintToolSelector selector, IPaintToolAction action) {
         this.selector = selector;
         this.action = action;
     }
 
-    public SkinCubeColorApplier(PacketBuffer buffer) {
+    public SkinCubePaintingEvent(PacketBuffer buffer) {
         this.selector = SkinCubeSelector.from(buffer);
         this.action = Action.fromBuffer(buffer);
         // read and remapping actions.
@@ -72,37 +72,29 @@ public class SkinCubeColorApplier {
         buffer.writeByte(0);
     }
 
-    public boolean prepare(ItemUseContext context) {
+    public boolean prepare(SkinCubeApplier applier, ItemUseContext context) {
         World world = context.getLevel();
         PlayerEntity player = context.getPlayer();
-        SkinCubeOptimizer optimizer = new SkinCubeOptimizer(world);
         selector.forEach(context, (target, dir) -> {
-            optimizer.setLocation(target);
-            if (optimizer.getTarget() != null) {
+            SkinCubeWrapper wrapper = applier.wrap(target);
+            if (wrapper.is(IPaintable.class)) {
                 targetCount += 1;
             }
-            IPaintToolAction action1 = action.build(world, target, dir, optimizer, player);
+            IPaintToolAction action1 = action.build(world, target, dir, wrapper, player);
             if (action1 != action) {
                 overrides.put(Pair.of(target, dir), action1);
             }
         });
-        optimizer.clean();
         return targetCount != 0;
     }
 
-    public void apply(ItemUseContext context) {
-        apply(context, new SkinCubeOptimizer(context.getLevel()));
-    }
-
-    public void apply(ItemUseContext context, SkinCubeOptimizer optimizer) {
+    public void apply(SkinCubeApplier applier, ItemUseContext context) {
         World world = context.getLevel();
         PlayerEntity player = context.getPlayer();
         selector.forEach(context, (target, dir) -> {
-            optimizer.setLocation(target);
             IPaintToolAction action1 = overrides.getOrDefault(Pair.of(target, dir), action);
-            action1.apply(world, target, dir, optimizer, player);
+            action1.apply(world, target, dir, applier.wrap(target), player);
         });
-        optimizer.clean();
     }
 
     public enum ActionTypes {
@@ -110,7 +102,7 @@ public class SkinCubeColorApplier {
         SET_COLOR(SetAction.class, SetAction::new),
         SET_BRIGHTNESS(BrightnessAction.class, BrightnessAction::new),
         SET_NOISE(NoiseAction.class, NoiseAction::new),
-        SET_HUE(HueActoin.class, HueActoin::new),
+        SET_HUE(HueAction.class, HueAction::new),
         SET_BLENDING(BlendingAction.class, BlendingAction::new),
         CLEAR_COLOR(ClearAction.class, ClearAction::new);
 
@@ -293,7 +285,7 @@ public class SkinCubeColorApplier {
         }
     }
 
-    public static class HueActoin extends MixedAction {
+    public static class HueAction extends MixedAction {
 
         final IPaintColor destinationColor;
 
@@ -302,7 +294,7 @@ public class SkinCubeColorApplier {
         final boolean changeBrightness;
         final boolean changePaintType;
 
-        public HueActoin(IPaintColor paintColor, boolean hue, boolean saturation, boolean brightness, boolean paintType) {
+        public HueAction(IPaintColor paintColor, boolean hue, boolean saturation, boolean brightness, boolean paintType) {
             this.destinationColor = paintColor;
             this.changeHue = hue;
             this.changeSaturation = saturation;
@@ -310,7 +302,7 @@ public class SkinCubeColorApplier {
             this.changePaintType = paintType;
         }
 
-        public HueActoin(PacketBuffer buffer) {
+        public HueAction(PacketBuffer buffer) {
             this.destinationColor = PaintColor.of(buffer.readInt());
             this.changeHue = buffer.readBoolean();
             this.changeSaturation = buffer.readBoolean();

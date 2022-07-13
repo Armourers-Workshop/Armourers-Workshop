@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.builder.container;
 
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.tileentity.ArmourerTileEntity;
+import moe.plushie.armourers_workshop.builder.world.SkinCubeApplier;
 import moe.plushie.armourers_workshop.builder.world.SkinCubeTransform;
 import moe.plushie.armourers_workshop.builder.world.WorldUtils;
 import moe.plushie.armourers_workshop.core.container.AbstractBlockContainer;
@@ -15,15 +15,14 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModContainerTypes;
 import moe.plushie.armourers_workshop.init.common.ModItems;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
@@ -154,9 +153,10 @@ public class ArmourerContainer extends AbstractBlockContainer {
         tileEntity.setPaintData(skin.getPaintData());
 
         try {
-            World world = tileEntity.getLevel();
+            SkinCubeApplier applier = new SkinCubeApplier(tileEntity.getLevel());
             SkinCubeTransform transform = tileEntity.getTransform();
-            WorldUtils.loadSkinIntoWorld(world, transform, skin);
+            WorldUtils.loadSkinIntoWorld(applier, transform, skin);
+            applier.submit(TranslateUtils.title("action.armourers_workshop.block.load"), player);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -8,7 +8,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.world.*;
-import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
@@ -18,8 +17,12 @@ import moe.plushie.armourers_workshop.core.tileentity.AbstractTileEntity;
 import moe.plushie.armourers_workshop.init.common.AWConstants;
 import moe.plushie.armourers_workshop.init.common.ModBlocks;
 import moe.plushie.armourers_workshop.init.common.ModTileEntities;
-import moe.plushie.armourers_workshop.utils.*;
+import moe.plushie.armourers_workshop.utils.AWDataSerializers;
+import moe.plushie.armourers_workshop.utils.BoundingBox;
+import moe.plushie.armourers_workshop.utils.Rectangle3i;
+import moe.plushie.armourers_workshop.utils.TileEntityUpdateCombiner;
 import moe.plushie.armourers_workshop.utils.color.PaintColor;
+import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import moe.plushie.armourers_workshop.utils.texture.SkyBox;
 import net.minecraft.block.BlockState;
@@ -247,7 +250,7 @@ public class ArmourerTileEntity extends AbstractTileEntity implements IPaintTool
         return SkinCubeSelector.all(rects);
     }
 
-    public void copyPaintData(ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) {
+    public void copyPaintData(SkinCubeApplier applier, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) {
         if (paintData == null) {
             return;
         }
@@ -260,7 +263,7 @@ public class ArmourerTileEntity extends AbstractTileEntity implements IPaintTool
         }
     }
 
-    public void clearPaintData(ISkinPartType partType) {
+    public void clearPaintData(SkinCubeApplier applier, ISkinPartType partType) {
         if (paintData == null) {
             return;
         }
@@ -278,9 +281,9 @@ public class ArmourerTileEntity extends AbstractTileEntity implements IPaintTool
         }
     }
 
-    public void clearCubes(ISkinPartType partType) {
+    public void clearCubes(SkinCubeApplier applier, ISkinPartType partType) {
         // remove all part
-        WorldUtils.clearCubes(getLevel(), getTransform(), getSkinType(), getSkinProperties(), partType);
+        WorldUtils.clearCubes(applier, getTransform(), getSkinType(), getSkinProperties(), partType);
         // when just clear a part, we don't reset skin properties.
         if (partType != SkinPartTypes.UNKNOWN) {
             return;
@@ -292,16 +295,16 @@ public class ArmourerTileEntity extends AbstractTileEntity implements IPaintTool
         TileEntityUpdateCombiner.combine(this, this::sendBlockUpdates);
     }
 
-    public void replaceCubes(SkinCubeReplaceApplier applier) throws Exception {
-        WorldUtils.replaceCubes(getLevel(), getTransform(), getSkinType(), getSkinProperties(), applier);
+    public void replaceCubes(SkinCubeApplier applier, ISkinPartType partType, SkinCubeReplacingEvent event) throws Exception {
+        WorldUtils.replaceCubes(applier, getTransform(), getSkinType(), getSkinProperties(), event);
     }
 
-    public void copyCubes(ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws Exception {
-        WorldUtils.copyCubes(getLevel(), getTransform(), getSkinType(), getSkinProperties(), srcPart, destPart, mirror);
+    public void copyCubes(SkinCubeApplier applier, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws Exception {
+        WorldUtils.copyCubes(applier, getTransform(), getSkinType(), getSkinProperties(), srcPart, destPart, mirror);
     }
 
-    public void clearMarkers(ISkinPartType partType) {
-        WorldUtils.clearMarkers(getLevel(), getTransform(), getSkinType(), getSkinProperties(), partType);
+    public void clearMarkers(SkinCubeApplier applier, ISkinPartType partType) {
+        WorldUtils.clearMarkers(applier, getTransform(), getSkinType(), getSkinProperties(), partType);
         setChanged();
     }
 

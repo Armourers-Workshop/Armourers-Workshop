@@ -9,9 +9,9 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
-import moe.plushie.armourers_workshop.builder.world.SkinCubeColorApplier;
-import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
+import moe.plushie.armourers_workshop.builder.world.SkinCubePaintingEvent;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
+import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.common.AWCore;
 import moe.plushie.armourers_workshop.init.common.ModSounds;
@@ -64,7 +64,7 @@ public class PaintbrushItem extends AbstractPaintToolItem implements IItemTintCo
     @Override
     public IPaintToolAction createPaintToolAction(ItemUseContext context) {
         IPaintColor paintColor = getItemColor(context.getItemInHand(), PaintColor.WHITE);
-        return new SkinCubeColorApplier.SetAction(paintColor);
+        return new SkinCubePaintingEvent.SetAction(paintColor);
     }
 
     @Override
