@@ -70,7 +70,6 @@ public class ModConfig {
         public static boolean enableBlockPlacementHighlight = true;
         public static boolean enablePaintToolPlacementHighlight = true;
 
-        public static boolean enableWireframeRender = false;
         public static boolean enableMagicWhenContributor = false;
 
         public static int getNumberOfRenderLayers() {
@@ -99,7 +98,7 @@ public class ModConfig {
 
         // General
         public static int maxUndos = 100;
-        public static int blockTaskRate = 8; // 8 Blocks/t
+        public static int blockTaskRate = 10; // 10 blocks/t
         public static boolean lockDyesOnSkins = false;
         public static boolean instancedDyeTable = false;
         public static int serverSkinSendRate = 4000;

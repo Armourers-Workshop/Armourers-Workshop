@@ -221,6 +221,19 @@ public class ArmourerTileEntity extends AbstractTileEntity implements IPaintTool
         this.setChanged();
     }
 
+    public boolean isShowModelGuides() {
+        return (flags & 0x04) == 0;
+    }
+
+    public void setShowModelGuides(boolean value) {
+        if (value) {
+            this.flags &= ~0x04; // -
+        } else {
+            this.flags |= 0x04; // +
+        }
+        this.setChanged();
+    }
+
     public boolean usesHelper() {
         if (skinType == SkinTypes.ARMOR_WINGS) {
             return true;

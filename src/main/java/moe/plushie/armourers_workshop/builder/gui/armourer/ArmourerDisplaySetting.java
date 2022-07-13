@@ -27,6 +27,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting {
     private AWLabel inputType;
 
     private AWCheckBox checkShowGuides;
+    private AWCheckBox checkShowModelGuides;
     private AWCheckBox checkShowHelper;
 
     private final HashMap<PlayerTextureDescriptor.Source, String> defaultValues = new HashMap<>();
@@ -45,9 +46,11 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting {
         super.init();
 
         this.checkShowGuides = new AWCheckBox(leftPos + 10, topPos + 115, 9, 9, getDisplayText("showGuide"), false, this::updateFlagValue);
-        this.checkShowHelper = new AWCheckBox(leftPos + 10, topPos + 130, 9, 9, getDisplayText("showHelper"), false, this::updateFlagValue);
+        this.checkShowModelGuides = new AWCheckBox(leftPos + 10, topPos + 130, 9, 9, getDisplayText("showModelGuide"), false, this::updateFlagValue);
+        this.checkShowHelper = new AWCheckBox(leftPos + 10, topPos + 145, 9, 9, getDisplayText("showHelper"), false, this::updateFlagValue);
 
         this.addButton(checkShowGuides);
+        this.addButton(checkShowModelGuides);
         this.addButton(checkShowHelper);
 
         this.addLabel(leftPos + 10, topPos + 20, width, 10, getDisplayText("label.skinType"));
@@ -71,6 +74,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting {
             return;
         }
         checkShowGuides.setSelected(tileEntity.isShowGuides());
+        checkShowModelGuides.setSelected(tileEntity.isShowModelGuides());
         checkShowHelper.setSelected(tileEntity.isShowHelper());
         checkShowHelper.visible = tileEntity.usesHelper();
         // update input type
@@ -145,6 +149,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting {
     private void updateFlagValue(Button sender) {
         int oldFlags = tileEntity.getFlags();
         tileEntity.setShowGuides(checkShowGuides.isSelected());
+        tileEntity.setShowModelGuides(checkShowModelGuides.isSelected());
         tileEntity.setShowHelper(checkShowHelper.isSelected());
         int flags = tileEntity.getFlags();
         if (flags == oldFlags) {

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.common.ModConfig;
+import moe.plushie.armourers_workshop.init.common.ModDebugger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -187,13 +188,13 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements IRenderTyp
         private void setupRenderState() {
             RenderSystem.enableRescaleNormal();
 
-            if (ModConfig.Client.enableWireframeRender) {
+            if (ModDebugger.wireframeRender) {
                 RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
             }
         }
 
         private void clearRenderState() {
-            if (ModConfig.Client.enableWireframeRender) {
+            if (ModDebugger.wireframeRender) {
                 RenderSystem.polygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
             }
 

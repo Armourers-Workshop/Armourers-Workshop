@@ -142,6 +142,7 @@
   "inventory.armourers_workshop.armourer.displaySettings.label.username": "Username:",
   "inventory.armourers_workshop.armourer.displaySettings.set": "Set",
   "inventory.armourers_workshop.armourer.displaySettings.showGuide": "Show building guide?",
+  "inventory.armourers_workshop.armourer.displaySettings.showModelGuide": "Show model guide?",
   "inventory.armourers_workshop.armourer.displaySettings.showHelper": "Show helper model?",
   "inventory.armourers_workshop.armourer.label.clone": "Clone:",
   "inventory.armourers_workshop.armourer.main": "Main",

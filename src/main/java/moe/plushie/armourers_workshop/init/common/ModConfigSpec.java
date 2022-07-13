@@ -311,6 +311,7 @@ public class ModConfigSpec {
 
         // General
         ForgeConfigSpec.IntValue maxUndos;
+        ForgeConfigSpec.IntValue blockTaskRate;
         ForgeConfigSpec.BooleanValue lockDyesOnSkins;
         ForgeConfigSpec.BooleanValue instancedDyeTable;
         ForgeConfigSpec.IntValue serverSkinSendRate;
@@ -363,6 +364,9 @@ public class ModConfigSpec {
             builder.defineCategory("general", "General settings.", () -> {
                 maxUndos = builder.defineInRange("maxUndos", 100, 0, 1000,
                         "Max number of undos a player has for block painting.");
+
+                blockTaskRate = builder.defineInRange("blockTaskRate", 10, 1, 1000,
+                        "Max number of processing blocks in per tick.");
 
                 lockDyesOnSkins = builder.define("lockDyesOnSkins", false,
                         "When enabled players will not be able to remove dyes from skins in the dye table.");
@@ -630,6 +634,7 @@ public class ModConfigSpec {
 
             public static void apply(Common spec) {
                 maxUndos = spec.maxUndos.get();
+                blockTaskRate = spec.blockTaskRate.get();
                 lockDyesOnSkins = spec.lockDyesOnSkins.get();
                 instancedDyeTable = spec.instancedDyeTable.get();
                 serverSkinSendRate = spec.serverSkinSendRate.get();

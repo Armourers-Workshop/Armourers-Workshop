@@ -68,6 +68,7 @@ public class ArmourerTileEntityRenderer<T extends ArmourerTileEntity> extends Ti
 
         boolean isMultiBlocks = skinProperties.get(SkinProperty.BLOCK_MULTIBLOCK);
         boolean isShowGuides = entity.isShowGuides();
+        boolean isShowModelGuides = entity.isShowModelGuides();
         boolean isShowHelper = entity.isShowHelper();
         boolean isUsesHelper = entity.usesHelper();
 
@@ -130,7 +131,7 @@ public class ArmourerTileEntityRenderer<T extends ArmourerTileEntity> extends Ti
                 RenderUtils.drawCube(matrixStack, originBox, 0, 1, 0, 0.5f, buffers);
             }
             // render guide grid
-            if (isModelOverridden) {
+            if (isShowModelGuides && isModelOverridden) {
                 RenderUtils.drawCube(matrixStack, rect2, 0, 0, 1, 0.25f, buffers);
             }
 

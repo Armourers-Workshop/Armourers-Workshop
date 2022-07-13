@@ -38,6 +38,7 @@ public class ModDebugger {
     public static boolean spin = false;
 
     public static boolean tooltip = false;
+    public static boolean wireframeRender = false;
 
     // Debug tool
     public static boolean armourerDebugRender;
