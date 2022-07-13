@@ -64,18 +64,18 @@ public class SkinOverriddenManager {
     }
 
     // if it returns true, it means model is overwritten.
-    public boolean hasModel(ISkinPartType partType) {
+    public boolean overrideModel(ISkinPartType partType) {
         return disabledModels.contains(partType);
     }
 
     // if it returns true, it means overlay is overwritten.
-    public boolean hasOverlay(ISkinPartType partType) {
+    public boolean overrideOverlay(ISkinPartType partType) {
         return disabledModels.contains(partType)
                 || disabledOverlays.contains(partType);
     }
 
     // if it returns true, it means equipment is overwritten.
-    public boolean hasEquipment(EquipmentSlotType slotType) {
+    public boolean overrideEquipment(EquipmentSlotType slotType) {
         return disabledEquipmentSlotsByPart.contains(slotType)
                 || disabledEquipmentSlots.contains(slotType);
     }
@@ -89,7 +89,7 @@ public class SkinOverriddenManager {
 
     public void willRender(Entity entity) {
         for (EquipmentSlotType slotType : ARMOUR_EQUIPMENT_SLOTS) {
-            if (!hasEquipment(slotType) || disabledEquipmentItems.containsKey(slotType)) {
+            if (!overrideEquipment(slotType) || disabledEquipmentItems.containsKey(slotType)) {
                 continue;
             }
             ItemStack itemStack = setItem(entity, slotType, ItemStack.EMPTY);

@@ -78,32 +78,32 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
     protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
         super.apply(entity, model, overriddenManager, renderData);
         // model
-        if (overriddenManager.hasModel(SkinPartTypes.BIPED_HEAD)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_HEAD)) {
             addModelOverride(accessor.getHead(model));
         }
-        if (overriddenManager.hasModel(SkinPartTypes.BIPED_CHEST)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_CHEST)) {
             addModelOverride(accessor.getBody(model));
         }
-        if (overriddenManager.hasModel(SkinPartTypes.BIPED_LEFT_ARM)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_ARM)) {
             addModelOverride(accessor.getLeftArm(model));
         }
-        if (overriddenManager.hasModel(SkinPartTypes.BIPED_RIGHT_ARM)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_ARM)) {
             addModelOverride(accessor.getRightArm(model));
         }
-        if (overriddenManager.hasModel(SkinPartTypes.BIPED_LEFT_LEG)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_LEG)) {
             addModelOverride(accessor.getLeftLeg(model));
         }
-        if (overriddenManager.hasModel(SkinPartTypes.BIPED_RIGHT_LEG)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_LEG)) {
             addModelOverride(accessor.getRightLeg(model));
         }
-        if (overriddenManager.hasModel(SkinPartTypes.BIPED_LEFT_FOOT)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_FOOT)) {
             addModelOverride(accessor.getLeftLeg(model));
         }
-        if (overriddenManager.hasModel(SkinPartTypes.BIPED_RIGHT_FOOT)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_FOOT)) {
             addModelOverride(accessor.getRightLeg(model));
         }
         // overlay
-        if (overriddenManager.hasOverlay(SkinPartTypes.BIPED_HEAD)) {
+        if (overriddenManager.overrideOverlay(SkinPartTypes.BIPED_HEAD)) {
             addModelOverride(accessor.getHat(model));
         }
     }

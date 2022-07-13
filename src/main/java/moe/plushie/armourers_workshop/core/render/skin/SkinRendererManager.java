@@ -143,6 +143,9 @@ public class SkinRendererManager {
         if (entityModel instanceof SlimeModel) {
             return createRenderer(entityProfile, entityRenderer, SlimeSkinRenderer::new);
         }
+        if (entityModel instanceof GhastModel) {
+            return createRenderer(entityProfile, entityRenderer, GhastSkinRenderer::new);
+        }
 
         return null;
     }

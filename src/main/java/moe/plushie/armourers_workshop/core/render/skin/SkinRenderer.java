@@ -145,6 +145,9 @@ public class SkinRenderer<T extends Entity, M extends Model> {
     }
 
     protected void addModelOverride(ModelRenderer modelRenderer) {
+        if (ModDebugger.modelOverride) {
+            return;
+        }
         if (!modelRenderer.visible) {
             return;
         }

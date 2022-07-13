@@ -7,15 +7,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ModDebugger {
 
-    public static int rx = 0;
-    public static int ry = 0;
-    public static int rz = 0;
-    public static int tx = 0;
-    public static int ty = 0;
-    public static int tz = 0;
-    public static int sx = 1;
-    public static int sy = 1;
-    public static int sz = 1;
+    public static float rx = 0;
+    public static float ry = 0;
+    public static float rz = 0;
+    public static float tx = 0;
+    public static float ty = 0;
+    public static float tz = 0;
+    public static float sx = 1;
+    public static float sy = 1;
+    public static float sz = 1;
 
     public static boolean skinnableBlock = false;
     public static boolean hologramProjectorBlock = false;
@@ -31,8 +31,10 @@ public class ModDebugger {
     public static boolean boundingBox = false;
 
     public static boolean mannequinCulling = false;
+
     public static boolean itemOverride = false;
     public static boolean handOverride = false;
+    public static boolean modelOverride = false;
 
     public static boolean textureBounds = false;
     public static boolean spin = false;

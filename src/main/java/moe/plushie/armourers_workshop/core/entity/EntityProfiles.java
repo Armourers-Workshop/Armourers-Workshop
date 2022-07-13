@@ -78,7 +78,7 @@ public class EntityProfiles {
             .add(SkinTypes.ARMOR_WINGS, EntityProfiles::mobSlots)
             .build();
 
-    public static final EntityProfile SLIME = Builder.create()
+    public static final EntityProfile ONLY_HEAD = Builder.create()
             .add(SkinTypes.ARMOR_HEAD, EntityProfiles::mobSlots)
             .build();
 
@@ -123,8 +123,10 @@ public class EntityProfiles {
         register(EntityType.PIGLIN_BRUTE, EntityProfiles.COMMON);
         register(EntityType.ZOMBIFIED_PIGLIN, EntityProfiles.COMMON);
 
-        register(EntityType.SLIME, EntityProfiles.SLIME);
+        register(EntityType.SLIME, EntityProfiles.ONLY_HEAD);
+        register(EntityType.GHAST, EntityProfiles.ONLY_HEAD);
         register(EntityType.CHICKEN, EntityProfiles.CHICKEN);
+
         register(EntityType.ARROW, EntityProfiles.PROJECTING);
         register(EntityType.TRIDENT, EntityProfiles.PROJECTING);
 

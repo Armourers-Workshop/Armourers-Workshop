@@ -20,10 +20,10 @@ public class IllagerSkinRenderer<T extends AbstractIllagerEntity, M extends Illa
     @Override
     protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
         super.apply(entity, model, overriddenManager, renderData);
-        if (overriddenManager.hasModel(SkinPartTypes.BIPED_LEFT_ARM)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_LEFT_ARM)) {
             addModelOverride(model.arms);
         }
-        if (overriddenManager.hasModel(SkinPartTypes.BIPED_RIGHT_ARM)) {
+        if (overriddenManager.overrideModel(SkinPartTypes.BIPED_RIGHT_ARM)) {
             addModelOverride(model.arms);
         }
     }
