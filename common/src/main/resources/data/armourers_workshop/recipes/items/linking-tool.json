@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " IT",
+    " XI",
+    "/  "
+  ],
+  "key": {
+    "I": {
+      "tag": "c:iron_ingots"
+    },
+    "X": {
+      "tag": "c:wooden_chests"
+    },
+    "T": {
+      "tag": "armourers_workshop:skin_cubes"
+    },
+    "/": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:linking-tool"
+  }
+}

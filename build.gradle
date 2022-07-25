@@ -1,237 +1,62 @@
-import net.minecraftforge.gradle.common.tasks.SignJar
-
-buildscript {
-    repositories {
-        maven { url = "https://maven.minecraftforge.net" }
-        maven { url = "https://repo.spongepowered.org/maven" }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "5.1.+", changing: true
-        classpath "org.spongepowered:mixingradle:0.7.+"
-    }
-}
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 plugins {
-    id "maven-publish"
-    id "idea"
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "0.12.0-SNAPSHOT" apply false
 }
 
-apply plugin: "net.minecraftforge.gradle"
-apply plugin: "org.spongepowered.mixin"
-apply plugin: "eclipse"
-
-if (version == "unspecified") {
-    version = "homebaked"
+architectury {
+    minecraft = rootProject.minecraft_version
 }
 
-String semver = "${mod_version}-${version}"
-group = artifact_group
-version = "${minecraft_version}-${semver}"
-archivesBaseName = artifact_basename
+subprojects {
+    apply plugin: "dev.architectury.loom"
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
-compileJava {
-    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
-}
+    loom {
+        silentMojangMappingsLicense()
+    }
 
-minecraft {
-    // The mappings can be changed at any time and must be in the following format.
-    // Channel:   Version:
-    // official   MCVersion             Official field/method names from Mojang mapping files
-    // parchment  YYYY.MM.DD-MCVersion  Open community-sourced parameter names and javadocs layered on top of official
-    //
-    // You must be aware of the Mojang license when using the 'official' or 'parchment' mappings.
-    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
-    //
-    // Parchment is an unofficial project maintained by ParchmentMC, separate from MinecraftForge
-    // Additional setup is needed to use their mappings: https://github.com/ParchmentMC/Parchment/wiki/Getting-Started
-    //
-    // Use non-default mappings at your own risk. They may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: mcp_channel, version: mcp_mappings
-
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            // The markers can be added/remove as needed separated by commas.
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            property 'forge.logging.console.level', 'debug'
-
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', 'armourers_workshop'
-
-            property 'mixin.env.disableRefMap', 'true'
-
-            arg "-mixin.config=armourers_workshop.mixin.json"
-
-            mods {
-                armourers_workshop {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', 'armourers_workshop'
-
-            mods {
-                armourers_workshop {
-                    source sourceSets.main
-                }
-            }
-        }
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        // The following line declares the mojmap mappings, you may use other mappings as well
+        mappings loom.officialMojangMappings()
+        // The following line declares the yarn mappings you may select this one as well.
+        // mappings "net.fabricmc:yarn:1.16.5+build.10:v2"
     }
 }
 
-repositories {
-    // Put repositories for dependencies here
-    // ForgeGradle automatically adds the Forge maven and Maven Central for you
-    maven { url = "https://maven.minecraftforge.net" }
-    maven { url = "https://repo.spongepowered.org/maven" }
-    maven { url = "https://modmaven.dev/" }
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
 
-    // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
-     flatDir {
-         dir 'run/mods-dev'
-     }
-}
-
-dependencies {
-    // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
-    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
-    // Real mod deobf dependency examples - these get remapped to your current mappings
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
-    // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
-
-    // Examples using mod jars from ./libs
-    // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-    compileOnly "mezz.jei:jei-${jei_minecraft_version}:${jei_version}:api"
-    //compileOnly "com.sk89q.worldedit:worldedit-core:7.2.5-SNAPSHOT"
-
-    //runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}")
-    //runtimeOnly fg.deobf("com.sk89q.worldedit:worldedit-mod:7.2.5-dist")
-    //runtimeOnly fg.deobf("noppes.npcs:CustomNPCs:1.16.5.20220622snapshot")
-
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-}
-
-mixin {
-    add sourceSets.main, "armourers_workshop.refmap.json"
-    config 'armourers_workshop.mixin.json'
-
-    debug.verbose = true
-    debug.export = true
-}
-
-processResources {
-    inputs.property('version', version)
-    filesMatching("META-INF/mods.toml") {
-        expand 'version': semver,
-                'minecraft_version': project.minecraft_version_range,
-                'forge_version_range': project.forge_version_range
+    if (version == "unspecified") {
+        version = "homebaked"
     }
-}
 
-// Example for how to get properties into the manifest for reading at runtime.
-jar {
-    manifest {
-        attributes(["Specification-Title"     : "Armourer's Workshop",
-                    "Specification-Vendor"    : "armourers_workshop",
-                    "Specification-Version"   : "${semver}", // We are version 1 of ourselves
-                    "Implementation-Title"    : "${project.name}",
-                    "Implementation-Version"  : "${semver}",
-                    "Implementation-Vendor"   : "armourers_workshop",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")])
-    }
-}
+    archivesBaseName = "${rootProject.archives_base_name}-${project.name}"
+    version = "${rootProject.mod_version}-${version}"
+    group = rootProject.maven_group
 
-task apiJar(type: Jar) {
-    classifier = "api"
-    from(sourceSets.main.allJava) {
-        include "moe/plushie/armourers_workshop/api/**"
-    }
-}
-
-task sourcesJar(type: Jar) {
-    classifier = "sources"
-    from(sourceSets.main.allJava)
-}
-
-task signJar(type: SignJar, dependsOn: "reobfJar") {
-    def encodedKeyStore = System.getenv('AW_SIGN_KEYSTORE');
-    onlyIf {
-        encodedKeyStore != null
-    }
-    if (encodedKeyStore != null) {
-        keyStore = new File(getTemporaryDir(), "aw.jks").toString();
-        alias = System.getenv("AW_SIGN_ALIAS")
-        storePass = System.getenv("AW_SIGN_STOREPASS")
-        keyPass = System.getenv("AW_SIGN_KEYPASS")
-        inputFile = jar.archivePath
-        outputFile = jar.archivePath
-        file(keyStore).withOutputStream { output ->
-            output.write(Base64.getDecoder().decode(encodedKeyStore))
-        }
-    }
-    doLast {
-        delete keyStore
-    }
-}
-
-// Example configuration to allow publishing using the maven-publish plugin
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy("signJar")
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-// publish.dependsOn('reobfJar')
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-}
-
-artifacts {
-    archives sourcesJar
-    archives apiJar
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
     repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
+        // Add repositories to retrieve artifacts from in here.
+        // You should only use this when depending on other mods because
+        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+        // for more information about repositories.
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+
+        // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
+        // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
+        // We'll use that if it's available, but otherwise we'll use the older option.
+        def targetVersion = 8
+        if (JavaVersion.current().isJava9Compatible()) {
+            options.release = targetVersion
         }
+    }
+
+    java {
+        withSourcesJar()
     }
 }

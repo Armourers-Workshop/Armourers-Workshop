@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RGB",
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "R": {
+      "tag": "c:red_dyes"
+    },
+    "G": {
+      "tag": "c:green_dyes"
+    },
+    "B": {
+      "tag": "c:blue_dyes"
+    },
+    "X": {
+      "tag": "armourers_workshop:skin_cubes"
+    },
+    "#": {
+      "tag": "c:stone"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:colour-mixer"
+  }
+}

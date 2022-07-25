@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " M ",
+    "###",
+    "#X#"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:iron_ingots"
+    },
+    "X": {
+      "tag": "armourers_workshop:skin_cubes"
+    },
+    "#": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:outfit-maker"
+  }
+}

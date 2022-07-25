@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " BT",
+    " XS",
+    "/  "
+  ],
+  "key": {
+    "X": {
+      "tag": "c:iron_ingots"
+    },
+    "B": {
+      "item": "armourers_workshop:dye-bottle"
+    },
+    "T": {
+      "tag": "armourers_workshop:skin_cubes"
+    },
+    "S": {
+      "item": "armourers_workshop:skin-template"
+    },
+    "/": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:wand-of-style"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " WT",
+    " XB",
+    "/  "
+  ],
+  "key": {
+    "W": {
+      "tag": "c:white_dyes"
+    },
+    "B": {
+      "tag": "c:black_dyes"
+    },
+    "X": {
+      "tag": "c:iron_ingots"
+    },
+    "T": {
+      "tag": "armourers_workshop:skin_cubes"
+    },
+    "/": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:blending-tool"
+  }
+}

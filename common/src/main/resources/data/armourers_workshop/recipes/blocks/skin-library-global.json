@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#=#",
+    "NXN",
+    "###"
+  ],
+  "key": {
+    "N": {
+      "item": "minecraft:bookshelf"
+    },
+    "=": {
+      "tag": "c:ender_pearls"
+    },
+    "X": {
+      "tag": "armourers_workshop:skin_cubes"
+    },
+    "#": {
+      "tag": "c:stone"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:skin-library-global"
+  }
+}

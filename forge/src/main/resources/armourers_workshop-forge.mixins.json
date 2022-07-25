@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "moe.plushie.armourers_workshop.init.mixin.forge",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+  ],
+  "mixins": [
+    "ForgeLivingEntityMixin",
+    "ForgeHooksMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

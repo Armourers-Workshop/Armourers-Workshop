@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " XT",
+    " XX",
+    "/  "
+  ],
+  "key": {
+    "X": {
+      "tag": "c:iron_ingots"
+    },
+    "T": {
+      "tag": "armourers_workshop:skin_cubes"
+    },
+    "/": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:armourers-hammer"
+  }
+}

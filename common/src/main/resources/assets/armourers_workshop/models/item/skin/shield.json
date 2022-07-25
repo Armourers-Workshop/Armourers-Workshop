@@ -1,0 +1,33 @@
+{
+  "parent": "armourers_workshop:item/skin/unknown",
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 2, 2],
+      "scale": [ 1, 1, 1 ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 0, 2, 2],
+      "scale": [ 1, 1, 1 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [ -90, -85, -90 ],
+      "translation": [ 4, 8, 2],
+      "scale": [ 1.25, 1.25, 1.25 ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [ -90, -85, -90 ],
+      "translation": [ 4, 8, 2],
+      "scale": [ 1.25, 1.25, 1.25 ]
+    }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "blocking": 1
+      },
+      "model": "armourers_workshop:item/skin/shield_blocking"
+    }
+  ]
+}

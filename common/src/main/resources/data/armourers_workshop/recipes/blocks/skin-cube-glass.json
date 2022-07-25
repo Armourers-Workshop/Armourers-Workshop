@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "key": {
+    "X": {
+      "tag": "c:glass"
+    },
+    "#": {
+      "item": "armourers_workshop:skin-cube"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:skin-cube-glass",
+    "count": 8
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    " XC",
+    "/  "
+  ],
+  "key": {
+    "X": {
+      "tag": "c:iron_ingots"
+    },
+    "C": {
+      "tag": "armourers_workshop:skin_cubes"
+    },
+    "/": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:paint-roller"
+  }
+}

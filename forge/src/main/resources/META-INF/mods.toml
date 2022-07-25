@@ -1,0 +1,29 @@
+modLoader = "javafml"
+loaderVersion = "[36,)"
+issueTrackerURL = "https://github.com/Armourers-Workshop/Armourers-Workshop/issues"
+displayURL = "https://github.com/Armourers-Workshop/Armourers-Workshop"
+logoFile = "icon.png"
+license = "ALL RIGHTS RESERVED"
+
+[[mods]]
+modId = "armourers_workshop"
+version = "${version}"
+displayName = "Armourer's Workshop"
+authors = "RiskyKen, SAGESSE"
+description = '''
+Minecraft armour customization mod.
+'''
+
+[[dependencies.armourers_workshop]]
+modId = "forge"
+mandatory = true
+versionRange = "[36,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.armourers_workshop]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.16.5,)"
+ordering = "NONE"
+side = "BOTH"

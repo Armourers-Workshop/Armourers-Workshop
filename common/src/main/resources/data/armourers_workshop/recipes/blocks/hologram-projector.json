@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#=#",
+    "#X#",
+    "#H#"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:beacon"
+    },
+    "H": {
+      "tag": "c:iron_blocks"
+    },
+    "=": {
+      "tag": "armourers_workshop:skin_cubes"
+    },
+    "#": {
+      "tag": "c:iron_ingots"
+    }
+  },
+  "result": {
+    "item": "armourers_workshop:hologram-projector"
+  }
+}

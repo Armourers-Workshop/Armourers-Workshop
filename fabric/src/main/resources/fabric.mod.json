@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "armourers_workshop",
+  "version": "${version}",
+  "name": "Armourer's Workshop",
+  "description": "Minecraft armour customization mod.",
+  "authors": [
+    "RiskyKen",
+    "SAGESSE"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Armourers-Workshop/Armourers-Workshop",
+    "sources": "https://github.com/Armourers-Workshop/Armourers-Workshop"
+  },
+  "license": "ALL RIGHTS RESERVED",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "moe.plushie.armourers_workshop.init.CommonEventDispatcher"
+    ],
+    "client": [
+      "moe.plushie.armourers_workshop.init.ClientEventDispatcher"
+    ]
+  },
+  "mixins": [
+    "armourers_workshop-fabric.mixins.json",
+    "armourers_workshop-common.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.16.5"
+  }
+}
