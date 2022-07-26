@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.builder.item.impl;
 
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
+import moe.plushie.armourers_workshop.builder.network.UpdateBlockColorPacket;
 import moe.plushie.armourers_workshop.builder.other.SkinCubeApplier;
 import moe.plushie.armourers_workshop.builder.other.SkinCubePaintingEvent;
-import moe.plushie.armourers_workshop.core.network.UpdateBlockColorPacket;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;

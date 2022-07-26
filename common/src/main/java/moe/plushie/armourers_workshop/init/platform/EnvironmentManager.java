@@ -1,9 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import moe.plushie.armourers_workshop.api.other.config.IConfigBuilder;
-import moe.plushie.armourers_workshop.api.other.config.IConfigSpec;
-import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.api.config.IConfigSpec;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 
 import java.io.File;
 

@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.ext.MatrixX4f;
+import moe.plushie.armourers_workshop.utils.ext.ExtendedMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
@@ -345,7 +345,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         }
         float f = 1 / 16f;
         Rectangle3f box = bakedSkin.getRenderBounds(null, null, null, null).copy();
-        box.mul(MatrixX4f.createScaleMatrix(f, -f, f));
+        box.mul(ExtendedMatrix4f.createScaleMatrix(f, -f, f));
         return box;
     }
 

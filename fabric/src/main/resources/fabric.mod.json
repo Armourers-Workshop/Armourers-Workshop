@@ -28,7 +28,7 @@
     "armourers_workshop-common.mixins.json"
   ],
   "depends": {
-    "fabric": "*",
+    "fabric": ">=0.42.0",
     "minecraft": ">=1.16.5"
   }
 }

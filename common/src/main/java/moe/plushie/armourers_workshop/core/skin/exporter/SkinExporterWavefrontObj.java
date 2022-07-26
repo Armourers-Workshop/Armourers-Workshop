@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
-import moe.plushie.armourers_workshop.utils.ext.PoseStackX;
+import moe.plushie.armourers_workshop.utils.ext.ExtendedPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
@@ -88,7 +88,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
 
         int partIndex = 0;
         for (Task task : tasks) {
-            PoseStackX matrixStack = PoseStackX.create();
+            ExtendedPoseStack matrixStack = ExtendedPoseStack.create();
             SkinPart skinPart = task.skinPart;
             // apply the render context matrix.
             matrixStack.scale(scale, scale, scale);
@@ -110,7 +110,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         createMtlFile(filePath, filename);
     }
 
-    private void exportPart(PoseStackX matrixStack, ArrayList<SkinCubeFace> allFaces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, int partIndex) throws IOException {
+    private void exportPart(ExtendedPoseStack matrixStack, ArrayList<SkinCubeFace> allFaces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, int partIndex) throws IOException {
         // user maybe need apply some effects for the glass or glowing blocks,
         // so we need split the glass and glowing block into separate layers.
         HashMap<ISkinCube, ArrayList<SkinCubeFace>> faces = new HashMap<>();
@@ -128,7 +128,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         }
     }
 
-    private void exportLayer(PoseStackX matrixStack, ArrayList<SkinCubeFace> faces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, String layer, int partIndex) throws IOException {
+    private void exportLayer(ExtendedPoseStack matrixStack, ArrayList<SkinCubeFace> faces, SkinPart skinPart, Skin skin, OutputStreamWriter os, TextureBuilder texture, String layer, int partIndex) throws IOException {
         ModLog.debug("export {} layer of {}:{}, faces: {}", layer, partIndex, skinPart.getType(), faces.size());
 
         os.write("o " + partIndex + "-" + skinPart.getType().getRegistryName().getPath() + "-" + layer + CRLF);
@@ -174,13 +174,13 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         }
     }
 
-    private void writeVert(PoseStackX matrixStack, OutputStreamWriter os, float x, float y, float z) throws IOException {
+    private void writeVert(ExtendedPoseStack matrixStack, OutputStreamWriter os, float x, float y, float z) throws IOException {
         Vector4f q = new Vector4f(x, y, z, 1);
         matrixStack.applyPose(q);
         os.write(String.format("v %s %s %s", f2s(q.x()), f2s(q.y()), f2s(q.z())) + CRLF);
     }
 
-    private void writeNormal(PoseStackX matrixStack, OutputStreamWriter os, float x, float y, float z) throws IOException {
+    private void writeNormal(ExtendedPoseStack matrixStack, OutputStreamWriter os, float x, float y, float z) throws IOException {
         Vector3f q = new Vector3f(x, y, z);
         matrixStack.applyNormal(q);
         os.write(String.format("vn %s %s %s", f2s(q.x()), f2s(q.y()), f2s(q.z())) + CRLF);

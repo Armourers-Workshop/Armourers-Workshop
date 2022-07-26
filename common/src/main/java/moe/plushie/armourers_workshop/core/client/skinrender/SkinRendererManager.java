@@ -20,6 +20,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Function;
 
@@ -28,35 +29,16 @@ public class SkinRendererManager {
 
     private static final SkinRendererManager INSTANCE = new SkinRendererManager();
 
-    public static void init() {
-        EntityRenderDispatcher entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
-        if (entityRenderManager == null) {
-            RenderSystem.recordRenderCall(SkinRendererManager::init);
-            return;
-        }
-        SkinRendererManager skinRendererManager = getInstance();
-        for (PlayerRenderer playerRenderer : entityRenderManager.playerRenderers.values()) {
-            skinRendererManager.setupRenderer(EntityType.PLAYER, playerRenderer, true);
-        }
-
-        entityRenderManager.renderers.forEach((entityType1, entityRenderer) -> {
-            if (entityRenderer instanceof LivingEntityRenderer<?, ?>) {
-                skinRendererManager.setupRenderer(entityType1, (LivingEntityRenderer<?, ?>) entityRenderer, true);
-            }
-        });
-    }
-
-    public static SkinRendererManager getInstance() {
-        return INSTANCE;
-    }
+    private ArrayList<Runnable> pendingTasks = new ArrayList<>();
 
     public <T extends Entity, M extends Model> void register(EntityType<T> entityType, EntityProfile entityProfile) {
-        if (entityProfile == null) {
+        // if the manager not ready, register again later.
+        if (pendingTasks != null) {
+            pendingTasks.add(() -> register(entityType, entityProfile));
             return;
         }
         EntityRenderDispatcher entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         if (entityRenderManager == null) {
-            RenderSystem.recordRenderCall(() -> register(entityType, entityProfile));
             return;
         }
         // Add our own custom armor layer to the various player renderers.
@@ -197,5 +179,32 @@ public class SkinRendererManager {
         }
         SkinRenderer<T, M> skinRenderer = getRenderer(entityType, livingRenderer.getModel(), livingRenderer);
         livingRenderer.addLayer(new SkinWardrobeLayer<>(skinRenderer, livingRenderer));
+    }
+
+    public static SkinRendererManager getInstance() {
+        return INSTANCE;
+    }
+
+    public static void init() {
+        EntityRenderDispatcher entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
+        if (entityRenderManager == null) {
+            RenderSystem.recordRenderCall(SkinRendererManager::init);
+            return;
+        }
+        SkinRendererManager skinRendererManager = getInstance();
+        for (PlayerRenderer playerRenderer : entityRenderManager.playerRenderers.values()) {
+            skinRendererManager.setupRenderer(EntityType.PLAYER, playerRenderer, true);
+        }
+
+        entityRenderManager.renderers.forEach((entityType1, entityRenderer) -> {
+            if (entityRenderer instanceof LivingEntityRenderer<?, ?>) {
+                skinRendererManager.setupRenderer(entityType1, (LivingEntityRenderer<?, ?>) entityRenderer, true);
+            }
+        });
+
+        // execute the pending tasks.
+        ArrayList<Runnable> tasks = skinRendererManager.pendingTasks;
+        skinRendererManager.pendingTasks = null;
+        tasks.forEach(Runnable::run);
     }
 }

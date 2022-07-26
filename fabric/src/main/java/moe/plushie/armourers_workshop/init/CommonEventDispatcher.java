@@ -21,8 +21,8 @@ import moe.plushie.armourers_workshop.init.platform.fabric.builder.ConfigBuilder
 import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityClimbingEvents;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.PlayerBlockPlaceEvents;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.fabric.NetworkManagerImpl;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.*;

@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.capability;
 
-import moe.plushie.armourers_workshop.api.ICapabilityType;
+import moe.plushie.armourers_workshop.api.other.ICapabilityType;
 import moe.plushie.armourers_workshop.api.common.INBTRepresentable;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -11,7 +11,6 @@ import net.minecraft.world.entity.Entity;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Optional;
 import java.util.function.Function;

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.ICapabilityType;
+import moe.plushie.armourers_workshop.api.other.ICapabilityType;
 import moe.plushie.armourers_workshop.api.other.builder.ICapabilityTypeBuilder;
 import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.init.capability.CapabilityStorage;

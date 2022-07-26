@@ -4,11 +4,11 @@ import io.netty.buffer.Unpooled;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.other.network.IClientPacketHandler;
-import moe.plushie.armourers_workshop.api.other.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
-import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -124,10 +124,7 @@ public class NetworkManagerImpl {
 
         public void onServerEvent(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) {
             IServerPacketHandler packetHandler = this;
-            merge(player.getUUID(), buf, payload -> {
-                CustomPacket packet = CustomPacket.fromBuffer(payload);
-                server.execute(() -> packet.accept(packetHandler, player));
-            });
+            merge(player.getUUID(), buf, packet -> server.execute(() -> packet.accept(packetHandler, player)));
         }
 
         @Environment(value = EnvType.CLIENT)
@@ -143,13 +140,10 @@ public class NetworkManagerImpl {
                 return;
             }
             IClientPacketHandler packetHandler = this;
-            merge(player.getUUID(), buf, payload -> {
-                CustomPacket packet = CustomPacket.fromBuffer(payload);
-                client.execute(() -> packet.accept(packetHandler, player));
-            });
+            merge(player.getUUID(), buf, packet -> client.execute(() -> packet.accept(packetHandler, player)));
         }
 
-        public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<FriendlyByteBuf> consumer) {
+        public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<CustomPacket> consumer) {
             splitter.merge(uuid, buffer, consumer);
         }
 

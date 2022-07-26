@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.init.platform.PreferenceManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 

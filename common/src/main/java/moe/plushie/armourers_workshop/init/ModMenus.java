@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.api.other.menu.IMenuProvider;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
-import moe.plushie.armourers_workshop.api.other.builder.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.other.builder.IMenuTypeBuilder;
+import moe.plushie.armourers_workshop.api.other.menu.IMenuProvider;
 import moe.plushie.armourers_workshop.builder.client.gui.ColorMixerScreen;
 import moe.plushie.armourers_workshop.builder.client.gui.OutfitMakerScreen;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.ArmourerScreen;

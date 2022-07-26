@@ -27,7 +27,7 @@ public class ModCompatible {
         // Noppes:
         // I disabled that, because there was some mod in the past that had a disarm enchantment, which was also disarming my npcs
         // and getHandSlots isnt really used for anything in minecrafts code, so I removed it
-        if (entity instanceof LivingEntity && entity.getType() == customNPCEntityType) {
+        if (entity.getType() == customNPCEntityType && entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity;
             return Arrays.asList(livingEntity.getMainHandItem(), livingEntity.getOffhandItem());
         }

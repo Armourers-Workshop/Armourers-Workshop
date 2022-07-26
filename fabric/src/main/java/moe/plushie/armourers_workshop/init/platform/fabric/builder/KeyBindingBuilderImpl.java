@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import moe.plushie.armourers_workshop.api.other.key.IKeyBinding;
-import moe.plushie.armourers_workshop.api.other.key.IKeyModifier;
+import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
+import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 import moe.plushie.armourers_workshop.api.other.builder.IKeyBindingBuilder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.ext.KeyModifierX;
+import moe.plushie.armourers_workshop.utils.ext.ExtendedKeyModifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -22,7 +22,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
     private static final ArrayList<Pair<KeyMapping, Supplier<Runnable>>> INPUTS = new ArrayList<>();
 
     private String key;
-    private IKeyModifier modifier = KeyModifierX.NONE;
+    private IKeyModifier modifier = ExtendedKeyModifier.NONE;
     private String category = "";
     private Supplier<Runnable> handler;
 
@@ -53,21 +53,12 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
         String nameKey = "keys.armourers_workshop." + name;
         String categoryKey = "keys.armourers_workshop." + category;
         InputConstants.Key input = InputConstants.getKey(key);
-        KeyMapping binding = new OnceKeyBinding(
-                nameKey,
-                InputConstants.Type.KEYSYM,
-                input.getValue(),
-                categoryKey
-        );
+        KeyMapping binding = new OnceKeyBinding(nameKey, InputConstants.Type.KEYSYM, input.getValue(), categoryKey);
         if (handler != null) {
             INPUTS.add(Pair.of(binding, handler));
         }
         KeyBindingHelper.registerKeyBinding(binding);
         IKeyBinding binding1 = new IKeyBinding() {
-            @Override
-            public boolean consumeClick() {
-                return binding.consumeClick();
-            }
 
             @Override
             public Component getKeyName() {
@@ -76,7 +67,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
 
             @Override
             public IKeyModifier getKeyModifier() {
-                return KeyModifierX.NONE;
+                return ExtendedKeyModifier.NONE;
             }
         };
         return ObjectUtils.unsafeCast(binding1);

@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.data;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import moe.plushie.armourers_workshop.api.IResultHandler;
+import moe.plushie.armourers_workshop.api.other.IResultHandler;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.Constants;

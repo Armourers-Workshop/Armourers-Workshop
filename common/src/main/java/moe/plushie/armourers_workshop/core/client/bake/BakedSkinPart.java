@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
-import moe.plushie.armourers_workshop.utils.ext.VoxelShapeX;
+import moe.plushie.armourers_workshop.utils.ext.ExtendedVoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
@@ -87,7 +87,7 @@ public class BakedSkinPart {
         return quads.getColorInfo();
     }
 
-    public VoxelShapeX getRenderShape() {
+    public ExtendedVoxelShape getRenderShape() {
         return quads.getRenderShape();
     }
 

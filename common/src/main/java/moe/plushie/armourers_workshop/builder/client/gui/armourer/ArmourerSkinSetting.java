@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.panel.*;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
-import moe.plushie.armourers_workshop.core.network.UpdateArmourerPacket;
+import moe.plushie.armourers_workshop.builder.network.UpdateArmourerPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.other.network.IClientPacketHandler;
-import moe.plushie.armourers_workshop.api.other.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.minecraft.client.Minecraft;
@@ -82,10 +82,7 @@ public class NetworkManagerImpl {
                 return;
             }
             IServerPacketHandler packetHandler = this;
-            merge(player.getUUID(), event.getPayload(), payload -> {
-                CustomPacket packet = CustomPacket.fromBuffer(payload);
-                context.enqueueWork(() -> packet.accept(packetHandler, player));
-            });
+            merge(player.getUUID(), event.getPayload(), packet -> context.enqueueWork(() -> packet.accept(packetHandler, player)));
             context.setPacketHandled(true);
         }
 
@@ -101,14 +98,11 @@ public class NetworkManagerImpl {
             }
             NetworkEvent.Context context = event.getSource().get();
             IClientPacketHandler packetHandler = this;
-            merge(player.getUUID(), event.getPayload(), payload -> {
-                CustomPacket packet = CustomPacket.fromBuffer(payload);
-                context.enqueueWork(() -> packet.accept(packetHandler, player));
-            });
+            merge(player.getUUID(), event.getPayload(), packet -> context.enqueueWork(() -> packet.accept(packetHandler, player)));
             context.setPacketHandled(true);
         }
 
-        public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<FriendlyByteBuf> consumer) {
+        public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<CustomPacket> consumer) {
             splitter.merge(uuid, buffer, consumer);
         }
         public void split(final CustomPacket message, NetworkDirection dir, Consumer<Packet<?>> consumer) {

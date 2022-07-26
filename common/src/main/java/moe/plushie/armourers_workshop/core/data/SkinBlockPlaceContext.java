@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.ext.MatrixX4f;
+import moe.plushie.armourers_workshop.utils.ext.ExtendedMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -237,7 +237,7 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
             ArrayList<SkinMarker> newMarkerList = new ArrayList<>();
             for (SkinMarker marker : markerList) {
                 Vector4f f = new Vector4f(marker.x, marker.y, marker.z, 1.0f);
-                f.transform(MatrixX4f.createScaleMatrix(-1, -1, 1));
+                f.transform(ExtendedMatrix4f.createScaleMatrix(-1, -1, 1));
                 f.transform(q);
                 int x = Math.round(f.x());
                 int y = Math.round(f.y());

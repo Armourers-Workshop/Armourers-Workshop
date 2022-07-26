@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.other.config.IConfigSpec;
-import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.api.config.IConfigSpec;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.ConfigBuilderImpl;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;

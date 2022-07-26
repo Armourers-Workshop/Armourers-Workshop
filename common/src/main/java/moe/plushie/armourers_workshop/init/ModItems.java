@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.api.other.builder.IItemBuilder;
 import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.other.builder.IItemBuilder;
 import moe.plushie.armourers_workshop.builder.client.render.SkinCubeItemRenderer;
 import moe.plushie.armourers_workshop.builder.item.*;
 import moe.plushie.armourers_workshop.core.client.render.MannequinItemRenderer;

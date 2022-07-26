@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.other.config.IConfigBuilder;
-import moe.plushie.armourers_workshop.api.other.config.IConfigSpec;
-import moe.plushie.armourers_workshop.api.other.config.IConfigValue;
+import moe.plushie.armourers_workshop.api.config.IConfigBuilder;
+import moe.plushie.armourers_workshop.api.config.IConfigSpec;
+import moe.plushie.armourers_workshop.api.config.IConfigValue;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.config.FabricConfigSpec;

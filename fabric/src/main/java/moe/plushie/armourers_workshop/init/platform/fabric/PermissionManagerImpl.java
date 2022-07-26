@@ -12,6 +12,7 @@ public class PermissionManagerImpl {
     }
 
     public static boolean hasPermission(GameProfile profile, String node, @Nullable PermissionManager.PlayerContext context) {
+        // TODO: @SAGESSE
         return true;
     }
 }

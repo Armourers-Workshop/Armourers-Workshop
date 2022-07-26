@@ -4,7 +4,7 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Quaternion;
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.ext.MatrixX3f;
+import moe.plushie.armourers_workshop.utils.ext.ExtendedMatrix3f;
 import net.minecraft.core.Position;
 
 @SuppressWarnings("unused")
@@ -179,7 +179,7 @@ public final class Vector3f implements Position {
         float f = this.x;
         float f1 = this.y;
         float f2 = this.z;
-        float[][] buf = MatrixX3f.toFloatBuffer(p_229188_1_);
+        float[][] buf = ExtendedMatrix3f.toFloatBuffer(p_229188_1_);
         this.x = buf[0][0] * f + buf[0][1] * f1 + buf[0][2] * f2;
         this.y = buf[1][0] * f + buf[1][1] * f1 + buf[1][2] * f2;
         this.z = buf[2][0] * f + buf[2][1] * f1 + buf[2][2] * f2;

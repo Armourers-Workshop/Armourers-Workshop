@@ -16,7 +16,7 @@ import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.platform.TransformationProvider;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
-import moe.plushie.armourers_workshop.utils.ext.PoseStackX;
+import moe.plushie.armourers_workshop.utils.ext.ExtendedPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -71,7 +71,7 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         ITransform<T, M> op = getPartTransform(entity, model, itemStack, transformType, bakedPart);
         if (op != null && model != null) {
             op.apply(matrixStack, entity, model, itemStack, transformType, bakedPart);
-            SkinUtils.apply(PoseStackX.wrap(matrixStack), bakedPart.getPart(), partialTicks, entity);
+            SkinUtils.apply(ExtendedPoseStack.wrap(matrixStack), bakedPart.getPart(), partialTicks, entity);
         }
     }
 

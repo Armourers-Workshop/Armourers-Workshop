@@ -19,8 +19,8 @@ import moe.plushie.armourers_workshop.init.platform.fabric.builder.KeyBindingBui
 import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderSpecificArmEvents;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipCallback;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
-import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickHandler;

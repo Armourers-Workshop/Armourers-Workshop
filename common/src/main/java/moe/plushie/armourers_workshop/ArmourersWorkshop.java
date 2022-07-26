@@ -3,13 +3,12 @@ package moe.plushie.armourers_workshop;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
-import moe.plushie.armourers_workshop.core.network.NetworkHandler;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.*;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +31,7 @@ public class ArmourersWorkshop {
         EnvironmentExecutor.setupOn(EnvironmentType.COMMON, () -> () -> {
             // setup network manager.
             NetworkManager.init("aw2", "3");
-            NetworkHandler.init();
+            ModPackets.init();
 
             ModHolidays.init();
             ModPermissions.init();

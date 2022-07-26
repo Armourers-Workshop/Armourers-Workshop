@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.api.other.key.IKeyBinding;
+import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.other.builder.IKeyBindingBuilder;
 import moe.plushie.armourers_workshop.init.client.InputMotionHandler;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
-import moe.plushie.armourers_workshop.utils.ext.KeyModifierX;
+import moe.plushie.armourers_workshop.utils.ext.ExtendedKeyModifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -15,7 +15,7 @@ public class ModKeyBindings {
     public static IKeyBinding UNDO_KEY = create("key.keyboard.z").bind(() -> InputMotionHandler::sendUndo).build("undo");
 
     private static IKeyBindingBuilder<IKeyBinding> create(String key) {
-        return BuilderManager.getInstance().createKeyBindingBuilder(key).category("category").modifier(KeyModifierX.CONTROL);
+        return BuilderManager.getInstance().createKeyBindingBuilder(key).category("category").modifier(ExtendedKeyModifier.CONTROL);
     }
 
     public static void init() {

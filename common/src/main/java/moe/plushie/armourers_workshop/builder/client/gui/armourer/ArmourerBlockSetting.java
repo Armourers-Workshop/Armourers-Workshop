@@ -9,8 +9,8 @@ import moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog.Armoure
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog.ArmourerCopyDialog;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog.ArmourerReplaceDialog;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
+import moe.plushie.armourers_workshop.builder.network.UpdateArmourerPacket;
 import moe.plushie.armourers_workshop.core.client.gui.widget.AWExtendedButton;
-import moe.plushie.armourers_workshop.core.network.UpdateArmourerPacket;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;

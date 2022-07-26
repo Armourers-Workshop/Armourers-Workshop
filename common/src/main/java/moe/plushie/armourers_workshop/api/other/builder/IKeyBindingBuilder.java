@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.api.other.builder;
 
-import moe.plushie.armourers_workshop.api.other.key.IKeyBinding;
-import moe.plushie.armourers_workshop.api.other.key.IKeyModifier;
+import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
+import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 
 import java.util.function.Supplier;
 

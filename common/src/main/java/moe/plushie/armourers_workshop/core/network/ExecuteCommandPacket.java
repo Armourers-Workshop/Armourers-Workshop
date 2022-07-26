@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.network;
 
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
-import moe.plushie.armourers_workshop.api.other.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
@@ -22,7 +22,6 @@ public class ExecuteCommandPacket extends CustomPacket {
     private final Mode mode;
     private final String key;
     private final Object value;
-
 
     public ExecuteCommandPacket(Class<?> object, String key, Object value, Mode mode) {
         this.object = object;

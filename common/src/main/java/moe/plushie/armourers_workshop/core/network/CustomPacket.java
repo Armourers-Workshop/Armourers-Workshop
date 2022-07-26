@@ -1,23 +1,26 @@
 package moe.plushie.armourers_workshop.core.network;
 
-import moe.plushie.armourers_workshop.api.other.network.IClientPacketHandler;
-import moe.plushie.armourers_workshop.api.other.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.HashMap;
+import java.util.function.Function;
+
 public class CustomPacket {
 
-    /**
-     * Sadly {@link FriendlyByteBuf#readUtf()} gets inlined by Proguard which means it's not available on the Server.
-     * This field has the default string length that is used for writeString, which then also should be used for
-     * readString when it has no special length requirements.
-     */
-    public static final int MAX_STRING_LENGTH = 32767;
+    private static final HashMap<Integer, Function<FriendlyByteBuf, CustomPacket>> DECODERS = new HashMap<>();
+    private static final HashMap<Class<? extends CustomPacket>, Integer> ENCODERS = new HashMap<>();
 
-    public static CustomPacket fromBuffer(final FriendlyByteBuf buffer) {
-        final int packetType = buffer.readInt();
-        return NetworkHandler.PacketTypes.getPacket(packetType).parsePacket(buffer);
+    public static void register(int id, Class<? extends CustomPacket> clazz, Function<FriendlyByteBuf, CustomPacket> decoder) {
+        ENCODERS.put(clazz, id);
+        DECODERS.put(id, decoder);
+    }
+
+    public static Function<FriendlyByteBuf, CustomPacket> getPacketType(int id) {
+        return DECODERS.get(id);
     }
 
     public void accept(final IServerPacketHandler packetHandler, final ServerPlayer player) {
@@ -32,6 +35,6 @@ public class CustomPacket {
     }
 
     public int getPacketID() {
-        return NetworkHandler.PacketTypes.getID(this.getClass()).ordinal();
+        return ENCODERS.getOrDefault(this.getClass(), -1);
     }
 }

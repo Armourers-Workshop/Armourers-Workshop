@@ -29,8 +29,7 @@ public class PacketSplitter {
     public void split(final CustomPacket message, Function<FriendlyByteBuf, Packet<?>> builder, int partSize, Consumer<Packet<?>> consumer) {
         executor.submit(() -> {
             FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
-            buffer.writeInt(message.getPacketID());
-            message.encode(buffer);
+            writePacket(message, buffer);
             buffer.capacity(buffer.readableBytes());
             // when packet exceeds the part size, it will be split automatically
             int bufferSize = buffer.readableBytes();
@@ -58,7 +57,7 @@ public class PacketSplitter {
         });
     }
 
-    public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<FriendlyByteBuf> consumer) {
+    public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<CustomPacket> consumer) {
         int packetState = buffer.getInt(0);
         if (packetState < 0) {
             ArrayList<ByteBuf> playerReceivedBuffers = receivedBuffers.computeIfAbsent(uuid, k -> new ArrayList<>());
@@ -75,20 +74,34 @@ public class PacketSplitter {
                     // ownership will transfer to full buffer, so don't call release again.
                     FriendlyByteBuf full = new FriendlyByteBuf(Unpooled.wrappedBuffer(playerReceivedBuffers.toArray(new ByteBuf[0])));
                     playerReceivedBuffers.clear();
-                    consumer.accept(full);
+                    consumer.accept(readPacket(full));
                     full.release();
                 });
             }
             return;
         }
         if (buffer.readableBytes() < 3000) { // 3k
-            consumer.accept(buffer);
+            consumer.accept(readPacket(buffer));
             return;
         }
         ByteBuf receivedBuf = buffer.retainedDuplicate(); // we need to keep writer/reader index
         executor.submit(() -> {
-            consumer.accept(new FriendlyByteBuf(receivedBuf));
+            consumer.accept(readPacket(new FriendlyByteBuf(receivedBuf)));
             receivedBuf.release();
         });
+    }
+
+    private void writePacket(CustomPacket message, FriendlyByteBuf buffer) {
+        buffer.writeInt(message.getPacketID());
+        message.encode(buffer);
+    }
+
+    private CustomPacket readPacket(FriendlyByteBuf buffer) {
+        int packetId = buffer.readInt();
+        Function<FriendlyByteBuf, CustomPacket> decoder = CustomPacket.getPacketType(packetId);
+        if (decoder != null) {
+            return decoder.apply(buffer);
+        }
+        throw new UnsupportedOperationException("This packet ( " + packetId + ") does not support in this version.");
     }
 }
