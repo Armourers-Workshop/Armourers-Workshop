@@ -1,18 +1,15 @@
 package moe.plushie.armourers_workshop.init.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import moe.plushie.armourers_workshop.api.ICapabilityType;
-import moe.plushie.armourers_workshop.api.common.IMenuExtendFactory;
+import moe.plushie.armourers_workshop.api.other.builder.*;
+import moe.plushie.armourers_workshop.api.other.config.IConfigBuilder;
+import moe.plushie.armourers_workshop.api.other.menu.IMenuProvider;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
-import moe.plushie.armourers_workshop.api.key.IKeyBinding;
-import moe.plushie.armourers_workshop.api.registry.*;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import moe.plushie.armourers_workshop.api.other.key.IKeyBinding;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -46,8 +43,10 @@ public class BuilderManager {
 
         <T extends Entity> IEntityTypeBuilder<T> createEntityTypeBuilder(EntityType.EntityFactory<T> entityFactory, MobCategory mobCategory);
 
-        <T extends AbstractContainerMenu, V> IMenuTypeBuilder<T> createMenuTypeBuilder(IMenuExtendFactory<T, V> factory, IPlayerDataSerializer<V> serializer);
+        <T extends AbstractContainerMenu, V> IMenuTypeBuilder<T> createMenuTypeBuilder(IMenuProvider<T, V> factory, IPlayerDataSerializer<V> serializer);
 
-        <T> IEntryBuilder<IRegistryObject<ICapabilityType<T>>> createCapabilityTypeBuilder(Class<T> type, Function<Entity, Optional<T>> factory);
+        <T> ICapabilityTypeBuilder<T> createCapabilityTypeBuilder(Class<T> type, Function<Entity, Optional<T>> factory);
+
+        <T extends IKeyBinding> IKeyBindingBuilder<T> createKeyBindingBuilder(String key);
     }
 }

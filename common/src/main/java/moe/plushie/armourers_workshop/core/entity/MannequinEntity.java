@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.extend.IExtendedEntityHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModItems;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -235,7 +235,7 @@ public class MannequinEntity extends ArmorStand implements IExtendedEntityHandle
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null && wardrobe.isEditable(player)) {
-            MenuManager.openMenu(ModMenuTypes.WARDROBE, player, wardrobe);
+            MenuManager.openMenu(ModMenus.WARDROBE, player, wardrobe);
             return InteractionResult.sidedSuccess(world.isClientSide);
         }
         return InteractionResult.PASS;

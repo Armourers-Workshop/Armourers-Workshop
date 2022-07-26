@@ -14,8 +14,12 @@ import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.command.FileArgument;
 import moe.plushie.armourers_workshop.init.command.ListArgument;
-import moe.plushie.armourers_workshop.init.event.EntityClimbingEvents;
-import moe.plushie.armourers_workshop.init.event.PlayerBlockPlaceEvents;
+import moe.plushie.armourers_workshop.init.config.FabricConfig;
+import moe.plushie.armourers_workshop.init.config.FabricConfigEvents;
+import moe.plushie.armourers_workshop.init.config.FabricConfigTracker;
+import moe.plushie.armourers_workshop.init.platform.fabric.builder.ConfigBuilderImpl;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityClimbingEvents;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.PlayerBlockPlaceEvents;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
@@ -38,6 +42,7 @@ import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.synchronization.ArgumentTypes;
 import net.minecraft.core.BlockPos;
@@ -58,7 +63,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -102,6 +106,9 @@ public class CommonEventDispatcher implements ModInitializer {
         PlayerBlockBreakEvents.BEFORE.register(this::onBlockBreak);
         PlayerBlockPlaceEvents.BEFORE.register(this::onBlockPlace);
 
+        FabricConfigEvents.LOADING.register(this::onConfigReloaded);
+        FabricConfigEvents.RELOADING.register(this::onConfigReloaded);
+
         registerEntityAttributes();
 
         onCommonSetup();
@@ -110,6 +117,9 @@ public class CommonEventDispatcher implements ModInitializer {
         // IForgeBlock =>
         //                IBlockHandler2
         //                IBlockHandler3
+
+        // load all configs
+        FabricConfigTracker.INSTANCE.loadConfigs(FabricConfig.Type.COMMON, FabricLoader.getInstance().getConfigDir());
     }
 
     public void registerEntityAttributes() {
@@ -127,10 +137,10 @@ public class CommonEventDispatcher implements ModInitializer {
         EnvironmentExecutor.setup(EnvironmentType.COMMON);
     }
 
-//    @SubscribeEvent
-//    public void onConfigReloaded(ModConfig.ModConfigEvent event) {
-//        PreferenceManagerImpl.reloadSpec(event.getConfig().getSpec());
-//    }
+    public void onConfigReloaded(FabricConfig config) {
+        ConfigBuilderImpl.reloadSpec(ModConfigSpec.CLIENT, config.getSpec());
+        ConfigBuilderImpl.reloadSpec(ModConfigSpec.COMMON, config.getSpec());
+    }
 
     public void onServerTick(ServerLevel world) {
         WorldUpdater.getInstance().tick(world);
@@ -156,6 +166,7 @@ public class CommonEventDispatcher implements ModInitializer {
         ModLog.debug("bye");
         ModContext.reset();
         NetworkManagerImpl.CURRENT_SERVER = null;
+        FabricConfigTracker.INSTANCE.unloadConfigs(FabricConfig.Type.SERVER, FabricLoader.getInstance().getConfigDir());
     }
 
     public void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {

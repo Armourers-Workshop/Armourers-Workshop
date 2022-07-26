@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.init.ModCapabilities;
-import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.utils.LazyOptional;

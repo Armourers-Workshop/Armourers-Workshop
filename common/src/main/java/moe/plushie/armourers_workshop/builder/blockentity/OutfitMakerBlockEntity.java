@@ -4,9 +4,9 @@ import moe.plushie.armourers_workshop.core.blockentity.AbstractContainerBlockEnt
 import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.util.Strings;
 
@@ -22,13 +22,13 @@ public class OutfitMakerBlockEntity extends AbstractContainerBlockEntity {
     }
 
     public void readFromNBT(CompoundTag nbt) {
-        DataSerializers.loadAllItems(nbt, items);
+        ContainerHelper.loadAllItems(nbt, items);
         this.itemName = nbt.getString(Constants.Key.TILE_ENTITY_NAME);
         this.itemFlavour = nbt.getString(Constants.Key.TILE_ENTITY_FLAVOUR);
     }
 
     public void writeToNBT(CompoundTag nbt) {
-        DataSerializers.saveAllItems(nbt, items);
+        ContainerHelper.saveAllItems(nbt, items);
         if (Strings.isNotEmpty(itemName)) {
             nbt.putString(Constants.Key.TILE_ENTITY_NAME, itemName);
         }

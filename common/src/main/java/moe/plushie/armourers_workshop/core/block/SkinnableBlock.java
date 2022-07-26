@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModEntities;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class SkinnableBlock extends AbstractHorizontalFaceBlock implements EntityBlock, IExtendedBlockHandler {
+public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements EntityBlock, IExtendedBlockHandler {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
@@ -127,7 +127,7 @@ public class SkinnableBlock extends AbstractHorizontalFaceBlock implements Entit
             }
         }
         if (tileEntity.isInventory()) {
-            if (MenuManager.openMenu(ModMenuTypes.SKINNABLE, player, world, pos)) {
+            if (MenuManager.openMenu(ModMenus.SKINNABLE, player, world, pos)) {
                 player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
             }
             return InteractionResult.sidedSuccess(world.isClientSide);

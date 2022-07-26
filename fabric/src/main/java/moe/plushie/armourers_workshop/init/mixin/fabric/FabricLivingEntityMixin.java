@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.mixin.fabric;
 
-import moe.plushie.armourers_workshop.init.event.EntityClimbingEvents;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityClimbingEvents;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;

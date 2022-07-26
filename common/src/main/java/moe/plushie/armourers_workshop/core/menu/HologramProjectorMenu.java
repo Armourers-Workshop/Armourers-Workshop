@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +16,7 @@ public class HologramProjectorMenu extends AbstractBlockContainerMenu {
     private int group;
 
     public HologramProjectorMenu(int containerId, Inventory playerInventory, ContainerLevelAccess worldPos) {
-        super(containerId, ModMenuTypes.HOLOGRAM_PROJECTOR, ModBlocks.HOLOGRAM_PROJECTOR, worldPos);
+        super(containerId, ModMenus.HOLOGRAM_PROJECTOR, ModBlocks.HOLOGRAM_PROJECTOR, worldPos);
         this.playerInventory = playerInventory;
         this.inventory = getTileInventory();
         this.reload(0, 0, 240, 240);

@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.api.other.builder.IBlockEntityBuilder;
+import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.builder.blockentity.*;
 import moe.plushie.armourers_workshop.builder.client.render.ArmourerBlockRenderer;
 import moe.plushie.armourers_workshop.builder.client.render.SkinCubeBlockRenderer;
@@ -8,8 +10,6 @@ import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEnt
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.render.HologramProjectorBlockRenderer;
 import moe.plushie.armourers_workshop.core.client.render.SkinnableBlockRenderer;
-import moe.plushie.armourers_workshop.api.registry.IRegistryObject;
-import moe.plushie.armourers_workshop.api.registry.IBlockEntityBuilder;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.library.blockentity.GlobalSkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.library.blockentity.SkinLibraryBlockEntity;

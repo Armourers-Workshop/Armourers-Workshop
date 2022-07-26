@@ -3,12 +3,12 @@ package moe.plushie.armourers_workshop.core.capability;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataFixerUtils;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.ShortTag;
 import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.BitSet;
@@ -35,12 +35,12 @@ public class SkinWardrobeStorage {
         for (int i = 0; i < itemStacks.size(); ++i) {
             itemStacks.set(i, inventory.getItem(i));
         }
-        DataSerializers.saveAllItems(nbt, itemStacks);
+        ContainerHelper.saveAllItems(nbt, itemStacks);
     }
 
     public static void loadInventoryItems(Container inventory, CompoundTag nbt) {
         NonNullList<ItemStack> itemStacks = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
-        DataSerializers.loadAllItems(nbt, itemStacks);
+        ContainerHelper.loadAllItems(nbt, itemStacks);
         for (int i = 0; i < itemStacks.size(); ++i) {
             ItemStack newItemStack = itemStacks.get(i);
             ItemStack oldItemStack = inventory.getItem(i);

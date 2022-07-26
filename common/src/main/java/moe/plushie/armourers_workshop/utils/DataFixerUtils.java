@@ -1,8 +1,13 @@
 package moe.plushie.armourers_workshop.utils;
 
+import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModLog;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class DataFixerUtils {
 
@@ -19,5 +24,14 @@ public class DataFixerUtils {
         if (changes != 0) {
             ModLog.info("move {} items from {} - {}, to {} - {}, reason: {}", changes, src, src + size, dest, dest + size, reason);
         }
+    }
+
+    public static boolean noBlockEntitiesAround(Entity entity) {
+        if (entity.level instanceof ServerLevel) {
+            ServerLevel world = (ServerLevel) entity.level;
+            AABB alignedBB = entity.getBoundingBox().inflate(0.0625D).expandTowards(0.0D, -0.55D, 0.0D);
+            return world.getEntityCollisions(entity, alignedBB, e -> e instanceof MannequinEntity).allMatch(VoxelShape::isEmpty);
+        }
+        return true;
     }
 }

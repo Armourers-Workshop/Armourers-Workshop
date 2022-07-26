@@ -49,7 +49,7 @@ public class ModPermissions {
         for (Permission permission : PERMISSIONS) {
             for (String key : permission.getNodes()) {
                 String desc = TranslateUtils.title("permission." + key).getContents();
-                ModLog.info("Registering permission: {}", key);
+                ModLog.info("Registering Permission '{}'", key);
                 PermissionManager.registerNode(key, PermissionManager.Level.ALL, desc);
             }
         }

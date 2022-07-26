@@ -2,7 +2,9 @@ package moe.plushie.armourers_workshop.core.network;
 
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
-import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.other.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.TextComponent;
@@ -71,6 +73,10 @@ public class ExecuteCommandPacket extends CustomPacket {
                 }
             }
             player.sendMessage(new TextComponent(key + " = " + data), player.getUUID());
+            // auto-save when change
+            if (ModConfig.Client.class == object) {
+                ModConfigSpec.CLIENT.save();
+            }
         } catch (Exception exception) {
             exception.printStackTrace();
         }

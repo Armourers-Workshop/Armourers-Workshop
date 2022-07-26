@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.network;
 
 import com.mojang.authlib.GameProfile;
-import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.api.other.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.OutfitMakerMenu;
 import moe.plushie.armourers_workshop.init.ModPermissions;

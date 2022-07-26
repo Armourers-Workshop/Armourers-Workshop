@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.init.platform.fabric;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.other.config.IConfigSpec;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.platform.fabric.builder.ConfigBuilderImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -33,5 +35,13 @@ public class EnvironmentManagerImpl {
 
     public static boolean isDevelopmentEnvironment() {
         return FabricLoader.getInstance().isDevelopmentEnvironment();
+    }
+
+    public static IConfigSpec getClientConfigSpec() {
+        return ConfigBuilderImpl.createClientSpec();
+    }
+
+    public static IConfigSpec getCommonConfigSpec() {
+        return ConfigBuilderImpl.createCommonSpec();
     }
 }

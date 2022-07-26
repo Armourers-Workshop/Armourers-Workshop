@@ -164,7 +164,7 @@ public class ModConfig {
     }
 
     public static void init() {
-        PreferenceManager.init();
+        ModConfigSpec.init();
     }
 
     public static boolean enableEmbeddedSkinRenderer() {

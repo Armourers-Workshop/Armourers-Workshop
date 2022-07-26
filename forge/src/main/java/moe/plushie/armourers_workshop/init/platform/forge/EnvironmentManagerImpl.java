@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.other.config.IConfigSpec;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.platform.forge.builder.ConfigBuilderImpl;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -36,5 +38,13 @@ public class EnvironmentManagerImpl {
 
     public static boolean isDevelopmentEnvironment() {
         return !FMLEnvironment.production;
+    }
+
+    public static IConfigSpec getClientConfigSpec() {
+        return ConfigBuilderImpl.createClientSpec();
+    }
+
+    public static IConfigSpec getCommonConfigSpec() {
+        return ConfigBuilderImpl.createCommonSpec();
     }
 }

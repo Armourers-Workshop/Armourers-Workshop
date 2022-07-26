@@ -15,8 +15,7 @@ import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.platform.forge.ClientBuilderManagerImpl;
-import moe.plushie.armourers_workshop.init.platform.forge.PreferenceManagerImpl;
+import moe.plushie.armourers_workshop.init.platform.forge.builder.KeyBindingBuilderImpl;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.TickHandler;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2i;
@@ -130,13 +129,7 @@ public class ClientEventDispatcher {
 
         @SubscribeEvent
         public void onKeyInputEvent(InputEvent.KeyInputEvent event) {
-            ClientBuilderManagerImpl.onInputTick();
-//            ClientBuilderManagerImpl.getInstance();
-//            int key = event.getKey();
-//            int scanCode = event.getScanCode();
-//            int action = event.getAction();
-//            int modifiers = event.getModifiers();
-//            InputMotionManager.onKeyInput(key, scanCode, action, modifiers);
+            KeyBindingBuilderImpl.tick();
         }
 
         @SubscribeEvent
@@ -177,7 +170,7 @@ public class ClientEventDispatcher {
                 SkinLibraryManager.getClient().getPublicSkinLibrary().reset();
                 SkinLibraryManager.getClient().getPrivateSkinLibrary().reset();
                 ModContext.reset();
-                PreferenceManagerImpl.reloadSpec(null);
+                ModConfigSpec.COMMON.apply(null);
             }
         }
 

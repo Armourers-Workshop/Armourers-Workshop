@@ -26,6 +26,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -104,7 +105,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
             oldProperties.copyFrom(properties);
             properties = oldProperties;
         }
-        DataSerializers.loadAllItems(nbt, getOrCreateItems());
+        ContainerHelper.loadAllItems(nbt, getOrCreateItems());
     }
 
     @Override
@@ -120,7 +121,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         DataSerializers.putSkinProperties(nbt, Constants.Key.TILE_ENTITY_SKIN_PROPERTIES, properties);
         DataSerializers.putBlockPos(nbt, Constants.Key.TILE_ENTITY_LINKED_POS, linkedBlockPos, null);
 
-        DataSerializers.saveAllItems(nbt, getOrCreateItems());
+        ContainerHelper.saveAllItems(nbt, getOrCreateItems());
     }
 
     public void updateBlockStates() {

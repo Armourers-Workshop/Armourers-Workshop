@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.mixin.fabric;
 
-import moe.plushie.armourers_workshop.init.event.PlayerBlockPlaceEvents;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.PlayerBlockPlaceEvents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;

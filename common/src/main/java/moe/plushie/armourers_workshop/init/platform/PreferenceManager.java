@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import moe.plushie.armourers_workshop.api.other.config.IConfigBuilder;
+import moe.plushie.armourers_workshop.init.ModConfigSpec;
 
 import java.util.Map;
 

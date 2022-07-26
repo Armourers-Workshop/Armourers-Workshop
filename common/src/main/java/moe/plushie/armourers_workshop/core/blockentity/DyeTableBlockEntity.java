@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.blockentity;
 
 import moe.plushie.armourers_workshop.init.ModBlockEntities;
-import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 
 public class DyeTableBlockEntity extends AbstractContainerBlockEntity {
@@ -16,12 +16,12 @@ public class DyeTableBlockEntity extends AbstractContainerBlockEntity {
 
     @Override
     public void readFromNBT(CompoundTag nbt) {
-        DataSerializers.loadAllItems(nbt, items);
+        ContainerHelper.loadAllItems(nbt, items);
     }
 
     @Override
     public void writeToNBT(CompoundTag nbt) {
-        DataSerializers.saveAllItems(nbt, items);
+        ContainerHelper.saveAllItems(nbt, items);
     }
 
     @Override

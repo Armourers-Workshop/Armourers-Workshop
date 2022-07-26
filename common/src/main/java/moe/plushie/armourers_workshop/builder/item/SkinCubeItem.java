@@ -33,8 +33,8 @@ import java.util.List;
 
 public class SkinCubeItem extends BlockItem implements IItemColorProvider, IPaintToolPicker {
 
-    public SkinCubeItem(Block p_i48527_1_, Properties p_i48527_2_) {
-        super(p_i48527_1_, p_i48527_2_);
+    public SkinCubeItem(Block block, Properties properties) {
+        super(block, properties);
     }
 
     @Override

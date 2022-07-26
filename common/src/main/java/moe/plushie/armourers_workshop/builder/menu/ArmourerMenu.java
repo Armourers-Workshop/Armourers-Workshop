@@ -14,7 +14,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModItems;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.Container;
@@ -32,7 +32,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
     private Group group = null;
 
     public ArmourerMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
-        super(containerId, ModMenuTypes.ARMOURER, ModBlocks.ARMOURER, access);
+        super(containerId, ModMenus.ARMOURER, ModBlocks.ARMOURER, access);
         this.addPlayerSlots(playerInventory, 8, 142);
         this.addCustomSlot(inventory, 0, 64, 21);
         this.addCustomSlot(inventory, 1, 147, 21);

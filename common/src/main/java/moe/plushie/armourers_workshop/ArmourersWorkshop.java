@@ -24,9 +24,9 @@ public class ArmourersWorkshop {
         ModBlocks.init();
         ModBlockEntities.init();
         ModEntities.init();
-        ModSounds.init();
-        ModMenuTypes.init();
         ModCapabilities.init();
+        ModMenus.init();
+        ModSounds.init();
         ModConfig.init();
         // setup common objects.
         EnvironmentExecutor.setupOn(EnvironmentType.COMMON, () -> () -> {
@@ -34,6 +34,7 @@ public class ArmourersWorkshop {
             NetworkManager.init("aw2", "3");
             NetworkHandler.init();
 
+            ModHolidays.init();
             ModPermissions.init();
             ModEntityProfiles.init();
             SkinningRecipes.init();

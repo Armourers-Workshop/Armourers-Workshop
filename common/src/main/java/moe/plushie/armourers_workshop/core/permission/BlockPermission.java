@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.permission;
 
-import moe.plushie.armourers_workshop.api.registry.IRegistryObject;
+import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.platform.PermissionManager;
 import net.minecraft.world.entity.player.Player;

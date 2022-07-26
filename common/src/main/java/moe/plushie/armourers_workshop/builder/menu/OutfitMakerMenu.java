@@ -6,10 +6,10 @@ import moe.plushie.armourers_workshop.api.math.ITexturePos;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartTypeTextured;
 import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity;
-import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlot;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
+import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -19,7 +19,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -36,7 +36,7 @@ public class OutfitMakerMenu extends AbstractBlockContainerMenu {
     private final Container inventory;
 
     public OutfitMakerMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
-        super(containerId, ModMenuTypes.OUTFIT_MAKER, ModBlocks.OUTFIT_MAKER, access);
+        super(containerId, ModMenus.OUTFIT_MAKER, ModBlocks.OUTFIT_MAKER, access);
         this.inventory = getTileInventory();
         if (this.inventory == null) {
             return;

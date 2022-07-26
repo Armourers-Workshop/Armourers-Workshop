@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.api.other.builder.IBlockBuilder;
+import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.builder.block.*;
 import moe.plushie.armourers_workshop.core.block.DyeTableBlock;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.block.SkinningTableBlock;
-import moe.plushie.armourers_workshop.api.registry.IRegistryObject;
-import moe.plushie.armourers_workshop.api.registry.IBlockBuilder;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
 import moe.plushie.armourers_workshop.library.block.SkinLibraryBlock;

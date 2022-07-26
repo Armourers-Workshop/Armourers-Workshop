@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.common.IItemParticleProvider;
 import moe.plushie.armourers_workshop.api.common.IItemSoundProvider;
-import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.api.other.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.other.SkinCubeApplier;
 import moe.plushie.armourers_workshop.builder.other.SkinCubePaintingEvent;

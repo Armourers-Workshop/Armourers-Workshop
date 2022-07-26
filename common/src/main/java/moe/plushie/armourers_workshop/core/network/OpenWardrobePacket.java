@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.core.network;
 
-import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.api.other.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,7 +30,7 @@ public class OpenWardrobePacket extends CustomPacket {
         Entity entity = player.level.getEntity(entityId);
         SkinWardrobe wardrobe = SkinWardrobe.of(entity);
         if (wardrobe != null && wardrobe.isEditable(player)) {
-            MenuManager.openMenu(ModMenuTypes.WARDROBE, player, wardrobe);
+            MenuManager.openMenu(ModMenus.WARDROBE, player, wardrobe);
         }
     }
 }

@@ -10,7 +10,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModItems;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,7 +25,7 @@ public class DyeTableMenu extends AbstractBlockContainerMenu {
     private final Container inventory;
 
     public DyeTableMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
-        super(containerId, ModMenuTypes.DYE_TABLE, ModBlocks.DYE_TABLE, access);
+        super(containerId, ModMenus.DYE_TABLE, ModBlocks.DYE_TABLE, access);
         this.inventory = getTileInventory();
         this.addPlayerSlots(playerInventory, 8, 108);
         this.addCustomSlots(inventory, 68, 36, 22, 22);

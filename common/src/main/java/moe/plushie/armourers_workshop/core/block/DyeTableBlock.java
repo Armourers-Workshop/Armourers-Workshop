@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.core.blockentity.DyeTableBlockEntity;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
@@ -32,7 +32,7 @@ public class DyeTableBlock extends AbstractHorizontalBlock implements EntityBloc
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        if (MenuManager.openMenu(ModMenuTypes.DYE_TABLE, player, world, blockPos)) {
+        if (MenuManager.openMenu(ModMenus.DYE_TABLE, player, world, blockPos)) {
             return InteractionResult.CONSUME;
         }
         return InteractionResult.FAIL;

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.library.block;
 
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.library.blockentity.GlobalSkinLibraryBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -32,7 +32,7 @@ public class GlobalSkinLibraryBlock extends AbstractHorizontalBlock implements E
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        if (MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY_GLOBAL, player, level, blockPos)) {
+        if (MenuManager.openMenu(ModMenus.SKIN_LIBRARY_GLOBAL, player, level, blockPos)) {
             return InteractionResult.CONSUME;
         }
         return InteractionResult.FAIL;

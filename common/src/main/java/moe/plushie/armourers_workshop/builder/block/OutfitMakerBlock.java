@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.block;
 
 import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -27,7 +27,7 @@ public class OutfitMakerBlock extends AbstractHorizontalBlock implements EntityB
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        if (MenuManager.openMenu(ModMenuTypes.OUTFIT_MAKER, player, level, blockPos)) {
+        if (MenuManager.openMenu(ModMenus.OUTFIT_MAKER, player, level, blockPos)) {
             return InteractionResult.CONSUME;
         }
         return InteractionResult.FAIL;

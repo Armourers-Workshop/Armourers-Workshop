@@ -13,12 +13,14 @@ import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
-import moe.plushie.armourers_workshop.init.event.RenderSpecificArmEvents;
-import moe.plushie.armourers_workshop.init.event.RenderTooltipCallback;
+import moe.plushie.armourers_workshop.init.config.FabricConfig;
+import moe.plushie.armourers_workshop.init.config.FabricConfigTracker;
+import moe.plushie.armourers_workshop.init.platform.fabric.builder.KeyBindingBuilderImpl;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderSpecificArmEvents;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipCallback;
 import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.platform.fabric.ClientBuilderManagerImpl;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickHandler;
@@ -37,6 +39,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.event.client.player.ClientPickBlockGatherCallback;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
@@ -73,13 +76,11 @@ public class ClientEventDispatcher implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
         ClientTickEvents.START_CLIENT_TICK.register(this::onRenderTick);
         ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register(this::onTextureStitch);
         ModelLoadingRegistry.INSTANCE.registerModelProvider(this::onModelRegistry);
         ItemTooltipCallback.EVENT.register(this::onItemTooltipEvent);
         RenderTooltipCallback.EVENT.register(this::onRenderTooltip);
-//        TooltipComponent
 
         ClientPlayConnectionEvents.INIT.register(this::onPlayerLogin);
         ClientPlayConnectionEvents.DISCONNECT.register(this::onPlayerLogout);
@@ -98,6 +99,9 @@ public class ClientEventDispatcher implements ClientModInitializer {
         registerItemModels();
 
         EnvironmentExecutor.setup(EnvironmentType.CLIENT);
+
+        // load all configs
+        FabricConfigTracker.INSTANCE.loadConfigs(FabricConfig.Type.CLIENT, FabricLoader.getInstance().getConfigDir());
     }
 
     public void registerBlockColors() {
@@ -147,12 +151,7 @@ public class ClientEventDispatcher implements ClientModInitializer {
     }
 
     public void onKeyInputEvent(Minecraft client) {
-//        int key = event.getKey();
-//        int scanCode = event.getScanCode();
-//        int action = event.getAction();
-//        int modifiers = event.getModifiers();
-//        InputMotionManager.onKeyInput(0, 0, 0, 0);
-        ClientBuilderManagerImpl.onInputTick();
+        KeyBindingBuilderImpl.tick();
     }
 
     public void onItemTooltipEvent(ItemStack stack, TooltipFlag context, List<Component> lines) {
@@ -197,7 +196,7 @@ public class ClientEventDispatcher implements ClientModInitializer {
         SkinLibraryManager.getClient().getPublicSkinLibrary().reset();
         SkinLibraryManager.getClient().getPrivateSkinLibrary().reset();
         ModContext.reset();
-//            PreferenceManagerImpl.reloadSpec(null);
+        ModConfigSpec.COMMON.apply(null);
 //        }
     }
 

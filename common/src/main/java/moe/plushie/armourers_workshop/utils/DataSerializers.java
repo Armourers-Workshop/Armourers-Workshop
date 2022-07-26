@@ -527,43 +527,6 @@ public class DataSerializers {
     }
 
 
-        public static CompoundTag saveAllItems(CompoundTag p_191282_0_, NonNullList<ItemStack> p_191282_1_) {
-        return saveAllItems(p_191282_0_, p_191282_1_, true);
-    }
-
-    public static CompoundTag saveAllItems(CompoundTag p_191281_0_, NonNullList<ItemStack> p_191281_1_, boolean p_191281_2_) {
-        ListTag listnbt = new ListTag();
-
-        for (int i = 0; i < p_191281_1_.size(); ++i) {
-            ItemStack itemstack = p_191281_1_.get(i);
-            if (!itemstack.isEmpty()) {
-                CompoundTag compoundnbt = new CompoundTag();
-                compoundnbt.putByte("Slot", (byte) i);
-                itemstack.save(compoundnbt);
-                listnbt.add(compoundnbt);
-            }
-        }
-
-        if (!listnbt.isEmpty() || p_191281_2_) {
-            p_191281_0_.put("Items", listnbt);
-        }
-
-        return p_191281_0_;
-    }
-
-    public static void loadAllItems(CompoundTag p_191283_0_, NonNullList<ItemStack> p_191283_1_) {
-        ListTag listnbt = p_191283_0_.getList("Items", 10);
-
-        for (int i = 0; i < listnbt.size(); ++i) {
-            CompoundTag compoundnbt = listnbt.getCompound(i);
-            int j = compoundnbt.getByte("Slot") & 255;
-            if (j >= 0 && j < p_191283_1_.size()) {
-                p_191283_1_.set(j, ItemStack.of(compoundnbt));
-            }
-        }
-
-    }
-
     public static void dropContents(Level p_180175_0_, BlockPos p_180175_1_, Container p_180175_2_) {
         dropContents(p_180175_0_, (double) p_180175_1_.getX(), (double) p_180175_1_.getY(), (double) p_180175_1_.getZ(), p_180175_2_);
     }

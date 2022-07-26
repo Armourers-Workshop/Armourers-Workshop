@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.block;
 
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.minecraft.core.BlockPos;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class HologramProjectorBlock extends AbstractHorizontalFaceBlock implements EntityBlock {
+public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock implements EntityBlock {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
@@ -54,7 +54,7 @@ public class HologramProjectorBlock extends AbstractHorizontalFaceBlock implemen
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        if (MenuManager.openMenu(ModMenuTypes.HOLOGRAM_PROJECTOR, player, level, blockPos)) {
+        if (MenuManager.openMenu(ModMenus.HOLOGRAM_PROJECTOR, player, level, blockPos)) {
             return InteractionResult.CONSUME;
         }
         return InteractionResult.FAIL;

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.mixin.fabric;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.init.event.RenderSpecificArmEvents;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderSpecificArmEvents;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;

@@ -4,7 +4,7 @@ import com.google.common.collect.Iterables;
 import com.mojang.datafixers.util.Pair;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
-import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.other.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.core.data.DataDomain;

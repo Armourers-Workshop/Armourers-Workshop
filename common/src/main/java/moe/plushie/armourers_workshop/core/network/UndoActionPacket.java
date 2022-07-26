@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.network;
 
 import moe.plushie.armourers_workshop.api.action.IUndoCommand;
-import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.api.other.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoManager;
 import moe.plushie.armourers_workshop.builder.data.undo.UndoStack;
 import moe.plushie.armourers_workshop.init.ModPermissions;

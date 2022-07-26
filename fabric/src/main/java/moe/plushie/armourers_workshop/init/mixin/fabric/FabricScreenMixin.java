@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.mixin.fabric;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.init.event.RenderTooltipCallback;
+import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipCallback;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.FormattedCharSequence;
 import org.spongepowered.asm.mixin.Mixin;

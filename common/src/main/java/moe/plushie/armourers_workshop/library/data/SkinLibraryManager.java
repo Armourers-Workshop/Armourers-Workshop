@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.utils.Constants;
-import net.fabricmc.api.EnvType;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -224,7 +223,7 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
             if (!ModPermissions.SKIN_LIBRARY_SKIN_DOWNLOAD.accept(player)) {
                 return false;
             }
-            if (EnvironmentManager.getEnvironmentType() == EnvironmentType.SERVER) {
+            if (EnvironmentManager.isDedicatedServer()) {
                 return ModConfig.Common.allowDownloadingSkins;
             }
             return true;
@@ -235,7 +234,7 @@ public abstract class SkinLibraryManager implements ISkinLibraryListener {
             if (!ModPermissions.SKIN_LIBRARY_SKIN_UPLOAD.accept(player)) {
                 return false;
             }
-            if (EnvironmentManager.getEnvironmentType() == EnvironmentType.SERVER) {
+            if (EnvironmentManager.isDedicatedServer()) {
                 return ModConfig.Common.allowUploadingSkins;
             }
             return true;

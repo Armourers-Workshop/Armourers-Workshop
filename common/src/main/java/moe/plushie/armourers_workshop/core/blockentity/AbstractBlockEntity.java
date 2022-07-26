@@ -55,5 +55,4 @@ public abstract class AbstractBlockEntity extends BlockEntity implements IBlockE
     public CompoundTag getUpdateTag() {
         return this.save(new CompoundTag());
     }
-
 }

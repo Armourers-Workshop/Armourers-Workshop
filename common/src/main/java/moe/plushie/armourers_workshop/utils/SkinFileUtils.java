@@ -66,6 +66,13 @@ public class SkinFileUtils {
     }
 
     /**
+     * Gets the extension of a filename.
+     */
+    public static String getExtension(final String filename) {
+        return FilenameUtils.getExtension(filename);
+    }
+
+    /**
      * Makes a directory, including any necessary but nonexistent parent
      * directories. If a file already exists with specified name but it is
      * not a directory then an IOException is thrown.

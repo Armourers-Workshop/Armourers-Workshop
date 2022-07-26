@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.fabric;
 
+import com.electronwill.nightconfig.core.ConfigSpec;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +16,7 @@ public class PreferenceManagerImpl {
     }
 
     public static void init() {
+        Class<?> z = ConfigSpec.class;
         // TODO: @SAGESSE
     }
 

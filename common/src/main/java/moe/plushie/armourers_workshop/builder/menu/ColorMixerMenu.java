@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.builder.menu;
 
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
-import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
+import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
 import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.utils.ext.UseOnContextX;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,7 +27,7 @@ public class ColorMixerMenu extends AbstractBlockContainerMenu {
     private final Container inventory = new SimpleContainer(2);
 
     public ColorMixerMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
-        super(containerId, ModMenuTypes.COLOR_MIXER, ModBlocks.COLOR_MIXER, access);
+        super(containerId, ModMenus.COLOR_MIXER, ModBlocks.COLOR_MIXER, access);
         this.addPlayerSlots(playerInventory, 48, 158);
         this.addCustomSlot(inventory, 0, 83, 101);
         this.addCustomSlot(inventory, 1, 134, 101);

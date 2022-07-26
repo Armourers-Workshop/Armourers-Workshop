@@ -23,8 +23,8 @@ import moe.plushie.armourers_workshop.core.skin.exporter.SkinExportManager;
 import moe.plushie.armourers_workshop.init.command.FileArgument;
 import moe.plushie.armourers_workshop.init.command.ListArgument;
 import moe.plushie.armourers_workshop.init.command.ReflectArgumentBuilder;
-import moe.plushie.armourers_workshop.init.platform.PreferenceManager;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.PreferenceManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -261,7 +261,7 @@ public class ModCommands {
                 }
                 ModConfig.Common.overrides.remove(key);
             }
-            PreferenceManager.save();
+            ModConfigSpec.COMMON.save();
             // notify the user of what happened
             String messageKey = "commands.armourers_workshop.armourers.setItemSkinnable." + operator;
             Component overrideTypeName = TranslateUtils.Name.of(overrideType);

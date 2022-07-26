@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.library.menu;
 
-import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
+import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.core.item.SkinItem;
-import moe.plushie.armourers_workshop.api.registry.IRegistryObject;
+import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModItems;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -30,7 +30,7 @@ public class SkinLibraryMenu extends AbstractBlockContainerMenu {
     private int libraryVersion = 0;
 
     public SkinLibraryMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
-        this(containerId, ModMenuTypes.SKIN_LIBRARY, ModBlocks.SKIN_LIBRARY, playerInventory, access);
+        this(containerId, ModMenus.SKIN_LIBRARY, ModBlocks.SKIN_LIBRARY, playerInventory, access);
     }
 
     public <C extends AbstractContainerMenu> SkinLibraryMenu(int containerId, IRegistryObject<MenuType<C>> containerType, IRegistryObject<Block> block, Inventory playerInventory, ContainerLevelAccess access) {

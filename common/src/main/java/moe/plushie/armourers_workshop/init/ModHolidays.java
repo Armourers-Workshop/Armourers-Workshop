@@ -1,13 +1,12 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.core.data.HolidayTracker;
 import moe.plushie.armourers_workshop.core.holiday.Holiday;
 import moe.plushie.armourers_workshop.core.holiday.handler.ChristmasSeasonHandler;
 import moe.plushie.armourers_workshop.core.holiday.handler.HalloweenSeasonHandler;
 import moe.plushie.armourers_workshop.core.holiday.handler.ValentinesHandler;
 import moe.plushie.armourers_workshop.core.item.GiftSackItem;
-import moe.plushie.armourers_workshop.init.ModConfig;
-import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
@@ -44,6 +43,9 @@ public final class ModHolidays {
 
     // Should be 12 but making it 24 so more people can see it.
     public static final Holiday APRIL_FOOLS = register("april-fools", 1, Calendar.APRIL, 1, 0, null);
+
+    public static void init() {
+    }
 
     public static Collection<Holiday> getHolidays() {
         return HOLIDAY_LIST;
@@ -112,6 +114,7 @@ public final class ModHolidays {
         if (builder != null) {
             holiday.setHandler(builder.get());
         }
+        ModLog.debug("Registering Holiday '{}:{}'", ArmourersWorkshop.MOD_ID, name);
         HOLIDAY_LIST.add(holiday);
         return holiday;
     }

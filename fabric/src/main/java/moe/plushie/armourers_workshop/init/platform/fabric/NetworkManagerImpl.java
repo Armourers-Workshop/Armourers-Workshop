@@ -1,33 +1,39 @@
 package moe.plushie.armourers_workshop.init.platform.fabric;
 
+import io.netty.buffer.Unpooled;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
-import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
+import moe.plushie.armourers_workshop.api.other.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.api.other.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.fabric.api.networking.v1.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientHandshakePacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -40,18 +46,15 @@ public class NetworkManagerImpl {
     private static NetworkDispatcher dispatcher;
 
     public static void init(String name, String version) {
-        dispatcher = new NetworkDispatcher(ArmourersWorkshop.getResource(name));
-        // TODO: @SAGESSE Version Checker
-//        EventNetworkChannel channel = NetworkRegistry.ChannelBuilder
-//                .named(dispatcher.channelName)
-//                .networkProtocolVersion(() -> version)
-//                .clientAcceptedVersions(version::equals)
-//                .serverAcceptedVersions(version::equals)
-//                .eventNetworkChannel();
-//        channel.registerObject(dispatcher);
+        dispatcher = new NetworkDispatcher(ArmourersWorkshop.getResource(name), version);
+
+        ServerLoginConnectionEvents.QUERY_START.register(dispatcher::startServerHandshake);
+        ServerLoginNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onServerHandshake);
 
         ServerPlayNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onServerEvent);
+
         EnvironmentExecutor.runWhenOn(EnvironmentType.CLIENT, () -> () -> {
+            ClientLoginNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onClientHandshake);
             ClientPlayNetworking.registerGlobalReceiver(dispatcher.channelName, dispatcher::onClientEvent);
         });
     }
@@ -86,14 +89,37 @@ public class NetworkManagerImpl {
 
     public static class NetworkDispatcher implements IServerPacketHandler, IClientPacketHandler {
 
+        final String channelVersion;
         final ResourceLocation channelName;
         final PacketSplitter splitter;
 
         final int maxPartSize = 32000; // 32k
 
-        NetworkDispatcher(ResourceLocation channelName) {
+        NetworkDispatcher(ResourceLocation channelName, String channelVersion) {
             this.channelName = channelName;
+            this.channelVersion = channelVersion;
             this.splitter = new PacketSplitter();
+        }
+
+        public void startServerHandshake(ServerLoginPacketListenerImpl handler, MinecraftServer server, PacketSender sender, ServerLoginNetworking.LoginSynchronizer synchronizer) {
+            sender.sendPacket(channelName, PacketByteBufs.empty());
+        }
+
+        public void onServerHandshake(MinecraftServer server, ServerLoginPacketListenerImpl handler, boolean understood, FriendlyByteBuf buf, ServerLoginNetworking.LoginSynchronizer synchronizer, PacketSender responseSender) {
+            if (understood) {
+                String version = buf.readUtf(Short.MAX_VALUE);
+                if (version.equals(channelVersion)) {
+                    return;
+                }
+            }
+            handler.disconnect(new TextComponent("Please install correct Armourers Workshop to play on this server!"));
+        }
+
+        @Environment(value = EnvType.CLIENT)
+        public CompletableFuture<@Nullable FriendlyByteBuf> onClientHandshake(Minecraft client, ClientHandshakePacketListenerImpl handler, FriendlyByteBuf buf, Consumer<GenericFutureListener<? extends Future<? super Void>>> listenerAdder) {
+            FriendlyByteBuf responseBuffer = new FriendlyByteBuf(Unpooled.buffer());
+            responseBuffer.writeUtf(channelVersion);
+            return CompletableFuture.completedFuture(responseBuffer);
         }
 
         public void onServerEvent(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) {

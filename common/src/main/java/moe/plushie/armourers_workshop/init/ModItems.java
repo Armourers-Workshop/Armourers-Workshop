@@ -1,13 +1,13 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.api.other.builder.IItemBuilder;
+import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.builder.client.render.SkinCubeItemRenderer;
 import moe.plushie.armourers_workshop.builder.item.*;
 import moe.plushie.armourers_workshop.core.client.render.MannequinItemRenderer;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.item.*;
-import moe.plushie.armourers_workshop.api.registry.IRegistryObject;
-import moe.plushie.armourers_workshop.api.registry.IItemBuilder;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.item.BlockItem;

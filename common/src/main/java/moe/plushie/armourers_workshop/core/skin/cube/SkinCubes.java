@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
+import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
-import moe.plushie.armourers_workshop.api.registry.IRegistryObject;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinResourceLocation;

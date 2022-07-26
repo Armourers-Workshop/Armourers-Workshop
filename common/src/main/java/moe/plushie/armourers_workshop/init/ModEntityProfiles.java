@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;

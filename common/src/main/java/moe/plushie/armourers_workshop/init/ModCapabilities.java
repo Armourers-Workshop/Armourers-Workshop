@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.ICapabilityType;
-import moe.plushie.armourers_workshop.api.registry.IEntryBuilder;
-import moe.plushie.armourers_workshop.api.registry.IRegistryObject;
+import moe.plushie.armourers_workshop.api.other.builder.IEntryBuilder;
+import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import net.minecraft.world.entity.Entity;

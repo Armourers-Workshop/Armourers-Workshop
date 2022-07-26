@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.init.mixin.forge;
 
-import moe.plushie.armourers_workshop.init.event.ClimbingLocationCheckEvent;
+import moe.plushie.armourers_workshop.init.platform.forge.event.ClimbingLocationCheckEvent;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;

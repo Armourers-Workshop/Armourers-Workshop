@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
-import moe.plushie.armourers_workshop.library.blockentity.GlobalSkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

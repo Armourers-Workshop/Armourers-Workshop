@@ -1,8 +1,9 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.registry.IRegistryObject;
+import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.core.registry.Registry;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -48,6 +49,7 @@ public class RegistryManagerImpl {
 
             @Override
             public <I extends T> IRegistryObject<I> register(String name, Supplier<? extends I> sup) {
+                ModLog.debug("Registering '{}:{}'", ArmourersWorkshop.MOD_ID, name);
                 return put(name, register.register(name, sup));
             }
 

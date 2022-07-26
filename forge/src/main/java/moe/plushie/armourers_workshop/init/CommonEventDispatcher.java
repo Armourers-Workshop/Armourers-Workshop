@@ -6,18 +6,17 @@ import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.builder.other.WorldUpdater;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.LocalDataService;
-import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.init.command.FileArgument;
 import moe.plushie.armourers_workshop.init.command.ListArgument;
-import moe.plushie.armourers_workshop.init.event.ClimbingLocationCheckEvent;
+import moe.plushie.armourers_workshop.init.platform.forge.builder.ConfigBuilderImpl;
+import moe.plushie.armourers_workshop.init.platform.forge.event.ClimbingLocationCheckEvent;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.platform.forge.PreferenceManagerImpl;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.*;
 import net.minecraft.commands.synchronization.ArgumentTypes;
@@ -32,9 +31,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -96,7 +92,8 @@ public class CommonEventDispatcher {
 
     @SubscribeEvent
     public void onConfigReloaded(ModConfig.ModConfigEvent event) {
-        PreferenceManagerImpl.reloadSpec(event.getConfig().getSpec());
+        ConfigBuilderImpl.reloadSpec(ModConfigSpec.CLIENT, event.getConfig().getSpec());
+        ConfigBuilderImpl.reloadSpec(ModConfigSpec.COMMON, event.getConfig().getSpec());
     }
 
     private static class Forge {

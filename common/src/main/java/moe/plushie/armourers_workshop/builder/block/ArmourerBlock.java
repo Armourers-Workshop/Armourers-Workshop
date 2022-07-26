@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.block;
 
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -33,7 +33,7 @@ public class ArmourerBlock extends AbstractHorizontalBlock implements EntityBloc
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        if (MenuManager.openMenu(ModMenuTypes.ARMOURER, player, world, pos)) {
+        if (MenuManager.openMenu(ModMenus.ARMOURER, player, world, pos)) {
             return InteractionResult.CONSUME;
         }
         return InteractionResult.FAIL;

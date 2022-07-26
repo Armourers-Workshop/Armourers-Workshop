@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
@@ -21,7 +21,7 @@ public class SkinnableMenu extends AbstractBlockContainerMenu {
     private Container inventory;
 
     public SkinnableMenu(int containerId, Inventory playerInventory, ContainerLevelAccess worldPos) {
-        super(containerId, ModMenuTypes.SKINNABLE, ModBlocks.SKINNABLE, worldPos);
+        super(containerId, ModMenus.SKINNABLE, ModBlocks.SKINNABLE, worldPos);
         SkinnableBlockEntity tileEntity = getTileEntity(SkinnableBlockEntity.class);
         if (tileEntity == null) {
             return;

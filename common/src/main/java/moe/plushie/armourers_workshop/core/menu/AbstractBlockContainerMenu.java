@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.api.common.IHasInventory;
-import moe.plushie.armourers_workshop.api.registry.IRegistryObject;
+import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;

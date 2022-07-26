@@ -18,6 +18,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -62,7 +63,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     @Override
     public void readFromNBT(CompoundTag nbt) {
-        DataSerializers.loadAllItems(nbt, items);
+        ContainerHelper.loadAllItems(nbt, items);
         modelAngle = DataSerializers.getVector3f(nbt, Constants.Key.TILE_ENTITY_ANGLE);
         modelOffset = DataSerializers.getVector3f(nbt, Constants.Key.TILE_ENTITY_OFFSET);
         rotationSpeed = DataSerializers.getVector3f(nbt, Constants.Key.TILE_ENTITY_ROTATION_SPEED);
@@ -76,7 +77,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     @Override
     public void writeToNBT(CompoundTag nbt) {
-        DataSerializers.saveAllItems(nbt, items);
+        ContainerHelper.saveAllItems(nbt, items);
         DataSerializers.putVector3f(nbt, Constants.Key.TILE_ENTITY_ANGLE, modelAngle);
         DataSerializers.putVector3f(nbt, Constants.Key.TILE_ENTITY_OFFSET, modelOffset);
         DataSerializers.putVector3f(nbt, Constants.Key.TILE_ENTITY_ROTATION_SPEED, rotationSpeed);

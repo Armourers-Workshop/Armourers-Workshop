@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.init.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.core.client.model.BakedModelStroage;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import net.minecraft.client.renderer.MultiBufferSource;

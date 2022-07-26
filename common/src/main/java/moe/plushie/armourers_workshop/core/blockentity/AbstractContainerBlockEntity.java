@@ -1,78 +1,78 @@
 package moe.plushie.armourers_workshop.core.blockentity;
 
-import moe.plushie.armourers_workshop.api.common.IBlockEntityPacketHandler;
 import moe.plushie.armourers_workshop.api.common.IHasInventory;
-import moe.plushie.armourers_workshop.utils.Constants;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class AbstractContainerBlockEntity extends RandomizableContainerBlockEntity implements IBlockEntityPacketHandler, IHasInventory {
+public abstract class AbstractContainerBlockEntity extends AbstractBlockEntity implements Container, IHasInventory {
 
     public AbstractContainerBlockEntity(BlockEntityType<?> entityType) {
         super(entityType);
     }
 
-    public abstract void readFromNBT(CompoundTag nbt);
+    @Override
+    public boolean isEmpty() {
+        return this.getItems().stream().allMatch(ItemStack::isEmpty);
+    }
 
-    public abstract void writeToNBT(CompoundTag nbt);
+    @Override
+    public ItemStack getItem(int i) {
+        return this.getItems().get(i);
+    }
 
-    public void sendBlockUpdates() {
-        if (level != null) {
-            BlockState state = getBlockState();
-            level.sendBlockUpdated(getBlockPos(), state, state, Constants.BlockFlags.DEFAULT_AND_RERENDER);
+    @Override
+    public ItemStack removeItem(int i, int j) {
+        ItemStack itemStack = ContainerHelper.removeItem(this.getItems(), i, j);
+        if (!itemStack.isEmpty()) {
+            this.setChanged();
         }
+        return itemStack;
     }
 
     @Override
-    public void load(BlockState state, CompoundTag nbt) {
-        super.load(state, nbt);
-        this.readFromNBT(nbt);
+    public ItemStack removeItemNoUpdate(int i) {
+        return ContainerHelper.takeItem(this.getItems(), i);
     }
 
     @Override
-    public CompoundTag save(CompoundTag nbt) {
-        super.save(nbt);
-        this.writeToNBT(nbt);
-        return nbt;
+    public void setItem(int i, ItemStack itemStack) {
+        this.getItems().set(i, itemStack);
+        if (itemStack.getCount() > this.getMaxStackSize()) {
+            itemStack.setCount(this.getMaxStackSize());
+        }
+        this.setChanged();
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+    public boolean stillValid(Player player) {
+        if (this.level == null) {
+            return false;
+        }
+        BlockPos pos = this.worldPosition;
+        if (this.level.getBlockEntity(pos) != this) {
+            return false;
+        }
+        return player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0;
     }
 
     @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        CompoundTag tag = new CompoundTag();
-        this.writeToNBT(tag);
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, tag);
+    public void clearContent() {
+        this.getItems().clear();
     }
 
-    @Override
-    public void handleUpdatePacket(BlockState state, CompoundTag tag) {
-        this.readFromNBT(tag);
-        this.sendBlockUpdates();
-    }
+    protected abstract NonNullList<ItemStack> getItems();
 
-    @Override
-    protected AbstractContainerMenu createMenu(int i, Inventory inventory) {
-        return null;
-    }
+    protected abstract void setItems(NonNullList<ItemStack> var1);
 
     @Override
     public Container getInventory() {
         return this;
-    }
-
-    @Override
-    protected Component getDefaultName() {
-        return null;
     }
 }

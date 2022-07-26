@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.library.block;
 
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.library.blockentity.SkinLibraryBlockEntity;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -36,10 +36,10 @@ public class SkinLibraryBlock extends AbstractHorizontalBlock implements EntityB
             return InteractionResult.SUCCESS;
         }
         if (this == ModBlocks.SKIN_LIBRARY.get()) {
-            MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY, player, level, blockPos);
+            MenuManager.openMenu(ModMenus.SKIN_LIBRARY, player, level, blockPos);
         }
         if (this == ModBlocks.SKIN_LIBRARY_CREATIVE.get()) {
-            MenuManager.openMenu(ModMenuTypes.SKIN_LIBRARY_CREATIVE, player, level, blockPos);
+            MenuManager.openMenu(ModMenus.SKIN_LIBRARY_CREATIVE, player, level, blockPos);
         }
         return InteractionResult.CONSUME;
     }

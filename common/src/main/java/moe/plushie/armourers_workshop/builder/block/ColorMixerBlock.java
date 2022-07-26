@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.builder.block;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
-import moe.plushie.armourers_workshop.init.ModMenuTypes;
+import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,7 +53,7 @@ public class ColorMixerBlock extends AbstractHorizontalBlock implements EntityBl
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        if (MenuManager.openMenu(ModMenuTypes.COLOR_MIXER, player, level, blockPos)) {
+        if (MenuManager.openMenu(ModMenus.COLOR_MIXER, player, level, blockPos)) {
             return InteractionResult.CONSUME;
         }
         return InteractionResult.FAIL;

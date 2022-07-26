@@ -2,12 +2,12 @@ package moe.plushie.armourers_workshop.core.network;
 
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
-import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
-import moe.plushie.armourers_workshop.init.platform.PreferenceManager;
+import moe.plushie.armourers_workshop.api.other.network.IClientPacketHandler;
+import moe.plushie.armourers_workshop.init.ModConfigSpec;
 import moe.plushie.armourers_workshop.init.ModContext;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.PreferenceManager;
 import moe.plushie.armourers_workshop.init.platform.environment.EnvironmentType;
-import net.fabricmc.api.EnvType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
@@ -24,7 +24,7 @@ public class UpdateContextPacket extends CustomPacket {
 
     public UpdateContextPacket(FriendlyByteBuf buffer) {
         ModContext.init(buffer.readUUID(), buffer.readUUID());
-        PreferenceManager.setServerEntries(readConfig(buffer));
+        readConfigSpec(buffer);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class UpdateContextPacket extends CustomPacket {
     private void writeConfigSpec(FriendlyByteBuf buffer) {
         try {
             Map<String, Object> fields = new HashMap<>();
-            if (EnvironmentManager.getEnvironmentType() == EnvironmentType.SERVER) {
-                fields = PreferenceManager.getServerEntries();
+            if (EnvironmentManager.isDedicatedServer()) {
+                fields = ModConfigSpec.COMMON.snapshot();
             }
             buffer.writeInt(fields.size());
             if (fields.size() == 0) {
@@ -60,10 +60,10 @@ public class UpdateContextPacket extends CustomPacket {
         }
     }
 
-    private HashMap<String, Object> readConfig(FriendlyByteBuf buffer) {
+    private void readConfigSpec(FriendlyByteBuf buffer) {
         int size = buffer.readInt();
         if (size == 0) {
-            return null;
+            return;
         }
         try {
             HashMap<String, Object> fields = new HashMap<>();
@@ -75,10 +75,9 @@ public class UpdateContextPacket extends CustomPacket {
                 fields.put(name, value);
             }
             oi.close();
-            return fields;
+            ModConfigSpec.COMMON.apply(fields);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
     }
 }
