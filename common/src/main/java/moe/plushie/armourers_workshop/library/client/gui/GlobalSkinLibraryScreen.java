@@ -55,7 +55,6 @@ public class GlobalSkinLibraryScreen extends AWAbstractContainerScreen<GlobalSki
     public GlobalSkinLibraryScreen(GlobalSkinLibraryMenu container, Inventory inventory, Component title) {
         super(container, inventory, title);
 
-//        Minecraft.getInstance().uti
         PlushieAuth.init();
         if (!PlushieAuth.startedRemoteUserCheck()) {
             PlushieAuth.doRemoteUserCheck();

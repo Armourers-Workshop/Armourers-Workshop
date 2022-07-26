@@ -185,7 +185,6 @@ public class SkinRenderType extends RenderType {
                 .add(DefaultVertexFormat.ELEMENT_PADDING)
                 .build();
         RenderType.CompositeState states = RenderType.CompositeState.builder()
-                .setCullState(NO_CULL)
                 .setTextureState(COLORS)
                 .setTexturingState(COLORS_OFFSET)
                 .setDiffuseLightingState(DIFFUSE_LIGHTING)
@@ -203,7 +202,6 @@ public class SkinRenderType extends RenderType {
                 .add(DefaultVertexFormat.ELEMENT_UV0)
                 .build();
         RenderType.CompositeState states = RenderType.CompositeState.builder()
-                .setCullState(NO_CULL)
                 .setTextureState(COLORS)
                 .setTexturingState(COLORS_OFFSET)
                 .setTransparencyState(hasAlpha ? TRANSLUCENT_TRANSPARENCY : NO_TRANSPARENCY)
@@ -214,18 +212,18 @@ public class SkinRenderType extends RenderType {
 
 
     public static RenderType layeredItemSolid(ResourceLocation locationIn) {
-        RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+        RenderType.CompositeState states = RenderType.CompositeState.builder()
                 .setTextureState(new RenderStateShard.TextureStateShard(locationIn, false, false))
                 .setTransparencyState(NO_TRANSPARENCY)
                 .setDiffuseLightingState(DIFFUSE_LIGHTING)
                 .setLightmapState(LIGHTMAP)
                 .setOverlayState(OVERLAY)
                 .createCompositeState(true);
-        return create("forge_item_entity_solid", DefaultVertexFormat.NEW_ENTITY, 7, 256, true, false, rendertype$state);
+        return create("forge_item_entity_solid", DefaultVertexFormat.NEW_ENTITY, 7, 256, true, false, states);
     }
 
     public static RenderType layeredItemTranslucent(ResourceLocation locationIn) {
-        RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+        RenderType.CompositeState states = RenderType.CompositeState.builder()
                 .setTextureState(new RenderStateShard.TextureStateShard(locationIn, false, false))
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                 .setDiffuseLightingState(DIFFUSE_LIGHTING)
@@ -233,12 +231,12 @@ public class SkinRenderType extends RenderType {
                 .setLightmapState(LIGHTMAP)
                 .setOverlayState(OVERLAY)
                 .createCompositeState(true);
-        return create("forge_item_entity_translucent_cull", DefaultVertexFormat.NEW_ENTITY, 7, 256, true, true, rendertype$state);
+        return create("forge_item_entity_translucent_cull", DefaultVertexFormat.NEW_ENTITY, 7, 256, true, true, states);
     }
 
     public static RenderType unsortedTranslucent(ResourceLocation textureLocation) {
         final boolean sortingEnabled = false;
-        RenderType.CompositeState renderState = RenderType.CompositeState.builder()
+        RenderType.CompositeState states = RenderType.CompositeState.builder()
                 .setTextureState(new RenderStateShard.TextureStateShard(textureLocation, false, false))
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                 .setDiffuseLightingState(DIFFUSE_LIGHTING)
@@ -247,7 +245,7 @@ public class SkinRenderType extends RenderType {
                 .setLightmapState(LIGHTMAP)
                 .setOverlayState(OVERLAY)
                 .createCompositeState(true);
-        return create("forge_entity_unsorted_translucent", DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, 256, true, sortingEnabled, renderState);
+        return create("forge_entity_unsorted_translucent", DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, 256, true, sortingEnabled, states);
     }
 
     public boolean usesLight() {

@@ -37,7 +37,6 @@ public class PlushieAuth {
         }
         isInited = true;
 //        PermissionManager.registerPermissions();
-        doRemoteUserCheck();
         PLUSHIE_SESSION.updatePermissionGroup();
     }
 

@@ -9,8 +9,10 @@ import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskUserInfo;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 
 public final class GlobalSkinLibraryUtils {
 
@@ -55,34 +57,40 @@ public final class GlobalSkinLibraryUtils {
         return null;
     }
 
-    public static int[] getJavaVersion() {
-        int[] version = new int[]{6, 0};
+    // Java 8 or lower: 1.6.0_23, 1.7.0, 1.7.0_80, 1.8.0_211
+    // Java 9 or higher: 9.0.1, 11.0.4, 12, 12.0.1
+    public static String[] getJavaVersion() {
         try {
-            String java = System.getProperty("java.version");
-            String[] javaSplit = java.split("_");
-            int javaVersion = Integer.valueOf(javaSplit[1]);
-            version[1] = javaVersion;
-            javaSplit = javaSplit[0].split("\\.");
-            version[0] = Integer.valueOf(javaSplit[1]);
-        } catch (Exception e) {
+            String[] version = System.getProperty("java.version").split("[._]");
+            // modify the version to aligned format.
+            if (Objects.equals(version[0], "1")) {
+                return Arrays.copyOfRange(version, 1, version.length);
+            }
+            return version;
+        } catch (Exception ignored) {
         }
-        return version;
-    }
-
-    public static boolean isValidJavaVersion(int[] javaVersion) {
-        if (javaVersion[0] < 8) {
-            return false;
-        }
-        if (javaVersion[1] < 101) {
-            return false;
-        }
-        return true;
+        return new String[]{"6", "0"};
     }
 
     public static boolean isValidJavaVersion() {
-        int[] javaVersion = getJavaVersion();
-        if (javaVersion[0] < 8 & javaVersion[1] < 101) {
-            return false;
+        String[] javaVersion = getJavaVersion();
+        int[] targetVersion = new int[]{8, 0, 101};
+        for (int i = 0; i < javaVersion.length || i < targetVersion.length; ++i) {
+            int sv = 0, dv = 0;
+            if (i < javaVersion.length) {
+                try {
+                    sv = Integer.parseInt(javaVersion[i]);
+                } catch (Exception ignored) {
+                }
+            }
+            if (i < targetVersion.length) {
+                dv = targetVersion[i];
+            }
+            if (sv < dv) {
+                return false;
+            } else if (sv > dv) {
+                return true;
+            }
         }
         return true;
     }

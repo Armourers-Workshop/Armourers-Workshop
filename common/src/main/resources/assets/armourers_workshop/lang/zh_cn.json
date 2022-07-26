@@ -319,7 +319,7 @@
   "inventory.armourers_workshop.skin-library-global.join.message_4.title": "Account Requirements",
   "inventory.armourers_workshop.skin-library-global.join.message_5.text": "Ready to join? Click the button below to join the community!\n\nIf you have any issues joining please come by the Discord server for help.\n",
   "inventory.armourers_workshop.skin-library-global.join.message_5.title": "All Done",
-  "inventory.armourers_workshop.skin-library-global.join.old_java": "§cYour java version is too old to join the global skin library§r\n\nYour java version [Java %d Update %d] is too old. Please update to [Java 8 Update 101] or newer.\n\nPlease check the FAQ for help fixing this issue.\n%s\n\nThere is also a video guide to help fix this issue.\n%s",
+  "inventory.armourers_workshop.skin-library-global.join.old_java": "§cYour java version is too old to join the global skin library§r\n\nYour java version [Java %s Update %s] is too old. Please update to [Java 8 Update 101] or newer.\n\nPlease check the FAQ for help fixing this issue.\n%s\n\nThere is also a video guide to help fix this issue.\n%s",
   "inventory.armourers_workshop.skin-library-global.panel.info": "信息",
   "inventory.armourers_workshop.skin-library-global.panel.info.download_count": "下载量: 上个小时 %d, 之前一天 %d, 之前一周 %d",
   "inventory.armourers_workshop.skin-library-global.panel.info.error_getting_stats": "获取统计数据错误:",

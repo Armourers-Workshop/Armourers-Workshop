@@ -155,13 +155,14 @@ public class JoinLibraryPanel extends AbstractLibraryPanel {
     private void remake() {
         this.pages.clear();
 
-        int[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
-        boolean validJava = GlobalSkinLibraryUtils.isValidJavaVersion(javaVersion);
+        String[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
+        boolean validJava = GlobalSkinLibraryUtils.isValidJavaVersion();
 
         if (!validJava) {
             Component urlWikiFaq = getURLText(URL_WIKI_FAQ);
             Component urlVideoUpdateJava = getURLText(URL_VIDEO_UPDATE_JAVA);
-            this.pages.add(concat(getDisplayText("old_java", javaVersion[0], javaVersion[1], urlWikiFaq, urlVideoUpdateJava)));
+            String update = javaVersion.length > 2 ? javaVersion[2] : "0";
+            this.pages.add(concat(getDisplayText("old_java", javaVersion[0], update, urlWikiFaq, urlVideoUpdateJava)));
             return;
         }
 
