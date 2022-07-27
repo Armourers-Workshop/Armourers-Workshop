@@ -1,17 +1,21 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import moe.plushie.armourers_workshop.api.client.ISkinRendererProvider;
 import moe.plushie.armourers_workshop.api.skin.ISkinDataProvider;
 import moe.plushie.armourers_workshop.core.client.layer.SkinWardrobeLayer;
-import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.init.ModEntityProfiles;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.*;
-import net.minecraft.client.renderer.entity.*;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -22,28 +26,32 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Function;
 
 @Environment(value = EnvType.CLIENT)
 public class SkinRendererManager {
 
     private static final SkinRendererManager INSTANCE = new SkinRendererManager();
 
-    private final ArrayList<Builder> builders = new ArrayList<>();
+    private final ArrayList<ISkinRendererProvider<SkinRenderer<?, ?>>> builders = new ArrayList<>();
     private ArrayList<Runnable> pendingTasks = new ArrayList<>();
 
     public static SkinRendererManager getInstance() {
         return INSTANCE;
     }
 
-    public static void init() {
+    public void init() {
         EntityRenderDispatcher entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         if (entityRenderManager == null) {
-            RenderSystem.recordRenderCall(SkinRendererManager::init);
+            RenderSystem.recordRenderCall(this::init);
             return;
         }
         SkinRendererManager skinRendererManager = getInstance();
-        skinRendererManager.registerRendererBuilders();
+
+        // execute the pending tasks.
+        ArrayList<Runnable> tasks = skinRendererManager.pendingTasks;
+        skinRendererManager.pendingTasks = null;
+        tasks.forEach(Runnable::run);
+
         for (PlayerRenderer playerRenderer : entityRenderManager.playerRenderers.values()) {
             skinRendererManager.setupRenderer(EntityType.PLAYER, playerRenderer, true);
         }
@@ -53,18 +61,12 @@ public class SkinRendererManager {
                 skinRendererManager.setupRenderer(entityType1, (LivingEntityRenderer<?, ?>) entityRenderer, true);
             }
         });
-
-        // execute the pending tasks.
-        ArrayList<Runnable> tasks = skinRendererManager.pendingTasks;
-        skinRendererManager.pendingTasks = null;
-        tasks.forEach(Runnable::run);
     }
 
-
-    public <T extends Entity, M extends Model> void register(EntityType<T> entityType, EntityProfile entityProfile) {
+    public void bind(EntityType<?> entityType, EntityProfile entityProfile) {
         // if the manager not ready, register again later.
         if (pendingTasks != null) {
-            pendingTasks.add(() -> register(entityType, entityProfile));
+            pendingTasks.add(() -> bind(entityType, entityProfile));
             return;
         }
         EntityRenderDispatcher entityRenderManager = Minecraft.getInstance().getEntityRenderDispatcher();
@@ -85,6 +87,10 @@ public class SkinRendererManager {
                 }
             }
         });
+    }
+
+    public void registerRenderer(ISkinRendererProvider<SkinRenderer<?, ?>> builder) {
+        builders.add(builder);
     }
 
     @Nullable
@@ -131,8 +137,8 @@ public class SkinRendererManager {
     @Nullable
     protected <T extends Entity, M extends Model> SkinRenderer<T, M> createRenderer(EntityType<?> entityType, EntityRenderer<?> entityRenderer, Model entityModel) {
         EntityProfile entityProfile = ModEntityProfiles.getProfile(entityType);
-        for (Builder builder : builders) {
-            SkinRenderer<?, ?> skinRenderer = builder.build(entityType, entityRenderer, entityModel, entityProfile);
+        for (ISkinRendererProvider<SkinRenderer<?, ?>> builder : builders) {
+            SkinRenderer<?, ?> skinRenderer = builder.create(entityType, entityRenderer, entityModel, entityProfile);
             if (skinRenderer != null) {
                 return ObjectUtils.unsafeCast(skinRenderer);
             }
@@ -169,61 +175,5 @@ public class SkinRendererManager {
         }
         SkinRenderer<T, M> skinRenderer = getRenderer(entityType, livingRenderer.getModel(), livingRenderer);
         livingRenderer.addLayer(new SkinWardrobeLayer<>(skinRenderer, livingRenderer));
-    }
-
-    protected void registerRendererBuilders() {
-        // using special skin renderer of the arrow.
-        builders.add(Builder.of(ArrowSkinRenderer::new).whenRenderer(ArrowRenderer.class));
-        builders.add(Builder.of(TridentSkinRenderer::new).whenRenderer(ThrownTridentRenderer.class));
-
-        builders.add(Builder.of(IllagerSkinRenderer::new).whenModel(IllagerModel.class));
-        builders.add(Builder.of(ZombieVillagerSkinRenderer::new).whenModel(ZombieVillagerModel.class));
-        builders.add(Builder.of(VillagerSkinRenderer::new).whenModel(VillagerModel.class));
-
-        builders.add(Builder.of(FirstPersonSkinRenderer::new).whenModel(FirstPersonPlayerModel.class));
-        builders.add(Builder.of(PlayerSkinRenderer::new).whenModel(PlayerModel.class));
-        builders.add(Builder.of(BipedSkinRenderer::new).whenModel(HumanoidModel.class));
-
-        builders.add(Builder.of(SlimeSkinRenderer::new).whenModel(SlimeModel.class));
-        builders.add(Builder.of(GhastSkinRenderer::new).whenModel(GhastModel.class));
-    }
-
-    protected static class Builder {
-
-        Class<?> modelClass;
-        Class<?> rendererClass;
-        Function<EntityProfile, SkinRenderer<?, ?>> factory;
-
-        public static Builder of(Function<EntityProfile, SkinRenderer<?, ?>> factory) {
-            Builder builder = new Builder();
-            builder.factory = factory;
-            return builder;
-        }
-
-        public <T> Builder whenModel(Class<T> modelClass) {
-            this.modelClass = modelClass;
-            return this;
-        }
-
-        public <T> Builder whenRenderer(Class<T> rendererClass) {
-            this.rendererClass = rendererClass;
-            return this;
-        }
-
-        @Nullable
-        public SkinRenderer<?, ?> build(EntityType<?> entityType, EntityRenderer<?> entityRenderer, Model entityModel, EntityProfile entityProfile) {
-            // when specify the type of the model, we need to check it.
-            if (this.modelClass != null && !this.modelClass.isInstance(entityModel)) {
-                return null;
-            }
-            // when specify the type of the renderer, we need to check it.
-            if (this.rendererClass != null && !this.rendererClass.isInstance(entityRenderer)) {
-                return null;
-            }
-            SkinRenderer<?, ?> skinRenderer = this.factory.apply(entityProfile);
-            skinRenderer.initTransformers();
-            skinRenderer.init(ObjectUtils.unsafeCast(entityRenderer));
-            return skinRenderer;
-        }
     }
 }

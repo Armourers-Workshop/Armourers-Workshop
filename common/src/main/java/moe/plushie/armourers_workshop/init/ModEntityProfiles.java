@@ -1,17 +1,15 @@
 package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import net.minecraft.client.model.Model;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class ModEntityProfiles {
@@ -68,14 +66,6 @@ public class ModEntityProfiles {
             .add(SkinTypes.OUTFIT, ModEntityProfiles::mobSlots)
             .build();
 
-    public static final EntityProfile CHICKEN = Builder.create()
-            .add(SkinTypes.ARMOR_HEAD, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_CHEST, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_FEET, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_LEGS, ModEntityProfiles::mobSlots)
-            .add(SkinTypes.ARMOR_WINGS, ModEntityProfiles::mobSlots)
-            .build();
-
     public static final EntityProfile ONLY_HEAD = Builder.create()
             .add(SkinTypes.ARMOR_HEAD, ModEntityProfiles::mobSlots)
             .build();
@@ -123,7 +113,8 @@ public class ModEntityProfiles {
 
         register(EntityType.SLIME, ModEntityProfiles.ONLY_HEAD);
         register(EntityType.GHAST, ModEntityProfiles.ONLY_HEAD);
-//        register(EntityType.CHICKEN, ModEntityProfiles.CHICKEN);
+        register(EntityType.CHICKEN, ModEntityProfiles.ONLY_HEAD);
+        register(EntityType.CREEPER, ModEntityProfiles.ONLY_HEAD);
 
         register(EntityType.ARROW, ModEntityProfiles.PROJECTING);
         register(EntityType.TRIDENT, ModEntityProfiles.PROJECTING);
@@ -136,25 +127,17 @@ public class ModEntityProfiles {
         ModCompatible.registerCustomEntityType();
     }
 
-
-    public static <T extends Entity, M extends Model> void register(EntityType<T> entityType, EntityProfile entityProfile) {
+    public static void register(EntityType<?> entityType, EntityProfile entityProfile) {
         PROFILES.put(entityType, entityProfile);
-        EnvironmentExecutor.setupOn(EnvironmentType.CLIENT, () -> () -> {
-            SkinRendererManager.getInstance().register(entityType, entityProfile);
-        });
     }
 
-    public static <T extends Entity, M extends Model> void register(String registryName, EntityProfile entityProfile) {
-        EntityType<?> entityType = EntityType.byString(registryName).orElse(null);
-        if (entityType == null) {
-            return;
-        }
-        PROFILES.put(entityType, entityProfile);
-        EnvironmentExecutor.setupOn(EnvironmentType.CLIENT, () -> () -> {
-                SkinRendererManager.getInstance().register((EntityType<?>) entityType, entityProfile);
-        });
+    public static void register(String registryName, EntityProfile entityProfile) {
+        EntityType.byString(registryName).ifPresent(entityType -> register(entityType, entityProfile));
     }
 
+    public static void forEach(BiConsumer<EntityType<?>, EntityProfile> consumer) {
+        PROFILES.forEach(consumer);
+    }
 
     @Nullable
     public static <T extends Entity> EntityProfile getProfile(T entity) {

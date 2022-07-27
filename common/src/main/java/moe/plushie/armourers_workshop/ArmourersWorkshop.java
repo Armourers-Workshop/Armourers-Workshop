@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.*;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
+import moe.plushie.armourers_workshop.init.platform.SkinManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -47,8 +47,8 @@ public class ArmourersWorkshop {
             ModKeyBindings.init();
             ClientWardrobeHandler.init();
 
-            // setup skin renderer manager.
-            SkinRendererManager.init();
+            // setup skin manager.
+            SkinManager.init();
         });
     }
 
