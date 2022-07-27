@@ -185,6 +185,7 @@ public class SkinRenderType extends RenderType {
                 .add(DefaultVertexFormat.ELEMENT_PADDING)
                 .build();
         RenderType.CompositeState states = RenderType.CompositeState.builder()
+                .setCullState(NO_CULL)
                 .setTextureState(COLORS)
                 .setTexturingState(COLORS_OFFSET)
                 .setDiffuseLightingState(DIFFUSE_LIGHTING)
@@ -202,6 +203,7 @@ public class SkinRenderType extends RenderType {
                 .add(DefaultVertexFormat.ELEMENT_UV0)
                 .build();
         RenderType.CompositeState states = RenderType.CompositeState.builder()
+                .setCullState(NO_CULL)
                 .setTextureState(COLORS)
                 .setTexturingState(COLORS_OFFSET)
                 .setTransparencyState(hasAlpha ? TRANSLUCENT_TRANSPARENCY : NO_TRANSPARENCY)

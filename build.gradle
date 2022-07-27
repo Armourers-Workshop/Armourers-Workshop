@@ -21,6 +21,23 @@ subprojects {
         // The following line declares the yarn mappings you may select this one as well.
         // mappings "net.fabricmc:yarn:1.16.5+build.10:v2"
     }
+
+    task signJar {
+        onlyIf { System.getenv("AW_SIGN_STORE") != null }
+        doLast {
+            ant.signjar(
+                    destDir: "${remapJar.destinationDir}",
+                    jar: "${remapJar.archivePath}",
+                    alias: System.getenv("AW_SIGN_ALIAS"),
+                    keypass: System.getenv("AW_SIGN_KEY_PASS"),
+                    storepass: System.getenv("AW_SIGN_STORE_PASS"),
+                    keystore: System.getenv("AW_SIGN_STORE"),
+                    storetype: "jks"
+            )
+        }
+    }
+
+    remapJar.finalizedBy(signJar)
 }
 
 allprojects {
