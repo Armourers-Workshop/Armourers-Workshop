@@ -14,9 +14,9 @@ public class LeftLegPartType extends SkinPartType implements ISkinPartTypeTextur
 
     public LeftLegPartType() {
         super();
-        this.buildingSpace = new Rectangle3i(-18, -8, -16, 24, 16, 32);
+        this.buildingSpace = new Rectangle3i(-18, -16, -16, 24, 32, 32);
         this.guideSpace = new Rectangle3i(-2, -12, -2, 4, 12, 4);
-        this.offset = new Vector3i(9, -5, 0);
+        this.offset = new Vector3i(9, -1, 0);
     }
 
     @Override

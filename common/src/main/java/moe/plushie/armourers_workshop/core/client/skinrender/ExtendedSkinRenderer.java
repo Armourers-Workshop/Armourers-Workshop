@@ -30,15 +30,15 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
 
     @Override
     public void initTransformers() {
-        transformer.registerArmor(SkinPartTypes.BIPED_HAT, accessor::getHat);
+        transformer.registerArmor(SkinPartTypes.BIPED_HAT, this::setHatPart);
         transformer.registerArmor(SkinPartTypes.BIPED_HEAD, this::setHeadPart);
-        transformer.registerArmor(SkinPartTypes.BIPED_CHEST, accessor::getBody);
-        transformer.registerArmor(SkinPartTypes.BIPED_LEFT_ARM, accessor::getLeftArm);
-        transformer.registerArmor(SkinPartTypes.BIPED_RIGHT_ARM, accessor::getRightArm);
-        transformer.registerArmor(SkinPartTypes.BIPED_LEFT_FOOT, accessor::getLeftLeg);
-        transformer.registerArmor(SkinPartTypes.BIPED_RIGHT_FOOT, accessor::getRightLeg);
-        transformer.registerArmor(SkinPartTypes.BIPED_LEFT_LEG, accessor::getLeftLeg);
-        transformer.registerArmor(SkinPartTypes.BIPED_RIGHT_LEG, accessor::getRightLeg);
+        transformer.registerArmor(SkinPartTypes.BIPED_CHEST, this::setBodyPart);
+        transformer.registerArmor(SkinPartTypes.BIPED_LEFT_ARM, this::setLeftArmPart);
+        transformer.registerArmor(SkinPartTypes.BIPED_RIGHT_ARM, this::setRightArmPart);
+        transformer.registerArmor(SkinPartTypes.BIPED_LEFT_FOOT, this::setLeftFootPart);
+        transformer.registerArmor(SkinPartTypes.BIPED_RIGHT_FOOT, this::setRightFootPart);
+        transformer.registerArmor(SkinPartTypes.BIPED_LEFT_LEG, this::setLeftLegPart);
+        transformer.registerArmor(SkinPartTypes.BIPED_RIGHT_LEG, this::setRightLegPart);
         transformer.registerArmor(SkinPartTypes.BIPED_SKIRT, this::setSkirtPart);
         transformer.registerArmor(SkinPartTypes.BIPED_RIGHT_WING, this::setWings);
         transformer.registerArmor(SkinPartTypes.BIPED_LEFT_WING, this::setWings);
@@ -110,8 +110,37 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
 
     public abstract IPartAccessor<M> getAccessor();
 
+    protected void setHatPart(PoseStack matrixStack, M model) {
+        transformer.apply(matrixStack, accessor.getHat(model));
+    }
+
     protected void setHeadPart(PoseStack matrixStack, M model) {
         transformer.apply(matrixStack, accessor.getHead(model));
+    }
+
+    protected void setBodyPart(PoseStack matrixStack, M model) {
+        transformer.apply(matrixStack, accessor.getBody(model));
+    }
+
+    protected void setLeftArmPart(PoseStack matrixStack, M model) {
+        transformer.apply(matrixStack, accessor.getLeftArm(model));
+    }
+    protected void setRightArmPart(PoseStack matrixStack, M model) {
+        transformer.apply(matrixStack, accessor.getRightArm(model));
+    }
+
+    protected void setLeftLegPart(PoseStack matrixStack, M model) {
+        transformer.apply(matrixStack, accessor.getLeftLeg(model));
+    }
+    protected void setRightLegPart(PoseStack matrixStack, M model) {
+        transformer.apply(matrixStack, accessor.getRightLeg(model));
+    }
+
+    protected void setLeftFootPart(PoseStack matrixStack, M model) {
+        transformer.apply(matrixStack, accessor.getLeftLeg(model));
+    }
+    protected void setRightFootPart(PoseStack matrixStack, M model) {
+        transformer.apply(matrixStack, accessor.getRightLeg(model));
     }
 
     protected void setSkirtPart(PoseStack matrixStack, M model) {
@@ -130,7 +159,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
         }
     }
 
-    private void setWings(PoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
+    protected void setWings(PoseStack matrixStack, T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart) {
         if (bakedPart.getProperties().get(SkinProperty.WINGS_MATCHING_POSE)) {
             transformer.apply(matrixStack, accessor.getBody(model));
         }

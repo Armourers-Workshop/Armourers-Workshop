@@ -33,20 +33,23 @@ public class ArmourersWorkshop {
             NetworkManager.init("aw2", "3");
             ModPackets.init();
 
+            ModEntityProfiles.init();
             ModHolidays.init();
             ModPermissions.init();
-            ModEntityProfiles.init();
             SkinningRecipes.init();
 
             EnvironmentExecutor.run(() -> SkinLibraryManager::startClient, () -> SkinLibraryManager::startServer);
         });
-        // setup client only objects.
+        // setup client in setup.
         EnvironmentExecutor.setupOn(EnvironmentType.CLIENT, () -> () -> {
             // setup client objects.
             ModDebugger.init();
             ModKeyBindings.init();
             ClientWardrobeHandler.init();
 
+        });
+        // setup client renderer in finish.
+        EnvironmentExecutor.finishOn(EnvironmentType.CLIENT, () -> () -> {
             // setup skin manager.
             SkinManager.init();
         });

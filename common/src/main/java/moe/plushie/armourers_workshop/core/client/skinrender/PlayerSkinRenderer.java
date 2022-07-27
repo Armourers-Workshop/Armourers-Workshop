@@ -17,7 +17,6 @@ public class PlayerSkinRenderer<T extends LivingEntity, M extends PlayerModel<T>
         super(profile);
     }
 
-
     @Override
     protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
         super.apply(entity, model, overriddenManager, renderData);

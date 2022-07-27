@@ -53,6 +53,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
@@ -75,8 +76,7 @@ public class CommonEventDispatcher {
     }
 
     @SubscribeEvent
-    public void onCommonSetup(FMLLoadCompleteEvent event) {
-
+    public void onCommonSetup(FMLCommonSetupEvent event) {
         ArgumentTypes.register("armourers_workshop:items", ListArgument.class, new ListArgument.Serializer());
         ArgumentTypes.register("armourers_workshop:files", FileArgument.class, new FileArgument.Serializer());
 
@@ -88,6 +88,11 @@ public class CommonEventDispatcher {
         // IForgeBlock =>
         //                IBlockHandler2
         //                IBlockHandler3
+    }
+
+    @SubscribeEvent
+    public void onCommonFinish(FMLLoadCompleteEvent event) {
+        event.enqueueWork(() -> EnvironmentExecutor.finish(EnvironmentType.COMMON));
     }
 
     @SubscribeEvent

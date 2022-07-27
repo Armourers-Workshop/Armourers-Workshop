@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
@@ -102,6 +103,8 @@ public class ClientEventDispatcher implements ClientModInitializer {
 
         // load all configs
         FabricConfigTracker.INSTANCE.loadConfigs(FabricConfig.Type.CLIENT, FabricLoader.getInstance().getConfigDir());
+
+        RenderSystem.recordRenderCall(() -> EnvironmentExecutor.finish(EnvironmentType.CLIENT));
     }
 
     public void registerBlockColors() {

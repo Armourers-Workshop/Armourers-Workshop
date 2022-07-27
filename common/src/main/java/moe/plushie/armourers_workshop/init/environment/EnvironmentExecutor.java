@@ -11,16 +11,11 @@ import java.util.function.Supplier;
 
 public class EnvironmentExecutor {
 
-    private static final HashSet<EnvironmentType> STATUS = new HashSet<>();
-    private static final HashMap<EnvironmentType, ArrayList<Supplier<Runnable>>> SETUP_TASKS = new HashMap<>();
+    private static final Manager SETUP = new Manager();
+    private static final Manager FINISH = new Manager();
 
     public synchronized static void setupOn(EnvironmentType type, Supplier<Runnable> task) {
-        // when the setup did complete, direct call the task.
-        if (STATUS.contains(type)) {
-            task.get().run();
-            return;
-        }
-        SETUP_TASKS.computeIfAbsent(type, k -> new ArrayList<>()).add(task);
+        SETUP.add(type, task);
     }
 
     public synchronized static <T> void setupOn(EnvironmentType type, Supplier<Consumer<T>> task, Supplier<T> value) {
@@ -31,11 +26,15 @@ public class EnvironmentExecutor {
     }
 
     public synchronized static void setup(EnvironmentType type) {
-        ArrayList<Supplier<Runnable>> tasks = SETUP_TASKS.remove(type);
-        STATUS.add(type);
-        if (tasks != null) {
-            tasks.forEach(task -> task.get().run());
-        }
+        SETUP.run(type);
+    }
+
+    public synchronized static void finishOn(EnvironmentType type, Supplier<Runnable> task) {
+        FINISH.add(type, task);
+    }
+
+    public synchronized static void finish(EnvironmentType type) {
+        FINISH.run(type);
     }
 
     public static <T> Optional<T> callWhenOn(EnvironmentType envType, Supplier<Supplier<T>> supplier) {
@@ -63,6 +62,29 @@ public class EnvironmentExecutor {
             clientSupplier.get().run();
         } else {
             serverSupplier.get().run();
+        }
+    }
+
+    protected static class Manager {
+
+        private final HashSet<EnvironmentType> status = new HashSet<>();
+        private final HashMap<EnvironmentType, ArrayList<Supplier<Runnable>>> tasks = new HashMap<>();
+
+        public synchronized void add(EnvironmentType type, Supplier<Runnable> task) {
+            // when the setup did complete, direct call the task.
+            if (status.contains(type)) {
+                task.get().run();
+                return;
+            }
+            tasks.computeIfAbsent(type, k -> new ArrayList<>()).add(task);
+        }
+
+        public synchronized void run(EnvironmentType type) {
+            ArrayList<Supplier<Runnable>> tasks = this.tasks.remove(type);
+            status.add(type);
+            if (tasks != null) {
+                tasks.forEach(task -> task.get().run());
+            }
         }
     }
 }

@@ -37,6 +37,7 @@ public class SkinManager {
         manager.accept(Builder.of(IllagerSkinRenderer::new).whenModel(IllagerModel.class));
         manager.accept(Builder.of(ZombieVillagerSkinRenderer::new).whenModel(ZombieVillagerModel.class));
         manager.accept(Builder.of(VillagerSkinRenderer::new).whenModel(VillagerModel.class));
+        manager.accept(Builder.of(IronGolemSkinRenderer::new).whenModel(IronGolemModel.class));
 
         manager.accept(Builder.of(FirstPersonSkinRenderer::new).whenModel(FirstPersonPlayerModel.class));
         manager.accept(Builder.of(PlayerSkinRenderer::new).whenModel(PlayerModel.class));
@@ -44,7 +45,6 @@ public class SkinManager {
 
         manager.accept(Builder.of(SlimeSkinRenderer::new).whenModel(SlimeModel.class));
         manager.accept(Builder.of(GhastSkinRenderer::new).whenModel(GhastModel.class));
-
         manager.accept(Builder.of(ChickenSkinRenderer::new).whenModel(ChickenModel.class));
         manager.accept(Builder.of(CreeperSkinRenderer::new).whenModel(CreeperModel.class));
     }

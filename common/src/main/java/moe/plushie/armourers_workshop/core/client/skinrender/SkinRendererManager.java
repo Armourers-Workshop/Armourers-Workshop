@@ -47,11 +47,6 @@ public class SkinRendererManager {
         }
         SkinRendererManager skinRendererManager = getInstance();
 
-        // execute the pending tasks.
-        ArrayList<Runnable> tasks = skinRendererManager.pendingTasks;
-        skinRendererManager.pendingTasks = null;
-        tasks.forEach(Runnable::run);
-
         for (PlayerRenderer playerRenderer : entityRenderManager.playerRenderers.values()) {
             skinRendererManager.setupRenderer(EntityType.PLAYER, playerRenderer, true);
         }
@@ -61,6 +56,11 @@ public class SkinRendererManager {
                 skinRendererManager.setupRenderer(entityType1, (LivingEntityRenderer<?, ?>) entityRenderer, true);
             }
         });
+
+        // execute the pending tasks.
+        ArrayList<Runnable> tasks = skinRendererManager.pendingTasks;
+        skinRendererManager.pendingTasks = null;
+        tasks.forEach(Runnable::run);
     }
 
     public void bind(EntityType<?> entityType, EntityProfile entityProfile) {

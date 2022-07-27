@@ -43,6 +43,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @OnlyIn(Dist.CLIENT)
@@ -116,6 +117,11 @@ public class ClientEventDispatcher {
     public void onClientSetup(FMLClientSetupEvent event) {
         // forwarding to executor
         EnvironmentExecutor.setup(EnvironmentType.CLIENT);
+    }
+
+    @SubscribeEvent
+    public void onClientFinish(FMLLoadCompleteEvent event) {
+        event.enqueueWork(() -> EnvironmentExecutor.finish(EnvironmentType.CLIENT));
     }
 
     private static class Forge {

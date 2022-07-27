@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
+import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import net.minecraft.client.model.Model;
 import net.minecraft.world.entity.Entity;
@@ -87,47 +88,48 @@ public class ModEntityProfiles {
     }
 
     public static void init() {
-        register(EntityType.PLAYER, ModEntityProfiles.PLAYER);
+        register(EntityType.PLAYER, PLAYER);
 
-        register(EntityType.VILLAGER, ModEntityProfiles.VILLAGER);
-        register(EntityType.WITCH, ModEntityProfiles.VILLAGER);
-        register(EntityType.WANDERING_TRADER, ModEntityProfiles.VILLAGER);
+        register(EntityType.VILLAGER, VILLAGER);
+        register(EntityType.WITCH, VILLAGER);
+        register(EntityType.WANDERING_TRADER, VILLAGER);
 
-        register(EntityType.SKELETON, ModEntityProfiles.COMMON);
-        register(EntityType.STRAY, ModEntityProfiles.COMMON);
-        register(EntityType.WITHER_SKELETON, ModEntityProfiles.COMMON);
-        register(EntityType.ZOMBIE, ModEntityProfiles.COMMON);
-        register(EntityType.HUSK, ModEntityProfiles.COMMON);
-        register(EntityType.ZOMBIE_VILLAGER, ModEntityProfiles.COMMON);
-        register(EntityType.DROWNED, ModEntityProfiles.COMMON);
+        register(EntityType.SKELETON, COMMON);
+        register(EntityType.STRAY, COMMON);
+        register(EntityType.WITHER_SKELETON, COMMON);
+        register(EntityType.ZOMBIE, COMMON);
+        register(EntityType.HUSK, COMMON);
+        register(EntityType.ZOMBIE_VILLAGER, COMMON);
+        register(EntityType.DROWNED, COMMON);
 
-        register(EntityType.EVOKER, ModEntityProfiles.COMMON);
-        register(EntityType.ILLUSIONER, ModEntityProfiles.COMMON);
-        register(EntityType.PILLAGER, ModEntityProfiles.COMMON);
-        register(EntityType.VINDICATOR, ModEntityProfiles.COMMON);
+        register(EntityType.EVOKER, COMMON);
+        register(EntityType.ILLUSIONER, COMMON);
+        register(EntityType.PILLAGER, COMMON);
+        register(EntityType.VINDICATOR, COMMON);
 
-        register(EntityType.VEX, ModEntityProfiles.COMMON);
-        register(EntityType.PIGLIN, ModEntityProfiles.COMMON);
-        register(EntityType.PIGLIN_BRUTE, ModEntityProfiles.COMMON);
-        register(EntityType.ZOMBIFIED_PIGLIN, ModEntityProfiles.COMMON);
+        register(EntityType.VEX, COMMON);
+        register(EntityType.PIGLIN, COMMON);
+        register(EntityType.PIGLIN_BRUTE, COMMON);
+        register(EntityType.ZOMBIFIED_PIGLIN, COMMON);
 
-        register(EntityType.SLIME, ModEntityProfiles.ONLY_HEAD);
-        register(EntityType.GHAST, ModEntityProfiles.ONLY_HEAD);
-        register(EntityType.CHICKEN, ModEntityProfiles.ONLY_HEAD);
-        register(EntityType.CREEPER, ModEntityProfiles.ONLY_HEAD);
+        register(EntityType.SLIME, ONLY_HEAD);
+        register(EntityType.GHAST, ONLY_HEAD);
+        register(EntityType.CHICKEN, ONLY_HEAD);
+        register(EntityType.CREEPER, ONLY_HEAD);
 
-        register(EntityType.ARROW, ModEntityProfiles.PROJECTING);
-        register(EntityType.TRIDENT, ModEntityProfiles.PROJECTING);
+        register(EntityType.ARROW, PROJECTING);
+        register(EntityType.TRIDENT, PROJECTING);
 
 //        register(EntityType.ARMOR_STAND, EntityProfiles.MANNEQUIN);
-//        register(EntityType.IRON_GOLEM, EntityProfiles.MANNEQUIN);
+        register(EntityType.IRON_GOLEM, MANNEQUIN);
 
-        register(ModEntities.MANNEQUIN.get(), ModEntityProfiles.MANNEQUIN);
+        register(ModEntities.MANNEQUIN.get(), MANNEQUIN);
 
         ModCompatible.registerCustomEntityType();
     }
 
     public static void register(EntityType<?> entityType, EntityProfile entityProfile) {
+        ModLog.debug("Registering entity profile '{}'", Registry.ENTITY_TYPE.getKey(entityType));
         PROFILES.put(entityType, entityProfile);
     }
 

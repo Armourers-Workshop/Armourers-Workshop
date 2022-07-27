@@ -120,6 +120,8 @@ public class CommonEventDispatcher implements ModInitializer {
 
         // load all configs
         FabricConfigTracker.INSTANCE.loadConfigs(FabricConfig.Type.COMMON, FabricLoader.getInstance().getConfigDir());
+
+        EnvironmentExecutor.finish(EnvironmentType.COMMON);
     }
 
     public void registerEntityAttributes() {

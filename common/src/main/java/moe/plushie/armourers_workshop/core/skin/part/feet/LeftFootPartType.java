@@ -14,7 +14,7 @@ public class LeftFootPartType extends SkinPartType implements ISkinPartTypeTextu
 
     public LeftFootPartType() {
         super();
-        this.buildingSpace = new Rectangle3i(-18, -13, -16, 24, 5, 32);
+        this.buildingSpace = new Rectangle3i(-18, -14, -16, 24, 10, 32);
         this.guideSpace = new Rectangle3i(-2, -12, -2, 4, 12, 4);
         this.offset = new Vector3i(9, 0, 0);
     }

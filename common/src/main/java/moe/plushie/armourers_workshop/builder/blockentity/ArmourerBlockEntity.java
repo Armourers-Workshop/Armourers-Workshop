@@ -95,7 +95,7 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockHa
     }
 
     public void onRemove(Level world, BlockPos pos, BlockState state) {
-        remakeBoundingBoxes(getBoundingBoxes(), null, true);
+        remakeBoundingBoxes(getFullBoundingBoxes(), null, true);
     }
 
     public ISkinType getSkinType() {
@@ -417,6 +417,23 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockHa
         }
         return boxes;
     }
+
+    private Collection<BoundingBox> getFullBoundingBoxes() {
+        ArrayList<BoundingBox> boxes = new ArrayList<>();
+        for (ISkinPartType partType : skinType.getParts()) {
+            if (shouldAddBoundingBoxes(partType)) {
+                IVector3i origin = partType.getOffset();
+                IRectangle3i buildSpace = partType.getBuildingSpace();
+                int dx = -origin.getX() + buildSpace.getX();
+                int dy = -origin.getY();
+                int dz = origin.getZ() + buildSpace.getZ();
+                Rectangle3i rect = new Rectangle3i(dx, dy, dz, buildSpace.getWidth(), buildSpace.getHeight(), buildSpace.getDepth());
+                boxes.add(new BoundingBox(partType, rect));
+            }
+        }
+        return boxes;
+    }
+
 
     public SkinCubeTransform getTransform() {
         BlockPos pos = getBlockPos().offset(0, 1, 0);
