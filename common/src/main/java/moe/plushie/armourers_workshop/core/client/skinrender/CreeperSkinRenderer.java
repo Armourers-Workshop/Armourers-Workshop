@@ -34,9 +34,5 @@ public class CreeperSkinRenderer<T extends LivingEntity, M extends CreeperModel<
 
     private void offset(PoseStack matrixStack, M model) {
         transformer.apply(matrixStack, model.head);
-        ModDebugger.translate(matrixStack);
-        ModDebugger.scale(matrixStack);
-//        matrixStack.translate(0.0f, -2.0f, -1.0f);
-//        matrixStack.scale(0.5f, 0.5f, 0.5f);
     }
 }
