@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.api.extend;
+package moe.plushie.armourers_workshop.api.common;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public interface IExtendedBlockHandler {
+public interface IBlockHandler {
 
     /**
      * Determines if this block is classified as a Bed, Allowing

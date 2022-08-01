@@ -1,23 +1,23 @@
 package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
-import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.init.ModMenus;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 public class SkinningTableMenu extends AbstractBlockContainerMenu {
 
     private final Container craftingInventory = new SimpleContainer(2);
     private final Container craftingResultInventory = new SimpleContainer(1);
 
-    public SkinningTableMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
-        super(containerId, ModMenus.SKINNING_TABLE, ModBlocks.SKINNING_TABLE, access);
+    public SkinningTableMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
+        super(menuType, block, containerId, access);
         this.addPlayerSlots(playerInventory, 8, 94);
         this.addInputSlot(craftingInventory, 0, 37, 22);
         this.addInputSlot(craftingInventory, 1, 37, 58);

@@ -12,7 +12,6 @@ import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
-import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
@@ -25,11 +24,13 @@ import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Rotations;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -38,8 +39,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
+import org.apache.logging.log4j.util.Strings;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.DataInputStream;
@@ -126,7 +127,17 @@ public class DataSerializers {
             if (player == null || player.level == null) {
                 return null;
             }
-            return SkinWardrobe.of(player.level.getEntity(buffer.readInt()));
+            int entityId = buffer.readInt();
+            Entity entity = player.level.getEntity(entityId);
+            if (entity == null) {
+                for (Player player1 : player.level.players()) {
+                    if (player1.getId() == entityId) {
+                        entity = player1;
+                        break;
+                    }
+                }
+            }
+            return SkinWardrobe.of(entity);
         }
     };
 
@@ -171,7 +182,6 @@ public class DataSerializers {
         }
     };
 
-    public static final HashMap<String, IPaintColor> EMPTY_SIDE_COLORS = new HashMap<>();
     private static final Random RANDOM = new Random();
 
     public static Vector3i getVector3i(CompoundTag nbt, String key) {
@@ -187,11 +197,11 @@ public class DataSerializers {
         if (x == 0 && y == 0 && z == 0) {
             return;
         }
-        ListTag listnbt = new ListTag();
-        listnbt.add(IntTag.valueOf(x));
-        listnbt.add(IntTag.valueOf(y));
-        listnbt.add(IntTag.valueOf(z));
-        nbt.put(key, listnbt);
+        ListTag tags = new ListTag();
+        tags.add(IntTag.valueOf(x));
+        tags.add(IntTag.valueOf(y));
+        tags.add(IntTag.valueOf(z));
+        nbt.put(key, tags);
     }
 
     public static Vector3f getVector3f(CompoundTag nbt, String key) {
@@ -207,11 +217,11 @@ public class DataSerializers {
         if (x == 0 && y == 0 && z == 0) {
             return;
         }
-        ListTag listnbt = new ListTag();
-        listnbt.add(FloatTag.valueOf(x));
-        listnbt.add(FloatTag.valueOf(y));
-        listnbt.add(FloatTag.valueOf(z));
-        nbt.put(key, listnbt);
+        ListTag tags = new ListTag();
+        tags.add(FloatTag.valueOf(x));
+        tags.add(FloatTag.valueOf(y));
+        tags.add(FloatTag.valueOf(z));
+        nbt.put(key, tags);
     }
 
     public static Rectangle3i getRectangle3i(CompoundTag nbt, String key, Rectangle3i defaultValue) {
@@ -226,14 +236,14 @@ public class DataSerializers {
         if (value.equals(defaultValue)) {
             return;
         }
-        ListTag listnbt = new ListTag();
-        listnbt.add(IntTag.valueOf(value.getX()));
-        listnbt.add(IntTag.valueOf(value.getY()));
-        listnbt.add(IntTag.valueOf(value.getZ()));
-        listnbt.add(IntTag.valueOf(value.getWidth()));
-        listnbt.add(IntTag.valueOf(value.getHeight()));
-        listnbt.add(IntTag.valueOf(value.getDepth()));
-        nbt.put(key, listnbt);
+        ListTag tags = new ListTag();
+        tags.add(IntTag.valueOf(value.getX()));
+        tags.add(IntTag.valueOf(value.getY()));
+        tags.add(IntTag.valueOf(value.getZ()));
+        tags.add(IntTag.valueOf(value.getWidth()));
+        tags.add(IntTag.valueOf(value.getHeight()));
+        tags.add(IntTag.valueOf(value.getDepth()));
+        nbt.put(key, tags);
     }
 
     public static boolean getBoolean(CompoundTag nbt, String key, boolean defaultValue) {
@@ -501,29 +511,31 @@ public class DataSerializers {
         return elements;
     }
 
-    public static void putBlock(CompoundTag nbt, String key, Block value) {
-        ResourceLocation registryName = Registry.BLOCK.getKey(value);
-        if (value != null && registryName != null) {
-            nbt.putString(key, registryName.toString());
-        } else {
-            nbt.remove(key);
-        }
-    }
-
-    public static Block getBlock(CompoundTag nbt, String key) {
-        if (nbt.contains(key, Constants.TagFlags.STRING)) {
-            return Registry.BLOCK.get(new ResourceLocation(nbt.getString(key)));
-        }
-        return null;
-    }
-
     @Nullable
     public static GameProfile readGameProfile(CompoundTag compoundTag) {
-        return NbtUtils.readGameProfile(compoundTag);
+        String name = null;
+        UUID id = null;
+        if (compoundTag.contains("Name", 8)) {
+            name = compoundTag.getString("Name");
+        }
+        if (compoundTag.hasUUID("Id")) {
+            id = compoundTag.getUUID("Id");
+        }
+        try {
+            return new GameProfile(id, name);
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     public static CompoundTag writeGameProfile(CompoundTag compoundTag, GameProfile gameProfile) {
-        return NbtUtils.writeGameProfile(compoundTag, gameProfile);
+        if (Strings.isNotBlank(gameProfile.getName())) {
+            compoundTag.putString("Name", gameProfile.getName());
+        }
+        if (gameProfile.getId() != null) {
+            compoundTag.putUUID("Id", gameProfile.getId());
+        }
+        return compoundTag;
     }
 
 
@@ -550,7 +562,7 @@ public class DataSerializers {
     }
 
     public static void dropItemStack(Level level, double x, double y, double z, ItemStack itemStack) {
-        double d0 = (double) EntityType.ITEM.getWidth();
+        double d0 = EntityType.ITEM.getWidth();
         double d1 = 1.0D - d0;
         double d2 = d0 / 2.0D;
         double d3 = Math.floor(x) + RANDOM.nextDouble() * d1 + d2;

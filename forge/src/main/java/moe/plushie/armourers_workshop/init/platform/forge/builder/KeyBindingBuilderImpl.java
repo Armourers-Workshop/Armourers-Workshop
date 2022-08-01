@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 import moe.plushie.armourers_workshop.api.other.builder.IKeyBindingBuilder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedKeyModifier;
+import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
@@ -24,23 +24,23 @@ import java.util.function.Supplier;
 public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBindingBuilder<T> {
 
     private static final ImmutableMap<IKeyModifier, KeyModifier> MODIFIERS1 = ImmutableMap.<IKeyModifier, KeyModifier>builder()
-            .put(ExtendedKeyModifier.CONTROL, KeyModifier.CONTROL)
-            .put(ExtendedKeyModifier.SHIFT, KeyModifier.SHIFT)
-            .put(ExtendedKeyModifier.ALT, KeyModifier.ALT)
-            .put(ExtendedKeyModifier.NONE, KeyModifier.NONE)
+            .put(OpenKeyModifier.CONTROL, KeyModifier.CONTROL)
+            .put(OpenKeyModifier.SHIFT, KeyModifier.SHIFT)
+            .put(OpenKeyModifier.ALT, KeyModifier.ALT)
+            .put(OpenKeyModifier.NONE, KeyModifier.NONE)
             .build();
 
     private static final ImmutableMap<KeyModifier, IKeyModifier> MODIFIERS2 = ImmutableMap.<KeyModifier, IKeyModifier>builder()
-            .put(KeyModifier.CONTROL, ExtendedKeyModifier.CONTROL)
-            .put(KeyModifier.SHIFT, ExtendedKeyModifier.SHIFT)
-            .put(KeyModifier.ALT, ExtendedKeyModifier.ALT)
-            .put(KeyModifier.NONE, ExtendedKeyModifier.NONE)
+            .put(KeyModifier.CONTROL, OpenKeyModifier.CONTROL)
+            .put(KeyModifier.SHIFT, OpenKeyModifier.SHIFT)
+            .put(KeyModifier.ALT, OpenKeyModifier.ALT)
+            .put(KeyModifier.NONE, OpenKeyModifier.NONE)
             .build();
 
     private static final ArrayList<Pair<KeyMapping, Supplier<Runnable>>> INPUTS = new ArrayList<>();
 
-    private String key;
-    private IKeyModifier modifier = ExtendedKeyModifier.NONE;
+    private final String key;
+    private IKeyModifier modifier = OpenKeyModifier.NONE;
     private String category = "";
     private Supplier<Runnable> handler;
 
@@ -86,7 +86,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
 
             @Override
             public IKeyModifier getKeyModifier() {
-                return MODIFIERS2.getOrDefault(binding.getKeyModifier(), ExtendedKeyModifier.NONE);
+                return MODIFIERS2.getOrDefault(binding.getKeyModifier(), OpenKeyModifier.NONE);
             }
         };
         return ObjectUtils.unsafeCast(binding1);

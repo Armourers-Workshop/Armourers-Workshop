@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.capability;
 
 import moe.plushie.armourers_workshop.api.common.INBTRepresentable;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.api.skin.ISkinWardrobe;
 import moe.plushie.armourers_workshop.core.data.SkinDataStorage;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
@@ -29,7 +28,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class SkinWardrobe implements ISkinWardrobe, INBTRepresentable<CompoundTag> {
+public class SkinWardrobe implements INBTRepresentable<CompoundTag> {
 
     private final BitSet flags = new BitSet(6);
 

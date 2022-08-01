@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedVoxelShape;
+import moe.plushie.armourers_workshop.utils.ext.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.texture.PlayerTextureModel;
@@ -30,19 +30,19 @@ public class PackedQuad {
     private final HashMap<SkinRenderType, ArrayList<SkinCubeFace>> allFaces = new HashMap<>();
 
     private final Rectangle3i bounds;
-    private final ExtendedVoxelShape renderShape;
+    private final OpenVoxelShape renderShape;
     private final ColorDescriptor colorInfo = new ColorDescriptor();
 
     private int faceTotal = 0;
 
-    public PackedQuad(Rectangle3i bounds, ExtendedVoxelShape renderShape, ArrayList<SkinCubeFace> faces) {
+    public PackedQuad(Rectangle3i bounds, OpenVoxelShape renderShape, ArrayList<SkinCubeFace> faces) {
         this.bounds = bounds;
         this.renderShape = renderShape;
         this.loadFaces(faces);
     }
 
     public static PackedQuad from(SkinCubeData data) {
-        ExtendedVoxelShape renderShape = data.getRenderShape();
+        OpenVoxelShape renderShape = data.getRenderShape();
         Rectangle3i bounds = new Rectangle3i(renderShape.bounds());
         return new PackedQuad(bounds, renderShape, SkinCuller.cullFaces(data, bounds));
     }
@@ -65,7 +65,7 @@ public class PackedQuad {
             });
             if (quads.size() != 0) {
                 Rectangle3i bounds = box.getBounds();
-                ExtendedVoxelShape renderShape = ExtendedVoxelShape.box(new Rectangle3f(bounds));
+                OpenVoxelShape renderShape = OpenVoxelShape.box(new Rectangle3f(bounds));
                 allQuads.put(entry.getKey(), new PackedQuad(bounds, renderShape, quads));
             }
         }
@@ -99,7 +99,7 @@ public class PackedQuad {
         return bounds;
     }
 
-    public ExtendedVoxelShape getRenderShape() {
+    public OpenVoxelShape getRenderShape() {
         return renderShape;
     }
 

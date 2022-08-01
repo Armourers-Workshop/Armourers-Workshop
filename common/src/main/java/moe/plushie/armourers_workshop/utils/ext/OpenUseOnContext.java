@@ -8,9 +8,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class ExtendedUseOnContext extends UseOnContext {
+public class OpenUseOnContext extends UseOnContext {
 
-    public ExtendedUseOnContext(Level level, @Nullable Player player, InteractionHand interactionHand, ItemStack itemStack, BlockHitResult blockHitResult) {
+    public OpenUseOnContext(Level level, @Nullable Player player, InteractionHand interactionHand, ItemStack itemStack, BlockHitResult blockHitResult) {
         super(level, player, interactionHand, itemStack, blockHitResult);
     }
 }

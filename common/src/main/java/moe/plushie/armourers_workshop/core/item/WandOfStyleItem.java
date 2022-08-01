@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.item;
 
-import moe.plushie.armourers_workshop.api.extend.IExtendedItemHandler;
+import moe.plushie.armourers_workshop.api.common.IItemHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class WandOfStyleItem extends FlavouredItem implements IExtendedItemHandler {
+public class WandOfStyleItem extends FlavouredItem implements IItemHandler {
 
     public WandOfStyleItem(Properties properties) {
         super(properties);

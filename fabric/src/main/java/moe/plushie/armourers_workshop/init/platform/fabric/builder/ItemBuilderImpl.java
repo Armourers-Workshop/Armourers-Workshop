@@ -20,7 +20,7 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
 
     private Item.Properties properties = new FabricItemSettings();
     private Supplier<Consumer<T>> binder;
-    private Function<Item.Properties, T> supplier;
+    private final Function<Item.Properties, T> supplier;
 
     public ItemBuilderImpl(Function<Item.Properties, T> supplier) {
         this.supplier = supplier;

@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModConfig;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedPoseStack;
+import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
@@ -96,7 +96,7 @@ public final class SkinUtils {
 //        return null;
 //    }
 
-    public static void apply(ExtendedPoseStack matrixStack, SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
+    public static void apply(OpenPoseStack matrixStack, SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
         ISkinPartType partType = skinPart.getType();
         if (!(partType instanceof ICanRotation)) {
             return;

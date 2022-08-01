@@ -333,6 +333,7 @@
   "inventory.armourers_workshop.skinnable": "Блок-скин",
   "inventory.armourers_workshop.skinning-table": "Стол нанесения скинов",
   "inventory.armourers_workshop.wardrobe": "Гардероб",
+  "inventory.armourers_workshop.wardrobe-op": "Гардероб",
   "inventory.armourers_workshop.wardrobe.colour_settings": "Настройки цветов",
   "inventory.armourers_workshop.wardrobe.colour_settings.button.eye.auto": "Подобрать автоматически",
   "inventory.armourers_workshop.wardrobe.colour_settings.button.eye.clear": "Сбросить цвет глаз",

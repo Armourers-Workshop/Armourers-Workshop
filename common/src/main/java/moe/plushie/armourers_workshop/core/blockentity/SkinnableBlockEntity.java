@@ -10,11 +10,10 @@ import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedMatrix4f;
+import moe.plushie.armourers_workshop.utils.ext.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
@@ -30,6 +29,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.phys.AABB;
@@ -77,8 +77,8 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     private boolean isDropped = false;
     private boolean isParent = false;
 
-    public SkinnableBlockEntity() {
-        super(ModBlockEntities.SKINNABLE_CUBE.get());
+    public SkinnableBlockEntity(BlockEntityType<?> entityType) {
+        super(entityType);
     }
 
     public static Vector3f getRotations(BlockState state) {
@@ -345,7 +345,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         }
         float f = 1 / 16f;
         Rectangle3f box = bakedSkin.getRenderBounds(null, null, null, null).copy();
-        box.mul(ExtendedMatrix4f.createScaleMatrix(f, -f, f));
+        box.mul(OpenMatrix4f.createScaleMatrix(f, -f, f));
         return box;
     }
 

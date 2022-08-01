@@ -9,6 +9,7 @@ import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,13 +40,19 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class NetworkManagerImpl {
+public class NetworkManagerImpl implements NetworkManager.Impl {
 
     public static MinecraftServer CURRENT_SERVER;
 
-    private static NetworkDispatcher dispatcher;
+    private NetworkDispatcher dispatcher;
 
-    public static void init(String name, String version) {
+    public static NetworkManager.Impl getInstance(String name, String version) {
+        NetworkManagerImpl impl = new NetworkManagerImpl();
+        impl.init(name, version);
+        return impl;
+    }
+
+    public void init(String name, String version) {
         dispatcher = new NetworkDispatcher(ArmourersWorkshop.getResource(name), version);
 
         ServerLoginConnectionEvents.QUERY_START.register(dispatcher::startServerHandshake);
@@ -59,31 +66,35 @@ public class NetworkManagerImpl {
         });
     }
 
-    public static void sendToAll(final CustomPacket message) {
+    @Override
+    public void sendToAll(final CustomPacket message) {
         dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(PlayerLookup.all(getServer())));
     }
 
-    public static void sendToTracking(final CustomPacket message, final Entity entity) {
+    @Override
+    public void sendToTracking(final CustomPacket message, final Entity entity) {
         dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(PlayerLookup.tracking(entity)));
     }
 
-    public static void sendTo(final CustomPacket message, final ServerPlayer player) {
+    @Override
+    public void sendTo(final CustomPacket message, final ServerPlayer player) {
         dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(Collections.singleton(player)));
     }
 
+    @Override
     @Environment(value = EnvType.CLIENT)
-    public static void sendToServer(final CustomPacket message) {
+    public void sendToServer(final CustomPacket message) {
         ClientPacketListener connection = Minecraft.getInstance().getConnection();
         if (connection != null) {
             dispatcher.split(message, NetworkDirection.PLAY_TO_SERVER, connection::send);
         }
     }
 
-    private static Consumer<Packet<?>> getSender(Collection<ServerPlayer> players) {
+    private Consumer<Packet<?>> getSender(Collection<ServerPlayer> players) {
         return packet -> players.forEach(player -> player.connection.send(packet));
     }
 
-    private static MinecraftServer getServer() {
+    private MinecraftServer getServer() {
         return CURRENT_SERVER;
     }
 

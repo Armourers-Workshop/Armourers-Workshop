@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
-import net.minecraft.client.model.Model;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Nullable;
@@ -129,7 +128,7 @@ public class ModEntityProfiles {
     }
 
     public static void register(EntityType<?> entityType, EntityProfile entityProfile) {
-        ModLog.debug("Registering entity profile '{}'", Registry.ENTITY_TYPE.getKey(entityType));
+        ModLog.debug("Registering Entity Profile '{}'", Registry.ENTITY_TYPE.getKey(entityType));
         PROFILES.put(entityType, entityProfile);
     }
 

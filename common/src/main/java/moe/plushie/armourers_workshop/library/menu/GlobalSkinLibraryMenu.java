@@ -2,15 +2,15 @@ package moe.plushie.armourers_workshop.library.menu;
 
 import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.init.ModMenus;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 public class GlobalSkinLibraryMenu extends AbstractBlockContainerMenu {
 
@@ -20,8 +20,8 @@ public class GlobalSkinLibraryMenu extends AbstractBlockContainerMenu {
     public int inventoryHeight = 76;
     private boolean isVisible = false;
 
-    public GlobalSkinLibraryMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
-        super(containerId, ModMenus.SKIN_LIBRARY_GLOBAL, ModBlocks.SKIN_LIBRARY_GLOBAL, access);
+    public GlobalSkinLibraryMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
+        super(menuType, block, containerId, access);
         this.playerInventory = playerInventory;
         this.reload(0, 0, 240, 240);
     }

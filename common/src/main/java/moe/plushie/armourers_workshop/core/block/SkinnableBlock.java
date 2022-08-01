@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.core.block;
 
-import moe.plushie.armourers_workshop.api.extend.IExtendedBlockHandler;
+import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
+import moe.plushie.armourers_workshop.api.common.IBlockHandler;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.entity.SeatEntity;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.init.ModEntities;
 import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.ModPermissions;
@@ -25,7 +27,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements EntityBlock, IExtendedBlockHandler {
+public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements IBlockEntityProvider, IBlockHandler {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
@@ -59,7 +60,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements E
 
     @Override
     public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return new SkinnableBlockEntity();
+        return ModBlockEntities.SKINNABLE_CUBE.get().create();
     }
 
     @Override

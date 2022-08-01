@@ -14,6 +14,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -52,8 +53,8 @@ public class BuilderManagerImpl implements BuilderManager.Impl {
     }
 
     @Override
-    public <T extends BlockEntity> IBlockEntityBuilder<T> createBlockEntityBuilder(Supplier<T> factory) {
-        return new BlockEntityBuilderImpl<>(factory);
+    public <T extends BlockEntity> IBlockEntityBuilder<T> createBlockEntityBuilder(Function<BlockEntityType<?>, T> supplier) {
+        return new BlockEntityBuilderImpl<>(supplier);
     }
 
     @Override

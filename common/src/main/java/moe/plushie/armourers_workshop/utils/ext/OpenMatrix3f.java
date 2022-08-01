@@ -3,30 +3,32 @@ package moe.plushie.armourers_workshop.utils.ext;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Quaternion;
 
-public class ExtendedMatrix3f extends Matrix3f {
+import java.nio.FloatBuffer;
 
-    public ExtendedMatrix3f() {
+public class OpenMatrix3f extends Matrix3f {
+
+    public OpenMatrix3f() {
         super();
     }
 
-    public ExtendedMatrix3f(Quaternion quaternion) {
+    public OpenMatrix3f(Quaternion quaternion) {
         super(quaternion);
     }
 
-    public ExtendedMatrix3f(Matrix3f matrix) {
+    public OpenMatrix3f(Matrix3f matrix) {
         super(matrix);
     }
 
-    public static ExtendedMatrix3f createScaleMatrix(float x, float y, float z) {
-        ExtendedMatrix3f matrix = new ExtendedMatrix3f();
+    public static OpenMatrix3f createScaleMatrix(float x, float y, float z) {
+        OpenMatrix3f matrix = new OpenMatrix3f();
         matrix.m00 = x;
         matrix.m11 = y;
         matrix.m22 = z;
         return matrix;
     }
 
-    public static ExtendedMatrix3f fromFloatBuffer(float[][] values) {
-        ExtendedMatrix3f matrix = new ExtendedMatrix3f();
+    public static OpenMatrix3f fromFloatBuffer(float[][] values) {
+        OpenMatrix3f matrix = new OpenMatrix3f();
         matrix.m00 = values[0][0];
         matrix.m01 = values[0][1];
         matrix.m02 = values[0][2];
@@ -40,10 +42,10 @@ public class ExtendedMatrix3f extends Matrix3f {
     }
 
     public static float[][] toFloatBuffer(Matrix3f matrix) {
-        if (matrix instanceof ExtendedMatrix3f) {
-            return ((ExtendedMatrix3f) matrix).toArray();
+        if (matrix instanceof OpenMatrix3f) {
+            return ((OpenMatrix3f) matrix).toArray();
         }
-        return new ExtendedMatrix3f(matrix).toArray();
+        return new OpenMatrix3f(matrix).toArray();
     }
 
     public float[][] toArray() {
@@ -73,7 +75,7 @@ public class ExtendedMatrix3f extends Matrix3f {
     }
 
     public void multiply(Quaternion other) {
-        this.multiply(new ExtendedMatrix3f(other));
+        this.multiply(new OpenMatrix3f(other));
     }
 
     public void multiply(float ratio) {
@@ -86,5 +88,21 @@ public class ExtendedMatrix3f extends Matrix3f {
         this.m20 *= ratio;
         this.m21 *= ratio;
         this.m22 *= ratio;
+    }
+
+    public void store(FloatBuffer floatBuffer) {
+        floatBuffer.put(bufferIndex(0, 0), this.m00);
+        floatBuffer.put(bufferIndex(0, 1), this.m01);
+        floatBuffer.put(bufferIndex(0, 2), this.m02);
+        floatBuffer.put(bufferIndex(1, 0), this.m10);
+        floatBuffer.put(bufferIndex(1, 1), this.m11);
+        floatBuffer.put(bufferIndex(1, 2), this.m12);
+        floatBuffer.put(bufferIndex(2, 0), this.m20);
+        floatBuffer.put(bufferIndex(2, 1), this.m21);
+        floatBuffer.put(bufferIndex(2, 2), this.m22);
+    }
+
+    private static int bufferIndex(int i, int j) {
+        return j * 3 + i;
     }
 }

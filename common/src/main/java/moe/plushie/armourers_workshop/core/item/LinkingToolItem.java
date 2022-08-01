@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.item;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.common.IItemHandler;
 import moe.plushie.armourers_workshop.api.common.IItemModelProperty;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
-import moe.plushie.armourers_workshop.api.extend.IExtendedItemHandler;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
-public class LinkingToolItem extends FlavouredItem implements IExtendedItemHandler, IItemPropertiesProvider {
+public class LinkingToolItem extends FlavouredItem implements IItemHandler, IItemPropertiesProvider {
 
     public LinkingToolItem(Properties properties) {
         super(properties);

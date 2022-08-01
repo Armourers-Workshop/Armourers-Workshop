@@ -1,6 +1,6 @@
-package moe.plushie.armourers_workshop.init.mixin;
+package moe.plushie.armourers_workshop.init.mixin.fabric;
 
-import moe.plushie.armourers_workshop.api.common.IBlockEntityPacketHandler;
+import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
-public class ClientPacketListenerMixin {
+public class FabricClientPacketListenerMixin {
 
     @Inject(method = "handleBlockEntityData", at = @At("RETURN"))
     private void hooked_handleBlockEntityData(ClientboundBlockEntityDataPacket packet, CallbackInfo ci) {
@@ -21,8 +21,8 @@ public class ClientPacketListenerMixin {
             return;
         }
         BlockEntity blockEntity = level.getBlockEntity(packet.getPos());
-        if (blockEntity instanceof IBlockEntityPacketHandler) {
-            ((IBlockEntityPacketHandler) blockEntity).handleUpdatePacket(blockEntity.getBlockState(), packet.getTag());
+        if (blockEntity instanceof IBlockEntityHandler) {
+            ((IBlockEntityHandler) blockEntity).handleUpdatePacket(blockEntity.getBlockState(), packet.getTag());
         }
     }
 }

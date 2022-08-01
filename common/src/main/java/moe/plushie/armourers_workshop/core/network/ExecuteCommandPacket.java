@@ -117,7 +117,7 @@ public class ExecuteCommandPacket extends CustomPacket {
 
     private Class<?> readClass(FriendlyByteBuf buffer) {
         try {
-            return Class.forName(buffer.readUtf());
+            return Class.forName(buffer.readUtf(Short.MAX_VALUE));
         } catch (ClassNotFoundException e) {
             return null;
         }

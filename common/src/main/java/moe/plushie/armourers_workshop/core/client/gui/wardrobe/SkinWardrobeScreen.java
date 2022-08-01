@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
 @Environment(value = EnvType.CLIENT)
-public class SkinWardrobeScreen extends AWAbstractContainerScreen<SkinWardrobeMenu> {
+public class SkinWardrobeScreen<M extends SkinWardrobeMenu> extends AWAbstractContainerScreen<M> {
 
     private final Entity entity;
     private final Player operator;
@@ -36,7 +36,7 @@ public class SkinWardrobeScreen extends AWAbstractContainerScreen<SkinWardrobeMe
     private int lastMouseX = 0;
     private int lastMouseY = 0;
 
-    public SkinWardrobeScreen(SkinWardrobeMenu container, Inventory inventory, Component title) {
+    public SkinWardrobeScreen(M container, Inventory inventory, Component title) {
         super(container, inventory, title);
 
         this.imageWidth = 278;

@@ -22,9 +22,9 @@ import java.util.function.ToIntFunction;
 
 public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
 
-    protected BlockBehaviour.Properties properties;
-    protected Supplier<Consumer<T>> binder;
-    protected Function<BlockBehaviour.Properties, T> supplier;
+    private BlockBehaviour.Properties properties;
+    private Supplier<Consumer<T>> binder;
+    private final Function<BlockBehaviour.Properties, T> supplier;
 
     public BlockBuilderImpl(Function<BlockBehaviour.Properties, T> supplier, Material material, MaterialColor materialColor) {
         this.properties  = BlockBehaviour.Properties.of(material, materialColor);

@@ -13,7 +13,7 @@ import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedPoseStack;
+import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
@@ -96,7 +96,7 @@ public class SkinExporterPolygon implements ISkinExporter {
         os.flush();
 
         // apply the render context matrix.
-        ExtendedPoseStack matrixStack = ExtendedPoseStack.create();
+        OpenPoseStack matrixStack = OpenPoseStack.create();
         matrixStack.scale(scale, scale, scale);
         matrixStack.scale(-1, -1, 1);
         matrixStack.mul(Vector3f.YP.rotationDegrees(90));
@@ -117,7 +117,7 @@ public class SkinExporterPolygon implements ISkinExporter {
         outputStream.close();
     }
 
-    private void writeVert(ExtendedPoseStack matrixStack, OutputStreamWriter os, float x, float y, float z, PaintColor color) throws IOException {
+    private void writeVert(OpenPoseStack matrixStack, OutputStreamWriter os, float x, float y, float z, PaintColor color) throws IOException {
         Vector4f q = new Vector4f(x, y, z, 1);
         matrixStack.applyPose(q);
         os.write(String.format("%s %s %s %d %d %d", f2s(q.x()), f2s(q.y()), f2s(q.z()), color.getRed(), color.getGreen(), color.getBlue()) + CRLF);

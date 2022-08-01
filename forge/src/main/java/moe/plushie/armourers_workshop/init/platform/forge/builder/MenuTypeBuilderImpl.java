@@ -23,9 +23,9 @@ import java.util.function.Supplier;
 
 public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements IMenuTypeBuilder<T> {
 
-    protected IMenuProvider<T, D> factory;
-    protected IPlayerDataSerializer<D> serializer;
-    protected Supplier<Consumer<MenuType<T>>> binder;
+    private final IMenuProvider<T, D> factory;
+    private final IPlayerDataSerializer<D> serializer;
+    private Supplier<Consumer<MenuType<T>>> binder;
 
     public MenuTypeBuilderImpl(IMenuProvider<T, D> factory, IPlayerDataSerializer<D> serializer) {
         this.factory = factory;
@@ -43,13 +43,15 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
 
     @Override
     public IRegistryObject<MenuType<T>> build(String name) {
-        MenuType<T> menuType = IForgeContainerType.create((id, inv, buf) -> factory.createMenu(id, inv, serializer.read(buf, inv.player)));
+        MenuType<?>[] menuTypes = {null};
+        MenuType<T> menuType = IForgeContainerType.create((id, inv, buf) -> factory.createMenu(menuTypes[0], id, inv, serializer.read(buf, inv.player)));
         IRegistryObject<MenuType<T>> object = Registry.MENU_TYPE.register(name, () -> menuType);
         MenuManager.registerMenuOpener(menuType, serializer, (player, title, value) -> {
-            SimpleMenuProvider menuProvider = new SimpleMenuProvider((window, inv, player2) -> factory.createMenu(window, inv, value), title);
+            SimpleMenuProvider menuProvider = new SimpleMenuProvider((window, inv, player2) -> factory.createMenu(menuTypes[0], window, inv, value), title);
             NetworkHooks.openGui(player, menuProvider, buf -> serializer.write(buf, player, value));
             return true;
         });
+        menuTypes[0] = menuType;
         EnvironmentExecutor.setupOn(EnvironmentType.CLIENT, binder, object);
         return object;
     }

@@ -1,8 +1,5 @@
 accessWidener   v1  named
 
-#public net.minecraft.entity.item.ArmorStandEntity func_213815_f(Lnet/minecraft/util/DamageSource;)V # brokenByPlayer
-#public net.minecraft.entity.item.ArmorStandEntity func_213816_g(Lnet/minecraft/util/DamageSource;)V # brokenByAnything
-
 extendable class com/mojang/math/Matrix3f
 extendable class com/mojang/math/Matrix4f
 

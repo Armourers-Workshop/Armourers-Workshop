@@ -8,20 +8,20 @@ import moe.plushie.armourers_workshop.utils.math.Vector4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-public abstract class ExtendedPoseStack {
+public abstract class OpenPoseStack {
 
-    public static ExtendedPoseStack create() {
-        ExtendedMatrix4f pose = ExtendedMatrix4f.createScaleMatrix(1, 1, 1);
-        ExtendedMatrix3f normal = ExtendedMatrix3f.createScaleMatrix(1, 1, 1);
-        return new ExtendedPoseStack() {
+    public static OpenPoseStack create() {
+        OpenMatrix4f pose = OpenMatrix4f.createScaleMatrix(1, 1, 1);
+        OpenMatrix3f normal = OpenMatrix3f.createScaleMatrix(1, 1, 1);
+        return new OpenPoseStack() {
             @Override
             public void translate(double x, double y, double z) {
-                pose.multiply(ExtendedMatrix4f.createTranslateMatrix((float) x, (float) y, (float) z));
+                pose.multiply(OpenMatrix4f.createTranslateMatrix((float) x, (float) y, (float) z));
             }
 
             @Override
             public void scale(float x, float y, float z) {
-                pose.multiply(ExtendedMatrix4f.createScaleMatrix(x, y, z));
+                pose.multiply(OpenMatrix4f.createScaleMatrix(x, y, z));
                 if (x == y && y == z) {
                     if (x > 0.0F) {
                         return;
@@ -32,13 +32,13 @@ public abstract class ExtendedPoseStack {
                 float f1 = 1.0F / y;
                 float f2 = 1.0F / z;
                 float f3 = MathUtils.fastInvCubeRoot(f * f1 * f2);
-                normal.multiply(ExtendedMatrix3f.createScaleMatrix(f3 * f, f3 * f1, f3 * f2));
+                normal.multiply(OpenMatrix3f.createScaleMatrix(f3 * f, f3 * f1, f3 * f2));
             }
 
             @Override
             public void mul(Quaternion quaternion) {
-                pose.multiply(new ExtendedMatrix4f(quaternion));
-                normal.multiply(new ExtendedMatrix3f(quaternion));
+                pose.multiply(new OpenMatrix4f(quaternion));
+                normal.multiply(new OpenMatrix3f(quaternion));
             }
 
             @Override
@@ -54,8 +54,8 @@ public abstract class ExtendedPoseStack {
     }
 
     @Environment(value = EnvType.CLIENT)
-    public static ExtendedPoseStack wrap(PoseStack matrixStack) {
-        return new ExtendedPoseStack() {
+    public static OpenPoseStack wrap(PoseStack matrixStack) {
+        return new OpenPoseStack() {
             @Override
             public void translate(double x, double y, double z) {
                 matrixStack.translate(x, y, z);

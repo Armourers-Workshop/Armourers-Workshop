@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedMatrix4f;
+import moe.plushie.armourers_workshop.utils.ext.OpenMatrix4f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -142,31 +142,6 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
             this.shape = shape;
         }
 
-//        public Part(CompoundTag nbt) {
-//            this.offset = AWDataSerializers.getBlockPos(nbt, AWConstants.NBT.TILE_ENTITY_REFER, BlockPos.ZERO);
-//            this.shape = AWDataSerializers.getRectangle3i(nbt, AWConstants.NBT.TILE_ENTITY_SHAPE, Rectangle3i.ZERO);
-//        }
-//
-//        public static void putBlockParts(CompoundTag nbt, String key, ArrayList<Part> elements) {
-//            if (elements.isEmpty()) {
-//                return;
-//            }
-//            ListTag list = new ListTag();
-//            for (Part element : elements) {
-//                list.add(element.writeToNBT(new CompoundTag()));
-//            }
-//            nbt.put(key, list);
-//        }
-//
-//        public static ArrayList<Part> getBlockParts(CompoundTag nbt, String key) {
-//            ArrayList<Part> elements = new ArrayList<>();
-//            ListTag list = nbt.getList(key, AWConstants.NBT2.TAG_COMPOUND);
-//            for (int i = 0; i < list.size(); ++i) {
-//                elements.add(new Part(list.getCompound(i)));
-//            }
-//            return elements;
-//        }
-
         public CompoundTag writeToNBT(CompoundTag nbt) {
             DataSerializers.putBlockPos(nbt, Constants.Key.TILE_ENTITY_REFER, offset, null);
             DataSerializers.putRectangle3i(nbt, Constants.Key.TILE_ENTITY_SHAPE, shape, null);
@@ -237,7 +212,7 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
             ArrayList<SkinMarker> newMarkerList = new ArrayList<>();
             for (SkinMarker marker : markerList) {
                 Vector4f f = new Vector4f(marker.x, marker.y, marker.z, 1.0f);
-                f.transform(ExtendedMatrix4f.createScaleMatrix(-1, -1, 1));
+                f.transform(OpenMatrix4f.createScaleMatrix(-1, -1, 1));
                 f.transform(q);
                 int x = Math.round(f.x());
                 int y = Math.round(f.y());

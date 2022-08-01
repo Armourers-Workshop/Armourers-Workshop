@@ -6,7 +6,6 @@ import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.MathUtils;
@@ -20,6 +19,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 
@@ -57,8 +57,8 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     private Vector3f rotationSpeed = new Vector3f();
     private Vector3f rotationOffset = new Vector3f();
 
-    public HologramProjectorBlockEntity() {
-        super(ModBlockEntities.HOLOGRAM_PROJECTOR.get());
+    public HologramProjectorBlockEntity(BlockEntityType<?> entityType) {
+        super(entityType);
     }
 
     @Override

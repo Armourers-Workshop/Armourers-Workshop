@@ -12,9 +12,7 @@ import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.exception.SkinSaveException;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModItems;
-import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.Container;
@@ -22,17 +20,19 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 
 public class ArmourerMenu extends AbstractBlockContainerMenu {
 
     private final SimpleContainer inventory = new SimpleContainer(4);
     private Group group = null;
 
-    public ArmourerMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
-        super(containerId, ModMenus.ARMOURER, ModBlocks.ARMOURER, access);
+    public ArmourerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
+        super(menuType, block, containerId, access);
         this.addPlayerSlots(playerInventory, 8, 142);
         this.addCustomSlot(inventory, 0, 64, 21);
         this.addCustomSlot(inventory, 1, 147, 21);

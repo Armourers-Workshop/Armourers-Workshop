@@ -74,7 +74,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
             BlockPos pos = entity.getBlockPos();
             matrixStack.pushPose();
             matrixStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            RenderUtils.drawBoundingBox(matrixStack, entity.getRenderBoundingBox(), Color.ORANGE, buffers);
+            RenderUtils.drawBoundingBox(matrixStack, entity.getCustomRenderBoundingBox(), Color.ORANGE, buffers);
             matrixStack.popPose();
         }
     }

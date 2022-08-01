@@ -3,9 +3,7 @@ package moe.plushie.armourers_workshop.builder.menu;
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
 import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
-import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.init.ModMenus;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedUseOnContext;
+import moe.plushie.armourers_workshop.utils.ext.OpenUseOnContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
@@ -14,11 +12,13 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -26,8 +26,8 @@ public class ColorMixerMenu extends AbstractBlockContainerMenu {
 
     private final Container inventory = new SimpleContainer(2);
 
-    public ColorMixerMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
-        super(containerId, ModMenus.COLOR_MIXER, ModBlocks.COLOR_MIXER, access);
+    public ColorMixerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
+        super(menuType, block, containerId, access);
         this.addPlayerSlots(playerInventory, 48, 158);
         this.addCustomSlot(inventory, 0, 83, 101);
         this.addCustomSlot(inventory, 1, 134, 101);
@@ -80,6 +80,6 @@ public class ColorMixerMenu extends AbstractBlockContainerMenu {
 
     protected UseOnContext buildContext(Level world, BlockPos pos, ItemStack itemStack) {
         BlockHitResult traceResult = BlockHitResult.miss(Vec3.ZERO, Direction.NORTH, pos);
-        return new ExtendedUseOnContext(world, null, InteractionHand.OFF_HAND, itemStack, traceResult);
+        return new OpenUseOnContext(world, null, InteractionHand.OFF_HAND, itemStack, traceResult);
     }
 }

@@ -6,7 +6,10 @@ import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
+import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
+import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
@@ -22,12 +25,14 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle2i;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
@@ -223,33 +228,33 @@ public class ClientEventDispatcher {
             }
         }
 
-//        @SubscribeEvent
-//        public void onRenderLivingPre(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
-//            LivingEntity entity = event.getEntity();
-//            SkinRenderData renderData = SkinRenderData.of(entity);
-//            if (renderData == null) {
-//                return;
-//            }
-//            EntityModel<?> entityModel = event.getRenderer().getModel();
-//            SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
-//            if (renderer != null) {
-//                renderer.willRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getPoseStack(), event.getBuffers());
-//            }
-//        }
-//
-//        @SubscribeEvent
-//        public void onRenderLivingPost(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
-//            LivingEntity entity = event.getEntity();
-//            SkinRenderData renderData = SkinRenderData.of(entity);
-//            if (renderData == null) {
-//                return;
-//            }
-//            EntityModel<?> entityModel = event.getRenderer().getModel();
-//            SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
-//            if (renderer != null) {
-//                renderer.didRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getPoseStack(), event.getBuffers());
-//            }
-//        }
+        @SubscribeEvent
+        public void onRenderLivingPre(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
+            LivingEntity entity = event.getEntity();
+            SkinRenderData renderData = SkinRenderData.of(entity);
+            if (renderData == null) {
+                return;
+            }
+            EntityModel<?> entityModel = event.getRenderer().getModel();
+            SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
+            if (renderer != null) {
+                renderer.willRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
+            }
+        }
+
+        @SubscribeEvent
+        public void onRenderLivingPost(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
+            LivingEntity entity = event.getEntity();
+            SkinRenderData renderData = SkinRenderData.of(entity);
+            if (renderData == null) {
+                return;
+            }
+            EntityModel<?> entityModel = event.getRenderer().getModel();
+            SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
+            if (renderer != null) {
+                renderer.didRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
+            }
+        }
 
         @SubscribeEvent
         public void onRenderSpecificFirstPersonHand(RenderArmEvent event) {

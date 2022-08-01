@@ -33,7 +33,7 @@ public final class SkinPartSerializerV14 {
 
         cubeData = new SkinCubeData();
         cubeData.readFromStream(stream, version, skinPart);
-        markerBlocks = new ArrayList<SkinMarker>();
+        markerBlocks = new ArrayList<>();
         int markerCount = stream.readInt();
         for (int i = 0; i < markerCount; i++) {
             markerBlocks.add(new SkinMarker(stream, version));

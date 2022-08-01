@@ -13,8 +13,8 @@ import java.util.function.Supplier;
 
 public class ItemGroupBuilderImpl<T extends CreativeModeTab> implements IItemGroupBuilder<T> {
 
-    protected Supplier<Supplier<ItemStack>> icon = () -> () -> ItemStack.EMPTY;
-    protected BiConsumer<List<ItemStack>, CreativeModeTab> appendItems;
+    private Supplier<Supplier<ItemStack>> icon = () -> () -> ItemStack.EMPTY;
+    private BiConsumer<List<ItemStack>, CreativeModeTab> appendItems;
 
     public ItemGroupBuilderImpl() {
     }

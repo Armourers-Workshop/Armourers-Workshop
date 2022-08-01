@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedVoxelShape;
+import moe.plushie.armourers_workshop.utils.ext.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import net.minecraft.core.BlockPos;
 
@@ -18,7 +18,7 @@ public class SkinPart implements ISkinPart {
 
     protected ISkinPartType partType;
 
-    protected ExtendedVoxelShape renderShape;
+    protected OpenVoxelShape renderShape;
     protected Rectangle3i partBounds;
 
     protected SkinProperties properties;
@@ -54,9 +54,9 @@ public class SkinPart implements ISkinPart {
         return 0;
     }
 
-    public ExtendedVoxelShape getRenderShape() {
+    public OpenVoxelShape getRenderShape() {
         if (getType() == SkinPartTypes.ITEM_ARROW) {
-            return ExtendedVoxelShape.empty();
+            return OpenVoxelShape.empty();
         }
         return renderShape;
     }

@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.api.extend;
+package moe.plushie.armourers_workshop.api.common;
 
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 
-public interface IExtendedItemHandler {
+public interface IItemHandler {
 
     /**
      * Called when the player Left Clicks (attacks) an entity. Processed before

@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.builder.block;
 
-import moe.plushie.armourers_workshop.api.extend.IExtendedBlockHandler;
+import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
+import moe.plushie.armourers_workshop.api.common.IBlockHandler;
 import moe.plushie.armourers_workshop.builder.blockentity.BoundingBoxBlockEntity;
+import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -17,14 +19,13 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class BoundingBoxBlock extends Block implements EntityBlock, IExtendedBlockHandler {
+public class BoundingBoxBlock extends Block implements IBlockEntityProvider, IBlockHandler {
 
     public BoundingBoxBlock(BlockBehaviour.Properties properties) {
         super(properties);
@@ -53,7 +54,7 @@ public class BoundingBoxBlock extends Block implements EntityBlock, IExtendedBlo
 
     @Override
     public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return new BoundingBoxBlockEntity();
+        return ModBlockEntities.BOUNDING_BOX.get().create();
     }
 
     @Override

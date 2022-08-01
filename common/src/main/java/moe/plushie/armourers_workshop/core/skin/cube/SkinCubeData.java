@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.skin.data.serialize.LegacyCubeHelper;
 import moe.plushie.armourers_workshop.core.skin.exception.InvalidCubeTypeException;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedVoxelShape;
+import moe.plushie.armourers_workshop.utils.ext.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import net.minecraft.core.Direction;
@@ -73,11 +73,11 @@ public class SkinCubeData {
         return new SkinCubeFace(slice.getX(), slice.getY(), slice.getZ(), PaintColor.of(rgb, paintType), alpha, dir, cube);
     }
 
-    public ExtendedVoxelShape getRenderShape() {
+    public OpenVoxelShape getRenderShape() {
         if (bufferSlice == null) {
-            return ExtendedVoxelShape.empty();
+            return OpenVoxelShape.empty();
         }
-        ExtendedVoxelShape shape = ExtendedVoxelShape.empty();
+        OpenVoxelShape shape = OpenVoxelShape.empty();
         int count = cubeCount;
         if (count == 0) {
             return shape;

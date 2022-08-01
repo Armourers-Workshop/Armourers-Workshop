@@ -3,10 +3,13 @@
   "package": "moe.plushie.armourers_workshop.init.mixin.forge",
   "compatibilityLevel": "JAVA_8",
   "client": [
+    "ForgeLivingRendererMixin"
   ],
   "mixins": [
-    "ForgeLivingEntityMixin",
-    "ForgeHooksMixin"
+    "IItemHandlerMixin",
+    "IBlockHandlerMixin",
+    "IBlockEntityHandlerMixin",
+    "IEntityHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

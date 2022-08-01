@@ -16,11 +16,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Environment(value = EnvType.CLIENT)
-public class GlobalSkinLibraryTitleEntityRenderer<T extends BlockEntity> extends BlockEntityRenderer<T> {
+public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends BlockEntityRenderer<T> {
 
     private final ModelPart model = new ModelPart(64, 32, 0, 0);
 
-    public GlobalSkinLibraryTitleEntityRenderer(BlockEntityRenderDispatcher rendererManager) {
+    public GlobalSkinLibraryBlockEntityRenderer(BlockEntityRenderDispatcher rendererManager) {
         super(rendererManager);
         this.model.addBox(-8, -8, -8, 16, 16, 16);
     }

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -17,6 +18,7 @@ import net.minecraft.client.renderer.RenderType;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -91,6 +93,8 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         }
     }
 
+    static final FloatBuffer buffer = FloatBuffer.allocate(9);
+
     public abstract static class Pass {
 
         public abstract int getLightmap();
@@ -100,6 +104,8 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
         public abstract int getVertexCount();
 
         public abstract Matrix4f getMatrix();
+
+        public abstract Matrix3f getNormalMatrix();
 
         public abstract ISkinPartType getPartType();
 

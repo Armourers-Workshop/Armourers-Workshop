@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.entity;
 
-import moe.plushie.armourers_workshop.api.extend.IExtendedEntityHandler;
+import moe.plushie.armourers_workshop.api.common.IEntityHandler;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModItems;
@@ -36,7 +36,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 @SuppressWarnings("unused")
-public class MannequinEntity extends ArmorStand implements IExtendedEntityHandler {
+public class MannequinEntity extends ArmorStand implements IEntityHandler {
 
     public static final int PLACEHOLDER_ENTITY_ID = -1;
 

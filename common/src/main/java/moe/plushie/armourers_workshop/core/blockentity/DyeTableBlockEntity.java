@@ -1,17 +1,17 @@
 package moe.plushie.armourers_workshop.core.blockentity;
 
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class DyeTableBlockEntity extends AbstractContainerBlockEntity {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(10, ItemStack.EMPTY);
 
-    public DyeTableBlockEntity() {
-        super(ModBlockEntities.DYE_TABLE.get());
+    public DyeTableBlockEntity(BlockEntityType<?> entityType) {
+        super(entityType);
     }
 
     @Override

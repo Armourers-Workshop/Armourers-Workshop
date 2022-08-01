@@ -3,22 +3,22 @@ package moe.plushie.armourers_workshop.utils.ext;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 
-public class ExtendedMatrix4f extends Matrix4f {
+public class OpenMatrix4f extends Matrix4f {
 
-    public ExtendedMatrix4f() {
+    public OpenMatrix4f() {
         super();
     }
 
-    public ExtendedMatrix4f(Matrix4f matrix4f) {
+    public OpenMatrix4f(Matrix4f matrix4f) {
         super(matrix4f);
     }
 
-    public ExtendedMatrix4f(Quaternion quaternion) {
+    public OpenMatrix4f(Quaternion quaternion) {
         super(quaternion);
     }
 
-    public static ExtendedMatrix4f createScaleMatrix(float x, float y, float z) {
-        ExtendedMatrix4f matrix = new ExtendedMatrix4f();
+    public static OpenMatrix4f createScaleMatrix(float x, float y, float z) {
+        OpenMatrix4f matrix = new OpenMatrix4f();
         matrix.m00 = x;
         matrix.m11 = y;
         matrix.m22 = z;
@@ -26,8 +26,8 @@ public class ExtendedMatrix4f extends Matrix4f {
         return matrix;
     }
 
-    public static ExtendedMatrix4f createTranslateMatrix(float x, float y, float z) {
-        ExtendedMatrix4f matrix = new ExtendedMatrix4f();
+    public static OpenMatrix4f createTranslateMatrix(float x, float y, float z) {
+        OpenMatrix4f matrix = new OpenMatrix4f();
         matrix.m00 = 1.0F;
         matrix.m11 = 1.0F;
         matrix.m22 = 1.0F;
@@ -38,8 +38,8 @@ public class ExtendedMatrix4f extends Matrix4f {
         return matrix;
     }
 
-    public static ExtendedMatrix4f fromFloatBuffer(float[][] values) {
-        ExtendedMatrix4f matrix = new ExtendedMatrix4f();
+    public static OpenMatrix4f fromFloatBuffer(float[][] values) {
+        OpenMatrix4f matrix = new OpenMatrix4f();
         matrix.m00 = values[0][0];
         matrix.m01 = values[0][1];
         matrix.m02 = values[0][2];
@@ -60,10 +60,10 @@ public class ExtendedMatrix4f extends Matrix4f {
     }
 
     public static float[][] toFloatBuffer(Matrix4f matrix) {
-        if (matrix instanceof ExtendedMatrix4f) {
-            return ((ExtendedMatrix4f) matrix).toArray();
+        if (matrix instanceof OpenMatrix4f) {
+            return ((OpenMatrix4f) matrix).toArray();
         }
-        return new ExtendedMatrix4f(matrix).toArray();
+        return new OpenMatrix4f(matrix).toArray();
     }
 
     public float[][] toArray() {
@@ -107,7 +107,7 @@ public class ExtendedMatrix4f extends Matrix4f {
     }
 
     public void multiply(Quaternion quaternion) {
-        this.multiply(new ExtendedMatrix4f(quaternion));
+        this.multiply(new OpenMatrix4f(quaternion));
     }
 
     public void multiply(float f) {

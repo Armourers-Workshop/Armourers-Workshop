@@ -24,6 +24,7 @@ import moe.plushie.armourers_workshop.init.command.FileArgument;
 import moe.plushie.armourers_workshop.init.command.ListArgument;
 import moe.plushie.armourers_workshop.init.command.ReflectArgumentBuilder;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
+import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -61,16 +62,17 @@ public class ModCommands {
                 .then(ReflectArgumentBuilder.literal("debug", ModDebugger.class))
                 .requires(source -> source.hasPermission(2))
                 .then(Commands.literal("library").then(Commands.literal("reload").executes(Executor::reloadLibrary)))
-                .then(Commands.literal("setSkin").then(targets().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
-                .then(Commands.literal("giveSkin").then(targets().then(skins().executes(Executor::giveSkin))))
-                .then(Commands.literal("clearSkin").then(targets().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
+                .then(Commands.literal("setSkin").then(players().then(slots().then(skins().executes(Executor::setSkin))).then(skins().executes(Executor::setSkin))))
+                .then(Commands.literal("giveSkin").then(players().then(skins().executes(Executor::giveSkin))))
+                .then(Commands.literal("clearSkin").then(players().then(slotNames().then(slots().executes(Executor::clearSkin))).executes(Executor::clearSkin)))
                 .then(Commands.literal("exportSkin").then(skinFormats().then(outputFileName().then(scale().executes(Executor::exportSkin)).executes(Executor::exportSkin))))
-                .then(Commands.literal("resyncWardrobe").then(targets().executes(Executor::resyncWardrobe)))
+                .then(Commands.literal("rsyncWardrobe").then(players().executes(Executor::resyncWardrobe)))
+                .then(Commands.literal("openWardrobe").then(players().executes(Executor::openWardrobe)))
                 .then(Commands.literal("itemSkinnable").then(addOrRemote().then(overrideTypes().executes(Executor::setItemSkinnable))))
-                .then(Commands.literal("setUnlockedSlots").then(targets().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
+                .then(Commands.literal("setUnlockedSlots").then(players().then(resizableSlotNames().then(resizableSlotAmounts().executes(Executor::setUnlockedWardrobeSlots)))));
     }
 
-    static ArgumentBuilder<CommandSourceStack, ?> targets() {
+    static ArgumentBuilder<CommandSourceStack, ?> players() {
         return Commands.argument("targets", EntityArgument.players());
     }
 
@@ -273,6 +275,17 @@ public class ModCommands {
                 SkinWardrobe wardrobe = SkinWardrobe.of(player);
                 if (wardrobe != null) {
                     wardrobe.broadcast();
+                }
+            }
+            return 1;
+        }
+
+        static int openWardrobe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            for (Player player : EntityArgument.getPlayers(context, "targets")) {
+                SkinWardrobe wardrobe = SkinWardrobe.of(player);
+                if (wardrobe != null) {
+                    MenuManager.openMenu(ModMenus.WARDROBE_OP, player, wardrobe);
+                    break;
                 }
             }
             return 1;

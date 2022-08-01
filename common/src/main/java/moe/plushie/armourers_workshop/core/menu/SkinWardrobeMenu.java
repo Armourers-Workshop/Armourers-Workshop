@@ -5,12 +5,12 @@ import moe.plushie.armourers_workshop.core.data.slot.SkinSlot;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.init.ModMenus;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -30,8 +30,8 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
 
     private Group group = null;
 
-    public SkinWardrobeMenu(int containerId, Inventory inventory, SkinWardrobe wardrobe) {
-        super(ModMenus.WARDROBE.get(), containerId);
+    public SkinWardrobeMenu(MenuType<?> menuType, int containerId, Inventory inventory, SkinWardrobe wardrobe) {
+        super(menuType, containerId);
         this.wardrobe = wardrobe;
         this.player = inventory.player;
 

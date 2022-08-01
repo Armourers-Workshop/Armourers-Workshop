@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.holiday;
 
-import moe.plushie.armourers_workshop.core.holiday.Holiday;
 import moe.plushie.armourers_workshop.core.item.MannequinItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

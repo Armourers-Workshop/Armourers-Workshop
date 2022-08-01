@@ -4,39 +4,32 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.network.UpdateContextPacket;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 public class NetworkManager {
 
-    @ExpectPlatform
+    private static Impl IMPL;
+
     public static void init(String name, String version) {
-        throw new AssertionError();
+        IMPL = getInstance(name, version);
     }
 
-    @ExpectPlatform
     public static void sendToAll(final CustomPacket message) {
-        throw new AssertionError();
+        IMPL.sendToAll(message);
     }
 
-    @ExpectPlatform
     public static void sendToTracking(final CustomPacket message, final Entity entity) {
-        throw new AssertionError();
+        IMPL.sendToTracking(message, entity);
     }
 
-    @ExpectPlatform
     public static void sendTo(final CustomPacket message, final ServerPlayer player) {
-        throw new AssertionError();
+        IMPL.sendTo(message, player);
     }
 
-    @ExpectPlatform
-    @Environment(value = EnvType.CLIENT)
     public static void sendToServer(final CustomPacket message) {
-        throw new AssertionError();
+        IMPL.sendToServer(message);
     }
-
 
     public static void sendContextToAll() {
         sendToAll(new UpdateContextPacket());
@@ -51,6 +44,22 @@ public class NetworkManager {
         if (wardrobe != null) {
             wardrobe.broadcast(player);
         }
+    }
+
+    @ExpectPlatform
+    public static Impl getInstance(String name, String version) {
+        throw new AssertionError();
+    }
+
+    public interface Impl {
+
+        void sendToAll(final CustomPacket message);
+
+        void sendToTracking(final CustomPacket message, final Entity entity);
+
+        void sendTo(final CustomPacket message, final ServerPlayer player);
+
+        void sendToServer(final CustomPacket message);
     }
 }
 

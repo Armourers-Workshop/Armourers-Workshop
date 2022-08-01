@@ -1,8 +1,10 @@
 package moe.plushie.armourers_workshop.builder.block;
 
+import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.builder.blockentity.ColorMixerBlockEntity;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
+import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.core.BlockPos;
@@ -14,13 +16,12 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class ColorMixerBlock extends AbstractHorizontalBlock implements EntityBlock, IBlockTintColorProvider {
+public class ColorMixerBlock extends AbstractHorizontalBlock implements IBlockEntityProvider, IBlockTintColorProvider {
 
     public ColorMixerBlock(Properties properties) {
         super(properties);
@@ -28,7 +29,7 @@ public class ColorMixerBlock extends AbstractHorizontalBlock implements EntityBl
 
     @Override
     public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return new ColorMixerBlockEntity();
+        return ModBlockEntities.COLOR_MIXER.get().create();
     }
 
     @Override

@@ -11,7 +11,6 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -26,6 +25,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -41,8 +41,8 @@ public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPain
 
     protected boolean customRenderer = false;
 
-    public BoundingBoxBlockEntity() {
-        super(ModBlockEntities.BOUNDING_BOX.get());
+    public BoundingBoxBlockEntity(BlockEntityType<?> entityType) {
+        super(entityType);
     }
 
     public void readFromNBT(CompoundTag nbt) {

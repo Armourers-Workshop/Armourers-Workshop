@@ -1,9 +1,9 @@
-package moe.plushie.armourers_workshop.api.extend;
+package moe.plushie.armourers_workshop.api.common;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.HitResult;
 
-public interface IExtendedEntityHandler {
+public interface IEntityHandler {
 
     /**
      * Called when a user uses the creative pick block button on this entity.
@@ -14,5 +14,4 @@ public interface IExtendedEntityHandler {
     default ItemStack getCustomPickResult(HitResult target) {
         return ItemStack.EMPTY;
     }
-
 }

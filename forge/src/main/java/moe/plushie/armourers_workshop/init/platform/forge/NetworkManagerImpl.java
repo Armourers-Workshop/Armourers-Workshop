@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.network.IClientPacketHandler;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
+import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.PacketSplitter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -27,11 +28,17 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class NetworkManagerImpl {
+public class NetworkManagerImpl implements NetworkManager.Impl {
 
     private static NetworkDispatcher dispatcher;
 
-    public static void init(String name, String version) {
+    public static NetworkManager.Impl getInstance(String name, String version) {
+        NetworkManagerImpl impl = new NetworkManagerImpl();
+        impl.init(name, version);
+        return impl;
+    }
+
+    public void init(String name, String version) {
         dispatcher = new NetworkDispatcher(ArmourersWorkshop.getResource(name));
         EventNetworkChannel channel = NetworkRegistry.ChannelBuilder
                 .named(dispatcher.channelName)
@@ -42,20 +49,24 @@ public class NetworkManagerImpl {
         channel.registerObject(dispatcher);
     }
 
-    public static void sendToAll(final CustomPacket message) {
+    @Override
+    public void sendToAll(final CustomPacket message) {
         dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, PacketDistributor.PLAYER.noArg()::send);
     }
 
-    public static void sendToTracking(final CustomPacket message, final Entity entity) {
+    @Override
+    public void sendToTracking(final CustomPacket message, final Entity entity) {
         dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, PacketDistributor.TRACKING_ENTITY.with(() -> entity)::send);
     }
 
-    public static void sendTo(final CustomPacket message, final ServerPlayer player) {
+    @Override
+    public void sendTo(final CustomPacket message, final ServerPlayer player) {
         dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, player.connection::send);
     }
 
+    @Override
     @OnlyIn(Dist.CLIENT)
-    public static void sendToServer(final CustomPacket message) {
+    public void sendToServer(final CustomPacket message) {
         ClientPacketListener connection = Minecraft.getInstance().getConnection();
         if (connection != null) {
             dispatcher.split(message, NetworkDirection.PLAY_TO_SERVER, connection::send);

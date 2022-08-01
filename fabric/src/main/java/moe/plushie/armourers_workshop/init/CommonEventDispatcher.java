@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.init;
 
 import com.mojang.brigadier.CommandDispatcher;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.extend.IExtendedBlockHandler;
-import moe.plushie.armourers_workshop.api.extend.IExtendedItemHandler;
+import moe.plushie.armourers_workshop.api.common.IBlockHandler;
+import moe.plushie.armourers_workshop.api.common.IItemHandler;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.builder.other.WorldUpdater;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
@@ -113,11 +113,6 @@ public class CommonEventDispatcher implements ModInitializer {
 
         onCommonSetup();
 
-        // TODO: @SAGESSE
-        // IForgeBlock =>
-        //                IBlockHandler2
-        //                IBlockHandler3
-
         // load all configs
         FabricConfigTracker.INSTANCE.loadConfigs(FabricConfig.Type.COMMON, FabricLoader.getInstance().getConfigDir());
 
@@ -220,7 +215,7 @@ public class CommonEventDispatcher implements ModInitializer {
             return InteractionResult.PASS;
         }
         ItemStack itemStack = player.getItemInHand(hand);
-        IExtendedItemHandler handler = ObjectUtils.safeCast(itemStack.getItem(), IExtendedItemHandler.class);;
+        IItemHandler handler = ObjectUtils.safeCast(itemStack.getItem(), IItemHandler.class);;
         if (handler != null) {
             InteractionResult result = handler.attackLivingEntity(itemStack, player, entity);
             if (result.consumesAction()) {
@@ -235,7 +230,7 @@ public class CommonEventDispatcher implements ModInitializer {
             return InteractionResult.PASS;
         }
         ItemStack itemStack = player.getItemInHand(hand);
-        IExtendedItemHandler handler = ObjectUtils.safeCast(itemStack.getItem(), IExtendedItemHandler.class);;
+        IItemHandler handler = ObjectUtils.safeCast(itemStack.getItem(), IItemHandler.class);;
         if (handler != null) {
             return handler.useOnFirst(itemStack, new UseOnContext(player, hand, hitResult));
         }
@@ -246,7 +241,7 @@ public class CommonEventDispatcher implements ModInitializer {
         if (entity.isSpectator()) {
             return InteractionResult.PASS;
         }
-        IExtendedBlockHandler handler = ObjectUtils.safeCast(blockState.getBlock(), IExtendedBlockHandler.class);
+        IBlockHandler handler = ObjectUtils.safeCast(blockState.getBlock(), IBlockHandler.class);
         if (handler != null && handler.isCustomLadder(entity.level, blockPos, blockState, entity)) {
             return InteractionResult.SUCCESS;
         }
@@ -254,7 +249,7 @@ public class CommonEventDispatcher implements ModInitializer {
     }
 
     public InteractionResult onAllowBed(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
-        IExtendedBlockHandler handler = ObjectUtils.safeCast(state.getBlock(), IExtendedBlockHandler.class);
+        IBlockHandler handler = ObjectUtils.safeCast(state.getBlock(), IBlockHandler.class);
         if (handler != null && handler.isCustomBed(entity.level, sleepingPos, state, entity)) {
             return InteractionResult.SUCCESS;
         }
@@ -264,7 +259,7 @@ public class CommonEventDispatcher implements ModInitializer {
     public void onStopSleep(LivingEntity entity, BlockPos sleepingPos) {
         Level level = entity.level;
         BlockState state = level.getBlockState(sleepingPos);
-        IExtendedBlockHandler handler = ObjectUtils.safeCast(state.getBlock(), IExtendedBlockHandler.class);
+        IBlockHandler handler = ObjectUtils.safeCast(state.getBlock(), IBlockHandler.class);
         if (handler != null && handler.isCustomBed(level, sleepingPos, state, entity)) {
             level.setBlock(sleepingPos, state.setValue(BedBlock.OCCUPIED, false), 3);
             Vec3 vector3d1 = BedBlock.findStandUpPosition(entity.getType(), level, sleepingPos, entity.yRot).orElseGet(() -> {
@@ -308,7 +303,7 @@ public class CommonEventDispatcher implements ModInitializer {
             return InteractionResult.PASS;
         }
         BlockState state = level.getBlockState(pos);
-        IExtendedBlockHandler handler = ObjectUtils.safeCast(state.getBlock(), IExtendedBlockHandler.class);
+        IBlockHandler handler = ObjectUtils.safeCast(state.getBlock(), IBlockHandler.class);
         if (handler != null) {
             InteractionResult result = handler.attackBlock(level, pos, state, direction, player, hand);
             if (result == InteractionResult.CONSUME) {

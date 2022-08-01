@@ -55,9 +55,9 @@ public class ConfigBuilderImpl {
 
     public static class SpecProxy implements IConfigSpec {
 
-        protected ForgeConfigSpec spec;
-        protected HashMap<String, ValueProxy<Object>> values;
-        protected Map<String, Object> snapshot;
+        private ForgeConfigSpec spec;
+        private Map<String, Object> snapshot;
+        private final HashMap<String, ValueProxy<Object>> values;
 
         public SpecProxy(HashMap<String, ValueProxy<Object>> values) {
             this.values = values;

@@ -83,8 +83,6 @@ public class PlayerTextureDescriptor {
         if (profile != null) {
             CompoundTag nbt1 = new CompoundTag();
             DataSerializers.writeGameProfile(nbt1, profile);
-            // we not need properties, and the properties so bigger, so remove it.
-            nbt1.remove("Properties");
             nbt.put(Constants.Key.TEXTURE_PROFILE, nbt1);
         }
         return nbt;

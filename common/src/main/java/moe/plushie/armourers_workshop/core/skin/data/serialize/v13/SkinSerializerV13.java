@@ -117,7 +117,7 @@ public final class SkinSerializerV13 {
         } else {
             StringBuilder sb = new StringBuilder();
             while (true) {
-                sb.append(new String(new byte[]{stream.readByte()}, "UTF-8"));
+                sb.append(new String(new byte[]{stream.readByte()}, StandardCharsets.UTF_8));
                 if (sb.toString().endsWith("armourers:")) {
                     break;
                 }
@@ -126,7 +126,7 @@ public final class SkinSerializerV13 {
             sb = new StringBuilder();
             sb.append("armourers:");
             while (SkinTypes.byName(sb.toString()) == null) {
-                sb.append(new String(new byte[]{stream.readByte()}, "UTF-8"));
+                sb.append(new String(new byte[]{stream.readByte()}, StandardCharsets.UTF_8));
             }
             ModLog.info(sb.toString());
             skinType = SkinTypes.byName(sb.toString());

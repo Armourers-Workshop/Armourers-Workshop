@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.blockentity;
 
-import moe.plushie.armourers_workshop.api.common.IBlockEntityPacketHandler;
+import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class AbstractBlockEntity extends BlockEntity implements IBlockEntityPacketHandler {
+public abstract class AbstractBlockEntity extends BlockEntity implements IBlockEntityHandler {
 
     public AbstractBlockEntity(BlockEntityType<?> entityType) {
         super(entityType);

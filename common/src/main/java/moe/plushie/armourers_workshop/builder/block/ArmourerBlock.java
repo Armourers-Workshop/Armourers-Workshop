@@ -1,7 +1,9 @@
 package moe.plushie.armourers_workshop.builder.block;
 
+import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
+import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import net.minecraft.core.BlockPos;
@@ -12,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -22,7 +23,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.function.Consumer;
 
-public class ArmourerBlock extends AbstractHorizontalBlock implements EntityBlock {
+public class ArmourerBlock extends AbstractHorizontalBlock implements IBlockEntityProvider {
 
     public ArmourerBlock(BlockBehaviour.Properties properties) {
         super(properties);
@@ -63,7 +64,7 @@ public class ArmourerBlock extends AbstractHorizontalBlock implements EntityBloc
 
     @Override
     public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return new ArmourerBlockEntity();
+        return ModBlockEntities.ARMOURER.get().create();
     }
 
     private void applyTitleEntity(Level world, BlockPos pos, Consumer<ArmourerBlockEntity> consumer) {

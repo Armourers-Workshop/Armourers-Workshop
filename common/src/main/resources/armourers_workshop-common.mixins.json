@@ -4,12 +4,10 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "ArrowRendererMixin",
-    "ClientPacketListenerMixin",
     "EntityRendererMixin",
     "HttpTextureMixin",
     "InventoryScreenMixin",
     "ItemRendererMixin",
-    "LivingRendererMixin",
     "RenderBuffersMixin",
     "ThrownTridentRendererMixin"
   ],

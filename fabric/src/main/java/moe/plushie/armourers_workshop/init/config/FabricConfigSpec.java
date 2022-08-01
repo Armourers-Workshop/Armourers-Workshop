@@ -461,7 +461,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
             context.setClazz(clazz);
             V[] allowedValues = clazz.getEnumConstants();
             context.setComment(ObjectArrays.concat(context.getComment(), "Allowed Values: " + Arrays.stream(allowedValues).filter(validator).map(Enum::name).collect(Collectors.joining(", "))));
-            return new EnumValue<V>(this, define(path, new ValueSpec(defaultSupplier, validator, context), defaultSupplier).getPath(), defaultSupplier, converter, clazz);
+            return new EnumValue<>(this, define(path, new ValueSpec(defaultSupplier, validator, context), defaultSupplier).getPath(), defaultSupplier, converter, clazz);
         }
 
         //boolean
@@ -470,7 +470,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
         }
 
         public BooleanValue define(List<String> path, boolean defaultValue) {
-            return define(path, (Supplier<Boolean>) () -> defaultValue);
+            return define(path, () -> defaultValue);
         }
 
         public BooleanValue define(String path, Supplier<Boolean> defaultSupplier) {
@@ -897,7 +897,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
 
         @Override
         protected Integer getRaw(Config config, List<String> path, Supplier<Integer> defaultSupplier) {
-            return config.getIntOrElse(path, () -> defaultSupplier.get());
+            return config.getIntOrElse(path, defaultSupplier::get);
         }
     }
 
@@ -908,7 +908,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
 
         @Override
         protected Long getRaw(Config config, List<String> path, Supplier<Long> defaultSupplier) {
-            return config.getLongOrElse(path, () -> defaultSupplier.get());
+            return config.getLongOrElse(path, defaultSupplier::get);
         }
     }
 
@@ -919,7 +919,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
 
         @Override
         protected Double getRaw(Config config, List<String> path, Supplier<Double> defaultSupplier) {
-            Number n = config.<Number>get(path);
+            Number n = config.get(path);
             return n == null ? defaultSupplier.get() : n.doubleValue();
         }
     }

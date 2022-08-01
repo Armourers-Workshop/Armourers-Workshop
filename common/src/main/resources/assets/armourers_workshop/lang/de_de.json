@@ -333,6 +333,7 @@
   "inventory.armourers_workshop.skinnable": "Skinbarer Block",
   "inventory.armourers_workshop.skinning-table": "Ausrüstungs Verarbeiter",
   "inventory.armourers_workshop.wardrobe": "Kleiderschrank",
+  "inventory.armourers_workshop.wardrobe-op": "Kleiderschrank",
   "inventory.armourers_workshop.wardrobe.colour_settings": "Farb-Einstellungen",
   "inventory.armourers_workshop.wardrobe.colour_settings.button.eye.auto": "Auto Eye Color",
   "inventory.armourers_workshop.wardrobe.colour_settings.button.eye.clear": "Clear Eye Color",

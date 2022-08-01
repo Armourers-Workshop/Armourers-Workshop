@@ -1,6 +1,8 @@
 package moe.plushie.armourers_workshop.core.block;
 
+import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
+import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -12,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,7 +23,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock implements EntityBlock {
+public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock implements IBlockEntityProvider {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
@@ -33,7 +34,7 @@ public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock impl
 
     @Override
     public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return new HologramProjectorBlockEntity();
+        return ModBlockEntities.HOLOGRAM_PROJECTOR.get().create();
     }
 
     @Override

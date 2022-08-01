@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.utils.math;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedMatrix4f;
+import moe.plushie.armourers_workshop.utils.ext.OpenMatrix4f;
 import net.minecraft.core.Position;
 
 @SuppressWarnings("unused")
@@ -105,7 +105,7 @@ public class Vector4f {
         float f1 = this.y;
         float f2 = this.z;
         float f3 = this.w;
-        float[][] buf = ExtendedMatrix4f.toFloatBuffer(matrix);
+        float[][] buf = OpenMatrix4f.toFloatBuffer(matrix);
         this.x = buf[0][0] * f + buf[0][1] * f1 + buf[0][2] * f2 + buf[0][3] * f3;
         this.y = buf[1][0] * f + buf[1][1] * f1 + buf[1][2] * f2 + buf[1][3] * f3;
         this.z = buf[2][0] * f + buf[2][1] * f1 + buf[2][2] * f2 + buf[2][3] * f3;

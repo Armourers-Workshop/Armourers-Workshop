@@ -6,13 +6,14 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class SkinLibraryBlockEntity extends AbstractContainerBlockEntity {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(2, ItemStack.EMPTY);
 
-    public SkinLibraryBlockEntity() {
-        super(ModBlockEntities.SKIN_LIBRARY.get());
+    public SkinLibraryBlockEntity(BlockEntityType<?> entityType) {
+        super(entityType);
     }
 
     @Override

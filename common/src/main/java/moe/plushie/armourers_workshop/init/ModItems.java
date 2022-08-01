@@ -53,7 +53,6 @@ public class ModItems {
     public static final IRegistryObject<Item> SKIN_TEMPLATE = MAIN.normal(FlavouredItem::new).stacksTo(64).build("skin-template");
     public static final IRegistryObject<Item> SOAP = MAIN.normal(SoapItem::new).stacksTo(64).build("soap");
     public static final IRegistryObject<Item> GIFT_SACK = MAIN.normal(GiftSackItem::new).stacksTo(64).build("gift-sack");
-    //public static final RegistryObject<Item> ARMOUR_CONTAINER = MAIN.normal(FlavouredItem::new).stacksTo(16).build("armour-container");
 
     public static final IRegistryObject<Item> ARMOURER = BUILDING.block(ModBlocks.ARMOURER).rarity(Rarity.EPIC).build("armourer");
     public static final IRegistryObject<Item> COLOR_MIXER = BUILDING.block(ModBlocks.COLOR_MIXER).build("colour-mixer");

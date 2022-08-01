@@ -17,8 +17,8 @@ import java.util.function.Supplier;
 
 public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuilder<T> {
 
-    protected EntityType.Builder<T> builder;
-    protected Supplier<Consumer<EntityType<T>>> binder;
+    private EntityType.Builder<T> builder;
+    private Supplier<Consumer<EntityType<T>>> binder;
 
     public EntityTypeBuilderImpl(EntityType.EntityFactory<T> entityFactory, MobCategory mobCategory) {
         this.builder = EntityType.Builder.of(entityFactory, mobCategory);

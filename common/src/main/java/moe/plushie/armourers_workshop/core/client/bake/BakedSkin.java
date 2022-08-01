@@ -21,7 +21,7 @@ import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedVoxelShape;
+import moe.plushie.armourers_workshop.utils.ext.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -139,7 +139,7 @@ public class BakedSkin implements IBakedSkin {
             return bounds;
         }
         Matrix4f matrix = Matrix4f.createScaleMatrix(1, 1, 1);
-        ExtendedVoxelShape shape = getRenderShape(entity, model, itemStack, ItemTransforms.TransformType.NONE);
+        OpenVoxelShape shape = getRenderShape(entity, model, itemStack, ItemTransforms.TransformType.NONE);
         if (rotation != null) {
             matrix.multiply(TrigUtils.rotate(rotation.getX(), rotation.getY(), rotation.getZ(), true));
             shape.mul(matrix);
@@ -157,16 +157,16 @@ public class BakedSkin implements IBakedSkin {
         return bounds;
     }
 
-    public ExtendedVoxelShape getRenderShape(Entity entity, Model model, @Nullable ItemStack itemStack, ItemTransforms.TransformType transformType) {
+    public OpenVoxelShape getRenderShape(Entity entity, Model model, @Nullable ItemStack itemStack, ItemTransforms.TransformType transformType) {
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null) {
-            return ExtendedVoxelShape.empty();
+            return OpenVoxelShape.empty();
         }
-        ExtendedVoxelShape shape = ExtendedVoxelShape.empty();
+        OpenVoxelShape shape = OpenVoxelShape.empty();
         PoseStack matrixStack = new PoseStack();
         for (BakedSkinPart part : skinParts) {
             if (renderer.prepare(entity, model, this, part, itemStack, transformType)) {
-                ExtendedVoxelShape shape1 = part.getRenderShape().copy();
+                OpenVoxelShape shape1 = part.getRenderShape().copy();
                 matrixStack.pushPose();
                 renderer.apply(entity, model, itemStack, transformType, part, this, 0, matrixStack);
                 shape1.mul(matrixStack.last().pose());

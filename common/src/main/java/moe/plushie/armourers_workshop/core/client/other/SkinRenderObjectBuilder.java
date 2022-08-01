@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
@@ -100,6 +101,7 @@ public class SkinRenderObjectBuilder {
         if (tasks.isEmpty()) {
             return;
         }
+//        long startTime = System.currentTimeMillis();
         PoseStack matrixStack1 = new PoseStack();
         ArrayList<CompiledTask> buildingTasks = new ArrayList<>();
         for (CachedTask task : tasks) {
@@ -118,6 +120,8 @@ public class SkinRenderObjectBuilder {
             task.mergedTasks = mergedTasks;
         }
         combineAndUpload(tasks, buildingTasks);
+//        long totalTime = System.currentTimeMillis() - startTime;
+//        ModLog.debug("compile tasks {}, times: {}ms", tasks.size(), totalTime);
     }
 
     private void combineAndUpload(ArrayList<CachedTask> qt, ArrayList<CompiledTask> buildingTasks) {
@@ -191,7 +195,8 @@ public class SkinRenderObjectBuilder {
 
         void render(CachedTask task, PoseStack matrixStack, int lightmap, float partialTicks, int slotIndex) {
             Matrix4f matrix = matrixStack.last().pose().copy();
-            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, matrix, lightmap, partialTicks, slotIndex)));
+            Matrix3f normalMatrix = matrixStack.last().normal().copy();
+            task.mergedTasks.forEach(t -> tasks.add(new CompiledPass(t, matrix, normalMatrix, lightmap, partialTicks, slotIndex)));
         }
 
         void commit(Consumer<SkinVertexBufferBuilder.Pass> consumer) {
@@ -210,12 +215,14 @@ public class SkinRenderObjectBuilder {
         float additionalPolygonOffset;
 
         Matrix4f matrix;
+        Matrix3f normalMatrix;
         CompiledTask compiledTask;
 
-        CompiledPass(CompiledTask compiledTask, Matrix4f matrix, int lightmap, float partialTicks, int slotIndex) {
+        CompiledPass(CompiledTask compiledTask, Matrix4f matrix, Matrix3f normalMatrix, int lightmap, float partialTicks, int slotIndex) {
             super();
             this.compiledTask = compiledTask;
             this.matrix = matrix;
+            this.normalMatrix = normalMatrix;
             this.lightmap = lightmap;
             this.partialTicks = partialTicks;
             this.additionalPolygonOffset = slotIndex * 10;
@@ -254,6 +261,11 @@ public class SkinRenderObjectBuilder {
         @Override
         public Matrix4f getMatrix() {
             return matrix;
+        }
+
+        @Override
+        public Matrix3f getNormalMatrix() {
+            return normalMatrix;
         }
 
         @Override

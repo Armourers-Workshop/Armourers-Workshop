@@ -54,16 +54,16 @@ public class ConfigBuilderImpl {
         }
         Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(ArmourersWorkshop.MOD_ID);
         if (container.isPresent()) {
-            FabricConfig config = new FabricConfig(type, pair.getValue(), container.get());
+            FabricConfig ignored = new FabricConfig(type, pair.getValue(), container.get());
         }
         return spec;
     }
 
     public static class SpecProxy implements IConfigSpec {
 
-        protected FabricConfigSpec spec;
-        protected HashMap<String, ValueProxy<Object>> values;
-        protected Map<String, Object> snapshot;
+        private FabricConfigSpec spec;
+        private Map<String, Object> snapshot;
+        private final HashMap<String, ValueProxy<Object>> values;
 
         public SpecProxy(HashMap<String, ValueProxy<Object>> values) {
             this.values = values;

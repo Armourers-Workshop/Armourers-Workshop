@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
+import moe.plushie.armourers_workshop.api.common.IBlockEntityHandler;
 import moe.plushie.armourers_workshop.api.common.IWorldUpdateTask;
-import moe.plushie.armourers_workshop.api.extend.IBlockHandler3;
 import moe.plushie.armourers_workshop.api.math.IRectangle3i;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
@@ -41,6 +41,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +50,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockHandler3, IPaintToolSelector.Provider {
+public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEntityHandler, IPaintToolSelector.Provider {
 
     protected int flags = 0;
     protected int version = 0;
@@ -63,8 +64,8 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockHa
     protected Object renderData;
     protected AABB renderBoundingBox;
 
-    public ArmourerBlockEntity() {
-        super(ModBlockEntities.ARMOURER.get());
+    public ArmourerBlockEntity(BlockEntityType<?> entityType) {
+        super(entityType);
     }
 
     @Override
@@ -323,7 +324,7 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockHa
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public AABB getRenderBoundingBox() {
+    public AABB getCustomRenderBoundingBox() {
         if (renderBoundingBox == null) {
             renderBoundingBox = new AABB(-32, -32, -44, 64, 64, 64);
             renderBoundingBox = renderBoundingBox.move(getBlockPos());

@@ -137,14 +137,12 @@ public class ModConfig {
         public static int entityDropSkinChance = 10;
         public static String enitiySpawnSkinTargetPath = "/";
 
-
         // Cache
         public static int skinCacheExpireTime = 600;
         public static int skinCacheMaxSize = 2000;
 
         // Overrides
         public static ArrayList<String> overrides = new ArrayList<>();
-
 
         public static boolean canOpenWardrobe(Entity target, Player operator) {
             if (!wardrobeAllowOpening) {
@@ -167,18 +165,18 @@ public class ModConfig {
     }
 
     public static boolean enableEmbeddedSkinRenderer() {
-        int flags = Common.enableEmbeddedSkinRenderer;
+        int flags = Client.enableEmbeddedSkinRenderer;
         if (flags == 0) {
-            flags = Client.enableEmbeddedSkinRenderer;
+            flags = Common.enableEmbeddedSkinRenderer;
         }
         // 0 auto(reserve), 1 disable, 2 enable
         return flags == 2;
     }
 
     public static boolean enableFirstPersonSkinRenderer() {
-        int flags = Common.enableFirstPersonSkinRenderer;
+        int flags = Client.enableFirstPersonSkinRenderer;
         if (flags == 0) {
-            flags = Client.enableFirstPersonSkinRenderer;
+            flags = Common.enableFirstPersonSkinRenderer;
         }
         // 0 auto(reserve), 1 disable, 2 enable
         return flags == 2;

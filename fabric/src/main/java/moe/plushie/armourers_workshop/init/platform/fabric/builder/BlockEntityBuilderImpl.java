@@ -13,15 +13,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.LinkedList;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEntityBuilder<T> {
 
-    protected Supplier<Consumer<BlockEntityType<T>>> binder;
-    protected final LinkedList<Supplier<Block>> blocks = new LinkedList<>();
-    protected final Supplier<T> supplier;
+    private Supplier<Consumer<BlockEntityType<T>>> binder;
+    private final LinkedList<Supplier<Block>> blocks = new LinkedList<>();
+    private final Function<BlockEntityType<?>, T> supplier;
 
-    public BlockEntityBuilderImpl(Supplier<T> supplier) {
+    public BlockEntityBuilderImpl(Function<BlockEntityType<?>, T> supplier) {
         this.supplier = supplier;
     }
 
@@ -44,7 +45,10 @@ public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEnti
     public IRegistryObject<BlockEntityType<T>> build(String name) {
         IRegistryObject<BlockEntityType<T>> object = Registry.BLOCK_ENTITY_TYPE.register(name, () -> {
             Block[] blocks1 = blocks.stream().map(Supplier::get).toArray(Block[]::new);
-            return BlockEntityType.Builder.of(supplier, blocks1).build(null);
+            BlockEntityType<?>[] entityTypes = {null};
+            BlockEntityType<T> entityType = BlockEntityType.Builder.of(() -> supplier.apply(entityTypes[0]), blocks1).build(null);
+            entityTypes[0] = entityType;
+            return entityType;
         });
         EnvironmentExecutor.setupOn(EnvironmentType.CLIENT, binder, object);
         return object;

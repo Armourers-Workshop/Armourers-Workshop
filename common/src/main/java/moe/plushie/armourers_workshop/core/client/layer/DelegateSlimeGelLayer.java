@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.SlimeOuterLayer;
 import net.minecraft.world.entity.LivingEntity;
 
-@SuppressWarnings("NullableProblems")
 @Environment(value = EnvType.CLIENT)
 public class DelegateSlimeGelLayer<T extends LivingEntity> extends SlimeOuterLayer<T> {
 

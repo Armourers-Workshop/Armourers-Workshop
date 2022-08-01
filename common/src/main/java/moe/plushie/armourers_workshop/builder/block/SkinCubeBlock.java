@@ -1,16 +1,17 @@
 package moe.plushie.armourers_workshop.builder.block;
 
+import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.blockentity.SkinCubeBlockEntity;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.core.data.OptionalDirection;
+import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,7 +21,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 
-public class SkinCubeBlock extends AbstractHorizontalBlock implements EntityBlock, IBlockTintColorProvider {
+public class SkinCubeBlock extends AbstractHorizontalBlock implements IBlockEntityProvider, IBlockTintColorProvider {
 
     // a better solution is use `OptionalDirectionProperty` as marker flags,
     // but some third-party mods will rotate this block, such as world edit's.
@@ -58,7 +59,7 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements EntityBloc
 
     @Override
     public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return new SkinCubeBlockEntity();
+        return ModBlockEntities.SKIN_CUBE.get().create();
     }
 
     @Override

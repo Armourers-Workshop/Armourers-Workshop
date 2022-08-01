@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.core.menu;
 
 import moe.plushie.armourers_workshop.api.common.IHasInventory;
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
@@ -16,10 +15,10 @@ public abstract class AbstractBlockContainerMenu extends AbstractContainerMenu {
     protected final Block block;
     protected final ContainerLevelAccess access;
 
-    public <C extends net.minecraft.world.inventory.AbstractContainerMenu> AbstractBlockContainerMenu(int containerId, IRegistryObject<MenuType<C>> containerType, IRegistryObject<Block> block, ContainerLevelAccess access) {
-        super(containerType.get(), containerId);
+    public AbstractBlockContainerMenu(MenuType<?> menuType, Block block, int containerId, ContainerLevelAccess access) {
+        super(menuType, containerId);
         this.access = access;
-        this.block = block.get();
+        this.block = block;
     }
 
     @Override

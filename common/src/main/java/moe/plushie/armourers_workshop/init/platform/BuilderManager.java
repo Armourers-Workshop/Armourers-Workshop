@@ -13,13 +13,13 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class BuilderManager {
 
@@ -38,7 +38,7 @@ public class BuilderManager {
 
         <T extends Block> IBlockBuilder<T> createBlockBuilder(Function<BlockBehaviour.Properties, T> supplier, Material material, MaterialColor materialColor);
 
-        <T extends BlockEntity> IBlockEntityBuilder<T> createBlockEntityBuilder(Supplier<T> supplier);
+        <T extends BlockEntity> IBlockEntityBuilder<T> createBlockEntityBuilder(Function<BlockEntityType<?>, T> supplier);
 
         <T extends Entity> IEntityTypeBuilder<T> createEntityTypeBuilder(EntityType.EntityFactory<T> entityFactory, MobCategory mobCategory);
 

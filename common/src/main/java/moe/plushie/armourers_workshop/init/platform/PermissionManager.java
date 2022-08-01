@@ -32,7 +32,7 @@ public class PermissionManager {
      */
     @ExpectPlatform
     public static boolean hasPermission(GameProfile profile, String node, @Nullable PlayerContext context) {
-        return false;
+        return true;
     }
 
     /**

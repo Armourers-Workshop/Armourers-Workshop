@@ -1,6 +1,5 @@
-package moe.plushie.armourers_workshop.core.data;
+package moe.plushie.armourers_workshop.core.holiday;
 
-import moe.plushie.armourers_workshop.core.holiday.Holiday;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.Constants;
 import net.minecraft.nbt.CompoundTag;

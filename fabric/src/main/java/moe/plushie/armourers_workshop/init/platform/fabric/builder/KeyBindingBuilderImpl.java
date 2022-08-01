@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
 import moe.plushie.armourers_workshop.api.other.builder.IKeyBindingBuilder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedKeyModifier;
+import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -21,10 +21,10 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
 
     private static final ArrayList<Pair<KeyMapping, Supplier<Runnable>>> INPUTS = new ArrayList<>();
 
-    private String key;
-    private IKeyModifier modifier = ExtendedKeyModifier.NONE;
+    private IKeyModifier modifier = OpenKeyModifier.NONE;
     private String category = "";
     private Supplier<Runnable> handler;
+    private final String key;
 
     public KeyBindingBuilderImpl(String key) {
         this.key = key;
@@ -67,7 +67,7 @@ public class KeyBindingBuilderImpl<T extends IKeyBinding> implements IKeyBinding
 
             @Override
             public IKeyModifier getKeyModifier() {
-                return ExtendedKeyModifier.NONE;
+                return OpenKeyModifier.NONE;
             }
         };
         return ObjectUtils.unsafeCast(binding1);

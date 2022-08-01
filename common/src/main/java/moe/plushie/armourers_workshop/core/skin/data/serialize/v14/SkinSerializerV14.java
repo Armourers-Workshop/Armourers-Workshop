@@ -144,7 +144,7 @@ public final class SkinSerializerV14 {
         }
 
         int size = stream.readByte();
-        ArrayList<SkinPart> parts = new ArrayList<SkinPart>();
+        ArrayList<SkinPart> parts = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             if (!StreamUtils.readString(stream, StandardCharsets.US_ASCII).equals(TAG_SKIN_PART_HEADER)) {
                 ModLog.error("Error loading skin part header.");

@@ -6,7 +6,7 @@ import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
-import moe.plushie.armourers_workshop.api.extend.IExtendedEntityHandler;
+import moe.plushie.armourers_workshop.api.common.IEntityHandler;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
@@ -25,7 +25,7 @@ import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.TickHandler;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedResourceLocation;
+import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2i;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -206,7 +206,7 @@ public class ClientEventDispatcher implements ClientModInitializer {
     public ItemStack onPickItem(Player player, HitResult result) {
         EntityHitResult result1 = ObjectUtils.safeCast(result, EntityHitResult.class);
         if (result1 != null) {
-            IExtendedEntityHandler handler = ObjectUtils.safeCast(result1.getEntity(), IExtendedEntityHandler.class);
+            IEntityHandler handler = ObjectUtils.safeCast(result1.getEntity(), IEntityHandler.class);
             if (handler != null) {
                 return handler.getCustomPickResult(result);
             }
@@ -305,15 +305,15 @@ public class ClientEventDispatcher implements ClientModInitializer {
             fonts[0] = style.getFont();
             return false;
         });
-        if (fonts[0] instanceof ExtendedResourceLocation) {
-            return (ItemStack) ((ExtendedResourceLocation<?>) fonts[0]).extra;
+        if (fonts[0] instanceof OpenResourceLocation) {
+            return (ItemStack) ((OpenResourceLocation<?>) fonts[0]).extra;
         }
         return null;
     }
 
     public static Component wrap(Component component, ItemStack itemStack) {
         TextComponent text = new TextComponent("");
-        text.setStyle(Style.EMPTY.withFont(new ExtendedResourceLocation<>(Style.DEFAULT_FONT, itemStack)));
+        text.setStyle(Style.EMPTY.withFont(new OpenResourceLocation<>(Style.DEFAULT_FONT, itemStack)));
         text.append(component);
         return text;
     }

@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.other.SkinCubeApplier;
 import moe.plushie.armourers_workshop.builder.other.SkinCubePaintingEvent;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
-import moe.plushie.armourers_workshop.utils.ext.ExtendedUseOnContext;
+import moe.plushie.armourers_workshop.utils.ext.OpenUseOnContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -63,7 +63,7 @@ public class UpdateBlockColorPacket extends CustomPacket {
         }
         try {
             ItemStack itemStack = player.getItemInHand(hand);
-            UseOnContext context = new ExtendedUseOnContext(world, player, hand, itemStack, traceResult);
+            UseOnContext context = new OpenUseOnContext(world, player, hand, itemStack, traceResult);
             SkinCubeApplier applier = new SkinCubeApplier(world);
             paintingEvent.apply(applier, context);
             applier.submit(itemStack.getHoverName(), player);

@@ -14,7 +14,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Function;
 
-
 public class FabricConfigFileTypeHandler {
     static FabricConfigFileTypeHandler TOML = new FabricConfigFileTypeHandler();
     private static final Path defaultConfigPath = FabricLoader.getInstance().getGameDir().resolve("defaultconfigs");
@@ -25,7 +24,7 @@ public class FabricConfigFileTypeHandler {
             final CommentedFileConfig configData = CommentedFileConfig.builder(configPath).sync().
                     preserveInsertionOrder().
                     autosave().
-                    onFileNotFound((newfile, configFormat) -> setupConfigFile(c, newfile, configFormat)).
+                    onFileNotFound((newFile, configFormat) -> setupConfigFile(c, newFile, configFormat)).
                     writingMode(WritingMode.REPLACE).
                     build();
             ModLog.debug("Built TOML config for {}", configPath.toString());

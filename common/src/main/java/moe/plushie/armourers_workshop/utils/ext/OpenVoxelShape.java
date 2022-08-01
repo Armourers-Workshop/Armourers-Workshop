@@ -10,20 +10,20 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-public class ExtendedVoxelShape {
+public class OpenVoxelShape {
 
     private Rectangle3f box;
     private ArrayList<Vector4f> vertexes;
 
-    public ExtendedVoxelShape() {
+    public OpenVoxelShape() {
     }
 
-    public static ExtendedVoxelShape empty() {
-        return new ExtendedVoxelShape();
+    public static OpenVoxelShape empty() {
+        return new OpenVoxelShape();
     }
 
-    public static ExtendedVoxelShape box(Rectangle3f bounds) {
-        ExtendedVoxelShape shape = new ExtendedVoxelShape();
+    public static OpenVoxelShape box(Rectangle3f bounds) {
+        OpenVoxelShape shape = new OpenVoxelShape();
         shape.box = bounds;
         return shape;
     }
@@ -78,7 +78,7 @@ public class ExtendedVoxelShape {
         box = null;
     }
 
-    public void add(ExtendedVoxelShape shape1) {
+    public void add(OpenVoxelShape shape1) {
         List<Vector4f> list = getVertexes();
         list.addAll(shape1.getVertexes());
         box = null;
@@ -107,8 +107,8 @@ public class ExtendedVoxelShape {
         vertexes = Lists.newArrayList(uniquesVertexes);
     }
 
-    public ExtendedVoxelShape copy() {
-        ExtendedVoxelShape shape = new ExtendedVoxelShape();
+    public OpenVoxelShape copy() {
+        OpenVoxelShape shape = new OpenVoxelShape();
         if (box != null) {
             shape.box = box;
         }
