@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class SkinCubeSelector implements IPaintToolSelector {
+public class CubeSelector implements IPaintToolSelector {
 
     final BlockPos pos;
     final MatchMode mode;
@@ -27,7 +27,7 @@ public class SkinCubeSelector implements IPaintToolSelector {
     final boolean isPlaneOnly;
     final boolean isApplyAllFaces;
 
-    protected SkinCubeSelector(MatchMode mode, BlockPos pos, int radius, boolean isApplyAllFaces, boolean isPlaneOnly) {
+    protected CubeSelector(MatchMode mode, BlockPos pos, int radius, boolean isApplyAllFaces, boolean isPlaneOnly) {
         this.pos = pos;
         this.mode = mode;
         this.radius = Math.max(radius, 1);
@@ -36,7 +36,7 @@ public class SkinCubeSelector implements IPaintToolSelector {
         this.rects = new ArrayList<>();
     }
 
-    protected SkinCubeSelector(MatchMode mode, Iterable<Rectangle3i> rects) {
+    protected CubeSelector(MatchMode mode, Iterable<Rectangle3i> rects) {
         this.pos = BlockPos.ZERO;
         this.mode = mode;
         this.radius = 0;
@@ -45,7 +45,7 @@ public class SkinCubeSelector implements IPaintToolSelector {
         this.rects = Lists.newArrayList(rects);
     }
 
-    protected SkinCubeSelector(FriendlyByteBuf buffer) {
+    protected CubeSelector(FriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
         this.mode = buffer.readEnum(MatchMode.class);
         this.radius = buffer.readInt();
@@ -66,28 +66,28 @@ public class SkinCubeSelector implements IPaintToolSelector {
         }
     }
 
-    public static SkinCubeSelector from(FriendlyByteBuf buffer) {
-        return new SkinCubeSelector(buffer);
+    public static CubeSelector from(FriendlyByteBuf buffer) {
+        return new CubeSelector(buffer);
     }
 
-    public static SkinCubeSelector box(BlockPos pos, boolean isApplyAllFaces) {
+    public static CubeSelector box(BlockPos pos, boolean isApplyAllFaces) {
         return box(pos, 1, isApplyAllFaces);
     }
 
-    public static SkinCubeSelector box(BlockPos pos, int radius, boolean isApplyAllFaces) {
-        return new SkinCubeSelector(MatchMode.SAME, pos, radius, isApplyAllFaces, false);
+    public static CubeSelector box(BlockPos pos, int radius, boolean isApplyAllFaces) {
+        return new CubeSelector(MatchMode.SAME, pos, radius, isApplyAllFaces, false);
     }
 
-    public static SkinCubeSelector all(Iterable<Rectangle3i> rects) {
-        return new SkinCubeSelector(MatchMode.ALL, rects);
+    public static CubeSelector all(Iterable<Rectangle3i> rects) {
+        return new CubeSelector(MatchMode.ALL, rects);
     }
 
-    public static SkinCubeSelector plane(BlockPos pos, int radius, boolean isApplyAllFaces) {
-        return new SkinCubeSelector(MatchMode.SAME, pos, radius, isApplyAllFaces, true);
+    public static CubeSelector plane(BlockPos pos, int radius, boolean isApplyAllFaces) {
+        return new CubeSelector(MatchMode.SAME, pos, radius, isApplyAllFaces, true);
     }
 
-    public static SkinCubeSelector touching(BlockPos pos, int radius, boolean isApplyAllFaces, boolean isPlaneOnly) {
-        return new SkinCubeSelector(MatchMode.TOUCHING, pos, radius, isApplyAllFaces, isPlaneOnly);
+    public static CubeSelector touching(BlockPos pos, int radius, boolean isApplyAllFaces, boolean isPlaneOnly) {
+        return new CubeSelector(MatchMode.TOUCHING, pos, radius, isApplyAllFaces, isPlaneOnly);
     }
 
     public void encode(FriendlyByteBuf buffer) {
@@ -110,17 +110,17 @@ public class SkinCubeSelector implements IPaintToolSelector {
     }
 
     public void forEach(UseOnContext context, BiConsumer<BlockPos, Direction> consumer) {
-        Level world = context.getLevel();
+        Level level = context.getLevel();
         Direction clickedFace = context.getClickedFace();
         Direction[] dirs = resolvedDirections(clickedFace);
-        forEach(world, clickedFace, targetPos -> {
+        forEach(level, clickedFace, targetPos -> {
             for (Direction dir : dirs) {
                 consumer.accept(targetPos, dir);
             }
         });
     }
 
-    private void forEach(Level world, Direction dir, Consumer<BlockPos> consumer) {
+    private void forEach(Level level, Direction dir, Consumer<BlockPos> consumer) {
         switch (this.mode) {
             case ALL: {
                 for (Rectangle3i rect : rects) {
@@ -131,9 +131,9 @@ public class SkinCubeSelector implements IPaintToolSelector {
                 break;
             }
             case SAME: {
-                Object info = resolvedBlockInfo(world, pos);
+                Object info = resolvedBlockInfo(level, pos);
                 Consumer<BlockPos> consumer1 = targetPos -> {
-                    if (Objects.equals(info, resolvedBlockInfo(world, targetPos))) {
+                    if (Objects.equals(info, resolvedBlockInfo(level, targetPos))) {
                         consumer.accept(targetPos);
                     }
                 };
@@ -155,7 +155,7 @@ public class SkinCubeSelector implements IPaintToolSelector {
                 break;
             }
             case TOUCHING: {
-                BlockUtils.findTouchingBlockFaces(world, pos, dir, radius, isPlaneOnly).forEach(consumer);
+                BlockUtils.findTouchingBlockFaces(level, pos, dir, radius, isPlaneOnly).forEach(consumer);
                 break;
             }
         }
@@ -187,17 +187,15 @@ public class SkinCubeSelector implements IPaintToolSelector {
         return Direction.values();
     }
 
-    private Object resolvedBlockInfo(Level world, BlockPos pos) {
+    private Object resolvedBlockInfo(Level level, BlockPos pos) {
         if (radius == 1) {
             return null;
         }
-        return world.getBlockState(pos).is(ModBlocks.BOUNDING_BOX.get());
+        return level.getBlockState(pos).is(ModBlocks.BOUNDING_BOX.get());
     }
 
     private enum MatchMode {
-        ALL,
-        SAME,
-        TOUCHING
+        ALL, SAME, TOUCHING
     }
 }
 

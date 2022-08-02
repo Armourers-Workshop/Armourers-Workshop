@@ -25,8 +25,11 @@ public interface IBlockEntityHandler {
      *
      * @return an appropriately size {@link AABB} for the {@link BlockEntity}
      */
-    @Environment(value = EnvType.CLIENT)
     default AABB getCustomRenderBoundingBox() {
+        return getDefaultRenderBoundingBox();
+    }
+
+    default AABB getDefaultRenderBoundingBox() {
         return AABB.ofSize(1, 1, 1);
     }
 }

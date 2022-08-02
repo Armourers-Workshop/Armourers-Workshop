@@ -38,19 +38,19 @@ public class SkinCubeItem extends BlockItem implements IItemColorProvider, IPain
     }
 
     @Override
-    public InteractionResult usePickTool(Level world, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context) {
+    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
         if (tileEntity instanceof IPaintProvider) {
             setItemColor(itemStack, ((IPaintProvider) tileEntity).getColor());
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }
 
     @Override
-    protected boolean updateCustomBlockEntityTag(BlockPos pos, Level world, @Nullable Player player, ItemStack itemStack, BlockState blockState) {
-        if (world.isClientSide()) {
-            BlockEntity tileEntity = world.getBlockEntity(pos);
+    protected boolean updateCustomBlockEntityTag(BlockPos pos, Level level, @Nullable Player player, ItemStack itemStack, BlockState blockState) {
+        if (level.isClientSide()) {
+            BlockEntity tileEntity = level.getBlockEntity(pos);
             CompoundTag nbt = itemStack.getTagElement(Constants.Key.BLOCK_ENTITY);
             if (nbt != null && tileEntity != null) {
                 CompoundTag newNBT = tileEntity.save(new CompoundTag());
@@ -58,13 +58,13 @@ public class SkinCubeItem extends BlockItem implements IItemColorProvider, IPain
                 tileEntity.load(blockState, newNBT);
             }
         }
-        return super.updateCustomBlockEntityTag(pos, world, player, itemStack, blockState);
+        return super.updateCustomBlockEntityTag(pos, level, player, itemStack, blockState);
     }
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> tooltips, TooltipFlag flags) {
-        super.appendHoverText(itemStack, world, tooltips, flags);
+    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flags) {
+        super.appendHoverText(itemStack, level, tooltips, flags);
         BlockPaintColor paintColor = getItemColors(itemStack);
         if (paintColor != null && paintColor.isPureColor()) {
             tooltips.addAll(ColorUtils.getColorTooltips(paintColor.get(Direction.NORTH), true));

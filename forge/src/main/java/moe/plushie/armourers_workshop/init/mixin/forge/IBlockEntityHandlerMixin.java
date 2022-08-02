@@ -28,6 +28,10 @@ public interface IBlockEntityHandlerMixin extends IForgeTileEntity {
         return handler.getCustomRenderBoundingBox();
     }
 
+    default AABB getDefaultRenderBoundingBox() {
+        return IForgeTileEntity.super.getRenderBoundingBox();
+    }
+
     @Override
     default void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         IBlockEntityHandler handler = ObjectUtils.unsafeCast(this);

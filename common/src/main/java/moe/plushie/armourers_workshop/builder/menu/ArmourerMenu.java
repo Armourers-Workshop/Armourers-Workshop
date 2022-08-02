@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.builder.menu;
 
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
-import moe.plushie.armourers_workshop.builder.other.SkinCubeApplier;
-import moe.plushie.armourers_workshop.builder.other.SkinCubeTransform;
+import moe.plushie.armourers_workshop.builder.other.CubeApplier;
+import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.builder.other.WorldUtils;
 import moe.plushie.armourers_workshop.core.menu.AbstractBlockContainerMenu;
 import moe.plushie.armourers_workshop.core.skin.Skin;
@@ -41,7 +41,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
     @Override
     public void removed(Player player) {
         super.removed(player);
-        this.access.execute((world, pos) -> this.clearContainer(player, world, inventory));
+        this.access.execute((level, pos) -> this.clearContainer(player, level, inventory));
     }
 
     public boolean shouldLoadArmourItem(Player player) {
@@ -108,9 +108,9 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
         }
 
         try {
-            Level world = tileEntity.getLevel();
-            SkinCubeTransform transform = tileEntity.getTransform();
-            skin = WorldUtils.saveSkinFromWorld(world, transform, skinProps, tileEntity.getSkinType(), tileEntity.getPaintData());
+            Level level = tileEntity.getLevel();
+            CubeTransform transform = tileEntity.getTransform();
+            skin = WorldUtils.saveSkinFromWorld(level, transform, skinProps, tileEntity.getSkinType(), tileEntity.getPaintData());
         } catch (SkinSaveException e) {
             player.sendMessage(new TextComponent(e.getMessage()), player.getUUID());
         }
@@ -152,8 +152,8 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
         tileEntity.setPaintData(skin.getPaintData());
 
         try {
-            SkinCubeApplier applier = new SkinCubeApplier(tileEntity.getLevel());
-            SkinCubeTransform transform = tileEntity.getTransform();
+            CubeApplier applier = new CubeApplier(tileEntity.getLevel());
+            CubeTransform transform = tileEntity.getTransform();
             WorldUtils.loadSkinIntoWorld(applier, transform, skin);
             applier.submit(TranslateUtils.title("action.armourers_workshop.block.load"), player);
         } catch (Exception e) {

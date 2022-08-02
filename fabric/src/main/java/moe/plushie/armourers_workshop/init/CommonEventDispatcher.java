@@ -139,8 +139,8 @@ public class CommonEventDispatcher implements ModInitializer {
         ConfigBuilderImpl.reloadSpec(ModConfigSpec.COMMON, config.getSpec());
     }
 
-    public void onServerTick(ServerLevel world) {
-        WorldUpdater.getInstance().tick(world);
+    public void onServerTick(ServerLevel level) {
+        WorldUpdater.getInstance().tick(level);
     }
 
     public void onServerStart(MinecraftServer server) {
@@ -188,7 +188,7 @@ public class CommonEventDispatcher implements ModInitializer {
         }
     }
 
-    public void onPlayerDrops(ServerLevel world, Entity entity, LivingEntity killedEntity) {
+    public void onPlayerDrops(ServerLevel level, Entity entity, LivingEntity killedEntity) {
         if (killedEntity instanceof Player) {
             SkinUtils.dropAll((Player) killedEntity);
         }
@@ -201,7 +201,7 @@ public class CommonEventDispatcher implements ModInitializer {
         }
     }
 
-    public void onEntityJoinWorld(Entity entity, ServerLevel world) {
+    public void onEntityJoinWorld(Entity entity, ServerLevel level) {
         SkinUtils.copySkinFromOwner(entity);
         if (entity instanceof ServerPlayer) {
             ServerPlayer player = (ServerPlayer) entity;
@@ -210,7 +210,7 @@ public class CommonEventDispatcher implements ModInitializer {
         }
     }
 
-    public InteractionResult onAttackEntity(Player player, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult)  {
+    public InteractionResult onAttackEntity(Player player, Level level, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult)  {
         if (player.isSpectator()) {
             return InteractionResult.PASS;
         }
@@ -225,7 +225,7 @@ public class CommonEventDispatcher implements ModInitializer {
         return InteractionResult.PASS;
     }
 
-    public InteractionResult onUseItemFirst(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+    public InteractionResult onUseItemFirst(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {
         if (player.isSpectator()) {
             return InteractionResult.PASS;
         }

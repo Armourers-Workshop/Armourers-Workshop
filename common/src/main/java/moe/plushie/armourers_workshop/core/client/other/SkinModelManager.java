@@ -34,9 +34,9 @@ public class SkinModelManager {
         return INSTANCE;
     }
 
-    public BakedModel getModel(ISkinPartType partType, ItemStack itemStack, @Nullable Level world, @Nullable Entity entity) {
+    public BakedModel getModel(ISkinPartType partType, ItemStack itemStack, @Nullable Level level, @Nullable Entity entity) {
         BakedModel bakedModel = loadModel(partType);
-        ClientLevel clientWorld = cast(world, ClientLevel.class);
+        ClientLevel clientWorld = cast(level, ClientLevel.class);
         LivingEntity livingEntity = cast(entity, LivingEntity.class);
         return bakedModel.getOverrides().resolve(bakedModel, itemStack, clientWorld, livingEntity);
     }

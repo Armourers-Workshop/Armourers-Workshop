@@ -20,10 +20,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ItemRendererMixin {
 
     @Inject(method = "getModel", at = @At("RETURN"), cancellable = true)
-    private void hooked_getModel(ItemStack itemStack, Level world, LivingEntity entity, CallbackInfoReturnable<BakedModel> cir) {
+    private void hooked_getModel(ItemStack itemStack, Level level, LivingEntity entity, CallbackInfoReturnable<BakedModel> cir) {
         BakedModel bakedModel = cir.getReturnValue();
-        if (ClientWardrobeHandler.shouldRenderEmbeddedSkin(entity, world, itemStack, false)) {
-            cir.setReturnValue(BakedModelStroage.wrap(bakedModel, itemStack, entity, world));
+        if (ClientWardrobeHandler.shouldRenderEmbeddedSkin(entity, level, itemStack, false)) {
+            cir.setReturnValue(BakedModelStroage.wrap(bakedModel, itemStack, entity, level));
         }
     }
 
@@ -35,7 +35,7 @@ public class ItemRendererMixin {
         }
         BakedModel resolvedModel = stroage.getOriginModel();
         LivingEntity entity = stroage.getEntity();
-        Level world = stroage.getWorld();
-        ClientWardrobeHandler.onRenderEmbeddedSkin(entity, world, itemStack, transformType, p_229111_3_, matrixStack, buffers, resolvedModel, packedLight, overlay, ci);
+        Level level = stroage.getLevel();
+        ClientWardrobeHandler.onRenderEmbeddedSkin(entity, level, itemStack, transformType, p_229111_3_, matrixStack, buffers, resolvedModel, packedLight, overlay, ci);
     }
 }

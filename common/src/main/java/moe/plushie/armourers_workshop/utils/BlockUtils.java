@@ -125,7 +125,7 @@ public final class BlockUtils {
 //    }
 
 
-    public static ArrayList<BlockPos> findTouchingBlockFaces(Level world, BlockPos pos, Direction facing, int radius, boolean restrictPlane) {
+    public static ArrayList<BlockPos> findTouchingBlockFaces(Level level, BlockPos pos, Direction facing, int radius, boolean restrictPlane) {
         ArrayList<BlockPos> blockFaces = new ArrayList<>();
         ArrayList<BlockPos> openList = new ArrayList<>();
         HashSet<BlockPos> closedList = new HashSet<>();
@@ -139,7 +139,7 @@ public final class BlockUtils {
 
         while (!openList.isEmpty()) {
             BlockPos loc = openList.remove(0);
-            BlockEntity tileEntity = world.getBlockEntity(loc);
+            BlockEntity tileEntity = level.getBlockEntity(loc);
             if (tileEntity instanceof IPaintable) {
                 if (!restrictPlane) {
                     blockFaces.add(loc);
@@ -153,7 +153,7 @@ public final class BlockUtils {
                     continue;
                 }
                 closedList.add(sideLoc);
-                if (getDistance(sideLoc, pos) < radius & hasPaintableBlock(world, sideLoc)) {
+                if (getDistance(sideLoc, pos) < radius & hasPaintableBlock(level, sideLoc)) {
                     openList.add(sideLoc);
                 }
             }
@@ -173,11 +173,11 @@ public final class BlockUtils {
         return Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
     }
 
-    private static boolean hasPaintableBlock(Level world, BlockPos pos) {
+    private static boolean hasPaintableBlock(Level level, BlockPos pos) {
         for (int ix = 0; ix < 3; ix++) {
             for (int iy = 0; iy < 3; iy++) {
                 for (int iz = 0; iz < 3; iz++) {
-                    BlockEntity stateValid = world.getBlockEntity(pos.offset(ix - 1, iy - 1, iz - 1));
+                    BlockEntity stateValid = level.getBlockEntity(pos.offset(ix - 1, iy - 1, iz - 1));
                     if (stateValid instanceof IPaintable) {
                         return true;
                     }

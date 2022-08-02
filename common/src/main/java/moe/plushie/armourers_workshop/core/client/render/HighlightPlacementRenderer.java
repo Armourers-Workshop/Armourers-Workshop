@@ -92,10 +92,10 @@ public class HighlightPlacementRenderer {
     }
 
     public static void renderPaintTool(ItemStack itemStack, Player player, BlockHitResult traceResult, Camera renderInfo, PoseStack matrixStack, MultiBufferSource buffers) {
-        Level world = player.level;
+        Level level = player.level;
         BlockPos pos = traceResult.getBlockPos();
         Direction direction = traceResult.getDirection();
-        BlockEntity tileEntity = world.getBlockEntity(pos);
+        BlockEntity tileEntity = level.getBlockEntity(pos);
 
         // must select a paintable block to preview.
         if (!(tileEntity instanceof IPaintable)) {
@@ -106,8 +106,8 @@ public class HighlightPlacementRenderer {
         int radiusEffect = ToolOptions.RADIUS_EFFECT.get(itemStack);
         boolean restrictPlane = ToolOptions.PLANE_RESTRICT.get(itemStack);
 
-        ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(world, pos, direction, radiusSample, restrictPlane);
-        ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(world, pos, direction, radiusEffect, restrictPlane);
+        ArrayList<BlockPos> blockSamples = BlockUtils.findTouchingBlockFaces(level, pos, direction, radiusSample, restrictPlane);
+        ArrayList<BlockPos> blockEffects = BlockUtils.findTouchingBlockFaces(level, pos, direction, radiusEffect, restrictPlane);
 
         matrixStack.pushPose();
 

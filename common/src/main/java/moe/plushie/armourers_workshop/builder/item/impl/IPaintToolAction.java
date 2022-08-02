@@ -12,7 +12,7 @@ public interface IPaintToolAction {
 
     void encode(final FriendlyByteBuf buffer);
 
-    void apply(Level world, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player);
+    void apply(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player);
 
-    IPaintToolAction build(Level world, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player);
+    IPaintToolAction build(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player);
 }

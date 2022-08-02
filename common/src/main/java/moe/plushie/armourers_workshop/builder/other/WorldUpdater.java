@@ -25,8 +25,8 @@ public class WorldUpdater {
         allTasks.computeIfAbsent(task.getLevel().dimension(), k -> new ArrayList<>()).add(task);
     }
 
-    public void tick(Level world) {
-        ResourceKey<Level> key = world.dimension();
+    public void tick(Level level) {
+        ResourceKey<Level> key = level.dimension();
         if (isEmpty(key)) {
             return;
         }
@@ -37,7 +37,7 @@ public class WorldUpdater {
             if (task == null) {
                 break; // no more tasks to run
             }
-            InteractionResult resultType = task.run(world);
+            InteractionResult resultType = task.run(level);
             if (resultType.consumesAction()) {
                 count -= 1;
             } else if (resultType == InteractionResult.FAIL) {

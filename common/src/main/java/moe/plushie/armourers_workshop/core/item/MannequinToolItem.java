@@ -56,8 +56,8 @@ public class MannequinToolItem extends FlavouredItem {
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> tooltips, TooltipFlag flag) {
-        super.appendHoverText(itemStack, world, tooltips, flag);
+    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flag) {
+        super.appendHoverText(itemStack, level, tooltips, flag);
         CompoundTag tag = itemStack.getTag();
         if (tag != null && tag.contains(Constants.Key.ENTITY, Constants.TagFlags.COMPOUND)) {
             tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.settingsSaved"));

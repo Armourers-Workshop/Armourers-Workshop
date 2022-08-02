@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class SkinCubeWrapper implements IPaintable {
+public class CubeWrapper implements IPaintable {
 
-    private final Consumer<SkinCubeChanges> consumer;
-    private final Level world;
+    private final Consumer<CubeChanges> consumer;
+    private final Level level;
 
     private BlockPos pos;
 
@@ -28,11 +28,11 @@ public class SkinCubeWrapper implements IPaintable {
     private Supplier<BlockEntity> tileEntity;
     private Supplier<IPaintable> target;
 
-    private SkinCubeChanges changes;
+    private CubeChanges changes;
 
-    public SkinCubeWrapper(Level world, Consumer<SkinCubeChanges> consumer) {
+    public CubeWrapper(Level level, Consumer<CubeChanges> consumer) {
         this.consumer = consumer;
-        this.world = world;
+        this.level = level;
     }
 
     public boolean is(Class<?> clazz) {
@@ -56,7 +56,7 @@ public class SkinCubeWrapper implements IPaintable {
             return this.state.get();
         }
         if (this.pos != null) {
-            BlockState state = world.getBlockState(pos);
+            BlockState state = level.getBlockState(pos);
             this.state = () -> state;
             return state;
         }
@@ -73,7 +73,7 @@ public class SkinCubeWrapper implements IPaintable {
             return this.tileEntity.get();
         }
         if (this.pos != null) {
-            BlockEntity tileEntity = world.getBlockEntity(pos);
+            BlockEntity tileEntity = level.getBlockEntity(pos);
             this.tileEntity = () -> tileEntity;
             return tileEntity;
         }
@@ -150,9 +150,9 @@ public class SkinCubeWrapper implements IPaintable {
         return null;
     }
 
-    private SkinCubeChanges lastChanges() {
+    private CubeChanges lastChanges() {
         if (changes == null) {
-            changes = new SkinCubeChanges(world, pos);
+            changes = new CubeChanges(level, pos);
         }
         return changes;
     }

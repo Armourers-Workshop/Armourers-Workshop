@@ -14,7 +14,7 @@ public class SkinValueHealthPercentage extends AdvancedSkinRegistry.AdvancedSkin
     }
 
     @Override
-    public float getValue(Level world, Entity entity, Skin skin, SkinPart skinPart) {
+    public float getValue(Level level, Entity entity, Skin skin, SkinPart skinPart) {
         if (entity != null && entity instanceof LivingEntity) {
             LivingEntity entityLivingBase = (LivingEntity) entity;
             return entityLivingBase.getHealth() / entityLivingBase.getMaxHealth();

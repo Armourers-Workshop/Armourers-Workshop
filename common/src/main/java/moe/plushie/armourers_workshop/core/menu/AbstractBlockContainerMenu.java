@@ -29,7 +29,7 @@ public abstract class AbstractBlockContainerMenu extends AbstractContainerMenu {
     @Nullable
     public <T extends BlockEntity> T getTileEntity(Class<T> clazz) {
         BlockEntity[] tileEntities = {null};
-        access.execute((world, pos) -> tileEntities[0] = world.getBlockEntity(pos));
+        access.execute((level, pos) -> tileEntities[0] = level.getBlockEntity(pos));
         if (clazz.isInstance(tileEntities[0])) {
             return ObjectUtils.unsafeCast(tileEntities[0]);
         }

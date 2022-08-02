@@ -36,7 +36,7 @@ public class ColorMixerMenu extends AbstractBlockContainerMenu {
     @Override
     public void removed(Player player) {
         super.removed(player);
-        this.access.execute((world, pos) -> this.clearContainer(player, world, inventory));
+        this.access.execute((level, pos) -> this.clearContainer(player, level, inventory));
     }
 
     @Override
@@ -78,8 +78,8 @@ public class ColorMixerMenu extends AbstractBlockContainerMenu {
         }
     }
 
-    protected UseOnContext buildContext(Level world, BlockPos pos, ItemStack itemStack) {
+    protected UseOnContext buildContext(Level level, BlockPos pos, ItemStack itemStack) {
         BlockHitResult traceResult = BlockHitResult.miss(Vec3.ZERO, Direction.NORTH, pos);
-        return new OpenUseOnContext(world, null, InteractionHand.OFF_HAND, itemStack, traceResult);
+        return new OpenUseOnContext(level, null, InteractionHand.OFF_HAND, itemStack, traceResult);
     }
 }

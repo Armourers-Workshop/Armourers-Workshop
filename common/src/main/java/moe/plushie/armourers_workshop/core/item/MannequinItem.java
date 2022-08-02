@@ -81,12 +81,12 @@ public class MannequinItem extends FlavouredItem {
         if (player == null) {
             return InteractionResult.FAIL;
         }
-        Level world = context.getLevel();
+        Level level = context.getLevel();
         Vec3 origin = new Vec3(player.getX(), player.getY(), player.getZ());
         MannequinHitResult rayTraceResult = MannequinHitResult.test(player, origin, context.getClickLocation(), context.getClickedPos());
         ItemStack itemStack = context.getItemInHand();
-        if (world instanceof ServerLevel) {
-            ServerLevel serverWorld = (ServerLevel) world;
+        if (level instanceof ServerLevel) {
+            ServerLevel serverWorld = (ServerLevel) level;
             MannequinEntity entity = ModEntities.MANNEQUIN.get().create(serverWorld, itemStack.getTag(), null, context.getPlayer(), rayTraceResult.getBlockPos(), MobSpawnType.SPAWN_EGG, true, true);
             if (entity == null) {
                 return InteractionResult.FAIL;
@@ -95,11 +95,11 @@ public class MannequinItem extends FlavouredItem {
             entity.absMoveTo(clickedLocation.x(), clickedLocation.y(), clickedLocation.z(), 0.0f, 0.0f);
             entity.setYBodyRot(rayTraceResult.getRotation());
 
-            world.addFreshEntity(entity);
-            world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
+            level.addFreshEntity(entity);
+            level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
 
             itemStack.shrink(1);
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.FAIL;
     }
@@ -118,8 +118,8 @@ public class MannequinItem extends FlavouredItem {
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> tooltips, TooltipFlag flag) {
-        super.appendHoverText(itemStack, world, tooltips, flag);
+    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flag) {
+        super.appendHoverText(itemStack, level, tooltips, flag);
         PlayerTextureDescriptor descriptor = PlayerTextureDescriptor.of(itemStack);
         if (descriptor.getName() != null) {
             tooltips.add(TranslateUtils.subtitle("item.armourers_workshop.rollover.user", descriptor.getName()));

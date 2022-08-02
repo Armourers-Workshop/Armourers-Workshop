@@ -42,7 +42,7 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, world, entity) -> {
+        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, level, entity) -> {
             CompoundTag tag = itemStack.getTag();
             if (tag != null && tag.contains(Constants.Key.TILE_ENTITY_LINKED_POS)) {
                 return 0;
@@ -53,13 +53,13 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
 
     @Override
     public InteractionResult useOnFirst(ItemStack itemStack, UseOnContext context) {
-        Level world = context.getLevel();
+        Level level = context.getLevel();
         Player player = context.getPlayer();
-        if (world.isClientSide || player == null) {
+        if (level.isClientSide || player == null) {
             return InteractionResult.SUCCESS;
         }
         BlockPos linkedBlockPos = getLinkedBlockPos(itemStack);
-        SkinnableBlockEntity tileEntity = getTitleEntity(world, context.getClickedPos());
+        SkinnableBlockEntity tileEntity = getTitleEntity(level, context.getClickedPos());
         if (tileEntity != null && player.isShiftKeyDown()) {
             tileEntity.setLinkedBlockPos(null);
             player.sendMessage(TranslateUtils.title("inventory.armourers_workshop.linking-tool.clear"), player.getUUID());
@@ -84,8 +84,8 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
         return InteractionResult.SUCCESS;
     }
 
-    private SkinnableBlockEntity getTitleEntity(Level world, BlockPos pos) {
-        BlockEntity tileEntity = world.getBlockEntity(pos);
+    private SkinnableBlockEntity getTitleEntity(Level level, BlockPos pos) {
+        BlockEntity tileEntity = level.getBlockEntity(pos);
         if (tileEntity instanceof SkinnableBlockEntity) {
             return (SkinnableBlockEntity) tileEntity;
         }

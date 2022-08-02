@@ -8,10 +8,10 @@ import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
-import moe.plushie.armourers_workshop.builder.other.SkinCubeApplier;
-import moe.plushie.armourers_workshop.builder.other.SkinCubePaintingEvent;
-import moe.plushie.armourers_workshop.builder.other.SkinCubeSelector;
-import moe.plushie.armourers_workshop.builder.other.SkinCubeWrapper;
+import moe.plushie.armourers_workshop.builder.other.CubeApplier;
+import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
+import moe.plushie.armourers_workshop.builder.other.CubeSelector;
+import moe.plushie.armourers_workshop.builder.other.CubeWrapper;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.init.ModSounds;
@@ -46,11 +46,11 @@ public class BlendingToolItem extends AbstractPaintToolItem implements IBlockPai
         builder.accept(ToolOptions.FULL_BLOCK_MODE);
     }
 
-    protected SkinCubeSelector createColorApplierSelector(int radius, UseOnContext context) {
+    protected CubeSelector createColorApplierSelector(int radius, UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
         boolean restrictPlane = ToolOptions.PLANE_RESTRICT.get(itemStack);
         boolean isFullMode = shouldUseFullMode(context);
-        return SkinCubeSelector.touching(context.getClickedPos(), radius, isFullMode, restrictPlane);
+        return CubeSelector.touching(context.getClickedPos(), radius, isFullMode, restrictPlane);
     }
 
     @Override
@@ -75,9 +75,9 @@ public class BlendingToolItem extends AbstractPaintToolItem implements IBlockPai
         int radiusSample = ToolOptions.RADIUS_SAMPLE.get(itemStack);
         // we need to complete sampling before we can use blending tool.
         ArrayList<Integer> colors = new ArrayList<>();
-        SkinCubeApplier applier = new SkinCubeApplier(context.getLevel());
+        CubeApplier applier = new CubeApplier(context.getLevel());
         createColorApplierSelector(radiusSample, context).forEach(context, (targetPos, dir) -> {
-            SkinCubeWrapper wrapper = applier.wrap(targetPos);
+            CubeWrapper wrapper = applier.wrap(targetPos);
             if (wrapper.shouldChangeColor(dir)) {
                 IPaintColor paintColor = wrapper.getColor(dir);
                 if (paintColor != null) {
@@ -86,7 +86,7 @@ public class BlendingToolItem extends AbstractPaintToolItem implements IBlockPai
             }
         });
         IPaintColor paintColor = PaintColor.of(ColorUtils.getAverageColor(colors), SkinPaintTypes.NORMAL);
-        return new SkinCubePaintingEvent.BlendingAction(paintColor, intensity);
+        return new CubePaintingEvent.BlendingAction(paintColor, intensity);
     }
 
     @Override

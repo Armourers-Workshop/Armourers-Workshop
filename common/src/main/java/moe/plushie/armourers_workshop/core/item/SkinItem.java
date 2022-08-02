@@ -124,7 +124,7 @@ public class SkinItem extends Item implements IItemPropertiesProvider {
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("loading"), (itemStack, world, entity) -> {
+        builder.accept(ArmourersWorkshop.getResource("loading"), (itemStack, level, entity) -> {
             SkinDescriptor descriptor = SkinDescriptor.of(itemStack);
             BakedSkin bakedSkin = BakedSkin.of(descriptor);
             if (bakedSkin != null) {

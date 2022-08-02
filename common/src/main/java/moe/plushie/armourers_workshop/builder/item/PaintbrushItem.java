@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
-import moe.plushie.armourers_workshop.builder.other.SkinCubePaintingEvent;
+import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintToolPicker;
@@ -49,10 +49,10 @@ public class PaintbrushItem extends AbstractPaintToolItem implements IItemTintCo
     }
 
     @Override
-    public InteractionResult usePickTool(Level world, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context) {
+    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context) {
         if (tileEntity instanceof IPaintProvider) {
             setItemColor(context.getItemInHand(), ((IPaintProvider) tileEntity).getColor());
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }
@@ -65,12 +65,12 @@ public class PaintbrushItem extends AbstractPaintToolItem implements IItemTintCo
     @Override
     public IPaintToolAction createPaintToolAction(UseOnContext context) {
         IPaintColor paintColor = getItemColor(context.getItemInHand(), PaintColor.WHITE);
-        return new SkinCubePaintingEvent.SetAction(paintColor);
+        return new CubePaintingEvent.SetAction(paintColor);
     }
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("small"), (itemStack, world, entity) -> ToolOptions.FULL_BLOCK_MODE.get(itemStack) ? 0 : 1);
+        builder.accept(ArmourersWorkshop.getResource("small"), (itemStack, level, entity) -> ToolOptions.FULL_BLOCK_MODE.get(itemStack) ? 0 : 1);
     }
 
     @Override

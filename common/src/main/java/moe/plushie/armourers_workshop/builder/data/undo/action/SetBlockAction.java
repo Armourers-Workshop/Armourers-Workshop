@@ -14,8 +14,8 @@ public class SetBlockAction extends BlockUndoAction {
     private final BlockState newValue;
     private final CompoundTag newValueNBT;
 
-    public SetBlockAction(Level world, BlockPos blockPos, BlockState newValue, CompoundTag newValueNBT) {
-        super(world, blockPos);
+    public SetBlockAction(Level level, BlockPos blockPos, BlockState newValue, CompoundTag newValueNBT) {
+        super(level, blockPos);
         this.newValue = newValue;
         this.newValueNBT = newValueNBT;
     }
@@ -27,16 +27,16 @@ public class SetBlockAction extends BlockUndoAction {
 
     @Override
     public IUndoCommand apply() {
-        BlockState oldState = world.getBlockState(blockPos);
+        BlockState oldState = level.getBlockState(blockPos);
         CompoundTag oldNBT = null;
-        BlockEntity oldTileEntity = world.getBlockEntity(blockPos);
+        BlockEntity oldTileEntity = level.getBlockEntity(blockPos);
         if (oldTileEntity != null) {
             oldNBT = oldTileEntity.save(new CompoundTag());
         }
-        SetBlockAction oldChanges = new SetBlockAction(world, blockPos, oldState, oldNBT);
-        world.setBlock(blockPos, newValue, Constants.BlockFlags.DEFAULT_AND_RERENDER);
+        SetBlockAction oldChanges = new SetBlockAction(level, blockPos, oldState, oldNBT);
+        level.setBlock(blockPos, newValue, Constants.BlockFlags.DEFAULT_AND_RERENDER);
         if (newValueNBT != null) {
-            BlockEntity tileEntity = world.getBlockEntity(blockPos);
+            BlockEntity tileEntity = level.getBlockEntity(blockPos);
             if (tileEntity != null) {
                 tileEntity.load(tileEntity.getBlockState(), newValueNBT);
             }

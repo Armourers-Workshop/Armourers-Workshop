@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.builder.item;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolApplier;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
-import moe.plushie.armourers_workshop.builder.other.SkinCubeSelector;
+import moe.plushie.armourers_workshop.builder.other.CubeSelector;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 
@@ -28,7 +28,7 @@ public abstract class AbstractPaintToolItem extends AbstractConfigurableToolItem
     @Override
     public IPaintToolSelector createPaintToolSelector(UseOnContext context) {
         boolean isFullMode = shouldUseFullMode(context);
-        return SkinCubeSelector.box(context.getClickedPos(), isFullMode);
+        return CubeSelector.box(context.getClickedPos(), isFullMode);
     }
 
     public boolean shouldUseFullMode(UseOnContext context) {

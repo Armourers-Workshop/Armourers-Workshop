@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 public class WorldBlockUpdateTask implements IWorldUpdateTask {
 
-    Level world;
+    Level level;
     BlockPos pos;
     BlockState state;
     CompoundTag nbt;
@@ -22,12 +22,12 @@ public class WorldBlockUpdateTask implements IWorldUpdateTask {
     Predicate<BlockState> validator;
     Consumer<BlockState> modifier;
 
-    public WorldBlockUpdateTask(Level world, BlockPos pos, BlockState state) {
-        this(world, pos, state, null);
+    public WorldBlockUpdateTask(Level level, BlockPos pos, BlockState state) {
+        this(level, pos, state, null);
     }
 
-    public WorldBlockUpdateTask(Level world, BlockPos pos, BlockState state, CompoundTag nbt) {
-        this.world = world;
+    public WorldBlockUpdateTask(Level level, BlockPos pos, BlockState state, CompoundTag nbt) {
+        this.level = level;
         this.pos = pos;
         this.state = state;
         this.nbt = nbt;
@@ -43,21 +43,21 @@ public class WorldBlockUpdateTask implements IWorldUpdateTask {
 
     @Override
     public Level getLevel() {
-        return world;
+        return level;
     }
 
     @Override
-    public InteractionResult run(Level world) {
-        if (!world.isLoaded(pos)) {
+    public InteractionResult run(Level level) {
+        if (!level.isLoaded(pos)) {
             return InteractionResult.PASS;
         }
-        BlockState targetState = world.getBlockState(pos);
+        BlockState targetState = level.getBlockState(pos);
         if (validator != null && !validator.test(targetState)) {
             return InteractionResult.PASS;
         }
-        world.setBlock(pos, state, Constants.BlockFlags.DEFAULT);
+        level.setBlock(pos, state, Constants.BlockFlags.DEFAULT);
         if (nbt != null) {
-            BlockEntity tileEntity = world.getBlockEntity(pos);
+            BlockEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity != null) {
                 tileEntity.load(tileEntity.getBlockState(), nbt);
             }

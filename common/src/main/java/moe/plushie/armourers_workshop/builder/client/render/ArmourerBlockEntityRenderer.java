@@ -12,7 +12,7 @@ import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
 import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.render.guide.GuideRendererManager;
-import moe.plushie.armourers_workshop.builder.other.SkinCubeTransform;
+import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.core.client.other.SkinDynamicTexture;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -141,7 +141,7 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
 
     public void transform(PoseStack matrixStack, BlockState state) {
         matrixStack.translate(0, 1, 0); // apply height offset
-        matrixStack.mulPose(SkinCubeTransform.getRotationDegrees(state.getValue(ArmourerBlock.FACING))); // apply facing rotation
+        matrixStack.mulPose(CubeTransform.getRotationDegrees(state.getValue(ArmourerBlock.FACING))); // apply facing rotation
     }
 
     @Override

@@ -9,11 +9,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class BlockUndoAction implements IUndoCommand {
 
-    protected final Level world;
+    protected final Level level;
     protected final BlockPos blockPos;
 
-    public BlockUndoAction(Level world, BlockPos blockPos) {
-        this.world = world;
+    public BlockUndoAction(Level level, BlockPos blockPos) {
+        this.level = level;
         this.blockPos = blockPos;
     }
 
@@ -28,8 +28,8 @@ public abstract class BlockUndoAction implements IUndoCommand {
     }
 
     public BlockEntity getTileEntity() {
-        if (world != null) {
-            return world.getBlockEntity(blockPos);
+        if (level != null) {
+            return level.getBlockEntity(blockPos);
         }
         return null;
     }

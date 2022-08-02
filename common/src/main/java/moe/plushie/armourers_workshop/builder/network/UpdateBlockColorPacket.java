@@ -4,8 +4,8 @@ import moe.plushie.armourers_workshop.api.common.IItemParticleProvider;
 import moe.plushie.armourers_workshop.api.common.IItemSoundProvider;
 import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.builder.other.SkinCubeApplier;
-import moe.plushie.armourers_workshop.builder.other.SkinCubePaintingEvent;
+import moe.plushie.armourers_workshop.builder.other.CubeApplier;
+import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.utils.ext.OpenUseOnContext;
 import net.minecraft.core.BlockPos;
@@ -25,16 +25,16 @@ public class UpdateBlockColorPacket extends CustomPacket {
     final InteractionHand hand;
     final GlobalPos clickedPos;
     final BlockHitResult traceResult;
-    final SkinCubePaintingEvent paintingEvent;
+    final CubePaintingEvent paintingEvent;
 
     public UpdateBlockColorPacket(FriendlyByteBuf buffer) {
         this.hand = buffer.readEnum(InteractionHand.class);
         this.clickedPos = readGlobalPos(buffer);
         this.traceResult = buffer.readBlockHitResult();
-        this.paintingEvent = new SkinCubePaintingEvent(buffer);
+        this.paintingEvent = new CubePaintingEvent(buffer);
     }
 
-    public UpdateBlockColorPacket(UseOnContext context, SkinCubePaintingEvent paintingEvent) {
+    public UpdateBlockColorPacket(UseOnContext context, CubePaintingEvent paintingEvent) {
         this.hand = context.getHand();
         this.clickedPos = GlobalPos.of(context.getLevel().dimension(), context.getClickedPos());
         this.traceResult = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), context.isInside());
@@ -57,14 +57,14 @@ public class UpdateBlockColorPacket extends CustomPacket {
     public void accept(IServerPacketHandler packetHandler, ServerPlayer player) {
         // TODO: check player
         // we don't support modify blocks in multiple dimensions at the same time.
-        Level world = player.server.getLevel(clickedPos.dimension());
-        if (world == null) {
+        Level level = player.server.getLevel(clickedPos.dimension());
+        if (level == null) {
             return;
         }
         try {
             ItemStack itemStack = player.getItemInHand(hand);
-            UseOnContext context = new OpenUseOnContext(world, player, hand, itemStack, traceResult);
-            SkinCubeApplier applier = new SkinCubeApplier(world);
+            UseOnContext context = new OpenUseOnContext(level, player, hand, itemStack, traceResult);
+            CubeApplier applier = new CubeApplier(level);
             paintingEvent.apply(applier, context);
             applier.submit(itemStack.getHoverName(), player);
             applyUseEffects(itemStack, context);

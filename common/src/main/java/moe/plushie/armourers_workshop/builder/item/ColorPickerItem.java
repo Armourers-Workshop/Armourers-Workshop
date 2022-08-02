@@ -48,10 +48,10 @@ public class ColorPickerItem extends AbstractConfigurableToolItem implements IIt
     }
 
     @Override
-    public InteractionResult usePickTool(Level world, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context) {
+    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
         if (tileEntity instanceof IPaintable) {
-            if (!world.isClientSide()) {
+            if (!level.isClientSide()) {
                 return InteractionResult.CONSUME;
             }
             IPaintColor color = ((IPaintable) tileEntity).getColor(dir);
@@ -77,14 +77,14 @@ public class ColorPickerItem extends AbstractConfigurableToolItem implements IIt
                 newColor = PaintColor.of(newColor.getRGB(), provider.getColor().getPaintType());
             }
             provider.setColor(newColor);
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, world, entity) -> ColorUtils.hasColor(itemStack) ? 0 : 1);
+        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, level, entity) -> ColorUtils.hasColor(itemStack) ? 0 : 1);
     }
 
     @Override

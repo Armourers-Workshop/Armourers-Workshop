@@ -22,9 +22,9 @@ public class SkinUnlockItem extends FlavouredItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (world.isClientSide) {
+        if (level.isClientSide) {
             return InteractionResultHolder.consume(itemStack);
         }
         ISkinType skinType = slotType.getSkinType();

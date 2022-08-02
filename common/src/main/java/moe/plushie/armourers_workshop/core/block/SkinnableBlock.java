@@ -64,22 +64,22 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
         SkinBlockPlaceContext context = SkinBlockPlaceContext.of(pos);
         if (context == null) {
             return;
         }
-        // add all part into world
+        // add all part into level
         context.getParts().forEach(p -> {
             BlockPos target = pos.offset(p.getOffset());
-            world.setBlock(target, state, 11);
-            SkinnableBlockEntity tileEntity = getTileEntity(world, target);
+            level.setBlock(target, state, 11);
+            SkinnableBlockEntity tileEntity = getTileEntity(level, target);
             if (tileEntity != null) {
                 tileEntity.readFromNBT(p.getEntityTag());
                 tileEntity.updateBlockStates();
             }
         });
-        super.setPlacedBy(world, pos, state, entity, itemStack);
+        super.setPlacedBy(level, pos, state, entity, itemStack);
     }
 
     @Override
@@ -98,28 +98,28 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult traceResult) {
-        SkinnableBlockEntity tileEntity = getTileEntity(world, pos);
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult traceResult) {
+        SkinnableBlockEntity tileEntity = getTileEntity(level, blockPos);
         if (tileEntity == null) {
             return InteractionResult.FAIL;
         }
         if (tileEntity.isLinked()) {
             BlockPos linkedPos = tileEntity.getLinkedBlockPos();
-            BlockState linkedState = world.getBlockState(linkedPos);
-            return linkedState.getBlock().use(linkedState, world, linkedPos, player, hand, traceResult);
+            BlockState linkedState = level.getBlockState(linkedPos);
+            return linkedState.getBlock().use(linkedState, level, linkedPos, player, hand, traceResult);
         }
         if (tileEntity.isBed() && !player.isShiftKeyDown()) {
             if (ModPermissions.SKINNABLE_SLEEP.accept(tileEntity, player)) {
-                return Blocks.RED_BED.use(state, world, tileEntity.getBedPos(), player, hand, traceResult);
+                return Blocks.RED_BED.use(blockState, level, tileEntity.getBedPos(), player, hand, traceResult);
             }
         }
         if (tileEntity.isSeat() && !player.isShiftKeyDown()) {
             if (ModPermissions.SKINNABLE_SIT.accept(tileEntity, player)) {
-                if (world.isClientSide) {
+                if (level.isClientSide) {
                     return InteractionResult.CONSUME;
                 }
                 Vector3d seatPos = tileEntity.getSeatPos().add(0.5f, 0.5f, 0.5f);
-                SeatEntity seatEntity = getSeatEntity(world, tileEntity.getParentPos(), seatPos);
+                SeatEntity seatEntity = getSeatEntity(level, tileEntity.getParentPos(), seatPos);
                 if (seatEntity == null) {
                     return InteractionResult.FAIL; // it is using
                 }
@@ -128,10 +128,10 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
             }
         }
         if (tileEntity.isInventory()) {
-            if (MenuManager.openMenu(ModMenus.SKINNABLE, player, world, pos)) {
+            if (MenuManager.openMenu(ModMenus.SKINNABLE, player, level, blockPos)) {
                 player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
             }
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.FAIL;
     }
@@ -198,8 +198,8 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
         return super.getCollisionShape(blockState, blockGetter, blockPos, collisionContext);
     }
 
-    public void forEach(Level world, BlockPos pos, Consumer<BlockPos> consumer) {
-        SkinnableBlockEntity tileEntity = getParentTileEntity(world, pos);
+    public void forEach(Level level, BlockPos pos, Consumer<BlockPos> consumer) {
+        SkinnableBlockEntity tileEntity = getParentTileEntity(level, pos);
         if (tileEntity == null) {
             return;
         }
@@ -243,8 +243,8 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
         return true;
     }
 
-    private SkinnableBlockEntity getTileEntity(BlockGetter world, BlockPos pos) {
-        BlockEntity tileEntity = world.getBlockEntity(pos);
+    private SkinnableBlockEntity getTileEntity(BlockGetter level, BlockPos pos) {
+        BlockEntity tileEntity = level.getBlockEntity(pos);
         if (tileEntity instanceof SkinnableBlockEntity) {
             return (SkinnableBlockEntity) tileEntity;
         }
@@ -260,9 +260,9 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
     }
 
     @Nullable
-    private SeatEntity getSeatEntity(Level world, BlockPos blockPos, Vector3d pos) {
+    private SeatEntity getSeatEntity(Level level, BlockPos blockPos, Vector3d pos) {
         AABB searchRect = AABB.ofSize(1, 1, 1).move(pos.x(), pos.y(), pos.z());
-        for (SeatEntity entity : world.getEntitiesOfClass(SeatEntity.class, searchRect)) {
+        for (SeatEntity entity : level.getEntitiesOfClass(SeatEntity.class, searchRect)) {
             if (entity.isAlive() && blockPos.equals(entity.getBlockPos())) {
                 if (entity.getPassengers().isEmpty()) {
                     return entity;
@@ -270,16 +270,16 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
                 return null; // is using
             }
         }
-        SeatEntity entity = new SeatEntity(ModEntities.SEAT.get(), world);
+        SeatEntity entity = new SeatEntity(ModEntities.SEAT.get(), level);
         entity.setPos(pos.x(), pos.y(), pos.z());
         entity.setBlockPos(blockPos);
-        world.addFreshEntity(entity);
+        level.addFreshEntity(entity);
         return entity;
     }
 
-    private void killSeatEntity(Level world, BlockPos blockPos, Vector3d pos) {
+    private void killSeatEntity(Level level, BlockPos blockPos, Vector3d pos) {
         AABB searchRect = AABB.ofSize(1, 1, 1).move(pos.x(), pos.y(), pos.z());
-        for (SeatEntity entity : world.getEntitiesOfClass(SeatEntity.class, searchRect)) {
+        for (SeatEntity entity : level.getEntitiesOfClass(SeatEntity.class, searchRect)) {
             if (entity.isAlive() && blockPos.equals(entity.getBlockPos())) {
                 entity.kill();
             }

@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.function.Function;
 
-public class SkinCubePaintingEvent {
+public class CubePaintingEvent {
 
     private static final HashMap<Class<? extends Action>, ActionTypes> REVERSE_LOOKUP = new HashMap<>();
 
@@ -32,13 +32,13 @@ public class SkinCubePaintingEvent {
 
     private int targetCount = 0;
 
-    public SkinCubePaintingEvent(IPaintToolSelector selector, IPaintToolAction action) {
+    public CubePaintingEvent(IPaintToolSelector selector, IPaintToolAction action) {
         this.selector = selector;
         this.action = action;
     }
 
-    public SkinCubePaintingEvent(FriendlyByteBuf buffer) {
-        this.selector = SkinCubeSelector.from(buffer);
+    public CubePaintingEvent(FriendlyByteBuf buffer) {
+        this.selector = CubeSelector.from(buffer);
         this.action = Action.fromBuffer(buffer);
         // read and remapping actions.
         while (true) {
@@ -72,15 +72,15 @@ public class SkinCubePaintingEvent {
         buffer.writeByte(0);
     }
 
-    public boolean prepare(SkinCubeApplier applier, UseOnContext context) {
-        Level world = context.getLevel();
+    public boolean prepare(CubeApplier applier, UseOnContext context) {
+        Level level = context.getLevel();
         Player player = context.getPlayer();
         selector.forEach(context, (target, dir) -> {
-            SkinCubeWrapper wrapper = applier.wrap(target);
+            CubeWrapper wrapper = applier.wrap(target);
             if (wrapper.is(IPaintable.class)) {
                 targetCount += 1;
             }
-            IPaintToolAction action1 = action.build(world, target, dir, wrapper, player);
+            IPaintToolAction action1 = action.build(level, target, dir, wrapper, player);
             if (action1 != action) {
                 overrides.put(Pair.of(target, dir), action1);
             }
@@ -88,12 +88,12 @@ public class SkinCubePaintingEvent {
         return targetCount != 0;
     }
 
-    public void apply(SkinCubeApplier applier, UseOnContext context) {
-        Level world = context.getLevel();
+    public void apply(CubeApplier applier, UseOnContext context) {
+        Level level = context.getLevel();
         Player player = context.getPlayer();
         selector.forEach(context, (target, dir) -> {
             IPaintToolAction action1 = overrides.getOrDefault(Pair.of(target, dir), action);
-            action1.apply(world, target, dir, applier.wrap(target), player);
+            action1.apply(level, target, dir, applier.wrap(target), player);
         });
     }
 
@@ -130,9 +130,9 @@ public class SkinCubePaintingEvent {
             action.encode(buffer);
         }
 
-        public abstract void apply(Level world, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player);
+        public abstract void apply(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player);
 
-        public Action build(Level world, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
+        public Action build(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
             return this;
         }
 
@@ -144,7 +144,7 @@ public class SkinCubePaintingEvent {
         public abstract IPaintColor resolve(BlockPos pos, Direction dir, IPaintColor sourceColor);
 
         @Override
-        public Action build(Level world, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
+        public Action build(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
             if (provider.shouldChangeColor(dir)) {
                 IPaintColor paintColor = provider.getColor(dir);
                 if (paintColor instanceof TexturedPaintColor) {
@@ -159,7 +159,7 @@ public class SkinCubePaintingEvent {
         }
 
         @Override
-        public void apply(Level world, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
+        public void apply(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
             if (provider.shouldChangeColor(dir)) {
                 provider.setColor(dir, resolve(pos, dir, provider.getColor(dir)));
             }
@@ -184,7 +184,7 @@ public class SkinCubePaintingEvent {
         }
 
         @Override
-        public void apply(Level world, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
+        public void apply(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
             if (provider.shouldChangeColor(dir)) {
                 provider.setColor(dir, destinationColor);
             }
@@ -204,9 +204,9 @@ public class SkinCubePaintingEvent {
         }
 
         @Override
-        public void apply(Level world, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
+        public void apply(Level level, BlockPos pos, Direction dir, IPaintable provider, @Nullable Player player) {
             if (provider.shouldChangeColor(dir)) {
-                if (world.getBlockEntity(pos) instanceof BoundingBoxBlockEntity) {
+                if (level.getBlockEntity(pos) instanceof BoundingBoxBlockEntity) {
                     provider.setColor(dir, PaintColor.CLEAR);
                 } else {
                     provider.setColor(dir, PaintColor.WHITE);

@@ -12,7 +12,7 @@ public class SkinValueMathMultiply extends AdvancedSkinRegistry.AdvancedSkinMath
     }
 
     @Override
-    public float getValue(Level world, Entity entity, Skin skin, float... data) {
+    public float getValue(Level level, Entity entity, Skin skin, float... data) {
         if (data.length < getInputs().length) {
             return 0F;
         }

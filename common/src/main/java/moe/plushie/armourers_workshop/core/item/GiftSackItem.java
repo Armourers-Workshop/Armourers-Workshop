@@ -54,20 +54,20 @@ public class GiftSackItem extends FlavouredItem implements IItemTintColorProvide
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         ItemStack giftStack = getGift(itemStack, player);
         if (giftStack.isEmpty()) {
             return InteractionResultHolder.pass(itemStack);
         }
-        if (!world.isClientSide()) {
+        if (!level.isClientSide()) {
             if (player.inventory.add(giftStack)) {
                 itemStack.shrink(1);
             } else {
                 player.sendMessage(TranslateUtils.title("chat.armourers_workshop.inventoryFull"), player.getUUID());
             }
         }
-        return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide());
+        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
     }
 
     @Override

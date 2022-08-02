@@ -7,5 +7,5 @@ public interface IWorldUpdateTask {
 
     Level getLevel();
 
-    InteractionResult run(Level world);
+    InteractionResult run(Level level);
 }

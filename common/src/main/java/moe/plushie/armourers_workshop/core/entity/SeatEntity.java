@@ -20,8 +20,8 @@ public class SeatEntity extends LivingEntity {
     private int holdingTick;
     private BlockPos blockPos;
 
-    public SeatEntity(EntityType<? extends SeatEntity> entityType, Level world) {
-        super(entityType, world);
+    public SeatEntity(EntityType<? extends SeatEntity> entityType, Level level) {
+        super(entityType, level);
         this.yRot = 0.0f;
         this.yHeadRot = this.yRot;
         this.maxUpStep = 0.0f;

@@ -19,13 +19,13 @@ public class BakedModelStroage {
     private static BakedModel SHARED_MODEL;
 
     final ItemStack itemStack;
-    final Level world;
+    final Level level;
     final LivingEntity entity;
     final BakedModel bakedModel;
 
-    public BakedModelStroage(ItemStack itemStack, LivingEntity entity, @Nullable Level world, BakedModel bakedModel) {
+    public BakedModelStroage(ItemStack itemStack, LivingEntity entity, @Nullable Level level, BakedModel bakedModel) {
         this.itemStack = itemStack;
-        this.world = world;
+        this.level = level;
         this.entity = entity;
         this.bakedModel = bakedModel;
     }
@@ -38,14 +38,14 @@ public class BakedModelStroage {
         return null;
     }
 
-    public static BakedModel wrap(BakedModel bakedModel, ItemStack itemStack, LivingEntity entity, @Nullable Level world) {
+    public static BakedModel wrap(BakedModel bakedModel, ItemStack itemStack, LivingEntity entity, @Nullable Level level) {
         // when the world is empty, this means the model is rendering on the GUI.
-        if (world == null) {
+        if (level == null) {
             bakedModel = getSkinBakedModel();
         }
         // we use a java proxy, which will forward all methods back to the original baked model.
         Class<?>[] classes = new Class[]{BakedModel.class, ISkinDataProvider.class};
-        BakedModelStroage stroage = new BakedModelStroage(itemStack, entity, world, bakedModel);
+        BakedModelStroage stroage = new BakedModelStroage(itemStack, entity, level, bakedModel);
         return (BakedModel) Proxy.newProxyInstance(BakedModel.class.getClassLoader(), classes, (proxy, method, methodArgs) -> {
             if (method.getDeclaringClass() == ISkinDataProvider.class) {
                 return stroage;
@@ -69,7 +69,7 @@ public class BakedModelStroage {
         return entity;
     }
 
-    public Level getWorld() {
-        return world;
+    public Level getLevel() {
+        return level;
     }
 }

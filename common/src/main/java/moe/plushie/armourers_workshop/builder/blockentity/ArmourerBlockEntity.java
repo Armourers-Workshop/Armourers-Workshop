@@ -19,7 +19,6 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -88,14 +87,14 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
         DataSerializers.putPaintData(nbt, Constants.Key.PAINT_DATA, paintData);
     }
 
-    public void onPlace(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity) {
+    public void onPlace(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity) {
         remakeBoundingBoxes(null, getBoundingBoxes(), true);
         if (entity instanceof Player) {
             setTextureDescriptor(new PlayerTextureDescriptor(((Player) entity).getGameProfile()));
         }
     }
 
-    public void onRemove(Level world, BlockPos pos, BlockState state) {
+    public void onRemove(Level level, BlockPos pos, BlockState state) {
         remakeBoundingBoxes(getFullBoundingBoxes(), null, true);
     }
 
@@ -236,7 +235,7 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
             return null;
         }
         ArrayList<Rectangle3i> rects = new ArrayList<>();
-        SkinCubeTransform transform = getTransform();
+        CubeTransform transform = getTransform();
         for (ISkinPartType partType : getSkinType().getParts()) {
             Rectangle3i box = WorldUtils.getResolvedBuildingSpace(partType);
             BlockPos p1 = transform.mul(box.getMinX(), box.getMinY(), box.getMinZ());
@@ -249,10 +248,10 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
             int maxZ = Math.max(p1.getZ(), p2.getZ());
             rects.add(new Rectangle3i(minX, minY, minZ, maxX - minX, maxY - minY, maxZ - minZ));
         }
-        return SkinCubeSelector.all(rects);
+        return CubeSelector.all(rects);
     }
 
-    public void copyPaintData(SkinCubeApplier applier, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) {
+    public void copyPaintData(CubeApplier applier, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) {
         if (paintData == null) {
             return;
         }
@@ -265,7 +264,7 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
         }
     }
 
-    public void clearPaintData(SkinCubeApplier applier, ISkinPartType partType) {
+    public void clearPaintData(CubeApplier applier, ISkinPartType partType) {
         if (paintData == null) {
             return;
         }
@@ -283,7 +282,7 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
         }
     }
 
-    public void clearCubes(SkinCubeApplier applier, ISkinPartType partType) {
+    public void clearCubes(CubeApplier applier, ISkinPartType partType) {
         // remove all part
         WorldUtils.clearCubes(applier, getTransform(), getSkinType(), getSkinProperties(), partType);
         // when just clear a part, we don't reset skin properties.
@@ -297,15 +296,15 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
         BlockUtils.combine(this, this::sendBlockUpdates);
     }
 
-    public void replaceCubes(SkinCubeApplier applier, ISkinPartType partType, SkinCubeReplacingEvent event) throws Exception {
+    public void replaceCubes(CubeApplier applier, ISkinPartType partType, CubeReplacingEvent event) throws Exception {
         WorldUtils.replaceCubes(applier, getTransform(), getSkinType(), getSkinProperties(), event);
     }
 
-    public void copyCubes(SkinCubeApplier applier, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws Exception {
+    public void copyCubes(CubeApplier applier, ISkinPartType srcPart, ISkinPartType destPart, boolean mirror) throws Exception {
         WorldUtils.copyCubes(applier, getTransform(), getSkinType(), getSkinProperties(), srcPart, destPart, mirror);
     }
 
-    public void clearMarkers(SkinCubeApplier applier, ISkinPartType partType) {
+    public void clearMarkers(CubeApplier applier, ISkinPartType partType) {
         WorldUtils.clearMarkers(applier, getTransform(), getSkinType(), getSkinProperties(), partType);
         setChanged();
     }
@@ -355,8 +354,8 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
 
     private void remakeBoundingBoxes(Collection<BoundingBox> oldBoxes, Collection<BoundingBox> newBoxes, boolean forced) {
         // we only remake bounding box on the server side.
-        Level world = getLevel();
-        if (world == null || world.isClientSide()) {
+        Level level = getLevel();
+        if (level == null || level.isClientSide()) {
             return;
         }
         // we only remake bounding box when data is changed.
@@ -365,20 +364,20 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
         }
         // we need to remove the old bounding box before add.
         applyBoundingBoxes(oldBoxes, (partType, pos, offset) -> {
-            WorldBlockUpdateTask task = new WorldBlockUpdateTask(world, pos, Blocks.AIR.defaultBlockState());
+            WorldBlockUpdateTask task = new WorldBlockUpdateTask(level, pos, Blocks.AIR.defaultBlockState());
             task.setValidator(state -> state.is(ModBlocks.BOUNDING_BOX.get()));
             return task;
         });
         applyBoundingBoxes(newBoxes, (partType, pos, offset) -> {
-            WorldBlockUpdateTask task = new WorldBlockUpdateTask(world, pos, ModBlocks.BOUNDING_BOX.get().defaultBlockState());
+            WorldBlockUpdateTask task = new WorldBlockUpdateTask(level, pos, ModBlocks.BOUNDING_BOX.get().defaultBlockState());
             task.setValidator(state -> state.getMaterial().isReplaceable());
-            task.setModifier(state -> setupBoundingBox(world, pos, offset, partType));
+            task.setModifier(state -> setupBoundingBox(level, pos, offset, partType));
             return task;
         });
     }
 
-    private void setupBoundingBox(Level world, BlockPos pos, Vector3i offset, ISkinPartType partType) {
-        BlockEntity tileEntity = world.getBlockEntity(pos);
+    private void setupBoundingBox(Level level, BlockPos pos, Vector3i offset, ISkinPartType partType) {
+        BlockEntity tileEntity = level.getBlockEntity(pos);
         if (tileEntity instanceof BoundingBoxBlockEntity) {
             BoundingBoxBlockEntity box = (BoundingBoxBlockEntity) tileEntity;
             box.setPartType(partType);
@@ -392,7 +391,7 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
         if (boxes == null || boxes.isEmpty()) {
             return;
         }
-        SkinCubeTransform transform = getTransform();
+        CubeTransform transform = getTransform();
         boxes.forEach(box -> box.forEach((ix, iy, iz) -> {
             BlockPos target = transform.mul(ix + box.getX(), iy + box.getY(), iz + box.getZ());
             ix = box.getWidth() - ix - 1;
@@ -436,10 +435,10 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
     }
 
 
-    public SkinCubeTransform getTransform() {
+    public CubeTransform getTransform() {
         BlockPos pos = getBlockPos().offset(0, 1, 0);
         Direction facing = getBlockState().getValue(ArmourerBlock.FACING);
-        return new SkinCubeTransform(getLevel(), pos, facing);
+        return new CubeTransform(getLevel(), pos, facing);
     }
 
     public interface IUpdateTaskBuilder {

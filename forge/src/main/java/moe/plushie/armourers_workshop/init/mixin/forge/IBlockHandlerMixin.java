@@ -17,14 +17,14 @@ import org.spongepowered.asm.mixin.Mixin;
 public interface IBlockHandlerMixin extends IForgeBlock {
 
     @Override
-    default boolean isBed(BlockState state, BlockGetter world, BlockPos pos, @Nullable Entity entity) {
+    default boolean isBed(BlockState state, BlockGetter level, BlockPos pos, @Nullable Entity entity) {
         IBlockHandler handler = ObjectUtils.unsafeCast(this);
-        return handler.isCustomBed((Level) world, pos, state, entity);
+        return handler.isCustomBed((Level) level, pos, state, entity);
     }
 
     @Override
-    default boolean isLadder(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
+    default boolean isLadder(BlockState state, LevelReader level, BlockPos pos, LivingEntity entity) {
         IBlockHandler handler = ObjectUtils.unsafeCast(this);
-        return handler.isCustomLadder((Level) world, pos, state, entity);
+        return handler.isCustomLadder((Level) level, pos, state, entity);
     }
 }

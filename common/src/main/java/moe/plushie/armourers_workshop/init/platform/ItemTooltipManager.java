@@ -139,7 +139,7 @@ public class ItemTooltipManager {
         return tooltip;
     }
 
-    public static void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> tooltips, TooltipFlag flags, @Nullable Function<Component, Component> applier) {
+    public static void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flags, @Nullable Function<Component, Component> applier) {
         List<Component> newTooltips = createSkinTooltip(itemStack);
         if (newTooltips.isEmpty()) {
             return;

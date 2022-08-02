@@ -13,7 +13,7 @@ public class SkinValueInWater extends AdvancedSkinRegistry.AdvancedSkinValue {
     }
 
     @Override
-    public float getValue(Level world, Entity entity, Skin skin, SkinPart skinPart) {
+    public float getValue(Level level, Entity entity, Skin skin, SkinPart skinPart) {
         if (entity != null) {
             if (entity.isInWater()) {
                 return 1F;

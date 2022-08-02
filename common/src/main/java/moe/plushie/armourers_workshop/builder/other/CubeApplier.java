@@ -9,15 +9,15 @@ import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 
-public class SkinCubeApplier {
+public class CubeApplier {
 
-    private final Level world;
-    private final SkinCubeWrapper wrapper;
-    private final ArrayList<SkinCubeChanges> changes = new ArrayList<>();
+    private final Level level;
+    private final CubeWrapper wrapper;
+    private final ArrayList<CubeChanges> changes = new ArrayList<>();
 
-    public SkinCubeApplier(Level world) {
-        this.world = world;
-        this.wrapper = new SkinCubeWrapper(world, changes::add);
+    public CubeApplier(Level level) {
+        this.level = level;
+        this.wrapper = new CubeWrapper(level, changes::add);
     }
 
     public void submit(Component name, Player player) {
@@ -32,15 +32,15 @@ public class SkinCubeApplier {
         UndoManager.of(player.getUUID()).push(group.apply());
     }
 
-    public Level getWorld() {
-        return world;
+    public Level getLevel() {
+        return level;
     }
 
     public int getChanges() {
         return changes.size();
     }
 
-    public SkinCubeWrapper wrap(BlockPos pos) {
+    public CubeWrapper wrap(BlockPos pos) {
         wrapper.setPos(pos);
         return wrapper;
     }

@@ -22,8 +22,8 @@ public class ContainerPermission extends Permission {
         return eval(node, player, new PermissionManager.TargetContext(player, target));
     }
 
-    public <T extends AbstractContainerMenu> boolean accept(IRegistryObject<MenuType<T>> type, Level world, BlockPos pos, Player player) {
+    public <T extends AbstractContainerMenu> boolean accept(IRegistryObject<MenuType<T>> type, Level level, BlockPos pos, Player player) {
         String node = get(type.getRegistryName());
-        return eval(node, player, new PermissionManager.BlockContext(player, pos, world.getBlockState(pos), null));
+        return eval(node, player, new PermissionManager.BlockContext(player, pos, level.getBlockState(pos), null));
     }
 }

@@ -198,11 +198,11 @@ public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPain
     }
 
     private ArmourerBlockEntity getParentTileEntity() {
-        Level world = getLevel();
-        if (world == null || parent.equals(INVALID)) {
+        Level level = getLevel();
+        if (level == null || parent.equals(INVALID)) {
             return null;
         }
-        BlockEntity tileEntity = world.getBlockEntity(getBlockPos().subtract(parent));
+        BlockEntity tileEntity = level.getBlockEntity(getBlockPos().subtract(parent));
         if (tileEntity instanceof ArmourerBlockEntity) {
             return (ArmourerBlockEntity) tileEntity;
         }

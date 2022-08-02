@@ -62,8 +62,8 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     private boolean isDropEquipment = false;
     private AABB boundingBoxForCulling;
 
-    public MannequinEntity(EntityType<? extends MannequinEntity> entityType, Level world) {
-        super(entityType, world);
+    public MannequinEntity(EntityType<? extends MannequinEntity> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override
@@ -214,7 +214,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
         if (isMarker()) {
             return InteractionResult.PASS;
         }
-        Level world = player.level;
+        Level level = player.level;
         ItemStack itemStack = player.getItemInHand(hand);
         if (itemStack.getItem() == ModItems.MANNEQUIN_TOOL.get()) {
             return InteractionResult.PASS;
@@ -225,18 +225,18 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
                 customName = itemStack.getHoverName();
             }
             setCustomName(customName);
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         if (player.isShiftKeyDown()) {
             double ry = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
             Rotations rotations = getBodyPose();
             setBodyPose(new Rotations(rotations.getX(), (float) ry - yRot, rotations.getZ()));
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         SkinWardrobe wardrobe = SkinWardrobe.of(this);
         if (wardrobe != null && wardrobe.isEditable(player)) {
             MenuManager.openMenu(ModMenus.WARDROBE, player, wardrobe);
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }

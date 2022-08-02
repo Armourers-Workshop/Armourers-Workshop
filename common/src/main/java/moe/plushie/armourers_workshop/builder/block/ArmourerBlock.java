@@ -31,11 +31,11 @@ public class ArmourerBlock extends AbstractHorizontalBlock implements IBlockEnti
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult traceResult) {
-        if (world.isClientSide) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult traceResult) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        if (MenuManager.openMenu(ModMenus.ARMOURER, player, world, pos)) {
+        if (MenuManager.openMenu(ModMenus.ARMOURER, player, level, pos)) {
             return InteractionResult.CONSUME;
         }
         return InteractionResult.FAIL;
@@ -68,8 +68,8 @@ public class ArmourerBlock extends AbstractHorizontalBlock implements IBlockEnti
         return ModBlockEntities.ARMOURER.get().create();
     }
 
-    private void applyTitleEntity(Level world, BlockPos pos, Consumer<ArmourerBlockEntity> consumer) {
-        BlockEntity entity1 = world.getBlockEntity(pos);
+    private void applyTitleEntity(Level level, BlockPos pos, Consumer<ArmourerBlockEntity> consumer) {
+        BlockEntity entity1 = level.getBlockEntity(pos);
         if (entity1 instanceof ArmourerBlockEntity) {
             consumer.accept((ArmourerBlockEntity) entity1);
         }

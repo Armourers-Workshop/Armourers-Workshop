@@ -18,13 +18,13 @@ public class ArmourersHammerItem extends FlavouredItem implements IItemHandler {
 
     @Override
     public InteractionResult useOnFirst(ItemStack itemStack, UseOnContext context) {
-        Level world = context.getLevel();
+        Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        BlockState state = world.getBlockState(pos);
+        BlockState state = level.getBlockState(pos);
         BlockState newState = state.rotate(Rotation.CLOCKWISE_90);
         if (!newState.equals(state)) {
-            world.setBlock(pos, newState, Constants.BlockFlags.BLOCK_UPDATE);
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            level.setBlock(pos, newState, Constants.BlockFlags.BLOCK_UPDATE);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }

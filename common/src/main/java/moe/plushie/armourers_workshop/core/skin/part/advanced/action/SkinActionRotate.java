@@ -12,7 +12,7 @@ public class SkinActionRotate extends AdvancedSkinRegistry.AdvancedSkinAction {
     }
 
     @Override
-    public void trigger(Level world, Entity entity, Skin skin, float... data) {
+    public void trigger(Level level, Entity entity, Skin skin, float... data) {
         if (data.length < getInputs().length) {
             return;
         }

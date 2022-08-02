@@ -13,9 +13,9 @@ public class SkinValueRaining extends AdvancedSkinRegistry.AdvancedSkinValue {
     }
 
     @Override
-    public float getValue(Level world, Entity entity, Skin skin, SkinPart skinPart) {
-        if (world != null) {
-            if (world.isRaining()) {
+    public float getValue(Level level, Entity entity, Skin skin, SkinPart skinPart) {
+        if (level != null) {
+            if (level.isRaining()) {
                 return 1F;
             }
         }

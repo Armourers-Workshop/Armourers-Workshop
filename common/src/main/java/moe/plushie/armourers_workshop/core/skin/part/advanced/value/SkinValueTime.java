@@ -13,10 +13,10 @@ public class SkinValueTime extends AdvancedSkinRegistry.AdvancedSkinValue {
     }
 
     @Override
-    public float getValue(Level world, Entity entity, Skin skin, SkinPart skinPart) {
-        if (world != null) {
+    public float getValue(Level level, Entity entity, Skin skin, SkinPart skinPart) {
+        if (level != null) {
 //            return (world.provider.getWorldTime() % 24000L);
-            return (world.getGameTime() % 24000L);
+            return (level.getGameTime() % 24000L);
         }
         return 0F;
     }

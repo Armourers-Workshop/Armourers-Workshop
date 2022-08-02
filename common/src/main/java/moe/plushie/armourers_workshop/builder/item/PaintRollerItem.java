@@ -4,7 +4,7 @@ import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
-import moe.plushie.armourers_workshop.builder.other.SkinCubeSelector;
+import moe.plushie.armourers_workshop.builder.other.CubeSelector;
 import moe.plushie.armourers_workshop.init.ModSounds;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.core.BlockPos;
@@ -33,7 +33,7 @@ public class PaintRollerItem extends PaintbrushItem {
         ItemStack itemStack = context.getItemInHand();
         BlockPos pos = context.getClickedPos();
         int radius = ToolOptions.RADIUS.get(itemStack);
-        return SkinCubeSelector.plane(pos, radius, shouldUseFullMode(context));
+        return CubeSelector.plane(pos, radius, shouldUseFullMode(context));
     }
 
     @Override

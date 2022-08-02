@@ -13,7 +13,7 @@ public class SkinTriggerAlways extends AdvancedSkinRegistry.AdvancedSkinTrigger 
     }
 
     @Override
-    public boolean canTrigger(Level world, Entity entity, Skin skin, SkinPart skinPart) {
+    public boolean canTrigger(Level level, Entity entity, Skin skin, SkinPart skinPart) {
         return true;
     }
 }

@@ -26,7 +26,7 @@ public class MannequinHitResult extends BlockHitResult {
     }
 
     public static MannequinHitResult test(Player player, Vec3 origin, Vec3 target, BlockPos pos) {
-        Level world = player.level;
+        Level level = player.level;
         ItemStack itemStack = player.getMainHandItem();
         float scale = MannequinItem.getScale(itemStack);
         float rotation = (float) TrigUtils.getAngleDegrees(origin.x(), origin.z(), target.x(), target.z()) + 90.0f;
@@ -34,12 +34,12 @@ public class MannequinHitResult extends BlockHitResult {
         if (MannequinItem.isSmall(itemStack)) {
             scale *= 0.5f;
         }
-        BlockState blockState = world.getBlockState(pos);
+        BlockState blockState = level.getBlockState(pos);
 
         if (player.isShiftKeyDown()) {
-            VoxelShape shape = blockState.getShape(world, pos);
+            VoxelShape shape = blockState.getShape(level, pos);
             target = Vec3.upFromBottomCenterOf(pos, shape.max(Direction.Axis.Y));
-            VoxelShape collisionShape = blockState.getCollisionShape(world, pos);
+            VoxelShape collisionShape = blockState.getCollisionShape(level, pos);
             if (!Block.isFaceFull(collisionShape, Direction.UP)) {
                 Vec3 newLocation = Vec3.atBottomCenterOf(pos); // can't stand, reset to bottom
                 if (!collisionShape.isEmpty()) {

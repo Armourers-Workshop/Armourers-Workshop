@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.builder.other;
 
 import com.mojang.math.Quaternion;
-import moe.plushie.armourers_workshop.core.data.OptionalDirection;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
@@ -10,17 +9,17 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 
-public class SkinCubeTransform {
+public class CubeTransform {
 
-    final Level world;
-    final BlockPos pos;
-    final Direction direction;
-    final Rotation rotation;
-    final Rotation invRotation;
-    final Quaternion rotationDegrees;
+    public final Level level;
+    public final BlockPos pos;
+    public final Direction direction;
+    public final Rotation rotation;
+    public final Rotation invRotation;
+    public final Quaternion rotationDegrees;
 
-    public SkinCubeTransform(Level world, BlockPos pos, Direction direction) {
-        this.world = world;
+    public CubeTransform(Level level, BlockPos pos, Direction direction) {
+        this.level = level;
         this.pos = pos;
         this.direction = direction;
         this.rotation = getRotation(direction, false);

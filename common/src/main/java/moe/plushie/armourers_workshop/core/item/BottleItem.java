@@ -40,11 +40,11 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
     }
 
     @Override
-    public InteractionResult usePickTool(Level world, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context) {
+    public InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context) {
         ItemStack itemStack = context.getItemInHand();
         if (tileEntity instanceof IPaintProvider) {
             setItemColor(itemStack, ((IPaintProvider) tileEntity).getColor());
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.PASS;
     }
@@ -78,13 +78,13 @@ public class BottleItem extends FlavouredItem implements IItemTintColorProvider,
 
     @Override
     public void createModelProperties(BiConsumer<ResourceLocation, IItemModelProperty> builder) {
-        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, world, entity) -> ColorUtils.hasColor(itemStack) ? 0 : 1);
+        builder.accept(ArmourersWorkshop.getResource("empty"), (itemStack, level, entity) -> ColorUtils.hasColor(itemStack) ? 0 : 1);
     }
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> tooltips, TooltipFlag flags) {
-        super.appendHoverText(itemStack, world, tooltips, flags);
+    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flags) {
+        super.appendHoverText(itemStack, level, tooltips, flags);
         IPaintColor paintColor = getItemColor(itemStack);
         if (paintColor != null) {
             tooltips.addAll(ColorUtils.getColorTooltips(paintColor, false));

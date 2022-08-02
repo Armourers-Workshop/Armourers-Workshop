@@ -28,9 +28,9 @@ public class DataFixerUtils {
 
     public static boolean noBlockEntitiesAround(Entity entity) {
         if (entity.level instanceof ServerLevel) {
-            ServerLevel world = (ServerLevel) entity.level;
+            ServerLevel level = (ServerLevel) entity.level;
             AABB alignedBB = entity.getBoundingBox().inflate(0.0625D).expandTowards(0.0D, -0.55D, 0.0D);
-            return world.getEntityCollisions(entity, alignedBB, e -> e instanceof MannequinEntity).allMatch(VoxelShape::isEmpty);
+            return level.getEntityCollisions(entity, alignedBB, e -> e instanceof MannequinEntity).allMatch(VoxelShape::isEmpty);
         }
         return true;
     }

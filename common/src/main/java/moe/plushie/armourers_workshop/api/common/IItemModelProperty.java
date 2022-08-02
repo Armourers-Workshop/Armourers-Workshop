@@ -7,5 +7,5 @@ import org.jetbrains.annotations.Nullable;
 
 public interface IItemModelProperty {
 
-    float getValue(ItemStack itemStack, @Nullable Level world, @Nullable LivingEntity entity);
+    float getValue(ItemStack itemStack, @Nullable Level level, @Nullable LivingEntity entity);
 }

@@ -36,12 +36,12 @@ public abstract class AbstractConfigurableToolItem extends FlavouredItem impleme
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (world.isClientSide() && player.isShiftKeyDown() && openContainer(world, player, hand, itemStack)) {
+        if (level.isClientSide() && player.isShiftKeyDown() && openContainer(level, player, hand, itemStack)) {
             return InteractionResultHolder.success(itemStack);
         }
-        return super.use(world, player, hand);
+        return super.use(level, player, hand);
     }
 
     @Override
@@ -54,12 +54,12 @@ public abstract class AbstractConfigurableToolItem extends FlavouredItem impleme
             soundEvent = ModSounds.BOI;
         }
         float pitch = getItemSoundPitch(context);
-        Level world = context.getLevel();
+        Level level = context.getLevel();
         BlockPos clickedPos = context.getClickedPos();
-        if (world.isClientSide()) {
-            world.playSound(context.getPlayer(), clickedPos, soundEvent.get(), SoundSource.BLOCKS, 1.0f, pitch);
+        if (level.isClientSide()) {
+            level.playSound(context.getPlayer(), clickedPos, soundEvent.get(), SoundSource.BLOCKS, 1.0f, pitch);
         } else {
-            world.playSound(null, clickedPos, soundEvent.get(), SoundSource.BLOCKS, 1.0f, pitch);
+            level.playSound(null, clickedPos, soundEvent.get(), SoundSource.BLOCKS, 1.0f, pitch);
         }
     }
 
@@ -67,7 +67,7 @@ public abstract class AbstractConfigurableToolItem extends FlavouredItem impleme
     public void playParticle(UseOnContext context) {
     }
 
-    public boolean openContainer(Level world, Player player, InteractionHand hand, ItemStack itemStack) {
+    public boolean openContainer(Level level, Player player, InteractionHand hand, ItemStack itemStack) {
         ArrayList<IPaintingToolProperty<?>> properties = new ArrayList<>();
         createToolProperties(properties::add);
         if (properties.isEmpty()) {
@@ -86,8 +86,8 @@ public abstract class AbstractConfigurableToolItem extends FlavouredItem impleme
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public void appendHoverText(ItemStack itemStack, @Nullable Level world, List<Component> tooltips, TooltipFlag flags) {
-        super.appendHoverText(itemStack, world, tooltips, flags);
+    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltips, TooltipFlag flags) {
+        super.appendHoverText(itemStack, level, tooltips, flags);
         appendColorHoverText(itemStack, tooltips);
         appendSettingHoverText(itemStack, tooltips);
     }

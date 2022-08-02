@@ -11,15 +11,15 @@ public interface IPaintToolPicker {
 
     default InteractionResult usePickTool(UseOnContext context) {
         if (shouldUsePickTool(context)) {
-            Level world = context.getLevel();
+            Level level = context.getLevel();
             BlockPos pos = context.getClickedPos();
             Direction dir = context.getClickedFace();
-            return usePickTool(world, pos, dir, world.getBlockEntity(pos), context);
+            return usePickTool(level, pos, dir, level.getBlockEntity(pos), context);
         }
         return InteractionResult.PASS;
     }
 
-    InteractionResult usePickTool(Level world, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context);
+    InteractionResult usePickTool(Level level, BlockPos pos, Direction dir, BlockEntity tileEntity, UseOnContext context);
 
     default boolean shouldUsePickTool(UseOnContext context) {
         return true;

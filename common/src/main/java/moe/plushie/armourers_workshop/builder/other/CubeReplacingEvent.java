@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class SkinCubeReplacingEvent {
+public class CubeReplacingEvent {
 
     public final ItemStack source;
     public final Block sourceBlock;
@@ -37,7 +37,7 @@ public class SkinCubeReplacingEvent {
     public int blockChanges = 0;
     public int blockColorChanges = 0;
 
-    public SkinCubeReplacingEvent(ItemStack source, ItemStack destination) {
+    public CubeReplacingEvent(ItemStack source, ItemStack destination) {
         this.source = source;
         this.sourceBlock = getBlock(source);
         this.sourceBlockColor = getBlockColor(source);
@@ -49,7 +49,7 @@ public class SkinCubeReplacingEvent {
         this.isChangedBlock = isChangedBlock();
     }
 
-    public boolean accept(SkinCubeWrapper wrapper) {
+    public boolean accept(CubeWrapper wrapper) {
         // security check, we only can modify the paintable block.
         if (!wrapper.is(IPaintable.class)) {
             return false;
@@ -81,7 +81,7 @@ public class SkinCubeReplacingEvent {
         return true;
     }
 
-    public void apply(SkinCubeWrapper wrapper) {
+    public void apply(CubeWrapper wrapper) {
         // security check, we only can modify the paintable block.
         if (!wrapper.is(IPaintable.class)) {
             return;
@@ -102,7 +102,7 @@ public class SkinCubeReplacingEvent {
         }
     }
 
-    private void applyColor(SkinCubeWrapper wrapper) {
+    private void applyColor(CubeWrapper wrapper) {
         // when both keep color and keep paint type, we not need to color mix.
         if (keepColor && keepPaintType) {
             return;
@@ -135,7 +135,7 @@ public class SkinCubeReplacingEvent {
         blockColorChanges += 1;
     }
 
-    private void applyBlock(SkinCubeWrapper wrapper) {
+    private void applyBlock(CubeWrapper wrapper) {
         // security check, we only can modify the skin cube block.
         if (!wrapper.is(SkinCubeBlock.class)) {
             return;

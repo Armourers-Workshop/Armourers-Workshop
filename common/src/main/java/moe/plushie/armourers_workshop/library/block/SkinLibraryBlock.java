@@ -46,14 +46,14 @@ public class SkinLibraryBlock extends AbstractHorizontalBlock implements IBlockE
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean p_196243_5_) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean p_196243_5_) {
         if (state.is(newState.getBlock())) {
             return;
         }
-        SkinLibraryBlockEntity tileEntity = ObjectUtils.safeCast(world.getBlockEntity(pos), SkinLibraryBlockEntity.class);
+        SkinLibraryBlockEntity tileEntity = ObjectUtils.safeCast(level.getBlockEntity(pos), SkinLibraryBlockEntity.class);
         if (tileEntity != null) {
-            DataSerializers.dropContents(world, pos, tileEntity.getInventory());
+            DataSerializers.dropContents(level, pos, tileEntity.getInventory());
         }
-        super.onRemove(state, world, pos, newState, p_196243_5_);
+        super.onRemove(state, level, pos, newState, p_196243_5_);
     }
 }

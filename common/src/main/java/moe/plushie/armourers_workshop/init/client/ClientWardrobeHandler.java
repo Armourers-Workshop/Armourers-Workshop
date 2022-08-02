@@ -212,9 +212,9 @@ public class ClientWardrobeHandler {
         }
     }
 
-    public static boolean shouldRenderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level world, ItemStack itemStack, boolean isRenderInGUI) {
+    public static boolean shouldRenderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, boolean isRenderInGUI) {
         //
-        if (world == null) {
+        if (level == null) {
             if (!ModConfig.enableEmbeddedSkinRenderer()) {
                 return false;
             }
@@ -230,7 +230,7 @@ public class ClientWardrobeHandler {
         return false;
     }
 
-    public static void onRenderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level world, ItemStack itemStack, ItemTransforms.TransformType transformType, boolean p_229109_4_, PoseStack matrixStack, MultiBufferSource buffers, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {
+    public static void onRenderEmbeddedSkin(@Nullable LivingEntity entity, @Nullable Level level, ItemStack itemStack, ItemTransforms.TransformType transformType, boolean p_229109_4_, PoseStack matrixStack, MultiBufferSource buffers, BakedModel bakedModel, int packedLight, int overlay, CallbackInfo callback) {
         if (itemStack.isEmpty()) {
             return;
         }

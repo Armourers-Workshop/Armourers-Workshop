@@ -29,30 +29,30 @@ public class DyeTableBlock extends AbstractHorizontalBlock implements IBlockEnti
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level world, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (world.isClientSide) {
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        if (MenuManager.openMenu(ModMenus.DYE_TABLE, player, world, blockPos)) {
+        if (MenuManager.openMenu(ModMenus.DYE_TABLE, player, level, blockPos)) {
             return InteractionResult.CONSUME;
         }
         return InteractionResult.FAIL;
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean p_196243_5_) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean p_196243_5_) {
         if (state.is(newState.getBlock())) {
             return;
         }
-        DyeTableBlockEntity tileEntity = getTileEntity(world, pos);
+        DyeTableBlockEntity tileEntity = getTileEntity(level, pos);
         if (tileEntity != null) {
-            DataSerializers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), tileEntity.getItem(9));
+            DataSerializers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), tileEntity.getItem(9));
         }
-        super.onRemove(state, world, pos, newState, p_196243_5_);
+        super.onRemove(state, level, pos, newState, p_196243_5_);
     }
 
-    private DyeTableBlockEntity getTileEntity(Level world, BlockPos pos) {
-        BlockEntity tileEntity = world.getBlockEntity(pos);
+    private DyeTableBlockEntity getTileEntity(Level level, BlockPos pos) {
+        BlockEntity tileEntity = level.getBlockEntity(pos);
         if (tileEntity instanceof DyeTableBlockEntity) {
             return (DyeTableBlockEntity) tileEntity;
         }

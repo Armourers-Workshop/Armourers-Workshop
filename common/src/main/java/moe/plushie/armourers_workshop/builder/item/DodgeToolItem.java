@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
-import moe.plushie.armourers_workshop.builder.other.SkinCubePaintingEvent;
+import moe.plushie.armourers_workshop.builder.other.CubePaintingEvent;
 import moe.plushie.armourers_workshop.init.ModSounds;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.network.chat.Component;
@@ -31,7 +31,7 @@ public class DodgeToolItem extends AbstractPaintToolItem implements IBlockPaintV
     @Override
     public IPaintToolAction createPaintToolAction(UseOnContext context) {
         int intensity = ToolOptions.INTENSITY.get(context.getItemInHand());
-        return new SkinCubePaintingEvent.BrightnessAction(intensity);
+        return new CubePaintingEvent.BrightnessAction(intensity);
     }
 
     @Override

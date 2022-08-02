@@ -39,11 +39,11 @@ public class MenuManager {
         return false;
     }
 
-    public static <C extends AbstractContainerMenu> boolean openMenu(IRegistryObject<MenuType<C>> type, Player player, Level world, BlockPos pos) {
-        if (!ModPermissions.OPEN.accept(type, world, pos, player)) {
+    public static <C extends AbstractContainerMenu> boolean openMenu(IRegistryObject<MenuType<C>> type, Player player, Level level, BlockPos pos) {
+        if (!ModPermissions.OPEN.accept(type, level, pos, player)) {
             return false;
         }
-        return openMenu(type, player, ContainerLevelAccess.create(world, pos));
+        return openMenu(type, player, ContainerLevelAccess.create(level, pos));
     }
 
     @FunctionalInterface

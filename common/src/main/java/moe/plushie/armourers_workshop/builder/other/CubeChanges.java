@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SkinCubeChanges implements IUndoCommand, IWorldUpdateTask {
+public class CubeChanges implements IUndoCommand, IWorldUpdateTask {
 
     private final Level level;
     private final BlockPos pos;
@@ -29,7 +29,7 @@ public class SkinCubeChanges implements IUndoCommand, IWorldUpdateTask {
     private CompoundTag nbt;
     private Map<Direction, IPaintColor> colors;
 
-    public SkinCubeChanges(Level level, BlockPos pos) {
+    public CubeChanges(Level level, BlockPos pos) {
         this.level = level;
         this.pos = pos;
     }
@@ -82,7 +82,7 @@ public class SkinCubeChanges implements IUndoCommand, IWorldUpdateTask {
     @Override
     public IUndoCommand apply() throws CommandRuntimeException {
         boolean isChangedNBT = false;
-        SkinCubeChanges changes = new SkinCubeChanges(level, pos);
+        CubeChanges changes = new CubeChanges(level, pos);
         if (state != null) {
             changes.setState(level.getBlockState(pos));
             isChangedNBT = true;
@@ -119,16 +119,16 @@ public class SkinCubeChanges implements IUndoCommand, IWorldUpdateTask {
     }
 
     @Override
-    public InteractionResult run(Level world) {
-        if (!world.isLoaded(pos)) {
+    public InteractionResult run(Level level) {
+        if (!level.isLoaded(pos)) {
             return InteractionResult.PASS;
         }
         if (state != null) {
-            world.setBlock(pos, state, Constants.BlockFlags.DEFAULT);
+            level.setBlock(pos, state, Constants.BlockFlags.DEFAULT);
         }
         BlockEntity tileEntity = null;
         if (isChangeNBT()) {
-            tileEntity = world.getBlockEntity(pos);
+            tileEntity = level.getBlockEntity(pos);
         }
         if (nbt != null) {
             if (tileEntity != null) {

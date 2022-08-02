@@ -5,8 +5,8 @@ import moe.plushie.armourers_workshop.api.network.IServerPacketHandler;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
-import moe.plushie.armourers_workshop.builder.other.SkinCubeApplier;
-import moe.plushie.armourers_workshop.builder.other.SkinCubeReplacingEvent;
+import moe.plushie.armourers_workshop.builder.other.CubeApplier;
+import moe.plushie.armourers_workshop.builder.other.CubeReplacingEvent;
 import moe.plushie.armourers_workshop.core.network.CustomPacket;
 import moe.plushie.armourers_workshop.core.permission.BlockPermission;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -81,7 +81,7 @@ public class UpdateArmourerPacket extends CustomPacket {
             case ITEM_CLEAR: {
                 CompoundTag nbt = (CompoundTag) fieldValue;
                 ModLog.info("accept clear action of the {}, nbt: {}", playerName, nbt);
-                SkinCubeApplier applier = new SkinCubeApplier(tileEntity.getLevel());
+                CubeApplier applier = new CubeApplier(tileEntity.getLevel());
                 ISkinPartType partType = SkinPartTypes.byName(nbt.getString(Constants.Key.SKIN_PART_TYPE));
                 if (nbt.getBoolean(Constants.Key.SKIN_CUBES)) {
                     tileEntity.clearCubes(applier, partType);
@@ -103,7 +103,7 @@ public class UpdateArmourerPacket extends CustomPacket {
                     boolean isCopyPaintData = nbt.getBoolean(Constants.Key.SKIN_PAINTS);
                     ISkinPartType sourcePartType = SkinPartTypes.byName(nbt.getString(Constants.Key.SOURCE));
                     ISkinPartType destinationPartType = SkinPartTypes.byName(nbt.getString(Constants.Key.DESTINATION));
-                    SkinCubeApplier applier = new SkinCubeApplier(tileEntity.getLevel());
+                    CubeApplier applier = new CubeApplier(tileEntity.getLevel());
                     tileEntity.copyCubes(applier, sourcePartType, destinationPartType, isMirror);
                     if (isCopyPaintData) {
                         tileEntity.copyPaintData(applier, sourcePartType, destinationPartType, isMirror);
@@ -120,13 +120,13 @@ public class UpdateArmourerPacket extends CustomPacket {
                 try {
                     ItemStack source = ItemStack.of(nbt.getCompound(Constants.Key.SOURCE));
                     ItemStack destination = ItemStack.of(nbt.getCompound(Constants.Key.DESTINATION));
-                    SkinCubeReplacingEvent event = new SkinCubeReplacingEvent(source, destination);
+                    CubeReplacingEvent event = new CubeReplacingEvent(source, destination);
                     event.keepColor = nbt.getBoolean(Constants.Key.KEEP_COLOR);
                     event.keepPaintType = nbt.getBoolean(Constants.Key.KEEP_PAINT_TYPE);
                     if (event.isEmptySource && event.isEmptyDestination) {
                         return;
                     }
-                    SkinCubeApplier applier = new SkinCubeApplier(tileEntity.getLevel());
+                    CubeApplier applier = new CubeApplier(tileEntity.getLevel());
                     tileEntity.replaceCubes(applier, SkinPartTypes.UNKNOWN, event);
                     applier.submit(TranslateUtils.title("action.armourers_workshop.block.replace"), player);
                     player.sendMessage(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.replace.success", applier.getChanges()), player.getUUID());

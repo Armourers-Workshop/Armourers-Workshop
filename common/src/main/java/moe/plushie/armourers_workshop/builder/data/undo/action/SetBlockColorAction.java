@@ -17,8 +17,8 @@ public class SetBlockColorAction extends BlockUndoAction {
 
     private final ImmutableMap<Direction, IPaintColor> newValue;
 
-    public SetBlockColorAction(Level world, BlockPos pos, HashMap<Direction, IPaintColor> newValue) {
-        super(world, pos);
+    public SetBlockColorAction(Level level, BlockPos pos, HashMap<Direction, IPaintColor> newValue) {
+        super(level, pos);
         this.newValue = ImmutableMap.copyOf(newValue);
     }
 
@@ -33,7 +33,7 @@ public class SetBlockColorAction extends BlockUndoAction {
             }
             oldValue.put(direction, paintColor);
         }
-        IUndoCommand revertAction = new SetBlockColorAction(world, blockPos, oldValue);
+        IUndoCommand revertAction = new SetBlockColorAction(level, blockPos, oldValue);
         target.setColors(newValue);
         return revertAction;
     }
