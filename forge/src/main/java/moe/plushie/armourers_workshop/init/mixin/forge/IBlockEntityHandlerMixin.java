@@ -28,6 +28,8 @@ public interface IBlockEntityHandlerMixin extends IForgeTileEntity {
         return handler.getCustomRenderBoundingBox();
     }
 
+    // @Override from IBlockEntityHandler
+    @SuppressWarnings("unused")
     default AABB getDefaultRenderBoundingBox() {
         return IForgeTileEntity.super.getRenderBoundingBox();
     }

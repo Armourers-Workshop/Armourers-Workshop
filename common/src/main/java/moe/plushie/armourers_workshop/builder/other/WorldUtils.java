@@ -57,8 +57,6 @@ public final class WorldUtils {
      * @param skinProps The skin properties for this skin.
      * @param skinType  The type of skin to save.
      * @param paintData Paint data for this skin.
-     * @return
-     * @throws SkinSaveException
      */
     public static Skin saveSkinFromWorld(Level level, CubeTransform transform, SkinProperties skinProps, ISkinType skinType, SkinPaintData paintData) throws SkinSaveException {
 
@@ -238,8 +236,8 @@ public final class WorldUtils {
             OptionalDirection markerFacing = OptionalDirection.NONE;
             for (ISkinMarker marker : partData.getMarkers()) {
                 if (cubePos.equals(marker.getPosition())) {
-                    Direction resolvedMarker = transform.rotate(marker.getDirection());
-                    markerFacing = OptionalDirection.of(resolvedMarker);
+                    Direction resolvedMarker = getResolvedDirection(marker.getDirection(), mirror);
+                    markerFacing = OptionalDirection.of(transform.rotate(resolvedMarker));
                     break;
                 }
             }
@@ -270,8 +268,8 @@ public final class WorldUtils {
         for (Direction dir : Direction.values()) {
             int rgb = slice.getRGB(dir.ordinal());
             int type = slice.getPaintType(dir.ordinal());
-            Direction resolvedDir = transform.rotate(dir);
-            colors.put(resolvedDir, PaintColor.of(rgb, SkinPaintTypes.byId(type)));
+            Direction resolvedDir = getResolvedDirection(dir, mirror);
+            colors.put(transform.rotate(resolvedDir), PaintColor.of(rgb, SkinPaintTypes.byId(type)));
         }
 
         wrapper.setBlockState(targetState, colors);
@@ -292,9 +290,7 @@ public final class WorldUtils {
             int iz = z - srcZ;
             if (isMirrorX) {
                 ix = destWidth - ix - 1;
-                if (dir.getAxis() == Direction.Axis.X) {
-                    dir = dir.getOpposite();
-                }
+                dir = getResolvedDirection(dir, true);
             }
             ITexturePos newTexture = destBox.get(ix + destX, iy + destY, iz + destZ, dir);
             if (newTexture == null) {
@@ -432,6 +428,14 @@ public final class WorldUtils {
             }
         }
         return cubeCount;
+    }
+
+    private static Direction getResolvedDirection(Direction dir, boolean mirror) {
+        // we're just mirroring the x-axis when if it needs.
+        if (mirror && dir.getAxis() == Direction.Axis.X) {
+            return dir.getOpposite();
+        }
+        return dir;
     }
 }
 
