@@ -141,7 +141,7 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
 
     public void transform(PoseStack matrixStack, BlockState state) {
         matrixStack.translate(0, 1, 0); // apply height offset
-        matrixStack.mulPose(SkinCubeTransform.getRotation(state.getValue(ArmourerBlock.FACING))); // apply facing rotation
+        matrixStack.mulPose(SkinCubeTransform.getRotationDegrees(state.getValue(ArmourerBlock.FACING))); // apply facing rotation
     }
 
     @Override

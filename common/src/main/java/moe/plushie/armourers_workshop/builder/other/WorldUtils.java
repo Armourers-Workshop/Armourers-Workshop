@@ -160,7 +160,7 @@ public final class WorldUtils {
 
                     BlockState targetState = world.getBlockState(target);
                     if (targetState.getBlock() instanceof SkinCubeBlock) {
-                        saveArmourBlockToList(world, target,
+                        saveArmourBlockToList(world, transform, target,
                                 xOrigin - 1,
                                 yOrigin - 1,
                                 -zOrigin,
@@ -184,7 +184,7 @@ public final class WorldUtils {
         return new SkinPart(skinPart, markerBlocks, cubeData);
     }
 
-    private static void saveArmourBlockToList(Level world, BlockPos pos, int ix, int iy, int iz, SkinCubeData.BufferSlice slice, ArrayList<SkinMarker> markerBlocks) {
+    private static void saveArmourBlockToList(Level world, SkinCubeTransform transform, BlockPos pos, int ix, int iy, int iz, SkinCubeData.BufferSlice slice, ArrayList<SkinMarker> markerBlocks) {
         BlockEntity tileEntity = world.getBlockEntity(pos);
         if (!(tileEntity instanceof IPaintable)) {
             return;
@@ -202,11 +202,13 @@ public final class WorldUtils {
 
         for (Direction dir : Direction.values()) {
             IPaintColor color = target.getColor(dir);
-            slice.setRGB(dir.ordinal(), color.getRGB());
-            slice.setPaintType(dir.ordinal(), (byte) color.getPaintType().getId());
+            Direction resolvedDir = transform.invRotate(dir);
+            slice.setRGB(resolvedDir.ordinal(), color.getRGB());
+            slice.setPaintType(resolvedDir.ordinal(), (byte) color.getPaintType().getId());
         }
         if (marker != OptionalDirection.NONE) {
-            markerBlocks.add(new SkinMarker((byte) ix, (byte) iy, (byte) iz, (byte) marker.ordinal()));
+            OptionalDirection resolvedMarker = OptionalDirection.of(transform.invRotate(marker.getDirection()));
+            markerBlocks.add(new SkinMarker((byte) ix, (byte) iy, (byte) iz, (byte) resolvedMarker.ordinal()));
         }
     }
 
@@ -236,7 +238,8 @@ public final class WorldUtils {
             OptionalDirection markerFacing = OptionalDirection.NONE;
             for (ISkinMarker marker : partData.getMarkers()) {
                 if (cubePos.equals(marker.getPosition())) {
-                    markerFacing = OptionalDirection.of(marker.getDirection());
+                    Direction resolvedMarker = transform.rotate(marker.getDirection());
+                    markerFacing = OptionalDirection.of(resolvedMarker);
                     break;
                 }
             }
@@ -267,7 +270,8 @@ public final class WorldUtils {
         for (Direction dir : Direction.values()) {
             int rgb = slice.getRGB(dir.ordinal());
             int type = slice.getPaintType(dir.ordinal());
-            colors.put(dir, PaintColor.of(rgb, SkinPaintTypes.byId(type)));
+            Direction resolvedDir = transform.rotate(dir);
+            colors.put(resolvedDir, PaintColor.of(rgb, SkinPaintTypes.byId(type)));
         }
 
         wrapper.setBlockState(targetState, colors);
