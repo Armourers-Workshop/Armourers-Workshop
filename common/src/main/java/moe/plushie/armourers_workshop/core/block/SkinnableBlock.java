@@ -64,22 +64,22 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
-        SkinBlockPlaceContext context = SkinBlockPlaceContext.of(pos);
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity entity, ItemStack itemStack) {
+        SkinBlockPlaceContext context = SkinBlockPlaceContext.of(blockPos);
         if (context == null) {
             return;
         }
         // add all part into level
         context.getParts().forEach(p -> {
-            BlockPos target = pos.offset(p.getOffset());
-            level.setBlock(target, state, 11);
+            BlockPos target = blockPos.offset(p.getOffset());
+            level.setBlock(target, blockState, 11);
             SkinnableBlockEntity tileEntity = getTileEntity(level, target);
             if (tileEntity != null) {
                 tileEntity.readFromNBT(p.getEntityTag());
                 tileEntity.updateBlockStates();
             }
         });
-        super.setPlacedBy(level, pos, state, entity, itemStack);
+        super.setPlacedBy(level, blockPos, blockState, entity, itemStack);
     }
 
     @Override

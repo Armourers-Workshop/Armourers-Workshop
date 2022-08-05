@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
-import moe.plushie.armourers_workshop.api.other.builder.IItemBuilder;
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -78,8 +78,8 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
     }
 
     @Override
-    public IRegistryObject<T> build(String name) {
-        IRegistryObject<T> object = Registry.ITEM.register(name, () -> supplier.apply(properties));
+    public IRegistryKey<T> build(String name) {
+        IRegistryKey<T> object = Registry.ITEM.register(name, () -> supplier.apply(properties));
         EnvironmentExecutor.setupOn(EnvironmentType.CLIENT, binder, object);
         return object;
     }

@@ -8,10 +8,10 @@ import java.util.UUID;
 
 public class PlushieUser {
 
-    private int id;
-    private UUID uuid;
-    private String username;
-    private int permissionGroupId;
+    private final int id;
+    private final UUID uuid;
+    private final String username;
+    private final int permissionGroupId;
 
     private PlushieUser(int id, UUID uuid, String username, int permissionGroupId) {
         this.id = id;
@@ -78,8 +78,6 @@ public class PlushieUser {
         if (getClass() != obj.getClass())
             return false;
         PlushieUser other = (PlushieUser) obj;
-        if (id != other.id)
-            return false;
-        return true;
+        return id == other.id;
     }
 }

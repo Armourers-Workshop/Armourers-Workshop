@@ -62,10 +62,7 @@ public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable & IE
             return true;
         } else if (item == ModItems.COLOR_PICKER.get()) {
             return true;
-        } else if (item == ModItems.SOAP.get()) {
-            return true;
-        }
-        return false;
+        } else return item == ModItems.SOAP.get();
     }
 
     @Override

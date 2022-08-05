@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;
-import moe.plushie.armourers_workshop.api.other.builder.IKeyBindingBuilder;
+import moe.plushie.armourers_workshop.api.common.builder.IKeyBindingBuilder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;
 import net.minecraft.client.KeyMapping;

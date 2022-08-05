@@ -44,43 +44,43 @@ import java.util.Collections;
 @Environment(value = EnvType.CLIENT)
 public final class RenderUtils {
 
-    public static final ResourceLocation TEX_WARDROBE_1 = ArmourersWorkshop.getResource("textures/gui/wardrobe/wardrobe-1.png");
-    public static final ResourceLocation TEX_WARDROBE_2 = ArmourersWorkshop.getResource("textures/gui/wardrobe/wardrobe-2.png");
+    public static final ResourceLocation TEX_WARDROBE_1 = res("textures/gui/wardrobe/wardrobe-1.png");
+    public static final ResourceLocation TEX_WARDROBE_2 = res("textures/gui/wardrobe/wardrobe-2.png");
 
-    public static final ResourceLocation TEX_HOLOGRAM_PROJECTOR = ArmourersWorkshop.getResource("textures/gui/hologram_projector/hologram-projector.png");
-    public static final ResourceLocation TEX_SKINNING_TABLE = ArmourersWorkshop.getResource("textures/gui/skinning_table/skinning-table.png");
-    public static final ResourceLocation TEX_DYE_TABLE = ArmourersWorkshop.getResource("textures/gui/dye_table/dye-table.png");
-    public static final ResourceLocation TEX_SKIN_LIBRARY = ArmourersWorkshop.getResource("textures/gui/skin_library/armour-library.png");
-    public static final ResourceLocation TEX_GLOBAL_SKIN_LIBRARY = ArmourersWorkshop.getResource("textures/gui/global_library/global-library.png");
-    public static final ResourceLocation TEX_COLOUR_MIXER = ArmourersWorkshop.getResource("textures/gui/colour_mixer/colour-mixer.png");
-    public static final ResourceLocation TEX_OUTFIT_MAKER = ArmourersWorkshop.getResource("textures/gui/outfit_maker/outfit-maker.png");
-    public static final ResourceLocation TEX_ARMOURER = ArmourersWorkshop.getResource("textures/gui/armourer/armourer.png");
+    public static final ResourceLocation TEX_HOLOGRAM_PROJECTOR = res("textures/gui/hologram_projector/hologram-projector.png");
+    public static final ResourceLocation TEX_SKINNING_TABLE = res("textures/gui/skinning_table/skinning-table.png");
+    public static final ResourceLocation TEX_DYE_TABLE = res("textures/gui/dye_table/dye-table.png");
+    public static final ResourceLocation TEX_SKIN_LIBRARY = res("textures/gui/skin_library/armour-library.png");
+    public static final ResourceLocation TEX_GLOBAL_SKIN_LIBRARY = res("textures/gui/global_library/global-library.png");
+    public static final ResourceLocation TEX_COLOUR_MIXER = res("textures/gui/colour_mixer/colour-mixer.png");
+    public static final ResourceLocation TEX_OUTFIT_MAKER = res("textures/gui/outfit_maker/outfit-maker.png");
+    public static final ResourceLocation TEX_ARMOURER = res("textures/gui/armourer/armourer.png");
 
-    public static final ResourceLocation TEX_TABS = ArmourersWorkshop.getResource("textures/gui/controls/tabs.png");
-    public static final ResourceLocation TEX_COMMON = ArmourersWorkshop.getResource("textures/gui/common.png");
-    public static final ResourceLocation TEX_WIDGETS = ArmourersWorkshop.getResource("textures/gui/widgets.png");
-    public static final ResourceLocation TEX_LIST = ArmourersWorkshop.getResource("textures/gui/controls/list.png");
-    public static final ResourceLocation TEX_RATING = ArmourersWorkshop.getResource("textures/gui/controls/rating.png");
-    public static final ResourceLocation TEX_TAB_ICONS = ArmourersWorkshop.getResource("textures/gui/controls/tab_icons.png");
-    public static final ResourceLocation TEX_HUE = ArmourersWorkshop.getResource("textures/gui/controls/slider-hue.png");
+    public static final ResourceLocation TEX_TABS = res("textures/gui/controls/tabs.png");
+    public static final ResourceLocation TEX_COMMON = res("textures/gui/common.png");
+    public static final ResourceLocation TEX_WIDGETS = res("textures/gui/widgets.png");
+    public static final ResourceLocation TEX_LIST = res("textures/gui/controls/list.png");
+    public static final ResourceLocation TEX_RATING = res("textures/gui/controls/rating.png");
+    public static final ResourceLocation TEX_TAB_ICONS = res("textures/gui/controls/tab_icons.png");
+    public static final ResourceLocation TEX_HUE = res("textures/gui/controls/slider-hue.png");
 
-    public static final ResourceLocation TEX_BUTTONS = ArmourersWorkshop.getResource("textures/gui/controls/buttons.png");
-    public static final ResourceLocation TEX_HELP = ArmourersWorkshop.getResource("textures/gui/controls/help.png");
+    public static final ResourceLocation TEX_BUTTONS = res("textures/gui/controls/buttons.png");
+    public static final ResourceLocation TEX_HELP = res("textures/gui/controls/help.png");
 
-    public static final ResourceLocation TEX_PLAYER_INVENTORY = ArmourersWorkshop.getResource("textures/gui/player_inventory.png");
+    public static final ResourceLocation TEX_PLAYER_INVENTORY = res("textures/gui/player_inventory.png");
 
-    public static final ResourceLocation TEX_CUBE = ArmourersWorkshop.getResource("textures/armour/cube.png");
-    public static final ResourceLocation TEX_CIRCLE = ArmourersWorkshop.getResource("textures/other/nanoha-circle.png");
-    public static final ResourceLocation TEX_EARTH = ArmourersWorkshop.getResource("textures/tile-entities/global-skin-library.png");
+    public static final ResourceLocation TEX_CUBE = res("textures/armour/cube.png");
+    public static final ResourceLocation TEX_CIRCLE = res("textures/other/nanoha-circle.png");
+    public static final ResourceLocation TEX_EARTH = res("textures/tile-entities/global-skin-library.png");
 
-    public static final ResourceLocation TEX_GUI_PREVIEW = ArmourersWorkshop.getResource("textures/gui/skin-preview.png");
-    public static final ResourceLocation TEX_SKIN_PANEL = ArmourersWorkshop.getResource("textures/gui/controls/skin-panel.png");
+    public static final ResourceLocation TEX_GUI_PREVIEW = res("textures/gui/skin-preview.png");
+    public static final ResourceLocation TEX_SKIN_PANEL = res("textures/gui/controls/skin-panel.png");
 
-    public static final ResourceLocation TEX_MARKERS = ArmourersWorkshop.getResource("textures/tile-entities/markers.png");
-    public static final ResourceLocation TEX_GUIDES = ArmourersWorkshop.getResource("textures/block/guide.png");
+    public static final ResourceLocation TEX_MARKERS = res("textures/tile-entities/markers.png");
+    public static final ResourceLocation TEX_GUIDES = res("textures/block/guide.png");
 
-    public static final ResourceLocation TEX_BLOCK_CUBE = ArmourersWorkshop.getResource("textures/block/colourable/colourable.png");
-    public static final ResourceLocation TEX_BLOCK_CUBE_GLASS = ArmourersWorkshop.getResource("textures/block/colourable/colourable-glass.png");
+    public static final ResourceLocation TEX_BLOCK_CUBE = res("textures/block/colourable/colourable.png");
+    public static final ResourceLocation TEX_BLOCK_CUBE_GLASS = res("textures/block/colourable/colourable-glass.png");
 
     private static final FloatBuffer BUFFER = BufferUtils.createFloatBuffer(3);
 
@@ -107,6 +107,9 @@ public final class RenderUtils {
 
     private static final ArrayList<Rectangle2i> clipBounds = new ArrayList<>();
 
+    private static ResourceLocation res(String name) {
+        return ArmourersWorkshop.getResource(name);
+    }
 
     public static void call(Runnable task) {
         if (RenderSystem.isOnRenderThread()) {

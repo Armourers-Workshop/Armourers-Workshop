@@ -52,9 +52,9 @@ public class GlobalTaskUserSkinRate extends GlobalTask<GlobalTaskUserSkinRate.Us
 
     public class UserSkinRateResult {
 
-        private GlobalTaskResult result;
-        private String message;
-        private float newRating;
+        private final GlobalTaskResult result;
+        private final String message;
+        private final float newRating;
 
         public UserSkinRateResult(GlobalTaskResult result, String message, float newRating) {
             this.result = result;

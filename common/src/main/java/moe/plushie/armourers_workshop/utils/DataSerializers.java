@@ -103,7 +103,6 @@ public class DataSerializers {
         }
     };
 
-    @SuppressWarnings("NullableProblems")
     public static final EntityDataSerializer<PlayerTextureDescriptor> PLAYER_TEXTURE = new EntityDataSerializer<PlayerTextureDescriptor>() {
         public void write(FriendlyByteBuf buffer, PlayerTextureDescriptor descriptor) {
             buffer.writeNbt(descriptor.serializeNBT());
@@ -539,17 +538,17 @@ public class DataSerializers {
     }
 
 
-    public static void dropContents(Level p_180175_0_, BlockPos p_180175_1_, Container p_180175_2_) {
-        dropContents(p_180175_0_, (double) p_180175_1_.getX(), (double) p_180175_1_.getY(), (double) p_180175_1_.getZ(), p_180175_2_);
+    public static void dropContents(Level level, BlockPos blockPos, Container container) {
+        dropContents(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), container);
     }
 
-    public static void dropContents(Level p_180176_0_, Entity p_180176_1_, Container p_180176_2_) {
-        dropContents(p_180176_0_, p_180176_1_.getX(), p_180176_1_.getY(), p_180176_1_.getZ(), p_180176_2_);
+    public static void dropContents(Level level, Entity entity, Container container) {
+        dropContents(level, entity.getX(), entity.getY(), entity.getZ(), container);
     }
 
-    private static void dropContents(Level p_180174_0_, double p_180174_1_, double p_180174_3_, double p_180174_5_, Container p_180174_7_) {
-        for (int i = 0; i < p_180174_7_.getContainerSize(); ++i) {
-            dropItemStack(p_180174_0_, p_180174_1_, p_180174_3_, p_180174_5_, p_180174_7_.getItem(i));
+    private static void dropContents(Level level, double x, double y, double z, Container container) {
+        for (int i = 0; i < container.getContainerSize(); ++i) {
+            dropItemStack(level, x, y, z, container.getItem(i));
         }
     }
 
@@ -575,7 +574,5 @@ public class DataSerializers {
             itementity.setDeltaMovement(RANDOM.nextGaussian() * (double) 0.05F, RANDOM.nextGaussian() * (double) 0.05F + (double) 0.2F, RANDOM.nextGaussian() * (double) 0.05F);
             level.addFreshEntity(itementity);
         }
-
     }
-
 }

@@ -125,6 +125,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
     protected void setLeftArmPart(PoseStack matrixStack, M model) {
         transformer.apply(matrixStack, accessor.getLeftArm(model));
     }
+
     protected void setRightArmPart(PoseStack matrixStack, M model) {
         transformer.apply(matrixStack, accessor.getRightArm(model));
     }
@@ -132,6 +133,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
     protected void setLeftLegPart(PoseStack matrixStack, M model) {
         transformer.apply(matrixStack, accessor.getLeftLeg(model));
     }
+
     protected void setRightLegPart(PoseStack matrixStack, M model) {
         transformer.apply(matrixStack, accessor.getRightLeg(model));
     }
@@ -139,6 +141,7 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
     protected void setLeftFootPart(PoseStack matrixStack, M model) {
         transformer.apply(matrixStack, accessor.getLeftLeg(model));
     }
+
     protected void setRightFootPart(PoseStack matrixStack, M model) {
         transformer.apply(matrixStack, accessor.getRightLeg(model));
     }

@@ -50,10 +50,14 @@ public class Rectangle2i {
         int ty1 = this.y;
         int rx1 = r.x;
         int ry1 = r.y;
-        long tx2 = tx1; tx2 += this.width;
-        long ty2 = ty1; ty2 += this.height;
-        long rx2 = rx1; rx2 += r.width;
-        long ry2 = ry1; ry2 += r.height;
+        long tx2 = tx1;
+        tx2 += this.width;
+        long ty2 = ty1;
+        ty2 += this.height;
+        long rx2 = rx1;
+        rx2 += r.width;
+        long ry2 = ry1;
+        ry2 += r.height;
         if (tx1 < rx1) tx1 = rx1;
         if (ty1 < ry1) ty1 = ry1;
         if (tx2 > rx2) tx2 = rx2;

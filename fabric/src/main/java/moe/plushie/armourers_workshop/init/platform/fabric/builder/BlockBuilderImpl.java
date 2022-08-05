@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
-import moe.plushie.armourers_workshop.api.other.builder.IBlockBuilder;
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.common.builder.IBlockBuilder;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -27,7 +27,7 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
     private final Function<BlockBehaviour.Properties, T> supplier;
 
     public BlockBuilderImpl(Function<BlockBehaviour.Properties, T> supplier, Material material, MaterialColor materialColor) {
-        this.properties  = BlockBehaviour.Properties.of(material, materialColor);
+        this.properties = BlockBehaviour.Properties.of(material, materialColor);
         this.supplier = supplier;
     }
 
@@ -167,8 +167,8 @@ public class BlockBuilderImpl<T extends Block> implements IBlockBuilder<T> {
     }
 
     @Override
-    public IRegistryObject<T> build(String name) {
-        IRegistryObject<T> object = Registry.BLOCK.register(name, () -> supplier.apply(properties));
+    public IRegistryKey<T> build(String name) {
+        IRegistryKey<T> object = Registry.BLOCK.register(name, () -> supplier.apply(properties));
         EnvironmentExecutor.setupOn(EnvironmentType.CLIENT, binder, object);
         return object;
     }

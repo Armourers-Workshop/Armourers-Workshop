@@ -6,9 +6,8 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
-import moe.plushie.armourers_workshop.utils.PaintingUtils;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
-import moe.plushie.armourers_workshop.utils.TickHandler;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderStateShard;
@@ -50,7 +49,7 @@ public class SkinRenderType extends RenderType {
         RenderSystem.matrixMode(GL11.GL_TEXTURE);
         RenderSystem.pushMatrix();
         RenderSystem.loadIdentity();
-        float f = PaintingUtils.getPaintTextureOffset(TickHandler.ticks()) / 256.0f;
+        float f = TickUtils.getPaintTextureOffset() / 256.0f;
         RenderSystem.translatef(0, f, 0.0F);
         RenderSystem.matrixMode(GL11.GL_MODELVIEW);
     }, () -> {

@@ -24,8 +24,8 @@ public class AWTabController<Target> extends Screen {
     private int y = 0;
     private Tab selectedTab = null;
 
-    private ArrayList<Tab> tabs = new ArrayList<>();
-    private ArrayList<Tab> actives = new ArrayList<>();
+    private final ArrayList<Tab> tabs = new ArrayList<>();
+    private final ArrayList<Tab> actives = new ArrayList<>();
 
     public AWTabController(boolean fullscreen) {
         super(TextComponent.EMPTY);

@@ -17,13 +17,13 @@ import moe.plushie.armourers_workshop.init.command.ListArgument;
 import moe.plushie.armourers_workshop.init.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.config.FabricConfigEvents;
 import moe.plushie.armourers_workshop.init.config.FabricConfigTracker;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.platform.NetworkManager;
+import moe.plushie.armourers_workshop.init.platform.fabric.NetworkManagerImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.ConfigBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.EntityClimbingEvents;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.PlayerBlockPlaceEvents;
-import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
-import moe.plushie.armourers_workshop.init.platform.fabric.NetworkManagerImpl;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.*;
 import net.fabricmc.api.ModInitializer;
@@ -210,12 +210,12 @@ public class CommonEventDispatcher implements ModInitializer {
         }
     }
 
-    public InteractionResult onAttackEntity(Player player, Level level, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult)  {
+    public InteractionResult onAttackEntity(Player player, Level level, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
         if (player.isSpectator()) {
             return InteractionResult.PASS;
         }
         ItemStack itemStack = player.getItemInHand(hand);
-        IItemHandler handler = ObjectUtils.safeCast(itemStack.getItem(), IItemHandler.class);;
+        IItemHandler handler = ObjectUtils.safeCast(itemStack.getItem(), IItemHandler.class);
         if (handler != null) {
             InteractionResult result = handler.attackLivingEntity(itemStack, player, entity);
             if (result.consumesAction()) {
@@ -230,7 +230,7 @@ public class CommonEventDispatcher implements ModInitializer {
             return InteractionResult.PASS;
         }
         ItemStack itemStack = player.getItemInHand(hand);
-        IItemHandler handler = ObjectUtils.safeCast(itemStack.getItem(), IItemHandler.class);;
+        IItemHandler handler = ObjectUtils.safeCast(itemStack.getItem(), IItemHandler.class);
         if (handler != null) {
             return handler.useOnFirst(itemStack, new UseOnContext(player, hand, hitResult));
         }

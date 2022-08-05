@@ -40,19 +40,19 @@ public class DyeTableBlock extends AbstractHorizontalBlock implements IBlockEnti
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean p_196243_5_) {
+    public void onRemove(BlockState state, Level level, BlockPos blockPos, BlockState newState, boolean p_196243_5_) {
         if (state.is(newState.getBlock())) {
             return;
         }
-        DyeTableBlockEntity tileEntity = getTileEntity(level, pos);
+        DyeTableBlockEntity tileEntity = getTileEntity(level, blockPos);
         if (tileEntity != null) {
-            DataSerializers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), tileEntity.getItem(9));
+            DataSerializers.dropItemStack(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), tileEntity.getItem(9));
         }
-        super.onRemove(state, level, pos, newState, p_196243_5_);
+        super.onRemove(state, level, blockPos, newState, p_196243_5_);
     }
 
-    private DyeTableBlockEntity getTileEntity(Level level, BlockPos pos) {
-        BlockEntity tileEntity = level.getBlockEntity(pos);
+    private DyeTableBlockEntity getTileEntity(Level level, BlockPos blockPos) {
+        BlockEntity tileEntity = level.getBlockEntity(blockPos);
         if (tileEntity instanceof DyeTableBlockEntity) {
             return (DyeTableBlockEntity) tileEntity;
         }

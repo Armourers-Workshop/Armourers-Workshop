@@ -84,8 +84,8 @@ public class LinkingToolItem extends FlavouredItem implements IItemHandler, IIte
         return InteractionResult.SUCCESS;
     }
 
-    private SkinnableBlockEntity getTitleEntity(Level level, BlockPos pos) {
-        BlockEntity tileEntity = level.getBlockEntity(pos);
+    private SkinnableBlockEntity getTitleEntity(Level level, BlockPos blockPos) {
+        BlockEntity tileEntity = level.getBlockEntity(blockPos);
         if (tileEntity instanceof SkinnableBlockEntity) {
             return (SkinnableBlockEntity) tileEntity;
         }

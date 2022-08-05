@@ -8,6 +8,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenVoxelShape;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
+import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import net.minecraft.core.BlockPos;
 
 import java.util.ArrayList;
@@ -23,9 +24,11 @@ public class SkinPart implements ISkinPart {
 
     protected SkinProperties properties;
 
+    protected int id = 0;
+
     private HashMap<Long, Rectangle3i> blockGrid;
     private SkinCubeData cubeData;
-    private ArrayList<SkinMarker> markerBlocks;
+    private final ArrayList<SkinMarker> markerBlocks;
 
     public SkinPart(ISkinPartType partType, ArrayList<SkinMarker> markerBlocks, SkinCubeData cubeData) {
         this.partType = partType;
@@ -39,6 +42,10 @@ public class SkinPart implements ISkinPart {
         if (markerBlocks != null) {
             cubeData.getUsedCounter().addMarkers(markerBlocks.size());
         }
+    }
+
+    public int getId() {
+        return id;
     }
 
     public SkinProperties getProperties() {
@@ -113,6 +120,23 @@ public class SkinPart implements ISkinPart {
 
     public Rectangle3i getPartBounds() {
         return partBounds;
+    }
+
+
+    public int getParent() {
+        return 0;
+    }
+
+    public String getName() {
+        return null;
+    }
+
+    public Object getTransform() {
+        return null;
+    }
+
+    public SkinPaintData getPaintData() {
+        return null;
     }
 
     @Override

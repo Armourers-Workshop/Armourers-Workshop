@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.item;
 
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolSelector;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
@@ -48,7 +48,7 @@ public class PaintRollerItem extends PaintbrushItem {
     }
 
     @Override
-    public IRegistryObject<SoundEvent> getItemSoundEvent(UseOnContext context) {
+    public IRegistryKey<SoundEvent> getItemSoundEvent(UseOnContext context) {
         return ModSounds.PAINT;
     }
 }

@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
 import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
-import moe.plushie.armourers_workshop.api.other.builder.IItemBuilder;
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.common.builder.IItemBuilder;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -71,7 +71,7 @@ public class ItemBuilderImpl<T extends Item> implements IItemBuilder<T> {
     }
 
     @Override
-    public IRegistryObject<T> build(String name) {
+    public IRegistryKey<T> build(String name) {
         return Registry.ITEM.register(name, () -> supplier.apply(properties));
     }
 }

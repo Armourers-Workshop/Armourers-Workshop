@@ -15,12 +15,12 @@ import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.core.skin.SkinLoader;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
-import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.KeyBindingBuilderImpl;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
-import moe.plushie.armourers_workshop.utils.TickHandler;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2i;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
@@ -194,9 +194,9 @@ public class ClientEventDispatcher {
             if (this.isPaused != isPaused) {
                 this.isPaused = isPaused;
                 if (isPaused) {
-                    TickHandler.pause();
+                    TickUtils.pause();
                 } else {
-                    TickHandler.resume();
+                    TickUtils.resume();
                 }
             }
         }

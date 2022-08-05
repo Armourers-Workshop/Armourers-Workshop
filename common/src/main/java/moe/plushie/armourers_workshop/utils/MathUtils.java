@@ -1,17 +1,11 @@
 package moe.plushie.armourers_workshop.utils;
 
-import net.minecraft.Util;
-
 public class MathUtils {
     private static final double FRAC_BIAS = Double.longBitsToDouble(4805340802404319232L);
     private static final double[] ASIN_TAB = new double[257];
     private static final double[] COS_TAB = new double[257];
 
-    private static final float[] SIN = Util.make(new float[65536], (p_203445_0_) -> {
-        for (int i = 0; i < p_203445_0_.length; ++i) {
-            p_203445_0_[i] = (float) Math.sin((double) i * Math.PI * 2.0D / 65536.0D);
-        }
-    });
+    private static final float[] SIN = new float[65536];
 
     public static int clamp(int value, int minValue, int maxValue) {
         if (value < minValue) {
@@ -71,12 +65,12 @@ public class MathUtils {
         return (float) Math.sqrt(p_76133_0_);
     }
 
-    public static float sin(float p_76126_0_) {
-        return SIN[(int) (p_76126_0_ * 10430.378F) & '\uffff'];
+    public static float sin(float f) {
+        return SIN[(int) (f * 10430.378F) & '\uffff'];
     }
 
-    public static float cos(float p_76134_0_) {
-        return SIN[(int) (p_76134_0_ * 10430.378F + 16384.0F) & '\uffff'];
+    public static float cos(float f) {
+        return SIN[(int) (f * 10430.378F + 16384.0F) & '\uffff'];
     }
 
 
@@ -220,6 +214,9 @@ public class MathUtils {
             double e = Math.asin(d);
             COS_TAB[i] = Math.cos(e);
             ASIN_TAB[i] = e;
+        }
+        for (int i = 0; i < SIN.length; ++i) {
+            SIN[i] = (float) Math.sin((double) i * Math.PI * 2.0D / 65536.0D);
         }
     }
 }

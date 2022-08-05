@@ -14,5 +14,4 @@ public class TransformationProviderImpl {
     public static BakedModel handleTransforms(PoseStack matrixStack, BakedModel bakedModel, ItemTransforms.TransformType transformType, boolean leftHandHackery) {
         return ForgeHooksClient.handleCameraTransforms(matrixStack, bakedModel, transformType, leftHandHackery);
     }
-
 }

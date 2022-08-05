@@ -8,7 +8,7 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
-import moe.plushie.armourers_workshop.utils.TickHandler;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -50,7 +50,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
             return;
         }
         float f = 1 / 16f;
-        float partialTicks1 = TickHandler.ticks();
+        float partialTicks1 = TickUtils.ticks();
         int overLight = light;
         if (entity.isOverrideLight()) {
             overLight = 0xf000f0;

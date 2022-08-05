@@ -231,9 +231,9 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
     public static class Builder {
         private final Config storage = Config.of(LinkedHashMap::new, InMemoryFormat.withUniversalSupport()); // Use LinkedHashMap for consistent ordering
         private BuilderContext context = new BuilderContext();
-        private Map<List<String>, String> levelComments = new HashMap<>();
-        private List<String> currentPath = new ArrayList<>();
-        private List<ConfigValue<?>> values = new ArrayList<>();
+        private final Map<List<String>, String> levelComments = new HashMap<>();
+        private final List<String> currentPath = new ArrayList<>();
+        private final List<ConfigValue<?>> values = new ArrayList<>();
 
         //Object
         public <T> ConfigValue<T> define(String path, T defaultValue) {
@@ -293,7 +293,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
         public <V extends Comparable<? super V>> ConfigValue<V> defineInRange(List<String> path, Supplier<V> defaultSupplier, V min, V max, Class<V> clazz) {
             Range<V> range = new Range<>(clazz, min, max);
             context.setRange(range);
-            context.setComment(ObjectArrays.concat(context.getComment(), "Range: " + range.toString()));
+            context.setComment(ObjectArrays.concat(context.getComment(), "Range: " + range));
             if (min.compareTo(max) > 0)
                 throw new IllegalArgumentException("Range min most be less then max.");
             return define(path, defaultSupplier, range);
@@ -393,7 +393,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
         }
 
         public <V extends Enum<V>> EnumValue<V> defineEnum(List<String> path, V defaultValue, @SuppressWarnings("unchecked") V... acceptableValues) {
-            return defineEnum(path, defaultValue, (Collection<V>) Arrays.asList(acceptableValues));
+            return defineEnum(path, defaultValue, Arrays.asList(acceptableValues));
         }
 
         public <V extends Enum<V>> EnumValue<V> defineEnum(List<String> path, V defaultValue, EnumGetMethod converter, @SuppressWarnings("unchecked") V... acceptableValues) {
@@ -491,7 +491,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
         }
 
         public DoubleValue defineInRange(List<String> path, double defaultValue, double min, double max) {
-            return defineInRange(path, (Supplier<Double>) () -> defaultValue, min, max);
+            return defineInRange(path, () -> defaultValue, min, max);
         }
 
         public DoubleValue defineInRange(String path, Supplier<Double> defaultSupplier, double min, double max) {
@@ -508,7 +508,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
         }
 
         public IntValue defineInRange(List<String> path, int defaultValue, int min, int max) {
-            return defineInRange(path, (Supplier<Integer>) () -> defaultValue, min, max);
+            return defineInRange(path, () -> defaultValue, min, max);
         }
 
         public IntValue defineInRange(String path, Supplier<Integer> defaultSupplier, int min, int max) {
@@ -525,7 +525,7 @@ public class FabricConfigSpec extends UnmodifiableConfigWrapper<UnmodifiableConf
         }
 
         public LongValue defineInRange(List<String> path, long defaultValue, long min, long max) {
-            return defineInRange(path, (Supplier<Long>) () -> defaultValue, min, max);
+            return defineInRange(path, () -> defaultValue, min, max);
         }
 
         public LongValue defineInRange(String path, Supplier<Long> defaultSupplier, long min, long max) {

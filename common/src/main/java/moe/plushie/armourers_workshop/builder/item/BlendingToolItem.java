@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.item;
 
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
@@ -101,7 +101,7 @@ public class BlendingToolItem extends AbstractPaintToolItem implements IBlockPai
     }
 
     @Override
-    public IRegistryObject<SoundEvent> getItemSoundEvent(UseOnContext context) {
+    public IRegistryKey<SoundEvent> getItemSoundEvent(UseOnContext context) {
         return ModSounds.PAINT;
     }
 }

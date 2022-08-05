@@ -249,14 +249,11 @@ public class SaveSkinPacket extends CustomPacket {
             if (path.startsWith(Constants.PRIVATE + "/" + player.getStringUUID())) {
                 return true; // any operation has been accepted in the player's own directory.
             }
-            if (path.startsWith(Constants.PRIVATE)) {
-                return false; // any operation has been rejected in the other player's private directory.
-            }
+            return !path.startsWith(Constants.PRIVATE); // any operation has been rejected in the other player's private directory.
 //            if (SkinLibraryManager.getServer().getLibrary().get(path) != null) {
 //                // required auth when on files already in public directory
 //                return SkinLibraryManager.getServer().shouldModifierFile(player);
 //            }
-            return true;
         }
         return !location.isEmpty();
     }

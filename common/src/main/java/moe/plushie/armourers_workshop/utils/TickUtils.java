@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.utils;
 
-public class TickHandler {
+public class TickUtils {
 
     private static long pausedTime;
     private static long ignoredTime;
@@ -14,6 +14,11 @@ public class TickHandler {
 
     public static int ticks() {
         return (int) (getTime() % 100000000);
+    }
+
+    public static float getPaintTextureOffset() {
+        double f = ticks() % (255L * 25) / 25f;
+        return Math.round(f);
     }
 
     public static void pause() {

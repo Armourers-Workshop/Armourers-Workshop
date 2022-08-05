@@ -12,15 +12,15 @@ import net.minecraft.world.level.block.Rotation;
 public class CubeTransform {
 
     public final Level level;
-    public final BlockPos pos;
+    public final BlockPos blockPos;
     public final Direction direction;
     public final Rotation rotation;
     public final Rotation invRotation;
     public final Quaternion rotationDegrees;
 
-    public CubeTransform(Level level, BlockPos pos, Direction direction) {
+    public CubeTransform(Level level, BlockPos blockPos, Direction direction) {
         this.level = level;
-        this.pos = pos;
+        this.blockPos = blockPos;
         this.direction = direction;
         this.rotation = getRotation(direction, false);
         this.invRotation = getRotation(direction, true);
@@ -76,12 +76,12 @@ public class CubeTransform {
     public BlockPos mul(int x, int y, int z) {
         // in this case not need to apply matrix transform.
         if (rotationDegrees == Quaternion.ONE) {
-            return pos.offset(x, y, z);
+            return blockPos.offset(x, y, z);
         }
         // we increase 0.5 offset to avoid down-cast incorrect by float accuracy problems.
         Vector4f off = new Vector4f(x + 0.5f, y + 0.5f, z + 0.5f, 1);
         off.transform(rotationDegrees);
-        return pos.offset(off.x(), off.y(), off.z());
+        return blockPos.offset(off.x(), off.y(), off.z());
     }
 
 }

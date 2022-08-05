@@ -178,7 +178,7 @@ public class ReportList extends Button {
     public class GuiDetailListColumn {
 
         private final String name;
-        private int width;
+        private final int width;
 
         public GuiDetailListColumn(String name, int width) {
             this.name = name;

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.other.builder.IItemGroupBuilder;
+import moe.plushie.armourers_workshop.api.common.builder.IItemGroupBuilder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.world.item.CreativeModeTab;

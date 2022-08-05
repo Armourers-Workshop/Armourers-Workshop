@@ -213,5 +213,4 @@ public class Rectangle3i implements IRectangle3i {
         return "Rectangle3i [x=" + x + ", y=" + y + ", z=" + z + ", width="
                 + width + ", height=" + height + ", depth=" + depth + "]";
     }
-
 }

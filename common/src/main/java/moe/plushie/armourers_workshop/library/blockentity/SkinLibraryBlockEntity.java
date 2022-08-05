@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.library.blockentity;
 
 import moe.plushie.armourers_workshop.core.blockentity.AbstractContainerBlockEntity;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;

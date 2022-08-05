@@ -227,7 +227,7 @@ public class SkinProperties implements ISkinProperties {
         for (String key : nbt.getAllKeys()) {
             Tag value = nbt.get(key);
             if (value instanceof StringTag) {
-                properties.put(key, ((StringTag) value).getAsString());
+                properties.put(key, value.getAsString());
             } else if (value instanceof IntTag) {
                 properties.put(key, ((IntTag) value).getAsInt());
             } else if (value instanceof FloatTag) {
@@ -324,7 +324,7 @@ public class SkinProperties implements ISkinProperties {
             if (property instanceof SkinProperty) {
                 SkinProperty<?> property1 = (SkinProperty<?>) property;
                 if (property1.isMultipleKey()) {
-                    return property.getKey() + String.valueOf(index);
+                    return property.getKey() + index;
                 }
             }
             return null;

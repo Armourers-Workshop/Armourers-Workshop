@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.builder.block;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
-import moe.plushie.armourers_workshop.builder.blockentity.OutfitMakerBlockEntity;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.init.ModMenus;

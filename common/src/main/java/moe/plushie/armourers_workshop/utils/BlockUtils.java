@@ -58,8 +58,6 @@ public final class BlockUtils {
         pending.set(null);
     }
 
-
-
 //    public static int determineOrientation(BlockPos pos, LivingEntity entity) {
 //        return determineOrientation(pos.getX(), pos.getY(), pos.getZ(), entity);
 //    }
@@ -190,9 +188,7 @@ public final class BlockUtils {
     private static boolean samePlane(BlockPos src, BlockPos dst, Direction direction) {
         if (direction.getStepX() == 0 || src.getX() == dst.getX()) {
             if (direction.getStepY() == 0 || src.getY() == dst.getY()) {
-                if (direction.getStepZ() == 0 || src.getZ() == dst.getZ()) {
-                    return true;
-                }
+                return direction.getStepZ() == 0 || src.getZ() == dst.getZ();
             }
         }
         return false;

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -30,7 +30,7 @@ public class RegistryManagerImpl {
         DeferredRegister<T> register = DeferredRegister.create(clazz, ArmourersWorkshop.MOD_ID);
         register.register(FMLJavaModLoadingContext.get().getModEventBus());
         return new Registry<T>() {
-            private final LinkedHashSet<IRegistryObject<T>> entriesView = new LinkedHashSet<>();
+            private final LinkedHashSet<IRegistryKey<T>> entriesView = new LinkedHashSet<>();
 
             @Override
             public T get(ResourceLocation registryName) {
@@ -43,18 +43,18 @@ public class RegistryManagerImpl {
             }
 
             @Override
-            public Collection<IRegistryObject<T>> getEntries() {
+            public Collection<IRegistryKey<T>> getEntries() {
                 return entriesView;
             }
 
             @Override
-            public <I extends T> IRegistryObject<I> register(String name, Supplier<? extends I> sup) {
+            public <I extends T> IRegistryKey<I> register(String name, Supplier<? extends I> sup) {
                 ModLog.debug("Registering '{}:{}'", ArmourersWorkshop.MOD_ID, name);
                 return put(name, register.register(name, sup));
             }
 
-            private <I extends T> IRegistryObject<I> put(String name, net.minecraftforge.fml.RegistryObject<I> object) {
-                IRegistryObject<I> newObjet = new IRegistryObject<I>() {
+            private <I extends T> IRegistryKey<I> put(String name, net.minecraftforge.fml.RegistryObject<I> object) {
+                IRegistryKey<I> newObjet = new IRegistryKey<I>() {
 
                     @Override
                     public I get() {

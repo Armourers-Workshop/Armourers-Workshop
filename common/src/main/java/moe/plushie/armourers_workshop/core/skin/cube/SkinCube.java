@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -10,10 +10,10 @@ public class SkinCube implements ISkinCube {
     protected final int id;
     protected final boolean glass;
     protected final boolean glowing;
-    protected final IRegistryObject<Block> block;
+    protected final IRegistryKey<Block> block;
     protected ResourceLocation registryName;
 
-    public SkinCube(int id, boolean glass, boolean glowing, IRegistryObject<Block> block) {
+    public SkinCube(int id, boolean glass, boolean glowing, IRegistryKey<Block> block) {
         this.id = id;
         this.glass = glass;
         this.glowing = glowing;

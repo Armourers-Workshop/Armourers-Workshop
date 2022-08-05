@@ -133,7 +133,7 @@ public class CubeWrapper implements IPaintable {
 
     public void setPos(BlockPos pos) {
         if (this.pos != pos) {
-            this.next();
+            this.submit();
         }
         this.pos = pos;
     }
@@ -157,7 +157,7 @@ public class CubeWrapper implements IPaintable {
         return changes;
     }
 
-    private void next() {
+    private void submit() {
         if (this.changes != null) {
             this.consumer.accept(changes);
             this.changes = null;

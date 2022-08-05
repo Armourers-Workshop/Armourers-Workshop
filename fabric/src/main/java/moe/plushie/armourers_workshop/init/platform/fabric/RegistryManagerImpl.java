@@ -2,8 +2,8 @@ package moe.plushie.armourers_workshop.init.platform.fabric;
 
 import com.google.common.collect.ImmutableMap;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.core.registry.Registry;
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -43,7 +43,7 @@ public class RegistryManagerImpl {
     public static class RegistryProxy<T, R extends net.minecraft.core.Registry<T>> extends Registry<T> {
 
         protected final R registry;
-        protected final LinkedHashSet<IRegistryObject<T>> entriesView = new LinkedHashSet<>();
+        protected final LinkedHashSet<IRegistryKey<T>> entriesView = new LinkedHashSet<>();
 
         protected RegistryProxy(R registry) {
             this.registry = registry;
@@ -60,16 +60,16 @@ public class RegistryManagerImpl {
         }
 
         @Override
-        public Collection<IRegistryObject<T>> getEntries() {
+        public Collection<IRegistryKey<T>> getEntries() {
             return entriesView;
         }
 
         @Override
-        public <I extends T> IRegistryObject<I> register(String name, Supplier<? extends I> sup) {
+        public <I extends T> IRegistryKey<I> register(String name, Supplier<? extends I> sup) {
             ResourceLocation registryName = ArmourersWorkshop.getResource(name);
             ModLog.debug("Registering '{}'", registryName);
             I value = R.register(registry, registryName, sup.get());
-            IRegistryObject<I> object = new IRegistryObject<I>() {
+            IRegistryKey<I> object = new IRegistryKey<I>() {
                 @Override
                 public ResourceLocation getRegistryName() {
                     return registryName;

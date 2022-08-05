@@ -120,7 +120,6 @@ public class MultipartForm {
             writer.append("Content-Type: application/octet-stream").append(CRLF);
             writer.append("Content-Transfer-.Encoding: binary").append(CRLF);
             writer.append(CRLF).flush();
-            ;
             output.write(fileBytes);
             output.flush(); // Important must flush before continuing with writer!
             writer.append(CRLF).flush();

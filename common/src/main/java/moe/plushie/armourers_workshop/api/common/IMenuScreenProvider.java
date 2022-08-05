@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.api.other.menu;
+package moe.plushie.armourers_workshop.api.common;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;

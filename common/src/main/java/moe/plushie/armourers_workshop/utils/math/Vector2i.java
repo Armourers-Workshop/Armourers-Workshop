@@ -17,7 +17,6 @@ public class Vector2i {
         this(MathUtils.floor(x), MathUtils.floor(y));
     }
 
-
     public double x() {
         return this.x;
     }

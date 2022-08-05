@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform;
 
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
@@ -25,7 +25,7 @@ public class MenuManager {
         MENU_OPENERS.put(menuType, ObjectUtils.unsafeCast(menuOpener));
     }
 
-    public static <T extends AbstractContainerMenu, V> boolean openMenu(IRegistryObject<MenuType<T>> menuType, Player player, V value) {
+    public static <T extends AbstractContainerMenu, V> boolean openMenu(IRegistryKey<MenuType<T>> menuType, Player player, V value) {
         MenuType<T> menuType1 = menuType.get();
         MenuOpener<Object> menuOpener = MENU_OPENERS.get(menuType1);
         if (menuOpener == null) {
@@ -39,7 +39,7 @@ public class MenuManager {
         return false;
     }
 
-    public static <C extends AbstractContainerMenu> boolean openMenu(IRegistryObject<MenuType<C>> type, Player player, Level level, BlockPos pos) {
+    public static <C extends AbstractContainerMenu> boolean openMenu(IRegistryKey<MenuType<C>> type, Player player, Level level, BlockPos pos) {
         if (!ModPermissions.OPEN.accept(type, level, pos, player)) {
             return false;
         }

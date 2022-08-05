@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.common.IBlockEntityProvider;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
-import moe.plushie.armourers_workshop.builder.blockentity.SkinCubeBlockEntity;
 import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.core.data.OptionalDirection;
 import moe.plushie.armourers_workshop.init.ModBlockEntities;

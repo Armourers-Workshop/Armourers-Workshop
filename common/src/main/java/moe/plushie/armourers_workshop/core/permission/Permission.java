@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.permission;
 
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.init.platform.PermissionManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +18,7 @@ public abstract class Permission {
         this.name = name;
     }
 
-    protected void add(IRegistryObject<?> object) {
+    protected void add(IRegistryKey<?> object) {
         nodes.add(get(object.getRegistryName()));
     }
 

@@ -92,7 +92,7 @@ public final class Constants {
     }
 
     /**
-     * NBT Tag type IDS, used when storing the nbt to disc, Should align with {@link net.minecraft.nbt.Tag#new}
+     * NBT Tag type IDS, used when storing the nbt to disc, Should align with {@link net.minecraft.nbt.Tag}
      * and {@link net.minecraft.nbt.Tag#getType()}
      * <p>
      * Main use is checking tag type in {@link net.minecraft.nbt.CompoundTag#contains(String, int)}
@@ -115,22 +115,14 @@ public final class Constants {
     }
 
     /**
-     * The flags used when calling
-     * {@link IWorldWriter#setBlockState(BlockPos, BlockState, int)}<br>
-     * Can be found from {@link World#setBlockState(BlockPos, BlockState, int)},
-     * {@link Level#markAndNotifyBlock}, and
-     * {@link LevelRenderer#notifyBlockUpdate}<br>
      * Flags can be combined with bitwise OR
      */
     public static class BlockFlags {
         /**
-         * Calls
-         * {@link Block#neighborChanged(BlockState, World, BlockPos, Block, BlockPos, boolean)
          * neighborChanged} on surrounding blocks (with isMoving as false). Also updates comparator output state.
          */
         public static final int NOTIFY_NEIGHBORS = (1 << 0);
         /**
-         * Calls {@link Level#notifyBlockUpdate(BlockPos, BlockState, BlockState, int)}.<br>
          * Server-side, this updates all the path-finding navigators.
          */
         public static final int BLOCK_UPDATE = (1 << 1);
@@ -145,25 +137,17 @@ public final class Constants {
         public static final int RERENDER_MAIN_THREAD = (1 << 3);
         /**
          * Causes neighbor updates to be sent to all surrounding blocks (including
-         * diagonals). This in turn will call
-         * {@link Block#updateDiagonalNeighbors(BlockState, IWorld, BlockPos, int)
-         * updateDiagonalNeighbors} on both old and new states, and
-         * {@link Block#updateNeighbors(BlockState, IWorld, BlockPos, int)
-         * updateNeighbors} on the new state.
+         * diagonals).
          */
         public static final int UPDATE_NEIGHBORS = (1 << 4);
 
         /**
-         * Prevents neighbor changes from spawning item drops, used by
-         * {@link Block#replaceBlock(BlockState, BlockState, IWorld, BlockPos, int)}.
+         * Prevents neighbor changes from spawning item drops.
          */
         public static final int NO_NEIGHBOR_DROPS = (1 << 5);
 
         /**
-         * Tell the block being changed that it was moved, rather than removed/replaced,
-         * the boolean value is eventually passed to
-         * {@link Block#onReplaced(BlockState, World, BlockPos, BlockState, boolean)}
-         * as the last parameter.
+         * Tell the block being changed that it was moved, rather than removed/replaced.
          */
         public static final int IS_MOVING = (1 << 6);
 

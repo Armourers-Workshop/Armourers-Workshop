@@ -7,7 +7,7 @@ public class Palette {
     public static final int MAX_COLOURS_PER_PALETTE = 32;
     private final boolean locked;
     private String name;
-    private int[] colors;
+    private final int[] colors;
 
     public Palette(String name, boolean locked, int[] colours) {
         this.name = name;
@@ -66,11 +66,8 @@ public class Palette {
             return false;
         Palette other = (Palette) obj;
         if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        return true;
+            return other.name == null;
+        } else return name.equals(other.name);
     }
 
     @Override

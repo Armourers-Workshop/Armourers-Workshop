@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.init;
 import moe.plushie.armourers_workshop.core.permission.BlockPermission;
 import moe.plushie.armourers_workshop.core.permission.ContainerPermission;
 import moe.plushie.armourers_workshop.core.permission.Permission;
+import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.platform.PermissionManager;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 
@@ -38,7 +39,7 @@ public class ModPermissions {
     public static final BlockPermission SKIN_LIBRARY_SKIN_LOAD = register(new BlockPermission("skin.load", ModBlocks.SKIN_LIBRARY));
     public static final BlockPermission SKIN_LIBRARY_SKIN_SAVE = register(new BlockPermission("skin.save", ModBlocks.SKIN_LIBRARY));
 
-    public static final ContainerPermission OPEN = register(new ContainerPermission("open-gui"));
+    public static final ContainerPermission OPEN = register(new ContainerPermission("open-gui", Registry.MENU_TYPE.getEntries()::forEach));
 
     private static <T extends Permission> T register(T permission) {
         PERMISSIONS.add(permission);

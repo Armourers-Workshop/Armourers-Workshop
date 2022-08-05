@@ -2,9 +2,9 @@ package moe.plushie.armourers_workshop.init.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
+import moe.plushie.armourers_workshop.api.common.IMenuProvider;
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
-import moe.plushie.armourers_workshop.api.other.builder.*;
-import moe.plushie.armourers_workshop.api.other.menu.IMenuProvider;
+import moe.plushie.armourers_workshop.api.common.builder.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;

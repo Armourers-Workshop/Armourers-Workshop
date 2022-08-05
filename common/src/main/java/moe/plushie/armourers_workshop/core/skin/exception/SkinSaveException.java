@@ -18,6 +18,6 @@ public class SkinSaveException extends Exception {
         NO_DATA,
         MISSING_PARTS,
         BED_AND_SEAT,
-        INVALID_MULTIBLOCK;
+        INVALID_MULTIBLOCK
     }
 }

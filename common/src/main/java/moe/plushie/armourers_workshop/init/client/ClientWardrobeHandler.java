@@ -17,7 +17,7 @@ import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.platform.TransformationProvider;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
-import moe.plushie.armourers_workshop.utils.TickHandler;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -306,7 +306,7 @@ public class ClientWardrobeHandler {
 
     private static int render(Entity entity, ItemStack itemStack, Model model, int light, PoseStack matrixStack, MultiBufferSource buffers, ItemTransforms.TransformType transformType, Supplier<Iterable<SkinRenderData.Entry>> provider) {
         int r = 0;
-        float partialTicks = TickHandler.ticks();
+        float partialTicks = TickUtils.ticks();
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null) {
             return 0;

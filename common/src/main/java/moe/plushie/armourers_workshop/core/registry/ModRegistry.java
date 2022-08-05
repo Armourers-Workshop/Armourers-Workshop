@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 public class ModRegistry<TYPE extends ModRegistry.IRegistryItem> {
 
     private final String name;
-    private LinkedHashMap<ResourceLocation, TYPE> registryMap = new LinkedHashMap<ResourceLocation, TYPE>();
+    private final LinkedHashMap<ResourceLocation, TYPE> registryMap = new LinkedHashMap<ResourceLocation, TYPE>();
 
     public ModRegistry(String name) {
         this.name = name;
@@ -37,11 +37,11 @@ public class ModRegistry<TYPE extends ModRegistry.IRegistryItem> {
         return registryMap.get(key);
     }
 
-    public static interface IRegistryItem {
+    public interface IRegistryItem {
 
-        public ResourceLocation getRegistryName();
+        ResourceLocation getRegistryName();
 
-        public String getName();
+        String getName();
     }
 
     public static class RegistryItem implements IRegistryItem {

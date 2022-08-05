@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 public class MannequinItemRenderer extends BlockEntityWithoutLevelRenderer {
 
     private static MannequinItemRenderer INSTANCE;
+
     public static MannequinItemRenderer getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new MannequinItemRenderer();

@@ -22,7 +22,7 @@ public class SkinCubeData {
 
     private int cubeCount = 0;
     private BufferSlice bufferSlice;
-    private SkinUsedCounter usedCounter = new SkinUsedCounter();
+    private final SkinUsedCounter usedCounter = new SkinUsedCounter();
 
     public int getCubeCount() {
         return cubeCount;

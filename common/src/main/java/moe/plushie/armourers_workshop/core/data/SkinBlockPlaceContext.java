@@ -181,9 +181,9 @@ public class SkinBlockPlaceContext extends BlockPlaceContext {
 
     public static class ParentPart extends Part {
 
-        private SkinDescriptor descriptor;
-        private SkinProperties properties;
-        private Collection<BlockPos> blockPosList;
+        private final SkinDescriptor descriptor;
+        private final SkinProperties properties;
+        private final Collection<BlockPos> blockPosList;
         private Collection<SkinMarker> markerList;
 
         public ParentPart(BlockPos offset, Rectangle3i shape, Collection<BlockPos> blockPosList, SkinDescriptor descriptor, Skin skin) {

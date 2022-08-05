@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
-import moe.plushie.armourers_workshop.api.other.builder.IKeyBindingBuilder;
+import moe.plushie.armourers_workshop.api.common.builder.IKeyBindingBuilder;
 import moe.plushie.armourers_workshop.init.client.InputMotionHandler;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.utils.ext.OpenKeyModifier;

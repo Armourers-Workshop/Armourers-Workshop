@@ -24,8 +24,8 @@ public class EntityClimbingEvents {
         /**
          * Checks whether a player's spawn can be set when sleeping.
          *
-         * @param player      the sleeping player
-         * @param sleepingPos the sleeping position
+         * @param entity   the sleeping player
+         * @param blockPos the sleeping position
          * @return true if allowed, false otherwise
          */
         InteractionResult allowClimbing(LivingEntity entity, BlockPos blockPos, BlockState blockState);

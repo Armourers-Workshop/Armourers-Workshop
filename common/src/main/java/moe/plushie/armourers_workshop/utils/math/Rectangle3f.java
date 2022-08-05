@@ -21,13 +21,13 @@ public class Rectangle3f implements IRectangle3f {
     private float height;
     private float depth;
 
-    public Rectangle3f(Rectangle3i rectangle) {
-        this.x = rectangle.getX();
-        this.y = rectangle.getY();
-        this.z = rectangle.getZ();
-        this.width = rectangle.getWidth();
-        this.height = rectangle.getHeight();
-        this.depth = rectangle.getDepth();
+    public Rectangle3f(Rectangle3i rect) {
+        this.x = rect.getX();
+        this.y = rect.getY();
+        this.z = rect.getZ();
+        this.width = rect.getWidth();
+        this.height = rect.getHeight();
+        this.depth = rect.getDepth();
     }
 
     public Rectangle3f(float x, float y, float z, float width, float height, float depth) {

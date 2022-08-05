@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.api.other.builder;
+package moe.plushie.armourers_workshop.api.common.builder;
 
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
 import moe.plushie.armourers_workshop.api.client.key.IKeyModifier;

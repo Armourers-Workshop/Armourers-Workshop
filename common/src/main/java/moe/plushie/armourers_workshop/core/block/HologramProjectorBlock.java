@@ -73,8 +73,8 @@ public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock impl
         super.onRemove(blockState, level, blockPos, blockState2, bl);
     }
 
-    private HologramProjectorBlockEntity getTileEntity(Level level, BlockPos pos) {
-        BlockEntity tileEntity = level.getBlockEntity(pos);
+    private HologramProjectorBlockEntity getTileEntity(Level level, BlockPos blockPos) {
+        BlockEntity tileEntity = level.getBlockEntity(blockPos);
         if (tileEntity instanceof HologramProjectorBlockEntity) {
             return (HologramProjectorBlockEntity) tileEntity;
         }

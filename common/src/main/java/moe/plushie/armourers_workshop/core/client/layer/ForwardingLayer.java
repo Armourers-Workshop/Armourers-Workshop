@@ -15,7 +15,7 @@ import java.util.function.BiFunction;
 public class ForwardingLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
     private final RenderLayer<T, M> target;
-    private BiFunction<T, M, Boolean> test;
+    private final BiFunction<T, M, Boolean> test;
 
     public ForwardingLayer(RenderLayerParent<T, M> renderer, RenderLayer<T, M> target) {
         this(renderer, target, (t, m) -> true);

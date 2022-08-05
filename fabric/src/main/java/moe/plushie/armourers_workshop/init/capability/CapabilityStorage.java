@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.capability;
 
-import moe.plushie.armourers_workshop.api.other.ICapabilityType;
-import moe.plushie.armourers_workshop.api.common.INBTRepresentable;
+import moe.plushie.armourers_workshop.api.common.ITagRepresentable;
+import moe.plushie.armourers_workshop.api.common.ICapabilityType;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -78,6 +78,7 @@ public class CapabilityStorage {
     public static class Stub extends CapabilityStorage {
 
         final IdentityHashMap<ICapabilityType<?>, Pair<Entry<?>, Optional<?>>> capabilities;
+
         Stub(IdentityHashMap<ICapabilityType<?>, Pair<Entry<?>, Optional<?>>> capabilities) {
             this.capabilities = capabilities;
         }
@@ -87,8 +88,8 @@ public class CapabilityStorage {
             CompoundTag caps = tag.getCompound("ForgeCaps");
             capabilities.values().forEach(pair -> {
                 Object value = pair.getValue().orElse(null);
-                if (value instanceof INBTRepresentable) {
-                    INBTRepresentable<Tag> value1 = ObjectUtils.unsafeCast(value);
+                if (value instanceof ITagRepresentable) {
+                    ITagRepresentable<Tag> value1 = ObjectUtils.unsafeCast(value);
                     Tag tag1 = value1.serializeNBT();
                     if (tag1 != null) {
                         caps.put(pair.getKey().registryName.toString(), tag1);
@@ -113,10 +114,10 @@ public class CapabilityStorage {
             }
             capabilities.values().forEach(pair -> {
                 Object value = pair.getValue().orElse(null);
-                if (value instanceof INBTRepresentable) {
+                if (value instanceof ITagRepresentable) {
                     Tag tag1 = caps.get(pair.getKey().registryName.toString());
                     if (tag1 != null) {
-                        INBTRepresentable<Tag> value1 = ObjectUtils.unsafeCast(value);
+                        ITagRepresentable<Tag> value1 = ObjectUtils.unsafeCast(value);
                         value1.deserializeNBT(tag1);
                     }
                 }

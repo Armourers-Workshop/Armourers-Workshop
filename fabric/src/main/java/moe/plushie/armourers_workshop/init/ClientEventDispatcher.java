@@ -4,9 +4,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
+import moe.plushie.armourers_workshop.api.common.IEntityHandler;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
-import moe.plushie.armourers_workshop.api.common.IEntityHandler;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.core.data.slot.SkinSlotType;
@@ -16,15 +16,15 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.client.ClientWardrobeHandler;
 import moe.plushie.armourers_workshop.init.config.FabricConfig;
 import moe.plushie.armourers_workshop.init.config.FabricConfigTracker;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
+import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
+import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
 import moe.plushie.armourers_workshop.init.platform.fabric.builder.KeyBindingBuilderImpl;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderSpecificArmEvents;
 import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipCallback;
-import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
-import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
-import moe.plushie.armourers_workshop.utils.TickHandler;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
 import moe.plushie.armourers_workshop.utils.math.Rectangle2i;
 import net.fabricmc.api.ClientModInitializer;
@@ -219,9 +219,9 @@ public class ClientEventDispatcher implements ClientModInitializer {
         if (this.isPaused != isPaused) {
             this.isPaused = isPaused;
             if (isPaused) {
-                TickHandler.pause();
+                TickUtils.pause();
             } else {
-                TickHandler.resume();
+                TickUtils.resume();
             }
         }
     }

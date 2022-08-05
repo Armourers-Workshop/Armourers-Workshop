@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.init.platform.forge;
 
-import moe.plushie.armourers_workshop.api.other.builder.*;
-import moe.plushie.armourers_workshop.api.other.menu.IMenuProvider;
-import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
 import moe.plushie.armourers_workshop.api.client.key.IKeyBinding;
+import moe.plushie.armourers_workshop.api.common.IMenuProvider;
+import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
+import moe.plushie.armourers_workshop.api.common.builder.*;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.*;
 import net.minecraft.world.entity.Entity;
@@ -21,7 +21,6 @@ import net.minecraft.world.level.material.MaterialColor;
 
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class BuilderManagerImpl implements BuilderManager.Impl {

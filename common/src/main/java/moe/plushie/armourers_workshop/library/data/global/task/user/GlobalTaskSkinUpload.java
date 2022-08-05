@@ -62,8 +62,8 @@ public class GlobalTaskSkinUpload extends GlobalTask<GlobalTaskSkinUpload.Result
 
     public class Result {
 
-        private GlobalTaskResult result;
-        private String message;
+        private final GlobalTaskResult result;
+        private final String message;
 
         public Result(GlobalTaskResult result, String message) {
             this.result = result;

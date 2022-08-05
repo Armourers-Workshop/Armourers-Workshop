@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.core.blockentity.AbstractBlockEntity;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
-import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;

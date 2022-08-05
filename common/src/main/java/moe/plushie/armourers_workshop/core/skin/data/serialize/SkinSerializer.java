@@ -144,7 +144,7 @@ public class SkinSerializer {
                 partIndex = count;
             }
         }
-        return new Skin(properties, skinType, paintData, skinParts);
+        return new Skin(skinType, properties, paintData, skinParts);
     }
 
 

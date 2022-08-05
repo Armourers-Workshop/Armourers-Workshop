@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
-import moe.plushie.armourers_workshop.api.other.builder.IBlockBuilder;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.common.builder.IBlockBuilder;
 import moe.plushie.armourers_workshop.builder.block.*;
 import moe.plushie.armourers_workshop.core.block.DyeTableBlock;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
@@ -25,26 +25,26 @@ import java.util.function.ToIntFunction;
 @SuppressWarnings("unused")
 public class ModBlocks {
 
-    public static final IRegistryObject<Block> HOLOGRAM_PROJECTOR = normal(HologramProjectorBlock::new).lightLevel(lit(13)).strength(5f, 1200f).build("hologram-projector");
-    public static final IRegistryObject<Block> SKINNABLE = half(SkinnableBlock::new).lightLevel(lit(15)).build("skinnable");
+    public static final IRegistryKey<Block> HOLOGRAM_PROJECTOR = normal(HologramProjectorBlock::new).lightLevel(lit(13)).strength(5f, 1200f).build("hologram-projector");
+    public static final IRegistryKey<Block> SKINNABLE = half(SkinnableBlock::new).lightLevel(lit(15)).build("skinnable");
 
-    public static final IRegistryObject<Block> DYE_TABLE = half(DyeTableBlock::new).build("dye-table");
-    public static final IRegistryObject<Block> SKINNING_TABLE = half(SkinningTableBlock::new).build("skinning-table");
+    public static final IRegistryKey<Block> DYE_TABLE = half(DyeTableBlock::new).build("dye-table");
+    public static final IRegistryKey<Block> SKINNING_TABLE = half(SkinningTableBlock::new).build("skinning-table");
 
-    public static final IRegistryObject<Block> SKIN_LIBRARY_CREATIVE = half(SkinLibraryBlock::new).build("skin-library-creative");
-    public static final IRegistryObject<Block> SKIN_LIBRARY = half(SkinLibraryBlock::new).build("skin-library");
-    public static final IRegistryObject<Block> SKIN_LIBRARY_GLOBAL = half(GlobalSkinLibraryBlock::new).build("skin-library-global");
+    public static final IRegistryKey<Block> SKIN_LIBRARY_CREATIVE = half(SkinLibraryBlock::new).build("skin-library-creative");
+    public static final IRegistryKey<Block> SKIN_LIBRARY = half(SkinLibraryBlock::new).build("skin-library");
+    public static final IRegistryKey<Block> SKIN_LIBRARY_GLOBAL = half(GlobalSkinLibraryBlock::new).build("skin-library-global");
 
-    public static final IRegistryObject<Block> OUTFIT_MAKER = half(OutfitMakerBlock::new).build("outfit-maker");
-    public static final IRegistryObject<Block> COLOR_MIXER = normal(ColorMixerBlock::new).bind(() -> RenderType::cutout).build("colour-mixer");
-    public static final IRegistryObject<Block> ARMOURER = normal(ArmourerBlock::new).build("armourer");
+    public static final IRegistryKey<Block> OUTFIT_MAKER = half(OutfitMakerBlock::new).build("outfit-maker");
+    public static final IRegistryKey<Block> COLOR_MIXER = normal(ColorMixerBlock::new).bind(() -> RenderType::cutout).build("colour-mixer");
+    public static final IRegistryKey<Block> ARMOURER = normal(ArmourerBlock::new).build("armourer");
 
-    public static final IRegistryObject<Block> SKIN_CUBE = half(SkinCubeBlock::new).build("skin-cube");
-    public static final IRegistryObject<Block> SKIN_CUBE_GLASS = glass(SkinCubeBlock::new).build("skin-cube-glass");
-    public static final IRegistryObject<Block> SKIN_CUBE_GLOWING = half(SkinCubeBlock::new).lightLevel(15).build("skin-cube-glowing");
-    public static final IRegistryObject<Block> SKIN_CUBE_GLASS_GLOWING = glass(SkinCubeBlock::new).lightLevel(15).build("skin-cube-glass-glowing");
+    public static final IRegistryKey<Block> SKIN_CUBE = half(SkinCubeBlock::new).build("skin-cube");
+    public static final IRegistryKey<Block> SKIN_CUBE_GLASS = glass(SkinCubeBlock::new).build("skin-cube-glass");
+    public static final IRegistryKey<Block> SKIN_CUBE_GLOWING = half(SkinCubeBlock::new).lightLevel(15).build("skin-cube-glowing");
+    public static final IRegistryKey<Block> SKIN_CUBE_GLASS_GLOWING = glass(SkinCubeBlock::new).lightLevel(15).build("skin-cube-glass-glowing");
 
-    public static final IRegistryObject<Block> BOUNDING_BOX = glass(BoundingBoxBlock::new).noDrops().noCollission().build("bounding-box");
+    public static final IRegistryKey<Block> BOUNDING_BOX = glass(BoundingBoxBlock::new).noDrops().noCollission().build("bounding-box");
 
     private static ToIntFunction<BlockState> lit(int level) {
         return state -> state.getValue(BlockStateProperties.LIT) ? level : 0;

@@ -1,6 +1,6 @@
-package moe.plushie.armourers_workshop.api.other.builder;
+package moe.plushie.armourers_workshop.api.common.builder;
 
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 
-public interface IBlockBuilder<T extends Block> extends IEntryBuilder<IRegistryObject<T>> {
+public interface IBlockBuilder<T extends Block> extends IEntryBuilder<IRegistryKey<T>> {
 
     IBlockBuilder<T> noCollission();
 

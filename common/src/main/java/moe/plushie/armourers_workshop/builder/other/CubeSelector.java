@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 
 public class CubeSelector implements IPaintToolSelector {
 
-    final BlockPos pos;
+    final BlockPos blockPos;
     final MatchMode mode;
     final ArrayList<Rectangle3i> rects;
 
@@ -27,8 +27,8 @@ public class CubeSelector implements IPaintToolSelector {
     final boolean isPlaneOnly;
     final boolean isApplyAllFaces;
 
-    protected CubeSelector(MatchMode mode, BlockPos pos, int radius, boolean isApplyAllFaces, boolean isPlaneOnly) {
-        this.pos = pos;
+    protected CubeSelector(MatchMode mode, BlockPos blockPos, int radius, boolean isApplyAllFaces, boolean isPlaneOnly) {
+        this.blockPos = blockPos;
         this.mode = mode;
         this.radius = Math.max(radius, 1);
         this.isApplyAllFaces = isApplyAllFaces;
@@ -37,7 +37,7 @@ public class CubeSelector implements IPaintToolSelector {
     }
 
     protected CubeSelector(MatchMode mode, Iterable<Rectangle3i> rects) {
-        this.pos = BlockPos.ZERO;
+        this.blockPos = BlockPos.ZERO;
         this.mode = mode;
         this.radius = 0;
         this.isApplyAllFaces = true;
@@ -46,7 +46,7 @@ public class CubeSelector implements IPaintToolSelector {
     }
 
     protected CubeSelector(FriendlyByteBuf buffer) {
-        this.pos = buffer.readBlockPos();
+        this.blockPos = buffer.readBlockPos();
         this.mode = buffer.readEnum(MatchMode.class);
         this.radius = buffer.readInt();
         this.isApplyAllFaces = buffer.readBoolean();
@@ -91,7 +91,7 @@ public class CubeSelector implements IPaintToolSelector {
     }
 
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeBlockPos(pos);
+        buffer.writeBlockPos(blockPos);
         buffer.writeEnum(mode);
         buffer.writeInt(radius);
         buffer.writeBoolean(isApplyAllFaces);
@@ -131,7 +131,7 @@ public class CubeSelector implements IPaintToolSelector {
                 break;
             }
             case SAME: {
-                Object info = resolvedBlockInfo(level, pos);
+                Object info = resolvedBlockInfo(level, blockPos);
                 Consumer<BlockPos> consumer1 = targetPos -> {
                     if (Objects.equals(info, resolvedBlockInfo(level, targetPos))) {
                         consumer.accept(targetPos);
@@ -147,7 +147,7 @@ public class CubeSelector implements IPaintToolSelector {
                     for (int iy = -radius + 1; iy < radius; ++iy) {
                         for (int ix = -radius + 1; ix < radius; ++ix) {
                             for (int iz = -radius + 1; iz < radius; ++iz) {
-                                consumer1.accept(pos.offset(ix, iy, iz));
+                                consumer1.accept(blockPos.offset(ix, iy, iz));
                             }
                         }
                     }
@@ -155,7 +155,7 @@ public class CubeSelector implements IPaintToolSelector {
                 break;
             }
             case TOUCHING: {
-                BlockUtils.findTouchingBlockFaces(level, pos, dir, radius, isPlaneOnly).forEach(consumer);
+                BlockUtils.findTouchingBlockFaces(level, blockPos, dir, radius, isPlaneOnly).forEach(consumer);
                 break;
             }
         }
@@ -165,18 +165,18 @@ public class CubeSelector implements IPaintToolSelector {
         switch (dir) {
             case UP:
             case DOWN:
-                return pos.offset(j, 0, i);
+                return blockPos.offset(j, 0, i);
 
             case NORTH:
             case SOUTH:
-                return pos.offset(i, j, 0);
+                return blockPos.offset(i, j, 0);
 
             case WEST:
             case EAST:
-                return pos.offset(0, i, j);
+                return blockPos.offset(0, i, j);
 
             default:
-                return pos;
+                return blockPos;
         }
     }
 

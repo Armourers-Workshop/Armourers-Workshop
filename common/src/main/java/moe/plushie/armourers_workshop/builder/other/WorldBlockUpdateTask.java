@@ -15,21 +15,21 @@ import java.util.function.Predicate;
 public class WorldBlockUpdateTask implements IWorldUpdateTask {
 
     Level level;
-    BlockPos pos;
-    BlockState state;
+    BlockPos blockPos;
+    BlockState blockState;
     CompoundTag nbt;
 
     Predicate<BlockState> validator;
     Consumer<BlockState> modifier;
 
-    public WorldBlockUpdateTask(Level level, BlockPos pos, BlockState state) {
-        this(level, pos, state, null);
+    public WorldBlockUpdateTask(Level level, BlockPos blockPos, BlockState blockState) {
+        this(level, blockPos, blockState, null);
     }
 
-    public WorldBlockUpdateTask(Level level, BlockPos pos, BlockState state, CompoundTag nbt) {
+    public WorldBlockUpdateTask(Level level, BlockPos blockPos, BlockState blockState, CompoundTag nbt) {
         this.level = level;
-        this.pos = pos;
-        this.state = state;
+        this.blockPos = blockPos;
+        this.blockState = blockState;
         this.nbt = nbt;
     }
 
@@ -48,22 +48,22 @@ public class WorldBlockUpdateTask implements IWorldUpdateTask {
 
     @Override
     public InteractionResult run(Level level) {
-        if (!level.isLoaded(pos)) {
+        if (!level.isLoaded(blockPos)) {
             return InteractionResult.PASS;
         }
-        BlockState targetState = level.getBlockState(pos);
+        BlockState targetState = level.getBlockState(blockPos);
         if (validator != null && !validator.test(targetState)) {
             return InteractionResult.PASS;
         }
-        level.setBlock(pos, state, Constants.BlockFlags.DEFAULT);
+        level.setBlock(blockPos, blockState, Constants.BlockFlags.DEFAULT);
         if (nbt != null) {
-            BlockEntity tileEntity = level.getBlockEntity(pos);
+            BlockEntity tileEntity = level.getBlockEntity(blockPos);
             if (tileEntity != null) {
                 tileEntity.load(tileEntity.getBlockState(), nbt);
             }
         }
         if (modifier != null) {
-            modifier.accept(state);
+            modifier.accept(blockState);
         }
         return InteractionResult.SUCCESS;
     }

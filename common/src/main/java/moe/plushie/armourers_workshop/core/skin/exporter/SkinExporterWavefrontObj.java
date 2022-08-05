@@ -77,7 +77,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         while (textureSize * textureSize < textureTotalSize * 4) {
             textureSize = getNextPowerOf2(textureSize + 1);
         }
-        ModLog.debug("create texture of size {}", textureSize);
+        ModLog.debug("create {}x{} texture of {}", textureSize, textureSize, textureTotalSize);
 
         TextureBuilder textureBuilder = new TextureBuilder(textureSize, textureSize);
         colors.forEach((color, index) -> textureBuilder.setColor(index, color));

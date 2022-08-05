@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.skin.cube;
 
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
 import moe.plushie.armourers_workshop.init.ModBlocks;
 import moe.plushie.armourers_workshop.init.ModLog;
@@ -46,7 +46,7 @@ public final class SkinCubes {
         return SOLID;
     }
 
-    private static SkinCube register(String name, int id, boolean glass, boolean glowing, IRegistryObject<Block> block) {
+    private static SkinCube register(String name, int id, boolean glass, boolean glowing, IRegistryKey<Block> block) {
         SkinCube cube = new SkinCube(id, glass, glowing, block);
         cube.setRegistryName(new SkinResourceLocation("armourers", name));
         if (ALL_CUBES.containsKey(cube.getRegistryName().toString())) {

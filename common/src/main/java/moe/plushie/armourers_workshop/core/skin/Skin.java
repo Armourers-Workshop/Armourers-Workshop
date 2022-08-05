@@ -31,10 +31,10 @@ public class Skin implements ISkin {
     public int serverId = -1;
     public int paintTextureId;
     //    public SkinModelTexture skinModelTexture;
-    private SkinPaintData paintData;
+    private final SkinPaintData paintData;
     private int lightHash = 0;
 
-    public Skin(SkinProperties properties, ISkinType skinType, SkinPaintData paintData, ArrayList<SkinPart> skinParts) {
+    public Skin(ISkinType skinType, SkinProperties properties, SkinPaintData paintData, ArrayList<SkinPart> skinParts) {
         this.properties = properties;
         this.skinType = skinType;
         this.paintData = paintData;

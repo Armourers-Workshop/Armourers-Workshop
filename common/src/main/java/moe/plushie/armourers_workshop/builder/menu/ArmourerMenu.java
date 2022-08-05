@@ -68,15 +68,11 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
             }
         }
 
-        if (stackInput.isEmpty() || !stackOutput.isEmpty()) {
-            return false;
-        }
+        return !stackInput.isEmpty() && stackOutput.isEmpty();
 
 //        if (!(stackInput.getItem() instanceof ISkinHolder)) {
 //            return;
 //        }
-
-        return true;
     }
 
 

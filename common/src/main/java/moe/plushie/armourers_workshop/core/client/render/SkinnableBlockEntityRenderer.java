@@ -9,7 +9,7 @@ import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
-import moe.plushie.armourers_workshop.utils.TickHandler;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.HumanoidModel;
@@ -47,7 +47,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
             return;
         }
         float f = 1 / 16f;
-        float partialTicks1 = TickHandler.ticks();
+        float partialTicks1 = TickUtils.ticks();
         Quaternion rotations = entity.getRenderRotations();
 
         matrixStack.pushPose();

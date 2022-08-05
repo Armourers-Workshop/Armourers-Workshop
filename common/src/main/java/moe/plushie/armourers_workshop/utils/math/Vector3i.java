@@ -20,23 +20,27 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
     private int y;
     private int z;
 
-    public Vector3i(int p_i46007_1_, int p_i46007_2_, int p_i46007_3_) {
-        this.x = p_i46007_1_;
-        this.y = p_i46007_2_;
-        this.z = p_i46007_3_;
+    public Vector3i(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
-    public Vector3i(double p_i46008_1_, double p_i46008_3_, double p_i46008_5_) {
-        this(MathUtils.floor(p_i46008_1_), MathUtils.floor(p_i46008_3_), MathUtils.floor(p_i46008_5_));
+    public Vector3i(double x, double y, double z) {
+        this(MathUtils.floor(x), MathUtils.floor(y), MathUtils.floor(z));
     }
 
-    public boolean equals(Object p_equals_1_) {
-        if (this == p_equals_1_) {
+    public Vector3i(Position pos) {
+        this(pos.x(), pos.y(), pos.z());
+    }
+
+    public boolean equals(Object other) {
+        if (this == other) {
             return true;
-        } else if (!(p_equals_1_ instanceof Vector3i)) {
+        } else if (!(other instanceof Vector3i)) {
             return false;
         } else {
-            Vector3i vector3i = (Vector3i) p_equals_1_;
+            Vector3i vector3i = (Vector3i) other;
             if (this.getX() != vector3i.getX()) {
                 return false;
             } else if (this.getY() != vector3i.getY()) {
@@ -79,8 +83,8 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         return this.x;
     }
 
-    protected void setX(int p_223471_1_) {
-        this.x = p_223471_1_;
+    protected void setX(int x) {
+        this.x = x;
     }
 
     @Override
@@ -88,8 +92,8 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         return this.y;
     }
 
-    protected void setY(int p_185336_1_) {
-        this.y = p_185336_1_;
+    protected void setY(int y) {
+        this.y = y;
     }
 
     @Override
@@ -97,8 +101,8 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         return this.z;
     }
 
-    protected void setZ(int p_223472_1_) {
-        this.z = p_223472_1_;
+    protected void setZ(int z) {
+        this.z = z;
     }
 
     public Vector3i above() {
@@ -126,7 +130,7 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
     }
 
     public boolean closerThan(Vector3i p_218141_1_, double p_218141_2_) {
-        return this.distSqr((double) p_218141_1_.getX(), (double) p_218141_1_.getY(), (double) p_218141_1_.getZ(), false) < p_218141_2_ * p_218141_2_;
+        return this.distSqr(p_218141_1_.getX(), p_218141_1_.getY(), p_218141_1_.getZ(), false) < p_218141_2_ * p_218141_2_;
     }
 
     public boolean closerThan(Position p_218137_1_, double p_218137_2_) {
@@ -134,7 +138,7 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
     }
 
     public double distSqr(Vector3i p_177951_1_) {
-        return this.distSqr((double) p_177951_1_.getX(), (double) p_177951_1_.getY(), (double) p_177951_1_.getZ(), true);
+        return this.distSqr(p_177951_1_.getX(), p_177951_1_.getY(), p_177951_1_.getZ(), true);
     }
 
     public double distSqr(Position p_218138_1_, boolean p_218138_2_) {

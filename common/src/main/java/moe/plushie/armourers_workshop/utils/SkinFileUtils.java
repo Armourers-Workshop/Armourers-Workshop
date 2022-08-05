@@ -112,7 +112,7 @@ public class SkinFileUtils {
 
     public static void writeNBT(CompoundTag compoundTag, File file) throws IOException {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file);
-             DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream);){
+             DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream)) {
             NbtIo.write(compoundTag, dataOutputStream);
         }
     }
@@ -124,7 +124,7 @@ public class SkinFileUtils {
             CompoundTag tag;
             try (
                     FileInputStream fileinputstream = new FileInputStream(file);
-                    DataInputStream datainputstream = new DataInputStream(fileinputstream);
+                    DataInputStream datainputstream = new DataInputStream(fileinputstream)
             ) {
                 tag = NbtIo.read(datainputstream, NbtAccounter.UNLIMITED);
             }

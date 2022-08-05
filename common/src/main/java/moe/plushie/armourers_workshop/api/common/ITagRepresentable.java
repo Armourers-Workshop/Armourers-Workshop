@@ -6,7 +6,7 @@ import net.minecraft.nbt.Tag;
  * An interface designed to unify various things in the Minecraft
  * code base that can be serialized to and from a NBT tag.
  */
-public interface INBTRepresentable<T extends Tag> {
+public interface ITagRepresentable<T extends Tag> {
 
     T serializeNBT();
 

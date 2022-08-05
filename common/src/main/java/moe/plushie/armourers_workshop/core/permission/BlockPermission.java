@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.permission;
 
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.platform.PermissionManager;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 public class BlockPermission extends Permission {
 
     @SafeVarargs
-    public BlockPermission(String name, IRegistryObject<Block>... blocks) {
+    public BlockPermission(String name, IRegistryKey<Block>... blocks) {
         super(name);
         Arrays.stream(blocks).forEach(this::add);
     }

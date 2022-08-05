@@ -99,7 +99,7 @@ public final class SkinDownloader {
             if (Strings.isNotEmpty(name)) {
                 downloadUrl += "skins/" + name;
             } else {
-                downloadUrl += "get-skin.php?skinid=" + String.valueOf(serverId);
+                downloadUrl += "get-skin.php?skinid=" + serverId;
             }
 
             Skin skin = null;

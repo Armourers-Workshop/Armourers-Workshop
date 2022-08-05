@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.other.ICapabilityType;
-import moe.plushie.armourers_workshop.api.other.builder.ICapabilityTypeBuilder;
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.ICapabilityType;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.common.builder.ICapabilityTypeBuilder;
 import moe.plushie.armourers_workshop.init.capability.CapabilityStorage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -22,7 +22,7 @@ public class CapabilityTypeBuilderImpl<T> implements ICapabilityTypeBuilder<T> {
     }
 
     @Override
-    public IRegistryObject<ICapabilityType<T>> build(String name) {
+    public IRegistryKey<ICapabilityType<T>> build(String name) {
         ResourceLocation registryName = ArmourersWorkshop.getResource(name);
         ICapabilityType<T> capabilityType = new ICapabilityType<T>() {
             @Override
@@ -31,7 +31,7 @@ public class CapabilityTypeBuilderImpl<T> implements ICapabilityTypeBuilder<T> {
             }
         };
         CapabilityStorage.registerCapability(registryName, capabilityType, factory);
-        return new IRegistryObject<ICapabilityType<T>>() {
+        return new IRegistryKey<ICapabilityType<T>>() {
             @Override
             public ResourceLocation getRegistryName() {
                 return registryName;

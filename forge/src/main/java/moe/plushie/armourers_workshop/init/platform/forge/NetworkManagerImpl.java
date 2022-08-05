@@ -97,7 +97,7 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
             context.setPacketHandled(true);
         }
 
-        @OnlyIn(value=Dist.CLIENT)
+        @OnlyIn(value = Dist.CLIENT)
         @SubscribeEvent
         public void onClientEvent(final NetworkEvent.ServerCustomPayloadEvent event) {
             if (event instanceof NetworkEvent.ServerCustomPayloadLoginEvent) {
@@ -116,6 +116,7 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
         public void merge(UUID uuid, FriendlyByteBuf buffer, Consumer<CustomPacket> consumer) {
             splitter.merge(uuid, buffer, consumer);
         }
+
         public void split(final CustomPacket message, NetworkDirection dir, Consumer<Packet<?>> consumer) {
             int partSize = maxPartSize;
             // download from the server side, the forge is resolved, the maximum packet size is than 10m.

@@ -130,8 +130,8 @@ public class GlobalTaskSkinReport extends GlobalTask<GlobalTaskSkinReport.SkinRe
 
     public class SkinReportResult {
 
-        private GlobalTaskResult result;
-        private String message;
+        private final GlobalTaskResult result;
+        private final String message;
 
         public SkinReportResult(GlobalTaskResult result, String message) {
             this.result = result;

@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
-import moe.plushie.armourers_workshop.api.other.builder.IMenuTypeBuilder;
-import moe.plushie.armourers_workshop.api.other.menu.IMenuProvider;
-import moe.plushie.armourers_workshop.api.other.menu.IMenuScreenProvider;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.common.builder.IMenuTypeBuilder;
+import moe.plushie.armourers_workshop.api.common.IMenuProvider;
+import moe.plushie.armourers_workshop.api.common.IMenuScreenProvider;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -47,10 +47,10 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
     }
 
     @Override
-    public IRegistryObject<MenuType<T>> build(String name) {
+    public IRegistryKey<MenuType<T>> build(String name) {
         MenuType<?>[] menuTypes = {null};
         MenuType<T> menuType = new ExtendedScreenHandlerType<>((id, inv, buf) -> factory.createMenu(menuTypes[0], id, inv, serializer.read(buf, inv.player)));
-        IRegistryObject<MenuType<T>> object = Registry.MENU_TYPE.register(name, () -> menuType);
+        IRegistryKey<MenuType<T>> object = Registry.MENU_TYPE.register(name, () -> menuType);
         MenuManager.registerMenuOpener(menuType, serializer, (player, title, value) -> {
             SimpleMenuProvider menuProvider = new SimpleMenuProvider((window, inv, player2) -> factory.createMenu(menuTypes[0], window, inv, value), title);
             player.openMenu(new ExtendedScreenHandlerFactory() {

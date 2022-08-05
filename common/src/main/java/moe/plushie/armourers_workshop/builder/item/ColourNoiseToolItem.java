@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.item;
 
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
 import moe.plushie.armourers_workshop.builder.item.impl.IPaintToolAction;
@@ -42,7 +42,7 @@ public class ColourNoiseToolItem extends AbstractPaintToolItem implements IBlock
     }
 
     @Override
-    public IRegistryObject<SoundEvent> getItemSoundEvent(UseOnContext context) {
+    public IRegistryKey<SoundEvent> getItemSoundEvent(UseOnContext context) {
         return ModSounds.NOISE;
     }
 }

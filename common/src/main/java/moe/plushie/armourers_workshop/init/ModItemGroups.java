@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init;
 
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
-import moe.plushie.armourers_workshop.api.other.builder.IItemGroupBuilder;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.common.builder.IItemGroupBuilder;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.init.platform.BuilderManager;
 import net.minecraft.core.NonNullList;
@@ -42,8 +42,8 @@ public class ModItemGroups {
                     continue;
                 }
                 Object value = field.get(object);
-                if (value instanceof IRegistryObject) {
-                    value = ((IRegistryObject<?>) value).get();
+                if (value instanceof IRegistryKey) {
+                    value = ((IRegistryKey<?>) value).get();
                 }
                 if (value instanceof Item) {
                     items.add((Item) value);

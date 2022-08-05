@@ -40,7 +40,7 @@ public class Vector3d implements Position {
     }
 
     public static Vector3d atBottomCenterOf(Vec3i pos) {
-        return new Vector3d((double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D);
+        return new Vector3d((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D);
     }
 
     public static Vector3d upFromBottomCenterOf(Vec3i pos, double offset) {
@@ -52,7 +52,7 @@ public class Vector3d implements Position {
         float f1 = MathUtils.sin(-p_189986_1_ * ((float) Math.PI / 180F) - (float) Math.PI);
         float f2 = -MathUtils.cos(-p_189986_0_ * ((float) Math.PI / 180F));
         float f3 = MathUtils.sin(-p_189986_0_ * ((float) Math.PI / 180F));
-        return new Vector3d((double) (f1 * f2), (double) f3, (double) (f * f2));
+        return new Vector3d(f1 * f2, f3, f * f2);
     }
 
     public Vector3d vectorTo(Vector3d pos) {

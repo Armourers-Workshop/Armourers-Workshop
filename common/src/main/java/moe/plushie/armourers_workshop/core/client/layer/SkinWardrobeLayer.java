@@ -7,7 +7,7 @@ import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.init.ModContributors;
-import moe.plushie.armourers_workshop.utils.TickHandler;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -54,7 +54,7 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
         float f = 1 / 16f;
         matrixStack.scale(f, f, f);
 
-        float partialTicks2 = TickHandler.ticks();
+        float partialTicks2 = TickUtils.ticks();
         for (SkinRenderData.Entry entry : renderData.getArmorSkins()) {
             skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), entry.getItemStack(), null, packedLightIn, partialTicks2, entry.getSlotIndex(), matrixStack, buffers);
         }

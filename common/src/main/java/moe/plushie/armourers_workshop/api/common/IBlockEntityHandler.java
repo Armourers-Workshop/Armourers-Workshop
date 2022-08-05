@@ -1,7 +1,5 @@
 package moe.plushie.armourers_workshop.api.common;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;

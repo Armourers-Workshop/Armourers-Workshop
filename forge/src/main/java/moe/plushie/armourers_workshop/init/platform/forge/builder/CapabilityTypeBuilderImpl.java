@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.other.ICapabilityType;
-import moe.plushie.armourers_workshop.api.common.INBTRepresentable;
-import moe.plushie.armourers_workshop.api.other.builder.ICapabilityTypeBuilder;
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.ITagRepresentable;
+import moe.plushie.armourers_workshop.api.common.ICapabilityType;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.common.builder.ICapabilityTypeBuilder;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.Direction;
@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 public class CapabilityTypeBuilderImpl<T> implements ICapabilityTypeBuilder<T> {
 
     @CapabilityInject(SkinWardrobe.class)
-    private static Capability<SkinWardrobe> WARDROBE_KEY = null;
+    public static Capability<SkinWardrobe> WARDROBE_KEY;
 
     Class<T> type;
     Function<Entity, Optional<T>> factory;
@@ -42,7 +42,7 @@ public class CapabilityTypeBuilderImpl<T> implements ICapabilityTypeBuilder<T> {
     }
 
     @Override
-    public IRegistryObject<ICapabilityType<T>> build(String name) {
+    public IRegistryKey<ICapabilityType<T>> build(String name) {
         if (type == SkinWardrobe.class) {
             return ObjectUtils.unsafeCast(createWardrobeCapabilityType(name, ObjectUtils.unsafeCast(factory)));
         }
@@ -50,13 +50,13 @@ public class CapabilityTypeBuilderImpl<T> implements ICapabilityTypeBuilder<T> {
     }
 
 
-    private static IRegistryObject<ICapabilityType<SkinWardrobe>> createWardrobeCapabilityType(String registryName, Function<Entity, Optional<SkinWardrobe>> provider) {
+    private static IRegistryKey<ICapabilityType<SkinWardrobe>> createWardrobeCapabilityType(String registryName, Function<Entity, Optional<SkinWardrobe>> provider) {
         ResourceLocation name = ArmourersWorkshop.getResource(registryName);
         ICapabilityType<SkinWardrobe> capabilityType = entity -> entity.getCapability(WARDROBE_KEY).resolve();
         return new RegistryObjectProxy<>(name, SkinWardrobe.class, provider, capabilityType, () -> WARDROBE_KEY);
     }
 
-    public static class RegistryObjectProxy<N extends Tag, T extends INBTRepresentable<N>> implements IRegistryObject<ICapabilityType<T>> {
+    public static class RegistryObjectProxy<N extends Tag, T extends ITagRepresentable<N>> implements IRegistryKey<ICapabilityType<T>> {
 
         final ResourceLocation registryName;
         final Supplier<Capability<T>> capability;
@@ -116,7 +116,7 @@ public class CapabilityTypeBuilderImpl<T> implements ICapabilityTypeBuilder<T> {
         }
     }
 
-    public static abstract class CapabilityProviderProxy<N extends Tag, T extends INBTRepresentable<N>> implements ICapabilityProvider, INBTSerializable<N> {
+    public static abstract class CapabilityProviderProxy<N extends Tag, T extends ITagRepresentable<N>> implements ICapabilityProvider, INBTSerializable<N> {
 
         protected final T value;
 

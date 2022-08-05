@@ -1,8 +1,8 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
 import moe.plushie.armourers_workshop.api.common.IBlockEntityRendererProvider;
-import moe.plushie.armourers_workshop.api.other.builder.IBlockEntityBuilder;
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import moe.plushie.armourers_workshop.api.common.builder.IBlockEntityBuilder;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -42,8 +42,8 @@ public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEnti
     }
 
     @Override
-    public IRegistryObject<BlockEntityType<T>> build(String name) {
-        IRegistryObject<BlockEntityType<T>> object = Registry.BLOCK_ENTITY_TYPE.register(name, () -> {
+    public IRegistryKey<BlockEntityType<T>> build(String name) {
+        IRegistryKey<BlockEntityType<T>> object = Registry.BLOCK_ENTITY_TYPE.register(name, () -> {
             Block[] blocks1 = blocks.stream().map(Supplier::get).toArray(Block[]::new);
             BlockEntityType<?>[] entityTypes = {null};
             BlockEntityType<T> entityType = BlockEntityType.Builder.of(() -> supplier.apply(entityTypes[0]), blocks1).build(null);

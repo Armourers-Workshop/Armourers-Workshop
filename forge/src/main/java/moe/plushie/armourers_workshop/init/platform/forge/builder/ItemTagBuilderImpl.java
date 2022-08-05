@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.platform.forge.builder;
 
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
-import moe.plushie.armourers_workshop.api.other.builder.IItemTagBuilder;
+import moe.plushie.armourers_workshop.api.common.builder.IItemTagBuilder;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;

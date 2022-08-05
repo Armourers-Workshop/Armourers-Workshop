@@ -20,7 +20,7 @@ public class AWCheckBox extends Button {
     private final int textHeight;
 
     private int textColour = 0x404040;
-    private Font font;
+    private final Font font;
     private boolean isSelected;
 
     public AWCheckBox(int x, int y, int iconWidth, int iconHeight, Component title, boolean isSelected) {

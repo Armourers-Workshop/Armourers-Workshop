@@ -27,6 +27,7 @@ public class Vector4f {
         this((float) pos.x(), (float) pos.y(), (float) pos.z(), 1.0F);
     }
 
+    @Override
     public boolean equals(Object other) {
         if (this == other) {
             return true;
@@ -46,6 +47,7 @@ public class Vector4f {
         }
     }
 
+    @Override
     public int hashCode() {
         int i = Float.floatToIntBits(this.x);
         i = 31 * i + Float.floatToIntBits(this.y);
@@ -112,10 +114,10 @@ public class Vector4f {
         this.w = buf[3][0] * f + buf[3][1] * f1 + buf[3][2] * f2 + buf[3][3] * f3;
     }
 
-    public void transform(Quaternion p_195912_1_) {
-        Quaternion quaternion = new Quaternion(p_195912_1_);
+    public void transform(Quaternion q) {
+        Quaternion quaternion = new Quaternion(q);
         quaternion.mul(new Quaternion(this.x(), this.y(), this.z(), 0.0F));
-        Quaternion quaternion1 = new Quaternion(p_195912_1_);
+        Quaternion quaternion1 = new Quaternion(q);
         quaternion1.conj();
         quaternion.mul(quaternion1);
         this.set(quaternion.i(), quaternion.j(), quaternion.k(), this.w());
@@ -128,6 +130,7 @@ public class Vector4f {
         this.w = 1.0F;
     }
 
+    @Override
     public String toString() {
         return "[" + this.x + ", " + this.y + ", " + this.z + ", " + this.w + "]";
     }

@@ -6,10 +6,10 @@
     "ForgeLivingRendererMixin"
   ],
   "mixins": [
-    "IItemHandlerMixin",
-    "IBlockHandlerMixin",
     "IBlockEntityHandlerMixin",
-    "IEntityHandlerMixin"
+    "IBlockHandlerMixin",
+    "IEntityHandlerMixin",
+    "IItemHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

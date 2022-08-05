@@ -11,7 +11,7 @@ import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.utils.RenderUtils;
-import moe.plushie.armourers_workshop.utils.TickHandler;
+import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -39,7 +39,7 @@ public final class ExtendedItemRenderer {
 
     public static void renderSkin(BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int x, int y, int z, int width, int height, int rx, int ry, int rz, PoseStack matrixStack, MultiBufferSource buffers) {
         if (bakedSkin != null) {
-            int t = TickHandler.ticks();
+            int t = TickUtils.ticks();
             int si = Math.min(width, height);
             matrixStack.pushPose();
             matrixStack.translate(x + width / 2f, y + height / 2f, z);

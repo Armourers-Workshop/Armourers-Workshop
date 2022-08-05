@@ -196,7 +196,7 @@ public class ConfigBuilderImpl {
             return new SpecProxy(values);
         }
 
-        private  <T> IConfigValue<T> put(String path, ForgeConfigSpec.ConfigValue<T> value) {
+        private <T> IConfigValue<T> put(String path, ForgeConfigSpec.ConfigValue<T> value) {
             ValueProxy<T> proxy = new ValueProxy<>(path, value);
             values.put(path, ObjectUtils.unsafeCast(proxy));
             return proxy;

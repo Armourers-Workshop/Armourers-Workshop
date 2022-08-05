@@ -9,7 +9,7 @@ public class ObjectUtils {
 
     public static <S, T> T unsafeCast(S src) {
         // noinspection unchecked
-        return (T)src;
+        return (T) src;
     }
 
     @Nullable

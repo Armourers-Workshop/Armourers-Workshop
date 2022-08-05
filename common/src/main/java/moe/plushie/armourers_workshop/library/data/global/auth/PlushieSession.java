@@ -92,9 +92,7 @@ public class PlushieSession {
 
     public boolean isAuthenticated() {
         if (isAuth) {
-            if (accessTokenReceivedTime + (accessTokenExpiryTime * 1000L) > System.currentTimeMillis()) {
-                return true;
-            }
+            return accessTokenReceivedTime + (accessTokenExpiryTime * 1000L) > System.currentTimeMillis();
         }
         return false;
     }

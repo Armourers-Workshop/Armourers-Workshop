@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.core.registry;
 
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.init.platform.RegistryManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -31,7 +31,7 @@ public abstract class Registry<T> {
 
     public abstract ResourceLocation getKey(T object);
 
-    public abstract Collection<IRegistryObject<T>> getEntries();
+    public abstract Collection<IRegistryKey<T>> getEntries();
 
     /**
      * Adds a new supplier to the list of entries to be registered, and returns a RegistryObject that will be populated with the created entry automatically.
@@ -40,5 +40,5 @@ public abstract class Registry<T> {
      * @param sup  A factory for the new entry, it should return a new instance every time it is called.
      * @return A RegistryObject that will be updated with when the entries in the registry change.
      */
-    public abstract <I extends T> IRegistryObject<I> register(final String name, final Supplier<? extends I> sup);
+    public abstract <I extends T> IRegistryKey<I> register(final String name, final Supplier<? extends I> sup);
 }

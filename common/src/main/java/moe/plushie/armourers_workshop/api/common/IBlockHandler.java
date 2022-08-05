@@ -18,10 +18,10 @@ public interface IBlockHandler {
      * players to sleep in it, though the block has to specifically
      * perform the sleeping functionality in it's activated event.
      *
-     * @param level  The current world
-     * @param blockPos    Block position in world
-     * @param blockState  The current state
-     * @param entity The player or camera entity, null in some cases.
+     * @param level      The current world
+     * @param blockPos   Block position in world
+     * @param blockState The current state
+     * @param entity     The player or camera entity, null in some cases.
      * @return True to treat this as a bed
      */
     default boolean isCustomBed(Level level, BlockPos blockPos, BlockState blockState, @Nullable Entity entity) {
@@ -31,10 +31,10 @@ public interface IBlockHandler {
     /**
      * Checks if a player or entity can use this block to 'climb' like a ladder.
      *
-     * @param level  The current world
-     * @param blockPos    Block position in world
-     * @param blockState  The current state
-     * @param entity The entity trying to use the ladder, CAN be null.
+     * @param level      The current world
+     * @param blockPos   Block position in world
+     * @param blockState The current state
+     * @param entity     The entity trying to use the ladder, CAN be null.
      * @return True if the block should act like a ladder
      */
     default boolean isCustomLadder(Level level, BlockPos blockPos, BlockState blockState, LivingEntity entity) {
@@ -52,12 +52,12 @@ public interface IBlockHandler {
      * Note: When used in multiplayer, this is called on both client and
      * server sides!
      *
-     * @param level       The current world
-     * @param blockPos    Block position in world.
-     * @param blockState  The current state.
-     * @param direction   The attack direction.
-     * @param player      The player damaging the block.
-     * @param hand        The player attack by hand.
+     * @param level      The current world
+     * @param blockPos   Block position in world.
+     * @param blockState The current state.
+     * @param direction  The attack direction.
+     * @param player     The player damaging the block.
+     * @param hand       The player attack by hand.
      * @return True if the block is actually destroyed.
      */
     default InteractionResult attackBlock(Level level, BlockPos blockPos, BlockState blockState, Direction direction, Player player, InteractionHand hand) {

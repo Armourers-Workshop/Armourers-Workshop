@@ -24,7 +24,7 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
     private final ArrayList<GlobalTaskSkinReport.SkinReport> skinReports = new ArrayList<>();
     private int pageIndex = 0;
     private boolean isRequesting = true;
-    private GlobalTaskGetReportList.Filter filter = GlobalTaskGetReportList.Filter.OPEN;
+    private final GlobalTaskGetReportList.Filter filter = GlobalTaskGetReportList.Filter.OPEN;
 
     public ModerationLibraryPanel() {
         super("inventory.armourers_workshop.skin-library-global.panel.info", GlobalSkinLibraryScreen.Page.LIBRARY_MODERATION::equals);

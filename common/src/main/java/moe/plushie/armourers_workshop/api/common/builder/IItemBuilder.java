@@ -1,14 +1,14 @@
-package moe.plushie.armourers_workshop.api.other.builder;
+package moe.plushie.armourers_workshop.api.common.builder;
 
 import moe.plushie.armourers_workshop.api.common.IItemStackRendererProvider;
-import moe.plushie.armourers_workshop.api.other.IRegistryObject;
+import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
 import java.util.function.Supplier;
 
-public interface IItemBuilder<T extends Item> extends IEntryBuilder<IRegistryObject<T>> {
+public interface IItemBuilder<T extends Item> extends IEntryBuilder<IRegistryKey<T>> {
 
     IItemBuilder<T> stacksTo(int i);
 

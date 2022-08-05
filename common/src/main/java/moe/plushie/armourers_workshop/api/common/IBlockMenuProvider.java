@@ -1,4 +1,4 @@
-package moe.plushie.armourers_workshop.api.other.menu;
+package moe.plushie.armourers_workshop.api.common;
 
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
