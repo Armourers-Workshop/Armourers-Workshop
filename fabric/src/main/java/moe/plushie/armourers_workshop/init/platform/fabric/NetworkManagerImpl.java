@@ -31,6 +31,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -67,13 +68,14 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
     }
 
     @Override
-    public void sendToAll(final CustomPacket message) {
-        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(PlayerLookup.all(getServer())));
-    }
-
-    @Override
     public void sendToTracking(final CustomPacket message, final Entity entity) {
-        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(PlayerLookup.tracking(entity)));
+        Collection<ServerPlayer> players = PlayerLookup.tracking(entity);
+        if (entity instanceof ServerPlayer) {
+            ArrayList<ServerPlayer> trackingAndSelf = new ArrayList<>(players);
+            trackingAndSelf.add((ServerPlayer) entity);
+            players = trackingAndSelf;
+        }
+        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, getSender(players));
     }
 
     @Override

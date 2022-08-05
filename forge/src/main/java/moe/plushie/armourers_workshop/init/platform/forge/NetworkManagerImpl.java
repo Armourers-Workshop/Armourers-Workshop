@@ -50,13 +50,8 @@ public class NetworkManagerImpl implements NetworkManager.Impl {
     }
 
     @Override
-    public void sendToAll(final CustomPacket message) {
-        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, PacketDistributor.PLAYER.noArg()::send);
-    }
-
-    @Override
     public void sendToTracking(final CustomPacket message, final Entity entity) {
-        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, PacketDistributor.TRACKING_ENTITY.with(() -> entity)::send);
+        dispatcher.split(message, NetworkDirection.PLAY_TO_CLIENT, PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity)::send);
     }
 
     @Override

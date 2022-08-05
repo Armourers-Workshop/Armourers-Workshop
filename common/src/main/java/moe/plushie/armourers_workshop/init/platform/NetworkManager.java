@@ -15,10 +15,6 @@ public class NetworkManager {
         IMPL = getInstance(name, version);
     }
 
-    public static void sendToAll(final CustomPacket message) {
-        IMPL.sendToAll(message);
-    }
-
     public static void sendToTracking(final CustomPacket message, final Entity entity) {
         IMPL.sendToTracking(message, entity);
     }
@@ -29,10 +25,6 @@ public class NetworkManager {
 
     public static void sendToServer(final CustomPacket message) {
         IMPL.sendToServer(message);
-    }
-
-    public static void sendContextToAll() {
-        sendToAll(new UpdateContextPacket());
     }
 
     public static void sendContextTo(ServerPlayer player) {
@@ -52,8 +44,6 @@ public class NetworkManager {
     }
 
     public interface Impl {
-
-        void sendToAll(final CustomPacket message);
 
         void sendToTracking(final CustomPacket message, final Entity entity);
 

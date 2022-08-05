@@ -96,7 +96,7 @@ public class UpdateWardrobePacket extends CustomPacket {
         ModLog.debug("the wardrobe {} operation accepted for '{}'", field, playerName);
         SkinWardrobe wardrobe = apply(player);
         if (wardrobe != null) {
-            NetworkManager.sendToAll(this);
+            NetworkManager.sendToTracking(this, player);
         }
     }
 
