@@ -7,6 +7,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +25,7 @@ public interface IBlockHandler {
      * @param entity     The player or camera entity, null in some cases.
      * @return True to treat this as a bed
      */
-    default boolean isCustomBed(Level level, BlockPos blockPos, BlockState blockState, @Nullable Entity entity) {
+    default boolean isCustomBed(BlockGetter level, BlockPos blockPos, BlockState blockState, @Nullable Entity entity) {
         return false;
     }
 
@@ -37,7 +38,7 @@ public interface IBlockHandler {
      * @param entity     The entity trying to use the ladder, CAN be null.
      * @return True if the block should act like a ladder
      */
-    default boolean isCustomLadder(Level level, BlockPos blockPos, BlockState blockState, LivingEntity entity) {
+    default boolean isCustomLadder(BlockGetter level, BlockPos blockPos, BlockState blockState, LivingEntity entity) {
         return false;
     }
 

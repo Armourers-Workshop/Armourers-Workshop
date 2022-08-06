@@ -19,12 +19,12 @@ public interface IBlockHandlerMixin extends IForgeBlock {
     @Override
     default boolean isBed(BlockState state, BlockGetter level, BlockPos pos, @Nullable Entity entity) {
         IBlockHandler handler = ObjectUtils.unsafeCast(this);
-        return handler.isCustomBed((Level) level, pos, state, entity);
+        return handler.isCustomBed(level, pos, state, entity);
     }
 
     @Override
     default boolean isLadder(BlockState state, LevelReader level, BlockPos pos, LivingEntity entity) {
         IBlockHandler handler = ObjectUtils.unsafeCast(this);
-        return handler.isCustomLadder((Level) level, pos, state, entity);
+        return handler.isCustomLadder(level, pos, state, entity);
     }
 }

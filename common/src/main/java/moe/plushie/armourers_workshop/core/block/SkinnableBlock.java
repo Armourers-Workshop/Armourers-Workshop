@@ -158,7 +158,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
     }
 
     @Override
-    public boolean isCustomBed(Level level, BlockPos blockPos, BlockState blockState, @Nullable Entity player) {
+    public boolean isCustomBed(BlockGetter level, BlockPos blockPos, BlockState blockState, @Nullable Entity player) {
         SkinnableBlockEntity tileEntity = getTileEntity(level, blockPos);
         if (tileEntity != null) {
             return tileEntity.isBed();
@@ -167,7 +167,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
     }
 
     @Override
-    public boolean isCustomLadder(Level level, BlockPos blockPos, BlockState blockState, LivingEntity entity) {
+    public boolean isCustomLadder(BlockGetter level, BlockPos blockPos, BlockState blockState, LivingEntity entity) {
         SkinnableBlockEntity tileEntity = getTileEntity(level, blockPos);
         if (tileEntity != null) {
             return tileEntity.isLadder();
