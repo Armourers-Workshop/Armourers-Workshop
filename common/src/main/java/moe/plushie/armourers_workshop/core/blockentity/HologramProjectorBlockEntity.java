@@ -247,7 +247,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
         if (bakedSkin == null) {
             return null;
         }
-        Rectangle3f rect = bakedSkin.getRenderBounds(null, null, null, null);
+        Rectangle3f rect = bakedSkin.getRenderBounds(null, null, null, ItemStack.EMPTY);
         float f = 1 / 16f;
         float scale = getModelScale() * f;
         float modelRadius = 0.0f;

@@ -125,7 +125,7 @@ public class BakedSkin implements IBakedSkin {
         return cachedBlockBounds;
     }
 
-    public Rectangle3f getRenderBounds(@Nullable Entity entity, @Nullable Model model, @Nullable Vector3f rotation, @Nullable ItemStack itemStack) {
+    public Rectangle3f getRenderBounds(@Nullable Entity entity, @Nullable Model model, @Nullable Vector3f rotation, ItemStack itemStack) {
         if (entity == null) {
             entity = SkinItemRenderer.getInstance().getMannequinEntity();
         }
@@ -157,7 +157,7 @@ public class BakedSkin implements IBakedSkin {
         return bounds;
     }
 
-    public OpenVoxelShape getRenderShape(Entity entity, Model model, @Nullable ItemStack itemStack, ItemTransforms.TransformType transformType) {
+    public OpenVoxelShape getRenderShape(Entity entity, Model model, ItemStack itemStack, ItemTransforms.TransformType transformType) {
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null) {
             return OpenVoxelShape.empty();
