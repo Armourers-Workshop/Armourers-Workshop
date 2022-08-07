@@ -14,26 +14,26 @@ public class EnvironmentExecutor {
     private static final Manager SETUP = new Manager();
     private static final Manager FINISH = new Manager();
 
-    public synchronized static void setupOn(EnvironmentType type, Supplier<Runnable> task) {
+    public synchronized static void initOn(EnvironmentType type, Supplier<Runnable> task) {
         SETUP.add(type, task);
     }
 
-    public synchronized static <T> void setupOn(EnvironmentType type, Supplier<Consumer<T>> task, Supplier<T> value) {
+    public synchronized static <T> void initOn(EnvironmentType type, Supplier<Consumer<T>> task, Supplier<T> value) {
         if (task == null || value == null) {
             return;
         }
-        setupOn(type, () -> () -> task.get().accept(value.get()));
+        initOn(type, () -> () -> task.get().accept(value.get()));
     }
 
-    public synchronized static void setup(EnvironmentType type) {
+    public synchronized static void init(EnvironmentType type) {
         SETUP.run(type);
     }
 
-    public synchronized static void finishOn(EnvironmentType type, Supplier<Runnable> task) {
+    public synchronized static void loadOn(EnvironmentType type, Supplier<Runnable> task) {
         FINISH.add(type, task);
     }
 
-    public synchronized static void finish(EnvironmentType type) {
+    public synchronized static void load(EnvironmentType type) {
         FINISH.run(type);
     }
 

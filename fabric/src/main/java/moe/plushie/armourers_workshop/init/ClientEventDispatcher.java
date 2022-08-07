@@ -99,12 +99,12 @@ public class ClientEventDispatcher implements ClientModInitializer {
 
         registerItemModels();
 
-        EnvironmentExecutor.setup(EnvironmentType.CLIENT);
+        EnvironmentExecutor.init(EnvironmentType.CLIENT);
 
         // load all configs
         FabricConfigTracker.INSTANCE.loadConfigs(FabricConfig.Type.CLIENT, FabricLoader.getInstance().getConfigDir());
 
-        RenderSystem.recordRenderCall(() -> EnvironmentExecutor.finish(EnvironmentType.CLIENT));
+        RenderSystem.recordRenderCall(() -> EnvironmentExecutor.load(EnvironmentType.CLIENT));
     }
 
     public void registerBlockColors() {

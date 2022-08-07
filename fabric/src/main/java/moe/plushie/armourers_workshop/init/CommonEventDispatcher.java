@@ -31,9 +31,7 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.*;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -67,6 +65,7 @@ import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -116,7 +115,7 @@ public class CommonEventDispatcher implements ModInitializer {
         // load all configs
         FabricConfigTracker.INSTANCE.loadConfigs(FabricConfig.Type.COMMON, FabricLoader.getInstance().getConfigDir());
 
-        EnvironmentExecutor.finish(EnvironmentType.COMMON);
+        EnvironmentExecutor.load(EnvironmentType.COMMON);
     }
 
     public void registerEntityAttributes() {
@@ -131,7 +130,7 @@ public class CommonEventDispatcher implements ModInitializer {
 
         EntityDataSerializers.registerSerializer(DataSerializers.PLAYER_TEXTURE);
 
-        EnvironmentExecutor.setup(EnvironmentType.COMMON);
+        EnvironmentExecutor.init(EnvironmentType.COMMON);
     }
 
     public void onConfigReloaded(FabricConfig config) {
@@ -155,6 +154,10 @@ public class CommonEventDispatcher implements ModInitializer {
     }
 
     public void onServerWillStop(MinecraftServer server) {
+        // before server stopping, we need to sure that all data is saved.
+        for (ServerLevel level : server.getAllLevels()) {
+            WorldUpdater.getInstance().drain(level);
+        }
         LocalDataService.stop();
         SkinLoader.getInstance().clear();
     }

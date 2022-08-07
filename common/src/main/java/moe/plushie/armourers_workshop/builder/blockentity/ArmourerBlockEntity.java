@@ -95,6 +95,10 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
     }
 
     public void onRemove(Level level, BlockPos pos, BlockState state) {
+        // if has been deleted, don't need to remake bounding, because it has been carried out.
+        if (!getBlockState().is(ModBlocks.ARMOURER.get())) {
+            return;
+        }
         remakeBoundingBoxes(getFullBoundingBoxes(), null, true);
     }
 
@@ -370,7 +374,7 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
         });
         applyBoundingBoxes(newBoxes, (partType, pos, offset) -> {
             WorldBlockUpdateTask task = new WorldBlockUpdateTask(level, pos, ModBlocks.BOUNDING_BOX.get().defaultBlockState());
-            task.setValidator(state -> state.getMaterial().isReplaceable());
+            task.setValidator(state -> state.getMaterial().isReplaceable() || state.is(ModBlocks.BOUNDING_BOX.get()));
             task.setModifier(state -> setupBoundingBox(level, pos, offset, partType));
             return task;
         });

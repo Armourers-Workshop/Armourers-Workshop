@@ -47,6 +47,16 @@ public class WorldBlockUpdateTask implements IWorldUpdateTask {
     }
 
     @Override
+    public BlockPos getBlockPos() {
+        return blockPos;
+    }
+
+    @Override
+    public BlockState getBlockState() {
+        return blockState;
+    }
+
+    @Override
     public InteractionResult run(Level level) {
         if (!level.isLoaded(blockPos)) {
             return InteractionResult.PASS;

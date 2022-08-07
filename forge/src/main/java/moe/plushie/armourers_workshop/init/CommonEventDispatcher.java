@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.init;
 
+import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.IItemHandler;
 import moe.plushie.armourers_workshop.builder.block.SkinCubeBlock;
 import moe.plushie.armourers_workshop.builder.other.WorldUpdater;
@@ -24,6 +25,7 @@ import net.minecraft.commands.synchronization.ArgumentTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -43,6 +45,7 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.config.ModConfig;
@@ -70,17 +73,17 @@ public class CommonEventDispatcher {
 
     @SubscribeEvent
     public void onCommonSetup(FMLCommonSetupEvent event) {
-        ArgumentTypes.register("armourers_workshop:items", ListArgument.class, new ListArgument.Serializer());
-        ArgumentTypes.register("armourers_workshop:files", FileArgument.class, new FileArgument.Serializer());
+        ArgumentTypes.register(ArmourersWorkshop.getResource("items").toString(), ListArgument.class, new ListArgument.Serializer());
+        ArgumentTypes.register(ArmourersWorkshop.getResource("files").toString(), FileArgument.class, new FileArgument.Serializer());
 
         EntityDataSerializers.registerSerializer(DataSerializers.PLAYER_TEXTURE);
 
-        EnvironmentExecutor.setup(EnvironmentType.COMMON);
+        EnvironmentExecutor.init(EnvironmentType.COMMON);
     }
 
     @SubscribeEvent
     public void onCommonFinish(FMLLoadCompleteEvent event) {
-        event.enqueueWork(() -> EnvironmentExecutor.finish(EnvironmentType.COMMON));
+        event.enqueueWork(() -> EnvironmentExecutor.load(EnvironmentType.COMMON));
     }
 
     @SubscribeEvent
@@ -112,6 +115,10 @@ public class CommonEventDispatcher {
 
         @SubscribeEvent
         public void onServerWillStop(FMLServerStoppingEvent event) {
+            // before server stopping, we need to sure that all data is saved.
+            for (ServerLevel level : event.getServer().getAllLevels()) {
+                WorldUpdater.getInstance().drain(level);
+            }
             LocalDataService.stop();
             SkinLoader.getInstance().clear();
         }

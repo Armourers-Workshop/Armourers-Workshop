@@ -83,7 +83,7 @@ public class EntityTypeBuilderImpl<T extends Entity> implements IEntityTypeBuild
     @Override
     public IRegistryKey<EntityType<T>> build(String name) {
         IRegistryKey<EntityType<T>> object = Registry.ENTITY_TYPE.register(name, () -> builder.build(name));
-        EnvironmentExecutor.setupOn(EnvironmentType.CLIENT, binder, object);
+        EnvironmentExecutor.initOn(EnvironmentType.CLIENT, binder, object);
         return object;
     }
 }

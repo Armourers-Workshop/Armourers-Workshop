@@ -50,7 +50,7 @@ public class BlockEntityBuilderImpl<T extends BlockEntity> implements IBlockEnti
             entityTypes[0] = entityType;
             return entityType;
         });
-        EnvironmentExecutor.setupOn(EnvironmentType.CLIENT, binder, object);
+        EnvironmentExecutor.initOn(EnvironmentType.CLIENT, binder, object);
         return object;
     }
 }

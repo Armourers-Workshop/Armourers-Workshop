@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.block.AbstractHorizontalBlock;
 import moe.plushie.armourers_workshop.init.ModBlockEntities;
 import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -69,9 +70,9 @@ public class ArmourerBlock extends AbstractHorizontalBlock implements IBlockEnti
     }
 
     private void applyTitleEntity(Level level, BlockPos pos, Consumer<ArmourerBlockEntity> consumer) {
-        BlockEntity entity1 = level.getBlockEntity(pos);
-        if (entity1 instanceof ArmourerBlockEntity) {
-            consumer.accept((ArmourerBlockEntity) entity1);
+        ArmourerBlockEntity blockEntity = ObjectUtils.safeCast(level.getBlockEntity(pos), ArmourerBlockEntity.class);
+        if (blockEntity != null) {
+            consumer.accept(blockEntity);
         }
     }
 }

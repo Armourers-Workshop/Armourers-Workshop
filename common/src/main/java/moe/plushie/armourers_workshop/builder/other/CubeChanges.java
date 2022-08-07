@@ -23,19 +23,19 @@ import java.util.Map;
 public class CubeChanges implements IUndoCommand, IWorldUpdateTask {
 
     private final Level level;
-    private final BlockPos pos;
+    private final BlockPos blockPos;
 
-    private BlockState state;
+    private BlockState blockState;
     private CompoundTag nbt;
     private Map<Direction, IPaintColor> colors;
 
-    public CubeChanges(Level level, BlockPos pos) {
+    public CubeChanges(Level level, BlockPos blockPos) {
         this.level = level;
-        this.pos = pos;
+        this.blockPos = blockPos;
     }
 
-    public void setState(BlockState state) {
-        this.state = state;
+    public void setBlockState(BlockState blockState) {
+        this.blockState = blockState;
     }
 
     public void setCompoundTag(CompoundTag nbt) {
@@ -53,9 +53,14 @@ public class CubeChanges implements IUndoCommand, IWorldUpdateTask {
         this.colors = colors;
     }
 
+    @Override
+    public BlockPos getBlockPos() {
+        return blockPos;
+    }
 
-    public BlockPos getPos() {
-        return pos;
+    @Override
+    public BlockState getBlockState() {
+        return blockState;
     }
 
     private boolean isChangeNBT() {
@@ -69,12 +74,12 @@ public class CubeChanges implements IUndoCommand, IWorldUpdateTask {
             return;
         }
         // when the block state is changed, the block entity will be created again.
-        if (state != null) {
+        if (blockState != null) {
             return;
         }
-        BlockEntity tileEntity = level.getBlockEntity(pos);
+        BlockEntity tileEntity = level.getBlockEntity(blockPos);
         if (tileEntity == null) {
-            String value = String.format("x=%d, y=%d, z=%d", pos.getX(), pos.getY(), pos.getZ());
+            String value = String.format("x=%d, y=%d, z=%d", blockPos.getX(), blockPos.getY(), blockPos.getZ());
             throw new CommandRuntimeException(TranslateUtils.title("chat.armourers_workshop.undo.missingBlock", value));
         }
     }
@@ -82,20 +87,20 @@ public class CubeChanges implements IUndoCommand, IWorldUpdateTask {
     @Override
     public IUndoCommand apply() throws CommandRuntimeException {
         boolean isChangedNBT = false;
-        CubeChanges changes = new CubeChanges(level, pos);
-        if (state != null) {
-            changes.setState(level.getBlockState(pos));
+        CubeChanges changes = new CubeChanges(level, blockPos);
+        if (blockState != null) {
+            changes.setBlockState(level.getBlockState(blockPos));
             isChangedNBT = true;
         }
         if (nbt != null) {
             isChangedNBT = true;
         }
         if (isChangedNBT) {
-            ObjectUtils.ifPresent(level.getBlockEntity(pos), blockEntity -> {
+            ObjectUtils.ifPresent(level.getBlockEntity(blockPos), blockEntity -> {
                 changes.setCompoundTag(blockEntity.save(new CompoundTag()));
             });
         } else if (colors != null) {
-            BlockEntity tileEntity = level.getBlockEntity(pos);
+            BlockEntity tileEntity = level.getBlockEntity(blockPos);
             if (tileEntity instanceof IPaintable) {
                 IPaintable target = (IPaintable) tileEntity;
                 HashMap<Direction, IPaintColor> oldValue = new HashMap<>();
@@ -120,25 +125,32 @@ public class CubeChanges implements IUndoCommand, IWorldUpdateTask {
 
     @Override
     public InteractionResult run(Level level) {
-        if (!level.isLoaded(pos)) {
+        if (!level.isLoaded(blockPos)) {
             return InteractionResult.PASS;
         }
-        if (state != null) {
-            level.setBlock(pos, state, Constants.BlockFlags.DEFAULT);
+        int changes = 0;
+        if (blockState != null && !blockState.equals(level.getBlockState(blockPos))) {
+            level.setBlock(blockPos, blockState, Constants.BlockFlags.DEFAULT);
+            changes += 1;
         }
         BlockEntity tileEntity = null;
         if (isChangeNBT()) {
-            tileEntity = level.getBlockEntity(pos);
+            tileEntity = level.getBlockEntity(blockPos);
         }
         if (nbt != null) {
             if (tileEntity != null) {
                 tileEntity.load(tileEntity.getBlockState(), nbt);
+                changes += 1;
             }
         }
         if (colors != null) {
             if (tileEntity instanceof IPaintable) {
                 ((IPaintable) tileEntity).setColors(colors);
+                changes += 1;
             }
+        }
+        if (changes == 0) {
+            return InteractionResult.PASS;
         }
         return InteractionResult.SUCCESS;
     }

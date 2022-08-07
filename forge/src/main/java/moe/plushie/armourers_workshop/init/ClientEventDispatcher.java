@@ -26,6 +26,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -121,12 +122,12 @@ public class ClientEventDispatcher {
     @SubscribeEvent
     public void onClientSetup(FMLClientSetupEvent event) {
         // forwarding to executor
-        EnvironmentExecutor.setup(EnvironmentType.CLIENT);
+        EnvironmentExecutor.init(EnvironmentType.CLIENT);
     }
 
     @SubscribeEvent
     public void onClientFinish(FMLLoadCompleteEvent event) {
-        event.enqueueWork(() -> EnvironmentExecutor.finish(EnvironmentType.CLIENT));
+        event.enqueueWork(() -> EnvironmentExecutor.load(EnvironmentType.CLIENT));
     }
 
     private static class Forge {

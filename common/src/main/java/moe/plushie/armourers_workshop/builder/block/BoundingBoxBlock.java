@@ -23,6 +23,9 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class BoundingBoxBlock extends Block implements IBlockEntityProvider, IBlockHandler {
@@ -61,6 +64,15 @@ public class BoundingBoxBlock extends Block implements IBlockEntityProvider, IBl
     public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         // a transparent block, should not blocking the transmission of light
         return true;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+        BoundingBoxBlockEntity blockEntity = ObjectUtils.safeCast(blockGetter.getBlockEntity(blockPos), BoundingBoxBlockEntity.class);
+        if (blockEntity != null && blockEntity.isValid()) {
+            return Shapes.block();
+        }
+        return Shapes.empty();
     }
 
     @Override

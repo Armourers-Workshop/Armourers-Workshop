@@ -39,7 +39,8 @@ public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPain
 
     protected ISkinPartType partType = SkinPartTypes.UNKNOWN;
 
-    protected boolean customRenderer = false;
+    private ArmourerBlockEntity cachedParentBlockEntity;
+    private boolean customRenderer = false;
 
     public BoundingBoxBlockEntity(BlockEntityType<?> entityType) {
         super(entityType);
@@ -50,6 +51,7 @@ public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPain
         guide = DataSerializers.getVector3i(nbt, Constants.Key.TILE_ENTITY_OFFSET);
         partType = SkinPartTypes.byName(DataSerializers.getString(nbt, Constants.Key.SKIN_PART_TYPE, SkinTypes.UNKNOWN.getRegistryName().toString()));
         customRenderer = Arrays.stream(Direction.values()).anyMatch(this::shouldChangeColor);
+        cachedParentBlockEntity = null;
     }
 
     public void writeToNBT(CompoundTag nbt) {
@@ -71,6 +73,7 @@ public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPain
     }
 
     public void setParent(BlockPos parent) {
+        this.cachedParentBlockEntity = null;
         this.parent = parent;
     }
 
@@ -83,7 +86,11 @@ public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPain
     }
 
     public boolean isValid() {
-        return getParentTileEntity() != null;
+        ArmourerBlockEntity blockEntity = getParentTileEntity();
+        if (blockEntity != null && blockEntity.getSkinType() != null) {
+            return blockEntity.getSkinType().getParts().contains(partType);
+        }
+        return false;
     }
 
     public boolean hasColors() {
@@ -198,19 +205,31 @@ public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPain
     }
 
     private ArmourerBlockEntity getParentTileEntity() {
+        // quickly query the parent block.
+        if (cachedParentBlockEntity != null) {
+            if (cachedParentBlockEntity.isRemoved()) {
+                return null;
+            }
+            return cachedParentBlockEntity;
+        }
         Level level = getLevel();
         if (level == null || parent.equals(INVALID)) {
             return null;
         }
         BlockEntity tileEntity = level.getBlockEntity(getBlockPos().subtract(parent));
         if (tileEntity instanceof ArmourerBlockEntity) {
-            return (ArmourerBlockEntity) tileEntity;
+            cachedParentBlockEntity = (ArmourerBlockEntity) tileEntity;
+            return cachedParentBlockEntity;
         }
         return null;
     }
 
     @Override
     public boolean shouldUseExtendedRenderer() {
+        // if the parent entity is missing, do not render it.
+        if (!isValid()) {
+            return false;
+        }
         return customRenderer;
     }
 }

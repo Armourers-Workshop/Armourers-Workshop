@@ -64,7 +64,7 @@ public class CubeWrapper implements IPaintable {
     }
 
     public void setBlockState(BlockState state) {
-        this.lastChanges().setState(state);
+        this.lastChanges().setBlockState(state);
     }
 
     @Nullable
@@ -90,12 +90,12 @@ public class CubeWrapper implements IPaintable {
     }
 
     public void setBlockState(BlockState state, CompoundTag nbt) {
-        this.lastChanges().setState(state);
+        this.lastChanges().setBlockState(state);
         this.lastChanges().setCompoundTag(nbt);
     }
 
     public void setBlockState(BlockState state, Map<Direction, IPaintColor> colors) {
-        this.lastChanges().setState(state);
+        this.lastChanges().setBlockState(state);
         this.lastChanges().setColors(colors);
     }
 

@@ -28,7 +28,7 @@ public class ArmourersWorkshop {
         ModSounds.init();
         ModConfig.init();
         // setup common objects.
-        EnvironmentExecutor.setupOn(EnvironmentType.COMMON, () -> () -> {
+        EnvironmentExecutor.initOn(EnvironmentType.COMMON, () -> () -> {
             // setup network manager.
             NetworkManager.init("aw2", "3");
             ModPackets.init();
@@ -41,7 +41,7 @@ public class ArmourersWorkshop {
             EnvironmentExecutor.run(() -> SkinLibraryManager::startClient, () -> SkinLibraryManager::startServer);
         });
         // setup client in setup.
-        EnvironmentExecutor.setupOn(EnvironmentType.CLIENT, () -> () -> {
+        EnvironmentExecutor.initOn(EnvironmentType.CLIENT, () -> () -> {
             // setup client objects.
             ModDebugger.init();
             ModKeyBindings.init();
@@ -49,7 +49,7 @@ public class ArmourersWorkshop {
 
         });
         // setup client renderer in finish.
-        EnvironmentExecutor.finishOn(EnvironmentType.CLIENT, () -> () -> {
+        EnvironmentExecutor.loadOn(EnvironmentType.CLIENT, () -> () -> {
             // setup skin manager.
             SkinManager.init();
         });
