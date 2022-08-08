@@ -2,7 +2,7 @@ package moe.plushie.armourers_workshop.builder.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import moe.plushie.armourers_workshop.api.client.IExtendedBlockEntityRenderer;
+import moe.plushie.armourers_workshop.api.client.IBlockEntityExtendedRenderer;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable & IExtendedBlockEntityRenderer> extends BlockEntityRenderer<T> {
+public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> extends BlockEntityRenderer<T> {
 
     private static float markerAlpha = 0F;
     private static long lastWorldTimeUpdate;
@@ -67,9 +67,6 @@ public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable & IE
 
     @Override
     public void render(T entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffers, int light, int overlay) {
-        if (!entity.shouldUseExtendedRenderer()) {
-            return;
-        }
         updateAlpha(entity);
         if (!(markerAlpha > 0)) {
             return;

@@ -8,6 +8,7 @@
     "HttpTextureMixin",
     "InventoryScreenMixin",
     "ItemRendererMixin",
+    "RebuildTaskMixin",
     "RenderBuffersMixin",
     "ThrownTridentRendererMixin"
   ],

@@ -33,9 +33,6 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
 
     @Override
     public void render(T entity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffers, int light, int overlay) {
-        if (!entity.shouldUseExtendedRenderer()) {
-            return;
-        }
         BakedSkin bakedSkin = BakedSkin.of(entity.getDescriptor());
         if (bakedSkin == null) {
             return;

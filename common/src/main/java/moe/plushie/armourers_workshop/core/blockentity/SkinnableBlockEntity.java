@@ -3,7 +3,7 @@ package moe.plushie.armourers_workshop.core.blockentity;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
-import moe.plushie.armourers_workshop.api.client.IExtendedBlockEntityRenderer;
+import moe.plushie.armourers_workshop.api.client.IBlockEntityExtendedRenderer;
 import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.function.Function;
 
-public class SkinnableBlockEntity extends RotableContainerBlockEntity implements IExtendedBlockEntityRenderer {
+public class SkinnableBlockEntity extends RotableContainerBlockEntity implements IBlockEntityExtendedRenderer {
 
     private static final BlockPos INVALID = BlockPos.of(-1);
 

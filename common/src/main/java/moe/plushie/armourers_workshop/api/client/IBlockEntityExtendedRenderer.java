@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.api.client;
 
-public interface IExtendedBlockEntityRenderer {
+public interface IBlockEntityExtendedRenderer {
 
     boolean shouldUseExtendedRenderer();
 }

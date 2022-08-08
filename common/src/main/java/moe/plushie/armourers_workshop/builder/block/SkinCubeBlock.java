@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import org.jetbrains.annotations.Nullable;
 
 public class SkinCubeBlock extends AbstractHorizontalBlock implements IBlockEntityProvider, IBlockTintColorProvider {
 
@@ -86,7 +87,7 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements IBlockEnti
     }
 
     @Override
-    public int getTintColor(BlockState blockState, @org.jetbrains.annotations.Nullable BlockGetter reader, @org.jetbrains.annotations.Nullable BlockPos blockPos, int index) {
+    public int getTintColor(BlockState blockState, @Nullable BlockGetter reader, @Nullable BlockPos blockPos, int index) {
         if (reader == null || blockPos == null) {
             return 0xffffffff;
         }

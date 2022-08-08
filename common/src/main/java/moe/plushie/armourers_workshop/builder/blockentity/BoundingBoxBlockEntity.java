@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.builder.blockentity;
 
-import moe.plushie.armourers_workshop.api.client.IExtendedBlockEntityRenderer;
+import moe.plushie.armourers_workshop.api.client.IBlockEntityExtendedRenderer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import java.util.Arrays;
 import java.util.Map;
 
-public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPaintable, IExtendedBlockEntityRenderer {
+public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPaintable, IBlockEntityExtendedRenderer {
 
     protected static final BlockPos INVALID = BlockPos.of(-1);
 
@@ -227,9 +227,9 @@ public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPain
     @Override
     public boolean shouldUseExtendedRenderer() {
         // if the parent entity is missing, do not render it.
-        if (!isValid()) {
-            return false;
+        if (customRenderer) {
+            return isValid();
         }
-        return customRenderer;
+        return false;
     }
 }
