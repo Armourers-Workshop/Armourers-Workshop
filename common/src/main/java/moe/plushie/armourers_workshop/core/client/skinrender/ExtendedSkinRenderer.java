@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.skinrender;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -13,7 +14,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -54,8 +54,8 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
     }
 
     @Override
-    public void willRender(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, PoseStack matrixStack, MultiBufferSource buffers) {
-        super.willRender(entity, model, renderData, light, partialRenderTick, matrixStack, buffers);
+    public void willRender(T entity, M model, SkinRenderData renderData, SkinRenderContext context) {
+        super.willRender(entity, model, renderData, context);
         renderData.getOverriddenManager().willRender(entity);
 
         // Limit the players limbs if they have a skirt equipped.
@@ -69,8 +69,8 @@ public abstract class ExtendedSkinRenderer<T extends LivingEntity, M extends Ent
     }
 
     @Override
-    public void didRender(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, PoseStack matrixStack, MultiBufferSource buffers) {
-        super.didRender(entity, model, renderData, light, partialRenderTick, matrixStack, buffers);
+    public void didRender(T entity, M model, SkinRenderData renderData, SkinRenderContext renderContext) {
+        super.didRender(entity, model, renderData, renderContext);
         renderData.getOverriddenManager().didRender(entity);
     }
 

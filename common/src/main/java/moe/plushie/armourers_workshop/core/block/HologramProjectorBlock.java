@@ -52,13 +52,7 @@ public class HologramProjectorBlock extends AbstractAttachedHorizontalBlock impl
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
-        }
-        if (MenuManager.openMenu(ModMenus.HOLOGRAM_PROJECTOR, player, level, blockPos)) {
-            return InteractionResult.CONSUME;
-        }
-        return InteractionResult.FAIL;
+        return MenuManager.openMenu(ModMenus.HOLOGRAM_PROJECTOR, level.getBlockEntity(blockPos), player);
     }
 
     @Override

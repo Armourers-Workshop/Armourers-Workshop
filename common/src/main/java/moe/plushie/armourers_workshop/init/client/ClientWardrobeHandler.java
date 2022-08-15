@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.model.FirstPersonPlayerModel;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
@@ -64,7 +65,9 @@ public class ClientWardrobeHandler {
         matrixStack.scale(-SCALE, -SCALE, SCALE);
         matrixStack.translate(0, 11, 0);
 
-        int count = render(entity, null, model, light, matrixStack, buffers, ItemTransforms.TransformType.NONE, renderData::getItemSkins);
+        SkinRenderContext context = SkinRenderContext.getInstance();
+        context.setup(light, TickUtils.ticks(), matrixStack, buffers);
+        int count = render(entity, null, model, context, renderData::getItemSkins);
         if (count != 0 && !ModDebugger.itemOverride) {
             callback.cancel();
         }
@@ -97,7 +100,9 @@ public class ClientWardrobeHandler {
         matrixStack.scale(-SCALE, -SCALE, SCALE);
         matrixStack.translate(0, 0, -1);
 
-        int count = render(entity, null, model, light, matrixStack, buffers, ItemTransforms.TransformType.NONE, () -> Collections.singletonList(entry));
+        SkinRenderContext context = SkinRenderContext.getInstance();
+        context.setup(light, TickUtils.ticks(), matrixStack, buffers);
+        int count = render(entity, null, model, context, () -> Collections.singletonList(entry));
         if (count != 0 && !ModDebugger.itemOverride) {
             callback.cancel();
         }
@@ -168,7 +173,9 @@ public class ClientWardrobeHandler {
         matrixStack.pushPose();
         matrixStack.scale(-SCALE, -SCALE, SCALE);
 
-        int count = render(entity, null, model, light, matrixStack, buffers, transformType, renderData::getArmorSkins);
+        SkinRenderContext context = SkinRenderContext.getInstance();
+        context.setup(light, TickUtils.ticks(), transformType, matrixStack, buffers);
+        int count = render(entity, null, model, context, renderData::getArmorSkins);
         if (count != 0 && !ModDebugger.handOverride) {
             cancelHandler.run();
         }
@@ -184,7 +191,9 @@ public class ClientWardrobeHandler {
         EntityModel<?> entityModel = entityRenderer.getModel();
         SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, entityRenderer);
         if (renderer != null) {
-            renderer.willRender(entity, entityModel, renderData, light, partialTicks, matrixStack, buffers);
+            SkinRenderContext renderContext = SkinRenderContext.getInstance();
+            renderContext.setup(light, partialTicks, matrixStack, buffers);
+            renderer.willRender(entity, entityModel, renderData, renderContext);
         }
     }
 
@@ -196,7 +205,9 @@ public class ClientWardrobeHandler {
         EntityModel<?> entityModel = entityRenderer.getModel();
         SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, entityRenderer);
         if (renderer != null) {
-            renderer.willRenderModel(entity, entityModel, renderData, light, partialTicks, matrixStack, buffers);
+            SkinRenderContext renderContext = SkinRenderContext.getInstance();
+            renderContext.setup(light, partialTicks, matrixStack, buffers);
+            renderer.willRenderModel(entity, entityModel, renderData, renderContext);
         }
     }
 
@@ -208,7 +219,9 @@ public class ClientWardrobeHandler {
         EntityModel<?> entityModel = entityRenderer.getModel();
         SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, entityRenderer);
         if (renderer != null) {
-            renderer.didRender(entity, entityModel, renderData, light, partialTicks, matrixStack, buffers);
+            SkinRenderContext renderContext = SkinRenderContext.getInstance();
+            renderContext.setup(light, partialTicks, matrixStack, buffers);
+            renderer.didRender(entity, entityModel, renderData, renderContext);
         }
     }
 
@@ -259,7 +272,9 @@ public class ClientWardrobeHandler {
                     matrixStack.scale(-SCALE, -SCALE, SCALE);
 
                     boolean replaceSkinItem = entity instanceof MannequinEntity;
-                    counter = render(entity, itemStack, null, packedLight, matrixStack, buffers, transformType, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
+                    SkinRenderContext context = SkinRenderContext.getInstance();
+                    context.setup(packedLight, TickUtils.ticks(), transformType, matrixStack, buffers);
+                    counter = render(entity, itemStack, null, context, () -> renderData.getItemSkins(itemStack, replaceSkinItem));
                     if (counter != 0 && !ModDebugger.itemOverride) {
                         callback.cancel();
                     }
@@ -304,9 +319,8 @@ public class ClientWardrobeHandler {
         RenderUtils.disableScissor();
     }
 
-    private static int render(Entity entity, ItemStack itemStack, Model model, int light, PoseStack matrixStack, MultiBufferSource buffers, ItemTransforms.TransformType transformType, Supplier<Iterable<SkinRenderData.Entry>> provider) {
+    private static int render(Entity entity, ItemStack itemStack, Model model, SkinRenderContext context, Supplier<Iterable<SkinRenderData.Entry>> provider) {
         int r = 0;
-        float partialTicks = TickUtils.ticks();
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(entity, model, null);
         if (renderer == null) {
             return 0;
@@ -315,7 +329,7 @@ public class ClientWardrobeHandler {
             if (itemStack == null) {
                 itemStack = entry.getItemStack();
             }
-            r += renderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), itemStack, transformType, light, partialTicks, entry.getSlotIndex(), matrixStack, buffers);
+            r += renderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), itemStack, entry.getSlotIndex(), context);
         }
         return r;
     }

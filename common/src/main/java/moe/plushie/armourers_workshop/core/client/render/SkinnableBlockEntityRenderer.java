@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -15,7 +16,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.core.BlockPos;
@@ -54,7 +54,9 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
         matrixStack.scale(f, f, f);
         matrixStack.scale(-1, -1, 1);
 
-        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, ItemTransforms.TransformType.NONE, light, partialTicks1, 0, matrixStack, buffers);
+        SkinRenderContext context = SkinRenderContext.getInstance();
+        context.setup(light, partialTicks1, matrixStack, buffers);
+        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, ItemStack.EMPTY, 0, context);
 
         matrixStack.popPose();
 

@@ -194,7 +194,7 @@ public class ModConfigSpec {
 //            }
             defineCategory("overrides", "Custom list of items that can be skinned.", () -> {
                 Predicate<Object> elementValidator = item -> Arrays.stream(ItemOverrideType.values()).anyMatch(t -> ((String) item).startsWith(t.getName()));
-                defineList("itemOverrides", new ArrayList<String>(), elementValidator, "Format [override type:mod id:item name]", "Valid override types are: sword, shield, bow, pickaxe, axe, shovel, hoe and item", "example sword:minecraft:iron_sword").bind(n -> overrides = new ArrayList<>(n), () -> new ArrayList<>(overrides));
+                defineList("itemOverrides", new ArrayList<String>(), elementValidator, "Format [\"override type:mod id:item name\"]", "Valid override types are: sword, shield, bow, pickaxe, axe, shovel, hoe and item", "example [\"sword:minecraft:iron_sword\",\"sword:minecraft:gold_sword\"]").bind(n -> overrides = new ArrayList<>(n), () -> new ArrayList<>(overrides));
             });
         }
     }

@@ -36,7 +36,7 @@ public class OutfitMakerScreen extends AWAbstractContainerScreen<OutfitMakerMenu
         super(container, inventory, title);
         this.imageWidth = 176;
         this.imageHeight = 240;
-        this.tileEntity = container.getTileEntity(OutfitMakerBlockEntity.class);
+        this.tileEntity = container.getTileEntity();
     }
 
     @Override
@@ -100,5 +100,10 @@ public class OutfitMakerScreen extends AWAbstractContainerScreen<OutfitMakerMenu
 
     protected Component getDisplayText(String key) {
         return TranslateUtils.title("inventory.armourers_workshop.outfit-maker" + "." + key);
+    }
+
+    @Override
+    public boolean shouldRenderPluginScreen() {
+        return true;
     }
 }

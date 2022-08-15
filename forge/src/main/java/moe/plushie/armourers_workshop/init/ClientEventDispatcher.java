@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
 import moe.plushie.armourers_workshop.api.common.IItemPropertiesProvider;
 import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.core.client.bake.SkinBakery;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.render.HighlightPlacementRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
@@ -26,7 +27,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -239,7 +239,9 @@ public class ClientEventDispatcher {
             EntityModel<?> entityModel = event.getRenderer().getModel();
             SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
             if (renderer != null) {
-                renderer.willRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
+                SkinRenderContext context = SkinRenderContext.getInstance();
+                context.setup(event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
+                renderer.willRender(entity, entityModel, renderData, context);
             }
         }
 
@@ -253,7 +255,9 @@ public class ClientEventDispatcher {
             EntityModel<?> entityModel = event.getRenderer().getModel();
             SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
             if (renderer != null) {
-                renderer.didRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
+                SkinRenderContext context = SkinRenderContext.getInstance();
+                context.setup(event.getLight(), event.getPartialRenderTick(), event.getMatrixStack(), event.getBuffers());
+                renderer.didRender(entity, entityModel, renderData, context);
             }
         }
 

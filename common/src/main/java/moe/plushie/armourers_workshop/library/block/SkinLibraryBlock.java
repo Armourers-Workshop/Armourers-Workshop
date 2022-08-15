@@ -33,14 +33,11 @@ public class SkinLibraryBlock extends AbstractHorizontalBlock implements IBlockE
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
+        if (this == ModBlocks.SKIN_LIBRARY_CREATIVE.get()) {
+            return MenuManager.openMenu(ModMenus.SKIN_LIBRARY_CREATIVE, level.getBlockEntity(blockPos), player);
         }
         if (this == ModBlocks.SKIN_LIBRARY.get()) {
-            MenuManager.openMenu(ModMenus.SKIN_LIBRARY, player, level, blockPos);
-        }
-        if (this == ModBlocks.SKIN_LIBRARY_CREATIVE.get()) {
-            MenuManager.openMenu(ModMenus.SKIN_LIBRARY_CREATIVE, player, level, blockPos);
+            return MenuManager.openMenu(ModMenus.SKIN_LIBRARY, level.getBlockEntity(blockPos), player);
         }
         return InteractionResult.CONSUME;
     }

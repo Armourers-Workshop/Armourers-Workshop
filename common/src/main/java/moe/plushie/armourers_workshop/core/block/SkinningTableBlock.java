@@ -19,12 +19,6 @@ public class SkinningTableBlock extends AbstractHorizontalBlock {
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
-        }
-        if (MenuManager.openMenu(ModMenus.SKINNING_TABLE, player, level, blockPos)) {
-            return InteractionResult.CONSUME;
-        }
-        return InteractionResult.FAIL;
+        return MenuManager.openMenu(ModMenus.SKINNING_TABLE, level, blockPos, player);
     }
 }

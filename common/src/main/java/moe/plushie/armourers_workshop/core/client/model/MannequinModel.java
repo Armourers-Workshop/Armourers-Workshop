@@ -3,6 +3,8 @@ package moe.plushie.armourers_workshop.core.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
+import moe.plushie.armourers_workshop.utils.MathUtils;
+import moe.plushie.armourers_workshop.utils.TrigUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -20,21 +22,21 @@ public class MannequinModel<T extends MannequinEntity> extends PlayerModel<T> {
 
     @Override
     public void setupAnim(T entity, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
-        this.head.xRot = resolve(entity.getHeadPose().getX());
-        this.head.yRot = resolve(entity.getHeadPose().getY());
-        this.head.zRot = resolve(entity.getHeadPose().getZ());
-        this.leftArm.xRot = resolve(entity.getLeftArmPose().getX());
-        this.leftArm.yRot = resolve(entity.getLeftArmPose().getY());
-        this.leftArm.zRot = resolve(entity.getLeftArmPose().getZ());
-        this.rightArm.xRot = resolve(entity.getRightArmPose().getX());
-        this.rightArm.yRot = resolve(entity.getRightArmPose().getY());
-        this.rightArm.zRot = resolve(entity.getRightArmPose().getZ());
-        this.leftLeg.xRot = resolve(entity.getLeftLegPose().getX());
-        this.leftLeg.yRot = resolve(entity.getLeftLegPose().getY());
-        this.leftLeg.zRot = resolve(entity.getLeftLegPose().getZ());
-        this.rightLeg.xRot = resolve(entity.getRightLegPose().getX());
-        this.rightLeg.yRot = resolve(entity.getRightLegPose().getY());
-        this.rightLeg.zRot = resolve(entity.getRightLegPose().getZ());
+        this.head.xRot = MathUtils.toRadians(entity.getHeadPose().getX());
+        this.head.yRot = MathUtils.toRadians(entity.getHeadPose().getY());
+        this.head.zRot = MathUtils.toRadians(entity.getHeadPose().getZ());
+        this.leftArm.xRot = MathUtils.toRadians(entity.getLeftArmPose().getX());
+        this.leftArm.yRot = MathUtils.toRadians(entity.getLeftArmPose().getY());
+        this.leftArm.zRot = MathUtils.toRadians(entity.getLeftArmPose().getZ());
+        this.rightArm.xRot = MathUtils.toRadians(entity.getRightArmPose().getX());
+        this.rightArm.yRot = MathUtils.toRadians(entity.getRightArmPose().getY());
+        this.rightArm.zRot = MathUtils.toRadians(entity.getRightArmPose().getZ());
+        this.leftLeg.xRot = MathUtils.toRadians(entity.getLeftLegPose().getX());
+        this.leftLeg.yRot = MathUtils.toRadians(entity.getLeftLegPose().getY());
+        this.leftLeg.zRot = MathUtils.toRadians(entity.getLeftLegPose().getZ());
+        this.rightLeg.xRot = MathUtils.toRadians(entity.getRightLegPose().getX());
+        this.rightLeg.yRot = MathUtils.toRadians(entity.getRightLegPose().getY());
+        this.rightLeg.zRot = MathUtils.toRadians(entity.getRightLegPose().getZ());
         this.hat.copyFrom(this.head);
         this.leftPants.copyFrom(this.leftLeg);
         this.rightPants.copyFrom(this.rightLeg);
@@ -45,14 +47,8 @@ public class MannequinModel<T extends MannequinEntity> extends PlayerModel<T> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack matrixStack, VertexConsumer builder, int p_225598_3_, int p_225598_4_, float p_225598_5_, float p_225598_6_, float p_225598_7_, float p_225598_8_) {
-        matrixStack.mulPose(Vector3f.ZP.rotation(resolve(mainPose.getZ())));
-        matrixStack.mulPose(Vector3f.YP.rotation(resolve(mainPose.getY())));
-        matrixStack.mulPose(Vector3f.XP.rotation(resolve(mainPose.getX())));
-        super.renderToBuffer(matrixStack, builder, p_225598_3_, p_225598_4_, p_225598_5_, p_225598_6_, p_225598_7_, p_225598_8_);
-    }
-
-    private float resolve(double value) {
-        return (float) Math.toRadians((value + 360) % 360);
+    public void renderToBuffer(PoseStack matrixStack, VertexConsumer builder, int light, int overlay, float r, float g, float b, float a) {
+        matrixStack.mulPose(TrigUtils.rotate(mainPose.getX(), mainPose.getY(), mainPose.getZ(), true));
+        super.renderToBuffer(matrixStack, builder, light, overlay, r, g, b, a);
     }
 }

@@ -24,7 +24,7 @@ public class ArmourerScreen extends AWAbstractContainerScreen<ArmourerMenu> {
         super(container, inventory, title);
         this.imageWidth = 176;
         this.imageHeight = 224;
-        this.tileEntity = container.getTileEntity(ArmourerBlockEntity.class);
+        this.tileEntity = container.getTileEntity();
 
         this.initTabs();
     }

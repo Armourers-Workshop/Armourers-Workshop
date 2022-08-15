@@ -8,6 +8,7 @@ import net.minecraft.core.Position;
 
 @SuppressWarnings("unused")
 public class Vector4f {
+
     private float x;
     private float y;
     private float z;

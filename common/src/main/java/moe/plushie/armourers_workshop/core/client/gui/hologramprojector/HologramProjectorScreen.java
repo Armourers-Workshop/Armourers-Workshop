@@ -26,7 +26,7 @@ public class HologramProjectorScreen extends AWAbstractContainerScreen<HologramP
 
         this.imageWidth = 176;
         this.imageHeight = 240;
-        this.tileEntity = container.getTileEntity(HologramProjectorBlockEntity.class);
+        this.tileEntity = container.getTileEntity();
 
         this.initTabs();
     }

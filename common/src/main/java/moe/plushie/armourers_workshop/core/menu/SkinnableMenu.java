@@ -15,18 +15,14 @@ import org.apache.logging.log4j.util.Strings;
 
 public class SkinnableMenu extends AbstractBlockContainerMenu {
 
-    private String title;
+    private final String title;
     private int row;
     private int colum;
     private Container inventory;
 
     public SkinnableMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, ContainerLevelAccess worldPos) {
         super(menuType, block, containerId, worldPos);
-        SkinnableBlockEntity tileEntity = getTileEntity(SkinnableBlockEntity.class);
-        if (tileEntity == null) {
-            return;
-        }
-
+        SkinnableBlockEntity tileEntity = getTileEntity();
         this.title = tileEntity.getInventoryName();
 
         row = 3;

@@ -1,9 +1,9 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.layer.ForwardingLayer;
 import moe.plushie.armourers_workshop.core.client.model.TransformModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinOverriddenManager;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
@@ -11,7 +11,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -33,14 +32,14 @@ public class VillagerSkinRenderer<T extends LivingEntity, M extends VillagerMode
     }
 
     @Override
-    public void willRender(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, PoseStack matrixStack, MultiBufferSource buffers) {
-        super.willRender(entity, model, renderData, light, partialRenderTick, matrixStack, buffers);
-        transformModel.setup(entity, light, partialRenderTick);
+    public void willRender(T entity, M model, SkinRenderData renderData, SkinRenderContext context) {
+        super.willRender(entity, model, renderData, context);
+        transformModel.setup(entity, context.light, context.partialTicks);
     }
 
     @Override
-    public void willRenderModel(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, PoseStack matrixStack, MultiBufferSource buffers) {
-        super.willRenderModel(entity, model, renderData, light, partialRenderTick, matrixStack, buffers);
+    public void willRenderModel(T entity, M model, SkinRenderData renderData, SkinRenderContext context) {
+        super.willRenderModel(entity, model, renderData, context);
         copyRot(transformModel.head, model.head);
     }
 

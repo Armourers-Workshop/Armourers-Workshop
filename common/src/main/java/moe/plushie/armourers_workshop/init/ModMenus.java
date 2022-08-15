@@ -7,7 +7,9 @@ import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.common.builder.IMenuTypeBuilder;
 import moe.plushie.armourers_workshop.builder.client.gui.ColorMixerScreen;
 import moe.plushie.armourers_workshop.builder.client.gui.OutfitMakerScreen;
+import moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.AdvancedSkinBuilderScreen;
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.ArmourerScreen;
+import moe.plushie.armourers_workshop.builder.menu.AdvancedSkinBuilderMenu;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
 import moe.plushie.armourers_workshop.builder.menu.ColorMixerMenu;
 import moe.plushie.armourers_workshop.builder.menu.OutfitMakerMenu;
@@ -48,6 +50,7 @@ public class ModMenus {
     public static final IRegistryKey<MenuType<ColorMixerMenu>> COLOR_MIXER = block(ColorMixerMenu::new, ModBlocks.COLOR_MIXER).bind(() -> ColorMixerScreen::new).build("colour-mixer");
     public static final IRegistryKey<MenuType<ArmourerMenu>> ARMOURER = block(ArmourerMenu::new, ModBlocks.ARMOURER).bind(() -> ArmourerScreen::new).build("armourer");
     public static final IRegistryKey<MenuType<OutfitMakerMenu>> OUTFIT_MAKER = block(OutfitMakerMenu::new, ModBlocks.OUTFIT_MAKER).bind(() -> OutfitMakerScreen::new).build("outfit-maker");
+    public static final IRegistryKey<MenuType<AdvancedSkinBuilderMenu>> ADVANCED_SKIN_BUILDER = block(AdvancedSkinBuilderMenu::new, ModBlocks.ADVANCED_SKIN_BUILDER).bind(() -> AdvancedSkinBuilderScreen::new).build("advanced-skin-builder");
 
     private static <T extends AbstractContainerMenu, V> IMenuTypeBuilder<T> normal(IMenuProvider<T, V> factory, IPlayerDataSerializer<V> serializer) {
         return BuilderManager.getInstance().createMenuTypeBuilder(factory, serializer);

@@ -33,7 +33,7 @@ public class ArmourerDisplaySetting extends ArmourerBaseSetting {
 
     public ArmourerDisplaySetting(ArmourerMenu container) {
         super("inventory.armourers_workshop.armourer.displaySettings");
-        this.tileEntity = container.getTileEntity(ArmourerBlockEntity.class);
+        this.tileEntity = container.getTileEntity();
         this.reloadData();
     }
 

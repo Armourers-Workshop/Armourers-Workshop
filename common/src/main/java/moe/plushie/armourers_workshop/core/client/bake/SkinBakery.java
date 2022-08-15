@@ -162,10 +162,13 @@ public final class SkinBakery {
             bakedParts.add(bakedPart);
         }
 
-        for (int i = 0; i < bakedParts.size(); ++i) {
-            BakedSkinPart bakedPart = bakedParts.get(i);
-            bakedPart.setId(i);
+        int partId = 0;
+        ArrayList<BakedSkinPart> iterator = new ArrayList<>(bakedParts);
+        while (!iterator.isEmpty()) {
+            BakedSkinPart bakedPart = iterator.remove(0);
+            bakedPart.setId(partId++);
             colorInfo.add(bakedPart.getColorInfo());
+            iterator.addAll(0, bakedPart.getChildren());
         }
 
         usedCounter.addPaints(colorInfo.getPaintTypes());

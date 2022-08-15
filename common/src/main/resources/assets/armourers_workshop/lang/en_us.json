@@ -103,6 +103,7 @@
   "action.armourers_workshop.block.clear": "Clear blocks",
   "action.armourers_workshop.block.copy": "Copy blocks",
   "action.armourers_workshop.block.replace": "Replace blocks",
+  "inventory.armourers_workshop.advanced-skin-builder": "Advanced Skin Builder",
   "inventory.armourers_workshop.admin-panel.clear_cache": "Clear Cache",
   "inventory.armourers_workshop.admin-panel.recover_skins": "Recover Skins",
   "inventory.armourers_workshop.admin-panel.reload_library": "Reload Library",

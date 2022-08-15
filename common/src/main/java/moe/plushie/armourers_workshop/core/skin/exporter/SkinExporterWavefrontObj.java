@@ -11,6 +11,8 @@ import moe.plushie.armourers_workshop.core.skin.face.SkinCubeFace;
 import moe.plushie.armourers_workshop.core.skin.face.SkinCuller;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
+import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
+import moe.plushie.armourers_workshop.core.skin.transform.SkinWingsTransform;
 import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.SkinUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
@@ -90,6 +92,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
         for (Task task : tasks) {
             OpenPoseStack matrixStack = OpenPoseStack.create();
             SkinPart skinPart = task.skinPart;
+            SkinTransform transform = SkinWingsTransform.build(skinPart);
             // apply the render context matrix.
             matrixStack.scale(scale, scale, scale);
             matrixStack.scale(-1, -1, 1);
@@ -98,7 +101,8 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
             IVector3i pos = skinPart.getType().getRenderOffset();
             matrixStack.translate(pos.getX(), pos.getY(), pos.getZ());
             // apply the marker rotation and offset.
-            SkinUtils.apply(matrixStack, skinPart, 0, null);
+            transform.setup(0, null);
+            transform.apply(matrixStack);
             exportPart(matrixStack, task.skinFaces, skinPart, task.skin, os, textureBuilder, partIndex++);
         }
 

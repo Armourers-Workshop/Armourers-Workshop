@@ -56,6 +56,7 @@ public class ModItems {
 
     public static final IRegistryKey<Item> ARMOURER = BUILDING.block(ModBlocks.ARMOURER).rarity(Rarity.EPIC).build("armourer");
     public static final IRegistryKey<Item> COLOR_MIXER = BUILDING.block(ModBlocks.COLOR_MIXER).build("colour-mixer");
+    public static final IRegistryKey<Item> ADVANCED_SKIN_BUILDER = BUILDING.block(ModBlocks.ADVANCED_SKIN_BUILDER).build("advanced-skin-builder");
 
     public static final IRegistryKey<Item> SKIN_CUBE = BUILDING.cube(ModBlocks.SKIN_CUBE).build("skin-cube");
     public static final IRegistryKey<Item> SKIN_CUBE_GLOWING = BUILDING.cube(ModBlocks.SKIN_CUBE_GLOWING).build("skin-cube-glowing");

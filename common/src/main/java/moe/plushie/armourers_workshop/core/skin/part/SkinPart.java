@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.skin.part;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinPart;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
+import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubeData;
 import moe.plushie.armourers_workshop.core.skin.data.SkinMarker;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
@@ -22,6 +23,7 @@ public class SkinPart implements ISkinPart {
     protected OpenVoxelShape renderShape;
     protected Rectangle3i partBounds;
 
+    protected SkinTransform transform;
     protected SkinProperties properties;
 
     protected int id = 0;
@@ -34,6 +36,7 @@ public class SkinPart implements ISkinPart {
         this.partType = partType;
         this.renderShape = cubeData.getRenderShape();
 
+        this.transform = SkinTransform.IDENTIFIER;
         this.cubeData = cubeData;
         this.markerBlocks = markerBlocks;
 
@@ -122,7 +125,6 @@ public class SkinPart implements ISkinPart {
         return partBounds;
     }
 
-
     public int getParent() {
         return 0;
     }
@@ -131,8 +133,8 @@ public class SkinPart implements ISkinPart {
         return null;
     }
 
-    public Object getTransform() {
-        return null;
+    public SkinTransform getTransform() {
+        return transform;
     }
 
     public SkinPaintData getPaintData() {

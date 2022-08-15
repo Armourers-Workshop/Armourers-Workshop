@@ -38,6 +38,7 @@ public class ModBlocks {
     public static final IRegistryKey<Block> OUTFIT_MAKER = half(OutfitMakerBlock::new).build("outfit-maker");
     public static final IRegistryKey<Block> COLOR_MIXER = normal(ColorMixerBlock::new).bind(() -> RenderType::cutout).build("colour-mixer");
     public static final IRegistryKey<Block> ARMOURER = normal(ArmourerBlock::new).build("armourer");
+    public static final IRegistryKey<Block> ADVANCED_SKIN_BUILDER = normal(AdvancedSkinBuilderBlock::new).build("advanced-skin-builder");
 
     public static final IRegistryKey<Block> SKIN_CUBE = half(SkinCubeBlock::new).build("skin-cube");
     public static final IRegistryKey<Block> SKIN_CUBE_GLASS = glass(SkinCubeBlock::new).build("skin-cube-glass");

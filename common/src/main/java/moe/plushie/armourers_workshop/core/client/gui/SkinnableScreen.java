@@ -45,4 +45,9 @@ public class SkinnableScreen extends AWAbstractContainerScreen<SkinnableMenu> {
             RenderUtils.blit(matrixStack, leftPos + slot.x - 1, topPos + slot.y - 1, 238, 0, 18, 18);
         }
     }
+
+    @Override
+    public boolean shouldRenderPluginScreen() {
+        return true;
+    }
 }

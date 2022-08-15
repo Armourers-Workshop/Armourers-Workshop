@@ -55,7 +55,7 @@ public final class SkinCubes {
         }
         ALL_CUBES.put(cube.getRegistryName().toString(), cube);
         ALL_CUBES_MAPPING[cube.getId() & 0xFF] = cube;
-        ModLog.info("Registering Skin Cube '{}'", cube.getRegistryName());
+        ModLog.debug("Registering Skin Cube '{}'", cube.getRegistryName());
         return cube;
     }
 

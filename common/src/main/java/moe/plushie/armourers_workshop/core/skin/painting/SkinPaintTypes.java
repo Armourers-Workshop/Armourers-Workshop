@@ -73,7 +73,7 @@ public final class SkinPaintTypes {
         ALL_SORTED_TYPES.add(paintType);
         ALL_PAINT_TYPES.put(paintType.getRegistryName().toString(), paintType);
         ALL_PAINT_MAPPING[paintType.getId() & 0xff] = paintType;
-        ModLog.info("Registering Skin Paint '{}'", paintType.getRegistryName());
+        ModLog.debug("Registering Skin Paint '{}'", paintType.getRegistryName());
         return paintType;
     }
 

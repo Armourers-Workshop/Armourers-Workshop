@@ -36,12 +36,13 @@ public abstract class AbstractBlockContainerMenu extends AbstractContainerMenu {
         return null;
     }
 
-    @Nullable
+    public <T extends BlockEntity> T getTileEntity() {
+        BlockEntity[] tileEntities = {null};
+        access.execute((level, pos) -> tileEntities[0] = level.getBlockEntity(pos));
+        return ObjectUtils.unsafeCast(tileEntities[0]);
+    }
+
     public Container getTileInventory() {
-        BlockEntity tileEntity = getTileEntity(BlockEntity.class);
-        if (tileEntity instanceof IHasInventory) {
-            return ((IHasInventory) tileEntity).getInventory();
-        }
-        return null;
+        return ((IHasInventory) getTileEntity()).getInventory();
     }
 }

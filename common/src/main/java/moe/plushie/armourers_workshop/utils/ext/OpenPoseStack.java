@@ -1,12 +1,9 @@
 package moe.plushie.armourers_workshop.utils.ext;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 public abstract class OpenPoseStack {
 
@@ -15,8 +12,8 @@ public abstract class OpenPoseStack {
         OpenMatrix3f normal = OpenMatrix3f.createScaleMatrix(1, 1, 1);
         return new OpenPoseStack() {
             @Override
-            public void translate(double x, double y, double z) {
-                pose.multiply(OpenMatrix4f.createTranslateMatrix((float) x, (float) y, (float) z));
+            public void translate(float x, float y, float z) {
+                pose.multiply(OpenMatrix4f.createTranslateMatrix(x, y, z));
             }
 
             @Override
@@ -53,37 +50,7 @@ public abstract class OpenPoseStack {
         };
     }
 
-    @Environment(value = EnvType.CLIENT)
-    public static OpenPoseStack wrap(PoseStack matrixStack) {
-        return new OpenPoseStack() {
-            @Override
-            public void translate(double x, double y, double z) {
-                matrixStack.translate(x, y, z);
-            }
-
-            @Override
-            public void scale(float x, float y, float z) {
-                matrixStack.scale(x, y, z);
-            }
-
-            @Override
-            public void mul(Quaternion quaternion) {
-                matrixStack.mulPose(quaternion);
-            }
-
-            @Override
-            public void applyPose(Vector4f vector) {
-                vector.transform(matrixStack.last().pose());
-            }
-
-            @Override
-            public void applyNormal(Vector3f vector) {
-                vector.transform(matrixStack.last().normal());
-            }
-        };
-    }
-
-    public abstract void translate(double x, double y, double z);
+    public abstract void translate(float x, float y, float z);
 
     public abstract void scale(float x, float y, float z);
 

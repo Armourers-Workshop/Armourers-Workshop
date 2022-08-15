@@ -90,7 +90,7 @@ public final class SkinTypes {
         }
         ALL_SORTED_TYPES.add(type);
         ALL_TYPES.put(type.getRegistryName().toString(), type);
-        ModLog.info("Registering Skin '{}'", type.getRegistryName());
+        ModLog.debug("Registering Skin '{}'", type.getRegistryName());
         return type;
     }
 }

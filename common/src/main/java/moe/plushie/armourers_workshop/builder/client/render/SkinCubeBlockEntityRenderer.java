@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.builder.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import moe.plushie.armourers_workshop.api.client.IBlockEntityExtendedRenderer;
 import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;

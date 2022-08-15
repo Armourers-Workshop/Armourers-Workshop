@@ -39,7 +39,7 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
 
     public ArmourerSkinSetting(ArmourerMenu container) {
         super("inventory.armourers_workshop.armourer.skinSettings");
-        this.tileEntity = container.getTileEntity(ArmourerBlockEntity.class);
+        this.tileEntity = container.getTileEntity();
     }
 
     @Override

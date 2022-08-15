@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -17,7 +18,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.core.BlockPos;
@@ -67,7 +67,9 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         Rectangle3f rect = bakedSkin.getRenderBounds(mannequin, model, null, itemStack);
         apply(entity, rect, partialTicks1, matrixStack, buffers);
 
-        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, itemStack, ItemTransforms.TransformType.NONE, overLight, partialTicks1, 0, matrixStack, buffers);
+        SkinRenderContext context = SkinRenderContext.getInstance();
+        context.setup(overLight, partialTicks1, matrixStack, buffers);
+        renderer.render(mannequin, model, bakedSkin, ColorScheme.EMPTY, itemStack, 0, context);
 
         matrixStack.popPose();
 

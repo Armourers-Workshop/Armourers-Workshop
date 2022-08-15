@@ -32,14 +32,8 @@ public class ArmourerBlock extends AbstractHorizontalBlock implements IBlockEnti
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult traceResult) {
-        if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
-        }
-        if (MenuManager.openMenu(ModMenus.ARMOURER, player, level, pos)) {
-            return InteractionResult.CONSUME;
-        }
-        return InteractionResult.FAIL;
+    public InteractionResult use(BlockState state, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult traceResult) {
+        return MenuManager.openMenu(ModMenus.ARMOURER, level.getBlockEntity(blockPos), player);
     }
 
     @Override

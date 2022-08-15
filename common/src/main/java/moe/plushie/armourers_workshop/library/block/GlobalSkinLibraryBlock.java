@@ -29,12 +29,6 @@ public class GlobalSkinLibraryBlock extends AbstractHorizontalBlock implements I
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
-        }
-        if (MenuManager.openMenu(ModMenus.SKIN_LIBRARY_GLOBAL, player, level, blockPos)) {
-            return InteractionResult.CONSUME;
-        }
-        return InteractionResult.FAIL;
+        return MenuManager.openMenu(ModMenus.SKIN_LIBRARY_GLOBAL, level.getBlockEntity(blockPos), player);
     }
 }

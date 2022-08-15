@@ -128,10 +128,11 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
             }
         }
         if (tileEntity.isInventory()) {
-            if (MenuManager.openMenu(ModMenus.SKINNABLE, player, level, blockPos)) {
+            InteractionResult result = MenuManager.openMenu(ModMenus.SKINNABLE, level.getBlockEntity(blockPos), player);
+            if (result.consumesAction()) {
                 player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return result;
         }
         return InteractionResult.FAIL;
     }

@@ -24,13 +24,7 @@ public class OutfitMakerBlock extends AbstractHorizontalBlock implements IBlockE
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
-        }
-        if (MenuManager.openMenu(ModMenus.OUTFIT_MAKER, player, level, blockPos)) {
-            return InteractionResult.CONSUME;
-        }
-        return InteractionResult.FAIL;
+        return MenuManager.openMenu(ModMenus.OUTFIT_MAKER, level.getBlockEntity(blockPos), player);
     }
 
     @Override

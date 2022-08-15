@@ -231,6 +231,10 @@ public abstract class AWAbstractContainerScreen<T extends AbstractContainerMenu>
         this.lastHoveredButton = button;
     }
 
+    public boolean shouldRenderPluginScreen() {
+        return false;
+    }
+
     public boolean isPresenting() {
         return dialog != null;
     }

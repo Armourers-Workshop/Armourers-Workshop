@@ -8,13 +8,7 @@ import net.minecraft.core.Position;
 
 @SuppressWarnings("unused")
 public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
-    //    public static final Codec<Vector3i> CODEC = Codec.INT_STREAM.comapFlatMap((p_239783_0_) -> {
-//        return Util.fixedSize(p_239783_0_, 3).map((p_239784_0_) -> {
-//            return new Vector3i(p_239784_0_[0], p_239784_0_[1], p_239784_0_[2]);
-//        });
-//    }, (p_239782_0_) -> {
-//        return IntStream.of(p_239782_0_.getX(), p_239782_0_.getY(), p_239782_0_.getZ());
-//    });
+
     public static final Vector3i ZERO = new Vector3i(0, 0, 0);
     private int x;
     private int y;

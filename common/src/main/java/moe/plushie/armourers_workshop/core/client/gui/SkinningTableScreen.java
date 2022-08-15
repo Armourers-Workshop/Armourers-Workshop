@@ -40,4 +40,9 @@ public class SkinningTableScreen extends AWAbstractContainerScreen<SkinningTable
         this.font.draw(matrixStack, this.getTitle(), (float) this.titleLabelX, (float) this.titleLabelY, 0x282216);
         this.font.draw(matrixStack, this.inventory.getDisplayName(), (float) this.inventoryLabelX, (float) this.inventoryLabelY, 0x282216);
     }
+
+    @Override
+    public boolean shouldRenderPluginScreen() {
+        return true;
+    }
 }

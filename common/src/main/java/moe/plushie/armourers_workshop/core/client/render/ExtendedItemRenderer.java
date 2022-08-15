@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
@@ -21,7 +22,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -71,7 +71,9 @@ public final class ExtendedItemRenderer {
         matrixStack.scale(newScale / scale.getX(), newScale / scale.getY(), newScale / scale.getZ());
         matrixStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
 
-        renderer.render(entity, model, bakedSkin, scheme, itemStack, ItemTransforms.TransformType.NONE, light, partialTicks, 0, matrixStack, buffers);
+        SkinRenderContext context = SkinRenderContext.getInstance();
+        context.setup(light, partialTicks, matrixStack, buffers);
+        renderer.render(entity, model, bakedSkin, scheme, itemStack, 0, context);
 
         matrixStack.popPose();
     }

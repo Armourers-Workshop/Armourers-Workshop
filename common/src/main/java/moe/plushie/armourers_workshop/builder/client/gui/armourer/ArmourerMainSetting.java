@@ -47,7 +47,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
         super("inventory.armourers_workshop.armourer.main");
         this.modVersion = EnvironmentManager.getVersion();
         this.container = container;
-        this.tileEntity = container.getTileEntity(ArmourerBlockEntity.class);
+        this.tileEntity = container.getTileEntity();
         if (this.tileEntity != null) {
             this.skinType = tileEntity.getSkinType();
         }

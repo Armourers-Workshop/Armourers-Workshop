@@ -11,18 +11,16 @@ import moe.plushie.armourers_workshop.core.client.other.*;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.platform.TransformationProvider;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
-import moe.plushie.armourers_workshop.utils.SkinUtils;
-import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.resources.model.BakedModel;
@@ -67,27 +65,30 @@ public class SkinRenderer<T extends Entity, M extends Model> {
     }
 
 
-    public void apply(T entity, M model, ItemStack itemStack, ItemTransforms.TransformType transformType, BakedSkinPart bakedPart, BakedSkin bakedSkin, float partialTicks, PoseStack matrixStack) {
-        ITransform<T, M> op = getPartTransform(entity, model, itemStack, transformType, bakedPart);
+    public void apply(T entity, M model, ItemStack itemStack, BakedSkinPart bakedPart, BakedSkin bakedSkin, SkinRenderContext context) {
+        ITransform<T, M> op = getPartTransform(entity, model, itemStack, context.transformType, bakedPart);
         if (op != null && model != null) {
-            op.apply(matrixStack, entity, model, itemStack, transformType, bakedPart);
-            SkinUtils.apply(OpenPoseStack.wrap(matrixStack), bakedPart.getPart(), partialTicks, entity);
+            SkinTransform transform = bakedPart.getTransform();
+            transform.setup(context.partialTicks, entity);
+            transform.pre(context.openPoseStack);
+            op.apply(context.poseStack, entity, model, itemStack, context.transformType, bakedPart);
+            transform.post(context.openPoseStack);
         }
     }
 
     protected void apply(T entity, M model, SkinOverriddenManager overriddenManager, SkinRenderData renderData) {
     }
 
-    public void willRender(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, PoseStack matrixStack, MultiBufferSource buffers) {
+    public void willRender(T entity, M model, SkinRenderData renderData, SkinRenderContext context) {
         overriders.clear();
         apply(entity, model, renderData.getOverriddenManager(), renderData);
     }
 
-    public void willRenderModel(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, PoseStack matrixStack, MultiBufferSource buffers) {
+    public void willRenderModel(T entity, M model, SkinRenderData renderData, SkinRenderContext context) {
         overriders.forEach(m -> m.visible = false);
     }
 
-    public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, ItemTransforms.TransformType transformType, int light, float partialTicks, int slotIndex, PoseStack matrixStack, MultiBufferSource buffers) {
+    public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int slotIndex, SkinRenderContext context) {
         if (profile != null) {
             ISkinType type = bakedSkin.getType();
             if (type instanceof ISkinArmorType && !profile.canSupport(type)) {
@@ -95,20 +96,21 @@ public class SkinRenderer<T extends Entity, M extends Model> {
             }
         }
         int counter = 0;
+        PoseStack matrixStack = context.poseStack;
         Skin skin = bakedSkin.getSkin();
         ColorScheme scheme1 = bakedSkin.resolve(entity, scheme);
-        SkinVertexBufferBuilder bufferBuilder = SkinVertexBufferBuilder.getBuffer(buffers);
-        SkinRenderObjectBuilder builder = bufferBuilder.getBuffer(skin);
+        SkinRenderObjectBuilder builder = context.getBuffer(skin);
         for (BakedSkinPart bakedPart : bakedSkin.getSkinParts()) {
-            if (!prepare(entity, model, bakedSkin, bakedPart, itemStack, transformType)) {
+            if (!prepare(entity, model, bakedSkin, bakedPart, itemStack, context.transformType)) {
                 continue;
             }
-            boolean shouldRenderPart = bakedSkin.shouldRenderPart(bakedPart, entity, itemStack, transformType);
+            boolean shouldRenderPart = bakedSkin.shouldRenderPart(bakedPart, entity, itemStack, context.transformType);
             matrixStack.pushPose();
-            apply(entity, model, itemStack, transformType, bakedPart, bakedSkin, partialTicks, matrixStack);
-            builder.addPartData(bakedPart, scheme1, light, partialTicks, slotIndex, matrixStack, shouldRenderPart);
+            apply(entity, model, itemStack, bakedPart, bakedSkin, context);
+            builder.addPartData(bakedPart, scheme1, context.light, context.partialTicks, slotIndex, matrixStack, shouldRenderPart);
+            counter += renderChildPart(bakedPart, scheme1, slotIndex, shouldRenderPart, builder, context);
             if (shouldRenderPart && ModDebugger.skinPartBounds) {
-                builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(counter), matrixStack);
+                builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(bakedPart.getId()), matrixStack);
             }
             if (shouldRenderPart && ModDebugger.skinPartOrigin) {
                 builder.addShapeData(Vector3f.ZERO, matrixStack);
@@ -123,7 +125,7 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         }
 
         if (ModDebugger.skinBounds) {
-            builder.addShapeData(bakedSkin.getRenderShape(entity, model, itemStack, transformType).bounds(), Color.RED, matrixStack);
+            builder.addShapeData(bakedSkin.getRenderShape(entity, model, itemStack, context.transformType).bounds(), Color.RED, matrixStack);
         }
         if (ModDebugger.skinBounds) {
             builder.addShapeData(Vector3f.ZERO, matrixStack);
@@ -132,7 +134,32 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         return counter;
     }
 
-    public void didRender(T entity, M model, SkinRenderData renderData, int light, float partialRenderTick, PoseStack matrixStack, MultiBufferSource buffers) {
+    public int renderChildPart(BakedSkinPart parentPart, ColorScheme scheme, int slotIndex, boolean shouldRenderPart, SkinRenderObjectBuilder builder, SkinRenderContext context) {
+        int counter = 0;
+        for (BakedSkinPart bakedPart : parentPart.getChildren()) {
+            PoseStack matrixStack = context.poseStack;
+            SkinTransform transform = bakedPart.getTransform();
+            matrixStack.pushPose();
+            transform.apply(context.openPoseStack);
+            builder.addPartData(bakedPart, scheme, context.light, context.partialTicks, slotIndex, matrixStack, shouldRenderPart);
+            counter += renderChildPart(bakedPart, scheme, slotIndex, shouldRenderPart, builder, context);
+            if (shouldRenderPart && ModDebugger.skinPartBounds) {
+                builder.addShapeData(bakedPart.getRenderShape().bounds(), ColorUtils.getPaletteColor(bakedPart.getId()), matrixStack);
+            }
+            if (shouldRenderPart && ModDebugger.skinPartOrigin) {
+                builder.addShapeData(Vector3f.ZERO, matrixStack);
+            }
+            // we have some cases where we need to pre-render,
+            // this is not a real render where we should not increase the number.
+            if (shouldRenderPart) {
+                counter += 1;
+            }
+            matrixStack.popPose();
+        }
+        return counter;
+    }
+
+    public void didRender(T entity, M model, SkinRenderData renderData, SkinRenderContext context) {
         for (ModelPart modelRenderer : overriders) {
             modelRenderer.visible = true;
         }
@@ -227,5 +254,8 @@ public class SkinRenderer<T extends Entity, M extends Model> {
                 matrixStack.mulPose(Vector3f.XP.rotation(modelRenderer.xRot));
             }
         }
+    }
+
+    public static class Context {
     }
 }

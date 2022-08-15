@@ -104,7 +104,7 @@ public final class SkinPartTypes {
             return partType;
         }
         ALL_PART_TYPES.put(partType.getRegistryName().toString(), partType);
-        ModLog.info("Registering Skin Part '{}'", partType.getRegistryName());
+        ModLog.debug("Registering Skin Part '{}'", partType.getRegistryName());
         return partType;
     }
 }

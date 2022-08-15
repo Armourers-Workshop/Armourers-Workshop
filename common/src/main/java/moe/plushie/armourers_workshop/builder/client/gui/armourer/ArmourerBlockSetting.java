@@ -39,7 +39,7 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
 
     protected ArmourerBlockSetting(ArmourerMenu container, ArmourerScreen screen) {
         super("inventory.armourers_workshop.armourer.blockUtils");
-        this.tileEntity = container.getTileEntity(ArmourerBlockEntity.class);
+        this.tileEntity = container.getTileEntity();
         this.screen = screen;
     }
 

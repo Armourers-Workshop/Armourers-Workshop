@@ -68,14 +68,14 @@ public class SkinRenderObjectBuilder {
     }
 
     public void addShapeData(Vector3f origin, PoseStack matrixStack) {
-        MultiBufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+        MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
 //        RenderUtils.drawBoundingBox(matrixStack, box, color, SkinRenderBuffer.getInstance());
-        RenderUtils.drawPoint(matrixStack, origin, 16, buffer);
+        RenderUtils.drawPoint(matrixStack, origin, 16, buffers);
     }
 
     public void addShapeData(Rectangle3f box, Color color, PoseStack matrixStack) {
-        MultiBufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderUtils.drawBoundingBox(matrixStack, box, color, buffer);
+        MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        RenderUtils.drawBoundingBox(matrixStack, box, color, buffers);
     }
 
     public void endBatch(SkinVertexBufferBuilder.Pipeline pipeline) {

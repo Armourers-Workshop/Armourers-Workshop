@@ -51,13 +51,7 @@ public class ColorMixerBlock extends AbstractHorizontalBlock implements IBlockEn
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
-        }
-        if (MenuManager.openMenu(ModMenus.COLOR_MIXER, player, level, blockPos)) {
-            return InteractionResult.CONSUME;
-        }
-        return InteractionResult.FAIL;
+        return MenuManager.openMenu(ModMenus.COLOR_MIXER, level.getBlockEntity(blockPos), player);
     }
 
     @Override

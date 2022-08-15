@@ -74,16 +74,16 @@ public class MathUtils {
     }
 
 
-    public static double absMax(double p_76132_0_, double p_76132_2_) {
-        if (p_76132_0_ < 0.0D) {
-            p_76132_0_ = -p_76132_0_;
+    public static double absMax(double a, double b) {
+        if (a < 0.0D) {
+            a = -a;
         }
 
-        if (p_76132_2_ < 0.0D) {
-            p_76132_2_ = -p_76132_2_;
+        if (b < 0.0D) {
+            b = -b;
         }
 
-        return p_76132_0_ > p_76132_2_ ? p_76132_0_ : p_76132_2_;
+        return a > b ? a : b;
     }
 
 
@@ -183,12 +183,12 @@ public class MathUtils {
         return o;
     }
 
-    public static float fastInvSqrt(float p_226165_0_) {
-        float f = 0.5F * p_226165_0_;
-        int i = Float.floatToIntBits(p_226165_0_);
+    public static float fastInvSqrt(float v) {
+        float f = 0.5F * v;
+        int i = Float.floatToIntBits(v);
         i = 1597463007 - (i >> 1);
-        p_226165_0_ = Float.intBitsToFloat(i);
-        return p_226165_0_ * (1.5F - f * p_226165_0_ * p_226165_0_);
+        v = Float.intBitsToFloat(i);
+        return v * (1.5F - f * v * v);
     }
 
     public static double fastInvSqrt(double p_181161_0_) {
@@ -207,6 +207,9 @@ public class MathUtils {
         return 0.6666667F * f + 1.0F / (3.0F * f * f * p_226166_0_);
     }
 
+    public static float toRadians(double value) {
+        return (float) Math.toRadians((value + 360) % 360);
+    }
 
     static {
         for (int i = 0; i < 257; ++i) {

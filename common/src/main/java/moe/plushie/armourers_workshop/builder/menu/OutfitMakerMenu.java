@@ -38,9 +38,6 @@ public class OutfitMakerMenu extends AbstractBlockContainerMenu {
     public OutfitMakerMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, ContainerLevelAccess access) {
         super(menuType, block, containerId, access);
         this.inventory = getTileInventory();
-        if (this.inventory == null) {
-            return;
-        }
         this.addPlayerSlots(playerInventory, 8, 158);
         this.addInputSlots(inventory, 0, inventory.getContainerSize() - 1, 36, 58);
         this.addOutputSlot(inventory, inventory.getContainerSize() - 1, 148, 88);

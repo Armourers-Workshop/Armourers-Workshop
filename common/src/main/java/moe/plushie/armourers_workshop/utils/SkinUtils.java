@@ -96,79 +96,79 @@ public final class SkinUtils {
 //        return null;
 //    }
 
-    public static void apply(OpenPoseStack matrixStack, SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
-        ISkinPartType partType = skinPart.getType();
-        if (!(partType instanceof ICanRotation)) {
-            return;
-        }
-        List<SkinMarker> markers = skinPart.getMarkers();
-        if (markers == null || markers.size() == 0) {
-            return;
-        }
-        SkinMarker marker = markers.get(0);
-        Vector3i point = marker.getPosition();
-
-        float angle = (float) getRotationDegrees(skinPart, partialTicks, entity);
-        Vector3f offset = new Vector3f(point.getX() + 0.5f, point.getY() + 0.5f, point.getZ() + 0.5f);
-        if (!((ICanRotation) partType).isMirror()) {
-            angle = -angle;
-        }
-
-        matrixStack.translate(offset.x(), offset.y(), offset.z());
-        matrixStack.mul(getRotationMatrix(marker).rotationDegrees(angle));
-        matrixStack.translate(-offset.x(), -offset.y(), -offset.z());
-    }
-
-    public static double getRotationDegrees(SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
-        SkinProperties properties = skinPart.getProperties();
-        if (properties == null) {
-            return 0;
-        }
-
-        double maxAngle = properties.get(SkinProperty.WINGS_MAX_ANGLE);
-        double minAngle = properties.get(SkinProperty.WINGS_MIN_ANGLE);
-        String movementTypeName = properties.get(SkinProperty.WINGS_MOVMENT_TYPE);
-        SkinProperty.MovementType movementType = SkinProperty.MovementType.valueOf(movementTypeName);
-
-        double flapTime = properties.get(SkinProperty.WINGS_IDLE_SPEED);
-        if (entity instanceof LivingEntity && ((LivingEntity) entity).isFallFlying()) {
-            flapTime = properties.get(SkinProperty.WINGS_FLYING_SPEED);
-        }
-
-        double angle = partialTicks % flapTime;
-
-        if (movementType == SkinProperty.MovementType.EASE) {
-            angle = Math.sin(angle / flapTime * Math.PI * 2);
-        }
-        if (movementType == SkinProperty.MovementType.LINEAR) {
-            angle = angle / flapTime;
-        }
-
-        double fullAngle = maxAngle - minAngle;
-        if (movementType == SkinProperty.MovementType.LINEAR) {
-            return fullAngle * angle;
-        }
-
-        return -minAngle - fullAngle * ((angle + 1D) / 2);
-    }
-
-    public static Vector3f getRotationMatrix(SkinMarker marker) {
-        switch (marker.getDirection()) {
-            case UP:
-                return Vector3f.YP;
-            case DOWN:
-                return Vector3f.YN;
-            case SOUTH:
-                return Vector3f.ZN;
-            case NORTH:
-                return Vector3f.ZP;
-            case EAST:
-                return Vector3f.XP;
-            case WEST:
-                return Vector3f.XN;
-        }
-        return Vector3f.YP;
-    }
+//    public static void apply(OpenPoseStack matrixStack, SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
+//        ISkinPartType partType = skinPart.getType();
+//        if (!(partType instanceof ICanRotation)) {
+//            return;
+//        }
+//        List<SkinMarker> markers = skinPart.getMarkers();
+//        if (markers == null || markers.size() == 0) {
+//            return;
+//        }
+//        SkinMarker marker = markers.get(0);
+//        Vector3i point = marker.getPosition();
+//
+//        float angle = (float) getRotationDegrees(skinPart, partialTicks, entity);
+//        Vector3f offset = new Vector3f(point.getX() + 0.5f, point.getY() + 0.5f, point.getZ() + 0.5f);
+//        if (!((ICanRotation) partType).isMirror()) {
+//            angle = -angle;
+//        }
+//
+//        matrixStack.translate(offset.x(), offset.y(), offset.z());
+//        matrixStack.mul(getRotationMatrix(marker).rotationDegrees(angle));
+//        matrixStack.translate(-offset.x(), -offset.y(), -offset.z());
+//    }
+//
+//    public static double getRotationDegrees(SkinPart skinPart, float partialTicks, @Nullable Entity entity) {
+//        SkinProperties properties = skinPart.getProperties();
+//        if (properties == null) {
+//            return 0;
+//        }
+//
+//        double maxAngle = properties.get(SkinProperty.WINGS_MAX_ANGLE);
+//        double minAngle = properties.get(SkinProperty.WINGS_MIN_ANGLE);
+//        String movementTypeName = properties.get(SkinProperty.WINGS_MOVMENT_TYPE);
+//        SkinProperty.MovementType movementType = SkinProperty.MovementType.valueOf(movementTypeName);
+//
+//        double flapTime = properties.get(SkinProperty.WINGS_IDLE_SPEED);
+//        if (entity instanceof LivingEntity && ((LivingEntity) entity).isFallFlying()) {
+//            flapTime = properties.get(SkinProperty.WINGS_FLYING_SPEED);
+//        }
+//
+//        double angle = partialTicks % flapTime;
+//
+//        if (movementType == SkinProperty.MovementType.EASE) {
+//            angle = Math.sin(angle / flapTime * Math.PI * 2);
+//        }
+//        if (movementType == SkinProperty.MovementType.LINEAR) {
+//            angle = angle / flapTime;
+//        }
+//
+//        double fullAngle = maxAngle - minAngle;
+//        if (movementType == SkinProperty.MovementType.LINEAR) {
+//            return fullAngle * angle;
+//        }
+//
+//        return -minAngle - fullAngle * ((angle + 1D) / 2);
+//    }
+//
+//    public static Vector3f getRotationMatrix(SkinMarker marker) {
+//        switch (marker.getDirection()) {
+//            case UP:
+//                return Vector3f.YP;
+//            case DOWN:
+//                return Vector3f.YN;
+//            case SOUTH:
+//                return Vector3f.ZN;
+//            case NORTH:
+//                return Vector3f.ZP;
+//            case EAST:
+//                return Vector3f.XP;
+//            case WEST:
+//                return Vector3f.XN;
+//        }
+//        return Vector3f.YP;
+//    }
 
     public static boolean shouldKeepWardrobe(Player entity) {
         if (entity.isSpectator()) {

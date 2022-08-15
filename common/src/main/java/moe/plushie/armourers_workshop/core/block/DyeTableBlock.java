@@ -30,13 +30,7 @@ public class DyeTableBlock extends AbstractHorizontalBlock implements IBlockEnti
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
-        }
-        if (MenuManager.openMenu(ModMenus.DYE_TABLE, player, level, blockPos)) {
-            return InteractionResult.CONSUME;
-        }
-        return InteractionResult.FAIL;
+        return MenuManager.openMenu(ModMenus.DYE_TABLE, level.getBlockEntity(blockPos), player);
     }
 
     @Override

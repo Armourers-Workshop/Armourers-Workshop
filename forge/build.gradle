@@ -40,10 +40,10 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
-    modApi("mezz.jei:jei-1.16.5:7.7.1.152:api")
+    modApi("mezz.jei:jei-${rootProject.minecraft_version}:${project.jei_version}:api")
     //modApi("com.sk89q.worldedit:worldedit-core:7.2.5-SNAPSHOT")
 
-    //modLocalRuntime("mezz.jei:jei-1.16.5:7.7.1.152")
+    //modLocalRuntime("mezz.jei:jei-${rootProject.minecraft_version}:${project.jei_version}")
     //modLocalRuntime("com.sk89q.worldedit:worldedit-mod:7.2.5-dist")
     //modLocalRuntime("noppes.npcs:CustomNPCs:1.16.5.20220622snapshot")
 }

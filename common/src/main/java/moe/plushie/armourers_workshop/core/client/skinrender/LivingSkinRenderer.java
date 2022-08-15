@@ -1,14 +1,12 @@
 package moe.plushie.armourers_workshop.core.client.skinrender;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -52,12 +50,12 @@ public class LivingSkinRenderer<T extends LivingEntity, M extends EntityModel<T>
     }
 
     @Override
-    public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, ItemTransforms.TransformType transformType, int light, float partialTicks, int slotIndex, PoseStack matrixStack, MultiBufferSource buffers) {
+    public int render(T entity, M model, BakedSkin bakedSkin, ColorScheme scheme, ItemStack itemStack, int slotIndex, SkinRenderContext context) {
         // we don't know how to draw without a model, right?
         if (model == null) {
             model = getModel();
         }
-        return super.render(entity, model, bakedSkin, scheme, itemStack, transformType, light, partialTicks, slotIndex, matrixStack, buffers);
+        return super.render(entity, model, bakedSkin, scheme, itemStack, slotIndex, context);
     }
 
     public M getModel() {

@@ -7,6 +7,7 @@ import moe.plushie.armourers_workshop.api.action.ICanUse;
 import moe.plushie.armourers_workshop.api.client.IBakedSkin;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.render.SkinItemRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
@@ -162,19 +163,30 @@ public class BakedSkin implements IBakedSkin {
         if (renderer == null) {
             return OpenVoxelShape.empty();
         }
-        OpenVoxelShape shape = OpenVoxelShape.empty();
         PoseStack matrixStack = new PoseStack();
+        OpenVoxelShape shape = OpenVoxelShape.empty();
+        SkinRenderContext context = new SkinRenderContext();
+        context.setup(0, 0, transformType, matrixStack, null);
         for (BakedSkinPart part : skinParts) {
-            if (renderer.prepare(entity, model, this, part, itemStack, transformType)) {
-                OpenVoxelShape shape1 = part.getRenderShape().copy();
-                matrixStack.pushPose();
-                renderer.apply(entity, model, itemStack, transformType, part, this, 0, matrixStack);
-                shape1.mul(matrixStack.last().pose());
-                matrixStack.popPose();
-                shape.add(shape1);
-            }
+            addRenderShape(part, entity, model, itemStack, shape, renderer, context);
         }
         return shape;
+    }
+
+    private void addRenderShape(BakedSkinPart part, Entity entity, Model model, ItemStack itemStack, OpenVoxelShape shape, SkinRenderer<Entity, Model> renderer, SkinRenderContext context) {
+        if (!renderer.prepare(entity, model, this, part, itemStack, context.transformType)) {
+            return;
+        }
+        PoseStack matrixStack = context.poseStack;
+        OpenVoxelShape shape1 = part.getRenderShape().copy();
+        matrixStack.pushPose();
+        renderer.apply(entity, model, itemStack, part, this, context);
+        shape1.mul(matrixStack.last().pose());
+        shape.add(shape1);
+        for (BakedSkinPart childPart : part.getChildren()) {
+            addRenderShape(childPart, entity, model, itemStack, shape, renderer, context);
+        }
+        matrixStack.popPose();
     }
 
     public boolean shouldRenderPart(BakedSkinPart bakedPart, Entity entity, ItemStack itemStack, ItemTransforms.TransformType transformType) {

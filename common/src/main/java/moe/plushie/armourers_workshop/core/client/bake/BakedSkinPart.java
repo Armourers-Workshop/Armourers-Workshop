@@ -11,8 +11,12 @@ import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
+import moe.plushie.armourers_workshop.core.skin.transform.SkinFixedTransform;
+import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
+import moe.plushie.armourers_workshop.core.skin.transform.SkinWingsTransform;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.utils.ext.OpenVoxelShape;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
@@ -25,13 +29,25 @@ public class BakedSkinPart {
 
     private final SkinPart part;
     private final PackedQuad quads;
+    private final SkinTransform transform;
     private final ColorDescriptor descriptor;
+    private final ArrayList<BakedSkinPart> children = new ArrayList<>();
 
     private int id = 0;
 
     public BakedSkinPart(SkinPart part, PackedQuad quads) {
+//        this(part, quads, SkinWingsTransform.build(part));
+//        SkinFixedTransform transform = new SkinFixedTransform();
+//        transform.rotation = new Vector3f(30, 0, 0);
+//        BakedSkinPart ps = new BakedSkinPart(part, quads, transform);
+//        ps.children.add(new BakedSkinPart(part, quads, transform));
+//        children.add(ps);
+//    }
+//
+//    protected BakedSkinPart(SkinPart part, PackedQuad quads, SkinTransform transform) {
         this.part = part;
         this.quads = quads;
+        this.transform = SkinWingsTransform.build(part);
         this.descriptor = quads.getColorInfo();
     }
 
@@ -83,6 +99,10 @@ public class BakedSkinPart {
         return part.getType();
     }
 
+    public SkinTransform getTransform() {
+        return transform;
+    }
+
     public ColorDescriptor getColorInfo() {
         return quads.getColorInfo();
     }
@@ -100,6 +120,10 @@ public class BakedSkinPart {
             return 20;
         }
         return getType().getRenderPolygonOffset();
+    }
+
+    public ArrayList<BakedSkinPart> getChildren() {
+        return children;
     }
 
     public SkinProperties getProperties() {

@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.layer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
+import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderData;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
@@ -54,9 +55,11 @@ public class SkinWardrobeLayer<T extends Entity, M extends EntityModel<T>> exten
         float f = 1 / 16f;
         matrixStack.scale(f, f, f);
 
+        SkinRenderContext context = SkinRenderContext.getInstance();
         float partialTicks2 = TickUtils.ticks();
         for (SkinRenderData.Entry entry : renderData.getArmorSkins()) {
-            skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), entry.getItemStack(), null, packedLightIn, partialTicks2, entry.getSlotIndex(), matrixStack, buffers);
+            context.setup(packedLightIn, partialTicks2, null, matrixStack, buffers);
+            skinRenderer.render(entity, model, entry.getBakedSkin(), entry.getBakedScheme(), entry.getItemStack(), entry.getSlotIndex(), context);
         }
 
         matrixStack.popPose();

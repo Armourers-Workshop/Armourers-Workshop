@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 public class ArmourersWorkshop {
 
     public static final String MOD_ID = "armourers_workshop";
+    public static final String MOD_NET_ID = "5";
 
     public static void init() {
         ModItemGroups.init();
@@ -30,7 +31,7 @@ public class ArmourersWorkshop {
         // setup common objects.
         EnvironmentExecutor.initOn(EnvironmentType.COMMON, () -> () -> {
             // setup network manager.
-            NetworkManager.init("aw2", "3");
+            NetworkManager.init("play", MOD_NET_ID);
             ModPackets.init();
 
             ModEntityProfiles.init();
