@@ -54,6 +54,16 @@ public class ArmourersWorkshop {
             // setup skin manager.
             SkinManager.init();
         });
+        //#if MC >= 11605
+        ModLog.debug("hello 1.16.5+");
+        //#else
+        //# ModLog.debug("hello 1.16.5-");
+        //#endif
+        //#if MC >= 11800
+        //# ModLog.debug("hello 1.18+");
+        //#else
+        ModLog.debug("hello 1.16.5-");
+        //#endif
     }
 
     public static ResourceLocation getResource(String path) {

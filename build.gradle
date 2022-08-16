@@ -1,4 +1,5 @@
 plugins {
+    id "java"
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "0.12.0-SNAPSHOT" apply false
 }
@@ -41,7 +42,6 @@ subprojects {
 }
 
 allprojects {
-    apply plugin: "java"
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 

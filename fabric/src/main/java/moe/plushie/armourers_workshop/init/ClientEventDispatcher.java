@@ -255,33 +255,33 @@ public class ClientEventDispatcher implements ClientModInitializer {
         return true;
     }
 //
-////        @SubscribeEvent
-////        public void onRenderLivingPre(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
-////            LivingEntity entity = event.getEntity();
-////            SkinRenderData renderData = SkinRenderData.of(entity);
-////            if (renderData == null) {
-////                return;
-////            }
-////            EntityModel<?> entityModel = event.getRenderer().getModel();
-////            SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
-////            if (renderer != null) {
-////                renderer.willRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getPoseStack(), event.getBuffers());
-////            }
-////        }
-////
-////        @SubscribeEvent
-////        public void onRenderLivingPost(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
-////            LivingEntity entity = event.getEntity();
-////            SkinRenderData renderData = SkinRenderData.of(entity);
-////            if (renderData == null) {
-////                return;
-////            }
-////            EntityModel<?> entityModel = event.getRenderer().getModel();
-////            SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
-////            if (renderer != null) {
-////                renderer.didRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getPoseStack(), event.getBuffers());
-////            }
-////        }
+//        @SubscribeEvent
+//        public void onRenderLivingPre(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
+//            LivingEntity entity = event.getEntity();
+//            SkinRenderData renderData = SkinRenderData.of(entity);
+//            if (renderData == null) {
+//                return;
+//            }
+//            EntityModel<?> entityModel = event.getRenderer().getModel();
+//            SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
+//            if (renderer != null) {
+//                renderer.willRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getPoseStack(), event.getBuffers());
+//            }
+//        }
+//
+//        @SubscribeEvent
+//        public void onRenderLivingPost(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
+//            LivingEntity entity = event.getEntity();
+//            SkinRenderData renderData = SkinRenderData.of(entity);
+//            if (renderData == null) {
+//                return;
+//            }
+//            EntityModel<?> entityModel = event.getRenderer().getModel();
+//            SkinRenderer<LivingEntity, EntityModel<?>> renderer = SkinRendererManager.getInstance().getRenderer(entity, entityModel, event.getRenderer());
+//            if (renderer != null) {
+//                renderer.didRender(entity, entityModel, renderData, event.getLight(), event.getPartialRenderTick(), event.getPoseStack(), event.getBuffers());
+//            }
+//        }
 
     public boolean onRenderSpecificFirstPersonHand(PoseStack poseStack, MultiBufferSource buffers, int light, Player player, InteractionHand hand) {
         if (!ModConfig.enableFirstPersonSkinRenderer()) {

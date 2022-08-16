@@ -24,7 +24,7 @@ public class AWImageExtendedButton extends AWImageButton {
         if (!visible) {
             return;
         }
-        int k = getYImage(isHovered());
+        int k = getYImage(isHovered);
         RenderUtils.tile(matrixStack, x, y, 0, 46 + k * 20, width, height, 200, 20, 2, 3, 2, 2, RenderUtils.TEX_WIDGETS);
         super.renderButton(matrixStack, mouseX, mouseY, partialTicks);
     }

@@ -1,0 +1,59 @@
+import com.github.hexomod.macro.PreprocessorPlugin
+
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "com.github.hexomod:MacroPreprocessor:0.9"
+    }
+}
+
+apply plugin: JavaPlugin
+apply plugin: PreprocessorPlugin
+
+// we needs convert the version to number, for example: 1.16.5 => 11605.
+def minecraft_version = rootDir.getName()
+def (major, minor, patch) = minecraft_version.tokenize('-')[0].tokenize('.')
+def minecraft_version_number = "${major}${minor.padLeft(2, '0')}${(patch ?: '').padLeft(2, '0')}" as int
+
+def targets = ["common","forge","fabric"]
+
+targets.forEach {
+    sourceSets.register(it) {
+        it.java.srcDirs("../../${it.name}/src/main/java")
+        it.java.srcDirs("../../${it.name}/src/main/resources")
+    }
+}
+
+macroPreprocessorSettings {
+    inPlace = true
+    remove = true
+    vars = [MC:minecraft_version_number]
+    com.github.hexomod.macro.Preprocessor.SLASH_KEYWORDS.put("comment", "//#")
+}
+
+task applyCoreSources {
+    dependsOn "macroPreprocessorJava"
+    dependsOn "macroPreprocessorResource"
+    dependsOn "applyCoreProperties"
+    doLast {
+        println "Minecraft Version: ${minecraft_version}(${minecraft_version_number})"
+    }
+}
+
+task applyCoreProperties {
+    def rootPath = rootDir.absolutePath
+    fileTree(rootPath).matching { include "**/*.properties" }.forEach {
+        def target = new File(rootDir, "../../${it.absolutePath.replace(rootPath, "")}")
+        def contents = target.getText("UTF-8")
+        def properties = new Properties()
+        properties.load(it.newDataInputStream())
+        properties.forEach { key, value ->
+            contents = contents.replaceAll("${key}\\s*=\\s*[^#\\n]+", "${key}=${value}")
+        }
+        target.write(contents, "UTF-8")
+    }
+}
+
+defaultTasks "applyCoreSources"

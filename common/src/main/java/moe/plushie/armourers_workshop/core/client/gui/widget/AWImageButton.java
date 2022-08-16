@@ -99,7 +99,7 @@ public class AWImageButton extends Button {
         if (!active) {
             return 2;
         }
-        if (isHovered()) {
+        if (isHovered) {
             state += 1;
         }
         if (isSelected) {

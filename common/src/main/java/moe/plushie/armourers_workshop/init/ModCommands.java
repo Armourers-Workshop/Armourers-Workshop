@@ -55,7 +55,7 @@ public class ModCommands {
         return TranslateUtils.title("commands.armourers_workshop.armourers.error.missingItemSkinnable", ob);
     });
 
-    /// :/armourers setSkin|giveSkin|clearSkin
+    // :/armourers setSkin|giveSkin|clearSkin
     public static LiteralArgumentBuilder<CommandSourceStack> commands() {
         return Commands.literal("armourers")
                 .then(ReflectArgumentBuilder.literal("config", ModConfig.Client.class))

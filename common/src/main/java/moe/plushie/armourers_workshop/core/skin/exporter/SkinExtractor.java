@@ -12,11 +12,11 @@ package moe.plushie.armourers_workshop.core.skin.exporter;
 //import moe.plushie.armourers_workshop.core.config.ConfigHandler;
 //import moe.plushie.armourers_workshop.utils.ModLogger;
 //
-///**
-// * Extracts skins from the jar file and places them into the library folder.
-// * @author RiskyKen
-// *
-// */
+// /**
+//  * Extracts skins from the jar file and places them into the library folder.
+//  * @author RiskyKen
+//  *
+//  */
 //public final class SkinExtractor {
 //
 //    private SkinExtractor() {
