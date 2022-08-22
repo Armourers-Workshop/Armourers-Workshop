@@ -1,7 +1,6 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperty;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
@@ -13,7 +12,6 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 
 import java.util.HashMap;
 import java.util.function.BiConsumer;
@@ -33,7 +31,6 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
 
     protected final DifferenceSkinProperties skinProperties = new DifferenceSkinProperties();
     protected final ArmourerBlockEntity tileEntity;
-    protected final HashMap<ISkinType, ArmourerBaseSkinPanel> screens = new HashMap<>();
 
     protected ArmourerBaseSkinPanel screen;
 
@@ -43,40 +40,32 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
     }
 
     @Override
+    public void layoutSubviews() {
+        super.layoutSubviews();
+        if (screen != null) {
+            screen.setFrame(bounds());
+        }
+    }
+
+    @Override
     public void reloadData() {
         ISkinType skinType = tileEntity.getSkinType();
         skinProperties.copyFrom(tileEntity.getSkinProperties());
-        screen = screens.get(skinType);
-        if (screen == null) {
-            Function<SkinProperties, ArmourerBaseSkinPanel> supplier = REGISTERED.get(skinType);
-            if (supplier != null) {
-                screen = supplier.apply(skinProperties);
-                screen.setApplier(this::updateSkinProperties);
-                screens.put(skinType, screen);
-            }
+        Function<SkinProperties, ArmourerBaseSkinPanel> supplier = REGISTERED.get(skinType);
+        if (supplier != null) {
+            updateScreen(supplier.apply(skinProperties));
+            screen.setApplier(this::updateSkinProperties);
+            screen.setFrame(bounds());
+            screen.init();
+        } else {
+            updateScreen(null);
         }
-        if (screen == null) {
-            return;
-        }
-        screen.leftPos = leftPos;
-        screen.topPos = topPos;
-        screen.init(Minecraft.getInstance(), width, height);
-        children.clear();
-        children.add(screen);
     }
 
     @Override
-    public void init(Minecraft minecraft, int width, int height) {
-        super.init(minecraft, width, height);
+    public void init() {
+        super.init();
         this.reloadData();
-    }
-
-    @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float p_230430_4_) {
-        super.render(matrixStack, mouseX, mouseY, p_230430_4_);
-        if (screen != null) {
-            screen.render(matrixStack, mouseX, mouseY, p_230430_4_);
-        }
     }
 
     private void updateSkinProperties(SkinProperties skinProperties) {
@@ -90,6 +79,19 @@ public class ArmourerSkinSetting extends ArmourerBaseSetting {
         UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.SKIN_PROPERTIES;
         UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, skinProperties);
         NetworkManager.sendToServer(packet);
+    }
+
+    private void updateScreen(ArmourerBaseSkinPanel view) {
+        if (screen == view) {
+            return;
+        }
+        if (screen != null) {
+            screen.removeFromSuperview();
+        }
+        screen = view;
+        if (screen != null) {
+            addSubview(screen);
+        }
     }
 
     public static class DifferenceSkinProperties extends SkinProperties {

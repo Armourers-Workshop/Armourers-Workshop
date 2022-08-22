@@ -17,7 +17,7 @@ public class FabricClientPacketListenerMixin {
     @Inject(method = "handleBlockEntityData", at = @At("RETURN"))
     private void hooked_handleBlockEntityData(ClientboundBlockEntityDataPacket packet, CallbackInfo ci) {
         Level level = Minecraft.getInstance().level;
-        if (level == null || packet.getType() != 0) {
+        if (level == null) {
             return;
         }
         BlockEntity blockEntity = level.getBlockEntity(packet.getPos());

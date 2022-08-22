@@ -6,12 +6,13 @@ import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.builder.item.tooloption.ToolOptions;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.data.MannequinHitResult;
 import moe.plushie.armourers_workshop.core.data.SkinBlockPlaceContext;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,7 +29,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 @Environment(value = EnvType.CLIENT)
@@ -53,13 +53,13 @@ public class HighlightPlacementRenderer {
 
         for (SkinBlockPlaceContext.Part part : context.getParts()) {
             BlockPos pos = part.getOffset();
-            Color color = Color.RED;
+            UIColor color = UIColor.RED;
             if (context.canPlace(part)) {
-                color = Color.WHITE;
+                color = UIColor.WHITE;
             }
             matrixStack.pushPose();
             matrixStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
-            RenderUtils.drawBoundingBox(matrixStack, part.getShape(), color, buffers);
+            RenderSystem.drawBoundingBox(matrixStack, part.getShape(), color, buffers);
             matrixStack.popPose();
         }
 
@@ -125,7 +125,7 @@ public class HighlightPlacementRenderer {
             float x1 = pos1.getX() + 0.5f;
             float y1 = pos1.getY() + 0.5f;
             float z1 = pos1.getZ() + 0.5f;
-            RenderUtils.drawBoundingBox(mat, x0, y0, z0, x1, y1, z1, Color.RED, builder);
+            RenderSystem.drawBoundingBox(mat, x0, y0, z0, x1, y1, z1, UIColor.RED, builder);
         }
 
         for (BlockPos pos1 : blockEffects) {
@@ -135,7 +135,7 @@ public class HighlightPlacementRenderer {
             float x1 = pos1.getX() + 0.4f;
             float y1 = pos1.getY() + 0.4f;
             float z1 = pos1.getZ() + 0.4f;
-            RenderUtils.drawBoundingBox(mat, x0, y0, z0, x1, y1, z1, Color.GREEN, builder);
+            RenderSystem.drawBoundingBox(mat, x0, y0, z0, x1, y1, z1, UIColor.GREEN, builder);
         }
 
         matrixStack.popPose();

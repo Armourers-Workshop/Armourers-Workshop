@@ -1,6 +1,6 @@
 package moe.plushie.armourers_workshop.utils.texture;
 
-import moe.plushie.armourers_workshop.utils.math.Rectangle2i;
+import com.apple.library.coregraphics.CGRect;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3i;
 import moe.plushie.armourers_workshop.utils.math.TexturePos;
 import moe.plushie.armourers_workshop.utils.math.Vector3i;
@@ -17,7 +17,7 @@ public class SkyBox {
     protected final EnumMap<Direction, ToIntFunction<Vector3i>> validator = new EnumMap<>(Direction.class);
     protected final EnumMap<Direction, Function<Vector3i, TexturePos>> evaluator = new EnumMap<>(Direction.class);
     protected final Rectangle3i rect;
-    protected final Rectangle2i textureRect;
+    protected final CGRect textureRect;
     protected final boolean mirror;
 
     public SkyBox(int x, int y, int z, int width, int height, int depth, int u, int v) {
@@ -27,7 +27,7 @@ public class SkyBox {
     public SkyBox(int x, int y, int z, int width, int height, int depth, int u, int v, boolean mirror) {
         this.mirror = mirror;
         this.rect = new Rectangle3i(x, y, z, width, height, depth);
-        this.textureRect = new Rectangle2i(u, v, depth + width + depth + width, depth + height);
+        this.textureRect = new CGRect(u, v, depth + width + depth + width, depth + height);
         // we are assuming front side always facing north.
         this.put(Direction.UP, positiveX(u + depth), negativeZ(v + depth - 1));
         this.put(Direction.DOWN, positiveX(u + depth + width), negativeZ(v + depth - 1));

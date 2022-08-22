@@ -1,72 +1,77 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.*;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonObject;
-import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWConfirmDialog;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWExtendedButton;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWTextField;
+import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryScreen;
-import moe.plushie.armourers_workshop.library.client.gui.widget.SkinFileList;
+import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
+import moe.plushie.armourers_workshop.library.client.gui.widget.SkinItemList;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinDelete;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinEdit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
 import org.apache.logging.log4j.util.Strings;
+
+import java.util.function.BiConsumer;
 
 @Environment(value = EnvType.CLIENT)
 public class SkinEditLibraryPanel extends AbstractLibraryPanel {
 
-    private AWTextField textName;
-    private AWTextField textTags;
-    private AWTextField textDescription;
+    private UITextField textName;
+    private UITextField textTags;
+    private UITextView textDescription;
 
-    private AWExtendedButton buttonUpdate;
-    private AWExtendedButton buttonDelete;
+    private UIButton buttonUpdate;
+    private UIButton buttonDelete;
 
-    private SkinFileList.Entry entry;
-    private GlobalSkinLibraryScreen.Page returnPage;
+    private SkinItemList.Entry entry;
+    private GlobalSkinLibraryWindow.Page returnPage;
 
     public SkinEditLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.edit", GlobalSkinLibraryScreen.Page.SKIN_EDIT::equals);
+        super("inventory.armourers_workshop.skin-library-global.edit", GlobalSkinLibraryWindow.Page.SKIN_EDIT::equals);
+        this.setup();
     }
 
-    @Override
-    protected void init() {
-        super.init();
-
+    private void setup() {
+        int width = bounds().getWidth();
+        int height = bounds().getHeight();
         int inputWidth = width - 15 - 162;
-        this.textName = addTextField(leftPos + 5, topPos + 35, inputWidth, 12, "enterName");
-        this.textName.setMaxLength(80);
+        textName = addTextField(5, 15, inputWidth, 12, "enterName");
+        textName.setMaxLength(80);
 
-        this.textTags = addTextField(leftPos + 5, topPos + 65, inputWidth, 12, "enterTags");
-        this.textTags.setMaxLength(32);
+        textTags = addTextField(5, 45, inputWidth, 12, "enterTags");
+        textTags.setMaxLength(32);
 
-        this.textDescription = addTextField(leftPos + 5, topPos + 95, inputWidth, height - 95 - 40, "enterDescription");
-        this.textDescription.setMaxLength(255);
-        this.textDescription.setSingleLine(false);
+        textDescription = addTextView(5, 75, inputWidth, height - 75 - 40, "enterDescription");
+        textDescription.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
+        textDescription.setMaxLength(255);
 
-        this.addLabel(leftPos + 5, topPos + 25, inputWidth, 10, getDisplayText("skinName"));
-        this.addLabel(leftPos + 5, topPos + 55, inputWidth, 10, getDisplayText("skinTags"));
-        this.addLabel(leftPos + 5, topPos + 85, inputWidth, 10, getDisplayText("skinDescription"));
+        addLabel(5, 5, inputWidth, 10, getDisplayText("skinName"));
+        addLabel(5, 35, inputWidth, 10, getDisplayText("skinTags"));
+        addLabel(5, 65, inputWidth, 10, getDisplayText("skinDescription"));
 
-        this.buttonUpdate = addButton(new AWExtendedButton(leftPos + 5, topPos + height - 25, 100, 20, getDisplayText("buttonUpdate"), this::updateSkin));
-        this.buttonDelete = addButton(new AWExtendedButton(leftPos + width - 105, topPos + height - 25, 100, 20, getDisplayText("buttonDelete"), this::removeSkinPre));
+        buttonUpdate = addTextButton(5, height - 25, 100, 20, "buttonUpdate", SkinEditLibraryPanel::updateSkin);
+        buttonUpdate.setAutoresizingMask(AutoresizingMask.flexibleRightMargin | AutoresizingMask.flexibleTopMargin);
+
+        buttonDelete = addTextButton(width - 105, height - 25, 100, 20, "buttonDelete", SkinEditLibraryPanel::removeSkinPre);
+        buttonUpdate.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleTopMargin);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (this.textName != null) {
-            this.buttonUpdate.active = Strings.isNotBlank(textName.getValue());
+        if (textName != null) {
+            buttonUpdate.setEnabled(Strings.isNotBlank(textName.value()));
         }
     }
 
-    public void reloadData(SkinFileList.Entry entry, GlobalSkinLibraryScreen.Page returnPage) {
+    public void reloadData(SkinItemList.Entry entry, GlobalSkinLibraryWindow.Page returnPage) {
         this.entry = entry;
         this.returnPage = returnPage;
         this.textName.setValue(entry.name);
@@ -74,14 +79,9 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
         this.textTags.setValue("");
     }
 
-    @Override
-    public void renderBackgroundLayer(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.fillGradient(matrixStack, leftPos, topPos, leftPos + width, topPos + height, 0xC0101010, 0xD0101010);
-    }
-
-    private void updateSkin(Button button) {
-        String name = textName.getValue().trim();
-        String description = textDescription.getValue().trim();
+    private void updateSkin(UIControl button) {
+        String name = textName.value().trim();
+        String description = textDescription.value().trim();
         if (name.isEmpty()) {
             ModLog.warn("Can't set the skin name to empty");
             return;
@@ -91,12 +91,12 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
             backToPage(false);
             return;
         }
-        buttonUpdate.active = false;
+        buttonUpdate.setEnabled(false);
         new GlobalTaskSkinEdit(entry.id, name, description, isModerator()).createTaskAndRun(new FutureCallback<JsonObject>() {
             @Override
             public void onSuccess(JsonObject result) {
                 Minecraft.getInstance().execute(() -> {
-                    buttonUpdate.active = true;
+                    buttonUpdate.setEnabled(true);
                     if (result.has("valid") & result.has("action")) {
                         String action = result.get("action").getAsString();
                         boolean valid = result.get("valid").getAsBoolean();
@@ -120,20 +120,21 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
         });
     }
 
-    private void removeSkinPre(Button button) {
-        AWConfirmDialog dialog = new AWConfirmDialog(getDisplayText("dialog.delete.title"));
-        dialog.setMessageColor(0xffff5555);
+    private void removeSkinPre(UIControl button) {
+        ConfirmDialog dialog = new ConfirmDialog();
+        dialog.setTitle(getDisplayText("dialog.delete.title"));
+        dialog.setMessageColor(new UIColor(0xffff5555));
         dialog.setConfirmText(getDisplayText("dialog.delete.ok"));
         dialog.setCancelText(getDisplayText("dialog.delete.cancel"));
         dialog.setMessage(getDisplayText("dialog.delete.message", entry.name));
-        router.showDialog(dialog, r -> {
-            if (!r.isCancelled()) {
+        dialog.showInView(this, () -> {
+            if (!dialog.isCancelled()) {
                 removeSkin(button);
             }
         });
     }
 
-    private void removeSkin(Button button) {
+    private void removeSkin(UIControl button) {
         new GlobalTaskSkinDelete(entry.id, isModerator()).createTaskAndRun(new FutureCallback<JsonObject>() {
 
             @Override
@@ -169,11 +170,40 @@ public class SkinEditLibraryPanel extends AbstractLibraryPanel {
         router.showPage(returnPage);
     }
 
-    private AWTextField addTextField(int x, int y, int width, int height, String key) {
-        AWTextField textField = new AWTextField(font, x, y, width, height, getDisplayText(key));
+    private UITextField addTextField(int x, int y, int width, int height, String key) {
+        UITextField textField = new UITextField(new CGRect(x, y, width, height));
+        textField.setPlaceholder(getDisplayText(key));
         textField.setMaxLength(255);
-        addButton(textField);
+        textField.setAutoresizingMask(AutoresizingMask.flexibleWidth);
+        addSubview(textField);
         return textField;
+    }
+
+    private UITextView addTextView(int x, int y, int width, int height, String key) {
+        UITextView textField = new UITextView(new CGRect(x, y, width, height));
+        textField.setPlaceholder(getDisplayText(key));
+        textField.setMaxLength(255);
+        addSubview(textField);
+        return textField;
+    }
+
+    protected UILabel addLabel(int x, int y, int width, int height, NSString message) {
+        UILabel label = new UILabel(new CGRect(x, y, width, height));
+        label.setText(message);
+        label.setTextColor(UIColor.WHITE);
+        label.setAutoresizingMask(AutoresizingMask.flexibleWidth);
+        addSubview(label);
+        return label;
+    }
+
+    private UIButton addTextButton(int x, int y, int width, int height, String key, BiConsumer<SkinEditLibraryPanel, UIControl> handler) {
+        UIButton button = new UIButton(new CGRect(x, y, width, height));
+        button.setTitle(getDisplayText(key), UIControl.State.NORMAL);
+        button.setTitleColor(UIColor.WHITE, UIControl.State.NORMAL);
+        button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, handler);
+        addSubview(button);
+        return button;
     }
 
     private boolean isModerator() {

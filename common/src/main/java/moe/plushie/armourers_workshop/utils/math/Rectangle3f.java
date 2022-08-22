@@ -199,7 +199,6 @@ public class Rectangle3f implements IRectangle3f {
 
     @Override
     public String toString() {
-        return "Rectangle3f [x=" + x + ", y=" + y + ", z=" + z + ", width="
-                + width + ", height=" + height + ", depth=" + depth + "]";
+        return String.format("(%g %g %g; %g %g %g)", x, y, z, width, height, depth);
     }
 }

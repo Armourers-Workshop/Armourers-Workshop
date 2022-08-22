@@ -4,6 +4,7 @@ import moe.plushie.armourers_workshop.api.common.IItemTintColorProvider;
 import moe.plushie.armourers_workshop.core.holiday.Holiday;
 import moe.plushie.armourers_workshop.init.ModHolidays;
 import moe.plushie.armourers_workshop.init.ModItems;
+import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
@@ -61,7 +62,7 @@ public class GiftSackItem extends FlavouredItem implements IItemTintColorProvide
             return InteractionResultHolder.pass(itemStack);
         }
         if (!level.isClientSide()) {
-            if (player.inventory.add(giftStack)) {
+            if (Accessor.getInventory(player).add(giftStack)) {
                 itemStack.shrink(1);
             } else {
                 player.sendMessage(TranslateUtils.title("chat.armourers_workshop.inventoryFull"), player.getUUID());

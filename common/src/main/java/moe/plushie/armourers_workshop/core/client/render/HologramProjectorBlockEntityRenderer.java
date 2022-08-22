@@ -6,9 +6,10 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
+import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -19,16 +20,13 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.awt.*;
-
 @Environment(value = EnvType.CLIENT)
-public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlockEntity> extends BlockEntityRenderer<T> {
+public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
     public HologramProjectorBlockEntityRenderer(BlockEntityRenderDispatcher rendererManager) {
         super(rendererManager);
@@ -79,7 +77,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
             BlockPos pos = entity.getBlockPos();
             matrixStack.pushPose();
             matrixStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            RenderUtils.drawBoundingBox(matrixStack, entity.getCustomRenderBoundingBox(blockState), Color.ORANGE, buffers);
+            RenderSystem.drawBoundingBox(matrixStack, entity.getCustomRenderBoundingBox(blockState), UIColor.ORANGE, buffers);
             matrixStack.popPose();
         }
     }
@@ -116,18 +114,18 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         matrixStack.translate(-offset.x(), -offset.y(), offset.z());
 
         if (entity.shouldShowRotationPoint()) {
-            RenderUtils.drawBoundingBox(matrixStack, -1, -1, -1, 1, 1, 1, Color.MAGENTA, buffers);
+            RenderSystem.drawBoundingBox(matrixStack, -1, -1, -1, 1, 1, 1, UIColor.MAGENTA, buffers);
         }
 
         if (ModDebugger.hologramProjectorBlock) {
-            RenderUtils.drawPoint(matrixStack, null, 128, buffers);
+            RenderSystem.drawPoint(matrixStack, null, 128, buffers);
         }
 
         matrixStack.mulPose(TrigUtils.rotate(rotX, -rotY, rotZ, true));
         matrixStack.translate(rotationOffset.x(), -rotationOffset.y(), rotationOffset.z());
 
         if (ModDebugger.hologramProjectorBlock) {
-            RenderUtils.drawPoint(matrixStack, null, 128, buffers);
+            RenderSystem.drawPoint(matrixStack, null, 128, buffers);
         }
     }
 }

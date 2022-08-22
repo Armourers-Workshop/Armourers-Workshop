@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
+import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
@@ -91,16 +92,16 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     }
 
     public void readExtendedData(CompoundTag nbt) {
-        this.entityData.set(DATA_IS_CHILD, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_IS_SMALL, false));
-        this.entityData.set(DATA_IS_FLYING, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_IS_FLYING, false));
-        this.entityData.set(DATA_IS_GHOST, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_IS_GHOST, false));
-        this.entityData.set(DATA_IS_VISIBLE, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_IS_VISIBLE, true));
-        this.entityData.set(DATA_EXTRA_RENDERER, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_EXTRA_RENDER, true));
+        entityData.set(DATA_IS_CHILD, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_IS_SMALL, false));
+        entityData.set(DATA_IS_FLYING, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_IS_FLYING, false));
+        entityData.set(DATA_IS_GHOST, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_IS_GHOST, false));
+        entityData.set(DATA_IS_VISIBLE, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_IS_VISIBLE, true));
+        entityData.set(DATA_EXTRA_RENDERER, DataSerializers.getBoolean(nbt, Constants.Key.ENTITY_EXTRA_RENDER, true));
 
-        this.entityData.set(DATA_SCALE, DataSerializers.getFloat(nbt, Constants.Key.ENTITY_SCALE, 1.0f));
-        this.entityData.set(DATA_TEXTURE, DataSerializers.getTextureDescriptor(nbt, Constants.Key.ENTITY_TEXTURE, PlayerTextureDescriptor.EMPTY));
+        entityData.set(DATA_SCALE, DataSerializers.getFloat(nbt, Constants.Key.ENTITY_SCALE, 1.0f));
+        entityData.set(DATA_TEXTURE, DataSerializers.getTextureDescriptor(nbt, Constants.Key.ENTITY_TEXTURE, PlayerTextureDescriptor.EMPTY));
 
-        this.readCustomPose(nbt.getCompound(Constants.Key.ENTITY_POSE));
+        readCustomPose(nbt.getCompound(Constants.Key.ENTITY_POSE));
     }
 
     public void addExtendedData(CompoundTag nbt) {
@@ -193,8 +194,8 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
     }
 
     @Override
-    public void setBoundingBox(AABB p_174826_1_) {
-        super.setBoundingBox(p_174826_1_);
+    public void setPos(double d, double e, double f) {
+        super.setPos(d, e, f);
         this.boundingBoxForCulling = null;
     }
 
@@ -230,6 +231,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
         if (player.isShiftKeyDown()) {
             double ry = TrigUtils.getAngleDegrees(player.getX(), player.getZ(), getX(), getZ()) + 90.0;
             Rotations rotations = getBodyPose();
+            float yRot = Accessor.getYRot(this);
             setBodyPose(new Rotations(rotations.getX(), (float) ry - yRot, rotations.getZ()));
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
@@ -247,7 +249,7 @@ public class MannequinEntity extends ArmorStand implements IEntityHandler {
         if (source.getEntity() instanceof Player) {
             player = (Player) source.getEntity();
         }
-        if (player != null && !player.abilities.instabuild) {
+        if (player != null && !Accessor.getAbilities(player).instabuild) {
             Block.popResource(this.level, this.blockPosition(), createMannequinStack());
         }
         this.brokenByAnything(source);

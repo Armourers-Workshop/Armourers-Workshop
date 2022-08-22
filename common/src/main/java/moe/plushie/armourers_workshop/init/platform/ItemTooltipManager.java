@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init.platform;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedItemRenderer;
@@ -9,14 +8,11 @@ import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.skin.cube.SkinCubes;
 import moe.plushie.armourers_workshop.core.skin.data.SkinUsedCounter;
-import moe.plushie.armourers_workshop.init.ModConfig;
-import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.init.ModItems;
-import moe.plushie.armourers_workshop.init.ModKeyBindings;
+import moe.plushie.armourers_workshop.init.*;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
-import moe.plushie.armourers_workshop.utils.math.Rectangle2i;
+import com.apple.library.coregraphics.CGRect;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -160,7 +156,7 @@ public class ItemTooltipManager {
         tooltips.addAll(newTooltips);
     }
 
-    public static void renderHoverText(ItemStack itemStack, Rectangle2i frame, int mouseX, int mouseY, int screenWidth, int screenHeight, PoseStack matrixStack) {
+    public static void renderHoverText(ItemStack itemStack, CGRect frame, int mouseX, int mouseY, int screenWidth, int screenHeight, PoseStack matrixStack) {
         if (!ModConfig.Client.skinPreEnabled) {
             return;
         }
@@ -185,7 +181,7 @@ public class ItemTooltipManager {
 
         if (ModConfig.Client.skinPreDrawBackground) {
             RenderSystem.enableDepthTest();
-            RenderUtils.drawContinuousTexturedBox(matrixStack, RenderUtils.TEX_GUI_PREVIEW, tx, ty, 0, 0, size, size, 62, 62, 4, 400);
+            RenderSystem.drawContinuousTexturedBox(matrixStack, ModTextures.GUI_PREVIEW, tx, ty, 0, 0, size, size, 62, 62, 4, 400);
             RenderSystem.disableDepthTest();
         }
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();

@@ -1,26 +1,26 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer;
 
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
+import com.apple.library.foundation.NSTextAlignment;
+import com.apple.library.uikit.*;
 import com.mojang.authlib.GameProfile;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateArmourerPacket;
-import moe.plushie.armourers_workshop.core.client.gui.widget.*;
+import moe.plushie.armourers_workshop.core.client.gui.widget.SkinComboBox;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
@@ -28,18 +28,16 @@ import java.util.List;
 import java.util.Objects;
 
 @Environment(value = EnvType.CLIENT)
-public class ArmourerMainSetting extends ArmourerBaseSetting {
+public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFieldDelegate {
+
+    private final UITextField nameTextField = new UITextField(new CGRect(8, 58, 158, 16));
+    private final UITextField flavorTextField = new UITextField(new CGRect(8, 90, 158, 16));
+
+    private final SkinComboBox skinTypeBox = new SkinComboBox(new CGRect(7, 21, 50, 16));
 
     protected final ArmourerMenu container;
     protected final ArmourerBlockEntity tileEntity;
     protected final String modVersion;
-
-    protected AWSkinTypeComboBox skinTypeBox;
-    protected AWTextField skinName;
-    protected AWTextField skinFlavor;
-
-    protected AWExtendedButton btnSave;
-    protected AWExtendedButton btnLoad;
 
     protected ISkinType skinType = SkinTypes.ARMOR_HEAD;
 
@@ -63,84 +61,98 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
         return skinTypes;
     }
 
-    @Override
-    protected void init() {
-        super.init();
-
+    public void init() {
         // TODO Make button icons for save/load buttons.
         // GuiIconButton buttonSave = new GuiIconButton(parent, 13, 88, 16, 16, 16, GuiHelper.getLocalizedControlName(guiName, "save"), TEXTURE_BUTTONS);
         // GuiIconButton buttonLoad = new GuiIconButton(parent, 14, 88, 16 + 13, 16, 16, GuiHelper.getLocalizedControlName(guiName, "load"), TEXTURE_BUTTONS);
 
-        this.btnSave = new AWExtendedButton(leftPos + 88, topPos + 16, 50, 12, getDisplayText("save"), this::saveSkin);
-        this.btnLoad = new AWExtendedButton(leftPos + 88, topPos + 29, 50, 12, getDisplayText("load"), this::loadSkin);
-        this.addButton(btnSave);
-        this.addButton(btnLoad);
+        UIButton saveBtn = new UIButton(new CGRect(88, 16, 50, 12));
+        saveBtn.setTitle(getDisplayText("save"), UIControl.State.ALL);
+        saveBtn.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
+        saveBtn.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        saveBtn.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, ArmourerMainSetting::saveSkin);
+        addSubview(saveBtn);
 
-        this.skinName = new AWTextField(font, leftPos + 8, topPos + 58, 158, 16, TextComponent.EMPTY);
-        this.skinName.setMaxLength(40);
-        this.skinName.setEventListener(this::updateSkinPropertiesEvent);
-        this.skinName.setReturnHandler(this::updateSkinPropertiesReturn);
-        this.addButton(skinName);
+        UIButton loadBtn = new UIButton(new CGRect(88, 29, 50, 12));
+        loadBtn.setTitle(getDisplayText("load"), UIControl.State.ALL);
+        loadBtn.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
+        loadBtn.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        loadBtn.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, ArmourerMainSetting::loadSkin);
+        addSubview(loadBtn);
 
-        this.skinFlavor = new AWTextField(font, leftPos + 8, topPos + 90, 158, 16, TextComponent.EMPTY);
-        this.skinFlavor.setMaxLength(40);
-        this.skinFlavor.setEventListener(this::updateSkinPropertiesEvent);
-        this.skinFlavor.setReturnHandler(this::updateSkinPropertiesReturn);
-        this.addButton(skinFlavor);
+        nameTextField.setMaxLength(40);
+        nameTextField.setDelegate(this);
+        addSubview(nameTextField);
 
-        this.addLabel(leftPos + 14, topPos + 48, width, 10, getDisplayText("label.itemName"));
-        this.addLabel(leftPos + 14, topPos + 80, width, 10, getDisplayText("label.flavour"));
+        flavorTextField.setMaxLength(40);
+        flavorTextField.setDelegate(this);
+        addSubview(flavorTextField);
+
+        setupLabel(14, 48, getDisplayText("label.itemName"));
+        setupLabel(14, 80, getDisplayText("label.flavour"));
         if (modVersion != null) {
-            TextComponent text = new TextComponent(modVersion);
-            int textWidth = font.width(text);
-            this.addLabel(leftPos + width - textWidth - 7, topPos + height - 96, textWidth, 9, text);
+            UILabel modLabel = new UILabel(new CGRect(8, 131, 160, 9));
+            modLabel.setText(new NSString(modVersion));
+            modLabel.setTextHorizontalAlignment(NSTextAlignment.Horizontal.RIGHT);
+            addSubview(modLabel);
         }
 
-        this.addHelpButton(leftPos + 6, topPos + 12, "help.skinType");
-        this.addHelpButton(leftPos + 6, topPos + 48, "help.itemName");
-        this.addHelpButton(leftPos + 6, topPos + 80, "help.itemFlavour");
-        this.addHelpButton(leftPos + 81, topPos + 18, "help.save");
-        this.addHelpButton(leftPos + 81, topPos + 30, "help.load");
+        setupHelpView(6, 12, "help.skinType");
+        setupHelpView(6, 48, "help.itemName");
+        setupHelpView(6, 80, "help.itemFlavour");
+        setupHelpView(81, 18, "help.save");
+        setupHelpView(81, 30, "help.load");
 
-        this.skinTypeBox = new AWSkinTypeComboBox(leftPos + 7, topPos + 21, 50, 16, getSkinTypes(), skinType, this::updateSkinType);
-        this.skinTypeBox.setMaxRowCount(8);
-        this.skinTypeBox.setPopLevel(200);
-        this.addButton(skinTypeBox);
+        skinTypeBox.setMaxRows(7);
+        skinTypeBox.reloadSkins(getSkinTypes());
+        skinTypeBox.setSelectedSkin(skinType);
+        skinTypeBox.addTarget(this, UIControl.Event.VALUE_CHANGED, ArmourerMainSetting::updateSkinType);
+        addSubview(skinTypeBox);
 
-        this.reloadData();
+        UIImageView slot1 = new UIImageView(new CGRect(63, 20, 18, 18));
+        UIImageView slot2 = new UIImageView(new CGRect(142, 16, 26, 26));
+        slot1.setImage(UIImage.of(ModTextures.ARMOURER).uv(238, 0).build());
+        slot2.setImage(UIImage.of(ModTextures.ARMOURER).uv(230, 18).build());
+        insertViewAtIndex(slot1, 0);
+        insertViewAtIndex(slot2, 0);
+
+        reloadData();
+    }
+
+    @Override
+    public boolean textFieldShouldReturn(UITextField textField) {
+        updateSkinPropertiesReturn();
+        return true;
+    }
+
+    @Override
+    public void textFieldDidEndEditing(UITextField textField) {
+        updateSkinProperties();
     }
 
     @Override
     public void reloadData() {
         SkinProperties skinProperties = tileEntity.getSkinProperties();
-        this.skinName.setValue(skinProperties.get(SkinProperty.ALL_CUSTOM_NAME));
-        this.skinFlavor.setValue(skinProperties.get(SkinProperty.ALL_FLAVOUR_TEXT));
-        this.skinTypeBox.setSelectedSkin(tileEntity.getSkinType());
+        nameTextField.setValue(skinProperties.get(SkinProperty.ALL_CUSTOM_NAME));
+        flavorTextField.setValue(skinProperties.get(SkinProperty.ALL_FLAVOUR_TEXT));
+        skinTypeBox.setSelectedSkin(tileEntity.getSkinType());
     }
 
-    @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float p_230430_4_) {
-        super.render(matrixStack, mouseX, mouseY, p_230430_4_);
-        RenderUtils.bind(RenderUtils.TEX_ARMOURER);
-        RenderUtils.blit(matrixStack, leftPos + 63, topPos + 20, 238, 0, 18, 18); // input
-        RenderUtils.blit(matrixStack, leftPos + 142, topPos + 16, 230, 18, 26, 26); // output
+    private void setupLabel(int x, int y, NSString text) {
+        UILabel label = new UILabel(new CGRect(x, y, bounds().getWidth(), 9));
+        label.setText(text);
+        addSubview(label);
     }
 
-    @Override
-    protected void addHoveredButton(Button button, PoseStack matrixStack, int mouseX, int mouseY) {
-        if (getFocused() != button && getFocused() != null && getFocused().isMouseOver(mouseX, mouseY)) {
-            return;
-        }
-        super.addHoveredButton(button, matrixStack, mouseX, mouseY);
+    private void setupHelpView(int x, int y, String key) {
+        UIButton button = new UIButton(new CGRect(x, y, 7, 8));
+        button.setBackgroundImage(ModTextures.helpButtonImage(), UIControl.State.ALL);
+        button.setTooltip(getDisplayText(key));
+        addSubview(button);
     }
 
-    protected void addHelpButton(int x, int y, String key) {
-        Component tooltip = getDisplayText(key);
-        AWImageButton button = new AWHelpButton(x, y, 7, 8, Objects::hash, this::addHoveredButton, tooltip);
-        addButton(button);
-    }
-
-    private void updateSkinType(ISkinType skinType) {
+    private void updateSkinType(UIControl control) {
+        ISkinType skinType = skinTypeBox.selectedSkin();;
         if (Objects.equals(skinType, this.skinType)) {
             return; // no changes
         }
@@ -156,8 +168,8 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
 
     private void updateSkinProperties() {
         SkinProperties skinProperties = new SkinProperties(tileEntity.getSkinProperties());
-        skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, skinName.getValue());
-        skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, skinFlavor.getValue());
+        skinProperties.put(SkinProperty.ALL_CUSTOM_NAME, nameTextField.value());
+        skinProperties.put(SkinProperty.ALL_FLAVOUR_TEXT, flavorTextField.value());
         if (skinProperties.equals(tileEntity.getSkinProperties())) {
             return; // not any changes.
         }
@@ -167,7 +179,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
         NetworkManager.sendToServer(packet);
     }
 
-    private void loadSkin(Button sender) {
+    private void loadSkin(UIControl sender) {
         Player player = Minecraft.getInstance().player;
         if (player == null || !container.shouldLoadArmourItem(player)) {
             return;
@@ -177,7 +189,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
         NetworkManager.sendToServer(packet);
     }
 
-    private void saveSkin(Button sender) {
+    private void saveSkin(UIControl sender) {
         Player player = Minecraft.getInstance().player;
         if (player == null || !container.shouldSaveArmourItem(player)) {
             return;
@@ -189,15 +201,8 @@ public class ArmourerMainSetting extends ArmourerBaseSetting {
         NetworkManager.sendToServer(packet);
     }
 
-    private void updateSkinPropertiesReturn(String value) {
-        skinName.setFocus(false);
-        skinFlavor.setFocus(false);
-        setFocused(null);
-    }
-
-    private void updateSkinPropertiesEvent(AWTextField textField, AWTextField.EditEvent event) {
-        if (event == AWTextField.EditEvent.END) {
-            updateSkinProperties();
-        }
+    private void updateSkinPropertiesReturn() {
+        nameTextField.resignFirstResponder();
+        flavorTextField.resignFirstResponder();
     }
 }

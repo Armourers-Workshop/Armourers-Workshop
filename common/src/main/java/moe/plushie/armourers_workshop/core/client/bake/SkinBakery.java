@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.client.bake;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.client.other.SkinVertexBufferBuilder;
 import moe.plushie.armourers_workshop.core.data.DataLoader;
@@ -14,6 +13,7 @@ import moe.plushie.armourers_workshop.core.skin.part.SkinPart;
 import moe.plushie.armourers_workshop.core.skin.part.texture.TexturePart;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModLog;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;

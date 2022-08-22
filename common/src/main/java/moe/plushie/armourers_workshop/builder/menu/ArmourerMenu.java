@@ -41,7 +41,7 @@ public class ArmourerMenu extends AbstractBlockContainerMenu {
     @Override
     public void removed(Player player) {
         super.removed(player);
-        this.access.execute((level, pos) -> this.clearContainer(player, level, inventory));
+        this.clearContainer(player, inventory);
     }
 
     public boolean shouldLoadArmourItem(Player player) {

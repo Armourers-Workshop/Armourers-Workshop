@@ -1,0 +1,78 @@
+package moe.plushie.armourers_workshop.core.client.gui.widget;
+
+import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGPoint;
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UIEvent;
+import moe.plushie.armourers_workshop.core.client.render.MannequinEntityRenderer;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
+import moe.plushie.armourers_workshop.utils.math.Vector3f;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.world.entity.LivingEntity;
+
+@Environment(value = EnvType.CLIENT)
+public class EntityPreviewView extends UIControl {
+
+    private CGPoint lastMousePos;
+    private float playerRotation = 45.0f;
+
+    public EntityPreviewView(CGRect frame) {
+        super(frame);
+        this.setClipBounds(true);
+    }
+
+    @Override
+    public void render(CGPoint point, CGGraphicsContext context) {
+        LivingEntity entity = ObjectUtils.safeCast(contents(), LivingEntity.class);
+        if (entity == null) {
+            return;
+        }
+        CGRect bounds = bounds();
+        CGPoint pos = convertPointToView(new CGPoint(bounds.width / 2, bounds.height - 8), null);
+        OpenPoseStack poseStack1 = RenderSystem.getResolvedModelViewStack();
+        poseStack1.pushPose();
+
+        poseStack1.translate(0, 0, 300);
+        poseStack1.translate(pos.x, pos.y, 50);
+        poseStack1.mulPose(Vector3f.XP.rotationDegrees(-20));
+        poseStack1.mulPose(Vector3f.YP.rotationDegrees(playerRotation));
+        poseStack1.translate(0, 0, -50);
+
+        MannequinEntityRenderer.enableLimitScale = true;
+        InventoryScreen.renderEntityInInventory(0, 0, 45, 0, 0, entity);
+        MannequinEntityRenderer.enableLimitScale = false;
+
+        poseStack1.popPose();
+    }
+
+    @Override
+    public void setHighlighted(boolean highlighted) {
+        super.setHighlighted(highlighted);
+        this.setClipBounds(!highlighted);
+    }
+
+    @Override
+    public void mouseDown(UIEvent event) {
+        super.mouseDown(event);
+        this.lastMousePos = null;
+        if (event.type() == UIEvent.Type.MOUSE_RIGHT_DOWN) {
+            this.lastMousePos = event.locationInWindow();
+        }
+    }
+
+    @Override
+    public void mouseDragged(UIEvent event) {
+        super.mouseDragged(event);
+        CGPoint oldMousePos = this.lastMousePos;
+        if (oldMousePos == null) {
+            return;
+        }
+        this.lastMousePos = event.locationInWindow();
+        this.playerRotation = (playerRotation + (lastMousePos.x - oldMousePos.x) + 360) % 360;
+    }
+}

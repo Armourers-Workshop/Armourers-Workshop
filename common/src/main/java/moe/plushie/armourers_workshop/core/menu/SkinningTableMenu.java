@@ -27,7 +27,7 @@ public class SkinningTableMenu extends AbstractBlockContainerMenu {
     @Override
     public void removed(Player player) {
         super.removed(player);
-        this.access.execute((level, pos) -> this.clearContainer(player, level, craftingInventory));
+        this.clearContainer(player, craftingInventory);
     }
 
     @Override

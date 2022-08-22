@@ -17,7 +17,7 @@ public class SkinnableMenu extends AbstractBlockContainerMenu {
 
     private final String title;
     private int row;
-    private int colum;
+    private int column;
     private Container inventory;
 
     public SkinnableMenu(MenuType<?> menuType, Block block, int containerId, Inventory playerInventory, ContainerLevelAccess worldPos) {
@@ -26,17 +26,21 @@ public class SkinnableMenu extends AbstractBlockContainerMenu {
         this.title = tileEntity.getInventoryName();
 
         row = 3;
-        colum = 9;
+        column = 9;
         inventory = playerInventory.player.getEnderChestInventory();
 
         if (!tileEntity.isEnderInventory()) {
             row = tileEntity.getInventoryHeight();
-            colum = tileEntity.getInventoryWidth();
+            column = tileEntity.getInventoryWidth();
             inventory = tileEntity.getInventory();
         }
 
-        addPlayerSlots(playerInventory, 8, row * 18 + 41);
-        addCustomSlots(inventory, 0, 0, colum, row);
+        // guiHeight = top + row * 18 + middle + 98 = row * 18 + 124
+        int guiTop = 20;
+        int guiMiddle = 6;
+        int guiWidth = 176;
+        addPlayerSlots(playerInventory, 8, guiTop + row * 18 + guiMiddle + 16); // 16: inventory name
+        addCustomSlots(inventory, (guiWidth - (column * 18)) / 2, guiTop);
 
         if (inventory != null) {
             inventory.startOpen(playerInventory.player);
@@ -56,14 +60,13 @@ public class SkinnableMenu extends AbstractBlockContainerMenu {
         }
     }
 
-    protected void addCustomSlots(Container inventory, int x, int y, int column, int row) {
+    protected void addCustomSlots(Container inventory, int x, int y) {
         if (inventory == null) {
             return;
         }
-        int guiWidth = 176;
         for (int j = 0; j < row; j++) {
             for (int i = 0; i < column; i++) {
-                addSlot(new Slot(inventory, x + i + j * column, y + (guiWidth / 2 - (column * 18) / 2) + 1 + 18 * i, 21 + j * 18));
+                addSlot(new Slot(inventory, i + j * column, x + 18 * i + 1, y + j * 18 + 1));
             }
         }
     }
@@ -90,8 +93,7 @@ public class SkinnableMenu extends AbstractBlockContainerMenu {
         return row;
     }
 
-    public int getColum() {
-        return colum;
+    public int getColumn() {
+        return column;
     }
-
 }

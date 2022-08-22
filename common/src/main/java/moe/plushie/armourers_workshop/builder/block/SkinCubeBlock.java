@@ -52,14 +52,14 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements IBlockEnti
     }
 
     @Override
-    public boolean skipRendering(BlockState state, BlockState state1, Direction dir) {
-        // the same block can be omitted
-        return state.getBlock() == state1.getBlock();
+    public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
+        return ModBlockEntities.SKIN_CUBE.create(level, blockPos, blockState);
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return ModBlockEntities.SKIN_CUBE.get().create();
+    public boolean skipRendering(BlockState state, BlockState state1, Direction dir) {
+        // the same block can be omitted
+        return state.getBlock() == state1.getBlock();
     }
 
     @Override

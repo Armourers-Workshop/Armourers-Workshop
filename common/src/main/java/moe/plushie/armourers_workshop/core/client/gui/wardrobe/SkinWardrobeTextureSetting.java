@@ -1,64 +1,83 @@
 package moe.plushie.armourers_workshop.core.client.gui.wardrobe;
 
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.uikit.*;
 import com.mojang.authlib.GameProfile;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWComboBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWExtendedButton;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWTabPanel;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWTextField;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
+import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.entity.Entity;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinWardrobeTextureSetting extends AWTabPanel {
+public class SkinWardrobeTextureSetting extends SkinWardrobeBaseSetting implements UITextFieldDelegate {
 
     private final SkinWardrobe wardrobe;
     private final HashMap<PlayerTextureDescriptor.Source, String> defaultValues = new HashMap<>();
 
-    private AWComboBox comboList;
-    private AWTextField textBox;
+    private final UIComboBox comboView = new UIComboBox(new CGRect(83, 27, 80, 14));
+    private final UITextField textField = new UITextField(new CGRect(83, 70, 165, 18));
 
     private PlayerTextureDescriptor lastDescriptor = PlayerTextureDescriptor.EMPTY;
     private PlayerTextureDescriptor.Source lastSource = PlayerTextureDescriptor.Source.NONE;
 
-    public SkinWardrobeTextureSetting(SkinWardrobeMenu container) {
+    public SkinWardrobeTextureSetting(SkinWardrobe wardrobe) {
         super("inventory.armourers_workshop.wardrobe.man_texture");
-        this.wardrobe = container.getWardrobe();
+        this.wardrobe = wardrobe;
         this.prepareDefaultValue();
+        this.setup();
     }
 
-    @Override
-    public void init(Minecraft minecraft, int width, int height) {
-        super.init(minecraft, width, height);
-
-        this.addTextField(leftPos + 83 + 1, topPos + 70, defaultValues.get(lastSource));
-        this.addComboList(leftPos + 83, topPos + 27, lastSource);
-        this.addButton(new AWExtendedButton(leftPos + 83, topPos + 90, 100, 20, getDisplayText("set"), this::submit));
+    private void setup() {
+        setupTextField();
+        UIButton button = new UIButton(new CGRect(83, 90, 100, 20));
+        button.setTitle(getDisplayText("set"), UIControl.State.ALL);
+        button.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
+        button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, SkinWardrobeTextureSetting::submit);
+        addSubview(button);
+        setupComboView();
     }
 
-    @Override
-    public void removed() {
-        super.removed();
-        this.comboList = null;
-        this.textBox = null;
+    private void setupComboView() {
+        int selectedIndex = 0;
+        if (lastSource != PlayerTextureDescriptor.Source.NONE) {
+            selectedIndex = lastSource.ordinal() - 1;
+        }
+        ArrayList<UIComboItem> items = new ArrayList<>();
+        items.add(new UIComboItem(getDisplayText("dropdown.user")));
+        items.add(new UIComboItem(getDisplayText("dropdown.url")));
+        comboView.setSelectedIndex(selectedIndex);
+        comboView.reloadData(items);
+        comboView.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, e) -> {
+            int index = self.comboView.selectedIndex();
+            self.changeSource(PlayerTextureDescriptor.Source.values()[index + 1]);
+        });
+        addSubview(comboView);
+    }
+
+    public void setupTextField() {
+        String defaultValue = defaultValues.get(lastSource);
+        textField.setDelegate(this);
+        textField.setMaxLength(1024);
+        if (Strings.isNotBlank(defaultValue)) {
+            textField.setValue(defaultValue);
+        }
+        addSubview(textField);
     }
 
     private void prepareDefaultValue() {
-        Entity entity = wardrobe.getEntity();
-        if (!(entity instanceof MannequinEntity)) {
+        MannequinEntity entity = ObjectUtils.safeCast(wardrobe.getEntity(), MannequinEntity.class);
+        if (entity == null) {
             return;
         }
         defaultValues.clear();
@@ -73,21 +92,21 @@ public class SkinWardrobeTextureSetting extends AWTabPanel {
     }
 
     private void submit(Object button) {
-        textBox.setFocus(false);
-        int index = comboList.getSelectedIndex();
+        textField.resignFirstResponder();
+        int index = comboView.selectedIndex();
         PlayerTextureDescriptor.Source source = PlayerTextureDescriptor.Source.values()[index + 1];
-        applyText(source, textBox.getValue());
+        applyText(source, textField.value());
     }
 
     private void changeSource(PlayerTextureDescriptor.Source newSource) {
         if (this.lastSource == newSource) {
             return;
         }
-        defaultValues.put(lastSource, textBox.getValue());
-        textBox.setValue(defaultValues.getOrDefault(newSource, ""));
-        textBox.setFocus(false);
-        textBox.moveCursorToStart();
-        comboList.setSelectedIndex(newSource.ordinal() - 1);
+        defaultValues.put(lastSource, textField.value());
+        textField.setValue(defaultValues.getOrDefault(newSource, ""));
+        textField.resignFirstResponder();
+        textField.setCursorPos(textField.beginOfDocument());
+        comboView.setSelectedIndex(newSource.ordinal() - 1);
         lastSource = newSource;
     }
 
@@ -116,30 +135,9 @@ public class SkinWardrobeTextureSetting extends AWTabPanel {
         });
     }
 
-    private void addComboList(int x, int y, PlayerTextureDescriptor.Source source) {
-        int selectedIndex = 0;
-        if (source != PlayerTextureDescriptor.Source.NONE) {
-            selectedIndex = source.ordinal() - 1;
-        }
-        ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
-        items.add(new AWComboBox.ComboItem(getDisplayText("dropdown.user")));
-        items.add(new AWComboBox.ComboItem(getDisplayText("dropdown.url")));
-        comboList = new AWComboBox(x, y, 80, 14, items, selectedIndex, button -> {
-            if (button instanceof AWComboBox) {
-                int index = ((AWComboBox) button).getSelectedIndex();
-                changeSource(PlayerTextureDescriptor.Source.values()[index + 1]);
-            }
-        });
-        addButton(comboList);
-    }
-
-    private void addTextField(int x, int y, String defaultValue) {
-        textBox = new AWTextField(font, x, y, 165, 16, TextComponent.EMPTY);
-        textBox.setMaxLength(1024);
-        textBox.setReturnHandler(this::submit);
-        if (Strings.isNotBlank(defaultValue)) {
-            textBox.setValue(defaultValue);
-        }
-        addButton(textBox);
+    @Override
+    public boolean textFieldShouldReturn(UITextField textField) {
+        submit(textField.value());
+        return true;
     }
 }

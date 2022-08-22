@@ -1,12 +1,12 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
 import moe.plushie.armourers_workshop.api.skin.ISkinCube;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,12 +21,12 @@ import java.util.OptionalDouble;
 @Environment(value = EnvType.CLIENT)
 public class SkinRenderType extends RenderType {
 
-    public static final RenderType MAGIC = createImageType(RenderUtils.TEX_CIRCLE, true, true);
-    public static final RenderType EARTH = createImageType(RenderUtils.TEX_EARTH, false, false);
+    public static final RenderType MAGIC = createImageType(ModTextures.CIRCLE, true, true);
+    public static final RenderType EARTH = createImageType(ModTextures.EARTH, false, false);
     public static final RenderType ENTITY_OUTLINE = createEntityOutline();
     public static final RenderType PLAYER_CUTOUT_NO_CULL = entityCutoutNoCull(DefaultPlayerSkin.getDefaultSkin());
     public static final RenderType LINES_WITHOUT_TEST = create("aw_box_lines", DefaultVertexFormat.POSITION_COLOR, 1, 256, RenderType.CompositeState.builder().setLineState(new RenderStateShard.LineStateShard(OptionalDouble.empty())).setLayeringState(VIEW_OFFSET_Z_LAYERING).setAlphaState(NO_ALPHA).setDepthTestState(NO_DEPTH_TEST).createCompositeState(false));
-    public static final RenderType GUIDES = createMarkerFace2(RenderUtils.TEX_GUIDES);
+    public static final RenderType GUIDES = createMarkerFace2(ModTextures.GUIDES);
     protected static final RenderStateShard.LayeringStateShard POLYGON_OFFSET_LAYERING3 = new RenderStateShard.LayeringStateShard("aw_polygon_offset_layering", () -> {
         RenderSystem.enablePolygonOffset();
         RenderSystem.polygonOffset(0.0F, -1000.0F);
@@ -34,7 +34,7 @@ public class SkinRenderType extends RenderType {
         RenderSystem.polygonOffset(0.0F, 0.0F);
         RenderSystem.disablePolygonOffset();
     });
-    public static final RenderType MARKER_FACE = createMarkerFace(RenderUtils.TEX_MARKERS);
+    public static final RenderType MARKER_FACE = createMarkerFace(ModTextures.MARKERS);
     protected static final RenderStateShard.LayeringStateShard POLYGON_OFFSET_LAYERING2 = new RenderStateShard.LayeringStateShard("aw_polygon_offset_layering", () -> {
         RenderSystem.enablePolygonOffset();
         RenderSystem.polygonOffset(0.0F, 10.0F);
@@ -44,18 +44,17 @@ public class SkinRenderType extends RenderType {
     });
     public static final RenderType PLAYER_CUTOUT = entityCutout(DefaultPlayerSkin.getDefaultSkin());
     public static final RenderType PLAYER_TRANSLUCENT = entityTranslucentCull(DefaultPlayerSkin.getDefaultSkin());
-    private static final RenderStateShard.TextureStateShard COLORS = new TextureStateShard(RenderUtils.TEX_CUBE, false, false);
+    private static final RenderStateShard.TextureStateShard COLORS = new TextureStateShard(ModTextures.CUBE, false, false);
     private static final RenderStateShard.TexturingStateShard COLORS_OFFSET = new TexturingStateShard("aw_offset_texturing", () -> {
-        RenderSystem.matrixMode(GL11.GL_TEXTURE);
-        RenderSystem.pushMatrix();
-        RenderSystem.loadIdentity();
-        float f = TickUtils.getPaintTextureOffset() / 256.0f;
-        RenderSystem.translatef(0, f, 0.0F);
-        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
+        GL11.glMatrixMode(GL11.GL_TEXTURE);
+        GL11.glPushMatrix();
+        GL11.glLoadIdentity();
+        GL11.glTranslatef(0, TickUtils.getPaintTextureOffset() / 256.0f, 0);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
     }, () -> {
-        RenderSystem.matrixMode(GL11.GL_TEXTURE);
-        RenderSystem.popMatrix();
-        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
+        GL11.glMatrixMode(GL11.GL_TEXTURE);
+        GL11.glPopMatrix();
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
     });
     public static final SkinRenderType SOLID_FACE = new SkinRenderType("aw_quad_face", createSolidFace(false), true, false);
     public static final SkinRenderType LIGHTING_FACE = new SkinRenderType("aw_lighting_quad_face", createLightingPart(false), false, false);

@@ -42,6 +42,8 @@ public class ModDebugger {
     public static boolean tooltip = false;
     public static boolean wireframeRender = false;
 
+    public static boolean viewHierarchy = false;
+
     // Debug tool
     public static boolean armourerDebugRender;
     public static boolean lodLevels;

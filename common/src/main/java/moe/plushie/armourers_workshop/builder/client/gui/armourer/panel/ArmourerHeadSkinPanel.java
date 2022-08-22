@@ -13,9 +13,9 @@ public class ArmourerHeadSkinPanel extends ArmourerBaseSkinPanel {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         super.init();
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.MODEL_OVERRIDE_HEAD);
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.MODEL_HIDE_OVERLAY_HEAD);
+        addCheckBox(0, 0, SkinProperty.MODEL_OVERRIDE_HEAD);
+        addCheckBox(0, 0, SkinProperty.MODEL_HIDE_OVERLAY_HEAD);
     }
 }

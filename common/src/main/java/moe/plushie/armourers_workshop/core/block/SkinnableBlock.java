@@ -11,6 +11,7 @@ import moe.plushie.armourers_workshop.init.ModEntities;
 import moe.plushie.armourers_workshop.init.ModMenus;
 import moe.plushie.armourers_workshop.init.ModPermissions;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
+import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
 import net.minecraft.core.BlockPos;
@@ -59,8 +60,8 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return ModBlockEntities.SKINNABLE_CUBE.get().create();
+    public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
+        return ModBlockEntities.SKINNABLE_CUBE.create(level, blockPos, blockState);
     }
 
     @Override
@@ -235,7 +236,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
         }
         // anyway, we only drop all items once.
         tileEntity.setDropped(true);
-        if (player == null || !player.abilities.instabuild) {
+        if (player == null || !Accessor.getAbilities(player).instabuild) {
             DataSerializers.dropItemStack(level, blockPos, tileEntity.getDescriptor().asItemStack());
         }
         if (tileEntity.isInventory()) {
@@ -262,7 +263,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
 
     @Nullable
     private SeatEntity getSeatEntity(Level level, BlockPos blockPos, Vector3d pos) {
-        AABB searchRect = AABB.ofSize(1, 1, 1).move(pos.x(), pos.y(), pos.z());
+        AABB searchRect = new AABB(pos.x, pos.y, pos.z, pos.x + 1, pos.y + 1, pos.z + 1);
         for (SeatEntity entity : level.getEntitiesOfClass(SeatEntity.class, searchRect)) {
             if (entity.isAlive() && blockPos.equals(entity.getBlockPos())) {
                 if (entity.getPassengers().isEmpty()) {
@@ -279,7 +280,7 @@ public class SkinnableBlock extends AbstractAttachedHorizontalBlock implements I
     }
 
     private void killSeatEntity(Level level, BlockPos blockPos, Vector3d pos) {
-        AABB searchRect = AABB.ofSize(1, 1, 1).move(pos.x(), pos.y(), pos.z());
+        AABB searchRect = new AABB(pos.x, pos.y, pos.z, pos.x + 1, pos.y + 1, pos.z + 1);
         for (SeatEntity entity : level.getEntitiesOfClass(SeatEntity.class, searchRect)) {
             if (entity.isAlive() && blockPos.equals(entity.getBlockPos())) {
                 entity.kill();

@@ -1,7 +1,7 @@
 package moe.plushie.armourers_workshop.init.capability;
 
-import moe.plushie.armourers_workshop.api.common.ITagRepresentable;
 import moe.plushie.armourers_workshop.api.common.ICapabilityType;
+import moe.plushie.armourers_workshop.api.common.ITagRepresentable;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.minecraft.nbt.CompoundTag;

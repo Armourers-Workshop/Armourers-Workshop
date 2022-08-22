@@ -158,18 +158,15 @@ public class PlayerTextureLoader {
             return;
         }
         profiles.put(name, Optional.empty());
-        executor.execute(() -> {
-            GameProfile profile1 = null;
-            try {
-                profile1 = SkullBlockEntity.updateGameprofile(profile);
-                profiles.put(name, Optional.ofNullable(profile1));
-            } catch (Exception exception) {
-                // we called mojang API, it will throw `com.mojang.authlib.exceptions.*`.
-                //exception.printStackTrace();
+        loadVanillaGameProfile(profile, resolvedProfile -> {
+            // when an exception occurs, we need to remove and later retry.
+            if (resolvedProfile.isPresent()) {
+                profiles.put(name, resolvedProfile);
+            } else {
                 profiles.remove(name);
             }
             if (complete != null) {
-                complete.accept(Optional.ofNullable(profile1));
+                complete.accept(resolvedProfile);
             }
         });
     }
@@ -206,6 +203,20 @@ public class PlayerTextureLoader {
             ModLog.debug("receive player texture from vanilla loader => {}", location);
             receivePlayerTexture(descriptor, location, profileTexture.getUrl(), model);
         }, true);
+    }
+
+    private void loadVanillaGameProfile(GameProfile profile, Consumer<Optional<GameProfile>> complete) {
+        executor.execute(() -> {
+            //#if MC >= 11800
+            //# SkullBlockEntity.updateGameprofile(profile, resolvedProfile -> complete.accept(Optional.ofNullable(resolvedProfile)));
+            //#else
+            try {
+                complete.accept(Optional.ofNullable(SkullBlockEntity.updateGameprofile(profile)));
+            } catch (Exception exception) {
+                complete.accept(Optional.empty()); // we called mojang API, it will throw `com.mojang.authlib.exceptions.*`.
+            }
+            //#endif
+        });
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -250,7 +261,6 @@ public class PlayerTextureLoader {
             ModLog.debug("baked a player texture => {}, url: {}, slim: {}", bakedTexture.getResourceLocation(), url, slim);
         });
     }
-
 
     private synchronized void receivePlayerTexture(PlayerTextureDescriptor descriptor, ResourceLocation location, String url, String model) {
         PlayerTexture resolvedTexture = new PlayerTexture(url, location, model);

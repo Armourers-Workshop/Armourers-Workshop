@@ -2,14 +2,7 @@ package moe.plushie.armourers_workshop.builder.client.gui.advancedskinbuilder.gu
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import moe.plushie.armourers_workshop.api.client.guide.IGuideDataProvider;
-import moe.plushie.armourers_workshop.builder.client.render.guide.AbstractGuideRenderer;
-import moe.plushie.armourers_workshop.builder.client.render.guide.GuideRendererManager;
-import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
-import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
-import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

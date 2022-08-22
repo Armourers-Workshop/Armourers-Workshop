@@ -77,14 +77,14 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     private boolean isDropped = false;
     private boolean isParent = false;
 
-    public SkinnableBlockEntity(BlockEntityType<?> entityType) {
-        super(entityType);
+    public SkinnableBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
     }
 
     public static Vector3f getRotations(BlockState state) {
         AttachFace face = state.getOptionalValue(SkinnableBlock.FACE).orElse(AttachFace.FLOOR);
         Direction facing = state.getOptionalValue(SkinnableBlock.FACING).orElse(Direction.NORTH);
-        return FACING_TO_ROT.getOrDefault(Pair.of(face, facing), new Vector3f());
+        return FACING_TO_ROT.getOrDefault(Pair.of(face, facing), Vector3f.ZERO);
     }
 
     @Override
@@ -180,7 +180,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         if (renderRotations != null) {
             return renderRotations;
         }
-        Vector3f r = getRotations(getBlockState());
+        Vector3f r = getRotations(blockState);
         renderRotations = TrigUtils.rotate(r.getX(), r.getY(), r.getZ(), true);
         return renderRotations;
     }

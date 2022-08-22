@@ -1,10 +1,10 @@
 package moe.plushie.armourers_workshop.core.data.slot;
 
+import moe.plushie.armourers_workshop.api.common.ITagKey;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModItemTags;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,10 +22,10 @@ public enum ItemOverrideType {
 
     ITEM("item", null);
 
-    private final Tag<Item> tag;
+    private final ITagKey<Item> tag;
     private final String name;
 
-    ItemOverrideType(String name, Tag<Item> tag) {
+    ItemOverrideType(String name, ITagKey<Item> tag) {
         this.name = name;
         this.tag = tag;
     }
@@ -47,7 +47,7 @@ public enum ItemOverrideType {
             return true;
         }
         // and then using vanilla's tag system.
-        return tag != null && item.is(tag);
+        return tag != null && tag.contains(item);
     }
 
     public String getName() {

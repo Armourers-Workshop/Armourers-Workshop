@@ -27,8 +27,8 @@ public class AdvancedSkinBuilderBlock extends AbstractHorizontalBlock implements
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return ModBlockEntities.ADVANCED_SKIN_BUILDER.get().create();
+    public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
+        return ModBlockEntities.ADVANCED_SKIN_BUILDER.create(level, blockPos, blockState);
     }
 
     @Override

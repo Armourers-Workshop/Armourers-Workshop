@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3d;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -16,8 +17,8 @@ public abstract class RotableContainerBlockEntity extends AbstractContainerBlock
 
     private AABB renderBoundingBox;
 
-    public RotableContainerBlockEntity(BlockEntityType<?> entityType) {
-        super(entityType);
+    public RotableContainerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
     }
 
     public void setRenderChanged() {
@@ -40,7 +41,7 @@ public abstract class RotableContainerBlockEntity extends AbstractContainerBlock
         if (renderBoundingBox != null) {
             return renderBoundingBox;
         }
-        Rectangle3f rect = getRenderBoundingBox(getBlockState());
+        Rectangle3f rect = getRenderBoundingBox(blockState);
         if (rect == null) {
             return ZERO_BOX;
         }

@@ -1,15 +1,15 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
+import com.apple.library.foundation.NSString;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonObject;
-import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryScreen;
-import moe.plushie.armourers_workshop.library.client.gui.widget.SkinFileList;
+import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
+import moe.plushie.armourers_workshop.library.client.gui.widget.SkinItemList;
 import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.library.data.global.PlushieUser;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinListUser;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.chat.Component;
 
 import java.util.function.BiConsumer;
 
@@ -19,7 +19,7 @@ public class UserSkinsLibraryPanel extends SearchResultsLibraryPanel {
     private int userId;
 
     public UserSkinsLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.searchResults", GlobalSkinLibraryScreen.Page.LIST_USER_SKINS::equals);
+        super("inventory.armourers_workshop.skin-library-global.searchResults", GlobalSkinLibraryWindow.Page.LIST_USER_SKINS::equals);
     }
 
     public void reloadData(int userId) {
@@ -28,8 +28,8 @@ public class UserSkinsLibraryPanel extends SearchResultsLibraryPanel {
         this.fetchPage(0);
     }
 
-    protected void showSkinInfo(SkinFileList.Entry sender) {
-        router.showSkinDetail(sender, GlobalSkinLibraryScreen.Page.LIST_USER_SKINS);
+    protected void showSkinInfo(SkinItemList.Entry sender) {
+        router.showSkinDetail(sender, GlobalSkinLibraryWindow.Page.LIST_USER_SKINS);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class UserSkinsLibraryPanel extends SearchResultsLibraryPanel {
     }
 
     @Override
-    public Component getTitle() {
+    protected NSString getResultsTitle() {
         if (totalPages < 0) {
             return getDisplayText("label.searching");
         }

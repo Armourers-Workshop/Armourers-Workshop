@@ -1,5 +1,10 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer;
 
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIControl;
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
@@ -10,18 +15,16 @@ import moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog.Armoure
 import moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog.ArmourerReplaceDialog;
 import moe.plushie.armourers_workshop.builder.menu.ArmourerMenu;
 import moe.plushie.armourers_workshop.builder.network.UpdateArmourerPacket;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWExtendedButton;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -31,80 +34,86 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
 
     protected final ArmourerBlockEntity tileEntity;
 
-    protected AWExtendedButton buttonClear;
-    protected AWExtendedButton buttonCopy;
-    protected AWExtendedButton buttonReplace;
-
-    protected ArmourerScreen screen;
-
-    protected ArmourerBlockSetting(ArmourerMenu container, ArmourerScreen screen) {
+    protected ArmourerBlockSetting(ArmourerMenu container) {
         super("inventory.armourers_workshop.armourer.blockUtils");
         this.tileEntity = container.getTileEntity();
-        this.screen = screen;
     }
 
     @Override
-    protected void init() {
+    public void init() {
         super.init();
 
-        this.buttonClear = new AWExtendedButton(leftPos + 10, topPos + 20, 70, 20, getDisplayText("clear"), this::clearAction);
-        this.buttonCopy = new AWExtendedButton(leftPos + 10, topPos + 45, 70, 20, getDisplayText("copy"), this::copyAction);
-        this.buttonReplace = new AWExtendedButton(leftPos + 10, topPos + 70, 70, 20, getDisplayText("replace"), this::replaceAction);
+        UIButton clearBtn = new UIButton(new CGRect(10, 20, 70, 20));
+        clearBtn.setTitle(getDisplayText("clear"), UIControl.State.ALL);
+        clearBtn.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
+        clearBtn.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        clearBtn.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, ArmourerBlockSetting::clearAction);
+        addSubview(clearBtn);
 
-        this.addButton(buttonClear);
-        this.addButton(buttonCopy);
-        this.addButton(buttonReplace);
+        UIButton copyBtn = new UIButton(new CGRect(10, 45, 70, 20));
+        copyBtn.setTitle(getDisplayText("copy"), UIControl.State.ALL);
+        copyBtn.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
+        copyBtn.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        copyBtn.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, ArmourerBlockSetting::copyAction);
+        addSubview(copyBtn);
+
+        UIButton replaceBtn = new UIButton(new CGRect(10, 70, 70, 20));
+        replaceBtn.setTitle(getDisplayText("replace"), UIControl.State.ALL);
+        replaceBtn.setTitleColor(UIColor.WHITE, UIControl.State.ALL);
+        replaceBtn.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        replaceBtn.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, ArmourerBlockSetting::replaceAction);
+        addSubview(replaceBtn);
     }
 
-    private void clearAction(Button sender) {
-        Component title = TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.clear.title");
-        ArmourerClearDialog dialog = new ArmourerClearDialog(getPartTypes(true), title);
-        screen.present(dialog, dialog1 -> {
-            if (dialog1.isCancelled()) {
+    private void clearAction(UIControl sender) {
+        ArmourerClearDialog dialog = new ArmourerClearDialog(getPartTypes(true));
+        dialog.setTitle(getCommonText("inventory.armourers_workshop.armourer.dialog.clear.title"));
+        dialog.showInView(this, () -> {
+            if (dialog.isCancelled()) {
                 return;
             }
             CompoundTag nbt = new CompoundTag();
-            nbt.putBoolean(Constants.Key.SKIN_CUBES, dialog1.isClearBlocks());
-            nbt.putBoolean(Constants.Key.SKIN_PAINTS, dialog1.isClearPaints());
-            nbt.putBoolean(Constants.Key.SKIN_MARKERS, dialog1.isClearMarkers());
-            nbt.putString(Constants.Key.SKIN_PART_TYPE, dialog1.getSelectedPartType().getRegistryName().toString());
+            nbt.putBoolean(Constants.Key.SKIN_CUBES, dialog.isClearBlocks());
+            nbt.putBoolean(Constants.Key.SKIN_PAINTS, dialog.isClearPaints());
+            nbt.putBoolean(Constants.Key.SKIN_MARKERS, dialog.isClearMarkers());
+            nbt.putString(Constants.Key.SKIN_PART_TYPE, dialog.getSelectedPartType().getRegistryName().toString());
             UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_CLEAR;
             NetworkManager.sendToServer(new UpdateArmourerPacket(tileEntity, field, nbt));
         });
     }
 
-    private void copyAction(Button sender) {
-        Component title = TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.copy.title");
-        ArmourerCopyDialog dialog = new ArmourerCopyDialog(getPartTypes(false), title);
-        screen.present(dialog, dialog1 -> {
-            if (dialog1.isCancelled()) {
+    private void copyAction(UIControl sender) {
+        ArmourerCopyDialog dialog = new ArmourerCopyDialog(getPartTypes(false));
+        dialog.setTitle(getCommonText("inventory.armourers_workshop.armourer.dialog.copy.title"));
+        dialog.showInView(this, () -> {
+            if (dialog.isCancelled()) {
                 return;
             }
             CompoundTag nbt = new CompoundTag();
-            nbt.putBoolean(Constants.Key.MIRROR, dialog1.isMirror());
-            nbt.putBoolean(Constants.Key.SKIN_PAINTS, dialog1.isCopyPaintData());
-            nbt.putString(Constants.Key.SOURCE, dialog1.getSourcePartType().getRegistryName().toString());
-            nbt.putString(Constants.Key.DESTINATION, dialog1.getDestinationPartType().getRegistryName().toString());
+            nbt.putBoolean(Constants.Key.MIRROR, dialog.isMirror());
+            nbt.putBoolean(Constants.Key.SKIN_PAINTS, dialog.isCopyPaintData());
+            nbt.putString(Constants.Key.SOURCE, dialog.getSourcePartType().getRegistryName().toString());
+            nbt.putString(Constants.Key.DESTINATION, dialog.getDestinationPartType().getRegistryName().toString());
             UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_COPY;
             UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, nbt);
             NetworkManager.sendToServer(packet);
         });
     }
 
-    private void replaceAction(Button sender) {
-        Component title = TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.replace.title");
-        ArmourerReplaceDialog dialog = new ArmourerReplaceDialog(title);
-        screen.present(dialog, dialog1 -> {
-            if (dialog1.isCancelled()) {
+    private void replaceAction(UIControl sender) {
+        ArmourerReplaceDialog dialog = new ArmourerReplaceDialog();
+        dialog.setTitle(getCommonText("inventory.armourers_workshop.armourer.dialog.replace.title"));
+        dialog.showInView(this, () -> {
+            if (dialog.isCancelled()) {
                 return;
             }
             CompoundTag source = new CompoundTag();
-            ItemStack selector = dialog1.getSelector();
+            ItemStack selector = dialog.getSelector();
             if (selector.getItem() instanceof IItemColorProvider) {
                 selector.save(source);
             }
             CompoundTag destination = new CompoundTag();
-            ItemStack applier = dialog1.getApplier();
+            ItemStack applier = dialog.getApplier();
             if (applier.getItem() instanceof IItemColorProvider) {
                 applier.save(destination);
             }
@@ -114,8 +123,8 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             CompoundTag nbt = new CompoundTag();
             nbt.put(Constants.Key.SOURCE, source);
             nbt.put(Constants.Key.DESTINATION, destination);
-            nbt.putBoolean(Constants.Key.KEEP_COLOR, dialog1.isKeepColor());
-            nbt.putBoolean(Constants.Key.KEEP_PAINT_TYPE, dialog1.isKeepPaintType());
+            nbt.putBoolean(Constants.Key.KEEP_COLOR, dialog.isKeepColor());
+            nbt.putBoolean(Constants.Key.KEEP_PAINT_TYPE, dialog.isKeepPaintType());
             UpdateArmourerPacket.Field field = UpdateArmourerPacket.Field.ITEM_REPLACE;
             UpdateArmourerPacket packet = new UpdateArmourerPacket(tileEntity, field, nbt);
             NetworkManager.sendToServer(packet);
@@ -139,5 +148,9 @@ public class ArmourerBlockSetting extends ArmourerBaseSetting {
             }
         }
         return partTypes;
+    }
+
+    protected NSString getCommonText(String key) {
+        return new NSString(TranslateUtils.title(key));
     }
 }

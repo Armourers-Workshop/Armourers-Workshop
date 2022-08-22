@@ -2,6 +2,7 @@ package moe.plushie.armourers_workshop.core.entity;
 
 import moe.plushie.armourers_workshop.core.blockentity.SkinnableBlockEntity;
 import moe.plushie.armourers_workshop.init.ModConfig;
+import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
 import net.fabricmc.api.EnvType;
@@ -22,8 +23,7 @@ public class SeatEntity extends LivingEntity {
 
     public SeatEntity(EntityType<? extends SeatEntity> entityType, Level level) {
         super(entityType, level);
-        this.yRot = 0.0f;
-        this.yHeadRot = this.yRot;
+        this.setYRot(0.0f);
         this.maxUpStep = 0.0f;
         this.holdingTick = ModConfig.Client.prefersSeatHoldingTick;
     }
@@ -52,17 +52,17 @@ public class SeatEntity extends LivingEntity {
     public void travel(Vec3 p_213352_1_) {
         if (isAlive() && !getPassengers().isEmpty()) {
             Entity passenger = getPassengers().get(0);
-            this.yRot = passenger.yRot;
-            this.yRotO = this.yRot;
-            this.setRot(this.yRot, this.xRot);
-            this.yBodyRot = this.yRot;
-            this.yHeadRot = this.yBodyRot;
+            this.setYRot(Accessor.getYRot(passenger));
         }
     }
 
     @Override
     public void kill() {
+        //#if MC >= 11800
+        //# this.remove(RemovalReason.KILLED);
+        //#else
         this.remove();
+        //#endif
     }
 
     public void autoKill() {
@@ -85,6 +85,17 @@ public class SeatEntity extends LivingEntity {
             return false;
         }
         return level != null && blockPos != null && level.getBlockEntity(blockPos) instanceof SkinnableBlockEntity;
+    }
+
+    public void setYRot(float f) {
+        this.yRotO = f;
+        this.yBodyRot = f;
+        this.yHeadRot = f;
+        //#if MC >= 11800
+        //# super.setYRot(f);
+        //#else
+        this.yRot = f;
+        //#endif
     }
 
     @Override

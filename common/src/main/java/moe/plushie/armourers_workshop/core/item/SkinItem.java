@@ -101,12 +101,14 @@ public class SkinItem extends Item implements IItemPropertiesProvider {
         if (!wardrobe.getItem(slotType, slot).isEmpty()) {
             return InteractionResultHolder.pass(itemStack);
         }
-        wardrobe.setItem(slotType, slot, itemStack.copy());
-        itemStack.shrink(1);
-        if (!level.isClientSide()) {
-            wardrobe.broadcast();
+        // we need to wait for the server check.
+        if (level.isClientSide()) {
+            return InteractionResultHolder.success(itemStack);
         }
-        return InteractionResultHolder.sidedSuccess(itemStack.copy(), level.isClientSide());
+        wardrobe.setItem(slotType, slot, itemStack.copy());
+        wardrobe.broadcast();
+        itemStack.shrink(1);
+        return InteractionResultHolder.consume(itemStack.copy());
     }
 
     public InteractionResult place(BlockPlaceContext context) {

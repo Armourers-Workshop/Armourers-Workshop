@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.library.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.render.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.library.block.GlobalSkinLibraryBlock;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import net.fabricmc.api.EnvType;
@@ -10,13 +11,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Environment(value = EnvType.CLIENT)
-public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends BlockEntityRenderer<T> {
+public class GlobalSkinLibraryBlockEntityRenderer<T extends BlockEntity> extends AbstractBlockEntityRenderer<T> {
 
     private final ModelPart model = new ModelPart(64, 32, 0, 0);
 

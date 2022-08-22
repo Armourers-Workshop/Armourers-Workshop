@@ -23,12 +23,12 @@ public class OutfitMakerBlock extends AbstractHorizontalBlock implements IBlockE
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return MenuManager.openMenu(ModMenus.OUTFIT_MAKER, level.getBlockEntity(blockPos), player);
+    public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
+        return ModBlockEntities.OUTFIT_MAKER.create(level, blockPos, blockState);
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return ModBlockEntities.OUTFIT_MAKER.get().create();
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        return MenuManager.openMenu(ModMenus.OUTFIT_MAKER, level.getBlockEntity(blockPos), player);
     }
 }

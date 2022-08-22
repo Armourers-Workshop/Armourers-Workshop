@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.builder.data.palette;
 
+import com.apple.library.uikit.UIColor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -9,7 +10,6 @@ import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
 import moe.plushie.armourers_workshop.utils.SerializeHelper;
 
-import java.awt.*;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
@@ -116,7 +116,7 @@ public class PaletteManager {
                 if (jsonPalette.has("name") & jsonPalette.has("colours")) {
                     String name = jsonPalette.get("name").getAsString();
                     boolean locked = jsonPalette.get("locked").getAsBoolean();
-                    int[] colours = jsonToIntArray(jsonPalette.get("colours").getAsJsonArray());
+                    UIColor[] colours = jsonToIntArray(jsonPalette.get("colours").getAsJsonArray());
                     Palette palette = new Palette(name, locked, colours);
                     paletteMap.put(palette.getName(), palette);
                 }
@@ -128,7 +128,7 @@ public class PaletteManager {
         }
     }
 
-    private JsonArray intToJsonArray(int[] intArray) {
+    private JsonArray intToJsonArray(UIColor[] intArray) {
         JsonArray jsonArray = new JsonArray();
         for (int i = 0; i < intArray.length; i++) {
             jsonArray.add(colourToHex(intArray[i]));
@@ -136,35 +136,31 @@ public class PaletteManager {
         return jsonArray;
     }
 
-    private int[] jsonToIntArray(JsonArray jsonArray) {
-        int[] intArray = new int[jsonArray.size()];
+    private UIColor[] jsonToIntArray(JsonArray jsonArray) {
+        UIColor[] intArray = new UIColor[jsonArray.size()];
         for (int i = 0; i < jsonArray.size(); i++) {
             String colourHex = jsonArray.get(i).getAsString();
-            intArray[i] = hexToColour(colourHex);
+            if (isValidHex(colourHex)) {
+                intArray[i] = UIColor.decode(colourHex);
+            }
         }
         return intArray;
     }
 
     private boolean isValidHex(String colorStr) {
+        if (colorStr.isEmpty()) {
+            return false;
+        }
         String hexPatten = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
         Pattern pattern = Pattern.compile(hexPatten);
         Matcher matcher = pattern.matcher(colorStr);
         return matcher.matches();
     }
 
-    private String colourToHex(int colour) {
-        return colourToHex(new Color(colour, false));
-    }
-
-    private String colourToHex(Color c) {
-        return String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
-    }
-
-    private int hexToColour(String hex) {
-        if (isValidHex(hex)) {
-            return Color.decode(hex).getRGB();
-        } else {
-            return 0xFF000000;
+    private String colourToHex(UIColor c) {
+        if (c == null) {
+            return "";
         }
+        return String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
     }
 }

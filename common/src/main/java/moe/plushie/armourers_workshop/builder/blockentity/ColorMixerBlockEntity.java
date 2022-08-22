@@ -7,15 +7,17 @@ import moe.plushie.armourers_workshop.core.item.impl.IPaintProvider;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class ColorMixerBlockEntity extends AbstractBlockEntity implements IPaintProvider {
 
     private IPaintColor color = PaintColor.WHITE;
 
-    public ColorMixerBlockEntity(BlockEntityType<?> entityType) {
-        super(entityType);
+    public ColorMixerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
     }
 
     public void readFromNBT(CompoundTag nbt) {

@@ -1,30 +1,31 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.coregraphics.CGSize;
+import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UILabel;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWImageButton;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWImageExtendedButton;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryScreen;
-import moe.plushie.armourers_workshop.library.client.gui.widget.SkinFileList;
+import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
+import moe.plushie.armourers_workshop.library.client.gui.widget.SkinItemList;
 import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchColumnType;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskSkinSearch.SearchOrderType;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
-import moe.plushie.armourers_workshop.utils.math.Size2i;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -35,18 +36,15 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 @Environment(value = EnvType.CLIENT)
-public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements GlobalSkinLibraryScreen.ISkinListListener {
+public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements GlobalSkinLibraryWindow.ISkinListListener {
 
-    protected final HashSet<Integer> downloadingPages = new HashSet<>();
-    protected final HashMap<Integer, ArrayList<SkinFileList.Entry>> downloadedPageList = new HashMap<>();
-    protected SkinFileList skinPanelResults;
-    protected AWImageButton iconButtonSmall;
-    protected AWImageButton iconButtonMedium;
-    protected AWImageButton iconButtonLarge;
-    protected AWImageButton iconButtonPrevious;
-    protected AWImageButton iconButtonNext;
-    protected int itemSize = 48;
-    protected int lastRequestSize = 0;
+    private final HashSet<Integer> downloadingPages = new HashSet<>();
+    private final HashMap<Integer, ArrayList<SkinItemList.Entry>> downloadedPageList = new HashMap<>();
+    private final UILabel resultTitle = new UILabel(CGRect.ZERO);
+    private final SkinItemList skinPanelResults = new SkinItemList(CGRect.ZERO);
+
+    private int itemSize = 48;
+    private int lastRequestSize = 0;
 
     protected int currentPage = 0;
     protected int totalPages = -1;
@@ -58,35 +56,48 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     private SearchOrderType orderType = SearchOrderType.DESC;
 
     public SearchResultsLibraryPanel() {
-        this("inventory.armourers_workshop.skin-library-global.searchResults", GlobalSkinLibraryScreen.Page.LIST_SEARCH::equals);
+        this("inventory.armourers_workshop.skin-library-global.searchResults", GlobalSkinLibraryWindow.Page.LIST_SEARCH::equals);
     }
 
-    public SearchResultsLibraryPanel(String titleKey, Predicate<GlobalSkinLibraryScreen.Page> predicate) {
+    public SearchResultsLibraryPanel(String titleKey, Predicate<GlobalSkinLibraryWindow.Page> predicate) {
         super(titleKey, predicate);
+        this.setup();
+    }
+
+    private void setup() {
+        CGRect rect = bounds();
+
+        resultTitle.setFrame(new CGRect(4, 2, rect.width - 64, 16));
+        resultTitle.setTextColor(UIColor.WHITE);
+        resultTitle.setAutoresizingMask(AutoresizingMask.flexibleWidth);
+        addSubview(resultTitle);
+
+        skinPanelResults.setFrame(new CGRect(4, 20, rect.width - 8, rect.height - 40 - 3));
+        skinPanelResults.setItemSelector(this::showSkinInfo);
+        skinPanelResults.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
+        addSubview(skinPanelResults);
+        setItemSize(itemSize);
+
+        int iconX = rect.width - 4;
+
+        addIconButton(iconX - 52, 2, 48, 0, 16, 16, "small", buildItemSizeUpdater(32));
+        addIconButton(iconX - 34, 2, 48, 17, 16, 16, "medium", buildItemSizeUpdater(48));
+        addIconButton(iconX - 16, 2, 48, 34, 16, 16, "large", buildItemSizeUpdater(80));
+
+        UIButton btn1 = addCommonButton(4, rect.height - 20, 208, 80, 16, 16, "button.previousPage", buildPageUpdater(-1));
+        UIButton btn2 = addCommonButton(rect.width - 20, rect.height - 20, 208, 96, 16, 16, "button.nextPage", buildPageUpdater(1));
+        btn1.setAutoresizingMask(AutoresizingMask.flexibleRightMargin | AutoresizingMask.flexibleTopMargin);
+        btn2.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleTopMargin);
     }
 
     @Override
-    protected void init() {
-        super.init();
-        int iconX = leftPos + width - 4;
-
-        this.iconButtonSmall = addIconButton(iconX - 52, topPos + 2, 48, 0, 16, 16, "small", buildItemSizeUpdater(32));
-        this.iconButtonMedium = addIconButton(iconX - 34, topPos + 2, 48, 17, 16, 16, "medium", buildItemSizeUpdater(48));
-        this.iconButtonLarge = addIconButton(iconX - 16, topPos + 2, 48, 34, 16, 16, "large", buildItemSizeUpdater(80));
-
-        this.skinPanelResults = new SkinFileList(leftPos + 4, topPos + 20, width - 8, height - 40 - 3);
-        this.skinPanelResults.setItemSelector(this::showSkinInfo);
-        this.setItemSize(itemSize);
-        this.addButton(skinPanelResults);
-
-        this.iconButtonPrevious = addCommonButton(leftPos + 4, topPos + height - 20, 208, 80, 16, 16, "button.previousPage", buildPageUpdater(-1));
-        this.iconButtonNext = addCommonButton(leftPos + width - 20, topPos + height - 20, 208, 96, 16, 16, "button.nextPage", buildPageUpdater(1));
-
+    public void layoutSubviews() {
+        super.layoutSubviews();
         int pageSize = skinPanelResults.getTotalCount();
-        if (this.lastRequestSize > 0 && this.lastRequestSize != pageSize) {
-            this.resize();
+        if (lastRequestSize > 0 && this.lastRequestSize != pageSize) {
+            resize();
         } else {
-            this.onPageDidChange();
+            onPageDidChange();
         }
     }
 
@@ -100,25 +111,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     }
 
     @Override
-    protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {
-        RenderUtils.enableScissor(titleLabelX, titleLabelY, width - 64, 16);
-        super.renderLabels(matrixStack, mouseX, mouseY);
-        RenderUtils.disableScissor();
-    }
-
-    @Override
-    public void renderBackgroundLayer(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.fillGradient(matrixStack, leftPos, topPos, leftPos + width, topPos + height, 0xC0101010, 0xD0101010);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-    }
-
-    @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        // all content will render on the background layer
-    }
-
-    @Override
-    public void skinDidChange(int skinId, @Nullable SkinFileList.Entry newValue) {
+    public void skinDidChange(int skinId, @Nullable SkinItemList.Entry newValue) {
         // only update for remove
         if (newValue != null) {
             return;
@@ -138,12 +131,11 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         }
     }
 
-    protected void showSkinInfo(SkinFileList.Entry sender) {
-        router.showSkinDetail(sender, GlobalSkinLibraryScreen.Page.LIST_SEARCH);
+    protected void showSkinInfo(SkinItemList.Entry sender) {
+        router.showSkinDetail(sender, GlobalSkinLibraryWindow.Page.LIST_SEARCH);
     }
 
-    @Override
-    public Component getTitle() {
+    protected NSString getResultsTitle() {
         if (totalPages < 0) {
             return getDisplayText("label.searching");
         }
@@ -153,44 +145,50 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         return getDisplayText("results", currentPage + 1, totalPages, totalResults);
     }
 
-    private AWImageButton addIconButton(int x, int y, int u, int v, int width, int height, String key, Button.OnPress handler) {
-        Component tooltip = getDisplayText(key);
-        AWImageButton button = new AWImageExtendedButton(x, y, width, height, u, v, RenderUtils.TEX_GLOBAL_SKIN_LIBRARY, handler, this::addHoveredButton, tooltip);
-        addButton(button);
-        return button;
+    private void addIconButton(int x, int y, int u, int v, int width, int height, String key, BiConsumer<SearchResultsLibraryPanel, UIControl> handler) {
+        UIButton button = new UIButton(new CGRect(x, y, width, height));
+        button.setImage(ModTextures.iconImage(u, v, width, height, ModTextures.GLOBAL_SKIN_LIBRARY), UIControl.State.ALL);
+        button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        button.setTooltip(getDisplayText(key));
+        button.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin);
+        button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, handler);
+        addSubview(button);
     }
 
-    private AWImageButton addCommonButton(int x, int y, int u, int v, int width, int height, String key, Button.OnPress handler) {
-        Component tooltip = getCommonDisplayText(key);
-        AWImageButton button = new AWImageButton(x, y, width, height, u, v, RenderUtils.TEX_BUTTONS, handler, this::addHoveredButton, tooltip);
-        addButton(button);
+    private UIButton addCommonButton(int x, int y, int u, int v, int width, int height, String key, BiConsumer<SearchResultsLibraryPanel, UIControl> handler) {
+        UIButton button = new UIButton(new CGRect(x, y, width, height));
+        button.setImage(ModTextures.iconImage(u, v, width, height, ModTextures.BUTTONS), UIControl.State.ALL);
+        button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        button.setTooltip(getCommonDisplayText(key));
+        button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, handler);
+        addSubview(button);
         return button;
     }
 
     private void setItemSize(int itemSize) {
         this.itemSize = itemSize;
-        this.skinPanelResults.setItemSize(new Size2i(itemSize, itemSize));
+        this.skinPanelResults.setItemSize(new CGSize(itemSize, itemSize));
         this.skinPanelResults.setShowsName(itemSize >= 72);
         this.skinPanelResults.reloadData();
     }
 
-    private Button.OnPress buildPageUpdater(int step) {
-        return button -> {
-            currentPage = MathUtils.clamp(currentPage + step, 0, totalPages - 1);
-            fetchPage(currentPage);
+    private BiConsumer<SearchResultsLibraryPanel, UIControl> buildPageUpdater(int step) {
+        return (self, sender) -> {
+            self.currentPage = MathUtils.clamp(self.currentPage + step, 0, self.totalPages - 1);
+            fetchPage(self.currentPage);
             onPageDidChange();
             // auto request skin data for the previous/next page
-            int pageIndex = currentPage + step;
-            if (pageIndex > 0 && pageIndex < totalPages) {
+            int pageIndex = self.currentPage + step;
+            if (pageIndex > 0 && pageIndex < self.totalPages) {
                 RenderSystem.recordRenderCall(() -> fetchPage(pageIndex));
             }
         };
     }
 
-    private Button.OnPress buildItemSizeUpdater(int size) {
-        return button -> {
-            setItemSize(size);
-            resize();
+    private BiConsumer<SearchResultsLibraryPanel, UIControl> buildItemSizeUpdater(int size) {
+        return (self, sender) -> {
+            self.setItemSize(size);
+            self.resize();
         };
     }
 
@@ -207,6 +205,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         totalResults = 0;
         skinPanelResults.setEntries(new ArrayList<>());
         lastRequestSize = 0;
+        resultTitle.setText(getResultsTitle());
     }
 
     protected void fetchPage(int pageIndex) {
@@ -252,12 +251,12 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     }
 
     protected void onPageJsonDownload(int pageIndex, JsonObject result) {
-        ArrayList<SkinFileList.Entry> entries = new ArrayList<>();
+        ArrayList<SkinItemList.Entry> entries = new ArrayList<>();
         if (result.has("results")) {
             JsonArray pageResults = result.get("results").getAsJsonArray();
             for (int i = 0; i < pageResults.size(); i++) {
                 JsonObject skinJson = pageResults.get(i).getAsJsonObject();
-                entries.add(new SkinFileList.Entry(skinJson));
+                entries.add(new SkinItemList.Entry(skinJson));
             }
         }
         if (result.has("totalPages")) {
@@ -269,7 +268,7 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
         downloadedPageList.put(pageIndex, entries);
         RenderSystem.recordRenderCall(() -> {
             ModLog.debug("receive skin list {} of {}", pageIndex, totalPages);
-            this.onPageDidChange();
+            onPageDidChange();
         });
         // auto request skin data for the seconds page
         if (pageIndex == 0 && totalPages > 1) {
@@ -278,13 +277,14 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     }
 
     private void onPageDidChange() {
-        ArrayList<SkinFileList.Entry> entries = downloadedPageList.getOrDefault(currentPage, new ArrayList<>());
+        ArrayList<SkinItemList.Entry> entries = downloadedPageList.getOrDefault(currentPage, new ArrayList<>());
         skinPanelResults.setEntries(entries);
         skinPanelResults.reloadData();
+        resultTitle.setText(getResultsTitle());
     }
 
     private Pair<Integer, Integer> getPageBySkin(int skinId) {
-        for (Map.Entry<Integer, ArrayList<SkinFileList.Entry>> entry : downloadedPageList.entrySet()) {
+        for (Map.Entry<Integer, ArrayList<SkinItemList.Entry>> entry : downloadedPageList.entrySet()) {
             int index = Iterables.indexOf(entry.getValue(), e -> e.id == skinId);
             if (index != -1) {
                 return Pair.of(entry.getKey(), index);

@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.utils.ext;
 
+import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
@@ -33,9 +34,15 @@ public abstract class OpenPoseStack {
             }
 
             @Override
-            public void mul(Quaternion quaternion) {
+            public void mulPose(Quaternion quaternion) {
                 pose.multiply(new OpenMatrix4f(quaternion));
                 normal.multiply(new OpenMatrix3f(quaternion));
+            }
+
+            @Override
+            public void mulPose(Matrix4f matrix) {
+//                pose.multiply(new OpenMatrix4f(matrix));
+//                normal.multiply(new OpenMatrix3f(matrix));
             }
 
             @Override
@@ -50,11 +57,19 @@ public abstract class OpenPoseStack {
         };
     }
 
+    public void pushPose() {
+    }
+
+    public void popPose() {
+    }
+
     public abstract void translate(float x, float y, float z);
 
     public abstract void scale(float x, float y, float z);
 
-    public abstract void mul(Quaternion quaternion);
+    public abstract void mulPose(Quaternion quaternion);
+
+    public abstract void mulPose(Matrix4f matrix);
 
     public abstract void applyPose(Vector4f vector);
 

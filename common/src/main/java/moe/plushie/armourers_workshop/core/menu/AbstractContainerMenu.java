@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.core.menu;
 
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
@@ -10,6 +11,14 @@ public abstract class AbstractContainerMenu extends net.minecraft.world.inventor
 
     public AbstractContainerMenu(@Nullable MenuType<?> containerType, int containerId) {
         super(containerType, containerId);
+    }
+
+    protected void clearContainer(Player player, Container container) {
+        //#if MC >= 11800
+        //# super.clearContainer(player, container);
+        //#else
+        this.clearContainer(player, player.level, container);
+        //#endif
     }
 
     public ItemStack quickMoveStack(Player player, int index, int slotSize) {

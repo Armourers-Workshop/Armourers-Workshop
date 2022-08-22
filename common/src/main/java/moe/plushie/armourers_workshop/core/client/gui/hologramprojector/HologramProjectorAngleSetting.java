@@ -1,97 +1,64 @@
 package moe.plushie.armourers_workshop.core.client.gui.hologramprojector;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UISliderBox;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWSliderBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.UpdateHologramProjectorPacket;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
-import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.Component;
-
-import java.util.function.Function;
 
 @Environment(value = EnvType.CLIENT)
-public class HologramProjectorAngleSetting extends AWTabPanel {
+public class HologramProjectorAngleSetting extends HologramProjectorBaseSetting {
+
+    private UISliderBox sliderX;
+    private UISliderBox sliderY;
+    private UISliderBox sliderZ;
 
     private final HologramProjectorBlockEntity entity;
     private final UpdateHologramProjectorPacket.Field field = UpdateHologramProjectorPacket.Field.ANGLE;
-    protected int contentWidth = 200;
-    protected int contentHeight = 82;
-    private int modelLeft = 0;
-    private int modelTop = 0;
-    private AWSliderBox sliderX;
-    private AWSliderBox sliderY;
-    private AWSliderBox sliderZ;
 
     public HologramProjectorAngleSetting(HologramProjectorBlockEntity entity) {
         super("inventory.armourers_workshop.hologram-projector.angle");
         this.entity = entity;
+        this.setFrame(new CGRect(0, 0, 200, 82));
+        this.setup();
     }
 
-    @Override
-    public void init(Minecraft minecraft, int width, int height) {
-        super.init(minecraft, width, height);
-
-        this.modelTop = 0;
-        this.modelLeft = (width - 178) / 2;
-
-        this.sliderX = addSlider(modelLeft, modelTop + 30, 178, 10, "X: ");
-        this.sliderY = addSlider(modelLeft, modelTop + 45, 178, 10, "Y: ");
-        this.sliderZ = addSlider(modelLeft, modelTop + 60, 178, 10, "Z: ");
-
-        Vector3f value = field.get(entity);
-        this.sliderX.setValue(value.x());
-        this.sliderY.setValue(value.y());
-        this.sliderZ.setValue(value.z());
-    }
-
-    @Override
-    public void removed() {
-        sliderZ = null;
-        sliderX = null;
-        sliderY = null;
-        super.removed();
-    }
-
-
-    @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        int x = (width - contentWidth) / 2;
-        RenderUtils.bind(RenderUtils.TEX_HOLOGRAM_PROJECTOR);
-        RenderUtils.drawContinuousTexturedBox(matrixStack, x, 0, 0, 138, contentWidth, contentHeight, 38, 38, 4, 0);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-    }
-
-    private AWSliderBox addSlider(int x, int y, int width, int height, String key) {
-        Function<Double, Component> titleProvider = currentValue -> {
-            String formattedValue = String.format("%s%.2f\u00b0", key, currentValue);
-            return TranslateUtils.literal(formattedValue);
-        };
-        AWSliderBox slider = new AWSliderBox(x, y, width, height, titleProvider, -180, 180, this::updateValue);
-        slider.setEndListener(this::didUpdateValue);
-        addButton(slider);
-        return slider;
-    }
-
-    private void updateValue(Button button) {
-        float x = (float) sliderX.getValue();
-        float y = (float) sliderY.getValue();
-        float z = (float) sliderZ.getValue();
+    private void updateValue(UIControl button) {
+        float x = (float) sliderX.value();
+        float y = (float) sliderY.value();
+        float z = (float) sliderZ.value();
         field.set(entity, new Vector3f(x, y, z));
     }
 
-    private void didUpdateValue(Button button) {
-        float x = (float) sliderX.getValue();
-        float y = (float) sliderY.getValue();
-        float z = (float) sliderZ.getValue();
+    private void didUpdateValue(UIControl button) {
+        float x = (float) sliderX.value();
+        float y = (float) sliderY.value();
+        float z = (float) sliderZ.value();
         UpdateHologramProjectorPacket packet = new UpdateHologramProjectorPacket(entity, field, new Vector3f(x, y, z));
         NetworkManager.sendToServer(packet);
+    }
+
+    private void setup() {
+        Vector3f value = field.get(entity);
+        sliderX = setupSlider(11, 30, "X: ", value.x());
+        sliderY = setupSlider(11, 45, "Y: ", value.y());
+        sliderZ = setupSlider(11, 60, "Z: ", value.z());
+    }
+
+    private UISliderBox setupSlider(int x, int y, String key, double value) {
+        UISliderBox slider = new UISliderBox(new CGRect(x, y, 178, 10));
+        slider.setMinValue(-180);
+        slider.setMaxValue(180);
+        slider.setFormatter(currentValue -> new NSString(String.format("%s%.2f\u00b0", key, currentValue)));
+        slider.addTarget(this, UIControl.Event.VALUE_CHANGED, HologramProjectorAngleSetting::updateValue);
+        slider.addTarget(this, UIControl.Event.EDITING_DID_END, HologramProjectorAngleSetting::didUpdateValue);
+        slider.setValue(value);
+        addSubview(slider);
+        return slider;
     }
 }

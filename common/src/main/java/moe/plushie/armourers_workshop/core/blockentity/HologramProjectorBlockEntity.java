@@ -15,6 +15,7 @@ import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -52,14 +53,14 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
     private boolean isPowered = false;
     private boolean showRotationPoint = false;
 
-    private Vector3f modelAngle = new Vector3f();
-    private Vector3f modelOffset = new Vector3f();
+    private Vector3f modelAngle = Vector3f.ZERO;
+    private Vector3f modelOffset = Vector3f.ZERO;
 
-    private Vector3f rotationSpeed = new Vector3f();
-    private Vector3f rotationOffset = new Vector3f();
+    private Vector3f rotationSpeed = Vector3f.ZERO;
+    private Vector3f rotationOffset = Vector3f.ZERO;
 
-    public HologramProjectorBlockEntity(BlockEntityType<?> entityType) {
-        super(entityType);
+    public HologramProjectorBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
     }
 
     @Override
@@ -231,9 +232,9 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
         if (renderRotations != null) {
             return renderRotations;
         }
-        AttachFace face = blockState.getOptionalValue(SkinnableBlock.FACE).orElse(AttachFace.FLOOR);
-        Direction facing = blockState.getOptionalValue(SkinnableBlock.FACING).orElse(Direction.NORTH);
-        Vector3f rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), new Vector3f());
+        AttachFace face = blockState.getOptionalValue(HologramProjectorBlock.FACE).orElse(AttachFace.FLOOR);
+        Direction facing = blockState.getOptionalValue(HologramProjectorBlock.FACING).orElse(Direction.NORTH);
+        Vector3f rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), Vector3f.ZERO);
         renderRotations = TrigUtils.rotate(rot.getX(), rot.getY(), rot.getZ(), true);
         return renderRotations;
     }

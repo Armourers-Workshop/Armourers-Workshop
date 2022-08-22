@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -10,6 +9,7 @@ import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.init.ModDebugger;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 @Environment(value = EnvType.CLIENT)
 public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBufferSource {
 
-    public static final RenderType MERGER = new Merger("skin_merger", DefaultVertexFormat.POSITION, GL11.GL_QUADS, 256);
+    public static final RenderType MERGER = new Merger("skin_merger", DefaultVertexFormat.POSITION, 256);
 
     protected final Pipeline pipeline = new Pipeline();
 
@@ -210,8 +210,8 @@ public class SkinVertexBufferBuilder extends BufferBuilder implements MultiBuffe
 
     public static class Merger extends RenderType {
 
-        protected Merger(String name, VertexFormat format, int mode, int bufferSize) {
-            super(name, format, mode, bufferSize, true, false, Merger::noop, Merger::noop);
+        protected Merger(String name, VertexFormat format, int bufferSize) {
+            super(name, format, RenderSystem.VERTEX_QUADS_MODE, bufferSize, true, false, Merger::noop, Merger::noop);
         }
 
         protected static void noop() {

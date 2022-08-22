@@ -36,7 +36,7 @@ public class ColorMixerMenu extends AbstractBlockContainerMenu {
     @Override
     public void removed(Player player) {
         super.removed(player);
-        this.access.execute((level, pos) -> this.clearContainer(player, level, inventory));
+        this.clearContainer(player, inventory);
     }
 
     @Override

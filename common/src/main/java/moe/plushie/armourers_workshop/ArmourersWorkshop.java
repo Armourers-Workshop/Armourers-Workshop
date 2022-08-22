@@ -1,6 +1,7 @@
 package moe.plushie.armourers_workshop;
 
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
+import com.apple.library.coregraphics.CGGraphicsRenderer;
 import moe.plushie.armourers_workshop.core.crafting.recipe.SkinningRecipes;
 import moe.plushie.armourers_workshop.core.skin.SkinTypes;
 import moe.plushie.armourers_workshop.init.*;
@@ -47,23 +48,13 @@ public class ArmourersWorkshop {
             ModDebugger.init();
             ModKeyBindings.init();
             ClientWardrobeHandler.init();
-
+            CGGraphicsRenderer.init();
         });
         // setup client renderer in finish.
         EnvironmentExecutor.loadOn(EnvironmentType.CLIENT, () -> () -> {
             // setup skin manager.
             SkinManager.init();
         });
-        //#if MC >= 11605
-        ModLog.debug("hello 1.16.5+");
-        //#else
-        //# ModLog.debug("hello 1.16.5-");
-        //#endif
-        //#if MC >= 11800
-        //# ModLog.debug("hello 1.18+");
-        //#else
-        ModLog.debug("hello 1.16.5-");
-        //#endif
     }
 
     public static ResourceLocation getResource(String path) {

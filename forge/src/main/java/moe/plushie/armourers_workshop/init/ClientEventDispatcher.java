@@ -22,7 +22,7 @@ import moe.plushie.armourers_workshop.init.platform.ItemTooltipManager;
 import moe.plushie.armourers_workshop.init.platform.forge.builder.KeyBindingBuilderImpl;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.TickUtils;
-import moe.plushie.armourers_workshop.utils.math.Rectangle2i;
+import com.apple.library.coregraphics.CGRect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
@@ -161,7 +161,7 @@ public class ClientEventDispatcher {
         public void onRenderTooltip(RenderTooltipEvent.PostText event) {
             ItemStack itemStack = event.getStack();
             PoseStack matrixStack = event.getMatrixStack();
-            Rectangle2i frame = new Rectangle2i(event.getX(), event.getY(), event.getWidth(), event.getHeight());
+            CGRect frame = new CGRect(event.getX(), event.getY(), event.getWidth(), event.getHeight());
             ItemTooltipManager.renderHoverText(itemStack, frame, mouseX, mouseY, screenWidth, screenHeight, matrixStack);
         }
 

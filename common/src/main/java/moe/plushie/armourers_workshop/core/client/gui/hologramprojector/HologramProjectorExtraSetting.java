@@ -1,86 +1,66 @@
 package moe.plushie.armourers_workshop.core.client.gui.hologramprojector;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.uikit.*;
 import moe.plushie.armourers_workshop.core.blockentity.HologramProjectorBlockEntity;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWCheckBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWComboBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.network.UpdateHologramProjectorPacket;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 
 @Environment(value = EnvType.CLIENT)
-public class HologramProjectorExtraSetting extends AWTabPanel {
+public class HologramProjectorExtraSetting extends HologramProjectorBaseSetting {
 
-    private final Component powerModeTips;
     private final HologramProjectorBlockEntity entity;
     private final UpdateHologramProjectorPacket.Field field = UpdateHologramProjectorPacket.Field.POWER_MODE;
     private final UpdateHologramProjectorPacket.Field field2 = UpdateHologramProjectorPacket.Field.IS_GLOWING;
-    protected int contentWidth = 200;
-    protected int contentHeight = 78;
-    private int modelLeft = 0;
-    private int modelTop = 0;
 
     public HologramProjectorExtraSetting(HologramProjectorBlockEntity entity) {
         super("inventory.armourers_workshop.hologram-projector.extra");
         this.entity = entity;
-        this.powerModeTips = getDisplayText("powerMode");
+        this.setFrame(new CGRect(0, 0, 200, 78));
+        this.setup();
     }
 
-    @Override
-    public void init(Minecraft minecraft, int width, int height) {
-        super.init(minecraft, width, height);
+    private void setup() {
+        setupOption(11, 30, field2, "glowing");
+        setupComboList(11, 55, field);
 
-        this.modelTop = 0;
-        this.modelLeft = (width - 178) / 2;
-
-        addOption(modelLeft, modelTop + 30, field2, "glowing");
-        addComboList(modelLeft, modelTop + 55, field);
+        UILabel label = new UILabel(new CGRect(11, 45, 178, 9));
+        label.setText(getDisplayText("powerMode"));
+        addSubview(label);
     }
 
-    @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        int x = (width - contentWidth) / 2;
-        RenderUtils.bind(RenderUtils.TEX_HOLOGRAM_PROJECTOR);
-        RenderUtils.drawContinuousTexturedBox(matrixStack, x, 0, 0, 138, contentWidth, contentHeight, 38, 38, 4, 0);
-        font.draw(matrixStack, powerModeTips, modelLeft, modelTop + 45, 0x404040);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-    }
-
-    private AWCheckBox addOption(int x, int y, UpdateHologramProjectorPacket.Field field, String key) {
-        AWCheckBox box = new AWCheckBox(x, y, 9, 9, getDisplayText(key), field.get(entity), button -> {
-            if (button instanceof AWCheckBox) {
-                boolean newValue = ((AWCheckBox) button).isSelected();
-                field.set(entity, newValue);
-                UpdateHologramProjectorPacket packet = new UpdateHologramProjectorPacket(entity, field, newValue);
-                NetworkManager.sendToServer(packet);
-            }
+    private void setupOption(int x, int y, UpdateHologramProjectorPacket.Field field, String key) {
+        UICheckBox checkBox = new UICheckBox(new CGRect(x, y, 178, 10));
+        checkBox.setTitle(getDisplayText(key));
+        checkBox.setSelected(field.get(entity));
+        checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, c) -> {
+            UICheckBox checkBox1 = ObjectUtils.unsafeCast(c);
+            field.set(entity, checkBox1.isSelected());
+            UpdateHologramProjectorPacket packet = new UpdateHologramProjectorPacket(entity, field, checkBox1.isSelected());
+            NetworkManager.sendToServer(packet);
         });
-        addButton(box);
-        return box;
+        addSubview(checkBox);
     }
 
-    private AWComboBox addComboList(int x, int y, UpdateHologramProjectorPacket.Field field) {
-        ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
-        items.add(new AWComboBox.ComboItem(getDisplayText("powerMode.ignored")));
-        items.add(new AWComboBox.ComboItem(getDisplayText("powerMode.high")));
-        items.add(new AWComboBox.ComboItem(getDisplayText("powerMode.low")));
-        AWComboBox comboBox = new AWComboBox(x, y, 80, 14, items, field.get(entity), button -> {
-            if (button instanceof AWComboBox) {
-                int newValue = ((AWComboBox) button).getSelectedIndex();
-                field.set(entity, newValue);
-                UpdateHologramProjectorPacket packet = new UpdateHologramProjectorPacket(entity, field, newValue);
-                NetworkManager.sendToServer(packet);
-            }
+    private void setupComboList(int x, int y, UpdateHologramProjectorPacket.Field field) {
+        ArrayList<UIComboItem> items = new ArrayList<>();
+        items.add(new UIComboItem(getDisplayText("powerMode.ignored")));
+        items.add(new UIComboItem(getDisplayText("powerMode.high")));
+        items.add(new UIComboItem(getDisplayText("powerMode.low")));
+        UIComboBox comboBox = new UIComboBox(new CGRect(x, y, 80, 14));
+        comboBox.setSelectedIndex(field.get(entity));
+        comboBox.reloadData(items);
+        comboBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, e) -> {
+            UIComboBox comboBox1 = ObjectUtils.unsafeCast(e);
+            field.set(entity, comboBox1.selectedIndex());
+            UpdateHologramProjectorPacket packet = new UpdateHologramProjectorPacket(entity, field, comboBox1.selectedIndex());
+            NetworkManager.sendToServer(packet);
         });
-        addButton(comboBox);
-        return comboBox;
+        addSubview(comboBox);
     }
-
 }

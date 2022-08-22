@@ -28,6 +28,10 @@ public interface IBlockEntityHandler {
     }
 
     default AABB getDefaultRenderBoundingBox() {
-        return AABB.ofSize(1, 1, 1);
+        return new AABB(0, 0, 0, 1, 1, 1);
+    }
+
+    default double getViewDistance() {
+        return 64;
     }
 }

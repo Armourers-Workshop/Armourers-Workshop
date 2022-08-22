@@ -8,11 +8,12 @@ import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
 import moe.plushie.armourers_workshop.core.client.other.*;
+import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.EntityProfile;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
+import moe.plushie.armourers_workshop.core.skin.transform.SkinTransform;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.platform.TransformationProvider;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
@@ -27,7 +28,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
@@ -125,7 +125,7 @@ public class SkinRenderer<T extends Entity, M extends Model> {
         }
 
         if (ModDebugger.skinBounds) {
-            builder.addShapeData(bakedSkin.getRenderShape(entity, model, itemStack, context.transformType).bounds(), Color.RED, matrixStack);
+            builder.addShapeData(bakedSkin.getRenderShape(entity, model, itemStack, context.transformType).bounds(), UIColor.RED, matrixStack);
         }
         if (ModDebugger.skinBounds) {
             builder.addShapeData(Vector3f.ZERO, matrixStack);

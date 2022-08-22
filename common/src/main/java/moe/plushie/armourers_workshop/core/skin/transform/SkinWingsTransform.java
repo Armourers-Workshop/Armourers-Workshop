@@ -69,7 +69,7 @@ public class SkinWingsTransform extends SkinTransform {
         }
 
         matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
-        matrixStack.mul(getRotationMatrix().rotationDegrees(angle));
+        matrixStack.mulPose(getRotationMatrix().rotationDegrees(angle));
         matrixStack.translate(-offset.getX(), -offset.getY(), -offset.getZ());
 
         transform.post(matrixStack);

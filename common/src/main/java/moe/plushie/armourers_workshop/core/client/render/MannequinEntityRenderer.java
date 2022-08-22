@@ -3,11 +3,12 @@ package moe.plushie.armourers_workshop.core.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.model.MannequinArmorModel;
 import moe.plushie.armourers_workshop.core.client.model.MannequinModel;
+import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.texture.BakedEntityTexture;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureLoader;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,8 +20,6 @@ import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
-
-import java.awt.*;
 
 @Environment(value = EnvType.CLIENT)
 public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingEntityRenderer<T, MannequinModel<T>> {
@@ -72,7 +71,7 @@ public class MannequinEntityRenderer<T extends MannequinEntity> extends LivingEn
             matrixStack.pushPose();
             AABB box = entity.getBoundingBoxForCulling();
             matrixStack.translate(-box.minX - (box.maxX - box.minX) / 2, -box.minY, -box.minZ - (box.maxZ - box.minZ) / 2);
-            RenderUtils.drawBoundingBox(matrixStack, box, Color.YELLOW, buffers);
+            RenderSystem.drawBoundingBox(matrixStack, box, UIColor.YELLOW, buffers);
             matrixStack.popPose();
         }
     }

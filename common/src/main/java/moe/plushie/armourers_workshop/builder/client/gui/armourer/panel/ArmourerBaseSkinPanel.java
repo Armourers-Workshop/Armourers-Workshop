@@ -1,25 +1,20 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.panel;
 
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWCheckBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWLabel;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWSliderBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWTabPanel;
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.*;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
+import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Environment(value = EnvType.CLIENT)
-public class ArmourerBaseSkinPanel extends AWTabPanel {
+public class ArmourerBaseSkinPanel extends UIView {
 
     protected final SkinProperties skinProperties;
     protected final ArrayList<AbstractWidget> widgets = new ArrayList<>();
@@ -27,17 +22,18 @@ public class ArmourerBaseSkinPanel extends AWTabPanel {
     protected int cursorY = 0;
     protected Consumer<SkinProperties> applier;
 
+    private final String baseKey;
+
     public ArmourerBaseSkinPanel(SkinProperties skinProperties) {
-        super("inventory.armourers_workshop.armourer.skinSettings");
+        super(CGRect.ZERO);
+        this.baseKey = "inventory.armourers_workshop.armourer.skinSettings";
         this.skinProperties = skinProperties;
     }
 
-    @Override
-    public void init(Minecraft minecraft, int x, int y) {
+    public void init() {
         widgets.clear();
-        cursorX = leftPos + 10;
-        cursorY = topPos + 20;
-        super.init(minecraft, x, y);
+        cursorX = 10;
+        cursorY = 20;
     }
 
     public void apply() {
@@ -45,7 +41,6 @@ public class ArmourerBaseSkinPanel extends AWTabPanel {
             applier.accept(skinProperties);
         }
     }
-
 
     public Consumer<SkinProperties> getApplier() {
         return applier;
@@ -55,45 +50,58 @@ public class ArmourerBaseSkinPanel extends AWTabPanel {
         this.applier = applier;
     }
 
-    protected AWCheckBox addCheckBox(int x, int y, int width, int height, SkinProperty<Boolean> property) {
-        boolean oldValue = skinProperties.get(property);
-        AWCheckBox checkBox = new AWCheckBox(cursorX + x, cursorY + y, width, height, getDisplayText(property.getKey()), oldValue, b -> {
-            boolean value = ((AWCheckBox) b).isSelected();
+    protected UISliderBox addSliderBox(int x, int y, int width, int height, double minValue, double maxValue, String suffix, SkinProperty<Double> property) {
+        UISliderBox slider = new UISliderBox(new CGRect(cursorX + x, cursorY + y, width, height));
+        slider.setFormatter(value -> {
+            String formattedValue = String.format("%.0f%s", value, suffix);
+            return new NSString(formattedValue);
+        });
+        slider.setMaxValue(maxValue);
+        slider.setMinValue(minValue);
+        slider.setValue(skinProperties.get(property));
+        slider.addTarget(this, UIControl.Event.EDITING_DID_END, (self, box) -> {
+            double value = ((UISliderBox) box).value();
             skinProperties.put(property, value);
             apply();
         });
-        addButton(checkBox);
+        addSubview(slider);
+        cursorY += 2;
+        return slider;
+    }
+
+    protected UICheckBox addCheckBox(int x, int y, SkinProperty<Boolean> property) {
+        boolean oldValue = skinProperties.get(property);
+        UICheckBox checkBox = new UICheckBox(new CGRect(cursorX + x, cursorY + y, 156 - x, 9));
+        checkBox.setTitle(getDisplayText(property.getKey()));
+        checkBox.setSelected(oldValue);
+        checkBox.addTarget(this, UIControl.Event.VALUE_CHANGED, (self, box) -> {
+            boolean value = box.isSelected();
+            self.skinProperties.put(property, value);
+            apply();
+        });
+        addSubview(checkBox);
         cursorY += 4;
         return checkBox;
     }
 
-    protected AWSliderBox addSliderBox(int x, int y, int width, int height, double minValue, double maxValue, String suffix, SkinProperty<Double> property) {
-        Function<Double, Component> titleProvider = value -> {
-            String formattedValue = String.format("%.0f%s", value, suffix);
-            return new TextComponent(formattedValue);
-        };
-        AWSliderBox box = new AWSliderBox(cursorX + x, cursorY + y, width, height, titleProvider, minValue, maxValue, Objects::hash);
-        box.setEndListener(button -> {
-            double value = ((AWSliderBox) button).getValue();
-            skinProperties.put(property, value);
-            apply();
-        });
-        box.setValue(skinProperties.get(property));
-        addButton(box);
-        cursorY += 2;
-        return box;
+    protected UILabel addLabel(int x, int y, NSString message) {
+        UILabel label = new UILabel(new CGRect(cursorX + x, cursorY + y, 156 - x, 9));
+        label.setText(message);
+        addSubview(label);
+        return label;
     }
 
     @Override
-    protected AWLabel addLabel(int x, int y, int width, int height, Component message) {
-        return super.addLabel(cursorX + x, cursorY + y, width, height, message);
+    public void addSubview(UIView view) {
+        super.addSubview(view);
+        cursorY += view.bounds().getHeight() + 2;
     }
 
-    @Override
-    protected <T extends AbstractWidget> T addButton(T button) {
-        super.addButton(button);
-        widgets.add(button);
-        cursorY += button.getHeight() + 2;
-        return button;
+    protected NSString getDisplayText(String key) {
+        return new NSString(TranslateUtils.title(baseKey + "." + key));
+    }
+
+    protected NSString getDisplayText(String key, Object... objects) {
+        return new NSString(TranslateUtils.title(baseKey + "." + key, objects));
     }
 }

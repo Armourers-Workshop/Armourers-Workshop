@@ -10,10 +10,12 @@ import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.skin.painting.SkinPaintTypes;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Map;
 
@@ -22,8 +24,8 @@ public class SkinCubeBlockEntity extends AbstractBlockEntity implements IPaintab
     protected BlockPaintColor colors = new BlockPaintColor(PaintColor.WHITE);
     protected boolean customRenderer = false;
 
-    public SkinCubeBlockEntity(BlockEntityType<?> entityType) {
-        super(entityType);
+    public SkinCubeBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
     }
 
     public void readFromNBT(CompoundTag nbt) {

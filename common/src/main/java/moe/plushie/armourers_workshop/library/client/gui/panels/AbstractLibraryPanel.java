@@ -1,141 +1,79 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWLabel;
-import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryScreen;
-import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
+import com.apple.library.coregraphics.CGGradient;
+import com.apple.library.coregraphics.CGPoint;
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIEvent;
+import com.apple.library.uikit.UIView;
+import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.Predicate;
 
-@SuppressWarnings({"unused"})
 @Environment(value = EnvType.CLIENT)
-public abstract class AbstractLibraryPanel extends Screen {
+public abstract class AbstractLibraryPanel extends UIView {
 
-    public final Predicate<GlobalSkinLibraryScreen.Page> predicate;
-    public int leftPos = 0;
-    public int topPos = 0;
-    public int titleLabelX = 0;
-    public int titleLabelY = 0;
-    public boolean visible = false;
     public String baseKey;
-    protected Button lastHoveredButton;
-    protected GlobalSkinLibraryScreen.Router router;
+    public final Predicate<GlobalSkinLibraryWindow.Page> predicate;
+    protected GlobalSkinLibraryWindow.Router router;
 
-    public AbstractLibraryPanel(String titleKey, Predicate<GlobalSkinLibraryScreen.Page> predicate) {
-        super(TranslateUtils.title(titleKey));
+    public AbstractLibraryPanel(String titleKey, Predicate<GlobalSkinLibraryWindow.Page> predicate) {
+        super(new CGRect(0, 0, 320, 240));
+        this.setContents(getDefaultColor());
         this.baseKey = titleKey;
         this.predicate = predicate;
     }
 
-    public void init(Minecraft minecraft, int x, int y, int width, int height) {
-        this.leftPos = x;
-        this.topPos = y;
-        this.init(minecraft, width, height);
+    public void tick() {
+    }
+
+    public void refresh() {
     }
 
     @Override
-    protected void init() {
-        super.init();
-        this.titleLabelX = leftPos + 5;
-        this.titleLabelY = topPos + 5;
-    }
-
-    protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {
-        this.font.draw(matrixStack, this.getTitle(), (float) this.titleLabelX, (float) this.titleLabelY, 0xffffff);
-    }
-
-    public void renderBackgroundLayer(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-    }
-
-    public void renderTooltipLayer(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        if (this.lastHoveredButton != null) {
-            this.renderTooltip(matrixStack, lastHoveredButton.getMessage(), mouseX, mouseY);
-            this.lastHoveredButton = null;
+    public boolean pointInside(CGPoint point, UIEvent event) {
+        if (super.pointInside(point, event)) {
+            return true;
         }
+        return subviews().stream().anyMatch(subview -> subview.pointInside(convertPointToView(point, subview), event));
     }
 
-    @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderLabels(matrixStack, mouseX, mouseY);
+    protected NSString getDisplayText(String key) {
+        return new NSString(TranslateUtils.title(baseKey + "." + key));
     }
 
-    public Optional<GlobalSkinLibraryMenu> getMenu() {
-        Screen screen = Minecraft.getInstance().screen;
-        if (screen instanceof GlobalSkinLibraryScreen) {
-            return Optional.of(((GlobalSkinLibraryScreen) screen).getMenu());
-        }
-        return Optional.empty();
+    protected NSString getDisplayText(String key, Object... objects) {
+        return new NSString(TranslateUtils.title(baseKey + "." + key, objects));
     }
 
-    public boolean isVisible() {
-        return visible;
+    protected NSString getCommonDisplayText(String key) {
+        return new NSString(TranslateUtils.title("inventory.armourers_workshop.common" + "." + key));
     }
 
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    protected AWLabel addLabel(int x, int y, int width, int height, Component message) {
-        AWLabel label = new AWLabel(x, y, width, height, message);
-        addButton(label);
-        return label;
-    }
-
-    @Override
-    public void setFocused(@Nullable GuiEventListener p_231035_1_) {
-        if (getFocused() != p_231035_1_) {
-            if (getFocused() instanceof AbstractWidget) {
-                AbstractWidget widget = (AbstractWidget) getFocused();
-                if (widget.isFocused()) {
-                    widget.changeFocus(false);
-                }
-            }
-        }
-        super.setFocused(p_231035_1_);
-    }
-
-    protected Component getDisplayText(String key) {
-        return TranslateUtils.title(baseKey + "." + key);
-    }
-
-    protected Component getDisplayText(String key, Object... objects) {
-        return TranslateUtils.title(baseKey + "." + key, objects);
-    }
-
-    protected Component getCommonDisplayText(String key) {
-        return TranslateUtils.title("inventory.armourers_workshop.common" + "." + key);
-    }
-
-    protected Component getURLText(String url) {
+    protected NSString getURLText(String url) {
         Style style = Style.EMPTY.withColor(ChatFormatting.BLUE).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-        return new TextComponent(url).withStyle(style);
+        return new NSString(new TextComponent(url).withStyle(style));
     }
 
-    protected void addHoveredButton(Button button, PoseStack matrixStack, int mouseX, int mouseY) {
-        this.lastHoveredButton = button;
+    protected CGGradient getDefaultColor() {
+        UIColor startColor = UIColor.rgba(0xC0101010);
+        UIColor endColor = UIColor.rgba(0xD0101010);
+        return new CGGradient(startColor, CGPoint.ZERO, endColor, CGPoint.ZERO);
     }
 
-    public GlobalSkinLibraryScreen.Router getRouter() {
+    public GlobalSkinLibraryWindow.Router getRouter() {
         return router;
     }
 
-    public void setRouter(GlobalSkinLibraryScreen.Router router) {
+    public void setRouter(GlobalSkinLibraryWindow.Router router) {
         this.router = router;
     }
 

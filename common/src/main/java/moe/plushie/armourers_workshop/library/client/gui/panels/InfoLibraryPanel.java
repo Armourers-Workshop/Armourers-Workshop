@@ -1,56 +1,52 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSMutableString;
+import com.apple.library.foundation.NSTextAlignment;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UILabel;
+import com.apple.library.uikit.UILabelDelegate;
 import com.google.common.util.concurrent.FutureCallback;
-import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWLabel;
-import moe.plushie.armourers_workshop.init.ModLog;
-import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskInfo;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import org.jetbrains.annotations.Nullable;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Map;
 
-@SuppressWarnings("NullableProblems")
 @Environment(value = EnvType.CLIENT)
-public class InfoLibraryPanel extends AbstractLibraryPanel {
+public class InfoLibraryPanel extends AbstractLibraryPanel implements UILabelDelegate {
 
     private static final String URL_DISCORD = "https://discord.gg/5Z3KKvU";
     private static final String URL_GITHUB = "https://github.com/RiskyKen/Armourers-Workshop";
     private static final String URL_REDDIT = "https://www.reddit.com/r/ArmourersWorkshop/";
     private static final String URL_DONATION = "https://ko-fi.com/riskyken";
 
-    private TextComponent message = new TextComponent("");
+    private final UILabel label = new UILabel(CGRect.ZERO);
+
     private GlobalTaskInfo.TaskData stats = null;
     private String failMessage = null;
-    private AWLabel label;
 
     public InfoLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.panel.info", GlobalSkinLibraryScreen.Page.LIBRARY_INFO::equals);
+        super("inventory.armourers_workshop.skin-library-global.panel.info", GlobalSkinLibraryWindow.Page.LIBRARY_INFO::equals);
+        this.setup();
+    }
+
+    private void setup() {
+        label.setFrame(bounds().insetBy(5, 5, 5, 5));
+        label.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
+        label.setTextVerticalAlignment(NSTextAlignment.Vertical.TOP);
+        label.setNumberOfLines(0);
+        label.setTextColor(UIColor.WHITE);
+        label.setUserInteractionEnabled(true);
+        label.setDelegate(this);
+        addSubview(label);
     }
 
     @Override
-    protected void init() {
-        super.init();
-        this.label = addLabel(leftPos + 5, topPos + 5, width - 10, height - 10, message);
-    }
-
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        if (visible) {
-            this.updateInfo();
-        }
-    }
-
-    public void updateInfo() {
+    public void refresh() {
+        super.refresh();
         stats = null;
         failMessage = null;
         new GlobalTaskInfo().createTaskAndRun(new FutureCallback<GlobalTaskInfo.TaskData>() {
@@ -75,7 +71,7 @@ public class InfoLibraryPanel extends AbstractLibraryPanel {
     }
 
     public void reloadUI() {
-        message = new TextComponent("\n\n\n");
+        NSMutableString message = new NSMutableString("\n\n\n");
 
         if (stats != null) {
             message.append(getDisplayText("total_skins", stats.getTotalSkin()));
@@ -121,36 +117,13 @@ public class InfoLibraryPanel extends AbstractLibraryPanel {
         message.append(getURLText(URL_DONATION));
         message.append("\n\n");
 
-        label.setMessage(message);
+        label.setText(message);
     }
 
     @Override
-    public boolean handleComponentClicked(@Nullable Style style) {
-        if (style == null) {
-            return false;
+    public void labelWillClickAttributes(UILabel label, Map<String, ?> attributes) {
+        if (router != null) {
+            router.labelWillClickAttributes(label, attributes);
         }
-        ClickEvent clickevent = style.getClickEvent();
-        if (clickevent == null) {
-            return false;
-        }
-        if (clickevent.getAction() == ClickEvent.Action.OPEN_URL) {
-            try {
-                URI uri = new URI(clickevent.getValue());
-                String s = uri.getScheme();
-                if (s == null) {
-                    throw new URISyntaxException(clickevent.getValue(), "Missing protocol");
-                }
-                Util.getPlatform().openUri(uri);
-                return true;
-            } catch (URISyntaxException urisyntaxexception) {
-                ModLog.error("Can't open url for {}", clickevent, urisyntaxexception);
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void renderBackgroundLayer(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.fillGradient(matrixStack, leftPos, topPos, leftPos + width, topPos + height, 0xC0101010, 0xD0101010);
     }
 }

@@ -1,10 +1,12 @@
 package moe.plushie.armourers_workshop.core.client.other;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.math.Matrix4f;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
+import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 
 import java.nio.ByteBuffer;
@@ -51,10 +53,11 @@ public class SkinRenderObject implements AutoCloseable {
     }
 
     public void draw(Matrix4f matrix, int mode, int vertexCount) {
-        RenderSystem.pushMatrix();
-        RenderSystem.multMatrix(matrix);
-        RenderSystem.drawArrays(mode, 0, vertexCount);
-        RenderSystem.popMatrix();
+        OpenPoseStack poseStack = RenderSystem.getResolvedModelViewStack();
+        poseStack.pushPose();
+        poseStack.mulPose(matrix);
+        GL11.glDrawArrays(mode, 0, vertexCount);
+        poseStack.popPose();
     }
 
     public void close() {

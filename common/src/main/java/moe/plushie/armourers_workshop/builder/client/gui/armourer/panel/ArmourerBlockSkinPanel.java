@@ -1,27 +1,27 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.panel;
 
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWCheckBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWInventoryBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWLabel;
+import com.apple.library.coregraphics.CGPoint;
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.UICheckBox;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UILabel;
+import moe.plushie.armourers_workshop.core.client.gui.widget.InventoryBox;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
-import moe.plushie.armourers_workshop.utils.math.Vector2i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.TextComponent;
 
 @Environment(value = EnvType.CLIENT)
 public class ArmourerBlockSkinPanel extends ArmourerBaseSkinPanel {
 
-    protected AWCheckBox blockBed;
-    protected AWCheckBox blockEnderInventory;
-    protected AWCheckBox blockInventory;
+    protected UICheckBox blockBed;
+    protected UICheckBox blockEnderInventory;
+    protected UICheckBox blockInventory;
 
-    protected AWLabel inventoryTitle;
-    protected AWLabel inventorySlot;
-    protected AWInventoryBox inventoryBox;
+    protected UILabel inventoryTitle;
+    protected UILabel inventorySlot;
+    protected InventoryBox inventoryBox;
 
     public ArmourerBlockSkinPanel(SkinProperties skinProperties) {
         super(skinProperties);
@@ -34,8 +34,8 @@ public class ArmourerBlockSkinPanel extends ArmourerBaseSkinPanel {
         super.apply();
     }
 
-    public void applySlot(Button sender) {
-        Vector2i offset = inventoryBox.getOffset();
+    public void applySlot(UIControl sender) {
+        CGPoint offset = inventoryBox.getOffset();
         int width = (offset.x / 10) + 1;
         int height = (offset.y / 10) + 1;
         skinProperties.put(SkinProperty.BLOCK_INVENTORY_WIDTH, width);
@@ -44,27 +44,28 @@ public class ArmourerBlockSkinPanel extends ArmourerBaseSkinPanel {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         super.init();
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.BLOCK_GLOWING);
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.BLOCK_LADDER);
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.BLOCK_NO_COLLISION);
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.BLOCK_SEAT);
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.BLOCK_MULTIBLOCK);
-        this.blockBed = addCheckBox(12, 0, 9, 9, SkinProperty.BLOCK_BED);
-        this.blockEnderInventory = addCheckBox(0, 0, 9, 9, SkinProperty.BLOCK_ENDER_INVENTORY);
-        this.blockInventory = addCheckBox(0, 0, 9, 9, SkinProperty.BLOCK_INVENTORY);
-        this.inventoryTitle = addLabel(0, -2, width, 9, getDisplayText("label.inventorySize"));
-        this.inventorySlot = addLabel(0, -1, width, 9, TextComponent.EMPTY);
-        this.inventoryBox = addInventoryBox(0, -2);
+        addCheckBox(0, 0, SkinProperty.BLOCK_GLOWING);
+        addCheckBox(0, 0, SkinProperty.BLOCK_LADDER);
+        addCheckBox(0, 0, SkinProperty.BLOCK_NO_COLLISION);
+        addCheckBox(0, 0, SkinProperty.BLOCK_SEAT);
+        addCheckBox(0, 0, SkinProperty.BLOCK_MULTIBLOCK);
+        blockBed = addCheckBox(12, 0, SkinProperty.BLOCK_BED);
+        blockEnderInventory = addCheckBox(0, 0, SkinProperty.BLOCK_ENDER_INVENTORY);
+        blockInventory = addCheckBox(0, 0, SkinProperty.BLOCK_INVENTORY);
+        inventoryTitle = addLabel(0, -2, getDisplayText("label.inventorySize"));
+        inventorySlot = addLabel(0, -1, new NSString(""));
+        inventoryBox = addInventoryBox(0, -2);
 
-        this.resolveConflicts();
-        this.resolveSlots();
+        resolveConflicts();
+        resolveSlots();
     }
 
-    protected AWInventoryBox addInventoryBox(int x, int y) {
-        AWInventoryBox box = new AWInventoryBox(cursorX + x, cursorY + y, 9 * 10, 6 * 10, 176, 0, RenderUtils.TEX_ARMOURER, this::applySlot);
-        addButton(box);
+    protected InventoryBox addInventoryBox(int x, int y) {
+        InventoryBox box = new InventoryBox(new CGRect(cursorX + x, cursorY + y, 9 * 10, 6 * 10));
+        box.addTarget(this, UIControl.Event.VALUE_CHANGED, ArmourerBlockSkinPanel::applySlot);
+        addSubview(box);
         return box;
     }
 
@@ -75,11 +76,11 @@ public class ArmourerBlockSkinPanel extends ArmourerBaseSkinPanel {
         boolean isEnabled = blockInventory.isEnabled() && blockInventory.isSelected();
         int width = skinProperties.get(SkinProperty.BLOCK_INVENTORY_WIDTH);
         int height = skinProperties.get(SkinProperty.BLOCK_INVENTORY_HEIGHT);
-        inventorySlot.setMessage(getDisplayText("label.inventorySlots", width * height, width, height));
-        inventoryBox.setOffset(new Vector2i(Math.max(width - 1, 0) * 10, Math.max(height - 1, 0) * 10));
-        inventoryTitle.visible = isEnabled;
-        inventorySlot.visible = isEnabled;
-        inventoryBox.visible = isEnabled;
+        inventorySlot.setText(getDisplayText("label.inventorySlots", width * height, width, height));
+        inventoryBox.setOffset(new CGPoint(Math.max(width - 1, 0) * 10, Math.max(height - 1, 0) * 10));
+        inventoryTitle.setHidden(!isEnabled);
+        inventorySlot.setHidden(!isEnabled);
+        inventoryBox.setHidden(!isEnabled);
     }
 
     private void resolveConflicts() {

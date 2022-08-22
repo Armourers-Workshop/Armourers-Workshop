@@ -96,7 +96,7 @@ public class SkinExporterWavefrontObj implements ISkinExporter {
             // apply the render context matrix.
             matrixStack.scale(scale, scale, scale);
             matrixStack.scale(-1, -1, 1);
-            matrixStack.mul(Vector3f.YP.rotationDegrees(90));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(90));
             // apply the origin offset.
             IVector3i pos = skinPart.getType().getRenderOffset();
             matrixStack.translate(pos.getX(), pos.getY(), pos.getZ());

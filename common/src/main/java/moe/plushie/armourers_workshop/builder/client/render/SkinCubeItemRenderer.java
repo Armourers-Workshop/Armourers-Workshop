@@ -9,7 +9,8 @@ import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.core.data.color.BlockPaintColor;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.init.ModBlocks;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -26,9 +27,9 @@ public class SkinCubeItemRenderer extends BlockEntityWithoutLevelRenderer {
 
     private static SkinCubeItemRenderer INSTANCE;
 
-    private final RenderType normalRenderType = SkinRenderType.layeredItemSolid(RenderUtils.TEX_BLOCK_CUBE);
-    private final RenderType translucentRenderType = SkinRenderType.layeredItemTranslucent(RenderUtils.TEX_BLOCK_CUBE_GLASS);
-    private final RenderType unsortedTranslucentRenderType = SkinRenderType.unsortedTranslucent(RenderUtils.TEX_BLOCK_CUBE_GLASS);
+    private final RenderType normalRenderType = SkinRenderType.layeredItemSolid(ModTextures.BLOCK_CUBE);
+    private final RenderType translucentRenderType = SkinRenderType.layeredItemTranslucent(ModTextures.BLOCK_CUBE_GLASS);
+    private final RenderType unsortedTranslucentRenderType = SkinRenderType.unsortedTranslucent(ModTextures.BLOCK_CUBE_GLASS);
 
     public static SkinCubeItemRenderer getInstance() {
         if (INSTANCE == null) {

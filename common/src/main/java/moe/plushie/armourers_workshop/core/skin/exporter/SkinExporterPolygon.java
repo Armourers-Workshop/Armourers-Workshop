@@ -99,7 +99,7 @@ public class SkinExporterPolygon implements ISkinExporter {
         OpenPoseStack matrixStack = OpenPoseStack.create();
         matrixStack.scale(scale, scale, scale);
         matrixStack.scale(-1, -1, 1);
-        matrixStack.mul(Vector3f.YP.rotationDegrees(90));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(90));
 
         for (SkinCubeFace face : faces) {
             byte[][] vertexes = SkinUtils.getRenderVertexes(face.getDirection());

@@ -1,5 +1,7 @@
 package moe.plushie.armourers_workshop.builder.data.palette;
 
+import com.apple.library.uikit.UIColor;
+
 import java.util.Arrays;
 
 public class Palette {
@@ -7,16 +9,16 @@ public class Palette {
     public static final int MAX_COLOURS_PER_PALETTE = 32;
     private final boolean locked;
     private String name;
-    private final int[] colors;
+    private final UIColor[] colors;
 
-    public Palette(String name, boolean locked, int[] colours) {
+    public Palette(String name, boolean locked, UIColor[] colours) {
         this.name = name;
         this.locked = locked;
         this.colors = colours;
     }
 
     public Palette(String name) {
-        this(name, false, new int[MAX_COLOURS_PER_PALETTE]);
+        this(name, false, new UIColor[MAX_COLOURS_PER_PALETTE]);
     }
 
     public String getName() {
@@ -31,15 +33,15 @@ public class Palette {
         return locked;
     }
 
-    public int[] getColors() {
+    public UIColor[] getColors() {
         return colors;
     }
 
-    public void setColor(int index, int colour) {
+    public void setColor(int index, UIColor colour) {
         colors[index] = colour;
     }
 
-    public int getColor(int index) {
+    public UIColor getColor(int index) {
         return colors[index];
     }
 

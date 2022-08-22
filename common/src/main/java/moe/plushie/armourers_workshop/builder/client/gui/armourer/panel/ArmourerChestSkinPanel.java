@@ -13,13 +13,13 @@ public class ArmourerChestSkinPanel extends ArmourerBaseSkinPanel {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         super.init();
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.MODEL_OVERRIDE_CHEST);
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.MODEL_OVERRIDE_ARM_LEFT);
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.MODEL_OVERRIDE_ARM_RIGHT);
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.MODEL_HIDE_OVERLAY_CHEST);
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.MODEL_HIDE_OVERLAY_ARM_LEFT);
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.MODEL_HIDE_OVERLAY_ARM_RIGHT);
+        addCheckBox(0, 0, SkinProperty.MODEL_OVERRIDE_CHEST);
+        addCheckBox(0, 0, SkinProperty.MODEL_OVERRIDE_ARM_LEFT);
+        addCheckBox(0, 0, SkinProperty.MODEL_OVERRIDE_ARM_RIGHT);
+        addCheckBox(0, 0, SkinProperty.MODEL_HIDE_OVERLAY_CHEST);
+        addCheckBox(0, 0, SkinProperty.MODEL_HIDE_OVERLAY_ARM_LEFT);
+        addCheckBox(0, 0, SkinProperty.MODEL_HIDE_OVERLAY_ARM_RIGHT);
     }
 }

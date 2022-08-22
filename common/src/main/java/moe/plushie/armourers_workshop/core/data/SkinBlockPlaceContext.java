@@ -33,7 +33,7 @@ import java.util.function.Function;
 
 public class SkinBlockPlaceContext extends BlockPlaceContext {
 
-    private Vector3f rotations = new Vector3f();
+    private Vector3f rotations = Vector3f.ZERO;
     private SkinDescriptor skin = SkinDescriptor.EMPTY;
     private ArrayList<Part> parts = new ArrayList<>();
 

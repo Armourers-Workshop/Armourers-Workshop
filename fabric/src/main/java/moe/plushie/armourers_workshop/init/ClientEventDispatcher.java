@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.init;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.api.common.IBlockTintColorProvider;
@@ -24,9 +23,10 @@ import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderSpecificA
 import moe.plushie.armourers_workshop.init.platform.fabric.event.RenderTooltipCallback;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
 import moe.plushie.armourers_workshop.utils.ObjectUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.ext.OpenResourceLocation;
-import moe.plushie.armourers_workshop.utils.math.Rectangle2i;
+import com.apple.library.coregraphics.CGRect;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -181,7 +181,7 @@ public class ClientEventDispatcher implements ClientModInitializer {
             screenWidth = screen.width;
             screenHeight = screen.height;
         }
-        Rectangle2i frame = new Rectangle2i(x, y, w, h);
+        CGRect frame = new CGRect(x, y, w, h);
         ItemTooltipManager.renderHoverText(itemStack, frame, mouseX, mouseY, screenWidth, screenHeight, poseStack);
     }
 

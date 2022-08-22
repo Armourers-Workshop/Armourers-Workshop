@@ -1,10 +1,9 @@
 package moe.plushie.armourers_workshop.init.platform.fabric.builder;
 
-import moe.plushie.armourers_workshop.api.common.IPlayerDataSerializer;
-import moe.plushie.armourers_workshop.api.common.IRegistryKey;
+import com.apple.library.uikit.UIWindow;
+import moe.plushie.armourers_workshop.api.common.*;
 import moe.plushie.armourers_workshop.api.common.builder.IMenuTypeBuilder;
-import moe.plushie.armourers_workshop.api.common.IMenuProvider;
-import moe.plushie.armourers_workshop.api.common.IMenuScreenProvider;
+import moe.plushie.armourers_workshop.core.client.gui.widget.MenuScreen;
 import moe.plushie.armourers_workshop.core.registry.Registry;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentExecutor;
 import moe.plushie.armourers_workshop.init.environment.EnvironmentType;
@@ -38,10 +37,10 @@ public class MenuTypeBuilderImpl<T extends AbstractContainerMenu, D> implements 
     }
 
     @Override
-    public <U extends Screen & MenuAccess<T>> IMenuTypeBuilder<T> bind(Supplier<IMenuScreenProvider<T, U>> provider) {
+    public <U extends UIWindow & IMenuWindow<T>> IMenuTypeBuilder<T> bind(Supplier<IMenuWindowProvider<T, U>> provider) {
         this.binder = () -> menuType -> {
             // here is safe call client registry.
-            ScreenRegistry.register(menuType, provider.get()::createMenuScreen);
+            ScreenRegistry.register(menuType, MenuScreen.bind(provider.get())::createMenuScreen);
         };
         return this;
     }

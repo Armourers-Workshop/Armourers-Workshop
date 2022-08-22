@@ -16,8 +16,9 @@ import moe.plushie.armourers_workshop.init.ModConfig;
 import moe.plushie.armourers_workshop.init.ModDebugger;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.init.platform.TransformationProvider;
+import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.MathUtils;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -56,8 +57,13 @@ public class ClientWardrobeHandler {
         }
         matrixStack.pushPose();
 
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(MathUtils.lerp(partialTicks, entity.yRotO, entity.yRot) - 90.0F));
-        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(MathUtils.lerp(partialTicks, entity.xRotO, entity.xRot) + 90.0F));
+        float xRot = Accessor.getXRot(entity);
+        float yRot = Accessor.getYRot(entity);
+        float xRotO = entity.xRotO;
+        float yRotO = entity.yRotO;
+
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(MathUtils.lerp(partialTicks, yRotO, yRot) - 90.0F));
+        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(MathUtils.lerp(partialTicks, xRotO, xRot) + 90.0F));
 
         matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(-90));
@@ -84,11 +90,15 @@ public class ClientWardrobeHandler {
         if (entry == null) {
             return; // we just need to render with the arrows.
         }
-
         matrixStack.pushPose();
 
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(MathUtils.lerp(partialTicks, entity.yRotO, entity.yRot) - 90.0F));
-        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(MathUtils.lerp(partialTicks, entity.xRotO, entity.xRot)));
+        float xRot = Accessor.getXRot(entity);
+        float yRot = Accessor.getYRot(entity);
+        float xRotO = entity.xRotO;
+        float yRotO = entity.yRotO;
+
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(MathUtils.lerp(partialTicks, yRotO, yRot) - 90.0F));
+        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(MathUtils.lerp(partialTicks, xRotO, xRot)));
 
         float f9 = (float) entity.shakeTime - partialTicks;
         if (f9 > 0.0F) {
@@ -309,14 +319,14 @@ public class ClientWardrobeHandler {
             default:
                 return;
         }
-        RenderUtils.enableScissor(left, top, width, height);
+        RenderSystem.addClipRect(left, top, width, height);
     }
 
     public static void onRenderEntityInInventoryPost(LivingEntity entity) {
         if (!ModConfig.Client.enableEntityInInventoryClip) {
             return;
         }
-        RenderUtils.disableScissor();
+        RenderSystem.removeClipRect();
     }
 
     private static int render(Entity entity, ItemStack itemStack, Model model, SkinRenderContext context, Supplier<Iterable<SkinRenderData.Entry>> provider) {

@@ -1,26 +1,24 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.apple.library.coregraphics.CGPoint;
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.*;
 import moe.plushie.armourers_workshop.api.common.IItemColorProvider;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWCheckBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWConfirmDialog;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWHelpButton;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWImageButton;
+import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
+import moe.plushie.armourers_workshop.core.client.gui.widget.PlayerInventoryView;
+import moe.plushie.armourers_workshop.core.client.gui.widget.SlotListView;
 import moe.plushie.armourers_workshop.core.menu.AbstractContainerMenu;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -28,24 +26,80 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 @Environment(value = EnvType.CLIENT)
-public class ArmourerReplaceDialog extends AWConfirmDialog {
+public class ArmourerReplaceDialog extends ConfirmDialog {
 
-    Player player;
-    Container inventory;
+    private final Inventory playerInventory;
+    private final  Container inventory;
 
-    PickerScreen pickerScreen;
-    Button lastHoveredButton;
+    private final UICheckBox keepPaintBox = new UICheckBox(CGRect.ZERO);
+    private final UICheckBox keepColorBox = new UICheckBox(CGRect.ZERO);
 
-    AWCheckBox keepPaintBox;
-    AWCheckBox keepColorBox;
+    private final SlotListView<PickerContainer> listView;
+    private final PlayerInventoryView inventoryView = new PlayerInventoryView(new CGRect(0, 0, 176, 98));
 
-    public ArmourerReplaceDialog(Component title) {
-        super(title);
-        this.player = Objects.requireNonNull(Minecraft.getInstance().player);
-        this.inventory = createBackup(player.inventory);
-        this.pickerScreen = new PickerScreen(new PickerContainer(inventory), player.inventory, TextComponent.EMPTY);
-        this.imageWidth = 240;
-        this.imageHeight = 130;
+    public ArmourerReplaceDialog() {
+        super();
+        this.setFrame(new CGRect(0, 0, 240, 130));
+        Player player = Objects.requireNonNull(Minecraft.getInstance().player);
+        this.playerInventory = Accessor.getInventory(player);
+        this.inventory = createBackup(playerInventory);
+        this.listView = new SlotListView<>(new PickerContainer(inventory), playerInventory, bounds());
+        this.setup();
+    }
+
+    private void setup() {
+        layoutIfNeeded();
+        int left = confirmButton.frame().getX() + 1;
+        int centerX = cancelButton.frame().getX() + 1;
+        int bottom = confirmButton.frame().getY() - 4;
+        int width = bounds().width - 30;
+        int height = bounds().getHeight() + 10 + 98;
+
+        setupBackgroundView(left, centerX, height);
+
+        keepColorBox.setFrame(new CGRect(left, bottom - 22, width, 9));
+        keepColorBox.setTitle(getText("keepColor"));
+        keepColorBox.setSelected(false);
+        addSubview(keepColorBox);
+
+        keepPaintBox.setFrame(new CGRect(left, bottom - 11, width, 9));
+        keepPaintBox.setTitle(getText("keepPaint"));
+        keepPaintBox.setSelected(false);
+        addSubview(keepPaintBox);
+
+        bringSubviewToFront(confirmButton);
+        bringSubviewToFront(cancelButton);
+
+        listView.setFrame(new CGRect(0, 0, bounds().getWidth(), height));
+        listView.getMenu().reloadSlots(inventoryView.frame(), new CGRect(left + 32, 44, 0, 0));
+        addSubview(listView);
+    }
+
+    private void setupBackgroundView(int left, int center, int height) {
+        UILabel label1 = new UILabel(new CGRect(left + 8, 25, 100, 9));
+        UILabel label2 = new UILabel(new CGRect(center + 8, 25, 100, 9));
+        label1.setText(getText("srcBlock"));
+        label2.setText(getText("desBlock"));
+        addSubview(label1);
+        addSubview(label2);
+
+        int placeholderX = left + 32;
+        int placeholderY = 44;
+        UIImageView slot1 = new UIImageView(new CGRect(placeholderX - 5, placeholderY - 5, 26, 26));
+        UIImageView slot2 = new UIImageView(new CGRect(placeholderX - 5 + 110, placeholderY - 5, 26, 26));
+        slot1.setImage(UIImage.of(ModTextures.ARMOURER).uv(230, 18).build());
+        slot2.setImage(UIImage.of(ModTextures.ARMOURER).uv(230, 18).build());
+        addSubview(slot1);
+        addSubview(slot2);
+
+        inventoryView.setFrame(new CGRect(32, height - 98, 176, 98));
+        inventoryView.setName(new NSString(playerInventory.getDisplayName()));
+        inventoryView.setStyle(PlayerInventoryView.Style.NORMAL);
+        inventoryView.setUserInteractionEnabled(false);
+        addSubview(inventoryView);
+
+        addHelpButton(left, 25, "help.selector");
+        addHelpButton(center, 25, "help.applier");
     }
 
     private Container createBackup(Inventory inventory) {
@@ -57,42 +111,6 @@ public class ArmourerReplaceDialog extends AWConfirmDialog {
         return newInventory;
     }
 
-    @Override
-    protected void init() {
-        int realHeight = height;
-        this.height = realHeight - 98;
-        super.init();
-        this.height = realHeight;
-
-        int leftX = confirmButton.x + 1;
-        int centerX = confirmButton.x + 111;
-        int bottom = confirmButton.y - 4;
-
-        this.keepColorBox = new AWCheckBox(leftX, bottom - 22, 9, 9, getText("keepColor"), false, Objects::hash);
-        this.keepPaintBox = new AWCheckBox(leftX, bottom - 11, 9, 9, getText("keepPaint"), false, Objects::hash);
-
-        this.addButton(keepPaintBox);
-        this.addButton(keepColorBox);
-
-        this.addLabel(leftX + 8, topPos + 25, 100, 9, getText("srcBlock"));
-        this.addLabel(centerX + 8, topPos + 25, 100, 9, getText("desBlock"));
-        this.addHelpButton(leftX, topPos + 25, "help.selector");
-        this.addHelpButton(centerX, topPos + 25, "help.applier");
-
-        this.pickerScreen.inventoryX = (width - 176) / 2;
-        this.pickerScreen.inventoryY = (height - 98);
-        this.pickerScreen.placeholderX = leftX + 32;
-        this.pickerScreen.placeholderY = topPos + 44;
-
-        this.pickerScreen.init(Minecraft.getInstance(), width, height);
-        this.addWidget(pickerScreen);
-    }
-
-    @Override
-    public void removed() {
-        super.removed();
-        this.pickerScreen.removed();
-    }
 
     public boolean isKeepColor() {
         return keepColorBox.isSelected();
@@ -111,30 +129,55 @@ public class ArmourerReplaceDialog extends AWConfirmDialog {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float p_230430_4_) {
-        matrixStack.pushPose();
-        matrixStack.translate(0, 0, -200);
-        super.render(matrixStack, mouseX, mouseY, p_230430_4_);
-        matrixStack.popPose();
-        this.pickerScreen.render(matrixStack, mouseX, mouseY, p_230430_4_);
-        if (this.lastHoveredButton != null) {
-            this.renderTooltip(matrixStack, lastHoveredButton.getMessage(), mouseX, mouseY);
-            this.lastHoveredButton = null;
+    public boolean pointInside(CGPoint point, UIEvent event) {
+        if (super.pointInside(point, event)) {
+            return true;
+        }
+        return subviews().stream().anyMatch(subview -> subview.pointInside(convertPointToView(point, subview), event));
+    }
+
+    @Nullable
+    @Override
+    public UIView hitTest(CGPoint point, UIEvent event) {
+        if (_ignoresTouchEvents(this)) {
+            return null;
+        }
+        if (!pointInside(point, event)) {
+            return null;
+        }
+        for (UIView subview : _subviewsForRev()) {
+            if (subview != listView) {
+                UIView hitView = subview.hitTest(convertPointToView(point, subview), event);
+                if (hitView != null) {
+                    return hitView;
+                }
+            }
+        }
+        UIView hitView = listView.hitTest(convertPointToView(point, listView), event);
+        if (hitView != null) {
+            return hitView;
+        }
+        return this;
+    }
+
+    @Override
+    public void setOrigin(CGPoint origin) {
+        int extendHeight = 98 + 10;
+        super.setOrigin(new CGPoint(origin.x, origin.y - extendHeight / 2));
+        if (listView != null) {
+            listView.setNeedsLayout();
         }
     }
 
-    protected void addHoveredButton(Button button, PoseStack matrixStack, int mouseX, int mouseY) {
-        this.lastHoveredButton = button;
+    private void addHelpButton(int x, int y, String key) {
+        UIButton button = new UIButton(new CGRect(x, y, 7, 8));
+        button.setBackgroundImage(ModTextures.helpButtonImage(), UIControl.State.ALL);
+        button.setTooltip(getText(key));
+        addSubview(button);
     }
 
-    protected void addHelpButton(int x, int y, String key) {
-        Component tooltip = getText(key);
-        AWImageButton button = new AWHelpButton(x, y, 7, 8, Objects::hash, this::addHoveredButton, tooltip);
-        addButton(button);
-    }
-
-    private Component getText(String key) {
-        return TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.replace" + "." + key);
+    private NSString getText(String key) {
+        return new NSString(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.replace" + "." + key));
     }
 
     static class PickerContainer extends AbstractContainerMenu {
@@ -144,7 +187,17 @@ public class ArmourerReplaceDialog extends AWConfirmDialog {
         protected PickerContainer(Container inventory) {
             super(null, 0);
             this.inventory = inventory;
-            this.reload(0, 0, 0, 0);
+        }
+
+        @Override
+        public void removed(Player player) {
+            super.removed(player);
+            Inventory playerInventory = Accessor.getInventory(player);
+            //#if MC >= 11800
+            //# playerInventory.setPickedItem(ItemStack.EMPTY);
+            //#else
+            playerInventory.setCarried(ItemStack.EMPTY);
+            //#endif
         }
 
         @Override
@@ -157,10 +210,10 @@ public class ArmourerReplaceDialog extends AWConfirmDialog {
             return quickMoveStack(player, index, slots.size());
         }
 
-        public void reload(int inventoryX, int inventoryY, int placeholderX, int placeholderY) {
+        protected void reloadSlots(CGRect inventoryRect, CGRect placeholderRect) {
             slots.clear();
-            addPlayerSlots(inventory, inventoryX, inventoryY);
-            addPlaceholderSlots(inventory, inventory.getContainerSize() - 2, placeholderX, placeholderY);
+            addPlayerSlots(inventory, inventoryRect.x, inventoryRect.y);
+            addPlaceholderSlots(inventory, inventory.getContainerSize() - 2, placeholderRect.x, placeholderRect.y);
         }
 
         protected void addPlayerSlots(Container inventory, int x, int y) {
@@ -185,58 +238,6 @@ public class ArmourerReplaceDialog extends AWConfirmDialog {
                     }
                 });
             }
-        }
-    }
-
-    static class PickerScreen extends AbstractContainerScreen<PickerContainer> {
-
-        int inventoryX;
-        int inventoryY;
-        int placeholderX;
-        int placeholderY;
-
-        public PickerScreen(PickerContainer p_i51105_1_, Inventory p_i51105_2_, Component p_i51105_3_) {
-            super(p_i51105_1_, p_i51105_2_, p_i51105_3_);
-            this.imageWidth = 240;
-            this.imageHeight = 240;
-        }
-
-        @Override
-        protected void init() {
-            this.topPos = 0;
-            this.leftPos = 0;
-            this.menu.reload(inventoryX, inventoryY, placeholderX, placeholderY);
-        }
-
-        @Override
-        public void removed() {
-            this.inventory.setCarried(ItemStack.EMPTY);
-        }
-
-        @Override
-        public void render(PoseStack matrixStack, int mouseX, int mouseY, float p_230430_4_) {
-            super.render(matrixStack, mouseX, mouseY, p_230430_4_);
-            this.renderTooltip(matrixStack, mouseX, mouseY);
-        }
-
-        @Override
-        protected void renderBg(PoseStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-            RenderUtils.blit(matrixStack, inventoryX, inventoryY, 0, 0, 176, 98, RenderUtils.TEX_PLAYER_INVENTORY);
-            RenderUtils.bind(RenderUtils.TEX_ARMOURER);
-            RenderUtils.blit(matrixStack, placeholderX - 5, placeholderY - 5, 230, 18, 26, 26); // input
-            RenderUtils.blit(matrixStack, placeholderX - 5 + 110, placeholderY - 5, 230, 18, 26, 26); // replaced
-        }
-
-        @Override
-        protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {
-            font.draw(matrixStack, inventory.getDisplayName(), inventoryX + 8, inventoryY + 5, 0x404040);
-        }
-
-        protected void slotClicked(@Nullable Slot slot, int slotIndex, int p_184098_3_, ClickType clickType) {
-            if (slot == null) {
-                return;
-            }
-            menu.clicked(slot.index, p_184098_3_, clickType, inventory.player);
         }
     }
 }

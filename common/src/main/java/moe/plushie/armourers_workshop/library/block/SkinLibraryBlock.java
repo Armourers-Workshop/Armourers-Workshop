@@ -27,8 +27,8 @@ public class SkinLibraryBlock extends AbstractHorizontalBlock implements IBlockE
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return ModBlockEntities.SKIN_LIBRARY.get().create();
+    public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
+        return ModBlockEntities.SKIN_LIBRARY.create(level, blockPos, blockState);
     }
 
     @Override

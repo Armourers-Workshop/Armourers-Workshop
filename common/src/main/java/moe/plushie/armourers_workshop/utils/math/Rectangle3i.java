@@ -210,7 +210,6 @@ public class Rectangle3i implements IRectangle3i {
 
     @Override
     public String toString() {
-        return "Rectangle3i [x=" + x + ", y=" + y + ", z=" + z + ", width="
-                + width + ", height=" + height + ", depth=" + depth + "]";
+        return String.format("(%d %d %d; %d %d %d)", x, y, z, width, height, depth);
     }
 }

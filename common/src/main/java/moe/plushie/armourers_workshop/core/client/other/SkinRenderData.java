@@ -17,7 +17,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.init.ModCompatible;
 import moe.plushie.armourers_workshop.init.ModItems;
 import moe.plushie.armourers_workshop.utils.ColorUtils;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.NonNullList;
@@ -76,7 +76,7 @@ public class SkinRenderData implements SkinBakery.IBakeListener {
     @Override
     public void didBake(String identifier, BakedSkin bakedSkin) {
         if (missingSkins.contains(identifier)) {
-            RenderUtils.call(this::invalidateAll);
+            RenderSystem.call(this::invalidateAll);
         }
     }
 

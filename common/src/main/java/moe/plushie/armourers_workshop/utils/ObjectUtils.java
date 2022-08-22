@@ -1,5 +1,6 @@
 package moe.plushie.armourers_workshop.utils;
 
+import com.apple.library.foundation.NSRange;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -18,6 +19,10 @@ public class ObjectUtils {
             return type.cast(src);
         }
         return null;
+    }
+
+    public static String replaceString(String string, NSRange range, String replacementString) {
+        return (new StringBuilder(string)).replace(range.startIndex(), range.endIndex(), replacementString).toString();
     }
 
     @Nullable

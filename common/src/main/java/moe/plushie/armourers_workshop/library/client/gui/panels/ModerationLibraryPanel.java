@@ -1,11 +1,11 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
+import com.apple.library.coregraphics.CGRect;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonObject;
-import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.client.gui.widget.ReportList;
-import moe.plushie.armourers_workshop.library.client.gui.widget.SkinFileList;
+import moe.plushie.armourers_workshop.library.client.gui.widget.SkinItemList;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskGetSkinInfo;
 import moe.plushie.armourers_workshop.library.data.global.task.mod.GlobalTaskGetReportList;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinReport;
@@ -27,20 +27,19 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
     private final GlobalTaskGetReportList.Filter filter = GlobalTaskGetReportList.Filter.OPEN;
 
     public ModerationLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.panel.info", GlobalSkinLibraryScreen.Page.LIBRARY_MODERATION::equals);
+        super("inventory.armourers_workshop.skin-library-global.panel.info", GlobalSkinLibraryWindow.Page.LIBRARY_MODERATION::equals);
+        this.listReports.setFrame(bounds().insetBy(5, 5, 5, 5));
+        this.listReports.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
+        this.addSubview(listReports);
     }
 
     @Override
-    protected void init() {
-        super.init();
-        listReports.setFrame(leftPos + 5, topPos + 20, width - 10, height - 25);
-        addButton(listReports);
-    }
-
-    @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.fillGradient(matrixStack, leftPos, topPos, leftPos + width, topPos + height, 0xC0101010, 0xD0101010);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void refresh() {
+        super.refresh();
+        if (skinReports.isEmpty()) {
+            pageIndex = 0;
+            loadReportList();
+        }
     }
 
     @Override
@@ -54,8 +53,8 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
             @Override
             public void onSuccess(JsonObject result) {
                 if (result != null) {
-                    SkinFileList.Entry entry = new SkinFileList.Entry(result);
-                    Minecraft.getInstance().execute(() -> router.showSkinDetail(entry, GlobalSkinLibraryScreen.Page.LIBRARY_MODERATION));
+                    SkinItemList.Entry entry = new SkinItemList.Entry(result);
+                    Minecraft.getInstance().execute(() -> router.showSkinDetail(entry, GlobalSkinLibraryWindow.Page.LIBRARY_MODERATION));
                 }
             }
 
@@ -71,17 +70,8 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
         if (isRequesting) {
             return;
         }
-        if (contentOffset + reportList.getHeight() * 1.5f >= reportList.getContentHeight()) {
+        if (contentOffset + reportList.frame().getHeight() * 1.5f >= reportList.getContentHeight()) {
             pageIndex += getMaxPerPage();
-            loadReportList();
-        }
-    }
-
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        if (visible && skinReports.isEmpty()) {
-            pageIndex = 0;
             loadReportList();
         }
     }
@@ -119,13 +109,13 @@ public class ModerationLibraryPanel extends AbstractLibraryPanel implements Repo
             names.clear();
         }
         skinReports.addAll(reports);
-        if (reports.size() == getMaxPerPage()) {
+        if (reports.size() >= getMaxPerPage()) {
             isRequesting = false;
         }
     }
 
     private ReportList buildReportList() {
-        ReportList reportList = new ReportList(0, 0, 240, 120);
+        ReportList reportList = new ReportList(new CGRect(0, 0, 240, 120));
         reportList.addColumn("date", 106);
         reportList.addColumn("userId", 40);
         reportList.addColumn("skinId", 40);

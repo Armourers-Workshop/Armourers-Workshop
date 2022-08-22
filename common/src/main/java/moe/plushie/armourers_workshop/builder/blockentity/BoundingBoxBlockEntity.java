@@ -25,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -41,8 +42,8 @@ public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPain
     private ArmourerBlockEntity cachedParentBlockEntity;
     private boolean customRenderer = false;
 
-    public BoundingBoxBlockEntity(BlockEntityType<?> entityType) {
-        super(entityType);
+    public BoundingBoxBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
     }
 
     public void readFromNBT(CompoundTag nbt) {

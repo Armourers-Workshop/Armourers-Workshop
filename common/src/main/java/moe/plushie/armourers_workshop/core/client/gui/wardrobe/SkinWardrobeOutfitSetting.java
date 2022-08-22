@@ -1,15 +1,15 @@
 package moe.plushie.armourers_workshop.core.client.gui.wardrobe;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWTabPanel;
+import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGPoint;
 import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.world.inventory.Slot;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinWardrobeOutfitSetting extends AWTabPanel {
+public class SkinWardrobeOutfitSetting extends SkinWardrobeBaseSetting {
 
     private final SkinWardrobeMenu container;
 
@@ -19,12 +19,10 @@ public class SkinWardrobeOutfitSetting extends AWTabPanel {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        RenderUtils.bind(RenderUtils.TEX_WARDROBE_2);
-        for (Slot slot : container.getCustomSlots()) {
-            if (slot.isActive()) {
-                RenderUtils.blit(matrixStack, leftPos + slot.x - 1, topPos + slot.y - 1, 238, 194, 18, 18);
-            }
-        }
+    public void render(CGPoint point, CGGraphicsContext context) {
+        RenderSystem.bind(ModTextures.WARDROBE_2);
+        container.forEachCustomSlots(slot -> {
+            RenderSystem.blit(context.poseStack, slot.x - 1, slot.y - 1, 238, 194, 18, 18);
+        });
     }
 }

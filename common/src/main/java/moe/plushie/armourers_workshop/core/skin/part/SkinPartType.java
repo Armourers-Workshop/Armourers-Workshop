@@ -61,7 +61,7 @@ public abstract class SkinPartType implements ISkinPartType {
 
     @Override
     public Vector3i getRenderOffset() {
-        return new Vector3i(0, 0, 0);
+        return Vector3i.ZERO;
     }
 
     @Override

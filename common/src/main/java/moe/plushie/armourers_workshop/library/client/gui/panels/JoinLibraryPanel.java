@@ -1,107 +1,113 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSMutableString;
+import com.apple.library.foundation.NSString;
+import com.apple.library.foundation.NSTextAlignment;
+import com.apple.library.uikit.*;
 import com.google.common.util.concurrent.FutureCallback;
-import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWExtendedButton;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWImageButton;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWLabel;
-import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.global.GlobalSkinLibraryUtils;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskBetaJoin;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
-import moe.plushie.armourers_workshop.utils.math.Rectangle2i;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 @Environment(value = EnvType.CLIENT)
-public class JoinLibraryPanel extends AbstractLibraryPanel {
+public class JoinLibraryPanel extends AbstractLibraryPanel implements UILabelDelegate {
 
     private static final String URL_DISCORD = "https://discord.gg/5Z3KKvU";
     private static final String URL_WIKI_FAQ = "https://github.com/RiskyKen/Armourers-Workshop/wiki/FAQ";
     private static final String URL_VIDEO_UPDATE_JAVA = "https://youtu.be/xZfaXHulmKo";
 
-    private final ArrayList<Component> pages = new ArrayList<>();
+    private final ArrayList<NSString> pages = new ArrayList<>();
 
-    private Rectangle2i frame;
-    private AWLabel label;
+    private final UILabel label = new UILabel(CGRect.ZERO);
 
-    private AWImageButton buttonPrevious;
-    private AWImageButton buttonNext;
-    private AWExtendedButton buttonJoin;
+    private final UIButton buttonPrevious = new UIButton(CGRect.ZERO);
+    private final UIButton buttonNext = new UIButton(CGRect.ZERO);
+    private final UIButton buttonJoin = new UIButton(CGRect.ZERO);
 
     private int page = 0;
     private String joinFailMessage = null;
     private boolean joining = false;
 
     public JoinLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.join", GlobalSkinLibraryScreen.Page.LIBRARY_JOIN::equals);
+        super("inventory.armourers_workshop.skin-library-global.join", GlobalSkinLibraryWindow.Page.LIBRARY_JOIN::equals);
         this.remake();
+        this.setup(bounds());
     }
 
-    @Override
-    protected void init() {
-        super.init();
-
+    private void setup(CGRect rect) {
         int recWidth = 318;
         int recHeight = 180;
-        this.frame = new Rectangle2i(leftPos + (width - recWidth) / 2, topPos + (height - recHeight) / 2, recWidth, recHeight);
-        this.label = addLabel(frame.getX() + 5, frame.getY() + 5, frame.getWidth() - 10, frame.getHeight() - 10, pages.get(page));
-        this.label.setTextColor(0x333333);
 
-        int buttonBottom = frame.getY() + frame.getHeight() - 16 - 5;
-        this.buttonPrevious = addIconButton(frame.getX() + 5, buttonBottom, 208, 80, 16, 16, "button.previousPage", this::previous);
-        this.buttonNext = addIconButton(frame.getX() + frame.getWidth() - 16 - 5, buttonBottom, 208, 96, 16, 16, "button.nextPage", this::next);
-        this.buttonJoin = addTextButton(frame.getX() + (frame.getWidth() - 140) / 2, buttonBottom, 140, 16, "button.join", this::join);
+        UIView contentView = new UIView(new CGRect((rect.width - recWidth) / 2, (rect.height - recHeight) / 2, recWidth, recHeight));
+        contentView.setContents(ModTextures.defaultWindowImage());
+        contentView.setAutoresizingMask(AutoresizingMask.flexibleTopMargin | AutoresizingMask.flexibleBottomMargin | AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleRightMargin);
+        addSubview(contentView);
 
-        this.refresh();
+        label.setFrame(contentView.bounds().insetBy(5, 5, 5, 5));
+        label.setNumberOfLines(0);
+        label.setTextVerticalAlignment(NSTextAlignment.Vertical.TOP);
+        label.setTextColor(new UIColor(0x333333));
+        label.setDelegate(this);
+        contentView.addSubview(label);
+
+        CGRect frame = label.frame();
+        int buttonBottom = frame.getMaxY() - 16;
+
+        buttonPrevious.setFrame(new CGRect(frame.getMinX(), buttonBottom, 16, 16));
+        buttonPrevious.setTooltip(getCommonDisplayText("button.previousPage"));
+        buttonPrevious.setImage(ModTextures.iconImage(208, 80, 16, 16, ModTextures.BUTTONS), UIControl.State.ALL);
+        buttonPrevious.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        buttonPrevious.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, JoinLibraryPanel::previous);
+        contentView.addSubview(buttonPrevious);
+
+        buttonNext.setFrame(new CGRect(frame.getMaxX() - 16, buttonBottom, 16, 16));
+        buttonNext.setTooltip(getCommonDisplayText("button.nextPage"));
+        buttonNext.setImage(ModTextures.iconImage(208, 96, 16, 16, ModTextures.BUTTONS), UIControl.State.ALL);
+        buttonNext.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        buttonNext.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, JoinLibraryPanel::next);
+        contentView.addSubview(buttonNext);
+
+        buttonJoin.setFrame(new CGRect(frame.getMidX() - 70, buttonBottom, 140, 16));
+        buttonJoin.setTitle(getDisplayText("button.join"), UIControl.State.NORMAL);
+        buttonJoin.setTitleColor(UIColor.WHITE, UIControl.State.NORMAL);
+        buttonJoin.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        buttonJoin.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, JoinLibraryPanel::join);
+        contentView.addSubview(buttonJoin);
     }
 
     @Override
-    public void renderBackgroundLayer(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.fillGradient(matrixStack, leftPos, topPos, leftPos + width, topPos + height, 0xC0101010, 0xD0101010);
-        RenderUtils.tile(matrixStack, frame.getX(), frame.getY(), 0, 0, frame.getWidth(), frame.getHeight(), 128, 128, 4, 4, 4, 4, RenderUtils.TEX_COMMON);
+    public void refresh() {
+        super.refresh();
+        page = 0;
+        remake();
+        refreshStatus();
     }
 
     @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        if (visible) {
-            this.page = 0;
-            this.remake();
-            this.refresh();
+    public void labelWillClickAttributes(UILabel label, Map<String, ?> attributes) {
+        if (router != null) {
+            router.labelWillClickAttributes(label, attributes);
         }
     }
 
-    private AWImageButton addIconButton(int x, int y, int u, int v, int width, int height, String key, Button.OnPress handler) {
-        Component tooltip = getCommonDisplayText(key);
-        AWImageButton button = new AWImageButton(x, y, width, height, u, v, RenderUtils.TEX_BUTTONS, handler, this::addHoveredButton, tooltip);
-        addButton(button);
-        return button;
-    }
-
-    private AWExtendedButton addTextButton(int x, int y, int width, int height, String key, Button.OnPress handler) {
-        Component title = getDisplayText(key);
-        AWExtendedButton button = new AWExtendedButton(x, y, width, height, title, handler);
-        addButton(button);
-        return button;
-    }
-
-    private void previous(Button button) {
+    private void previous(UIControl button) {
         setPage(page - 1);
     }
 
-    private void next(Button button) {
+    private void next(UIControl button) {
         setPage(page + 1);
     }
 
-    private void join(Button button) {
+    private void join(UIControl button) {
         joining = true;
         joinFailMessage = null;
         new GlobalTaskBetaJoin().createTaskAndRun(new FutureCallback<GlobalTaskBetaJoin.BetaJoinResult>() {
@@ -124,7 +130,7 @@ public class JoinLibraryPanel extends AbstractLibraryPanel {
                 Minecraft.getInstance().execute(() -> onJoinedFailed(t.toString()));
             }
         });
-        this.refresh();
+        refreshStatus();
     }
 
     private void onJoined() {
@@ -137,50 +143,50 @@ public class JoinLibraryPanel extends AbstractLibraryPanel {
         joining = false;
         joinFailMessage = message;
         remake();
-        refresh();
+        refreshStatus();
     }
 
-    private void refresh() {
+    private void refreshStatus() {
         boolean canJoin = pages.size() != 1;
         boolean isLast = page == (pages.size() - 1);
-        this.label.setMessage(pages.get(page));
-        this.buttonPrevious.setEnabled(page != 0);
-        this.buttonNext.setEnabled(!isLast);
-        this.buttonNext.visible = canJoin;
-        this.buttonPrevious.visible = canJoin;
-        this.buttonJoin.visible = canJoin && isLast;
-        this.buttonJoin.active = !joining;
+        label.setText(pages.get(page));
+        buttonPrevious.setEnabled(page != 0);
+        buttonNext.setEnabled(!isLast);
+        buttonNext.setHidden(!canJoin);
+        buttonPrevious.setHidden(!canJoin);
+        buttonJoin.setHidden(!(canJoin && isLast));
+        buttonJoin.setEnabled(!joining);
     }
 
     private void remake() {
-        this.pages.clear();
+        pages.clear();
 
         String[] javaVersion = GlobalSkinLibraryUtils.getJavaVersion();
         boolean validJava = GlobalSkinLibraryUtils.isValidJavaVersion();
 
         if (!validJava) {
-            Component urlWikiFaq = getURLText(URL_WIKI_FAQ);
-            Component urlVideoUpdateJava = getURLText(URL_VIDEO_UPDATE_JAVA);
+            NSString urlWikiFaq = getURLText(URL_WIKI_FAQ);
+            NSString urlVideoUpdateJava = getURLText(URL_VIDEO_UPDATE_JAVA);
             String update = javaVersion.length > 2 ? javaVersion[2] : "0";
-            this.pages.add(concat(getDisplayText("old_java", javaVersion[0], update, urlWikiFaq, urlVideoUpdateJava)));
+            pages.add(concat(getDisplayText("old_java", javaVersion[0], update, urlWikiFaq, urlVideoUpdateJava)));
             return;
         }
 
-        this.pages.add(concat(getDisplayText("message_1.title"), "\n\n", getDisplayText("message_1.text")));
-        this.pages.add(concat(getDisplayText("message_2.title"), "\n\n", getDisplayText("message_2.text")));
-        this.pages.add(concat(getDisplayText("message_3.title"), "\n\n", getDisplayText("message_3.text")));
-        this.pages.add(concat(getDisplayText("message_4.title"), "\n\n", getDisplayText("message_4.text")));
-        this.pages.add(concat(getDisplayText("message_5.title"), "\n\n", getDisplayText("message_5.text"), getURLText(URL_DISCORD)));
+        pages.add(concat(getDisplayText("message_1.title"), "\n\n", getDisplayText("message_1.text")));
+        pages.add(concat(getDisplayText("message_2.title"), "\n\n", getDisplayText("message_2.text")));
+        pages.add(concat(getDisplayText("message_3.title"), "\n\n", getDisplayText("message_3.text")));
+        pages.add(concat(getDisplayText("message_4.title"), "\n\n", getDisplayText("message_4.text")));
+        pages.add(concat(getDisplayText("message_5.title"), "\n\n", getDisplayText("message_5.text"), getURLText(URL_DISCORD)));
 
         if (Strings.isNotBlank(joinFailMessage)) {
-            TextComponent message = (TextComponent) pages.get(pages.size() - 1);
+            NSMutableString message = (NSMutableString) pages.get(pages.size() - 1);
             message.append("\n\n");
             message.append("§cError: " + joinFailMessage + "§r");
             message.append("\n\n");
         }
 
-        if (this.label != null) {
-            this.label.setMessage(pages.get(page));
+        if (label != null) {
+            label.setText(pages.get(page));
         }
     }
 
@@ -189,17 +195,17 @@ public class JoinLibraryPanel extends AbstractLibraryPanel {
             return;
         }
         this.page = page;
-        this.refresh();
+        this.refreshStatus();
     }
 
-    private TextComponent concat(Object... keys) {
-        TextComponent message = new TextComponent("");
+    private NSMutableString concat(Object... keys) {
+        NSMutableString message = new NSMutableString("");
         for (Object key : keys) {
             if (key instanceof String) {
                 message.append((String) key);
             }
-            if (key instanceof Component) {
-                message.append((Component) key);
+            if (key instanceof NSString) {
+                message.append((NSString) key);
             }
         }
         return message;

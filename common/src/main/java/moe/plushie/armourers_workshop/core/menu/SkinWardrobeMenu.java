@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SkinWardrobeMenu extends AbstractContainerMenu {
 
@@ -119,6 +120,14 @@ public class SkinWardrobeMenu extends AbstractContainerMenu {
 
     public List<Slot> getCustomSlots() {
         return customSlots;
+    }
+
+    public void forEachCustomSlots(Consumer<Slot> consumer) {
+        for (Slot slot : customSlots) {
+            if (slot.isActive()) {
+                consumer.accept(slot);
+            }
+        }
     }
 
     @Override

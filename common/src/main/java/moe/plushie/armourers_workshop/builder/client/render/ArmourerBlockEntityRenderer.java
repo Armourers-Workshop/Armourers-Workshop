@@ -14,9 +14,10 @@ import moe.plushie.armourers_workshop.builder.client.render.guide.GuideRendererM
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
 import moe.plushie.armourers_workshop.core.client.other.SkinDynamicTexture;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.render.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TextureUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import net.fabricmc.api.EnvType;
@@ -25,7 +26,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +35,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 @Environment(value = EnvType.CLIENT)
-public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends BlockEntityRenderer<T> {
+public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
     private final PlayerTextureOverride override = new PlayerTextureOverride();
     private final Rectangle3f originBox = new Rectangle3f(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f);
@@ -122,12 +122,12 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
 
             // render building grid
             if (isShowGuides) {
-                RenderUtils.drawCube(matrixStack, rect, r, g, b, a, buffers);
-                RenderUtils.drawCube(matrixStack, originBox, 0, 1, 0, 0.5f, buffers);
+                RenderSystem.drawCube(matrixStack, rect, r, g, b, a, buffers);
+                RenderSystem.drawCube(matrixStack, originBox, 0, 1, 0, 0.5f, buffers);
             }
             // render guide grid
             if (isShowModelGuides && isModelOverridden) {
-                RenderUtils.drawCube(matrixStack, rect2, 0, 0, 1, 0.25f, buffers);
+                RenderSystem.drawCube(matrixStack, rect2, 0, 0, 1, 0.25f, buffers);
             }
 
             matrixStack.popPose();

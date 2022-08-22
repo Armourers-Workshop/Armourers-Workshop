@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.init;
 import moe.plushie.armourers_workshop.ArmourersWorkshop;
 import moe.plushie.armourers_workshop.core.holiday.*;
 import moe.plushie.armourers_workshop.core.item.GiftSackItem;
+import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
@@ -76,7 +77,7 @@ public final class ModHolidays {
                 continue; // the gift is already give to player in this year.
             }
             ItemStack itemStack = GiftSackItem.of(holiday1);
-            if (player.inventory.add(itemStack)) {
+            if (Accessor.getInventory(player).add(itemStack)) {
                 storage.add(player, holiday1);
             } else {
                 player.sendMessage(TranslateUtils.title("chat.armourers_workshop.inventoryGiftFail"), player.getUUID());

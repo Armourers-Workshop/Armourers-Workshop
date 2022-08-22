@@ -2,7 +2,6 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -11,10 +10,11 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkinPart;
+import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.data.cache.SkinCache;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.skin.Skin;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import net.fabricmc.api.EnvType;
@@ -23,7 +23,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 
-import java.awt.*;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -70,12 +69,12 @@ public class SkinRenderObjectBuilder {
     public void addShapeData(Vector3f origin, PoseStack matrixStack) {
         MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
 //        RenderUtils.drawBoundingBox(matrixStack, box, color, SkinRenderBuffer.getInstance());
-        RenderUtils.drawPoint(matrixStack, origin, 16, buffers);
+        RenderSystem.drawPoint(matrixStack, origin, 16, buffers);
     }
 
-    public void addShapeData(Rectangle3f box, Color color, PoseStack matrixStack) {
+    public void addShapeData(Rectangle3f box, UIColor color, PoseStack matrixStack) {
         MultiBufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderUtils.drawBoundingBox(matrixStack, box, color, buffers);
+        RenderSystem.drawBoundingBox(matrixStack, box, color, buffers);
     }
 
     public void endBatch(SkinVertexBufferBuilder.Pipeline pipeline) {

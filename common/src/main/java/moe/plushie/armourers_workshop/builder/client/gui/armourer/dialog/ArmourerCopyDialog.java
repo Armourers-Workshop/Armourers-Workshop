@@ -1,67 +1,83 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog;
 
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.UICheckBox;
+import com.apple.library.uikit.UIComboBox;
+import com.apple.library.uikit.UIComboItem;
+import com.apple.library.uikit.UILabel;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWCheckBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWComboBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWConfirmDialog;
+import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 @Environment(value = EnvType.CLIENT)
-public class ArmourerCopyDialog extends AWConfirmDialog {
+public class ArmourerCopyDialog extends ConfirmDialog {
 
     final ArrayList<ISkinPartType> partTypes;
-    AWComboBox sourcePartComboBox;
-    AWComboBox destinationPartComboBox;
-    AWCheckBox mirrorCheckBox;
-    AWCheckBox paintCheckBox;
 
-    public ArmourerCopyDialog(ArrayList<ISkinPartType> partTypes, Component title) {
-        super(title);
+    private final UICheckBox mirrorCheckBox = new UICheckBox(CGRect.ZERO);
+    private final UICheckBox paintCheckBox = new UICheckBox(CGRect.ZERO);
+
+    private final UIComboBox sourcePartComboBox = new UIComboBox(new CGRect(0, 0, 100, 14));
+    private final UIComboBox destinationPartComboBox = new UIComboBox(new CGRect(0, 0, 100, 14));
+
+    public ArmourerCopyDialog(ArrayList<ISkinPartType> partTypes) {
+        super();
+        this.setFrame(new CGRect(0, 0, 240, 140));
         this.partTypes = partTypes;
-        this.imageWidth = 240;
-        this.imageHeight = 140;
+        this.setup();
     }
 
-    @Override
-    protected void init() {
-        super.init();
+    private void setup() {
+        layoutIfNeeded();
+        int width = bounds().width - 30;
+        int left = confirmButton.frame().getX() + 1;
+        int right = cancelButton.frame().getMaxX() - 1;
+        int bottom = confirmButton.frame().getY() - 4;
 
-        int right = cancelButton.x + cancelButton.getWidth();
-        int bottom = confirmButton.y - 4;
+        mirrorCheckBox.setFrame(new CGRect(left, bottom - 22, width, 9));
+        mirrorCheckBox.setTitle(getText("mirror"));
+        mirrorCheckBox.setSelected(false);
+        addSubview(mirrorCheckBox);
 
-        this.mirrorCheckBox = new AWCheckBox(confirmButton.x + 1, bottom - 22, 9, 9, getText("mirror"), false, Objects::hash);
-        this.paintCheckBox = new AWCheckBox(confirmButton.x + 1, bottom - 11, 9, 9, getText("copyPaint"), false, Objects::hash);
+        paintCheckBox.setFrame(new CGRect(left, bottom - 11, width, 9));
+        paintCheckBox.setTitle(getText("copyPaint"));
+        paintCheckBox.setSelected(false);
+        addSubview(paintCheckBox);
 
-        this.sourcePartComboBox = new AWComboBox(confirmButton.x + 1, topPos + 35, 100, 14, getItems(partTypes), 0, Objects::hash);
-        this.destinationPartComboBox = new AWComboBox(right - 100 - 1, topPos + 35, 100, 14, getItems(partTypes), 0, Objects::hash);
+        sourcePartComboBox.setFrame(new CGRect(left, 35, 100, 14));
+        sourcePartComboBox.setSelectedIndex(0);
+        sourcePartComboBox.reloadData(getItems(partTypes));
+        addSubview(sourcePartComboBox);
 
-        this.addButton(mirrorCheckBox);
-        this.addButton(paintCheckBox);
+        destinationPartComboBox.setFrame(new CGRect(right - 100, 35, 100, 14));
+        destinationPartComboBox.setSelectedIndex(0);
+        destinationPartComboBox.reloadData(getItems(partTypes));
+        addSubview(destinationPartComboBox);
 
-        this.addButton(sourcePartComboBox);
-        this.addButton(destinationPartComboBox);
-
-        this.addLabel(sourcePartComboBox.x, sourcePartComboBox.y - 10, 100, 9, getText("srcPart"));
-        this.addLabel(destinationPartComboBox.x, destinationPartComboBox.y - 10, 100, 9, getText("desPart"));
+        UILabel label1 = new UILabel(new CGRect(sourcePartComboBox.frame().getX(), sourcePartComboBox.frame().getY() - 10, 100, 9));
+        UILabel label2 = new UILabel(new CGRect(destinationPartComboBox.frame().getX(), destinationPartComboBox.frame().getY() - 10, 100, 9));
+        label1.setText(getText("srcPart"));
+        label2.setText(getText("desPart"));
+        addSubview(label1);
+        addSubview(label2);
     }
 
     public ISkinPartType getSourcePartType() {
-        if (partTypes != null && sourcePartComboBox != null && sourcePartComboBox.getSelectedIndex() < partTypes.size()) {
-            return partTypes.get(sourcePartComboBox.getSelectedIndex());
+        if (partTypes != null && sourcePartComboBox != null && sourcePartComboBox.selectedIndex() < partTypes.size()) {
+            return partTypes.get(sourcePartComboBox.selectedIndex());
         }
         return SkinPartTypes.UNKNOWN;
     }
 
     public ISkinPartType getDestinationPartType() {
-        if (partTypes != null && destinationPartComboBox != null && destinationPartComboBox.getSelectedIndex() < partTypes.size()) {
-            return partTypes.get(destinationPartComboBox.getSelectedIndex());
+        if (partTypes != null && destinationPartComboBox != null && destinationPartComboBox.selectedIndex() < partTypes.size()) {
+            return partTypes.get(destinationPartComboBox.selectedIndex());
         }
         return SkinPartTypes.UNKNOWN;
     }
@@ -74,16 +90,16 @@ public class ArmourerCopyDialog extends AWConfirmDialog {
         return paintCheckBox == null || paintCheckBox.isSelected();
     }
 
-    private ArrayList<AWComboBox.ComboItem> getItems(ArrayList<ISkinPartType> partTypes) {
-        ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
+    private ArrayList<UIComboItem> getItems(ArrayList<ISkinPartType> partTypes) {
+        ArrayList<UIComboItem> items = new ArrayList<>();
         for (ISkinPartType partType : partTypes) {
-            Component title = TranslateUtils.Name.of(partType);
-            items.add(new AWComboBox.ComboItem(title));
+            NSString title = new NSString(TranslateUtils.Name.of(partType));
+            items.add(new UIComboItem(title));
         }
         return items;
     }
 
-    private Component getText(String key) {
-        return TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.copy" + "." + key);
+    private NSString getText(String key) {
+        return new NSString(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.copy" + "." + key));
     }
 }

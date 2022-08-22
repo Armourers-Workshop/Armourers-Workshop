@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.utils.math;
 
-import com.google.common.base.MoreObjects;
 import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import net.minecraft.core.Direction;
@@ -115,16 +114,16 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         return this.relative(Direction.DOWN, p_177979_1_);
     }
 
-    public Vector3i relative(Direction p_177967_1_, int p_177967_2_) {
-        return p_177967_2_ == 0 ? this : new Vector3i(this.getX() + p_177967_1_.getStepX() * p_177967_2_, this.getY() + p_177967_1_.getStepY() * p_177967_2_, this.getZ() + p_177967_1_.getStepZ() * p_177967_2_);
+    public Vector3i relative(Direction dir, int i) {
+        return i == 0 ? this : new Vector3i(this.getX() + dir.getStepX() * i, this.getY() + dir.getStepY() * i, this.getZ() + dir.getStepZ() * i);
     }
 
-    public Vector3i cross(Vector3i p_177955_1_) {
-        return new Vector3i(this.getY() * p_177955_1_.getZ() - this.getZ() * p_177955_1_.getY(), this.getZ() * p_177955_1_.getX() - this.getX() * p_177955_1_.getZ(), this.getX() * p_177955_1_.getY() - this.getY() * p_177955_1_.getX());
+    public Vector3i cross(Vector3i v) {
+        return new Vector3i(this.getY() * v.getZ() - this.getZ() * v.getY(), this.getZ() * v.getX() - this.getX() * v.getZ(), this.getX() * v.getY() - this.getY() * v.getX());
     }
 
-    public boolean closerThan(Vector3i p_218141_1_, double p_218141_2_) {
-        return this.distSqr(p_218141_1_.getX(), p_218141_1_.getY(), p_218141_1_.getZ(), false) < p_218141_2_ * p_218141_2_;
+    public boolean closerThan(Vector3i v, double d) {
+        return this.distSqr(v.getX(), v.getY(), v.getZ(), false) < d * d;
     }
 
     public boolean closerThan(Position p_218137_1_, double p_218137_2_) {
@@ -154,12 +153,12 @@ public class Vector3i implements Comparable<Vector3i>, Position, IVector3i {
         return (int) (f + f1 + f2);
     }
 
-    public int get(Direction.Axis p_243648_1_) {
-        return p_243648_1_.choose(this.x, this.y, this.z);
+    public int get(Direction.Axis axis) {
+        return axis.choose(this.x, this.y, this.z);
     }
 
     public String toString() {
-        return MoreObjects.toStringHelper(this).add("x", this.getX()).add("y", this.getY()).add("z", this.getZ()).toString();
+        return String.format("(%d %d %d)", x, y, z);
     }
 
     public String toShortString() {

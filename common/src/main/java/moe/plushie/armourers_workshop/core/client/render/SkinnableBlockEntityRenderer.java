@@ -7,9 +7,10 @@ import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderContext;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRenderer;
 import moe.plushie.armourers_workshop.core.client.skinrender.SkinRendererManager;
+import com.apple.library.uikit.UIColor;
 import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.init.ModDebugger;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,16 +18,13 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.awt.*;
-
 @Environment(value = EnvType.CLIENT)
-public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extends BlockEntityRenderer<T> {
+public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extends AbstractBlockEntityRenderer<T> {
 
     public SkinnableBlockEntityRenderer(BlockEntityRenderDispatcher rendererManager) {
         super(rendererManager);
@@ -69,13 +67,13 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
                 matrixStack.scale(f, f, f);
                 matrixStack.mulPose(rotations);
                 matrixStack.translate(pos.getX() * 16f, pos.getY() * 16f, pos.getZ() * 16f);
-                RenderUtils.drawBoundingBox(matrixStack, rect, Color.RED, buffers);
+                RenderSystem.drawBoundingBox(matrixStack, rect, UIColor.RED, buffers);
                 matrixStack.popPose();
             });
             BlockPos pos = entity.getBlockPos();
             matrixStack.pushPose();
             matrixStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            RenderUtils.drawBoundingBox(matrixStack, entity.getCustomRenderBoundingBox(blockState), Color.ORANGE, buffers);
+            RenderSystem.drawBoundingBox(matrixStack, entity.getCustomRenderBoundingBox(blockState), UIColor.ORANGE, buffers);
             matrixStack.popPose();
         }
     }

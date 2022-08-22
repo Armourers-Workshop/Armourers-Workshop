@@ -3,6 +3,7 @@ package moe.plushie.armourers_workshop.core.client.other;
 import com.mojang.blaze3d.platform.NativeImage;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTexture;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.texture.SkinPaintData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -102,7 +103,7 @@ public class SkinDynamicTexture extends DynamicTexture {
             }
         }
         if (refer != null) {
-            textureManager.bind(refer);
+            RenderSystem.bind(refer);
         }
     }
 
@@ -112,7 +113,7 @@ public class SkinDynamicTexture extends DynamicTexture {
         }
         if (refer != null) {
             downloadedImage = new NativeImage(PlayerTexture.TEXTURE_WIDTH, PlayerTexture.TEXTURE_HEIGHT, true);
-            textureManager.bind(refer);
+            RenderSystem.bind(refer);
             downloadedImage.downloadTexture(0, false);
         }
         return downloadedImage;

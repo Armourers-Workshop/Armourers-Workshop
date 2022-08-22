@@ -1,65 +1,75 @@
 package moe.plushie.armourers_workshop.core.client.gui.wardrobe;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UIColor;
+import com.apple.library.uikit.UIControl;
+import com.apple.library.uikit.UILabel;
 import moe.plushie.armourers_workshop.core.capability.SkinWardrobe;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWImageButton;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWTabPanel;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
-import moe.plushie.armourers_workshop.core.menu.SkinWardrobeMenu;
 import moe.plushie.armourers_workshop.core.network.UpdateWardrobePacket;
+import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.ObjectUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinWardrobeLocationSetting extends AWTabPanel {
+public class SkinWardrobeLocationSetting extends SkinWardrobeBaseSetting {
 
     private final float[] steps = {1.0f, 1.0f / 8.0f, 1.0f / 16.0f};
     private final SkinWardrobe wardrobe;
     private final Entity entity;
 
-    public SkinWardrobeLocationSetting(SkinWardrobeMenu container) {
+    public SkinWardrobeLocationSetting(SkinWardrobe wardrobe, Entity entity) {
         super("inventory.armourers_workshop.wardrobe.man_offsets");
-        this.wardrobe = container.getWardrobe();
-        this.entity = container.getEntity();
+        this.wardrobe = wardrobe;
+        this.entity = entity;
+        this.setup();
     }
 
-    @Override
-    public void init(Minecraft minecraft, int width, int height) {
-        super.init(minecraft, width, height);
-
-        int x = leftPos + 83;
-        int y = topPos + 25;
+    private void setup() {
+        setupLabel(146, 29, "X");
+        setupLabel(146, 49, "Y");
+        setupLabel(146, 69, "Z");
+        int x = 83;
+        int y = 25;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                addIconButton(x + i * 20, y + j * 20, 208, 80, j, -steps[i], "button.sub." + -(i - 3));
+                setupButton(x + i * 20, y + j * 20, 208, 80, j, -steps[i], "button.sub." + -(i - 3));
             }
         }
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                addIconButton(x + 77 + i * 20, y + j * 20, 208, 96, j, steps[3 - i - 1], "button.add." + (i + 1));
+                setupButton(x + 77 + i * 20, y + j * 20, 208, 96, j, steps[3 - i - 1], "button.add." + (i + 1));
             }
         }
     }
 
-    @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    private void setupLabel(int x, int y, String text) {
+        UILabel label = new UILabel(new CGRect(x, y, 10, 9));
+        label.setText(new NSString(text));
+        label.setTextColor(new UIColor(0x333333));
+        addSubview(label);
+    }
 
-        font.draw(matrixStack, "X", leftPos + 146, topPos + 29, 0x333333);
-        font.draw(matrixStack, "Y", leftPos + 146, topPos + 29 + 20, 0x333333);
-        font.draw(matrixStack, "Z", leftPos + 146, topPos + 29 + 40, 0x333333);
+    private void setupButton(int x, int y, int u, int v, int axis, float step, String key) {
+        UIButton button = new UIButton(new CGRect(x, y, 16, 16));
+        button.setBackgroundImage(ModTextures.defaultButtonImage(u, v), UIControl.State.ALL);
+        button.setTooltip(getDisplayText(key));
+        button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, (self, e) -> {
+            self.updateValue(axis, step);
+        });
+        addSubview(button);
     }
 
     private void updateValue(int axis, float step) {
-        if (!(entity instanceof MannequinEntity)) {
+        MannequinEntity entity = ObjectUtils.safeCast(this.entity, MannequinEntity.class);
+        if (entity == null) {
             return;
         }
         Vec3 pos = entity.position();
@@ -68,15 +78,5 @@ public class SkinWardrobeLocationSetting extends AWTabPanel {
         pos = new Vec3(xyz[0], xyz[1], xyz[2]);
         UpdateWardrobePacket packet = UpdateWardrobePacket.field(wardrobe, UpdateWardrobePacket.Field.MANNEQUIN_POSITION, pos);
         NetworkManager.sendToServer(packet);
-    }
-
-    private void addIconButton(int x, int y, int u, int v, int axis, float step, String key) {
-        Component tooltip = getDisplayText(key);
-        Button.OnPress pressable = b -> updateValue(axis, step);
-        addButton(new AWImageButton(x, y, 16, 16, u, v, RenderUtils.TEX_BUTTONS, pressable, this::renderIconTooltip, tooltip));
-    }
-
-    private void renderIconTooltip(Button button, PoseStack matrixStack, int mouseX, int mouseY) {
-        renderTooltip(matrixStack, button.getMessage(), mouseX, mouseY);
     }
 }

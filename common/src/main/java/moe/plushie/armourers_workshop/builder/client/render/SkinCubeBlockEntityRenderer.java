@@ -6,6 +6,7 @@ import moe.plushie.armourers_workshop.api.painting.IBlockPaintViewer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.core.client.other.SkinRenderType;
+import moe.plushie.armourers_workshop.core.client.render.AbstractBlockEntityRenderer;
 import moe.plushie.armourers_workshop.core.client.render.ExtendedFaceRenderer;
 import moe.plushie.armourers_workshop.init.ModItems;
 import net.fabricmc.api.EnvType;
@@ -13,7 +14,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 @Environment(value = EnvType.CLIENT)
-public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> extends BlockEntityRenderer<T> {
+public class SkinCubeBlockEntityRenderer<T extends BlockEntity & IPaintable> extends AbstractBlockEntityRenderer<T> {
 
     private static float markerAlpha = 0F;
     private static long lastWorldTimeUpdate;

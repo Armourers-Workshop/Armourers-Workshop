@@ -64,8 +64,8 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
     protected Object renderData;
     protected AABB renderBoundingBox;
 
-    public ArmourerBlockEntity(BlockEntityType<?> entityType) {
-        super(entityType);
+    public ArmourerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
     }
 
     @Override
@@ -337,7 +337,6 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
     }
 
     @Override
-    @Environment(value = EnvType.CLIENT)
     public double getViewDistance() {
         return 128;
     }

@@ -1,6 +1,5 @@
 package moe.plushie.armourers_workshop.core.client.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
@@ -11,7 +10,7 @@ import moe.plushie.armourers_workshop.core.data.color.ColorScheme;
 import moe.plushie.armourers_workshop.core.entity.MannequinEntity;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.TickUtils;
 import moe.plushie.armourers_workshop.utils.TrigUtils;
 import moe.plushie.armourers_workshop.utils.math.Rectangle3f;
@@ -66,7 +65,7 @@ public final class ExtendedItemRenderer {
         Rectangle3f rect = bakedSkin.getRenderBounds(entity, model, rotation, itemStack);
         float newScale = Math.min(targetWidth / rect.getWidth(), targetHeight / rect.getHeight());
         newScale = Math.min(newScale, targetDepth / rect.getDepth());
-        RenderUtils.drawTargetBox(matrixStack, targetWidth, targetHeight, targetDepth, buffers);
+        RenderSystem.drawTargetBox(matrixStack, targetWidth, targetHeight, targetDepth, buffers);
 
         matrixStack.scale(newScale / scale.getX(), newScale / scale.getY(), newScale / scale.getZ());
         matrixStack.translate(-rect.getMidX(), -rect.getMidY(), -rect.getMidZ()); // to model center
@@ -91,7 +90,7 @@ public final class ExtendedItemRenderer {
         }
 
         Rectangle3f rect = new Rectangle3f(entity.getBoundingBox());
-        RenderUtils.drawTargetBox(matrixStack, targetWidth, targetHeight, targetDepth, buffers);
+        RenderSystem.drawTargetBox(matrixStack, targetWidth, targetHeight, targetDepth, buffers);
 
         Rectangle3f resolvedRect = rect.offset(rect.getMidX(), rect.getMidY(), rect.getMidZ());
         resolvedRect.mul(new Matrix4f(TrigUtils.rotate(rotation.getX(), rotation.getY(), rotation.getZ(), true)));

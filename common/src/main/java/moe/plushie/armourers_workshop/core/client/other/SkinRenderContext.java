@@ -2,8 +2,10 @@ package moe.plushie.armourers_workshop.core.client.other;
 
 import com.google.common.collect.Iterators;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.core.skin.Skin;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import moe.plushie.armourers_workshop.utils.ext.OpenPoseStack;
 import moe.plushie.armourers_workshop.utils.math.Vector3f;
 import moe.plushie.armourers_workshop.utils.math.Vector4f;
@@ -24,7 +26,7 @@ public class SkinRenderContext {
     public int light;
     public float partialTicks;
     public PoseStack poseStack;
-    public final FixedPoseStack openPoseStack = new FixedPoseStack();
+    public final FixedPoseStack openPoseStack = new FixedPoseStack(null);
     public MultiBufferSource buffers;
     public ItemTransforms.TransformType transformType;
 
@@ -67,6 +69,20 @@ public class SkinRenderContext {
 
         public PoseStack matrixStack;
 
+        public FixedPoseStack(PoseStack matrixStack) {
+            this.matrixStack = matrixStack;
+        }
+
+        @Override
+        public void pushPose() {
+            matrixStack.pushPose();
+        }
+
+        @Override
+        public void popPose() {
+            matrixStack.popPose();
+        }
+
         @Override
         public void translate(float x, float y, float z) {
             matrixStack.translate(x, y, z);
@@ -78,8 +94,12 @@ public class SkinRenderContext {
         }
 
         @Override
-        public void mul(Quaternion quaternion) {
+        public void mulPose(Quaternion quaternion) {
             matrixStack.mulPose(quaternion);
+        }
+
+        @Override
+        public void mulPose(Matrix4f matrix) {
         }
 
         @Override
@@ -91,5 +111,22 @@ public class SkinRenderContext {
         public void applyNormal(Vector3f vector) {
             vector.transform(matrixStack.last().normal());
         }
+    }
+
+    public static OpenPoseStack createSystemPoseStack() {
+        //#if MC >= 11800
+        //# return new FixedPoseStack(RenderSystem.getModelViewStack());
+        //#else
+        return new OpenPoseStack() {
+        public void pushPose() { RenderSystem.pushMatrix(); }
+        public void popPose() { RenderSystem.popMatrix(); }
+        public void translate(float x, float y, float z) { RenderSystem.translatef(x, y, z); }
+        public void scale(float x, float y, float z) { RenderSystem.scalef(x, y, z); }
+        public void mulPose(Quaternion quaternion) { mulPose(new Matrix4f(quaternion)); }
+        public void mulPose(Matrix4f matrix) { RenderSystem.multMatrix(matrix); }
+        public void applyPose(Vector4f vector) { }
+        public void applyNormal(Vector3f vector) {}
+        };
+        //#endif
     }
 }

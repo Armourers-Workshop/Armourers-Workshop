@@ -42,6 +42,6 @@ public class Vector2i {
     }
 
     public String toString() {
-        return MoreObjects.toStringHelper(this).add("x", this.getX()).add("y", this.getY()).toString();
+        return String.format("(%d %d)", x, y);
     }
 }

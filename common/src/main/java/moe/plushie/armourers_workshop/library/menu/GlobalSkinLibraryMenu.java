@@ -50,7 +50,7 @@ public class GlobalSkinLibraryMenu extends AbstractBlockContainerMenu {
     @Override
     public void removed(Player player) {
         super.removed(player);
-        this.access.execute((world, pos) -> this.clearContainer(player, world, inventory));
+        this.clearContainer(player, inventory);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class GlobalSkinLibraryMenu extends AbstractBlockContainerMenu {
     }
 
     public void crafting() {
-        this.access.execute((world, pos) -> this.clearContainer(playerInventory.player, world, inventory));
+        this.clearContainer(playerInventory.player, inventory);
     }
 
     protected void addInputSlot(Container inventory, int slot, int x, int y) {

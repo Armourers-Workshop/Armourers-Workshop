@@ -1,51 +1,60 @@
 package moe.plushie.armourers_workshop.builder.client.gui.armourer.dialog;
 
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSString;
+import com.apple.library.uikit.UICheckBox;
+import com.apple.library.uikit.UIComboBox;
+import com.apple.library.uikit.UIComboItem;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWCheckBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWComboBox;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWConfirmDialog;
+import moe.plushie.armourers_workshop.core.client.gui.widget.ConfirmDialog;
 import moe.plushie.armourers_workshop.core.skin.part.SkinPartTypes;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 @Environment(value = EnvType.CLIENT)
-public class ArmourerClearDialog extends AWConfirmDialog {
+public class ArmourerClearDialog extends ConfirmDialog {
 
     final ArrayList<ISkinPartType> partTypes;
-    AWComboBox partComboBox;
-    AWCheckBox blockCheckBox;
-    AWCheckBox paintCheckBox;
-    AWCheckBox markersCheckBox;
+    private final UIComboBox partComboBox = new UIComboBox(new CGRect(0, 0, 80, 14));
+    private final UICheckBox blockCheckBox = new UICheckBox(CGRect.ZERO);
+    private final UICheckBox paintCheckBox = new UICheckBox(CGRect.ZERO);
+    private final UICheckBox markersCheckBox = new UICheckBox(CGRect.ZERO);
 
-    public ArmourerClearDialog(ArrayList<ISkinPartType> partTypes, Component title) {
-        super(title);
+    public ArmourerClearDialog(ArrayList<ISkinPartType> partTypes) {
+        super();
+        this.setFrame(new CGRect(0, 0, 240, 140));
         this.partTypes = partTypes;
-        this.imageWidth = 240;
-        this.imageHeight = 140;
+        this.setup();
     }
 
-    @Override
-    protected void init() {
-        super.init();
+    private void setup() {
+        layoutIfNeeded();
+        int width = bounds().width - 30;
+        int left = confirmButton.frame().getX() + 1;
+        int bottom = confirmButton.frame().getY() - 4;
 
-        int bottom = confirmButton.y - 4;
-        this.blockCheckBox = new AWCheckBox(confirmButton.x + 1, bottom - 22, 9, 9, getText("clearBlocks"), true, Objects::hash);
-        this.paintCheckBox = new AWCheckBox(confirmButton.x + 1, bottom - 11, 9, 9, getText("clearPaint"), true, Objects::hash);
-        this.markersCheckBox = new AWCheckBox(confirmButton.x + 1, bottom - 33, 9, 9, getText("clearMarkers"), true, Objects::hash);
+        blockCheckBox.setFrame(new CGRect(left, bottom - 22, width, 9));
+        blockCheckBox.setTitle(getText("clearBlocks"));
+        blockCheckBox.setSelected(true);
+        addSubview(blockCheckBox);
 
-        this.partComboBox = new AWComboBox(confirmButton.x + 1, topPos + 20, 80, 14, getItems(partTypes), 0, Objects::hash);
+        paintCheckBox.setFrame(new CGRect(left, bottom - 11, width, 9));
+        paintCheckBox.setTitle(getText("clearPaint"));
+        paintCheckBox.setSelected(true);
+        addSubview(paintCheckBox);
 
-        this.addButton(blockCheckBox);
-        this.addButton(paintCheckBox);
-        this.addButton(markersCheckBox);
+        markersCheckBox.setFrame(new CGRect(left, bottom - 33, width, 9));
+        markersCheckBox.setTitle(getText("clearMarkers"));
+        markersCheckBox.setSelected(true);
+        addSubview(markersCheckBox);
 
-        this.addButton(partComboBox);
+        partComboBox.setFrame(new CGRect(left, 20, 80, 14));
+        partComboBox.setSelectedIndex(0);
+        partComboBox.reloadData(getItems(partTypes));
+        addSubview(partComboBox);
     }
 
     public boolean isClearBlocks() {
@@ -61,27 +70,27 @@ public class ArmourerClearDialog extends AWConfirmDialog {
     }
 
     public ISkinPartType getSelectedPartType() {
-        if (partTypes != null && partComboBox != null && partComboBox.getSelectedIndex() < partTypes.size()) {
-            return partTypes.get(partComboBox.getSelectedIndex());
+        if (partTypes != null && partComboBox != null && partComboBox.selectedIndex() < partTypes.size()) {
+            return partTypes.get(partComboBox.selectedIndex());
         }
         return SkinPartTypes.UNKNOWN;
     }
 
-    private ArrayList<AWComboBox.ComboItem> getItems(ArrayList<ISkinPartType> partTypes) {
-        ArrayList<AWComboBox.ComboItem> items = new ArrayList<>();
+    private ArrayList<UIComboItem> getItems(ArrayList<ISkinPartType> partTypes) {
+        ArrayList<UIComboItem> items = new ArrayList<>();
         for (ISkinPartType partType : partTypes) {
-            Component title;
+            NSString title;
             if (partType != SkinPartTypes.UNKNOWN) {
-                title = TranslateUtils.Name.of(partType);
+                title = new NSString(TranslateUtils.Name.of(partType));
             } else {
-                title = new TextComponent("*");
+                title = new NSString("*");
             }
-            items.add(new AWComboBox.ComboItem(title));
+            items.add(new UIComboItem(title));
         }
         return items;
     }
 
-    private Component getText(String key) {
-        return TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.clear" + "." + key);
+    private NSString getText(String key) {
+        return new NSString(TranslateUtils.title("inventory.armourers_workshop.armourer.dialog.clear" + "." + key));
     }
 }

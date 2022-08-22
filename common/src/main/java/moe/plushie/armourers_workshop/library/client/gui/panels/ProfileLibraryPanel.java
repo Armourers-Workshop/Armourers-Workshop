@@ -78,7 +78,7 @@ public class ProfileLibraryPanel extends AbstractLibraryPanel {
 
     public void setProfileTarget(PlushieUser user) {
         this.user = user;
-        if (visible) {
+        if (superview() != null) {
             updateProfileData();
         }
     }

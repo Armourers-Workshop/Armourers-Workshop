@@ -4,6 +4,8 @@ import moe.plushie.armourers_workshop.api.math.ITexturePos;
 
 public class TexturePos implements ITexturePos {
 
+    public static final TexturePos ZERO = new TexturePos(0, 0);
+
     public final int u;
     public final int v;
 
@@ -20,5 +22,10 @@ public class TexturePos implements ITexturePos {
     @Override
     public int getV() {
         return this.v;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("(%d %d)", u, v);
     }
 }

@@ -35,6 +35,11 @@ public class BoundingBoxBlock extends Block implements IBlockEntityProvider, IBl
     }
 
     @Override
+    public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
+        return ModBlockEntities.BOUNDING_BOX.create(level, blockPos, blockState);
+    }
+
+    @Override
     public boolean dropFromExplosion(Explosion explosion) {
         return false;
     }
@@ -53,11 +58,6 @@ public class BoundingBoxBlock extends Block implements IBlockEntityProvider, IBl
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return InteractionResult.FAIL;
-    }
-
-    @Override
-    public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return ModBlockEntities.BOUNDING_BOX.get().create();
     }
 
     @Override

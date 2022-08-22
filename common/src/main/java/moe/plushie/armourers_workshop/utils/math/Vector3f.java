@@ -223,7 +223,7 @@ public final class Vector3f implements Position {
 
     @Override
     public String toString() {
-        return "[" + this.x + ", " + this.y + ", " + this.z + "]";
+        return String.format("(%g %g %g)", x, y, z);
     }
 
     public void set(float[] values) {

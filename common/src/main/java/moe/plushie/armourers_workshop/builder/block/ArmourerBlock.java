@@ -32,6 +32,11 @@ public class ArmourerBlock extends AbstractHorizontalBlock implements IBlockEnti
     }
 
     @Override
+    public BlockEntity createBlockEntity(BlockGetter level, BlockPos blockPos, BlockState blockState) {
+        return ModBlockEntities.ARMOURER.create(level, blockPos, blockState);
+    }
+
+    @Override
     public InteractionResult use(BlockState state, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult traceResult) {
         return MenuManager.openMenu(ModMenus.ARMOURER, level.getBlockEntity(blockPos), player);
     }
@@ -56,11 +61,6 @@ public class ArmourerBlock extends AbstractHorizontalBlock implements IBlockEnti
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
         this.applyTitleEntity(level, blockPos, te -> te.onRemove(level, blockPos, te.getBlockState()));
         super.onRemove(blockState, level, blockPos, blockState2, bl);
-    }
-
-    @Override
-    public BlockEntity newBlockEntity(BlockGetter blockGetter) {
-        return ModBlockEntities.ARMOURER.get().create();
     }
 
     private void applyTitleEntity(Level level, BlockPos pos, Consumer<ArmourerBlockEntity> consumer) {

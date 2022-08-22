@@ -38,7 +38,11 @@ public class SkinModelManager {
         BakedModel bakedModel = loadModel(partType);
         ClientLevel clientWorld = cast(level, ClientLevel.class);
         LivingEntity livingEntity = cast(entity, LivingEntity.class);
+        //#if MC >= 11800
+        //# return bakedModel.getOverrides().resolve(bakedModel, itemStack, clientWorld, livingEntity, 0);
+        //#else
         return bakedModel.getOverrides().resolve(bakedModel, itemStack, clientWorld, livingEntity);
+        //#endif
     }
 
     private BakedModel loadModel(ISkinPartType partType) {

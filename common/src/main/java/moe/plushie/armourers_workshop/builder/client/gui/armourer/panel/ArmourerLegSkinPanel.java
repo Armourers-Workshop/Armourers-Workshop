@@ -13,8 +13,8 @@ public class ArmourerLegSkinPanel extends ArmourerFeetSkinPanel {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         super.init();
-        this.addCheckBox(0, 0, 9, 9, SkinProperty.MODEL_LEGS_LIMIT_LIMBS);
+        addCheckBox(0, 0, SkinProperty.MODEL_LEGS_LIMIT_LIMBS);
     }
 }

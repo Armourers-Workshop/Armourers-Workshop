@@ -26,6 +26,7 @@ import moe.plushie.armourers_workshop.init.command.ReflectArgumentBuilder;
 import moe.plushie.armourers_workshop.init.platform.EnvironmentManager;
 import moe.plushie.armourers_workshop.init.platform.MenuManager;
 import moe.plushie.armourers_workshop.library.data.SkinLibraryManager;
+import moe.plushie.armourers_workshop.utils.Accessor;
 import moe.plushie.armourers_workshop.utils.MathUtils;
 import moe.plushie.armourers_workshop.utils.TranslateUtils;
 import net.minecraft.Util;
@@ -145,7 +146,7 @@ public class ModCommands {
             }
             ItemStack itemStack = descriptor.asItemStack();
             for (Player player : EntityArgument.getPlayers(context, "targets")) {
-                boolean flag = player.inventory.add(itemStack);
+                boolean flag = Accessor.getInventory(player).add(itemStack);
                 if (flag && itemStack.isEmpty()) {
                     itemStack.setCount(1);
                     ItemEntity itemEntity1 = player.drop(itemStack, false);

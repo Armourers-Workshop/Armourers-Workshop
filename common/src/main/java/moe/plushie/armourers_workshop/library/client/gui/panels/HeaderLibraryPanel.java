@@ -1,138 +1,85 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
+import com.apple.library.coregraphics.CGGraphicsContext;
+import com.apple.library.coregraphics.CGPoint;
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.uikit.UIButton;
+import com.apple.library.uikit.UIControl;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWImageButton;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWImageExtendedButton;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
-import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.init.ModTextures;
+import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.library.data.global.permission.PermissionSystem;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
+import moe.plushie.armourers_workshop.utils.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.TextComponent;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 
 @Environment(value = EnvType.CLIENT)
 public class HeaderLibraryPanel extends AbstractLibraryPanel {
 
-    private final ArrayList<Button> rightButtons = new ArrayList<>();
-    private PlayerTextureDescriptor playerTexture;
+    private final ArrayList<UIButton> rightButtons = new ArrayList<>();
 
-    private AWImageButton iconButtonHome;
-    private AWImageButton iconButtonMyFiles;
-    private AWImageButton iconButtonUploadSkin;
-    private AWImageButton iconButtonJoin;
-    private AWImageButton iconButtonInfo;
-    private AWImageButton iconButtonModeration;
+    private final UIButton iconButtonHome = addRightButton(0, 0, "home", redirect(GlobalSkinLibraryWindow.Page.HOME));
+    private final UIButton iconButtonMyFiles = addRightButton(0, 34, "myFiles", redirect(GlobalSkinLibraryWindow.Page.LIST_USER_SKINS));
+    private final UIButton iconButtonUploadSkin = addRightButton(0, 51, "uploadSkin", "uploadSkinBan", redirect(GlobalSkinLibraryWindow.Page.SKIN_UPLOAD));
+    private final UIButton iconButtonJoin = addRightButton(0, 68, "join", redirect(GlobalSkinLibraryWindow.Page.LIBRARY_JOIN));
+    private final UIButton iconButtonInfo = addRightButton(0, 17, "info", redirect(GlobalSkinLibraryWindow.Page.LIBRARY_INFO));
+    private final UIButton iconButtonModeration = addRightButton(0, 119, "moderation", redirect(GlobalSkinLibraryWindow.Page.LIBRARY_MODERATION));
+
+    private PlayerTextureDescriptor playerTexture;
 
     public HeaderLibraryPanel() {
         super("inventory.armourers_workshop.skin-library-global.header", p -> true);
-    }
-
-    @Override
-    protected void init() {
-        this.rightButtons.clear();
-        super.init();
-
-        this.iconButtonHome = addRightButton(0, 0, "home", redirect(GlobalSkinLibraryScreen.Page.HOME));
-        this.iconButtonMyFiles = addRightButton(0, 34, "myFiles", redirect(GlobalSkinLibraryScreen.Page.LIST_USER_SKINS));
-        this.iconButtonUploadSkin = addRightButton(0, 51, "uploadSkin", "uploadSkinBan", redirect(GlobalSkinLibraryScreen.Page.SKIN_UPLOAD));
-
-        this.iconButtonJoin = addRightButton(0, 68, "join", redirect(GlobalSkinLibraryScreen.Page.LIBRARY_JOIN));
-        this.iconButtonInfo = addRightButton(0, 17, "info", redirect(GlobalSkinLibraryScreen.Page.LIBRARY_INFO));
-
-        this.iconButtonModeration = addRightButton(0, 119, "moderation", redirect(GlobalSkinLibraryScreen.Page.LIBRARY_MODERATION));
-
         this.betaCheckUpdate();
     }
 
     @Override
     public void tick() {
         super.tick();
-        this.betaCheckUpdate();
+        betaCheckUpdate();
     }
 
-    private void betaCheckUpdate() {
-        iconButtonHome.visible = true;
-        iconButtonMyFiles.visible = false;
-        iconButtonUploadSkin.visible = false;
-        iconButtonJoin.visible = false;
-        iconButtonInfo.visible = true;
-        iconButtonModeration.visible = false;
-
-        boolean isRemoteUser = PlushieAuth.isRemoteUser();
-        boolean doneRemoteUserCheck = PlushieAuth.doneRemoteUserCheck();
-        PlushieSession session = PlushieAuth.PLUSHIE_SESSION;
-
-        if (doneRemoteUserCheck & !isRemoteUser) {
-            iconButtonJoin.visible = true;
-        }
-
-        if (session.hasServerId()) {
-            iconButtonMyFiles.visible = isRemoteUser;
-            iconButtonUploadSkin.visible = isRemoteUser;
-            iconButtonUploadSkin.setEnabled(session.hasPermission(PermissionSystem.PlushieAction.SKIN_UPLOAD));
-            if (session.hasPermission(PermissionSystem.PlushieAction.GET_REPORT_LIST)) {
-                iconButtonModeration.visible = true;
-            }
-        }
-
-        int x2 = leftPos + width - 4;
-        for (Button button : rightButtons) {
-            if (!button.visible) {
+    @Override
+    public void layoutSubviews() {
+        super.layoutSubviews();
+        CGRect bounds = bounds();
+        int x2 = bounds.width - 4;
+        for (UIButton button : rightButtons) {
+            if (button.isHidden()) {
                 continue;
             }
-            button.x = x2 - button.getWidth();
-            button.y = topPos + (height - button.getHeight()) / 2;
-            x2 = button.x - 2;
+            CGRect frame = button.frame();
+            button.setFrame(new CGRect(x2 - frame.width, (bounds.height - frame.height) / 2, frame.width, frame.height));
+            x2 = button.frame().getMinX() - 2;
         }
     }
 
-    private Button.OnPress redirect(GlobalSkinLibraryScreen.Page page) {
-        return button -> {
-            switch (page) {
-                case HOME:
-                    router.showNewHome();
-                    break;
-                case LIST_USER_SKINS:
-                    if (PlushieAuth.PLUSHIE_SESSION.hasServerId()) {
-                        router.showSkinList(PlushieAuth.PLUSHIE_SESSION.getServerId());
-                    }
-                    break;
-                default:
-                    router.showPage(page);
-                    break;
-            }
-        };
-    }
-
     @Override
-    protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {
+    public void render(CGPoint point, CGGraphicsContext context) {
+        super.render(point, context);
+        this.renderPlayerProfile(context.poseStack, context.font.font(), Minecraft.getInstance().getUser().getGameProfile());
     }
 
-    @Override
-    public void renderBackgroundLayer(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.fillGradient(matrixStack, leftPos, topPos, leftPos + width, topPos + height, 0xC0101010, 0xD0101010);
-        this.renderPlayerProfile(matrixStack, Minecraft.getInstance().getUser().getGameProfile());
-    }
-
-    private void renderPlayerProfile(PoseStack matrixStack, GameProfile gameProfile) {
+    private void renderPlayerProfile(PoseStack matrixStack, Font font, GameProfile gameProfile) {
         if (playerTexture == null) {
             playerTexture = new PlayerTextureDescriptor(gameProfile);
         }
-        RenderUtils.drawPlayerHead(matrixStack, leftPos + 5, topPos + 5, 16, 16, playerTexture);
+        RenderSystem.drawPlayerHead(matrixStack, 5, 5, 16, 16, playerTexture);
 
         // White - not a member.
         // Yellow - Member not authenticated.
         // Green - Authenticated member.
         // Red - Missing profile info.
+        CGRect rect = bounds();
         TextComponent profile = new TextComponent(" - ");
         profile.append(gameProfile.getName());
         int colour = 0xFFFFFF;
@@ -145,21 +92,69 @@ public class HeaderLibraryPanel extends AbstractLibraryPanel {
         if (PlushieAuth.PLUSHIE_SESSION.isAuthenticated()) {
             colour = 0xAAFFAA;
         }
-        font.draw(matrixStack, profile, leftPos + 24, topPos + (height - font.lineHeight) / 2f, colour);
+        font.draw(matrixStack, profile, 24, (rect.height - font.lineHeight) / 2f, colour);
     }
 
-    private AWImageButton addRightButton(int u, int v, String key, Button.OnPress handler) {
+    private void betaCheckUpdate() {
+        iconButtonHome.setHidden(false);
+        iconButtonMyFiles.setHidden(true);
+        iconButtonUploadSkin.setHidden(true);
+        iconButtonJoin.setHidden(true);
+        iconButtonInfo.setHidden(true);
+        iconButtonModeration.setHidden(true);
+
+        boolean isRemoteUser = PlushieAuth.isRemoteUser();
+        boolean doneRemoteUserCheck = PlushieAuth.doneRemoteUserCheck();
+        PlushieSession session = PlushieAuth.PLUSHIE_SESSION;
+
+        if (doneRemoteUserCheck & !isRemoteUser) {
+            iconButtonJoin.setHidden(false);
+        }
+
+        if (session.hasServerId()) {
+            iconButtonMyFiles.setHidden(!isRemoteUser);
+            iconButtonUploadSkin.setHidden(!isRemoteUser);
+            iconButtonUploadSkin.setEnabled(session.hasPermission(PermissionSystem.PlushieAction.SKIN_UPLOAD));
+            if (session.hasPermission(PermissionSystem.PlushieAction.GET_REPORT_LIST)) {
+                iconButtonModeration.setHidden(false);
+            }
+        }
+
+        setNeedsLayout();
+    }
+
+    private BiConsumer<HeaderLibraryPanel, UIControl> redirect(GlobalSkinLibraryWindow.Page page) {
+        return (self, sender) -> {
+            switch (page) {
+                case HOME:
+                    self.router.showNewHome();
+                    break;
+                case LIST_USER_SKINS:
+                    if (PlushieAuth.PLUSHIE_SESSION.hasServerId()) {
+                        self.router.showSkinList(PlushieAuth.PLUSHIE_SESSION.getServerId());
+                    }
+                    break;
+                default:
+                    self.router.showPage(page);
+                    break;
+            }
+        };
+    }
+
+    private UIButton addRightButton(int u, int v, String key, BiConsumer<HeaderLibraryPanel, UIControl> handler) {
         return addRightButton(u, v, key, null, handler);
     }
 
-    private AWImageButton addRightButton(int u, int v, String key, String key2, Button.OnPress handler) {
-        Component tooltip = getDisplayText(key);
-        AWImageButton button = new AWImageExtendedButton(0, 0, 18, 18, u, v, RenderUtils.TEX_GLOBAL_SKIN_LIBRARY, handler, this::addHoveredButton, tooltip);
+    private UIButton addRightButton(int u, int v, String key, String key2, BiConsumer<HeaderLibraryPanel, UIControl> handler) {
+        UIButton button = new UIButton(new CGRect(0, 0, 18, 18));
+        button.setImage(ModTextures.iconImage(u, v, 16, 16, ModTextures.GLOBAL_SKIN_LIBRARY), UIControl.State.ALL);
+        button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        button.setTooltip(getDisplayText(key), UIControl.State.NORMAL);
         if (key2 != null) {
-            button.setDisabledMessage(getDisplayText(key2));
+            button.setTooltip(getDisplayText(key2), UIControl.State.DISABLED);
         }
-        button.setIconSize(16, 16);
-        addButton(button);
+        button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, handler);
+        addSubview(button);
         rightButtons.add(button);
         return button;
     }

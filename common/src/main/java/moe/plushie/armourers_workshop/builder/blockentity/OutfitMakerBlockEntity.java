@@ -3,11 +3,13 @@ package moe.plushie.armourers_workshop.builder.blockentity;
 import moe.plushie.armourers_workshop.core.blockentity.AbstractContainerBlockEntity;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.apache.logging.log4j.util.Strings;
 
 public class OutfitMakerBlockEntity extends AbstractContainerBlockEntity {
@@ -17,8 +19,8 @@ public class OutfitMakerBlockEntity extends AbstractContainerBlockEntity {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
 
-    public OutfitMakerBlockEntity(BlockEntityType<?> entityType) {
-        super(entityType);
+    public OutfitMakerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
     }
 
     public void readFromNBT(CompoundTag nbt) {

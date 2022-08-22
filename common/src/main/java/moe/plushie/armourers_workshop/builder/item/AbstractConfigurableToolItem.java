@@ -5,7 +5,7 @@ import moe.plushie.armourers_workshop.api.common.IItemSoundProvider;
 import moe.plushie.armourers_workshop.api.common.IRegistryKey;
 import moe.plushie.armourers_workshop.api.painting.IPaintingTool;
 import moe.plushie.armourers_workshop.api.painting.IPaintingToolProperty;
-import moe.plushie.armourers_workshop.builder.client.gui.PaintingToolScreen;
+import moe.plushie.armourers_workshop.builder.client.gui.PaintingToolWindow;
 import moe.plushie.armourers_workshop.core.item.FlavouredItem;
 import moe.plushie.armourers_workshop.init.ModHolidays;
 import moe.plushie.armourers_workshop.init.ModSounds;
@@ -94,8 +94,8 @@ public abstract class AbstractConfigurableToolItem extends FlavouredItem impleme
 
     @Environment(value = EnvType.CLIENT)
     public void openGUI(Component title, ArrayList<IPaintingToolProperty<?>> properties, InteractionHand hand, ItemStack itemStack) {
-        PaintingToolScreen screen = new PaintingToolScreen(title, properties, itemStack, hand);
-        Minecraft.getInstance().setScreen(screen);
+        PaintingToolWindow window = new PaintingToolWindow(title, properties, itemStack, hand);
+        Minecraft.getInstance().setScreen(window.asScreen());
     }
 
     public float getItemSoundPitch(UseOnContext context) {

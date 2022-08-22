@@ -1,108 +1,104 @@
 package moe.plushie.armourers_workshop.library.client.gui.panels;
 
+import com.apple.library.coregraphics.CGRect;
+import com.apple.library.foundation.NSMutableString;
+import com.apple.library.foundation.NSString;
+import com.apple.library.foundation.NSTextAlignment;
+import com.apple.library.uikit.*;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
-import com.mojang.blaze3d.vertex.PoseStack;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWExtendedButton;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWLabel;
-import moe.plushie.armourers_workshop.core.client.gui.widget.AWTextField;
 import moe.plushie.armourers_workshop.core.skin.Skin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
+import moe.plushie.armourers_workshop.init.ModTextures;
 import moe.plushie.armourers_workshop.init.platform.NetworkManager;
-import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryScreen;
+import moe.plushie.armourers_workshop.library.client.gui.GlobalSkinLibraryWindow;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieAuth;
 import moe.plushie.armourers_workshop.library.data.global.auth.PlushieSession;
 import moe.plushie.armourers_workshop.library.data.global.task.GlobalTaskResult;
 import moe.plushie.armourers_workshop.library.data.global.task.user.GlobalTaskSkinUpload;
 import moe.plushie.armourers_workshop.library.menu.GlobalSkinLibraryMenu;
 import moe.plushie.armourers_workshop.library.network.UploadSkinPacket;
-import moe.plushie.armourers_workshop.utils.RenderUtils;
 import moe.plushie.armourers_workshop.utils.SkinIOUtils;
 import moe.plushie.armourers_workshop.utils.StreamUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import org.apache.logging.log4j.util.Strings;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Optional;
+import java.util.function.BiConsumer;
 
-@SuppressWarnings("NullableProblems")
 @Environment(value = EnvType.CLIENT)
 public class UploadLibraryPanel extends AbstractLibraryPanel {
 
-    private AWLabel warningLabel;
-    private AWTextField textName;
-    private AWTextField textTags;
-    private AWTextField textDescription;
-    private AWExtendedButton buttonUpload;
+    private UILabel warningLabel;
+    private UITextField textName;
+    private UITextField textTags;
+    private UITextView textDescription;
+    private UIButton buttonUpload;
 
     private String error = null;
     private boolean isUploading = false;
 
     public UploadLibraryPanel() {
-        super("inventory.armourers_workshop.skin-library-global.upload", GlobalSkinLibraryScreen.Page.SKIN_UPLOAD::equals);
+        super("inventory.armourers_workshop.skin-library-global.upload", GlobalSkinLibraryWindow.Page.SKIN_UPLOAD::equals);
+        this.setup();
     }
 
-    @Override
-    protected void init() {
-        super.init();
+    private void setup() {
+        int width = bounds().getWidth();
+        int height = bounds().getHeight();
 
         int inputWidth = width - 15 - 162;
-        this.textName = addTextField(leftPos + 5, topPos + 35, inputWidth, 12, "enterName");
-        this.textName.setMaxLength(80);
 
-        this.textTags = addTextField(leftPos + 5, topPos + 65, inputWidth, 12, "enterTags");
-        this.textTags.setMaxLength(32);
+        textName = addTextField(5, 15, inputWidth, 16, "enterName");
+        textName.setMaxLength(80);
 
-        this.textDescription = addTextField(leftPos + 5, topPos + 95, inputWidth, height - 95 - 40, "enterDescription");
-        this.textDescription.setMaxLength(255);
-        this.textDescription.setSingleLine(false);
+        textTags = addTextField(5, 45, inputWidth, 16, "enterTags");
+        textTags.setMaxLength(32);
 
-        this.buttonUpload = new AWExtendedButton(leftPos + 28, topPos + height - 28, 96, 18, getDisplayText("buttonUpload"), this::upload);
-        this.buttonUpload.active = false;
-        this.addButton(buttonUpload);
+        textDescription = addTextView(5, 75, inputWidth, height - 75 - 40, "enterDescription");
+        textDescription.setMaxLength(255);
 
-        this.addLabel(leftPos + 5, topPos + 25, inputWidth, 10, getDisplayText("skinName"));
-        this.addLabel(leftPos + 5, topPos + 55, inputWidth, 10, getDisplayText("skinTags"));
-        this.addLabel(leftPos + 5, topPos + 85, inputWidth, 10, getDisplayText("skinDescription"));
+        buttonUpload = addTextButton(28, height - 28, 96, 18, "buttonUpload", UploadLibraryPanel::upload);
+        buttonUpload.setAutoresizingMask(AutoresizingMask.flexibleTopMargin);
+        buttonUpload.setEnabled(false);
 
-        this.warningLabel = addLabel(leftPos + width - 162 - 5, topPos + 5, 162, height - 90, getWarningMessage());
+        addLabel(5, 5, inputWidth, 10, getDisplayText("skinName"));
+        addLabel(5, 35, inputWidth, 10, getDisplayText("skinTags"));
+        addLabel(5, 65, inputWidth, 10, getDisplayText("skinDescription"));
 
-        this.getMenu().ifPresent(container -> container.reload(leftPos, topPos, width, height));
+        warningLabel = addLabel(width - 162 - 5, 5, 162, height - 90, getWarningMessage());
+        warningLabel.setNumberOfLines(0);
+        warningLabel.setTextVerticalAlignment(NSTextAlignment.Vertical.TOP);
+        warningLabel.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleHeight);
+
+        UIImageView bg1 = new UIImageView(new CGRect(width - 18 * 9 - 5, height - 82, 162, 76));
+        bg1.setImage(UIImage.of(ModTextures.GLOBAL_SKIN_LIBRARY).uv(0, 180).build());
+        bg1.setAutoresizingMask(AutoresizingMask.flexibleLeftMargin | AutoresizingMask.flexibleTopMargin);
+        bg1.setOpaque(true);
+        insertViewAtIndex(bg1, 0);
+
+        UIImageView bg2 = new UIImageView(new CGRect(5, height - 28, 18, 18));
+        UIImageView bg3 = new UIImageView(new CGRect(129, height - 32, 26, 26));
+        bg2.setOpaque(true);
+        bg3.setOpaque(true);
+        bg2.setImage(UIImage.of(ModTextures.GLOBAL_SKIN_LIBRARY).uv(0, 162).build());
+        bg3.setImage(UIImage.of(ModTextures.GLOBAL_SKIN_LIBRARY).uv(18, 154).build());
+        bg2.setAutoresizingMask(AutoresizingMask.flexibleTopMargin);
+        bg3.setAutoresizingMask(AutoresizingMask.flexibleTopMargin);
+        insertViewAtIndex(bg2, 0);
+        insertViewAtIndex(bg3, 0);
     }
 
     @Override
-    public void renderBackground(PoseStack matrixStack) {
-        this.fillGradient(matrixStack, leftPos, topPos, leftPos + width, topPos + height, 0xC0101010, 0xD0101010);
-        RenderUtils.bind(RenderUtils.TEX_GLOBAL_SKIN_LIBRARY);
-
-        RenderUtils.blit(matrixStack, leftPos + width - 18 * 9 - 5, topPos + height - 82, 0, 180, 162, 76);
-
-        RenderUtils.blit(matrixStack, leftPos + 5, topPos + height - 28, 0, 162, 18, 18);
-        RenderUtils.blit(matrixStack, leftPos + 129, topPos + height - 32, 18, 154, 26, 26);
-    }
-
-    @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-    }
-
-    @Override
-    public boolean keyPressed(int p_231046_1_, int p_231046_2_, int p_231046_3_) {
-        return super.keyPressed(p_231046_1_, p_231046_2_, p_231046_3_);
-    }
-
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        this.getMenu().ifPresent(container -> container.setVisible(visible));
+    public void didMoveToWindow() {
+        super.didMoveToWindow();
+        this.getMenu().ifPresent(container -> container.setVisible(window() != null));
     }
 
     @Override
@@ -111,24 +107,55 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
         if (this.buttonUpload == null) {
             return;
         }
-        this.buttonUpload.active = Strings.isNotBlank(textName.getValue()) && !SkinDescriptor.of(getInputStack()).isEmpty() && !isUploading;
+        boolean flags = Strings.isNotBlank(textName.value()) && !SkinDescriptor.of(getInputStack()).isEmpty() && !isUploading;
+        this.buttonUpload.setEnabled(flags);
     }
 
-    private AWTextField addTextField(int x, int y, int width, int height, String key) {
-        AWTextField textField = new AWTextField(font, x, y, width, height, getDisplayText(key));
+    private UITextField addTextField(int x, int y, int width, int height, String key) {
+        UITextField textField = new UITextField(new CGRect(x, y, width, height));
+        textField.setPlaceholder(getDisplayText(key));
         textField.setMaxLength(255);
-        addButton(textField);
+        textField.setAutoresizingMask(AutoresizingMask.flexibleWidth);
+        addSubview(textField);
         return textField;
     }
 
-    private void upload(Button sender) {
+    private UITextView addTextView(int x, int y, int width, int height, String key) {
+        UITextView textField = new UITextView(new CGRect(x, y, width, height));
+        textField.setPlaceholder(getDisplayText(key));
+        textField.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleHeight);
+        textField.setMaxLength(255);
+        addSubview(textField);
+        return textField;
+    }
+
+    private UILabel addLabel(int x, int y, int width, int height, NSString message) {
+        UILabel label = new UILabel(new CGRect(x, y, width, height));
+        label.setText(message);
+        label.setTextColor(UIColor.WHITE);
+        label.setAutoresizingMask(AutoresizingMask.flexibleWidth);
+        addSubview(label);
+        return label;
+    }
+
+    private UIButton addTextButton(int x, int y, int width, int height, String key, BiConsumer<UploadLibraryPanel, UIControl> handler) {
+        UIButton button = new UIButton(new CGRect(x, y, width, height));
+        button.setTitle(getDisplayText(key), UIControl.State.NORMAL);
+        button.setTitleColor(UIColor.WHITE, UIControl.State.NORMAL);
+        button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
+        button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, handler);
+        addSubview(button);
+        return button;
+    }
+
+    private void upload(UIControl sender) {
         BakedSkin bakedSkin = BakedSkin.of(getInputStack());
         if (bakedSkin == null) {
             onUploadFailed("Skin missing.");
             return;
         }
 
-        if (Strings.isBlank(textName.getValue())) {
+        if (Strings.isBlank(textName.value())) {
             onUploadFailed("Skin name missing.");
             return;
         }
@@ -159,7 +186,7 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
         SkinIOUtils.saveSkinToStream(outputStream, skin);
         byte[] fileBytes = outputStream.toByteArray();
         StreamUtils.closeQuietly(outputStream);
-        new GlobalTaskSkinUpload(fileBytes, textName.getValue().trim(), textDescription.getValue().trim()).createTaskAndRun(new FutureCallback<GlobalTaskSkinUpload.Result>() {
+        new GlobalTaskSkinUpload(fileBytes, textName.value().trim(), textDescription.value().trim()).createTaskAndRun(new FutureCallback<GlobalTaskSkinUpload.Result>() {
 
             @Override
             public void onSuccess(GlobalTaskSkinUpload.Result result) {
@@ -192,12 +219,12 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
         error = message;
         isUploading = false;
         if (warningLabel != null) {
-            warningLabel.setMessage(getWarningMessage());
+            warningLabel.setText(getWarningMessage());
         }
     }
 
-    private Component getWarningMessage() {
-        TextComponent message = new TextComponent("");
+    private NSString getWarningMessage() {
+        NSMutableString message = new NSMutableString("");
         message.append(getDisplayText("label.upload_warning"));
         message.append("\n\n");
 
@@ -210,5 +237,12 @@ public class UploadLibraryPanel extends AbstractLibraryPanel {
 
     private ItemStack getInputStack() {
         return getMenu().map(GlobalSkinLibraryMenu::getInputStack).orElse(ItemStack.EMPTY);
+    }
+
+    private Optional<GlobalSkinLibraryMenu> getMenu() {
+        if (router != null) {
+            return Optional.ofNullable(router.menu());
+        }
+        return Optional.empty();
     }
 }
