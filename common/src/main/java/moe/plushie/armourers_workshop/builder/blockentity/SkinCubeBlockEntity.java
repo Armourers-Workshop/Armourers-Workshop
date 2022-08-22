@@ -88,7 +88,7 @@ public class SkinCubeBlockEntity extends AbstractBlockEntity implements IPaintab
     }
 
     public Direction getDirection() {
-        return getBlockState().getValue(ArmourerBlock.FACING);
+        return getBlockState().getOptionalValue(ArmourerBlock.FACING).orElse(Direction.NORTH);
     }
 
     @Override

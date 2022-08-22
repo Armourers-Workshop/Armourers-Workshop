@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.awt.*;
 
@@ -37,6 +38,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
         if (bakedSkin == null) {
             return;
         }
+        BlockState blockState = entity.getBlockState();
         Entity mannequin = SkinItemRenderer.getInstance().getMannequinEntity();
         HumanoidModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(mannequin, model, null);
@@ -45,7 +47,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
         }
         float f = 1 / 16f;
         float partialTicks1 = TickUtils.ticks();
-        Quaternion rotations = entity.getRenderRotations();
+        Quaternion rotations = entity.getRenderRotations(blockState);
 
         matrixStack.pushPose();
         matrixStack.translate(0.5f, 0.5f, 0.5f);
@@ -73,7 +75,7 @@ public class SkinnableBlockEntityRenderer<T extends SkinnableBlockEntity> extend
             BlockPos pos = entity.getBlockPos();
             matrixStack.pushPose();
             matrixStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            RenderUtils.drawBoundingBox(matrixStack, entity.getCustomRenderBoundingBox(), Color.ORANGE, buffers);
+            RenderUtils.drawBoundingBox(matrixStack, entity.getCustomRenderBoundingBox(blockState), Color.ORANGE, buffers);
             matrixStack.popPose();
         }
     }

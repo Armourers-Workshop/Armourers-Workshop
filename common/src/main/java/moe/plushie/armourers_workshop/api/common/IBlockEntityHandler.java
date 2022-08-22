@@ -23,7 +23,7 @@ public interface IBlockEntityHandler {
      *
      * @return an appropriately size {@link AABB} for the {@link BlockEntity}
      */
-    default AABB getCustomRenderBoundingBox() {
+    default AABB getCustomRenderBoundingBox(BlockState blockState) {
         return getDefaultRenderBoundingBox();
     }
 

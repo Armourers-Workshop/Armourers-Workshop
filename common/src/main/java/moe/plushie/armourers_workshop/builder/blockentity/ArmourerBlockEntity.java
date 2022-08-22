@@ -20,6 +20,7 @@ import moe.plushie.armourers_workshop.core.skin.property.SkinProperties;
 import moe.plushie.armourers_workshop.core.skin.property.SkinProperty;
 import moe.plushie.armourers_workshop.core.texture.PlayerTextureDescriptor;
 import moe.plushie.armourers_workshop.init.ModBlocks;
+import moe.plushie.armourers_workshop.init.ModLog;
 import moe.plushie.armourers_workshop.utils.BlockUtils;
 import moe.plushie.armourers_workshop.utils.Constants;
 import moe.plushie.armourers_workshop.utils.DataSerializers;
@@ -99,7 +100,7 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
         if (!getBlockState().is(ModBlocks.ARMOURER.get())) {
             return;
         }
-        remakeBoundingBoxes(getFullBoundingBoxes(), null, true);
+        remakeBoundingBoxes(getBoundingBoxes(), null, true);
     }
 
     public ISkinType getSkinType() {
@@ -327,7 +328,7 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public AABB getCustomRenderBoundingBox() {
+    public AABB getCustomRenderBoundingBox(BlockState blockState) {
         if (renderBoundingBox == null) {
             renderBoundingBox = new AABB(-32, -32, -44, 64, 64, 64);
             renderBoundingBox = renderBoundingBox.move(getBlockPos());
@@ -438,11 +439,13 @@ public class ArmourerBlockEntity extends AbstractBlockEntity implements IBlockEn
         return boxes;
     }
 
+    public Direction getFacing() {
+        return getBlockState().getOptionalValue(ArmourerBlock.FACING).orElse(Direction.NORTH);
+    }
 
     public CubeTransform getTransform() {
         BlockPos pos = getBlockPos().offset(0, 1, 0);
-        Direction facing = getBlockState().getValue(ArmourerBlock.FACING);
-        return new CubeTransform(getLevel(), pos, facing);
+        return new CubeTransform(getLevel(), pos, getFacing());
     }
 
     public interface IUpdateTaskBuilder {

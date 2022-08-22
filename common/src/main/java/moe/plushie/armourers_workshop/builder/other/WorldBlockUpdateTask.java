@@ -22,6 +22,8 @@ public class WorldBlockUpdateTask implements IWorldUpdateTask {
     Predicate<BlockState> validator;
     Consumer<BlockState> modifier;
 
+    private int blockFlags = Constants.BlockFlags.DEFAULT;
+
     public WorldBlockUpdateTask(Level level, BlockPos blockPos, BlockState blockState) {
         this(level, blockPos, blockState, null);
     }
@@ -39,6 +41,10 @@ public class WorldBlockUpdateTask implements IWorldUpdateTask {
 
     public void setModifier(Consumer<BlockState> modifier) {
         this.modifier = modifier;
+    }
+
+    public void setBlockFlags(int blockFlags) {
+        this.blockFlags = blockFlags;
     }
 
     @Override
@@ -61,15 +67,14 @@ public class WorldBlockUpdateTask implements IWorldUpdateTask {
         if (!level.isLoaded(blockPos)) {
             return InteractionResult.PASS;
         }
-        BlockState targetState = level.getBlockState(blockPos);
-        if (validator != null && !validator.test(targetState)) {
+        if (validator != null && !validator.test(level.getBlockState(blockPos))) {
             return InteractionResult.PASS;
         }
-        level.setBlock(blockPos, blockState, Constants.BlockFlags.DEFAULT);
+        level.setBlock(blockPos, blockState, blockFlags);
         if (nbt != null) {
             BlockEntity tileEntity = level.getBlockEntity(blockPos);
             if (tileEntity != null) {
-                tileEntity.load(tileEntity.getBlockState(), nbt);
+                tileEntity.load(blockState, nbt);
             }
         }
         if (modifier != null) {

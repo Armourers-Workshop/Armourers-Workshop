@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import moe.plushie.armourers_workshop.core.block.HologramProjectorBlock;
+import moe.plushie.armourers_workshop.core.block.SkinnableBlock;
 import moe.plushie.armourers_workshop.core.client.bake.BakedSkin;
 import moe.plushie.armourers_workshop.core.skin.SkinDescriptor;
 import moe.plushie.armourers_workshop.utils.Constants;
@@ -226,12 +227,12 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public Quaternion getRenderRotations() {
+    public Quaternion getRenderRotations(BlockState blockState) {
         if (renderRotations != null) {
             return renderRotations;
         }
-        AttachFace face = getBlockState().getValue(HologramProjectorBlock.FACE);
-        Direction facing = getBlockState().getValue(HologramProjectorBlock.FACING);
+        AttachFace face = blockState.getOptionalValue(SkinnableBlock.FACE).orElse(AttachFace.FLOOR);
+        Direction facing = blockState.getOptionalValue(SkinnableBlock.FACING).orElse(Direction.NORTH);
         Vector3f rot = FACING_TO_ROT.getOrDefault(Pair.of(face, facing), new Vector3f());
         renderRotations = TrigUtils.rotate(rot.getX(), rot.getY(), rot.getZ(), true);
         return renderRotations;
@@ -239,7 +240,7 @@ public class HologramProjectorBlockEntity extends RotableContainerBlockEntity {
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public Rectangle3f getRenderBoundingBox(BlockState state) {
+    public Rectangle3f getRenderBoundingBox(BlockState blockState) {
         if (!isPowered()) {
             return null;
         }

@@ -9,7 +9,6 @@ import moe.plushie.armourers_workshop.api.math.IVector3i;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
 import moe.plushie.armourers_workshop.api.skin.ISkinType;
 import moe.plushie.armourers_workshop.api.skin.property.ISkinProperties;
-import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.blockentity.ArmourerBlockEntity;
 import moe.plushie.armourers_workshop.builder.client.render.guide.GuideRendererManager;
 import moe.plushie.armourers_workshop.builder.other.CubeTransform;
@@ -30,7 +29,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -70,7 +68,7 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
         boolean isUsesHelper = entity.usesHelper();
 
         matrixStack.pushPose();
-        transform(matrixStack, entity.getBlockState());
+        transform(matrixStack, entity);
         matrixStack.scale(-1, -1, 1);
 
         float polygonOffset = 0f;
@@ -139,9 +137,9 @@ public class ArmourerBlockEntityRenderer<T extends ArmourerBlockEntity> extends 
         override.setBuffers(null);
     }
 
-    public void transform(PoseStack matrixStack, BlockState state) {
+    public void transform(PoseStack matrixStack, T entity) {
         matrixStack.translate(0, 1, 0); // apply height offset
-        matrixStack.mulPose(CubeTransform.getRotationDegrees(state.getValue(ArmourerBlock.FACING))); // apply facing rotation
+        matrixStack.mulPose(CubeTransform.getRotationDegrees(entity.getFacing())); // apply facing rotation
     }
 
     @Override

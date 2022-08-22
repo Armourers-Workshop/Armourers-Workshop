@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.awt.*;
 
@@ -43,6 +44,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
         if (bakedSkin == null) {
             return;
         }
+        BlockState blockState = entity.getBlockState();
         Entity mannequin = SkinItemRenderer.getInstance().getMannequinEntity();
         HumanoidModel<?> model = SkinItemRenderer.getInstance().getMannequinModel();
         SkinRenderer<Entity, Model> renderer = SkinRendererManager.getInstance().getRenderer(mannequin, model, null);
@@ -58,7 +60,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
 
         matrixStack.pushPose();
         matrixStack.translate(0.5f, 0.5f, 0.5f);
-        matrixStack.mulPose(entity.getRenderRotations());
+        matrixStack.mulPose(entity.getRenderRotations(blockState));
         matrixStack.translate(0.0f, 0.5f, 0.0f);
 
         matrixStack.scale(f, f, f);
@@ -77,7 +79,7 @@ public class HologramProjectorBlockEntityRenderer<T extends HologramProjectorBlo
             BlockPos pos = entity.getBlockPos();
             matrixStack.pushPose();
             matrixStack.translate(-pos.getX(), -pos.getY(), -pos.getZ());
-            RenderUtils.drawBoundingBox(matrixStack, entity.getCustomRenderBoundingBox(), Color.ORANGE, buffers);
+            RenderUtils.drawBoundingBox(matrixStack, entity.getCustomRenderBoundingBox(blockState), Color.ORANGE, buffers);
             matrixStack.popPose();
         }
     }

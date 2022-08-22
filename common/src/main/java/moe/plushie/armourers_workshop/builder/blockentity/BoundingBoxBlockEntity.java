@@ -4,7 +4,6 @@ import moe.plushie.armourers_workshop.api.client.IBlockEntityExtendedRenderer;
 import moe.plushie.armourers_workshop.api.painting.IPaintColor;
 import moe.plushie.armourers_workshop.api.painting.IPaintable;
 import moe.plushie.armourers_workshop.api.skin.ISkinPartType;
-import moe.plushie.armourers_workshop.builder.block.ArmourerBlock;
 import moe.plushie.armourers_workshop.builder.data.BoundingBox;
 import moe.plushie.armourers_workshop.core.blockentity.AbstractBlockEntity;
 import moe.plushie.armourers_workshop.core.data.color.PaintColor;
@@ -185,7 +184,7 @@ public class BoundingBoxBlockEntity extends AbstractBlockEntity implements IPain
         if (tileEntity == null) {
             return dir;
         }
-        switch (tileEntity.getBlockState().getValue(ArmourerBlock.FACING)) {
+        switch (tileEntity.getFacing()) {
             case SOUTH: {
                 // when block facing to south, we need to rotate 180° get facing north direction.
                 return Rotation.CLOCKWISE_180.rotate(dir);

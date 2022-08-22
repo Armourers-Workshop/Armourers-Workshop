@@ -25,18 +25,18 @@ public abstract class RotableContainerBlockEntity extends AbstractContainerBlock
     }
 
     @Environment(value = EnvType.CLIENT)
-    public Quaternion getRenderRotations() {
+    public Quaternion getRenderRotations(BlockState blockState) {
         return null;
     }
 
     @Environment(value = EnvType.CLIENT)
-    public Rectangle3f getRenderBoundingBox(BlockState state) {
+    public Rectangle3f getRenderBoundingBox(BlockState blockState) {
         return null;
     }
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public AABB getCustomRenderBoundingBox() {
+    public AABB getCustomRenderBoundingBox(BlockState blockState) {
         if (renderBoundingBox != null) {
             return renderBoundingBox;
         }
@@ -44,7 +44,7 @@ public abstract class RotableContainerBlockEntity extends AbstractContainerBlock
         if (rect == null) {
             return ZERO_BOX;
         }
-        Quaternion quaternion = getRenderRotations();
+        Quaternion quaternion = getRenderRotations(blockState);
         if (quaternion != null) {
             rect.mul(quaternion);
         }

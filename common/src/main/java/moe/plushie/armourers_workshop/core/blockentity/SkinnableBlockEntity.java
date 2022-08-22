@@ -82,8 +82,8 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
     }
 
     public static Vector3f getRotations(BlockState state) {
-        AttachFace face = state.getValue(SkinnableBlock.FACE);
-        Direction facing = state.getValue(SkinnableBlock.FACING);
+        AttachFace face = state.getOptionalValue(SkinnableBlock.FACE).orElse(AttachFace.FLOOR);
+        Direction facing = state.getOptionalValue(SkinnableBlock.FACING).orElse(Direction.NORTH);
         return FACING_TO_ROT.getOrDefault(Pair.of(face, facing), new Vector3f());
     }
 
@@ -176,7 +176,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     @Override
     @Environment(value = EnvType.CLIENT)
-    public Quaternion getRenderRotations() {
+    public Quaternion getRenderRotations(BlockState blockState) {
         if (renderRotations != null) {
             return renderRotations;
         }
@@ -243,7 +243,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
         BlockPos parentPos = getParentPos();
         Collection<SkinMarker> markers = getMarkers();
         if (markers == null || markers.isEmpty()) {
-            Direction facing = getBlockState().getValue(SkinnableBlock.FACING);
+            Direction facing = getBlockState().getOptionalValue(SkinnableBlock.FACING).orElse(Direction.NORTH);
             return parentPos.relative(Rotation.CLOCKWISE_180.rotate(facing));
         }
         SkinMarker marker = markers.iterator().next();
@@ -338,7 +338,7 @@ public class SkinnableBlockEntity extends RotableContainerBlockEntity implements
 
     @Environment(value = EnvType.CLIENT)
     @Override
-    public Rectangle3f getRenderBoundingBox(BlockState state) {
+    public Rectangle3f getRenderBoundingBox(BlockState blockState) {
         BakedSkin bakedSkin = BakedSkin.of(getDescriptor());
         if (bakedSkin == null) {
             return null;

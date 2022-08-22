@@ -37,7 +37,7 @@ public class SkinCubeBlock extends AbstractHorizontalBlock implements IBlockEnti
     }
 
     public static OptionalDirection getMarker(BlockState blockState) {
-        if (blockState.getValue(HAS_MARKER)) {
+        if (blockState.getOptionalValue(HAS_MARKER).orElse(false)) {
             return OptionalDirection.of(blockState.getValue(MARKER));
         }
         return OptionalDirection.NONE;
