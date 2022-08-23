@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class SkinCubeBlockEntity extends AbstractBlockEntity implements IPaintable, IBlockEntityExtendedRenderer {
 
-    protected BlockPaintColor colors = new BlockPaintColor();
+    protected BlockPaintColor colors = new BlockPaintColor(PaintColor.WHITE);
     protected boolean customRenderer = false;
 
     public SkinCubeBlockEntity(BlockEntityType<?> entityType) {
