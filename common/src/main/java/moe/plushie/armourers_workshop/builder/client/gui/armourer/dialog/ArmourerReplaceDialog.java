@@ -173,6 +173,7 @@ public class ArmourerReplaceDialog extends ConfirmDialog {
         UIButton button = new UIButton(new CGRect(x, y, 7, 8));
         button.setBackgroundImage(ModTextures.helpButtonImage(), UIControl.State.ALL);
         button.setTooltip(getText(key));
+        button.setCanBecomeFocused(false);
         addSubview(button);
     }
 

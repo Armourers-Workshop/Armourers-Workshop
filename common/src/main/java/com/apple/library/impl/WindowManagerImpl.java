@@ -147,6 +147,10 @@ public class WindowManagerImpl {
         return dispatchers.test(dispatcher -> dispatcher.mouseIsInside(mouseX, mouseY, button));
     }
 
+    public boolean changeKeyView(boolean bl) {
+        return dispatchers.test(dispatcher -> dispatcher.changeKeyView(bl));
+    }
+
     public UIView firstTooltipResponder() {
         return dispatchers.flatMap(WindowDispatcherImpl::firstTooltipResponder);
     }
@@ -177,28 +181,34 @@ public class WindowManagerImpl {
     public static class Queue<T extends WindowDispatcherImpl> implements Iterable<T> {
 
         private final LinkedList<T> values = new LinkedList<>();
+        private LinkedList<T> readValues = values;
 
         public void add(T val) {
             values.add(val);
             values.sort(Comparator.comparing(T::level));
+            readValues = new LinkedList<>(values);
         }
 
         public void remove(T val) {
             values.remove(val);
+            readValues = new LinkedList<>(values);
         }
 
         public void removeIf(Predicate<T> val) {
             values.removeIf(val);
+            readValues = new LinkedList<>(values);
         }
 
         public void removeAll() {
             values.clear();
+            readValues = new LinkedList<>(values);
         }
 
-        public boolean test(Predicate<T> predicate) {
+        public boolean test(Function<T, InvokerResult> provider) {
             for (T value : descendingEnum()) {
-                if (predicate.test(value)) {
-                    return true;
+                InvokerResult result = provider.apply(value);
+                if (result.isDecided()) {
+                    return result.conclusion();
                 }
             }
             return false;
@@ -226,11 +236,11 @@ public class WindowManagerImpl {
 
         @Override
         public Iterator<T> iterator() {
-            return values.iterator();
+            return readValues.iterator();
         }
 
         public Iterable<T> descendingEnum() {
-            return values::descendingIterator;
+            return readValues::descendingIterator;
         }
     }
 }

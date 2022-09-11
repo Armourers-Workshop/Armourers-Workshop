@@ -3,14 +3,13 @@ package com.apple.library.uikit;
 import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
+import com.apple.library.impl.ReversedIteratorImpl;
 import com.apple.library.impl.ViewImpl;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class UIView extends UIResponder implements ViewImpl {
 
@@ -166,6 +165,9 @@ public class UIView extends UIResponder implements ViewImpl {
     public void layerDidDraw(CGGraphicsContext context) {
     }
 
+    public void focusesDidChange() {
+    }
+
     @Override
     public UIResponder nextResponder() {
         return superview();
@@ -213,6 +215,14 @@ public class UIView extends UIResponder implements ViewImpl {
 
     public CGRect frame() {
         return frame;
+    }
+
+   public boolean canBecomeFocused() {
+        return false;
+   }
+
+    public boolean isFocused() {
+        return _flags.isFocused;
     }
 
     @Override
@@ -436,18 +446,8 @@ public class UIView extends UIResponder implements ViewImpl {
 
     protected Iterable<UIView> _subviewsForRev() {
         List<UIView> subviews = subviews();
-        ListIterator<UIView> iterator = subviews.listIterator(subviews.size());
-        return () -> new Iterator<UIView>() {
-            @Override
-            public boolean hasNext() {
-                return iterator.hasPrevious();
-            }
-
-            @Override
-            public UIView next() {
-                return iterator.previous();
-            }
-        };
+        ReversedIteratorImpl<UIView> iterator = new ReversedIteratorImpl<>(subviews.listIterator(subviews.size()));
+        return () -> iterator;
     }
 
     protected static class Flags {
@@ -455,6 +455,7 @@ public class UIView extends UIResponder implements ViewImpl {
         boolean isHidden = false;
         boolean isClipBounds = false;
         boolean isHovered = false;
+        boolean isFocused = false;
         boolean isUserInteractionEnabled = true;
         boolean isDirty = false;
 

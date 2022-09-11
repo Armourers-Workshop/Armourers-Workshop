@@ -96,7 +96,7 @@ public class OutfitMakerWindow extends MenuWindow<OutfitMakerMenu> {
     }
 
     @Override
-    public boolean shouldDrawPluginScreen() {
+    public boolean shouldRenderExtendScreen() {
         return true;
     }
 }

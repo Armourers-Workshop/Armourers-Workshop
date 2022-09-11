@@ -40,7 +40,7 @@ public class SkinnableWindow extends MenuWindow<SkinnableMenu> {
     }
 
     @Override
-    public boolean shouldDrawPluginScreen() {
+    public boolean shouldRenderExtendScreen() {
         return true;
     }
 }

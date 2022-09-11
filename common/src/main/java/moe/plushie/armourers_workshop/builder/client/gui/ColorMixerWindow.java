@@ -248,6 +248,7 @@ public class ColorMixerWindow extends MenuWindow<ColorMixerMenu> implements UITe
         UIButton button = new UIButton(new CGRect(x, y, 7, 8));
         button.setBackgroundImage(ModTextures.helpButtonImage(), UIControl.State.ALL);
         button.setTooltip(getDisplayText("help.palette"));
+        button.setCanBecomeFocused(false);
         addSubview(button);
     }
 

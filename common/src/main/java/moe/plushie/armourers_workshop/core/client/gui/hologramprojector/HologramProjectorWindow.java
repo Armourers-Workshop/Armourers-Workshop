@@ -93,7 +93,7 @@ public class HologramProjectorWindow extends MenuWindow<HologramProjectorMenu> {
     }
 
     @Override
-    public boolean shouldDrawBackground() {
+    public boolean shouldRenderBackground() {
         return false;
     }
 

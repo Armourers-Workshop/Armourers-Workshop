@@ -167,7 +167,6 @@ public class UIControl extends UIView implements HighlightedDisplayable {
         public static final int HIGHLIGHTED = 0x01;
         public static final int SELECTED = 0x02;
         public static final int DISABLED = 0x04;
-
         public static final int ALL = 0x07;
     }
 }

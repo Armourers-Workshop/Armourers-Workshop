@@ -37,11 +37,11 @@ public class MenuWindow<M extends AbstractContainerMenu> extends UIWindow implem
         return subviews().stream().anyMatch(subview -> subview.pointInside(convertPointToView(point, subview), event));
     }
 
-    public boolean shouldDrawBackground() {
+    public boolean shouldRenderBackground() {
         return true;
     }
 
-    public boolean shouldDrawPluginScreen() {
+    public boolean shouldRenderExtendScreen() {
         return false;
     }
 

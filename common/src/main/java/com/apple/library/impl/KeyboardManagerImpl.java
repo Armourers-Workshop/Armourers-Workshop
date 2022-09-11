@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import org.lwjgl.glfw.GLFW;
 
 @Environment(value= EnvType.CLIENT)
 public class KeyboardManagerImpl {
@@ -35,6 +36,14 @@ public class KeyboardManagerImpl {
 
     public static boolean isSelectAll(int i) {
         return Screen.isSelectAll(i);
+    }
+
+    public static boolean isSpace(int i) {
+        return i == GLFW.GLFW_KEY_SPACE;
+    }
+
+    public static boolean isEnter(int i) {
+        return i == GLFW.GLFW_KEY_ENTER || i == GLFW.GLFW_KEY_KP_ENTER;
     }
 
     public static String getClipboard() {

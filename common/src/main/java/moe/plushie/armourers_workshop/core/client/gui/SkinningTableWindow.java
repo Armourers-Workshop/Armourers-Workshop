@@ -23,7 +23,7 @@ public class SkinningTableWindow extends MenuWindow<SkinningTableMenu> {
     }
 
     @Override
-    public boolean shouldDrawPluginScreen() {
+    public boolean shouldRenderExtendScreen() {
         return true;
     }
 }

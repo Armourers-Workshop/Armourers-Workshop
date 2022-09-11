@@ -49,12 +49,14 @@ public class ScrollIndicator extends UIControl {
         topButton.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleBottomMargin);
         topButton.setBackgroundImage(makeImage(20, 0), State.ALL);
         topButton.addTarget(this, Event.MOUSE_LEFT_DOWN, ScrollIndicator::upAction);
+        topButton.setCanBecomeFocused(false);
         addSubview(topButton);
 
         bottomButton.setFrame(new CGRect(0, rect.getMaxY() - size, size, size));
         bottomButton.setAutoresizingMask(AutoresizingMask.flexibleWidth | AutoresizingMask.flexibleTopMargin);
         bottomButton.setBackgroundImage(makeImage(30, 0), State.ALL);
         bottomButton.addTarget(this, Event.MOUSE_LEFT_DOWN, ScrollIndicator::downAction);
+        bottomButton.setCanBecomeFocused(false);
         addSubview(bottomButton);
 
         UIImageView bg1 = new UIImageView(new CGRect(0, topButton.frame().getMaxY(), size, size));
@@ -72,6 +74,7 @@ public class ScrollIndicator extends UIControl {
 
         middleButton.setFrame(new CGRect(0, size, size, size));
         middleButton.setBackgroundImage(makeImage(40, 0), State.ALL);
+        middleButton.setCanBecomeFocused(false);
         addSubview(middleButton);
     }
 

@@ -4,12 +4,12 @@ import com.apple.library.coregraphics.CGGraphicsContext;
 import com.apple.library.coregraphics.CGPoint;
 import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
-import com.apple.library.impl.InvokerResult;
-import com.apple.library.impl.WeakDispatcherImpl;
-import com.apple.library.impl.WindowDispatcherImpl;
+import com.apple.library.impl.*;
 import moe.plushie.armourers_workshop.utils.RenderSystem;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public class UIWindow extends UIView {
@@ -19,6 +19,7 @@ public class UIWindow extends UIView {
     private UIView firstResponder;
     private UIView hoveredResponder;
     private UIView firstInputResponder;
+    private UIView focusedResponder;
 
     private final HashMap<UIControl.Event, WeakDispatcherImpl<UIEvent>> dispatchers = new HashMap<>();
 
@@ -32,6 +33,7 @@ public class UIWindow extends UIView {
     public void deinit() {
         if (firstInputResponder != null) {
             firstInputResponder.resignFirstResponder();
+            firstInputResponder = null;
         }
         _removeAllSubviews(this);
     }
@@ -120,6 +122,7 @@ public class UIWindow extends UIView {
 
     protected void setFirstInputResponder(UIView view) {
         firstInputResponder = view;
+        _setFocusedResponder(view);
     }
 
     protected boolean shouldPassEventToNextWindow(UIEvent event) {
@@ -130,12 +133,14 @@ public class UIWindow extends UIView {
         if (firstResponder == view) {
             firstResponder = null;
         }
+        if (focusedResponder == view)  {
+            _setFocusedResponder(null);
+        }
         if (firstInputResponder == view) {
             firstInputResponder = null;
         }
         if (hoveredResponder == view) {
-            Dispatcher.applyMouseHovered(hoveredResponder, false, Dispatcher.NULL_EVENT);
-            hoveredResponder = null;
+            _setHoveredResponder(null, Dispatcher.NULL_EVENT);
         }
     }
 
@@ -156,13 +161,51 @@ public class UIWindow extends UIView {
         return dispatchers.computeIfAbsent(event, k -> new WeakDispatcherImpl<>());
     }
 
+    private void _setFocusedResponder(UIView view) {
+        if (focusedResponder == view) {
+            return;
+        }
+        if (focusedResponder != null) {
+            Dispatcher.applyFocusedView(focusedResponder, false);
+        }
+        focusedResponder = view;
+        if (focusedResponder != null) {
+            Dispatcher.applyFocusedView(focusedResponder, true);
+        }
+    }
+
+    private void _setInputResponder(UIView view) {
+        if (firstInputResponder == view) {
+            return;
+        }
+        if (firstInputResponder != null) {
+            firstInputResponder.resignFirstResponder();
+        }
+        firstInputResponder = view;
+        if (firstInputResponder != null) {
+            firstInputResponder.becomeFirstResponder();
+        }
+    }
+
+    private void _setHoveredResponder(UIView view, UIEvent event) {
+        if (hoveredResponder == view) {
+            return;
+        }
+        if (hoveredResponder != null) {
+            Dispatcher.applyMouseHovered(hoveredResponder, false, event);
+        }
+        hoveredResponder = view;
+        if (hoveredResponder != null) {
+            Dispatcher.applyMouseHovered(hoveredResponder, true, event);
+        }
+    }
+
     public static class Dispatcher extends WindowDispatcherImpl {
 
         // left: 0, right: 1, middle: 2
         private static final UIEvent.Type[] MOUSE_BUTTONS = {UIEvent.Type.MOUSE_LEFT_DOWN, UIEvent.Type.MOUSE_RIGHT_DOWN, UIEvent.Type.MOUSE_MIDDLE_DOWN, UIEvent.Type.MOUSE_LEFT_UP, UIEvent.Type.MOUSE_RIGHT_UP, UIEvent.Type.MOUSE_MIDDLE_UP,};
 
         public static final UIEvent NULL_EVENT = new UIEvent(UIEvent.Type.MOUSE_MOVED, 0, 0, 0, CGPoint.ZERO);
-
 
         public final UIWindow window;
 
@@ -212,16 +255,7 @@ public class UIWindow extends UIView {
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
-            if (window.firstInputResponder != null) {
-                window.firstInputResponder.keyUp(event);
-                return checkEvent(event);
-            }
-            if (window.hoveredResponder != null) {
-                window.hoveredResponder.keyUp(event);
-                return checkEvent(event);
-            }
-            window.keyUp(event);
-            return checkEvent(event);
+            return applyKeyEvent(event, UIResponder::keyUp);
         }
 
         @Override
@@ -230,16 +264,7 @@ public class UIWindow extends UIView {
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
-            if (window.firstInputResponder != null) {
-                window.firstInputResponder.keyDown(event);
-                return checkEvent(event);
-            }
-            if (window.hoveredResponder != null) {
-                window.hoveredResponder.keyDown(event);
-                return checkEvent(event);
-            }
-            window.keyDown(event);
-            return checkEvent(event);
+            return applyKeyEvent(event, UIResponder::keyDown);
         }
 
         @Override
@@ -248,16 +273,7 @@ public class UIWindow extends UIView {
             if (!window._sendGlobalEvent(UIControl.Event.of(event), event)) {
                 return checkEvent(event);
             }
-            if (window.firstInputResponder != null) {
-                window.firstInputResponder.charTyped(event);
-                return checkEvent(event);
-            }
-            if (window.hoveredResponder != null) {
-                window.hoveredResponder.charTyped(event);
-                return checkEvent(event);
-            }
-            window.charTyped(event);
-            return checkEvent(event);
+            return applyKeyEvent(event, UIResponder::charTyped);
         }
 
         @Override
@@ -268,6 +284,9 @@ public class UIWindow extends UIView {
             }
             window.firstResponder = findFirstResponder((int) mouseX, (int) mouseY, event, window);
             // auto resign the input first responder if needed.
+            if (window.focusedResponder != window.firstResponder) {
+                window._setFocusedResponder(null);
+            }
             if (window.firstInputResponder != window.firstResponder) {
                 if (window.firstInputResponder != null) {
                     window.firstInputResponder.resignFirstResponder();
@@ -333,11 +352,35 @@ public class UIWindow extends UIView {
         }
 
         @Override
-        public boolean mouseIsInside(double mouseX, double mouseY, int button) {
+        public InvokerResult mouseIsInside(double mouseX, double mouseY, int button) {
             UIEvent event = makeMouseEvent(mouseX, mouseY, button, 0, MOUSE_BUTTONS[(button % 3)]);
             CGRect frame = window.frame();
             UIView view = window.hitTest(new CGPoint((int) mouseX - frame.x, (int) mouseY - frame.y), event);
-            return view != null && view != window;
+            if (view != null && view != window) {
+                return InvokerResult.SUCCESS;
+            }
+            return InvokerResult.PASS;
+        }
+
+        @Override
+        public InvokerResult changeKeyView(boolean bl) {
+            UIView view = window;
+            UIView targetView = null;
+            if (window.focusedResponder != null) {
+                UIView superview = window.focusedResponder.superview();
+                if (superview != null) {
+                    view = superview;
+                    targetView = window.focusedResponder;
+                }
+            }
+            LBSIterator<UIView> iterator = new LBSIterator<>(bl);
+            UIView responder = findFocusedResponder(view, targetView, iterator, false, targetView != null);
+            if (responder != null) {
+                window._setInputResponder(responder);
+                window._setFocusedResponder(responder);
+                return InvokerResult.SUCCESS;
+            }
+            return InvokerResult.PASS;
         }
 
         @Override
@@ -356,16 +399,7 @@ public class UIWindow extends UIView {
         }
 
         private void updateHoveredResponder(int mouseX, int mouseY, UIEvent event, boolean force) {
-            UIView newHoveredResponder = findFirstResponder(mouseX, mouseY, event, window);
-            if (window.hoveredResponder != newHoveredResponder) {
-                if (window.hoveredResponder != null) {
-                    applyMouseHovered(window.hoveredResponder, false, event);
-                }
-                window.hoveredResponder = newHoveredResponder;
-                if (window.hoveredResponder != null) {
-                    applyMouseHovered(window.hoveredResponder, true, event);
-                }
-            }
+            window._setHoveredResponder(findFirstResponder(mouseX, mouseY, event, window), event);
         }
 
         private UIEvent makeMouseEvent(double mouseX, double mouseY, int key, double delta, UIEvent.Type type) {
@@ -394,6 +428,17 @@ public class UIWindow extends UIView {
                 return InvokerResult.PASS;
             }
             return InvokerResult.FAIL;
+        }
+
+        private InvokerResult applyKeyEvent(UIEvent event, BiConsumer<UIResponder, UIEvent> consumer) {
+            UIResponder[] responders = {window.firstInputResponder, window.focusedResponder, window.hoveredResponder, window};
+            for (UIResponder responder : responders) {
+                if (responder != null) {
+                    consumer.accept(responder, event);
+                    break;
+                }
+            }
+            return checkEvent(event);
         }
 
         private static void applyRender(int mouseX, int mouseY, int depth, UIView view, CGGraphicsContext context) {
@@ -443,6 +488,41 @@ public class UIWindow extends UIView {
             return view.hitTest(point, event);
         }
 
+        private static UIView findFocusedResponder(UIView view, @Nullable UIView currentView, LBSIterator<UIView> iterator, boolean ignoreSelf, boolean backToTop) {
+            List<UIView> subviews = view.subviews();
+            for (UIView subview : iterator.remaining(subviews, currentView)) {
+                if (ignoreSelf && subview == currentView) {
+                    continue;
+                }
+                if (subview != currentView && subview.canBecomeFocused()) {
+                    return subview;
+                }
+                UIView focusedResponder = findFocusedResponder(subview, null, iterator, false, false);
+                if (focusedResponder != null) {
+                    return focusedResponder;
+                }
+            }
+            if (backToTop) {
+                UIView superView = view.superview();
+                if (superView != null) {
+                    UIView focusedResponder = findFocusedResponder(superView, view, iterator, true, true);
+                    if (focusedResponder != null) {
+                        return focusedResponder;
+                    }
+                }
+            }
+            for (UIView subview : iterator.skipping(subviews, currentView)) {
+                if (subview != currentView && subview.canBecomeFocused()) {
+                    return subview;
+                }
+                UIView focusedResponder = findFocusedResponder(subview, null, iterator, false, false);
+                if (focusedResponder != null) {
+                    return focusedResponder;
+                }
+            }
+            return null;
+        }
+
         private static void applyMouseHovered(UIView view, boolean isHovered, UIEvent event) {
             if (view._flags.isHovered != isHovered) {
                 view._flags.isHovered = isHovered;
@@ -453,5 +533,14 @@ public class UIWindow extends UIView {
                 }
             }
         }
+
+        private static void applyFocusedView(UIView view, boolean isFocused) {
+            if (view._flags.isFocused != isFocused) {
+                view._flags.isFocused = isFocused;
+                view.focusesDidChange();
+            }
+        }
+
     }
 }
+

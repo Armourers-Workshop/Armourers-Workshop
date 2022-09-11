@@ -158,7 +158,6 @@ public class SearchResultsLibraryPanel extends AbstractLibraryPanel implements G
     private UIButton addCommonButton(int x, int y, int u, int v, int width, int height, String key, BiConsumer<SearchResultsLibraryPanel, UIControl> handler) {
         UIButton button = new UIButton(new CGRect(x, y, width, height));
         button.setImage(ModTextures.iconImage(u, v, width, height, ModTextures.BUTTONS), UIControl.State.ALL);
-        button.setBackgroundImage(ModTextures.defaultButtonImage(), UIControl.State.ALL);
         button.setTooltip(getCommonDisplayText(key));
         button.addTarget(this, UIControl.Event.MOUSE_LEFT_DOWN, handler);
         addSubview(button);

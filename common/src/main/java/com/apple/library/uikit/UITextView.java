@@ -176,6 +176,11 @@ public class UITextView extends UIScrollView implements TextInputTraits {
 //        delegate.invoker().textFieldDidEndEditing(this);
     }
 
+    @Override
+    public boolean canBecomeFocused() {
+        return !_ignoresTouchEvents(this) && input.isEditable();
+    }
+
     public NSTextPosition beginOfDocument() {
         return storage.beginOfDocument();
     }

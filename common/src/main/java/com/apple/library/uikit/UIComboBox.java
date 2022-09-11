@@ -35,6 +35,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
         this.handleView.setTitle(new NSString("⋁"), State.NORMAL);
         this.handleView.setTitle(new NSString("⋀"), State.SELECTED);
         this.handleView.setTitleColor(UIColor.WHITE, State.ALL);
+        this.handleView.setCanBecomeFocused(false);
         this.titleView.titleView.setEnabled(false);
         this.titleView.setClipBounds(true);
         this.titleView.setUserInteractionEnabled(false);
@@ -232,6 +233,7 @@ public class UIComboBox extends UIControl implements UITableViewDataSource, UITa
             this.titleView.setTitleColor(UIColor.WHITE, State.NORMAL);
             this.titleView.setTitleColor(new UIColor(0xffffa0), State.HIGHLIGHTED);
             this.titleView.setTitleColor(new UIColor(0xcc0000), State.DISABLED);
+            this.titleView.setCanBecomeFocused(false);
             this.addSubview(titleView);
         }
 

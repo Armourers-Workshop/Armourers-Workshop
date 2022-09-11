@@ -137,9 +137,14 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
         }
     }
 
+    @Override
+    public boolean changeFocus(boolean bl) {
+        return manager.changeKeyView(bl);
+    }
+
     public boolean shouldDrawPluginScreen() {
         if (menuWindow != null) {
-            return menuWindow.shouldDrawPluginScreen();
+            return menuWindow.shouldRenderExtendScreen();
         }
         return false;
     }
@@ -154,11 +159,10 @@ public class MenuScreen<M extends AbstractContainerMenu, W extends UIWindow & IM
 
     private void _renderBackground(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
         // draw bg
-        if (menuWindow != null && menuWindow.shouldDrawBackground()) {
+        if (menuWindow != null && menuWindow.shouldRenderBackground()) {
             renderBackground(poseStack);
         }
     }
-
 
     private boolean _charTyped(int key, int i, int j) {
         super.charTyped((char) key, i);

@@ -193,6 +193,11 @@ public class UITextField extends UIControl implements TextInputTraits {
         this.contentInsets = contentInsets;
     }
 
+    @Override
+    public boolean canBecomeFocused() {
+        return !_ignoresTouchEvents(this) && input.isEditable();
+    }
+
     private boolean shouldReturn(String value) {
         return delegate.invoker().textFieldShouldReturn(this);
     }

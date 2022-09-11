@@ -121,7 +121,7 @@ public class GlobalSkinLibraryWindow extends MenuWindow<GlobalSkinLibraryMenu> {
     }
 
     @Override
-    public boolean shouldDrawBackground() {
+    public boolean shouldRenderBackground() {
         return false;
     }
 

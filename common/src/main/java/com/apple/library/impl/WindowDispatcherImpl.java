@@ -61,8 +61,12 @@ public class WindowDispatcherImpl {
         return InvokerResult.PASS;
     }
 
-    public boolean mouseIsInside(double mouseX, double mouseY, int button) {
-        return false;
+    public InvokerResult changeKeyView(boolean bl) {
+        return InvokerResult.PASS;
+    }
+
+    public InvokerResult mouseIsInside(double mouseX, double mouseY, int button) {
+        return InvokerResult.PASS;
     }
 
     public UIView firstInputResponder() {

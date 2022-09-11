@@ -6,6 +6,7 @@ import com.apple.library.coregraphics.CGRect;
 import com.apple.library.coregraphics.CGSize;
 import com.apple.library.foundation.NSString;
 import com.apple.library.foundation.NSTextAlignment;
+import com.apple.library.impl.KeyboardManagerImpl;
 import com.apple.library.impl.LayoutManagerImpl;
 import com.apple.library.impl.SoundManagerImpl;
 import com.apple.library.impl.StateValueImpl;
@@ -38,6 +39,7 @@ public class UIButton extends UIControl {
     private UIImage cachedCurrentImage;
 
     private boolean shouldPassHighlighted = true;
+    private boolean canBecomeFocused = true;
 
     public UIButton(CGRect frame) {
         super(frame);
@@ -52,6 +54,22 @@ public class UIButton extends UIControl {
     public void mouseDown(UIEvent event) {
         super.mouseDown(event);
         SoundManagerImpl.click();
+    }
+
+    @Override
+    public void keyDown(UIEvent event) {
+        super.keyDown(event);
+        // simulate a mouse press.
+        if (isFocused() && isDownKey(event.key)) {
+            sendEvent(Event.MOUSE_LEFT_DOWN);
+            SoundManagerImpl.click();
+        }
+    }
+
+    @Override
+    public void focusesDidChange() {
+        super.focusesDidChange();
+        updateStateIfNeeded();
     }
 
     @Override
@@ -161,6 +179,15 @@ public class UIButton extends UIControl {
     }
 
     @Override
+    public boolean canBecomeFocused() {
+        return !_ignoresTouchEvents(this) && isEnabled() && canBecomeFocused;
+    }
+
+    public void setCanBecomeFocused(boolean canBecomeFocused) {
+        this.canBecomeFocused = canBecomeFocused;
+    }
+
+    @Override
     public boolean shouldPassHighlighted() {
         return shouldPassHighlighted;
     }
@@ -201,6 +228,10 @@ public class UIButton extends UIControl {
         if (isHighlighted()) {
             state |= State.HIGHLIGHTED;
         }
+        if (isFocused()) {
+            // highlight and focused used same state.
+            state |= State.HIGHLIGHTED;
+        }
         if (!isEnabled()) {
             state |= State.DISABLED;
         }
@@ -236,6 +267,10 @@ public class UIButton extends UIControl {
             return image.size();
         }
         return null;
+    }
+
+    private boolean isDownKey(int key) {
+        return KeyboardManagerImpl.isEnter(key) || KeyboardManagerImpl.isSpace(key);
     }
 
     private void applyImageToAnother(StateValueImpl<UIImage> container, UIImage image, int state) {

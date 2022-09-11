@@ -148,6 +148,7 @@ public class ArmourerMainSetting extends ArmourerBaseSetting implements UITextFi
         UIButton button = new UIButton(new CGRect(x, y, 7, 8));
         button.setBackgroundImage(ModTextures.helpButtonImage(), UIControl.State.ALL);
         button.setTooltip(getDisplayText(key));
+        button.setCanBecomeFocused(false);
         addSubview(button);
     }
 
